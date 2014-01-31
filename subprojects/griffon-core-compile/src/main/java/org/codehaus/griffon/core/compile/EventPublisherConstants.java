@@ -16,9 +16,7 @@
 
 package org.codehaus.griffon.core.compile;
 
-import static org.codehaus.griffon.core.compile.MethodDescriptor.args;
-import static org.codehaus.griffon.core.compile.MethodDescriptor.type;
-import static org.codehaus.griffon.core.compile.MethodDescriptor.typeWithParams;
+import static org.codehaus.griffon.core.compile.MethodDescriptor.*;
 
 /**
  * @author Andres Almiray
@@ -27,8 +25,7 @@ public interface EventPublisherConstants extends BaseConstants {
     String EVENT_ROUTER_PROPERTY = "eventRouter";
     String EVENT_ROUTER_TYPE = "griffon.core.event.EventRouter";
     String EVENT_PUBLISHER_TYPE = "griffon.core.event.EventPublisher";
-    String EVENT_PUBLISHER_FIELD_NAME = "this$eventPublisher";
-    String EVENT_PUBLISHER_FIELD_TYPE = "org.codehaus.griffon.runtime.core.event.DefaultEventPublisher";
+    String EVENT_ROUTER_FIELD_NAME = "this$eventRouter";
     String EVENT_TYPE = "griffon.core.event.Event";
 
     String METHOD_SET_EVENT_ROUTER = "setEventRouter";
@@ -40,102 +37,124 @@ public interface EventPublisherConstants extends BaseConstants {
     String METHOD_IS_EVENT_PUBLISHING_ENABLED = "isEventPublishingEnabled";
     String METHOD_SET_EVENT_PUBLISHING_ENABLED = "setEventPublishingEnabled";
 
+    String E = "E";
+
     MethodDescriptor[] METHODS = new MethodDescriptor[]{
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_ADD_EVENT_LISTENER,
-            args(type(JAVA_LANG_OBJECT))
+            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_OBJECT))
         ),
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_ADD_EVENT_LISTENER,
-            args(type(JAVA_LANG_STRING), type(GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))
         ),
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_ADD_EVENT_LISTENER,
-            args(typeWithParams(JAVA_UTIL_MAP, type(JAVA_LANG_STRING), type(GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD)))
+            args(typeWithParams(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_MAP, type(JAVA_LANG_STRING), type(GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD)))
         ),
-        MethodDescriptor.method(
+        method(
             type(VOID),
+            typeParams(
+                typeParam(E, EVENT_TYPE)
+            ),
             METHOD_ADD_EVENT_LISTENER,
-            args(type(JAVA_LANG_CLASS, EVENT_TYPE), type(GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_CLASS, E),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))
         ),
 
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_REMOVE_EVENT_LISTENER,
-            args(type(JAVA_LANG_OBJECT))
+            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_OBJECT))
         ),
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_REMOVE_EVENT_LISTENER,
-            args(type(JAVA_LANG_STRING), type(GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))
         ),
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_REMOVE_EVENT_LISTENER,
-            args(typeWithParams(JAVA_UTIL_MAP, type(JAVA_LANG_STRING), type(GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD)))
+            args(typeWithParams(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_MAP, type(JAVA_LANG_STRING), type(GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD)))
         ),
-        MethodDescriptor.method(
+        method(
             type(VOID),
+            typeParams(
+                typeParam(E, EVENT_TYPE)
+            ),
             METHOD_REMOVE_EVENT_LISTENER,
-            args(type(JAVA_LANG_CLASS, EVENT_TYPE), type(GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_CLASS, E),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))
         ),
 
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_PUBLISH_EVENT,
-            args(type(JAVA_LANG_STRING))
+            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING))
         ),
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_PUBLISH_EVENT,
-            args(type(JAVA_LANG_STRING), type(JAVA_UTIL_LIST, WILDCARD))
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_LIST, WILDCARD))
         ),
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_PUBLISH_EVENT,
-            args(type(EVENT_TYPE))
+            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), EVENT_TYPE))
         ),
 
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_PUBLISH_EVENT_OUTSIDE_UI,
-            args(type(JAVA_LANG_STRING))
+            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING))
         ),
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_PUBLISH_EVENT_OUTSIDE_UI,
-            args(type(JAVA_LANG_STRING), type(JAVA_UTIL_LIST, WILDCARD))
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_LIST, WILDCARD))
         ),
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_PUBLISH_EVENT_OUTSIDE_UI,
-            args(type(EVENT_TYPE))
+            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), EVENT_TYPE))
         ),
 
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_PUBLISH_EVENT_ASYNC,
-            args(type(JAVA_LANG_STRING))
+            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING))
         ),
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_PUBLISH_EVENT_ASYNC,
-            args(type(JAVA_LANG_STRING), type(JAVA_UTIL_LIST, WILDCARD))
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_LIST, WILDCARD))
         ),
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_PUBLISH_EVENT_ASYNC,
-            args(type(EVENT_TYPE))
+            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), EVENT_TYPE))
         ),
 
-        MethodDescriptor.method(
+        method(
             type(BOOLEAN),
             METHOD_IS_EVENT_PUBLISHING_ENABLED
         ),
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_SET_EVENT_PUBLISHING_ENABLED,
             args(type(BOOLEAN))

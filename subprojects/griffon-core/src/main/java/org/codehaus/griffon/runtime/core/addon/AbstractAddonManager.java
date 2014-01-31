@@ -152,6 +152,6 @@ public abstract class AbstractAddonManager implements AddonManager {
     }
 
     protected void event(@Nonnull ApplicationEvent evt, @Nonnull List<?> args) {
-        getApplication().getEventRouter().publish(evt.getName(), args);
+        getApplication().getEventRouter().publishEvent(evt.getName(), args);
     }
 }

@@ -115,7 +115,7 @@ public abstract class AbstractPivotGriffonApplication extends AbstractGriffonApp
 
     private void event(@Nonnull String eventName, @Nonnull List<?> args) {
         try {
-            getEventRouter().publish(eventName, args);
+            getEventRouter().publishEvent(eventName, args);
         } catch (InstanceNotFoundException infe) {
             // ignore
         }

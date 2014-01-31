@@ -99,13 +99,13 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             selectClassesPerMember(memberType, memberClassName, classMap);
         }
 
-        boolean isEventPublishingEnabled = getApplication().getEventRouter().isEnabled();
-        getApplication().getEventRouter().setEnabled(isConfigFlagEnabled(configuration, CONFIG_KEY_EVENTS_INSTANTIATION));
+        boolean isEventPublishingEnabled = getApplication().getEventRouter().isEventPublishingEnabled();
+        getApplication().getEventRouter().setEventPublishingEnabled(isConfigFlagEnabled(configuration, CONFIG_KEY_EVENTS_INSTANTIATION));
         Map<String, Object> instances = new LinkedHashMap<>();
         try {
             instances.putAll(instantiateMembers(classMap, argsCopy));
         } finally {
-            getApplication().getEventRouter().setEnabled(isEventPublishingEnabled);
+            getApplication().getEventRouter().setEventPublishingEnabled(isEventPublishingEnabled);
         }
 
         MVCGroup group = newMVCGroup(configuration, mvcId, instances);
@@ -113,7 +113,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
         boolean fireEvents = isConfigFlagEnabled(configuration, CONFIG_KEY_EVENTS_LIFECYCLE);
         if (fireEvents) {
-            getApplication().getEventRouter().publish(ApplicationEvent.INITIALIZE_MVC_GROUP.getName(), asList(configuration, group));
+            getApplication().getEventRouter().publishEvent(ApplicationEvent.INITIALIZE_MVC_GROUP.getName(), asList(configuration, group));
         }
 
         // special case -- controllers are added as application listeners
@@ -132,7 +132,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         initializeMembers(group, argsCopy);
 
         if (fireEvents) {
-            getApplication().getEventRouter().publish(ApplicationEvent.CREATE_MVC_GROUP.getName(), asList(group));
+            getApplication().getEventRouter().publishEvent(ApplicationEvent.CREATE_MVC_GROUP.getName(), asList(group));
         }
 
         return group;
@@ -314,7 +314,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         group.destroy();
 
         if (isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_LIFECYCLE)) {
-            getApplication().getEventRouter().publish(ApplicationEvent.DESTROY_MVC_GROUP.getName(), asList(group));
+            getApplication().getEventRouter().publishEvent(ApplicationEvent.DESTROY_MVC_GROUP.getName(), asList(group));
         }
     }
 
@@ -332,7 +332,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         if (member instanceof GriffonMvcArtifact) {
             GriffonMvcArtifact artifact = (GriffonMvcArtifact) member;
             if (fireDestructionEvents) {
-                getApplication().getEventRouter().publish(ApplicationEvent.DESTROY_INSTANCE.getName(), asList(member.getClass(), artifact));
+                getApplication().getEventRouter().publishEvent(ApplicationEvent.DESTROY_INSTANCE.getName(), asList(member.getClass(), artifact));
             }
             artifact.mvcGroupDestroy();
         }

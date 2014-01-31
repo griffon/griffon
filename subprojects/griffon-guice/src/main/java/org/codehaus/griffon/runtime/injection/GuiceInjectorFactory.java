@@ -68,7 +68,7 @@ public class GuiceInjectorFactory implements InjectorFactory {
         final InjectionListener<GriffonArtifact> injectionListener = new InjectionListener<GriffonArtifact>() {
             @Override
             public void afterInjection(GriffonArtifact injectee) {
-                application.getEventRouter().publish(
+                application.getEventRouter().publishEvent(
                     ApplicationEvent.NEW_INSTANCE.getName(),
                     asList(injectee.getClass(), injectee)
                 );

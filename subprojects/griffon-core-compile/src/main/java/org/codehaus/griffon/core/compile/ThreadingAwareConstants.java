@@ -16,9 +16,7 @@
 
 package org.codehaus.griffon.core.compile;
 
-import static org.codehaus.griffon.core.compile.MethodDescriptor.args;
-import static org.codehaus.griffon.core.compile.MethodDescriptor.type;
-import static org.codehaus.griffon.core.compile.MethodDescriptor.typeParams;
+import static org.codehaus.griffon.core.compile.MethodDescriptor.*;
 
 /**
  * @author Andres Almiray
@@ -38,36 +36,40 @@ public interface ThreadingAwareConstants extends BaseConstants {
     String JAVA_UTIL_CONCURRENT_EXECUTOR_SERVICE = "java.util.concurrent.ExecutorService";
 
     MethodDescriptor[] METHODS = new MethodDescriptor[]{
-        MethodDescriptor.method(
+        method(
             type(BOOLEAN),
             METHOD_IS_UITHREAD
         ),
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_RUN_INSIDE_UI_ASYNC,
-            args(type(JAVA_LANG_RUNNABLE))
+            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_RUNNABLE))
         ),
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_RUN_INSIDE_UI_SYNC,
-            args(type(JAVA_LANG_RUNNABLE))
+            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_RUNNABLE))
         ),
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_RUN_OUTSIDE_UI,
-            args(type(JAVA_LANG_RUNNABLE))
+            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_RUNNABLE))
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NONNULL)),
             type(JAVA_UTIL_CONCURRENT_FUTURE, R),
             typeParams(R),
             METHOD_RUN_FUTURE,
-            args(type(JAVA_UTIL_CONCURRENT_EXECUTOR_SERVICE), type(JAVA_UTIL_CONCURRENT_CALLABLE, R))
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_CONCURRENT_EXECUTOR_SERVICE),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_CONCURRENT_CALLABLE, R))
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NONNULL)),
             type(JAVA_UTIL_CONCURRENT_FUTURE, R),
             typeParams(R),
             METHOD_RUN_FUTURE,
-            args(type(JAVA_UTIL_CONCURRENT_CALLABLE, R))
+            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_CONCURRENT_CALLABLE, R))
         )
     };
 }

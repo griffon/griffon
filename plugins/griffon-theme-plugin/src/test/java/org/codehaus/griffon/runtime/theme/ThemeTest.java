@@ -122,7 +122,7 @@ public class ThemeTest {
         assertEquals("BLUE", model.getString());
 
         // when:
-        application.getEventRouter().publish(ApplicationEvent.DESTROY_INSTANCE.getName(), asList(model.getClass(), model));
+        application.getEventRouter().publishEvent(ApplicationEvent.DESTROY_INSTANCE.getName(), asList(model.getClass(), model));
         themeManager.setCurrentTheme("red");
 
         // then:

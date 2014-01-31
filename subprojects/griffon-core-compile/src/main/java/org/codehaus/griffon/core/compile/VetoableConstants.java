@@ -19,9 +19,7 @@ package org.codehaus.griffon.core.compile;
 
 import java.lang.reflect.Modifier;
 
-import static org.codehaus.griffon.core.compile.MethodDescriptor.args;
-import static org.codehaus.griffon.core.compile.MethodDescriptor.throwing;
-import static org.codehaus.griffon.core.compile.MethodDescriptor.type;
+import static org.codehaus.griffon.core.compile.MethodDescriptor.*;
 
 /**
  * @author Andres Almiray
@@ -41,57 +39,59 @@ public interface VetoableConstants extends ObservableConstants {
     String METHOD_FIRE_VETOABLE_CHANGE = "fireVetoableChange";
 
     MethodDescriptor[] VETOABLE_METHODS = new MethodDescriptor[]{
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_ADD_VETOABLE_CHANGE_LISTENER,
-            args(type(VETOABLE_CHANGE_LISTENER_TYPE))
+            args(type(types(type(JAVAX_ANNOTATION_NULLABLE)), VETOABLE_CHANGE_LISTENER_TYPE))
         ),
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_ADD_VETOABLE_CHANGE_LISTENER,
             args(
-                type(JAVA_LANG_STRING),
-                type(VETOABLE_CHANGE_LISTENER_TYPE))
+                type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NULLABLE)), VETOABLE_CHANGE_LISTENER_TYPE))
         ),
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_REMOVE_VETOABLE_CHANGE_LISTENER,
-            args(type(VETOABLE_CHANGE_LISTENER_TYPE))
+            args(type(types(type(JAVAX_ANNOTATION_NULLABLE)), VETOABLE_CHANGE_LISTENER_TYPE))
         ),
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_REMOVE_VETOABLE_CHANGE_LISTENER,
             args(
-                type(JAVA_LANG_STRING),
-                type(VETOABLE_CHANGE_LISTENER_TYPE))
+                type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NULLABLE)), VETOABLE_CHANGE_LISTENER_TYPE))
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NONNULL)),
             type(VETOABLE_CHANGE_LISTENER_TYPE, 1),
             METHOD_GET_VETOABLE_CHANGE_LISTENERS
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NONNULL)),
             type(VETOABLE_CHANGE_LISTENER_TYPE, 1),
             METHOD_GET_VETOABLE_CHANGE_LISTENERS,
-            args(type(JAVA_LANG_STRING))
+            args(type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_STRING))
         )
     };
 
     MethodDescriptor[] VETOABLE_FIRE_METHODS = new MethodDescriptor[]{
-        MethodDescriptor.method(
+        method(
             Modifier.PROTECTED,
             type(VOID),
             METHOD_FIRE_VETOABLE_CHANGE,
-            args(type(PROPERTY_CHANGE_EVENT_TYPE)),
+            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), PROPERTY_CHANGE_EVENT_TYPE)),
             throwing(type(PROPERTY_VETO_EXCEPTION_TYPE))
         ),
-        MethodDescriptor.method(
+        method(
             Modifier.PROTECTED,
             type(VOID),
             METHOD_FIRE_VETOABLE_CHANGE,
             args(
-                type(JAVA_LANG_STRING),
-                type(JAVA_LANG_OBJECT),
-                type(JAVA_LANG_OBJECT)),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_OBJECT),
+                type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_OBJECT)),
             throwing(type(PROPERTY_VETO_EXCEPTION_TYPE))
         )
     };

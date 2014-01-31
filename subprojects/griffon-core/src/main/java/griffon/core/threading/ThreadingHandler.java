@@ -54,11 +54,11 @@ public interface ThreadingHandler {
      * Executes a code block as a Future on an ExecutorService.
      */
     @Nonnull
-    <R> Future<R> runFuture(@Nullable ExecutorService executorService, @Nonnull Callable<R> closure);
+    <R> Future<R> runFuture(@Nonnull ExecutorService executorService, @Nonnull Callable<R> callable);
 
     /**
      * Executes a code block as a Future on a default ExecutorService.
      */
     @Nonnull
-    <R> Future<R> runFuture(@Nonnull Callable<R> closure);
+    <R> Future<R> runFuture(@Nonnull Callable<R> callable);
 }

@@ -348,7 +348,7 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
         // with stage #2 if and only if the current thread is
         // the ui thread
         log.debug("Shutdown stage 1: notify all event listeners");
-        if (getEventRouter().isEnabled()) {
+        if (getEventRouter().isEventPublishingEnabled()) {
             final CountDownLatch latch = new CountDownLatch(getUIThreadManager().isUIThread() ? 1 : 0);
             getEventRouter().addEventListener(ApplicationEvent.SHUTDOWN_START.getName(), new CallableWithArgs<Void>() {
                 @Override
@@ -425,6 +425,6 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
     }
 
     protected void event(@Nonnull ApplicationEvent event, @Nullable List<?> args) {
-        getEventRouter().publish(event.getName(), args);
+        getEventRouter().publishEvent(event.getName(), args);
     }
 }

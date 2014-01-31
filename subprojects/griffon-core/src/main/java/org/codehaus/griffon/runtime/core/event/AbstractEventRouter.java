@@ -65,40 +65,40 @@ public abstract class AbstractEventRouter implements EventRouter {
     private final MethodCache methodCache = new MethodCache();
 
     @Override
-    public boolean isEnabled() {
+    public boolean isEventPublishingEnabled() {
         synchronized (LOCK) {
             return this.enabled;
         }
     }
 
     @Override
-    public void setEnabled(boolean enabled) {
+    public void setEventPublishingEnabled(boolean enabled) {
         synchronized (LOCK) {
             this.enabled = enabled;
         }
     }
 
     @Override
-    public void publish(@Nonnull String eventName) {
-        publish(eventName, EMPTY_LIST);
+    public void publishEvent(@Nonnull String eventName) {
+        publishEvent(eventName, EMPTY_LIST);
     }
 
     @Override
-    public void publish(@Nonnull String eventName, @Nullable List<?> params) {
-        if (!isEnabled()) return;
+    public void publishEvent(@Nonnull String eventName, @Nullable List<?> params) {
+        if (!isEventPublishingEnabled()) return;
         requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
         if (params == null) params = EMPTY_LIST;
         buildPublisher(eventName, params, "synchronously").run();
     }
 
     @Override
-    public void publishOutsideUI(@Nonnull String eventName) {
-        publishOutsideUI(eventName, EMPTY_LIST);
+    public void publishEventOutsideUI(@Nonnull String eventName) {
+        publishEventOutsideUI(eventName, EMPTY_LIST);
     }
 
     @Override
-    public void publishOutsideUI(@Nonnull String eventName, @Nullable List<?> params) {
-        if (!isEnabled()) return;
+    public void publishEventOutsideUI(@Nonnull String eventName, @Nullable List<?> params) {
+        if (!isEventPublishingEnabled()) return;
         requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
         if (params == null) params = EMPTY_LIST;
         final Runnable publisher = buildPublisher(eventName, params, "outside UI");
@@ -108,13 +108,13 @@ public abstract class AbstractEventRouter implements EventRouter {
     protected abstract void doPublishOutsideUI(@Nonnull Runnable publisher);
 
     @Override
-    public void publishAsync(@Nonnull String eventName) {
-        publishAsync(eventName, EMPTY_LIST);
+    public void publishEventAsync(@Nonnull String eventName) {
+        publishEventAsync(eventName, EMPTY_LIST);
     }
 
     @Override
-    public void publishAsync(@Nonnull String eventName, @Nullable List<?> params) {
-        if (!isEnabled()) return;
+    public void publishEventAsync(@Nonnull String eventName, @Nullable List<?> params) {
+        if (!isEventPublishingEnabled()) return;
         requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
         if (params == null) params = EMPTY_LIST;
         final Runnable publisher = buildPublisher(eventName, params, "asynchronously");
@@ -124,25 +124,25 @@ public abstract class AbstractEventRouter implements EventRouter {
     protected abstract void doPublishAsync(@Nonnull Runnable publisher);
 
     @Override
-    public void publish(@Nonnull Event event) {
+    public void publishEvent(@Nonnull Event event) {
         requireNonNull(event, ERROR_EVENT_NULL);
-        publish(event.getClass().getSimpleName(), asList(event));
+        publishEvent(event.getClass().getSimpleName(), asList(event));
     }
 
     @Override
-    public void publishOutsideUI(@Nonnull Event event) {
+    public void publishEventOutsideUI(@Nonnull Event event) {
         requireNonNull(event, ERROR_EVENT_NULL);
-        publishOutsideUI(event.getClass().getSimpleName(), asList(event));
+        publishEventOutsideUI(event.getClass().getSimpleName(), asList(event));
     }
 
     @Override
-    public void publishAsync(@Nonnull Event event) {
+    public void publishEventAsync(@Nonnull Event event) {
         requireNonNull(event, ERROR_EVENT_NULL);
-        publishAsync(event.getClass().getSimpleName(), asList(event));
+        publishEventAsync(event.getClass().getSimpleName(), asList(event));
     }
 
     @Override
-    public void removeEventListener(@Nonnull Class<? extends Event> eventClass, @Nonnull CallableWithArgs<?> listener) {
+    public <E extends Event> void removeEventListener(@Nonnull Class<E> eventClass, @Nonnull CallableWithArgs<?> listener) {
         requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);
         removeEventListener(eventClass.getSimpleName(), listener);
     }
@@ -168,7 +168,7 @@ public abstract class AbstractEventRouter implements EventRouter {
     }
 
     @Override
-    public void addEventListener(@Nonnull Class<? extends Event> eventClass, @Nonnull CallableWithArgs<?> listener) {
+    public <E extends Event> void addEventListener(@Nonnull Class<E> eventClass, @Nonnull CallableWithArgs<?> listener) {
         requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);
         addEventListener(eventClass.getSimpleName(), listener);
     }

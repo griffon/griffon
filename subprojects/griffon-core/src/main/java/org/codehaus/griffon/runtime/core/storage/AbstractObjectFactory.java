@@ -62,7 +62,7 @@ public abstract class AbstractObjectFactory<T> implements ObjectFactory<T> {
     protected abstract String getPluralKey();
 
     protected void event(@Nonnull String eventName, @Nonnull List<?> args) {
-        application.getEventRouter().publish(eventName, args);
+        application.getEventRouter().publishEvent(eventName, args);
     }
 
     @Nonnull

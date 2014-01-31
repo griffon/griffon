@@ -77,7 +77,8 @@ subprojects { subproj ->
 
         idea {
             module {
-                scopes.PROVIDED.plus += configurations.compileOnly + configurations.testCompileOnly
+                scopes.PROVIDED.plus += configurations.compileOnly
+                scopes.PROVIDED.plus += configurations.testCompileOnly
             }
         }
 

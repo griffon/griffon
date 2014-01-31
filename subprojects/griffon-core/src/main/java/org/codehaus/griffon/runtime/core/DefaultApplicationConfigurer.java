@@ -127,7 +127,7 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
     }
 
     protected void event(@Nonnull ApplicationEvent event, @Nullable List<?> args) {
-        application.getEventRouter().publish(event.getName(), args);
+        application.getEventRouter().publishEvent(event.getName(), args);
     }
 
     protected void initializePropertyEditors() {

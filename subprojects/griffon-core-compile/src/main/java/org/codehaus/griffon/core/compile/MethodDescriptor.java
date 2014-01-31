@@ -29,25 +29,43 @@ public class MethodDescriptor {
     public static class Type {
         public final String type;
         public final Type[] parameters;
+        public final Type[] annotations;
         public final int dimensions;
         public String signature;
 
         public Type(String type) {
-            this(type, 0, EMPTY_TYPES);
+            this(EMPTY_TYPES, type, 0, EMPTY_TYPES);
         }
 
         public Type(String type, int dimensions) {
-            this(type, dimensions, EMPTY_TYPES);
+            this(EMPTY_TYPES, type, dimensions, EMPTY_TYPES);
         }
 
         public Type(String type, Type[] parameters) {
-            this(type, 0, parameters);
+            this(EMPTY_TYPES, type, 0, parameters);
         }
 
         public Type(String type, int dimensions, Type[] parameters) {
+            this(EMPTY_TYPES, type, dimensions, parameters);
+        }
+
+        public Type(Type[] annotations, String type) {
+            this(annotations, type, 0, EMPTY_TYPES);
+        }
+
+        public Type(Type[] annotations, String type, int dimensions) {
+            this(annotations, type, dimensions, EMPTY_TYPES);
+        }
+
+        public Type(Type[] annotations, String type, Type[] parameters) {
+            this(annotations, type, 0, parameters);
+        }
+
+        public Type(Type[] annotations, String type, int dimensions, Type[] parameters) {
             this.type = type;
             this.dimensions = dimensions;
             this.parameters = parameters != null ? parameters : EMPTY_TYPES;
+            this.annotations = annotations != null ? annotations : EMPTY_TYPES;
         }
 
         public String signature() {
@@ -58,7 +76,13 @@ public class MethodDescriptor {
         }
 
         protected String createTypeSignature() {
-            StringBuilder b = new StringBuilder(type);
+            StringBuilder b = new StringBuilder("");
+            for (Type annotation : annotations) {
+                b.append("@")
+                    .append(annotation.signature())
+                    .append(" ");
+            }
+            b.append(type);
             if (parameters.length > 0) {
                 b.append("<");
                 for (int i = 0; i < parameters.length; i++) {
@@ -147,26 +171,46 @@ public class MethodDescriptor {
     public final String methodName;
     public final Type returnType;
     public final TypeParam[] typeParameters;
+    public final Type[] annotations;
     public final Type[] exceptions;
     public final Type[] arguments;
     public final String signature;
 
     public MethodDescriptor(Type returnType, TypeParam[] typeParameters, String methodName, Type[] arguments, Type[] exceptions) {
-        this(Modifier.PUBLIC, returnType, typeParameters, methodName, arguments, exceptions);
+        this(Modifier.PUBLIC, returnType, typeParameters, methodName, arguments, exceptions, EMPTY_TYPES);
+    }
+
+    public MethodDescriptor(Type returnType, TypeParam[] typeParameters, String methodName, Type[] arguments, Type[] exceptions, Type[] annotations) {
+        this(Modifier.PUBLIC, returnType, typeParameters, methodName, arguments, exceptions, annotations);
     }
 
     public MethodDescriptor(int modifiers, Type returnType, TypeParam[] typeParameters, String methodName, Type[] arguments, Type[] exceptions) {
+        this(modifiers, returnType, typeParameters, methodName, arguments, exceptions, EMPTY_TYPES);
+    }
+
+    public MethodDescriptor(int modifiers, Type returnType, TypeParam[] typeParameters, String methodName, Type[] arguments, Type[] exceptions, Type[] annotations) {
         this.modifiers = modifiers;
         this.returnType = returnType;
         this.methodName = methodName;
         this.typeParameters = typeParameters != null ? typeParameters : EMPTY_PARAMETERS;
         this.arguments = arguments != null ? arguments : EMPTY_TYPES;
         this.exceptions = exceptions != null ? exceptions : EMPTY_TYPES;
+        this.annotations = annotations != null ? annotations : EMPTY_TYPES;
         this.signature = createMethodSignature();
     }
 
+    public String toString() {
+        return signature;
+    }
+
     private String createMethodSignature() {
-        StringBuilder b = new StringBuilder(Modifier.toString(modifiers)).append(" ");
+        StringBuilder b = new StringBuilder();
+        for (Type annotation : annotations) {
+            b.append("@")
+                .append(annotation.signature())
+                .append(" ");
+        }
+        b.append(Modifier.toString(modifiers)).append(" ");
         if (typeParameters.length > 0) {
             b.append("<");
             for (int i = 0; i < typeParameters.length; i++) {
@@ -214,12 +258,28 @@ public class MethodDescriptor {
         return new Type(type, dimensions, types(types));
     }
 
+    public static Type type(Type[] annotations, String type, String... types) {
+        return new Type(annotations, type, types(types));
+    }
+
+    public static Type type(Type[] annotations, String type, int dimensions, String... types) {
+        return new Type(annotations, type, dimensions, types(types));
+    }
+
     public static Type typeWithParams(String type, Type... types) {
         return new Type(type, types);
     }
 
     public static Type typeWithParams(String type, int dimensions, Type... types) {
         return new Type(type, dimensions, types);
+    }
+
+    public static Type typeWithParams(Type[] annotations, String type, Type... types) {
+        return new Type(annotations, type, types);
+    }
+
+    public static Type typeWithParams(Type[] annotations, String type, int dimensions, Type... types) {
+        return new Type(annotations, type, dimensions, types);
     }
 
     public static TypeParam[] typeParams(String... typeParameters) {
@@ -252,6 +312,10 @@ public class MethodDescriptor {
             t[i] = type(types[i]);
         }
         return t;
+    }
+
+    public static Type[] types(Type... types) {
+        return types;
     }
 
     public static Type[] args(Type... types) {
@@ -308,5 +372,53 @@ public class MethodDescriptor {
 
     public static MethodDescriptor method(int modifiers, Type type, String methodName, Type[] args, Type[] exceptions) {
         return new MethodDescriptor(modifiers, type, EMPTY_PARAMETERS, methodName, args, exceptions);
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, Type type, TypeParam[] typeParameters, String methodName, Type[] args) {
+        return new MethodDescriptor(type, typeParameters, methodName, args, EMPTY_TYPES, annotations);
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, Type type, TypeParam[] typeParameters, String methodName) {
+        return new MethodDescriptor(type, typeParameters, methodName, EMPTY_TYPES, EMPTY_TYPES, annotations);
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, Type type, String methodName, Type[] args) {
+        return new MethodDescriptor(type, EMPTY_PARAMETERS, methodName, args, EMPTY_TYPES, annotations);
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, Type type, String methodName) {
+        return new MethodDescriptor(type, EMPTY_PARAMETERS, methodName, EMPTY_TYPES, EMPTY_TYPES, annotations);
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, Type type, TypeParam[] typeParameters, String methodName, Type[] args, Type[] exceptions) {
+        return new MethodDescriptor(type, typeParameters, methodName, args, exceptions, annotations);
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, Type type, String methodName, Type[] args, Type[] exceptions) {
+        return new MethodDescriptor(type, EMPTY_PARAMETERS, methodName, args, exceptions, annotations);
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, int modifiers, Type type, TypeParam[] typeParameters, String methodName, Type[] args) {
+        return new MethodDescriptor(modifiers, type, typeParameters, methodName, args, EMPTY_TYPES, annotations);
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, int modifiers, Type type, TypeParam[] typeParameters, String methodName) {
+        return new MethodDescriptor(modifiers, type, typeParameters, methodName, EMPTY_TYPES, EMPTY_TYPES, annotations);
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, int modifiers, Type type, String methodName, Type[] args) {
+        return new MethodDescriptor(modifiers, type, EMPTY_PARAMETERS, methodName, args, EMPTY_TYPES, annotations);
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, int modifiers, Type type, String methodName) {
+        return new MethodDescriptor(modifiers, type, EMPTY_PARAMETERS, methodName, EMPTY_TYPES, EMPTY_TYPES, annotations);
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, int modifiers, Type type, TypeParam[] typeParameters, String methodName, Type[] args, Type[] exceptions) {
+        return new MethodDescriptor(modifiers, type, typeParameters, methodName, args, exceptions, annotations);
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, int modifiers, Type type, String methodName, Type[] args, Type[] exceptions) {
+        return new MethodDescriptor(modifiers, type, EMPTY_PARAMETERS, methodName, args, exceptions, annotations);
     }
 }

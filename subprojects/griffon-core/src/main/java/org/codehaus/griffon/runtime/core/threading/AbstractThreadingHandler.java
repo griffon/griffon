@@ -65,7 +65,7 @@ public abstract class AbstractThreadingHandler implements ThreadingHandler {
     }
 
     @Nonnull
-    public <R> Future<R> runFuture(@Nullable ExecutorService executorService, @Nonnull Callable<R> callable) {
+    public <R> Future<R> runFuture(@Nonnull ExecutorService executorService, @Nonnull Callable<R> callable) {
         requireNonNull(callable, ERROR_CALLABLE_NULL);
         return uiThreadManager.runFuture(executorService, callable);
     }

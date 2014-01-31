@@ -36,4 +36,8 @@ public interface BaseConstants {
     String JAVA_NET_URL = "java.net.URL";
     String NAME = "name";
     String APPLICATION = "application";
+    String JAVAX_INJECT_INJECT = "javax.inject.Inject";
+    String JAVAX_INJECT_NAMED = "javax.inject.Named";
+    String JAVAX_ANNOTATION_NONNULL = "javax.annotation.Nonnull";
+    String JAVAX_ANNOTATION_NULLABLE = "javax.annotation.Nullable";
 }

@@ -21,7 +21,6 @@ import griffon.core.GriffonExceptionHandler;
 import griffon.core.threading.UIThreadManager;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -73,10 +72,10 @@ public abstract class AbstractUIThreadManager implements UIThreadManager {
      * @return a Future that contains the result of the execution
      */
     @Nonnull
-    public <R> Future<R> runFuture(@Nullable ExecutorService executorService, @Nonnull Callable<R> callable) {
-        ExecutorService executor = executorService != null ? executorService : DEFAULT_EXECUTOR_SERVICE;
+    public <R> Future<R> runFuture(@Nonnull ExecutorService executorService, @Nonnull Callable<R> callable) {
+        requireNonNull(executorService, "Argument 'executorService' cannot be null");
         requireNonNull(callable, ERROR_CALLABLE_NULL);
-        return executor.submit(callable);
+        return executorService.submit(callable);
     }
 
     public void runOutsideUI(@Nonnull final Runnable runnable) {

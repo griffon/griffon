@@ -18,8 +18,7 @@ package org.codehaus.griffon.core.compile;
 
 import java.lang.reflect.Modifier;
 
-import static org.codehaus.griffon.core.compile.MethodDescriptor.args;
-import static org.codehaus.griffon.core.compile.MethodDescriptor.type;
+import static org.codehaus.griffon.core.compile.MethodDescriptor.*;
 
 /**
  * @author Andres Almiray
@@ -42,56 +41,58 @@ public interface ObservableConstants extends BaseConstants {
     String EVENT = "event";
 
     MethodDescriptor[] OBSERVABLE_METHODS = new MethodDescriptor[]{
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_ADD_PROPERTY_CHANGE_LISTENER,
-            args(type(PROPERTY_CHANGE_LISTENER_TYPE))
+            args(type(types(type(JAVAX_ANNOTATION_NULLABLE)), PROPERTY_CHANGE_LISTENER_TYPE))
         ),
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_ADD_PROPERTY_CHANGE_LISTENER,
             args(
-                type(JAVA_LANG_STRING),
-                type(PROPERTY_CHANGE_LISTENER_TYPE))
+                type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NULLABLE)), PROPERTY_CHANGE_LISTENER_TYPE))
         ),
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_REMOVE_PROPERTY_CHANGE_LISTENER,
-            args(type(PROPERTY_CHANGE_LISTENER_TYPE))
+            args(type(types(type(JAVAX_ANNOTATION_NULLABLE)), PROPERTY_CHANGE_LISTENER_TYPE))
         ),
-        MethodDescriptor.method(
+        method(
             type(VOID),
             METHOD_REMOVE_PROPERTY_CHANGE_LISTENER,
             args(
-                type(JAVA_LANG_STRING),
-                type(PROPERTY_CHANGE_LISTENER_TYPE))
+                type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NULLABLE)), PROPERTY_CHANGE_LISTENER_TYPE))
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NONNULL)),
             type(PROPERTY_CHANGE_LISTENER_TYPE, 1),
             METHOD_GET_PROPERTY_CHANGE_LISTENERS
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NONNULL)),
             type(PROPERTY_CHANGE_LISTENER_TYPE, 1),
             METHOD_GET_PROPERTY_CHANGE_LISTENERS,
-            args(type(JAVA_LANG_STRING))
+            args(type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_STRING))
         )
     };
 
     MethodDescriptor[] OBSERVABLE_FIRE_METHODS = new MethodDescriptor[]{
-        MethodDescriptor.method(
+        method(
             Modifier.PROTECTED,
             type(VOID),
             METHOD_FIRE_PROPERTY_CHANGE,
-            args(type(PROPERTY_CHANGE_EVENT_TYPE))
+            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), PROPERTY_CHANGE_EVENT_TYPE))
         ),
-        MethodDescriptor.method(
+        method(
             Modifier.PROTECTED,
             type(VOID),
             METHOD_FIRE_PROPERTY_CHANGE,
             args(
-                type(JAVA_LANG_STRING),
-                type(JAVA_LANG_OBJECT),
-                type(JAVA_LANG_OBJECT))
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_OBJECT),
+                type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_OBJECT))
         )
     };
 }

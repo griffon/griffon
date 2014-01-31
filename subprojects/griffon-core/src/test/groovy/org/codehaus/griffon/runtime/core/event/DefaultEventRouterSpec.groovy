@@ -34,8 +34,8 @@ class DefaultEventRouterSpec extends Specification {
 
         when:
 
-        eventRouter.publish(eventName1, [1, 'one'])
-        eventRouter.publish(eventName2, [2, 'two'])
+        eventRouter.publishEvent(eventName1, [1, 'one'])
+        eventRouter.publishEvent(eventName2, [2, 'two'])
 
         then:
 
@@ -52,8 +52,8 @@ class DefaultEventRouterSpec extends Specification {
 
         when:
 
-        eventRouter.publishAsync(eventName1, [1, 'one'])
-        eventRouter.publishAsync(eventName2, [2, 'two'])
+        eventRouter.publishEventAsync(eventName1, [1, 'one'])
+        eventRouter.publishEventAsync(eventName2, [2, 'two'])
         Thread.sleep(200L)
 
         then:
@@ -71,8 +71,8 @@ class DefaultEventRouterSpec extends Specification {
 
         when:
 
-        eventRouter.publishOutsideUI(eventName1, [1, 'one'])
-        eventRouter.publishOutsideUI(eventName2, [2, 'two'])
+        eventRouter.publishEventOutsideUI(eventName1, [1, 'one'])
+        eventRouter.publishEventOutsideUI(eventName2, [2, 'two'])
 
         then:
 
@@ -89,8 +89,8 @@ class DefaultEventRouterSpec extends Specification {
 
         when:
 
-        eventRouter.publish(eventName1, [1, 'one'])
-        eventRouter.publish(eventName2, [2, 'two'])
+        eventRouter.publishEvent(eventName1, [1, 'one'])
+        eventRouter.publishEvent(eventName2, [2, 'two'])
 
         then:
 
@@ -107,8 +107,8 @@ class DefaultEventRouterSpec extends Specification {
 
         when:
 
-        eventRouter.publishAsync(eventName1, [1, 'one'])
-        eventRouter.publishAsync(eventName2, [2, 'two'])
+        eventRouter.publishEventAsync(eventName1, [1, 'one'])
+        eventRouter.publishEventAsync(eventName2, [2, 'two'])
         Thread.sleep(200L)
 
         then:
@@ -126,8 +126,8 @@ class DefaultEventRouterSpec extends Specification {
 
         when:
 
-        eventRouter.publishOutsideUI(eventName1, [1, 'one'])
-        eventRouter.publishOutsideUI(eventName2, [2, 'two'])
+        eventRouter.publishEventOutsideUI(eventName1, [1, 'one'])
+        eventRouter.publishEventOutsideUI(eventName2, [2, 'two'])
 
         then:
 
@@ -144,8 +144,8 @@ class DefaultEventRouterSpec extends Specification {
 
         when:
 
-        eventRouter.publish(eventName1, [1, 'one'])
-        eventRouter.publish(eventName2, [2, 'two'])
+        eventRouter.publishEvent(eventName1, [1, 'one'])
+        eventRouter.publishEvent(eventName2, [2, 'two'])
 
         then:
 
@@ -162,8 +162,8 @@ class DefaultEventRouterSpec extends Specification {
 
         when:
 
-        eventRouter.publishAsync(eventName1, [1, 'one'])
-        eventRouter.publishAsync(eventName2, [2, 'two'])
+        eventRouter.publishEventAsync(eventName1, [1, 'one'])
+        eventRouter.publishEventAsync(eventName2, [2, 'two'])
         Thread.sleep(200L)
 
         then:
@@ -181,8 +181,8 @@ class DefaultEventRouterSpec extends Specification {
 
         when:
 
-        eventRouter.publishOutsideUI(eventName1, [1, 'one'])
-        eventRouter.publishOutsideUI(eventName2, [2, 'two'])
+        eventRouter.publishEventOutsideUI(eventName1, [1, 'one'])
+        eventRouter.publishEventOutsideUI(eventName2, [2, 'two'])
 
         then:
 
@@ -199,8 +199,8 @@ class DefaultEventRouterSpec extends Specification {
 
         when:
 
-        eventRouter.publish(event1)
-        eventRouter.publish(event2)
+        eventRouter.publishEvent(event1)
+        eventRouter.publishEvent(event2)
 
         then:
 
@@ -217,8 +217,8 @@ class DefaultEventRouterSpec extends Specification {
 
         when:
 
-        eventRouter.publishAsync(event1)
-        eventRouter.publishAsync(event2)
+        eventRouter.publishEventAsync(event1)
+        eventRouter.publishEventAsync(event2)
         Thread.sleep(200L)
 
         then:
@@ -236,8 +236,8 @@ class DefaultEventRouterSpec extends Specification {
 
         when:
 
-        eventRouter.publishOutsideUI(event1)
-        eventRouter.publishOutsideUI(event2)
+        eventRouter.publishEventOutsideUI(event1)
+        eventRouter.publishEventOutsideUI(event2)
 
         then:
 
@@ -254,8 +254,8 @@ class DefaultEventRouterSpec extends Specification {
 
         when:
 
-        eventRouter.publish(event1)
-        eventRouter.publish(event2)
+        eventRouter.publishEvent(event1)
+        eventRouter.publishEvent(event2)
 
         then:
 
@@ -272,8 +272,8 @@ class DefaultEventRouterSpec extends Specification {
 
         when:
 
-        eventRouter.publishAsync(event1)
-        eventRouter.publishAsync(event2)
+        eventRouter.publishEventAsync(event1)
+        eventRouter.publishEventAsync(event2)
         Thread.sleep(200L)
 
         then:
@@ -291,8 +291,8 @@ class DefaultEventRouterSpec extends Specification {
 
         when:
 
-        eventRouter.publishOutsideUI(event1)
-        eventRouter.publishOutsideUI(event2)
+        eventRouter.publishEventOutsideUI(event1)
+        eventRouter.publishEventOutsideUI(event2)
 
         then:
 
@@ -310,8 +310,8 @@ class DefaultEventRouterSpec extends Specification {
 
         when:
 
-        eventRouter.publish(eventName1, [1, 'one'])
-        eventRouter.publish(eventName2, [2, 'two'])
+        eventRouter.publishEvent(eventName1, [1, 'one'])
+        eventRouter.publishEvent(eventName2, [2, 'two'])
 
         then:
 
@@ -329,8 +329,8 @@ class DefaultEventRouterSpec extends Specification {
 
         when:
 
-        eventRouter.publish(eventName1, [1, 'one'])
-        eventRouter.publish(eventName2, [2, 'two'])
+        eventRouter.publishEvent(eventName1, [1, 'one'])
+        eventRouter.publishEvent(eventName2, [2, 'two'])
 
         then:
 
@@ -348,8 +348,8 @@ class DefaultEventRouterSpec extends Specification {
 
         when:
 
-        eventRouter.publish(eventName1, [1, 'one'])
-        eventRouter.publish(eventName2, [2, 'two'])
+        eventRouter.publishEvent(eventName1, [1, 'one'])
+        eventRouter.publishEvent(eventName2, [2, 'two'])
 
         then:
 
@@ -367,8 +367,8 @@ class DefaultEventRouterSpec extends Specification {
 
         when:
 
-        eventRouter.publish(eventName1)
-        eventRouter.publish(eventName2)
+        eventRouter.publishEvent(eventName1)
+        eventRouter.publishEvent(eventName2)
 
         then:
 
@@ -387,8 +387,8 @@ class DefaultEventRouterSpec extends Specification {
 
         when:
 
-        eventRouter.publish(eventName1, [1, 'one'])
-        eventRouter.publish(eventName2, [2, 'two'])
+        eventRouter.publishEvent(eventName1, [1, 'one'])
+        eventRouter.publishEvent(eventName2, [2, 'two'])
 
         then:
 

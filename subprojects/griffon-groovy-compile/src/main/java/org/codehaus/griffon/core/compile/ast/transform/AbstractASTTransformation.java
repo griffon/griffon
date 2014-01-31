@@ -254,6 +254,7 @@ public abstract class AbstractASTTransformation implements ASTTransformation {
                 Parameter p = method.getParameters()[i];
                 parameters[i] = new Parameter(makeClassSafe(p.getType()), p.getName());
                 parameters[i].getType().setGenericsTypes(p.getType().getGenericsTypes());
+                parameters[i].addAnnotations(p.getAnnotations());
                 variables.add(var(p.getName()));
             }
             for (int i = 0; i < method.getExceptions().length; i++) {
@@ -261,6 +262,7 @@ public abstract class AbstractASTTransformation implements ASTTransformation {
                 exceptions[i] = makeClassSafe(ex);
             }
             ClassNode returnType = makeClassSafe(method.getReturnType());
+            returnType.addAnnotations(method.getReturnType().getAnnotations());
             returnType.setGenericsTypes(method.getReturnType().getGenericsTypes());
             returnType.setGenericsPlaceHolder(method.getReturnType().isGenericsPlaceHolder());
 

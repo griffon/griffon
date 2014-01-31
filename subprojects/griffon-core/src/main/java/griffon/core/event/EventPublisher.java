@@ -68,7 +68,7 @@ public interface EventPublisher {
      * @param eventClass the type of the event
      * @param listener   an event listener
      */
-    void addEventListener(@Nonnull Class<? extends Event> eventClass, @Nonnull CallableWithArgs<?> listener);
+    <E extends Event> void addEventListener(@Nonnull Class<E> eventClass, @Nonnull CallableWithArgs<?> listener);
 
     /**
      * Removes an event listener.<p>
@@ -107,7 +107,7 @@ public interface EventPublisher {
      * @param eventClass the type of the event
      * @param listener   an event listener
      */
-    void removeEventListener(@Nonnull Class<? extends Event> eventClass, @Nonnull CallableWithArgs<?> listener);
+    <E extends Event> void removeEventListener(@Nonnull Class<E> eventClass, @Nonnull CallableWithArgs<?> listener);
 
     /**
      * Publishes an event.<p>

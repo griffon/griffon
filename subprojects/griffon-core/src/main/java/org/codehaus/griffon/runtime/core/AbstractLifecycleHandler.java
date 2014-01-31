@@ -54,14 +54,14 @@ public abstract class AbstractLifecycleHandler implements LifecycleHandler {
 
     @Override
     @Nonnull
-    public <R> Future<R> runFuture(@Nonnull Callable<R> closure) {
-        return application.getUIThreadManager().runFuture(closure);
+    public <R> Future<R> runFuture(@Nonnull Callable<R> callable) {
+        return application.getUIThreadManager().runFuture(callable);
     }
 
     @Override
     @Nonnull
-    public <R> Future<R> runFuture(@Nullable ExecutorService executorService, @Nonnull Callable<R> closure) {
-        return application.getUIThreadManager().runFuture(executorService, closure);
+    public <R> Future<R> runFuture(@Nonnull ExecutorService executorService, @Nonnull Callable<R> callable) {
+        return application.getUIThreadManager().runFuture(executorService, callable);
     }
 
     @Override

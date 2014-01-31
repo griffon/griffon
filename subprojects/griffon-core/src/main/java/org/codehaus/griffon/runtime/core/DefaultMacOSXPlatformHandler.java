@@ -67,18 +67,18 @@ public class DefaultMacOSXPlatformHandler extends DefaultPlatformHandler {
 
         @Override
         public void handleAbout() {
-            application.getEventRouter().publish("OSXAbout", asList(application));
+            application.getEventRouter().publishEvent("OSXAbout", asList(application));
         }
 
         @Override
         public void handlePrefs() throws IllegalStateException {
-            application.getEventRouter().publish("OSXPrefs", asList(application));
+            application.getEventRouter().publishEvent("OSXPrefs", asList(application));
         }
 
         @Override
         public void handleQuit() {
             if (noquit) {
-                application.getEventRouter().publish("OSXQuit", asList(application));
+                application.getEventRouter().publishEvent("OSXQuit", asList(application));
             } else {
                 application.shutdown();
             }

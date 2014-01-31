@@ -16,8 +16,10 @@
 
 package org.codehaus.griffon.core.compile;
 
+import static org.codehaus.griffon.core.compile.MethodDescriptor.annotatedMethod;
 import static org.codehaus.griffon.core.compile.MethodDescriptor.args;
 import static org.codehaus.griffon.core.compile.MethodDescriptor.type;
+import static org.codehaus.griffon.core.compile.MethodDescriptor.types;
 
 /**
  * @author Andres Almiray
@@ -32,22 +34,26 @@ public interface ResourcesAwareConstants extends BaseConstants {
     String METHOD_CLASSLOADER = "classloader";
 
     MethodDescriptor[] METHODS = new MethodDescriptor[]{
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NULLABLE)),
             type(JAVA_NET_URL),
             METHOD_GET_RESOURCE_AS_URL,
-            args(type(JAVA_LANG_STRING))
+            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING))
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NULLABLE)),
             type("java.io.InputStream"),
             METHOD_GET_RESOURCE_AS_STREAM,
-            args(type(JAVA_LANG_STRING))
+            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING))
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NULLABLE)),
             type(JAVA_UTIL_LIST, JAVA_NET_URL),
             METHOD_GET_RESOURCES,
-            args(type(JAVA_LANG_STRING))
+            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING))
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NONNULL)),
             type("java.lang.ClassLoader"),
             METHOD_CLASSLOADER
         )

@@ -16,9 +16,7 @@
 
 package org.codehaus.griffon.core.compile;
 
-import static org.codehaus.griffon.core.compile.MethodDescriptor.args;
-import static org.codehaus.griffon.core.compile.MethodDescriptor.throwing;
-import static org.codehaus.griffon.core.compile.MethodDescriptor.type;
+import static org.codehaus.griffon.core.compile.MethodDescriptor.*;
 
 /**
  * @author Andres Almiray
@@ -28,128 +26,193 @@ public interface ResourceResolverAwareConstants extends BaseConstants {
     String NO_SUCH_RESOURCE_EXCEPTION_TYPE = "griffon.core.resources.NoSuchResourceException";
     String RESOURCE_RESOLVER_TYPE = "griffon.core.resources.ResourceResolver";
     String JAVA_UTIL_LOCALE = "java.util.Locale";
-    String METHOD_GET_RESOURCE = "getResource";
+    String METHOD_RESOLVE_RESOURCE = "resolveResource";
     String METHOD_RESOLVE_RESOURCE_VALUE = "resolveResourceValue";
     String METHOD_FORMAT_RESOURCE = "formatResource";
 
     MethodDescriptor[] METHODS = new MethodDescriptor[]{
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NONNULL)),
             type(JAVA_LANG_OBJECT),
             METHOD_RESOLVE_RESOURCE_VALUE,
-            args(type(JAVA_LANG_STRING), type(JAVA_UTIL_LOCALE)),
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_LOCALE)),
             throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
         ),
 
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NONNULL)),
             type(JAVA_LANG_OBJECT),
-            METHOD_GET_RESOURCE,
-            args(type(JAVA_LANG_STRING)),
+            METHOD_RESOLVE_RESOURCE,
+            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING)),
             throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NONNULL)),
             type(JAVA_LANG_OBJECT),
-            METHOD_GET_RESOURCE,
-            args(type(JAVA_LANG_STRING), type(JAVA_UTIL_LOCALE)),
+            METHOD_RESOLVE_RESOURCE,
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_LOCALE)),
             throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NONNULL)),
             type(JAVA_LANG_OBJECT),
-            METHOD_GET_RESOURCE,
-            args(type(JAVA_LANG_STRING), type(JAVA_LANG_OBJECT, 1)),
+            METHOD_RESOLVE_RESOURCE,
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_OBJECT, 1)),
             throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NONNULL)),
             type(JAVA_LANG_OBJECT),
-            METHOD_GET_RESOURCE,
-            args(type(JAVA_LANG_STRING), type(JAVA_LANG_OBJECT, 1), type(JAVA_UTIL_LOCALE)),
+            METHOD_RESOLVE_RESOURCE,
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_OBJECT, 1),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_LOCALE)),
             throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NONNULL)),
             type(JAVA_LANG_OBJECT),
-            METHOD_GET_RESOURCE,
-            args(type(JAVA_LANG_STRING), type(JAVA_UTIL_LIST, WILDCARD)),
+            METHOD_RESOLVE_RESOURCE,
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_LIST, WILDCARD)),
             throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NONNULL)),
             type(JAVA_LANG_OBJECT),
-            METHOD_GET_RESOURCE,
-            args(type(JAVA_LANG_STRING), type(JAVA_UTIL_LIST, WILDCARD), type(JAVA_UTIL_LOCALE)),
+            METHOD_RESOLVE_RESOURCE,
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_LIST, WILDCARD),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_LOCALE)),
             throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NONNULL)),
             type(JAVA_LANG_OBJECT),
-            METHOD_GET_RESOURCE,
-            args(type(JAVA_LANG_STRING), type(JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT)),
+            METHOD_RESOLVE_RESOURCE,
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT)),
             throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NONNULL)),
             type(JAVA_LANG_OBJECT),
-            METHOD_GET_RESOURCE,
-            args(type(JAVA_LANG_STRING), type(JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT), type(JAVA_UTIL_LOCALE)),
+            METHOD_RESOLVE_RESOURCE,
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_LOCALE)),
             throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
         ),
 
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NULLABLE)),
             type(JAVA_LANG_OBJECT),
-            METHOD_GET_RESOURCE,
-            args(type(JAVA_LANG_STRING))
+            METHOD_RESOLVE_RESOURCE,
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_OBJECT))
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NULLABLE)),
             type(JAVA_LANG_OBJECT),
-            METHOD_GET_RESOURCE,
-            args(type(JAVA_LANG_STRING), type(JAVA_UTIL_LOCALE), type(JAVA_LANG_STRING))
+            METHOD_RESOLVE_RESOURCE,
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_LOCALE),
+                type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_OBJECT))
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NULLABLE)),
             type(JAVA_LANG_OBJECT),
-            METHOD_GET_RESOURCE,
-            args(type(JAVA_LANG_STRING), type(JAVA_LANG_OBJECT, 1))
+            METHOD_RESOLVE_RESOURCE,
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_OBJECT, 1),
+                type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_OBJECT))
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NULLABLE)),
             type(JAVA_LANG_OBJECT),
-            METHOD_GET_RESOURCE,
-            args(type(JAVA_LANG_STRING), type(JAVA_LANG_OBJECT, 1), type(JAVA_UTIL_LOCALE), type(JAVA_LANG_STRING))
+            METHOD_RESOLVE_RESOURCE,
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_OBJECT, 1),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_LOCALE),
+                type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_OBJECT))
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NULLABLE)),
             type(JAVA_LANG_OBJECT),
-            METHOD_GET_RESOURCE,
-            args(type(JAVA_LANG_STRING), type(JAVA_UTIL_LIST, WILDCARD))
+            METHOD_RESOLVE_RESOURCE,
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_LIST, WILDCARD),
+                type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_OBJECT))
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NULLABLE)),
             type(JAVA_LANG_OBJECT),
-            METHOD_GET_RESOURCE,
-            args(type(JAVA_LANG_STRING), type(JAVA_UTIL_LIST, WILDCARD), type(JAVA_UTIL_LOCALE), type(JAVA_LANG_STRING))
+            METHOD_RESOLVE_RESOURCE,
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_LIST, WILDCARD),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_LOCALE),
+                type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_OBJECT))
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NULLABLE)),
             type(JAVA_LANG_OBJECT),
-            METHOD_GET_RESOURCE,
-            args(type(JAVA_LANG_STRING), type(JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
+            METHOD_RESOLVE_RESOURCE,
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_OBJECT))
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NULLABLE)),
             type(JAVA_LANG_OBJECT),
-            METHOD_GET_RESOURCE,
-            args(type(JAVA_LANG_STRING), type(JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT), type(JAVA_UTIL_LOCALE), type(JAVA_LANG_STRING))
+            METHOD_RESOLVE_RESOURCE,
+            args(
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_LOCALE),
+                type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_OBJECT))
         ),
 
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NONNULL)),
             type(JAVA_LANG_STRING),
             METHOD_FORMAT_RESOURCE,
             args(
-                type(JAVA_LANG_OBJECT, 1),
-                type(JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_OBJECT, 1),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NONNULL)),
             type(JAVA_LANG_STRING),
             METHOD_FORMAT_RESOURCE,
             args(
-                type(JAVA_LANG_STRING),
-                type(JAVA_UTIL_LIST, WILDCARD))
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_LIST, WILDCARD))
         ),
-        MethodDescriptor.method(
+        annotatedMethod(
+            types(type(JAVAX_ANNOTATION_NONNULL)),
             type(JAVA_LANG_STRING),
             METHOD_FORMAT_RESOURCE,
             args(
-                type(JAVA_LANG_STRING),
-                type(JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
         )
     };
 }

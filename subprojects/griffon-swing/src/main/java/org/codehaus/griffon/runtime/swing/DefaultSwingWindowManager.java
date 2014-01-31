@@ -331,7 +331,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
     private void event(@Nonnull ApplicationEvent evt, List<Object> args) {
         try {
             EventRouter eventRouter = getApplication().getEventRouter();
-            eventRouter.publish(evt.getName(), args);
+            eventRouter.publishEvent(evt.getName(), args);
         } catch (InstanceNotFoundException infe) {
             if (getApplication().getPhase() != ApplicationPhase.SHUTDOWN) {
                 throw infe;

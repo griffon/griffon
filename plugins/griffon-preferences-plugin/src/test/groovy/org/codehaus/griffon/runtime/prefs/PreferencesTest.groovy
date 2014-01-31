@@ -116,7 +116,7 @@ class PreferencesTest {
         assert model.value == 'value1'
 
         // when:
-        application.getEventRouter().publish(ApplicationEvent.DESTROY_INSTANCE.getName(), [model.class, model])
+        application.getEventRouter().publishEvent(ApplicationEvent.DESTROY_INSTANCE.getName(), [model.class, model])
         preferencesManager.preferences.node(PreferencesAwareModel)['value'] = 'value2'
 
         // expect:

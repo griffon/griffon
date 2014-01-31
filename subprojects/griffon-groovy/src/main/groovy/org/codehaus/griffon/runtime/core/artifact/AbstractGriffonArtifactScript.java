@@ -83,13 +83,13 @@ public abstract class AbstractGriffonArtifactScript extends Script implements Gr
     }
 
     @Nonnull
-    public <R> Future<R> runFuture(@Nullable ExecutorService executorService, @Nonnull Callable<R> closure) {
-        return application.getUIThreadManager().runFuture(executorService, closure);
+    public <R> Future<R> runFuture(@Nonnull ExecutorService executorService, @Nonnull Callable<R> callable) {
+        return application.getUIThreadManager().runFuture(executorService, callable);
     }
 
     @Nonnull
-    public <R> Future<R> runFuture(@Nonnull Callable<R> closure) {
-        return application.getUIThreadManager().runFuture(closure);
+    public <R> Future<R> runFuture(@Nonnull Callable<R> callable) {
+        return application.getUIThreadManager().runFuture(callable);
     }
 
     public void runInsideUISync(@Nonnull Runnable runnable) {
