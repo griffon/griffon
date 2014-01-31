@@ -114,6 +114,10 @@ public abstract class AbstractASTTransformation implements ASTTransformation {
         }
     }
 
+    public static FieldExpression injectedField(@Nonnull ClassNode owner, @Nonnull ClassNode type, @Nonnull String name) {
+        return injectedField(owner, type, name);
+    }
+
     public static FieldExpression injectedField(@Nonnull ClassNode owner, @Nonnull ClassNode type, @Nonnull String name, @Nullable String qualifierName) {
         FieldNode fieldNode = GriffonASTUtils.injectField(owner, name, Modifier.PRIVATE, type, null, false);
         fieldNode.addAnnotation(new AnnotationNode(INJECT_TYPE));

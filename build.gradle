@@ -28,6 +28,8 @@ buildscript {
 
     dependencies {
         classpath 'net.saliman:gradle-cobertura-plugin:2.2.2'
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.7.0'
+        classpath 'org.ajoberstar:gradle-git:0.6.3'
     }
 }
 
@@ -50,6 +52,8 @@ evaluationDependsOnChildren()
 
 subprojects { subproj ->
     if (subproj.plugins.hasPlugin('java')) {
+        apply plugin: 'license'
+
         configurations {
             compileOnly
             testCompileOnly

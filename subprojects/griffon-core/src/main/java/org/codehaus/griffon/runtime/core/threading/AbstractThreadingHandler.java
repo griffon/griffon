@@ -20,7 +20,6 @@ import griffon.core.threading.ThreadingHandler;
 import griffon.core.threading.UIThreadManager;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
