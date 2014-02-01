@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2014 the original author or authors.
+ * Copyright 2008-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,8 +52,6 @@ evaluationDependsOnChildren()
 
 subprojects { subproj ->
     if (subproj.plugins.hasPlugin('java')) {
-        apply plugin: 'license'
-
         configurations {
             compileOnly
             testCompileOnly
@@ -121,19 +119,10 @@ subprojects { subproj ->
                 ])
             }
         }
-
-        license {
-            header rootProject.file('config/HEADER')
-            strictCheck true
-            mapping {
-                java ='SLASHSTAR_STYLE'
-                groovy ='SLASHSTAR_STYLE'
-            }
-            ext.year = '2008-2014'
-        }
     }
 
     if (subproj.ext.maven == true) {
+        apply plugin: 'license'
         apply from: "${rootDir}/gradle/maven.gradle"
         apply from: "${rootDir}/gradle/publish.gradle"
         apply from: "${rootDir}/gradle/coverage.gradle"
@@ -160,7 +149,7 @@ subprojects { subproj ->
             options.version     = subproj.sourceCompatibility
             options.windowTitle = "${subproj.ext.pomDescription} $version"
             options.docTitle    = "${subproj.ext.pomDescription} $version"
-            options.footer      = "Copyright &amp;copy; 2008-2014 The Griffon Team. All rights reserved."
+            options.footer      = project.javadocFooter
             options.links       = ['http://www.slf4j.org/apidocs/',
                                    'http://jsr-305.googlecode.com/svn/trunk/javadoc/',
                                    'http://docs.oracle.com/javase/7/docs/api/']
@@ -185,7 +174,7 @@ subprojects { subproj ->
         }
 
         task javadocJar(type: Jar) {
-            description "An archive of the JavaDocs for"
+            description "An archive of the javadocs"
             classifier "javadoc"
             from javadoc
         }
@@ -219,6 +208,21 @@ subprojects { subproj ->
                     'Implementation-Vendor': 'griffon-framework.org'
                 )
             }
+        }
+
+        license {
+            header = rootProject.file('config/HEADER')
+            strictCheck = true
+            ignoreFailures = true
+            mapping {
+                java ='SLASHSTAR_STYLE'
+                groovy ='SLASHSTAR_STYLE'
+            }
+            ext.year = '2008-2014'
+        }
+
+        licenseTest {
+            source -= sourceSets.test.resources
         }
     }
 }
