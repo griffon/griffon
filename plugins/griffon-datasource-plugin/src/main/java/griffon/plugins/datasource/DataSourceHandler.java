@@ -26,10 +26,10 @@ import javax.annotation.Nullable;
  */
 public interface DataSourceHandler {
     @Nullable
-    <R> R withDataSource(@Nonnull DataSourceCallback<R> callback);
+    <R> R withDataSource(@Nonnull DataSourceCallback<R> callback) throws RuntimeSQLException;
 
     @Nullable
-    <R> R withDataSource(@Nonnull String dataSourceName, @Nonnull DataSourceCallback<R> callback);
+    <R> R withDataSource(@Nonnull String dataSourceName, @Nonnull DataSourceCallback<R> callback) throws RuntimeSQLException;
 
     @Nullable
     <R> R withConnection(@Nonnull ConnectionCallback<R> callback) throws RuntimeSQLException;

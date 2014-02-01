@@ -14,6 +14,7 @@ dataSources {
         driverClassName = 'org.h2.Driver'
         username = 'sa'
         password = ''
+        schema = false
         url = 'jdbc:h2:mem:@application.name@-internal'
     }
     people {

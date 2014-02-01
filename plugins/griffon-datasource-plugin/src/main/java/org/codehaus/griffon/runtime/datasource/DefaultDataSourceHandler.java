@@ -15,7 +15,6 @@
  */
 package org.codehaus.griffon.runtime.datasource;
 
-import griffon.exceptions.GriffonException;
 import griffon.plugins.datasource.*;
 import griffon.plugins.datasource.exceptions.RuntimeSQLException;
 import org.slf4j.Logger;
@@ -62,8 +61,12 @@ public class DefaultDataSourceHandler implements DataSourceHandler {
         requireNonBlank(dataSourceName, ERROR_DATASOURCE_BLANK);
         requireNonNull(callback, ERROR_CALLBACK_NULL);
         DataSource dataSource = getDataSource(dataSourceName);
-        LOG.debug("Executing statements on dataSource '{}'", dataSourceName);
-        return callback.handle(dataSourceName, dataSource);
+        try {
+            LOG.debug("Executing statements on dataSource '{}'", dataSourceName);
+            return callback.handle(dataSourceName, dataSource);
+        } catch (SQLException e) {
+            throw new RuntimeSQLException(dataSourceName, e);
+        }
     }
 
     @Nullable
@@ -84,7 +87,7 @@ public class DefaultDataSourceHandler implements DataSourceHandler {
 
     @Nullable
     @SuppressWarnings("ThrowFromFinallyBlock")
-    public static <R> R doWithConnection(String dataSourceName, DataSource dataSource, ConnectionCallback<R> callback) throws RuntimeSQLException{
+    public static <R> R doWithConnection(String dataSourceName, DataSource dataSource, ConnectionCallback<R> callback) throws RuntimeSQLException {
         requireNonBlank(dataSourceName, ERROR_DATASOURCE_BLANK);
         requireNonNull(dataSource, ERROR_DATASOURCE_NULL);
         requireNonNull(callback, ERROR_CALLBACK_NULL);
@@ -98,6 +101,8 @@ public class DefaultDataSourceHandler implements DataSourceHandler {
         try {
             LOG.debug("Executing statements on dataSource '{}'", dataSourceName);
             return callback.handle(dataSourceName, dataSource, connection);
+        } catch (SQLException e) {
+            throw new RuntimeSQLException(dataSourceName, e);
         } finally {
             try {
                 connection.close();

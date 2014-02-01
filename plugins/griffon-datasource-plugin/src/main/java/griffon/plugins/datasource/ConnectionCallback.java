@@ -18,11 +18,12 @@ package griffon.plugins.datasource;
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public interface ConnectionCallback<R> {
-    R handle(@Nonnull String dataSourceName, @Nonnull DataSource dataSource, @Nonnull Connection connection);
+    R handle(@Nonnull String dataSourceName, @Nonnull DataSource dataSource, @Nonnull Connection connection) throws SQLException;
 }

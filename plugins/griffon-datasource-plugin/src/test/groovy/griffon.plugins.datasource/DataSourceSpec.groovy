@@ -18,6 +18,7 @@ package griffon.plugins.datasource
 import griffon.core.CallableWithArgs
 import griffon.core.GriffonApplication
 import griffon.core.test.GriffonUnitRule
+import griffon.plugins.datasource.exceptions.RuntimeSQLException
 import groovy.sql.Sql
 import org.junit.Rule
 import spock.lang.Specification
@@ -151,5 +152,27 @@ class DataSourceSpec extends Specification {
 
         then:
         peopleIn == peopleOut
+    }
+
+    void 'A runtime SQLException is thrown within dataSource handling'() {
+        when:
+        dataSourceHandler.withDataSource { String dataSourceName, DataSource dataSource ->
+            Sql sql = new Sql(dataSource)
+            sql.dataSet('people').add(id: 0)
+        }
+
+        then:
+        thrown(RuntimeSQLException)
+    }
+
+    void 'A runtime SQLException is thrown within connection handling'() {
+        when:
+        dataSourceHandler.withConnection { String dataSourceName, DataSource dataSource, Connection connection ->
+            Sql sql = new Sql(connection)
+            sql.dataSet('people').add(id: 0)
+        }
+
+        then:
+        thrown(RuntimeSQLException)
     }
 }

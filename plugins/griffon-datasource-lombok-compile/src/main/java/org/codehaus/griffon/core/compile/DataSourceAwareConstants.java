@@ -52,7 +52,8 @@ public interface DataSourceAwareConstants extends BaseConstants {
             type(R),
             typeParams(R),
             METHOD_WITH_DATA_SOURCE,
-            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), DATA_SOURCE_CALLBACK_TYPE, R))
+            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), DATA_SOURCE_CALLBACK_TYPE, R)),
+            throwing(type(RUNTIME_SQL_EXCEPTION_TYPE))
         ),
         annotatedMethod(
             types(type(JAVAX_ANNOTATION_NONNULL)),
@@ -61,7 +62,8 @@ public interface DataSourceAwareConstants extends BaseConstants {
             METHOD_WITH_DATA_SOURCE,
             args(
                 type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
-                type(types(type(JAVAX_ANNOTATION_NONNULL)), DATA_SOURCE_CALLBACK_TYPE, R))
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), DATA_SOURCE_CALLBACK_TYPE, R)),
+            throwing(type(RUNTIME_SQL_EXCEPTION_TYPE))
         ),
 
         annotatedMethod(

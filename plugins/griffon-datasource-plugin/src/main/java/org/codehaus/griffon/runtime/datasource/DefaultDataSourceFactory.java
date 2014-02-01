@@ -83,7 +83,7 @@ public class DefaultDataSourceFactory extends AbstractObjectFactory<DataSource> 
         Map<String, Object> config = narrowConfig(name);
         event("DataSourceConnectStart", asList(name, config));
         DataSource dataSource = createDataSource(config, name);
-        boolean skipSchema = getConfigValueAsBoolean(config, "schema.skip", false);
+        boolean skipSchema = getConfigValueAsBoolean(config, "schema", false);
         if (!skipSchema) {
             processSchema(config, name, dataSource);
         }
