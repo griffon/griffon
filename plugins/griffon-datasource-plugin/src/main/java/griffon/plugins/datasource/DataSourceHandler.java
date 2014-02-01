@@ -15,6 +15,8 @@
  */
 package griffon.plugins.datasource;
 
+import griffon.plugins.datasource.exceptions.RuntimeSQLException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -30,10 +32,10 @@ public interface DataSourceHandler {
     <R> R withDataSource(@Nonnull String dataSourceName, @Nonnull DataSourceCallback<R> callback);
 
     @Nullable
-    <R> R withConnection(@Nonnull ConnectionCallback<R> callback);
+    <R> R withConnection(@Nonnull ConnectionCallback<R> callback) throws RuntimeSQLException;
 
     @Nullable
-    <R> R withConnection(@Nonnull String dataSourceName, @Nonnull ConnectionCallback<R> callback);
+    <R> R withConnection(@Nonnull String dataSourceName, @Nonnull ConnectionCallback<R> callback) throws RuntimeSQLException;
 
     void closeDataSource();
 

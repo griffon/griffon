@@ -25,6 +25,7 @@ public interface DataSourceAwareConstants extends BaseConstants {
     String DATA_SOURCE_HANDLER_TYPE = "griffon.plugins.datasource.DataSourceHandler";
     String DATA_SOURCE_CALLBACK_TYPE = "griffon.plugins.datasource.DataSourceCallback";
     String CONNECTION_CALLBACK_TYPE = "griffon.plugins.datasource.ConnectionCallback";
+    String RUNTIME_SQL_EXCEPTION_TYPE = "griffon.plugins.datasource.exceptions.RuntimeSQLException";
     String DATA_SOURCE_HANDLER_PROPERTY = "dataSourceHandler";
     String DATA_SOURCE_HANDLER_FIELD_NAME = "this$" + DATA_SOURCE_HANDLER_PROPERTY;
 
@@ -68,7 +69,8 @@ public interface DataSourceAwareConstants extends BaseConstants {
             type(R),
             typeParams(R),
             METHOD_WITH_CONNECTION,
-            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), CONNECTION_CALLBACK_TYPE, R))
+            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), CONNECTION_CALLBACK_TYPE, R)),
+            throwing(type(RUNTIME_SQL_EXCEPTION_TYPE))
         ),
         annotatedMethod(
             types(type(JAVAX_ANNOTATION_NONNULL)),
@@ -77,7 +79,8 @@ public interface DataSourceAwareConstants extends BaseConstants {
             METHOD_WITH_CONNECTION,
             args(
                 type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
-                type(types(type(JAVAX_ANNOTATION_NONNULL)), CONNECTION_CALLBACK_TYPE, R))
+                type(types(type(JAVAX_ANNOTATION_NONNULL)), CONNECTION_CALLBACK_TYPE, R)),
+            throwing(type(RUNTIME_SQL_EXCEPTION_TYPE))
         ),
     };
 }

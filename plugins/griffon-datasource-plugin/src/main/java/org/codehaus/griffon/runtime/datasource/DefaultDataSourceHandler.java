@@ -17,6 +17,7 @@ package org.codehaus.griffon.runtime.datasource;
 
 import griffon.exceptions.GriffonException;
 import griffon.plugins.datasource.*;
+import griffon.plugins.datasource.exceptions.RuntimeSQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,7 +74,7 @@ public class DefaultDataSourceHandler implements DataSourceHandler {
 
     @Nullable
     @Override
-    public <R> R withConnection(@Nonnull String dataSourceName, @Nonnull ConnectionCallback<R> callback) {
+    public <R> R withConnection(@Nonnull String dataSourceName, @Nonnull ConnectionCallback<R> callback) throws RuntimeSQLException {
         requireNonBlank(dataSourceName, ERROR_DATASOURCE_BLANK);
         requireNonNull(callback, ERROR_CALLBACK_NULL);
 
@@ -83,7 +84,7 @@ public class DefaultDataSourceHandler implements DataSourceHandler {
 
     @Nullable
     @SuppressWarnings("ThrowFromFinallyBlock")
-    public static <R> R doWithConnection(String dataSourceName, DataSource dataSource, ConnectionCallback<R> callback) {
+    public static <R> R doWithConnection(String dataSourceName, DataSource dataSource, ConnectionCallback<R> callback) throws RuntimeSQLException{
         requireNonBlank(dataSourceName, ERROR_DATASOURCE_BLANK);
         requireNonNull(dataSource, ERROR_DATASOURCE_NULL);
         requireNonNull(callback, ERROR_CALLBACK_NULL);
@@ -92,7 +93,7 @@ public class DefaultDataSourceHandler implements DataSourceHandler {
         try {
             connection = dataSource.getConnection();
         } catch (SQLException e) {
-            throw new GriffonException(e);
+            throw new RuntimeSQLException(dataSourceName, e);
         }
         try {
             LOG.debug("Executing statements on dataSource '{}'", dataSourceName);
@@ -101,7 +102,7 @@ public class DefaultDataSourceHandler implements DataSourceHandler {
             try {
                 connection.close();
             } catch (SQLException e) {
-                throw new GriffonException(e);
+                throw new RuntimeSQLException(dataSourceName, e);
             }
         }
     }
