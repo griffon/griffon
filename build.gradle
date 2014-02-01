@@ -121,6 +121,16 @@ subprojects { subproj ->
                 ])
             }
         }
+
+        license {
+            header rootProject.file('config/HEADER')
+            strictCheck true
+            mapping {
+                java ='SLASHSTAR_STYLE'
+                groovy ='SLASHSTAR_STYLE'
+            }
+            ext.year = '2008-2014'
+        }
     }
 
     if (subproj.ext.maven == true) {
