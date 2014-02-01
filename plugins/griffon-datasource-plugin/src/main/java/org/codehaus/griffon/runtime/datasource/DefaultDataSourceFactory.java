@@ -157,8 +157,9 @@ public class DefaultDataSourceFactory extends AbstractObjectFactory<DataSource> 
             public Object handle(@Nonnull String dataSourceName, @Nonnull DataSource ds, @Nonnull Connection connection) {
                 try (Scanner sc = new Scanner(url.openStream()); Statement statement = connection.createStatement()) {
                     sc.useDelimiter(";");
-                    while (sc.hasNextLine()) {
-                        statement.execute(sc.nextLine());
+                    while (sc.hasNext()) {
+                        String line = sc.next().trim();
+                        statement.execute(line);
                     }
                 } catch (IOException | SQLException e) {
                     LOG.error("An error occurred when reading schema DDL from " + url, sanitize(e));

@@ -14,8 +14,14 @@ dataSources {
         driverClassName = 'org.h2.Driver'
         username = 'sa'
         password = ''
-        tokenizeddl = false
         url = 'jdbc:h2:mem:@application.name@-internal'
+    }
+    people {
+        driverClassName = 'org.h2.Driver'
+        username = 'sa'
+        password = ''
+        dbCreate = 'create'
+        url = 'jdbc:h2:mem:@application.name@-people'
     }
 }
 

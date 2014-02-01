@@ -18,6 +18,7 @@ package griffon.plugins.datasource
 import griffon.core.CallableWithArgs
 import griffon.core.GriffonApplication
 import griffon.core.test.GriffonUnitRule
+import groovy.sql.Sql
 import org.junit.Rule
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -89,6 +90,7 @@ class DataSourceSpec extends Specification {
         name       | _
         'default'  | _
         'internal' | _
+        'people'   | _
     }
 
     void 'Can open a connection to #name dataSource'() {
@@ -101,6 +103,7 @@ class DataSourceSpec extends Specification {
         name       | _
         'default'  | _
         'internal' | _
+        'people'   | _
     }
 
     void 'Bogus dataSource name (#name) results in error'() {
@@ -117,5 +120,36 @@ class DataSourceSpec extends Specification {
         null    | _
         ''      | _
         'bogus' | _
+    }
+
+    void 'Execute statements on people dataSource'() {
+        when:
+        List peopleIn = dataSourceHandler.withDataSource('people') { String dataSourceName, DataSource dataSource ->
+            Sql sql = new Sql(dataSource)
+            def people = sql.dataSet('people')
+            [[id: 1, name: 'Danno', lastname: 'Ferrin'],
+                [id: 2, name: 'Andres', lastname: 'Almiray'],
+                [id: 3, name: 'James', lastname: 'Williams'],
+                [id: 4, name: 'Guillaume', lastname: 'Laforge'],
+                [id: 5, name: 'Jim', lastname: 'Shingler'],
+                [id: 6, name: 'Alexander', lastname: 'Klein'],
+                [id: 7, name: 'Rene', lastname: 'Groeschke']].each { data ->
+                people.add(data)
+            }
+        }
+
+        List peopleOut = dataSourceHandler.withDataSource('people') { String dataSourceName, DataSource dataSource ->
+            Sql sql = new Sql(dataSource)
+            List list = []
+            sql.eachRow('SELECT * FROM people') {
+                list << [id: it.id,
+                    name: it.name,
+                    lastname: it.lastname]
+            }
+            list
+        }
+
+        then:
+        peopleIn == peopleOut
     }
 }
