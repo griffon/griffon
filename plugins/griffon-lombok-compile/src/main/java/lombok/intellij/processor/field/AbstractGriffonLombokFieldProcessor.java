@@ -58,7 +58,7 @@ public abstract class AbstractGriffonLombokFieldProcessor extends AbstractLombok
         return result;
     }
 
-    protected <Psi extends PsiElement> void delegateTo(@NotNull PsiField psiField, @NotNull PsiAnnotation psiAnnotation, @NotNull List<Psi> target, @NotNull MethodDescriptor[] methods) {
+    protected <PSI extends PsiElement> void delegateTo(@NotNull PsiField psiField, @NotNull PsiAnnotation psiAnnotation, @NotNull List<PSI> target, @NotNull MethodDescriptor[] methods) {
         PsiClass psiClass = psiField.getContainingClass();
         for (MethodDescriptor methodDesc : methods) {
             PsiMethod method = PsiMethodUtil.createMethod(psiClass, methodDesc.signature, psiAnnotation);
@@ -66,14 +66,14 @@ public abstract class AbstractGriffonLombokFieldProcessor extends AbstractLombok
         }
     }
 
-    protected <Psi extends PsiElement> void safeAddMethod(@NotNull PsiField psiField, @NotNull String method, @NotNull List<Psi> target) {
+    protected <PSI extends PsiElement> void safeAddMethod(@NotNull PsiField psiField, @NotNull String method, @NotNull List<PSI> target) {
         PsiClass psiClass = psiField.getContainingClass();
         safeAddMethod(psiField,
             PsiMethodUtil.createMethod(psiClass, method, psiClass),
             target);
     }
 
-    protected <Psi extends PsiElement> void safeAddMethod(@NotNull PsiField psiField, @NotNull PsiMethod targetMethod, @NotNull List<Psi> target) {
+    protected <PSI extends PsiElement> void safeAddMethod(@NotNull PsiField psiField, @NotNull PsiMethod targetMethod, @NotNull List<PSI> target) {
         PsiClass psiClass = psiField.getContainingClass();
         final PsiMethod[] classMethods = PsiClassUtil.collectClassMethodsIntern(psiClass);
         boolean found = false;
@@ -85,7 +85,7 @@ public abstract class AbstractGriffonLombokFieldProcessor extends AbstractLombok
             }
         }
 
-        if (!found) target.add((Psi) targetMethod);
+        if (!found) target.add((PSI) targetMethod);
     }
 
     public static String getGetterName(String propertyName) {

@@ -37,7 +37,7 @@ public class EventPublisherProcessor extends AbstractGriffonLombokClassProcessor
         super(EventPublisher.class, PsiMethod.class);
     }
 
-    protected <Psi extends PsiElement> void processIntern(@NotNull PsiClass psiClass, @NotNull PsiAnnotation psiAnnotation, @NotNull List<Psi> target) {
+    protected <PSI extends PsiElement> void processIntern(@NotNull PsiClass psiClass, @NotNull PsiAnnotation psiAnnotation, @NotNull List<PSI> target) {
         PsiElementFactory psiElementFactory = psiElementFactory(psiClass);
         PsiManager manager = psiClass.getContainingFile().getManager();
 
@@ -49,7 +49,7 @@ public class EventPublisherProcessor extends AbstractGriffonLombokClassProcessor
             .withParameter(EVENT_ROUTER_PROPERTY, psiEventRouterType)
             .withModifier(PsiModifier.PUBLIC)
             .withNavigationElement(psiAnnotation);
-        target.add((Psi) method);
+        target.add((PSI) method);
 
         delegateTo(psiClass, psiAnnotation, target, METHODS);
     }

@@ -36,7 +36,7 @@ public class VetoableProcessor extends AbstractGriffonLombokClassProcessor imple
         super(Vetoable.class, PsiMethod.class);
     }
 
-    protected <Psi extends PsiElement> void processIntern(@NotNull PsiClass psiClass, @NotNull PsiAnnotation psiAnnotation, @NotNull List<Psi> target) {
+    protected <PSI extends PsiElement> void processIntern(@NotNull PsiClass psiClass, @NotNull PsiAnnotation psiAnnotation, @NotNull List<PSI> target) {
         delegateTo(psiClass, psiAnnotation, target, VETOABLE_METHODS);
         delegateTo(psiClass, psiAnnotation, target, VETOABLE_FIRE_METHODS);
         delegateTo(psiClass, psiAnnotation, target, OBSERVABLE_METHODS);

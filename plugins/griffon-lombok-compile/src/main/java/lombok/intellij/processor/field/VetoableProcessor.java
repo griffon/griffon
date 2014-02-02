@@ -37,7 +37,7 @@ public class VetoableProcessor extends AbstractGriffonLombokFieldProcessor imple
         super(Vetoable.class, PsiMethod.class);
     }
 
-    protected <Psi extends PsiElement> void processIntern(@NotNull PsiField psiField, @NotNull PsiAnnotation psiAnnotation, @NotNull List<Psi> target) {
+    protected <PSI extends PsiElement> void processIntern(@NotNull PsiField psiField, @NotNull PsiAnnotation psiAnnotation, @NotNull List<PSI> target) {
         if (psiField.getName().startsWith("$") || psiField.getName().startsWith("this$")) {
             return;
         }

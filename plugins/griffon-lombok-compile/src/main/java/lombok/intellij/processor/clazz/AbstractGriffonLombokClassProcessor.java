@@ -63,20 +63,20 @@ public abstract class AbstractGriffonLombokClassProcessor extends AbstractLombok
         return JavaPsiFacade.getElementFactory(project);
     }
 
-    protected <Psi extends PsiElement> void delegateTo(@NotNull PsiClass psiClass, @NotNull PsiAnnotation psiAnnotation, @NotNull List<Psi> target, @NotNull MethodDescriptor[] methods) {
+    protected <PSI extends PsiElement> void delegateTo(@NotNull PsiClass psiClass, @NotNull PsiAnnotation psiAnnotation, @NotNull List<PSI> target, @NotNull MethodDescriptor[] methods) {
         for (MethodDescriptor methodDesc : methods) {
             PsiMethod method = PsiMethodUtil.createMethod(psiClass, methodDesc.signature, psiAnnotation);
             safeAddMethod(psiClass, method, target);
         }
     }
 
-    protected <Psi extends PsiElement> void safeAddMethod(@NotNull PsiClass psiClass, @NotNull String method, @NotNull List<Psi> target) {
+    protected <PSI extends PsiElement> void safeAddMethod(@NotNull PsiClass psiClass, @NotNull String method, @NotNull List<PSI> target) {
         safeAddMethod(psiClass,
             PsiMethodUtil.createMethod(psiClass, method, psiClass),
             target);
     }
 
-    protected <Psi extends PsiElement> void safeAddMethod(@NotNull PsiClass psiClass, @NotNull PsiMethod targetMethod, @NotNull List<Psi> target) {
+    protected <PSI extends PsiElement> void safeAddMethod(@NotNull PsiClass psiClass, @NotNull PsiMethod targetMethod, @NotNull List<PSI> target) {
         final PsiMethod[] classMethods = PsiClassUtil.collectClassMethodsIntern(psiClass);
 
         boolean found = false;
@@ -88,7 +88,7 @@ public abstract class AbstractGriffonLombokClassProcessor extends AbstractLombok
             }
         }
 
-        if (!found) target.add((Psi) targetMethod);
+        if (!found) target.add((PSI) targetMethod);
     }
 
     public static String getGetterName(String propertyName) {

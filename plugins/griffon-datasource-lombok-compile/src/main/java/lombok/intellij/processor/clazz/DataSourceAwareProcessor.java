@@ -37,7 +37,7 @@ public class DataSourceAwareProcessor extends AbstractGriffonLombokClassProcesso
         super(DataSourceAware.class, PsiMethod.class);
     }
 
-    protected <Psi extends PsiElement> void processIntern(@NotNull PsiClass psiClass, @NotNull PsiAnnotation psiAnnotation, @NotNull List<Psi> target) {
+    protected <PSI extends PsiElement> void processIntern(@NotNull PsiClass psiClass, @NotNull PsiAnnotation psiAnnotation, @NotNull List<PSI> target) {
         delegateTo(psiClass, psiAnnotation, target, METHODS);
     }
 }
