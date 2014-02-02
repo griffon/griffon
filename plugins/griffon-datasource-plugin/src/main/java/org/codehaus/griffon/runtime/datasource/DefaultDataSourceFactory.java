@@ -152,6 +152,8 @@ public class DefaultDataSourceFactory extends AbstractObjectFactory<DataSource> 
         }
         final URL url = ddl;
 
+        LOG.info("Initializing schema on '{}'", name);
+
         DefaultDataSourceHandler.doWithConnection(name, dataSource, new ConnectionCallback<Object>() {
             @Override
             public Object handle(@Nonnull String dataSourceName, @Nonnull DataSource ds, @Nonnull Connection connection) {

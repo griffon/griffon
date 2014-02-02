@@ -114,7 +114,7 @@ public abstract class AbstractASTTransformation implements ASTTransformation {
     }
 
     public static FieldExpression injectedField(@Nonnull ClassNode owner, @Nonnull ClassNode type, @Nonnull String name) {
-        return injectedField(owner, type, name);
+        return injectedField(owner, type, name, null);
     }
 
     public static FieldExpression injectedField(@Nonnull ClassNode owner, @Nonnull ClassNode type, @Nonnull String name, @Nullable String qualifierName) {
