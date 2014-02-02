@@ -17,20 +17,27 @@ package griffon.exceptions;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.Method;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class InstanceMethodInvocationException extends GriffonException {
-    private static final long serialVersionUID = -4328366864589401815L;
-
     public InstanceMethodInvocationException(@Nonnull Object instance, @Nonnull String methodName, @Nullable Object[] args) {
         super(formatArguments(instance, methodName, args));
     }
 
     public InstanceMethodInvocationException(@Nonnull Object instance, @Nonnull String methodName, @Nullable Object[] args, @Nonnull Throwable cause) {
         super(formatArguments(instance, methodName, args), cause);
+    }
+
+    public InstanceMethodInvocationException(@Nonnull Object instance, @Nonnull Method method) {
+        super(formatArguments(instance, method));
+    }
+
+    public InstanceMethodInvocationException(@Nonnull Object instance, @Nonnull Method method, @Nonnull Throwable cause) {
+        super(formatArguments(instance, method), cause);
     }
 
     @Nonnull
@@ -43,6 +50,28 @@ public class InstanceMethodInvocationException extends GriffonException {
 
         boolean first = true;
         for (Class<?> type : convertToTypeArray(args)) {
+            if (first) {
+                first = false;
+            } else {
+                b.append(",");
+            }
+            b.append(type.getName());
+        }
+        b.append(")");
+
+        return b.toString();
+    }
+
+    @Nonnull
+    private static String formatArguments(@Nonnull Object instance, @Nonnull Method method) {
+        checkNonNull(instance, "instance");
+        checkNonNull(method, "method");
+        StringBuilder b = new StringBuilder("An error occurred while invoking instance method ")
+            .append(instance.getClass().getName())
+            .append(".").append(method.getName()).append("(");
+
+        boolean first = true;
+        for (Class<?> type : method.getParameterTypes()) {
             if (first) {
                 first = false;
             } else {

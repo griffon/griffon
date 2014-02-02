@@ -21,7 +21,6 @@ import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
@@ -32,11 +31,15 @@ public final class MethodUtils {
         List<Method> methods = new ArrayList<>();
         Class<?> klass = instance.getClass();
         while (klass != null) {
+            boolean found = false;
             for (Method method : klass.getDeclaredMethods()) {
                 if (method.isAnnotationPresent(annotation) &&
-                    method.getParameterTypes().length == 0 &&
-                    Modifier.isPublic(method.getModifiers())) {
+                    method.getParameterTypes().length == 0) {
+                    if (found) {
+                        throw new InstanceMethodInvocationException(instance, method, buildCause(instance.getClass(), method, methods));
+                    }
                     methods.add(method);
+                    found = true;
                 }
             }
 
@@ -61,5 +64,16 @@ public final class MethodUtils {
                 }
             });
         }
+    }
+
+    @Nonnull
+    private static Throwable buildCause(@Nonnull Class<?> clazz, @Nonnull Method method, @Nonnull List<Method> methods) {
+        StringBuilder b = new StringBuilder("The following methods were found annotated with @PostConstruct on ")
+            .append(clazz);
+        for (Method m : methods) {
+            b.append("\n  ").append(m.toGenericString());
+        }
+        b.append("\n  ").append(method.toGenericString());
+        return new IllegalStateException(b.toString());
     }
 }
