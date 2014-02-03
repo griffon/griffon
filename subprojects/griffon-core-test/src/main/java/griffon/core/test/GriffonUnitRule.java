@@ -64,16 +64,24 @@ public class GriffonUnitRule implements MethodRule {
                 bootstrapper.bootstrap();
                 application.initialize();
                 application.getInjector().injectMembers(target);
-
                 handleTestForAnnotation(application, target);
 
+                before(application, target);
                 try {
                     base.evaluate();
                 } finally {
-                    application.shutdown();
+                    after(application, target);
                 }
             }
         };
+    }
+
+    protected void before(@Nonnull GriffonApplication application, @Nonnull Object target) throws Throwable {
+
+    }
+
+    protected void after(@Nonnull GriffonApplication application, @Nonnull Object target) {
+        application.shutdown();
     }
 
     @Nonnull
