@@ -38,6 +38,7 @@ public interface ObservableConstants extends BaseConstants {
     String OLD_VALUE = "oldValue";
     String NEW_VALUE = "newValue";
     String EVENT = "event";
+    String VALUE = "value";
 
     MethodDescriptor[] OBSERVABLE_METHODS = new MethodDescriptor[]{
         method(

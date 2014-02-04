@@ -21,16 +21,25 @@ import org.codehaus.griffon.core.compile.AnnotationHandlerFor;
 import org.codehaus.griffon.core.compile.ObservableConstants;
 import org.codehaus.griffon.core.compile.ast.GriffonASTUtils;
 import org.codehaus.groovy.ast.*;
+import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.ast.expr.FieldExpression;
+import org.codehaus.groovy.ast.expr.VariableExpression;
+import org.codehaus.groovy.ast.stmt.BlockStatement;
+import org.codehaus.groovy.ast.stmt.Statement;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
+import org.codehaus.groovy.control.messages.SyntaxErrorMessage;
+import org.codehaus.groovy.syntax.SyntaxException;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeSupport;
+import java.lang.reflect.Modifier;
 
+import static griffon.util.GriffonNameUtils.getGetterName;
+import static griffon.util.GriffonNameUtils.getSetterName;
 import static java.lang.reflect.Modifier.FINAL;
 import static java.lang.reflect.Modifier.PROTECTED;
 import static org.codehaus.griffon.core.compile.ast.GriffonASTUtils.*;
@@ -72,14 +81,161 @@ public class ObservableASTTransformation extends AbstractASTTransformation imple
      * @param source the source unit for the nodes
      */
     public void visit(ASTNode[] nodes, SourceUnit source) {
-        checkNodesForAnnotationAndType(nodes[0], nodes[1]);
-        addObservableIfNeeded(source, (ClassNode) nodes[1]);
+        // addObservableIfNeeded(source, (ClassNode) nodes[1]);
+        if (!(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof AnnotatedNode)) {
+            throw new RuntimeException("Internal error: wrong types: $node.class / $parent.class");
+        }
+        AnnotationNode node = (AnnotationNode) nodes[0];
+        AnnotatedNode parent = (AnnotatedNode) nodes[1];
+
+        /*
+        if (VetoableASTTransformation.hasVetoableAnnotation(parent)) {
+            // VetoableASTTransformation will handle both @Observable and @Vetoable
+            return;
+        }
+        */
+
+        ClassNode declaringClass = parent.getDeclaringClass();
+        if (parent instanceof FieldNode) {
+            if ((((FieldNode) parent).getModifiers() & Modifier.FINAL) != 0) {
+                source.getErrorCollector().addErrorAndContinue(new SyntaxErrorMessage(
+                    new SyntaxException("@griffon.transform.Observable cannot annotate a final property.",
+                        node.getLineNumber(), node.getColumnNumber(), node.getLastLineNumber(), node.getLastColumnNumber()),
+                    source));
+            }
+
+            /*
+            if (VetoableASTTransformation.hasVetoableAnnotation(parent.getDeclaringClass())) {
+                // VetoableASTTransformation will handle both @Observable and @Vetoable
+                return;
+            }
+            */
+            addObservableIfNeeded(source, node, declaringClass, (FieldNode) parent);
+        } else if (parent instanceof ClassNode) {
+            addObservableIfNeeded(source, (ClassNode) parent);
+        }
+    }
+
+    public static boolean needsObservableSupport(ClassNode classNode, SourceUnit source) {
+        return needsDelegate(classNode, source, OBSERVABLE_METHODS, "Observable", OBSERVABLE_TYPE);
     }
 
     public static void addObservableIfNeeded(SourceUnit source, ClassNode classNode) {
-        if (needsDelegate(classNode, source, OBSERVABLE_METHODS, "Observable", OBSERVABLE_TYPE)) {
+        if (needsObservableSupport(classNode, source)) {
             LOG.debug("Injecting {} into {}", OBSERVABLE_TYPE, classNode.getName());
             apply(classNode);
+        }
+
+        for (PropertyNode propertyNode : classNode.getProperties()) {
+            FieldNode field = propertyNode.getField();
+            // look to see if per-field handlers will catch this one...
+            if (hasObservableAnnotation(field)
+                || ((field.getModifiers() & Modifier.FINAL) != 0)
+                || field.isStatic()
+                /*|| VetoableASTTransformation.hasVetoableAnnotation(field)*/) {
+                // explicitly labeled properties are already handled,
+                // don't transform final properties
+                // don't transform static properties
+                // VetoableASTTransformation will handle both @Observable and @Vetoable
+                continue;
+            }
+            createListenerSetter(classNode, propertyNode);
+        }
+    }
+
+    public static void addObservableIfNeeded(SourceUnit source, AnnotationNode annotationNode, ClassNode classNode, FieldNode field) {
+        String fieldName = field.getName();
+        for (PropertyNode propertyNode : classNode.getProperties()) {
+            if (propertyNode.getName().equals(fieldName)) {
+                if (field.isStatic()) {
+                    //noinspection ThrowableInstanceNeverThrown
+                    source.getErrorCollector().addErrorAndContinue(new SyntaxErrorMessage(
+                        new SyntaxException("@griffon.transform.Observable cannot annotate a static property.",
+                            annotationNode.getLineNumber(), annotationNode.getColumnNumber(), annotationNode.getLastLineNumber(), annotationNode.getLastColumnNumber()),
+                        source));
+                } else {
+                    if (needsObservableSupport(classNode, source)) {
+                        LOG.debug("Injecting {} into {}", OBSERVABLE_TYPE, classNode.getName());
+                        apply(classNode);
+                    }
+                    createListenerSetter(classNode, propertyNode);
+                }
+                return;
+            }
+        }
+        //noinspection ThrowableInstanceNeverThrown
+        source.getErrorCollector().addErrorAndContinue(new SyntaxErrorMessage(
+            new SyntaxException("@griffon.transform.Observable must be on a property, not a field. Try removing the private, protected, or public modifier.",
+                annotationNode.getLineNumber(), annotationNode.getColumnNumber(), annotationNode.getLastLineNumber(), annotationNode.getLastColumnNumber()),
+            source));
+    }
+
+    private static void createListenerSetter(ClassNode classNode, PropertyNode propertyNode) {
+        String setterName = getSetterName(propertyNode.getName());
+        if (classNode.getMethods(setterName).isEmpty()) {
+            Expression fieldExpression = new FieldExpression(propertyNode.getField());
+            Statement setterBlock = createBindableStatement(propertyNode, fieldExpression);
+
+            // create method void <setter>(<type> fieldName)
+            createSetterMethod(classNode, propertyNode, setterName, setterBlock);
+        } else {
+            wrapSetterMethod(classNode, propertyNode.getName());
+        }
+    }
+
+    private static Statement createBindableStatement(PropertyNode propertyNode, Expression fieldExpression) {
+        // create statementBody
+        return stmnt(call(
+            THIS,
+            METHOD_FIRE_PROPERTY_CHANGE,
+            args(
+                constx(propertyNode.getName()),
+                fieldExpression,
+                assign(fieldExpression, var(VALUE)))));
+    }
+
+    private static void createSetterMethod(ClassNode declaringClass, PropertyNode propertyNode, String setterName, Statement setterBlock) {
+        MethodNode setter = new MethodNode(
+            setterName,
+            propertyNode.getModifiers(),
+            VOID_TYPE,
+            params(param(propertyNode.getType(), VALUE)),
+            NO_EXCEPTIONS,
+            setterBlock);
+        setter.setSynthetic(true);
+        // add it to the class
+        declaringClass.addMethod(setter);
+    }
+
+    private static void wrapSetterMethod(ClassNode classNode, String propertyName) {
+        String getterName = getGetterName(propertyName);
+        MethodNode setter = classNode.getSetterMethod(getSetterName(propertyName));
+
+        if (setter != null) {
+            // Get the existing code block
+            Statement code = setter.getCode();
+
+            VariableExpression oldValue = new VariableExpression("$oldValue");
+            VariableExpression newValue = new VariableExpression("$newValue");
+            BlockStatement block = new BlockStatement();
+
+            // create a local variable to hold the old value from the getter
+            block.addStatement(decls(oldValue, call(THIS, getterName, NO_ARGS)));
+
+            // call the existing block, which will presumably set the value properly
+            block.addStatement(code);
+
+            // get the new value to emit in the event
+            block.addStatement(decls(newValue, call(THIS, getterName, NO_ARGS)));
+
+            // add the firePropertyChange method call
+            block.addStatement(stmnt(call(
+                THIS,
+                METHOD_FIRE_PROPERTY_CHANGE,
+                args(constx(propertyName), oldValue, newValue))));
+
+            // replace the existing code block with our new one
+            setter.setCode(block);
         }
     }
 

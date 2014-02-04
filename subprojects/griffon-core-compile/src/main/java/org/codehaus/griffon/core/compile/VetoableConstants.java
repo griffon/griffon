@@ -15,7 +15,6 @@
  */
 package org.codehaus.griffon.core.compile;
 
-
 import java.lang.reflect.Modifier;
 
 import static org.codehaus.griffon.core.compile.MethodDescriptor.*;
