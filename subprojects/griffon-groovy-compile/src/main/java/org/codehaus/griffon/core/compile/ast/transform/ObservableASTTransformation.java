@@ -43,6 +43,7 @@ import static griffon.util.GriffonNameUtils.getSetterName;
 import static java.lang.reflect.Modifier.FINAL;
 import static java.lang.reflect.Modifier.PROTECTED;
 import static org.codehaus.griffon.core.compile.ast.GriffonASTUtils.*;
+import static org.codehaus.griffon.core.compile.ast.transform.VetoableASTTransformation.hasVetoableAnnotation;
 import static org.codehaus.groovy.ast.ClassHelper.OBJECT_TYPE;
 import static org.codehaus.groovy.ast.ClassHelper.STRING_TYPE;
 import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
@@ -88,12 +89,10 @@ public class ObservableASTTransformation extends AbstractASTTransformation imple
         AnnotationNode node = (AnnotationNode) nodes[0];
         AnnotatedNode parent = (AnnotatedNode) nodes[1];
 
-        /*
-        if (VetoableASTTransformation.hasVetoableAnnotation(parent)) {
+        if (hasVetoableAnnotation(parent)) {
             // VetoableASTTransformation will handle both @Observable and @Vetoable
             return;
         }
-        */
 
         ClassNode declaringClass = parent.getDeclaringClass();
         if (parent instanceof FieldNode) {
@@ -104,12 +103,10 @@ public class ObservableASTTransformation extends AbstractASTTransformation imple
                     source));
             }
 
-            /*
-            if (VetoableASTTransformation.hasVetoableAnnotation(parent.getDeclaringClass())) {
+            if (hasVetoableAnnotation(parent.getDeclaringClass())) {
                 // VetoableASTTransformation will handle both @Observable and @Vetoable
                 return;
             }
-            */
             addObservableIfNeeded(source, node, declaringClass, (FieldNode) parent);
         } else if (parent instanceof ClassNode) {
             addObservableIfNeeded(source, (ClassNode) parent);
@@ -132,7 +129,7 @@ public class ObservableASTTransformation extends AbstractASTTransformation imple
             if (hasObservableAnnotation(field)
                 || ((field.getModifiers() & Modifier.FINAL) != 0)
                 || field.isStatic()
-                /*|| VetoableASTTransformation.hasVetoableAnnotation(field)*/) {
+                || hasVetoableAnnotation(field)) {
                 // explicitly labeled properties are already handled,
                 // don't transform final properties
                 // don't transform static properties

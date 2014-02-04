@@ -1,12 +1,12 @@
 package console
 
 import griffon.core.artifact.GriffonModel
-import groovy.beans.Bindable
+import griffon.transform.Observable
 import griffon.metadata.ArtifactProviderFor
 
 @ArtifactProviderFor(GriffonModel)
 class ConsoleModel {
     String scriptSource                                  //<1>
-    @Bindable Object scriptResult                        //<2>
-    @Bindable boolean enabled = true                     //<3>
+    @Observable Object scriptResult                      //<2>
+    @Observable boolean enabled = true                   //<3>
 }

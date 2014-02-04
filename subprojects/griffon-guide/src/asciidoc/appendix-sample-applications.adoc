@@ -65,7 +65,7 @@ include::{sample-swing-java}/griffon-app/models/sample/SampleModel.java[]
 
 The code is quite straight forward, there's nothing much to see here other than making
 sure to follow the rules for creating observable properties. The Groovy version sports
-a short hand thanks to the usage of the @Bindable AST transformation.
+a short hand thanks to the usage of the @Observable AST transformation.
 
 One key difference between the Java and the Groovy version is that the Groovy Model
 does not extend a particular class. It also This is due to Griffon being aware of its own
@@ -81,7 +81,7 @@ include::{sample-swing-groovy}/griffon-app/models/sample/SampleModel.groovy[]
 ----
 <1> Observable property
 
-Properties become observable by simply annotating them with @Bindable. The Groovy compiler
+Properties become observable by simply annotating them with @Observable. The Groovy compiler
 will generate the required boilerplate code, which so happens to be functionally equivalent
 to what we showed in the Java version.
 
@@ -222,7 +222,7 @@ include::{sample-javafx-groovy}/griffon-app/models/sample/SampleModel.groovy[]
 ----
 <1> Observable property
 
-Similarly to +@Bindable+ we find that Groovy based JavaFX models can use another AST
+Similarly to +@Observable+ we find that Groovy based JavaFX models can use another AST
 transformation named +@FXBindable+. This transformation generates equivalent byte code
 to the Java based Model we saw. +@FXBindable+ is delivered by http://groovyfx.org[GroovyFX]
 which is automatically included as a dependency when +griffon-java-builder+ is added

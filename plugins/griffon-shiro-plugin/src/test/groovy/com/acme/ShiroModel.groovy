@@ -17,9 +17,9 @@ package com.acme
 
 import griffon.core.artifact.GriffonModel
 import griffon.metadata.ArtifactProviderFor
-import groovy.beans.Bindable
+import griffon.transform.Observable
 
 @ArtifactProviderFor(GriffonModel)
 class ShiroModel {
-    @Bindable String value
+    @Observable String value
 }

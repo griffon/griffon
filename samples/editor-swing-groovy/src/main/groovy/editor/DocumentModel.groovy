@@ -1,12 +1,12 @@
 package editor
 
 import griffon.transform.PropertyListener
-import groovy.beans.Bindable
+import griffon.transform.Observable
 
 import java.beans.PropertyChangeListener
 
 class DocumentModel extends Document {
-    @Bindable
+    @Observable
     @PropertyListener(documentUpdater)
     Document document = new Document()
 

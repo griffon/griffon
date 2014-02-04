@@ -2,7 +2,7 @@ package editor
 
 import griffon.core.artifact.GriffonModel
 import griffon.transform.PropertyListener
-import groovy.beans.Bindable
+import griffon.transform.Observable
 import griffon.metadata.ArtifactProviderFor
 
 import javax.swing.event.ChangeEvent
@@ -12,7 +12,7 @@ import javax.swing.event.ChangeListener
 class ContainerModel implements ChangeListener {
     final DocumentModel documentModel = new DocumentModel()
 
-    @Bindable
+    @Observable
     @PropertyListener(mvcUpdater)
     String mvcIdentifier
 

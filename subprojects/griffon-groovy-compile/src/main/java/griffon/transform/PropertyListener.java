@@ -30,12 +30,12 @@ import java.lang.annotation.Target;
  * <p>The following code exemplifies what must be written by hand in order to register a pair
  * of PropertyChangeListeners. One of them is a catch-all handler while the second is property specific.
  * <pre>
- * import groovy.beans.Bindable
+ * import griffon.transform.Observable
  * import java.beans.PropertyChangeListener
  *
  * class MyModel {
- *     &#064;Bindable String name
- *     &#064;Bindable String lastname
+ *     &#064;Observable String name
+ *     &#064;Observable String lastname
  *
  *     def snoopAll = { evt -> ... }
  *
@@ -51,13 +51,13 @@ import java.lang.annotation.Target;
  * <p>Applying &#064;PropertyListener to the previous snippet results in the following code</p>
  * <pre>
  * import griffon.transform.PropertyListener
- * import groovy.beans.Bindable
+ * import griffon.transform.Observable
  *
  * &#064;PropertyListener(snoopAll)
  * class MyModel {
- *     &#064;Bindable String name
+ *     &#064;Observable String name
  *
- *     &#064;Bindable
+ *     &#064;Observable
  *     &#064;PropertyListener({controller.someAction(it)})
  *     String lastname
  *

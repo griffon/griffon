@@ -1,8 +1,8 @@
 package editor
 
-import groovy.beans.Bindable
+import griffon.transform.Observable
 
-@Bindable
+@Observable
 class Document {
     String title
     String contents

@@ -28,7 +28,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.GuardedBy;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Andres Almiray
@@ -74,8 +73,8 @@ public class AnnotationHandlerASTTransformation extends AbstractASTTransformatio
             if (transformationClass == null) continue;
             GroovyASTTransformation annotation = transformationClass.getAnnotation(GroovyASTTransformation.class);
             if (annotation == null) continue;
-            Set<ASTNode> nodes = owner.getTransforms(annotation.phase()).get(transformationClass);
-            if (nodes != null && !nodes.isEmpty()) continue;
+            // Set<ASTNode> nodes = owner.getTransforms(annotation.phase()).get(transformationClass);
+            // if (nodes != null && !nodes.isEmpty()) continue;
             owner.addTransform(transformationClass, annotationNode);
         }
     }
