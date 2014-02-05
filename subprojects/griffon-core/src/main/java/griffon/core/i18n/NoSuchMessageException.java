@@ -18,6 +18,9 @@ package griffon.core.i18n;
 import javax.annotation.Nonnull;
 import java.util.Locale;
 
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
 /**
  * @author Alexander Klein
  * @since 2.0.0
@@ -35,7 +38,7 @@ public class NoSuchMessageException extends RuntimeException {
      * @param locale locale that was used to search for the code within
      */
     public NoSuchMessageException(@Nonnull String key, @Nonnull Locale locale) {
-        super("No message found under key '" + key + "' for locale '" + locale + "'.");
+        super("No message found under key '" + requireNonBlank(key, "key") + "' for locale '" + requireNonNull(locale, "locale") + "'.");
         this.key = key;
         this.locale = locale;
     }

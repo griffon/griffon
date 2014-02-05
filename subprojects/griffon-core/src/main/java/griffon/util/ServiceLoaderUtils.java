@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
@@ -49,11 +50,12 @@ public class ServiceLoaderUtils {
         requireNonBlank(path, "Argument 'path' cannot be blank");
         requireNonNull(type, "Argument 'type' cannot be null");
         requireNonNull(processor, "Argument 'processor' cannot be null");
+        String normalizedPath = path.endsWith(File.separator) ? path : path + File.separator;
 
         Enumeration<URL> urls;
 
         try {
-            urls = classLoader.getResources(path + type.getName());
+            urls = classLoader.getResources(normalizedPath + type.getName());
         } catch (IOException ioe) {
             return false;
         }

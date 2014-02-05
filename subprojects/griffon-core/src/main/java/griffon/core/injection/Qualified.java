@@ -29,7 +29,7 @@ public final class Qualified<T> {
     private Annotation qualifier;
     private final T instance;
 
-    public Qualified(@Nonnull T instance, @Nonnull Annotation qualifier) {
+    public Qualified(@Nonnull T instance, @Nullable Annotation qualifier) {
         this.instance = requireNonNull(instance, "Argument 'instance' cannot be null");
         this.qualifier = qualifier;
     }

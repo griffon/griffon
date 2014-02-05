@@ -15,11 +15,7 @@
  */
 
 apply plugin: 'java'
-apply plugin: 'cobertura'
-
-cobertura {
-    coverageFormats = ['html', 'xml']
-}
+apply from: rootProject.file('gradle/coverage.gradle')
 
 ext.maven = true
 ext.pomDescription = 'Griffon core (compile)'

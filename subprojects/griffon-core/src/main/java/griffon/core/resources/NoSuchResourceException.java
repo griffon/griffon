@@ -18,6 +18,9 @@ package griffon.core.resources;
 import javax.annotation.Nonnull;
 import java.util.Locale;
 
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
 /**
  * @author Andres Almiray
  * @author Alexander Klein
@@ -36,7 +39,7 @@ public class NoSuchResourceException extends RuntimeException {
      * @param locale locale that was used to search for the code within
      */
     public NoSuchResourceException(@Nonnull String key, @Nonnull Locale locale) {
-        super("No resorce found under key '" + key + "' for locale '" + locale + "'.");
+        super("No resource found under key '" + requireNonBlank(key, "key") + "' for locale '" + requireNonNull(locale, "locale") + "'.");
         this.key = key;
         this.locale = locale;
     }

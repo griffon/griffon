@@ -15,6 +15,7 @@
  */
 package griffon.util
 
+import griffon.inject.BindTo
 import griffon.inject.DependsOn
 import griffon.inject.Typed
 import spock.lang.Specification
@@ -28,7 +29,24 @@ class AnnotationUtilsSpec extends Specification {
         System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace")
     }
 
-    def "Find out if #target are annotated wit @#annotation.name"() {
+    def "Test setup of #type annotation"() {
+        expect:
+        type.isAssignableFrom(annotation1.class)
+        type.isAssignableFrom(annotation2.class)
+        type == annotation1.annotationType()
+        annotation1 == annotation2
+        annotation1 != annotation3
+        annotation1.hashCode() == annotation2.hashCode()
+        annotation1.hashCode() != annotation3.hashCode()
+
+        where:
+        type   | annotation1                    | annotation2                    | annotation3
+        Named  | AnnotationUtils.named('foo')   | AnnotationUtils.named('foo')   | AnnotationUtils.named('bar')
+        Typed  | AnnotationUtils.typed(Object)  | AnnotationUtils.typed(Object)  | AnnotationUtils.typed(String)
+        BindTo | AnnotationUtils.bindto(Object) | AnnotationUtils.bindto(Object) | AnnotationUtils.bindto(String)
+    }
+
+    def "Find out if #target is annotated wit @#annotation.name"() {
         expect:
         outcome == AnnotationUtils.isAnnotatedWith(target, annotation)
 
