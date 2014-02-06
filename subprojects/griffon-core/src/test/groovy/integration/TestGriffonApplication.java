@@ -13,33 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.core.artifact;
+package integration;
+
+import org.codehaus.griffon.runtime.core.AbstractGriffonApplication;
 
 import javax.annotation.Nonnull;
+import java.util.Map;
 
-/**
- * Represents a View class in Griffon.<p>
- *
- * @author Andres Almiray
- * @since 2.0.0
- */
-public interface GriffonViewClass extends GriffonClass {
-    /**
-     * "view"
-     */
-    String TYPE = "view";
-    /**
-     * "View"
-     */
-    String TRAILING = "View";
+public class TestGriffonApplication extends AbstractGriffonApplication {
+    public TestGriffonApplication() {
+        this(EMPTY_ARGS);
+    }
 
-    /**
-     * Matches all public methods and closure properties whose name
-     * matches the event handler convention, i.e, starts with "on" and
-     * is followed by at least one uppercase character.<p>
-     *
-     * @return an array containing the names of all event handlers.
-     */
+    public TestGriffonApplication(@Nonnull String[] args) {
+        super(args);
+    }
+
     @Nonnull
-    String[] getEventNames();
+    @Override
+    public Object createApplicationContainer(@Nonnull Map<String, Object> attributes) {
+        return new Object();
+    }
 }

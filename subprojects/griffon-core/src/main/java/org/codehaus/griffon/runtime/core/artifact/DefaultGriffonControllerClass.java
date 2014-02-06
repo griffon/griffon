@@ -20,15 +20,15 @@ import griffon.util.GriffonClassUtils;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
-import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class DefaultGriffonControllerClass extends DefaultGriffonClass implements GriffonControllerClass {
-    protected final Set<String> actionsCache = new LinkedHashSet<>();
+    protected final Set<String> actionsCache = new TreeSet<>();
 
     public DefaultGriffonControllerClass(@Nonnull Class<?> clazz) {
         super(clazz, TYPE, TRAILING);

@@ -32,7 +32,7 @@ import java.util.TreeSet;
  */
 public interface GriffonClass {
     Set<String> STANDARD_PROPERTIES = new TreeSet<>(
-        Arrays.asList("class", "UIThread", "griffonClass", "log", "artifactType"));
+        Arrays.asList("class", "UIThread", "application", "griffonClass", "log", "artifactType"));
 
     /**
      * Gets the initial value of the given property on the class.</p>

@@ -34,4 +34,16 @@ class ExpandableResourceBundleSpec extends Specification {
         'key.number' || 'number'
         'key'        || [string: 'string', number: 'number']
     }
+
+    def 'Test wrapping modes'() {
+        given:
+        ResourceBundle b1 = new MapResourceBundle()
+        ResourceBundle b2 = ExpandableResourceBundle.wrapResourceBundle(b1)
+        ResourceBundle b3 = ExpandableResourceBundle.wrapResourceBundle(b2)
+
+        expect:
+        b2 instanceof ExpandableResourceBundle
+        b3 instanceof ExpandableResourceBundle
+        b3 == b2
+    }
 }

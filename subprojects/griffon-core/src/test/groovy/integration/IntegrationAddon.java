@@ -13,33 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.core.artifact;
+package integration;
+
+import griffon.core.GriffonApplication;
+import org.codehaus.griffon.runtime.core.addon.AbstractGriffonAddon;
 
 import javax.annotation.Nonnull;
+import javax.inject.Named;
 
-/**
- * Represents a View class in Griffon.<p>
- *
- * @author Andres Almiray
- * @since 2.0.0
- */
-public interface GriffonViewClass extends GriffonClass {
-    /**
-     * "view"
-     */
-    String TYPE = "view";
-    /**
-     * "View"
-     */
-    String TRAILING = "View";
+@Named("integration")
+public class IntegrationAddon extends AbstractGriffonAddon implements Invokable {
+    private boolean invoked;
 
-    /**
-     * Matches all public methods and closure properties whose name
-     * matches the event handler convention, i.e, starts with "on" and
-     * is followed by at least one uppercase character.<p>
-     *
-     * @return an array containing the names of all event handlers.
-     */
-    @Nonnull
-    String[] getEventNames();
+    @Override
+    public void init(@Nonnull GriffonApplication application) {
+        invoked = true;
+    }
+
+    @Override
+    public boolean isInvoked() {
+        return invoked;
+    }
 }

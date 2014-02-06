@@ -34,7 +34,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.util.*;
@@ -42,8 +41,6 @@ import java.util.*;
 import static griffon.core.GriffonExceptionHandler.sanitize;
 import static griffon.util.AnnotationUtils.named;
 import static griffon.util.AnnotationUtils.sortByDependencies;
-import static griffon.util.GriffonNameUtils.getLogicalPropertyName;
-import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
@@ -249,15 +246,6 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
         for (ActionInterceptor interceptor : sortedInterceptors.values()) {
             application.getActionManager().addActionInterceptor(interceptor);
         }
-    }
-
-    @Nonnull
-    private String nameFor(@Nonnull ActionInterceptor actionInterceptor) {
-        Named named = actionInterceptor.getClass().getAnnotation(Named.class);
-        if (named != null && !isBlank(named.value())) {
-            return named.value();
-        }
-        return getLogicalPropertyName(actionInterceptor.getClass().getName(), "ActionInterceptor");
     }
 
     protected Class<?> loadClass(@Nonnull String className, @Nonnull ClassLoader classLoader) throws ClassNotFoundException {

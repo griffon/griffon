@@ -24,6 +24,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import static griffon.util.GriffonClassUtils.isEventHandler;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
@@ -37,7 +38,7 @@ public class DefaultGriffonModelClass extends DefaultGriffonClass implements Gri
     private static final String ERROR_MODEL_NULL = "Argument 'model' cannot be null";
     private static final String ERROR_PROPERTY_NAME_BLANK = "Argument 'propertyName' cannot be blank";
 
-    protected final Set<String> propertiesCache = new LinkedHashSet<>();
+    protected final Set<String> propertiesCache = new TreeSet<>();
     private static final Set<String> BINDABLE_PROPERTIES = new LinkedHashSet<>(
         Arrays.asList("propertyChangeListeners", "vetoableChangeListeners"));
 

@@ -43,3 +43,13 @@ class MapResourceBundle extends AbstractMapResourceBundle {
         entries['key.number'] = 'number'
     }
 }
+
+class MapResourceBundle2 extends AbstractMapResourceBundle {
+    @Override
+    protected void initialize(@Nonnull Map<String, Object> entries) {
+        entries['single'] = 'single'
+        entries['key.string'] = 'string'
+        entries['key.number'] = 'number'
+        entries['key.float'] = 'float'
+    }
+}

@@ -118,7 +118,7 @@ public class GriffonClassUtils {
 
         ARTIFACT_METHODS.add(new MethodDescriptor("newInstance", new Class<?>[]{Class.class, String.class}));
         ARTIFACT_METHODS.add(new MethodDescriptor("newInstance", new Class<?>[]{Object[].class}));
-        ARTIFACT_METHODS.add(new MethodDescriptor("getApp"));
+        ARTIFACT_METHODS.add(new MethodDescriptor("getApplication"));
         ARTIFACT_METHODS.add(new MethodDescriptor("getLog"));
         ARTIFACT_METHODS.add(new MethodDescriptor("getGriffonClass"));
 
@@ -193,6 +193,7 @@ public class GriffonClassUtils {
         RESOURCE_HANDLER_METHODS.add(new MethodDescriptor("getResourceAsURL", new Class<?>[]{String.class}));
         RESOURCE_HANDLER_METHODS.add(new MethodDescriptor("getResourceAsStream", new Class<?>[]{String.class}));
         RESOURCE_HANDLER_METHODS.add(new MethodDescriptor("getResources", new Class<?>[]{String.class}));
+        RESOURCE_HANDLER_METHODS.add(new MethodDescriptor("classloader", new Class<?>[0]));
 
         MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("resolveMessageValue", new Class<?>[]{String.class, Locale.class}));
         MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class}));

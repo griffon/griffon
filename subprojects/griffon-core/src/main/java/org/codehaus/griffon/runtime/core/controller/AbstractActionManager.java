@@ -123,7 +123,7 @@ public abstract class AbstractActionManager implements ActionManager {
 
             Map<String, Action> actions = actionCache.get(controller);
             if (actions.isEmpty()) {
-                actions = new LinkedHashMap<>();
+                actions = new TreeMap<>();
                 actionCache.set(controller, actions);
             }
             String actionKey = normalizeName(actionName);
