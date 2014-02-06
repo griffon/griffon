@@ -1,0 +1,11 @@
+script: ./gradlew clean check cobertura
+
+jdk:
+  - oraclejdk7
+  - openjdk7
+
+env:
+   - TERM=dumb
+
+after_success:
+   - ./gradlew coveralls

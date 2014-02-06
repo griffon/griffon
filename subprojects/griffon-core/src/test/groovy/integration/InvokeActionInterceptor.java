@@ -16,7 +16,6 @@
 package integration;
 
 import griffon.core.artifact.GriffonController;
-import griffon.core.controller.AbortActionExecution;
 import griffon.core.controller.ActionExecutionStatus;
 import org.codehaus.griffon.runtime.core.controller.AbstractActionInterceptor;
 

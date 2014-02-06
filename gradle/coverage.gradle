@@ -19,6 +19,9 @@ apply plugin: 'jacoco'
 
 cobertura {
     coverageFormats = ['html', 'xml']
+    if (project.plugins.hasPlugin('groovy')) {
+      coverageSourceDirs = sourceSets.main.groovy.srcDirs
+    }
 }
 
 jacocoTestReport {

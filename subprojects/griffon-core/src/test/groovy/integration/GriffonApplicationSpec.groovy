@@ -20,12 +20,7 @@ import griffon.core.GriffonApplication
 import griffon.core.LifecycleHandler
 import griffon.core.ShutdownHandler
 import griffon.core.addon.GriffonAddon
-import griffon.core.artifact.GriffonController
-import griffon.core.artifact.GriffonControllerClass
-import griffon.core.artifact.GriffonModel
-import griffon.core.artifact.GriffonModelClass
-import griffon.core.artifact.GriffonServiceClass
-import griffon.core.artifact.GriffonViewClass
+import griffon.core.artifact.*
 import griffon.core.controller.ActionInterceptor
 import griffon.core.env.ApplicationPhase
 import griffon.core.env.Lifecycle
