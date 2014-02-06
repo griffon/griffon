@@ -1,0 +1,59 @@
+/*
+ * Copyright 2008-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+configurations {
+    compileOnly
+    testCompileOnly
+}
+
+for (location in ['lib/tools.jar', '../lib/tools.jar']) {
+    File javaHome = new File(System.properties['java.home'])
+    javaHome = javaHome.name == 'jre' ? javaHome.parentFile : javaHome
+    File file = new File(javaHome, location)
+    if (file.exists()) {
+        ext.toolsLocation = file.absolutePath
+        break
+    }
+}
+
+repositories {
+    flatDir { dirs ' lib' }
+}
+
+dependencies {
+    compileOnly project.files(project.toolsLocation)
+
+    def compileOnlyNoTransitive = { dependency ->
+        compileOnly(dependency.toString()) { transitive = false }
+    }
+
+    String lombokIdea = '0.5'
+    String ideaVersion = '11.1.4'
+
+    compileOnlyNoTransitive 'org.eclipse.jdt:org.eclipse.jdt.core:3.6.0.v_A58'
+    compileOnlyNoTransitive "de.plushnikov.lombok-intellij-plugin:processor-api:$lombokIdea"
+    compileOnlyNoTransitive "de.plushnikov.lombok-intellij-plugin:processor-core:$lombokIdea"
+    compileOnlyNoTransitive "de.plushnikov.lombok-intellij-plugin:intellij-facade-factory:$lombokIdea"
+    compileOnlyNoTransitive "de.plushnikov.lombok-intellij-plugin:intellij-facade-api:$lombokIdea"
+    compileOnlyNoTransitive "de.plushnikov.lombok-intellij-plugin:intellij-facade-9:$lombokIdea"
+    compileOnlyNoTransitive "de.plushnikov.lombok-intellij-plugin:intellij-facade-10:$lombokIdea"
+    compileOnlyNoTransitive "de.plushnikov.lombok-intellij-plugin:intellij-facade-11:$lombokIdea"
+    compileOnlyNoTransitive "org.jetbrains.idea:idea-openapi:$ideaVersion"
+    compileOnlyNoTransitive "org.jetbrains.idea:extensions:$ideaVersion"
+    compileOnlyNoTransitive "org.jetbrains.idea:util:$ideaVersion"
+    compileOnlyNoTransitive "org.jetbrains.idea:annotations:$ideaVersion"
+}

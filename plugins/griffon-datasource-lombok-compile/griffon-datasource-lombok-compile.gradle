@@ -20,41 +20,9 @@ apply from: rootProject.file('gradle/coverage.gradle')
 ext.maven = true
 ext.pomDescription = 'Griffon Datasource (Lombok)'
 
-configurations {
-    compileOnly
-    testCompileOnly
-}
-
-for (location in ['lib/tools.jar', '../lib/tools.jar']) {
-    File javaHome = new File(System.properties['java.home'])
-    javaHome = javaHome.name == 'jre' ? javaHome.parentFile : javaHome
-    File file = new File(javaHome, location)
-    if (file.exists()) {
-        ext.toolsLocation = file.absolutePath
-        break
-    }
-}
+apply from: '../lombok-deps/lombok.gradle'
 
 dependencies {
-    compileOnly project.files(project.toolsLocation)
-
-    def compileOnlyNoTransitive = { String dependency ->
-        compileOnly(dependency) { transitive = false }
-    }
-
-    compileOnlyNoTransitive 'org.eclipse.jdt:org.eclipse.jdt.core:3.6.0.v_A58'
-    compileOnlyNoTransitive "de.plushnikov.lombok-intellij-plugin:processor-api:$lombokIdea"
-    compileOnlyNoTransitive "de.plushnikov.lombok-intellij-plugin:processor-core:$lombokIdea"
-    compileOnlyNoTransitive "de.plushnikov.lombok-intellij-plugin:intellij-facade-factory:$lombokIdea"
-    compileOnlyNoTransitive "de.plushnikov.lombok-intellij-plugin:intellij-facade-api:$lombokIdea"
-    compileOnlyNoTransitive "de.plushnikov.lombok-intellij-plugin:intellij-facade-9:$lombokIdea"
-    compileOnlyNoTransitive "de.plushnikov.lombok-intellij-plugin:intellij-facade-10:$lombokIdea"
-    compileOnlyNoTransitive "de.plushnikov.lombok-intellij-plugin:intellij-facade-11:$lombokIdea"
-    compileOnlyNoTransitive "org.jetbrains.idea:idea-openapi:$ideaVersion"
-    compileOnlyNoTransitive "org.jetbrains.idea:extensions:$ideaVersion"
-    compileOnlyNoTransitive "org.jetbrains.idea:util:$ideaVersion"
-    compileOnlyNoTransitive "org.jetbrains.idea:annotations:$ideaVersion"
-
     compile project(':griffon-core-compile')
     compile project(':griffon-lombok-compile')
     compile project(':griffon-datasource-plugin')
