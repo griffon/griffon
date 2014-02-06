@@ -61,7 +61,11 @@ public class BigDecimalFormatter extends AbstractFormatter<BigDecimal> {
     public BigDecimal parse(@Nullable String str) throws ParseException {
         if (isBlank(str)) return null;
         try {
-            return (BigDecimal) numberFormat.parse(str);
+            Number number = numberFormat.parse(str);
+            if (number instanceof BigDecimal) {
+                return (BigDecimal) number;
+            }
+            return new BigDecimal(number.longValue());
         } catch (java.text.ParseException e) {
             throw new ParseException(e);
         }

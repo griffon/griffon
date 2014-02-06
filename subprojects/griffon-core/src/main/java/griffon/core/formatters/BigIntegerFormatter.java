@@ -62,8 +62,11 @@ public class BigIntegerFormatter extends AbstractFormatter<BigInteger> {
     public BigInteger parse(@Nullable String str) throws ParseException {
         if (isBlank(str)) return null;
         try {
-            BigDecimal bd = (BigDecimal) numberFormat.parse(str);
-            return bd.toBigInteger();
+            Number number = numberFormat.parse(str);
+            if (number instanceof BigDecimal) {
+                return ((BigDecimal) number).toBigInteger();
+            }
+            return BigInteger.valueOf(number.longValue());
         } catch (java.text.ParseException e) {
             throw new ParseException(e);
         }
