@@ -19,7 +19,7 @@ apply from: rootProject.file('gradle/coverage.gradle')
 
 ext.maven = true
 ext.pomDescription = 'Griffon JavaFX module'
-ext.jfxrtLocation = new File("${System.properties['java.home']}/jre/lib/ext/jfxrt.jar").absolutePath
+ext.jfxrtLocation = new File("${System.properties['java.home']}/jre/lib/jfxrt.jar").absolutePath
 
 for (location in ['lib/jfxrt.jar', 'jre/lib/jfxrt.jar', 'jre/lib/ext/jfxrt.jar']) {
     File javaHome = new File(System.properties['java.home'])

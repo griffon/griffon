@@ -9,6 +9,8 @@
  */
 
 buildscript {
+    ext.jfxrtLocation = new File("${System.properties['java.home']}/jre/lib/jfxrt.jar").absolutePath
+
     // JavaFX locations for JDK7, JDK7, JDK8
     for (location in ['lib/jfxrt.jar', 'jre/lib/jfxrt.jar', 'jre/lib/ext/jfxrt.jar']) {
         File javaHome = new File(System.properties['java.home'])
