@@ -15,7 +15,6 @@ buildscript {
         File javaHome = new File(System.properties['java.home'])
         javaHome = javaHome.name == 'jre' ? javaHome.parentFile : javaHome
         File file = new File(javaHome, location)
-        println(file.absolutePath+' '+file.exists())
         if (file.exists()) {
             jfxrtLocation = file.absolutePath
             break
