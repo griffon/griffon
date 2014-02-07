@@ -7,6 +7,7 @@ import griffon.metadata.ArtifactProviderFor
 class BrowserView {
     def builder
     def model
+    def controller
 
     void initUI() {
         builder.application(title: application.configuration['application.title'],
@@ -19,7 +20,7 @@ class BrowserView {
                             button(forwardAction, skipName: true)
                             button(reloadAction, skipName: true)
                             textField(id: 'urlField', prefColumnCount: 56,
-                                onAction: controller.openUrl)
+                                onAction: controller.&openUrl)
                             actions { bean(model, url: bind(urlField.textProperty())) }
                         }
                     }
@@ -30,5 +31,8 @@ class BrowserView {
                 }
             }
         }
+
+        builder.urlField.text = 'http://griffon-framework.org'
+        controller.openUrl()
     }
 }

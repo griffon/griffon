@@ -9,13 +9,6 @@ class BrowserController {
     def model
     def builder
 
-    void mvcGroupInit(Map<String, Object> args) {
-        runInsideUIAsync {
-            builder.urlField.text = 'http://griffon-framework.org'
-            openUrl()
-        }
-    }
-
     @Threading(Threading.Policy.SKIP)
     void back() {
         if (builder.browser.engine.history.entries.size() > 0) {
