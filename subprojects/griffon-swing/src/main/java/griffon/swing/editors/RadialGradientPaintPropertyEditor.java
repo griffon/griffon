@@ -25,6 +25,8 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
+import static griffon.util.GriffonNameUtils.isBlank;
+
 /**
  * @author Andres Almiray
  * @since 2.0.0
@@ -100,6 +102,11 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsString(String str) {
+        if (isBlank(str)) {
+            super.setValueInternal(null);
+            return;
+        }
+
         float cx = 0;
         float cy = 0;
         float radius = 0;
@@ -131,6 +138,11 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsList(List<?> list) {
+        if(list.isEmpty()) {
+            super.setValueInternal(null);
+            return;
+        }
+
         float cx = 0;
         float cy = 0;
         float radius = 0;
@@ -161,6 +173,11 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsMap(Map<?, ?> map) {
+        if(map.isEmpty()) {
+            super.setValueInternal(null);
+            return;
+        }
+
         float cx = (Float) getMapValue(map, "cx", 0f);
         float cy = (Float) getMapValue(map, "cy", 0f);
         float radius = (Float) getMapValue(map, "radius", 0f);
@@ -173,7 +190,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
         if (fractions.length != colors.length) {
             throw illegalValue(map, RadialGradientPaint.class);
         }
-        Object cyclicValue = map.get("cyclic");
+        Object cyclicValue = map.get("cycle");
         if (null != cyclicValue) {
             cyclicMethod = parseCyclicMethod(map, String.valueOf(cyclicValue));
         }
@@ -191,11 +208,11 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
     }
 
     private float[] parseFractions(Object source, String str) {
-        if (str.startsWith("[") && str.endsWith("]")) {
+        if (!str.startsWith("[") || !str.endsWith("]")) {
             throw illegalValue(source, RadialGradientPaint.class);
         }
 
-        String[] strs = str.substring(1, str.length() - 2).split(",");
+        String[] strs = str.substring(1, str.length() - 1).split(":");
         float[] fractions = new float[strs.length];
         for (int i = 0; i < strs.length; i++) {
             fractions[i] = parseValue(strs[i]);
@@ -207,7 +224,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
     private float[] parseFractions(Object source, List<?> list) {
         float[] fractions = new float[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            fractions[i] = parseValue(list.get(1));
+            fractions[i] = parseValue(list.get(i));
         }
 
         return fractions;
@@ -223,11 +240,11 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
     }
 
     private Color[] parseColors(Object source, String str) {
-        if (str.startsWith("[") && str.endsWith("]")) {
+        if (!str.startsWith("[") || !str.endsWith("]")) {
             throw illegalValue(source, RadialGradientPaint.class);
         }
 
-        String[] strs = str.substring(1, str.length() - 2).split(",");
+        String[] strs = str.substring(1, str.length() - 1).split(":");
         Color[] colors = new Color[strs.length];
         ColorPropertyEditor colorEditor = new ColorPropertyEditor();
         for (int i = 0; i < strs.length; i++) {

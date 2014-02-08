@@ -47,6 +47,11 @@ public class EnumPropertyEditor extends AbstractPropertyEditor {
 
     @SuppressWarnings("unchecked")
     private void handleAsString(String str) {
+        if (isBlank(str)) {
+            super.setValueInternal(null);
+            return;
+        }
+
         try {
             super.setValueInternal(isBlank(str) ? null : Enum.valueOf(enumType, str));
         } catch (Exception e) {

@@ -19,6 +19,8 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static griffon.util.GriffonNameUtils.isBlank;
+
 /**
  * @author Andres Almiray
  * @since 2.0.0
@@ -39,6 +41,11 @@ public class URIPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsString(String str) {
+        if (isBlank(str)) {
+            super.setValueInternal(null);
+            return;
+        }
+
         try {
             super.setValueInternal(new URI(str));
         } catch (URISyntaxException e) {

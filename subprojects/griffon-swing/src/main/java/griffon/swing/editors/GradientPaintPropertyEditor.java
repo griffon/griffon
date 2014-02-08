@@ -23,6 +23,8 @@ import java.awt.GradientPaint;
 import java.util.List;
 import java.util.Map;
 
+import static griffon.util.GriffonNameUtils.isBlank;
+
 /**
  * @author Andres Almiray
  * @author Alexander Klein
@@ -67,6 +69,11 @@ public class GradientPaintPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsString(String str) {
+        if (isBlank(str)) {
+            super.setValueInternal(null);
+            return;
+        }
+
         float x1 = 0;
         float y1 = 0;
         float x2 = 0;
@@ -150,6 +157,11 @@ public class GradientPaintPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsList(List<?> list) {
+        if(list.isEmpty()) {
+            super.setValueInternal(null);
+            return;
+        }
+
         float x1 = 0;
         float y1 = 0;
         float x2 = 0;
@@ -186,6 +198,11 @@ public class GradientPaintPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsMap(Map<?, ?> map) {
+        if(map.isEmpty()) {
+            super.setValueInternal(null);
+            return;
+        }
+
         float x1 = (Float) getMapValue(map, "x1", 0f);
         float y1 = (Float) getMapValue(map, "y1", 0f);
         float x2 = (Float) getMapValue(map, "x2", 0f);

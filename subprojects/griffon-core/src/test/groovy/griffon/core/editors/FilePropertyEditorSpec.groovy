@@ -15,6 +15,7 @@
  */
 package griffon.core.editors
 
+import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -22,6 +23,29 @@ import java.beans.PropertyEditor
 
 @Unroll
 class FilePropertyEditorSpec extends Specification {
+    @Shared
+    private File sharedFile = new File('.')
+
+    void "File literal '#literal' should be equal to #value"() {
+        setup:
+
+        PropertyEditor editor = new FilePropertyEditor()
+
+        when:
+        editor.value = literal
+
+        then:
+        value == editor.value
+
+
+        where:
+        literal       | value
+        null       | null
+        ''         | null
+        ' '        | null
+        sharedFile | sharedFile
+    }
+
     void "Invalid file literal '#literal'"() {
         setup:
 

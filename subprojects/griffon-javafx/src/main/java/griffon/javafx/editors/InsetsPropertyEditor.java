@@ -22,6 +22,8 @@ import javafx.geometry.Insets;
 import java.util.List;
 import java.util.Map;
 
+import static griffon.util.GriffonNameUtils.isBlank;
+
 /**
  * @author Andres Almiray
  */
@@ -46,6 +48,11 @@ public class InsetsPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsString(String str) {
+        if (isBlank(str)) {
+            super.setValueInternal(null);
+            return;
+        }
+
         double t = 0;
         double l = 0;
         double r = 0;
@@ -68,6 +75,11 @@ public class InsetsPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsList(List<?> list) {
+        if(list.isEmpty()) {
+            super.setValueInternal(null);
+            return;
+        }
+
         double t = 0;
         double l = 0;
         double r = 0;
@@ -89,6 +101,11 @@ public class InsetsPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsMap(Map<?, ?> map) {
+        if(map.isEmpty()) {
+            super.setValueInternal(null);
+            return;
+        }
+
         double t = getMapValue(map, "top", 0);
         double l = getMapValue(map, "left", 0);
         double r = getMapValue(map, "right", 0);

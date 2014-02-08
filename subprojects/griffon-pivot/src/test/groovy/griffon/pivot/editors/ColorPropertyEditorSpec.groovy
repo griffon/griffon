@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.swing.editors
+package griffon.pivot.editors
 
-import griffon.swing.support.Colors
+import griffon.pivot.support.Colors
 import spock.lang.Specification
 import spock.lang.Unroll
 

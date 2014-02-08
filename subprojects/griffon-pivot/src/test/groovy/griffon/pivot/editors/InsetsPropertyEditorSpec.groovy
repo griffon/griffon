@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.swing.editors
+package griffon.pivot.editors
 
+import org.apache.pivot.wtk.Insets
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import java.awt.Insets
 import java.beans.PropertyEditor
 
 @Unroll

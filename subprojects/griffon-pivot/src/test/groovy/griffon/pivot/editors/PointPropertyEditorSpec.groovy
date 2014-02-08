@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.swing.editors
+package griffon.pivot.editors
 
+import org.apache.pivot.wtk.Point
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import java.awt.Point
 import java.beans.PropertyEditor
 
 @Unroll
@@ -40,8 +40,8 @@ class PointPropertyEditorSpec extends Specification {
         null              | null
         null              | ''
         null              | ' '
-        null              | []
-        null              | [:]
+        null                          | []
+        null                          | [:]
         new Point(10, 20) | '10,20'
         new Point(10, 20) | '10, 20'
         new Point(10, 20) | ' 10, 20'

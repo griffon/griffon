@@ -22,6 +22,8 @@ import java.awt.Font;
 import java.util.List;
 import java.util.Map;
 
+import static griffon.util.GriffonNameUtils.isBlank;
+
 /**
  * @author Andres Almiray
  */
@@ -61,6 +63,10 @@ public class FontPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsString(String str) {
+        if (isBlank(str)) {
+            super.setValueInternal(null);
+            return;
+        }
         String[] parts = str.split("-");
         if (parts.length != 3) {
             throw illegalValue(str, Font.class);
@@ -74,6 +80,11 @@ public class FontPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsList(List<?> list) {
+        if(list.isEmpty()) {
+            super.setValueInternal(null);
+            return;
+        }
+
         if (list.size() != 3) {
             throw illegalValue(list, Font.class);
         }
@@ -86,6 +97,11 @@ public class FontPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsMap(Map<?, ?> map) {
+        if(map.isEmpty()) {
+            super.setValueInternal(null);
+            return;
+        }
+
         String family = getMapValue(map, "family", "");
         String style = getMapValue(map, "style", "");
         String size = getMapValue(map, "size", "");

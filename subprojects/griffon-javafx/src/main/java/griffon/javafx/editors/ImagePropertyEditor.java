@@ -25,6 +25,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 
+import static griffon.util.GriffonNameUtils.isBlank;
+
 /**
  * @author Andres Almiray
  */
@@ -51,7 +53,11 @@ public class ImagePropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsString(String str) {
-        handleAsURL(getClass().getClassLoader().getResource(str));
+        if (isBlank(str)) {
+            super.setValueInternal(null);
+        } else {
+            handleAsURL(getClass().getClassLoader().getResource(str));
+        }
     }
 
     private void handleAsFile(File file) {

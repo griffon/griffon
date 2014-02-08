@@ -38,7 +38,8 @@ public class FilePropertyEditor extends AbstractPropertyEditor {
 
     private void handleAsString(String str) {
         if (isBlank(str)) {
-            throw illegalValue(str, File.class);
+            super.setValueInternal(null);
+            return;
         }
         super.setValueInternal(new File(str));
     }

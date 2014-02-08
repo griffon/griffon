@@ -22,6 +22,8 @@ import javafx.geometry.Dimension2D;
 import java.util.List;
 import java.util.Map;
 
+import static griffon.util.GriffonNameUtils.isBlank;
+
 /**
  * @author Andres Almiray
  */
@@ -46,6 +48,11 @@ public class Dimension2DPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsString(String str) {
+        if (isBlank(str)) {
+            super.setValueInternal(null);
+            return;
+        }
+
         String[] parts = str.split(",");
         switch (parts.length) {
             case 1:
@@ -63,6 +70,11 @@ public class Dimension2DPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsList(List<?> list) {
+        if(list.isEmpty()) {
+            super.setValueInternal(null);
+            return;
+        }
+
         switch (list.size()) {
             case 1:
                 double s = parseValue(list.get(0));
@@ -79,6 +91,11 @@ public class Dimension2DPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsMap(Map<?, ?> map) {
+        if(map.isEmpty()) {
+            super.setValueInternal(null);
+            return;
+        }
+
         double w = getMapValue(map, "width", 0);
         double h = getMapValue(map, "height", 0);
         super.setValueInternal(new Dimension2D(w, h));

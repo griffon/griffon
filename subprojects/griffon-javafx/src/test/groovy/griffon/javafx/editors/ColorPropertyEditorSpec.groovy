@@ -29,16 +29,22 @@ class ColorPropertyEditorSpec extends Specification {
         PropertyEditor editor = new ColorPropertyEditor()
 
         when:
+
         editor.value = format
         def parsedColor = editor.value
 
         then:
 
         // use string comparison to avoid inequality on double values
-        color.toString() == parsedColor.toString()
+        color?.toString() == parsedColor?.toString()
 
         where:
         color                         | format
+        null                          | null
+        null                          | ''
+        null                          | ' '
+        null                          | []
+        null                          | [:]
         Color.RED                     | 'red'
         Color.RED                     | 'RED'
         Color.RED                     | '#F00'
@@ -63,6 +69,7 @@ class ColorPropertyEditorSpec extends Specification {
         new Color(0.25, 0.5, 0.75, 1) | '#4080BFFF'
         new Color(0.25, 0.5, 0.75, 1) | ['40', '80', 'BF', 'FF']
         new Color(0.25, 0.5, 0.75, 1) | [r: '40', g: '80', b: 'BF', a: 'FF']
+        new Color(0.25, 0.5, 0.75, 1) | new Color(0.25, 0.5, 0.75, 1)
     }
 
     void "Invalid color format '#format'"() {
@@ -79,10 +86,7 @@ class ColorPropertyEditorSpec extends Specification {
 
         where:
         format << [
-            '',
-            '   ',
             'garbage',
-            [],
             [1],
             [1, 2],
             [1, 2, 3, 4, 5],

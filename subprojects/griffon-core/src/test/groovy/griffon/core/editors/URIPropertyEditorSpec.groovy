@@ -41,6 +41,8 @@ class URIPropertyEditorSpec extends Specification {
         where:
         literal            | value
         null               | null
+        ''                 | null
+        ' '                | null
         'http://localhost' | 'http://localhost'.toURI()
         uri                | uri
     }

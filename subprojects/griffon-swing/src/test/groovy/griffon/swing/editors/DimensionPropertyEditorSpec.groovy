@@ -37,6 +37,11 @@ class DimensionPropertyEditorSpec extends Specification {
 
         where:
         dimension             | format
+        null                  | null
+        null                  | ''
+        null                  | ' '
+        null                  | []
+        null                  | [:]
         new Dimension(10, 20) | '10,20'
         new Dimension(10, 20) | '10, 20'
         new Dimension(10, 20) | ' 10, 20'
@@ -51,7 +56,7 @@ class DimensionPropertyEditorSpec extends Specification {
         new Dimension(10, 20) | [width: '10', height: '20']
         new Dimension(10, 20) | [w: 10, h: 20]
         new Dimension(10, 20) | [w: '10', h: '20']
-        new Dimension(0, 0)   | [:]
+        new Dimension(10, 20) | new Dimension(10, 20)
         new Dimension(0, 0)   | [foo: 10, bar: 20]
     }
 
@@ -69,11 +74,8 @@ class DimensionPropertyEditorSpec extends Specification {
 
         where:
         format << [
-            '',
-            '   ',
             'garbage',
             '1, 2, 3',
-            [],
             [1, 2, 3],
             [width: 'a'],
             [w: 'b'],

@@ -22,6 +22,8 @@ import org.apache.pivot.wtk.Insets;
 import java.util.List;
 import java.util.Map;
 
+import static griffon.util.GriffonNameUtils.isBlank;
+
 /**
  * @author Andres Almiray
  * @since 2.0.0
@@ -53,6 +55,11 @@ public class InsetsPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsString(String str) {
+        if (isBlank(str)) {
+            super.setValueInternal(null);
+            return;
+        }
+
         int t = 0;
         int l = 0;
         int r = 0;
@@ -75,6 +82,11 @@ public class InsetsPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsList(List<?> list) {
+        if(list.isEmpty()) {
+            super.setValueInternal(null);
+            return;
+        }
+
         int t = 0;
         int l = 0;
         int r = 0;
@@ -96,6 +108,11 @@ public class InsetsPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsMap(Map<?, ?> map) {
+        if(map.isEmpty()) {
+            super.setValueInternal(null);
+            return;
+        }
+
         int t = getMapValue(map, "top", 0);
         int l = getMapValue(map, "left", 0);
         int r = getMapValue(map, "right", 0);

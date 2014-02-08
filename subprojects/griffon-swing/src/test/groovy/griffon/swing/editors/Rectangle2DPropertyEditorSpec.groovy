@@ -37,6 +37,11 @@ class Rectangle2DPropertyEditorSpec extends Specification {
 
         where:
         rectangle                              | format
+        null                                   | null
+        null                                   | ''
+        null                                   | ' '
+        null                                   | []
+        null                                   | [:]
         new Rectangle2D.Double(10, 20, 30, 40) | '10,20,30,40'
         new Rectangle2D.Double(10, 20, 30, 40) | '10, 20, 30, 40'
         new Rectangle2D.Double(10, 20, 30, 40) | ' 10, 20, 30, 40'
@@ -47,7 +52,7 @@ class Rectangle2DPropertyEditorSpec extends Specification {
         new Rectangle2D.Double(10, 20, 30, 40) | [x: '10', y: '20', width: '30', height: '40']
         new Rectangle2D.Double(10, 20, 30, 40) | [x: 10, y: 20, w: 30, h: 40]
         new Rectangle2D.Double(10, 20, 30, 40) | [x: '10', y: '20', w: '30', h: '40']
-        new Rectangle2D.Double(0, 0, 0, 0)     | [:]
+        new Rectangle2D.Double(10, 20, 30, 40) | new Rectangle2D.Double(10, 20, 30, 40)
         new Rectangle2D.Double(0, 0, 0, 0)     | [foo: 10, bar: 20]
     }
 
@@ -65,12 +70,9 @@ class Rectangle2DPropertyEditorSpec extends Specification {
 
         where:
         format << [
-            '',
-            '   ',
             'garbage',
             '1, 2, 3',
             '1, 2, 3, 4, 5',
-            [],
             [1, 2, 3],
             [1, 2, 3, 4, 5],
             [x: 'a'],

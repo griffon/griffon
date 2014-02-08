@@ -22,6 +22,8 @@ import java.awt.Dimension;
 import java.util.List;
 import java.util.Map;
 
+import static griffon.util.GriffonNameUtils.isBlank;
+
 /**
  * @author Andres Almiray
  * @author Alexander Klein
@@ -54,6 +56,10 @@ public class DimensionPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsString(String str) {
+        if (isBlank(str)) {
+            super.setValueInternal(null);
+            return;
+        }
         String[] parts = str.split(",");
         switch (parts.length) {
             case 1:
@@ -71,6 +77,11 @@ public class DimensionPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsList(List<?> list) {
+        if(list.isEmpty()) {
+            super.setValueInternal(null);
+            return;
+        }
+
         switch (list.size()) {
             case 1:
                 int s = parseValue(list.get(0));
@@ -87,6 +98,11 @@ public class DimensionPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsMap(Map<?, ?> map) {
+        if(map.isEmpty()) {
+            super.setValueInternal(null);
+            return;
+        }
+
         int w = getMapValue(map, "width", 0);
         int h = getMapValue(map, "height", 0);
         super.setValueInternal(new Dimension(w, h));

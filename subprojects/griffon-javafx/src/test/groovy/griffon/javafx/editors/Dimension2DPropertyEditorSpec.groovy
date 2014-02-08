@@ -29,6 +29,7 @@ class Dimension2DPropertyEditorSpec extends Specification {
         PropertyEditor editor = new Dimension2DPropertyEditor()
 
         when:
+
         editor.value = format
 
         then:
@@ -37,6 +38,11 @@ class Dimension2DPropertyEditorSpec extends Specification {
 
         where:
         dimension               | format
+        null                    | null
+        null                    | ''
+        null                    | ' '
+        null                    | []
+        null                    | [:]
         new Dimension2D(10, 20) | '10,20'
         new Dimension2D(10, 20) | '10, 20'
         new Dimension2D(10, 20) | ' 10, 20'
@@ -51,7 +57,7 @@ class Dimension2DPropertyEditorSpec extends Specification {
         new Dimension2D(10, 20) | [width: '10', height: '20']
         new Dimension2D(10, 20) | [w: 10, h: 20]
         new Dimension2D(10, 20) | [w: '10', h: '20']
-        new Dimension2D(0, 0)   | [:]
+        new Dimension2D(10, 20) | new Dimension2D(10, 20)
         new Dimension2D(0, 0)   | [foo: 10, bar: 20]
     }
 
@@ -69,11 +75,8 @@ class Dimension2DPropertyEditorSpec extends Specification {
 
         where:
         format << [
-            '',
-            '   ',
             'garbage',
             '1, 2, 3',
-            [],
             [1, 2, 3],
             [width: 'a'],
             [w: 'b'],

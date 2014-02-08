@@ -37,6 +37,11 @@ class FontPropertyEditorSpec extends Specification {
 
         where:
         font                                               | format
+        null                                               | null
+        null                                               | ''
+        null                                               | ' '
+        null                                               | []
+        null                                               | [:]
         new Font('Helvetica', Font.PLAIN, 12)              | 'Helvetica-PLAIN-12'
         new Font('Helvetica', Font.BOLD, 12)               | 'Helvetica-BOLD-12'
         new Font('Helvetica', Font.ITALIC, 12)             | 'Helvetica-ITALIC-12'
@@ -49,6 +54,7 @@ class FontPropertyEditorSpec extends Specification {
         new Font('Helvetica', Font.BOLD, 12)               | [family: 'Helvetica', style: 'BOLD', size: '12']
         new Font('Helvetica', Font.ITALIC, 12)             | [family: 'Helvetica', style: 'ITALIC', size: '12']
         new Font('Helvetica', Font.BOLD | Font.ITALIC, 12) | [family: 'Helvetica', style: 'BOLDITALIC', size: '12']
+        new Font('Helvetica', Font.BOLD | Font.ITALIC, 12) | new Font('Helvetica', Font.BOLD | Font.ITALIC, 12)
     }
 
     void "Invalid font format '#format'"() {
@@ -65,13 +71,10 @@ class FontPropertyEditorSpec extends Specification {
 
         where:
         format << [
-            '',
-            '   ',
             'garbage',
             'foo-bar-baz',
             'Helvetica-FOO-12',
             'Helvetica-BOLD-baz',
-            [],
             ['Helvetica'],
             ['Helvetica', 'BOLD'],
             [family: 'Helvetica'],

@@ -29,6 +29,7 @@ class Point2DPropertyEditorSpec extends Specification {
         PropertyEditor editor = new Point2DPropertyEditor()
 
         when:
+
         editor.value = format
 
         then:
@@ -37,6 +38,11 @@ class Point2DPropertyEditorSpec extends Specification {
 
         where:
         point               | format
+        null                | null
+        null                | ''
+        null                | ' '
+        null                | []
+        null                | [:]
         new Point2D(10, 20) | '10,20'
         new Point2D(10, 20) | '10, 20'
         new Point2D(10, 20) | ' 10, 20'
@@ -49,7 +55,7 @@ class Point2DPropertyEditorSpec extends Specification {
         new Point2D(10, 10) | ['10']
         new Point2D(10, 20) | [x: 10, y: 20]
         new Point2D(10, 20) | [x: '10', y: '20']
-        new Point2D(0, 0)   | [:]
+        new Point2D(10, 20) | new Point2D(10, 20)
         new Point2D(0, 0)   | [foo: 10, bar: 20]
     }
 
@@ -67,11 +73,8 @@ class Point2DPropertyEditorSpec extends Specification {
 
         where:
         format << [
-            '',
-            '   ',
             'garbage',
             '1, 2, 3',
-            [],
             [1, 2, 3],
             [x: 'a'],
             [y: 'b'],

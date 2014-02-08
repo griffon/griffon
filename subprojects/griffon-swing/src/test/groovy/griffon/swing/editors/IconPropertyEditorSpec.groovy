@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.core.editors
+package griffon.swing.editors
 
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -21,54 +21,50 @@ import spock.lang.Unroll
 import java.beans.PropertyEditor
 
 @Unroll
-class EnumPropertyEditorSpec extends Specification {
-    void "Enum literal '#literal' should be equal to #value"() {
-        setup:
+class IconPropertyEditorSpec extends Specification {
 
-        PropertyEditor editor = new EnumPropertyEditor()
+    void "Icon format '#format' should be equal to #icon"() {
+        setup:
+        PropertyEditor editor = new IconPropertyEditor()
 
         when:
-        editor.enumType = Numbers
-        editor.value = literal
+
+        editor.value = format
 
         then:
-
-        value == editor.value
+        icon == editor.value
 
         where:
-        literal     | value
-        null        | null
-        ''          | null
-        ' '         | null
-        'ZERO'      | Numbers.ZERO
-        Numbers.ONE | Numbers.ONE
+        icon | format
+        null | null
+        null | ''
+        null | ' '
     }
 
-    void "Invalid enum literal '#literal'"() {
+    void "Invalid icon format '#format'"() {
         setup:
 
-        PropertyEditor editor = new EnumPropertyEditor()
+        PropertyEditor editor = new IconPropertyEditor()
 
         when:
-        editor.enumType = Numbers
-        editor.value = literal
+        editor.value = format
 
         then:
 
         thrown(IllegalArgumentException)
 
         where:
-        literal << [
+        format << [
             'garbage',
             [],
-            [1, 2, 3],
-            [:],
-            [key: 'value'],
-            new Object()
+            [1],
+            [1, 2],
+            [1, 2, 3, 4, 5],
+            'F00',
+            '#F0',
+            '#FF0000FF00',
+            ['HH', 'FF', '00'],
+            new Object(),
         ]
     }
-}
-
-enum Numbers {
-    ZERO, ONE, TWO
 }

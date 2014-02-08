@@ -67,6 +67,11 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsString(String str) {
+        if (isBlank(str)) {
+            super.setValueInternal(null);
+            return;
+        }
+
         try {
             super.setValueInternal(ColorFormatter.parseColor(str));
         } catch (ParseException e) {
@@ -75,6 +80,11 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsList(List<?> list) {
+        if(list.isEmpty()) {
+            super.setValueInternal(null);
+            return;
+        }
+
         List<Object> values = new ArrayList<>();
         values.addAll(list);
         switch (list.size()) {
@@ -106,6 +116,11 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsMap(Map<?, ?> map) {
+        if(map.isEmpty()) {
+            super.setValueInternal(null);
+            return;
+        }
+
         int r = getMapValue(map, "red", 0);
         int g = getMapValue(map, "green", 0);
         int b = getMapValue(map, "blue", 0);

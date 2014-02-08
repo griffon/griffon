@@ -29,6 +29,7 @@ class InsetsPropertyEditorSpec extends Specification {
         PropertyEditor editor = new InsetsPropertyEditor()
 
         when:
+
         editor.value = format
 
         then:
@@ -37,6 +38,11 @@ class InsetsPropertyEditorSpec extends Specification {
 
         where:
         insets                 | format
+        null                   | null
+        null                   | ''
+        null                   | ' '
+        null                   | []
+        null                   | [:]
         new Insets(1, 0, 0, 0) | '1'
         new Insets(1, 2, 0, 0) | '1,2'
         new Insets(1, 2, 3, 0) | '1,2,3'
@@ -53,7 +59,7 @@ class InsetsPropertyEditorSpec extends Specification {
         new Insets(1, 2, 3, 4) | [top: '1', left: '2', right: '3', bottom: '4']
         new Insets(1, 2, 3, 4) | [t: 1, l: 2, r: 3, b: 4]
         new Insets(1, 2, 3, 4) | [t: '1', l: '2', r: '3', b: '4']
-        new Insets(0, 0, 0, 0) | [:]
+        new Insets(1, 2, 3, 4) | new Insets(1, 2, 3, 4)
         new Insets(0, 0, 0, 0) | [foo: 1, bar: 2]
     }
 
@@ -71,12 +77,9 @@ class InsetsPropertyEditorSpec extends Specification {
 
         where:
         format << [
-            '',
-            '   ',
             'garbage',
             '1, 2, 3,4 ,5',
             '1, a',
-            [],
             [1, 2, 3, 4, 5],
             [top: 'a'],
             [t: 'b'],

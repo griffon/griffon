@@ -21,6 +21,8 @@ import griffon.metadata.PropertyEditorFor;
 import java.awt.Polygon;
 import java.util.List;
 
+import static griffon.util.GriffonNameUtils.isBlank;
+
 /**
  * @author Andres Almiray
  * @since 2.0.0
@@ -57,6 +59,11 @@ public class PolygonPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsString(String str) {
+        if (isBlank(str)) {
+            super.setValueInternal(null);
+            return;
+        }
+
         String[] parts = str.split(",");
         if (parts.length == 0 || parts.length % 2 == 1) {
             throw illegalValue(str, Polygon.class);
@@ -74,6 +81,11 @@ public class PolygonPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsList(List<?> list) {
+        if(list.isEmpty()) {
+            super.setValueInternal(null);
+            return;
+        }
+
         if (list.isEmpty() || list.size() % 2 == 1) {
             throw illegalValue(list, Polygon.class);
         }

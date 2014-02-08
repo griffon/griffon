@@ -13,55 +13,53 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.swing.editors
+package griffon.pivot.editors
 
+import org.apache.pivot.wtk.Bounds
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import java.awt.geom.Point2D
 import java.beans.PropertyEditor
 
 @Unroll
-class Point2DPropertyEditorSpec extends Specification {
-    void "Point2D format '#format' should be equal to #point"() {
+class BoundsPropertyEditorSpec extends Specification {
+    void "Bounds format '#format' should be equal to #bounds"() {
         setup:
 
-        PropertyEditor editor = new Point2DPropertyEditor()
+        PropertyEditor editor = new BoundsPropertyEditor()
 
         when:
         editor.value = format
 
         then:
 
-        point == editor.value
+        bounds == editor.value
 
         where:
-        point                      | format
+        bounds                     | format
         null                       | null
         null                       | ''
         null                       | ' '
         null                       | []
         null                       | [:]
-        new Point2D.Double(10, 20) | '10,20'
-        new Point2D.Double(10, 20) | '10, 20'
-        new Point2D.Double(10, 20) | ' 10, 20'
-        new Point2D.Double(10, 20) | ' 10, 20 '
-        new Point2D.Double(10, 20) | [10, 20]
-        new Point2D.Double(10, 20) | ['10', '20']
-        new Point2D.Double(10, 10) | 10
-        new Point2D.Double(10, 10) | '10'
-        new Point2D.Double(10, 10) | [10]
-        new Point2D.Double(10, 10) | ['10']
-        new Point2D.Double(10, 20) | [x: 10, y: 20]
-        new Point2D.Double(10, 20) | [x: '10', y: '20']
-        new Point2D.Double(10, 20) | new Point2D.Double(10, 20)
-        new Point2D.Double(0, 0)   | [foo: 10, bar: 20]
+        new Bounds(10, 20, 30, 40) | '10,20,30,40'
+        new Bounds(10, 20, 30, 40) | '10, 20, 30, 40'
+        new Bounds(10, 20, 30, 40) | ' 10, 20, 30, 40'
+        new Bounds(10, 20, 30, 40) | ' 10, 20, 30, 40 '
+        new Bounds(10, 20, 30, 40) | [10, 20, 30, 40]
+        new Bounds(10, 20, 30, 40) | ['10', '20', '30', '40']
+        new Bounds(10, 20, 30, 40) | [x: 10, y: 20, width: 30, height: 40]
+        new Bounds(10, 20, 30, 40) | [x: '10', y: '20', width: '30', height: '40']
+        new Bounds(10, 20, 30, 40) | [x: 10, y: 20, w: 30, h: 40]
+        new Bounds(10, 20, 30, 40) | [x: '10', y: '20', w: '30', h: '40']
+        new Bounds(10, 20, 30, 40) | new Bounds(10, 20, 30, 40)
+        new Bounds(0, 0, 0, 0)     | [foo: 10, bar: 20]
     }
 
-    void "Invalid point format '#format'"() {
+    void "Invalid bounds format '#format'"() {
         setup:
 
-        PropertyEditor editor = new Point2DPropertyEditor()
+        PropertyEditor editor = new BoundsPropertyEditor()
 
         when:
         editor.value = format
@@ -74,7 +72,9 @@ class Point2DPropertyEditorSpec extends Specification {
         format << [
             'garbage',
             '1, 2, 3',
+            '1, 2, 3, 4, 5',
             [1, 2, 3],
+            [1, 2, 3, 4, 5],
             [x: 'a'],
             [y: 'b'],
             new Object()

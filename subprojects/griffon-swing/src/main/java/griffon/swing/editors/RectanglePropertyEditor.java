@@ -22,6 +22,8 @@ import java.awt.Rectangle;
 import java.util.List;
 import java.util.Map;
 
+import static griffon.util.GriffonNameUtils.isBlank;
+
 /**
  * @author Andres Almiray
  * @author Alexander Klein
@@ -52,6 +54,11 @@ public class RectanglePropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsString(String str) {
+        if (isBlank(str)) {
+            super.setValueInternal(null);
+            return;
+        }
+
         String[] parts = str.split(",");
         switch (parts.length) {
             case 4:
@@ -67,6 +74,11 @@ public class RectanglePropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsList(List<?> list) {
+        if(list.isEmpty()) {
+            super.setValueInternal(null);
+            return;
+        }
+
         switch (list.size()) {
             case 4:
                 int x = parseValue(list.get(0));
@@ -81,6 +93,11 @@ public class RectanglePropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsMap(Map<?, ?> map) {
+        if(map.isEmpty()) {
+            super.setValueInternal(null);
+            return;
+        }
+
         int x = getMapValue(map, "x", 0);
         int y = getMapValue(map, "y", 0);
         int w = getMapValue(map, "width", 0);
