@@ -216,8 +216,8 @@ subprojects { subproj ->
             strictCheck = true
             ignoreFailures = true
             mapping {
-                java ='SLASHSTAR_STYLE'
-                groovy ='SLASHSTAR_STYLE'
+                java   = 'SLASHSTAR_STYLE'
+                groovy = 'SLASHSTAR_STYLE'
             }
             ext.year = '2008-2014'
         }
@@ -226,4 +226,12 @@ subprojects { subproj ->
             source -= sourceSets.test.resources
         }
     }
+}
+
+task projectCoberturaMerge(type: ProjectCoberturaMergeTask) {
+
+}
+
+task projectCoberturaReport(type: ProjectCoberturaReportTask) {
+
 }
