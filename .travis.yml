@@ -1,9 +1,9 @@
 language: java
 
-script: ./gradlew clean check cobertura
+script: ./gradlew clean check cobertura projectCoberturaMerge projectCoberturaReport
 
 jdk: oraclejdk7
 
 env: TERM=dumb
 
-#after_success: ./gradlew coveralls
+after_success: ./gradlew coveralls

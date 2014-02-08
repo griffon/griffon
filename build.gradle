@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat
 
 apply plugin: 'base'
 apply plugin: 'idea'
+apply plugin: 'coveralls'
 apply plugin: 'build-dashboard'
 apply from: 'gradle/idea.gradle'
 
@@ -124,7 +125,6 @@ subprojects { subproj ->
 
     if (subproj.ext.maven == true) {
         apply plugin: 'license'
-        apply plugin: 'coveralls'
         apply from: "${rootDir}/gradle/maven.gradle"
         apply from: "${rootDir}/gradle/publish.gradle"
         apply from: "${rootDir}/gradle/codeQuality.gradle"
