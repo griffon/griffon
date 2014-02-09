@@ -39,12 +39,13 @@ class URLPropertyEditorSpec extends Specification {
         value == editor.value
 
         where:
-        literal            | value
-        null               | null
-        ''                 | null
-        ' '                | null
-        'http://localhost' | 'http://localhost'.toURL()
-        url                | url
+        literal                    | value
+        null                       | null
+        ''                         | null
+        ' '                        | null
+        'http://localhost'         | 'http://localhost'.toURL()
+        new File('/').absoluteFile | new File('/').absoluteFile.toURI().toURL()
+        url                        | url
     }
 
     void "Invalid url literal '#literal'"() {

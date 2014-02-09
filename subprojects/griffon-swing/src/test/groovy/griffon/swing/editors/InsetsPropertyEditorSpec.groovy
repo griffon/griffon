@@ -15,6 +15,7 @@
  */
 package griffon.swing.editors
 
+import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -23,6 +24,9 @@ import java.beans.PropertyEditor
 
 @Unroll
 class InsetsPropertyEditorSpec extends Specification {
+    @Shared
+    private Insets insets = new Insets(1, 2, 3, 4)
+
     void "Insets format '#format' should be equal to #insets"() {
         setup:
 
@@ -33,10 +37,10 @@ class InsetsPropertyEditorSpec extends Specification {
 
         then:
 
-        insets == editor.value
+        value == editor.value
 
         where:
-        insets                 | format
+        value                  | format
         null                   | null
         null                   | ''
         null                   | ' '
@@ -45,20 +49,20 @@ class InsetsPropertyEditorSpec extends Specification {
         new Insets(1, 0, 0, 0) | '1'
         new Insets(1, 2, 0, 0) | '1,2'
         new Insets(1, 2, 3, 0) | '1,2,3'
-        new Insets(1, 2, 3, 4) | '1,2,3,4'
-        new Insets(1, 2, 3, 4) | '1, 2, 3, 4'
-        new Insets(1, 2, 3, 4) | ' 1, 2, 3, 4'
-        new Insets(1, 2, 3, 4) | ' 1, 2,3 , 4 '
-        new Insets(1, 2, 3, 4) | [1, 2, 3, 4]
-        new Insets(1, 2, 3, 4) | ['1', '2', '3', '4']
+        insets                 | '1,2,3,4'
+        insets                 | '1, 2, 3, 4'
+        insets                 | ' 1, 2, 3, 4'
+        insets                 | ' 1, 2,3 , 4 '
+        insets                 | [1, 2, 3, 4]
+        insets                 | ['1', '2', '3', '4']
         new Insets(1, 1, 1, 1) | 1
         new Insets(1, 0, 0, 0) | [1]
         new Insets(1, 0, 0, 0) | ['1']
-        new Insets(1, 2, 3, 4) | [top: 1, left: 2, right: 3, bottom: 4]
-        new Insets(1, 2, 3, 4) | [top: '1', left: '2', right: '3', bottom: '4']
-        new Insets(1, 2, 3, 4) | [t: 1, l: 2, r: 3, b: 4]
-        new Insets(1, 2, 3, 4) | [t: '1', l: '2', r: '3', b: '4']
-        new Insets(1, 2, 3, 4) | new Insets(1, 2, 3, 4)
+        insets                 | [top: 1, left: 2, right: 3, bottom: 4]
+        insets                 | [top: '1', left: '2', right: '3', bottom: '4']
+        insets                 | [t: 1, l: 2, r: 3, b: 4]
+        insets                 | [t: '1', l: '2', r: '3', b: '4']
+        insets                 | insets
         new Insets(0, 0, 0, 0) | [foo: 1, bar: 2]
     }
 
@@ -84,5 +88,25 @@ class InsetsPropertyEditorSpec extends Specification {
             [t: 'b'],
             new Object()
         ]
+    }
+
+    void "Formatted insets '#expected'"() {
+        given:
+
+        PropertyEditor editor = new InsetsPropertyEditor()
+
+        when:
+
+        editor.value = value
+        String actual = editor.asText
+
+        then:
+
+        expected == actual
+
+        where:
+        value  | expected
+        null   | null
+        insets | '1, 2, 3, 4'
     }
 }

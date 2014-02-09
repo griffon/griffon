@@ -97,4 +97,29 @@ class ColorPropertyEditorSpec extends Specification {
             new Object()
         ]
     }
+
+    void "Formatted color '#expected' with format #format"() {
+        given:
+
+        PropertyEditor editor = new ColorPropertyEditor()
+
+        when:
+
+        editor.format = format
+        editor.value = value
+        String actual = editor.asText
+
+        then:
+
+        expected == actual
+
+        where:
+        value     | format      | expected
+        null      | null        | null
+        Color.RED | null        | '#ff0000'
+        Color.RED | '#RGB'      | '#f00'
+        Color.RED | '#RGBA'     | '#f00f'
+        Color.RED | '#RRGGBB'   | '#ff0000'
+        Color.RED | '#RRGGBBAA' | '#ff0000ff'
+    }
 }

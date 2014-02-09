@@ -15,6 +15,7 @@
  */
 package griffon.swing.editors
 
+import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -23,6 +24,9 @@ import java.beans.PropertyEditor
 
 @Unroll
 class Point2DPropertyEditorSpec extends Specification {
+    @Shared
+    private Point2D point = new Point2D.Double(10, 20)
+
     void "Point2D format '#format' should be equal to #point"() {
         setup:
 
@@ -33,28 +37,28 @@ class Point2DPropertyEditorSpec extends Specification {
 
         then:
 
-        point == editor.value
+        value == editor.value
 
         where:
-        point                      | format
+        value                      | format
         null                       | null
         null                       | ''
         null                       | ' '
         null                       | []
         null                       | [:]
-        new Point2D.Double(10, 20) | '10,20'
-        new Point2D.Double(10, 20) | '10, 20'
-        new Point2D.Double(10, 20) | ' 10, 20'
-        new Point2D.Double(10, 20) | ' 10, 20 '
-        new Point2D.Double(10, 20) | [10, 20]
-        new Point2D.Double(10, 20) | ['10', '20']
+        point                      | '10,20'
+        point                      | '10, 20'
+        point                      | ' 10, 20'
+        point                      | ' 10, 20 '
+        point                      | [10, 20]
+        point                      | ['10', '20']
         new Point2D.Double(10, 10) | 10
         new Point2D.Double(10, 10) | '10'
         new Point2D.Double(10, 10) | [10]
         new Point2D.Double(10, 10) | ['10']
-        new Point2D.Double(10, 20) | [x: 10, y: 20]
-        new Point2D.Double(10, 20) | [x: '10', y: '20']
-        new Point2D.Double(10, 20) | new Point2D.Double(10, 20)
+        point                      | [x: 10, y: 20]
+        point                      | [x: '10', y: '20']
+        point                      | point
         new Point2D.Double(0, 0)   | [foo: 10, bar: 20]
     }
 
@@ -79,5 +83,26 @@ class Point2DPropertyEditorSpec extends Specification {
             [y: 'b'],
             new Object()
         ]
+    }
+
+
+    void "Formatted point '#expected'"() {
+        given:
+
+        PropertyEditor editor = new Point2DPropertyEditor()
+
+        when:
+
+        editor.value = value
+        String actual = editor.asText
+
+        then:
+
+        expected == actual
+
+        where:
+        value | expected
+        null  | null
+        point | '10.0, 20.0'
     }
 }

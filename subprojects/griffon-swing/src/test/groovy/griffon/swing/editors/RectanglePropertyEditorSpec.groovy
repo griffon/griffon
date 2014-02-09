@@ -15,6 +15,7 @@
  */
 package griffon.swing.editors
 
+import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -23,6 +24,9 @@ import java.beans.PropertyEditor
 
 @Unroll
 class RectanglePropertyEditorSpec extends Specification {
+    @Shared
+    private Rectangle rectangle = new Rectangle(10, 20, 30, 40)
+
     void "Rectangle format '#format' should be equal to #rectangle"() {
         setup:
 
@@ -33,27 +37,27 @@ class RectanglePropertyEditorSpec extends Specification {
 
         then:
 
-        rectangle == editor.value
+        value == editor.value
 
         where:
-        rectangle                     | format
-        null                          | null
-        null                          | ''
-        null                          | ' '
-        null                          | []
-        null                          | [:]
-        new Rectangle(10, 20, 30, 40) | '10,20,30,40'
-        new Rectangle(10, 20, 30, 40) | '10, 20, 30, 40'
-        new Rectangle(10, 20, 30, 40) | ' 10, 20, 30, 40'
-        new Rectangle(10, 20, 30, 40) | ' 10, 20, 30, 40 '
-        new Rectangle(10, 20, 30, 40) | [10, 20, 30, 40]
-        new Rectangle(10, 20, 30, 40) | ['10', '20', '30', '40']
-        new Rectangle(10, 20, 30, 40) | [x: 10, y: 20, width: 30, height: 40]
-        new Rectangle(10, 20, 30, 40) | [x: '10', y: '20', width: '30', height: '40']
-        new Rectangle(10, 20, 30, 40) | [x: 10, y: 20, w: 30, h: 40]
-        new Rectangle(10, 20, 30, 40) | [x: '10', y: '20', w: '30', h: '40']
-        new Rectangle(10, 20, 30, 40) | new Rectangle(10, 20, 30, 40)
-        new Rectangle(0, 0, 0, 0)     | [foo: 10, bar: 20]
+        value                     | format
+        null                      | null
+        null                      | ''
+        null                      | ' '
+        null                      | []
+        null                      | [:]
+        rectangle                 | '10,20,30,40'
+        rectangle                 | '10, 20, 30, 40'
+        rectangle                 | ' 10, 20, 30, 40'
+        rectangle                 | ' 10, 20, 30, 40 '
+        rectangle                 | [10, 20, 30, 40]
+        rectangle                 | ['10', '20', '30', '40']
+        rectangle                 | [x: 10, y: 20, width: 30, height: 40]
+        rectangle                 | [x: '10', y: '20', width: '30', height: '40']
+        rectangle                 | [x: 10, y: 20, w: 30, h: 40]
+        rectangle                 | [x: '10', y: '20', w: '30', h: '40']
+        rectangle                 | rectangle
+        new Rectangle(0, 0, 0, 0) | [foo: 10, bar: 20]
     }
 
     void "Invalid rectangle format '#format'"() {
@@ -79,5 +83,25 @@ class RectanglePropertyEditorSpec extends Specification {
             [y: 'b'],
             new Object()
         ]
+    }
+
+    void "Formatted rectangle '#expected'"() {
+        given:
+
+        PropertyEditor editor = new RectanglePropertyEditor()
+
+        when:
+
+        editor.value = value
+        String actual = editor.asText
+
+        then:
+
+        expected == actual
+
+        where:
+        value     | expected
+        null      | null
+        rectangle | '10.0, 20.0, 30.0, 40.0'
     }
 }

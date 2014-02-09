@@ -16,6 +16,7 @@
 package griffon.pivot.editors
 
 import org.apache.pivot.wtk.Bounds
+import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -23,6 +24,9 @@ import java.beans.PropertyEditor
 
 @Unroll
 class BoundsPropertyEditorSpec extends Specification {
+    @Shared
+    private Bounds bounds = new Bounds(10, 20, 30, 40)
+
     void "Bounds format '#format' should be equal to #bounds"() {
         setup:
 
@@ -33,27 +37,27 @@ class BoundsPropertyEditorSpec extends Specification {
 
         then:
 
-        bounds == editor.value
+        value == editor.value
 
         where:
-        bounds                     | format
-        null                       | null
-        null                       | ''
-        null                       | ' '
-        null                       | []
-        null                       | [:]
-        new Bounds(10, 20, 30, 40) | '10,20,30,40'
-        new Bounds(10, 20, 30, 40) | '10, 20, 30, 40'
-        new Bounds(10, 20, 30, 40) | ' 10, 20, 30, 40'
-        new Bounds(10, 20, 30, 40) | ' 10, 20, 30, 40 '
-        new Bounds(10, 20, 30, 40) | [10, 20, 30, 40]
-        new Bounds(10, 20, 30, 40) | ['10', '20', '30', '40']
-        new Bounds(10, 20, 30, 40) | [x: 10, y: 20, width: 30, height: 40]
-        new Bounds(10, 20, 30, 40) | [x: '10', y: '20', width: '30', height: '40']
-        new Bounds(10, 20, 30, 40) | [x: 10, y: 20, w: 30, h: 40]
-        new Bounds(10, 20, 30, 40) | [x: '10', y: '20', w: '30', h: '40']
-        new Bounds(10, 20, 30, 40) | new Bounds(10, 20, 30, 40)
-        new Bounds(0, 0, 0, 0)     | [foo: 10, bar: 20]
+        value                  | format
+        null                   | null
+        null                   | ''
+        null                   | ' '
+        null                   | []
+        null                   | [:]
+        bounds                 | '10,20,30,40'
+        bounds                 | '10, 20, 30, 40'
+        bounds                 | ' 10, 20, 30, 40'
+        bounds                 | ' 10, 20, 30, 40 '
+        bounds                 | [10, 20, 30, 40]
+        bounds                 | ['10', '20', '30', '40']
+        bounds                 | [x: 10, y: 20, width: 30, height: 40]
+        bounds                 | [x: '10', y: '20', width: '30', height: '40']
+        bounds                 | [x: 10, y: 20, w: 30, h: 40]
+        bounds                 | [x: '10', y: '20', w: '30', h: '40']
+        bounds                 | bounds
+        new Bounds(0, 0, 0, 0) | [foo: 10, bar: 20]
     }
 
     void "Invalid bounds format '#format'"() {
@@ -79,5 +83,25 @@ class BoundsPropertyEditorSpec extends Specification {
             [y: 'b'],
             new Object()
         ]
+    }
+
+    void "Formatted bounds '#expected'"() {
+        given:
+
+        PropertyEditor editor = new BoundsPropertyEditor()
+
+        when:
+
+        editor.value = value
+        String actual = editor.asText
+
+        then:
+
+        expected == actual
+
+        where:
+        value  | expected
+        null   | null
+        bounds | '10, 20, 30, 40'
     }
 }

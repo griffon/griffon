@@ -38,11 +38,7 @@ public class BooleanPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsString(String str) {
-        try {
-            super.setValueInternal(isBlank(str) ? null : Boolean.parseBoolean(str));
-        } catch (NumberFormatException e) {
-            throw illegalValue(str, Boolean.class, e);
-        }
+        super.setValueInternal(isBlank(str) ? null : Boolean.parseBoolean(str));
     }
 
     private void handleAsBoolean(Boolean bool) {

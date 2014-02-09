@@ -35,7 +35,7 @@ public class PolygonPropertyEditor extends AbstractPropertyEditor {
         StringBuilder b = new StringBuilder();
         for (int i = 0; i < p.npoints; i++) {
             if (i != 0) {
-                b.append(" , ");
+                b.append(", ");
             }
             b.append(p.xpoints[i])
                 .append(", ")
@@ -65,7 +65,7 @@ public class PolygonPropertyEditor extends AbstractPropertyEditor {
         }
 
         String[] parts = str.split(",");
-        if (parts.length == 0 || parts.length % 2 == 1) {
+        if (parts.length % 2 == 1) {
             throw illegalValue(str, Polygon.class);
         }
 
@@ -81,12 +81,12 @@ public class PolygonPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsList(List<?> list) {
-        if(list.isEmpty()) {
+        if (list.isEmpty()) {
             super.setValueInternal(null);
             return;
         }
 
-        if (list.isEmpty() || list.size() % 2 == 1) {
+        if (list.size() % 2 == 1) {
             throw illegalValue(list, Polygon.class);
         }
 

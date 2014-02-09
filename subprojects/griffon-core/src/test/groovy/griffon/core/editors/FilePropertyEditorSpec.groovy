@@ -39,7 +39,7 @@ class FilePropertyEditorSpec extends Specification {
 
 
         where:
-        literal       | value
+        literal    | value
         null       | null
         ''         | null
         ' '        | null

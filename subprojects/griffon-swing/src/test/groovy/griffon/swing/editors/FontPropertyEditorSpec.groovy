@@ -81,4 +81,27 @@ class FontPropertyEditorSpec extends Specification {
             new Object()
         ]
     }
+
+    void "Formatted font '#expected'"() {
+        given:
+
+        PropertyEditor editor = new FontPropertyEditor()
+
+        when:
+
+        editor.value = value
+        String actual = editor.asText
+
+        then:
+
+        expected == actual
+
+        where:
+        value                                              | expected
+        null                                               | null
+        new Font('Helvetica', Font.PLAIN, 12)              | 'Helvetica-PLAIN-12'
+        new Font('Helvetica', Font.BOLD, 12)               | 'Helvetica-BOLD-12'
+        new Font('Helvetica', Font.ITALIC, 12)             | 'Helvetica-ITALIC-12'
+        new Font('Helvetica', Font.BOLD | Font.ITALIC, 12) | 'Helvetica-BOLDITALIC-12'
+    }
 }

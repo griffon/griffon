@@ -15,6 +15,7 @@
  */
 package griffon.swing.editors
 
+import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -26,6 +27,9 @@ import static java.awt.Color.WHITE
 
 @Unroll
 class GradientPaintPropertyEditorSpec extends Specification {
+    @Shared
+    private GradientPaint gradientPaint = new GradientPaint(0f, 0f, BLACK, 1f, 1f, WHITE)
+
     void "GradientPaint format '#format' is supported"() {
         setup:
 
@@ -36,22 +40,22 @@ class GradientPaintPropertyEditorSpec extends Specification {
 
         then:
 
-        paintsAreEqual gradientPaint, editor.value
+        paintsAreEqual value, editor.value
 
         where:
-        gradientPaint                                   | format
-        null                                            | null
-        null                                            | ''
-        null                                            | ' '
-        null                                            | []
-        null                                            | [:]
-        new GradientPaint(0f, 0f, BLACK, 1f, 1f, WHITE) | '0,0,BLACK,1,1,WHITE'
-        new GradientPaint(0f, 0f, BLACK, 1f, 1f, WHITE) | [0, 0, BLACK, 1, 1, WHITE]
-        new GradientPaint(0f, 0f, BLACK, 1f, 1f, WHITE) | [0, 0, 'BLACK', 1, 1, 'WHITE']
-        new GradientPaint(0f, 0f, BLACK, 1f, 1f, WHITE) | [x1: 0, y1: 0, c1: BLACK, x2: 1, y2: 1, c2: WHITE]
-        new GradientPaint(0f, 0f, BLACK, 1f, 1f, WHITE) | [x1: 0, y1: 0, c1: 'BLACK', x2: 1, y2: 1, c2: 'WHITE']
-        new GradientPaint(0f, 0f, BLACK, 1f, 1f, WHITE) | '0, 0 | 1, 1 | BLACK, WHITE'
-        new GradientPaint(0f, 0f, BLACK, 1f, 1f, WHITE) | new GradientPaint(0f, 0f, BLACK, 1f, 1f, WHITE)
+        value         | format
+        null          | null
+        null          | ''
+        null          | ' '
+        null          | []
+        null          | [:]
+        gradientPaint | '0,0,BLACK,1,1,WHITE'
+        gradientPaint | [0, 0, BLACK, 1, 1, WHITE]
+        gradientPaint | [0, 0, 'BLACK', 1, 1, 'WHITE']
+        gradientPaint | [x1: 0, y1: 0, c1: BLACK, x2: 1, y2: 1, c2: WHITE]
+        gradientPaint | [x1: 0, y1: 0, c1: 'BLACK', x2: 1, y2: 1, c2: 'WHITE']
+        gradientPaint | '0, 0 | 1, 1 | BLACK, WHITE'
+        gradientPaint | gradientPaint
     }
 
     private static void paintsAreEqual(GradientPaint p1, GradientPaint p2) {
@@ -89,5 +93,25 @@ class GradientPaintPropertyEditorSpec extends Specification {
             [c1: 'a'],
             new Object()
         ]
+    }
+
+    void "Formatted gradient paint '#expected'"() {
+        given:
+
+        PropertyEditor editor = new GradientPaintPropertyEditor()
+
+        when:
+
+        editor.value = value
+        String actual = editor.asText
+
+        then:
+
+        expected == actual
+
+        where:
+        value         | expected
+        null          | null
+        gradientPaint | '0.0, 0.0, #000000, 1.0, 1.0, #ffffff, false'
     }
 }

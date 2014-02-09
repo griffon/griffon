@@ -40,6 +40,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
 
     @Override
     public String getAsText() {
+        if (null == getValue()) return null;
         return isBlank(getFormat()) ? format((Color) getValueInternal()) : getFormattedValue();
     }
 
@@ -79,7 +80,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsList(List<?> list) {
-        if(list.isEmpty()) {
+        if (list.isEmpty()) {
             super.setValueInternal(null);
             return;
         }
@@ -115,7 +116,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsMap(Map<?, ?> map) {
-        if(map.isEmpty()) {
+        if (map.isEmpty()) {
             super.setValueInternal(null);
             return;
         }

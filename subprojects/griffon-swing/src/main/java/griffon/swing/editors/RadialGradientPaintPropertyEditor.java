@@ -63,7 +63,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
             if (first) {
                 first = false;
             } else {
-                b.append(", ");
+                b.append(":");
             }
             b.append(f);
         }
@@ -78,7 +78,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
             if (first) {
                 first = false;
             } else {
-                b.append(", ");
+                b.append(":");
             }
             b.append(ColorPropertyEditor.format(c));
         }

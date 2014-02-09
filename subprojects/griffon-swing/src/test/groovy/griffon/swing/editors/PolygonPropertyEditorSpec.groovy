@@ -15,6 +15,7 @@
  */
 package griffon.swing.editors
 
+import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -23,6 +24,9 @@ import java.beans.PropertyEditor
 
 @Unroll
 class PolygonPropertyEditorSpec extends Specification {
+    @Shared
+    private Polygon polygon = new Polygon([0, 2] as int[], [1, 3] as int[], 2)
+
     void "Polygon format '#format' should be supported"() {
         setup:
 
@@ -33,21 +37,21 @@ class PolygonPropertyEditorSpec extends Specification {
 
         then:
 
-        polygonsAreEqual polygon, editor.value
+        polygonsAreEqual value, editor.value
 
         where:
-        polygon                                          | format
-        null                                             | null
-        null                                             | ''
-        null                                             | ' '
-        null                                             | []
-        new Polygon([0, 2] as int[], [1, 3] as int[], 2) | '0,1,2,3'
-        new Polygon([0, 2] as int[], [1, 3] as int[], 2) | '0, 1, 2, 3'
-        new Polygon([0, 2] as int[], [1, 3] as int[], 2) | ' 0, 1, 2, 3'
-        new Polygon([0, 2] as int[], [1, 3] as int[], 2) | ' 0, 1, 2, 3 '
-        new Polygon([0, 2] as int[], [1, 3] as int[], 2) | [0, 1, 2, 3]
-        new Polygon([0, 2] as int[], [1, 3] as int[], 2) | ['0', '1', '2', '3']
-        new Polygon([0, 2] as int[], [1, 3] as int[], 2) | new Polygon([0, 2] as int[], [1, 3] as int[], 2)
+        value   | format
+        null    | null
+        null    | ''
+        null    | ' '
+        null    | []
+        polygon | '0,1,2,3'
+        polygon | '0, 1, 2, 3'
+        polygon | ' 0, 1, 2, 3'
+        polygon | ' 0, 1, 2, 3 '
+        polygon | [0, 1, 2, 3]
+        polygon | ['0', '1', '2', '3']
+        polygon | polygon
     }
 
     private static void polygonsAreEqual(Polygon p1, Polygon p2) {
@@ -79,5 +83,25 @@ class PolygonPropertyEditorSpec extends Specification {
             [1, 2, 3],
             new Object()
         ]
+    }
+
+    void "Formatted polygon '#expected'"() {
+        given:
+
+        PropertyEditor editor = new PolygonPropertyEditor()
+
+        when:
+
+        editor.value = value
+        String actual = editor.asText
+
+        then:
+
+        expected == actual
+
+        where:
+        value   | expected
+        null    | null
+        polygon | '0, 1, 2, 3'
     }
 }

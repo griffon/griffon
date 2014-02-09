@@ -16,6 +16,7 @@
 package griffon.pivot.editors
 
 import org.apache.pivot.wtk.Point
+import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -23,6 +24,9 @@ import java.beans.PropertyEditor
 
 @Unroll
 class PointPropertyEditorSpec extends Specification {
+    @Shared
+    private Point point = new Point(10, 20)
+
     void "Point format '#format' should be equal to #point"() {
         setup:
 
@@ -33,15 +37,15 @@ class PointPropertyEditorSpec extends Specification {
 
         then:
 
-        point == editor.value
+        value == editor.value
 
         where:
-        point             | format
+        value             | format
         null              | null
         null              | ''
         null              | ' '
-        null                          | []
-        null                          | [:]
+        null              | []
+        null              | [:]
         new Point(10, 20) | '10,20'
         new Point(10, 20) | '10, 20'
         new Point(10, 20) | ' 10, 20'
@@ -79,5 +83,25 @@ class PointPropertyEditorSpec extends Specification {
             [y: 'b'],
             new Object()
         ]
+    }
+
+    void "Formatted point '#expected'"() {
+        given:
+
+        PropertyEditor editor = new PointPropertyEditor()
+
+        when:
+
+        editor.value = value
+        String actual = editor.asText
+
+        then:
+
+        expected == actual
+
+        where:
+        value | expected
+        null  | null
+        point | '10, 20'
     }
 }

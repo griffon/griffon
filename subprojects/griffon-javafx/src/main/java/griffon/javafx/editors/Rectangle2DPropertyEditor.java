@@ -29,6 +29,12 @@ import static griffon.util.GriffonNameUtils.isBlank;
  */
 @PropertyEditorFor(Rectangle2D.class)
 public class Rectangle2DPropertyEditor extends AbstractPropertyEditor {
+    public String getAsText() {
+        if (null == getValue()) return null;
+        Rectangle2D r = (Rectangle2D) getValue();
+        return r.getMinX() + ", " + r.getMinY() + ", " + r.getWidth() + ", " + r.getHeight();
+    }
+
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);
@@ -66,7 +72,7 @@ public class Rectangle2DPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsList(List<?> list) {
-        if(list.isEmpty()) {
+        if (list.isEmpty()) {
             super.setValueInternal(null);
             return;
         }
@@ -85,7 +91,7 @@ public class Rectangle2DPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsMap(Map<?, ?> map) {
-        if(map.isEmpty()) {
+        if (map.isEmpty()) {
             super.setValueInternal(null);
             return;
         }

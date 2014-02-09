@@ -29,6 +29,12 @@ import static griffon.util.GriffonNameUtils.isBlank;
  */
 @PropertyEditorFor(Dimension2D.class)
 public class Dimension2DPropertyEditor extends AbstractPropertyEditor {
+    public String getAsText() {
+        if (null == getValue()) return null;
+        Dimension2D dimension = (Dimension2D) getValue();
+        return dimension.getWidth() + ", " + dimension.getHeight();
+    }
+
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);
@@ -70,7 +76,7 @@ public class Dimension2DPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsList(List<?> list) {
-        if(list.isEmpty()) {
+        if (list.isEmpty()) {
             super.setValueInternal(null);
             return;
         }
@@ -91,7 +97,7 @@ public class Dimension2DPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsMap(Map<?, ?> map) {
-        if(map.isEmpty()) {
+        if (map.isEmpty()) {
             super.setValueInternal(null);
             return;
         }

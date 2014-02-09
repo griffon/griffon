@@ -61,7 +61,7 @@ public class LinearGradientPaintPropertyEditor extends AbstractPropertyEditor {
             if (first) {
                 first = false;
             } else {
-                b.append(", ");
+                b.append(":");
             }
             b.append(f);
         }
@@ -76,7 +76,7 @@ public class LinearGradientPaintPropertyEditor extends AbstractPropertyEditor {
             if (first) {
                 first = false;
             } else {
-                b.append(", ");
+                b.append(":");
             }
             b.append(ColorPropertyEditor.format(c));
         }

@@ -46,24 +46,24 @@ class RadialGradientPaintPropertyEditorSpec extends Specification {
 
         then:
 
-        paintsAreEqual gradientPaint, editor.value
+        paintsAreEqual value, editor.value
 
         where:
-        gradientPaint | format
-        null          | null
-        null          | ''
-        null          | ' '
-        null          | []
-        null          | [:]
-        sharedPaint   | '2,2,5,4,4,[0:1],[BLACK:WHITE]'
-        sharedPaintC  | '2,2,5,4,4,[0:1],[BLACK:WHITE],REPEAT'
-        sharedPaint   | [2, 2, 5, 4, 4, [0, 1], [BLACK, WHITE]]
-        sharedPaintC  | [2, 2, 5, 4, 4, [0, 1], [BLACK, WHITE], 'REPEAT']
-        sharedPaintC  | [2, 2, 5, 4, 4, [0, 1], [BLACK, WHITE], REPEAT]
-        sharedPaint   | [cx: 2, cy: 2, radius: '5', fx: 4, fy: 4, fractions: [0, 1], colors: [BLACK, WHITE]]
-        sharedPaintC  | [cx: 2, cy: 2, radius: '5', fx: 4, fy: 4, fractions: [0, 1], colors: [BLACK, WHITE], cycle: 'REPEAT']
-        sharedPaintC  | [cx: 2, cy: 2, radius: '5', fx: 4, fy: 4, fractions: [0, 1], colors: [BLACK, WHITE], cycle: REPEAT]
-        sharedPaint   | sharedPaint
+        value        | format
+        null         | null
+        null         | ''
+        null         | ' '
+        null         | []
+        null         | [:]
+        sharedPaint  | '2,2,5,4,4,[0:1],[BLACK:WHITE]'
+        sharedPaintC | '2,2,5,4,4,[0:1],[BLACK:WHITE],REPEAT'
+        sharedPaint  | [2, 2, 5, 4, 4, [0, 1], [BLACK, WHITE]]
+        sharedPaintC | [2, 2, 5, 4, 4, [0, 1], [BLACK, WHITE], 'REPEAT']
+        sharedPaintC | [2, 2, 5, 4, 4, [0, 1], [BLACK, WHITE], REPEAT]
+        sharedPaint  | [cx: 2, cy: 2, radius: '5', fx: 4, fy: 4, fractions: [0, 1], colors: [BLACK, WHITE]]
+        sharedPaintC | [cx: 2, cy: 2, radius: '5', fx: 4, fy: 4, fractions: [0, 1], colors: [BLACK, WHITE], cycle: 'REPEAT']
+        sharedPaintC | [cx: 2, cy: 2, radius: '5', fx: 4, fy: 4, fractions: [0, 1], colors: [BLACK, WHITE], cycle: REPEAT]
+        sharedPaint  | sharedPaint
     }
 
     private static void paintsAreEqual(RadialGradientPaint p1, RadialGradientPaint p2) {
@@ -107,5 +107,26 @@ class RadialGradientPaintPropertyEditorSpec extends Specification {
             [2, 2, 5, 4, 4, [0, 1], [BLACK, WHITE, RED]],
             [cx: 2, cy: 2, radius: '5', fx: 4, fy: 4, fractions: [0, 1], colors: [BLACK, WHITE, RED]]
         ]
+    }
+
+    void "Formatted radial gradient '#expected'"() {
+        given:
+
+        PropertyEditor editor = new RadialGradientPaintPropertyEditor()
+
+        when:
+
+        editor.value = value
+        String actual = editor.asText
+
+        then:
+
+        expected == actual
+
+        where:
+        value        | expected
+        null         | null
+        sharedPaint  | '2.0, 2.0, 5.0, 4.0, 4.0, [0.0:1.0], [#000000:#ffffff], NO_CYCLE'
+        sharedPaintC | '2.0, 2.0, 5.0, 4.0, 4.0, [0.0:1.0], [#000000:#ffffff], REPEAT'
     }
 }

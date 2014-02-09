@@ -39,12 +39,13 @@ class URIPropertyEditorSpec extends Specification {
         value == editor.value
 
         where:
-        literal            | value
-        null               | null
-        ''                 | null
-        ' '                | null
-        'http://localhost' | 'http://localhost'.toURI()
-        uri                | uri
+        literal                    | value
+        null                       | null
+        ''                         | null
+        ' '                        | null
+        'http://localhost'         | 'http://localhost'.toURI()
+        new File('/').absoluteFile | new File('/').absoluteFile.toURI()
+        uri                        | uri
     }
 
     void "Invalid uri literal '#literal'"() {

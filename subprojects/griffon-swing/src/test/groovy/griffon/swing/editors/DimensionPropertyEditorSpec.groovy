@@ -15,6 +15,7 @@
  */
 package griffon.swing.editors
 
+import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -23,6 +24,9 @@ import java.beans.PropertyEditor
 
 @Unroll
 class DimensionPropertyEditorSpec extends Specification {
+    @Shared
+    private Dimension dimension = new Dimension(10, 20)
+
     void "Dimension format '#format' should be equal to #dimension"() {
         setup:
 
@@ -33,30 +37,30 @@ class DimensionPropertyEditorSpec extends Specification {
 
         then:
 
-        dimension == editor.value
+        value == editor.value
 
         where:
-        dimension             | format
+        value                 | format
         null                  | null
         null                  | ''
         null                  | ' '
         null                  | []
         null                  | [:]
-        new Dimension(10, 20) | '10,20'
-        new Dimension(10, 20) | '10, 20'
-        new Dimension(10, 20) | ' 10, 20'
-        new Dimension(10, 20) | ' 10, 20 '
-        new Dimension(10, 20) | [10, 20]
-        new Dimension(10, 20) | ['10', '20']
+        dimension             | '10,20'
+        dimension             | '10, 20'
+        dimension             | ' 10, 20'
+        dimension             | ' 10, 20 '
+        dimension             | [10, 20]
+        dimension             | ['10', '20']
         new Dimension(10, 10) | 10
         new Dimension(10, 10) | '10'
         new Dimension(10, 10) | [10]
         new Dimension(10, 10) | ['10']
-        new Dimension(10, 20) | [width: 10, height: 20]
-        new Dimension(10, 20) | [width: '10', height: '20']
-        new Dimension(10, 20) | [w: 10, h: 20]
-        new Dimension(10, 20) | [w: '10', h: '20']
-        new Dimension(10, 20) | new Dimension(10, 20)
+        dimension             | [width: 10, height: 20]
+        dimension             | [width: '10', height: '20']
+        dimension             | [w: 10, h: 20]
+        dimension             | [w: '10', h: '20']
+        dimension             | dimension
         new Dimension(0, 0)   | [foo: 10, bar: 20]
     }
 
@@ -81,5 +85,25 @@ class DimensionPropertyEditorSpec extends Specification {
             [w: 'b'],
             new Object()
         ]
+    }
+
+    void "Formatted dimension '#expected'"() {
+        given:
+
+        PropertyEditor editor = new DimensionPropertyEditor()
+
+        when:
+
+        editor.value = value
+        String actual = editor.asText
+
+        then:
+
+        expected == actual
+
+        where:
+        value     | expected
+        null      | null
+        dimension | '10.0, 20.0'
     }
 }

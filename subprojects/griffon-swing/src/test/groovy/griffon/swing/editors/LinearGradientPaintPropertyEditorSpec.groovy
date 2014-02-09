@@ -45,24 +45,24 @@ class LinearGradientPaintPropertyEditorSpec extends Specification {
 
         then:
 
-        paintsAreEqual gradientPaint, editor.value
+        paintsAreEqual value, editor.value
 
         where:
-        gradientPaint | format
-        null          | null
-        null          | ''
-        null          | ' '
-        null          | []
-        null          | [:]
-        sharedPaint   | '1,2,3,4,[0:1],[BLACK:WHITE]'
-        sharedPaintC  | '1,2,3,4,[0:1],[BLACK:WHITE],REPEAT'
-        sharedPaint   | [1, 2, 3, 4, [0, 1], [BLACK, WHITE]]
-        sharedPaintC  | [1, 2, 3, 4, [0, 1], [BLACK, WHITE], 'REPEAT']
-        sharedPaintC  | [1, 2, 3, 4, [0, 1], [BLACK, WHITE], REPEAT]
-        sharedPaint   | [x1: 1, y1: 2, x2: 3, y2: 4, fractions: [0, 1], colors: [BLACK, WHITE]]
-        sharedPaintC  | [x1: 1, y1: 2, x2: 3, y2: 4, fractions: [0, 1], colors: [BLACK, WHITE], cycle: 'REPEAT']
-        sharedPaintC  | [x1: 1, y1: 2, x2: 3, y2: 4, fractions: [0, 1], colors: [BLACK, WHITE], cycle: REPEAT]
-        sharedPaint   | sharedPaint
+        value        | format
+        null         | null
+        null         | ''
+        null         | ' '
+        null         | []
+        null         | [:]
+        sharedPaint  | '1,2,3,4,[0:1],[BLACK:WHITE]'
+        sharedPaintC | '1,2,3,4,[0:1],[BLACK:WHITE],REPEAT'
+        sharedPaint  | [1, 2, 3, 4, [0, 1], [BLACK, WHITE]]
+        sharedPaintC | [1, 2, 3, 4, [0, 1], [BLACK, WHITE], 'REPEAT']
+        sharedPaintC | [1, 2, 3, 4, [0, 1], [BLACK, WHITE], REPEAT]
+        sharedPaint  | [x1: 1, y1: 2, x2: 3, y2: 4, fractions: [0, 1], colors: [BLACK, WHITE]]
+        sharedPaintC | [x1: 1, y1: 2, x2: 3, y2: 4, fractions: [0, 1], colors: [BLACK, WHITE], cycle: 'REPEAT']
+        sharedPaintC | [x1: 1, y1: 2, x2: 3, y2: 4, fractions: [0, 1], colors: [BLACK, WHITE], cycle: REPEAT]
+        sharedPaint  | sharedPaint
     }
 
     private static void paintsAreEqual(LinearGradientPaint p1, LinearGradientPaint p2) {
@@ -105,5 +105,26 @@ class LinearGradientPaintPropertyEditorSpec extends Specification {
             [1, 2, 3, 4, [0, 1], [BLACK, WHITE, RED]],
             [x1: 1, y1: 2, x2: 3, y2: 4, fractions: [0, 1], colors: [BLACK, WHITE, RED]]
         ]
+    }
+
+    void "Formatted linear gradient '#expected'"() {
+        given:
+
+        PropertyEditor editor = new LinearGradientPaintPropertyEditor()
+
+        when:
+
+        editor.value = value
+        String actual = editor.asText
+
+        then:
+
+        expected == actual
+
+        where:
+        value        | expected
+        null         | null
+        sharedPaint  | '1.0, 2.0, 3.0, 4.0, [0.0:1.0], [#000000:#ffffff], NO_CYCLE'
+        sharedPaintC | '1.0, 2.0, 3.0, 4.0, [0.0:1.0], [#000000:#ffffff], REPEAT'
     }
 }

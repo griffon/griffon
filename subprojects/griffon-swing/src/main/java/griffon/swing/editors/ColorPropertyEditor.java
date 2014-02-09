@@ -42,6 +42,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
 
     @Override
     public String getAsText() {
+        if (null == getValue()) return null;
         return isBlank(getFormat()) ? format((Color) getValueInternal()) : getFormattedValue();
     }
 

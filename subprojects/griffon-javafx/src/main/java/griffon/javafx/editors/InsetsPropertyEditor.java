@@ -29,6 +29,12 @@ import static griffon.util.GriffonNameUtils.isBlank;
  */
 @PropertyEditorFor(Insets.class)
 public class InsetsPropertyEditor extends AbstractPropertyEditor {
+    public String getAsText() {
+        if (null == getValue()) return null;
+        Insets i = (Insets) getValue();
+        return i.getTop() + ", " + i.getRight() + ", " + i.getBottom() + ", " + i.getLeft();
+    }
+
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);
@@ -60,14 +66,14 @@ public class InsetsPropertyEditor extends AbstractPropertyEditor {
         String[] parts = str.split(",");
         switch (parts.length) {
             case 4:
-                b = parseValue(parts[3]);
+                l = parseValue(parts[3]);
             case 3:
-                r = parseValue(parts[2]);
+                b = parseValue(parts[2]);
             case 2:
-                l = parseValue(parts[1]);
+                r = parseValue(parts[1]);
             case 1:
                 t = parseValue(parts[0]);
-                super.setValueInternal(new Insets(t, l, r, b));
+                super.setValueInternal(new Insets(t, r, b, l));
                 break;
             default:
                 throw illegalValue(str, Insets.class);
@@ -75,7 +81,7 @@ public class InsetsPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsList(List<?> list) {
-        if(list.isEmpty()) {
+        if (list.isEmpty()) {
             super.setValueInternal(null);
             return;
         }
@@ -86,14 +92,14 @@ public class InsetsPropertyEditor extends AbstractPropertyEditor {
         double b = 0;
         switch (list.size()) {
             case 4:
-                b = parseValue(list.get(3));
+                l = parseValue(list.get(3));
             case 3:
-                r = parseValue(list.get(2));
+                b = parseValue(list.get(2));
             case 2:
-                l = parseValue(list.get(1));
+                r = parseValue(list.get(1));
             case 1:
                 t = parseValue(list.get(0));
-                super.setValueInternal(new Insets(t, l, r, b));
+                super.setValueInternal(new Insets(t, r, b, l));
                 break;
             default:
                 throw illegalValue(list, Insets.class);
@@ -101,7 +107,7 @@ public class InsetsPropertyEditor extends AbstractPropertyEditor {
     }
 
     private void handleAsMap(Map<?, ?> map) {
-        if(map.isEmpty()) {
+        if (map.isEmpty()) {
             super.setValueInternal(null);
             return;
         }
@@ -110,7 +116,7 @@ public class InsetsPropertyEditor extends AbstractPropertyEditor {
         double l = getMapValue(map, "left", 0);
         double r = getMapValue(map, "right", 0);
         double b = getMapValue(map, "bottom", 0);
-        super.setValueInternal(new Insets(t, l, r, b));
+        super.setValueInternal(new Insets(t, r, b, l));
     }
 
     private double parseValue(Object value) {
