@@ -30,7 +30,7 @@ class ProjectCoberturaReportTask extends DefaultTask {
         def coberturaDir = new File(project.buildDir, 'cobertura')
         args << '--datafile'
         args << "${coberturaDir.absolutePath}/cobertura.ser"
-        args << 'format'
+        args << '--format'
         args << 'html'
         args << '--destination'
         args << new File(project.buildDir, 'reports/cobertura')
@@ -49,6 +49,9 @@ class ProjectCoberturaReportTask extends DefaultTask {
                 }
             }
         }
+        Main.main(args as String[])
+
+        args[3] = 'xml'
         Main.main(args as String[])
     }
 }

@@ -157,7 +157,7 @@ public final class Xml2Groovy {
 
     private IndentPrinter createIndentPrinter(OutputStream os) {
         PrintWriter pw = new PrintWriter(new OutputStreamWriter(os));
-        return new IndentPrinter(pw);
+        return new IndentPrinter(pw, "    ");
     }
 
     private void walkXml(IndentPrinter printer, NodeChild node) {
@@ -170,7 +170,7 @@ public final class Xml2Groovy {
                 Map.Entry<?, ?> entry = (Map.Entry<?, ?>) o;
                 attrs.add(entry.getKey() + ": " + entry.getValue());
             }
-            printer.print(DefaultGroovyMethods.join((Iterable) attrs, ","));
+            printer.print(DefaultGroovyMethods.join((Iterable) attrs, ", "));
             printer.print(")");
         }
 
@@ -205,7 +205,7 @@ public final class Xml2Groovy {
                 Map.Entry<?, ?> entry = (Map.Entry<?, ?>) o;
                 attrs.add(entry.getKey() + ": " + entry.getValue());
             }
-            printer.print(DefaultGroovyMethods.join((Iterable) attrs, ","));
+            printer.print(DefaultGroovyMethods.join((Iterable) attrs, ", "));
             printer.print(")");
         }
 
