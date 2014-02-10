@@ -75,7 +75,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.FIELD, ElementType.TYPE})
-@GroovyASTTransformationClass("org.codehaus.griffon.core.compile.ast.transform.PropertyListenerASTTransformation")
+@GroovyASTTransformationClass("org.codehaus.griffon.compile.core.ast.transform.PropertyListenerASTTransformation")
 public @interface PropertyListener {
     String value();
 }

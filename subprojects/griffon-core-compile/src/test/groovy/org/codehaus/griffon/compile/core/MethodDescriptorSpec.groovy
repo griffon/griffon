@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package groovy.org.codehaus.griffon.core.compile
+package org.codehaus.griffon.compile.core
 
-import org.codehaus.griffon.compile.core.BaseConstants
-import org.codehaus.griffon.compile.core.MethodDescriptor
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
