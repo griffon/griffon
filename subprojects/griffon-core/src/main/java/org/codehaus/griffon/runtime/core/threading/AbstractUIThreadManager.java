@@ -36,7 +36,7 @@ public abstract class AbstractUIThreadManager implements UIThreadManager {
     protected static final String ERROR_RUNNABLE_NULL = "Argument 'runnable' cannot be bull";
     protected static final String ERROR_CALLABLE_NULL = "Argument 'callable' cannot be null";
 
-    private final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private final ExecutorService defaultExecutorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private static final Thread.UncaughtExceptionHandler UNCAUGHT_EXCEPTION_HANDLER = new GriffonExceptionHandler();
 
     private ExecutorServiceManager executorServiceManager;
@@ -45,10 +45,10 @@ public abstract class AbstractUIThreadManager implements UIThreadManager {
     public void setExecutorServiceManager(@Nonnull ExecutorServiceManager executorServiceManager) {
         requireNonNull(executorServiceManager, "Argument 'executorServiceManager' cannot be bull");
         if (this.executorServiceManager != null) {
-            this.executorServiceManager.remove(DEFAULT_EXECUTOR_SERVICE);
+            this.executorServiceManager.remove(defaultExecutorService);
         }
         this.executorServiceManager = executorServiceManager;
-        this.executorServiceManager.add(DEFAULT_EXECUTOR_SERVICE);
+        this.executorServiceManager.add(defaultExecutorService);
     }
 
     /**
@@ -60,7 +60,7 @@ public abstract class AbstractUIThreadManager implements UIThreadManager {
     @Nonnull
     public <R> Future<R> runFuture(@Nonnull Callable<R> callable) {
         requireNonNull(callable, ERROR_CALLABLE_NULL);
-        return runFuture(DEFAULT_EXECUTOR_SERVICE, callable);
+        return runFuture(defaultExecutorService, callable);
     }
 
     /**
@@ -82,7 +82,7 @@ public abstract class AbstractUIThreadManager implements UIThreadManager {
         if (!isUIThread()) {
             runnable.run();
         } else {
-            DEFAULT_EXECUTOR_SERVICE.submit(new Runnable() {
+            defaultExecutorService.submit(new Runnable() {
                 public void run() {
                     try {
                         runnable.run();
