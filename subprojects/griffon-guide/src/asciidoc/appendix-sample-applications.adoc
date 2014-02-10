@@ -54,10 +54,10 @@ Instances of +{link_griffon_model}+ implement the +{link_observable}+ interface 
 means they know how to handle observable properties out of the box. We only need to be
 concerned in triggering a +java.beans.PropertyChangeEvent+ when a property changes value.
 
-.sample-swing-java/griffon-app/models/sample/SampleModel.java
+.sample-swing-java/griffon-app/models/sample/swing/java/SampleModel.java
 [source,java]
 ----
-include::{sample-swing-java}/griffon-app/models/sample/SampleModel.java[]
+include::{sample-swing-java}/griffon-app/models/sample/swing/java/SampleModel.java[]
 ----
 <1> Define a private field for the property
 <2> Property accessor
@@ -74,10 +74,10 @@ The compiled Model class does implement the +{link_griffon_model}+ interface as 
 the framework. This type of byte code manipulation is expected to work for every Groovy
 based artifact.
 
-.sample-swing-groovy/griffon-app/models/sample/SampleModel.groovy
+.sample-swing-groovy/griffon-app/models/sample/swing/groovy/SampleModel.groovy
 [source,groovy]
 ----
-include::{sample-swing-groovy}/griffon-app/models/sample/SampleModel.groovy[]
+include::{sample-swing-groovy}/griffon-app/models/sample/swing/groovy/SampleModel.groovy[]
 ----
 <1> Observable property
 
@@ -92,10 +92,10 @@ They usually manipulate values coming from Views via Model properties. Controlle
 rely on additional components, such as Services, to do they work. This is exactly our
 case as there's a +SampleService+ instance injected into our controllers.
 
-.sample-swing-java/griffon-app/controllers/sample/SampleController.java
+.sample-swing-java/griffon-app/controllers/sample/swing/java/SampleController.java
 [source,java]
 ----
-include::{sample-swing-java}/griffon-app/controllers/sample/SampleController.java[]
+include::{sample-swing-java}/griffon-app/controllers/sample/swing/java/SampleController.java[]
 ----
 <1> MVC member injected by +{link_mvc_group_manager}+
 <2> Injected by JSR 330
@@ -107,10 +107,10 @@ unless otherwise configured with an +@Threading+ annotation. Once we have comput
 output we must inform the View of the new value. This is done by updating the model
 inside the UI thread [conum,data-value=4]_4_.
 
-.sample-swing-groovy/griffon-app/controllers/sample/SampleController.groovy
+.sample-swing-groovy/griffon-app/controllers/sample/swing/groovy/SampleController.groovy
 [source,groovy]
 ----
-include::{sample-swing-groovy}/griffon-app/controllers/sample/SampleController.groovy[]
+include::{sample-swing-groovy}/griffon-app/controllers/sample/swing/groovy/SampleController.groovy[]
 ----
 <1> MVC member injected by +{link_mvc_group_manager}+
 <2> Injected by JSR 330
@@ -130,16 +130,16 @@ The following service shows another facility provide by the
 +{link_message_source}+, capable of resolving i18n-able
 resources.
 
-.sample-swing-java/griffon-app/services/sample/SampleService.java
+.sample-swing-java/griffon-app/services/sample/swing/java/SampleService.java
 [source,java]
 ----
-include::{sample-swing-java}/griffon-app/services/sample/SampleService.java[]
+include::{sample-swing-java}/griffon-app/services/sample/swing/java/SampleService.java[]
 ----
 
-.sample-swing-groovy/griffon-app/services/sample/SampleService.groovy
+.sample-swing-groovy/griffon-app/services/sample/swing/groovy/SampleService.groovy
 [source,groovy]
 ----
-include::{sample-swing-groovy}/griffon-app/services/sample/SampleService.groovy[]
+include::{sample-swing-groovy}/griffon-app/services/sample/swing/groovy/SampleService.groovy[]
 ----
 
 === View
@@ -147,10 +147,10 @@ include::{sample-swing-groovy}/griffon-app/services/sample/SampleService.groovy[
 We come to the final piece of the puzzle: the View. Components are arranged in a
 one column vertical grid
 
-.sample-swing-java/griffon-app/views/sample/SampleView.java
+.sample-swing-java/griffon-app/views/sample/swing/java/SampleView.java
 [source,java]
 ----
-include::{sample-swing-java}/griffon-app/views/sample/SampleView.java[]
+include::{sample-swing-java}/griffon-app/views/sample/swing/java/SampleView.java[]
 ----
 <1> MVC member injected by +{link_mvc_group_manager}+
 <2> Attach window to +{link_window_manager}+
@@ -161,10 +161,10 @@ Here we can appreciate at [conum,data-value=3]_3_ how Model properties are bound
 View components, also how controller actions can be transformed into toolkit actions
 that may be applied to buttons [conum,data-value=4]_4_ for example.
 
-.sample-swing-groovy/griffon-app/views/sample/SampleView.groovy
+.sample-swing-groovy/griffon-app/views/sample/swing/groovy/SampleView.groovy
 [source,groovy]
 ----
-include::{sample-swing-groovy}/griffon-app/views/sample/SampleView.groovy[]
+include::{sample-swing-groovy}/griffon-app/views/sample/swing/groovy/SampleView.groovy[]
 ----
 <1> MVC member injected by +{link_mvc_group_manager}+
 <2> Create window and attach it to +{link_window_manager}+

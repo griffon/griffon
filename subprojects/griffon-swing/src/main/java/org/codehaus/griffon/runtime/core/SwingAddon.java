@@ -56,8 +56,12 @@ public class SwingAddon extends AbstractGriffonAddon {
                 getLog().info("EDT violations check enabled.");
             }
             RepaintManager currentRepaintManager = getCurrentRepaintManager();
-            if (null == currentRepaintManager)
+            if (null == currentRepaintManager) {
                 currentRepaintManager = new RepaintManager();
+            }
+            if( currentRepaintManager instanceof CheckThreadViolationRepaintManager) {
+                return;
+            }
             RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager(currentRepaintManager));
 
             GriffonExceptionHandler.addClassTest(new CallableWithArgs<Boolean>() {

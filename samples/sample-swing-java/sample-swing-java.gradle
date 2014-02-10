@@ -16,13 +16,25 @@
 
 apply plugin: 'java'
 apply plugin: 'application'
+apply from: rootProject.file('gradle/integration-test.gradle')
+apply from: rootProject.file('gradle/coverage.gradle')
 
-mainClassName = 'sample.Launcher'
+mainClassName = 'sample.swing.java.Launcher'
 
 configurations {
     compileOnly
     testCompileOnly
 }
+
+ext.depProjects = [
+    ':griffon-core',
+    ':griffon-swing',
+    ':griffon-guice',
+    ':griffon-core-test',
+    ':griffon-fest-plugin'
+]
+
+ext.depProjects.each { evaluationDependsOn it }
 
 dependencies {
     compileOnly project(':griffon-core-compile')
@@ -33,6 +45,7 @@ dependencies {
     runtime "org.slf4j:slf4j-simple:$slf4jVersion"
 
     testCompile project(':griffon-core-test')
+    testCompile project(':griffon-fest-plugin')
 }
 
 sourceSets {
@@ -61,4 +74,19 @@ sourceSets {
 gradle.taskGraph.whenReady {
     sourceSets.main.java.srcDirs.each { it.mkdirs() }
     sourceSets.main.resources.srcDirs.each { it.mkdirs() }
+}
+
+cobertura {
+    coverageFormats = ['html', 'xml']
+    List cd = []
+    Set csd = [] as Set
+    project.depProjects.each { String projectName ->
+        cd << project(projectName).sourceSets.main.output.classesDir.path
+        csd << project(projectName).sourceSets.main.allSource.srcDirs
+    }
+    cd << sourceSets.main.output.classesDir.path
+    csd << sourceSets.main.allSource.srcDirs
+
+    coverageDirs = cd
+    coverageSourceDirs = csd
 }

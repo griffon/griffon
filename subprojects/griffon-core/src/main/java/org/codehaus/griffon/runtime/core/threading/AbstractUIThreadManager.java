@@ -36,7 +36,7 @@ public abstract class AbstractUIThreadManager implements UIThreadManager {
     protected static final String ERROR_RUNNABLE_NULL = "Argument 'runnable' cannot be bull";
     protected static final String ERROR_CALLABLE_NULL = "Argument 'callable' cannot be null";
 
-    private static final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private static final Thread.UncaughtExceptionHandler UNCAUGHT_EXCEPTION_HANDLER = new GriffonExceptionHandler();
 
     private ExecutorServiceManager executorServiceManager;

@@ -1,9 +1,13 @@
 language: java
 
-script: ./gradlew clean check cobertura projectCoberturaMerge projectCoberturaReport
+script: ./gradlew clean check test integrationTest cobertura
 
 jdk: oraclejdk7
 
 env: TERM=dumb
 
-after_success: ./gradlew coveralls
+before_install:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+
+after_success: ./gradlew projectCoberturaMerge projectCoberturaReport coveralls

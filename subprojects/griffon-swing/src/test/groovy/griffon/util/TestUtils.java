@@ -45,7 +45,7 @@ public class TestUtils {
         try {
             final Class jframe = TestUtils.class.getClassLoader().loadClass("javax.swing.JFrame");
             final Constructor constructor = jframe.getConstructor(new Class[]{String.class});
-            constructor.newInstance(new String[]{"testing"});
+            constructor.newInstance("testing");
             headless = false;
         } catch (java.awt.HeadlessException | ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException | NoClassDefFoundError | UnsatisfiedLinkError e) {
             headless = true;
