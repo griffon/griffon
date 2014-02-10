@@ -21,7 +21,7 @@ import lombok.core.handlers.MessageSourceAwareHandler;
 import lombok.eclipse.EclipseAnnotationHandler;
 import lombok.eclipse.EclipseNode;
 import lombok.eclipse.handlers.ast.EclipseType;
-import org.codehaus.griffon.core.compile.MessageSourceAwareConstants;
+import org.codehaus.griffon.compile.core.MessageSourceAwareConstants;
 import org.eclipse.jdt.internal.compiler.ast.Annotation;
 import org.kordamp.jipsy.ServiceProviderFor;
 

@@ -22,7 +22,7 @@ import lombok.core.handlers.DataSourceAwareHandler;
 import lombok.javac.JavacAnnotationHandler;
 import lombok.javac.JavacNode;
 import lombok.javac.handlers.ast.JavacType;
-import org.codehaus.griffon.core.compile.DataSourceAwareConstants;
+import org.codehaus.griffon.compile.datasource.DataSourceAwareConstants;
 import org.kordamp.jipsy.ServiceProviderFor;
 
 import static lombok.core.util.ErrorMessages.canBeUsedOnClassAndEnumOnly;

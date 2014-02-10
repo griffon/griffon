@@ -22,7 +22,7 @@ import com.intellij.psi.PsiMethod;
 import de.plushnikov.intellij.lombok.processor.LombokProcessor;
 import de.plushnikov.intellij.lombok.processor.clazz.LombokClassProcessor;
 import griffon.transform.DataSourceAware;
-import org.codehaus.griffon.core.compile.DataSourceAwareConstants;
+import org.codehaus.griffon.compile.datasource.DataSourceAwareConstants;
 import org.jetbrains.annotations.NotNull;
 import org.kordamp.jipsy.ServiceProviderFor;
 

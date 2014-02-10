@@ -16,8 +16,8 @@
 package lombok.core.handlers;
 
 import lombok.ast.*;
-import org.codehaus.griffon.core.compile.BaseConstants;
-import org.codehaus.griffon.core.compile.MethodDescriptor;
+import org.codehaus.griffon.compile.core.BaseConstants;
+import org.codehaus.griffon.compile.core.MethodDescriptor;
 
 import java.util.ArrayList;
 import java.util.Collections;

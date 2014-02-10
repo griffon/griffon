@@ -22,7 +22,7 @@ import com.intellij.psi.PsiMethod;
 import de.plushnikov.intellij.lombok.processor.LombokProcessor;
 import de.plushnikov.intellij.lombok.processor.clazz.LombokClassProcessor;
 import griffon.transform.MVCAware;
-import org.codehaus.griffon.core.compile.MVCAwareConstants;
+import org.codehaus.griffon.compile.core.MVCAwareConstants;
 import org.jetbrains.annotations.NotNull;
 import org.kordamp.jipsy.ServiceProviderFor;
 

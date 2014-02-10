@@ -22,7 +22,7 @@ import com.intellij.psi.PsiMethod;
 import de.plushnikov.intellij.lombok.processor.LombokProcessor;
 import de.plushnikov.intellij.lombok.processor.field.LombokFieldProcessor;
 import griffon.transform.Observable;
-import org.codehaus.griffon.core.compile.ObservableConstants;
+import org.codehaus.griffon.compile.core.ObservableConstants;
 import org.jetbrains.annotations.NotNull;
 import org.kordamp.jipsy.ServiceProviderFor;
 

@@ -20,7 +20,7 @@ import de.plushnikov.intellij.lombok.processor.LombokProcessor;
 import de.plushnikov.intellij.lombok.processor.clazz.LombokClassProcessor;
 import de.plushnikov.intellij.lombok.util.PsiFieldUtil;
 import griffon.transform.Observable;
-import org.codehaus.griffon.core.compile.ObservableConstants;
+import org.codehaus.griffon.compile.core.ObservableConstants;
 import org.jetbrains.annotations.NotNull;
 import org.kordamp.jipsy.ServiceProviderFor;
 

@@ -21,7 +21,7 @@ import lombok.core.handlers.ThreadingAwareHandler;
 import lombok.eclipse.EclipseAnnotationHandler;
 import lombok.eclipse.EclipseNode;
 import lombok.eclipse.handlers.ast.EclipseType;
-import org.codehaus.griffon.core.compile.ThreadingAwareConstants;
+import org.codehaus.griffon.compile.core.ThreadingAwareConstants;
 import org.eclipse.jdt.internal.compiler.ast.Annotation;
 import org.kordamp.jipsy.ServiceProviderFor;
 

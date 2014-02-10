@@ -22,7 +22,7 @@ import lombok.core.handlers.EventPublisherHandler;
 import lombok.javac.JavacAnnotationHandler;
 import lombok.javac.JavacNode;
 import lombok.javac.handlers.ast.JavacType;
-import org.codehaus.griffon.core.compile.EventPublisherConstants;
+import org.codehaus.griffon.compile.core.EventPublisherConstants;
 
 import static lombok.core.util.ErrorMessages.canBeUsedOnClassAndEnumOnly;
 import static lombok.javac.handlers.JavacHandlerUtil.createAnnotation;

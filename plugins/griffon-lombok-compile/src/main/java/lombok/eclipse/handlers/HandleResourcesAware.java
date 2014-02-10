@@ -21,7 +21,7 @@ import lombok.core.handlers.ResourcesAwareHandler;
 import lombok.eclipse.EclipseAnnotationHandler;
 import lombok.eclipse.EclipseNode;
 import lombok.eclipse.handlers.ast.EclipseType;
-import org.codehaus.griffon.core.compile.ResourcesAwareConstants;
+import org.codehaus.griffon.compile.core.ResourcesAwareConstants;
 import org.eclipse.jdt.internal.compiler.ast.Annotation;
 import org.kordamp.jipsy.ServiceProviderFor;
 

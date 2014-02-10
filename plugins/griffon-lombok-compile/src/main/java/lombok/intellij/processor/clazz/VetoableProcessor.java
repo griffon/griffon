@@ -20,7 +20,7 @@ import de.plushnikov.intellij.lombok.processor.LombokProcessor;
 import de.plushnikov.intellij.lombok.processor.clazz.LombokClassProcessor;
 import de.plushnikov.intellij.lombok.util.PsiFieldUtil;
 import griffon.transform.Vetoable;
-import org.codehaus.griffon.core.compile.VetoableConstants;
+import org.codehaus.griffon.compile.core.VetoableConstants;
 import org.jetbrains.annotations.NotNull;
 import org.kordamp.jipsy.ServiceProviderFor;
 

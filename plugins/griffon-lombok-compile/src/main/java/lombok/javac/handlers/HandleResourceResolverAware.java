@@ -22,7 +22,7 @@ import lombok.core.handlers.ResourceResolverAwareHandler;
 import lombok.javac.JavacAnnotationHandler;
 import lombok.javac.JavacNode;
 import lombok.javac.handlers.ast.JavacType;
-import org.codehaus.griffon.core.compile.ResourceResolverAwareConstants;
+import org.codehaus.griffon.compile.core.ResourceResolverAwareConstants;
 import org.kordamp.jipsy.ServiceProviderFor;
 
 import static lombok.core.util.ErrorMessages.canBeUsedOnClassAndEnumOnly;

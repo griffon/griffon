@@ -20,7 +20,7 @@ import lombok.ast.Argument;
 import lombok.ast.IMethod;
 import lombok.ast.IType;
 import lombok.ast.MethodDecl;
-import org.codehaus.griffon.core.compile.EventPublisherConstants;
+import org.codehaus.griffon.compile.core.EventPublisherConstants;
 
 import static java.util.Arrays.asList;
 import static lombok.ast.AST.*;

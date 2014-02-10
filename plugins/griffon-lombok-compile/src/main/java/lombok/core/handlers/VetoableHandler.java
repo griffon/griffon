@@ -19,7 +19,7 @@ import griffon.transform.Vetoable;
 import lombok.ast.*;
 import lombok.core.AST;
 import lombok.core.LombokNode;
-import org.codehaus.griffon.core.compile.VetoableConstants;
+import org.codehaus.griffon.compile.core.VetoableConstants;
 
 import java.util.ArrayList;
 import java.util.List;

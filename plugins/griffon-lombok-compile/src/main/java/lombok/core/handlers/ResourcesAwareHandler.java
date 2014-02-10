@@ -17,7 +17,7 @@ package lombok.core.handlers;
 
 import lombok.ast.IMethod;
 import lombok.ast.IType;
-import org.codehaus.griffon.core.compile.ResourcesAwareConstants;
+import org.codehaus.griffon.compile.core.ResourcesAwareConstants;
 
 import static lombok.ast.AST.*;
 

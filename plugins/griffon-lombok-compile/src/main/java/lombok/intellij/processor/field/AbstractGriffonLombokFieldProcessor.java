@@ -21,7 +21,7 @@ import de.plushnikov.intellij.lombok.processor.field.AbstractLombokFieldProcesso
 import de.plushnikov.intellij.lombok.quickfix.PsiQuickFixFactory;
 import de.plushnikov.intellij.lombok.util.PsiClassUtil;
 import de.plushnikov.intellij.lombok.util.PsiMethodUtil;
-import org.codehaus.griffon.core.compile.MethodDescriptor;
+import org.codehaus.griffon.compile.core.MethodDescriptor;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;

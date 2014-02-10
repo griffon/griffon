@@ -22,7 +22,7 @@ import lombok.core.handlers.ThreadingAwareHandler;
 import lombok.javac.JavacAnnotationHandler;
 import lombok.javac.JavacNode;
 import lombok.javac.handlers.ast.JavacType;
-import org.codehaus.griffon.core.compile.ThreadingAwareConstants;
+import org.codehaus.griffon.compile.core.ThreadingAwareConstants;
 import org.kordamp.jipsy.ServiceProviderFor;
 
 import static lombok.core.util.ErrorMessages.canBeUsedOnClassAndEnumOnly;

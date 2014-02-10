@@ -17,7 +17,7 @@ package lombok.core.handlers;
 
 import lombok.ast.IMethod;
 import lombok.ast.IType;
-import org.codehaus.griffon.core.compile.MVCAwareConstants;
+import org.codehaus.griffon.compile.core.MVCAwareConstants;
 
 import static lombok.ast.AST.Annotation;
 import static lombok.ast.AST.Field;

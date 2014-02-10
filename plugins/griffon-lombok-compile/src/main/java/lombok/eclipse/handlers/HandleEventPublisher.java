@@ -21,7 +21,7 @@ import lombok.core.handlers.EventPublisherHandler;
 import lombok.eclipse.EclipseAnnotationHandler;
 import lombok.eclipse.EclipseNode;
 import lombok.eclipse.handlers.ast.EclipseType;
-import org.codehaus.griffon.core.compile.EventPublisherConstants;
+import org.codehaus.griffon.compile.core.EventPublisherConstants;
 import org.eclipse.jdt.internal.compiler.ast.Annotation;
 import org.kordamp.jipsy.ServiceProviderFor;
 

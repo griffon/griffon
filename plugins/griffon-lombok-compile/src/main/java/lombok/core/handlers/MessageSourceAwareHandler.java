@@ -17,7 +17,7 @@ package lombok.core.handlers;
 
 import lombok.ast.IMethod;
 import lombok.ast.IType;
-import org.codehaus.griffon.core.compile.MessageSourceAwareConstants;
+import org.codehaus.griffon.compile.core.MessageSourceAwareConstants;
 
 import static lombok.ast.AST.Annotation;
 import static lombok.ast.AST.Field;

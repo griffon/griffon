@@ -22,7 +22,7 @@ import de.plushnikov.intellij.lombok.problem.ProblemBuilder;
 import de.plushnikov.intellij.lombok.processor.clazz.AbstractLombokClassProcessor;
 import de.plushnikov.intellij.lombok.util.PsiClassUtil;
 import de.plushnikov.intellij.lombok.util.PsiMethodUtil;
-import org.codehaus.griffon.core.compile.MethodDescriptor;
+import org.codehaus.griffon.compile.core.MethodDescriptor;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;

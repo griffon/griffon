@@ -22,7 +22,7 @@ import de.plushnikov.intellij.lombok.psi.LombokLightMethodBuilder;
 import de.plushnikov.intellij.lombok.psi.LombokPsiElementFactory;
 import de.plushnikov.intellij.lombok.util.PsiPrimitiveTypeFactory;
 import griffon.transform.EventPublisher;
-import org.codehaus.griffon.core.compile.EventPublisherConstants;
+import org.codehaus.griffon.compile.core.EventPublisherConstants;
 import org.jetbrains.annotations.NotNull;
 import org.kordamp.jipsy.ServiceProviderFor;
 
