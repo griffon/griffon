@@ -95,6 +95,10 @@ public class MethodDescriptor {
             }
             return b.toString();
         }
+
+        public String toString() {
+            return signature();
+        }
     }
 
     public static class Wildcard extends Type {
@@ -163,6 +167,10 @@ public class MethodDescriptor {
                 b.append(" extends ").append(bound.signature());
             }
             return b.toString();
+        }
+
+        public String toString() {
+            return signature;
         }
     }
 

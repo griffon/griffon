@@ -15,6 +15,8 @@
  */
 package griffon.swing.editors
 
+import griffon.util.TestUtils
+import spock.lang.IgnoreIf
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -22,6 +24,7 @@ import java.awt.Font
 import java.beans.PropertyEditor
 
 @Unroll
+@IgnoreIf({ TestUtils.headless })
 class FontPropertyEditorSpec extends Specification {
     void "Font format '#format' should be equal to #font"() {
         setup:

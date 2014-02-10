@@ -92,6 +92,88 @@ class CompositeBuilderTest extends GroovyTestCase {
         }
     }
 
+    void testMethodMissingDelegate_noDelegate() {
+        SampleBuilderCustomizer one = new SampleBuilderCustomizer('one')
+        SampleBuilderCustomizer two = new SampleBuilderCustomizer('two')
+
+        CompositeBuilder compositeBuilder = new CompositeBuilder([one, two] as BuilderCustomizer[])
+
+        assert !compositeBuilder.getVariables()['methodCalled']
+        shouldFail(MissingMethodException) {
+            compositeBuilder.randomMethod()
+        }
+        assert !compositeBuilder.getVariables()['methodCalled']
+    }
+
+    void testMethodMissingDelegate_handledByCustomizer() {
+        String methodCalled = null
+        SampleBuilderCustomizer one = new SampleBuilderCustomizer('one') {
+            {
+                setMethodMissingDelegate { String methodName, args ->
+                    methodCalled = methodName
+                }
+            }
+        }
+        SampleBuilderCustomizer two = new SampleBuilderCustomizer('two')
+
+        CompositeBuilder compositeBuilder = new CompositeBuilder([one, two] as BuilderCustomizer[])
+
+        assert !methodCalled
+        compositeBuilder.randomMethod()
+        assert methodCalled == 'randomMethod'
+
+        compositeBuilder.setMethodMissingDelegate(null)
+
+        shouldFail(MissingMethodException) {
+            compositeBuilder.someOtherMethod()
+        }
+    }
+
+    void testMethodMissingDelegate_unhandledByCustomizer() {
+        SampleBuilderCustomizer one = new SampleBuilderCustomizer('one') {
+            {
+                setMethodMissingDelegate { String methodName, args ->
+                    throw new MissingMethodException(methodName, CompositeBuilder, args)
+                }
+            }
+        }
+        SampleBuilderCustomizer two = new SampleBuilderCustomizer('two')
+
+        CompositeBuilder compositeBuilder = new CompositeBuilder([one, two] as BuilderCustomizer[])
+        compositeBuilder.setMethodMissingDelegate { String methodName, args ->
+            compositeBuilder['methodCalled'] = methodName
+        }
+
+        assert !compositeBuilder.getVariables()['methodCalled']
+        compositeBuilder.randomMethod()
+        assert compositeBuilder.getVariables()['methodCalled'] == 'randomMethod'
+
+        compositeBuilder.setMethodMissingDelegate(null)
+
+        shouldFail(MissingMethodException) {
+            compositeBuilder.someOtherMethod()
+        }
+    }
+
+    void testMethodMissingDelegate_abortedByCustomizer() {
+        SampleBuilderCustomizer one = new SampleBuilderCustomizer('one') {
+            {
+                setMethodMissingDelegate { String methodName, args ->
+                    throw new MissingMethodException('boom', CompositeBuilder, args)
+                }
+            }
+        }
+        SampleBuilderCustomizer two = new SampleBuilderCustomizer('two')
+
+        CompositeBuilder compositeBuilder = new CompositeBuilder([one, two] as BuilderCustomizer[])
+
+        assert !compositeBuilder.getVariables()['methodCalled']
+        shouldFail(MissingMethodException) {
+            compositeBuilder.randomMethod()
+        }
+        assert !compositeBuilder.getVariables()['methodCalled']
+    }
+
     void testPropertyMissingDelegate() {
         SampleBuilderCustomizer one = new SampleBuilderCustomizer('one')
         SampleBuilderCustomizer two = new SampleBuilderCustomizer('two')

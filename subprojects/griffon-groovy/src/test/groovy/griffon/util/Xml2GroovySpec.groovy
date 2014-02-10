@@ -15,6 +15,7 @@
  */
 package griffon.util
 
+import org.xml.sax.SAXParseException
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -22,6 +23,7 @@ import spock.lang.Unroll
 @Unroll
 class Xml2GroovySpec extends Specification {
     private static final String APPLICATION_XML = 'build/resources/test/griffon/util/application.xml'
+    private static final String BAD_APPLICATION_XML = 'build/resources/test/griffon/util/bad_application.xml'
 
     @Shared
     private String expected = getClass().getResourceAsStream('/griffon/util/application.groovy').text
@@ -48,5 +50,28 @@ class Xml2GroovySpec extends Specification {
 
         expect:
         expected.trim() == output.trim()
+    }
+
+    def "Bad application.xml from #type results in error"() {
+        when:
+        Xml2Groovy.instance.parse(input)
+
+        then:
+        thrown(IllegalArgumentException)
+
+        where:
+        type          | input
+        'file'        | new File(BAD_APPLICATION_XML)
+        'reader'      | new FileReader(new File(BAD_APPLICATION_XML))
+        'inputStream' | new FileInputStream(new File(BAD_APPLICATION_XML))
+        'uri'         | new File(BAD_APPLICATION_XML).toURI().toString()
+    }
+
+    def "Bad application.xml from string results in error"() {
+        when:
+        Xml2Groovy.instance.parseText(new File(BAD_APPLICATION_XML).text)
+
+        then:
+        thrown(IllegalArgumentException)
     }
 }
