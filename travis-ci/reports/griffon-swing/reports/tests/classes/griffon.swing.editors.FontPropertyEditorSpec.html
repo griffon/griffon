@@ -28,7 +28,7 @@
 </td>
 <td>
 <div class="infoBox" id="failures">
-<div class="counter">4</div>
+<div class="counter">0</div>
 <p>failures</p>
 </div>
 </td>
@@ -40,7 +40,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.477s</div>
+<div class="counter">0.055s</div>
 <p>duration</p>
 </div>
 </td>
@@ -49,8 +49,8 @@
 </div>
 </td>
 <td>
-<div class="infoBox failures" id="successRate">
-<div class="percent">87%</div>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
 <p>successful</p>
 </div>
 </td>
@@ -60,92 +60,10 @@
 <div id="tabs">
 <ul class="tabLinks">
 <li>
-<a href="#tab0">Failed tests</a>
-</li>
-<li>
-<a href="#tab1">Tests</a>
+<a href="#tab0">Tests</a>
 </li>
 </ul>
 <div id="tab0" class="tab">
-<h2>Failed tests</h2>
-<div class="test">
-<a name="Formatted font 'Helvetica-BOLD-12'"></a>
-<h3 class="failures">Formatted font 'Helvetica-BOLD-12'</h3>
-<span class="code">
-<pre>Condition not satisfied:
-
-expected == actual
-|        |  |
-|        |  SansSerif-BOLD-12
-|        false
-|        8 differences (52% similarity)
-|        (Helv-)e(t)i(ca)-BOLD-12
-|        (SansS)e(r)i(f-)-BOLD-12
-Helvetica-BOLD-12
-
-	at griffon.swing.editors.FontPropertyEditorSpec.Formatted font '#expected'(FontPropertyEditorSpec.groovy:102)
-</pre>
-</span>
-</div>
-<div class="test">
-<a name="Formatted font 'Helvetica-BOLDITALIC-12'"></a>
-<h3 class="failures">Formatted font 'Helvetica-BOLDITALIC-12'</h3>
-<span class="code">
-<pre>Condition not satisfied:
-
-expected == actual
-|        |  |
-|        |  SansSerif-BOLDITALIC-12
-|        false
-|        8 differences (65% similarity)
-|        (Helv-)e(t)i(ca)-BOLDITALIC-12
-|        (SansS)e(r)i(f-)-BOLDITALIC-12
-Helvetica-BOLDITALIC-12
-
-	at griffon.swing.editors.FontPropertyEditorSpec.Formatted font '#expected'(FontPropertyEditorSpec.groovy:102)
-</pre>
-</span>
-</div>
-<div class="test">
-<a name="Formatted font 'Helvetica-ITALIC-12'"></a>
-<h3 class="failures">Formatted font 'Helvetica-ITALIC-12'</h3>
-<span class="code">
-<pre>Condition not satisfied:
-
-expected == actual
-|        |  |
-|        |  SansSerif-ITALIC-12
-|        false
-|        8 differences (57% similarity)
-|        (Helv-)e(t)i(ca)-ITALIC-12
-|        (SansS)e(r)i(f-)-ITALIC-12
-Helvetica-ITALIC-12
-
-	at griffon.swing.editors.FontPropertyEditorSpec.Formatted font '#expected'(FontPropertyEditorSpec.groovy:102)
-</pre>
-</span>
-</div>
-<div class="test">
-<a name="Formatted font 'Helvetica-PLAIN-12'"></a>
-<h3 class="failures">Formatted font 'Helvetica-PLAIN-12'</h3>
-<span class="code">
-<pre>Condition not satisfied:
-
-expected == actual
-|        |  |
-|        |  SansSerif-PLAIN-12
-|        false
-|        8 differences (55% similarity)
-|        (Helv-)e(t)i(ca)-PLAIN-12
-|        (SansS)e(r)i(f-)-PLAIN-12
-Helvetica-PLAIN-12
-
-	at griffon.swing.editors.FontPropertyEditorSpec.Formatted font '#expected'(FontPropertyEditorSpec.groovy:102)
-</pre>
-</span>
-</div>
-</div>
-<div id="tab1" class="tab">
 <h2>Tests</h2>
 <table>
 <thead>
@@ -162,26 +80,26 @@ Helvetica-PLAIN-12
 </tr>
 <tr>
 <td class="success">Font format '' should be equal to null</td>
-<td>0s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Font format 'Helvetica-BOLD-12' should be equal to java.awt.Font[family=SansSerif,name=Helvetica,style=bold,size=12]</td>
 <td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Font format 'Helvetica-BOLDITALIC-12' should be equal to java.awt.Font[family=SansSerif,name=Helvetica,style=bolditalic,size=12]</td>
+<td class="success">Font format 'SansSerif-BOLD-12' should be equal to java.awt.Font[family=SansSerif,name=SansSerif,style=bold,size=12]</td>
 <td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Font format 'Helvetica-ITALIC-12' should be equal to java.awt.Font[family=SansSerif,name=Helvetica,style=italic,size=12]</td>
-<td>0s</td>
+<td class="success">Font format 'SansSerif-BOLDITALIC-12' should be equal to java.awt.Font[family=SansSerif,name=SansSerif,style=bolditalic,size=12]</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Font format 'Helvetica-PLAIN-12' should be equal to java.awt.Font[family=SansSerif,name=Helvetica,style=plain,size=12]</td>
+<td class="success">Font format 'SansSerif-ITALIC-12' should be equal to java.awt.Font[family=SansSerif,name=SansSerif,style=italic,size=12]</td>
+<td>0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Font format 'SansSerif-PLAIN-12' should be equal to java.awt.Font[family=SansSerif,name=SansSerif,style=plain,size=12]</td>
 <td>0.001s</td>
 <td class="success">passed</td>
 </tr>
@@ -191,23 +109,23 @@ Helvetica-PLAIN-12
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Font format '[Helvetica, BOLD, 12]' should be equal to java.awt.Font[family=SansSerif,name=Helvetica,style=bold,size=12]</td>
+<td class="success">Font format '[SansSerif, BOLD, 12]' should be equal to java.awt.Font[family=SansSerif,name=SansSerif,style=bold,size=12]</td>
 <td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Font format '[Helvetica, BOLDITALIC, 12]' should be equal to java.awt.Font[family=SansSerif,name=Helvetica,style=bolditalic,size=12]</td>
-<td>0s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Font format '[Helvetica, ITALIC, 12]' should be equal to java.awt.Font[family=SansSerif,name=Helvetica,style=italic,size=12]</td>
+<td class="success">Font format '[SansSerif, BOLDITALIC, 12]' should be equal to java.awt.Font[family=SansSerif,name=SansSerif,style=bolditalic,size=12]</td>
 <td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Font format '[Helvetica, PLAIN, 12]' should be equal to java.awt.Font[family=SansSerif,name=Helvetica,style=plain,size=12]</td>
-<td>0s</td>
+<td class="success">Font format '[SansSerif, ITALIC, 12]' should be equal to java.awt.Font[family=SansSerif,name=SansSerif,style=italic,size=12]</td>
+<td>0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Font format '[SansSerif, PLAIN, 12]' should be equal to java.awt.Font[family=SansSerif,name=SansSerif,style=plain,size=12]</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -216,54 +134,54 @@ Helvetica-PLAIN-12
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Font format '[family:Helvetica, style:BOLD, size:12]' should be equal to java.awt.Font[family=SansSerif,name=Helvetica,style=bold,size=12]</td>
-<td>0s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Font format '[family:Helvetica, style:BOLDITALIC, size:12]' should be equal to java.awt.Font[family=SansSerif,name=Helvetica,style=bolditalic,size=12]</td>
-<td>0s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Font format '[family:Helvetica, style:ITALIC, size:12]' should be equal to java.awt.Font[family=SansSerif,name=Helvetica,style=italic,size=12]</td>
-<td>0.002s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Font format '[family:Helvetica, style:PLAIN, size:12]' should be equal to java.awt.Font[family=SansSerif,name=Helvetica,style=plain,size=12]</td>
+<td class="success">Font format '[family:SansSerif, style:BOLD, size:12]' should be equal to java.awt.Font[family=SansSerif,name=SansSerif,style=bold,size=12]</td>
 <td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Font format 'java.awt.Font[family=SansSerif,name=Helvetica,style=bolditalic,size=12]' should be equal to java.awt.Font[family=SansSerif,name=Helvetica,style=bolditalic,size=12]</td>
-<td>0s</td>
+<td class="success">Font format '[family:SansSerif, style:BOLDITALIC, size:12]' should be equal to java.awt.Font[family=SansSerif,name=SansSerif,style=bolditalic,size=12]</td>
+<td>0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Font format '[family:SansSerif, style:ITALIC, size:12]' should be equal to java.awt.Font[family=SansSerif,name=SansSerif,style=italic,size=12]</td>
+<td>0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Font format '[family:SansSerif, style:PLAIN, size:12]' should be equal to java.awt.Font[family=SansSerif,name=SansSerif,style=plain,size=12]</td>
+<td>0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Font format 'java.awt.Font[family=SansSerif,name=SansSerif,style=bolditalic,size=12]' should be equal to java.awt.Font[family=SansSerif,name=SansSerif,style=bolditalic,size=12]</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Font format 'null' should be equal to null</td>
-<td>0.011s</td>
+<td>0.024s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="failures">Formatted font 'Helvetica-BOLD-12'</td>
-<td>0.029s</td>
-<td class="failures">failed</td>
+<td class="success">Formatted font 'SansSerif-BOLD-12'</td>
+<td>0.002s</td>
+<td class="success">passed</td>
 </tr>
 <tr>
-<td class="failures">Formatted font 'Helvetica-BOLDITALIC-12'</td>
-<td>0.009s</td>
-<td class="failures">failed</td>
+<td class="success">Formatted font 'SansSerif-BOLDITALIC-12'</td>
+<td>0.001s</td>
+<td class="success">passed</td>
 </tr>
 <tr>
-<td class="failures">Formatted font 'Helvetica-ITALIC-12'</td>
-<td>0.008s</td>
-<td class="failures">failed</td>
+<td class="success">Formatted font 'SansSerif-ITALIC-12'</td>
+<td>0.001s</td>
+<td class="success">passed</td>
 </tr>
 <tr>
-<td class="failures">Formatted font 'Helvetica-PLAIN-12'</td>
-<td>0.404s</td>
-<td class="failures">failed</td>
+<td class="success">Formatted font 'SansSerif-PLAIN-12'</td>
+<td>0.001s</td>
+<td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Formatted font 'null'</td>
@@ -271,38 +189,38 @@ Helvetica-PLAIN-12
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Invalid font format 'Helvetica-BOLD-baz'</td>
-<td>0s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Invalid font format 'Helvetica-FOO-12'</td>
-<td>0s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Invalid font format '[Helvetica, BOLD]'</td>
+<td class="success">Invalid font format 'SansSerif-BOLD-baz'</td>
 <td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Invalid font format '[Helvetica]'</td>
-<td>0.001s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Invalid font format '[family:Helvetica]'</td>
+<td class="success">Invalid font format 'SansSerif-FOO-12'</td>
 <td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Invalid font format '[family:java.lang.Object@1a8c6fdb]'</td>
+<td class="success">Invalid font format '[SansSerif, BOLD]'</td>
+<td>0s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Invalid font format '[SansSerif]'</td>
+<td>0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Invalid font format '[family:SansSerif]'</td>
 <td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Invalid font format '[java.lang.Object@2530d46]'</td>
-<td>0s</td>
+<td class="success">Invalid font format '[family:java.lang.Object@be4481b]'</td>
+<td>0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Invalid font format '[java.lang.Object@5978d4f1]'</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -312,12 +230,12 @@ Helvetica-PLAIN-12
 </tr>
 <tr>
 <td class="success">Invalid font format 'garbage'</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Invalid font format 'java.lang.Object@7a03a07a'</td>
-<td>0.001s</td>
+<td class="success">Invalid font format 'java.lang.Object@3839eab6'</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -325,7 +243,7 @@ Helvetica-PLAIN-12
 </div>
 <div id="footer">
 <p>Generated by 
-<a href="http://www.gradle.org">Gradle 1.11</a> at Feb 11, 2014 9:15:40 PM</p>
+<a href="http://www.gradle.org">Gradle 1.11</a> at Feb 11, 2014 10:24:51 PM</p>
 </div>
 </div>
 </body>
