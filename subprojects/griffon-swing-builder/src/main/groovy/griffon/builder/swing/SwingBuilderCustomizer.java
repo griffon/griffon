@@ -19,7 +19,7 @@ import griffon.builder.swing.factory.ApplicationFactory;
 import griffon.inject.DependsOn;
 import groovy.swing.SwingBuilder;
 import groovy.util.Factory;
-import org.codehaus.griffon.runtime.core.view.AbstractBuilderCustomizer;
+import org.codehaus.griffon.runtime.groovy.view.AbstractBuilderCustomizer;
 
 import javax.inject.Named;
 import java.util.LinkedHashMap;

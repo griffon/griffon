@@ -3,11 +3,11 @@ package sample;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonView;
 import griffon.core.controller.Action;
+import griffon.metadata.ArtifactProviderFor;
 import griffon.pivot.support.PivotAction;
 import griffon.pivot.support.adapters.TextInputContentAdapter;
 import org.apache.pivot.serialization.SerializationException;
 import org.apache.pivot.wtk.*;
-import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
 
 import javax.annotation.Nonnull;

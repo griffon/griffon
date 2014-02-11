@@ -20,7 +20,7 @@ import griffon.inject.DependsOn;
 import groovy.util.Factory;
 import groovyx.javafx.SceneGraphBuilder;
 import javafx.scene.control.*;
-import org.codehaus.griffon.runtime.core.view.AbstractBuilderCustomizer;
+import org.codehaus.griffon.runtime.groovy.view.AbstractBuilderCustomizer;
 
 import javax.inject.Named;
 import java.util.LinkedHashMap;

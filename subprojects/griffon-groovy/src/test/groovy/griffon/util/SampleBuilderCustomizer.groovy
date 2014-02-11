@@ -15,7 +15,7 @@
  */
 package griffon.util
 
-import org.codehaus.griffon.runtime.core.view.AbstractBuilderCustomizer
+import org.codehaus.griffon.runtime.groovy.view.AbstractBuilderCustomizer
 
 class SampleBuilderCustomizer extends AbstractBuilderCustomizer {
     final String namespace

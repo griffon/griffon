@@ -25,7 +25,7 @@ import griffon.inject.DependsOn;
 import groovy.lang.Closure;
 import groovy.util.Factory;
 import groovy.util.FactoryBuilderSupport;
-import org.codehaus.griffon.runtime.core.view.AbstractBuilderCustomizer;
+import org.codehaus.griffon.runtime.groovy.view.AbstractBuilderCustomizer;
 
 import javax.inject.Named;
 import java.util.LinkedHashMap;

@@ -13,26 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.builder.core;
+package org.codehaus.griffon.runtime.pivot;
 
-import griffon.builder.core.factory.MetaComponentFactory;
-import griffon.builder.core.factory.RootFactory;
-import groovy.util.Factory;
-import org.codehaus.griffon.runtime.groovy.view.AbstractBuilderCustomizer;
+import griffon.builder.pivot.PivotBuilderCustomizer;
+import griffon.core.injection.Module;
+import griffon.inject.DependsOn;
+import griffon.util.BuilderCustomizer;
+import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.kordamp.jipsy.ServiceProviderFor;
 
 import javax.inject.Named;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * @author Andres Almiray
  */
-@Named("core")
-public class CoreBuilderCustomizer extends AbstractBuilderCustomizer {
-    public CoreBuilderCustomizer() {
-        Map<String, Factory> factories = new LinkedHashMap<>();
-        factories.put("root", new RootFactory());
-        factories.put("metaComponent", new MetaComponentFactory());
-        setFactories(factories);
+@ServiceProviderFor(Module.class)
+@DependsOn("pivot")
+@Named("pivot-builder")
+public class PivotBuilderModule extends AbstractModule {
+    @Override
+    protected void doConfigure() {
+        // tag::bindings[]
+        bind(BuilderCustomizer.class)
+            .to(PivotBuilderCustomizer.class)
+            .asSingleton();
+        // end::bindings[]
     }
 }

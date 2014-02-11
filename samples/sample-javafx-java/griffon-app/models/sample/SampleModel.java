@@ -2,9 +2,9 @@ package sample;
 
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonModel;
+import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 
 import javax.annotation.Nonnull;

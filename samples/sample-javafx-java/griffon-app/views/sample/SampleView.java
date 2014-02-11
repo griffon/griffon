@@ -2,6 +2,7 @@ package sample;
 
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonView;
+import griffon.metadata.ArtifactProviderFor;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -10,8 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import griffon.metadata.ArtifactProviderFor;
-import org.codehaus.griffon.runtime.core.artifact.AbstractJavaFXGriffonView;
+import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

@@ -19,7 +19,7 @@ import griffon.util.BuilderCustomizer
 import griffon.util.CompositeBuilder
 import groovy.swing.factory.CollectionFactory
 import groovy.swing.factory.MapFactory
-import org.codehaus.griffon.runtime.core.view.AbstractBuilderCustomizer
+import org.codehaus.griffon.runtime.groovy.view.AbstractBuilderCustomizer
 import spock.lang.Specification
 import spock.lang.Unroll
 

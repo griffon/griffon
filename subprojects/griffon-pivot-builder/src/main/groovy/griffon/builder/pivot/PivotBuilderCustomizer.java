@@ -27,7 +27,7 @@ import org.apache.pivot.wtk.content.*;
 import org.apache.pivot.wtk.effects.*;
 import org.apache.pivot.wtk.effects.easing.*;
 import org.apache.pivot.wtk.media.Image;
-import org.codehaus.griffon.runtime.core.view.AbstractBuilderCustomizer;
+import org.codehaus.griffon.runtime.groovy.view.AbstractBuilderCustomizer;
 import org.codehaus.groovy.runtime.MethodClosure;
 
 import javax.inject.Named;

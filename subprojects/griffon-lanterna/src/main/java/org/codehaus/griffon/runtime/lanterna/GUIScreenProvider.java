@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.builder.core;
+package org.codehaus.griffon.runtime.lanterna;
 
-import griffon.builder.core.factory.MetaComponentFactory;
-import griffon.builder.core.factory.RootFactory;
-import groovy.util.Factory;
-import org.codehaus.griffon.runtime.groovy.view.AbstractBuilderCustomizer;
+import com.googlecode.lanterna.TerminalFacade;
+import com.googlecode.lanterna.gui.GUIScreen;
 
-import javax.inject.Named;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import javax.inject.Provider;
 
 /**
  * @author Andres Almiray
+ * @since 2.0.0
  */
-@Named("core")
-public class CoreBuilderCustomizer extends AbstractBuilderCustomizer {
-    public CoreBuilderCustomizer() {
-        Map<String, Factory> factories = new LinkedHashMap<>();
-        factories.put("root", new RootFactory());
-        factories.put("metaComponent", new MetaComponentFactory());
-        setFactories(factories);
+public class GUIScreenProvider implements Provider<GUIScreen> {
+    private final GUIScreen screen;
+
+    public GUIScreenProvider() {
+        this.screen = TerminalFacade.createGUIScreen();
+    }
+
+    @Override
+    public GUIScreen get() {
+        return screen;
     }
 }

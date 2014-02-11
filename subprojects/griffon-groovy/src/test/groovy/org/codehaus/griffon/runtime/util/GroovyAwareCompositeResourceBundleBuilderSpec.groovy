@@ -25,8 +25,7 @@ import griffon.util.CompositeResourceBundleBuilder
 import griffon.util.ConfigReader
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
 import org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler
-import org.junit.AfterClass
-import org.junit.BeforeClass
+import org.codehaus.griffon.runtime.groovy.util.GroovyAwareCompositeResourceBundleBuilder
 import org.junit.Rule
 import spock.lang.Specification
 

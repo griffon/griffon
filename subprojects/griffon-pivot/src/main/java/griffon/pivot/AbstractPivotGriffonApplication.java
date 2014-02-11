@@ -22,7 +22,7 @@ import org.apache.pivot.wtk.ApplicationContext;
 import org.apache.pivot.wtk.Display;
 import org.apache.pivot.wtk.Window;
 import org.codehaus.griffon.runtime.core.AbstractGriffonApplication;
-import org.codehaus.griffon.runtime.core.PivotApplicationBootstrapper;
+import org.codehaus.griffon.runtime.pivot.PivotApplicationBootstrapper;
 
 import javax.annotation.Nonnull;
 import java.util.List;

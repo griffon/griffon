@@ -18,7 +18,7 @@ package org.codehaus.griffon.compile.core.ast.transform;
 import griffon.core.artifact.GriffonView;
 import griffon.core.artifact.GriffonViewClass;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
-import org.codehaus.griffon.runtime.core.view.AbstractGriffonViewScript;
+import org.codehaus.griffon.runtime.groovy.view.AbstractGriffonViewScript;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
