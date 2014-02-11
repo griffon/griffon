@@ -1,4 +1,4 @@
-package sample;
+package sample.javafx.java;
 
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonView;

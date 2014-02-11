@@ -16,20 +16,11 @@
 
 apply plugin: 'groovy'
 apply from: rootProject.file('gradle/coverage.gradle')
+apply from: rootProject.file('gradle/javafx.gradle')
 
 ext.maven = true
 ext.pomDescription = 'Griffon JavaFX module'
-ext.jfxrtLocation = new File("${System.properties['java.home']}/jre/lib/jfxrt.jar").absolutePath
 
-for (location in ['lib/jfxrt.jar', 'jre/lib/jfxrt.jar', 'jre/lib/ext/jfxrt.jar']) {
-    File javaHome = new File(System.properties['java.home'])
-    javaHome = javaHome.name == 'jre' ? javaHome.parentFile : javaHome
-    File file = new File(javaHome, location)
-    if (file.exists()) {
-        ext.jfxrtLocation = file.absolutePath
-        break
-    }
-}
 
 configurations {
     compileOnly

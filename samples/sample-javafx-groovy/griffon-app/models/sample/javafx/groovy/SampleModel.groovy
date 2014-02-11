@@ -1,4 +1,4 @@
-package sample
+package sample.javafx.groovy
 
 import griffon.core.artifact.GriffonModel
 import griffon.metadata.ArtifactProviderFor

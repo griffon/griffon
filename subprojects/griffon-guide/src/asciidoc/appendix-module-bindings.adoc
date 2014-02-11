@@ -4,7 +4,7 @@
 :subproject-base: {rootdir}/subprojects/griffon-
 :java-source: /src/main/java/
 :groovy-source: /src/main/groovy/
-:package-base: org/codehaus/griffon/runtime/core/
+:package-base: org/codehaus/griffon/runtime/
 :numbered:
 
 The following sections display all bindings per module. Use this information to
@@ -17,7 +17,7 @@ Module name: +core+
 
 [source,java]
 ----
-include::{subproject-base}core{java-source}{package-base}/DefaultApplicationModule.java[tags=bindings,indent=0]
+include::{subproject-base}core{java-source}{package-base}/core/DefaultApplicationModule.java[tags=bindings,indent=0]
 ----
 
 == Groovy
@@ -26,7 +26,7 @@ Module name: +groovy+
 
 [source,java]
 ----
-include::{subproject-base}groovy{groovy-source}{package-base}/GroovyModule.java[tags=bindings,indent=0]
+include::{subproject-base}groovy{groovy-source}{package-base}/groovy/GroovyModule.java[tags=bindings,indent=0]
 ----
 
 == Swing
@@ -35,7 +35,7 @@ Module name: +swing+
 
 [source,java]
 ----
-include::{subproject-base}swing{java-source}{package-base}/SwingModule.java[tags=bindings,indent=0]
+include::{subproject-base}swing{java-source}{package-base}/swing/SwingModule.java[tags=bindings,indent=0]
 ----
 
 == Swing Builder
@@ -45,7 +45,7 @@ Depends on: +swing+
 
 [source,java]
 ----
-include::{subproject-base}swing-builder{groovy-source}{package-base}/SwingBuilderModule.java[tags=bindings,indent=0]
+include::{subproject-base}swing-builder{groovy-source}{package-base}/swing/SwingBuilderModule.java[tags=bindings,indent=0]
 ----
 
 == JavaFX
@@ -54,7 +54,7 @@ Module name: +javafx+
 
 [source,java]
 ----
-include::{subproject-base}javafx{java-source}{package-base}/JavaFXModule.java[tags=bindings,indent=0]
+include::{subproject-base}javafx{java-source}{package-base}/javafx/JavaFXModule.java[tags=bindings,indent=0]
 ----
 
 == JavaFX Builder
@@ -64,7 +64,7 @@ Depends on: +javafx+
 
 [source,java]
 ----
-include::{subproject-base}javafx-builder{groovy-source}{package-base}/JavaFXBuilderModule.java[tags=bindings,indent=0]
+include::{subproject-base}javafx-builder{groovy-source}{package-base}/javafx/JavaFXBuilderModule.java[tags=bindings,indent=0]
 ----
 
 == Lanterna
@@ -73,7 +73,7 @@ Module name: +lanterna+
 
 [source,java]
 ----
-include::{subproject-base}lanterna{java-source}{package-base}/LanternaModule.java[tags=bindings,indent=0]
+include::{subproject-base}lanterna{java-source}{package-base}/lanterna/LanternaModule.java[tags=bindings,indent=0]
 ----
 
 == Lanterna Builder
@@ -83,7 +83,7 @@ Depends on: +lanterna+
 
 [source,java]
 ----
-include::{subproject-base}lanterna-builder{groovy-source}{package-base}/LanternaBuilderModule.java[tags=bindings,indent=0]
+include::{subproject-base}lanterna-builder{groovy-source}{package-base}/lanterna/LanternaBuilderModule.java[tags=bindings,indent=0]
 ----
 
 == Pivot
@@ -92,7 +92,7 @@ Module name: +pivot+
 
 [source,java]
 ----
-include::{subproject-base}pivot{java-source}{package-base}/PivotModule.java[tags=bindings,indent=0]
+include::{subproject-base}pivot{java-source}{package-base}/pivot/PivotModule.java[tags=bindings,indent=0]
 ----
 
 == Pivot Builder
@@ -102,5 +102,5 @@ Depends on: +pivot+
 
 [source,java]
 ----
-include::{subproject-base}pivot-builder{groovy-source}{package-base}/PivotBuilderModule.java[tags=bindings,indent=0]
+include::{subproject-base}pivot-builder{groovy-source}{package-base}/pivot/PivotBuilderModule.java[tags=bindings,indent=0]
 ----

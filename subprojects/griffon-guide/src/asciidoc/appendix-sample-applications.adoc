@@ -200,10 +200,10 @@ idea to get started with it now. Among the several features found in JavaFX you'
 
 === Model
 
-.sample-javafx-java/griffon-app/models/sample/SampleModel.java
+.sample-javafx-java/griffon-app/models/sample/javafx/java/SampleModel.java
 [source,java]
 ----
-include::{sample-javafx-java}/griffon-app/models/sample/SampleModel.java[]
+include::{sample-javafx-java}/griffon-app/models/sample/javafx/java/SampleModel.java[]
 ----
 <1> Define a private field for the property
 <2> Property accessor
@@ -214,11 +214,11 @@ equivalent in behavior to the ones we saw back in the <<_swing,Swing>> example, 
 they provide much more behavior than that; values may be cached automatically for
 example, avoiding bindings to be updated needlessly.
 
-.sample-javafx-groovy/griffon-app/models/sample/SampleModel.groovy
+.sample-javafx-groovy/griffon-app/models/sample/javafx/groovy/SampleModel.groovy
 [source,groovy]
 
 ----
-include::{sample-javafx-groovy}/griffon-app/models/sample/SampleModel.groovy[]
+include::{sample-javafx-groovy}/griffon-app/models/sample/javafx/groovy/SampleModel.groovy[]
 ----
 <1> Observable property
 
@@ -233,10 +233,10 @@ to a project.
 Have a look at the controller for this application. See if you can spot the differences
 between its Swing counterpart.
 
-.sample-javafx-java/griffon-app/controllers/sample/SampleController.java
+.sample-javafx-java/griffon-app/controllers/sample/javafx/java/SampleController.java
 [source,java]
 ----
-include::{sample-javafx-java}/griffon-app/controllers/sample/SampleController.java[]
+include::{sample-javafx-java}/griffon-app/controllers/sample/javafx/java/SampleController.java[]
 ----
 <1> MVC member injected by +{link_mvc_group_manager}+
 <2> Injected by JSR 330
@@ -248,11 +248,11 @@ How can this be? This is the power of separating concerns between MVC members. B
 the Controller only talks to the View via the Model, and the Model exposes an identical
 contract for its properties we didn't have to change the Controller at all.
 
-.sample-javafx-groovy/griffon-app/controllers/sample/SampleController.groovy
+.sample-javafx-groovy/griffon-app/controllers/sample/javafx/groovy/SampleController.groovy
 [source,groovy]
 
 ----
-include::{sample-javafx-groovy}/griffon-app/controllers/sample/SampleController.groovy[]
+include::{sample-javafx-groovy}/griffon-app/controllers/sample/javafx/groovy/SampleController.groovy[]
 ----
 <1> MVC member injected by +{link_mvc_group_manager}+
 <2> Injected by JSR 330
@@ -269,17 +269,17 @@ code remains short and to the point.
 Given that the service operates with raw data and has no ties to the toolkit in use we'd
 expect no changes from the Swing example.
 
-.sample-javafx-java/griffon-app/services/sample/SampleService.java
+.sample-javafx-java/griffon-app/services/sample/javafx/java/SampleService.java
 [source,java]
 ----
-include::{sample-javafx-java}/griffon-app/services/sample/SampleService.java[]
+include::{sample-javafx-java}/griffon-app/services/sample/javafx/java/SampleService.java[]
 ----
 
-.sample-javafx-groovy/griffon-app/services/sample/SampleService.groovy
+.sample-javafx-groovy/griffon-app/services/sample/javafx/groovy/SampleService.groovy
 [source,groovy]
 
 ----
-include::{sample-javafx-groovy}/griffon-app/services/sample/SampleService.groovy[]
+include::{sample-javafx-groovy}/griffon-app/services/sample/javafx/groovy/SampleService.groovy[]
 ----
 
 === View
@@ -288,10 +288,10 @@ Views are the artifacts that are most impacted by the choice of UI toolkit. You 
 remember we mentioned FXML as one of the strong features delivered by JavaFX and so
 we chose to implement the Java based View by reading an fxml file by convention.
 
-.sample-javafx-java/griffon-app/views/sample/SampleView.java
+.sample-javafx-java/griffon-app/views/sample/javafx/java/SampleView.java
 [source,java]
 ----
-include::{sample-javafx-java}/griffon-app/views/sample/SampleView.java[]
+include::{sample-javafx-java}/griffon-app/views/sample/javafx/java/SampleView.java[]
 ----
 <1> MVC member injected by +{link_mvc_group_manager}+
 <2> Create window and attach it to +{link_window_manager}+
@@ -302,10 +302,10 @@ include::{sample-javafx-java}/griffon-app/views/sample/SampleView.java[]
 fields annotated with +@FXML+; fields names must match component ids [conum,data-value=2]_2_
 as defined in the fxml file, which is shown next:
 
-.sample-javafx-java/griffon-app/resources/sample/sample.fxml
+.sample-javafx-java/griffon-app/resources/sample/javafx/java/sample.fxml
 [source,xml]
 ----
-include::{sample-javafx-java}/griffon-app/resources/sample/sample.fxml[]
+include::{sample-javafx-java}/griffon-app/resources/sample/javafx/java/sample.fxml[]
 ----
 <1> Naming convention for automatic action binding
 
@@ -320,11 +320,11 @@ Given this we infer that the +fx:id+ value must be of the form +<actionName>Acti
 The naming convention is one of two steps, you must also connect the controller using
 a helper method [conum,data-value=4]_4_ as shown in the View.
 
-.sample-javafx-groovy/griffon-app/views/sample/SampleView.groovy
+.sample-javafx-groovy/griffon-app/views/sample/javafx/groovy/SampleView.groovy
 [source,groovy]
 
 ----
-include::{sample-javafx-groovy}/griffon-app/views/sample/SampleView.groovy[]
+include::{sample-javafx-groovy}/griffon-app/views/sample/javafx/groovy/SampleView.groovy[]
 ----
 <1> MVC member injected by +{link_mvc_group_manager}+
 <2> Create window and attach it to +{link_window_manager}+

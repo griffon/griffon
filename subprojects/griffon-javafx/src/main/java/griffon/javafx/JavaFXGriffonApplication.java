@@ -31,7 +31,7 @@ import static griffon.core.GriffonExceptionHandler.registerExceptionHandler;
  */
 public class JavaFXGriffonApplication extends AbstractJavaFXGriffonApplication {
     private boolean primaryStageDispensed = false;
-    private Stage primaryStage;
+    protected Stage primaryStage;
 
     public JavaFXGriffonApplication() {
         this(EMPTY_ARGS);
