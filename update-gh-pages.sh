@@ -6,18 +6,18 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   do
       rm -rf $HOME/travis-ci/reports/griffon-${project}
       mkdir -p $HOME/travis-ci/reports/griffon-${project}
-      if [ -d $TRAVIS_BUILD_DIR/subprojects/griffon-${project}/build/reports/]; then
+      if [ -d "$TRAVIS_BUILD_DIR/subprojects/griffon-${project}/build/reports/" ]; then
           echo -e "Copying $TRAVIS_BUILD_DIR/subprojects/griffon-${project}/build/reports"
-          cp -R $TRAVIS_BUILD_DIR/subprojects/griffon-${project}/build/reports/ $HOME/travis-ci/reports/griffon-${project}
+          cp -R "$TRAVIS_BUILD_DIR/subprojects/griffon-${project}/build/reports/" "$HOME/travis-ci/reports/griffon-${project}"
       fi
   done
   for plugin in 'datasource', 'theme', 'preferences', 'shiro', 'tasks'
   do
       rm -rf $HOME/travis-ci/reports/griffon-${plugin}-plugin/
       mkdir -p $HOME/travis-ci/reports/griffon-${plugin}-plugin/
-      if [ -d $TRAVIS_BUILD_DIR/plugins/griffon-${plugin}-plugin/build/reports/]; then
+      if [ -d "$TRAVIS_BUILD_DIR/plugins/griffon-${plugin}-plugin/build/reports/" ]; then
           echo -e "$TRAVIS_BUILD_DIR/plugins/griffon-${plugin}-plugin/build/reports"
-          cp -R $TRAVIS_BUILD_DIR/plugins/griffon-${plugin}-plugin/build/reports/ $HOME/travis-ci/reports/griffon-${plugin}-plugin/
+          cp -R "$TRAVIS_BUILD_DIR/plugins/griffon-${plugin}-plugin/build/reports/" "$HOME/travis-ci/reports/griffon-${plugin}-plugin/"
       fi
   done
 
