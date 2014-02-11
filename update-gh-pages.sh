@@ -1,17 +1,17 @@
 if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   echo -e "Starting gh-pages update\n"
 
-  #copy data we're interested in to other place
-  for project in 'core', 'groovy', 'guice', 'swing', 'javafx', 'pivot', 'lanterna'
+  #copy data were interested in to other place
+  for project in core groovy guice swing javafx pivot lanterna
   do
-      rm -rf $HOME/travis-ci/reports/griffon-${project}
-      mkdir -p $HOME/travis-ci/reports/griffon-${project}
-      if [ -d "$TRAVIS_BUILD_DIR/subprojects/griffon-${project}/build/reports/" ]; then
-          echo -e "Copying $TRAVIS_BUILD_DIR/subprojects/griffon-${project}/build/reports"
-          cp -R "$TRAVIS_BUILD_DIR/subprojects/griffon-${project}/build/reports/" "$HOME/travis-ci/reports/griffon-${project}"
+      rm -rf $HOME/travis-ci/reports/griffon-$project
+      mkdir -p $HOME/travis-ci/reports/griffon-$project
+      if [ -d "$TRAVIS_BUILD_DIR/subprojects/griffon-$project/build/reports/" ]; then
+          echo -e "Copying $TRAVIS_BUILD_DIR/subprojects/griffon-$project/build/reports"
+          cp -R "$TRAVIS_BUILD_DIR/subprojects/griffon-$project/build/reports/" "$HOME/travis-ci/reports/griffon-$project"
       fi
   done
-  for plugin in 'datasource', 'theme', 'preferences', 'shiro', 'tasks'
+  for plugin in datasource theme preferences shiro tasks
   do
       rm -rf $HOME/travis-ci/reports/griffon-${plugin}-plugin/
       mkdir -p $HOME/travis-ci/reports/griffon-${plugin}-plugin/
@@ -30,7 +30,7 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   git clone --quiet --branch=gh-pages https://${GH_TOKEN}@github.com/aalmiray/griffon2.git gh-pages > /dev/null
 
   #go into directory and copy data we're interested in to that directory
-  cd gh-pages
+  cd gh-pages/travis-ci
   cp -Rf $HOME/travis-ci/* .
 
   #add, commit and push files
