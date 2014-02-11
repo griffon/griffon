@@ -45,19 +45,19 @@ class FontPropertyEditorSpec extends Specification {
         null                                               | ' '
         null                                               | []
         null                                               | [:]
-        new Font('Helvetica', Font.PLAIN, 12)              | 'Helvetica-PLAIN-12'
-        new Font('Helvetica', Font.BOLD, 12)               | 'Helvetica-BOLD-12'
-        new Font('Helvetica', Font.ITALIC, 12)             | 'Helvetica-ITALIC-12'
-        new Font('Helvetica', Font.BOLD | Font.ITALIC, 12) | 'Helvetica-BOLDITALIC-12'
-        new Font('Helvetica', Font.PLAIN, 12)              | ['Helvetica', 'PLAIN', '12']
-        new Font('Helvetica', Font.BOLD, 12)               | ['Helvetica', 'BOLD', '12']
-        new Font('Helvetica', Font.ITALIC, 12)             | ['Helvetica', 'ITALIC', '12']
-        new Font('Helvetica', Font.BOLD | Font.ITALIC, 12) | ['Helvetica', 'BOLDITALIC', '12']
-        new Font('Helvetica', Font.PLAIN, 12)              | [family: 'Helvetica', style: 'PLAIN', size: '12']
-        new Font('Helvetica', Font.BOLD, 12)               | [family: 'Helvetica', style: 'BOLD', size: '12']
-        new Font('Helvetica', Font.ITALIC, 12)             | [family: 'Helvetica', style: 'ITALIC', size: '12']
-        new Font('Helvetica', Font.BOLD | Font.ITALIC, 12) | [family: 'Helvetica', style: 'BOLDITALIC', size: '12']
-        new Font('Helvetica', Font.BOLD | Font.ITALIC, 12) | new Font('Helvetica', Font.BOLD | Font.ITALIC, 12)
+        new Font('SansSerif', Font.PLAIN, 12)              | 'SansSerif-PLAIN-12'
+        new Font('SansSerif', Font.BOLD, 12)               | 'SansSerif-BOLD-12'
+        new Font('SansSerif', Font.ITALIC, 12)             | 'SansSerif-ITALIC-12'
+        new Font('SansSerif', Font.BOLD | Font.ITALIC, 12) | 'SansSerif-BOLDITALIC-12'
+        new Font('SansSerif', Font.PLAIN, 12)              | ['SansSerif', 'PLAIN', '12']
+        new Font('SansSerif', Font.BOLD, 12)               | ['SansSerif', 'BOLD', '12']
+        new Font('SansSerif', Font.ITALIC, 12)             | ['SansSerif', 'ITALIC', '12']
+        new Font('SansSerif', Font.BOLD | Font.ITALIC, 12) | ['SansSerif', 'BOLDITALIC', '12']
+        new Font('SansSerif', Font.PLAIN, 12)              | [family: 'SansSerif', style: 'PLAIN', size: '12']
+        new Font('SansSerif', Font.BOLD, 12)               | [family: 'SansSerif', style: 'BOLD', size: '12']
+        new Font('SansSerif', Font.ITALIC, 12)             | [family: 'SansSerif', style: 'ITALIC', size: '12']
+        new Font('SansSerif', Font.BOLD | Font.ITALIC, 12) | [family: 'SansSerif', style: 'BOLDITALIC', size: '12']
+        new Font('SansSerif', Font.BOLD | Font.ITALIC, 12) | new Font('SansSerif', Font.BOLD | Font.ITALIC, 12)
     }
 
     void "Invalid font format '#format'"() {
@@ -76,11 +76,11 @@ class FontPropertyEditorSpec extends Specification {
         format << [
             'garbage',
             'foo-bar-baz',
-            'Helvetica-FOO-12',
-            'Helvetica-BOLD-baz',
-            ['Helvetica'],
-            ['Helvetica', 'BOLD'],
-            [family: 'Helvetica'],
+            'SansSerif-FOO-12',
+            'SansSerif-BOLD-baz',
+            ['SansSerif'],
+            ['SansSerif', 'BOLD'],
+            [family: 'SansSerif'],
             [new Object()],
             [family: new Object()],
             new Object()
@@ -104,9 +104,9 @@ class FontPropertyEditorSpec extends Specification {
         where:
         value                                              | expected
         null                                               | null
-        new Font('Helvetica', Font.PLAIN, 12)              | 'Helvetica-PLAIN-12'
-        new Font('Helvetica', Font.BOLD, 12)               | 'Helvetica-BOLD-12'
-        new Font('Helvetica', Font.ITALIC, 12)             | 'Helvetica-ITALIC-12'
-        new Font('Helvetica', Font.BOLD | Font.ITALIC, 12) | 'Helvetica-BOLDITALIC-12'
+        new Font('SansSerif', Font.PLAIN, 12)              | 'SansSerif-PLAIN-12'
+        new Font('SansSerif', Font.BOLD, 12)               | 'SansSerif-BOLD-12'
+        new Font('SansSerif', Font.ITALIC, 12)             | 'SansSerif-ITALIC-12'
+        new Font('SansSerif', Font.BOLD | Font.ITALIC, 12) | 'SansSerif-BOLDITALIC-12'
     }
 }
