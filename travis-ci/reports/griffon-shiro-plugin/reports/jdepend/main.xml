@@ -1,0 +1,239 @@
+<?xml version="1.0"?>
+<JDepend>
+    <Packages>
+
+        <Package name="griffon.core">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.core.artifact">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.core.controller">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.plugins.shiro">
+            <Stats>
+                <TotalClasses>2</TotalClasses>
+                <ConcreteClasses>1</ConcreteClasses>
+                <AbstractClasses>1</AbstractClasses>
+                <Ca>2</Ca>
+                <Ce>3</Ce>
+                <A>0.5</A>
+                <I>0.6</I>
+                <D>0.1</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+                <Class sourceFile="SecurityFailureHandler.java">
+                    griffon.plugins.shiro.SecurityFailureHandler
+                </Class>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="SecurityFailureHandler.java">
+                    griffon.plugins.shiro.SecurityFailureHandler$Kind
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>griffon.core.artifact</Package>
+                <Package>java.lang</Package>
+                <Package>org.apache.shiro.subject</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>org.codehaus.griffon.runtime.core</Package>
+                <Package>org.codehaus.griffon.runtime.shiro</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="griffon.util">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.lang">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.lang.reflect">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.util">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="javax.inject">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.apache.shiro">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.apache.shiro.authz">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.apache.shiro.authz.annotation">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.apache.shiro.mgt">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.apache.shiro.realm.text">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.apache.shiro.subject">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.codehaus.griffon.runtime.core">
+            <Stats>
+                <TotalClasses>1</TotalClasses>
+                <ConcreteClasses>1</ConcreteClasses>
+                <AbstractClasses>0</AbstractClasses>
+                <Ca>0</Ca>
+                <Ce>6</Ce>
+                <A>0</A>
+                <I>1</I>
+                <D>0</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="ShiroModule.java">
+                    org.codehaus.griffon.runtime.core.ShiroModule
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>griffon.core.controller</Package>
+                <Package>griffon.plugins.shiro</Package>
+                <Package>org.apache.shiro.mgt</Package>
+                <Package>org.apache.shiro.subject</Package>
+                <Package>org.codehaus.griffon.runtime.core.injection</Package>
+                <Package>org.codehaus.griffon.runtime.shiro</Package>
+            </DependsUpon>
+
+            <UsedBy>
+            </UsedBy>
+        </Package>
+
+        <Package name="org.codehaus.griffon.runtime.core.controller">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.codehaus.griffon.runtime.core.injection">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.codehaus.griffon.runtime.shiro">
+            <Stats>
+                <TotalClasses>16</TotalClasses>
+                <ConcreteClasses>14</ConcreteClasses>
+                <AbstractClasses>2</AbstractClasses>
+                <Ca>1</Ca>
+                <Ce>16</Ce>
+                <A>0.12</A>
+                <I>0.94</I>
+                <D>0.07</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+                <Class sourceFile="AbstractSecurityFailureHandler.java">
+                    org.codehaus.griffon.runtime.shiro.AbstractSecurityFailureHandler
+                </Class>
+                <Class sourceFile="ShiroActionInterceptor.java">
+                    org.codehaus.griffon.runtime.shiro.ShiroActionInterceptor$RequirementEvaluator
+                </Class>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="DefaultSecurityFailureHandler.java">
+                    org.codehaus.griffon.runtime.shiro.DefaultSecurityFailureHandler
+                </Class>
+                <Class sourceFile="DefaultSecurityFailureHandler.java">
+                    org.codehaus.griffon.runtime.shiro.DefaultSecurityFailureHandler$1
+                </Class>
+                <Class sourceFile="SecurityManagerProvider.java">
+                    org.codehaus.griffon.runtime.shiro.SecurityManagerProvider
+                </Class>
+                <Class sourceFile="ShiroActionInterceptor.java">
+                    org.codehaus.griffon.runtime.shiro.ShiroActionInterceptor
+                </Class>
+                <Class sourceFile="ShiroActionInterceptor.java">
+                    org.codehaus.griffon.runtime.shiro.ShiroActionInterceptor$1
+                </Class>
+                <Class sourceFile="ShiroActionInterceptor.java">
+                    org.codehaus.griffon.runtime.shiro.ShiroActionInterceptor$ActionRequirement
+                </Class>
+                <Class sourceFile="ShiroActionInterceptor.java">
+                    org.codehaus.griffon.runtime.shiro.ShiroActionInterceptor$AuthenticationRequirementEvaluator
+                </Class>
+                <Class sourceFile="ShiroActionInterceptor.java">
+                    org.codehaus.griffon.runtime.shiro.ShiroActionInterceptor$GuestRequirementEvaluator
+                </Class>
+                <Class sourceFile="ShiroActionInterceptor.java">
+                    org.codehaus.griffon.runtime.shiro.ShiroActionInterceptor$PermissionsRequirementEvaluator
+                </Class>
+                <Class sourceFile="ShiroActionInterceptor.java">
+                    org.codehaus.griffon.runtime.shiro.ShiroActionInterceptor$Requirement
+                </Class>
+                <Class sourceFile="ShiroActionInterceptor.java">
+                    org.codehaus.griffon.runtime.shiro.ShiroActionInterceptor$RequirementConfiguration
+                </Class>
+                <Class sourceFile="ShiroActionInterceptor.java">
+                    org.codehaus.griffon.runtime.shiro.ShiroActionInterceptor$RolesRequirementEvaluator
+                </Class>
+                <Class sourceFile="ShiroActionInterceptor.java">
+                    org.codehaus.griffon.runtime.shiro.ShiroActionInterceptor$UserRequirementEvaluator
+                </Class>
+                <Class sourceFile="SubjectProvider.java">
+                    org.codehaus.griffon.runtime.shiro.SubjectProvider
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>griffon.core</Package>
+                <Package>griffon.core.artifact</Package>
+                <Package>griffon.plugins.shiro</Package>
+                <Package>griffon.util</Package>
+                <Package>java.lang</Package>
+                <Package>java.lang.reflect</Package>
+                <Package>java.util</Package>
+                <Package>javax.inject</Package>
+                <Package>org.apache.shiro</Package>
+                <Package>org.apache.shiro.authz</Package>
+                <Package>org.apache.shiro.authz.annotation</Package>
+                <Package>org.apache.shiro.mgt</Package>
+                <Package>org.apache.shiro.realm.text</Package>
+                <Package>org.apache.shiro.subject</Package>
+                <Package>org.codehaus.griffon.runtime.core.controller</Package>
+                <Package>org.slf4j</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>org.codehaus.griffon.runtime.core</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="org.slf4j">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+    </Packages>
+
+    <Cycles>
+    </Cycles>
+</JDepend>

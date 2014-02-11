@@ -1,0 +1,921 @@
+<?xml version="1.0"?>
+<JDepend>
+    <Packages>
+
+        <Package name="griffon.core">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.core.artifact">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.core.controller">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.core.editors">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.core.env">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.core.event">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.core.formatters">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.core.injection">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.core.threading">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.core.view">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.exceptions">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.pivot">
+            <Stats>
+                <TotalClasses>4</TotalClasses>
+                <ConcreteClasses>1</ConcreteClasses>
+                <AbstractClasses>3</AbstractClasses>
+                <Ca>1</Ca>
+                <Ce>11</Ce>
+                <A>0.75</A>
+                <I>0.92</I>
+                <D>0.67</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+                <Class sourceFile="AbstractPivotGriffonApplication.java">
+                    griffon.pivot.AbstractPivotGriffonApplication
+                </Class>
+                <Class sourceFile="PivotWindowDisplayHandler.java">
+                    griffon.pivot.PivotWindowDisplayHandler
+                </Class>
+                <Class sourceFile="PivotWindowManager.java">
+                    griffon.pivot.PivotWindowManager
+                </Class>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="DesktopPivotGriffonApplication.java">
+                    griffon.pivot.DesktopPivotGriffonApplication
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>griffon.core</Package>
+                <Package>griffon.core.event</Package>
+                <Package>griffon.core.view</Package>
+                <Package>griffon.exceptions</Package>
+                <Package>griffon.util</Package>
+                <Package>java.lang</Package>
+                <Package>java.util</Package>
+                <Package>org.apache.pivot.collections</Package>
+                <Package>org.apache.pivot.wtk</Package>
+                <Package>org.codehaus.griffon.runtime.core</Package>
+                <Package>org.codehaus.griffon.runtime.pivot</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>org.codehaus.griffon.runtime.pivot</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="griffon.pivot.editors">
+            <Stats>
+                <TotalClasses>5</TotalClasses>
+                <ConcreteClasses>5</ConcreteClasses>
+                <AbstractClasses>0</AbstractClasses>
+                <Ca>0</Ca>
+                <Ce>8</Ce>
+                <A>0</A>
+                <I>1</I>
+                <D>0</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="BoundsPropertyEditor.java">
+                    griffon.pivot.editors.BoundsPropertyEditor
+                </Class>
+                <Class sourceFile="ColorPropertyEditor.java">
+                    griffon.pivot.editors.ColorPropertyEditor
+                </Class>
+                <Class sourceFile="DimensionsPropertyEditor.java">
+                    griffon.pivot.editors.DimensionsPropertyEditor
+                </Class>
+                <Class sourceFile="InsetsPropertyEditor.java">
+                    griffon.pivot.editors.InsetsPropertyEditor
+                </Class>
+                <Class sourceFile="PointPropertyEditor.java">
+                    griffon.pivot.editors.PointPropertyEditor
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>griffon.core.editors</Package>
+                <Package>griffon.core.formatters</Package>
+                <Package>griffon.pivot.formatters</Package>
+                <Package>griffon.util</Package>
+                <Package>java.awt</Package>
+                <Package>java.lang</Package>
+                <Package>java.util</Package>
+                <Package>org.apache.pivot.wtk</Package>
+            </DependsUpon>
+
+            <UsedBy>
+            </UsedBy>
+        </Package>
+
+        <Package name="griffon.pivot.formatters">
+            <Stats>
+                <TotalClasses>8</TotalClasses>
+                <ConcreteClasses>6</ConcreteClasses>
+                <AbstractClasses>2</AbstractClasses>
+                <Ca>1</Ca>
+                <Ce>6</Ce>
+                <A>0.25</A>
+                <I>0.86</I>
+                <D>0.11</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+                <Class sourceFile="ColorFormatter.java">
+                    griffon.pivot.formatters.ColorFormatter$AbstractColorFormatterDelegate
+                </Class>
+                <Class sourceFile="ColorFormatter.java">
+                    griffon.pivot.formatters.ColorFormatter$ColorFormatterDelegate
+                </Class>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="ColorFormatter.java">
+                    griffon.pivot.formatters.ColorFormatter
+                </Class>
+                <Class sourceFile="ColorFormatter.java">
+                    griffon.pivot.formatters.ColorFormatter$1
+                </Class>
+                <Class sourceFile="ColorFormatter.java">
+                    griffon.pivot.formatters.ColorFormatter$LongColorFormatterDelegate
+                </Class>
+                <Class sourceFile="ColorFormatter.java">
+                    griffon.pivot.formatters.ColorFormatter$LongWithAlphaColorFormatterDelegate
+                </Class>
+                <Class sourceFile="ColorFormatter.java">
+                    griffon.pivot.formatters.ColorFormatter$ShortColorFormatterDelegate
+                </Class>
+                <Class sourceFile="ColorFormatter.java">
+                    griffon.pivot.formatters.ColorFormatter$ShortWithAlphaColorFormatterDelegate
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>griffon.core.formatters</Package>
+                <Package>griffon.pivot.support</Package>
+                <Package>griffon.util</Package>
+                <Package>java.awt</Package>
+                <Package>java.lang</Package>
+                <Package>java.util</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>griffon.pivot.editors</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="griffon.pivot.support">
+            <Stats>
+                <TotalClasses>2</TotalClasses>
+                <ConcreteClasses>2</ConcreteClasses>
+                <AbstractClasses>0</AbstractClasses>
+                <Ca>2</Ca>
+                <Ce>5</Ce>
+                <A>0</A>
+                <I>0.71</I>
+                <D>0.29</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="Colors.java">
+                    griffon.pivot.support.Colors
+                </Class>
+                <Class sourceFile="PivotAction.java">
+                    griffon.pivot.support.PivotAction
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>griffon.core</Package>
+                <Package>java.awt</Package>
+                <Package>java.lang</Package>
+                <Package>java.util</Package>
+                <Package>org.apache.pivot.wtk</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>griffon.pivot.formatters</Package>
+                <Package>org.codehaus.griffon.runtime.pivot.controller</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="griffon.pivot.support.adapters">
+            <Stats>
+                <TotalClasses>138</TotalClasses>
+                <ConcreteClasses>137</ConcreteClasses>
+                <AbstractClasses>1</AbstractClasses>
+                <Ca>1</Ca>
+                <Ce>12</Ce>
+                <A>0.01</A>
+                <I>0.92</I>
+                <D>0.07</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+                <Class sourceFile="GriffonPivotAdapter.java">
+                    griffon.pivot.support.adapters.GriffonPivotAdapter
+                </Class>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="AccordionAdapter.java">
+                    griffon.pivot.support.adapters.AccordionAdapter
+                </Class>
+                <Class sourceFile="AccordionAttributeAdapter.java">
+                    griffon.pivot.support.adapters.AccordionAttributeAdapter
+                </Class>
+                <Class sourceFile="AccordionSelectionAdapter.java">
+                    griffon.pivot.support.adapters.AccordionSelectionAdapter
+                </Class>
+                <Class sourceFile="ActionAdapter.java">
+                    griffon.pivot.support.adapters.ActionAdapter
+                </Class>
+                <Class sourceFile="ActionClassAdapter.java">
+                    griffon.pivot.support.adapters.ActionClassAdapter
+                </Class>
+                <Class sourceFile="ActivityIndicatorAdapter.java">
+                    griffon.pivot.support.adapters.ActivityIndicatorAdapter
+                </Class>
+                <Class sourceFile="AlertAdapter.java">
+                    griffon.pivot.support.adapters.AlertAdapter
+                </Class>
+                <Class sourceFile="BlockAdapter.java">
+                    griffon.pivot.support.adapters.BlockAdapter
+                </Class>
+                <Class sourceFile="BorderAdapter.java">
+                    griffon.pivot.support.adapters.BorderAdapter
+                </Class>
+                <Class sourceFile="BoxPaneAdapter.java">
+                    griffon.pivot.support.adapters.BoxPaneAdapter
+                </Class>
+                <Class sourceFile="BulletedListAdapter.java">
+                    griffon.pivot.support.adapters.BulletedListAdapter
+                </Class>
+                <Class sourceFile="ButtonAdapter.java">
+                    griffon.pivot.support.adapters.ButtonAdapter
+                </Class>
+                <Class sourceFile="ButtonBindingAdapter.java">
+                    griffon.pivot.support.adapters.ButtonBindingAdapter
+                </Class>
+                <Class sourceFile="ButtonGroupAdapter.java">
+                    griffon.pivot.support.adapters.ButtonGroupAdapter
+                </Class>
+                <Class sourceFile="ButtonPressAdapter.java">
+                    griffon.pivot.support.adapters.ButtonPressAdapter
+                </Class>
+                <Class sourceFile="ButtonStateAdapter.java">
+                    griffon.pivot.support.adapters.ButtonStateAdapter
+                </Class>
+                <Class sourceFile="CalendarAdapter.java">
+                    griffon.pivot.support.adapters.CalendarAdapter
+                </Class>
+                <Class sourceFile="CalendarBindingAdapter.java">
+                    griffon.pivot.support.adapters.CalendarBindingAdapter
+                </Class>
+                <Class sourceFile="CalendarButtonAdapter.java">
+                    griffon.pivot.support.adapters.CalendarButtonAdapter
+                </Class>
+                <Class sourceFile="CalendarButtonBindingAdapter.java">
+                    griffon.pivot.support.adapters.CalendarButtonBindingAdapter
+                </Class>
+                <Class sourceFile="CalendarButtonSelectionAdapter.java">
+                    griffon.pivot.support.adapters.CalendarButtonSelectionAdapter
+                </Class>
+                <Class sourceFile="CalendarSelectionAdapter.java">
+                    griffon.pivot.support.adapters.CalendarSelectionAdapter
+                </Class>
+                <Class sourceFile="CardPaneAdapter.java">
+                    griffon.pivot.support.adapters.CardPaneAdapter
+                </Class>
+                <Class sourceFile="ClipboardContentAdapter.java">
+                    griffon.pivot.support.adapters.ClipboardContentAdapter
+                </Class>
+                <Class sourceFile="ColorChooserBindingAdapter.java">
+                    griffon.pivot.support.adapters.ColorChooserBindingAdapter
+                </Class>
+                <Class sourceFile="ColorChooserButtonBindingAdapter.java">
+                    griffon.pivot.support.adapters.ColorChooserButtonBindingAdapter
+                </Class>
+                <Class sourceFile="ColorChooserButtonSelectionAdapter.java">
+                    griffon.pivot.support.adapters.ColorChooserButtonSelectionAdapter
+                </Class>
+                <Class sourceFile="ColorChooserSelectionAdapter.java">
+                    griffon.pivot.support.adapters.ColorChooserSelectionAdapter
+                </Class>
+                <Class sourceFile="ComponentAdapter.java">
+                    griffon.pivot.support.adapters.ComponentAdapter
+                </Class>
+                <Class sourceFile="ComponentClassAdapter.java">
+                    griffon.pivot.support.adapters.ComponentClassAdapter
+                </Class>
+                <Class sourceFile="ComponentDataAdapter.java">
+                    griffon.pivot.support.adapters.ComponentDataAdapter
+                </Class>
+                <Class sourceFile="ComponentDecoratorAdapter.java">
+                    griffon.pivot.support.adapters.ComponentDecoratorAdapter
+                </Class>
+                <Class sourceFile="ComponentKeyAdapter.java">
+                    griffon.pivot.support.adapters.ComponentKeyAdapter
+                </Class>
+                <Class sourceFile="ComponentMouseAdapter.java">
+                    griffon.pivot.support.adapters.ComponentMouseAdapter
+                </Class>
+                <Class sourceFile="ComponentMouseButtonAdapter.java">
+                    griffon.pivot.support.adapters.ComponentMouseButtonAdapter
+                </Class>
+                <Class sourceFile="ComponentMouseWheelAdapter.java">
+                    griffon.pivot.support.adapters.ComponentMouseWheelAdapter
+                </Class>
+                <Class sourceFile="ComponentNodeAdapter.java">
+                    griffon.pivot.support.adapters.ComponentNodeAdapter
+                </Class>
+                <Class sourceFile="ComponentStateAdapter.java">
+                    griffon.pivot.support.adapters.ComponentStateAdapter
+                </Class>
+                <Class sourceFile="ComponentStyleAdapter.java">
+                    griffon.pivot.support.adapters.ComponentStyleAdapter
+                </Class>
+                <Class sourceFile="ComponentTooltipAdapter.java">
+                    griffon.pivot.support.adapters.ComponentTooltipAdapter
+                </Class>
+                <Class sourceFile="ContainerAdapter.java">
+                    griffon.pivot.support.adapters.ContainerAdapter
+                </Class>
+                <Class sourceFile="ContainerMouseAdapter.java">
+                    griffon.pivot.support.adapters.ContainerMouseAdapter
+                </Class>
+                <Class sourceFile="DialogAdapter.java">
+                    griffon.pivot.support.adapters.DialogAdapter
+                </Class>
+                <Class sourceFile="DialogCloseAdapter.java">
+                    griffon.pivot.support.adapters.DialogCloseAdapter
+                </Class>
+                <Class sourceFile="DialogStateAdapter.java">
+                    griffon.pivot.support.adapters.DialogStateAdapter
+                </Class>
+                <Class sourceFile="ElementAdapter.java">
+                    griffon.pivot.support.adapters.ElementAdapter
+                </Class>
+                <Class sourceFile="ExpanderAdapter.java">
+                    griffon.pivot.support.adapters.ExpanderAdapter
+                </Class>
+                <Class sourceFile="FileBrowserAdapter.java">
+                    griffon.pivot.support.adapters.FileBrowserAdapter
+                </Class>
+                <Class sourceFile="FileBrowserSheetAdapter.java">
+                    griffon.pivot.support.adapters.FileBrowserSheetAdapter
+                </Class>
+                <Class sourceFile="FillPaneAdapter.java">
+                    griffon.pivot.support.adapters.FillPaneAdapter
+                </Class>
+                <Class sourceFile="FormAdapter.java">
+                    griffon.pivot.support.adapters.FormAdapter
+                </Class>
+                <Class sourceFile="FormAttributeAdapter.java">
+                    griffon.pivot.support.adapters.FormAttributeAdapter
+                </Class>
+                <Class sourceFile="FrameAdapter.java">
+                    griffon.pivot.support.adapters.FrameAdapter
+                </Class>
+                <Class sourceFile="GridPaneAdapter.java">
+                    griffon.pivot.support.adapters.GridPaneAdapter
+                </Class>
+                <Class sourceFile="ImageAdapter.java">
+                    griffon.pivot.support.adapters.ImageAdapter
+                </Class>
+                <Class sourceFile="ImageNodeAdapter.java">
+                    griffon.pivot.support.adapters.ImageNodeAdapter
+                </Class>
+                <Class sourceFile="ImageViewAdapter.java">
+                    griffon.pivot.support.adapters.ImageViewAdapter
+                </Class>
+                <Class sourceFile="ImageViewBindingAdapter.java">
+                    griffon.pivot.support.adapters.ImageViewBindingAdapter
+                </Class>
+                <Class sourceFile="LabelAdapter.java">
+                    griffon.pivot.support.adapters.LabelAdapter
+                </Class>
+                <Class sourceFile="LabelBindingAdapter.java">
+                    griffon.pivot.support.adapters.LabelBindingAdapter
+                </Class>
+                <Class sourceFile="ListButtonAdapter.java">
+                    griffon.pivot.support.adapters.ListButtonAdapter
+                </Class>
+                <Class sourceFile="ListButtonBindingAdapter.java">
+                    griffon.pivot.support.adapters.ListButtonBindingAdapter
+                </Class>
+                <Class sourceFile="ListButtonItemAdapter.java">
+                    griffon.pivot.support.adapters.ListButtonItemAdapter
+                </Class>
+                <Class sourceFile="ListButtonSelectionAdapter.java">
+                    griffon.pivot.support.adapters.ListButtonSelectionAdapter
+                </Class>
+                <Class sourceFile="ListViewAdapter.java">
+                    griffon.pivot.support.adapters.ListViewAdapter
+                </Class>
+                <Class sourceFile="ListViewBindingAdapter.java">
+                    griffon.pivot.support.adapters.ListViewBindingAdapter
+                </Class>
+                <Class sourceFile="ListViewItemAdapter.java">
+                    griffon.pivot.support.adapters.ListViewItemAdapter
+                </Class>
+                <Class sourceFile="ListViewItemStateAdapter.java">
+                    griffon.pivot.support.adapters.ListViewItemStateAdapter
+                </Class>
+                <Class sourceFile="ListViewSelectionAdapter.java">
+                    griffon.pivot.support.adapters.ListViewSelectionAdapter
+                </Class>
+                <Class sourceFile="MenuAdapter.java">
+                    griffon.pivot.support.adapters.MenuAdapter
+                </Class>
+                <Class sourceFile="MenuBarAdapter.java">
+                    griffon.pivot.support.adapters.MenuBarAdapter
+                </Class>
+                <Class sourceFile="MenuButtonAdapter.java">
+                    griffon.pivot.support.adapters.MenuButtonAdapter
+                </Class>
+                <Class sourceFile="MenuItemSelectionAdapter.java">
+                    griffon.pivot.support.adapters.MenuItemSelectionAdapter
+                </Class>
+                <Class sourceFile="MenuPopupAdapter.java">
+                    griffon.pivot.support.adapters.MenuPopupAdapter
+                </Class>
+                <Class sourceFile="MenuPopupStateAdapter.java">
+                    griffon.pivot.support.adapters.MenuPopupStateAdapter
+                </Class>
+                <Class sourceFile="MeterAdapter.java">
+                    griffon.pivot.support.adapters.MeterAdapter
+                </Class>
+                <Class sourceFile="MovieAdapter.java">
+                    griffon.pivot.support.adapters.MovieAdapter
+                </Class>
+                <Class sourceFile="MovieViewAdapter.java">
+                    griffon.pivot.support.adapters.MovieViewAdapter
+                </Class>
+                <Class sourceFile="NodeAdapter.java">
+                    griffon.pivot.support.adapters.NodeAdapter
+                </Class>
+                <Class sourceFile="NumberedListAdapter.java">
+                    griffon.pivot.support.adapters.NumberedListAdapter
+                </Class>
+                <Class sourceFile="PromptAdapter.java">
+                    griffon.pivot.support.adapters.PromptAdapter
+                </Class>
+                <Class sourceFile="RollupAdapter.java">
+                    griffon.pivot.support.adapters.RollupAdapter
+                </Class>
+                <Class sourceFile="RollupStateAdapter.java">
+                    griffon.pivot.support.adapters.RollupStateAdapter
+                </Class>
+                <Class sourceFile="ScrollBarAdapter.java">
+                    griffon.pivot.support.adapters.ScrollBarAdapter
+                </Class>
+                <Class sourceFile="ScrollBarValueAdapter.java">
+                    griffon.pivot.support.adapters.ScrollBarValueAdapter
+                </Class>
+                <Class sourceFile="ScrollPaneAdapter.java">
+                    griffon.pivot.support.adapters.ScrollPaneAdapter
+                </Class>
+                <Class sourceFile="SeparatorAdapter.java">
+                    griffon.pivot.support.adapters.SeparatorAdapter
+                </Class>
+                <Class sourceFile="SheetCloseAdapter.java">
+                    griffon.pivot.support.adapters.SheetCloseAdapter
+                </Class>
+                <Class sourceFile="SheetStateAdapter.java">
+                    griffon.pivot.support.adapters.SheetStateAdapter
+                </Class>
+                <Class sourceFile="SliderAdapter.java">
+                    griffon.pivot.support.adapters.SliderAdapter
+                </Class>
+                <Class sourceFile="SliderValueAdapter.java">
+                    griffon.pivot.support.adapters.SliderValueAdapter
+                </Class>
+                <Class sourceFile="SpinnerAdapter.java">
+                    griffon.pivot.support.adapters.SpinnerAdapter
+                </Class>
+                <Class sourceFile="SpinnerBindingAdapter.java">
+                    griffon.pivot.support.adapters.SpinnerBindingAdapter
+                </Class>
+                <Class sourceFile="SpinnerItemAdapter.java">
+                    griffon.pivot.support.adapters.SpinnerItemAdapter
+                </Class>
+                <Class sourceFile="SpinnerSelectionAdapter.java">
+                    griffon.pivot.support.adapters.SpinnerSelectionAdapter
+                </Class>
+                <Class sourceFile="SplitPaneAdapter.java">
+                    griffon.pivot.support.adapters.SplitPaneAdapter
+                </Class>
+                <Class sourceFile="SuggestionPopupAdapter.java">
+                    griffon.pivot.support.adapters.SuggestionPopupAdapter
+                </Class>
+                <Class sourceFile="SuggestionPopupCloseAdapter.java">
+                    griffon.pivot.support.adapters.SuggestionPopupCloseAdapter
+                </Class>
+                <Class sourceFile="SuggestionPopupItemAdapter.java">
+                    griffon.pivot.support.adapters.SuggestionPopupItemAdapter
+                </Class>
+                <Class sourceFile="SuggestionPopupSelectionAdapter.java">
+                    griffon.pivot.support.adapters.SuggestionPopupSelectionAdapter
+                </Class>
+                <Class sourceFile="SuggestionPopupStateAdapter.java">
+                    griffon.pivot.support.adapters.SuggestionPopupStateAdapter
+                </Class>
+                <Class sourceFile="TabPaneAdapter.java">
+                    griffon.pivot.support.adapters.TabPaneAdapter
+                </Class>
+                <Class sourceFile="TabPaneAttributeAdapter.java">
+                    griffon.pivot.support.adapters.TabPaneAttributeAdapter
+                </Class>
+                <Class sourceFile="TabPaneSelectionAdapter.java">
+                    griffon.pivot.support.adapters.TabPaneSelectionAdapter
+                </Class>
+                <Class sourceFile="TablePaneAdapter.java">
+                    griffon.pivot.support.adapters.TablePaneAdapter
+                </Class>
+                <Class sourceFile="TablePaneAttributeAdapter.java">
+                    griffon.pivot.support.adapters.TablePaneAttributeAdapter
+                </Class>
+                <Class sourceFile="TableViewAdapter.java">
+                    griffon.pivot.support.adapters.TableViewAdapter
+                </Class>
+                <Class sourceFile="TableViewBindingAdapter.java">
+                    griffon.pivot.support.adapters.TableViewBindingAdapter
+                </Class>
+                <Class sourceFile="TableViewColumnAdapter.java">
+                    griffon.pivot.support.adapters.TableViewColumnAdapter
+                </Class>
+                <Class sourceFile="TableViewHeaderAdapter.java">
+                    griffon.pivot.support.adapters.TableViewHeaderAdapter
+                </Class>
+                <Class sourceFile="TableViewHeaderPressAdapter.java">
+                    griffon.pivot.support.adapters.TableViewHeaderPressAdapter
+                </Class>
+                <Class sourceFile="TableViewRowAdapter.java">
+                    griffon.pivot.support.adapters.TableViewRowAdapter
+                </Class>
+                <Class sourceFile="TableViewSelectionAdapter.java">
+                    griffon.pivot.support.adapters.TableViewSelectionAdapter
+                </Class>
+                <Class sourceFile="TableViewSortAdapter.java">
+                    griffon.pivot.support.adapters.TableViewSortAdapter
+                </Class>
+                <Class sourceFile="TextAreaAdapter.java">
+                    griffon.pivot.support.adapters.TextAreaAdapter
+                </Class>
+                <Class sourceFile="TextAreaBindingAdapter.java">
+                    griffon.pivot.support.adapters.TextAreaBindingAdapter
+                </Class>
+                <Class sourceFile="TextAreaContentAdapter.java">
+                    griffon.pivot.support.adapters.TextAreaContentAdapter
+                </Class>
+                <Class sourceFile="TextAreaSelectionAdapter.java">
+                    griffon.pivot.support.adapters.TextAreaSelectionAdapter
+                </Class>
+                <Class sourceFile="TextInputAdapter.java">
+                    griffon.pivot.support.adapters.TextInputAdapter
+                </Class>
+                <Class sourceFile="TextInputBindingAdapter.java">
+                    griffon.pivot.support.adapters.TextInputBindingAdapter
+                </Class>
+                <Class sourceFile="TextInputContentAdapter.java">
+                    griffon.pivot.support.adapters.TextInputContentAdapter
+                </Class>
+                <Class sourceFile="TextInputSelectionAdapter.java">
+                    griffon.pivot.support.adapters.TextInputSelectionAdapter
+                </Class>
+                <Class sourceFile="TextNodeAdapter.java">
+                    griffon.pivot.support.adapters.TextNodeAdapter
+                </Class>
+                <Class sourceFile="TextPaneAdapter.java">
+                    griffon.pivot.support.adapters.TextPaneAdapter
+                </Class>
+                <Class sourceFile="TextPaneCharacterAdapter.java">
+                    griffon.pivot.support.adapters.TextPaneCharacterAdapter
+                </Class>
+                <Class sourceFile="TextPaneSelectionAdapter.java">
+                    griffon.pivot.support.adapters.TextPaneSelectionAdapter
+                </Class>
+                <Class sourceFile="TransitionAdapter.java">
+                    griffon.pivot.support.adapters.TransitionAdapter
+                </Class>
+                <Class sourceFile="TreeViewAdapter.java">
+                    griffon.pivot.support.adapters.TreeViewAdapter
+                </Class>
+                <Class sourceFile="TreeViewBranchAdapter.java">
+                    griffon.pivot.support.adapters.TreeViewBranchAdapter
+                </Class>
+                <Class sourceFile="TreeViewNodeAdapter.java">
+                    griffon.pivot.support.adapters.TreeViewNodeAdapter
+                </Class>
+                <Class sourceFile="TreeViewNodeStateAdapter.java">
+                    griffon.pivot.support.adapters.TreeViewNodeStateAdapter
+                </Class>
+                <Class sourceFile="TreeViewSelectionAdapter.java">
+                    griffon.pivot.support.adapters.TreeViewSelectionAdapter
+                </Class>
+                <Class sourceFile="ViewportAdapter.java">
+                    griffon.pivot.support.adapters.ViewportAdapter
+                </Class>
+                <Class sourceFile="WindowActionMappingAdapter.java">
+                    griffon.pivot.support.adapters.WindowActionMappingAdapter
+                </Class>
+                <Class sourceFile="WindowAdapter.java">
+                    griffon.pivot.support.adapters.WindowAdapter
+                </Class>
+                <Class sourceFile="WindowClassAdapter.java">
+                    griffon.pivot.support.adapters.WindowClassAdapter
+                </Class>
+                <Class sourceFile="WindowStateAdapter.java">
+                    griffon.pivot.support.adapters.WindowStateAdapter
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>griffon.core</Package>
+                <Package>java.awt</Package>
+                <Package>java.io</Package>
+                <Package>java.lang</Package>
+                <Package>java.util</Package>
+                <Package>org.apache.pivot.collections</Package>
+                <Package>org.apache.pivot.util</Package>
+                <Package>org.apache.pivot.wtk</Package>
+                <Package>org.apache.pivot.wtk.effects</Package>
+                <Package>org.apache.pivot.wtk.media</Package>
+                <Package>org.apache.pivot.wtk.text</Package>
+                <Package>org.apache.pivot.wtk.validation</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>org.codehaus.griffon.runtime.pivot</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="griffon.util">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.awt">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.beans">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.io">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.lang">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.lang.reflect">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.util">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.apache.pivot.collections">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.apache.pivot.util">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.apache.pivot.wtk">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.apache.pivot.wtk.effects">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.apache.pivot.wtk.media">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.apache.pivot.wtk.text">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.apache.pivot.wtk.validation">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.codehaus.griffon.runtime.core">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.codehaus.griffon.runtime.core.controller">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.codehaus.griffon.runtime.core.injection">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.codehaus.griffon.runtime.core.threading">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.codehaus.griffon.runtime.core.view">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.codehaus.griffon.runtime.pivot">
+            <Stats>
+                <TotalClasses>9</TotalClasses>
+                <ConcreteClasses>9</ConcreteClasses>
+                <AbstractClasses>0</AbstractClasses>
+                <Ca>1</Ca>
+                <Ce>22</Ce>
+                <A>0</A>
+                <I>0.96</I>
+                <D>0.04</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="ConfigurablePivotWindowDisplayHandler.java">
+                    org.codehaus.griffon.runtime.pivot.ConfigurablePivotWindowDisplayHandler
+                </Class>
+                <Class sourceFile="DefaultPivotWindowDisplayHandler.java">
+                    org.codehaus.griffon.runtime.pivot.DefaultPivotWindowDisplayHandler
+                </Class>
+                <Class sourceFile="DefaultPivotWindowManager.java">
+                    org.codehaus.griffon.runtime.pivot.DefaultPivotWindowManager
+                </Class>
+                <Class sourceFile="DefaultPivotWindowManager.java">
+                    org.codehaus.griffon.runtime.pivot.DefaultPivotWindowManager$1
+                </Class>
+                <Class sourceFile="DefaultPivotWindowManager.java">
+                    org.codehaus.griffon.runtime.pivot.DefaultPivotWindowManager$WindowStateHelper
+                </Class>
+                <Class sourceFile="PivotApplicationBootstrapper.java">
+                    org.codehaus.griffon.runtime.pivot.PivotApplicationBootstrapper
+                </Class>
+                <Class sourceFile="PivotApplicationBootstrapper.java">
+                    org.codehaus.griffon.runtime.pivot.PivotApplicationBootstrapper$1
+                </Class>
+                <Class sourceFile="PivotModule.java">
+                    org.codehaus.griffon.runtime.pivot.PivotModule
+                </Class>
+                <Class sourceFile="PivotUIThreadManager.java">
+                    org.codehaus.griffon.runtime.pivot.PivotUIThreadManager
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>griffon.core</Package>
+                <Package>griffon.core.controller</Package>
+                <Package>griffon.core.env</Package>
+                <Package>griffon.core.event</Package>
+                <Package>griffon.core.injection</Package>
+                <Package>griffon.core.threading</Package>
+                <Package>griffon.core.view</Package>
+                <Package>griffon.exceptions</Package>
+                <Package>griffon.pivot</Package>
+                <Package>griffon.pivot.support.adapters</Package>
+                <Package>griffon.util</Package>
+                <Package>java.awt</Package>
+                <Package>java.lang</Package>
+                <Package>java.lang.reflect</Package>
+                <Package>java.util</Package>
+                <Package>org.apache.pivot.util</Package>
+                <Package>org.apache.pivot.wtk</Package>
+                <Package>org.codehaus.griffon.runtime.core</Package>
+                <Package>org.codehaus.griffon.runtime.core.injection</Package>
+                <Package>org.codehaus.griffon.runtime.core.threading</Package>
+                <Package>org.codehaus.griffon.runtime.core.view</Package>
+                <Package>org.codehaus.griffon.runtime.pivot.controller</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>griffon.pivot</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="org.codehaus.griffon.runtime.pivot.controller">
+            <Stats>
+                <TotalClasses>5</TotalClasses>
+                <ConcreteClasses>5</ConcreteClasses>
+                <AbstractClasses>0</AbstractClasses>
+                <Ca>1</Ca>
+                <Ce>13</Ce>
+                <A>0</A>
+                <I>0.93</I>
+                <D>0.07</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="PivotActionManager.java">
+                    org.codehaus.griffon.runtime.pivot.controller.PivotActionManager
+                </Class>
+                <Class sourceFile="PivotGriffonControllerAction.java">
+                    org.codehaus.griffon.runtime.pivot.controller.PivotGriffonControllerAction
+                </Class>
+                <Class sourceFile="PivotGriffonControllerAction.java">
+                    org.codehaus.griffon.runtime.pivot.controller.PivotGriffonControllerAction$1
+                </Class>
+                <Class sourceFile="PivotGriffonControllerAction.java">
+                    org.codehaus.griffon.runtime.pivot.controller.PivotGriffonControllerAction$2
+                </Class>
+                <Class sourceFile="PivotGriffonControllerAction.java">
+                    org.codehaus.griffon.runtime.pivot.controller.PivotGriffonControllerAction$2$1
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>griffon.core</Package>
+                <Package>griffon.core.artifact</Package>
+                <Package>griffon.core.controller</Package>
+                <Package>griffon.core.threading</Package>
+                <Package>griffon.exceptions</Package>
+                <Package>griffon.pivot.support</Package>
+                <Package>griffon.util</Package>
+                <Package>java.beans</Package>
+                <Package>java.lang</Package>
+                <Package>java.util</Package>
+                <Package>org.apache.pivot.wtk</Package>
+                <Package>org.codehaus.griffon.runtime.core.controller</Package>
+                <Package>org.slf4j</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>org.codehaus.griffon.runtime.pivot</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="org.slf4j">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+    </Packages>
+
+    <Cycles>
+        <Package Name="griffon.pivot">
+            <Package>org.codehaus.griffon.runtime.pivot</Package>
+            <Package>griffon.pivot</Package>
+        </Package>
+
+        <Package Name="org.codehaus.griffon.runtime.pivot">
+            <Package>griffon.pivot</Package>
+            <Package>org.codehaus.griffon.runtime.pivot</Package>
+        </Package>
+
+    </Cycles>
+</JDepend>
