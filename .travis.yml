@@ -1,13 +1,16 @@
 language: java
-
 script: ./gradlew clean check test integrationTest cobertura
-
 jdk: oraclejdk7
-
-env: TERM=dumb
-
+env:
+  matrix:
+  - TERM=dumb
+  global:
+    secure: T40U17SUNaeh9glmBgoi4t2LIgubw4XblW4VOZFqzHgfySUYfJTLsFaW/qBc1KObgzJ7AglNtEtWgWnLrNaT77dPMCWGJDUyRjLhlFtmXen7QdtnMSRoloxzIvPZVZgcusR1eHM3tLIQl0G+Zq7xjgR2VR7u+j819rsRhgvPKus=
 before_install:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-
-after_success: ./gradlew projectCoberturaMerge projectCoberturaReport coveralls
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
+after_success:
+- ./update-gh-pages.sh
+- ./gradlew projectCoberturaMerge projectCoberturaReport coveralls
+after_failure:
+- ./update-gh-pages.sh
