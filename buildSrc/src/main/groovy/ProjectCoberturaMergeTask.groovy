@@ -33,6 +33,7 @@ class ProjectCoberturaMergeTask extends DefaultTask {
         args << '--basedir'
         args << project.projectDir.absolutePath
         project.subprojects.each { prj ->
+            if (prj.name.endsWith('compile')) return
             File coberturaOutputDir = new File(prj.projectDir, 'build/cobertura')
             if (coberturaOutputDir.exists()) {
                 coberturaOutputDir.eachFile {

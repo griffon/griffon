@@ -35,6 +35,7 @@ class ProjectCoberturaReportTask extends DefaultTask {
         args << '--destination'
         args << new File(project.buildDir, 'reports/cobertura')
         project.subprojects.each { prj ->
+            if (prj.name.endsWith('compile')) return
             if (prj.plugins.hasPlugin('java')) {
                 args.addAll(prj.sourceSets.main.java.srcDirs)
             }
