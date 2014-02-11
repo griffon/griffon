@@ -61,6 +61,8 @@ class DataSourceSpec extends Specification {
             true
         }
         dataSourceHandler.closeDataSource()
+        // second call should be a NOOP
+        dataSourceHandler.closeDataSource()
 
         then:
         events.size() == 4
