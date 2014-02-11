@@ -81,6 +81,7 @@ class PolygonPropertyEditorSpec extends Specification {
             'garbage',
             '1, 2, 3',
             [1, 2, 3],
+            [new Object()],
             new Object()
         ]
     }

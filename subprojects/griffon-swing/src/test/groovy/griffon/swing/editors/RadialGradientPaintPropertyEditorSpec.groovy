@@ -100,6 +100,8 @@ class RadialGradientPaintPropertyEditorSpec extends Specification {
             [1, 2, 3],
             [1, 2, 3, 4, 5],
             [c1: 'a'],
+            [new Object()],
+            [c1: new Object()],
             new Object(),
             '2,2,5,4,4,[0:1],[BLACK:WHITE:RED]',
             '2,2,5,4,4,0:1,[BLACK:WHITE:RED]',

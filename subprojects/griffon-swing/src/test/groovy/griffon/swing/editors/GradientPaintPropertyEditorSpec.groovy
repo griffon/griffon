@@ -90,7 +90,9 @@ class GradientPaintPropertyEditorSpec extends Specification {
             '1, 2, 3, 4, 5',
             [1, 2, 3],
             [1, 2, 3, 4, 5],
-            [c1: 'a'],
+            [new Object()],
+            [x1: new Object()],
+            [x1: 'a'],
             new Object()
         ]
     }

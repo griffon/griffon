@@ -79,6 +79,8 @@ class BoundsPropertyEditorSpec extends Specification {
             '1, 2, 3, 4, 5',
             [1, 2, 3],
             [1, 2, 3, 4, 5],
+            [new Object()],
+            [x: new Object()],
             [x: 'a'],
             [y: 'b'],
             new Object()

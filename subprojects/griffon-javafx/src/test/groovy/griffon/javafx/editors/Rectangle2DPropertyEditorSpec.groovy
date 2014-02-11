@@ -82,6 +82,8 @@ class Rectangle2DPropertyEditorSpec extends Specification {
             [1, 2, 3, 4, 5],
             [x: 'a'],
             [y: 'b'],
+            [new Object()],
+            [x: new Object()],
             new Object()
         ]
     }

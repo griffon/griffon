@@ -83,6 +83,8 @@ class DimensionPropertyEditorSpec extends Specification {
             [1, 2, 3],
             [width: 'a'],
             [w: 'b'],
+            [new Object()],
+            [w: new Object()],
             new Object()
         ]
     }

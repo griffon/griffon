@@ -92,6 +92,7 @@ class ImagePropertyEditorSpec extends Specification {
             '#FF0000FF00',
             ['HH', 'FF', '00'],
             new Object(),
+            [new Object()]
         ]
     }
 }

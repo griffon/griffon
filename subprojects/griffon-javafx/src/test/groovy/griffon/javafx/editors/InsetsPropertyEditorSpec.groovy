@@ -87,6 +87,8 @@ class InsetsPropertyEditorSpec extends Specification {
             [1, 2, 3, 4, 5],
             [top: 'a'],
             [t: 'b'],
+            [new Object()],
+            [t: new Object()],
             new Object()
         ]
     }

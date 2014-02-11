@@ -81,6 +81,8 @@ class FontPropertyEditorSpec extends Specification {
             ['Helvetica'],
             ['Helvetica', 'BOLD'],
             [family: 'Helvetica'],
+            [new Object()],
+            [family: new Object()],
             new Object()
         ]
     }

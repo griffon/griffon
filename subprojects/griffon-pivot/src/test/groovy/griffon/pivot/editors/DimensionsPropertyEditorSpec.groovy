@@ -81,6 +81,8 @@ class DimensionsPropertyEditorSpec extends Specification {
             'garbage',
             '1, 2, 3',
             [1, 2, 3],
+            [new Object()],
+            [w: new Object()],
             [width: 'a'],
             [w: 'b'],
             new Object()

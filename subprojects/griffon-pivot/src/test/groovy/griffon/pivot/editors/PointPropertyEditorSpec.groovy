@@ -79,6 +79,8 @@ class PointPropertyEditorSpec extends Specification {
             'garbage',
             '1, 2, 3',
             [1, 2, 3],
+            [new Object()],
+            [x: new Object()],
             [x: 'a'],
             [y: 'b'],
             new Object()
