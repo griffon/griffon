@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
 
-<coverage line-rate="0.5572519083969466" branch-rate="0.5632850241545894" lines-covered="1387" lines-valid="2489" branches-covered="583" branches-valid="1035" complexity="3.3552631578947367" version="2.0.3" timestamp="1392157722619">
+<coverage line-rate="0.5572519083969466" branch-rate="0.5631629701060752" lines-covered="1387" lines-valid="2489" branches-covered="584" branches-valid="1037" complexity="3.357894736842105" version="2.0.3" timestamp="1392244287372">
 	<sources>
 		<source>/home/travis/build/aalmiray/griffon2/subprojects/griffon-swing/src/main/java</source>
 		<source>/home/travis/build/aalmiray/griffon2/subprojects/griffon-swing/src/main/groovy</source>
@@ -6403,9 +6403,9 @@
 				</class>
 			</classes>
 		</package>
-		<package name="griffon.swing.formatters" line-rate="0.900990099009901" branch-rate="0.8627450980392157" complexity="2.6923076923076925">
+		<package name="griffon.swing.formatters" line-rate="0.900990099009901" branch-rate="0.8490566037735849" complexity="2.730769230769231">
 			<classes>
-				<class name="griffon.swing.formatters.ColorFormatter" filename="griffon/swing/formatters/ColorFormatter.java" line-rate="0.8" branch-rate="0.7407407407407407" complexity="2.6923076923076925">
+				<class name="griffon.swing.formatters.ColorFormatter" filename="griffon/swing/formatters/ColorFormatter.java" line-rate="0.8" branch-rate="0.7241379310344828" complexity="2.730769230769231">
 					<methods>
 						<method name="&lt;clinit&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
 							<lines>
@@ -6530,9 +6530,13 @@
 							<lines>
 							</lines>
 						</method>
-						<method name="format" signature="(Ljava/awt/Color;)Ljava/lang/String;" line-rate="1.0" branch-rate="1.0">
+						<method name="format" signature="(Ljava/awt/Color;)Ljava/lang/String;" line-rate="1.0" branch-rate="0.5">
 							<lines>
-								<line number="142" hits="21" branch="false"/>
+								<line number="142" hits="21" branch="true" condition-coverage="50% (1/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="50%"/>
+									</conditions>
+								</line>
 							</lines>
 						</method>
 						<method name="format" signature="(Ljava/lang/Object;)Ljava/lang/String;" line-rate="1.0" branch-rate="1.0">
@@ -6671,7 +6675,11 @@
 						<line number="134" hits="2" branch="false"/>
 						<line number="136" hits="5" branch="false"/>
 						<line number="138" hits="30" branch="false"/>
-						<line number="142" hits="21" branch="false"/>
+						<line number="142" hits="21" branch="true" condition-coverage="50% (1/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="50%"/>
+							</conditions>
+						</line>
 						<line number="147" hits="28" branch="false"/>
 						<line number="157" hits="4" branch="false"/>
 						<line number="181" hits="36" branch="false"/>
@@ -6731,13 +6739,13 @@
 						<line number="424" hits="0" branch="false"/>
 					</lines>
 				</class>
-				<class name="griffon.swing.formatters.ColorFormatter$1" filename="griffon/swing/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.6923076923076925">
+				<class name="griffon.swing.formatters.ColorFormatter$1" filename="griffon/swing/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.730769230769231">
 					<methods>
 					</methods>
 					<lines>
 					</lines>
 				</class>
-				<class name="griffon.swing.formatters.ColorFormatter$AbstractColorFormatterDelegate" filename="griffon/swing/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.6923076923076925">
+				<class name="griffon.swing.formatters.ColorFormatter$AbstractColorFormatterDelegate" filename="griffon/swing/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.730769230769231">
 					<methods>
 						<method name="&lt;init&gt;" signature="(Ljava/lang/String;)V" line-rate="1.0" branch-rate="1.0">
 							<lines>
@@ -6765,13 +6773,13 @@
 						<line number="225" hits="4" branch="false"/>
 					</lines>
 				</class>
-				<class name="griffon.swing.formatters.ColorFormatter$ColorFormatterDelegate" filename="griffon/swing/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.6923076923076925">
+				<class name="griffon.swing.formatters.ColorFormatter$ColorFormatterDelegate" filename="griffon/swing/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.730769230769231">
 					<methods>
 					</methods>
 					<lines>
 					</lines>
 				</class>
-				<class name="griffon.swing.formatters.ColorFormatter$LongColorFormatterDelegate" filename="griffon/swing/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.6923076923076925">
+				<class name="griffon.swing.formatters.ColorFormatter$LongColorFormatterDelegate" filename="griffon/swing/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.730769230769231">
 					<methods>
 						<method name="&lt;init&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
 							<lines>
@@ -6827,7 +6835,7 @@
 						<line number="346" hits="5" branch="false"/>
 					</lines>
 				</class>
-				<class name="griffon.swing.formatters.ColorFormatter$LongWithAlphaColorFormatterDelegate" filename="griffon/swing/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.6923076923076925">
+				<class name="griffon.swing.formatters.ColorFormatter$LongWithAlphaColorFormatterDelegate" filename="griffon/swing/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.730769230769231">
 					<methods>
 						<method name="&lt;init&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
 							<lines>
@@ -6885,7 +6893,7 @@
 						<line number="390" hits="3" branch="false"/>
 					</lines>
 				</class>
-				<class name="griffon.swing.formatters.ColorFormatter$ShortColorFormatterDelegate" filename="griffon/swing/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.6923076923076925">
+				<class name="griffon.swing.formatters.ColorFormatter$ShortColorFormatterDelegate" filename="griffon/swing/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.730769230769231">
 					<methods>
 						<method name="&lt;init&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
 							<lines>
@@ -6941,7 +6949,7 @@
 						<line number="264" hits="2" branch="false"/>
 					</lines>
 				</class>
-				<class name="griffon.swing.formatters.ColorFormatter$ShortWithAlphaColorFormatterDelegate" filename="griffon/swing/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.6923076923076925">
+				<class name="griffon.swing.formatters.ColorFormatter$ShortWithAlphaColorFormatterDelegate" filename="griffon/swing/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.730769230769231">
 					<methods>
 						<method name="&lt;init&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
 							<lines>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
 
-<coverage line-rate="0.9383543285982311" branch-rate="0.9521103896103896" lines-covered="3501" lines-valid="3731" branches-covered="1173" branches-valid="1232" complexity="1.48456992777413" version="2.0.3" timestamp="1392157716777">
+<coverage line-rate="0.9383543285982311" branch-rate="0.9513776337115073" lines-covered="3501" lines-valid="3731" branches-covered="1174" branches-valid="1234" complexity="1.4852265265922522" version="2.0.3" timestamp="1392244279859">
 	<sources>
 		<source>/home/travis/build/aalmiray/griffon2/subprojects/griffon-pivot/src/main/groovy</source>
 		<source>/home/travis/build/aalmiray/griffon2/subprojects/griffon-pivot/src/main/java</source>
@@ -1915,9 +1915,9 @@
 				</class>
 			</classes>
 		</package>
-		<package name="griffon.pivot.formatters" line-rate="0.900990099009901" branch-rate="0.8627450980392157" complexity="2.6923076923076925">
+		<package name="griffon.pivot.formatters" line-rate="0.900990099009901" branch-rate="0.8490566037735849" complexity="2.730769230769231">
 			<classes>
-				<class name="griffon.pivot.formatters.ColorFormatter" filename="griffon/pivot/formatters/ColorFormatter.java" line-rate="0.8" branch-rate="0.7407407407407407" complexity="2.6923076923076925">
+				<class name="griffon.pivot.formatters.ColorFormatter" filename="griffon/pivot/formatters/ColorFormatter.java" line-rate="0.8" branch-rate="0.7241379310344828" complexity="2.730769230769231">
 					<methods>
 						<method name="&lt;clinit&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
 							<lines>
@@ -2042,9 +2042,13 @@
 							<lines>
 							</lines>
 						</method>
-						<method name="format" signature="(Ljava/awt/Color;)Ljava/lang/String;" line-rate="1.0" branch-rate="1.0">
+						<method name="format" signature="(Ljava/awt/Color;)Ljava/lang/String;" line-rate="1.0" branch-rate="0.5">
 							<lines>
-								<line number="142" hits="11" branch="false"/>
+								<line number="142" hits="11" branch="true" condition-coverage="50% (1/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="50%"/>
+									</conditions>
+								</line>
 							</lines>
 						</method>
 						<method name="format" signature="(Ljava/lang/Object;)Ljava/lang/String;" line-rate="1.0" branch-rate="1.0">
@@ -2183,7 +2187,11 @@
 						<line number="134" hits="2" branch="false"/>
 						<line number="136" hits="5" branch="false"/>
 						<line number="138" hits="30" branch="false"/>
-						<line number="142" hits="11" branch="false"/>
+						<line number="142" hits="11" branch="true" condition-coverage="50% (1/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="50%"/>
+							</conditions>
+						</line>
 						<line number="147" hits="28" branch="false"/>
 						<line number="157" hits="4" branch="false"/>
 						<line number="181" hits="14" branch="false"/>
@@ -2243,13 +2251,13 @@
 						<line number="424" hits="0" branch="false"/>
 					</lines>
 				</class>
-				<class name="griffon.pivot.formatters.ColorFormatter$1" filename="griffon/pivot/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.6923076923076925">
+				<class name="griffon.pivot.formatters.ColorFormatter$1" filename="griffon/pivot/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.730769230769231">
 					<methods>
 					</methods>
 					<lines>
 					</lines>
 				</class>
-				<class name="griffon.pivot.formatters.ColorFormatter$AbstractColorFormatterDelegate" filename="griffon/pivot/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.6923076923076925">
+				<class name="griffon.pivot.formatters.ColorFormatter$AbstractColorFormatterDelegate" filename="griffon/pivot/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.730769230769231">
 					<methods>
 						<method name="&lt;init&gt;" signature="(Ljava/lang/String;)V" line-rate="1.0" branch-rate="1.0">
 							<lines>
@@ -2277,13 +2285,13 @@
 						<line number="225" hits="4" branch="false"/>
 					</lines>
 				</class>
-				<class name="griffon.pivot.formatters.ColorFormatter$ColorFormatterDelegate" filename="griffon/pivot/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.6923076923076925">
+				<class name="griffon.pivot.formatters.ColorFormatter$ColorFormatterDelegate" filename="griffon/pivot/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.730769230769231">
 					<methods>
 					</methods>
 					<lines>
 					</lines>
 				</class>
-				<class name="griffon.pivot.formatters.ColorFormatter$LongColorFormatterDelegate" filename="griffon/pivot/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.6923076923076925">
+				<class name="griffon.pivot.formatters.ColorFormatter$LongColorFormatterDelegate" filename="griffon/pivot/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.730769230769231">
 					<methods>
 						<method name="&lt;init&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
 							<lines>
@@ -2339,7 +2347,7 @@
 						<line number="346" hits="5" branch="false"/>
 					</lines>
 				</class>
-				<class name="griffon.pivot.formatters.ColorFormatter$LongWithAlphaColorFormatterDelegate" filename="griffon/pivot/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.6923076923076925">
+				<class name="griffon.pivot.formatters.ColorFormatter$LongWithAlphaColorFormatterDelegate" filename="griffon/pivot/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.730769230769231">
 					<methods>
 						<method name="&lt;init&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
 							<lines>
@@ -2397,7 +2405,7 @@
 						<line number="390" hits="3" branch="false"/>
 					</lines>
 				</class>
-				<class name="griffon.pivot.formatters.ColorFormatter$ShortColorFormatterDelegate" filename="griffon/pivot/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.6923076923076925">
+				<class name="griffon.pivot.formatters.ColorFormatter$ShortColorFormatterDelegate" filename="griffon/pivot/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.730769230769231">
 					<methods>
 						<method name="&lt;init&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
 							<lines>
@@ -2453,7 +2461,7 @@
 						<line number="264" hits="2" branch="false"/>
 					</lines>
 				</class>
-				<class name="griffon.pivot.formatters.ColorFormatter$ShortWithAlphaColorFormatterDelegate" filename="griffon/pivot/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.6923076923076925">
+				<class name="griffon.pivot.formatters.ColorFormatter$ShortWithAlphaColorFormatterDelegate" filename="griffon/pivot/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.730769230769231">
 					<methods>
 						<method name="&lt;init&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
 							<lines>

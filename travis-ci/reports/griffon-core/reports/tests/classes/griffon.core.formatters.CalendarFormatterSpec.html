@@ -28,7 +28,7 @@
 </td>
 <td>
 <div class="infoBox" id="failures">
-<div class="counter">2</div>
+<div class="counter">0</div>
 <p>failures</p>
 </div>
 </td>
@@ -40,7 +40,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.028s</div>
+<div class="counter">0.018s</div>
 <p>duration</p>
 </div>
 </td>
@@ -49,8 +49,8 @@
 </div>
 </td>
 <td>
-<div class="infoBox failures" id="successRate">
-<div class="percent">60%</div>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
 <p>successful</p>
 </div>
 </td>
@@ -60,54 +60,10 @@
 <div id="tabs">
 <ul class="tabLinks">
 <li>
-<a href="#tab0">Failed tests</a>
-</li>
-<li>
-<a href="#tab1">Tests</a>
+<a href="#tab0">Tests</a>
 </li>
 </ul>
 <div id="tab0" class="tab">
-<h2>Failed tests</h2>
-<div class="test">
-<a name="Calendar 'java.util.GregorianCalendar[time=-3600000,areFieldsSet=true,areAllFieldsSet=true,lenient=true,zone=sun.util.calendar.ZoneInfo[id=&quot;Etc/UTC&quot;,offset=0,dstSavings=0,useDaylight=false,transitions=0,lastRule=null],firstDayOfWeek=1,minimalDaysInFirstWeek=1,ERA=1,YEAR=1969,MONTH=11,WEEK_OF_YEAR=1,WEEK_OF_MONTH=5,DAY_OF_MONTH=31,DAY_OF_YEAR=365,DAY_OF_WEEK=4,DAY_OF_WEEK_IN_MONTH=5,AM_PM=1,HOUR=11,HOUR_OF_DAY=23,MINUTE=0,SECOND=0,MILLISECOND=0,ZONE_OFFSET=0,DST_OFFSET=0]' produces literal '1/1/70 12:00 AM'"></a>
-<h3 class="failures">Calendar 'java.util.GregorianCalendar[time=-3600000,areFieldsSet=true,areAllFieldsSet=true,lenient=true,zone=sun.util.calendar.ZoneInfo[id=&quot;Etc/UTC&quot;,offset=0,dstSavings=0,useDaylight=false,transitions=0,lastRule=null],firstDayOfWeek=1,minimalDaysInFirstWeek=1,ERA=1,YEAR=1969,MONTH=11,WEEK_OF_YEAR=1,WEEK_OF_MONTH=5,DAY_OF_MONTH=31,DAY_OF_YEAR=365,DAY_OF_WEEK=4,DAY_OF_WEEK_IN_MONTH=5,AM_PM=1,HOUR=11,HOUR_OF_DAY=23,MINUTE=0,SECOND=0,MILLISECOND=0,ZONE_OFFSET=0,DST_OFFSET=0]' produces literal '1/1/70 12:00 AM'</h3>
-<span class="code">
-<pre>Condition not satisfied:
-
-str == literal
-|   |  |
-|   |  1/1/70 12:00 AM
-|   false
-|   6 differences (64% similarity)
-|   1(2)/(3)1/(69) 1(1):00 (P)M
-|   1(-)/(-)1/(70) 1(2):00 (A)M
-12/31/69 11:00 PM
-
-	at griffon.core.formatters.CalendarFormatterSpec.Calendar '#value' produces literal '#literal'(CalendarFormatterSpec.groovy:31)
-</pre>
-</span>
-</div>
-<div class="test">
-<a name="Calendar 'java.util.GregorianCalendar[time=-3600000,areFieldsSet=true,areAllFieldsSet=true,lenient=true,zone=sun.util.calendar.ZoneInfo[id=&quot;Etc/UTC&quot;,offset=0,dstSavings=0,useDaylight=false,transitions=0,lastRule=null],firstDayOfWeek=1,minimalDaysInFirstWeek=1,ERA=1,YEAR=1969,MONTH=11,WEEK_OF_YEAR=1,WEEK_OF_MONTH=5,DAY_OF_MONTH=31,DAY_OF_YEAR=365,DAY_OF_WEEK=4,DAY_OF_WEEK_IN_MONTH=5,AM_PM=1,HOUR=11,HOUR_OF_DAY=23,MINUTE=0,SECOND=0,MILLISECOND=0,ZONE_OFFSET=0,DST_OFFSET=0]' with pattern 'yyyy-MM-dd' produces literal '1970-01-01'"></a>
-<h3 class="failures">Calendar 'java.util.GregorianCalendar[time=-3600000,areFieldsSet=true,areAllFieldsSet=true,lenient=true,zone=sun.util.calendar.ZoneInfo[id=&quot;Etc/UTC&quot;,offset=0,dstSavings=0,useDaylight=false,transitions=0,lastRule=null],firstDayOfWeek=1,minimalDaysInFirstWeek=1,ERA=1,YEAR=1969,MONTH=11,WEEK_OF_YEAR=1,WEEK_OF_MONTH=5,DAY_OF_MONTH=31,DAY_OF_YEAR=365,DAY_OF_WEEK=4,DAY_OF_WEEK_IN_MONTH=5,AM_PM=1,HOUR=11,HOUR_OF_DAY=23,MINUTE=0,SECOND=0,MILLISECOND=0,ZONE_OFFSET=0,DST_OFFSET=0]' with pattern 'yyyy-MM-dd' produces literal '1970-01-01'</h3>
-<span class="code">
-<pre>Condition not satisfied:
-
-str == literal
-|   |  |
-|   |  1970-01-01
-|   false
-|   5 differences (50% similarity)
-|   19(69)-(-)1(2)-(3)1
-|   19(70)-(0)1(-)-(0)1
-1969-12-31
-
-	at griffon.core.formatters.CalendarFormatterSpec.Calendar '#value' with pattern '#pattern' produces literal '#literal'(CalendarFormatterSpec.groovy:48)
-</pre>
-</span>
-</div>
-</div>
-<div id="tab1" class="tab">
 <h2>Tests</h2>
 <table>
 <thead>
@@ -118,14 +74,14 @@ str == literal
 </tr>
 </thead>
 <tr>
-<td class="failures">Calendar 'java.util.GregorianCalendar[time=-3600000,areFieldsSet=true,areAllFieldsSet=true,lenient=true,zone=sun.util.calendar.ZoneInfo[id=&quot;Etc/UTC&quot;,offset=0,dstSavings=0,useDaylight=false,transitions=0,lastRule=null],firstDayOfWeek=1,minimalDaysInFirstWeek=1,ERA=1,YEAR=1969,MONTH=11,WEEK_OF_YEAR=1,WEEK_OF_MONTH=5,DAY_OF_MONTH=31,DAY_OF_YEAR=365,DAY_OF_WEEK=4,DAY_OF_WEEK_IN_MONTH=5,AM_PM=1,HOUR=11,HOUR_OF_DAY=23,MINUTE=0,SECOND=0,MILLISECOND=0,ZONE_OFFSET=0,DST_OFFSET=0]' produces literal '1/1/70 12:00 AM'</td>
-<td>0.015s</td>
-<td class="failures">failed</td>
+<td class="success">Calendar 'java.util.GregorianCalendar[time=0,areFieldsSet=true,areAllFieldsSet=true,lenient=true,zone=sun.util.calendar.ZoneInfo[id=&quot;Etc/UTC&quot;,offset=0,dstSavings=0,useDaylight=false,transitions=0,lastRule=null],firstDayOfWeek=1,minimalDaysInFirstWeek=1,ERA=1,YEAR=1970,MONTH=0,WEEK_OF_YEAR=1,WEEK_OF_MONTH=1,DAY_OF_MONTH=1,DAY_OF_YEAR=1,DAY_OF_WEEK=5,DAY_OF_WEEK_IN_MONTH=1,AM_PM=0,HOUR=0,HOUR_OF_DAY=0,MINUTE=0,SECOND=0,MILLISECOND=0,ZONE_OFFSET=0,DST_OFFSET=0]' produces literal '1/1/70 12:00 AM'</td>
+<td>0.010s</td>
+<td class="success">passed</td>
 </tr>
 <tr>
-<td class="failures">Calendar 'java.util.GregorianCalendar[time=-3600000,areFieldsSet=true,areAllFieldsSet=true,lenient=true,zone=sun.util.calendar.ZoneInfo[id=&quot;Etc/UTC&quot;,offset=0,dstSavings=0,useDaylight=false,transitions=0,lastRule=null],firstDayOfWeek=1,minimalDaysInFirstWeek=1,ERA=1,YEAR=1969,MONTH=11,WEEK_OF_YEAR=1,WEEK_OF_MONTH=5,DAY_OF_MONTH=31,DAY_OF_YEAR=365,DAY_OF_WEEK=4,DAY_OF_WEEK_IN_MONTH=5,AM_PM=1,HOUR=11,HOUR_OF_DAY=23,MINUTE=0,SECOND=0,MILLISECOND=0,ZONE_OFFSET=0,DST_OFFSET=0]' with pattern 'yyyy-MM-dd' produces literal '1970-01-01'</td>
-<td>0.008s</td>
-<td class="failures">failed</td>
+<td class="success">Calendar 'java.util.GregorianCalendar[time=0,areFieldsSet=true,areAllFieldsSet=true,lenient=true,zone=sun.util.calendar.ZoneInfo[id=&quot;Etc/UTC&quot;,offset=0,dstSavings=0,useDaylight=false,transitions=0,lastRule=null],firstDayOfWeek=1,minimalDaysInFirstWeek=1,ERA=1,YEAR=1970,MONTH=0,WEEK_OF_YEAR=1,WEEK_OF_MONTH=1,DAY_OF_MONTH=1,DAY_OF_YEAR=1,DAY_OF_WEEK=5,DAY_OF_WEEK_IN_MONTH=1,AM_PM=0,HOUR=0,HOUR_OF_DAY=0,MINUTE=0,SECOND=0,MILLISECOND=0,ZONE_OFFSET=0,DST_OFFSET=0]' with pattern 'yyyy-MM-dd' produces literal '1970-01-01'</td>
+<td>0.002s</td>
+<td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calendar 'null' with pattern 'yyyy-MM-dd' produces literal 'null'</td>
@@ -134,12 +90,12 @@ str == literal
 </tr>
 <tr>
 <td class="success">Illegal pattern ';garbage*@%&amp;'</td>
-<td>0.001s</td>
+<td>0.003s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Parse error for pattern 'yyyy-MM-dd' with literal 'abc'</td>
-<td>0.003s</td>
+<td>0.002s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -147,7 +103,7 @@ str == literal
 </div>
 <div id="footer">
 <p>Generated by 
-<a href="http://www.gradle.org">Gradle 1.11</a> at Feb 12, 2014 6:46:18 PM</p>
+<a href="http://www.gradle.org">Gradle 1.11</a> at Feb 12, 2014 10:17:06 PM</p>
 </div>
 </div>
 </body>

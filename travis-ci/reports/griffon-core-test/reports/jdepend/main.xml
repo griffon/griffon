@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<JDepend>
+    <Packages>
+
+        <Package name="griffon.core">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.core.artifact">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.core.injection">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.core.test">
+            <Stats>
+                <TotalClasses>4</TotalClasses>
+                <ConcreteClasses>2</ConcreteClasses>
+                <AbstractClasses>2</AbstractClasses>
+                <Ca>1</Ca>
+                <Ce>10</Ce>
+                <A>0.5</A>
+                <I>0.91</I>
+                <D>0.41</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+                <Class sourceFile="TestCaseAware.java">
+                    griffon.core.test.TestCaseAware
+                </Class>
+                <Class sourceFile="TestFor.java">
+                    griffon.core.test.TestFor
+                </Class>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="GriffonUnitRule.java">
+                    griffon.core.test.GriffonUnitRule
+                </Class>
+                <Class sourceFile="GriffonUnitRule.java">
+                    griffon.core.test.GriffonUnitRule$1
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>griffon.core</Package>
+                <Package>griffon.core.artifact</Package>
+                <Package>griffon.core.injection</Package>
+                <Package>java.lang</Package>
+                <Package>java.lang.annotation</Package>
+                <Package>java.lang.reflect</Package>
+                <Package>java.util</Package>
+                <Package>org.codehaus.griffon.runtime.core</Package>
+                <Package>org.junit.rules</Package>
+                <Package>org.junit.runners.model</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>org.codehaus.griffon.runtime.core</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="griffon.inject">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.util">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.lang">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.lang.annotation">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.lang.reflect">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.util">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="javax.inject">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.codehaus.griffon.runtime.core">
+            <Stats>
+                <TotalClasses>5</TotalClasses>
+                <ConcreteClasses>5</ConcreteClasses>
+                <AbstractClasses>0</AbstractClasses>
+                <Ca>1</Ca>
+                <Ce>10</Ce>
+                <A>0</A>
+                <I>0.91</I>
+                <D>0.09</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="DefaultGriffonApplication.java">
+                    org.codehaus.griffon.runtime.core.DefaultGriffonApplication
+                </Class>
+                <Class sourceFile="TestApplicationBootstrapper.java">
+                    org.codehaus.griffon.runtime.core.TestApplicationBootstrapper
+                </Class>
+                <Class sourceFile="TestApplicationBootstrapper.java">
+                    org.codehaus.griffon.runtime.core.TestApplicationBootstrapper$1
+                </Class>
+                <Class sourceFile="TestApplicationBootstrapper.java">
+                    org.codehaus.griffon.runtime.core.TestApplicationBootstrapper$FieldsModule
+                </Class>
+                <Class sourceFile="TestApplicationBootstrapper.java">
+                    org.codehaus.griffon.runtime.core.TestApplicationBootstrapper$InnerClassesModule
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>griffon.core</Package>
+                <Package>griffon.core.test</Package>
+                <Package>griffon.inject</Package>
+                <Package>griffon.util</Package>
+                <Package>java.lang</Package>
+                <Package>java.lang.annotation</Package>
+                <Package>java.lang.reflect</Package>
+                <Package>java.util</Package>
+                <Package>javax.inject</Package>
+                <Package>org.codehaus.griffon.runtime.core.injection</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>griffon.core.test</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="org.codehaus.griffon.runtime.core.injection">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.junit.rules">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.junit.runners.model">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+    </Packages>
+
+    <Cycles>
+        <Package Name="griffon.core.test">
+            <Package>org.codehaus.griffon.runtime.core</Package>
+            <Package>griffon.core.test</Package>
+        </Package>
+
+        <Package Name="org.codehaus.griffon.runtime.core">
+            <Package>griffon.core.test</Package>
+            <Package>org.codehaus.griffon.runtime.core</Package>
+        </Package>
+
+    </Cycles>
+</JDepend>

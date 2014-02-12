@@ -1,0 +1,228 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta httpEquiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Test results - Class org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec</title>
+<link href="css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="css/style.css" rel="stylesheet" type="text/css"/>
+<script src="js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>Class org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/org.codehaus.griffon.runtime.injection.html">org.codehaus.griffon.runtime.injection</a> &gt; GuiceInjectorFactorySpec</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">10</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.957s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard error</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">Closed injector throws exception (1)</td>
+<td>0.061s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Closed injector throws exception (2)</td>
+<td>0.049s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Closed injector throws exception (3)</td>
+<td>0.043s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Closed injector throws exception (4)</td>
+<td>0.042s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Closed injector throws exception (5)</td>
+<td>0.045s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Closed injector throws exception (6)</td>
+<td>0.035s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Invalid bindings</td>
+<td>0.060s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Non existent binding results in exception (1)</td>
+<td>0.059s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Non existent binding results in exception (2)</td>
+<td>0.050s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Verify bindings</td>
+<td>0.513s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard error</h2>
+<span class="code">
+<pre>Feb 12, 2014 10:20:32 PM com.google.inject.internal.MessageProcessor visit
+INFO: An exception was caught and reported. Message: java.lang.IllegalArgumentException: Don't know how to handle org.codehaus.griffon.runtime.injection.InvalidBinding@5ae3a20c
+java.lang.IllegalArgumentException: Don't know how to handle org.codehaus.griffon.runtime.injection.InvalidBinding@5ae3a20c
+	at org.codehaus.griffon.runtime.injection.GuiceInjector$2.configure(GuiceInjector.java:279)
+	at com.google.inject.AbstractModule.configure(AbstractModule.java:59)
+	at com.google.inject.spi.Elements$RecordingBinder.install(Elements.java:223)
+	at com.google.inject.spi.Elements.getElements(Elements.java:101)
+	at com.google.inject.internal.InjectorShell$Builder.build(InjectorShell.java:133)
+	at com.google.inject.internal.InternalInjectorCreator.build(InternalInjectorCreator.java:103)
+	at com.google.inject.Guice.createInjector(Guice.java:95)
+	at com.google.inject.Guice.createInjector(Guice.java:72)
+	at org.codehaus.griffon.runtime.injection.GuiceInjectorFactory.createModules(GuiceInjectorFactory.java:126)
+	at org.codehaus.griffon.runtime.injection.GuiceInjectorFactory.createInjector(GuiceInjectorFactory.java:61)
+	at org.codehaus.griffon.runtime.injection.GuiceInjectorFactory.createInjector(GuiceInjectorFactory.java:53)
+	at griffon.core.injection.InjectorFactory$createInjector.call(Unknown Source)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:45)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:108)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:120)
+	at org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec.$spock_feature_0_1(GuiceInjectorFactorySpec.groovy:72)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:330)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:311)
+	at org.spockframework.runtime.BaseSpecRunner.invokeFeatureMethod(BaseSpecRunner.java:285)
+	at org.spockframework.runtime.BaseSpecRunner.doRunIteration(BaseSpecRunner.java:256)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:330)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:311)
+	at org.spockframework.runtime.BaseSpecRunner.runIteration(BaseSpecRunner.java:223)
+	at org.spockframework.runtime.BaseSpecRunner.initializeAndRunIteration(BaseSpecRunner.java:214)
+	at org.spockframework.runtime.BaseSpecRunner.runSimpleFeature(BaseSpecRunner.java:205)
+	at org.spockframework.runtime.BaseSpecRunner.doRunFeature(BaseSpecRunner.java:199)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:330)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:311)
+	at org.spockframework.runtime.BaseSpecRunner.runFeature(BaseSpecRunner.java:175)
+	at org.spockframework.runtime.BaseSpecRunner.runFeatures(BaseSpecRunner.java:152)
+	at org.spockframework.runtime.BaseSpecRunner.doRunSpec(BaseSpecRunner.java:112)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:330)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:311)
+	at org.spockframework.runtime.BaseSpecRunner.runSpec(BaseSpecRunner.java:91)
+	at org.spockframework.runtime.BaseSpecRunner.run(BaseSpecRunner.java:82)
+	at org.spockframework.runtime.Sputnik.run(Sputnik.java:63)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecuter.runTestClass(JUnitTestClassExecuter.java:86)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecuter.execute(JUnitTestClassExecuter.java:49)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassProcessor.processTestClass(JUnitTestClassProcessor.java:69)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:50)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)
+	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.messaging.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:32)
+	at org.gradle.messaging.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:93)
+	at com.sun.proxy.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.processTestClass(TestWorker.java:105)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)
+	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.messaging.remote.internal.hub.MessageHub$Handler.run(MessageHub.java:355)
+	at org.gradle.internal.concurrent.DefaultExecutorFactory$StoppableExecutorImpl$1.run(DefaultExecutorFactory.java:64)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:744)
+
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>Generated by 
+<a href="http://www.gradle.org">Gradle 1.11</a> at Feb 12, 2014 10:20:33 PM</p>
+</div>
+</div>
+</body>

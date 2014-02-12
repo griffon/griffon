@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
 
-<coverage line-rate="0.47540983606557374" branch-rate="0.5613636363636364" lines-covered="493" lines-valid="1037" branches-covered="247" branches-valid="440" complexity="2.628440366972477" version="2.0.3" timestamp="1392157710522">
+<coverage line-rate="0.47540983606557374" branch-rate="0.5610859728506787" lines-covered="493" lines-valid="1037" branches-covered="248" branches-valid="442" complexity="2.63302752293578" version="2.0.3" timestamp="1392244274471">
 	<sources>
 		<source>/home/travis/build/aalmiray/griffon2/subprojects/griffon-javafx/src/main/java</source>
 		<source>/home/travis/build/aalmiray/griffon2/subprojects/griffon-javafx/src/main/groovy</source>
@@ -2745,9 +2745,9 @@
 				</class>
 			</classes>
 		</package>
-		<package name="griffon.javafx.formatters" line-rate="0.9065420560747663" branch-rate="0.8627450980392157" complexity="2.4193548387096775">
+		<package name="griffon.javafx.formatters" line-rate="0.9065420560747663" branch-rate="0.8490566037735849" complexity="2.4516129032258065">
 			<classes>
-				<class name="griffon.javafx.formatters.ColorFormatter" filename="griffon/javafx/formatters/ColorFormatter.java" line-rate="0.8214285714285714" branch-rate="0.7407407407407407" complexity="2.4193548387096775">
+				<class name="griffon.javafx.formatters.ColorFormatter" filename="griffon/javafx/formatters/ColorFormatter.java" line-rate="0.8214285714285714" branch-rate="0.7241379310344828" complexity="2.4516129032258065">
 					<methods>
 						<method name="&lt;clinit&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
 							<lines>
@@ -2902,9 +2902,13 @@
 							<lines>
 							</lines>
 						</method>
-						<method name="format" signature="(Ljavafx/scene/paint/Color;)Ljava/lang/String;" line-rate="1.0" branch-rate="1.0">
+						<method name="format" signature="(Ljavafx/scene/paint/Color;)Ljava/lang/String;" line-rate="1.0" branch-rate="0.5">
 							<lines>
-								<line number="141" hits="11" branch="false"/>
+								<line number="141" hits="11" branch="true" condition-coverage="50% (1/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="50%"/>
+									</conditions>
+								</line>
 							</lines>
 						</method>
 						<method name="getInstance" signature="(Ljava/lang/String;)Lgriffon/javafx/formatters/ColorFormatter;" line-rate="1.0" branch-rate="1.0">
@@ -3055,7 +3059,11 @@
 						<line number="133" hits="2" branch="false"/>
 						<line number="135" hits="5" branch="false"/>
 						<line number="137" hits="30" branch="false"/>
-						<line number="141" hits="11" branch="false"/>
+						<line number="141" hits="11" branch="true" condition-coverage="50% (1/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="50%"/>
+							</conditions>
+						</line>
 						<line number="146" hits="28" branch="false"/>
 						<line number="156" hits="4" branch="false"/>
 						<line number="180" hits="12" branch="true" condition-coverage="100% (2/2)">
@@ -3121,13 +3129,13 @@
 						<line number="445" hits="0" branch="false"/>
 					</lines>
 				</class>
-				<class name="griffon.javafx.formatters.ColorFormatter$1" filename="griffon/javafx/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.4193548387096775">
+				<class name="griffon.javafx.formatters.ColorFormatter$1" filename="griffon/javafx/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.4516129032258065">
 					<methods>
 					</methods>
 					<lines>
 					</lines>
 				</class>
-				<class name="griffon.javafx.formatters.ColorFormatter$AbstractColorFormatterDelegate" filename="griffon/javafx/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.4193548387096775">
+				<class name="griffon.javafx.formatters.ColorFormatter$AbstractColorFormatterDelegate" filename="griffon/javafx/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.4516129032258065">
 					<methods>
 						<method name="&lt;init&gt;" signature="(Ljava/lang/String;)V" line-rate="1.0" branch-rate="1.0">
 							<lines>
@@ -3155,13 +3163,13 @@
 						<line number="225" hits="4" branch="false"/>
 					</lines>
 				</class>
-				<class name="griffon.javafx.formatters.ColorFormatter$ColorFormatterDelegate" filename="griffon/javafx/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.4193548387096775">
+				<class name="griffon.javafx.formatters.ColorFormatter$ColorFormatterDelegate" filename="griffon/javafx/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.4516129032258065">
 					<methods>
 					</methods>
 					<lines>
 					</lines>
 				</class>
-				<class name="griffon.javafx.formatters.ColorFormatter$LongColorFormatterDelegate" filename="griffon/javafx/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.4193548387096775">
+				<class name="griffon.javafx.formatters.ColorFormatter$LongColorFormatterDelegate" filename="griffon/javafx/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.4516129032258065">
 					<methods>
 						<method name="&lt;init&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
 							<lines>
@@ -3217,7 +3225,7 @@
 						<line number="367" hits="5" branch="false"/>
 					</lines>
 				</class>
-				<class name="griffon.javafx.formatters.ColorFormatter$LongWithAlphaColorFormatterDelegate" filename="griffon/javafx/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.4193548387096775">
+				<class name="griffon.javafx.formatters.ColorFormatter$LongWithAlphaColorFormatterDelegate" filename="griffon/javafx/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.4516129032258065">
 					<methods>
 						<method name="&lt;init&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
 							<lines>
@@ -3275,7 +3283,7 @@
 						<line number="411" hits="3" branch="false"/>
 					</lines>
 				</class>
-				<class name="griffon.javafx.formatters.ColorFormatter$ShortColorFormatterDelegate" filename="griffon/javafx/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.4193548387096775">
+				<class name="griffon.javafx.formatters.ColorFormatter$ShortColorFormatterDelegate" filename="griffon/javafx/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.4516129032258065">
 					<methods>
 						<method name="&lt;init&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
 							<lines>
@@ -3331,7 +3339,7 @@
 						<line number="284" hits="2" branch="false"/>
 					</lines>
 				</class>
-				<class name="griffon.javafx.formatters.ColorFormatter$ShortWithAlphaColorFormatterDelegate" filename="griffon/javafx/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.4193548387096775">
+				<class name="griffon.javafx.formatters.ColorFormatter$ShortWithAlphaColorFormatterDelegate" filename="griffon/javafx/formatters/ColorFormatter.java" line-rate="1.0" branch-rate="1.0" complexity="2.4516129032258065">
 					<methods>
 						<method name="&lt;init&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
 							<lines>
