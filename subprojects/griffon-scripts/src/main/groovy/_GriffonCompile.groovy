@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2013 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,12 +96,13 @@ target(name: 'compile', description: "Implementation of compilation phase",
 
     if (isApplicationProject || isPluginProject) {
         [
-                projectCliClassesDir,
-                projectMainClassesDir,
-                projectTestClassesDir,
-                griffonSettings.testClassesDir,
-                griffonSettings.testResourcesDir,
-                griffonSettings.resourcesDir
+            projectCliClassesDir,
+            projectMainClassesDir,
+            projectTestClassesDir,
+            griffonSettings.testClassesDir,
+            griffonSettings.testResourcesDir,
+            griffonSettings.resourcesDir,
+            griffonSettings.resourcesExternalDir
         ].each { dir ->
             if (!dir.exists()) ant.mkdir(dir: dir)
             addUrlIfNotPresent rootLoader, dir

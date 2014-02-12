@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2013 the original author or authors.
+ * Copyright 2011-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package griffon.util;
 
 import groovy.util.ConfigObject;
 import org.codehaus.groovy.runtime.IOGroovyMethods;
-import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -152,7 +151,7 @@ public final class ConfigUtils {
      */
     public static int getConfigValueAsInt(Map config, String key, int defaultValue) {
         Object value = getConfigValue(config, key, defaultValue);
-        return DefaultTypeTransformation.castToNumber(value).intValue();
+        return castToInt(value);
     }
 
     /**
@@ -176,7 +175,7 @@ public final class ConfigUtils {
      */
     public static long getConfigValueAsLong(Map config, String key, long defaultValue) {
         Object value = getConfigValue(config, key, defaultValue);
-        return DefaultTypeTransformation.castToNumber(value).longValue();
+        return castToLong(value);
     }
 
     /**
@@ -200,7 +199,7 @@ public final class ConfigUtils {
      */
     public static double getConfigValueAsDouble(Map config, String key, double defaultValue) {
         Object value = getConfigValue(config, key, defaultValue);
-        return DefaultTypeTransformation.castToNumber(value).doubleValue();
+        return castToDouble(value);
     }
 
     /**
@@ -224,7 +223,7 @@ public final class ConfigUtils {
      */
     public static float getConfigValueAsFloat(Map config, String key, float defaultValue) {
         Object value = getConfigValue(config, key, defaultValue);
-        return DefaultTypeTransformation.castToNumber(value).floatValue();
+        return castToFloat(value);
     }
 
     /**
@@ -248,7 +247,7 @@ public final class ConfigUtils {
      */
     public static Number getConfigValueAsNumber(Map config, String key, Number defaultValue) {
         Object value = getConfigValue(config, key, defaultValue);
-        return DefaultTypeTransformation.castToNumber(value);
+        return castToNumber(value);
     }
 
     /**
@@ -506,7 +505,8 @@ public final class ConfigUtils {
             if (isBlank(suffix) || suffix.endsWith("_")) continue;
             if (baseClassName != null) {
                 Class configClass = safeLoadClass(baseClassName + "_" + suffix);
-                if (configClass != null) config.merge(configReader.parse(configClass));
+                if (configClass != null)
+                    config.merge(configReader.parse(configClass));
             }
 
             if (fileExtension == null) continue;
@@ -602,9 +602,44 @@ public final class ConfigUtils {
     }
 
     public static boolean castToBoolean(Object value) {
-        if( value instanceof CharSequence) {
-            return "true".equalsIgnoreCase(value.toString());
+        if (value instanceof Boolean) {
+            return (Boolean) value;
         }
-        return DefaultTypeTransformation.castToBoolean(value);
+        return "true".equalsIgnoreCase(String.valueOf(value));
+    }
+
+    public static int castToInt(Object value) {
+        if (value instanceof Number) {
+            return ((Number) value).intValue();
+        }
+        return Integer.valueOf(String.valueOf(value));
+    }
+
+    public static long castToLong(Object value) {
+        if (value instanceof Number) {
+            return ((Number) value).longValue();
+        }
+        return Long.valueOf(String.valueOf(value));
+    }
+
+    public static float castToFloat(Object value) {
+        if (value instanceof Number) {
+            return ((Number) value).floatValue();
+        }
+        return Float.valueOf(String.valueOf(value));
+    }
+
+    public static double castToDouble(Object value) {
+        if (value instanceof Number) {
+            return ((Number) value).doubleValue();
+        }
+        return Double.valueOf(String.valueOf(value));
+    }
+
+    public static Number castToNumber(Object value) {
+        if (value instanceof Number) {
+            return (Number) value;
+        }
+        throw new IllegalArgumentException("Don't know how to cast '" + value + "' to " + Number.class.getName());
     }
 }

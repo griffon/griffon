@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2013 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,22 +96,15 @@ testsFailed = false
 
 packageFiles = { String from ->
     def targetPath = griffonSettings.resourcesDir.path
-    def dir = new File(from, "griffon-app/conf")
-    if (dir.exists()) {
-        ant.copy(todir: targetPath, failonerror: false, overwrite: true) {
-            fileset(dir: dir.path) {
-                exclude(name: "**/*.groovy")
-                exclude(name: "**/log4j*")
-            }
-        }
-    }
 
-    dir = new File(from, "src/main")
+    packageResources()
+
+    File dir = new File(from, 'src/main')
     if (dir.exists()) {
         ant.copy(todir: targetPath, failonerror: false, overwrite: true) {
             fileset(dir: dir.path) {
-                exclude(name: "**/*.groovy")
-                exclude(name: "**/*.java")
+                exclude(name: '**/*.groovy')
+                exclude(name: '**/*.java')
             }
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors.
+ * Copyright 2012-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,10 @@ import griffon.util.ApplicationClassLoader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
-
-import static org.codehaus.groovy.runtime.DefaultGroovyMethods.toList;
 
 /**
  * Base implementation of the {@link ResourceHandler} interface.
@@ -55,5 +54,13 @@ public class ResourceLocator implements ResourceHandler {
 
     private ClassLoader classLoader() {
         return ApplicationClassLoader.get();
+    }
+
+    private static <T> List<T> toList(Enumeration<T> self) {
+        List<T> answer = new ArrayList<T>();
+        while (self.hasMoreElements()) {
+            answer.add(self.nextElement());
+        }
+        return answer;
     }
 }

@@ -1,7 +1,7 @@
-Resources may be configured in either properties files or Groovy scripts. Properties files have precedence over Groovy scripts should there be two files that match the same basename. The default configured basename is "@resources@", thus the application will search for the following resources in the classpath
+Resources may be configured in either properties files or Groovy scripts. Groovy scripts have precedence over properties files should there be two files that match the same basename. The default configured basename is "@resources@", thus the application will search for the following resources in the classpath
 
-  * resources.groovy
   * resources.properties
+  * resources.groovy
 
 The default basename may be changed to some other value, or additional basenames may be specified too; it's just a matter of configuring a flag in @Config.groovy@
 
@@ -10,13 +10,13 @@ resources.basenames = \['resources', 'icons'\]
 
 Both properties files and Groovy scripts are subject to the same locale aware loading mechanism described in [Runtime Configuration|guide:runtimeConfiguration], that is, the following resources will be searched for and loaded for a Locate set to @de_CH_Basel@
 
-  * resources.groovy
   * resources.properties
-  * resources_de.groovy
+  * resources.groovy
   * resources_de.properties
-  * resources_de_CH.groovy
+  * resources_de.groovy
   * resources_de_CH.properties
-  * resources_de_CH_Basel.groovy
+  * resources_de_CH.groovy
   * resources_de_CH_Basel.properties
+  * resources_de_CH_Basel.groovy
 
 Properties files and Groovy scripts used for internationalization purposes are usually placed under @griffon-app/i18n@ as these files are automatically processed with native2ascii when packaging is executed. The default @resources.properties@ file is placed in this directory upon creating an application with [create-app|commandLine].

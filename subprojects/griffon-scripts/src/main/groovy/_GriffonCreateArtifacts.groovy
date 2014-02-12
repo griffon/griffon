@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2013 the original author or authors.
+ * Copyright 2008-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -146,7 +146,7 @@ createArtifact = { Map args = [:] ->
     }
 
     event('CreatedFile', [artifactFile])
-    event('CreatedArtefact', [type, className])
+    event('CreatedArtefact', [type, className + suffix])
     fileType = originalFileType
 }
 
@@ -200,12 +200,22 @@ createDefaultPackage = {
 
 doCreateIntegrationTest = { Map args = [:] ->
     def superClass = args["superClass"] ?: "GriffonUnitTestCase"
-    createArtifact(name: args["name"], suffix: "${args['suffix']}Tests", type: "IntegrationTests", path: "test/integration", superClass: superClass)
+    createArtifact(name: args["name"],
+        suffix: "${args['suffix']}Tests",
+        type: "IntegrationTests",
+        template: args.template ?: 'IntegrationTests',
+        path: "test/integration",
+        superClass: superClass)
 }
 
 doCreateUnitTest = { Map args = [:] ->
     def superClass = args["superClass"] ?: "GriffonUnitTestCase"
-    createArtifact(name: args["name"], suffix: "${args['suffix']}Tests", type: "Tests", path: "test/unit", superClass: superClass)
+    createArtifact(name: args["name"],
+        suffix: "${args['suffix']}Tests",
+        type: "Tests",
+        template: args.template ?: 'Tests',
+        path: "test/unit",
+        superClass: superClass)
 }
 
 promptForName = { Map args = [:] ->
@@ -291,6 +301,30 @@ target(name: 'resolveArchetype', description: '', prehook: null, posthook: null)
             archetypeVersion = archetype.version
             archetypeProps.name = archetypeName
             archetypeProps.version = archetypeVersion
+            checkArchetype(archetypeProps)
+        }
+    }
+
+    if (!archetypeName && !archetypeVersion) {
+        archetype = buildConfig.griffon.'default'.archetype
+        if (archetype) {
+            Matcher matcher = artifactNameVersionPattern.matcher(archetype)
+            if (matcher.find()) {
+                archetypeName = matcher.group(1)
+                archetypeVersion = matcher.group(2)
+                archetypeProps.name = archetypeName
+                archetypeProps.version = archetypeVersion
+            } else {
+                archetypeProps.name = archetype
+                File file = artifactSettings.findArtifactDirForName(Archetype.TYPE, archetype)
+                if (file) {
+                    matcher = artifactNameVersionPattern.matcher(file.name)
+                    matcher.find()
+                    archetypeName = matcher.group(1)
+                    archetypeVersion = matcher.group(2)
+                    archetypeProps.version = archetypeVersion
+                }
+            }
             checkArchetype(archetypeProps)
         }
     }

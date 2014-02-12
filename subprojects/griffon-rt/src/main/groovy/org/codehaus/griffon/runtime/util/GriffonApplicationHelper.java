@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2013 the original author or authors.
+ * Copyright 2008-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -166,6 +166,11 @@ public class GriffonApplicationHelper {
 
     private static void readAndSetConfiguration(final GriffonApplication app) {
         ConfigReader configReader = createConfigReader();
+        configReader.setBinding(CollectionUtils.map()
+            .e("userHome", System.getProperty("user.home"))
+            .e("appName", Metadata.getCurrent().getApplicationName())
+            .e("appVersion", Metadata.getCurrent().getApplicationVersion())
+            .e("griffonVersion", Metadata.getCurrent().getGriffonVersion()));
 
         ConfigObject appConfig = doLoadConfig(configReader, app.getAppConfigClass(), GriffonApplication.Configuration.APPLICATION.getName());
         setApplicationLocale(app, getConfigValue(appConfig, "application.locale", Locale.getDefault()));
@@ -190,15 +195,15 @@ public class GriffonApplicationHelper {
     }
 
     private static void loadExternalConfig(GriffonApplication app, ConfigReader configReader) {
-        List<String> locations = (List<String>) getConfigValue(app.getConfig(), "griffon.config.locations", Collections.emptyList());
-        for (String location : locations) {
+        List locations = (List) getConfigValue(app.getConfig(), "griffon.config.locations", Collections.emptyList());
+        for (Object location : locations) {
             boolean groovyScriptAllowed = false;
 
-            String parsedLocation = location;
-            if (location.startsWith(LOCATION_CLASSPATH)) {
-                parsedLocation = location.substring(LOCATION_CLASSPATH.length()).trim();
-            } else if (location.startsWith(LOCATION_FILE)) {
-                parsedLocation = location.substring(LOCATION_FILE.length()).trim();
+            String parsedLocation = String.valueOf(location);
+            if (parsedLocation.startsWith(LOCATION_CLASSPATH)) {
+                parsedLocation = parsedLocation.substring(LOCATION_CLASSPATH.length()).trim();
+            } else if (parsedLocation.startsWith(LOCATION_FILE)) {
+                parsedLocation = parsedLocation.substring(LOCATION_FILE.length()).trim();
             } else {
                 // assume it's a class definition
                 groovyScriptAllowed = true;

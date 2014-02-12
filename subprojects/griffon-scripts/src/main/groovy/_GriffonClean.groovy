@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2013 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,12 +37,13 @@ target(name: 'clean', description: "Implementation of clean", prehook: null, pos
 
 target(name: 'cleanCompiledSources', description: "Cleans compiled Java and Groovy sources", prehook: null, posthook: null) {
     [
-            projectCliClassesDir,
-            projectMainClassesDir,
-            projectTestClassesDir,
-            griffonSettings.testClassesDir,
-            griffonSettings.testResourcesDir,
-            griffonSettings.resourcesDir
+        projectCliClassesDir,
+        projectMainClassesDir,
+        projectTestClassesDir,
+        griffonSettings.testClassesDir,
+        griffonSettings.testResourcesDir,
+        griffonSettings.resourcesDir,
+        griffonSettings.resourcesExternalDir
     ].each { dir ->
         ant.delete(dir: dir, failonerror: false)
     }

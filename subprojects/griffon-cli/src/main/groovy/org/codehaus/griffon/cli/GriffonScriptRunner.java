@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2013 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -753,6 +753,7 @@ public class GriffonScriptRunner {
         binding.setVariable("classesDirPath", settings.getClassesDir().getPath());
         binding.setVariable("testDirPath", settings.getTestClassesDir().getPath());
         binding.setVariable("resourcesDirPath", settings.getResourcesDir().getPath());
+        binding.setVariable("resourcesExternalDirPath", settings.getResourcesExternalDir().getPath());
         binding.setVariable("testResourcesDirPath", settings.getTestResourcesDir().getPath());
         binding.setVariable("pluginsDirPath", settings.getProjectPluginsDir().getPath());
         binding.setVariable("platform", PlatformUtils.getPlatform());
@@ -787,6 +788,9 @@ public class GriffonScriptRunner {
         // like can be picked up off the classpath.
         if (settings.getResourcesDir() != null && settings.getResourcesDir().exists()) {
             urls.add(settings.getResourcesDir().toURI().toURL());
+        }
+        if (settings.getResourcesExternalDir() != null && settings.getResourcesExternalDir().exists()) {
+            urls.add(settings.getResourcesExternalDir().toURI().toURL());
         }
 
         // Add build-only dependencies to the project

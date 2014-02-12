@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2013 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -141,10 +141,10 @@ public class GriffonCoreDependencies {
                                 ModuleRevisionId.newInstance("org.codehaus.griffon", "griffon-cli", griffonVersion),
                                 ModuleRevisionId.newInstance("org.codehaus.griffon", "griffon-scripts", griffonVersion),
                                 ModuleRevisionId.newInstance("org.codehaus.griffon", "griffon-rt", griffonVersion),
-                                ModuleRevisionId.newInstance("org.springframework", "org.springframework.core", springVersion),
-                                ModuleRevisionId.newInstance("org.springframework", "org.springframework.beans", springVersion),
-                                ModuleRevisionId.newInstance("org.springframework", "org.springframework.context", springVersion),
-                                ModuleRevisionId.newInstance("org.springframework", "org.springframework.context.support", springVersion),
+                                ModuleRevisionId.newInstance("org.springframework", "spring-core", springVersion),
+                                ModuleRevisionId.newInstance("org.springframework", "spring-beans", springVersion),
+                                ModuleRevisionId.newInstance("org.springframework", "spring-context", springVersion),
+                                ModuleRevisionId.newInstance("org.springframework", "spring-context-support", springVersion),
                                 ModuleRevisionId.newInstance("net.sf.json-lib", "json-lib", "2.4", classifier("jdk15")),
                                 ModuleRevisionId.newInstance("biz.aQute", "bndlib", "1.50.0")
                         };
@@ -168,7 +168,7 @@ public class GriffonCoreDependencies {
                         ModuleRevisionId[] docDependencies = {
                                 ModuleRevisionId.newInstance("org.xhtmlrenderer", "core-renderer", "R8"),
                                 ModuleRevisionId.newInstance("com.lowagie", "itext", "2.0.8"),
-                                ModuleRevisionId.newInstance("org.grails", "grails-docs", "2.2.3"),
+                                ModuleRevisionId.newInstance("org.grails", "grails-docs", "2.2.4"),
                                 ModuleRevisionId.newInstance("org.grails", "grails-gdoc-engine", "1.0.1"),
                                 ModuleRevisionId.newInstance("org.yaml", "snakeyaml", "1.9"),
                                 ModuleRevisionId.newInstance("commons-lang", "commons-lang", "2.6"),

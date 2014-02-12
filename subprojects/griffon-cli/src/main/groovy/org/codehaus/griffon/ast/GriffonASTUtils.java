@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2013 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -143,7 +143,7 @@ public class GriffonASTUtils {
     public static boolean hasField(ClassNode classNode, String name, int modifiers, ClassNode type) {
         FieldNode fieldNode = classNode.getDeclaredField(name);
         return fieldNode != null && fieldNode.getModifiers() == modifiers &&
-                fieldNode.getType().equals(type);
+            fieldNode.getType().equals(type);
     }
 
     public static boolean hasOrInheritsField(ClassNode classNode, String name, int modifiers, ClassNode type) {
@@ -214,7 +214,8 @@ public class GriffonASTUtils {
     public static ClassNode getFurthestParent(ClassNode classNode) {
         ClassNode parent = classNode.getSuperClass();
         while (parent != null && !getFullName(parent).equals("java.lang.Object")) {
-            if (SourceUnitCollector.getInstance().getSourceUnit(parent) == null) break;
+            if (SourceUnitCollector.getInstance().getSourceUnit(parent) == null)
+                break;
             classNode = parent;
             parent = parent.getSuperClass();
         }
@@ -293,7 +294,8 @@ public class GriffonASTUtils {
             // inject into furthest relative
             ClassNode parent = getFurthestParent(classNode);
             Expression initialExpression = value instanceof Expression ? (Expression) value : null;
-            if (value != null && initialExpression == null) initialExpression = new ConstantExpression(value);
+            if (value != null && initialExpression == null)
+                initialExpression = new ConstantExpression(value);
             parent.addProperty(propertyName, modifiers, propertyClass, initialExpression, null, null);
         }
     }
@@ -317,14 +319,14 @@ public class GriffonASTUtils {
             Expression initialValue = value != null && !(value instanceof Expression) ? initialValue = new ConstantExpression(value) : (Expression) value;
             classNode.addField(propertyName, visibility, propertyClass, initialValue);
             addMethod(classNode, new MethodNode(
-                    "get" + MetaClassHelper.capitalize(propertyName),
-                    Modifier.PUBLIC,
-                    propertyClass,
-                    Parameter.EMPTY_ARRAY,
-                    ClassNode.EMPTY_ARRAY,
-                    new ReturnStatement(
-                            new ExpressionStatement(
-                                    new FieldExpression(classNode.getField(propertyName))))));
+                "get" + MetaClassHelper.capitalize(propertyName),
+                Modifier.PUBLIC,
+                propertyClass,
+                Parameter.EMPTY_ARRAY,
+                ClassNode.EMPTY_ARRAY,
+                new ReturnStatement(
+                    new ExpressionStatement(
+                        new FieldExpression(classNode.getField(propertyName))))));
         }
     }
 
@@ -415,49 +417,49 @@ public class GriffonASTUtils {
 
     public static Statement ifs(Expression cond, Expression trueExpr) {
         return new IfStatement(
-                cond instanceof BooleanExpression ? (BooleanExpression) cond : new BooleanExpression(cond),
-                new ReturnStatement(trueExpr),
-                new EmptyStatement()
+            cond instanceof BooleanExpression ? (BooleanExpression) cond : new BooleanExpression(cond),
+            new ReturnStatement(trueExpr),
+            new EmptyStatement()
         );
     }
 
     public static Statement ifs(Expression cond, Expression trueExpr, Expression falseExpr) {
         return new IfStatement(
-                cond instanceof BooleanExpression ? (BooleanExpression) cond : new BooleanExpression(cond),
-                new ReturnStatement(trueExpr),
-                new ReturnStatement(falseExpr)
+            cond instanceof BooleanExpression ? (BooleanExpression) cond : new BooleanExpression(cond),
+            new ReturnStatement(trueExpr),
+            new ReturnStatement(falseExpr)
         );
     }
 
     public static Statement ifs_no_return(Expression cond, Expression trueExpr) {
         return new IfStatement(
-                cond instanceof BooleanExpression ? (BooleanExpression) cond : new BooleanExpression(cond),
-                new ExpressionStatement(trueExpr),
-                new EmptyStatement()
+            cond instanceof BooleanExpression ? (BooleanExpression) cond : new BooleanExpression(cond),
+            new ExpressionStatement(trueExpr),
+            new EmptyStatement()
         );
     }
 
     public static Statement ifs_no_return(Expression cond, Expression trueExpr, Expression falseExpr) {
         return new IfStatement(
-                cond instanceof BooleanExpression ? (BooleanExpression) cond : new BooleanExpression(cond),
-                new ExpressionStatement(trueExpr),
-                new ExpressionStatement(falseExpr)
+            cond instanceof BooleanExpression ? (BooleanExpression) cond : new BooleanExpression(cond),
+            new ExpressionStatement(trueExpr),
+            new ExpressionStatement(falseExpr)
         );
     }
 
     public static Statement ifs_no_return(Expression cond, Statement trueStmnt) {
         return new IfStatement(
-                cond instanceof BooleanExpression ? (BooleanExpression) cond : new BooleanExpression(cond),
-                trueStmnt,
-                new EmptyStatement()
+            cond instanceof BooleanExpression ? (BooleanExpression) cond : new BooleanExpression(cond),
+            trueStmnt,
+            new EmptyStatement()
         );
     }
 
     public static Statement ifs_no_return(Expression cond, Statement trueStmnt, Statement falseStmnt) {
         return new IfStatement(
-                cond instanceof BooleanExpression ? (BooleanExpression) cond : new BooleanExpression(cond),
-                trueStmnt,
-                falseStmnt
+            cond instanceof BooleanExpression ? (BooleanExpression) cond : new BooleanExpression(cond),
+            trueStmnt,
+            falseStmnt
         );
     }
 
@@ -531,5 +533,25 @@ public class GriffonASTUtils {
 
     public static ConstructorCallExpression ctor(ClassNode type, Expression args) {
         return new ConstructorCallExpression(type, args);
+    }
+
+    public static ListExpression listx(Expression... expressions) {
+        ListExpression list = new ListExpression();
+        for (Expression expression : expressions) {
+            list.addExpression(expression);
+        }
+        return list;
+    }
+
+    public static MapEntryExpression mapEntryx(Expression key, Expression value) {
+        return new MapEntryExpression(key, value);
+    }
+
+    public static MapExpression mapx(MapEntryExpression... entries) {
+        MapExpression map = new MapExpression();
+        for (MapEntryExpression entry : entries) {
+            map.addMapEntryExpression(entry);
+        }
+        return map;
     }
 }

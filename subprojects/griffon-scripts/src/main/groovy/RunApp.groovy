@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2013 the original author or authors.
+ * Copyright 2008-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -131,7 +131,7 @@ target(name: 'doRunApp', description: "Runs the application from the command lin
         f.absolutePath.startsWith(jardir.absolutePath) ? f.absolutePath - jardir.absolutePath - File.separator : f
     }.join(File.pathSeparator)
 
-    runtimeClasspath = [i18nDir, resourcesDir, runtimeClasspath, projectMainClassesDir].join(File.pathSeparator)
+    runtimeClasspath = [resourcesDir, resourcesExternalDir, runtimeClasspath, projectMainClassesDir].join(File.pathSeparator)
     runtimeClasspath = quote(runtimeClasspath)
 
     event 'StatusUpdate', ['Launching application']
@@ -149,9 +149,9 @@ target(name: 'doRunApp', description: "Runs the application from the command lin
             cmd << '--' + k + '=' + quote(String.valueOf(v))
         }
         argsMap.params.each { s -> cmd << s.trim() }
-        if (isWindows) cmd = cmd.collect { it.replace('\\\\', '\\') }
+        if (isWindows) cmd = cmd.collect { it.replace('\\\\', '\\').replace('"','') }
         debug("Executing ${cmd.join(' ')}")
-        Process p = Runtime.runtime.exec(isWindows? cmd.join(' ') : cmd as String[], null, jardir)
+        Process p = Runtime.runtime.exec(cmd as String[], null, jardir)
 
         // pipe the output
         p.consumeProcessOutput(System.out, System.err)

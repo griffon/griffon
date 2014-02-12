@@ -1,6 +1,8 @@
 package org.codehaus.griffon.ant.taskdefs
 
 class FileMergeTaskTests extends GroovyTestCase {
+    private final String EOL = System.getProperty('line.separator')
+
     void testSkip() {
         File f1 = createTempFile('skip')
         File f2 = createTempFile('skip')
@@ -29,24 +31,24 @@ class FileMergeTaskTests extends GroovyTestCase {
         File f1 = createTempFile('append')
         File f2 = createTempFile('append')
 
-        f1.text = 'foo\n'
+        f1.text = "foo${EOL}".toString()
         f2.text = 'bar'
 
         new FileMergeTask.Append().merge(f1, f2)
 
-        assert f1.text.trim() == 'foo\nbar'.trim()
+        assert f1.text.trim() == "foo${EOL}bar".trim()
     }
 
     void testMerge() {
         File f1 = createTempFile('merge')
         File f2 = createTempFile('merge')
 
-        f1.text = '1\n2\n3\n4'
-        f2.text = '2\n4\n6\n8'
+        f1.text = "1${EOL}2${EOL}3${EOL}4".toString()
+        f2.text = "2${EOL}4${EOL}6${EOL}8".toString()
 
         new FileMergeTask.Merge().merge(f1, f2)
 
-        assert f1.text.trim() == '1\n2\n3\n4\n6\n8'.trim()
+        assert f1.text.trim() == "1${EOL}2${EOL}3${EOL}4${EOL}6${EOL}8".trim()
     }
 
     void testMergeProperties() {

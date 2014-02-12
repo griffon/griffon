@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2013 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ configSlurper.setBinding(
 configSlurper.registerConditionalBlock('projects', griffonAppName)
 
 if (!buildConfig.griffon.jars.destDir) buildConfig.griffon.jars.destDir = "${basedir}/staging"
-if (!buildConfig.griffon.jars.jarName) buildConfig.griffon.jars.jarName = "${griffonAppName}.jar"
+if (!buildConfig.griffon.jars.jarName) buildConfig.griffon.jars.jarName = "${griffonAppName}-${griffonAppVersion}.jar"
 
 // No point doing this stuff more than once.
 if (getBinding().variables.containsKey("_settings_called")) return true
@@ -408,6 +408,7 @@ target(name: 'createStructure', description: "Creates the application directory 
             mkdir(dir: "${basedir}/griffon-app/lifecycle")
             mkdir(dir: "${basedir}/griffon-app/models")
             mkdir(dir: "${basedir}/griffon-app/resources")
+            mkdir(dir: "${basedir}/griffon-app/resources-external")
             mkdir(dir: "${basedir}/griffon-app/views")
             mkdir(dir: "${basedir}/lib")
             mkdir(dir: "${basedir}/scripts")

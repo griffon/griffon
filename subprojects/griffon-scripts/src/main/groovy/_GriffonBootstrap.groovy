@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2013 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ target(name: 'bootstrap', description: 'Loads and configures a Griffon instance'
 target(name: 'setupApp', description: 'Setups paths and JVM options for running a Griffon application', prehook: null, posthook: null) {
     depends(prepackage)
 
-    [projectMainClassesDir, i18nDir, resourcesDir].each { d ->
+    [projectMainClassesDir, resourcesDir, resourcesExternalDir].each { d ->
         addUrlIfNotPresent rootLoader, d
     }
     setupRuntimeJars().each { j ->

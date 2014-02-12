@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013 the original author or authors.
+ * Copyright 2009-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -121,7 +121,6 @@ target(name: 'packageAddon', description: 'Packages a Griffon addon',
             exclude(name: '*GriffonPlugin*.class')
             exclude(name: 'application.properties')
         }
-        fileset(dir: i18nDir)
         fileset(dir: resourcesDir)
 
         manifest {

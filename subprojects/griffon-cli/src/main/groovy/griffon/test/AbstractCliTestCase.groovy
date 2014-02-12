@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013 the original author or authors.
+ * Copyright 2009-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.Condition
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
+
+import static griffon.util.GriffonApplicationUtils.isWindows
 
 /**
 * This abstract test case makes it easy to run a Griffon command and
@@ -66,7 +68,7 @@ abstract class AbstractCliTestCase extends GroovyTestCase {
         // Add the path to the Griffon script as the first element of
         // the command. Note that we use an absolute path.
         def cmd = [] // new ArrayList<String>(command.size() + 2)
-        cmd.add "${griffonHome}/bin/griffon".toString()
+        cmd.add ("${griffonHome}/bin/griffon" + (isWindows ? '.bat' : '')).toString()
         if (System.getProperty('griffon.work.dir')) {
             cmd.add "-Dgriffon.work.dir=${System.getProperty('griffon.work.dir')}".toString()
         }

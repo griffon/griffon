@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2013 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,26 +85,8 @@ target(name: 'packageApp', description: '',
     event("PackagingEnd", [])
 }
 
-target(name: 'packageResources', description: "Presp app/plugin resources for packaging",
+target(name: 'packageResources', description: "Preps app/plugin resources for packaging",
     prehook: null, posthook: null) {
-    i18nDir = new File("${resourcesDirPath}/griffon-app/i18n")
-    ant.mkdir(dir: i18nDir)
-
-    resourcesDir = new File("${resourcesDirPath}/griffon-app/resources")
-    ant.mkdir(dir: resourcesDir)
-
-    if ((!isPluginProject && !isArchetypeProject) || isAddonPlugin) {
-        collectArtifactMetadata()
-        if (!isAddonPlugin) collectAddonMetadata()
-    }
-
-    ant.copy(todir: resourcesDir, overwrite: true) {
-        fileset(dir: "${basedir}/src/main") {
-            include(name: "**/*")
-            exclude(name: "**/*.java")
-            exclude(name: "**/*.groovy")
-        }
-    }
 
     def copyResourceFiles = { sourceDir, targetDir ->
         ant.copy(todir: targetDir, overwrite: true) {
@@ -122,7 +104,29 @@ target(name: 'packageResources', description: "Presp app/plugin resources for pa
         }
     }
 
-    copyResourceFiles("${basedir}/griffon-app/i18n", i18nDir)
+    resourcesExternalDir = new File(resourcesExternalDirPath)
+    ant.mkdir(dir: resourcesExternalDir)
+    if (!isPluginProject && !isArchetypeProject) {
+        copyResourceFiles("${basedir}/griffon-app/resources-external", resourcesExternalDir)
+    }
+
+    resourcesDir = new File(resourcesDirPath)
+    ant.mkdir(dir: resourcesDir)
+
+    if ((!isPluginProject && !isArchetypeProject) || isAddonPlugin) {
+        collectArtifactMetadata()
+        if (!isAddonPlugin) collectAddonMetadata()
+    }
+
+    ant.copy(todir: resourcesDir, overwrite: true) {
+        fileset(dir: "${basedir}/src/main") {
+            include(name: "**/*")
+            exclude(name: "**/*.java")
+            exclude(name: "**/*.groovy")
+        }
+    }
+
+    copyResourceFiles("${basedir}/griffon-app/i18n", resourcesDir)
     copyResourceFiles("${basedir}/griffon-app/resources", resourcesDir)
     buildConfig.griffon.compiler.additional.resources.each { path ->
         if (!(path instanceof File)) path = new File(path.toString())
@@ -136,15 +140,6 @@ target(name: 'packageResources', description: "Presp app/plugin resources for pa
     // GRIFFON-189 add environment info to metadata
     File metaFile = new File(projectMainClassesDir, metadataFile.name)
     updateMetadata(metaFile, (Environment.KEY): Environment.current.name)
-
-    ant.copy(todir: resourcesDirPath, failonerror: false, overwrite: true) {
-        fileset(dir: "${basedir}/griffon-app/conf", includes: "**", excludes: "*.groovy, log4j*, webstart")
-        fileset(dir: "${basedir}/src/main") {
-            include(name: "**/**")
-            exclude(name: "**/*.java")
-            exclude(name: "**/*.groovy")
-        }
-    }
 }
 
 collectArtifactMetadata = {
@@ -175,7 +170,7 @@ collectArtifactMetadata = {
     }
 
     if (artifacts) {
-        File artifactMetadataDir = new File("${resourcesDirPath}/griffon-app/resources/META-INF")
+        File artifactMetadataDir = new File("${resourcesDirPath}/META-INF")
         artifactMetadataDir.mkdirs()
         File artifactMetadataFile = new File(artifactMetadataDir, '/griffon-artifacts.properties')
         artifactMetadataFile.withPrintWriter { writer ->
@@ -200,7 +195,7 @@ collectAddonMetadata = {
         String toolkit = Metadata.current.getApplicationToolkit()
         String toolkitVersion = addons.remove(toolkit)
         addons = [(toolkit): toolkitVersion] + addons
-        File addonMetadataDir = new File("${resourcesDirPath}/griffon-app/resources/META-INF")
+        File addonMetadataDir = new File("${resourcesDirPath}/META-INF")
         addonMetadataDir.mkdirs()
         File addonMetadataFile = new File(addonMetadataDir, '/griffon-addons.properties')
         addonMetadataFile.withPrintWriter { writer ->
@@ -261,7 +256,6 @@ target(name: 'jarFiles', description: "Jar up the package files",
                 exclude(name: 'BuildConfig*.class')
                 exclude(name: '*GriffonPlugin.class')
             }
-            fileset(dir: i18nDir)
             fileset(dir: resourcesDir)
             if (metainfDirPath.list()) {
                 metainf(dir: metainfDirPath)

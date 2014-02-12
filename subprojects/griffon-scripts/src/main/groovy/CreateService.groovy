@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2013 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,11 +31,14 @@ target(name: 'createService', description: "Creates a new service class", prehoo
     def name = argsMap["params"][0]
 
     createArtifact(
-            name:   name,
-            suffix: type,
-            type:   type,
-            path:   'griffon-app/services')
-    doCreateUnitTest(name: name, suffix: type)
+        name: name,
+        suffix: type,
+        type: type,
+        path: 'griffon-app/services')
+    doCreateUnitTest(
+        name: name,
+        template: 'ArtifactTests',
+        suffix: type)
 }
 
 setDefaultTarget(createService)

@@ -203,7 +203,7 @@ set CMD_LINE_ARGS=%$
 :execute
 @rem Setup the command line
 set LIBDIR="%DIRNAME%..\lib"
-set CLASSPATH=
+set CLASSPATH="%DIRNAME%..\resources"
 for %%i in (%LIBDIR%\*.jar) do set CLASSPATH=!CLASSPATH!;%%i
 
 set NATIVE_LIBRARY_PATH=%PATH%

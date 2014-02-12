@@ -114,7 +114,7 @@ griffon.project.dependency.resolution = {
         // flatDir name: "${pluginName}LibDir", dirs: ["${basePath}lib"]
     }
     dependencies {
-        compile("org.springframework:org.springframework.core:$springVersion") {
+        compile("org.springframework:spring-core:$springVersion") {
             transitive = false
         }
     }
@@ -128,9 +128,9 @@ log4j = {
     }
 
     error 'org.codehaus.griffon',
-            'org.springframework',
-            'org.apache.karaf',
-            'groovyx.net'
+          'org.springframework',
+          'org.apache.karaf',
+          'groovyx.net'
     warn 'griffon'
 }
 

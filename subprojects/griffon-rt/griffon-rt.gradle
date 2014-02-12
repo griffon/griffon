@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2013 the original author or authors.
+ * Copyright 2010-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 
 apply plugin: 'groovy'
 apply plugin: 'osgi'
+apply plugin: 'findbugs'
+apply plugin: 'jdepend'
 
 ext.pomDescription = 'Griffon runtime'
 
@@ -88,3 +90,19 @@ task osgiBundleFull(type: Jar, dependsOn: copyDependencies) {
 }
 
 task osgiBundle(dependsOn: [osgiBundleSingle, osgiBundleFull]) {}
+
+findbugs {
+    toolVersion = '2.0.2'
+    sourceSets = [sourceSets.main]
+    ignoreFailures = true
+    reportsDir = file("$project.buildDir/reports/findbugs")
+    effort = "max"
+    reportLevel = "high"
+}
+
+jdepend {
+    toolVersion = '2.9.1'
+    sourceSets = [sourceSets.main]
+    ignoreFailures = true
+    reportsDir = file("$project.buildDir/reports/jdepend")
+}

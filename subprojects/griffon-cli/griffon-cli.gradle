@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2013 the original author or authors.
+ * Copyright 2010-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,22 +46,22 @@ dependencies {
         exclude group: 'org.apache.ant', module: 'ant'
         exclude group: 'junit',          module: 'junit'
     }
-    compile("org.springframework:org.springframework.core:$springVersion") {
+    compile("org.springframework:spring-core:$springVersion") {
         exclude group: 'org.apache.commons',  module: 'com.springsource.org.apache.commons.logging'
         exclude group: 'org.apache.log4',     module: 'com.springsource.org.apache.log4j'
         exclude group: 'org.aspectj',         module: 'com.springsource.org.aspectj.weaver'
-        exclude group: 'org.springframework', module: 'org.springframework.asm'
+        exclude group: 'org.springframework', module: 'spring-asm'
     }
-    compile("org.springframework:org.springframework.beans:$springVersion") {
+    compile("org.springframework:spring-beans:$springVersion") {
         exclude group: 'javax.el',              module: 'com.springsource.javax.el'
         exclude group: 'javax.inject',          module: 'com.springsource.javax.inject'
         exclude group: 'net.sourceforge.cglib', module: 'com.springsource.net.sf.cglib'
         exclude group: 'org.apache.commons',    module: 'com.springsource.org.apache.commons.logging'
         exclude group: 'org.apache.log4',       module: 'com.springsource.org.apache.log4j'
-        exclude group: 'org.springframework',   module: 'org.springframework.core'
-        exclude group: 'org.springframework',   module: 'org.springframework.asm'
+        exclude group: 'org.springframework',   module: 'spring-core'
+        exclude group: 'org.springframework',   module: 'spring-asm'
     }
-    compile("org.springframework:org.springframework.context:$springVersion") {
+    compile("org.springframework:spring-context:$springVersion") {
         exclude group: 'edu.emory.mathcs.backport', module: 'com.springsource.edu.emory.mathcs.backport'
         exclude group: 'javax.annotation',          module: 'com.springsource.javax.annotation'
         exclude group: 'javax.ejb',                 module: 'com.springsource.javax.ejb'
@@ -79,15 +79,15 @@ dependencies {
         exclude group: 'org.hibernate',             module: 'com.springsource.org.hibernate.validator'
         exclude group: 'org.joda',                  module: 'com.springsource.org.joda.time'
         exclude group: 'org.jruby',                 module: 'com.springsource.org.jruby'
-        exclude group: 'org.springframework',       module: 'org.springframework.asm'
-        exclude group: 'org.springframework',       module: 'org.springframework.aop'
-        exclude group: 'org.springframework',       module: 'org.springframework.beans'
-        exclude group: 'org.springframework',       module: 'org.springframework.core'
-        exclude group: 'org.springframework',       module: 'org.springframework.expression'
-        exclude group: 'org.springframework',       module: 'org.springframework.instrument'
+        exclude group: 'org.springframework',       module: 'spring-asm'
+        exclude group: 'org.springframework',       module: 'spring-aop'
+        exclude group: 'org.springframework',       module: 'spring-beans'
+        exclude group: 'org.springframework',       module: 'spring-core'
+        exclude group: 'org.springframework',       module: 'spring-expression'
+        exclude group: 'org.springframework',       module: 'spring-instrument'
         exclude group: 'javax.inject',              module: 'com.springsource.org.atinject.tck'
     }
-    compile("org.springframework:org.springframework.context.support:$springVersion") {
+    compile("org.springframework:spring-context-support:$springVersion") {
         exclude group: 'com.bea.commonj',               module: 'com.springsource.commonj'
         exclude group: 'com.opensymphony.quartz',       module: 'com.springsource.org.quartz'
         exclude group: 'javax.activation',              module: 'com.springsource.javax.activation'
@@ -98,12 +98,12 @@ dependencies {
         exclude group: 'org.apache.commons',            module: 'com.springsource.org.apache.commons.logging'
         exclude group: 'org.apache.velocity',           module: 'com.springsource.org.apache.velocity'
         exclude group: 'org.freemarker',                module: 'com.springsource.freemarker'
-        exclude group: 'org.springframework',           module: 'org.springframework.asm'
-        exclude group: 'org.springframework',           module: 'org.springframework.beans'
-        exclude group: 'org.springframework',           module: 'org.springframework.context'
-        exclude group: 'org.springframework',           module: 'org.springframework.core'
-        exclude group: 'org.springframework',           module: 'org.springframework.jdbc'
-        exclude group: 'org.springframework',           module: 'org.springframework.transaction'    
+        exclude group: 'org.springframework',           module: 'spring-asm'
+        exclude group: 'org.springframework',           module: 'spring-beans'
+        exclude group: 'org.springframework',           module: 'spring-context'
+        exclude group: 'org.springframework',           module: 'spring-core'
+        exclude group: 'org.springframework',           module: 'spring-jdbc'
+        exclude group: 'org.springframework',           module: 'spring-transaction'    
     }
     compile('org.xhtmlrenderer:core-renderer:R8') {
         exclude group: 'com.lowagie', module: 'itext'
@@ -132,7 +132,7 @@ dependencies {
         exclude group: 'org.bouncycastle',   module: 'bcpg-jdk14'
         exclude group: 'org.bouncycastle',   module: 'bcprov-jdk14'
     }
-    compile('org.codehaus.gant:gant_groovy2.1:1.9.9') {
+    compile('org.codehaus.gant:gant_groovy2.2:1.9.10') {
         exclude group: 'org.apache.ant', module: 'ant'
         exclude group: 'commons-cli',    module: 'commons-cli'
     }

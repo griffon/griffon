@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013 the original author or authors.
+ * Copyright 2009-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ class RootFactory extends AbstractFactory {
             String scriptName = builder.variables[FactoryBuilderSupport.SCRIPT_CLASS_NAME]
             if (!scriptName) return null
             String varName = scriptName + '-' + value.toString()
-            value = builder.variables[varName]q
+            value = builder.variables[varName]
         } else if (value instanceof Class) {
             String varName = value.name + '-' + rootName
             return builder.variables[varName]
