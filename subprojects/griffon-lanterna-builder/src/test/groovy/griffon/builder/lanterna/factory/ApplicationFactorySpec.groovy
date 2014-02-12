@@ -28,7 +28,7 @@ class ApplicationFactorySpec extends Specification {
         given:
         CompositeBuilder builder = new CompositeBuilder([new LanternaBuilderCustomizer()] as BuilderCustomizer[])
         builder.variables.application = new Expando(
-            getConfiguration: [
+            configuration: [
                 'application.title': 'lanterna'
             ],
             createApplicationContainer: { options -> new Window(options.title) },

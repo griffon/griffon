@@ -25,7 +25,7 @@ import java.lang.annotation.*;
 @Qualifier
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
+@Target({ElementType.TYPE, ElementType.FIELD})
 public @interface BindTo {
     Class<?> value();
 }

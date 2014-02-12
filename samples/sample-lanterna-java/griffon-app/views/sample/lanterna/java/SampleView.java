@@ -1,4 +1,4 @@
-package sample;
+package sample.lanterna.java;
 
 import com.googlecode.lanterna.gui.Window;
 import com.googlecode.lanterna.gui.component.Label;

@@ -1,3 +1,5 @@
+package sample.lanterna.groovy
+
 application {
     title = 'Lanterna + Groovy'
     startupGroups = ['sample']
@@ -6,7 +8,7 @@ application {
 mvcGroups {
     // MVC Group for "sample"
     'sample' {
-        view       = 'sample.SampleView'
-        controller = 'sample.SampleController'
+        view       = 'sample.lanterna.groovy.SampleView'
+        controller = 'sample.lanterna.groovy.SampleController'
     }
 }

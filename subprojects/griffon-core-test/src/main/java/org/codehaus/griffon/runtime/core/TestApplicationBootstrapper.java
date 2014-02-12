@@ -31,6 +31,7 @@ import javax.inject.Provider;
 import javax.inject.Qualifier;
 import javax.inject.Singleton;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,6 +69,7 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
         modules = super.loadModules();
         doCollectOverridingModules(modules);
         doCollectModulesFromInnerClasses(modules);
+        doCollectModulesFromFields(modules);
         return modules;
     }
 
@@ -108,39 +110,11 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
     }
 
     private void doCollectModulesFromInnerClasses(final @Nonnull Collection<Module> modules) {
-        modules.add(new AbstractModule() {
-            @Override
-            @SuppressWarnings("unchecked")
-            protected void doConfigure() {
-                for (Class<?> clazz : testCase.getClass().getDeclaredClasses()) {
-                    BindTo bindTo = clazz.getAnnotation(BindTo.class);
-                    if (bindTo == null) continue;
-                    List<Annotation> qualifiers = harvestQualifiers(clazz);
-                    Annotation classifier = qualifiers.isEmpty() ? null : qualifiers.get(0);
-                    boolean isSingleton = clazz.getAnnotation(Singleton.class) != null;
+        modules.add(new InnerClassesModule());
+    }
 
-                    AnnotatedBindingBuilder<?> abuilder = bind(bindTo.value());
-                    if (classifier != null) {
-                        LinkedBindingBuilder<?> lbuilder = abuilder.withClassifier(classifier);
-                        if (Provider.class.isAssignableFrom(clazz)) {
-                            SingletonBindingBuilder<?> sbuilder = lbuilder.toProvider((Class) clazz);
-                            if (isSingleton) sbuilder.asSingleton();
-                        } else {
-                            SingletonBindingBuilder<?> sbuilder = lbuilder.to((Class) clazz);
-                            if (isSingleton) sbuilder.asSingleton();
-                        }
-                    } else {
-                        if (Provider.class.isAssignableFrom(clazz)) {
-                            SingletonBindingBuilder<?> sbuilder = abuilder.toProvider((Class) clazz);
-                            if (isSingleton) sbuilder.asSingleton();
-                        } else {
-                            SingletonBindingBuilder<?> sbuilder = abuilder.to((Class) clazz);
-                            if (isSingleton) sbuilder.asSingleton();
-                        }
-                    }
-                }
-            }
-        });
+    private void doCollectModulesFromFields(final @Nonnull Collection<Module> modules) {
+        modules.add(new FieldsModule());
     }
 
     @Nonnull
@@ -165,5 +139,114 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
             }
         }
         return list;
+    }
+
+    @Nonnull
+    protected List<Annotation> harvestQualifiers(@Nonnull Field field) {
+        List<Annotation> list = new ArrayList<>();
+        Annotation[] annotations = field.getAnnotations();
+        for (Annotation annotation : annotations) {
+            if (AnnotationUtils.isAnnotatedWith(annotation, Qualifier.class)) {
+                if (BindTo.class.isAssignableFrom(annotation.getClass())) {
+                    continue;
+                }
+
+                // special case for @Named
+                if (Named.class.isAssignableFrom(annotation.getClass())) {
+                    Named named = (Named) annotation;
+                    if (isBlank(named.value())) {
+                        list.add(named(getPropertyName(field.getName())));
+                        continue;
+                    }
+                }
+                list.add(annotation);
+            }
+        }
+        return list;
+    }
+
+    private class InnerClassesModule extends AbstractModule {
+        @Override
+        @SuppressWarnings("unchecked")
+        protected void doConfigure() {
+            for (Class<?> clazz : testCase.getClass().getDeclaredClasses()) {
+                BindTo bindTo = clazz.getAnnotation(BindTo.class);
+                if (bindTo == null) continue;
+                List<Annotation> qualifiers = harvestQualifiers(clazz);
+                Annotation classifier = qualifiers.isEmpty() ? null : qualifiers.get(0);
+                boolean isSingleton = clazz.getAnnotation(Singleton.class) != null;
+
+                AnnotatedBindingBuilder<?> abuilder = bind(bindTo.value());
+                if (classifier != null) {
+                    LinkedBindingBuilder<?> lbuilder = abuilder.withClassifier(classifier);
+                    if (Provider.class.isAssignableFrom(clazz)) {
+                        SingletonBindingBuilder<?> sbuilder = lbuilder.toProvider((Class) clazz);
+                        if (isSingleton) sbuilder.asSingleton();
+                    } else {
+                        SingletonBindingBuilder<?> sbuilder = lbuilder.to((Class) clazz);
+                        if (isSingleton) sbuilder.asSingleton();
+                    }
+                } else {
+                    if (Provider.class.isAssignableFrom(clazz)) {
+                        SingletonBindingBuilder<?> sbuilder = abuilder.toProvider((Class) clazz);
+                        if (isSingleton) sbuilder.asSingleton();
+                    } else {
+                        SingletonBindingBuilder<?> sbuilder = abuilder.to((Class) clazz);
+                        if (isSingleton) sbuilder.asSingleton();
+                    }
+                }
+            }
+        }
+    }
+
+    private class FieldsModule extends AbstractModule {
+        @Override
+        @SuppressWarnings("unchecked")
+        protected void doConfigure() {
+            for (Field field : testCase.getClass().getDeclaredFields()) {
+                BindTo bindTo = field.getAnnotation(BindTo.class);
+                if (bindTo == null) continue;
+                List<Annotation> qualifiers = harvestQualifiers(field);
+                Annotation classifier = qualifiers.isEmpty() ? null : qualifiers.get(0);
+                boolean isSingleton = field.getAnnotation(Singleton.class) != null;
+
+                field.setAccessible(true);
+                Object instance = null;
+                try {
+                    instance = field.get(testCase);
+                } catch (IllegalAccessException e) {
+                    throw new IllegalArgumentException(e);
+                }
+
+                if (instance != null) {
+                    AnnotatedBindingBuilder<Object> abuilder = (AnnotatedBindingBuilder<Object>) bind(bindTo.value());
+                    if (classifier != null) {
+                        abuilder.withClassifier(classifier).toInstance(instance);
+                    } else {
+                        abuilder.toInstance(instance);
+                    }
+                } else {
+                    AnnotatedBindingBuilder<?> abuilder = bind(bindTo.value());
+                    if (classifier != null) {
+                        LinkedBindingBuilder<?> lbuilder = abuilder.withClassifier(classifier);
+                        if (Provider.class.isAssignableFrom(field.getType())) {
+                            SingletonBindingBuilder<?> sbuilder = lbuilder.toProvider((Class) field.getType());
+                            if (isSingleton) sbuilder.asSingleton();
+                        } else {
+                            SingletonBindingBuilder<?> sbuilder = lbuilder.to((Class) field.getType());
+                            if (isSingleton) sbuilder.asSingleton();
+                        }
+                    } else {
+                        if (Provider.class.isAssignableFrom(field.getType())) {
+                            SingletonBindingBuilder<?> sbuilder = abuilder.toProvider((Class) field.getType());
+                            if (isSingleton) sbuilder.asSingleton();
+                        } else {
+                            SingletonBindingBuilder<?> sbuilder = abuilder.to((Class) field.getType());
+                            if (isSingleton) sbuilder.asSingleton();
+                        }
+                    }
+                }
+            }
+        }
     }
 }

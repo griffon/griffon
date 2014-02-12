@@ -36,6 +36,10 @@ public class GriffonFestRule extends GriffonUnitRule {
         this(FestAwareSwingGriffonApplication.EMPTY_ARGS, TestApplicationBootstrapper.class);
     }
 
+    public GriffonFestRule(@Nonnull Class<? extends ApplicationBootstrapper> applicationBootstrapper) {
+        this(FestAwareSwingGriffonApplication.EMPTY_ARGS, applicationBootstrapper);
+    }
+
     public GriffonFestRule(@Nonnull String[] startupArgs) {
         this(startupArgs, TestApplicationBootstrapper.class);
     }

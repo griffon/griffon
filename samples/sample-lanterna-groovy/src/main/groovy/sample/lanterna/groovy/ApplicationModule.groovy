@@ -1,4 +1,4 @@
-package sample.javafx.groovy
+package sample.lanterna.groovy
 
 import griffon.core.injection.Module
 import org.codehaus.griffon.runtime.core.injection.AbstractModule
@@ -7,13 +7,13 @@ import org.kordamp.jipsy.ServiceProviderFor
 
 import static griffon.util.AnnotationUtils.named
 
-@ServiceProviderFor(Module)
+@ServiceProviderFor(Module.class)
 class ApplicationModule extends AbstractModule {
     @Override
     protected void doConfigure() {
-        bind(ResourceBundle)
+        bind(ResourceBundle.class)
             .withClassifier(named('applicationResourceBundle'))
-            .toProvider(new ResourceBundleProvider('sample.javafx.groovy.Config'))
+            .toProvider(new ResourceBundleProvider('sample.lanterna.groovy.Config'))
             .asSingleton()
     }
 }

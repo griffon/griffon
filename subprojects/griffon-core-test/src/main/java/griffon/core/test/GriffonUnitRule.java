@@ -44,6 +44,14 @@ public class GriffonUnitRule implements MethodRule {
         this(DefaultGriffonApplication.EMPTY_ARGS, DefaultGriffonApplication.class, TestApplicationBootstrapper.class);
     }
 
+    public GriffonUnitRule(@Nonnull Class<? extends GriffonApplication> applicationClass) {
+        this(DefaultGriffonApplication.EMPTY_ARGS, applicationClass, TestApplicationBootstrapper.class);
+    }
+
+    public GriffonUnitRule(@Nonnull Class<? extends GriffonApplication> applicationClass, @Nonnull Class<? extends ApplicationBootstrapper> applicationBootstrapper) {
+        this(DefaultGriffonApplication.EMPTY_ARGS, applicationClass, applicationBootstrapper);
+    }
+
     public GriffonUnitRule(@Nonnull String[] startupArgs) {
         this(startupArgs, DefaultGriffonApplication.class, TestApplicationBootstrapper.class);
     }

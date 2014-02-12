@@ -1,4 +1,4 @@
-package sample;
+package sample.lanterna.java;
 
 import griffon.lanterna.LanternaGriffonApplication;
 

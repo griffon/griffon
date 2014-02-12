@@ -1,3 +1,5 @@
+package sample.lanterna.java;
+
 import griffon.util.AbstractMapResourceBundle;
 import griffon.util.CollectionUtils;
 
@@ -17,9 +19,9 @@ public class Config extends AbstractMapResourceBundle {
             )
             .e("mvcGroups", CollectionUtils.map()
                 .e("sample", CollectionUtils.map()
-                    .e("model", "sample.SampleModel")
-                    .e("view", "sample.SampleView")
-                    .e("controller", "sample.SampleController")
+                    .e("model", "sample.lanterna.java.SampleModel")
+                    .e("view", "sample.lanterna.java.SampleView")
+                    .e("controller", "sample.lanterna.java.SampleController")
                 )
             );
     }

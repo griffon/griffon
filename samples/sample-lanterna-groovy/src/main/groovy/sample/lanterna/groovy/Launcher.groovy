@@ -1,4 +1,4 @@
-package sample
+package sample.lanterna.groovy
 
 import griffon.lanterna.LanternaGriffonApplication
 

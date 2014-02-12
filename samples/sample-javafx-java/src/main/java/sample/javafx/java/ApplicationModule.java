@@ -16,10 +16,7 @@
 
 package sample.javafx.java;
 
-import griffon.core.LifecycleHandler;
-import griffon.core.env.Lifecycle;
 import griffon.core.injection.Module;
-import org.codehaus.griffon.runtime.core.LifecycleHandlerProvider;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.codehaus.griffon.runtime.util.ResourceBundleProvider;
 import org.kordamp.jipsy.ServiceProviderFor;
@@ -36,12 +33,5 @@ public class ApplicationModule extends AbstractModule {
             .withClassifier(named("applicationResourceBundle"))
             .toProvider(new ResourceBundleProvider("sample.javafx.java.Config"))
             .asSingleton();
-
-        for (Lifecycle lifecycle : Lifecycle.values()) {
-            bind(LifecycleHandler.class)
-                .withClassifier(named(lifecycle.getName()))
-                .toProvider(new LifecycleHandlerProvider("sample.javafx.java." + lifecycle.getName()))
-                .asSingleton();
-        }
     }
 }

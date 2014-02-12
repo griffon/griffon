@@ -359,10 +359,10 @@ Even though Lanterna UI components do not expose observable properties in any wa
 it's a good thing to use observable properties in the Model, and so the following
 Model is identical to the <<_swing,Swing>> version.
 
-.sample-lanterna-java/griffon-app/models/sample/SampleModel.java
+.sample-lanterna-java/griffon-app/models/sample/lanterna/java/SampleModel.java
 [source,java]
 ----
-include::{sample-lanterna-java}/griffon-app/models/sample/SampleModel.java[]
+include::{sample-lanterna-java}/griffon-app/models/sample/lanterna/java/SampleModel.java[]
 ----
 <1> Define a private field for the property
 <2> Property accessor
@@ -373,10 +373,10 @@ for the Groovy version. This also demonstrates that even though and MVC group is
 smallest building block you can still configure how it's assembled. Have a look at
 the application's configuration to find out how
 
-.sample-lanterna-groovy/griffon-app/conf/Config.groovy
+.sample-lanterna-groovy/griffon-app/conf/sample/lanterna/groovy/Config.groovy
 [source,groovy]
 ----
-include::{sample-lanterna-groovy}/griffon-app/conf/Config.groovy[]
+include::{sample-lanterna-groovy}/griffon-app/conf/sample/lanterna/groovy/Config.groovy[]
 ----
 
 === Controller
@@ -388,20 +388,20 @@ that a Controller should never do this but because Lanterna exposes no bind mech
 the Groovy binding implementation would look as verbose as the Java version; we
 decided to take a shortcut for demonstrations purposes.
 
-.sample-lanterna-java/griffon-app/controllers/sample/SampleController.java
+.sample-lanterna-java/griffon-app/controllers/sample/lanterna/java/SampleController.java
 [source,java]
 ----
-include::{sample-lanterna-java}/griffon-app/controllers/sample/SampleController.java[]
+include::{sample-lanterna-java}/griffon-app/controllers/sample/lanterna/java/SampleController.java[]
 ----
 <1> MVC member injected by +{link_mvc_group_manager}+
 <2> Injected by JSR 330
 <3> Automatically run off the UI thread
 <4> Get back inside the UI thread
 
-.sample-lanterna-groovy/griffon-app/controllers/sample/SampleController.groovy
+.sample-lanterna-groovy/griffon-app/controllers/sample/lanterna/groovy/SampleController.groovy
 [source,groovy]
 ----
-include::{sample-lanterna-groovy}/griffon-app/controllers/sample/SampleController.groovy[]
+include::{sample-lanterna-groovy}/griffon-app/controllers/sample/lanterna/groovy/SampleController.groovy[]
 ----
 <1> MVC member injected by +{link_mvc_group_manager}+
 <2> Injected by JSR 330
@@ -413,16 +413,16 @@ include::{sample-lanterna-groovy}/griffon-app/controllers/sample/SampleControlle
 Again, services should not be affected by the choice of UI tookit so the following
 Service definitions are identical to the previous ones be saw earlier.
 
-.sample-lanterna-java/griffon-app/services/sample/SampleService.java
+.sample-lanterna-java/griffon-app/services/sample/lanterna/java/SampleService.java
 [source,java]
 ----
-include::{sample-lanterna-java}/griffon-app/services/sample/SampleService.java[]
+include::{sample-lanterna-java}/griffon-app/services/sample/lanterna/java/SampleService.java[]
 ----
 
-.sample-lanterna-groovy/griffon-app/services/sample/SampleService.groovy
+.sample-lanterna-groovy/griffon-app/services/sample/lanterna/groovy/SampleService.groovy
 [source,groovy]
 ----
-include::{sample-lanterna-groovy}/griffon-app/services/sample/SampleService.groovy[]
+include::{sample-lanterna-groovy}/griffon-app/services/sample/lanterna/groovy/SampleService.groovy[]
 ----
 
 === View
@@ -434,10 +434,10 @@ verbose due to the fact that Lanterna has no observable UI components. This is t
 reason for which we must explicitly mode the value of the +input+ component into
 the +input+ Model property as soon as the button is clicked.
 
-.sample-lanterna-java/griffon-app/views/sample/SampleView.java
+.sample-lanterna-java/griffon-app/views/sample/lanterna/java/SampleView.java
 [source,java]
 ----
-include::{sample-lanterna-java}/griffon-app/views/sample/SampleView.java[]
+include::{sample-lanterna-java}/griffon-app/views/sample/lanterna/java/SampleView.java[]
 ----
 <1> MVC member injected by +{link_mvc_group_manager}+
 <2> Create window and attach it to +{link_window_manager}+
@@ -447,10 +447,10 @@ include::{sample-lanterna-java}/griffon-app/views/sample/SampleView.java[]
 Fortunately we can rely on the observable +output+ Model property to write back the
 value to the +output+ component as soon as said property gets updated.
 
-.sample-lanterna-groovy/griffon-app/views/sample/SampleView.groovy
+.sample-lanterna-groovy/griffon-app/views/sample/lanterna/groovy/SampleView.groovy
 [source,groovy]
 ----
-include::{sample-lanterna-groovy}/griffon-app/views/sample/SampleView.groovy[]
+include::{sample-lanterna-groovy}/griffon-app/views/sample/lanterna/groovy/SampleView.groovy[]
 ----
 <1> MVC member injected by +{link_mvc_group_manager}+
 <2> Create window and attach it to +{link_window_manager}+

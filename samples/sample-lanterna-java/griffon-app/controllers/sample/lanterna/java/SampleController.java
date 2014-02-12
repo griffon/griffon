@@ -1,9 +1,11 @@
-package sample;
+package sample.lanterna.java;
 
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import sample.lanterna.java.SampleModel;
+import sample.lanterna.java.SampleService;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
