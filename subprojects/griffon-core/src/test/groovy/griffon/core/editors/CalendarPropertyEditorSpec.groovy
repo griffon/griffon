@@ -15,13 +15,41 @@
  */
 package griffon.core.editors
 
-import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.beans.PropertyEditor
 
 @Unroll
-class CalendarPropertyEditorSpec extends Specification {
+class CalendarPropertyEditorSpec extends PropertyEditorSpecSupport {
+    void "Calendar literal '#literal' with format '#format' should be equal to #value"() {
+        setup:
+
+        PropertyEditor editor = new CalendarPropertyEditor()
+
+        when:
+        editor.format = format
+        editor.value = literal
+
+        then:
+
+        value?.time == editor.value?.time
+
+        where:
+        literal               | format                | value
+        null                  | null                  | null
+        ''                    | null                  | null
+        '1/1/70 12:00 AM'     | null                  | epochAsCalendar()
+        '-3600000'            | null                  | epochAsCalendar()
+        -3600000              | null                  | epochAsCalendar()
+        epochAsDate()         | null                  | epochAsCalendar()
+        epochAsCalendar()     | null                  | epochAsCalendar()
+        ''                    | 'yyyy-MM-dd HH:mm:ss' | null
+        '1970-01-01 00:00:00' | 'yyyy-MM-dd HH:mm:ss' | epochAsCalendar()
+        -3600000              | 'yyyy-MM-dd HH:mm:ss' | epochAsCalendar()
+        epochAsDate()         | 'yyyy-MM-dd HH:mm:ss' | epochAsCalendar()
+        epochAsCalendar()     | 'yyyy-MM-dd HH:mm:ss' | epochAsCalendar()
+    }
+
     void "Invalid calendar literal '#literal'"() {
         setup:
 

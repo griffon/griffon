@@ -102,6 +102,7 @@ public abstract class AbstractAddonManager implements AddonManager {
             addMVCGroups(addon);
             addon.init(getApplication());
 
+            this.addons.put(name, addon);
             event(ApplicationEvent.LOAD_ADDON_END, asList(getApplication(), name, addon));
             LOG.debug("Loaded addon {}", name);
         }

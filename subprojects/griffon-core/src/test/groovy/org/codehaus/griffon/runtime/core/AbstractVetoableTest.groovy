@@ -22,7 +22,7 @@ import java.beans.PropertyChangeListener
 import java.beans.PropertyVetoException
 import java.beans.VetoableChangeListener
 
-class AbstractVetoableSpec {
+class AbstractVetoableTest {
     @Test
     void vetoableSetup() {
         // given:

@@ -137,9 +137,9 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
     }
 
-    @Nonnull
-    public String format(@Nonnull Color color) {
-        return delegate.format(color);
+    @Nullable
+    public String format(@Nullable Color color) {
+        return color == null ? null : delegate.format(color);
     }
 
     @Nullable

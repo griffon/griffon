@@ -45,7 +45,13 @@ idea {
 task integrationTest(type: Test, dependsOn: jar) {
     testClassesDir = sourceSets.integrationTest.output.classesDir
     classpath = sourceSets.integrationTest.runtimeClasspath
+    reports.html.enabled = false
+}
+
+task integrationTestReport(type: TestReport, dependsOn: integrationTest) {
+    destinationDir = file("${buildDir}/reports/integration-tests")
+    reportOn integrationTest
 }
 
 integrationTest.mustRunAfter test
-check.dependsOn integrationTest
+check.dependsOn integrationTestReport

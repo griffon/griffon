@@ -17,7 +17,6 @@ package griffon.core.formatters;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -28,7 +27,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @since 2.0.0
  */
 public class DateFormatter extends AbstractFormatter<Date> {
-    private final DateFormat dateFormat;
+    private final SimpleDateFormat dateFormat;
 
     public DateFormatter() {
         this(null);
@@ -43,8 +42,13 @@ public class DateFormatter extends AbstractFormatter<Date> {
     }
 
     @Nonnull
-    public String format(@Nonnull Date date) {
-        return dateFormat.format(date);
+    public String getPattern() {
+        return dateFormat.toPattern();
+    }
+
+    @Nullable
+    public String format(@Nullable Date date) {
+        return date == null ? null : dateFormat.format(date);
     }
 
     @Nullable

@@ -38,6 +38,8 @@ class ActionFactory extends AbstractFactory {
     }
 
     boolean onNodeChildren(FactoryBuilderSupport builder, Object node, Closure childContent) {
+        childContent.resolveStrategy = Closure.DELEGATE_FIRST
+        childContent.delegate = builder
         node.runnable = childContent
         false
     }

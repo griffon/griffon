@@ -24,6 +24,8 @@ import java.lang.reflect.Method;
  * @since 2.0.0
  */
 public class InstanceMethodInvocationException extends GriffonException {
+    private static final long serialVersionUID = -3271666284661136432L;
+
     public InstanceMethodInvocationException(@Nonnull Object instance, @Nonnull String methodName, @Nullable Object[] args) {
         super(formatArguments(instance, methodName, args));
     }

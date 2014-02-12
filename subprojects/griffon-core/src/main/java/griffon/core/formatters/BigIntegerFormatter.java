@@ -15,7 +15,6 @@
  */
 package griffon.core.formatters;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -29,8 +28,8 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @since 2.0.0
  */
 public class BigIntegerFormatter extends AbstractFormatter<BigInteger> {
-    private static final String PATTERN_CURRENCY = "currency";
-    private static final String PATTERN_PERCENT = "percent";
+    public static final String PATTERN_CURRENCY = "currency";
+    public static final String PATTERN_PERCENT = "percent";
 
     private final NumberFormat numberFormat;
 
@@ -52,9 +51,9 @@ public class BigIntegerFormatter extends AbstractFormatter<BigInteger> {
         }
     }
 
-    @Nonnull
-    public String format(@Nonnull BigInteger number) {
-        return numberFormat.format(number);
+    @Nullable
+    public String format(@Nullable BigInteger number) {
+        return number == null ? null : numberFormat.format(number);
     }
 
     @Nullable

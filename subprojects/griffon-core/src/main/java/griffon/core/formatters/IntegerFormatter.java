@@ -15,7 +15,6 @@
  */
 package griffon.core.formatters;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -27,8 +26,8 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @since 2.0.0
  */
 public class IntegerFormatter extends AbstractFormatter<Integer> {
-    private static final String PATTERN_CURRENCY = "currency";
-    private static final String PATTERN_PERCENT = "percent";
+    public static final String PATTERN_CURRENCY = "currency";
+    public static final String PATTERN_PERCENT = "percent";
 
     private final NumberFormat numberFormat;
 
@@ -49,9 +48,9 @@ public class IntegerFormatter extends AbstractFormatter<Integer> {
         }
     }
 
-    @Nonnull
-    public String format(@Nonnull Integer number) {
-        return numberFormat.format(number);
+    @Nullable
+    public String format(@Nullable Integer number) {
+        return number == null ? null : numberFormat.format(number);
     }
 
     @Nullable

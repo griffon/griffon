@@ -49,4 +49,8 @@ public class IntegrationController extends AbstractGriffonController {
     public void throwException() {
         throw new RuntimeException("Boom!");
     }
+
+    public void handleException() {
+        throw new RuntimeException("Boom!");
+    }
 }

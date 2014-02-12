@@ -15,14 +15,12 @@
  */
 package griffon.core.formatters;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * <p>Strategy for parsing and formatting instances from and to their literal representation</p>
  *
  * @param <T> the type of instances this {@code Formatter} can handle.
- *
  * @author Andres Almiray
  * @since 2.0.0
  */
@@ -35,8 +33,8 @@ public interface Formatter<T> {
      * @param obj the instance to be formatted
      * @return A {@code String} representing the instance's state.
      */
-    @Nonnull
-    String format(@Nonnull T obj);
+    @Nullable
+    String format(@Nullable T obj);
 
     /**
      * <p>Parses a literal representation into an instance of type {@code T}.</p>
@@ -45,7 +43,7 @@ public interface Formatter<T> {
      *
      * @param str the {@code String} to be parsed
      * @return an instance of type {@code T} whose state is initialized given the
-     *         parameters of the input {@code String}.
+     * parameters of the input {@code String}.
      * @throws ParseException if the {@code String} cannot be parsed.
      */
     @Nullable

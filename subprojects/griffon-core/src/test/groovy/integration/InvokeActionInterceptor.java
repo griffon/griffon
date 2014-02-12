@@ -67,6 +67,6 @@ public class InvokeActionInterceptor extends AbstractActionInterceptor {
     public boolean exception(@Nonnull Exception exception, @Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Object[] args) {
         this.exception = true;
         super.exception(exception, controller, actionName, args);
-        return true;
+        return actionName.equals("handleException");
     }
 }

@@ -33,6 +33,7 @@ class EnumPropertyEditorSpec extends Specification {
 
         then:
 
+        editor.enumType == Numbers
         value == editor.value
 
         where:

@@ -15,25 +15,12 @@
  */
 package griffon.core.editors
 
-import spock.lang.Shared
-import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.beans.PropertyEditor
 
 @Unroll
-class FloatPropertyEditorSpec extends Specification {
-    @Shared
-    private Locale defaultLocale = Locale.default
-
-    def setup() {
-        Locale.default = Locale.US
-    }
-
-    def cleanup() {
-        Locale.default = defaultLocale
-    }
-
+class FloatPropertyEditorSpec extends PropertyEditorSpecSupport {
     void "Float literal '#literal' with format '#format' should be equal to #value"() {
         setup:
 

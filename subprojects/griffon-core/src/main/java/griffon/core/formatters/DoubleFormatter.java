@@ -15,7 +15,6 @@
  */
 package griffon.core.formatters;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -27,8 +26,8 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @since 2.0.0
  */
 public class DoubleFormatter extends AbstractFormatter<Double> {
-    private static final String PATTERN_CURRENCY = "currency";
-    private static final String PATTERN_PERCENT = "percent";
+    public static final String PATTERN_CURRENCY = "currency";
+    public static final String PATTERN_PERCENT = "percent";
 
     private final NumberFormat numberFormat;
 
@@ -38,7 +37,7 @@ public class DoubleFormatter extends AbstractFormatter<Double> {
 
     public DoubleFormatter(@Nullable String pattern) {
         if (isBlank(pattern)) {
-            numberFormat = new DecimalFormat();
+            numberFormat = new DecimalFormat("#.0");
         } else if (PATTERN_CURRENCY.equalsIgnoreCase(pattern)) {
             numberFormat = NumberFormat.getCurrencyInstance();
         } else if (PATTERN_PERCENT.equalsIgnoreCase(pattern)) {
@@ -48,9 +47,9 @@ public class DoubleFormatter extends AbstractFormatter<Double> {
         }
     }
 
-    @Nonnull
-    public String format(@Nonnull Double number) {
-        return numberFormat.format(number);
+    @Nullable
+    public String format(@Nullable Double number) {
+        return number == null ? null : numberFormat.format(number);
     }
 
     @Nullable

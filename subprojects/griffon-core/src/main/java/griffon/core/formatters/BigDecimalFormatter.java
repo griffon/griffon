@@ -15,7 +15,6 @@
  */
 package griffon.core.formatters;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -28,8 +27,8 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @since 2.0.0
  */
 public class BigDecimalFormatter extends AbstractFormatter<BigDecimal> {
-    private static final String PATTERN_CURRENCY = "currency";
-    private static final String PATTERN_PERCENT = "percent";
+    public static final String PATTERN_CURRENCY = "currency";
+    public static final String PATTERN_PERCENT = "percent";
 
     private final NumberFormat numberFormat;
 
@@ -51,9 +50,9 @@ public class BigDecimalFormatter extends AbstractFormatter<BigDecimal> {
         }
     }
 
-    @Nonnull
-    public String format(@Nonnull BigDecimal number) {
-        return numberFormat.format(number);
+    @Nullable
+    public String format(@Nullable BigDecimal number) {
+        return number == null ? null : numberFormat.format(number);
     }
 
     @Nullable

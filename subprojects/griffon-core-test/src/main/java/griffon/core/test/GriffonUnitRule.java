@@ -36,19 +36,26 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class GriffonUnitRule implements MethodRule {
+    private String[] startupArgs;
     private Class<? extends GriffonApplication> applicationClass;
     private Class<? extends ApplicationBootstrapper> applicationBootstrapper;
 
     public GriffonUnitRule() {
-        this.applicationClass = DefaultGriffonApplication.class;
-        this.applicationBootstrapper = TestApplicationBootstrapper.class;
+        this(DefaultGriffonApplication.EMPTY_ARGS, DefaultGriffonApplication.class, TestApplicationBootstrapper.class);
     }
 
-    public GriffonUnitRule(@Nonnull Class<? extends GriffonApplication> applicationClass) {
-        this.applicationClass = requireNonNull(applicationClass, "Argument 'applicationClass' cannot be null");
+    public GriffonUnitRule(@Nonnull String[] startupArgs) {
+        this(startupArgs, DefaultGriffonApplication.class, TestApplicationBootstrapper.class);
     }
 
-    public GriffonUnitRule(@Nonnull Class<? extends GriffonApplication> applicationClass, @Nonnull Class<? extends ApplicationBootstrapper> applicationBootstrapper) {
+    public GriffonUnitRule(@Nonnull String[] startupArgs, @Nonnull Class<? extends GriffonApplication> applicationClass) {
+        this(startupArgs, applicationClass, TestApplicationBootstrapper.class);
+    }
+
+    public GriffonUnitRule(@Nonnull String[] startupArgs, @Nonnull Class<? extends GriffonApplication> applicationClass, @Nonnull Class<? extends ApplicationBootstrapper> applicationBootstrapper) {
+        requireNonNull(startupArgs, "Argument 'startupArgs' cannot be null");
+        this.startupArgs = new String[startupArgs.length];
+        System.arraycopy(startupArgs, 0, this.startupArgs, 0, startupArgs.length);
         this.applicationClass = requireNonNull(applicationClass, "Argument 'applicationClass' cannot be null");
         this.applicationBootstrapper = requireNonNull(applicationBootstrapper, "Argument 'applicationBootstrapper' cannot be null");
     }
@@ -86,7 +93,9 @@ public class GriffonUnitRule implements MethodRule {
 
     @Nonnull
     private GriffonApplication instantiateApplication() throws Exception {
-        return applicationClass.newInstance();
+        String[] array = new String[0];
+        Constructor<? extends GriffonApplication> ctor = applicationClass.getDeclaredConstructor(array.getClass());
+        return ctor.newInstance(new Object[]{startupArgs});
     }
 
     @Nonnull

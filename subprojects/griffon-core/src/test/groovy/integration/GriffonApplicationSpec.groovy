@@ -24,6 +24,7 @@ import griffon.core.artifact.*
 import griffon.core.controller.ActionInterceptor
 import griffon.core.env.ApplicationPhase
 import griffon.core.env.Lifecycle
+import griffon.core.mvc.MVCCallable
 import griffon.core.mvc.MVCGroup
 import org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper
 import spock.lang.Shared
@@ -31,6 +32,7 @@ import spock.lang.Specification
 import spock.lang.Stepwise
 
 import javax.annotation.Nonnull
+import javax.annotation.Nullable
 
 import static griffon.util.AnnotationUtils.named
 import static java.util.Arrays.asList
@@ -43,8 +45,11 @@ class GriffonApplicationSpec extends Specification {
     @Shared
     private static List<Invokable> invokables = []
 
-    def setupSpec() {
+    static {
         System.setProperty('org.slf4j.simpleLogger.defaultLogLevel', 'trace')
+    }
+
+    def setupSpec() {
         application = new TestGriffonApplication(['foo', 'bar'] as String[])
         application.addShutdownHandler(new TestShutdownHandler())
     }
@@ -87,7 +92,7 @@ class GriffonApplicationSpec extends Specification {
 
         expect:
         controllerClass.eventNames == []
-        controllerClass.actionNames == ['sayHello', 'throwException']
+        controllerClass.actionNames == ['handleException', 'sayHello', 'throwException']
     }
 
     def 'Check artifact model'() {
@@ -155,6 +160,20 @@ class GriffonApplicationSpec extends Specification {
         !interceptor.exception
     }
 
+    def 'Invoke handleException Action'() {
+        given:
+        InvokeActionInterceptor interceptor = application.injector.getInstance(ActionInterceptor)
+        MVCGroup group = application.mvcGroupManager.findGroup('integration')
+
+        when:
+        group.controller.invokeAction('handleException')
+
+        then:
+        interceptor.before
+        interceptor.after
+        interceptor.exception
+    }
+
     def 'Invoke throwException Action'() {
         given:
         InvokeActionInterceptor interceptor = application.injector.getInstance(ActionInterceptor)
@@ -164,6 +183,7 @@ class GriffonApplicationSpec extends Specification {
         group.controller.invokeAction('throwException')
 
         then:
+        thrown(RuntimeException)
         interceptor.before
         interceptor.after
         interceptor.exception
@@ -174,14 +194,377 @@ class GriffonApplicationSpec extends Specification {
         GriffonController controller = application.mvcGroupManager.findGroup('integration').controller
 
         expect:
-        application.actionManager.actionsFor(controller).keySet() == (['sayHello','throwException'] as Set)
+        application.actionManager.actionsFor(controller).keySet() == (['handleException', 'sayHello', 'throwException'] as Set)
         application.actionManager.normalizeName('fooAction') == 'foo'
         application.actionManager.normalizeName('foo') == 'foo'
         application.actionManager.actionFor(controller, 'sayHello')
         !application.actionManager.actionFor(controller, 'unknown')
     }
 
-    private static class TestShutdownHandler implements ShutdownHandler, Invokable {
+    def 'Verify AddonManager'() {
+        expect:
+        application.addonManager.addons.size() == 1
+        application.addonManager.findAddon('integration')
+        application.addonManager.findAddon('IntegrationGriffonAddon')
+        application.addonManager.addons.containsKey('integration')
+    }
+
+    def 'Verify MVCGroupManager'() {
+        expect:
+        application.mvcGroupManager.configurations.size() == 2
+        application.mvcGroupManager.findConfiguration('integration')
+        application.mvcGroupManager.findConfiguration('simple')
+        application.mvcGroupManager.configurations.containsKey('integration')
+        application.mvcGroupManager.configurations.containsKey('simple')
+
+        application.mvcGroupManager.models.containsKey('integration')
+        application.mvcGroupManager.controllers.containsKey('integration')
+        application.mvcGroupManager.views.containsKey('integration')
+    }
+
+    def 'Verify ArtifactManager'() {
+        given:
+        GriffonModel model = application.mvcGroupManager.findGroup('integration').model
+
+        expect:
+        application.artifactManager.findGriffonClass('integration.SimpleModel')
+        application.artifactManager.findGriffonClass('integration.SimpleModel', 'model')
+        application.artifactManager.findGriffonClass(SimpleModel)
+        application.artifactManager.findGriffonClass(SimpleModel, 'model')
+        application.artifactManager.findGriffonClass(model)
+
+        !application.artifactManager.findGriffonClass('integration.SampleModel')
+        !application.artifactManager.findGriffonClass('integration.SampleModel', 'model')
+        !application.artifactManager.findGriffonClass('integration.SampleModel', 'domain')
+        !application.artifactManager.findGriffonClass(SimpleModel, 'domain')
+        !application.artifactManager.findGriffonClass(SimpleModel, 'controller')
+
+        application.artifactManager.getClassesOfType('model').clazz == [IntegrationModel, SimpleModel]
+        !application.artifactManager.getClassesOfType('domain')
+
+        application.artifactManager.allClasses*.clazz.sort() == [IntegrationModel, IntegrationView, IntegrationController, IntegrationService, SimpleModel, SimpleView, SimpleController].sort()
+    }
+
+    def 'Verify withMvcGroup(type , handler)'() {
+        given:
+        List checks = []
+
+        when:
+        application.mvcGroupManager.withMVCGroup('simple', new MVCCallable() {
+            @Override
+            void call(
+                @Nullable GriffonModel model,
+                @Nullable GriffonView view,
+                @Nullable GriffonController controller) {
+                checks << (model instanceof SimpleModel)
+                checks << (view instanceof SimpleView)
+                checks << (controller instanceof SimpleController)
+                checks << (controller.mvcId == 'simple')
+                checks << (controller.key == null)
+            }
+        })
+
+        then:
+        checks.every { it == true }
+    }
+
+    def 'Verify withMvcGroup(type, id , handler)'() {
+        given:
+        List checks = []
+
+        when:
+        application.mvcGroupManager.withMVCGroup('simple', 'simple-1', new MVCCallable() {
+            @Override
+            void call(
+                @Nullable GriffonModel model,
+                @Nullable GriffonView view,
+                @Nullable GriffonController controller) {
+                checks << (model instanceof SimpleModel)
+                checks << (view instanceof SimpleView)
+                checks << (controller instanceof SimpleController)
+                checks << (controller.mvcId == 'simple-1')
+                checks << (controller.key == null)
+            }
+        })
+
+        then:
+        checks.every { it == true }
+    }
+
+    def 'Verify withMvcGroup(type, id, map , handler)'() {
+        given:
+        List checks = []
+
+        when:
+        application.mvcGroupManager.withMVCGroup('simple', 'simple-2', [key: 'griffon'], new MVCCallable() {
+            @Override
+            void call(
+                @Nullable GriffonModel model,
+                @Nullable GriffonView view,
+                @Nullable GriffonController controller) {
+                checks << (model instanceof SimpleModel)
+                checks << (view instanceof SimpleView)
+                checks << (controller instanceof SimpleController)
+                checks << (controller.mvcId == 'simple-2')
+                checks << (controller.key == 'griffon')
+            }
+        })
+
+        then:
+        checks.every { it == true }
+    }
+
+    def 'Verify withMvcGroup(type, map , handler)'() {
+        given:
+        List checks = []
+
+        when:
+        application.mvcGroupManager.withMVCGroup('simple', [key: 'griffon'], new MVCCallable() {
+            @Override
+            void call(
+                @Nullable GriffonModel model,
+                @Nullable GriffonView view,
+                @Nullable GriffonController controller) {
+                checks << (model instanceof SimpleModel)
+                checks << (view instanceof SimpleView)
+                checks << (controller instanceof SimpleController)
+                checks << (controller.mvcId == 'simple')
+                checks << (controller.key == 'griffon')
+            }
+        })
+
+        then:
+        checks.every { it == true }
+    }
+
+    def 'Verify withMvcGroup(map, type, id , handler)'() {
+        given:
+        List checks = []
+
+        when:
+        application.mvcGroupManager.withMVCGroup('simple', 'simple-2', key: 'griffon', new MVCCallable() {
+            @Override
+            void call(
+                @Nullable GriffonModel model,
+                @Nullable GriffonView view,
+                @Nullable GriffonController controller) {
+                checks << (model instanceof SimpleModel)
+                checks << (view instanceof SimpleView)
+                checks << (controller instanceof SimpleController)
+                checks << (controller.mvcId == 'simple-2')
+                checks << (controller.key == 'griffon')
+            }
+        })
+
+        then:
+        checks.every { it == true }
+    }
+
+    def 'Verify withMvcGroup(map, type , handler)'() {
+        given:
+        List checks = []
+
+        when:
+        application.mvcGroupManager.withMVCGroup('simple', key: 'griffon', new MVCCallable() {
+            @Override
+            void call(
+                @Nullable GriffonModel model,
+                @Nullable GriffonView view,
+                @Nullable GriffonController controller) {
+                checks << (model instanceof SimpleModel)
+                checks << (view instanceof SimpleView)
+                checks << (controller instanceof SimpleController)
+                checks << (controller.mvcId == 'simple')
+                checks << (controller.key == 'griffon')
+            }
+        })
+
+        then:
+        checks.every { it == true }
+    }
+
+    def 'Verify buildMVCGroup(type)'() {
+        given:
+        MVCGroup group = application.mvcGroupManager.buildMVCGroup('simple')
+
+        expect:
+        group.model instanceof SimpleModel
+        group.view instanceof SimpleView
+        group.controller instanceof SimpleController
+        group.controller.mvcId == 'simple'
+        group.controller.key == null
+
+        cleanup:
+        group.destroy()
+    }
+
+    def 'Verify buildMVCGroup(type, id)'() {
+        given:
+        MVCGroup group = application.mvcGroupManager.buildMVCGroup('simple', 'simple-1')
+
+        expect:
+        group.model instanceof SimpleModel
+        group.view instanceof SimpleView
+        group.controller instanceof SimpleController
+        group.controller.mvcId == 'simple-1'
+        group.controller.key == null
+
+        cleanup:
+        group.destroy()
+    }
+
+    def 'Verify buildMVCGroup(type, map)'() {
+        given:
+        MVCGroup group = application.mvcGroupManager.buildMVCGroup('simple', [key: 'griffon'])
+
+        expect:
+        group.model instanceof SimpleModel
+        group.view instanceof SimpleView
+        group.controller instanceof SimpleController
+        group.controller.mvcId == 'simple'
+        group.controller.key == 'griffon'
+
+        cleanup:
+        group.destroy()
+    }
+
+    def 'Verify buildMVCGroup(map, type)'() {
+        given:
+        MVCGroup group = application.mvcGroupManager.buildMVCGroup('simple', key: 'griffon')
+
+        expect:
+        group.model instanceof SimpleModel
+        group.view instanceof SimpleView
+        group.controller instanceof SimpleController
+        group.controller.mvcId == 'simple'
+        group.controller.key == 'griffon'
+
+        cleanup:
+        group.destroy()
+    }
+
+    def 'Verify buildMVCGroup(type, id, map)'() {
+        given:
+        MVCGroup group = application.mvcGroupManager.buildMVCGroup('simple', 'simple-2', [key: 'griffon'])
+
+        expect:
+        group.model instanceof SimpleModel
+        group.view instanceof SimpleView
+        group.controller instanceof SimpleController
+        group.controller.mvcId == 'simple-2'
+        group.controller.key == 'griffon'
+
+        cleanup:
+        group.destroy()
+    }
+
+    def 'Verify buildMVCGroup(map, type, id)'() {
+        given:
+        MVCGroup group = application.mvcGroupManager.buildMVCGroup('simple', 'simple-2', key: 'griffon')
+
+        expect:
+        group.model instanceof SimpleModel
+        group.view instanceof SimpleView
+        group.controller instanceof SimpleController
+        group.controller.mvcId == 'simple-2'
+        group.controller.key == 'griffon'
+
+        cleanup:
+        group.destroy()
+    }
+
+    def 'Verify createMVCGroup(type)'() {
+        given:
+        List members = application.mvcGroupManager.createMVCGroup('simple')
+
+        expect:
+        members[0] instanceof SimpleModel
+        members[1] instanceof SimpleView
+        members[2] instanceof SimpleController
+        members[2].mvcId == 'simple'
+        members[2].key == null
+
+        cleanup:
+        members[2].mvcGroup.destroy()
+    }
+
+    def 'Verify createMVCGroup(type, id)'() {
+        given:
+        List members = application.mvcGroupManager.createMVCGroup('simple', 'simple-1')
+
+        expect:
+        members[0] instanceof SimpleModel
+        members[1] instanceof SimpleView
+        members[2] instanceof SimpleController
+        members[2].mvcId == 'simple-1'
+        members[2].key == null
+
+        cleanup:
+        members[2].mvcGroup.destroy()
+    }
+
+    def 'Verify createMVCGroup(type, map)'() {
+        given:
+        List members = application.mvcGroupManager.createMVCGroup('simple', [key: 'griffon'])
+
+        expect:
+        members[0] instanceof SimpleModel
+        members[1] instanceof SimpleView
+        members[2] instanceof SimpleController
+        members[2].mvcId == 'simple'
+        members[2].key == 'griffon'
+
+        cleanup:
+        members[2].mvcGroup.destroy()
+    }
+
+    def 'Verify createMVCGroup(map, type)'() {
+        given:
+        List members = application.mvcGroupManager.createMVCGroup('simple', key: 'griffon')
+
+        expect:
+        members[0] instanceof SimpleModel
+        members[1] instanceof SimpleView
+        members[2] instanceof SimpleController
+        members[2].mvcId == 'simple'
+        members[2].key == 'griffon'
+
+        cleanup:
+        members[2].mvcGroup.destroy()
+    }
+
+    def 'Verify createMVCGroup(type, id, map)'() {
+        given:
+        List members = application.mvcGroupManager.createMVCGroup('simple', 'simple-2', [key: 'griffon'])
+
+        expect:
+        members[0] instanceof SimpleModel
+        members[1] instanceof SimpleView
+        members[2] instanceof SimpleController
+        members[2].mvcId == 'simple-2'
+        members[2].key == 'griffon'
+
+        cleanup:
+        members[2].mvcGroup.destroy()
+    }
+
+    def 'Verify createMVCGroup(map, type, id)'() {
+        given:
+        List members = application.mvcGroupManager.createMVCGroup('simple', 'simple-2', key: 'griffon')
+
+        expect:
+        members[0] instanceof SimpleModel
+        members[1] instanceof SimpleView
+        members[2] instanceof SimpleController
+        members[2].mvcId == 'simple-2'
+        members[2].key == 'griffon'
+
+        cleanup:
+        members[2].mvcGroup.destroy()
+    }
+
+    private
+    static class TestShutdownHandler implements ShutdownHandler, Invokable {
         private boolean invoked
 
         @Override

@@ -33,11 +33,15 @@ public class GriffonFestRule extends GriffonUnitRule {
     protected FrameFixture window;
 
     public GriffonFestRule() {
-        super(FestAwareSwingGriffonApplication.class, TestApplicationBootstrapper.class);
+        this(FestAwareSwingGriffonApplication.EMPTY_ARGS, TestApplicationBootstrapper.class);
     }
 
-    public GriffonFestRule(@Nonnull Class<? extends ApplicationBootstrapper> applicationBootstrapper) {
-        super(FestAwareSwingGriffonApplication.class, applicationBootstrapper);
+    public GriffonFestRule(@Nonnull String[] startupArgs) {
+        this(startupArgs, TestApplicationBootstrapper.class);
+    }
+
+    public GriffonFestRule(@Nonnull String[] startupArgs, @Nonnull Class<? extends ApplicationBootstrapper> applicationBootstrapper) {
+        super(startupArgs, FestAwareSwingGriffonApplication.class, applicationBootstrapper);
     }
 
     @Override

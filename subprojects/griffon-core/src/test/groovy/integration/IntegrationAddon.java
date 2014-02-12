@@ -16,10 +16,12 @@
 package integration;
 
 import griffon.core.GriffonApplication;
+import griffon.util.CollectionUtils;
 import org.codehaus.griffon.runtime.core.addon.AbstractGriffonAddon;
 
 import javax.annotation.Nonnull;
 import javax.inject.Named;
+import java.util.Map;
 
 @Named("integration")
 public class IntegrationAddon extends AbstractGriffonAddon implements Invokable {
@@ -33,5 +35,15 @@ public class IntegrationAddon extends AbstractGriffonAddon implements Invokable 
     @Override
     public boolean isInvoked() {
         return invoked;
+    }
+
+    @Nonnull
+    @Override
+    public Map<String, Map<String, Object>> getMvcGroups() {
+        return CollectionUtils.<String, Map<String, Object>>map()
+            .e("simple", CollectionUtils.<String, Object>map()
+                .e("model", "integration.SimpleModel")
+                .e("view", "integration.SimpleView")
+                .e("controller", "integration.SimpleController"));
     }
 }

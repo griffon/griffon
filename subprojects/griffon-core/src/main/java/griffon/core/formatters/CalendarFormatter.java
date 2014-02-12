@@ -17,7 +17,6 @@ package griffon.core.formatters;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -28,7 +27,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @since 2.0.0
  */
 public class CalendarFormatter extends AbstractFormatter<Calendar> {
-    private final DateFormat dateFormat;
+    private final SimpleDateFormat dateFormat;
 
     public CalendarFormatter() {
         this(null);
@@ -43,8 +42,13 @@ public class CalendarFormatter extends AbstractFormatter<Calendar> {
     }
 
     @Nonnull
-    public String format(@Nonnull Calendar date) {
-        return dateFormat.format(date.getTime());
+    public String getPattern() {
+        return dateFormat.toPattern();
+    }
+
+    @Nullable
+    public String format(@Nullable Calendar date) {
+        return date == null ? null : dateFormat.format(date.getTime());
     }
 
     @Nullable

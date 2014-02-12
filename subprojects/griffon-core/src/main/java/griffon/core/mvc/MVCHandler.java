@@ -33,7 +33,7 @@ import java.util.Map;
  * <ol>{@code withMVCGroup()} - creates a new group instance and  destroys it immediately after it has been processed by the callback.</ol>
  * </ul>
  * <p/>
- * It's worth mentioning that the value of the {@code mvcName} parameter must be unique otherwise a collision will occur.
+ * It's worth mentioning that the value of the {@code mvcId} parameter must be unique otherwise a collision will occur.
  * When that happens the application will report and exception and terminate. This behavior can be configured to be more
  * lenient, by defining a configuration flag {@code griffon.mvcid.collision} in {@code Config}. <br/>
  * Accepted values are
@@ -75,7 +75,7 @@ public interface MVCHandler {
      * @return an MVCGroup instance of the desired type
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          configuration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
     MVCGroup buildMVCGroup(@Nonnull String mvcType);
@@ -108,14 +108,14 @@ public interface MVCHandler {
      * MVC groups must have an unique name.
      *
      * @param mvcType the type of group to build.
-     * @param mvcName the name to assign to the built group.
+     * @param mvcId the name to assign to the built group.
      * @return an MVCGroup instance of the desired type
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          configuration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
-    MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull String mvcName);
+    MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId);
 
     /**
      * Instantiates an MVC group of the specified type with additional variables.<p>
@@ -162,7 +162,7 @@ public interface MVCHandler {
      * @return an MVCGroup instance of the desired type
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          configuration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
     MVCGroup buildMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType);
@@ -212,7 +212,7 @@ public interface MVCHandler {
      * @return an MVCGroup instance of the desired type
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          configuration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
     MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args);
@@ -255,14 +255,14 @@ public interface MVCHandler {
      * @param args    any useful values that can be set as properties on each MVC member or that
      *                identify a member that can be shared with other groups.
      * @param mvcType the type of group to build.
-     * @param mvcName the name to assign to the built group.
+     * @param mvcId the name to assign to the built group.
      * @return an MVCGroup instance of the desired type
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          configuration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
-    MVCGroup buildMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcName);
+    MVCGroup buildMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId);
 
     /**
      * Instantiates an MVC group of the specified type with a particular name.<p>
@@ -300,16 +300,16 @@ public interface MVCHandler {
      * MVC groups must have an unique name.
      *
      * @param mvcType the type of group to build.
-     * @param mvcName the name to assign to the built group.
+     * @param mvcId the name to assign to the built group.
      * @param args    any useful values that can be set as properties on each MVC member or that
      *                identify a member that can be shared with other groups.
      * @return an MVCGroup instance of the desired type
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          configuration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
-    MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull String mvcName, @Nonnull Map<String, Object> args);
+    MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args);
 
     /**
      * Instantiates an MVC group of the specified type returning only the MVC parts.<p>
@@ -340,7 +340,7 @@ public interface MVCHandler {
      * @return a List with the canonical MVC members of the group
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          configuration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
     List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType);
@@ -390,7 +390,7 @@ public interface MVCHandler {
      * @return a List with the canonical MVC members of the group
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          configuration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
     List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType);
@@ -440,7 +440,7 @@ public interface MVCHandler {
      * @return a List with the canonical MVC members of the group
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          configuration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
     List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args);
@@ -473,14 +473,14 @@ public interface MVCHandler {
      * MVC groups must have an unique name.
      *
      * @param mvcType the type of group to build.
-     * @param mvcName the name to assign to the built group.
+     * @param mvcId the name to assign to the built group.
      * @return a List with the canonical MVC members of the group
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          configuration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
-    List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcName);
+    List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId);
 
     /**
      * Instantiates an MVC group of the specified type with a particular name.<p>
@@ -520,14 +520,14 @@ public interface MVCHandler {
      * @param args    any useful values that can be set as properties on each MVC member or that
      *                identify a member that can be shared with other groups.
      * @param mvcType the type of group to build.
-     * @param mvcName the name to assign to the built group.
+     * @param mvcId the name to assign to the built group.
      * @return a List with the canonical MVC members of the group
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          configuration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
-    List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcName);
+    List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId);
 
     /**
      * Instantiates an MVC group of the specified type with a particular name.<p>
@@ -565,25 +565,25 @@ public interface MVCHandler {
      * MVC groups must have an unique name.
      *
      * @param mvcType the type of group to build.
-     * @param mvcName the name to assign to the built group.
+     * @param mvcId the name to assign to the built group.
      * @param args    any useful values that can be set as properties on each MVC member or that
      *                identify a member that can be shared with other groups.
      * @return a List with the canonical MVC members of the group
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
-     *          configuration or if a group with the same mvcName exists already.
+     *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
-    List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcName, @Nonnull Map<String, Object> args);
+    List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args);
 
     /**
      * Destroys an MVC group identified by a particular name.<p>
      * <b>ATTENTION:</b> make sure to call the super implementation if you override this method
      * otherwise group references will not be kept up to date.
      *
-     * @param mvcName the name of the group to destroy and dispose.
+     * @param mvcId the name of the group to destroy and dispose.
      */
-    void destroyMVCGroup(@Nonnull String mvcName);
+    void destroyMVCGroup(@Nonnull String mvcId);
 
     /**
      * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>
@@ -658,13 +658,13 @@ public interface MVCHandler {
      * MVC groups must have an unique name.
      *
      * @param mvcType the type of group to build.
-     * @param mvcName the name to assign to the built group.
+     * @param mvcId the name to assign to the built group.
      * @param handler a code block used to configure and manage the instantiated group
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
      *          configuration
      */
-    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcName, @Nonnull MVCCallable<M, V, C> handler);
+    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCCallable<M, V, C> handler);
 
     /**
      * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>
@@ -706,7 +706,7 @@ public interface MVCHandler {
      * MVC groups must have an unique name.
      *
      * @param mvcType the type of group to build.
-     * @param mvcName the name to assign to the built group.
+     * @param mvcId the name to assign to the built group.
      * @param args    any useful values that can be set as properties on each MVC member or that
      *                identify a member that can be shared with other groups.
      * @param handler a code block used to configure and manage the instantiated group
@@ -714,7 +714,7 @@ public interface MVCHandler {
      *          - if the type specified is not found in the application's
      *          configuration
      */
-    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcName, @Nonnull Map<String, Object> args, @Nonnull MVCCallable<M, V, C> handler);
+    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCCallable<M, V, C> handler);
 
     /**
      * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>
@@ -758,13 +758,13 @@ public interface MVCHandler {
      * @param args    any useful values that can be set as properties on each MVC member or that
      *                identify a member that can be shared with other groups.
      * @param mvcType the type of group to build.
-     * @param mvcName the name to assign to the built group.
+     * @param mvcId the name to assign to the built group.
      * @param handler a code block used to configure and manage the instantiated group
      * @throws griffon.exceptions.MVCGroupInstantiationException
      *          - if the type specified is not found in the application's
      *          configuration
      */
-    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcName, @Nonnull MVCCallable<M, V, C> handler);
+    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCCallable<M, V, C> handler);
 
     /**
      * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>

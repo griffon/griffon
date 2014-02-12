@@ -35,6 +35,7 @@ import static java.util.Objects.requireNonNull;
 @SuppressWarnings("rawtypes")
 public class CompositeBuilder extends FactoryBuilderSupport {
     public CompositeBuilder(@Nonnull BuilderCustomizer[] customizers) {
+        super(false);
         requireNonNull(customizers, "Argument 'customizers' cannot be null");
         for (int i = 0; i < customizers.length; i++) {
             BuilderCustomizer customizer = customizers[customizers.length - 1 - i];

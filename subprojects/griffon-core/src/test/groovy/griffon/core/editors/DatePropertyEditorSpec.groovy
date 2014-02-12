@@ -15,13 +15,41 @@
  */
 package griffon.core.editors
 
-import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.beans.PropertyEditor
 
 @Unroll
-class DatePropertyEditorSpec extends Specification {
+class DatePropertyEditorSpec extends PropertyEditorSpecSupport {
+    void "Date literal '#literal' with format '#format' should be equal to #value"() {
+        setup:
+
+        PropertyEditor editor = new DatePropertyEditor()
+
+        when:
+        editor.format = format
+        editor.value = literal
+
+        then:
+
+        value == editor.value
+
+        where:
+        literal               | format                | value
+        null                  | null                  | null
+        ''                    | null                  | null
+        '1/1/70 12:00 AM'     | null                  | epochAsDate()
+        '-3600000'            | null                  | epochAsDate()
+        -3600000              | null                  | epochAsDate()
+        epochAsDate()         | null                  | epochAsDate()
+        epochAsCalendar()     | null                  | epochAsDate()
+        ''                    | 'yyyy-MM-dd HH:mm:ss' | null
+        '1970-01-01 00:00:00' | 'yyyy-MM-dd HH:mm:ss' | epochAsDate()
+        -3600000              | 'yyyy-MM-dd HH:mm:ss' | epochAsDate()
+        epochAsDate()         | 'yyyy-MM-dd HH:mm:ss' | epochAsDate()
+        epochAsCalendar()     | 'yyyy-MM-dd HH:mm:ss' | epochAsDate()
+    }
+
     void "Invalid date literal '#literal'"() {
         setup:
 

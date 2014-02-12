@@ -23,20 +23,20 @@ public class MVCGroupInstantiationException extends MVCGroupException {
     private static final long serialVersionUID = -3908214044662655669L;
 
     private final String mvcType;
-    private final String mvcName;
+    private final String mvcId;
 
-    public MVCGroupInstantiationException(String message, String mvcType, String mvcName) {
-        this(message, mvcType, mvcName, null);
+    public MVCGroupInstantiationException(String message, String mvcType, String mvcId) {
+        this(message, mvcType, mvcId, null);
     }
 
-    public MVCGroupInstantiationException(String message, String mvcType, String mvcName, Throwable cause) {
+    public MVCGroupInstantiationException(String message, String mvcType, String mvcId, Throwable cause) {
         super(message, cause);
         this.mvcType = mvcType;
-        this.mvcName = mvcName;
+        this.mvcId = mvcId;
     }
 
-    public MVCGroupInstantiationException(String mvcType, String mvcName, Throwable cause) {
-        this("", mvcType, mvcName, cause);
+    public MVCGroupInstantiationException(String mvcType, String mvcId, Throwable cause) {
+        this("", mvcType, mvcId, cause);
     }
 
     public String getMvcType() {
@@ -44,6 +44,6 @@ public class MVCGroupInstantiationException extends MVCGroupException {
     }
 
     public String getMvcName() {
-        return mvcName;
+        return mvcId;
     }
 }

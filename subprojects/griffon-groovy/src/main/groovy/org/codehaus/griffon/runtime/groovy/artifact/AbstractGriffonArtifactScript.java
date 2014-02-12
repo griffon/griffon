@@ -133,32 +133,32 @@ public abstract class AbstractGriffonArtifactScript extends Script implements Gr
         return application.getMvcGroupManager().createMVCGroup(mvcType);
     }
 
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcName, @Nonnull MVCCallable<M, V, C> handler) {
-        application.getMvcGroupManager().withMVCGroup(mvcType, mvcName, handler);
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCCallable<M, V, C> handler) {
+        application.getMvcGroupManager().withMVCGroup(mvcType, mvcId, handler);
     }
 
     @Nonnull
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcName) {
-        return application.getMvcGroupManager().createMVCGroup(mvcType, mvcName);
+    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId) {
+        return application.getMvcGroupManager().createMVCGroup(mvcType, mvcId);
     }
 
     @Nonnull
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcName) {
-        return application.getMvcGroupManager().createMVCGroup(args, mvcType, mvcName);
+    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
+        return application.getMvcGroupManager().createMVCGroup(args, mvcType, mvcId);
     }
 
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcName, @Nonnull MVCCallable<M, V, C> handler) {
-        application.getMvcGroupManager().withMVCGroup(args, mvcType, mvcName, handler);
-    }
-
-    @Nonnull
-    public MVCGroup buildMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcName) {
-        return application.getMvcGroupManager().buildMVCGroup(args, mvcType, mvcName);
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCCallable<M, V, C> handler) {
+        application.getMvcGroupManager().withMVCGroup(args, mvcType, mvcId, handler);
     }
 
     @Nonnull
-    public MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull String mvcName, @Nonnull Map<String, Object> args) {
-        return application.getMvcGroupManager().buildMVCGroup(mvcType, mvcName, args);
+    public MVCGroup buildMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
+        return application.getMvcGroupManager().buildMVCGroup(args, mvcType, mvcId);
+    }
+
+    @Nonnull
+    public MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
+        return application.getMvcGroupManager().buildMVCGroup(mvcType, mvcId, args);
     }
 
     @Nonnull
@@ -176,8 +176,8 @@ public abstract class AbstractGriffonArtifactScript extends Script implements Gr
     }
 
     @Nonnull
-    public MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull String mvcName) {
-        return application.getMvcGroupManager().buildMVCGroup(mvcType, mvcName);
+    public MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId) {
+        return application.getMvcGroupManager().buildMVCGroup(mvcType, mvcId);
     }
 
     @Nonnull
@@ -199,15 +199,15 @@ public abstract class AbstractGriffonArtifactScript extends Script implements Gr
     }
 
     @Nonnull
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcName, @Nonnull Map<String, Object> args) {
-        return application.getMvcGroupManager().createMVCGroup(mvcType, mvcName, args);
+    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
+        return application.getMvcGroupManager().createMVCGroup(mvcType, mvcId, args);
     }
 
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcName, @Nonnull Map<String, Object> args, @Nonnull MVCCallable<M, V, C> handler) {
-        application.getMvcGroupManager().withMVCGroup(mvcType, mvcName, args, handler);
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCCallable<M, V, C> handler) {
+        application.getMvcGroupManager().withMVCGroup(mvcType, mvcId, args, handler);
     }
 
-    public void destroyMVCGroup(@Nonnull String mvcName) {
-        application.getMvcGroupManager().destroyMVCGroup(mvcName);
+    public void destroyMVCGroup(@Nonnull String mvcId) {
+        application.getMvcGroupManager().destroyMVCGroup(mvcId);
     }
 }

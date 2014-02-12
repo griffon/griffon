@@ -310,10 +310,10 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
         // stage 3 - destroy all mvc groups
         log.debug("Shutdown stage 3: destroy all MVC groups");
-        List<String> mvcNames = new ArrayList<>();
-        mvcNames.addAll(getMvcGroupManager().getGroups().keySet());
-        for (String name : mvcNames) {
-            getMvcGroupManager().destroyMVCGroup(name);
+        List<String> mvcIds = new ArrayList<>();
+        mvcIds.addAll(getMvcGroupManager().getGroups().keySet());
+        for (String id : mvcIds) {
+            getMvcGroupManager().destroyMVCGroup(id);
         }
 
         // stage 4 - call shutdown script

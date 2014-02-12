@@ -27,11 +27,13 @@ import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider;
 import org.codehaus.griffon.runtime.util.ResourceBundleProvider;
 
+import javax.inject.Named;
 import java.util.ResourceBundle;
 
 import static griffon.util.AnnotationUtils.named;
 
-public class ApplicationModule extends AbstractModule {
+@Named("integration")
+public class IntegrationModule extends AbstractModule {
     @Override
     protected void doConfigure() {
         bind(ResourceBundle.class)

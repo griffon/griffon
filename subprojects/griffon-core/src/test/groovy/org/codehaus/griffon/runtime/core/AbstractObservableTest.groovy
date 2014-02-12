@@ -20,7 +20,7 @@ import org.junit.Test
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 
-class AbstractObservableSpec {
+class AbstractObservableTest {
     @Test
     void observableSetup() {
         // given:

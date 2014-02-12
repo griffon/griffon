@@ -53,7 +53,7 @@ public class EnumPropertyEditor extends AbstractPropertyEditor {
         }
 
         try {
-            super.setValueInternal(isBlank(str) ? null : Enum.valueOf(enumType, str));
+            super.setValueInternal(Enum.valueOf(enumType, str));
         } catch (Exception e) {
             throw illegalValue(str, enumType, e);
         }

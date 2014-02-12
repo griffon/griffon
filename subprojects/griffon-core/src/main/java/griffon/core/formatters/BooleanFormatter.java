@@ -27,10 +27,10 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class BooleanFormatter extends AbstractFormatter<Boolean> {
-    private static final String PATTERN_BOOL = "boolean";
-    private static final String PATTERN_QUERY = "query";
-    private static final String PATTERN_SWITCH = "switch";
-    private static final String DEFAULT_PATTERN = PATTERN_BOOL;
+    public static final String PATTERN_BOOL = "boolean";
+    public static final String PATTERN_QUERY = "query";
+    public static final String PATTERN_SWITCH = "switch";
+    public static final String DEFAULT_PATTERN = PATTERN_BOOL;
 
     private static final String[] PATTERNS = new String[]{
         PATTERN_BOOL,
@@ -73,8 +73,14 @@ public class BooleanFormatter extends AbstractFormatter<Boolean> {
         }
     }
 
+    @Nonnull
+    public String getPattern() {
+        return delegate.getPattern();
+    }
+
     @Nullable
     public static Boolean parseBoolean(@Nullable String str) throws ParseException {
+        if (isBlank(str)) return null;
         for (BooleanFormatter formatter : FORMATTERS) {
             try {
                 return formatter.parse(str);
@@ -85,16 +91,17 @@ public class BooleanFormatter extends AbstractFormatter<Boolean> {
         throw parseError(str, Boolean.class);
     }
 
-    @Nonnull
+    @Nullable
     @Override
-    public String format(@Nonnull Boolean value) {
-        return delegate.format(value);
+    public String format(@Nullable Boolean value) {
+        return value == null ? null : delegate.format(value);
     }
 
     @Nullable
     @Override
+    @SuppressWarnings("ConstantConditions")
     public Boolean parse(@Nullable String str) throws ParseException {
-        return delegate.parse(str);
+        return isBlank(str) ? null : delegate.parse(str);
     }
 
     private static interface BooleanFormatterDelegate {
@@ -104,8 +111,8 @@ public class BooleanFormatter extends AbstractFormatter<Boolean> {
         @Nonnull
         String format(@Nonnull Boolean value);
 
-        @Nullable
-        Boolean parse(@Nullable String str) throws ParseException;
+        @Nonnull
+        Boolean parse(@Nonnull String str) throws ParseException;
     }
 
     private static abstract class AbstractBooleanFormatterDelegate implements BooleanFormatterDelegate {
@@ -128,9 +135,8 @@ public class BooleanFormatter extends AbstractFormatter<Boolean> {
             return bool ? tokens[1] : tokens[0];
         }
 
-        @Nullable
-        public Boolean parse(@Nullable String str) throws ParseException {
-            if (isBlank(str)) return null;
+        @Nonnull
+        public Boolean parse(@Nonnull String str) throws ParseException {
             if (tokens[0].equalsIgnoreCase(str)) {
                 return Boolean.FALSE;
             } else if (tokens[1].equalsIgnoreCase(str)) {

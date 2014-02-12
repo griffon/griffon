@@ -34,10 +34,10 @@ class MetaComponentFactory extends AbstractFactory {
             throw new IllegalArgumentException("In $name value must be an MVC group type")
         }
 
-        String mvcName = attributes.remove('mvcName')
-        mvcName = attributes.containsKey('mvcId') ? attributes.remove('mvcId') : mvcName
+        String mvcId = attributes.remove('mvcId')
+        mvcId = attributes.containsKey('mvcId') ? attributes.remove('mvcId') : mvcId
 
-        MVCGroup mvcGroup = builder.application.buildMVCGroup(mvcType, mvcName, attributes)
+        MVCGroup mvcGroup = builder.application.buildMVCGroup(mvcType, mvcId, attributes)
         def root = mvcGroup.getScriptResult('view')
 
         Closure destroyEventHandler
@@ -46,7 +46,7 @@ class MetaComponentFactory extends AbstractFactory {
                 childGroup.destroy()
                 builder.application.removeApplicationEventListener(ApplicationEvent.DESTROY_MVC_GROUP.name, destroyEventHandler)
             }
-        }.curry(mvcName, mvcGroup)
+        }.curry(mvcId, mvcGroup)
         builder.application.addApplicationEventListener(ApplicationEvent.DESTROY_MVC_GROUP.name, destroyEventHandler)
 
         builder.context.root = root
