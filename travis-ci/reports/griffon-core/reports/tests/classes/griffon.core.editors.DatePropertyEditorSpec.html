@@ -22,13 +22,13 @@
 <tr>
 <td>
 <div class="infoBox" id="tests">
-<div class="counter">6</div>
+<div class="counter">18</div>
 <p>tests</p>
 </div>
 </td>
 <td>
 <div class="infoBox" id="failures">
-<div class="counter">0</div>
+<div class="counter">2</div>
 <p>failures</p>
 </div>
 </td>
@@ -40,7 +40,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.010s</div>
+<div class="counter">0.044s</div>
 <p>duration</p>
 </div>
 </td>
@@ -49,8 +49,8 @@
 </div>
 </td>
 <td>
-<div class="infoBox success" id="successRate">
-<div class="percent">100%</div>
+<div class="infoBox failures" id="successRate">
+<div class="percent">88%</div>
 <p>successful</p>
 </div>
 </td>
@@ -60,10 +60,50 @@
 <div id="tabs">
 <ul class="tabLinks">
 <li>
-<a href="#tab0">Tests</a>
+<a href="#tab0">Failed tests</a>
+</li>
+<li>
+<a href="#tab1">Tests</a>
 </li>
 </ul>
 <div id="tab0" class="tab">
+<h2>Failed tests</h2>
+<div class="test">
+<a name="Date literal '1/1/70 12:00 AM' with format 'null' should be equal to Wed Dec 31 23:00:00 UTC 1969"></a>
+<h3 class="failures">Date literal '1/1/70 12:00 AM' with format 'null' should be equal to Wed Dec 31 23:00:00 UTC 1969</h3>
+<span class="code">
+<pre>Condition not satisfied:
+
+value == editor.value
+|     |  |      |
+|     |  |      Thu Jan 01 00:00:00 UTC 1970
+|     |  griffon.core.editors.DatePropertyEditor@403d1c18
+|     false
+Wed Dec 31 23:00:00 UTC 1969
+
+	at griffon.core.editors.DatePropertyEditorSpec.Date literal '#literal' with format '#format' should be equal to #value(DatePropertyEditorSpec.groovy:35)
+</pre>
+</span>
+</div>
+<div class="test">
+<a name="Date literal '1970-01-01 00:00:00' with format 'yyyy-MM-dd HH:mm:ss' should be equal to Wed Dec 31 23:00:00 UTC 1969"></a>
+<h3 class="failures">Date literal '1970-01-01 00:00:00' with format 'yyyy-MM-dd HH:mm:ss' should be equal to Wed Dec 31 23:00:00 UTC 1969</h3>
+<span class="code">
+<pre>Condition not satisfied:
+
+value == editor.value
+|     |  |      |
+|     |  |      Thu Jan 01 00:00:00 UTC 1970
+|     |  griffon.core.editors.DatePropertyEditor@902375a
+|     false
+Wed Dec 31 23:00:00 UTC 1969
+
+	at griffon.core.editors.DatePropertyEditorSpec.Date literal '#literal' with format '#format' should be equal to #value(DatePropertyEditorSpec.groovy:35)
+</pre>
+</span>
+</div>
+</div>
+<div id="tab1" class="tab">
 <h2>Tests</h2>
 <table>
 <thead>
@@ -74,18 +114,78 @@
 </tr>
 </thead>
 <tr>
+<td class="success">Date literal '' with format 'null' should be equal to null</td>
+<td>0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Date literal '' with format 'yyyy-MM-dd HH:mm:ss' should be equal to null</td>
+<td>0.004s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Date literal '-3600000' with format 'null' should be equal to Wed Dec 31 23:00:00 UTC 1969</td>
+<td>0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Date literal '-3600000' with format 'null' should be equal to Wed Dec 31 23:00:00 UTC 1969</td>
+<td>0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Date literal '-3600000' with format 'yyyy-MM-dd HH:mm:ss' should be equal to Wed Dec 31 23:00:00 UTC 1969</td>
+<td>0s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="failures">Date literal '1/1/70 12:00 AM' with format 'null' should be equal to Wed Dec 31 23:00:00 UTC 1969</td>
+<td>0.010s</td>
+<td class="failures">failed</td>
+</tr>
+<tr>
+<td class="failures">Date literal '1970-01-01 00:00:00' with format 'yyyy-MM-dd HH:mm:ss' should be equal to Wed Dec 31 23:00:00 UTC 1969</td>
+<td>0.010s</td>
+<td class="failures">failed</td>
+</tr>
+<tr>
+<td class="success">Date literal 'Wed Dec 31 23:00:00 UTC 1969' with format 'null' should be equal to Wed Dec 31 23:00:00 UTC 1969</td>
+<td>0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Date literal 'Wed Dec 31 23:00:00 UTC 1969' with format 'yyyy-MM-dd HH:mm:ss' should be equal to Wed Dec 31 23:00:00 UTC 1969</td>
+<td>0s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Date literal 'java.util.GregorianCalendar[time=-3600000,areFieldsSet=true,areAllFieldsSet=true,lenient=true,zone=sun.util.calendar.ZoneInfo[id=&quot;Etc/UTC&quot;,offset=0,dstSavings=0,useDaylight=false,transitions=0,lastRule=null],firstDayOfWeek=1,minimalDaysInFirstWeek=1,ERA=1,YEAR=1969,MONTH=11,WEEK_OF_YEAR=1,WEEK_OF_MONTH=5,DAY_OF_MONTH=31,DAY_OF_YEAR=365,DAY_OF_WEEK=4,DAY_OF_WEEK_IN_MONTH=5,AM_PM=1,HOUR=11,HOUR_OF_DAY=23,MINUTE=0,SECOND=0,MILLISECOND=0,ZONE_OFFSET=0,DST_OFFSET=0]' with format 'null' should be equal to Wed Dec 31 23:00:00 UTC 1969</td>
+<td>0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Date literal 'java.util.GregorianCalendar[time=-3600000,areFieldsSet=true,areAllFieldsSet=true,lenient=true,zone=sun.util.calendar.ZoneInfo[id=&quot;Etc/UTC&quot;,offset=0,dstSavings=0,useDaylight=false,transitions=0,lastRule=null],firstDayOfWeek=1,minimalDaysInFirstWeek=1,ERA=1,YEAR=1969,MONTH=11,WEEK_OF_YEAR=1,WEEK_OF_MONTH=5,DAY_OF_MONTH=31,DAY_OF_YEAR=365,DAY_OF_WEEK=4,DAY_OF_WEEK_IN_MONTH=5,AM_PM=1,HOUR=11,HOUR_OF_DAY=23,MINUTE=0,SECOND=0,MILLISECOND=0,ZONE_OFFSET=0,DST_OFFSET=0]' with format 'yyyy-MM-dd HH:mm:ss' should be equal to Wed Dec 31 23:00:00 UTC 1969</td>
+<td>0s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Date literal 'null' with format 'null' should be equal to null</td>
+<td>0.008s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
 <td class="success">Invalid date literal '[1, 2, 3]'</td>
 <td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Invalid date literal '[:]'</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Invalid date literal '[]'</td>
-<td>0.001s</td>
+<td>0.002s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -95,11 +195,11 @@
 </tr>
 <tr>
 <td class="success">Invalid date literal 'garbage'</td>
-<td>0.007s</td>
+<td>0.002s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Invalid date literal 'java.lang.Object@17e48d5e'</td>
+<td class="success">Invalid date literal 'java.lang.Object@1edd855d'</td>
 <td>0.001s</td>
 <td class="success">passed</td>
 </tr>
@@ -108,7 +208,7 @@
 </div>
 <div id="footer">
 <p>Generated by 
-<a href="http://www.gradle.org">Gradle 1.11</a> at Feb 11, 2014 10:13:41 PM</p>
+<a href="http://www.gradle.org">Gradle 1.11</a> at Feb 12, 2014 6:46:18 PM</p>
 </div>
 </div>
 </body>
