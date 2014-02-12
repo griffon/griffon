@@ -4,7 +4,7 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   #copy data were interested in to other place
   for projectDir in subprojects plugins samples
   do
-    for project in `ls $TRAVIS_BUILD_DIR/projectDir`
+    for project in `ls $TRAVIS_BUILD_DIR/$projectDir`
     do
       rm -rf $HOME/travis-ci/reports/$project
       mkdir -p $HOME/travis-ci/reports/$project
