@@ -30,9 +30,12 @@ class DatePropertyEditorSpec extends PropertyEditorSpecSupport {
         editor.format = format
         editor.value = literal
 
+        Date v1 = value ? clearTime(value) : value
+        Date v2 = editor.value ? clearTime(editor.value) : editor.value
+
         then:
 
-        value == editor.value
+        v1?.time == v2?.time
 
         where:
         literal               | format                | value

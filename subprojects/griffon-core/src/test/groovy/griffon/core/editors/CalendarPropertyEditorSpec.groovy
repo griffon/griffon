@@ -30,9 +30,12 @@ class CalendarPropertyEditorSpec extends PropertyEditorSpecSupport {
         editor.format = format
         editor.value = literal
 
+        Calendar v1 = value ? clearTime(value) : value
+        Calendar v2 = editor.value ? clearTime(editor.value) : editor.value
+
         then:
 
-        value?.time == editor.value?.time
+        v1?.time == v2?.time
 
         where:
         literal               | format                | value

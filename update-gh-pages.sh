@@ -2,34 +2,17 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   echo -e "Starting gh-pages update\n"
 
   #copy data were interested in to other place
-  for project in `ls $TRAVIS_BUILD_DIR/subprojects`
+  for projectDir in subprojects plugins samples
   do
+    for project in `ls $TRAVIS_BUILD_DIR/projectDir`
+    do
       rm -rf $HOME/travis-ci/reports/$project
       mkdir -p $HOME/travis-ci/reports/$project
-      if [ -d "$TRAVIS_BUILD_DIR/subprojects/$project/build/reports/" ]; then
-          echo -e "Copying $TRAVIS_BUILD_DIR/subprojects/$project/build/reports"
-          cp -R "$TRAVIS_BUILD_DIR/subprojects/$project/build/reports/" "$HOME/travis-ci/reports/$project"
+      if [ -d "$TRAVIS_BUILD_DIR/$projectDir/$project/build/reports/" ]; then
+          echo -e "Copying $TRAVIS_BUILD_DIR/$projectDir/$project/build/reports"
+          cp -R "$TRAVIS_BUILD_DIR/$projectDir/$project/build/reports/" "$HOME/travis-ci/reports/$project"
       fi
-  done
-
-  for project in `ls $TRAVIS_BUILD_DIR/plugins`
-  do
-      rm -rf $HOME/travis-ci/reports/$project
-      mkdir -p $HOME/travis-ci/reports/$project
-      if [ -d "$TRAVIS_BUILD_DIR/plugins/$project/build/reports/" ]; then
-          echo -e "Copying $TRAVIS_BUILD_DIR/plugins/$project/build/reports"
-          cp -R "$TRAVIS_BUILD_DIR/plugins/$project/build/reports/" "$HOME/travis-ci/reports/$project"
-      fi
-  done
-
-  for project in `ls $TRAVIS_BUILD_DIR/samples`
-  do
-      rm -rf $HOME/travis-ci/reports/$project
-      mkdir -p $HOME/travis-ci/reports/$project
-      if [ -d "$TRAVIS_BUILD_DIR/samples/$project/build/reports/" ]; then
-          echo -e "Copying $TRAVIS_BUILD_DIR/samples/$project/build/reports"
-          cp -R "$TRAVIS_BUILD_DIR/samples/$project/build/reports/" "$HOME/travis-ci/reports/$project"
-      fi
+    done
   done
 
   #go to home and setup git

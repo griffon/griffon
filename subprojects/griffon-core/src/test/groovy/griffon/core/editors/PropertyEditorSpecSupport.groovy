@@ -30,15 +30,35 @@ abstract class PropertyEditorSpecSupport extends Specification {
         Locale.default = defaultLocale
     }
 
-    public static Date epochAsDate() {
+    static Date epochAsDate() {
         // Thu Jan 01 00:00:00 1970
-        new Date(-3600000)
+        clearTime(new Date(0))
     }
 
-    public static Calendar epochAsCalendar() {
-        // Thu Jan 01 00:00:00 2000
+    static Calendar epochAsCalendar() {
+        // Thu Jan 01 00:00:00 1970
         Calendar c = Calendar.getInstance()
         c.time = epochAsDate()
         c
+    }
+
+    private static void clearTimeCommon(final Calendar self) {
+        self.set(Calendar.HOUR_OF_DAY, 0)
+        self.clear(Calendar.MINUTE)
+        self.clear(Calendar.SECOND)
+        self.clear(Calendar.MILLISECOND)
+    }
+
+    static Date clearTime(final Date self) {
+        Calendar calendar = Calendar.getInstance()
+        calendar.setTime(self)
+        clearTimeCommon(calendar)
+        self.setTime(calendar.getTime().getTime())
+        return self
+    }
+
+    static Calendar clearTime(final Calendar self) {
+        clearTimeCommon(self)
+        return self
     }
 }

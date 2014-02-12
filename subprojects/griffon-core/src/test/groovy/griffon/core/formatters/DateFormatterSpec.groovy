@@ -27,13 +27,16 @@ class DateFormatterSpec extends FormatterSpecSupport {
         String str = formatter.format(value)
         Date val = formatter.parse(str)
 
+        Date v1 = value ? clearTime(value) : value
+        Date v2 = val ? clearTime(val) : val
+
         then:
         str == literal
-        val == value
+        v1 == v2
 
         where:
-        value   | literal
-        epoch() | '1/1/70 12:00 AM'
+        value         | literal
+        epochAsDate() | '1/1/70 12:00 AM'
     }
 
     void "Date '#value' with pattern '#pattern' produces literal '#literal'"() {
@@ -44,14 +47,17 @@ class DateFormatterSpec extends FormatterSpecSupport {
         String str = formatter.format(value)
         Date val = formatter.parse(str)
 
+        Date v1 = value ? clearTime(value) : value
+        Date v2 = val ? clearTime(val) : val
+
         then:
         str == literal
-        val?.time == value?.time
+        v1?.time == v2?.time
 
         where:
-        pattern      | value   | literal
-        'yyyy-MM-dd' | null    | null
-        'yyyy-MM-dd' | epoch() | '1970-01-01'
+        pattern      | value         | literal
+        'yyyy-MM-dd' | null          | null
+        'yyyy-MM-dd' | epochAsDate() | '1970-01-01'
     }
 
     void "Parse error for pattern '#pattern' with literal '#literal'"() {
@@ -78,10 +84,5 @@ class DateFormatterSpec extends FormatterSpecSupport {
 
         where:
         pattern << [';garbage*@%&']
-    }
-
-    private static Date epoch() {
-        // Thu Jan 01 00:00:00 1970
-        new Date(-3600000)
     }
 }

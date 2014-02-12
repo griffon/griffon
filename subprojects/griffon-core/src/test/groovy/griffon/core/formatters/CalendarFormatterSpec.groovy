@@ -27,13 +27,20 @@ class CalendarFormatterSpec extends FormatterSpecSupport {
         String str = formatter.format(value)
         Calendar val = formatter.parse(str)
 
+        Calendar v1 = value ? clearTime(value) : value
+        Calendar v2 = val ? clearTime(val) : val
+
+        then:
+
+        v1?.time == v2?.time
+
         then:
         str == literal
-        val == value
+        v1 == v2
 
         where:
-        value   | literal
-        epoch() | '1/1/70 12:00 AM'
+        value             | literal
+        epochAsCalendar() | '1/1/70 12:00 AM'
     }
 
     void "Calendar '#value' with pattern '#pattern' produces literal '#literal'"() {
@@ -44,14 +51,17 @@ class CalendarFormatterSpec extends FormatterSpecSupport {
         String str = formatter.format(value)
         Calendar val = formatter.parse(str)
 
+        Calendar v1 = value ? clearTime(value) : value
+        Calendar v2 = val ? clearTime(val) : val
+
         then:
         str == literal
-        val?.time?.time == value?.time?.time
+        v1?.time?.time == v2?.time?.time
 
         where:
-        pattern      | value   | literal
-        'yyyy-MM-dd' | null    | null
-        'yyyy-MM-dd' | epoch() | '1970-01-01'
+        pattern      | value             | literal
+        'yyyy-MM-dd' | null              | null
+        'yyyy-MM-dd' | epochAsCalendar() | '1970-01-01'
     }
 
     void "Parse error for pattern '#pattern' with literal '#literal'"() {
@@ -78,12 +88,5 @@ class CalendarFormatterSpec extends FormatterSpecSupport {
 
         where:
         pattern << [';garbage*@%&']
-    }
-
-    private static Calendar epoch() {
-        // Thu Jan 01 00:00:00 1970
-        Calendar c = Calendar.getInstance()
-        c.time = new Date(-3600000)
-        c
     }
 }
