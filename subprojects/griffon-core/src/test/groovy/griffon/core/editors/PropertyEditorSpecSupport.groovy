@@ -47,6 +47,7 @@ abstract class PropertyEditorSpecSupport extends Specification {
         self.clear(Calendar.MINUTE)
         self.clear(Calendar.SECOND)
         self.clear(Calendar.MILLISECOND)
+        self.setTimeZone(TimeZone.getTimeZone('GMT'))
     }
 
     static Date clearTime(final Date self) {

@@ -42,13 +42,13 @@ class CalendarPropertyEditorSpec extends PropertyEditorSpecSupport {
         null                  | null                  | null
         ''                    | null                  | null
         '1/1/70 12:00 AM'     | null                  | epochAsCalendar()
-        '-3600000'            | null                  | epochAsCalendar()
-        -3600000              | null                  | epochAsCalendar()
+        '0'                   | null                  | epochAsCalendar()
+        0                     | null                  | epochAsCalendar()
         epochAsDate()         | null                  | epochAsCalendar()
         epochAsCalendar()     | null                  | epochAsCalendar()
         ''                    | 'yyyy-MM-dd HH:mm:ss' | null
         '1970-01-01 00:00:00' | 'yyyy-MM-dd HH:mm:ss' | epochAsCalendar()
-        -3600000              | 'yyyy-MM-dd HH:mm:ss' | epochAsCalendar()
+        0                     | 'yyyy-MM-dd HH:mm:ss' | epochAsCalendar()
         epochAsDate()         | 'yyyy-MM-dd HH:mm:ss' | epochAsCalendar()
         epochAsCalendar()     | 'yyyy-MM-dd HH:mm:ss' | epochAsCalendar()
     }
