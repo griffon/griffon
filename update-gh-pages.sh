@@ -2,22 +2,33 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   echo -e "Starting gh-pages update\n"
 
   #copy data were interested in to other place
-  for project in core groovy guice swing javafx pivot lanterna
+  for project in `ls $TRAVIS_BUILD_DIR/subprojects`
   do
-      rm -rf $HOME/travis-ci/reports/griffon-$project
-      mkdir -p $HOME/travis-ci/reports/griffon-$project
-      if [ -d "$TRAVIS_BUILD_DIR/subprojects/griffon-$project/build/reports/" ]; then
-          echo -e "Copying $TRAVIS_BUILD_DIR/subprojects/griffon-$project/build/reports"
-          cp -R "$TRAVIS_BUILD_DIR/subprojects/griffon-$project/build/reports/" "$HOME/travis-ci/reports/griffon-$project"
+      rm -rf $HOME/travis-ci/reports/$project
+      mkdir -p $HOME/travis-ci/reports/$project
+      if [ -d "$TRAVIS_BUILD_DIR/subprojects/$project/build/reports/" ]; then
+          echo -e "Copying $TRAVIS_BUILD_DIR/subprojects/$project/build/reports"
+          cp -R "$TRAVIS_BUILD_DIR/subprojects/$project/build/reports/" "$HOME/travis-ci/reports/$project"
       fi
   done
-  for plugin in datasource theme preferences shiro tasks
+
+  for project in `ls $TRAVIS_BUILD_DIR/plugins`
   do
-      rm -rf $HOME/travis-ci/reports/griffon-${plugin}-plugin/
-      mkdir -p $HOME/travis-ci/reports/griffon-${plugin}-plugin/
-      if [ -d "$TRAVIS_BUILD_DIR/plugins/griffon-${plugin}-plugin/build/reports/" ]; then
-          echo -e "$TRAVIS_BUILD_DIR/plugins/griffon-${plugin}-plugin/build/reports"
-          cp -R "$TRAVIS_BUILD_DIR/plugins/griffon-${plugin}-plugin/build/reports/" "$HOME/travis-ci/reports/griffon-${plugin}-plugin/"
+      rm -rf $HOME/travis-ci/reports/$project
+      mkdir -p $HOME/travis-ci/reports/$project
+      if [ -d "$TRAVIS_BUILD_DIR/plugins/$project/build/reports/" ]; then
+          echo -e "Copying $TRAVIS_BUILD_DIR/plugins/$project/build/reports"
+          cp -R "$TRAVIS_BUILD_DIR/plugins/$project/build/reports/" "$HOME/travis-ci/reports/$project"
+      fi
+  done
+
+  for project in `ls $TRAVIS_BUILD_DIR/samples`
+  do
+      rm -rf $HOME/travis-ci/reports/$project
+      mkdir -p $HOME/travis-ci/reports/$project
+      if [ -d "$TRAVIS_BUILD_DIR/samples/$project/build/reports/" ]; then
+          echo -e "Copying $TRAVIS_BUILD_DIR/samples/$project/build/reports"
+          cp -R "$TRAVIS_BUILD_DIR/samples/$project/build/reports/" "$HOME/travis-ci/reports/$project"
       fi
   done
 
