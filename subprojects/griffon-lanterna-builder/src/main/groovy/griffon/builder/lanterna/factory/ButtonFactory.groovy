@@ -33,14 +33,14 @@ class ButtonFactory extends ComponentFactory {
         }
 
         def text = attributes.remove('text')
-        if (text == null && value instanceof CharSequence) text = value
+        if (text == null && value instanceof CharSequence) text = String.valueOf(value)
         text = text != null ? text.toString() : ''
 
         def action = attributes.remove('action')
         if (action instanceof Runnable || action instanceof Action) {
             action = new LanternaAction(action)
-        } else if (action instanceof Action) {
-            action = new LanternaAction()
+        } else if (action != null && !(action instanceof Action)) {
+            throw new IllegalArgumentException("In $name action: is not a Runnable nor an Action")
         }
 
         new MutableButton(text, action)
