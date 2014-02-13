@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<BugCollection version="2.0.2" sequence="0" timestamp="1392243490088" analysisTimestamp="1392243490135" release="">
+<BugCollection version="2.0.2" sequence="0" timestamp="1392273702290" analysisTimestamp="1392273702329" release="">
   <Project projectName="">
-    <Jar>/home/travis/build/aalmiray/griffon2/plugins/griffon-datasource-lombok-compile/build/classes/main/lombok/javac/handlers/HandleDataSourceAware$1.class</Jar>
+    <Jar>/home/travis/build/aalmiray/griffon2/plugins/griffon-datasource-lombok-compile/build/classes/main/lombok/core/handlers/DataSourceAwareHandler.class</Jar>
     <Jar>/home/travis/build/aalmiray/griffon2/plugins/griffon-datasource-lombok-compile/build/classes/main/lombok/javac/handlers/HandleDataSourceAware$JavacDataSourceAwareHandler.class</Jar>
     <Jar>/home/travis/build/aalmiray/griffon2/plugins/griffon-datasource-lombok-compile/build/classes/main/lombok/javac/handlers/HandleDataSourceAware.class</Jar>
-    <Jar>/home/travis/build/aalmiray/griffon2/plugins/griffon-datasource-lombok-compile/build/classes/main/lombok/eclipse/handlers/HandleDataSourceAware$1.class</Jar>
+    <Jar>/home/travis/build/aalmiray/griffon2/plugins/griffon-datasource-lombok-compile/build/classes/main/lombok/javac/handlers/HandleDataSourceAware$1.class</Jar>
     <Jar>/home/travis/build/aalmiray/griffon2/plugins/griffon-datasource-lombok-compile/build/classes/main/lombok/eclipse/handlers/HandleDataSourceAware.class</Jar>
+    <Jar>/home/travis/build/aalmiray/griffon2/plugins/griffon-datasource-lombok-compile/build/classes/main/lombok/eclipse/handlers/HandleDataSourceAware$1.class</Jar>
     <Jar>/home/travis/build/aalmiray/griffon2/plugins/griffon-datasource-lombok-compile/build/classes/main/lombok/eclipse/handlers/HandleDataSourceAware$EclipseDataSourceAwareHandler.class</Jar>
-    <Jar>/home/travis/build/aalmiray/griffon2/plugins/griffon-datasource-lombok-compile/build/classes/main/lombok/core/handlers/DataSourceAwareHandler.class</Jar>
     <Jar>/home/travis/build/aalmiray/griffon2/plugins/griffon-datasource-lombok-compile/build/classes/main/lombok/intellij/processor/clazz/DataSourceAwareProcessor.class</Jar>
     <Jar>/home/travis/build/aalmiray/griffon2/plugins/griffon-datasource-lombok-compile/build/classes/main/META-INF/services/lombok.eclipse.EclipseAnnotationHandler</Jar>
     <Jar>/home/travis/build/aalmiray/griffon2/plugins/griffon-datasource-lombok-compile/build/classes/main/META-INF/services/de.plushnikov.intellij.lombok.processor.LombokProcessor</Jar>
@@ -42,9 +42,9 @@
     <AuxClasspathEntry>/home/travis/build/aalmiray/griffon2/plugins/lombok-deps/lib/extensions-11.1.4.jar</AuxClasspathEntry>
     <AuxClasspathEntry>/home/travis/build/aalmiray/griffon2/plugins/lombok-deps/lib/util-11.1.4.jar</AuxClasspathEntry>
     <AuxClasspathEntry>/home/travis/build/aalmiray/griffon2/plugins/lombok-deps/lib/annotations-11.1.4.jar</AuxClasspathEntry>
+    <SrcDir>/home/travis/build/aalmiray/griffon2/plugins/griffon-datasource-lombok-compile/src/main/java/lombok/core/handlers/DataSourceAwareHandler.java</SrcDir>
     <SrcDir>/home/travis/build/aalmiray/griffon2/plugins/griffon-datasource-lombok-compile/src/main/java/lombok/javac/handlers/HandleDataSourceAware.java</SrcDir>
     <SrcDir>/home/travis/build/aalmiray/griffon2/plugins/griffon-datasource-lombok-compile/src/main/java/lombok/eclipse/handlers/HandleDataSourceAware.java</SrcDir>
-    <SrcDir>/home/travis/build/aalmiray/griffon2/plugins/griffon-datasource-lombok-compile/src/main/java/lombok/core/handlers/DataSourceAwareHandler.java</SrcDir>
     <SrcDir>/home/travis/build/aalmiray/griffon2/plugins/griffon-datasource-lombok-compile/src/main/java/lombok/intellij/processor/clazz/DataSourceAwareProcessor.java</SrcDir>
     <SrcDir>/home/travis/build/aalmiray/griffon2/plugins/griffon-datasource-lombok-compile/src/main/java/org/codehaus/griffon/compile/datasource/DataSourceAwareConstants.java</SrcDir>
     <SrcDir>/home/travis/build/aalmiray/griffon2/plugins/griffon-datasource-lombok-compile/src/main/java/griffon/transform/DataSourceAware.java</SrcDir>
@@ -151,7 +151,7 @@
       <StackTrace>org.gradle.process.internal.launcher.GradleWorkerMain.main(GradleWorkerMain.java:37)</StackTrace>
     </Error>
   </Errors>
-  <FindBugsSummary timestamp="Wed, 12 Feb 2014 22:18:10 +0000" total_classes="10" referenced_classes="96" total_bugs="0" total_size="73" num_packages="6" vm_version="24.51-b03" cpu_seconds="19.26" clock_seconds="7.82" peak_mbytes="144.65" alloc_mbytes="683.00" gc_seconds="0.07">
+  <FindBugsSummary timestamp="Thu, 13 Feb 2014 06:41:42 +0000" total_classes="10" referenced_classes="96" total_bugs="0" total_size="73" num_packages="6" vm_version="24.51-b03" cpu_seconds="20.50" clock_seconds="7.64" peak_mbytes="144.72" alloc_mbytes="683.00" gc_seconds="0.08">
     <PackageStats package="griffon.transform" total_bugs="0" total_types="1" total_size="1">
       <ClassStats class="griffon.transform.DataSourceAware" sourceFile="DataSourceAware.java" interface="true" size="1" bugs="0"/>
     </PackageStats>
@@ -175,19 +175,20 @@
       <ClassStats class="org.codehaus.griffon.compile.datasource.DataSourceAwareConstants" sourceFile="DataSourceAwareConstants.java" interface="true" size="17" bugs="0"/>
     </PackageStats>
     <FindBugsProfile>
-      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassInfoAnalysisEngine" totalMilliseconds="1712" invocations="915" avgMicrosecondsPerInvocation="1871" maxMicrosecondsPerInvocation="47722" standardDeviationMircosecondsPerInvocation="4365"/>
-      <ClassProfile name="edu.umd.cs.findbugs.detect.FieldItemSummary" totalMilliseconds="693" invocations="96" avgMicrosecondsPerInvocation="7222" maxMicrosecondsPerInvocation="110233" standardDeviationMircosecondsPerInvocation="15949"/>
-      <ClassProfile name="edu.umd.cs.findbugs.OpcodeStack$JumpInfoFactory" totalMilliseconds="507" invocations="340" avgMicrosecondsPerInvocation="1492" maxMicrosecondsPerInvocation="64798" standardDeviationMircosecondsPerInvocation="4397"/>
-      <ClassProfile name="edu.umd.cs.findbugs.util.TopologicalSort" totalMilliseconds="436" invocations="878" avgMicrosecondsPerInvocation="497" maxMicrosecondsPerInvocation="10164" standardDeviationMircosecondsPerInvocation="1188"/>
-      <ClassProfile name="edu.umd.cs.findbugs.detect.NoteDirectlyRelevantTypeQualifiers" totalMilliseconds="388" invocations="96" avgMicrosecondsPerInvocation="4044" maxMicrosecondsPerInvocation="49445" standardDeviationMircosecondsPerInvocation="7893"/>
-      <ClassProfile name="edu.umd.cs.findbugs.detect.BuildObligationPolicyDatabase" totalMilliseconds="235" invocations="96" avgMicrosecondsPerInvocation="2449" maxMicrosecondsPerInvocation="23070" standardDeviationMircosecondsPerInvocation="4423"/>
-      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.JavaClassAnalysisEngine" totalMilliseconds="215" invocations="130" avgMicrosecondsPerInvocation="1654" maxMicrosecondsPerInvocation="30788" standardDeviationMircosecondsPerInvocation="3913"/>
-      <ClassProfile name="edu.umd.cs.findbugs.detect.FunctionsThatMightBeMistakenForProcedures" totalMilliseconds="172" invocations="96" avgMicrosecondsPerInvocation="1792" maxMicrosecondsPerInvocation="20535" standardDeviationMircosecondsPerInvocation="3486"/>
-      <ClassProfile name="edu.umd.cs.findbugs.classfile.impl.ZipCodeBaseFactory" totalMilliseconds="151" invocations="42" avgMicrosecondsPerInvocation="3617" maxMicrosecondsPerInvocation="140860" standardDeviationMircosecondsPerInvocation="21435"/>
-      <ClassProfile name="edu.umd.cs.findbugs.detect.CalledMethods" totalMilliseconds="151" invocations="96" avgMicrosecondsPerInvocation="1574" maxMicrosecondsPerInvocation="21581" standardDeviationMircosecondsPerInvocation="3160"/>
-      <ClassProfile name="edu.umd.cs.findbugs.detect.OverridingEqualsNotSymmetrical" totalMilliseconds="145" invocations="96" avgMicrosecondsPerInvocation="1518" maxMicrosecondsPerInvocation="14036" standardDeviationMircosecondsPerInvocation="2682"/>
-      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.IsNullValueDataflowFactory" totalMilliseconds="124" invocations="13" avgMicrosecondsPerInvocation="9556" maxMicrosecondsPerInvocation="81490" standardDeviationMircosecondsPerInvocation="21053"/>
-      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassDataAnalysisEngine" totalMilliseconds="121" invocations="920" avgMicrosecondsPerInvocation="132" maxMicrosecondsPerInvocation="1611" standardDeviationMircosecondsPerInvocation="110"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassInfoAnalysisEngine" totalMilliseconds="1560" invocations="915" avgMicrosecondsPerInvocation="1705" maxMicrosecondsPerInvocation="47185" standardDeviationMircosecondsPerInvocation="3944"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FieldItemSummary" totalMilliseconds="663" invocations="96" avgMicrosecondsPerInvocation="6908" maxMicrosecondsPerInvocation="92798" standardDeviationMircosecondsPerInvocation="14429"/>
+      <ClassProfile name="edu.umd.cs.findbugs.OpcodeStack$JumpInfoFactory" totalMilliseconds="463" invocations="340" avgMicrosecondsPerInvocation="1362" maxMicrosecondsPerInvocation="55929" standardDeviationMircosecondsPerInvocation="3811"/>
+      <ClassProfile name="edu.umd.cs.findbugs.util.TopologicalSort" totalMilliseconds="411" invocations="878" avgMicrosecondsPerInvocation="468" maxMicrosecondsPerInvocation="9708" standardDeviationMircosecondsPerInvocation="1097"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.NoteDirectlyRelevantTypeQualifiers" totalMilliseconds="365" invocations="96" avgMicrosecondsPerInvocation="3805" maxMicrosecondsPerInvocation="46899" standardDeviationMircosecondsPerInvocation="7548"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.BuildObligationPolicyDatabase" totalMilliseconds="212" invocations="96" avgMicrosecondsPerInvocation="2211" maxMicrosecondsPerInvocation="20249" standardDeviationMircosecondsPerInvocation="3835"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.JavaClassAnalysisEngine" totalMilliseconds="201" invocations="130" avgMicrosecondsPerInvocation="1548" maxMicrosecondsPerInvocation="27464" standardDeviationMircosecondsPerInvocation="3574"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FunctionsThatMightBeMistakenForProcedures" totalMilliseconds="162" invocations="96" avgMicrosecondsPerInvocation="1694" maxMicrosecondsPerInvocation="21845" standardDeviationMircosecondsPerInvocation="3333"/>
+      <ClassProfile name="edu.umd.cs.findbugs.ba.npe.NullDerefAndRedundantComparisonFinder" totalMilliseconds="152" invocations="13" avgMicrosecondsPerInvocation="11767" maxMicrosecondsPerInvocation="119736" standardDeviationMircosecondsPerInvocation="31284"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.IsNullValueDataflowFactory" totalMilliseconds="150" invocations="13" avgMicrosecondsPerInvocation="11538" maxMicrosecondsPerInvocation="105661" standardDeviationMircosecondsPerInvocation="27384"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.CalledMethods" totalMilliseconds="145" invocations="96" avgMicrosecondsPerInvocation="1515" maxMicrosecondsPerInvocation="19097" standardDeviationMircosecondsPerInvocation="2914"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.impl.ZipCodeBaseFactory" totalMilliseconds="138" invocations="42" avgMicrosecondsPerInvocation="3308" maxMicrosecondsPerInvocation="128634" standardDeviationMircosecondsPerInvocation="19575"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.OverridingEqualsNotSymmetrical" totalMilliseconds="135" invocations="96" avgMicrosecondsPerInvocation="1411" maxMicrosecondsPerInvocation="13274" standardDeviationMircosecondsPerInvocation="2489"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.UnconditionalValueDerefDataflowFactory" totalMilliseconds="124" invocations="13" avgMicrosecondsPerInvocation="9582" maxMicrosecondsPerInvocation="90497" standardDeviationMircosecondsPerInvocation="23477"/>
     </FindBugsProfile>
   </FindBugsSummary>
   <ClassFeatures></ClassFeatures>
