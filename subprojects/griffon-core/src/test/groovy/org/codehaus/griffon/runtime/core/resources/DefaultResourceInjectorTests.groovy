@@ -51,6 +51,7 @@ class DefaultResourceInjectorTests {
         assert bean.@fieldWithKeyAndArgs == 'with_args 1 2'
         assert bean.@fieldWithKeyNoArgsWithDefault == 'DEFAULT_NO_ARGS'
         assert bean.@fieldWithKeyWithArgsWithDefault == 'DEFAULT_WITH_ARGS'
+        assert !bean.@notFound
     }
 
     static final class TestModule extends AbstractModule {

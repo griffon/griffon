@@ -17,11 +17,13 @@ package org.codehaus.griffon.runtime.core.storage
 
 import griffon.core.Configuration
 import griffon.core.GriffonApplication
+import griffon.core.event.EventRouter
 import griffon.core.storage.ObjectFactory
 import griffon.util.AbstractMapResourceBundle
 import griffon.util.ExpandableResourceBundle
 import integration.TestGriffonApplication
 import org.codehaus.griffon.runtime.core.AbstractConfiguration
+import org.codehaus.griffon.runtime.core.event.DefaultEventRouter
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -32,13 +34,14 @@ class DefaultObjectFactorySpec extends Specification {
     void "Find config under #key"() {
         given:
         def configuration = new TestConfiguration()
-        def application = new TestGriffonApplication()
+        def application = new DummyGriffonApplication()
         ObjectFactory factory = new DefaultObjectFactory(configuration, application)
 
         when:
         factory.singleKey = singleKey
         factory.pluralKey = pluralKey
         String actual = factory.create(key)
+        factory.event('RandomEvent', [])
 
         then:
         actual == expected
@@ -56,6 +59,16 @@ class DefaultObjectFactorySpec extends Specification {
         's'       | 'ss'      | 'default'     | null
         's'       | 'ss'      | 'internal'    | null
         's'       | 'ss'      | 'nonexistant' | null
+    }
+
+    private
+    static class DummyGriffonApplication extends TestGriffonApplication {
+        EventRouter eventRouter = new DefaultEventRouter()
+
+        @Override
+        EventRouter getEventRouter() {
+            eventRouter
+        }
     }
 }
 
@@ -106,7 +119,9 @@ class DefaultObjectFactory extends AbstractObjectFactory<String> {
     private String singleKey = 'string'
     private String pluralKey = 'strings'
 
-    DefaultObjectFactory(@Nonnull Configuration configuration, @Nonnull GriffonApplication application) {
+    DefaultObjectFactory(
+        @Nonnull Configuration configuration,
+        @Nonnull GriffonApplication application) {
         super(configuration, application)
     }
 

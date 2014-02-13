@@ -39,4 +39,7 @@ public class Bean {
 
     @InjectedResource(key = "sample.key.no_args.with_default", args = {"1", "2"}, defaultValue = "DEFAULT_WITH_ARGS")
     private String fieldWithKeyWithArgsWithDefault;
+
+    @InjectedResource
+    private String notFound;
 }

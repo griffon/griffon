@@ -90,6 +90,20 @@ class CompositeMessageSourceTests {
         assert quote == 'not found :('
     }
 
+    @Test
+    void getCompositeResourceBundle() {
+        MessageSource messageSource1 = new DefaultMessageSource(bundleBuilder, 'org.codehaus.griffon.runtime.core.i18n.props')
+        MessageSource messageSource2 = new DefaultMessageSource(bundleBuilder, 'org.codehaus.griffon.runtime.core.i18n.props2')
+        MessageSource compositeMessageSource = new CompositeMessageSource([messageSource1, messageSource2])
+
+        ResourceBundle resourceBundle = compositeMessageSource.asResourceBundle()
+
+        assert resourceBundle.containsKey('healthy.proverb.index')
+        assert resourceBundle.containsKey('healthy.proverb2.index')
+        assert resourceBundle.containsKey('healthy.proverb.map')
+        assert resourceBundle.containsKey('healthy.proverb2.map')
+    }
+
     static final class TestModule extends AbstractModule {
         @Override
         protected void configure() {

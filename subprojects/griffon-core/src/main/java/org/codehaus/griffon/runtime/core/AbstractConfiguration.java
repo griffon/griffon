@@ -69,7 +69,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
     @Override
     public long getAsLong(@Nonnull String key) {
-        return getAsLong(key, 0);
+        return getAsLong(key, 0L);
     }
 
     @Override

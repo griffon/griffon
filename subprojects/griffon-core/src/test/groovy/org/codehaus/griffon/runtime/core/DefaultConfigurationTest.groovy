@@ -30,28 +30,35 @@ class DefaultConfigurationTest extends Specification {
         Configuration configuration = new DefaultConfiguration(bundle)
 
         expect:
-        value == configuration."$method"(key, defaultValue)
+        value == (defaultValue != null ? configuration."$method"(key, defaultValue) : configuration."$method"(key))
 
         where:
-        method         | key                   | defaultValue      || value
-        'get'          | 'key.string'          | 'STRING'          || 'string'
-        'getAsString'  | 'key.string'          | 'STRING'          || 'string'
-        'getAsBoolean' | 'key.boolean'         | false             || true
-        'getAsBoolean' | 'key.boolean.string'  | false             || true
-        'getAsInt'     | 'key.int'             | -1                || 42
-        'getAsInt'     | 'key.int.string'      | -1                || 21
-        'getAsLong'    | 'key.long'            | -1L               || 64L
-        'getAsLong'    | 'key.long.string'     | -1L               || 32L
-        'getAsFloat'   | 'key.float'           | -1.0f             || 3.1416f
-        'getAsFloat'   | 'key.float.string'    | -1.0f             || 6.2832f
-        'getAsDouble'  | 'key.double'          | -1.0d             || 3.1416d
-        'getAsDouble'  | 'key.double.string'   | -1.0d             || 6.2832d
-        'getAsString'  | 'key.string.unknown'  | 'UNKNOWN'         || 'UNKNOWN'
-        'getAsBoolean' | 'key.boolean.unknown' | true              || true
-        'getAsInt'     | 'key.int.unknown'     | Integer.MAX_VALUE || Integer.MAX_VALUE
-        'getAsLong'    | 'key.long.unknown'    | Long.MAX_VALUE    || Long.MAX_VALUE
-        'getAsFloat'   | 'key.float.unknown'   | Float.MAX_VALUE   || Float.MAX_VALUE
-        'getAsDouble'  | 'key.double.unknown'  | Double.MAX_VALUE  || Double.MAX_VALUE
+        method         | key                   | defaultValue      | value
+        'get'          | 'key.string'          | 'STRING'          | 'string'
+        'getAt'        | 'key.string'          | 'STRING'          | 'string'
+        'getAsString'  | 'key.string2'         | null              | null
+        'getAsString'  | 'key.string'          | 'STRING'          | 'string'
+        'getAsBoolean' | 'key.boolean2'        | null              | false
+        'getAsBoolean' | 'key.boolean'         | false             | true
+        'getAsBoolean' | 'key.boolean.string'  | false             | true
+        'getAsInt'     | 'key.int2'            | null              | 0
+        'getAsInt'     | 'key.int'             | -1                | 42
+        'getAsInt'     | 'key.int.string'      | -1                | 21
+        'getAsLong'    | 'key.long2'           | null              | 0
+        'getAsLong'    | 'key.long'            | -1L               | 64L
+        'getAsLong'    | 'key.long.string'     | -1L               | 32L
+        'getAsFloat'   | 'key.float2'          | null              | 0f
+        'getAsFloat'   | 'key.float'           | -1.0f             | 3.1416f
+        'getAsFloat'   | 'key.float.string'    | -1.0f             | 6.2832f
+        'getAsDouble'  | 'key.double2'         | null              | 0d
+        'getAsDouble'  | 'key.double'          | -1.0d             | 3.1416d
+        'getAsDouble'  | 'key.double.string'   | -1.0d             | 6.2832d
+        'getAsString'  | 'key.string.unknown'  | 'UNKNOWN'         | 'UNKNOWN'
+        'getAsBoolean' | 'key.boolean.unknown' | true              | true
+        'getAsInt'     | 'key.int.unknown'     | Integer.MAX_VALUE | Integer.MAX_VALUE
+        'getAsLong'    | 'key.long.unknown'    | Long.MAX_VALUE    | Long.MAX_VALUE
+        'getAsFloat'   | 'key.float.unknown'   | Float.MAX_VALUE   | Float.MAX_VALUE
+        'getAsDouble'  | 'key.double.unknown'  | Double.MAX_VALUE  | Double.MAX_VALUE
     }
 
     class MapResourceBundle extends AbstractMapResourceBundle {

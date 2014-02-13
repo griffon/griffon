@@ -32,13 +32,13 @@ import static java.util.Objects.requireNonNull;
 public class MessageSourceProvider implements Provider<MessageSource> {
     private final String basename;
 
-    @Inject
     private CompositeResourceBundleBuilder resourceBundleBuilder;
 
     public MessageSourceProvider(@Nonnull String basename) {
         this.basename = requireNonBlank(basename, "Argument 'basename' cannot be blank");
     }
 
+    @Inject
     public void setResourceBundleBuilder(@Nonnull CompositeResourceBundleBuilder resourceBundleBuilder) {
         this.resourceBundleBuilder = requireNonNull(resourceBundleBuilder, "Argument 'resourceBundleBuilder' cannot be null");
     }
