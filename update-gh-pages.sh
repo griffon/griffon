@@ -12,6 +12,10 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
           echo -e "Copying $TRAVIS_BUILD_DIR/$projectDir/$project/build/reports"
           cp -R "$TRAVIS_BUILD_DIR/$projectDir/$project/build/reports/" "$HOME/travis-ci/reports/$project"
       fi
+      if [ -d "$TRAVIS_BUILD_DIR/$projectDir/$project/build/test-results/" ]; then
+          echo -e "Copying $TRAVIS_BUILD_DIR/$projectDir/$project/build/test-results"
+          cp -R "$TRAVIS_BUILD_DIR/$projectDir/$project/build/test-results/" "$HOME/travis-ci/reports/$project"
+      fi
     done
   done
 
