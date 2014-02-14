@@ -46,6 +46,11 @@ class ColorFormatterSpec extends Specification {
         PATTERN_LONG_WITH_ALPHA  | Color.RED | '#ff0000ff'
         null                     | Color.RED | '#ff0000'
         ''                       | Color.RED | '#ff0000'
+        PATTERN_SHORT            | null      | null
+        PATTERN_SHORT_WITH_ALPHA | null      | null
+        PATTERN_LONG             | null      | null
+        PATTERN_LONG_WITH_ALPHA  | null      | null
+        null                     | null      | null
     }
 
     void "Parse error for pattern #pattern with literal #literal"() {
@@ -60,20 +65,12 @@ class ColorFormatterSpec extends Specification {
 
         where:
         pattern                  | literal
-        PATTERN_SHORT            | null
-        PATTERN_SHORT            | ''
         PATTERN_SHORT            | 'f00'
         PATTERN_SHORT            | '#f00f'
-        PATTERN_SHORT_WITH_ALPHA | null
-        PATTERN_SHORT_WITH_ALPHA | ''
         PATTERN_SHORT_WITH_ALPHA | 'f00f'
         PATTERN_SHORT_WITH_ALPHA | '#f00f0'
-        PATTERN_LONG             | null
-        PATTERN_LONG             | ''
         PATTERN_LONG             | 'ff0000'
         PATTERN_LONG             | '#ff0000f'
-        PATTERN_LONG_WITH_ALPHA  | null
-        PATTERN_LONG_WITH_ALPHA  | ''
         PATTERN_LONG_WITH_ALPHA  | 'ff0000ff'
         PATTERN_LONG_WITH_ALPHA  | '#ff0000ff0'
     }

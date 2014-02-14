@@ -131,5 +131,4 @@ public abstract class AbstractApplicationBootstrapper implements ApplicationBoot
             throw e;
         }
     }
-
 }

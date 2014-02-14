@@ -30,7 +30,7 @@ public class PivotAction extends Action {
     private CallableWithArgs<Void> callable;
 
     public PivotAction() {
-
+        this(null);
     }
 
     public PivotAction(CallableWithArgs<Void> callable) {

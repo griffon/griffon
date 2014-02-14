@@ -143,7 +143,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
 
     @Nullable
     public Color parse(@Nullable String str) throws ParseException {
-        return delegate.parse(str);
+        return isBlank(str) ? null : delegate.parse(str);
     }
 
     /**
@@ -210,7 +210,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         String format(@Nonnull Color color);
 
         @Nonnull
-        Color parse(@Nullable String str) throws ParseException;
+        Color parse(@Nonnull String str) throws ParseException;
     }
 
     private static abstract class AbstractColorFormatterDelegate implements ColorFormatterDelegate {
@@ -263,8 +263,8 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Nonnull
-        public Color parse(@Nullable String str) throws ParseException {
-            if (isBlank(str) || !str.startsWith("#") || str.length() != 4) {
+        public Color parse(@Nonnull String str) throws ParseException {
+            if (!str.startsWith("#") || str.length() != 4) {
                 throw parseError(str, Color.class);
             }
 
@@ -303,8 +303,8 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Nonnull
-        public Color parse(@Nullable String str) throws ParseException {
-            if (isBlank(str) || !str.startsWith("#") || str.length() != 5) {
+        public Color parse(@Nonnull String str) throws ParseException {
+            if (!str.startsWith("#") || str.length() != 5) {
                 throw parseError(str, Color.class);
             }
 
@@ -339,15 +339,15 @@ public class ColorFormatter extends AbstractFormatter<Color> {
             requireNonNull(color, "Cannot format given Color because it's null");
 
             return new StringBuilder("#")
-                .append(padLeft(toHexString(red(color)), 2, "0"))
-                .append(padLeft(toHexString(green(color)), 2, "0"))
-                .append(padLeft(toHexString(blue(color)), 2, "0"))
+                .append(padLeft(toHexString(red(color)), "0"))
+                .append(padLeft(toHexString(green(color)), "0"))
+                .append(padLeft(toHexString(blue(color)), "0"))
                 .toString();
         }
 
         @Nonnull
-        public Color parse(@Nullable String str) throws ParseException {
-            if (isBlank(str) || !str.startsWith("#") || str.length() != 7) {
+        public Color parse(@Nonnull String str) throws ParseException {
+            if (!str.startsWith("#") || str.length() != 7) {
                 throw parseError(str, Color.class);
             }
 
@@ -378,16 +378,16 @@ public class ColorFormatter extends AbstractFormatter<Color> {
             requireNonNull(color, "Cannot format given Color because it's null");
 
             return new StringBuilder("#")
-                .append(padLeft(toHexString(red(color)), 2, "0"))
-                .append(padLeft(toHexString(green(color)), 2, "0"))
-                .append(padLeft(toHexString(blue(color)), 2, "0"))
-                .append(padLeft(toHexString(alpha(color)), 2, "0"))
+                .append(padLeft(toHexString(red(color)), "0"))
+                .append(padLeft(toHexString(green(color)), "0"))
+                .append(padLeft(toHexString(blue(color)), "0"))
+                .append(padLeft(toHexString(alpha(color)), "0"))
                 .toString();
         }
 
         @Nonnull
-        public Color parse(@Nullable String str) throws ParseException {
-            if (isBlank(str) || !str.startsWith("#") || str.length() != 9) {
+        public Color parse(@Nonnull String str) throws ParseException {
+            if (!str.startsWith("#") || str.length() != 9) {
                 throw parseError(str, Color.class);
             }
 
@@ -412,36 +412,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
     }
 
-    // following methods taken from org/codehaus/groovy/runtime/StringGroovyMethods.java
-
-    private static String padLeft(String self, Number numberOfChars, String padding) {
-        int numChars = numberOfChars.intValue();
-        if (numChars <= self.length()) {
-            return self;
-        } else {
-            return getPadding(padding, numChars - self.length()) + self;
-        }
-    }
-
-    private static String getPadding(String padding, int length) {
-        if (padding.length() < length) {
-            return multiply(padding, length / padding.length() + 1).substring(0, length);
-        } else {
-            return padding.substring(0, length);
-        }
-    }
-
-    private static String multiply(String self, Number factor) {
-        int size = factor.intValue();
-        if (size == 0)
-            return "";
-        else if (size < 0) {
-            throw new IllegalArgumentException("multiply() should be called with a number of 0 or greater not: " + size);
-        }
-        StringBuilder answer = new StringBuilder(self);
-        for (int i = 1; i < size; i++) {
-            answer.append(self);
-        }
-        return answer.toString();
+    private static String padLeft(String self, String padding) {
+        return 2 <= self.length() ? self : padding + self;
     }
 }
