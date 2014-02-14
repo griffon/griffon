@@ -19,11 +19,14 @@ import griffon.core.ApplicationBootstrapper;
 import griffon.core.GriffonApplication;
 import org.codehaus.griffon.runtime.core.TestApplicationBootstrapper;
 import org.codehaus.griffon.runtime.swing.FestAwareSwingGriffonApplication;
+import org.fest.swing.core.Robot;
 import org.fest.swing.fixture.FrameFixture;
 
 import javax.annotation.Nonnull;
 import java.awt.Frame;
 import java.lang.reflect.Field;
+
+import static org.fest.swing.core.BasicRobot.robotWithNewAwtHierarchy;
 
 /**
  * @author Andres Almiray
@@ -49,13 +52,16 @@ public class GriffonFestRule extends GriffonUnitRule {
     }
 
     @Override
+    @SuppressWarnings("ConstantConditions")
     protected void before(@Nonnull GriffonApplication application, @Nonnull Object target) throws Throwable {
+        Robot robot = robotWithNewAwtHierarchy();
+
         application.startup();
         application.ready();
         Object startingWindow = application.getWindowManager().getStartingWindow();
         if (startingWindow != null) {
             if (startingWindow instanceof Frame) {
-                window = new FrameFixture((Frame) startingWindow);
+                window = new FrameFixture(robot, (Frame) startingWindow);
             }
         }
 
@@ -64,10 +70,13 @@ public class GriffonFestRule extends GriffonUnitRule {
             windowField.setAccessible(true);
             windowField.set(target, window);
         } catch (Exception e) {
-            // ignore
+            after(application, target);
+            throw new IllegalStateException("Class " + target.getClass().getName() +
+                " does not define a field named 'window' of type " + FrameFixture.class.getName(), e);
         }
 
-        window.show();
+        robot.showWindow((Frame) startingWindow, null, false);
+        window.moveToFront();
     }
 
     @Override

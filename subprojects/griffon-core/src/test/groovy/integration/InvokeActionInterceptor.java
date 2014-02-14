@@ -47,6 +47,7 @@ public class InvokeActionInterceptor extends AbstractActionInterceptor {
     @Override
     public void configure(@Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Method method) {
         configure = true;
+        assert qualifyActionName(controller, actionName).equals(controller.getClass().getName() + "." + actionName);
         super.configure(controller, actionName, method);
     }
 

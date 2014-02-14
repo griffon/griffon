@@ -1,4 +1,4 @@
-package sample
+package sample.pivot.groovy
 
 import griffon.pivot.DesktopPivotGriffonApplication
 

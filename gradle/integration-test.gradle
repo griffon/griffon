@@ -54,4 +54,5 @@ task integrationTestReport(type: TestReport, dependsOn: integrationTest) {
 }
 
 integrationTest.mustRunAfter test
+integrationTest.finalizedBy integrationTestReport
 check.dependsOn integrationTestReport

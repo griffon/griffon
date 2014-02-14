@@ -104,6 +104,11 @@ class CompositeMessageSourceTests {
         assert resourceBundle.containsKey('healthy.proverb2.map')
     }
 
+    @Test(expected = IllegalStateException)
+    void cantCreateBundleWithEmptyBundleList() {
+        new CompositeMessageSource([])
+    }
+
     static final class TestModule extends AbstractModule {
         @Override
         protected void configure() {

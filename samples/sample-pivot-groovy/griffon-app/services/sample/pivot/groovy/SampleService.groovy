@@ -1,4 +1,4 @@
-package sample
+package sample.pivot.groovy
 
 import griffon.core.artifact.GriffonService
 import griffon.core.i18n.MessageSource

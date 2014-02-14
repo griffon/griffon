@@ -144,6 +144,7 @@ class DefaultResourceResolverTests {
         assert "what's up doc?" == resourceResolver.resolveResourceValue('reference.key', Locale.default)
         assert '@[NOT' == resourceResolver.resolveResourceValue('not.a.reference.key1', Locale.default)
         assert 'NOT]' == resourceResolver.resolveResourceValue('not.a.reference.key2', Locale.default)
+        assert '@[]' == resourceResolver.resolveResourceValue('not.a.reference.key3', Locale.default)
     }
 
     @Test

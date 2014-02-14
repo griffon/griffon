@@ -51,7 +51,7 @@ class URIPropertyEditorSpec extends Specification {
     void "Invalid uri literal '#literal'"() {
         setup:
 
-        PropertyEditor editor = new URLPropertyEditor()
+        PropertyEditor editor = new URIPropertyEditor()
 
         when:
         editor.value = literal
@@ -62,7 +62,7 @@ class URIPropertyEditorSpec extends Specification {
 
         where:
         literal << [
-            'garbage',
+            'http://localhost/&?_<>',
             [],
             [1, 2, 3],
             [:],

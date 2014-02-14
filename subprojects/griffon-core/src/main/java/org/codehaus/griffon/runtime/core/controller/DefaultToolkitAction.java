@@ -26,7 +26,7 @@ public class DefaultToolkitAction {
     private Runnable runnable;
 
     public DefaultToolkitAction() {
-
+        this(null);
     }
 
     public DefaultToolkitAction(Runnable runnable) {

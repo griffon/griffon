@@ -1,7 +1,8 @@
-package sample
+package sample.pivot.groovy
 
 import griffon.core.artifact.GriffonController
 import griffon.metadata.ArtifactProviderFor
+import sample.pivot.groovy.SampleService
 
 import javax.inject.Inject
 

@@ -161,6 +161,7 @@ class DefaultMessageSourceTests {
         assert "what's up doc?" == messageSource.resolveMessageValue('reference.key', Locale.default)
         assert '@[NOT' == messageSource.resolveMessageValue('not.a.reference.key1', Locale.default)
         assert 'NOT]' == messageSource.resolveMessageValue('not.a.reference.key2', Locale.default)
+        assert '@[]' == messageSource.resolveMessageValue('not.a.reference.key3', Locale.default)
     }
 
     @Test

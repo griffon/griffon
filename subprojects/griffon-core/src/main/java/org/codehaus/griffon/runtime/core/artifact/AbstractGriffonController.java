@@ -33,9 +33,6 @@ import static griffon.util.GriffonNameUtils.requireNonBlank;
  */
 public abstract class AbstractGriffonController extends AbstractGriffonMvcArtifact implements GriffonController {
     @Inject
-    private ActionManager actionManager;
-
-    @Inject
     public AbstractGriffonController(@Nonnull GriffonApplication application) {
         super(application);
     }
@@ -52,6 +49,6 @@ public abstract class AbstractGriffonController extends AbstractGriffonMvcArtifa
     }
 
     public void invokeAction(@Nonnull String name, Object... args) {
-        actionManager.invokeAction(this, requireNonBlank(name, "Argument 'name' cannot be blank"), args);
+        getActionManager().invokeAction(this, requireNonBlank(name, "Argument 'name' cannot be blank"), args);
     }
 }

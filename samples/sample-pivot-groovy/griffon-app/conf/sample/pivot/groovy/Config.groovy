@@ -1,3 +1,5 @@
+package sample.pivot.groovy
+
 application {
     title = 'Pivot + Groovy'
     startupGroups = ['sample']
@@ -6,7 +8,7 @@ application {
 mvcGroups {
     // MVC Group for "sample"
     'sample' {
-        view       = 'sample.SampleView'
-        controller = 'sample.SampleController'
+        view       = 'sample.pivot.groovy.SampleView'
+        controller = 'sample.pivot.groovy.SampleController'
     }
 }

@@ -1,4 +1,4 @@
-package sample;
+package sample.pivot.java;
 
 import griffon.pivot.DesktopPivotGriffonApplication;
 

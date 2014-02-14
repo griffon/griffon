@@ -103,6 +103,8 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
                 values.set(i, parse((Number) val));
             } else if (val instanceof CharSequence) {
                 values.set(i, parse(String.valueOf(val)));
+            } else {
+                throw illegalValue(list, Color.class);
             }
         }
         super.setValueInternal(

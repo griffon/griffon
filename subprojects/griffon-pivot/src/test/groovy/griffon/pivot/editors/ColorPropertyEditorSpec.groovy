@@ -91,6 +91,7 @@ class ColorPropertyEditorSpec extends Specification {
             [1, 2],
             [1, 2, 3, 4, 5],
             [new Object()],
+            [new Object(), new Object(), new Object()],
             [red: new Object()],
             'F00',
             '#F0',
