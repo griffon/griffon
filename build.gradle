@@ -54,6 +54,8 @@ evaluationDependsOnChildren()
 
 subprojects { subproj ->
     if (subproj.plugins.hasPlugin('java')) {
+        apply plugin: 'license'
+
         configurations {
             compileOnly
             testCompileOnly
@@ -121,10 +123,24 @@ subprojects { subproj ->
                 ])
             }
         }
+
+        license {
+            header = rootProject.file('config/HEADER')
+            strictCheck = true
+            ignoreFailures = true
+            mapping {
+                java   = 'SLASHSTAR_STYLE'
+                groovy = 'SLASHSTAR_STYLE'
+            }
+            ext.year = '2008-2014'
+        }
+
+        licenseTest {
+            source -= sourceSets.test.resources
+        }
     }
 
     if (subproj.ext.maven == true) {
-        apply plugin: 'license'
         apply from: "${rootDir}/gradle/maven.gradle"
         apply from: "${rootDir}/gradle/publish.gradle"
         apply from: "${rootDir}/gradle/code-quality.gradle"
@@ -209,21 +225,6 @@ subprojects { subproj ->
                     'Implementation-Vendor': 'griffon-framework.org'
                 )
             }
-        }
-
-        license {
-            header = rootProject.file('config/HEADER')
-            strictCheck = true
-            ignoreFailures = true
-            mapping {
-                java   = 'SLASHSTAR_STYLE'
-                groovy = 'SLASHSTAR_STYLE'
-            }
-            ext.year = '2008-2014'
-        }
-
-        licenseTest {
-            source -= sourceSets.test.resources
         }
     }
 }

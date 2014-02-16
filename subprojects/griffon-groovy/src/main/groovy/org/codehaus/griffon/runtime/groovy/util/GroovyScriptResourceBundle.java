@@ -76,7 +76,11 @@ public class GroovyScriptResourceBundle extends ResourceBundle {
     @SuppressWarnings("unchecked")
     protected Object handleGetObject(@Nonnull String key) {
         Object value = getConfigValue(config, requireNonBlank(key, "Argument 'key' cannot be blank"), null);
-        return null == value ? null : value;
+        if (null == value) return null;
+        if (value instanceof ConfigObject) {
+            return ((ConfigObject) value).isEmpty() ? null : value;
+        }
+        return value;
     }
 
     @Nonnull
