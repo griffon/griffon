@@ -48,9 +48,9 @@ task integrationTest(type: Test, dependsOn: jar) {
     reports.html.enabled = false
 }
 
-task integrationTestReport(type: TestReport, dependsOn: integrationTest) {
+task integrationTestReport(type: TestReport) {
     destinationDir = file("${buildDir}/reports/integration-tests")
-    reportOn integrationTest
+    reportOn integrationTest.binResultsDir
 }
 
 integrationTest.mustRunAfter test

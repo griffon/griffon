@@ -16,6 +16,7 @@
 
 apply plugin: 'java'
 apply plugin: 'application'
+apply from: rootProject.file('gradle/integration-test.gradle')
 apply from: rootProject.file('gradle/coverage.gradle')
 
 mainClassName = 'sample.pivot.java.Launcher'

@@ -16,6 +16,7 @@
 package griffon.builder.pivot;
 
 import griffon.builder.pivot.factory.*;
+import griffon.exceptions.PropertyException;
 import griffon.inject.DependsOn;
 import griffon.pivot.support.PivotAction;
 import griffon.pivot.support.adapters.*;
@@ -35,6 +36,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static griffon.util.CollectionUtils.newList;
+import static griffon.util.GriffonClassUtils.getPropertyValue;
+import static griffon.util.GriffonClassUtils.setPropertyValue;
 
 /**
  * @author Andres Almiray
@@ -351,6 +354,16 @@ public class PivotBuilderCustomizer extends AbstractBuilderCustomizer {
                 if (attributes.containsKey("id")) {
                     String id = attributes.remove("id").toString();
                     builder.setVariable(id, node);
+
+                    // set id: as name: if node supports the property
+                    try {
+                        Object name = getPropertyValue(node, "name");
+                        if (name == null) {
+                            setPropertyValue(node, "name", id);
+                        }
+                    } catch (PropertyException pe) {
+                        // ignore
+                    }
                 }
                 return null;
             }

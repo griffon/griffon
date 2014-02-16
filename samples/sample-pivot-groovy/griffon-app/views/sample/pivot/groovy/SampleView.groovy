@@ -14,7 +14,7 @@ class SampleView {
                 vbox(styles: "{horizontalAlignment:'center', verticalAlignment:'center'}") {
                     label(application.messageSource.getMessage('name.label'))
                     textInput(id: 'input')
-                    button(sayHelloAction)                                                     //<3>
+                    button(id: 'sayHelloButton', sayHelloAction)                               //<3>
                     textInput(id: 'output', editable: false)
                 }
             }

@@ -54,6 +54,7 @@ public class SampleView extends AbstractGriffonView {
         vbox.add(new Label(getApplication().getMessageSource().getMessage("name.label")));
 
         TextInput input = new TextInput();
+        input.setName("inputField");
         input.getTextInputContentListeners().add(new TextInputContentAdapter() {  //<3>
             @Override
             public void textChanged(TextInput arg0) {
@@ -65,10 +66,12 @@ public class SampleView extends AbstractGriffonView {
         Action sayHelloAction = getApplication().getActionManager()
             .actionFor(controller, "sayHello");
         final Button button = new PushButton(sayHelloAction.getName());
+        button.setName("sayHelloButton");
         button.setAction((PivotAction) sayHelloAction.getToolkitAction());       //<4>
         vbox.add(button);
 
         final TextInput output = new TextInput();
+        output.setName("outputField");
         output.setEditable(false);
         model.addPropertyChangeListener("output", new PropertyChangeListener() { //<3>
             @Override
