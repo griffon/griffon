@@ -15,6 +15,7 @@
  */
 package org.codehaus.griffon.runtime.core.artifact;
 
+import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonClass;
 import griffon.util.GriffonClassUtils;
 import griffon.util.GriffonNameUtils;
@@ -48,6 +49,9 @@ public abstract class AbstractGriffonClass implements GriffonClass {
     private static final String ERROR_NAME_BLANK = "Argument 'name' cannot be blank";
     private static final String ERROR_ARTIFACT_TYPE_BLANK = "Argument 'artifactType' cannot be blank";
     private static final String ERROR_TYPE_NULL = "Argument 'type' cannot be null";
+    private static final String ERROR_APPLICATION_NULL = "Argument 'application' cannot be null";
+
+    private final GriffonApplication application;
     private final Class<?> clazz;
     private final String artifactType;
     private final String fullName;
@@ -62,7 +66,8 @@ public abstract class AbstractGriffonClass implements GriffonClass {
     protected final Set<String> eventsCache = new TreeSet<>();
     protected final Logger log;
 
-    public AbstractGriffonClass(@Nonnull Class<?> type, @Nonnull String artifactType, @Nonnull String trailingName) {
+    public AbstractGriffonClass(@Nonnull GriffonApplication application, @Nonnull Class<?> type, @Nonnull String artifactType, @Nonnull String trailingName) {
+        this.application = requireNonNull(application, ERROR_APPLICATION_NULL);
         this.clazz = requireNonNull(type, ERROR_TYPE_NULL);
         this.artifactType = requireNonBlank(artifactType, ERROR_ARTIFACT_TYPE_BLANK).trim();
         trailingName = isBlank(trailingName) ? "" : trailingName.trim();
@@ -79,6 +84,11 @@ public abstract class AbstractGriffonClass implements GriffonClass {
             logicalPropertyName = getPropertyNameRepresentation(name);
         }
         classPropertyFetcher = forClass(type);
+    }
+
+    @Nonnull
+    public GriffonApplication getApplication() {
+        return application;
     }
 
     @Nullable

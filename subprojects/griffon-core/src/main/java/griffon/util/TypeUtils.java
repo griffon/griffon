@@ -17,12 +17,15 @@ package griffon.util;
 
 import griffon.core.editors.ExtendedPropertyEditor;
 import griffon.core.editors.PropertyEditorResolver;
+import griffon.exceptions.GriffonException;
 import griffon.exceptions.TypeConversionException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.beans.PropertyEditor;
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
 import static griffon.util.GriffonNameUtils.isBlank;
@@ -35,47 +38,80 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public final class TypeUtils {
+
+    private static final String ERROR_VALUE_NULL = "Argument 'value' cannot be null";
+
     private TypeUtils() {
         // prevent instantiation
     }
 
-    public static boolean castToBoolean(@Nullable Object value) {
+    public static boolean castToBoolean(@Nonnull Object value) {
+        requireNonNull(value, ERROR_VALUE_NULL);
         if (value instanceof Boolean) {
             return (Boolean) value;
         }
         return "true".equalsIgnoreCase(String.valueOf(value));
     }
 
-    public static int castToInt(@Nullable Object value) {
+    public static char castToChar(@Nonnull Object value) {
+        requireNonNull(value, ERROR_VALUE_NULL);
+        if (value instanceof Character) {
+            return (Character) value;
+        }
+        return String.valueOf(value).charAt(0);
+    }
+
+    public static int castToInt(@Nonnull Object value) {
+        requireNonNull(value, ERROR_VALUE_NULL);
         if (value instanceof Number) {
             return ((Number) value).intValue();
         }
         return Integer.valueOf(String.valueOf(value));
     }
 
-    public static long castToLong(@Nullable Object value) {
+    public static long castToLong(@Nonnull Object value) {
+        requireNonNull(value, ERROR_VALUE_NULL);
         if (value instanceof Number) {
             return ((Number) value).longValue();
         }
         return Long.valueOf(String.valueOf(value));
     }
 
-    public static float castToFloat(@Nullable Object value) {
+    public static float castToFloat(@Nonnull Object value) {
+        requireNonNull(value, ERROR_VALUE_NULL);
         if (value instanceof Number) {
             return ((Number) value).floatValue();
         }
         return Float.valueOf(String.valueOf(value));
     }
 
-    public static double castToDouble(@Nullable Object value) {
+    public static double castToDouble(@Nonnull Object value) {
+        requireNonNull(value, ERROR_VALUE_NULL);
         if (value instanceof Number) {
             return ((Number) value).doubleValue();
         }
         return Double.valueOf(String.valueOf(value));
     }
 
+    public static BigInteger castToBigInteger(@Nonnull Object value) {
+        requireNonNull(value, ERROR_VALUE_NULL);
+        if (value instanceof BigInteger) {
+            return (BigInteger) value;
+        }
+        return new BigInteger(String.valueOf(value));
+    }
+
+    public static BigDecimal castToBigDecimal(@Nonnull Object value) {
+        requireNonNull(value, ERROR_VALUE_NULL);
+        if (value instanceof BigDecimal) {
+            return (BigDecimal) value;
+        }
+        return new BigDecimal(String.valueOf(value));
+    }
+
     @Nullable
-    public static Number castToNumber(@Nullable Object value) {
+    public static Number castToNumber(@Nonnull Object value) {
+        requireNonNull(value, ERROR_VALUE_NULL);
         if (value instanceof Number) {
             return (Number) value;
         }
@@ -84,6 +120,10 @@ public final class TypeUtils {
 
     public static boolean castToBoolean(@Nullable Object value, boolean defaultValue) {
         return value == null ? defaultValue : castToBoolean(value);
+    }
+
+    public static char castToChar(@Nullable Object value, char defaultValue) {
+        return value == null ? defaultValue : castToChar(value);
     }
 
     public static int castToInt(@Nullable Object value, int defaultValue) {
@@ -107,6 +147,16 @@ public final class TypeUtils {
         return value == null ? defaultValue : castToNumber(value);
     }
 
+    @Nullable
+    public static BigInteger castToBigInteger(@Nullable Object value, @Nullable BigInteger defaultValue) {
+        return value == null ? defaultValue : castToBigInteger(value);
+    }
+
+    @Nullable
+    public static BigDecimal castToBigDecimal(@Nullable Object value, @Nullable BigDecimal defaultValue) {
+        return value == null ? defaultValue : castToBigDecimal(value);
+    }
+
     @Nonnull
     public static <T> T convertValue(@Nonnull Class<T> targetType, @Nonnull Object value) {
         return convertValue(targetType, value, null);
@@ -116,7 +166,7 @@ public final class TypeUtils {
     @SuppressWarnings("unchecked")
     public static <T> T convertValue(@Nonnull Class<T> targetType, @Nonnull Object value, @Nullable String format) {
         requireNonNull(targetType, "Argument 'targetType' cannot be null");
-        requireNonNull(value, "Argument 'value' cannot be null");
+        requireNonNull(value, ERROR_VALUE_NULL);
         if (targetType.isAssignableFrom(value.getClass())) {
             return (T) value;
         }
@@ -290,7 +340,7 @@ public final class TypeUtils {
      * @param left  a List
      * @param right the List being compared to
      * @return boolean   <code>true</code> if the contents of both lists are identical,
-     *         <code>false</code> rightwise.
+     * <code>false</code> rightwise.
      */
     public static boolean equals(List left, List right) {
         if (left == null) {
@@ -417,5 +467,109 @@ public final class TypeUtils {
             list.add(item);
         }
         return list;
+    }
+
+    private static boolean isValidCharacterString(Object value) {
+        if (value instanceof String) {
+            String s = (String) value;
+            if (s.length() == 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static int compareTo(Object left, Object right) {
+        if (left == right) {
+            return 0;
+        }
+        if (left == null) {
+            return -1;
+        } else if (right == null) {
+            return 1;
+        }
+        if (left instanceof Comparable) {
+            if (left instanceof Number) {
+                if (isValidCharacterString(right)) {
+                    return compareTo((Number) left, (Character) castToChar(right));
+                }
+                if (right instanceof Character || right instanceof Number) {
+                    return compareTo((Number) left, castToNumber(right));
+                }
+            } else if (left instanceof Character) {
+                if (isValidCharacterString(right)) {
+                    return compareTo((Character) left, (Character) castToChar(right));
+                }
+                if (right instanceof Number) {
+                    return compareTo((Character) left, (Number) right);
+                }
+            } else if (right instanceof Number) {
+                if (isValidCharacterString(left)) {
+                    return compareTo((Character) castToChar(left), (Number) right);
+                }
+            } else if (left instanceof String && right instanceof Character) {
+                return ((String) left).compareTo(right.toString());
+            } else if (left instanceof CharSequence && right instanceof CharSequence) {
+                return String.valueOf(left).compareTo(String.valueOf(right));
+            }
+            if (left.getClass().isAssignableFrom(right.getClass())
+                || (right.getClass() != Object.class && right.getClass().isAssignableFrom(left.getClass())) //GROOVY-4046
+                || (left instanceof CharSequence && right instanceof CharSequence)) {
+                Comparable comparable = (Comparable) left;
+                return comparable.compareTo(right);
+            }
+        }
+
+        throw new GriffonException("Cannot compare " + left.getClass().getName() + " with value '" +
+            left + "' and " + right.getClass().getName() + " with value '" + right + "'");
+    }
+
+    public static int compareTo(Character left, Number right) {
+        return compareTo(Integer.valueOf(left), right);
+    }
+
+    public static int compareTo(Number left, Character right) {
+        return compareTo(left, Integer.valueOf(right));
+    }
+
+    public static int compareTo(Character left, Character right) {
+        return compareTo(Integer.valueOf(left), right);
+    }
+
+    public static int compareTo(Number left, Number right) {
+        if (isFloatingPoint(left) || isFloatingPoint(right)) {
+            return Double.compare(left.doubleValue(), right.doubleValue());
+        }
+        if (isBigDecimal(left) || isBigDecimal(right)) {
+            return castToBigDecimal(left).compareTo(castToBigDecimal(right));
+        }
+        if (isBigInteger(left) || isBigInteger(right)) {
+            return castToBigInteger(left).compareTo(castToBigInteger(right));
+        }
+        if (isLong(left) || isLong(right)) {
+            return Long.compare(left.longValue(), right.longValue());
+        }
+        return Integer.compare(left.intValue(), right.intValue());
+    }
+
+    public static boolean isFloatingPoint(Number number) {
+        return number instanceof Double || number instanceof Float;
+    }
+
+    public static boolean isInteger(Number number) {
+        return number instanceof Integer;
+    }
+
+    public static boolean isLong(Number number) {
+        return number instanceof Long;
+    }
+
+    public static boolean isBigDecimal(Number number) {
+        return number instanceof BigDecimal;
+    }
+
+    public static boolean isBigInteger(Number number) {
+        return number instanceof BigInteger;
     }
 }

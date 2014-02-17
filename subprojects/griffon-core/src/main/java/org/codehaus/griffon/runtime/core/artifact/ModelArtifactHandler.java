@@ -41,6 +41,6 @@ public class ModelArtifactHandler extends AbstractArtifactHandler<GriffonModel> 
     @Nonnull
     public GriffonClass newGriffonClassInstance(@Nonnull Class<GriffonModel> clazz) {
         requireNonNull(clazz, ERROR_CLASS_NULL);
-        return new DefaultGriffonModelClass(clazz);
+        return new DefaultGriffonModelClass(getApplication(), clazz);
     }
 }

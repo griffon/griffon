@@ -41,6 +41,6 @@ public class ControllerArtifactHandler extends AbstractArtifactHandler<GriffonCo
     @Nonnull
     public GriffonClass newGriffonClassInstance(@Nonnull Class<GriffonController> clazz) {
         requireNonNull(clazz, ERROR_CLASS_NULL);
-        return new DefaultGriffonControllerClass(clazz);
+        return new DefaultGriffonControllerClass(getApplication(), clazz);
     }
 }

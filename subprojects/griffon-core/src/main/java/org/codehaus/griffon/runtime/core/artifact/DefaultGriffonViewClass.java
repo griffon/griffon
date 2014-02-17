@@ -15,6 +15,7 @@
  */
 package org.codehaus.griffon.runtime.core.artifact;
 
+import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonViewClass;
 
 import javax.annotation.Nonnull;
@@ -24,7 +25,7 @@ import javax.annotation.Nonnull;
  * @since 2.0.0
  */
 public class DefaultGriffonViewClass extends DefaultGriffonClass implements GriffonViewClass {
-    public DefaultGriffonViewClass(@Nonnull Class<?> clazz) {
-        super(clazz, TYPE, TRAILING);
+    public DefaultGriffonViewClass(@Nonnull GriffonApplication application, @Nonnull Class<?> clazz) {
+        super(application, clazz, TYPE, TRAILING);
     }
 }

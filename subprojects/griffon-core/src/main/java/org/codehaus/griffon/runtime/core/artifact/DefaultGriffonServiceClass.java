@@ -15,6 +15,7 @@
  */
 package org.codehaus.griffon.runtime.core.artifact;
 
+import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonServiceClass;
 import griffon.util.GriffonClassUtils;
 
@@ -30,8 +31,8 @@ import java.util.TreeSet;
 public class DefaultGriffonServiceClass extends DefaultGriffonClass implements GriffonServiceClass {
     protected final Set<String> serviceCache = new TreeSet<>();
 
-    public DefaultGriffonServiceClass(@Nonnull Class<?> clazz) {
-        super(clazz, TYPE, TRAILING);
+    public DefaultGriffonServiceClass(@Nonnull GriffonApplication application, @Nonnull Class<?> clazz) {
+        super(application, clazz, TYPE, TRAILING);
     }
 
     public void resetCaches() {

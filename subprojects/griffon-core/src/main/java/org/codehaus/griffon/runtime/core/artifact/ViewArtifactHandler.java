@@ -41,6 +41,6 @@ public class ViewArtifactHandler extends AbstractArtifactHandler<GriffonView> {
     @Nonnull
     public GriffonClass newGriffonClassInstance(@Nonnull Class<GriffonView> clazz) {
         requireNonNull(clazz, ERROR_CLASS_NULL);
-        return new DefaultGriffonViewClass(clazz);
+        return new DefaultGriffonViewClass(getApplication(), clazz);
     }
 }

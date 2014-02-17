@@ -45,7 +45,7 @@ public class DefaultDataSourceHandler implements DataSourceHandler {
 
     @Inject
     public DefaultDataSourceHandler(@Nonnull DataSourceFactory dataSourceFactory, @Nonnull DataSourceStorage dataSourceStorage) {
-        this.dataSourceFactory = requireNonNull(dataSourceFactory, "Argument 'defaultDataSourceFactory' cannot be null");
+        this.dataSourceFactory = requireNonNull(dataSourceFactory, "Argument 'dataSourceFactory' cannot be null");
         this.dataSourceStorage = requireNonNull(dataSourceStorage, "Argument 'dataSourceStorage' cannot be null");
     }
 

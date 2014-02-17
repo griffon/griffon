@@ -47,7 +47,7 @@ public class ServiceArtifactHandler extends AbstractArtifactHandler<GriffonServi
     @Nonnull
     public GriffonClass newGriffonClassInstance(@Nonnull Class<GriffonService> clazz) {
         requireNonNull(clazz, ERROR_CLASS_NULL);
-        return new DefaultGriffonServiceClass(clazz);
+        return new DefaultGriffonServiceClass(getApplication(), clazz);
     }
 
     @Override

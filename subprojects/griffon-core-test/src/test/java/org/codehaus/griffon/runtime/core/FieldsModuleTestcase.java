@@ -28,7 +28,7 @@ public class FieldsModuleTestcase {
 
         @BindTo(Atom.class)
         @Named("Helium")
-        public Helium Litium;
+        public Helium litium;
     }
 
     public static class SingletonTargets {

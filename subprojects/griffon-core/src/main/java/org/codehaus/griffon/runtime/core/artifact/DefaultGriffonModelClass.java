@@ -15,6 +15,7 @@
  */
 package org.codehaus.griffon.runtime.core.artifact;
 
+import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonModel;
 import griffon.core.artifact.GriffonModelClass;
 import griffon.util.GriffonClassUtils;
@@ -42,8 +43,8 @@ public class DefaultGriffonModelClass extends DefaultGriffonClass implements Gri
     private static final Set<String> BINDABLE_PROPERTIES = new LinkedHashSet<>(
         Arrays.asList("propertyChangeListeners", "vetoableChangeListeners"));
 
-    public DefaultGriffonModelClass(@Nonnull Class<?> clazz) {
-        super(clazz, TYPE, TRAILING);
+    public DefaultGriffonModelClass(@Nonnull GriffonApplication application, @Nonnull Class<?> clazz) {
+        super(application, clazz, TYPE, TRAILING);
     }
 
     public void resetCaches() {

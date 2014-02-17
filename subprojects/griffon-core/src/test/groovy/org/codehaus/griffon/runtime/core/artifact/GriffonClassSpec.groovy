@@ -17,12 +17,13 @@ package org.codehaus.griffon.runtime.core.artifact
 
 import griffon.core.artifact.GriffonClass
 import integration.SimpleModel
+import integration.TestGriffonApplication
 import spock.lang.Shared
 import spock.lang.Specification
 
 class GriffonClassSpec extends Specification {
     @Shared
-    private GriffonClass griffonClass = new DefaultGriffonModelClass(SimpleModel)
+    private GriffonClass griffonClass = new DefaultGriffonModelClass(new TestGriffonApplication(), SimpleModel)
 
     void 'Verify properties'() {
         expect:
