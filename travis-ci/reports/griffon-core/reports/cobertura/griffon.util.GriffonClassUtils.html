@@ -420,11 +420,11 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;276</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> requireState(<span class="keyword">boolean</span> condition, String message) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;277</td>  <td class="nbHitsCovered"><a title="Line 277: Conditional coverage 100% (2/2).">&nbsp;404</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 277: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (!condition) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;277</td>  <td class="nbHitsCovered"><a title="Line 277: Conditional coverage 100% (2/2).">&nbsp;406</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 277: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (!condition) {</a></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;278</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(message);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;279</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;280</td>  <td class="nbHitsCovered">&nbsp;401</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;280</td>  <td class="nbHitsCovered">&nbsp;403</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;281</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;282</td>  <td class="nbHits">&nbsp;</td>
@@ -459,7 +459,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;297</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isEventHandler(String name) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;298</td>  <td class="nbHitsUncovered"><a title="Line 298: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">&nbsp;24</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 298: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">        <span class="keyword">return</span> !GriffonNameUtils.isBlank(name) &amp;&amp; EVENT_HANDLER_PATTERN.matcher(name).matches();</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;298</td>  <td class="nbHitsUncovered"><a title="Line 298: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">&nbsp;28</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 298: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">        <span class="keyword">return</span> !GriffonNameUtils.isBlank(name) &amp;&amp; EVENT_HANDLER_PATTERN.matcher(name).matches();</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;299</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;300</td>  <td class="nbHits">&nbsp;</td>
@@ -571,7 +571,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;354</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isEventHandler(MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;355</td>  <td class="nbHitsUncovered"><a title="Line 355: Conditional coverage 83% (5/6) [each condition: 50%, 100%, 100%].">&nbsp;2361</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 355: Conditional coverage 83% (5/6) [each condition: 50%, 100%, 100%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || method.getModifiers() - Modifier.PUBLIC != 0) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;355</td>  <td class="nbHitsUncovered"><a title="Line 355: Conditional coverage 83% (5/6) [each condition: 50%, 100%, 100%].">&nbsp;2363</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 355: Conditional coverage 83% (5/6) [each condition: 50%, 100%, 100%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || method.getModifiers() - Modifier.PUBLIC != 0) &amp;&amp;</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;356</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            EVENT_HANDLER_PATTERN.matcher(method.getName()).matches();</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;357</td>  <td class="nbHits">&nbsp;</td>
@@ -745,7 +745,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;443</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isContributionMethod(MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;444</td>  <td class="nbHitsUncovered"><a title="Line 444: Conditional coverage 50% (3/6) [each condition: 50%, 50%, 50%].">&nbsp;19</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 444: Conditional coverage 50% (3/6) [each condition: 50%, 50%, 50%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || method.getModifiers() - Modifier.PUBLIC != 0) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;444</td>  <td class="nbHitsUncovered"><a title="Line 444: Conditional coverage 50% (3/6) [each condition: 50%, 50%, 50%].">&nbsp;23</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 444: Conditional coverage 50% (3/6) [each condition: 50%, 50%, 50%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || method.getModifiers() - Modifier.PUBLIC != 0) &amp;&amp;</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;445</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            CONTRIBUTION_PATTERN.matcher(method.getName()).matches();</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;446</td>  <td class="nbHits">&nbsp;</td>
@@ -794,7 +794,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;468</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isBasicMethod(MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;469</td>  <td class="nbHitsUncovered"><a title="Line 469: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">&nbsp;2282</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 469: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || !isInstanceMethod(method)) &amp;&amp; BASIC_METHODS.contains(method);</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;469</td>  <td class="nbHitsUncovered"><a title="Line 469: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">&nbsp;2286</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 469: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || !isInstanceMethod(method)) &amp;&amp; BASIC_METHODS.contains(method);</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;470</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;471</td>  <td class="nbHits">&nbsp;</td>
@@ -870,7 +870,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;507</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isGroovyInjectedMethod(MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;508</td>  <td class="nbHitsUncovered"><a title="Line 508: Conditional coverage 50% (4/8) [each condition: 50%, 50%, 50%, 50%].">&nbsp;1877</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 508: Conditional coverage 50% (4/8) [each condition: 50%, 50%, 50%, 50%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || !isInstanceMethod(method)) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;508</td>  <td class="nbHitsUncovered"><a title="Line 508: Conditional coverage 50% (4/8) [each condition: 50%, 50%, 50%, 50%].">&nbsp;1881</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 508: Conditional coverage 50% (4/8) [each condition: 50%, 50%, 50%, 50%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || !isInstanceMethod(method)) &amp;&amp;</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;509</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            (method.getName().startsWith(<span class="string">"super$"</span>) || method.getName().startsWith(<span class="string">"this$"</span>));</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;510</td>  <td class="nbHits">&nbsp;</td>
@@ -984,7 +984,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;565</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isGetterMethod(MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;566</td>  <td class="nbHitsUncovered"><a title="Line 566: Conditional coverage 75% (6/8) [each condition: 50%, 50%, 100%, 100%].">&nbsp;217</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 566: Conditional coverage 75% (6/8) [each condition: 50%, 50%, 100%, 100%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || !isInstanceMethod(method)) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;566</td>  <td class="nbHitsUncovered"><a title="Line 566: Conditional coverage 75% (6/8) [each condition: 50%, 50%, 100%, 100%].">&nbsp;221</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 566: Conditional coverage 75% (6/8) [each condition: 50%, 50%, 100%, 100%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || !isInstanceMethod(method)) &amp;&amp;</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;567</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            (GETTER_PATTERN_1.matcher(method.getName()).matches() || GETTER_PATTERN_2.matcher(method.getName()).matches());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;568</td>  <td class="nbHits">&nbsp;</td>
@@ -1086,7 +1086,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;617</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isSetterMethod(MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;618</td>  <td class="nbHitsUncovered"><a title="Line 618: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">&nbsp;138</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 618: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || !isInstanceMethod(method)) &amp;&amp; SETTER_PATTERN.matcher(method.getName()).matches();</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;618</td>  <td class="nbHitsUncovered"><a title="Line 618: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">&nbsp;142</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 618: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || !isInstanceMethod(method)) &amp;&amp; SETTER_PATTERN.matcher(method.getName()).matches();</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;619</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;620</td>  <td class="nbHits">&nbsp;</td>
@@ -1192,7 +1192,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;671</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isArtifactMethod(MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;672</td>  <td class="nbHitsUncovered"><a title="Line 672: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">&nbsp;1607</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 672: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || !isInstanceMethod(method)) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;672</td>  <td class="nbHitsUncovered"><a title="Line 672: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">&nbsp;1611</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 672: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || !isInstanceMethod(method)) &amp;&amp;</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;673</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            ARTIFACT_METHODS.contains(method);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;674</td>  <td class="nbHits">&nbsp;</td>
@@ -1300,7 +1300,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;726</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isMvcMethod(MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;727</td>  <td class="nbHitsUncovered"><a title="Line 727: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">&nbsp;1472</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 727: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || !isInstanceMethod(method)) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;727</td>  <td class="nbHitsUncovered"><a title="Line 727: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">&nbsp;1476</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 727: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || !isInstanceMethod(method)) &amp;&amp;</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;728</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            MVC_METHODS.contains(method);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;729</td>  <td class="nbHits">&nbsp;</td>
@@ -1526,7 +1526,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;840</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isThreadingMethod(MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;841</td>  <td class="nbHitsUncovered"><a title="Line 841: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">&nbsp;1877</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 841: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || !isInstanceMethod(method)) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;841</td>  <td class="nbHitsUncovered"><a title="Line 841: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">&nbsp;1881</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 841: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || !isInstanceMethod(method)) &amp;&amp;</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;842</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            THREADING_METHODS.contains(method);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;843</td>  <td class="nbHits">&nbsp;</td>
@@ -1634,7 +1634,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;895</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isEventPublisherMethod(MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;896</td>  <td class="nbHitsUncovered"><a title="Line 896: Conditional coverage 50% (3/6) [each condition: 50%, 50%, 50%].">&nbsp;403</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 896: Conditional coverage 50% (3/6) [each condition: 50%, 50%, 50%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || !isInstanceMethod(method)) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;896</td>  <td class="nbHitsUncovered"><a title="Line 896: Conditional coverage 50% (3/6) [each condition: 50%, 50%, 50%].">&nbsp;407</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 896: Conditional coverage 50% (3/6) [each condition: 50%, 50%, 50%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || !isInstanceMethod(method)) &amp;&amp;</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;897</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            EVENT_PUBLISHER_METHODS.contains(method);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;898</td>  <td class="nbHits">&nbsp;</td>
@@ -1742,7 +1742,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;950</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isObservableMethod(MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;951</td>  <td class="nbHitsUncovered"><a title="Line 951: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">&nbsp;403</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 951: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || !isInstanceMethod(method)) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;951</td>  <td class="nbHitsUncovered"><a title="Line 951: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">&nbsp;407</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 951: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || !isInstanceMethod(method)) &amp;&amp;</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;952</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            OBSERVABLE_METHODS.contains(method);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;953</td>  <td class="nbHits">&nbsp;</td>
@@ -1850,7 +1850,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1005</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isResourceHandlerMethod(MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1006</td>  <td class="nbHitsUncovered"><a title="Line 1006: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">&nbsp;397</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 1006: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || !isInstanceMethod(method)) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1006</td>  <td class="nbHitsUncovered"><a title="Line 1006: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">&nbsp;401</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 1006: Conditional coverage 66% (4/6) [each condition: 50%, 50%, 100%].">        <span class="keyword">return</span> !(method == <span class="keyword">null</span> || !isInstanceMethod(method)) &amp;&amp;</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1007</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            RESOURCE_HANDLER_METHODS.contains(method);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1008</td>  <td class="nbHits">&nbsp;</td>
@@ -2120,9 +2120,9 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1143</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isInstanceMethod(MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1144</td>  <td class="nbHitsUncovered"><a title="Line 1144: Conditional coverage 50% (1/2).">&nbsp;13135</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 1144: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (method == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">false</span>;</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1145</td>  <td class="nbHitsCovered">&nbsp;13135</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">int</span> modifiers = method.getModifiers();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1146</td>  <td class="nbHitsUncovered"><a title="Line 1146: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">&nbsp;13135</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 1146: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">        <span class="keyword">return</span> Modifier.isPublic(modifiers) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1144</td>  <td class="nbHitsUncovered"><a title="Line 1144: Conditional coverage 50% (1/2).">&nbsp;13179</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 1144: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (method == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">false</span>;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1145</td>  <td class="nbHitsCovered">&nbsp;13179</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">int</span> modifiers = method.getModifiers();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1146</td>  <td class="nbHitsUncovered"><a title="Line 1146: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">&nbsp;13179</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 1146: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">        <span class="keyword">return</span> Modifier.isPublic(modifiers) &amp;&amp;</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1147</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            !Modifier.isStatic(modifiers);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1148</td>  <td class="nbHits">&nbsp;</td>
@@ -2171,7 +2171,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1170</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isPlainMethod(Method method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1171</td>  <td class="nbHitsCovered">&nbsp;2462</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> isPlainMethod(MethodDescriptor.forMethod(method));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1171</td>  <td class="nbHitsCovered">&nbsp;2466</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> isPlainMethod(MethodDescriptor.forMethod(method));</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1172</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1173</td>  <td class="nbHits">&nbsp;</td>
@@ -2266,7 +2266,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1218</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isPlainMethod(MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1219</td>  <td class="nbHitsUncovered"><a title="Line 1219: Conditional coverage 87% (21/24) [each condition: 100%, 100%, 50%, 100%, 100%, 100%, 50%, 100%, 100%, 100%, 100%, 50%].">&nbsp;2462</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 1219: Conditional coverage 87% (21/24) [each condition: 100%, 100%, 50%, 100%, 100%, 100%, 50%, 100%, 100%, 100%, 100%, 50%].">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1219</td>  <td class="nbHitsUncovered"><a title="Line 1219: Conditional coverage 87% (21/24) [each condition: 100%, 100%, 50%, 100%, 100%, 100%, 50%, 100%, 100%, 100%, 100%, 50%].">&nbsp;2466</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 1219: Conditional coverage 87% (21/24) [each condition: 100%, 100%, 50%, 100%, 100%, 100%, 50%, 100%, 100%, 100%, 100%, 50%].">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1220</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            !isBasicMethod(method) &amp;&amp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1221</td>  <td class="nbHits">&nbsp;</td>
@@ -4713,6 +4713,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 2/16/14 12:14 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 2/17/14 7:38 PM.</div>
 </body>
 </html>
