@@ -35,6 +35,7 @@ import javax.annotation.Nonnull
 import javax.annotation.Nullable
 
 import static griffon.util.AnnotationUtils.named
+import static griffon.util.AnnotationUtils.typed
 import static java.util.Arrays.asList
 
 @Stepwise
@@ -92,7 +93,7 @@ class GriffonApplicationSpec extends Specification {
 
         expect:
         controllerClass.eventNames == []
-        controllerClass.actionNames == ['handleException', 'sayHello', 'throwException']
+        controllerClass.actionNames == ['abort', 'handleException', 'sayHello', 'throwException']
     }
 
     def 'Check artifact model'() {
@@ -140,8 +141,25 @@ class GriffonApplicationSpec extends Specification {
 
         then:
         group
+        !interceptor.abort
         !interceptor.before
         !interceptor.after
+        !interceptor.exception
+    }
+
+    def 'Invoke abort Action'() {
+        given:
+        InvokeActionInterceptor interceptor = application.injector.getInstance(ActionInterceptor)
+        MVCGroup group = application.mvcGroupManager.findGroup('integration')
+        invokables << group.view
+
+        when:
+        group.controller.invokeAction('abort')
+
+        then:
+        interceptor.abort
+        !interceptor.before
+        interceptor.after
         !interceptor.exception
     }
 
@@ -194,7 +212,7 @@ class GriffonApplicationSpec extends Specification {
         GriffonController controller = application.mvcGroupManager.findGroup('integration').controller
 
         expect:
-        application.actionManager.actionsFor(controller).keySet() == (['handleException', 'sayHello', 'throwException'] as Set)
+        application.actionManager.actionsFor(controller).keySet() == (['abort', 'handleException', 'sayHello', 'throwException'] as Set)
         application.actionManager.normalizeName('fooAction') == 'foo'
         application.actionManager.normalizeName('foo') == 'foo'
         application.actionManager.actionFor(controller, 'sayHello')
@@ -225,6 +243,7 @@ class GriffonApplicationSpec extends Specification {
     def 'Verify ArtifactManager'() {
         given:
         GriffonModel model = application.mvcGroupManager.findGroup('integration').model
+        ArtifactHandler modelHandler = application.injector.getInstance(ArtifactHandler, typed(GriffonModel))
 
         expect:
         application.artifactManager.findGriffonClass('integration.SimpleModel')
@@ -243,6 +262,22 @@ class GriffonApplicationSpec extends Specification {
         !application.artifactManager.getClassesOfType('domain')
 
         application.artifactManager.allClasses*.clazz.sort() == [IntegrationModel, IntegrationView, IntegrationController, IntegrationService, SimpleModel, SimpleView, SimpleController].sort()
+
+        modelHandler.artifactType == GriffonModel
+        modelHandler.trailing == 'Model'
+        modelHandler.type == 'model'
+        modelHandler.classesByName.keySet() == (['integration.IntegrationModel', 'integration.SimpleModel'] as Set)
+        modelHandler.classes.clazz == [IntegrationModel, SimpleModel]
+        modelHandler.findClassFor('integrationModel')
+        modelHandler.findClassFor('integration')
+        !modelHandler.findClassFor('sample')
+        !modelHandler.findClassFor('s')
+        modelHandler.application == application
+        modelHandler.getClassFor(IntegrationModel)
+        !modelHandler.getClassFor(IntegrationController)
+        modelHandler.isArtifact(IntegrationModel)
+        !modelHandler.isArtifact(IntegrationController)
+        modelHandler.isArtifact(modelHandler.classes[0])
     }
 
     def 'Verify withMvcGroup(type , handler)'() {

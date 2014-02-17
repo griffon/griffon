@@ -54,9 +54,18 @@ public class JavaFXGriffonApplication extends AbstractJavaFXGriffonApplication {
 
     @Override
     public void init() throws Exception {
-        ApplicationBootstrapper bootstrapper = new DefaultApplicationBootstrapper(this);
+        ApplicationBootstrapper bootstrapper = createApplicationBootstrapper();
         bootstrapper.bootstrap();
+        afterInit();
+    }
+
+    protected void afterInit() {
         initialize();
+    }
+
+    @Nonnull
+    protected ApplicationBootstrapper createApplicationBootstrapper() {
+        return new DefaultApplicationBootstrapper(this);
     }
 
     @Override
@@ -69,8 +78,13 @@ public class JavaFXGriffonApplication extends AbstractJavaFXGriffonApplication {
             public void run() {
                 startup();
                 ready();
+                afterReady();
             }
         });
+    }
+
+    protected void afterReady() {
+        // empty
     }
 
     public boolean shutdown() {

@@ -221,7 +221,17 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
                 if (instance != null) {
                     AnnotatedBindingBuilder<Object> abuilder = (AnnotatedBindingBuilder<Object>) bind(bindTo.value());
                     if (classifier != null) {
-                        abuilder.withClassifier(classifier).toInstance(instance);
+                        if (Provider.class.isAssignableFrom(instance.getClass())) {
+                            SingletonBindingBuilder<?> sbuilder = abuilder
+                                .withClassifier(classifier)
+                                .toProvider((Provider<Object>) instance);
+                            if (isSingleton) sbuilder.asSingleton();
+                        } else {
+                            abuilder.withClassifier(classifier).toInstance(instance);
+                        }
+                    } else if (Provider.class.isAssignableFrom(instance.getClass())) {
+                        SingletonBindingBuilder<?> sbuilder = abuilder.toProvider((Provider<Object>) instance);
+                        if (isSingleton) sbuilder.asSingleton();
                     } else {
                         abuilder.toInstance(instance);
                     }

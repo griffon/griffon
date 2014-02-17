@@ -37,6 +37,8 @@ public class Config extends AbstractMapResourceBundle {
                     .e("model", "integration.IntegrationModel")
                     .e("view", "integration.IntegrationView")
                     .e("controller", "integration.IntegrationController")
+                    .e("config", CollectionUtils.map()
+                        .e("color", "#0000FF"))
                 )
             );
     }

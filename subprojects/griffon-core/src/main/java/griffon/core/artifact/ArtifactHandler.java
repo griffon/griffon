@@ -20,6 +20,7 @@ import griffon.core.injection.Binding;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * The ArtifactHandler interface's purpose is to allow the analysis of conventions within a Griffon application.<p>
@@ -106,7 +107,7 @@ public interface ArtifactHandler<A extends GriffonArtifact> {
      *
      * @param clazz a class object, i.e, BookController
      * @return a GriffonClass that can handle the target class or null
-     *         if the clazz is not handled by this ArtifactHandler.
+     * if the clazz is not handled by this ArtifactHandler.
      */
     @Nullable
     GriffonClass getClassFor(@Nonnull Class<A> clazz);
@@ -117,11 +118,14 @@ public interface ArtifactHandler<A extends GriffonArtifact> {
      *
      * @param fqnClassName a full qualified class name, i.e, "book.BookController"
      * @return a GriffonClass that can handle the target class or null
-     *         if the clazz is not handled by this ArtifactHandler.
+     * if the clazz is not handled by this ArtifactHandler.
      */
     @Nullable
     GriffonClass getClassFor(@Nonnull String fqnClassName);
 
     @Nonnull
     GriffonClass newGriffonClassInstance(@Nonnull Class<A> clazz);
+
+    @Nonnull
+    Map<String, GriffonClass> getClassesByName();
 }

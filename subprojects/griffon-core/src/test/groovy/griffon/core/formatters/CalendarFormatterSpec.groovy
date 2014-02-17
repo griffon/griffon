@@ -55,6 +55,7 @@ class CalendarFormatterSpec extends FormatterSpecSupport {
         Calendar v2 = val ? clearTime(val) : val
 
         then:
+        pattern == formatter.pattern
         str == literal
         v1?.time?.time == v2?.time?.time
 

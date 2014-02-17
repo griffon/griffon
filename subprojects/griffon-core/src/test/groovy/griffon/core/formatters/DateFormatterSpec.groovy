@@ -51,6 +51,7 @@ class DateFormatterSpec extends FormatterSpecSupport {
         Date v2 = val ? clearTime(val) : val
 
         then:
+        pattern == formatter.pattern
         str == literal
         v1?.time == v2?.time
 

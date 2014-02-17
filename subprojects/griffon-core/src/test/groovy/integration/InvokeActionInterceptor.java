@@ -23,10 +23,15 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 
 public class InvokeActionInterceptor extends AbstractActionInterceptor {
+    private boolean abort;
     private boolean configure;
     private boolean before;
     private boolean after;
     private boolean exception;
+
+    public boolean isAbort() {
+        return abort;
+    }
 
     public boolean isConfigure() {
         return configure;
@@ -54,6 +59,10 @@ public class InvokeActionInterceptor extends AbstractActionInterceptor {
     @Nonnull
     @Override
     public Object[] before(@Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Object[] args) {
+        if ("abort".equals(actionName)) {
+            abort = true;
+            throw abortActionExecution();
+        }
         before = true;
         return super.before(controller, actionName, args);
     }

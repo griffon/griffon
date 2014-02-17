@@ -36,6 +36,10 @@ public class IntegrationController extends AbstractGriffonController {
         this.model = model;
     }
 
+    public void abort() {
+        throw new RuntimeException("Abort!");
+    }
+
     public void sayHello() {
         final String result = sampleService.sayHello(model.getInput());
         runInsideUIAsync(new Runnable() {
