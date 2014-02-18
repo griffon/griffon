@@ -15,9 +15,12 @@
  */
 package griffon.pivot.support.adapters;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
 import griffon.core.CallableWithArgs;
+import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class TabPaneAttributeAdapterTest {
     private TabPaneAttributeAdapter adapter = new TabPaneAttributeAdapter();

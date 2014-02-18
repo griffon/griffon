@@ -292,7 +292,7 @@ public class GriffonClassUtils {
      *
      * @param name the name of a possible event handler
      * @return true if the name matches the given event handler
-     *         pattern, false otherwise.
+     * pattern, false otherwise.
      */
     public static boolean isEventHandler(String name) {
         return !GriffonNameUtils.isBlank(name) && EVENT_HANDLER_PATTERN.matcher(name).matches();
@@ -311,7 +311,7 @@ public class GriffonClassUtils {
      *
      * @param method a Method reference
      * @return true if the method name matches the given event handler
-     *         pattern, false otherwise.
+     * pattern, false otherwise.
      */
     public static boolean isEventHandler(Method method) {
         return isEventHandler(MethodDescriptor.forMethod(method));
@@ -349,7 +349,7 @@ public class GriffonClassUtils {
      *
      * @param method a MethodDescriptor reference
      * @return true if the method name matches the given event handler
-     *         pattern, false otherwise.
+     * pattern, false otherwise.
      */
     public static boolean isEventHandler(MethodDescriptor method) {
         return !(method == null || method.getModifiers() - Modifier.PUBLIC != 0) &&
@@ -362,7 +362,7 @@ public class GriffonClassUtils {
      *
      * @param method a Method reference
      * @return true if the method belongs to {@code Object} or
-     *         {@code GroovyObject}, false otherwise.
+     * {@code GroovyObject}, false otherwise.
      */
     public static boolean isBasicMethod(Method method) {
         return isBasicMethod(MethodDescriptor.forMethod(method));
@@ -381,7 +381,7 @@ public class GriffonClassUtils {
      *
      * @param name the name of a possible contribution method
      * @return true if the name matches the given contribution method
-     *         pattern, false otherwise.
+     * pattern, false otherwise.
      */
     public static boolean isContributionMethod(String name) {
         return !GriffonNameUtils.isBlank(name) && CONTRIBUTION_PATTERN.matcher(name).matches();
@@ -400,7 +400,7 @@ public class GriffonClassUtils {
      *
      * @param method a Method reference
      * @return true if the method name matches the given contribution method
-     *         pattern, false otherwise.
+     * pattern, false otherwise.
      */
     public static boolean isContributionMethod(Method method) {
         return isContributionMethod(MethodDescriptor.forMethod(method));
@@ -438,7 +438,7 @@ public class GriffonClassUtils {
      *
      * @param method a MethodDescriptor reference
      * @return true if the method name matches the given contribution method
-     *         pattern, false otherwise.
+     * pattern, false otherwise.
      */
     public static boolean isContributionMethod(MethodDescriptor method) {
         return !(method == null || method.getModifiers() - Modifier.PUBLIC != 0) &&
@@ -463,7 +463,7 @@ public class GriffonClassUtils {
      *
      * @param method a MethodDescriptor reference
      * @return true if the method belongs to {@code Object} or
-     *         {@code GroovyObject}, false otherwise.
+     * {@code GroovyObject}, false otherwise.
      */
     public static boolean isBasicMethod(MethodDescriptor method) {
         return !(method == null || !isInstanceMethod(method)) && BASIC_METHODS.contains(method);
@@ -1502,7 +1502,7 @@ public class GriffonClassUtils {
      * @param leftType
      * @param rightType
      * @return true if one of the classes is a native type and the other the object representation
-     *         of the same native type
+     * of the same native type
      */
     public static boolean isMatchBetweenPrimitiveAndWrapperTypes(Class<?> leftType, Class<?> rightType) {
         if (leftType == null) {
@@ -1523,7 +1523,7 @@ public class GriffonClassUtils {
      * @param leftType
      * @param rightType
      * @return true if one of the classes is a native type and the other the object representation
-     *         of the same native type
+     * of the same native type
      */
     public static boolean isMatchBetweenPrimitiveAndWrapperTypes(String leftType, String rightType) {
         if (leftType == null) {
@@ -2025,7 +2025,7 @@ public class GriffonClassUtils {
      * @param name name of the property for which a property descriptor
      *             is requested
      * @return the property descriptor or null if the bean does not have
-     *         a property that matches the specified name.
+     * a property that matches the specified name.
      * @throws IllegalAccessException    if the caller does not have
      *                                   access to the property accessor method
      * @throws IllegalArgumentException  if <code>bean</code> or
@@ -2060,7 +2060,7 @@ public class GriffonClassUtils {
      * @param name  name of the property for which a property descriptor
      *              is requested
      * @return the property descriptor or null if the bean does not have
-     *         a property that matches the specified name.
+     * a property that matches the specified name.
      * @throws IllegalAccessException    if the caller does not have
      *                                   access to the property accessor method
      * @throws IllegalArgumentException  if <code>bean</code> or
@@ -2149,7 +2149,7 @@ public class GriffonClassUtils {
      * @param bean Bean to be examined
      * @param name Property name to be evaluated
      * @return <code>true</code> if the property is readable,
-     *         otherwise <code>false</code>
+     * otherwise <code>false</code>
      * @throws IllegalArgumentException if <code>bean</code>
      *                                  or <code>name</code> is <code>null</code>
      * @since BeanUtils 1.6
@@ -2203,7 +2203,7 @@ public class GriffonClassUtils {
      * @param bean Bean to be examined
      * @param name Property name to be evaluated
      * @return <code>true</code> if the property is writable,
-     *         otherwise <code>false</code>
+     * otherwise <code>false</code>
      * @throws IllegalArgumentException if <code>bean</code>
      *                                  or <code>name</code> is <code>null</code>
      */
@@ -2276,6 +2276,12 @@ public class GriffonClassUtils {
         if (writeMethod == null) {
             throw new NoSuchMethodException("Property '" + name +
                 "' has no setter method in class '" + bean.getClass() + "'");
+        }
+
+        // type conversion needed?
+        Class<?> propertyType = descriptor.getPropertyType();
+        if (value != null && !propertyType.isAssignableFrom(value.getClass())) {
+            value = TypeUtils.convertValue(propertyType, value);
         }
 
         // Call the property setter

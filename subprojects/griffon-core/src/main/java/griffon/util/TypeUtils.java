@@ -203,8 +203,8 @@ public final class TypeUtils {
         if (left == null || right == null) return false;
 
         // handle arrays on both sides as special case for efficiency
-        Class leftClass = left.getClass();
-        Class rightClass = right.getClass();
+        Class<?> leftClass = left.getClass();
+        Class<?> rightClass = right.getClass();
         if (leftClass.isArray() && rightClass.isArray()) {
             return arrayEqual(left, right);
         }
@@ -308,7 +308,7 @@ public final class TypeUtils {
         return doEquals(right, left);
     }
 
-    private static boolean doEquals(Object[] left, List right) {
+    private static boolean doEquals(Object[] left, List<?> right) {
         if (left == null) {
             return right == null;
         }
@@ -342,7 +342,7 @@ public final class TypeUtils {
      * @return boolean   <code>true</code> if the contents of both lists are identical,
      * <code>false</code> rightwise.
      */
-    public static boolean equals(List left, List right) {
+    public static <T> boolean equals(List<T> left, List<T> right) {
         if (left == null) {
             return right == null;
         }
@@ -355,10 +355,10 @@ public final class TypeUtils {
         if (left.size() != right.size()) {
             return false;
         }
-        final Iterator it1 = left.iterator(), it2 = right.iterator();
+        final Iterator<T> it1 = left.iterator(), it2 = right.iterator();
         while (it1.hasNext()) {
-            final Object o1 = it1.next();
-            final Object o2 = it2.next();
+            final T o1 = it1.next();
+            final T o2 = it2.next();
             if (o1 == null) {
                 if (o2 != null) return false;
             } else if (!equals(o1, o2)) {
@@ -426,7 +426,7 @@ public final class TypeUtils {
      * @param right the Map being compared to
      * @return <tt>true</tt> if the contents of both maps are identical
      */
-    public static boolean equals(Map left, Map right) {
+    public static <K, V> boolean equals(Map<K, V> left, Map<K, V> right) {
         if (left == null) {
             return right == null;
         }
@@ -442,7 +442,7 @@ public final class TypeUtils {
         if (!left.keySet().equals(right.keySet())) {
             return false;
         }
-        for (Object key : left.keySet()) {
+        for (K key : left.keySet()) {
             if (!equals(left.get(key), right.get(key))) {
                 return false;
             }

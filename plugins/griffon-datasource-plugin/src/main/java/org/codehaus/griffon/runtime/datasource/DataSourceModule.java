@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.core;
+package org.codehaus.griffon.runtime.datasource;
 
 import griffon.core.Configuration;
 import griffon.core.injection.Module;
@@ -21,10 +21,6 @@ import griffon.plugins.datasource.DataSourceFactory;
 import griffon.plugins.datasource.DataSourceHandler;
 import griffon.plugins.datasource.DataSourceStorage;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
-import org.codehaus.griffon.runtime.datasource.DefaultDataSourceConfiguration;
-import org.codehaus.griffon.runtime.datasource.DefaultDataSourceFactory;
-import org.codehaus.griffon.runtime.datasource.DefaultDataSourceHandler;
-import org.codehaus.griffon.runtime.datasource.DefaultDataSourceStorage;
 import org.codehaus.griffon.runtime.util.ResourceBundleProvider;
 import org.kordamp.jipsy.ServiceProviderFor;
 

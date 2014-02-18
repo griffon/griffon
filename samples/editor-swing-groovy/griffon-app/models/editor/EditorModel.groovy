@@ -16,8 +16,8 @@
 package editor
 
 import griffon.core.artifact.GriffonModel
-import griffon.transform.Observable
 import griffon.metadata.ArtifactProviderFor
+import griffon.transform.Observable
 
 @ArtifactProviderFor(GriffonModel)
 class EditorModel {

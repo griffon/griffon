@@ -24,8 +24,6 @@ import griffon.pivot.support.adapters.TextInputContentAdapter;
 import org.apache.pivot.serialization.SerializationException;
 import org.apache.pivot.wtk.*;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
-import sample.pivot.java.SampleController;
-import sample.pivot.java.SampleModel;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

@@ -16,8 +16,8 @@
 package browser
 
 import griffon.core.artifact.GriffonModel
-import groovyx.javafx.beans.FXBindable
 import griffon.metadata.ArtifactProviderFor
+import groovyx.javafx.beans.FXBindable
 
 @ArtifactProviderFor(GriffonModel)
 class BrowserModel {

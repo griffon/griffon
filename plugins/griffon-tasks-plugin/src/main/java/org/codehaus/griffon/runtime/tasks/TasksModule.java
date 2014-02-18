@@ -1,11 +1,11 @@
 /*
- * Copyright 2008-2014 the original author or authors.
+ * Copyright 2013-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.core;
 
-import griffon.core.addon.GriffonAddon;
+package org.codehaus.griffon.runtime.tasks;
+
 import griffon.core.injection.Module;
-import griffon.plugins.preferences.PreferencesManager;
-import griffon.plugins.preferences.PreferencesPersistor;
-import griffon.plugins.preferences.persistors.SerializingPreferencesPersistor;
+import griffon.plugins.tasks.TaskManager;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
-import org.codehaus.griffon.runtime.prefs.DefaultPreferencesManager;
 import org.kordamp.jipsy.ServiceProviderFor;
 
 import javax.inject.Named;
@@ -29,21 +26,13 @@ import javax.inject.Named;
 /**
  * @author Andres Almiray
  */
-@Named("preferences")
+@Named("tasks")
 @ServiceProviderFor(Module.class)
-public class PreferencesModule extends AbstractModule {
+public class TasksModule extends AbstractModule {
     @Override
     protected void doConfigure() {
-        bind(PreferencesManager.class)
-            .to(DefaultPreferencesManager.class)
-            .asSingleton();
-
-        bind(PreferencesPersistor.class)
-            .to(SerializingPreferencesPersistor.class)
-            .asSingleton();
-
-        bind(GriffonAddon.class)
-            .to(PreferencesAddon.class)
+        bind(TaskManager.class)
+            .to(NonBlockingTaskManager.class)
             .asSingleton();
     }
 }

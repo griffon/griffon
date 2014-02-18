@@ -16,8 +16,8 @@
 package browser
 
 import griffon.core.artifact.GriffonController
-import griffon.transform.Threading
 import griffon.metadata.ArtifactProviderFor
+import griffon.transform.Threading
 
 @ArtifactProviderFor(GriffonController)
 class BrowserController {

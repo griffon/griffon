@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
  * @author Andres Almiray
  * @since 2.0.0
  */
-public class StaticMethodInvocationException extends GriffonException {
+public class StaticMethodInvocationException extends MethodInvocationException {
     private static final long serialVersionUID = 7806081622952446099L;
 
     public StaticMethodInvocationException(@Nonnull Class<?> klass, @Nonnull String methodName, @Nullable Object[] args) {
@@ -53,19 +53,5 @@ public class StaticMethodInvocationException extends GriffonException {
         b.append(")");
 
         return b.toString();
-    }
-
-    @Nonnull
-    private static Class[] convertToTypeArray(Object[] args) {
-        if (args == null) {
-            return new Class<?>[0];
-        }
-        int s = args.length;
-        Class<?>[] ans = new Class<?>[s];
-        for (int i = 0; i < s; i++) {
-            Object o = args[i];
-            ans[i] = o != null ? o.getClass() : null;
-        }
-        return ans;
     }
 }

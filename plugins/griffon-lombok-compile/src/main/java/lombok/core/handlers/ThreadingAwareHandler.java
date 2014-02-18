@@ -19,7 +19,10 @@ import lombok.ast.IMethod;
 import lombok.ast.IType;
 import org.codehaus.griffon.compile.core.ThreadingAwareConstants;
 
-import static lombok.ast.AST.*;
+import static lombok.ast.AST.Annotation;
+import static lombok.ast.AST.Field;
+import static lombok.ast.AST.FieldDecl;
+import static lombok.ast.AST.Type;
 
 /**
  * @author Andres Almiray

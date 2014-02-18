@@ -13,35 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.core;
+package org.codehaus.griffon.runtime.shiro;
 
+import griffon.core.controller.ActionInterceptor;
 import griffon.core.injection.Module;
-import griffon.core.resources.ResourceInjector;
-import griffon.plugins.theme.ThemeManager;
+import griffon.plugins.shiro.SecurityFailureHandler;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.subject.Subject;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
-import org.codehaus.griffon.runtime.theme.DefaultThemeManager;
-import org.codehaus.griffon.runtime.theme.ThemeAwareResourceInjector;
 import org.kordamp.jipsy.ServiceProviderFor;
 
 import javax.inject.Named;
 
-import static griffon.util.AnnotationUtils.named;
-
 /**
  * @author Andres Almiray
  */
-@Named("theme")
+@Named("shiro")
 @ServiceProviderFor(Module.class)
-public class ThemeModule extends AbstractModule {
+public class ShiroModule extends AbstractModule {
     @Override
     protected void doConfigure() {
-        bind(ThemeManager.class)
-            .to(DefaultThemeManager.class)
+        bind(SecurityManager.class)
+            .toProvider(SecurityManagerProvider.class)
             .asSingleton();
 
-        bind(ResourceInjector.class)
-            .withClassifier(named("applicationResourceInjector"))
-            .to(ThemeAwareResourceInjector.class)
+        bind(Subject.class)
+            .toProvider(SubjectProvider.class)
+            .asSingleton();
+
+        bind(SecurityFailureHandler.class)
+            .to(DefaultSecurityFailureHandler.class)
+            .asSingleton();
+
+        bind(ActionInterceptor.class)
+            .to(ShiroActionInterceptor.class)
             .asSingleton();
     }
 }

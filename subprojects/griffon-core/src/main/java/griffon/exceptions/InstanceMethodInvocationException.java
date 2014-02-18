@@ -23,8 +23,8 @@ import java.lang.reflect.Method;
  * @author Andres Almiray
  * @since 2.0.0
  */
-public class InstanceMethodInvocationException extends GriffonException {
-    private static final long serialVersionUID = -3271666284661136432L;
+public class InstanceMethodInvocationException extends MethodInvocationException {
+    private static final long serialVersionUID = -2325571968606780435L;
 
     public InstanceMethodInvocationException(@Nonnull Object instance, @Nonnull String methodName, @Nullable Object[] args) {
         super(formatArguments(instance, methodName, args));
@@ -65,7 +65,7 @@ public class InstanceMethodInvocationException extends GriffonException {
     }
 
     @Nonnull
-    private static String formatArguments(@Nonnull Object instance, @Nonnull Method method) {
+    protected static String formatArguments(@Nonnull Object instance, @Nonnull Method method) {
         checkNonNull(instance, "instance");
         checkNonNull(method, "method");
         StringBuilder b = new StringBuilder("An error occurred while invoking instance method ")
@@ -84,19 +84,5 @@ public class InstanceMethodInvocationException extends GriffonException {
         b.append(")");
 
         return b.toString();
-    }
-
-    @Nonnull
-    private static Class<?>[] convertToTypeArray(@Nullable Object[] args) {
-        if (args == null) {
-            return new Class<?>[0];
-        }
-        int s = args.length;
-        Class<?>[] ans = new Class<?>[s];
-        for (int i = 0; i < s; i++) {
-            Object o = args[i];
-            ans[i] = o != null ? o.getClass() : null;
-        }
-        return ans;
     }
 }

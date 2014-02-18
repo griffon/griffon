@@ -16,9 +16,9 @@
 package editor
 
 import griffon.core.artifact.GriffonModel
-import griffon.transform.PropertyListener
-import griffon.transform.Observable
 import griffon.metadata.ArtifactProviderFor
+import griffon.transform.Observable
+import griffon.transform.PropertyListener
 
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
