@@ -64,7 +64,6 @@ public class GriffonClassUtils {
     private static final Set<MethodDescriptor> BASIC_METHODS = new TreeSet<>();
     private static final Set<MethodDescriptor> ARTIFACT_METHODS = new TreeSet<>();
     private static final Set<MethodDescriptor> MVC_METHODS = new TreeSet<>();
-    // private static final Set<MethodDescriptor> SERVICE_METHODS = new TreeSet<MethodDescriptor>();
     private static final Set<MethodDescriptor> THREADING_METHODS = new TreeSet<>();
     private static final Set<MethodDescriptor> EVENT_PUBLISHER_METHODS = new TreeSet<>();
     private static final Set<MethodDescriptor> OBSERVABLE_METHODS = new TreeSet<>();
@@ -95,20 +94,30 @@ public class GriffonClassUtils {
         registerPrimitiveClassPair(Float.class, float.class);
         registerPrimitiveClassPair(Double.class, double.class);
 
-        /*
-        for (Method method : GroovyObject.class.getMethods()) {
-            MethodDescriptor md = MethodDescriptor.forMethod(method);
-            if (!BASIC_METHODS.contains(md)) {
-                BASIC_METHODS.add(md);
+        try {
+            Class groovyObjectClass = GriffonClassUtils.class.getClassLoader().loadClass("groovy.lang.GroovyObject");
+            for (Method method : groovyObjectClass.getMethods()) {
+                MethodDescriptor md = MethodDescriptor.forMethod(method);
+                if (!BASIC_METHODS.contains(md)) {
+                    BASIC_METHODS.add(md);
+                }
             }
+        } catch (ClassNotFoundException cnfe) {
+            // ignore
         }
-        for (Method method : GroovyObjectSupport.class.getMethods()) {
-            MethodDescriptor md = MethodDescriptor.forMethod(method);
-            if (!BASIC_METHODS.contains(md)) {
-                BASIC_METHODS.add(md);
+
+        try {
+            Class groovyObjectClass = GriffonClassUtils.class.getClassLoader().loadClass("groovy.lang.GroovyObjectSupport");
+            for (Method method : groovyObjectClass.getMethods()) {
+                MethodDescriptor md = MethodDescriptor.forMethod(method);
+                if (!BASIC_METHODS.contains(md)) {
+                    BASIC_METHODS.add(md);
+                }
             }
+        } catch (ClassNotFoundException cnfe) {
+            // ignore
         }
-        */
+
         for (Method method : Object.class.getMethods()) {
             MethodDescriptor md = MethodDescriptor.forMethod(method);
             if (!BASIC_METHODS.contains(md)) {
@@ -121,6 +130,7 @@ public class GriffonClassUtils {
         ARTIFACT_METHODS.add(new MethodDescriptor("getApplication"));
         ARTIFACT_METHODS.add(new MethodDescriptor("getLog"));
         ARTIFACT_METHODS.add(new MethodDescriptor("getGriffonClass"));
+        ARTIFACT_METHODS.add(new MethodDescriptor("getMetaClass"));
 
         MVC_METHODS.add(new MethodDescriptor("getMvcGroup"));
         MVC_METHODS.add(new MethodDescriptor("setMvcGroup", new Class<?>[]{MVCGroup.class}));

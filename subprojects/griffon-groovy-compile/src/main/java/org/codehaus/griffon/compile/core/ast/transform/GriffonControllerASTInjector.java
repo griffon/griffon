@@ -31,6 +31,7 @@ import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
  */
 public class GriffonControllerASTInjector extends GriffonMvcArtifactASTInjector {
     private static final ClassNode OBJECT_ARRAY_TYPE = makeClassSafe(Object[].class);
+    private static final String INVOKE_ACTION = "invokeAction";
     private static final String ACTION_NAME = "actionName";
     private static final String ARGS = "args";
 
@@ -39,7 +40,7 @@ public class GriffonControllerASTInjector extends GriffonMvcArtifactASTInjector 
 
         // void invokeAction(String actionName, Object... args)
         injectMethod(classNode, new MethodNode(
-            "invokeAction",
+            INVOKE_ACTION,
             Modifier.PUBLIC,
             VOID_TYPE,
             params(
@@ -48,7 +49,7 @@ public class GriffonControllerASTInjector extends GriffonMvcArtifactASTInjector 
             NO_EXCEPTIONS,
             stmnt(call(
                 applicationProperty(classNode, "actionManager"),
-                "invokeAction",
+                INVOKE_ACTION,
                 args(THIS, var(ACTION_NAME), var(ARGS))))
         ));
     }

@@ -76,7 +76,7 @@ public class DataSourceAwareASTTransformation extends AbstractASTTransformation 
 
     public static void addDataSourceHandlerIfNeeded(SourceUnit source, AnnotationNode annotationNode, ClassNode classNode) {
         if (needsDelegate(classNode, source, METHODS, "DataSourceAware", DATA_SOURCE_HANDLER_TYPE)) {
-            LOG.debug("Injecting {} into {}", DATA_SOURCE_TYPE, classNode.getName());
+            LOG.debug("Injecting {} into {}", DATA_SOURCE_HANDLER_TYPE, classNode.getName());
             apply(classNode);
         }
     }

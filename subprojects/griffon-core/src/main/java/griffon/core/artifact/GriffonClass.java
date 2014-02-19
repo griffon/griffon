@@ -34,7 +34,7 @@ import java.util.TreeSet;
  */
 public interface GriffonClass {
     Set<String> STANDARD_PROPERTIES = new TreeSet<>(
-        Arrays.asList("class", "UIThread", "application", "griffonClass", "log", "artifactType"));
+        Arrays.asList("class", "UIThread", "application", "griffonClass", "log", "artifactType", "metaClass"));
 
     @Nonnull
     GriffonApplication getApplication();
