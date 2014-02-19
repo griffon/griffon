@@ -20,6 +20,8 @@ import griffon.exceptions.TypeConversionException;
 import org.junit.Test;
 
 import java.beans.PropertyEditorManager;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -55,6 +57,7 @@ public class TypeUtilsTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void mapEquality() {
         Map<String, String> m1 = CollectionUtils.<String, String>newMap("k1", "v1", "k2", "v2");
         Map<String, String> m2 = CollectionUtils.<String, String>newMap("k2", "v2", "k1", "v1");
@@ -119,6 +122,7 @@ public class TypeUtilsTest {
     }
 
     @Test
+    @SuppressWarnings("UnnecessaryBoxing")
     public void objectEquality() {
         Object o1 = new Object();
         Object o2 = new Object();
@@ -134,6 +138,7 @@ public class TypeUtilsTest {
     }
 
     @Test
+    @SuppressWarnings("UnnecessaryBoxing")
     public void equality() {
         Integer[] integers1 = new Integer[]{Integer.valueOf(1), Integer.valueOf(2)};
         Integer[] integers2 = new Integer[]{Integer.valueOf(1), Integer.valueOf(2), new Integer(3)};
@@ -181,5 +186,186 @@ public class TypeUtilsTest {
         assertEquals(expected, TypeUtils.convertValue(URI.class, "http://localhost"));
         assertEquals(expected, TypeUtils.convertValue(URI.class, "http://localhost", "format"));
         TypeUtils.convertValue(TypeUtils.class, expected);
+    }
+
+    @Test
+    public void convertBooleans() {
+        assertEquals(true, (boolean) TypeUtils.convertValue(Boolean.TYPE, Boolean.TRUE));
+        assertEquals(Boolean.TRUE, TypeUtils.convertValue(Boolean.class, Boolean.TRUE));
+    }
+
+    @Test
+    @SuppressWarnings("UnnecessaryBoxing")
+    public void convertCharacters() {
+        assertEquals('A', (char) TypeUtils.convertValue(Character.TYPE, Character.valueOf('A')));
+        assertEquals(Character.valueOf('A'), TypeUtils.convertValue(Character.class, Character.valueOf('A')));
+    }
+
+    @Test
+    public void convertNumbersIntoPrimitiveByte() {
+        assertEquals((byte) 10, (byte) TypeUtils.convertValue(Byte.TYPE, Byte.valueOf("10")));
+        assertEquals((byte) 10, (byte) TypeUtils.convertValue(Byte.TYPE, Short.valueOf("10")));
+        assertEquals((byte) 10, (byte) TypeUtils.convertValue(Byte.TYPE, Integer.valueOf("10")));
+        assertEquals((byte) 10, (byte) TypeUtils.convertValue(Byte.TYPE, Long.valueOf("10")));
+        assertEquals((byte) 10, (byte) TypeUtils.convertValue(Byte.TYPE, Float.valueOf("10")));
+        assertEquals((byte) 10, (byte) TypeUtils.convertValue(Byte.TYPE, Double.valueOf("10")));
+        assertEquals((byte) 10, (byte) TypeUtils.convertValue(Byte.TYPE, new BigInteger("10")));
+        assertEquals((byte) 10, (byte) TypeUtils.convertValue(Byte.TYPE, new BigDecimal("10")));
+    }
+
+    @Test
+    public void convertNumbersIntoWrapperByte() {
+        assertEquals(Byte.valueOf("10"), TypeUtils.convertValue(Byte.class, Byte.valueOf("10")));
+        assertEquals(Byte.valueOf("10"), TypeUtils.convertValue(Byte.class, Short.valueOf("10")));
+        assertEquals(Byte.valueOf("10"), TypeUtils.convertValue(Byte.class, Integer.valueOf("10")));
+        assertEquals(Byte.valueOf("10"), TypeUtils.convertValue(Byte.class, Long.valueOf("10")));
+        assertEquals(Byte.valueOf("10"), TypeUtils.convertValue(Byte.class, Float.valueOf("10")));
+        assertEquals(Byte.valueOf("10"), TypeUtils.convertValue(Byte.class, Double.valueOf("10")));
+        assertEquals(Byte.valueOf("10"), TypeUtils.convertValue(Byte.class, new BigInteger("10")));
+        assertEquals(Byte.valueOf("10"), TypeUtils.convertValue(Byte.class, new BigDecimal("10")));
+    }
+
+    @Test
+    public void convertNumbersIntoPrimitiveShort() {
+        assertEquals((short) 10, (short) TypeUtils.convertValue(Short.TYPE, Byte.valueOf("10")));
+        assertEquals((short) 10, (short) TypeUtils.convertValue(Short.TYPE, Short.valueOf("10")));
+        assertEquals((short) 10, (short) TypeUtils.convertValue(Short.TYPE, Integer.valueOf("10")));
+        assertEquals((short) 10, (short) TypeUtils.convertValue(Short.TYPE, Long.valueOf("10")));
+        assertEquals((short) 10, (short) TypeUtils.convertValue(Short.TYPE, Float.valueOf("10")));
+        assertEquals((short) 10, (short) TypeUtils.convertValue(Short.TYPE, Double.valueOf("10")));
+        assertEquals((short) 10, (short) TypeUtils.convertValue(Short.TYPE, new BigInteger("10")));
+        assertEquals((short) 10, (short) TypeUtils.convertValue(Short.TYPE, new BigDecimal("10")));
+    }
+
+    @Test
+    public void convertNumbersIntoWrapperShort() {
+        assertEquals(Short.valueOf("10"), TypeUtils.convertValue(Short.class, Byte.valueOf("10")));
+        assertEquals(Short.valueOf("10"), TypeUtils.convertValue(Short.class, Short.valueOf("10")));
+        assertEquals(Short.valueOf("10"), TypeUtils.convertValue(Short.class, Integer.valueOf("10")));
+        assertEquals(Short.valueOf("10"), TypeUtils.convertValue(Short.class, Long.valueOf("10")));
+        assertEquals(Short.valueOf("10"), TypeUtils.convertValue(Short.class, Float.valueOf("10")));
+        assertEquals(Short.valueOf("10"), TypeUtils.convertValue(Short.class, Double.valueOf("10")));
+        assertEquals(Short.valueOf("10"), TypeUtils.convertValue(Short.class, new BigInteger("10")));
+        assertEquals(Short.valueOf("10"), TypeUtils.convertValue(Short.class, new BigDecimal("10")));
+    }
+
+    @Test
+    public void convertNumbersIntoPrimitiveInteger() {
+        assertEquals((int) 10, (int) TypeUtils.convertValue(Integer.TYPE, Byte.valueOf("10")));
+        assertEquals((int) 10, (int) TypeUtils.convertValue(Integer.TYPE, Short.valueOf("10")));
+        assertEquals((int) 10, (int) TypeUtils.convertValue(Integer.TYPE, Integer.valueOf("10")));
+        assertEquals((int) 10, (int) TypeUtils.convertValue(Integer.TYPE, Long.valueOf("10")));
+        assertEquals((int) 10, (int) TypeUtils.convertValue(Integer.TYPE, Float.valueOf("10")));
+        assertEquals((int) 10, (int) TypeUtils.convertValue(Integer.TYPE, Double.valueOf("10")));
+        assertEquals((int) 10, (int) TypeUtils.convertValue(Integer.TYPE, new BigInteger("10")));
+        assertEquals((int) 10, (int) TypeUtils.convertValue(Integer.TYPE, new BigDecimal("10")));
+    }
+
+    @Test
+    public void convertNumbersIntoWrapperInteger() {
+        assertEquals(Integer.valueOf("10"), TypeUtils.convertValue(Integer.class, Byte.valueOf("10")));
+        assertEquals(Integer.valueOf("10"), TypeUtils.convertValue(Integer.class, Short.valueOf("10")));
+        assertEquals(Integer.valueOf("10"), TypeUtils.convertValue(Integer.class, Integer.valueOf("10")));
+        assertEquals(Integer.valueOf("10"), TypeUtils.convertValue(Integer.class, Long.valueOf("10")));
+        assertEquals(Integer.valueOf("10"), TypeUtils.convertValue(Integer.class, Float.valueOf("10")));
+        assertEquals(Integer.valueOf("10"), TypeUtils.convertValue(Integer.class, Double.valueOf("10")));
+        assertEquals(Integer.valueOf("10"), TypeUtils.convertValue(Integer.class, new BigInteger("10")));
+        assertEquals(Integer.valueOf("10"), TypeUtils.convertValue(Integer.class, new BigDecimal("10")));
+    }
+
+    @Test
+    public void convertNumbersIntoPrimitiveLong() {
+        assertEquals((long) 10, (long) TypeUtils.convertValue(Long.TYPE, Byte.valueOf("10")));
+        assertEquals((long) 10, (long) TypeUtils.convertValue(Long.TYPE, Short.valueOf("10")));
+        assertEquals((long) 10, (long) TypeUtils.convertValue(Long.TYPE, Integer.valueOf("10")));
+        assertEquals((long) 10, (long) TypeUtils.convertValue(Long.TYPE, Long.valueOf("10")));
+        assertEquals((long) 10, (long) TypeUtils.convertValue(Long.TYPE, Float.valueOf("10")));
+        assertEquals((long) 10, (long) TypeUtils.convertValue(Long.TYPE, Double.valueOf("10")));
+        assertEquals((long) 10, (long) TypeUtils.convertValue(Long.TYPE, new BigInteger("10")));
+        assertEquals((long) 10, (long) TypeUtils.convertValue(Long.TYPE, new BigDecimal("10")));
+    }
+
+    @Test
+    public void convertNumbersIntoWrapperLong() {
+        assertEquals(Long.valueOf("10"), TypeUtils.convertValue(Long.class, Byte.valueOf("10")));
+        assertEquals(Long.valueOf("10"), TypeUtils.convertValue(Long.class, Short.valueOf("10")));
+        assertEquals(Long.valueOf("10"), TypeUtils.convertValue(Long.class, Integer.valueOf("10")));
+        assertEquals(Long.valueOf("10"), TypeUtils.convertValue(Long.class, Long.valueOf("10")));
+        assertEquals(Long.valueOf("10"), TypeUtils.convertValue(Long.class, Float.valueOf("10")));
+        assertEquals(Long.valueOf("10"), TypeUtils.convertValue(Long.class, Double.valueOf("10")));
+        assertEquals(Long.valueOf("10"), TypeUtils.convertValue(Long.class, new BigInteger("10")));
+        assertEquals(Long.valueOf("10"), TypeUtils.convertValue(Long.class, new BigDecimal("10")));
+    }
+
+    @Test
+    public void convertNumbersIntoPrimitiveFloat() {
+        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, Byte.valueOf("10")), 0);
+        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, Short.valueOf("10")), 0);
+        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, Integer.valueOf("10")), 0);
+        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, Long.valueOf("10")), 0);
+        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, Float.valueOf("10")), 0);
+        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, Double.valueOf("10")), 0);
+        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, new BigInteger("10")), 0);
+        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, new BigDecimal("10")), 0);
+    }
+
+    @Test
+    public void convertNumbersIntoWrapperFloat() {
+        assertEquals(Float.valueOf("10"), TypeUtils.convertValue(Float.class, Byte.valueOf("10")));
+        assertEquals(Float.valueOf("10"), TypeUtils.convertValue(Float.class, Short.valueOf("10")));
+        assertEquals(Float.valueOf("10"), TypeUtils.convertValue(Float.class, Integer.valueOf("10")));
+        assertEquals(Float.valueOf("10"), TypeUtils.convertValue(Float.class, Long.valueOf("10")));
+        assertEquals(Float.valueOf("10"), TypeUtils.convertValue(Float.class, Float.valueOf("10")));
+        assertEquals(Float.valueOf("10"), TypeUtils.convertValue(Float.class, Double.valueOf("10")));
+        assertEquals(Float.valueOf("10"), TypeUtils.convertValue(Float.class, new BigInteger("10")));
+        assertEquals(Float.valueOf("10"), TypeUtils.convertValue(Float.class, new BigDecimal("10")));
+    }
+
+    @Test
+    public void convertNumbersIntoPrimitiveDouble() {
+        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, Byte.valueOf("10")), 0);
+        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, Short.valueOf("10")), 0);
+        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, Integer.valueOf("10")), 0);
+        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, Long.valueOf("10")), 0);
+        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, Float.valueOf("10")), 0);
+        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, Double.valueOf("10")), 0);
+        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, new BigInteger("10")), 0);
+        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, new BigDecimal("10")), 0);
+    }
+
+    @Test
+    public void convertNumbersIntoWrapperDouble() {
+        assertEquals(Double.valueOf("10"), TypeUtils.convertValue(Double.class, Byte.valueOf("10")));
+        assertEquals(Double.valueOf("10"), TypeUtils.convertValue(Double.class, Short.valueOf("10")));
+        assertEquals(Double.valueOf("10"), TypeUtils.convertValue(Double.class, Integer.valueOf("10")));
+        assertEquals(Double.valueOf("10"), TypeUtils.convertValue(Double.class, Long.valueOf("10")));
+        assertEquals(Double.valueOf("10"), TypeUtils.convertValue(Double.class, Float.valueOf("10")));
+        assertEquals(Double.valueOf("10"), TypeUtils.convertValue(Double.class, Double.valueOf("10")));
+        assertEquals(Double.valueOf("10"), TypeUtils.convertValue(Double.class, new BigInteger("10")));
+        assertEquals(Double.valueOf("10"), TypeUtils.convertValue(Double.class, new BigDecimal("10")));
+    }
+
+    @Test
+    public void convertNumbersIntoWrapperBigInteger() {
+        assertEquals(BigInteger.valueOf(10L), TypeUtils.convertValue(BigInteger.class, Byte.valueOf("10")));
+        assertEquals(BigInteger.valueOf(10L), TypeUtils.convertValue(BigInteger.class, Short.valueOf("10")));
+        assertEquals(BigInteger.valueOf(10L), TypeUtils.convertValue(BigInteger.class, Integer.valueOf("10")));
+        assertEquals(BigInteger.valueOf(10L), TypeUtils.convertValue(BigInteger.class, Long.valueOf("10")));
+        assertEquals(BigInteger.valueOf(10L), TypeUtils.convertValue(BigInteger.class, Float.valueOf("10")));
+        assertEquals(BigInteger.valueOf(10L), TypeUtils.convertValue(BigInteger.class, Double.valueOf("10")));
+        assertEquals(BigInteger.valueOf(10L), TypeUtils.convertValue(BigInteger.class, new BigInteger("10")));
+        assertEquals(BigInteger.valueOf(10L), TypeUtils.convertValue(BigInteger.class, new BigDecimal("10")));
+    }
+
+    @Test
+    public void convertNumbersIntoWrapperBigDecimal() {
+        assertEquals(BigDecimal.valueOf(10d), TypeUtils.convertValue(BigDecimal.class, Byte.valueOf("10")));
+        assertEquals(BigDecimal.valueOf(10d), TypeUtils.convertValue(BigDecimal.class, Short.valueOf("10")));
+        assertEquals(BigDecimal.valueOf(10d), TypeUtils.convertValue(BigDecimal.class, Integer.valueOf("10")));
+        assertEquals(BigDecimal.valueOf(10d), TypeUtils.convertValue(BigDecimal.class, Long.valueOf("10")));
+        assertEquals(BigDecimal.valueOf(10d), TypeUtils.convertValue(BigDecimal.class, Float.valueOf("10")));
+        assertEquals(BigDecimal.valueOf(10d), TypeUtils.convertValue(BigDecimal.class, Double.valueOf("10")));
+        assertEquals(BigDecimal.valueOf(10d), TypeUtils.convertValue(BigDecimal.class, new BigInteger("10")));
+        assertEquals(BigDecimal.valueOf(10d), TypeUtils.convertValue(BigDecimal.class, new BigDecimal("10.0")));
     }
 }

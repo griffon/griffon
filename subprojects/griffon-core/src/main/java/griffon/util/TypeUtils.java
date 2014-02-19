@@ -61,6 +61,22 @@ public final class TypeUtils {
         return String.valueOf(value).charAt(0);
     }
 
+    public static byte castToByte(@Nonnull Object value) {
+        requireNonNull(value, ERROR_VALUE_NULL);
+        if (value instanceof Number) {
+            return ((Number) value).byteValue();
+        }
+        return Byte.valueOf(String.valueOf(value));
+    }
+
+    public static short castToShort(@Nonnull Object value) {
+        requireNonNull(value, ERROR_VALUE_NULL);
+        if (value instanceof Number) {
+            return ((Number) value).shortValue();
+        }
+        return Short.valueOf(String.valueOf(value));
+    }
+
     public static int castToInt(@Nonnull Object value) {
         requireNonNull(value, ERROR_VALUE_NULL);
         if (value instanceof Number) {
@@ -126,6 +142,14 @@ public final class TypeUtils {
         return value == null ? defaultValue : castToChar(value);
     }
 
+    public static byte castToByte(@Nullable Object value, byte defaultValue) {
+        return value == null ? defaultValue : castToByte(value);
+    }
+
+    public static short castToShort(@Nullable Object value, short defaultValue) {
+        return value == null ? defaultValue : castToShort(value);
+    }
+
     public static int castToInt(@Nullable Object value, int defaultValue) {
         return value == null ? defaultValue : castToInt(value);
     }
@@ -171,6 +195,35 @@ public final class TypeUtils {
             return (T) value;
         }
 
+        if (isBoolean(targetType) && isBoolean(value.getClass())) {
+            return (T) value;
+        }
+
+        if (isCharacter(targetType) && isCharacter(value.getClass())) {
+            return (T) value;
+        }
+
+        if (isNumber(targetType) && isNumber(value.getClass())) {
+            // perform fast number conversion
+            if (isByte(targetType)) {
+                return (T) ((Byte) castToByte(value));
+            } else if (isShort(targetType)) {
+                return (T) ((Short) castToShort(value));
+            } else if (isInteger(targetType)) {
+                return (T) ((Integer) castToInt(value));
+            } else if (isLong(targetType)) {
+                return (T) ((Long) castToLong(value));
+            } else if (isFloat(targetType)) {
+                return (T) ((Float) castToFloat(value));
+            } else if (isDouble(targetType)) {
+                return (T) ((Double) castToDouble(value));
+            } else if (isBigInteger(targetType)) {
+                return targetType.cast(BigInteger.valueOf(((Number) value).longValue()));
+            } else if (isBigDecimal(targetType)) {
+                return targetType.cast(BigDecimal.valueOf(((Number) value).doubleValue()));
+            }
+        }
+
         PropertyEditor targetEditor = resolveTargetPropertyEditor(targetType, format);
         if (targetEditor != null) {
             targetEditor.setValue(value);
@@ -192,6 +245,58 @@ public final class TypeUtils {
     @Nullable
     private static <T> PropertyEditor doResolveTargetPropertyEditor(@Nonnull Class<T> targetType) {
         return PropertyEditorResolver.findEditor(targetType);
+    }
+
+    public static boolean isBoolean(@Nonnull Class<?> type) {
+        return Boolean.class == type || Boolean.TYPE == type;
+    }
+
+    public static boolean isCharacter(@Nonnull Class<?> type) {
+        return Character.class == type || Character.TYPE == type;
+    }
+
+    public static boolean isByte(@Nonnull Class<?> type) {
+        return Byte.class == type || Byte.TYPE == type;
+    }
+
+    public static boolean isShort(@Nonnull Class<?> type) {
+        return Short.class == type || Short.TYPE == type;
+    }
+
+    public static boolean isInteger(@Nonnull Class<?> type) {
+        return Integer.class == type || Integer.TYPE == type;
+    }
+
+    public static boolean isLong(@Nonnull Class<?> type) {
+        return Long.class == type || Long.TYPE == type;
+    }
+
+    public static boolean isFloat(@Nonnull Class<?> type) {
+        return Float.class == type || Float.TYPE == type;
+    }
+
+    public static boolean isDouble(@Nonnull Class<?> type) {
+        return Double.class == type || Double.TYPE == type;
+    }
+
+    public static boolean isBigInteger(@Nonnull Class<?> type) {
+        return BigInteger.class == type;
+    }
+
+    public static boolean isBigDecimal(@Nonnull Class<?> type) {
+        return BigDecimal.class == type;
+    }
+
+    public static boolean isNumber(@Nonnull Class<?> type) {
+        return Number.class == type ||
+            isByte(type) ||
+            isShort(type) ||
+            isInteger(type) ||
+            isLong(type) ||
+            isFloat(type) ||
+            isDouble(type) ||
+            isBigInteger(type) ||
+            isBigDecimal(type);
     }
 
     // == The following methods taken from
