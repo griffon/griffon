@@ -15,26 +15,38 @@
  */
 package griffon.util;
 
-import griffon.core.CallableWithArgs;
-import griffon.core.event.Event;
-import griffon.core.mvc.MVCCallable;
-import griffon.core.mvc.MVCGroup;
-import griffon.exceptions.*;
+import griffon.core.Observable;
+import griffon.core.Vetoable;
+import griffon.core.artifact.GriffonArtifact;
+import griffon.core.artifact.GriffonMvcArtifact;
+import griffon.core.event.EventPublisher;
+import griffon.core.i18n.MessageSource;
+import griffon.core.mvc.MVCHandler;
+import griffon.core.resources.ResourceHandler;
+import griffon.core.resources.ResourceResolver;
+import griffon.core.threading.ThreadingHandler;
+import griffon.exceptions.BeanInstantiationException;
+import griffon.exceptions.InstanceMethodInvocationException;
+import griffon.exceptions.PropertyException;
+import griffon.exceptions.StaticMethodInvocationException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.*;
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.regex.Pattern;
 
+import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static griffon.util.MethodUtils.invokeExactMethod;
 import static griffon.util.MethodUtils.invokeMethod;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Class containing utility methods for dealing with Griffon class artifacts.<p>
@@ -70,6 +82,16 @@ public class GriffonClassUtils {
     private static final Set<MethodDescriptor> RESOURCE_HANDLER_METHODS = new TreeSet<>();
     private static final Set<MethodDescriptor> MESSAGE_SOURCE_METHODS = new TreeSet<>();
     private static final Set<MethodDescriptor> RESOURCE_RESOLVER_METHODS = new TreeSet<>();
+    private static final String ERROR_TYPE_NULL = "Argument 'type' cannot be null";
+    private static final String ERROR_METHOD_NAME_BLANK = "Argument 'methodName' cannot be blank";
+    private static final String ERROR_OBJECT_NULL = "Argument 'object' cannot be null";
+    private static final String ERROR_CLAZZ_NULL = "Argument 'clazz' cannot be null";
+    private static final String ERROR_DESCRIPTOR_NULL = "Argument 'descriptor' cannot be null";
+    private static final String ERROR_BEAN_NULL = "Argument 'bean' cannot be null";
+    private static final String ERROR_NAME_BLANK = "Argument 'name' cannot be blank";
+    private static final String ERROR_PROPERTIES_NULL = "Argument 'properties' cannot be null";
+    private static final String ERROR_PROPERTY_NAME_BLANK = "Argument 'propertyName' cannot be blank";
+    private static final String ERROR_METHOD_NULL = "Argument 'method' cannot be null";
 
     /**
      * Just add two entries to the class compatibility map
@@ -94,10 +116,17 @@ public class GriffonClassUtils {
         registerPrimitiveClassPair(Float.class, float.class);
         registerPrimitiveClassPair(Double.class, double.class);
 
+        for (Method method : Object.class.getMethods()) {
+            MethodDescriptor md = MethodDescriptor.forMethod(method);
+            if (!BASIC_METHODS.contains(md)) {
+                BASIC_METHODS.add(md);
+            }
+        }
+
         try {
             Class groovyObjectClass = GriffonClassUtils.class.getClassLoader().loadClass("groovy.lang.GroovyObject");
             for (Method method : groovyObjectClass.getMethods()) {
-                MethodDescriptor md = MethodDescriptor.forMethod(method);
+                MethodDescriptor md = MethodDescriptor.forMethod(method, true);
                 if (!BASIC_METHODS.contains(md)) {
                     BASIC_METHODS.add(md);
                 }
@@ -118,134 +147,87 @@ public class GriffonClassUtils {
             // ignore
         }
 
-        for (Method method : Object.class.getMethods()) {
-            MethodDescriptor md = MethodDescriptor.forMethod(method);
-            if (!BASIC_METHODS.contains(md)) {
-                BASIC_METHODS.add(md);
+        for (Method method : GriffonArtifact.class.getMethods()) {
+            MethodDescriptor md = MethodDescriptor.forMethod(method, true);
+            if (!ARTIFACT_METHODS.contains(md)) {
+                ARTIFACT_METHODS.add(md);
             }
         }
 
-        ARTIFACT_METHODS.add(new MethodDescriptor("newInstance", new Class<?>[]{Class.class, String.class}));
-        ARTIFACT_METHODS.add(new MethodDescriptor("newInstance", new Class<?>[]{Object[].class}));
-        ARTIFACT_METHODS.add(new MethodDescriptor("getApplication"));
-        ARTIFACT_METHODS.add(new MethodDescriptor("getLog"));
-        ARTIFACT_METHODS.add(new MethodDescriptor("getGriffonClass"));
-        ARTIFACT_METHODS.add(new MethodDescriptor("getMetaClass"));
-
         MVC_METHODS.add(new MethodDescriptor("getMvcGroup"));
-        MVC_METHODS.add(new MethodDescriptor("setMvcGroup", new Class<?>[]{MVCGroup.class}));
-        MVC_METHODS.add(new MethodDescriptor("mvcGroupInit", new Class<?>[]{Map.class}));
-        MVC_METHODS.add(new MethodDescriptor("mvcGroupDestroy"));
-        MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class<?>[]{String.class}));
-        MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class<?>[]{String.class, Map.class}));
-        MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class<?>[]{Map.class, String.class}));
-        MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class<?>[]{String.class, String.class}));
-        MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class<?>[]{String.class, String.class, Map.class}));
-        MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class<?>[]{Map.class, String.class, String.class}));
-        MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class<?>[]{String.class}));
-        MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class<?>[]{String.class, Map.class}));
-        MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class<?>[]{Map.class, String.class}));
-        MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class<?>[]{String.class, String.class}));
-        MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class<?>[]{String.class, String.class, Map.class}));
-        MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class<?>[]{Map.class, String.class, String.class}));
-        MVC_METHODS.add(new MethodDescriptor("destroyMVCGroup", new Class<?>[]{String.class}));
-        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class<?>[]{String.class, MVCCallable.class}));
-        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class<?>[]{String.class, Map.class, MVCCallable.class}));
-        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class<?>[]{Map.class, String.class, MVCCallable.class}));
-        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class<?>[]{String.class, String.class, MVCCallable.class}));
-        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class<?>[]{String.class, String.class, Map.class, MVCCallable.class}));
-        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class<?>[]{Map.class, String.class, String.class, MVCCallable.class}));
+        for (Method method : MVCHandler.class.getMethods()) {
+            MethodDescriptor md = MethodDescriptor.forMethod(method, true);
+            if (!MVC_METHODS.contains(md)) {
+                MVC_METHODS.add(md);
+            }
+        }
+        for (Method method : GriffonMvcArtifact.class.getMethods()) {
+            MethodDescriptor md = MethodDescriptor.forMethod(method, true);
+            if (!MVC_METHODS.contains(md)) {
+                MVC_METHODS.add(md);
+            }
+        }
 
         // Special cases due to the usage of varargs
-        MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class<?>[]{Object[].class}));
-        MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class<?>[]{Object[].class}));
-        MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class<?>[]{Object[].class}));
+        // MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class<?>[]{Object[].class}));
+        // MVC_METHODS.add(new MethodDescriptor("createMVCGroup", new Class<?>[]{Object[].class}));
+        // MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class<?>[]{Object[].class}));
 
+        // GriffonView
         MVC_METHODS.add(new MethodDescriptor("initUI"));
+        // GriffonController
         MVC_METHODS.add(new MethodDescriptor("invokeAction", new Class<?>[]{String.class, Object[].class}));
         MVC_METHODS.add(new MethodDescriptor("invokeAction", new Class<?>[]{String.class, Object[].class}, Modifier.PUBLIC | Modifier.TRANSIENT));
 
-        THREADING_METHODS.add(new MethodDescriptor("isUIThread"));
-        THREADING_METHODS.add(new MethodDescriptor("runInsideUIAsync", new Class<?>[]{Runnable.class}));
-        THREADING_METHODS.add(new MethodDescriptor("runInsideUISync", new Class<?>[]{Runnable.class}));
-        THREADING_METHODS.add(new MethodDescriptor("runOutsideUI", new Class<?>[]{Runnable.class}));
-        THREADING_METHODS.add(new MethodDescriptor("runFuture", new Class<?>[]{Callable.class}));
-        THREADING_METHODS.add(new MethodDescriptor("runFuture", new Class<?>[]{ExecutorService.class, Callable.class}));
-        THREADING_METHODS.add(new MethodDescriptor("edt", new Class<?>[]{Runnable.class}));
-        THREADING_METHODS.add(new MethodDescriptor("doLater", new Class<?>[]{Runnable.class}));
-        THREADING_METHODS.add(new MethodDescriptor("doOutside", new Class<?>[]{Runnable.class}));
+        for (Method method : ThreadingHandler.class.getMethods()) {
+            MethodDescriptor md = MethodDescriptor.forMethod(method, true);
+            if (!THREADING_METHODS.contains(md)) {
+                THREADING_METHODS.add(md);
+            }
+        }
         // Special case due to the usage of varargs
-        THREADING_METHODS.add(new MethodDescriptor("runFuture", new Class<?>[]{Object[].class}));
+        //THREADING_METHODS.add(new MethodDescriptor("runFuture", new Class<?>[]{Object[].class}));
 
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("addEventListener", new Class<?>[]{Object.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("addEventListener", new Class<?>[]{String.class, CallableWithArgs.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("addEventListener", new Class<?>[]{Event.class, CallableWithArgs.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("removeEventListener", new Class<?>[]{Object.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("removeEventListener", new Class<?>[]{String.class, CallableWithArgs.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("removeEventListener", new Class<?>[]{Event.class, CallableWithArgs.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEvent", new Class<?>[]{String.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEvent", new Class<?>[]{String.class, List.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEvent", new Class<?>[]{Event.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventAsync", new Class<?>[]{String.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventAsync", new Class<?>[]{String.class, List.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventAsync", new Class<?>[]{Event.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutsideUI", new Class<?>[]{String.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutsideUI", new Class<?>[]{String.class, List.class}));
-        EVENT_PUBLISHER_METHODS.add(new MethodDescriptor("publishEventOutsideUI", new Class<?>[]{Event.class}));
+        for (Method method : EventPublisher.class.getMethods()) {
+            MethodDescriptor md = MethodDescriptor.forMethod(method, true);
+            if (!EVENT_PUBLISHER_METHODS.contains(md)) {
+                EVENT_PUBLISHER_METHODS.add(md);
+            }
+        }
 
-        OBSERVABLE_METHODS.add(new MethodDescriptor("addPropertyChangeListener", new Class<?>[]{PropertyChangeListener.class}));
-        OBSERVABLE_METHODS.add(new MethodDescriptor("addPropertyChangeListener", new Class<?>[]{String.class, PropertyChangeListener.class}));
-        OBSERVABLE_METHODS.add(new MethodDescriptor("removePropertyChangeListener", new Class<?>[]{PropertyChangeListener.class}));
-        OBSERVABLE_METHODS.add(new MethodDescriptor("removePropertyChangeListener", new Class<?>[]{String.class, PropertyChangeListener.class}));
-        OBSERVABLE_METHODS.add(new MethodDescriptor("getPropertyChangeListeners", new Class<?>[0]));
-        OBSERVABLE_METHODS.add(new MethodDescriptor("getPropertyChangeListeners", new Class<?>[]{String.class}));
+        for (Method method : Observable.class.getMethods()) {
+            MethodDescriptor md = MethodDescriptor.forMethod(method, true);
+            if (!OBSERVABLE_METHODS.contains(md)) {
+                OBSERVABLE_METHODS.add(md);
+            }
+        }
+        for (Method method : Vetoable.class.getMethods()) {
+            MethodDescriptor md = MethodDescriptor.forMethod(method, true);
+            if (!OBSERVABLE_METHODS.contains(md)) {
+                OBSERVABLE_METHODS.add(md);
+            }
+        }
 
-        RESOURCE_HANDLER_METHODS.add(new MethodDescriptor("getResourceAsURL", new Class<?>[]{String.class}));
-        RESOURCE_HANDLER_METHODS.add(new MethodDescriptor("getResourceAsStream", new Class<?>[]{String.class}));
-        RESOURCE_HANDLER_METHODS.add(new MethodDescriptor("getResources", new Class<?>[]{String.class}));
-        RESOURCE_HANDLER_METHODS.add(new MethodDescriptor("classloader", new Class<?>[0]));
+        for (Method method : ResourceHandler.class.getMethods()) {
+            MethodDescriptor md = MethodDescriptor.forMethod(method, true);
+            if (!RESOURCE_HANDLER_METHODS.contains(md)) {
+                RESOURCE_HANDLER_METHODS.add(md);
+            }
+        }
 
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("resolveMessageValue", new Class<?>[]{String.class, Locale.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, Object[].class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, Locale.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, Object[].class, Locale.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, String.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, Object[].class, String.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, String.class, Locale.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, Object[].class, String.class, Locale.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, List.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, List.class, Locale.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, List.class, String.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, List.class, String.class, Locale.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, Map.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, Map.class, Locale.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, Map.class, String.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("getMessage", new Class<?>[]{String.class, Map.class, String.class, Locale.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("formatMessage", new Class<?>[]{String.class, Object[].class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("formatMessage", new Class<?>[]{String.class, List.class}));
-        MESSAGE_SOURCE_METHODS.add(new MethodDescriptor("formatMessage", new Class<?>[]{String.class, Map.class}));
+        for (Method method : MessageSource.class.getMethods()) {
+            MethodDescriptor md = MethodDescriptor.forMethod(method, true);
+            if (!MESSAGE_SOURCE_METHODS.contains(md)) {
+                MESSAGE_SOURCE_METHODS.add(md);
+            }
+        }
 
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResourceValue", new Class<?>[]{String.class, Locale.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, Object[].class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, Locale.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, Object[].class, Locale.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, Object.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, Object[].class, Object.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, Object.class, Locale.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, Object[].class, Object.class, Locale.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, List.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, List.class, Locale.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, List.class, Object.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, List.class, Object.class, Locale.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, Map.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, Map.class, Locale.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, Map.class, Object.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("resolveResource", new Class<?>[]{String.class, Map.class, Object.class, Locale.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("formatResource", new Class<?>[]{String.class, Object[].class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("formatResource", new Class<?>[]{String.class, List.class}));
-        RESOURCE_RESOLVER_METHODS.add(new MethodDescriptor("formatResource", new Class<?>[]{String.class, Map.class}));
+        for (Method method : ResourceResolver.class.getMethods()) {
+            MethodDescriptor md = MethodDescriptor.forMethod(method, true);
+            if (!RESOURCE_RESOLVER_METHODS.contains(md)) {
+                RESOURCE_RESOLVER_METHODS.add(md);
+            }
+        }
     }
 
     /**
@@ -304,8 +286,9 @@ public class GriffonClassUtils {
      * @return true if the name matches the given event handler
      * pattern, false otherwise.
      */
-    public static boolean isEventHandler(String name) {
-        return !GriffonNameUtils.isBlank(name) && EVENT_HANDLER_PATTERN.matcher(name).matches();
+    public static boolean isEventHandler(@Nonnull String name) {
+        requireNonBlank(name, ERROR_NAME_BLANK);
+        return EVENT_HANDLER_PATTERN.matcher(name).matches();
     }
 
     /**
@@ -323,28 +306,10 @@ public class GriffonClassUtils {
      * @return true if the method name matches the given event handler
      * pattern, false otherwise.
      */
-    public static boolean isEventHandler(Method method) {
+    public static boolean isEventHandler(@Nonnull Method method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
         return isEventHandler(MethodDescriptor.forMethod(method));
     }
-
-    /**
-     * Finds out if the given Method represents an event handler
-     * by matching its name against the following pattern:
-     * "^on[A-Z][\\w]*$"<p>
-     * <pre>
-     * // assuming getMethod() returns an appropriate MetaMethod reference
-     * isEventHandler(getMethod("onBootstrapEnd")) = true
-     * isEventHandler(getMethod("mvcGroupInit"))   = false
-     * isEventHandler(getMethod("online"))         = false
-     * </pre>
-     *
-     * @param method a MetaMethod reference
-     * @return true if the method name matches the given event handler
-     *         pattern, false otherwise.
-     */
-    /* public static boolean isEventHandler(MetaMethod method) {
-        return isEventHandler(MethodDescriptor.forMethod(method));
-    }*/
 
     /**
      * Finds out if the given Method represents an event handler
@@ -361,8 +326,9 @@ public class GriffonClassUtils {
      * @return true if the method name matches the given event handler
      * pattern, false otherwise.
      */
-    public static boolean isEventHandler(MethodDescriptor method) {
-        return !(method == null || method.getModifiers() - Modifier.PUBLIC != 0) &&
+    public static boolean isEventHandler(@Nonnull MethodDescriptor method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
+        return isInstanceMethod(method) &&
             EVENT_HANDLER_PATTERN.matcher(method.getName()).matches();
     }
 
@@ -374,7 +340,8 @@ public class GriffonClassUtils {
      * @return true if the method belongs to {@code Object} or
      * {@code GroovyObject}, false otherwise.
      */
-    public static boolean isBasicMethod(Method method) {
+    public static boolean isBasicMethod(@Nonnull Method method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
         return isBasicMethod(MethodDescriptor.forMethod(method));
     }
 
@@ -393,8 +360,9 @@ public class GriffonClassUtils {
      * @return true if the name matches the given contribution method
      * pattern, false otherwise.
      */
-    public static boolean isContributionMethod(String name) {
-        return !GriffonNameUtils.isBlank(name) && CONTRIBUTION_PATTERN.matcher(name).matches();
+    public static boolean isContributionMethod(@Nonnull String name) {
+        requireNonBlank(name, ERROR_NAME_BLANK);
+        return CONTRIBUTION_PATTERN.matcher(name).matches();
     }
 
     /**
@@ -412,28 +380,10 @@ public class GriffonClassUtils {
      * @return true if the method name matches the given contribution method
      * pattern, false otherwise.
      */
-    public static boolean isContributionMethod(Method method) {
+    public static boolean isContributionMethod(@Nonnull Method method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
         return isContributionMethod(MethodDescriptor.forMethod(method));
     }
-
-    /**
-     * Finds out if the given Method represents a contribution method
-     * by matching its name against the following pattern:
-     * "^with[A-Z][a-z0-9_]*[\w]*$"<p>
-     * <pre>
-     * // assuming getMethod() returns an appropriate MetaMethod reference
-     * isContributionMethod(getMethod("withRest"))     = true
-     * isContributionMethod(getMethod("withMVCGroup")) = false
-     * isContributionMethod(getMethod("without"))      = false
-     * </pre>
-     *
-     * @param method a MetaMethod reference
-     * @return true if the method name matches the given contribution method
-     *         pattern, false otherwise.
-     */
-    /*public static boolean isContributionMethod(MetaMethod method) {
-        return isContributionMethod(MethodDescriptor.forMethod(method));
-    }*/
 
     /**
      * Finds out if the given Method represents a contribution method
@@ -450,22 +400,11 @@ public class GriffonClassUtils {
      * @return true if the method name matches the given contribution method
      * pattern, false otherwise.
      */
-    public static boolean isContributionMethod(MethodDescriptor method) {
-        return !(method == null || method.getModifiers() - Modifier.PUBLIC != 0) &&
+    public static boolean isContributionMethod(@Nonnull MethodDescriptor method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
+        return isInstanceMethod(method) &&
             CONTRIBUTION_PATTERN.matcher(method.getName()).matches();
     }
-
-    /**
-     * Finds out if the given {@code MetaMethod} belongs either to the
-     * {@code Object} class or the {@code GroovyObject} class.<p>
-     *
-     * @param method a MetaMethod reference
-     * @return true if the method belongs to {@code Object} or
-     *         {@code GroovyObject}, false otherwise.
-     */
-    /*public static boolean isBasicMethod(MetaMethod method) {
-        return isBasicMethod(MethodDescriptor.forMethod(method));
-    }*/
 
     /**
      * Finds out if the given {@code MethodDescriptor} belongs either to the
@@ -475,8 +414,9 @@ public class GriffonClassUtils {
      * @return true if the method belongs to {@code Object} or
      * {@code GroovyObject}, false otherwise.
      */
-    public static boolean isBasicMethod(MethodDescriptor method) {
-        return !(method == null || !isInstanceMethod(method)) && BASIC_METHODS.contains(method);
+    public static boolean isBasicMethod(@Nonnull MethodDescriptor method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
+        return isInstanceMethod(method) && BASIC_METHODS.contains(method);
     }
 
     /**
@@ -488,22 +428,10 @@ public class GriffonClassUtils {
      * @param method a Method reference
      * @return true if the method matches the given criteria, false otherwise.
      */
-    public static boolean isGroovyInjectedMethod(Method method) {
+    public static boolean isGroovyInjectedMethod(@Nonnull Method method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
         return isGroovyInjectedMethod(MethodDescriptor.forMethod(method));
     }
-
-    /**
-     * Finds out if the given {@code MetaMethod} was injected by the Groovy
-     * compiler.<p>
-     * Performs a basic checks against the method's name, returning true
-     * if the name starts with either "super$" or "this$".
-     *
-     * @param method a MetaMethod reference
-     * @return true if the method matches the given criteria, false otherwise.
-     */
-    /*public static boolean isGroovyInjectedMethod(MetaMethod method) {
-        return isGroovyInjectedMethod(MethodDescriptor.forMethod(method));
-    }*/
 
     /**
      * Finds out if the given {@code MethodDescriptor} was injected by the Groovy
@@ -514,8 +442,9 @@ public class GriffonClassUtils {
      * @param method a MethodDescriptor reference
      * @return true if the method matches the given criteria, false otherwise.
      */
-    public static boolean isGroovyInjectedMethod(MethodDescriptor method) {
-        return !(method == null || !isInstanceMethod(method)) &&
+    public static boolean isGroovyInjectedMethod(@Nonnull MethodDescriptor method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
+        return isInstanceMethod(method) &&
             (method.getName().startsWith("super$") || method.getName().startsWith("this$"));
     }
 
@@ -534,28 +463,10 @@ public class GriffonClassUtils {
      * @param method a Method reference
      * @return true if the method is a getter, false otherwise.
      */
-    public static boolean isGetterMethod(Method method) {
+    public static boolean isGetterMethod(@Nonnull Method method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
         return isGetterMethod(MethodDescriptor.forMethod(method));
     }
-
-    /**
-     * Finds out if the given {@code MetaMethod} is a getter method.
-     * <p/>
-     * <pre>
-     * // assuming getMethod() returns an appropriate MetaMethod reference
-     * isGetterMethod(getMethod("getFoo"))       = true
-     * isGetterMethod(getMethod("getfoo") )      = false
-     * isGetterMethod(getMethod("mvcGroupInit")) = false
-     * isGetterMethod(getMethod("isFoo"))        = true
-     * isGetterMethod(getMethod("island"))       = false
-     * </pre>
-     *
-     * @param method a Method reference
-     * @return true if the method is a getter, false otherwise.
-     */
-    /*public static boolean isGetterMethod(MetaMethod method) {
-        return isGetterMethod(MethodDescriptor.forMethod(method));
-    }*/
 
     /**
      * Finds out if the given {@code MetaMethod} is a getter method.
@@ -572,8 +483,9 @@ public class GriffonClassUtils {
      * @param method a MethodDescriptor reference
      * @return true if the method is a getter, false otherwise.
      */
-    public static boolean isGetterMethod(MethodDescriptor method) {
-        return !(method == null || !isInstanceMethod(method)) &&
+    public static boolean isGetterMethod(@Nonnull MethodDescriptor method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
+        return isInstanceMethod(method) &&
             (GETTER_PATTERN_1.matcher(method.getName()).matches() || GETTER_PATTERN_2.matcher(method.getName()).matches());
     }
 
@@ -590,26 +502,10 @@ public class GriffonClassUtils {
      * @param method a Method reference
      * @return true if the method is a setter, false otherwise.
      */
-    public static boolean isSetterMethod(Method method) {
+    public static boolean isSetterMethod(@Nonnull Method method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
         return isSetterMethod(MethodDescriptor.forMethod(method));
     }
-
-    /**
-     * Finds out if the given {@code MetaMethod} is a setter method.
-     * <p/>
-     * <pre>
-     * // assuming getMethod() returns an appropriate MetaMethod reference
-     * isGetterMethod(getMethod("setFoo"))       = true
-     * isGetterMethod(getMethod("setfoo"))       = false
-     * isGetterMethod(getMethod("mvcGroupInit")) = false
-     * </pre>
-     *
-     * @param method a MetaMethod reference
-     * @return true if the method is a setter, false otherwise.
-     */
-    /*public static boolean isSetterMethod(MetaMethod method) {
-        return isSetterMethod(MethodDescriptor.forMethod(method));
-    }*/
 
     /**
      * Finds out if the given {@code MethodDescriptor} is a setter method.
@@ -624,8 +520,9 @@ public class GriffonClassUtils {
      * @param method a MethodDescriptor reference
      * @return true if the method is a setter, false otherwise.
      */
-    public static boolean isSetterMethod(MethodDescriptor method) {
-        return !(method == null || !isInstanceMethod(method)) && SETTER_PATTERN.matcher(method.getName()).matches();
+    public static boolean isSetterMethod(@Nonnull MethodDescriptor method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
+        return isInstanceMethod(method) && SETTER_PATTERN.matcher(method.getName()).matches();
     }
 
     /**
@@ -642,27 +539,10 @@ public class GriffonClassUtils {
      * @param method a Method reference
      * @return true if the method is an Artifact method, false otherwise.
      */
-    public static boolean isArtifactMethod(Method method) {
+    public static boolean isArtifactMethod(@Nonnull Method method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
         return isArtifactMethod(MethodDescriptor.forMethod(method));
     }
-
-    /**
-     * Finds out if the given {@code MetaMethod} belongs to the set of
-     * predefined Artifact methods by convention.
-     * <p/>
-     * <pre>
-     * // assuming getMethod() returns an appropriate MetaMethod reference
-     * isArtifactMethod(getMethod("newInstance"))    = true
-     * isArtifactMethod(getMethod("griffonDestroy")) = false
-     * isArtifactMethod(getMethod("foo"))            = false
-     * </pre>
-     *
-     * @param method a MetaMethod reference
-     * @return true if the method is an Artifact method, false otherwise.
-     */
-    /*public static boolean isArtifactMethod(MetaMethod method) {
-        return isArtifactMethod(MethodDescriptor.forMethod(method));
-    }*/
 
     /**
      * Finds out if the given {@code MethodDescriptor} belongs to the set of
@@ -678,8 +558,9 @@ public class GriffonClassUtils {
      * @param method a MethodDescriptor reference
      * @return true if the method is an Artifact method, false otherwise.
      */
-    public static boolean isArtifactMethod(MethodDescriptor method) {
-        return !(method == null || !isInstanceMethod(method)) &&
+    public static boolean isArtifactMethod(@Nonnull MethodDescriptor method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
+        return isInstanceMethod(method) &&
             ARTIFACT_METHODS.contains(method);
     }
 
@@ -697,27 +578,10 @@ public class GriffonClassUtils {
      * @param method a Method reference
      * @return true if the method is an MVC method, false otherwise.
      */
-    public static boolean isMvcMethod(Method method) {
+    public static boolean isMvcMethod(@Nonnull Method method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
         return isMvcMethod(MethodDescriptor.forMethod(method));
     }
-
-    /**
-     * Finds out if the given {@code MetaMethod} belongs to the set of
-     * predefined MVC methods by convention.
-     * <p/>
-     * <pre>
-     * // assuming getMethod() returns an appropriate MetaMethod reference
-     * isMvcMethod(getMethod("mvcGroupInit"))    = true
-     * isMvcMethod(getMethod("mvcGroupDestroy")) = true
-     * isMvcMethod(getMethod("foo"))             = false
-     * </pre>
-     *
-     * @param method a MetaMethod reference
-     * @return true if the method is an MVC method, false otherwise.
-     */
-    /*public static boolean isMvcMethod(MetaMethod method) {
-        return isMvcMethod(MethodDescriptor.forMethod(method));
-    }*/
 
     /**
      * Finds out if the given {@code MethodDescriptor} belongs to the set of
@@ -733,72 +597,14 @@ public class GriffonClassUtils {
      * @param method a MethodDescriptor reference
      * @return true if the method is an MVC method, false otherwise.
      */
-    public static boolean isMvcMethod(MethodDescriptor method) {
-        return !(method == null || !isInstanceMethod(method)) &&
+    public static boolean isMvcMethod(@Nonnull MethodDescriptor method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
+        return isInstanceMethod(method) &&
             MVC_METHODS.contains(method);
     }
 
     /**
      * Finds out if the given {@code Method} belongs to the set of
-     * predefined {@code GriffonService} methods by convention.
-     * <p/>
-     * <pre>
-     * // assuming getMethod() returns an appropriate Method reference
-     * isServiceMethod(getMethod("serviceInit"))    = true
-     * isServiceMethod(getMethod("serviceDestroy")) = true
-     * isServiceMethod(getMethod("foo"))            = false
-     * </pre>
-     *
-     * @param method a Method reference
-     * @return true if the method is an {@code GriffonService} method, false otherwise.
-     */
-    /*
-    public static boolean isServiceMethod(Method method) {
-        return isServiceMethod(MethodDescriptor.forMethod(method));
-    }
-    */
-
-    /**
-     * Finds out if the given {@code MetaMethod} belongs to the set of
-     * predefined {@code GriffonService} methods by convention.
-     * <p/>
-     * <pre>
-     * // assuming getMethod() returns an appropriate MetaMethod reference
-     * isServiceMethod(getMethod("serviceInit"))    = true
-     * isServiceMethod(getMethod("serviceDestroy")) = true
-     * isServiceMethod(getMethod("foo"))            = false
-     * </pre>
-     *
-     * @param method a MetaMethod reference
-     * @return true if the method is an {@code GriffonService} method, false otherwise.
-     */
-    /*public static boolean isServiceMethod(MetaMethod method) {
-        return isServiceMethod(MethodDescriptor.forMethod(method));
-    }*/
-
-    /**
-     * Finds out if the given {@code MethodDescriptor} belongs to the set of
-     * predefined {@code GriffonService} methods by convention.
-     * <p/>
-     * <pre>
-     * // assuming getMethod() returns an appropriate MethodDescriptor reference
-     * isServiceMethod(getMethod("serviceInit"))    = true
-     * isServiceMethod(getMethod("serviceDestroy")) = true
-     * isServiceMethod(getMethod("foo"))            = false
-     * </pre>
-     *
-     * @param method a MethodDescriptor reference
-     * @return true if the method is an {@code GriffonService} method, false otherwise.
-     */
-    /*
-    public static boolean isServiceMethod(MethodDescriptor method) {
-        return !(method == null || !isInstanceMethod(method)) &&
-            SERVICE_METHODS.contains(method);
-    }
-    */
-
-    /**
-     * Finds out if the given {@code Method} belongs to the set of
      * predefined threading methods by convention.
      * <p/>
      * <pre>
@@ -811,27 +617,10 @@ public class GriffonClassUtils {
      * @param method a Method reference
      * @return true if the method is a threading method, false otherwise.
      */
-    public static boolean isThreadingMethod(Method method) {
+    public static boolean isThreadingMethod(@Nonnull Method method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
         return isThreadingMethod(MethodDescriptor.forMethod(method));
     }
-
-    /**
-     * Finds out if the given {@code MetaMethod} belongs to the set of
-     * predefined threading methods by convention.
-     * <p/>
-     * <pre>
-     * // assuming getMethod() returns an appropriate MetaMethod reference
-     * isThreadingMethod(getMethod("execOutsideUI"))    = true
-     * isThreadingMethod(getMethod("doLater"))          = true
-     * isThreadingMethod(getMethod("foo"))              = false
-     * </pre>
-     *
-     * @param method a MetaMethod reference
-     * @return true if the method is a threading method, false otherwise.
-     */
-    /*public static boolean isThreadingMethod(MetaMethod method) {
-        return isThreadingMethod(MethodDescriptor.forMethod(method));
-    }*/
 
     /**
      * Finds out if the given {@code MethodDescriptor} belongs to the set of
@@ -847,8 +636,9 @@ public class GriffonClassUtils {
      * @param method a MethodDescriptor reference
      * @return true if the method is a threading method, false otherwise.
      */
-    public static boolean isThreadingMethod(MethodDescriptor method) {
-        return !(method == null || !isInstanceMethod(method)) &&
+    public static boolean isThreadingMethod(@Nonnull MethodDescriptor method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
+        return isInstanceMethod(method) &&
             THREADING_METHODS.contains(method);
     }
 
@@ -866,27 +656,10 @@ public class GriffonClassUtils {
      * @param method a Method reference
      * @return true if the method is an @EventPublisher method, false otherwise.
      */
-    public static boolean isEventPublisherMethod(Method method) {
+    public static boolean isEventPublisherMethod(@Nonnull Method method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
         return isEventPublisherMethod(MethodDescriptor.forMethod(method));
     }
-
-    /**
-     * Finds out if the given {@code MetaMethod} belongs to the set of
-     * predefined event publisher methods by convention.
-     * <p/>
-     * <pre>
-     * // assuming getMethod() returns an appropriate MetaMethod reference
-     * isEventPublisherMethod(getMethod("addEventPublisher"))  = true
-     * isEventPublisherMethod(getMethod("publishEvent"))       = true
-     * isEventPublisherMethod(getMethod("foo"))                = false
-     * </pre>
-     *
-     * @param method a MetaMethod reference
-     * @return true if the method is an @EventPublisher method, false otherwise.
-     */
-    /*public static boolean isEventPublisherMethod(MetaMethod method) {
-        return isEventPublisherMethod(MethodDescriptor.forMethod(method));
-    }*/
 
     /**
      * Finds out if the given {@code MethodDescriptor} belongs to the set of
@@ -902,8 +675,9 @@ public class GriffonClassUtils {
      * @param method a MethodDescriptor reference
      * @return true if the method is an @EventPublisher method, false otherwise.
      */
-    public static boolean isEventPublisherMethod(MethodDescriptor method) {
-        return !(method == null || !isInstanceMethod(method)) &&
+    public static boolean isEventPublisherMethod(@Nonnull MethodDescriptor method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
+        return isInstanceMethod(method) &&
             EVENT_PUBLISHER_METHODS.contains(method);
     }
 
@@ -921,27 +695,10 @@ public class GriffonClassUtils {
      * @param method a Method reference
      * @return true if the method is an Observable method, false otherwise.
      */
-    public static boolean isObservableMethod(Method method) {
+    public static boolean isObservableMethod(@Nonnull Method method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
         return isObservableMethod(MethodDescriptor.forMethod(method));
     }
-
-    /**
-     * Finds out if the given {@code MetaMethod} belongs to the set of
-     * predefined observable methods by convention.
-     * <p/>
-     * <pre>
-     * // assuming getMethod() returns an appropriate MetaMethod reference
-     * isObservableMethod(getMethod("addPropertyChangeListener"))  = true
-     * isObservableMethod(getMethod("getPropertyChangeListeners")) = true
-     * isObservableMethod(getMethod("foo"))                        = false
-     * </pre>
-     *
-     * @param method a MetaMethod reference
-     * @return true if the method is an Observable method, false otherwise.
-     */
-    /*public static boolean isObservableMethod(MetaMethod method) {
-        return isObservableMethod(MethodDescriptor.forMethod(method));
-    }*/
 
     /**
      * Finds out if the given {@code MethodDescriptor} belongs to the set of
@@ -957,8 +714,9 @@ public class GriffonClassUtils {
      * @param method a MethodDescriptor reference
      * @return true if the method is an Observable method, false otherwise.
      */
-    public static boolean isObservableMethod(MethodDescriptor method) {
-        return !(method == null || !isInstanceMethod(method)) &&
+    public static boolean isObservableMethod(@Nonnull MethodDescriptor method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
+        return isInstanceMethod(method) &&
             OBSERVABLE_METHODS.contains(method);
     }
 
@@ -976,27 +734,10 @@ public class GriffonClassUtils {
      * @param method a Method reference
      * @return true if the method is an Observable method, false otherwise.
      */
-    public static boolean isResourceHandlerMethod(Method method) {
-        return isResourceHandlerMethod(MethodDescriptor.forMethod(method));
+    public static boolean isResourceHandlerMethod(@Nonnull Method method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
+        return isResourceHandlerMethod(MethodDescriptor.forMethod(method, true));
     }
-
-    /**
-     * Finds out if the given {@code MetaMethod} belongs to the set of
-     * predefined resources methods by convention.
-     * <p/>
-     * <pre>
-     * // assuming getMethod() returns an appropriate MetaMethod reference
-     * isResourceHandlerMethod(getMethod("getResourceAsURL"))    = true
-     * isResourceHandlerMethod(getMethod("getResourceAsStream")) = true
-     * isResourceHandlerMethod(getMethod("foo"))                 = false
-     * </pre>
-     *
-     * @param method a MetaMethod reference
-     * @return true if the method is an Observable method, false otherwise.
-     */
-    /*public static boolean isResourceHandlerMethod(MetaMethod method) {
-        return isResourceHandlerMethod(MethodDescriptor.forMethod(method));
-    }*/
 
     /**
      * Finds out if the given {@code MethodDescriptor} belongs to the set of
@@ -1012,8 +753,9 @@ public class GriffonClassUtils {
      * @param method a MethodDescriptor reference
      * @return true if the method is an Observable method, false otherwise.
      */
-    public static boolean isResourceHandlerMethod(MethodDescriptor method) {
-        return !(method == null || !isInstanceMethod(method)) &&
+    public static boolean isResourceHandlerMethod(@Nonnull MethodDescriptor method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
+        return isInstanceMethod(method) &&
             RESOURCE_HANDLER_METHODS.contains(method);
     }
 
@@ -1030,26 +772,10 @@ public class GriffonClassUtils {
      * @param method a Method reference
      * @return true if the method is an Observable method, false otherwise.
      */
-    public static boolean isMessageSourceMethod(Method method) {
+    public static boolean isMessageSourceMethod(@Nonnull Method method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
         return isMessageSourceMethod(MethodDescriptor.forMethod(method));
     }
-
-    /**
-     * Finds out if the given {@code MetaMethod} belongs to the set of
-     * predefined message source methods by convention.
-     * <p/>
-     * <pre>
-     * // assuming getMethod() returns an appropriate MetaMethod reference
-     * isMessageSourceMethod(getMethod("getMessage"))    = true
-     * isMessageSourceMethod(getMethod("foo"))           = false
-     * </pre>
-     *
-     * @param method a MetaMethod reference
-     * @return true if the method is an Observable method, false otherwise.
-     */
-    /*public static boolean isMessageSourceMethod(MetaMethod method) {
-        return isMessageSourceMethod(MethodDescriptor.forMethod(method));
-    }*/
 
     /**
      * Finds out if the given {@code MethodDescriptor} belongs to the set of
@@ -1064,8 +790,9 @@ public class GriffonClassUtils {
      * @param method a MethodDescriptor reference
      * @return true if the method is an Observable method, false otherwise.
      */
-    public static boolean isMessageSourceMethod(MethodDescriptor method) {
-        return !(method == null || !isInstanceMethod(method)) &&
+    public static boolean isMessageSourceMethod(@Nonnull MethodDescriptor method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
+        return isInstanceMethod(method) &&
             MESSAGE_SOURCE_METHODS.contains(method);
     }
 
@@ -1082,26 +809,10 @@ public class GriffonClassUtils {
      * @param method a Method reference
      * @return true if the method is an Observable method, false otherwise.
      */
-    public static boolean isResourceResolverMethod(Method method) {
+    public static boolean isResourceResolverMethod(@Nonnull Method method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
         return isResourceResolverMethod(MethodDescriptor.forMethod(method));
     }
-
-    /**
-     * Finds out if the given {@code MetaMethod} belongs to the set of
-     * predefined resource resolver methods by convention.
-     * <p/>
-     * <pre>
-     * // assuming getMethod() returns an appropriate MetaMethod reference
-     * isResourceResolverMethod(getMethod("resolveResource")) = true
-     * isResourceResolverMethod(getMethod("foo"))             = false
-     * </pre>
-     *
-     * @param method a MetaMethod reference
-     * @return true if the method is an Observable method, false otherwise.
-     */
-    /*public static boolean isResourceResolverMethod(MetaMethod method) {
-        return isResourceResolverMethod(MethodDescriptor.forMethod(method));
-    }*/
 
     /**
      * Finds out if the given {@code MethodDescriptor} belongs to the set of
@@ -1116,8 +827,9 @@ public class GriffonClassUtils {
      * @param method a MethodDescriptor reference
      * @return true if the method is an Observable method, false otherwise.
      */
-    public static boolean isResourceResolverMethod(MethodDescriptor method) {
-        return !(method == null || !isInstanceMethod(method)) &&
+    public static boolean isResourceResolverMethod(@Nonnull MethodDescriptor method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
+        return isInstanceMethod(method) &&
             RESOURCE_RESOLVER_METHODS.contains(method);
     }
 
@@ -1128,20 +840,10 @@ public class GriffonClassUtils {
      * @param method a Method reference
      * @return true if the method is an instance method, false otherwise.
      */
-    public static boolean isInstanceMethod(Method method) {
+    public static boolean isInstanceMethod(@Nonnull Method method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
         return isInstanceMethod(MethodDescriptor.forMethod(method));
     }
-
-    /**
-     * Finds out if the given {@code MetaMethod} is an instance method, i.e,
-     * it is public and non-static.
-     *
-     * @param method a MetaMethod reference
-     * @return true if the method is an instance method, false otherwise.
-     */
-    /*public static boolean isInstanceMethod(MetaMethod method) {
-        return isInstanceMethod(MethodDescriptor.forMethod(method));
-    }*/
 
     /**
      * Finds out if the given {@code MethodDescriptor} is an instance method, i.e,
@@ -1150,10 +852,11 @@ public class GriffonClassUtils {
      * @param method a MethodDescriptor reference
      * @return true if the method is an instance method, false otherwise.
      */
-    public static boolean isInstanceMethod(MethodDescriptor method) {
-        if (method == null) return false;
+    public static boolean isInstanceMethod(@Nonnull MethodDescriptor method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
         int modifiers = method.getModifiers();
         return Modifier.isPublic(modifiers) &&
+            !Modifier.isAbstract(modifiers) &&
             !Modifier.isStatic(modifiers);
     }
 
@@ -1177,33 +880,10 @@ public class GriffonClassUtils {
      * @param method a Method reference
      * @return true if the method matches the given criteria, false otherwise.
      */
-    public static boolean isPlainMethod(Method method) {
+    public static boolean isPlainMethod(@Nonnull Method method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
         return isPlainMethod(MethodDescriptor.forMethod(method));
     }
-
-    /**
-     * Finds out if the given {@code MetaMethod} matches the following criteria:<ul>
-     * <li>isInstanceMethod(method)</li>
-     * <li>! isBasicMethod(method)</li>
-     * <li>! isGroovyInjectedMethod(method)</li>
-     * <li>! isThreadingMethod(method)</li>
-     * <li>! isArtifactMethod(method)</li>
-     * <li>! isMvcMethod(method)</li>
-     * <li>! isServiceMethod(method)</li>
-     * <li>! isEventPublisherMethod(method)</li>
-     * <li>! isObservableMethod(method)</li>
-     * <li>! isResourceHandlerMethod(method)</li>
-     * <li>! isGetterMethod(method)</li>
-     * <li>! isSetterMethod(method)</li>
-     * <li>! isContributionMethod(method)</li>
-     * </ul>
-     *
-     * @param method a MetaMethod reference
-     * @return true if the method matches the given criteria, false otherwise.
-     */
-    /*public static boolean isPlainMethod(MetaMethod method) {
-        return isPlainMethod(MethodDescriptor.forMethod(method));
-    }*/
 
     /**
      * Finds out if the given {@code MethodDescriptor} matches the following criteria:<ul>
@@ -1225,14 +905,14 @@ public class GriffonClassUtils {
      * @param method a MethodDescriptor reference
      * @return true if the method matches the given criteria, false otherwise.
      */
-    public static boolean isPlainMethod(MethodDescriptor method) {
+    public static boolean isPlainMethod(@Nonnull MethodDescriptor method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
         return isInstanceMethod(method) &&
             !isBasicMethod(method) &&
             !isGroovyInjectedMethod(method) &&
             !isThreadingMethod(method) &&
             !isArtifactMethod(method) &&
             !isMvcMethod(method) &&
-            //!isServiceMethod(method) &&
             !isEventPublisherMethod(method) &&
             !isObservableMethod(method) &&
             !isResourceHandlerMethod(method) &&
@@ -1240,23 +920,6 @@ public class GriffonClassUtils {
             !isSetterMethod(method) &&
             !isContributionMethod(method);
     }
-
-    /*
-    public static boolean isGetter(MetaProperty property) {
-        return isGetter(property, false);
-    }
-
-    public static boolean isGetter(MetaProperty property, boolean strict) {
-        if (property == null) return false;
-        return GETTER_PATTERN_1.matcher(property.getName()).matches() ||
-            (strict && GETTER_PATTERN_2.matcher(property.getName()).matches());
-    }
-
-    public static boolean isSetter(MetaProperty property) {
-        if (property == null) return false;
-        return SETTER_PATTERN.matcher(property.getName()).matches();
-    }
-    */
 
     /**
      * Returns true if the specified property in the specified class is of the specified type
@@ -1282,7 +945,9 @@ public class GriffonClassUtils {
      * @return the newly instantiated object.
      * @throws BeanInstantiationException if an error occurs when creating the object
      */
-    public static Object instantiateClass(Class<?> clazz) {
+    @Nonnull
+    public static Object instantiateClass(@Nonnull Class<?> clazz) {
+        requireNonNull(clazz, ERROR_CLAZZ_NULL);
         try {
             return clazz.newInstance();
         } catch (Exception e) {
@@ -1290,13 +955,9 @@ public class GriffonClassUtils {
         }
     }
 
-/*
-    public static Object instantiate(Class<?> clazz, Object arg) {
-        return instantiate(clazz, new Object[]{arg});
-    }
-*/
-
-    public static Object instantiate(Class<?> clazz, Object[] args) {
+    @Nonnull
+    public static Object instantiate(@Nonnull Class<?> clazz, @Nullable Object[] args) {
+        requireNonNull(clazz, ERROR_CLAZZ_NULL);
         try {
             if (args == null) {
                 args = EMPTY_OBJECT_ARRAY;
@@ -1320,10 +981,12 @@ public class GriffonClassUtils {
      * @param propertyType The property type
      * @return The value of the property or null if none exists
      */
-    public static Object getPropertyValueOfNewInstance(Class<?> clazz, String propertyName, Class<?> propertyType) {
+    @Nullable
+    public static Object getPropertyValueOfNewInstance(@Nullable Class<?> clazz, @Nullable String propertyName, Class<?> propertyType) {
         // validate
-        if (clazz == null || GriffonNameUtils.isBlank(propertyName))
+        if (clazz == null || GriffonNameUtils.isBlank(propertyName)) {
             return null;
+        }
 
         Object instance;
         try {
@@ -1344,8 +1007,9 @@ public class GriffonClassUtils {
      */
     public static Object getPropertyValueOfNewInstance(Class<?> clazz, String propertyName) {
         // validate
-        if (clazz == null || GriffonNameUtils.isBlank(propertyName))
+        if (clazz == null || GriffonNameUtils.isBlank(propertyName)) {
             return null;
+        }
 
         Object instance;
         try {
@@ -1392,9 +1056,11 @@ public class GriffonClassUtils {
      * @param propertyName The name of the property
      * @return The property type or null if none exists
      */
-    public static Class<?> getPropertyType(Class<?> clazz, String propertyName) {
-        if (clazz == null || GriffonNameUtils.isBlank(propertyName))
+    @Nullable
+    public static Class<?> getPropertyType(@Nullable Class<?> clazz, @Nullable String propertyName) {
+        if (clazz == null || GriffonNameUtils.isBlank(propertyName)) {
             return null;
+        }
 
         try {
             PropertyDescriptor desc = getPropertyDescriptor(clazz, propertyName);
@@ -1416,9 +1082,11 @@ public class GriffonClassUtils {
      * @param propertyType The type of the properties you wish to retrieve
      * @return An array of PropertyDescriptor instances
      */
-    public static PropertyDescriptor[] getPropertiesOfType(Class<?> clazz, Class<?> propertyType) {
-        if (clazz == null || propertyType == null)
+    @Nonnull
+    public static PropertyDescriptor[] getPropertiesOfType(@Nullable Class<?> clazz, @Nullable Class<?> propertyType) {
+        if (clazz == null || propertyType == null) {
             return new PropertyDescriptor[0];
+        }
 
         Set<PropertyDescriptor> properties = new HashSet<>();
         try {
@@ -1514,14 +1182,10 @@ public class GriffonClassUtils {
      * @return true if one of the classes is a native type and the other the object representation
      * of the same native type
      */
-    public static boolean isMatchBetweenPrimitiveAndWrapperTypes(Class<?> leftType, Class<?> rightType) {
-        if (leftType == null) {
-            throw new NullPointerException("Left type is null!");
-        } else if (rightType == null) {
-            throw new NullPointerException("Right type is null!");
-        } else {
-            return isMatchBetweenPrimitiveAndWrapperTypes(leftType.getName(), rightType.getName());
-        }
+    public static boolean isMatchBetweenPrimitiveAndWrapperTypes(@Nonnull Class<?> leftType, @Nonnull Class<?> rightType) {
+        requireNonNull(leftType, "Left type is null!");
+        requireNonNull(rightType, "Right type is null!");
+        return isMatchBetweenPrimitiveAndWrapperTypes(leftType.getName(), rightType.getName());
     }
 
     /**
@@ -1535,18 +1199,18 @@ public class GriffonClassUtils {
      * @return true if one of the classes is a native type and the other the object representation
      * of the same native type
      */
-    public static boolean isMatchBetweenPrimitiveAndWrapperTypes(String leftType, String rightType) {
-        if (leftType == null) {
-            throw new NullPointerException("Left type is null!");
-        } else if (rightType == null) {
-            throw new NullPointerException("Right type is null!");
-        } else {
-            String r = PRIMITIVE_TYPE_COMPATIBLE_TYPES.get(leftType);
-            return r != null && r.equals(rightType);
-        }
+    public static boolean isMatchBetweenPrimitiveAndWrapperTypes(@Nonnull String leftType, @Nonnull String rightType) {
+        requireNonBlank(leftType, "Left type is null!");
+        requireNonBlank(rightType, "Right type is null!");
+        String r = PRIMITIVE_TYPE_COMPATIBLE_TYPES.get(leftType);
+        return r != null && r.equals(rightType);
     }
 
-    private static Method findDeclaredMethod(Class<?> clazz, String methodName, Class[] parameterTypes) {
+    @Nullable
+    @SuppressWarnings("ConstantConditions")
+    private static Method findDeclaredMethod(@Nonnull Class<?> clazz, @Nonnull String methodName, Class[] parameterTypes) {
+        requireNonNull(clazz, ERROR_CLAZZ_NULL);
+        requireNonBlank(methodName, ERROR_METHOD_NAME_BLANK);
         while (clazz != null) {
             try {
                 Method method = clazz.getDeclaredMethod(methodName, parameterTypes);
@@ -1569,7 +1233,9 @@ public class GriffonClassUtils {
      * @param propertyName The property name
      * @return true if the property with name propertyName has a static getter method
      */
-    public static boolean isStaticProperty(Class<?> clazz, String propertyName) {
+    public static boolean isStaticProperty(@Nonnull Class<?> clazz, @Nonnull String propertyName) {
+        requireNonNull(clazz, ERROR_CLAZZ_NULL);
+        requireNonBlank(propertyName, ERROR_PROPERTY_NAME_BLANK);
         Method getter = findDeclaredMethod(clazz, getGetterName(propertyName), null);
         if (getter != null) {
             return isPublicStatic(getter);
@@ -1593,7 +1259,8 @@ public class GriffonClassUtils {
      * @param m
      * @return True if the method is declared public static
      */
-    public static boolean isPublicStatic(Method m) {
+    public static boolean isPublicStatic(@Nonnull Method m) {
+        requireNonNull(m, "Argument 'method' cannot be null");
         final int modifiers = m.getModifiers();
         return Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers);
     }
@@ -1604,7 +1271,8 @@ public class GriffonClassUtils {
      * @param f
      * @return True if the field is declared public static
      */
-    public static boolean isPublicStatic(Field f) {
+    public static boolean isPublicStatic(@Nonnull Field f) {
+        requireNonNull(f, "Argument 'field' cannot be null");
         final int modifiers = f.getModifiers();
         return Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers);
     }
@@ -1615,7 +1283,9 @@ public class GriffonClassUtils {
      * @param propertyName
      * @return The name for the getter method for this property, if it were to exist, i.e. getConstraints
      */
-    public static String getGetterName(String propertyName) {
+    @Nonnull
+    public static String getGetterName(@Nonnull String propertyName) {
+        requireNonBlank(propertyName, ERROR_PROPERTY_NAME_BLANK);
         return PROPERTY_GET_PREFIX + Character.toUpperCase(propertyName.charAt(0))
             + propertyName.substring(1);
     }
@@ -1627,7 +1297,10 @@ public class GriffonClassUtils {
      * @param name  The property name
      * @return The value if there is one, or null if unset OR there is no such property
      */
-    public static Object getStaticPropertyValue(Class<?> clazz, String name) {
+    @Nullable
+    public static Object getStaticPropertyValue(@Nonnull Class<?> clazz, @Nonnull String name) {
+        requireNonNull(clazz, ERROR_CLAZZ_NULL);
+        requireNonBlank(name, ERROR_NAME_BLANK);
         Method getter = findDeclaredMethod(clazz, getGetterName(name), null);
         try {
             if (getter != null) {
@@ -1657,12 +1330,15 @@ public class GriffonClassUtils {
      *
      * @return property value or null if no property found
      */
-    public static Object getPropertyOrStaticPropertyOrFieldValue(Object obj, String name) {
+    @Nullable
+    public static Object getPropertyOrStaticPropertyOrFieldValue(@Nonnull Object obj, @Nonnull String name) {
+        requireNonNull(obj, ERROR_OBJECT_NULL);
+        requireNonBlank(name, ERROR_NAME_BLANK);
         if (isReadable(obj, name)) {
             try {
                 return getProperty(obj, name);
             } catch (Exception e) {
-                throw new BeanException("Error while reading value of property/field " + name, e);
+                throw new PropertyException(obj, name);
             }
         } else {
             // Look for public fields
@@ -1687,7 +1363,10 @@ public class GriffonClassUtils {
      * @param name
      * @return The object value or null if there is no such field or access problems
      */
-    public static Object getFieldValue(Object obj, String name) {
+    @Nullable
+    public static Object getFieldValue(@Nonnull Object obj, @Nonnull String name) {
+        requireNonNull(obj, ERROR_OBJECT_NULL);
+        requireNonBlank(name, ERROR_NAME_BLANK);
         Class<?> clazz = obj.getClass();
         Field f;
         try {
@@ -1705,7 +1384,10 @@ public class GriffonClassUtils {
      * @param name
      * @return The field or null if there is no such field or access problems
      */
-    public static Field getField(Object obj, String name) {
+    @Nullable
+    public static Field getField(@Nonnull Object obj, @Nonnull String name) {
+        requireNonNull(obj, ERROR_OBJECT_NULL);
+        requireNonBlank(name, ERROR_NAME_BLANK);
         return getField(obj.getClass(), name);
     }
 
@@ -1716,7 +1398,10 @@ public class GriffonClassUtils {
      * @param name
      * @return The field or null if there is no such field or access problems
      */
-    public static Field getField(Class<?> clazz, String name) {
+    @Nullable
+    public static Field getField(@Nonnull Class<?> clazz, @Nonnull String name) {
+        requireNonNull(clazz, ERROR_CLAZZ_NULL);
+        requireNonBlank(name, ERROR_NAME_BLANK);
         Field f;
         try {
             f = clazz.getDeclaredField(name);
@@ -1733,7 +1418,9 @@ public class GriffonClassUtils {
      * @param name
      * @return True if a public field with the name exists
      */
-    public static boolean isPublicField(Object obj, String name) {
+    public static boolean isPublicField(@Nonnull Object obj, @Nonnull String name) {
+        requireNonNull(obj, ERROR_OBJECT_NULL);
+        requireNonBlank(name, ERROR_NAME_BLANK);
         Class<?> clazz = obj.getClass();
         Field f;
         try {
@@ -1751,18 +1438,16 @@ public class GriffonClassUtils {
      * @param propertyName The property name
      * @return True if the property is inherited
      */
-    public static boolean isPropertyInherited(Class<?> clz, String propertyName) {
+    public static boolean isPropertyInherited(@Nullable Class<?> clz, @Nonnull String propertyName) {
         if (clz == null) return false;
-        if (GriffonNameUtils.isBlank(propertyName))
-            throw new IllegalArgumentException("Argument [propertyName] cannot be null or blank");
-
+        requireNonBlank(propertyName, ERROR_PROPERTY_NAME_BLANK);
         Class<?> superClass = clz.getSuperclass();
 
         PropertyDescriptor pd;
         try {
             pd = getPropertyDescriptor(superClass, propertyName);
         } catch (Exception e) {
-            throw new BeanException("Could not read property descritptor for " + propertyName + " in " + superClass, e);
+            throw new PropertyException(superClass, propertyName, e);
         }
         return pd != null && pd.getReadMethod() != null;
     }
@@ -1773,7 +1458,9 @@ public class GriffonClassUtils {
      * @param interfaceType The interface
      * @return ArrayList for List, TreeSet for SortedSet, HashSet for Set etc.
      */
-    public static Collection<?> createConcreteCollection(Class<?> interfaceType) {
+    @Nonnull
+    public static Collection<?> createConcreteCollection(@Nonnull Class<?> interfaceType) {
+        requireNonNull(interfaceType, ERROR_TYPE_NULL);
         Collection<?> elements;
         if (interfaceType.equals(List.class)) {
             elements = new ArrayList<>();
@@ -1791,7 +1478,9 @@ public class GriffonClassUtils {
      * @param propertyName The property name
      * @return The setter equivalent
      */
-    public static String getSetterName(String propertyName) {
+    @Nonnull
+    public static String getSetterName(@Nonnull String propertyName) {
+        requireNonBlank(propertyName, ERROR_PROPERTY_NAME_BLANK);
         return PROPERTY_SET_PREFIX + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
     }
 
@@ -1802,7 +1491,8 @@ public class GriffonClassUtils {
      * @param args The arguments
      * @return True if it is a javabean property method
      */
-    public static boolean isGetter(String name, Class[] args) {
+    @SuppressWarnings("ConstantConditions")
+    public static boolean isGetter(@Nullable String name, @Nullable Class[] args) {
         if (GriffonNameUtils.isBlank(name) || args == null) return false;
         if (args.length != 0) return false;
 
@@ -1824,7 +1514,9 @@ public class GriffonClassUtils {
      * @param getterName The getter name
      * @return The property name equivalent
      */
-    public static String getPropertyForGetter(String getterName) {
+    @Nullable
+    @SuppressWarnings("ConstantConditions")
+    public static String getPropertyForGetter(@Nullable String getterName) {
         if (GriffonNameUtils.isBlank(getterName)) return null;
 
         if (getterName.startsWith(PROPERTY_GET_PREFIX)) {
@@ -1837,7 +1529,8 @@ public class GriffonClassUtils {
         return null;
     }
 
-    private static String convertPropertyName(String prop) {
+    @Nonnull
+    private static String convertPropertyName(@Nonnull String prop) {
         if (Character.isUpperCase(prop.charAt(0)) && Character.isUpperCase(prop.charAt(1))) {
             return prop;
         } else if (Character.isDigit(prop.charAt(0))) {
@@ -1853,7 +1546,9 @@ public class GriffonClassUtils {
      * @param setterName The setter name
      * @return The property name equivalent
      */
-    public static String getPropertyForSetter(String setterName) {
+    @Nullable
+    @SuppressWarnings("ConstantConditions")
+    public static String getPropertyForSetter(@Nullable String setterName) {
         if (GriffonNameUtils.isBlank(setterName)) return null;
 
         if (setterName.startsWith(PROPERTY_SET_PREFIX)) {
@@ -1863,7 +1558,8 @@ public class GriffonClassUtils {
         return null;
     }
 
-    public static boolean isSetter(String name, Class[] args) {
+    @SuppressWarnings("ConstantConditions")
+    public static boolean isSetter(@Nullable String name, @Nullable Class[] args) {
         if (GriffonNameUtils.isBlank(name) || args == null) return false;
 
         if (name.startsWith(PROPERTY_SET_PREFIX)) {
@@ -1876,32 +1572,8 @@ public class GriffonClassUtils {
         return false;
     }
 
-    /*
-    public static MetaClass getExpandoMetaClass(Class<?> clazz) {
-        MetaClassRegistry registry = GroovySystem.getMetaClassRegistry();
-        isTrue(registry.getMetaClassCreationHandler() instanceof ExpandoMetaClassCreationHandle, "Griffon requires an instance of [ExpandoMetaClassCreationHandle] to be set in Groovy's MetaClassRegistry!");
-        MetaClass mc = registry.getMetaClass(clazz);
-        AdaptingMetaClass adapter = null;
-        if (mc instanceof AdaptingMetaClass) {
-            adapter = (AdaptingMetaClass) mc;
-            mc = ((AdaptingMetaClass) mc).getAdaptee();
-        }
-
-        if (!(mc instanceof ExpandoMetaClass)) {
-            // removes cached version
-            registry.removeMetaClass(clazz);
-            mc = registry.getMetaClass(clazz);
-            if (adapter != null) {
-                adapter.setAdaptee(mc);
-            }
-        }
-        isTrue(mc instanceof ExpandoMetaClass, "BUG! Method must return an instance of [ExpandoMetaClass]!");
-        return mc;
-    }
-    */
-
     /**
-     * Returns true if the specified clazz parameter is either the same as, or is a superclass or superinterface
+     * Returns true if the specified clazz parameter is either the same as, or is a superclass or super interface
      * of, the specified type parameter. Converts primitive types to compatible class automatically.
      *
      * @param clazz
@@ -1909,7 +1581,7 @@ public class GriffonClassUtils {
      * @return True if the class is a taglib
      * @see java.lang.Class#isAssignableFrom(Class)
      */
-    public static boolean isAssignableOrConvertibleFrom(Class<?> clazz, Class<?> type) {
+    public static boolean isAssignableOrConvertibleFrom(@Nullable Class<?> clazz, @Nullable Class<?> type) {
         if (type == null || clazz == null) {
             return false;
         } else if (type.isPrimitive()) {
@@ -1928,7 +1600,7 @@ public class GriffonClassUtils {
      * @param map The map to look in
      * @return A boolean value which will be false if the map is null, the map doesn't contain the key or the value is false
      */
-    public static boolean getBooleanFromMap(String key, Map<String, Object> map) {
+    public static boolean getBooleanFromMap(@Nullable String key, @Nullable Map<String, Object> map) {
         if (map == null) return false;
         if (map.containsKey(key)) {
             Object o = map.get(key);
@@ -1943,37 +1615,17 @@ public class GriffonClassUtils {
     }
 
     /**
-     * Locates the name of a property for the given value on the target object using Groovy's meta APIs.
-     * Note that this method uses the reference so the incorrect result could be returned for two properties
-     * that refer to the same reference. Use with caution.
-     *
-     * @param target The target
-     * @param obj    The property value
-     * @return The property name or null
-     */
-    /*public static String findPropertyNameForValue(Object target, Object obj) {
-        MetaClass mc = GroovySystem.getMetaClassRegistry().getMetaClass(target.getClass());
-        List<MetaProperty> metaProperties = mc.getProperties();
-        for (MetaProperty metaProperty : metaProperties) {
-            if (isAssignableOrConvertibleFrom(metaProperty.getType(), obj.getClass())) {
-                Object val = metaProperty.getProperty(target);
-                if (val != null && val.equals(obj))
-                    return metaProperty.getName();
-            }
-        }
-        return null;
-    }*/
-
-    /**
      * Returns whether the specified class is either within one of the specified packages or
      * within a subpackage of one of the packages
      *
-     * @param theClass    The class
+     * @param clazz       The class
      * @param packageList The list of packages
      * @return True if it is within the list of specified packages
      */
-    public static boolean isClassBelowPackage(Class<?> theClass, List<?> packageList) {
-        String classPackage = theClass.getPackage().getName();
+    public static boolean isClassBelowPackage(@Nonnull Class<?> clazz, @Nonnull List<?> packageList) {
+        requireNonNull(clazz, ERROR_CLAZZ_NULL);
+        requireNonNull(packageList, "Argument 'packageList' cannot be null");
+        String classPackage = clazz.getPackage().getName();
         for (Object packageName : packageList) {
             if (packageName != null) {
                 if (classPackage.startsWith(packageName.toString())) {
@@ -1985,12 +1637,16 @@ public class GriffonClassUtils {
     }
 
     public static void setProperties(@Nonnull Object bean, @Nonnull Map<String, Object> properties) {
+        requireNonNull(bean, ERROR_BEAN_NULL);
+        requireNonNull(properties, ERROR_PROPERTIES_NULL);
         for (Map.Entry<String, Object> entry : properties.entrySet()) {
             setPropertyValue(bean, entry.getKey(), entry.getValue());
         }
     }
 
     public static void setPropertiesNoException(@Nonnull Object bean, @Nonnull Map<String, Object> properties) {
+        requireNonNull(bean, ERROR_BEAN_NULL);
+        requireNonNull(properties, ERROR_PROPERTIES_NULL);
         for (Map.Entry<String, Object> entry : properties.entrySet()) {
             try {
                 setPropertyValue(bean, entry.getKey(), entry.getValue());
@@ -2001,6 +1657,8 @@ public class GriffonClassUtils {
     }
 
     public static void setPropertyValue(@Nonnull Object bean, @Nonnull String name, @Nullable Object value) {
+        requireNonNull(bean, ERROR_BEAN_NULL);
+        requireNonBlank(name, ERROR_NAME_BLANK);
         try {
             setProperty(bean, name, value);
         } catch (IllegalAccessException | NoSuchMethodException e) {
@@ -2012,6 +1670,8 @@ public class GriffonClassUtils {
 
     @Nullable
     public static Object getPropertyValue(@Nonnull Object bean, @Nonnull String name) {
+        requireNonNull(bean, ERROR_BEAN_NULL);
+        requireNonBlank(name, ERROR_NAME_BLANK);
         try {
             return getProperty(bean, name);
         } catch (IllegalAccessException | NoSuchMethodException e) {
@@ -2045,17 +1705,13 @@ public class GriffonClassUtils {
      * @throws NoSuchMethodException     if an accessor method for this
      *                                   property cannot be found
      */
-    public static PropertyDescriptor getPropertyDescriptor(Object bean,
-                                                           String name)
+    @Nullable
+    public static PropertyDescriptor getPropertyDescriptor(@Nonnull Object bean,
+                                                           @Nonnull String name)
         throws IllegalAccessException, InvocationTargetException,
         NoSuchMethodException {
-        if (bean == null) {
-            throw new IllegalArgumentException("No bean specified");
-        }
-        if (name == null) {
-            throw new IllegalArgumentException("No name specified for bean class '" +
-                bean.getClass() + "'");
-        }
+        requireNonNull(bean, ERROR_BEAN_NULL);
+        requireNonBlank(name, ERROR_NAME_BLANK);
 
         return getPropertyDescriptor(bean instanceof Class ? (Class<?>) bean : bean.getClass(), name);
     }
@@ -2080,23 +1736,18 @@ public class GriffonClassUtils {
      * @throws NoSuchMethodException     if an accessor method for this
      *                                   property cannot be found
      */
-    public static PropertyDescriptor getPropertyDescriptor(Class<?> clazz,
-                                                           String name)
+    @Nullable
+    public static PropertyDescriptor getPropertyDescriptor(@Nonnull Class<?> clazz,
+                                                           @Nonnull String name)
         throws IllegalAccessException, InvocationTargetException,
         NoSuchMethodException {
-        if (clazz == null) {
-            throw new IllegalArgumentException("No class specified");
-        }
-        if (name == null) {
-            throw new IllegalArgumentException("No name specified for class '" + clazz + "'");
-        }
+        requireNonNull(clazz, ERROR_CLAZZ_NULL);
+        requireNonBlank(name, ERROR_NAME_BLANK);
 
         PropertyDescriptor[] descriptors = getPropertyDescriptors(clazz);
-        if (descriptors != null) {
-            for (PropertyDescriptor descriptor : descriptors) {
-                if (name.equals(descriptor.getName())) {
-                    return (descriptor);
-                }
+        for (PropertyDescriptor descriptor : descriptors) {
+            if (name.equals(descriptor.getName())) {
+                return (descriptor);
             }
         }
 
@@ -2112,16 +1763,15 @@ public class GriffonClassUtils {
      * @return the property descriptors
      * @throws IllegalArgumentException if <code>beanClass</code> is null
      */
-    public static PropertyDescriptor[] getPropertyDescriptors(Class<?> beanClass) {
-        if (beanClass == null) {
-            throw new IllegalArgumentException("No bean class specified");
-        }
+    @Nonnull
+    public static PropertyDescriptor[] getPropertyDescriptors(@Nonnull Class<?> beanClass) {
+        requireNonNull(beanClass, ERROR_CLAZZ_NULL);
 
         // Look up any cached descriptors for this bean class
         PropertyDescriptor[] descriptors;
         descriptors = descriptorsCache.get(beanClass.getName());
         if (descriptors != null) {
-            return (descriptors);
+            return descriptors;
         }
 
         // Introspect the bean and cache the generated descriptors
@@ -2137,7 +1787,7 @@ public class GriffonClassUtils {
         }
 
         descriptorsCache.put(beanClass.getName(), descriptors);
-        return (descriptors);
+        return descriptors;
     }
 
     /**
@@ -2147,7 +1797,9 @@ public class GriffonClassUtils {
      * @param descriptor Property descriptor to return a getter for
      * @return The read method
      */
-    public static Method getReadMethod(PropertyDescriptor descriptor) {
+    @Nullable
+    public static Method getReadMethod(@Nonnull PropertyDescriptor descriptor) {
+        requireNonNull(descriptor, ERROR_DESCRIPTOR_NULL);
         return (MethodUtils.getAccessibleMethod(descriptor.getReadMethod()));
     }
 
@@ -2164,21 +1816,16 @@ public class GriffonClassUtils {
      *                                  or <code>name</code> is <code>null</code>
      * @since BeanUtils 1.6
      */
-    public static boolean isReadable(Object bean, String name) {
+    public static boolean isReadable(@Nonnull Object bean, @Nonnull String name) {
         // Validate method parameters
-        if (bean == null) {
-            throw new IllegalArgumentException("No bean specified");
-        }
-        if (name == null) {
-            throw new IllegalArgumentException("No name specified for bean class '" +
-                bean.getClass() + "'");
-        }
+        requireNonNull(bean, ERROR_BEAN_NULL);
+        requireNonBlank(name, ERROR_NAME_BLANK);
 
         try {
             PropertyDescriptor desc = getPropertyDescriptor(bean, name);
             if (desc != null) {
                 Method readMethod = getReadMethod(bean.getClass(), desc);
-                if (readMethod == null) {
+                if (readMethod != null) {
                     readMethod = MethodUtils.getAccessibleMethod(bean.getClass(), readMethod);
                 }
                 return (readMethod != null);
@@ -2201,7 +1848,9 @@ public class GriffonClassUtils {
      * @param descriptor Property descriptor to return a setter for
      * @return The write method
      */
-    public static Method getWriteMethod(PropertyDescriptor descriptor) {
+    @Nullable
+    public static Method getWriteMethod(@Nonnull PropertyDescriptor descriptor) {
+        requireNonNull(descriptor, ERROR_DESCRIPTOR_NULL);
         return (MethodUtils.getAccessibleMethod(descriptor.getWriteMethod()));
     }
 
@@ -2217,21 +1866,16 @@ public class GriffonClassUtils {
      * @throws IllegalArgumentException if <code>bean</code>
      *                                  or <code>name</code> is <code>null</code>
      */
-    public static boolean isWritable(Object bean, String name) {
+    public static boolean isWritable(@Nonnull Object bean, @Nonnull String name) {
         // Validate method parameters
-        if (bean == null) {
-            throw new IllegalArgumentException("No bean specified");
-        }
-        if (name == null) {
-            throw new IllegalArgumentException("No name specified for bean class '" +
-                bean.getClass() + "'");
-        }
+        requireNonNull(bean, ERROR_BEAN_NULL);
+        requireNonBlank(name, ERROR_NAME_BLANK);
 
         try {
             PropertyDescriptor desc = getPropertyDescriptor(bean, name);
             if (desc != null) {
                 Method writeMethod = getWriteMethod(bean.getClass(), desc);
-                if (writeMethod == null) {
+                if (writeMethod != null) {
                     writeMethod = MethodUtils.getAccessibleMethod(bean.getClass(), writeMethod);
                 }
                 return (writeMethod != null);
@@ -2265,16 +1909,11 @@ public class GriffonClassUtils {
      * @throws NoSuchMethodException     if an accessor method for this
      *                                   property cannot be found
      */
-    public static void setProperty(Object bean, String name, Object value)
+    public static void setProperty(@Nonnull Object bean, @Nonnull String name, @Nullable Object value)
         throws IllegalAccessException, InvocationTargetException,
         NoSuchMethodException {
-        if (bean == null) {
-            throw new IllegalArgumentException("No bean specified");
-        }
-        if (name == null) {
-            throw new IllegalArgumentException("No name specified for bean class '" +
-                bean.getClass() + "'");
-        }
+        requireNonNull(bean, ERROR_BEAN_NULL);
+        requireNonBlank(name, ERROR_NAME_BLANK);
 
         // Retrieve the property setter method for the specified property
         PropertyDescriptor descriptor = getPropertyDescriptor(bean, name);
@@ -2316,16 +1955,12 @@ public class GriffonClassUtils {
      * @throws NoSuchMethodException     if an accessor method for this
      *                                   property cannot be found
      */
-    public static Object getProperty(Object bean, String name)
+    @Nullable
+    public static Object getProperty(@Nonnull Object bean, @Nonnull String name)
         throws IllegalAccessException, InvocationTargetException,
         NoSuchMethodException {
-        if (bean == null) {
-            throw new IllegalArgumentException("No bean specified");
-        }
-        if (name == null) {
-            throw new IllegalArgumentException("No name specified for bean class '" +
-                bean.getClass() + "'");
-        }
+        requireNonNull(bean, ERROR_BEAN_NULL);
+        requireNonBlank(name, ERROR_NAME_BLANK);
 
         // Retrieve the property getter method for the specified property
         PropertyDescriptor descriptor = getPropertyDescriptor(bean, name);
@@ -2351,7 +1986,10 @@ public class GriffonClassUtils {
      * @param descriptor Property descriptor to return a getter for
      * @return The read method
      */
-    public static Method getReadMethod(Class<?> clazz, PropertyDescriptor descriptor) {
+    @Nullable
+    public static Method getReadMethod(@Nonnull Class<?> clazz, @Nonnull PropertyDescriptor descriptor) {
+        requireNonNull(clazz, ERROR_CLAZZ_NULL);
+        requireNonNull(descriptor, ERROR_DESCRIPTOR_NULL);
         return (MethodUtils.getAccessibleMethod(clazz, descriptor.getReadMethod()));
     }
 
@@ -2363,7 +2001,10 @@ public class GriffonClassUtils {
      * @param descriptor Property descriptor to return a setter for
      * @return The write method
      */
-    public static Method getWriteMethod(Class<?> clazz, PropertyDescriptor descriptor) {
+    @Nullable
+    public static Method getWriteMethod(@Nonnull Class<?> clazz, @Nonnull PropertyDescriptor descriptor) {
+        requireNonNull(clazz, ERROR_CLAZZ_NULL);
+        requireNonNull(descriptor, ERROR_DESCRIPTOR_NULL);
         return (MethodUtils.getAccessibleMethod(clazz, descriptor.getWriteMethod()));
     }
 
@@ -2390,15 +2031,20 @@ public class GriffonClassUtils {
         }
     }
 
-    public static Object invokeInstanceMethod(Object object, String methodName) {
+    @Nullable
+    public static Object invokeInstanceMethod(@Nonnull Object object, @Nonnull String methodName) {
         return invokeInstanceMethod(object, methodName, EMPTY_ARGS);
     }
 
-    public static Object invokeInstanceMethod(Object object, String methodName, Object arg) {
+    @Nullable
+    public static Object invokeInstanceMethod(@Nonnull Object object, @Nonnull String methodName, Object arg) {
         return invokeInstanceMethod(object, methodName, new Object[]{arg});
     }
 
-    public static Object invokeInstanceMethod(Object object, String methodName, Object... args) {
+    @Nullable
+    public static Object invokeInstanceMethod(@Nonnull Object object, @Nonnull String methodName, Object... args) {
+        requireNonNull(object, ERROR_OBJECT_NULL);
+        requireNonBlank(methodName, ERROR_METHOD_NAME_BLANK);
         try {
             return invokeMethod(object, methodName, args);
         } catch (NoSuchMethodException | IllegalAccessException e) {
@@ -2408,15 +2054,20 @@ public class GriffonClassUtils {
         }
     }
 
-    public static Object invokeExactInstanceMethod(Object object, String methodName) {
+    @Nullable
+    public static Object invokeExactInstanceMethod(@Nonnull Object object, @Nonnull String methodName) {
         return invokeExactInstanceMethod(object, methodName, EMPTY_ARGS);
     }
 
-    public static Object invokeExactInstanceMethod(Object object, String methodName, Object arg) {
+    @Nullable
+    public static Object invokeExactInstanceMethod(@Nonnull Object object, @Nonnull String methodName, Object arg) {
         return invokeExactInstanceMethod(object, methodName, new Object[]{arg});
     }
 
-    public static Object invokeExactInstanceMethod(Object object, String methodName, Object... args) {
+    @Nullable
+    public static Object invokeExactInstanceMethod(@Nonnull Object object, @Nonnull String methodName, Object... args) {
+        requireNonNull(object, ERROR_OBJECT_NULL);
+        requireNonBlank(methodName, ERROR_METHOD_NAME_BLANK);
         try {
             return invokeExactMethod(object, methodName, args);
         } catch (NoSuchMethodException | IllegalAccessException e) {
@@ -2426,15 +2077,20 @@ public class GriffonClassUtils {
         }
     }
 
-    public static Object invokeStaticMethod(Class<?> type, String methodName) {
+    @Nullable
+    public static Object invokeStaticMethod(@Nonnull Class<?> type, @Nonnull String methodName) {
         return invokeStaticMethod(type, methodName, EMPTY_ARGS);
     }
 
-    public static Object invokeStaticMethod(Class<?> type, String methodName, Object arg) {
+    @Nullable
+    public static Object invokeStaticMethod(@Nonnull Class<?> type, @Nonnull String methodName, Object arg) {
         return invokeStaticMethod(type, methodName, new Object[]{arg});
     }
 
-    public static Object invokeStaticMethod(Class<?> type, String methodName, Object... args) {
+    @Nullable
+    public static Object invokeStaticMethod(@Nonnull Class<?> type, @Nonnull String methodName, Object... args) {
+        requireNonNull(type, ERROR_TYPE_NULL);
+        requireNonBlank(methodName, ERROR_METHOD_NAME_BLANK);
         try {
             return MethodUtils.invokeStaticMethod(type, methodName, args);
         } catch (NoSuchMethodException | IllegalAccessException e) {
@@ -2444,15 +2100,20 @@ public class GriffonClassUtils {
         }
     }
 
-    public static Object invokeExactStaticMethod(Class<?> type, String methodName) {
+    @Nullable
+    public static Object invokeExactStaticMethod(@Nonnull Class<?> type, @Nonnull String methodName) {
         return invokeExactStaticMethod(type, methodName, EMPTY_ARGS);
     }
 
-    public static Object invokeExactStaticMethod(Class<?> type, String methodName, Object arg) {
+    @Nullable
+    public static Object invokeExactStaticMethod(@Nonnull Class<?> type, @Nonnull String methodName, Object arg) {
         return invokeExactStaticMethod(type, methodName, new Object[]{arg});
     }
 
-    public static Object invokeExactStaticMethod(Class<?> type, String methodName, Object... args) {
+    @Nullable
+    public static Object invokeExactStaticMethod(@Nonnull Class<?> type, @Nonnull String methodName, Object... args) {
+        requireNonNull(type, ERROR_TYPE_NULL);
+        requireNonBlank(methodName, ERROR_METHOD_NAME_BLANK);
         try {
             return MethodUtils.invokeExactStaticMethod(type, methodName, args);
         } catch (NoSuchMethodException | IllegalAccessException e) {
@@ -2528,7 +2189,8 @@ public class GriffonClassUtils {
      * @param valueIfNull the value to return if null
      * @return the class name of the object without the package name, or the null value
      */
-    public static String getShortClassName(Object object, String valueIfNull) {
+    @Nonnull
+    public static String getShortClassName(@Nullable Object object, @Nonnull String valueIfNull) {
         if (object == null) {
             return valueIfNull;
         }
@@ -2541,7 +2203,8 @@ public class GriffonClassUtils {
      * @param cls the class to get the short name for.
      * @return the class name without the package name or an empty string
      */
-    public static String getShortClassName(Class<?> cls) {
+    @Nonnull
+    public static String getShortClassName(@Nullable Class<?> cls) {
         if (cls == null) {
             return EMPTY_STRING;
         }
@@ -2556,7 +2219,8 @@ public class GriffonClassUtils {
      * @param className the className to get the short name for
      * @return the class name of the class without the package name or an empty string
      */
-    public static String getShortClassName(String className) {
+    @Nonnull
+    public static String getShortClassName(@Nullable String className) {
         if (className == null) {
             return EMPTY_STRING;
         }
@@ -2602,7 +2266,8 @@ public class GriffonClassUtils {
      * @param valueIfNull the value to return if null
      * @return the package name of the object, or the null value
      */
-    public static String getPackageName(Object object, String valueIfNull) {
+    @Nonnull
+    public static String getPackageName(@Nullable Object object, @Nonnull String valueIfNull) {
         if (object == null) {
             return valueIfNull;
         }
@@ -2615,7 +2280,8 @@ public class GriffonClassUtils {
      * @param cls the class to get the package name for, may be <code>null</code>.
      * @return the package name or an empty string
      */
-    public static String getPackageName(Class<?> cls) {
+    @Nonnull
+    public static String getPackageName(@Nullable Class<?> cls) {
         if (cls == null) {
             return EMPTY_STRING;
         }
@@ -2631,7 +2297,8 @@ public class GriffonClassUtils {
      * @param className the className to get the package name for, may be <code>null</code>
      * @return the package name or an empty string
      */
-    public static String getPackageName(String className) {
+    @Nonnull
+    public static String getPackageName(@Nullable String className) {
         if (className == null || className.length() == 0) {
             return EMPTY_STRING;
         }
@@ -2658,7 +2325,8 @@ public class GriffonClassUtils {
      * @param args the arguments
      * @return the types of the arguments
      */
-    public static Class<?>[] convertToTypeArray(Object[] args) {
+    @Nullable
+    public static Class<?>[] convertToTypeArray(@Nullable Object[] args) {
         if (args == null) {
             return null;
         }

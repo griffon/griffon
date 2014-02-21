@@ -15,6 +15,7 @@
  */
 package griffon.core.env;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -59,8 +60,8 @@ public enum Environment {
     public static final String DEFAULT = "griffon.env.default";
     private static final String PRODUCTION_ENV_SHORT_NAME = "prod";
     private static final String DEVELOPMENT_ENVIRONMENT_SHORT_NAME = "dev";
-
     private static final String TEST_ENVIRONMENT_SHORT_NAME = "test";
+
     private static final Map<String, String> ENV_NAME_MAPPINGS = new LinkedHashMap<String, String>() {{
         put(DEVELOPMENT_ENVIRONMENT_SHORT_NAME, Environment.DEVELOPMENT.getName());
         put(PRODUCTION_ENV_SHORT_NAME, Environment.PRODUCTION.getName());
@@ -76,6 +77,7 @@ public enum Environment {
      *
      * @return The current environment.
      */
+    @Nonnull
     public static Environment getCurrent() {
         String envName = System.getProperty(Environment.KEY);
         Metadata metadata = Metadata.getCurrent();
@@ -115,6 +117,7 @@ public enum Environment {
      * @param shortName The short name
      * @return The Environment or null if not known
      */
+    @Nullable
     public static Environment getEnvironment(@Nullable String shortName) {
         final String envName = ENV_NAME_MAPPINGS.get(shortName);
         if (envName != null) {
@@ -128,6 +131,7 @@ public enum Environment {
     /**
      * @return The name of the environment
      */
+    @Nonnull
     public String getName() {
         if (name == null) {
             return this.toString().toLowerCase(Locale.getDefault());
@@ -139,6 +143,7 @@ public enum Environment {
         this.name = name;
     }
 
+    @Nonnull
     public static String getEnvironmentShortName() {
         switch(Environment.getCurrent()) {
             case DEVELOPMENT: return "dev";

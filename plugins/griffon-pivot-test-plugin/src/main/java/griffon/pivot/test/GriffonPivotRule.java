@@ -18,6 +18,7 @@ package griffon.pivot.test;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonArtifact;
 import griffon.core.artifact.GriffonClass;
+import griffon.core.env.Environment;
 import griffon.core.test.TestFor;
 import org.apache.pivot.wtk.DesktopApplicationContext;
 import org.codehaus.griffon.runtime.core.DefaultGriffonApplication;
@@ -47,6 +48,9 @@ public class GriffonPivotRule implements MethodRule {
         requireNonNull(startupArgs, "Argument 'startupArgs' cannot be null");
         this.startupArgs = new String[startupArgs.length];
         System.arraycopy(startupArgs, 0, this.startupArgs, 0, startupArgs.length);
+        if (!Environment.isSystemSet()) {
+            System.setProperty(Environment.KEY, Environment.TEST.getName());
+        }
     }
 
     @Override

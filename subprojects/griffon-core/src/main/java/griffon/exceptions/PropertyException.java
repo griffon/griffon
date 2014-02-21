@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
  * @since 2.0.0
  */
 public class PropertyException extends GriffonException {
-    private static final long serialVersionUID = 8166388238366606204L;
+    private static final long serialVersionUID = 6721682115856360089L;
 
     public PropertyException(@Nonnull Object bean, @Nonnull String propertyName, @Nullable Object value) {
         super(formatArgs(bean, propertyName, value));
@@ -41,6 +41,14 @@ public class PropertyException extends GriffonException {
         super(formatArgs(bean, propertyName), checkNonNull(cause, "cause"));
     }
 
+    public PropertyException(@Nonnull Class<?> klass, @Nonnull String propertyName) {
+        super(formatArgs(klass, propertyName));
+    }
+
+    public PropertyException(@Nonnull Class<?> klass, @Nonnull String propertyName, @Nonnull Throwable cause) {
+        super(formatArgs(klass, propertyName), checkNonNull(cause, "cause"));
+    }
+
     @Nonnull
     private static String formatArgs(@Nonnull Object bean, @Nonnull String propertyName, @Nullable Object value) {
         checkNonNull(bean, "bean");
@@ -53,5 +61,12 @@ public class PropertyException extends GriffonException {
         checkNonNull(bean, "bean");
         checkNonBlank(propertyName, "propertyName");
         return "Cannot get property " + propertyName + " from " + bean;
+    }
+
+    @Nonnull
+    private static String formatArgs(@Nonnull Class<?> klass, @Nonnull String propertyName) {
+        checkNonNull(klass, "klass");
+        checkNonBlank(propertyName, "propertyName");
+        return klass + " does not have a property named " + propertyName;
     }
 }

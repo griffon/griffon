@@ -20,6 +20,9 @@ import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
 /**
  * @author Andres Almiray
  */
@@ -31,9 +34,19 @@ public class MethodDescriptor implements Comparable<MethodDescriptor> {
 
     private static final String[] EMPTY_CLASS_PARAMETERS = new String[0];
 
-    public static MethodDescriptor forMethod(Method method) {
-        if (method == null) return null;
-        return new MethodDescriptor(method.getName(), method.getParameterTypes(), method.getModifiers());
+    @Nonnull
+    public static MethodDescriptor forMethod(@Nonnull Method method) {
+        return forMethod(method, false);
+    }
+
+    @Nonnull
+    public static MethodDescriptor forMethod(@Nonnull Method method, boolean removeAbstractModifier) {
+        requireNonNull(method, "Argument 'method' cannot be null");
+        int modifiers = method.getModifiers();
+        if (removeAbstractModifier) {
+            modifiers -= Modifier.ABSTRACT;
+        }
+        return new MethodDescriptor(method.getName(), method.getParameterTypes(), modifiers);
     }
 
     private static boolean areParametersCompatible(String[] params1, String[] params2) {
@@ -52,47 +65,52 @@ public class MethodDescriptor implements Comparable<MethodDescriptor> {
         return true;
     }
 
-    public MethodDescriptor(String methodName) {
+    public MethodDescriptor(@Nonnull String methodName) {
         this(methodName, EMPTY_CLASS_PARAMETERS, Modifier.PUBLIC);
     }
 
-    public MethodDescriptor(String methodName, int modifiers) {
+    public MethodDescriptor(@Nonnull String methodName, int modifiers) {
         this(methodName, EMPTY_CLASS_PARAMETERS, modifiers);
     }
 
-    public MethodDescriptor(String methodName, Class<?>[] paramTypes) {
+    public MethodDescriptor(@Nonnull String methodName, @Nonnull Class<?>[] paramTypes) {
         this(methodName, paramTypes, Modifier.PUBLIC);
     }
 
-    public MethodDescriptor(String methodName, String[] paramTypes) {
+    public MethodDescriptor(@Nonnull String methodName, @Nonnull String[] paramTypes) {
         this(methodName, paramTypes, Modifier.PUBLIC);
     }
 
-    public MethodDescriptor(String methodName, Class<?>[] paramTypes, int modifiers) {
-        this.methodName = methodName;
-        if (paramTypes == null) {
-            this.paramTypes = EMPTY_CLASS_PARAMETERS;
-        } else {
-            this.paramTypes = new String[paramTypes.length];
-            for (int i = 0; i < paramTypes.length; i++) {
-                this.paramTypes[i] = paramTypes[i].getName();
-            }
+    public MethodDescriptor(@Nonnull String methodName, @Nonnull Class<?>[] paramTypes, int modifiers) {
+        this.methodName = requireNonBlank(methodName, "Argment 'methodName' cannot be blank");
+        requireNonNull(paramTypes, "Argument 'paramTypes' cannot be null");
+
+        this.paramTypes = new String[paramTypes.length];
+        for (int i = 0; i < paramTypes.length; i++) {
+            this.paramTypes[i] = paramTypes[i].getName();
         }
+
         this.modifiers = modifiers;
         this.hashCode = 31 * methodName.hashCode() + modifiers;
     }
 
-    public MethodDescriptor(String methodName, String[] paramTypes, int modifiers) {
-        this.methodName = methodName;
-        this.paramTypes = paramTypes == null ? EMPTY_CLASS_PARAMETERS : paramTypes;
+    public MethodDescriptor(@Nonnull String methodName, @Nonnull String[] paramTypes, int modifiers) {
+        this.methodName = requireNonBlank(methodName, "Argment 'methodName' cannot be blank");
+        requireNonNull(paramTypes, "Argument 'paramTypes' cannot be null");
+
+        this.paramTypes = new String[paramTypes.length];
+        System.arraycopy(paramTypes, 0, this.paramTypes, 0, paramTypes.length);
+
         this.modifiers = modifiers;
         this.hashCode = 31 * methodName.hashCode() + modifiers;
     }
 
+    @Nonnull
     public String getName() {
         return methodName;
     }
 
+    @Nonnull
     public String[] getParameterTypes() {
         return paramTypes;
     }
@@ -143,7 +161,8 @@ public class MethodDescriptor implements Comparable<MethodDescriptor> {
         return 0;
     }
 
-    public boolean matches(MethodDescriptor md) {
+    public boolean matches(@Nonnull MethodDescriptor md) {
+        requireNonNull(md, "Argument 'methodDescriptor' cannot be null");
         if (!methodName.equals(md.methodName) ||
             modifiers != md.modifiers ||
             paramTypes.length != md.paramTypes.length) {

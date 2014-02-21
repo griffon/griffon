@@ -19,6 +19,7 @@ import griffon.core.ApplicationBootstrapper;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonArtifact;
 import griffon.core.artifact.GriffonClass;
+import griffon.core.env.Environment;
 import org.codehaus.griffon.runtime.core.DefaultGriffonApplication;
 import org.codehaus.griffon.runtime.core.TestApplicationBootstrapper;
 import org.junit.rules.MethodRule;
@@ -66,6 +67,9 @@ public class GriffonUnitRule implements MethodRule {
         System.arraycopy(startupArgs, 0, this.startupArgs, 0, startupArgs.length);
         this.applicationClass = requireNonNull(applicationClass, "Argument 'applicationClass' cannot be null");
         this.applicationBootstrapper = requireNonNull(applicationBootstrapper, "Argument 'applicationBootstrapper' cannot be null");
+        if (!Environment.isSystemSet()) {
+            System.setProperty(Environment.KEY, Environment.TEST.getName());
+        }
     }
 
     @Override

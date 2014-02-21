@@ -180,6 +180,7 @@ class DefaultResourceResolverTests {
     }
 
     static final class CustomResourceResolver extends AbstractResourceResolver {
+        @Nonnull
         @Override
         protected Object doResolveResourceValue(
             @Nonnull String key,

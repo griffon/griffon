@@ -195,32 +195,29 @@ public final class TypeUtils {
             return (T) value;
         }
 
-        if (isBoolean(targetType) && isBoolean(value.getClass())) {
-            return (T) value;
-        }
-
-        if (isCharacter(targetType) && isCharacter(value.getClass())) {
-            return (T) value;
-        }
-
-        if (isNumber(targetType) && isNumber(value.getClass())) {
-            // perform fast number conversion
-            if (isByte(targetType)) {
-                return (T) ((Byte) castToByte(value));
-            } else if (isShort(targetType)) {
-                return (T) ((Short) castToShort(value));
-            } else if (isInteger(targetType)) {
-                return (T) ((Integer) castToInt(value));
-            } else if (isLong(targetType)) {
-                return (T) ((Long) castToLong(value));
-            } else if (isFloat(targetType)) {
-                return (T) ((Float) castToFloat(value));
-            } else if (isDouble(targetType)) {
-                return (T) ((Double) castToDouble(value));
-            } else if (isBigInteger(targetType)) {
-                return targetType.cast(BigInteger.valueOf(((Number) value).longValue()));
-            } else if (isBigDecimal(targetType)) {
-                return targetType.cast(BigDecimal.valueOf(((Number) value).doubleValue()));
+        if (null == format) {
+            if (isBoolean(targetType) && isBoolean(value.getClass())) {
+                return (T) value;
+            } else if (isCharacter(targetType) && isCharacter(value.getClass())) {
+                return (T) value;
+            } else if (isNumber(targetType) && isNumber(value.getClass())) {
+                if (isByte(targetType)) {
+                    return (T) ((Byte) castToByte(value));
+                } else if (isShort(targetType)) {
+                    return (T) ((Short) castToShort(value));
+                } else if (isInteger(targetType)) {
+                    return (T) ((Integer) castToInt(value));
+                } else if (isLong(targetType)) {
+                    return (T) ((Long) castToLong(value));
+                } else if (isFloat(targetType)) {
+                    return (T) ((Float) castToFloat(value));
+                } else if (isDouble(targetType)) {
+                    return (T) ((Double) castToDouble(value));
+                } else if (isBigInteger(targetType)) {
+                    return targetType.cast(BigInteger.valueOf(((Number) value).longValue()));
+                } else if (isBigDecimal(targetType)) {
+                    return targetType.cast(BigDecimal.valueOf(((Number) value).doubleValue()));
+                }
             }
         }
 

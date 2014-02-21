@@ -368,4 +368,98 @@ public class TypeUtilsTest {
         assertEquals(BigDecimal.valueOf(10d), TypeUtils.convertValue(BigDecimal.class, new BigInteger("10")));
         assertEquals(BigDecimal.valueOf(10d), TypeUtils.convertValue(BigDecimal.class, new BigDecimal("10.0")));
     }
+
+    @Test
+    public void castToBoolean() {
+        assertTrue(TypeUtils.castToBoolean(Boolean.TRUE));
+        assertTrue(TypeUtils.castToBoolean("TRUE"));
+        assertTrue(TypeUtils.castToBoolean("true"));
+        assertFalse(TypeUtils.castToBoolean(Boolean.FALSE));
+        assertFalse(TypeUtils.castToBoolean("FALSE"));
+        assertFalse(TypeUtils.castToBoolean("false"));
+        assertTrue(TypeUtils.castToBoolean(null, true));
+        assertFalse(TypeUtils.castToBoolean(null, false));
+        assertTrue(TypeUtils.castToBoolean(true, true));
+        assertTrue(TypeUtils.castToBoolean(true, false));
+    }
+
+    @Test
+    public void castToChar() {
+        assertEquals('A', TypeUtils.castToChar(Character.valueOf('A')));
+        assertEquals('A', TypeUtils.castToChar("AB"));
+        assertEquals('A', TypeUtils.castToChar("AB", 'B'));
+        assertEquals('B', TypeUtils.castToChar(null, 'B'));
+    }
+
+    @Test
+    public void castToByte() {
+        assertEquals((byte) 10, TypeUtils.castToByte(Byte.valueOf("10")));
+        assertEquals((byte) 10, TypeUtils.castToByte(Integer.valueOf("10")));
+        assertEquals((byte) 10, TypeUtils.castToByte("10"));
+        assertEquals((byte) 10, TypeUtils.castToByte("10", (byte) 10));
+        assertEquals((byte) 10, TypeUtils.castToByte(null, (byte) 10));
+    }
+
+    @Test
+    public void castToShort() {
+        assertEquals((short) 10, TypeUtils.castToShort(Short.valueOf("10")));
+        assertEquals((short) 10, TypeUtils.castToShort(Integer.valueOf("10")));
+        assertEquals((short) 10, TypeUtils.castToShort("10"));
+        assertEquals((short) 10, TypeUtils.castToShort("10", (short) 10));
+        assertEquals((short) 10, TypeUtils.castToShort(null, (short) 10));
+    }
+
+    @Test
+    public void castToInt() {
+        assertEquals(10, TypeUtils.castToInt(Short.valueOf("10")));
+        assertEquals(10, TypeUtils.castToInt(Integer.valueOf("10")));
+        assertEquals(10, TypeUtils.castToInt("10"));
+        assertEquals(10, TypeUtils.castToInt("10", 10));
+        assertEquals(10, TypeUtils.castToInt(null, 10));
+    }
+
+    @Test
+    public void castToLong() {
+        assertEquals(10L, TypeUtils.castToLong(Integer.valueOf("10")));
+        assertEquals(10L, TypeUtils.castToLong(Long.valueOf("10")));
+        assertEquals(10L, TypeUtils.castToLong("10"));
+        assertEquals(10L, TypeUtils.castToLong("10", 10L));
+        assertEquals(10L, TypeUtils.castToLong(null, 10L));
+    }
+
+    @Test
+    public void castToFloat() {
+        assertEquals(10f, TypeUtils.castToFloat(Integer.valueOf("10")), 0f);
+        assertEquals(10f, TypeUtils.castToFloat(Float.valueOf("10")), 0f);
+        assertEquals(10f, TypeUtils.castToFloat("10"), 0f);
+        assertEquals(10f, TypeUtils.castToFloat("10", 10f), 0f);
+        assertEquals(10f, TypeUtils.castToFloat(null, 10f), 0f);
+    }
+
+    @Test
+    public void castToDouble() {
+        assertEquals(10d, TypeUtils.castToDouble(Integer.valueOf("10")), 0d);
+        assertEquals(10d, TypeUtils.castToDouble(Double.valueOf("10")), 0d);
+        assertEquals(10d, TypeUtils.castToDouble("10"), 0d);
+        assertEquals(10d, TypeUtils.castToDouble("10", 10d), 0d);
+        assertEquals(10d, TypeUtils.castToDouble(null, 10d), 0d);
+    }
+
+    @Test
+    public void castToBigInteger() {
+        assertEquals(BigInteger.valueOf(10), TypeUtils.castToBigInteger(Short.valueOf("10")));
+        assertEquals(BigInteger.valueOf(10), TypeUtils.castToBigInteger(BigInteger.valueOf(10)));
+        assertEquals(BigInteger.valueOf(10), TypeUtils.castToBigInteger("10"));
+        assertEquals(BigInteger.valueOf(10), TypeUtils.castToBigInteger("10", BigInteger.valueOf(10)));
+        assertEquals(BigInteger.valueOf(10), TypeUtils.castToBigInteger(null, BigInteger.valueOf(10)));
+    }
+
+    @Test
+    public void castToBigDecimal() {
+        assertEquals(BigDecimal.valueOf(10), TypeUtils.castToBigDecimal(Short.valueOf("10")));
+        assertEquals(BigDecimal.valueOf(10), TypeUtils.castToBigDecimal(BigDecimal.valueOf(10)));
+        assertEquals(BigDecimal.valueOf(10), TypeUtils.castToBigDecimal("10"));
+        assertEquals(BigDecimal.valueOf(10), TypeUtils.castToBigDecimal("10", BigDecimal.valueOf(10)));
+        assertEquals(BigDecimal.valueOf(10), TypeUtils.castToBigDecimal(null, BigDecimal.valueOf(10)));
+    }
 }
