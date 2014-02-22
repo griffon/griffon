@@ -25,12 +25,14 @@ public interface BaseConstants {
     String T = "T";
     String VOID = "void";
     String BOOLEAN = "boolean";
+    String INT = "int";
     String JAVA_LANG_OBJECT = "java.lang.Object";
     String JAVA_LANG_STRING = "java.lang.String";
     String JAVA_LANG_CLASS = "java.lang.Class";
     String GRIFFON_CORE_CALLABLEWITHARGS = "griffon.core.CallableWithArgs";
     String JAVA_UTIL_MAP = "java.util.Map";
     String JAVA_UTIL_LIST = "java.util.List";
+    String JAVA_UTIL_COLLECTION = "java.util.Collection";
     String JAVA_LANG_RUNNABLE = "java.lang.Runnable";
     String JAVA_NET_URL = "java.net.URL";
     String NAME = "name";

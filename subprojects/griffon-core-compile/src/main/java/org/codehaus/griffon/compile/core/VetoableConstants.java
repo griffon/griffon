@@ -40,37 +40,37 @@ public interface VetoableConstants extends ObservableConstants {
         method(
             type(VOID),
             METHOD_ADD_VETOABLE_CHANGE_LISTENER,
-            args(type(types(type(JAVAX_ANNOTATION_NULLABLE)), VETOABLE_CHANGE_LISTENER_TYPE))
+            args(annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), VETOABLE_CHANGE_LISTENER_TYPE))
         ),
         method(
             type(VOID),
             METHOD_ADD_VETOABLE_CHANGE_LISTENER,
             args(
-                type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_STRING),
-                type(types(type(JAVAX_ANNOTATION_NULLABLE)), VETOABLE_CHANGE_LISTENER_TYPE))
+                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_STRING),
+                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), VETOABLE_CHANGE_LISTENER_TYPE))
         ),
         method(
             type(VOID),
             METHOD_REMOVE_VETOABLE_CHANGE_LISTENER,
-            args(type(types(type(JAVAX_ANNOTATION_NULLABLE)), VETOABLE_CHANGE_LISTENER_TYPE))
+            args(annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), VETOABLE_CHANGE_LISTENER_TYPE))
         ),
         method(
             type(VOID),
             METHOD_REMOVE_VETOABLE_CHANGE_LISTENER,
             args(
-                type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_STRING),
-                type(types(type(JAVAX_ANNOTATION_NULLABLE)), VETOABLE_CHANGE_LISTENER_TYPE))
+                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_STRING),
+                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), VETOABLE_CHANGE_LISTENER_TYPE))
         ),
         annotatedMethod(
-            types(type(JAVAX_ANNOTATION_NONNULL)),
+            annotations(JAVAX_ANNOTATION_NONNULL),
             type(VETOABLE_CHANGE_LISTENER_TYPE, 1),
             METHOD_GET_VETOABLE_CHANGE_LISTENERS
         ),
         annotatedMethod(
-            types(type(JAVAX_ANNOTATION_NONNULL)),
+            annotations(JAVAX_ANNOTATION_NONNULL),
             type(VETOABLE_CHANGE_LISTENER_TYPE, 1),
             METHOD_GET_VETOABLE_CHANGE_LISTENERS,
-            args(type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_STRING))
+            args(annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_STRING))
         )
     };
 
@@ -79,7 +79,7 @@ public interface VetoableConstants extends ObservableConstants {
             Modifier.PROTECTED,
             type(VOID),
             METHOD_FIRE_VETOABLE_CHANGE,
-            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), PROPERTY_CHANGE_EVENT_TYPE)),
+            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), PROPERTY_CHANGE_EVENT_TYPE)),
             throwing(type(PROPERTY_VETO_EXCEPTION_TYPE))
         ),
         method(
@@ -87,9 +87,9 @@ public interface VetoableConstants extends ObservableConstants {
             type(VOID),
             METHOD_FIRE_VETOABLE_CHANGE,
             args(
-                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
-                type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_OBJECT),
-                type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_OBJECT)),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT),
+                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT)),
             throwing(type(PROPERTY_VETO_EXCEPTION_TYPE))
         )
     };

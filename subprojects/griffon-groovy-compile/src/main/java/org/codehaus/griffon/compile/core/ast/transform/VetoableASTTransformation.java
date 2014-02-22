@@ -46,7 +46,6 @@ import static java.lang.reflect.Modifier.FINAL;
 import static java.lang.reflect.Modifier.PROTECTED;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.*;
 import static org.codehaus.griffon.compile.core.ast.transform.ObservableASTTransformation.hasObservableAnnotation;
-import static org.codehaus.griffon.compile.core.ast.transform.ObservableASTTransformation.needsObservableSupport;
 import static org.codehaus.groovy.ast.ClassHelper.OBJECT_TYPE;
 import static org.codehaus.groovy.ast.ClassHelper.STRING_TYPE;
 import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
@@ -154,9 +153,9 @@ public class VetoableASTTransformation extends AbstractASTTransformation impleme
     }
 
     private static void createListenerSetter(SourceUnit source, boolean bindable, ClassNode declaringClass, PropertyNode propertyNode) {
-        if (bindable && needsObservableSupport(declaringClass, source)) {
-            ObservableASTTransformation.apply(declaringClass);
-        }
+        //if (bindable || needsObservableSupport(declaringClass, source)) {
+        //    ObservableASTTransformation.apply(declaringClass);
+        //}
         if (needsVetoableSupport(declaringClass, source)) {
             apply(declaringClass);
         }
@@ -256,6 +255,9 @@ public class VetoableASTTransformation extends AbstractASTTransformation impleme
      * @param classNode the class to which we add the support field and methods
      */
     public static void apply(ClassNode classNode) {
+        if( ObservableASTTransformation.needsObservableSupport(classNode, classNode.getModule().getContext())) {
+            ObservableASTTransformation.apply(classNode);
+        }
         injectInterface(classNode, VETOABLE_CNODE);
 
         ClassNode vcsClassNode = makeClassSafe(VetoableChangeSupport.class);

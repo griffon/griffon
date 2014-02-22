@@ -47,15 +47,15 @@ public interface DataSourceAwareConstants extends BaseConstants {
         method(
             type(VOID),
             METHOD_CLOSE_DATA_SOURCE,
-            args(type(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_STRING))
+            args(annotatedType(types(type(JAVAX_ANNOTATION_NULLABLE)), JAVA_LANG_STRING))
         ),
 
         annotatedMethod(
-            types(type(JAVAX_ANNOTATION_NONNULL)),
+            annotations(JAVAX_ANNOTATION_NONNULL),
             type(R),
             typeParams(R),
             METHOD_WITH_DATA_SOURCE,
-            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), DATA_SOURCE_CALLBACK_TYPE, R)),
+            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), DATA_SOURCE_CALLBACK_TYPE, R)),
             throwing(type(RUNTIME_SQL_EXCEPTION_TYPE))
         ),
         annotatedMethod(
@@ -64,27 +64,27 @@ public interface DataSourceAwareConstants extends BaseConstants {
             typeParams(R),
             METHOD_WITH_DATA_SOURCE,
             args(
-                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
-                type(types(type(JAVAX_ANNOTATION_NONNULL)), DATA_SOURCE_CALLBACK_TYPE, R)),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), DATA_SOURCE_CALLBACK_TYPE, R)),
             throwing(type(RUNTIME_SQL_EXCEPTION_TYPE))
         ),
 
         annotatedMethod(
-            types(type(JAVAX_ANNOTATION_NONNULL)),
+            annotations(JAVAX_ANNOTATION_NONNULL),
             type(R),
             typeParams(R),
             METHOD_WITH_CONNECTION,
-            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), CONNECTION_CALLBACK_TYPE, R)),
+            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), CONNECTION_CALLBACK_TYPE, R)),
             throwing(type(RUNTIME_SQL_EXCEPTION_TYPE))
         ),
         annotatedMethod(
-            types(type(JAVAX_ANNOTATION_NONNULL)),
+            annotations(JAVAX_ANNOTATION_NONNULL),
             type(R),
             typeParams(R),
             METHOD_WITH_CONNECTION,
             args(
-                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
-                type(types(type(JAVAX_ANNOTATION_NONNULL)), CONNECTION_CALLBACK_TYPE, R)),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), CONNECTION_CALLBACK_TYPE, R)),
             throwing(type(RUNTIME_SQL_EXCEPTION_TYPE))
         ),
     };

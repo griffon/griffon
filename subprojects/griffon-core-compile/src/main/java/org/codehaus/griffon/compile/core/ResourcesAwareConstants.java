@@ -16,9 +16,9 @@
 package org.codehaus.griffon.compile.core;
 
 import static org.codehaus.griffon.compile.core.MethodDescriptor.annotatedMethod;
+import static org.codehaus.griffon.compile.core.MethodDescriptor.annotations;
 import static org.codehaus.griffon.compile.core.MethodDescriptor.args;
 import static org.codehaus.griffon.compile.core.MethodDescriptor.type;
-import static org.codehaus.griffon.compile.core.MethodDescriptor.types;
 
 /**
  * @author Andres Almiray
@@ -34,25 +34,25 @@ public interface ResourcesAwareConstants extends BaseConstants {
 
     MethodDescriptor[] METHODS = new MethodDescriptor[]{
         annotatedMethod(
-            types(type(JAVAX_ANNOTATION_NULLABLE)),
+            annotations(JAVAX_ANNOTATION_NULLABLE),
             type(JAVA_NET_URL),
             METHOD_GET_RESOURCE_AS_URL,
-            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING))
+            args(MethodDescriptor.annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
         ),
         annotatedMethod(
-            types(type(JAVAX_ANNOTATION_NULLABLE)),
+            annotations(JAVAX_ANNOTATION_NULLABLE),
             type("java.io.InputStream"),
             METHOD_GET_RESOURCE_AS_STREAM,
-            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING))
+            args(MethodDescriptor.annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
         ),
         annotatedMethod(
-            types(type(JAVAX_ANNOTATION_NULLABLE)),
+            annotations(JAVAX_ANNOTATION_NULLABLE),
             type(JAVA_UTIL_LIST, JAVA_NET_URL),
             METHOD_GET_RESOURCES,
-            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING))
+            args(MethodDescriptor.annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
         ),
         annotatedMethod(
-            types(type(JAVAX_ANNOTATION_NONNULL)),
+            annotations(JAVAX_ANNOTATION_NONNULL),
             type("java.lang.ClassLoader"),
             METHOD_CLASSLOADER
         )

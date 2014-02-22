@@ -42,33 +42,33 @@ public interface ThreadingAwareConstants extends BaseConstants {
         method(
             type(VOID),
             METHOD_RUN_INSIDE_UI_ASYNC,
-            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_RUNNABLE))
+            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_RUNNABLE))
         ),
         method(
             type(VOID),
             METHOD_RUN_INSIDE_UI_SYNC,
-            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_RUNNABLE))
+            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_RUNNABLE))
         ),
         method(
             type(VOID),
             METHOD_RUN_OUTSIDE_UI,
-            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_RUNNABLE))
+            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_RUNNABLE))
         ),
         annotatedMethod(
-            types(type(JAVAX_ANNOTATION_NONNULL)),
+            annotations(JAVAX_ANNOTATION_NONNULL),
             type(JAVA_UTIL_CONCURRENT_FUTURE, R),
             typeParams(R),
             METHOD_RUN_FUTURE,
             args(
-                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_CONCURRENT_EXECUTOR_SERVICE),
-                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_CONCURRENT_CALLABLE, R))
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_CONCURRENT_EXECUTOR_SERVICE),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_CONCURRENT_CALLABLE, R))
         ),
         annotatedMethod(
-            types(type(JAVAX_ANNOTATION_NONNULL)),
+            annotations(JAVAX_ANNOTATION_NONNULL),
             type(JAVA_UTIL_CONCURRENT_FUTURE, R),
             typeParams(R),
             METHOD_RUN_FUTURE,
-            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_CONCURRENT_CALLABLE, R))
+            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_CONCURRENT_CALLABLE, R))
         )
     };
 }

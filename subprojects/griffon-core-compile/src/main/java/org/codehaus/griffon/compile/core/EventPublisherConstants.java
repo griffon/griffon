@@ -42,19 +42,19 @@ public interface EventPublisherConstants extends BaseConstants {
         method(
             type(VOID),
             METHOD_ADD_EVENT_LISTENER,
-            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_OBJECT))
+            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_OBJECT))
         ),
         method(
             type(VOID),
             METHOD_ADD_EVENT_LISTENER,
             args(
-                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
-                type(types(type(JAVAX_ANNOTATION_NONNULL)), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))
         ),
         method(
             type(VOID),
             METHOD_ADD_EVENT_LISTENER,
-            args(typeWithParams(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_MAP, type(JAVA_LANG_STRING), type(GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD)))
+            args(typeWithParams(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, type(JAVA_LANG_STRING), type(GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD)))
         ),
         method(
             type(VOID),
@@ -63,26 +63,26 @@ public interface EventPublisherConstants extends BaseConstants {
             ),
             METHOD_ADD_EVENT_LISTENER,
             args(
-                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_CLASS, E),
-                type(types(type(JAVAX_ANNOTATION_NONNULL)), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, E),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))
         ),
 
         method(
             type(VOID),
             METHOD_REMOVE_EVENT_LISTENER,
-            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_OBJECT))
+            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_OBJECT))
         ),
         method(
             type(VOID),
             METHOD_REMOVE_EVENT_LISTENER,
             args(
-                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
-                type(types(type(JAVAX_ANNOTATION_NONNULL)), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))
         ),
         method(
             type(VOID),
             METHOD_REMOVE_EVENT_LISTENER,
-            args(typeWithParams(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_MAP, type(JAVA_LANG_STRING), type(GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD)))
+            args(typeWithParams(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, type(JAVA_LANG_STRING), type(GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD)))
         ),
         method(
             type(VOID),
@@ -91,62 +91,62 @@ public interface EventPublisherConstants extends BaseConstants {
             ),
             METHOD_REMOVE_EVENT_LISTENER,
             args(
-                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_CLASS, E),
-                type(types(type(JAVAX_ANNOTATION_NONNULL)), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, E),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))
         ),
 
         method(
             type(VOID),
             METHOD_PUBLISH_EVENT,
-            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING))
+            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
         ),
         method(
             type(VOID),
             METHOD_PUBLISH_EVENT,
             args(
-                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
-                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_LIST, WILDCARD))
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD))
         ),
         method(
             type(VOID),
             METHOD_PUBLISH_EVENT,
-            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), EVENT_TYPE))
+            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), EVENT_TYPE))
         ),
 
         method(
             type(VOID),
             METHOD_PUBLISH_EVENT_OUTSIDE_UI,
-            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING))
+            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
         ),
         method(
             type(VOID),
             METHOD_PUBLISH_EVENT_OUTSIDE_UI,
             args(
-                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
-                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_LIST, WILDCARD))
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD))
         ),
         method(
             type(VOID),
             METHOD_PUBLISH_EVENT_OUTSIDE_UI,
-            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), EVENT_TYPE))
+            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), EVENT_TYPE))
         ),
 
         method(
             type(VOID),
             METHOD_PUBLISH_EVENT_ASYNC,
-            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING))
+            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
         ),
         method(
             type(VOID),
             METHOD_PUBLISH_EVENT_ASYNC,
             args(
-                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING),
-                type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_UTIL_LIST, WILDCARD))
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD))
         ),
         method(
             type(VOID),
             METHOD_PUBLISH_EVENT_ASYNC,
-            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), EVENT_TYPE))
+            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), EVENT_TYPE))
         ),
 
         method(

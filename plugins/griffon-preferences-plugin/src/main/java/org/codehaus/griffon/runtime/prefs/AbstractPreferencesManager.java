@@ -385,7 +385,7 @@ public abstract class AbstractPreferencesManager implements PreferencesManager {
         private final Map<String, InjectionPoint> injectionPoints = new LinkedHashMap<String, InjectionPoint>();
 
         private InstanceContainer(Object instance, List<InjectionPoint> injectionPoints) {
-            this.instance = new WeakReference<Object>(instance);
+            this.instance = new WeakReference<>(instance);
             for (InjectionPoint ip : injectionPoints) {
                 this.injectionPoints.put(ip.path, ip);
             }

@@ -257,6 +257,18 @@ public class MethodDescriptor {
         return new Wildcard(types);
     }
 
+    public static Type annotation(String type) {
+        return new Type(type);
+    }
+
+    public static Type[] annotations(String... types) {
+        Type[] annotations = new Type[types.length];
+        for (int i = 0; i < types.length; i++) {
+            annotations[i] = annotation(types[i]);
+        }
+        return annotations;
+    }
+
     public static Type type(String type, String... types) {
         return new Type(type, types(types));
     }
@@ -265,11 +277,11 @@ public class MethodDescriptor {
         return new Type(type, dimensions, types(types));
     }
 
-    public static Type type(Type[] annotations, String type, String... types) {
+    public static Type annotatedType(Type[] annotations, String type, String... types) {
         return new Type(annotations, type, types(types));
     }
 
-    public static Type type(Type[] annotations, String type, int dimensions, String... types) {
+    public static Type annotatedType(Type[] annotations, String type, int dimensions, String... types) {
         return new Type(annotations, type, dimensions, types(types));
     }
 
