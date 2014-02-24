@@ -70,7 +70,7 @@ public class DefaultArtifactManager extends AbstractArtifactManager {
                     try {
                         String className = line.trim();
                         Class<? extends GriffonArtifact> clazz = (Class<? extends GriffonArtifact>) applicationClassLoader.get().loadClass(className);
-                        if (Modifier.isAbstract(clazz.getModifiers())) return;
+                        // if (Modifier.isAbstract(clazz.getModifiers())) return;
                         list.add(clazz);
                     } catch (ClassNotFoundException e) {
                         throw new IllegalArgumentException(e);
