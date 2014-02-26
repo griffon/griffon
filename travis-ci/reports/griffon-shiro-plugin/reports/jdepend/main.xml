@@ -19,11 +19,11 @@
                 <TotalClasses>2</TotalClasses>
                 <ConcreteClasses>1</ConcreteClasses>
                 <AbstractClasses>1</AbstractClasses>
-                <Ca>2</Ca>
+                <Ca>1</Ca>
                 <Ce>3</Ce>
                 <A>0.5</A>
-                <I>0.6</I>
-                <D>0.1</D>
+                <I>0.75</I>
+                <D>0.25</D>
                 <V>1</V>
             </Stats>
 
@@ -46,7 +46,6 @@
             </DependsUpon>
 
             <UsedBy>
-                <Package>org.codehaus.griffon.runtime.core</Package>
                 <Package>org.codehaus.griffon.runtime.shiro</Package>
             </UsedBy>
         </Package>
@@ -95,41 +94,6 @@
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
-        <Package name="org.codehaus.griffon.runtime.core">
-            <Stats>
-                <TotalClasses>1</TotalClasses>
-                <ConcreteClasses>1</ConcreteClasses>
-                <AbstractClasses>0</AbstractClasses>
-                <Ca>0</Ca>
-                <Ce>6</Ce>
-                <A>0</A>
-                <I>1</I>
-                <D>0</D>
-                <V>1</V>
-            </Stats>
-
-            <AbstractClasses>
-            </AbstractClasses>
-
-            <ConcreteClasses>
-                <Class sourceFile="ShiroModule.java">
-                    org.codehaus.griffon.runtime.core.ShiroModule
-                </Class>
-            </ConcreteClasses>
-
-            <DependsUpon>
-                <Package>griffon.core.controller</Package>
-                <Package>griffon.plugins.shiro</Package>
-                <Package>org.apache.shiro.mgt</Package>
-                <Package>org.apache.shiro.subject</Package>
-                <Package>org.codehaus.griffon.runtime.core.injection</Package>
-                <Package>org.codehaus.griffon.runtime.shiro</Package>
-            </DependsUpon>
-
-            <UsedBy>
-            </UsedBy>
-        </Package>
-
         <Package name="org.codehaus.griffon.runtime.core.controller">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
@@ -140,14 +104,14 @@
 
         <Package name="org.codehaus.griffon.runtime.shiro">
             <Stats>
-                <TotalClasses>16</TotalClasses>
-                <ConcreteClasses>14</ConcreteClasses>
+                <TotalClasses>17</TotalClasses>
+                <ConcreteClasses>15</ConcreteClasses>
                 <AbstractClasses>2</AbstractClasses>
-                <Ca>1</Ca>
-                <Ce>16</Ce>
+                <Ca>0</Ca>
+                <Ce>18</Ce>
                 <A>0.12</A>
-                <I>0.94</I>
-                <D>0.07</D>
+                <I>1</I>
+                <D>0.12</D>
                 <V>1</V>
             </Stats>
 
@@ -200,6 +164,9 @@
                 <Class sourceFile="ShiroActionInterceptor.java">
                     org.codehaus.griffon.runtime.shiro.ShiroActionInterceptor$UserRequirementEvaluator
                 </Class>
+                <Class sourceFile="ShiroModule.java">
+                    org.codehaus.griffon.runtime.shiro.ShiroModule
+                </Class>
                 <Class sourceFile="SubjectProvider.java">
                     org.codehaus.griffon.runtime.shiro.SubjectProvider
                 </Class>
@@ -208,6 +175,7 @@
             <DependsUpon>
                 <Package>griffon.core</Package>
                 <Package>griffon.core.artifact</Package>
+                <Package>griffon.core.controller</Package>
                 <Package>griffon.plugins.shiro</Package>
                 <Package>griffon.util</Package>
                 <Package>java.lang</Package>
@@ -221,11 +189,11 @@
                 <Package>org.apache.shiro.realm.text</Package>
                 <Package>org.apache.shiro.subject</Package>
                 <Package>org.codehaus.griffon.runtime.core.controller</Package>
+                <Package>org.codehaus.griffon.runtime.core.injection</Package>
                 <Package>org.slf4j</Package>
             </DependsUpon>
 
             <UsedBy>
-                <Package>org.codehaus.griffon.runtime.core</Package>
             </UsedBy>
         </Package>
 

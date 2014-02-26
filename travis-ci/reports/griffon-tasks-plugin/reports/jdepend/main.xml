@@ -19,11 +19,11 @@
                 <TotalClasses>22</TotalClasses>
                 <ConcreteClasses>9</ConcreteClasses>
                 <AbstractClasses>13</AbstractClasses>
-                <Ca>2</Ca>
+                <Ca>1</Ca>
                 <Ce>5</Ce>
                 <A>0.59</A>
-                <I>0.71</I>
-                <D>0.31</D>
+                <I>0.83</I>
+                <D>0.42</D>
                 <V>1</V>
             </Stats>
 
@@ -108,7 +108,6 @@
             </DependsUpon>
 
             <UsedBy>
-                <Package>org.codehaus.griffon.runtime.core</Package>
                 <Package>org.codehaus.griffon.runtime.tasks</Package>
             </UsedBy>
         </Package>
@@ -176,36 +175,7 @@
         </Package>
 
         <Package name="org.codehaus.griffon.runtime.core">
-            <Stats>
-                <TotalClasses>1</TotalClasses>
-                <ConcreteClasses>1</ConcreteClasses>
-                <AbstractClasses>0</AbstractClasses>
-                <Ca>1</Ca>
-                <Ce>3</Ce>
-                <A>0</A>
-                <I>0.75</I>
-                <D>0.25</D>
-                <V>1</V>
-            </Stats>
-
-            <AbstractClasses>
-            </AbstractClasses>
-
-            <ConcreteClasses>
-                <Class sourceFile="TasksModule.java">
-                    org.codehaus.griffon.runtime.core.TasksModule
-                </Class>
-            </ConcreteClasses>
-
-            <DependsUpon>
-                <Package>griffon.plugins.tasks</Package>
-                <Package>org.codehaus.griffon.runtime.core.injection</Package>
-                <Package>org.codehaus.griffon.runtime.tasks</Package>
-            </DependsUpon>
-
-            <UsedBy>
-                <Package>org.codehaus.griffon.runtime.util</Package>
-            </UsedBy>
+            <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
         <Package name="org.codehaus.griffon.runtime.core.injection">
@@ -214,14 +184,14 @@
 
         <Package name="org.codehaus.griffon.runtime.tasks">
             <Stats>
-                <TotalClasses>19</TotalClasses>
-                <ConcreteClasses>17</ConcreteClasses>
+                <TotalClasses>20</TotalClasses>
+                <ConcreteClasses>18</ConcreteClasses>
                 <AbstractClasses>2</AbstractClasses>
-                <Ca>1</Ca>
-                <Ce>12</Ce>
-                <A>0.11</A>
-                <I>0.92</I>
-                <D>0.03</D>
+                <Ca>0</Ca>
+                <Ce>13</Ce>
+                <A>0.1</A>
+                <I>1</I>
+                <D>0.1</D>
                 <V>1</V>
             </Stats>
 
@@ -286,6 +256,9 @@
                 <Class sourceFile="TaskListenerAdapter.java">
                     org.codehaus.griffon.runtime.tasks.TaskListenerAdapter
                 </Class>
+                <Class sourceFile="TasksModule.java">
+                    org.codehaus.griffon.runtime.tasks.TasksModule
+                </Class>
             </ConcreteClasses>
 
             <DependsUpon>
@@ -299,12 +272,12 @@
                 <Package>java.util</Package>
                 <Package>java.util.concurrent</Package>
                 <Package>java.util.concurrent.atomic</Package>
+                <Package>org.codehaus.griffon.runtime.core.injection</Package>
                 <Package>org.codehaus.griffon.runtime.util</Package>
                 <Package>org.slf4j</Package>
             </DependsUpon>
 
             <UsedBy>
-                <Package>org.codehaus.griffon.runtime.core</Package>
             </UsedBy>
         </Package>
 
@@ -367,23 +340,5 @@
     </Packages>
 
     <Cycles>
-        <Package Name="org.codehaus.griffon.runtime.core">
-            <Package>org.codehaus.griffon.runtime.tasks</Package>
-            <Package>org.codehaus.griffon.runtime.util</Package>
-            <Package>org.codehaus.griffon.runtime.core</Package>
-        </Package>
-
-        <Package Name="org.codehaus.griffon.runtime.tasks">
-            <Package>org.codehaus.griffon.runtime.util</Package>
-            <Package>org.codehaus.griffon.runtime.core</Package>
-            <Package>org.codehaus.griffon.runtime.tasks</Package>
-        </Package>
-
-        <Package Name="org.codehaus.griffon.runtime.util">
-            <Package>org.codehaus.griffon.runtime.core</Package>
-            <Package>org.codehaus.griffon.runtime.tasks</Package>
-            <Package>org.codehaus.griffon.runtime.util</Package>
-        </Package>
-
     </Cycles>
 </JDepend>

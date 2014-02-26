@@ -31,11 +31,11 @@
                 <TotalClasses>12</TotalClasses>
                 <ConcreteClasses>4</ConcreteClasses>
                 <AbstractClasses>8</AbstractClasses>
-                <Ca>3</Ca>
+                <Ca>2</Ca>
                 <Ce>5</Ce>
                 <A>0.67</A>
-                <I>0.62</I>
-                <D>0.29</D>
+                <I>0.71</I>
+                <D>0.38</D>
                 <V>1</V>
             </Stats>
 
@@ -91,7 +91,6 @@
 
             <UsedBy>
                 <Package>griffon.plugins.preferences.persistors</Package>
-                <Package>org.codehaus.griffon.runtime.core</Package>
                 <Package>org.codehaus.griffon.runtime.prefs</Package>
             </UsedBy>
         </Package>
@@ -134,7 +133,7 @@
             </DependsUpon>
 
             <UsedBy>
-                <Package>org.codehaus.griffon.runtime.core</Package>
+                <Package>org.codehaus.griffon.runtime.prefs</Package>
             </UsedBy>
         </Package>
 
@@ -178,52 +177,6 @@
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
-        <Package name="org.codehaus.griffon.runtime.core">
-            <Stats>
-                <TotalClasses>3</TotalClasses>
-                <ConcreteClasses>3</ConcreteClasses>
-                <AbstractClasses>0</AbstractClasses>
-                <Ca>0</Ca>
-                <Ce>11</Ce>
-                <A>0</A>
-                <I>1</I>
-                <D>0</D>
-                <V>1</V>
-            </Stats>
-
-            <AbstractClasses>
-            </AbstractClasses>
-
-            <ConcreteClasses>
-                <Class sourceFile="PreferencesAddon.java">
-                    org.codehaus.griffon.runtime.core.PreferencesAddon
-                </Class>
-                <Class sourceFile="PreferencesAddon.java">
-                    org.codehaus.griffon.runtime.core.PreferencesAddon$1
-                </Class>
-                <Class sourceFile="PreferencesModule.java">
-                    org.codehaus.griffon.runtime.core.PreferencesModule
-                </Class>
-            </ConcreteClasses>
-
-            <DependsUpon>
-                <Package>griffon.core</Package>
-                <Package>griffon.core.addon</Package>
-                <Package>griffon.core.event</Package>
-                <Package>griffon.plugins.preferences</Package>
-                <Package>griffon.plugins.preferences.persistors</Package>
-                <Package>java.io</Package>
-                <Package>java.lang</Package>
-                <Package>org.codehaus.griffon.runtime.core.addon</Package>
-                <Package>org.codehaus.griffon.runtime.core.injection</Package>
-                <Package>org.codehaus.griffon.runtime.prefs</Package>
-                <Package>org.slf4j</Package>
-            </DependsUpon>
-
-            <UsedBy>
-            </UsedBy>
-        </Package>
-
         <Package name="org.codehaus.griffon.runtime.core.addon">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
@@ -234,14 +187,14 @@
 
         <Package name="org.codehaus.griffon.runtime.prefs">
             <Stats>
-                <TotalClasses>19</TotalClasses>
-                <ConcreteClasses>14</ConcreteClasses>
+                <TotalClasses>22</TotalClasses>
+                <ConcreteClasses>17</ConcreteClasses>
                 <AbstractClasses>5</AbstractClasses>
-                <Ca>1</Ca>
-                <Ce>14</Ce>
-                <A>0.26</A>
-                <I>0.93</I>
-                <D>0.2</D>
+                <Ca>0</Ca>
+                <Ce>19</Ce>
+                <A>0.23</A>
+                <I>1</I>
+                <D>0.23</D>
                 <V>1</V>
             </Stats>
 
@@ -306,27 +259,40 @@
                 <Class sourceFile="DefaultPreferencesNode.java">
                     org.codehaus.griffon.runtime.prefs.DefaultPreferencesNode
                 </Class>
+                <Class sourceFile="PreferencesAddon.java">
+                    org.codehaus.griffon.runtime.prefs.PreferencesAddon
+                </Class>
+                <Class sourceFile="PreferencesAddon.java">
+                    org.codehaus.griffon.runtime.prefs.PreferencesAddon$1
+                </Class>
+                <Class sourceFile="PreferencesModule.java">
+                    org.codehaus.griffon.runtime.prefs.PreferencesModule
+                </Class>
             </ConcreteClasses>
 
             <DependsUpon>
                 <Package>griffon.core</Package>
+                <Package>griffon.core.addon</Package>
                 <Package>griffon.core.editors</Package>
                 <Package>griffon.core.event</Package>
                 <Package>griffon.exceptions</Package>
                 <Package>griffon.plugins.preferences</Package>
+                <Package>griffon.plugins.preferences.persistors</Package>
                 <Package>griffon.util</Package>
                 <Package>java.beans</Package>
+                <Package>java.io</Package>
                 <Package>java.lang</Package>
                 <Package>java.lang.ref</Package>
                 <Package>java.lang.reflect</Package>
                 <Package>java.text</Package>
                 <Package>java.util</Package>
                 <Package>java.util.concurrent</Package>
+                <Package>org.codehaus.griffon.runtime.core.addon</Package>
+                <Package>org.codehaus.griffon.runtime.core.injection</Package>
                 <Package>org.slf4j</Package>
             </DependsUpon>
 
             <UsedBy>
-                <Package>org.codehaus.griffon.runtime.core</Package>
             </UsedBy>
         </Package>
 

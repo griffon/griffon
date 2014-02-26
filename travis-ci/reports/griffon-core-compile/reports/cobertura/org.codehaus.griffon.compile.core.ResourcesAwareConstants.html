@@ -54,11 +54,11 @@
 <tr>  <td class="numLine">&nbsp;18</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> <span class="keyword">static</span> org.codehaus.griffon.compile.core.MethodDescriptor.annotatedMethod;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;19</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> <span class="keyword">static</span> org.codehaus.griffon.compile.core.MethodDescriptor.args;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> <span class="keyword">static</span> org.codehaus.griffon.compile.core.MethodDescriptor.annotations;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;20</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> <span class="keyword">static</span> org.codehaus.griffon.compile.core.MethodDescriptor.type;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> <span class="keyword">static</span> org.codehaus.griffon.compile.core.MethodDescriptor.args;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;21</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> <span class="keyword">static</span> org.codehaus.griffon.compile.core.MethodDescriptor.types;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> <span class="keyword">static</span> org.codehaus.griffon.compile.core.MethodDescriptor.type;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;22</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;23</td>  <td class="nbHits">&nbsp;</td>
@@ -90,43 +90,43 @@
 <tr>  <td class="numLine">&nbsp;36</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        annotatedMethod(</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;37</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;            types(type(JAVAX_ANNOTATION_NULLABLE)),</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;            annotations(JAVAX_ANNOTATION_NULLABLE),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;38</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            type(JAVA_NET_URL),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;39</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            METHOD_GET_RESOURCE_AS_URL,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;40</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING))</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;            args(MethodDescriptor.annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;41</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        ),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;42</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        annotatedMethod(</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;43</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;            types(type(JAVAX_ANNOTATION_NULLABLE)),</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;            annotations(JAVAX_ANNOTATION_NULLABLE),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;44</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            type(<span class="string">"java.io.InputStream"</span>),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;45</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            METHOD_GET_RESOURCE_AS_STREAM,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;46</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING))</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;            args(MethodDescriptor.annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;47</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        ),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;48</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        annotatedMethod(</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;49</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;            types(type(JAVAX_ANNOTATION_NULLABLE)),</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;            annotations(JAVAX_ANNOTATION_NULLABLE),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;50</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            type(JAVA_UTIL_LIST, JAVA_NET_URL),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;51</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            METHOD_GET_RESOURCES,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;52</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;            args(type(types(type(JAVAX_ANNOTATION_NONNULL)), JAVA_LANG_STRING))</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;            args(MethodDescriptor.annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;53</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        ),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;54</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        annotatedMethod(</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;55</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;            types(type(JAVAX_ANNOTATION_NONNULL)),</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;            annotations(JAVAX_ANNOTATION_NONNULL),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;56</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            type(<span class="string">"java.lang.ClassLoader"</span>),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;57</td>  <td class="nbHits">&nbsp;</td>
@@ -139,6 +139,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 2/17/14 9:06 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 2/26/14 9:30 AM.</div>
 </body>
 </html>

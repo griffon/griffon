@@ -27,11 +27,11 @@
                 <TotalClasses>5</TotalClasses>
                 <ConcreteClasses>0</ConcreteClasses>
                 <AbstractClasses>5</AbstractClasses>
-                <Ca>2</Ca>
+                <Ca>1</Ca>
                 <Ce>5</Ce>
                 <A>1</A>
-                <I>0.71</I>
-                <D>0.71</D>
+                <I>0.83</I>
+                <D>0.83</D>
                 <V>1</V>
             </Stats>
 
@@ -65,7 +65,6 @@
             </DependsUpon>
 
             <UsedBy>
-                <Package>org.codehaus.griffon.runtime.core</Package>
                 <Package>org.codehaus.griffon.runtime.datasource</Package>
             </UsedBy>
         </Package>
@@ -143,40 +142,7 @@
         </Package>
 
         <Package name="org.codehaus.griffon.runtime.core">
-            <Stats>
-                <TotalClasses>1</TotalClasses>
-                <ConcreteClasses>1</ConcreteClasses>
-                <AbstractClasses>0</AbstractClasses>
-                <Ca>1</Ca>
-                <Ce>7</Ce>
-                <A>0</A>
-                <I>0.88</I>
-                <D>0.12</D>
-                <V>1</V>
-            </Stats>
-
-            <AbstractClasses>
-            </AbstractClasses>
-
-            <ConcreteClasses>
-                <Class sourceFile="DataSourceModule.java">
-                    org.codehaus.griffon.runtime.core.DataSourceModule
-                </Class>
-            </ConcreteClasses>
-
-            <DependsUpon>
-                <Package>griffon.core</Package>
-                <Package>griffon.plugins.datasource</Package>
-                <Package>griffon.util</Package>
-                <Package>java.util</Package>
-                <Package>org.codehaus.griffon.runtime.core.injection</Package>
-                <Package>org.codehaus.griffon.runtime.datasource</Package>
-                <Package>org.codehaus.griffon.runtime.util</Package>
-            </DependsUpon>
-
-            <UsedBy>
-                <Package>org.codehaus.griffon.runtime.datasource</Package>
-            </UsedBy>
+            <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
         <Package name="org.codehaus.griffon.runtime.core.injection">
@@ -189,14 +155,14 @@
 
         <Package name="org.codehaus.griffon.runtime.datasource">
             <Stats>
-                <TotalClasses>5</TotalClasses>
-                <ConcreteClasses>5</ConcreteClasses>
+                <TotalClasses>6</TotalClasses>
+                <ConcreteClasses>6</ConcreteClasses>
                 <AbstractClasses>0</AbstractClasses>
-                <Ca>1</Ca>
-                <Ce>18</Ce>
+                <Ca>0</Ca>
+                <Ce>20</Ce>
                 <A>0</A>
-                <I>0.95</I>
-                <D>0.05</D>
+                <I>1</I>
+                <D>0</D>
                 <V>1</V>
             </Stats>
 
@@ -204,6 +170,9 @@
             </AbstractClasses>
 
             <ConcreteClasses>
+                <Class sourceFile="DataSourceModule.java">
+                    org.codehaus.griffon.runtime.datasource.DataSourceModule
+                </Class>
                 <Class sourceFile="DefaultDataSourceConfiguration.java">
                     org.codehaus.griffon.runtime.datasource.DefaultDataSourceConfiguration
                 </Class>
@@ -238,12 +207,13 @@
                 <Package>org.apache.commons.dbcp</Package>
                 <Package>org.apache.commons.pool.impl</Package>
                 <Package>org.codehaus.griffon.runtime.core</Package>
+                <Package>org.codehaus.griffon.runtime.core.injection</Package>
                 <Package>org.codehaus.griffon.runtime.core.storage</Package>
+                <Package>org.codehaus.griffon.runtime.util</Package>
                 <Package>org.slf4j</Package>
             </DependsUpon>
 
             <UsedBy>
-                <Package>org.codehaus.griffon.runtime.core</Package>
             </UsedBy>
         </Package>
 
@@ -257,15 +227,5 @@
     </Packages>
 
     <Cycles>
-        <Package Name="org.codehaus.griffon.runtime.core">
-            <Package>org.codehaus.griffon.runtime.datasource</Package>
-            <Package>org.codehaus.griffon.runtime.core</Package>
-        </Package>
-
-        <Package Name="org.codehaus.griffon.runtime.datasource">
-            <Package>org.codehaus.griffon.runtime.core</Package>
-            <Package>org.codehaus.griffon.runtime.datasource</Package>
-        </Package>
-
     </Cycles>
 </JDepend>

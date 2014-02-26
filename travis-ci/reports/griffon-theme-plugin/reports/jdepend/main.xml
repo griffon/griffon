@@ -23,11 +23,11 @@
                 <TotalClasses>2</TotalClasses>
                 <ConcreteClasses>0</ConcreteClasses>
                 <AbstractClasses>2</AbstractClasses>
-                <Ca>2</Ca>
+                <Ca>1</Ca>
                 <Ce>6</Ce>
                 <A>1</A>
-                <I>0.75</I>
-                <D>0.75</D>
+                <I>0.86</I>
+                <D>0.86</D>
                 <V>1</V>
             </Stats>
 
@@ -53,7 +53,6 @@
             </DependsUpon>
 
             <UsedBy>
-                <Package>org.codehaus.griffon.runtime.core</Package>
                 <Package>org.codehaus.griffon.runtime.theme</Package>
             </UsedBy>
         </Package>
@@ -87,38 +86,7 @@
         </Package>
 
         <Package name="org.codehaus.griffon.runtime.core">
-            <Stats>
-                <TotalClasses>1</TotalClasses>
-                <ConcreteClasses>1</ConcreteClasses>
-                <AbstractClasses>0</AbstractClasses>
-                <Ca>1</Ca>
-                <Ce>5</Ce>
-                <A>0</A>
-                <I>0.83</I>
-                <D>0.17</D>
-                <V>1</V>
-            </Stats>
-
-            <AbstractClasses>
-            </AbstractClasses>
-
-            <ConcreteClasses>
-                <Class sourceFile="ThemeModule.java">
-                    org.codehaus.griffon.runtime.core.ThemeModule
-                </Class>
-            </ConcreteClasses>
-
-            <DependsUpon>
-                <Package>griffon.core.resources</Package>
-                <Package>griffon.plugins.theme</Package>
-                <Package>griffon.util</Package>
-                <Package>org.codehaus.griffon.runtime.core.injection</Package>
-                <Package>org.codehaus.griffon.runtime.theme</Package>
-            </DependsUpon>
-
-            <UsedBy>
-                <Package>org.codehaus.griffon.runtime.theme</Package>
-            </UsedBy>
+            <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
         <Package name="org.codehaus.griffon.runtime.core.injection">
@@ -131,14 +99,14 @@
 
         <Package name="org.codehaus.griffon.runtime.theme">
             <Stats>
-                <TotalClasses>7</TotalClasses>
-                <ConcreteClasses>7</ConcreteClasses>
+                <TotalClasses>8</TotalClasses>
+                <ConcreteClasses>8</ConcreteClasses>
                 <AbstractClasses>0</AbstractClasses>
-                <Ca>1</Ca>
-                <Ce>15</Ce>
+                <Ca>0</Ca>
+                <Ce>16</Ce>
                 <A>0</A>
-                <I>0.94</I>
-                <D>0.06</D>
+                <I>1</I>
+                <D>0</D>
                 <V>1</V>
             </Stats>
 
@@ -167,6 +135,9 @@
                 <Class sourceFile="ThemeAwareResourceInjector.java">
                     org.codehaus.griffon.runtime.theme.ThemeAwareResourceInjector$InstanceStore$1
                 </Class>
+                <Class sourceFile="ThemeModule.java">
+                    org.codehaus.griffon.runtime.theme.ThemeModule
+                </Class>
             </ConcreteClasses>
 
             <DependsUpon>
@@ -183,12 +154,12 @@
                 <Package>java.util</Package>
                 <Package>javax.inject</Package>
                 <Package>org.codehaus.griffon.runtime.core</Package>
+                <Package>org.codehaus.griffon.runtime.core.injection</Package>
                 <Package>org.codehaus.griffon.runtime.core.resources</Package>
                 <Package>org.slf4j</Package>
             </DependsUpon>
 
             <UsedBy>
-                <Package>org.codehaus.griffon.runtime.core</Package>
             </UsedBy>
         </Package>
 
@@ -198,15 +169,5 @@
     </Packages>
 
     <Cycles>
-        <Package Name="org.codehaus.griffon.runtime.core">
-            <Package>org.codehaus.griffon.runtime.theme</Package>
-            <Package>org.codehaus.griffon.runtime.core</Package>
-        </Package>
-
-        <Package Name="org.codehaus.griffon.runtime.theme">
-            <Package>org.codehaus.griffon.runtime.core</Package>
-            <Package>org.codehaus.griffon.runtime.theme</Package>
-        </Package>
-
     </Cycles>
 </JDepend>
