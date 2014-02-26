@@ -25,7 +25,7 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   git config --global user.name "Travis"
 
   #using token clone gh-pages branch
-  git clone --quiet --branch=gh-pages https://${GH_TOKEN}@github.com/aalmiray/griffon2.git gh-pages > /dev/null
+  git clone --quiet --branch=gh-pages https://${GH_TOKEN}@github.com/griffon/griffon.git gh-pages > /dev/null
 
   #go into directory and copy data we're interested in to that directory
   cd gh-pages/travis-ci
