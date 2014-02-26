@@ -82,9 +82,9 @@ public class ObservableASTTransformation extends AbstractASTTransformation imple
      * @param source the source unit for the nodes
      */
     public void visit(ASTNode[] nodes, SourceUnit source) {
-        // addObservableIfNeeded(source, (ClassNode) nodes[1]);
         if (!(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof AnnotatedNode)) {
-            throw new RuntimeException("Internal error: wrong types: $node.class / $parent.class");
+            throw new IllegalArgumentException("Internal error: wrong types: "
+                + nodes[0].getClass().getName() + " / " + nodes[1].getClass().getName());
         }
         AnnotationNode node = (AnnotationNode) nodes[0];
         AnnotatedNode parent = (AnnotatedNode) nodes[1];

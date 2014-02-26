@@ -17,10 +17,10 @@ package sample.javafx.groovy
 
 import griffon.core.artifact.GriffonModel
 import griffon.metadata.ArtifactProviderFor
-import groovyx.javafx.beans.FXBindable
+import griffon.transform.FXObservable
 
 @ArtifactProviderFor(GriffonModel)
 class SampleModel {
-    @FXBindable String input                                             //<1>
-    @FXBindable String output                                            //<1>
+    @FXObservable String input                                           //<1>
+    @FXObservable String output                                          //<1>
 }
