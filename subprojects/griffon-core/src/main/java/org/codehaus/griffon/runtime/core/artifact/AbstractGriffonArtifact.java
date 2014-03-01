@@ -60,12 +60,12 @@ public abstract class AbstractGriffonArtifact implements GriffonArtifact {
 
     @Nonnull
     @Override
+    @SuppressWarnings("ConstantConditions")
     public GriffonClass getGriffonClass() {
         synchronized (lock) {
             if (griffonClass == null) {
                 griffonClass = application.getArtifactManager().findGriffonClass(getClass());
             }
-            //noinspection ConstantConditions
             return griffonClass;
         }
     }

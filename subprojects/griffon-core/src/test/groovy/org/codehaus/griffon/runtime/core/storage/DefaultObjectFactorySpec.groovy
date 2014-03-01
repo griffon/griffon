@@ -65,6 +65,7 @@ class DefaultObjectFactorySpec extends Specification {
     static class DummyGriffonApplication extends TestGriffonApplication {
         EventRouter eventRouter = new DefaultEventRouter()
 
+        @Nonnull
         @Override
         EventRouter getEventRouter() {
             eventRouter

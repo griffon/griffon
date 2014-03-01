@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
+import java.beans.PropertyEditorSupport;
 
 import static java.util.Objects.requireNonNull;
 
@@ -48,9 +49,10 @@ public final class PropertyEditorResolver {
      *
      * @param type The Class object for the type to be edited
      * @return An editor object for the given target class.
-     *         The result is null if no suitable editor can be found.
+     * The result is null if no suitable editor can be found.
      * @see griffon.core.editors.EnumPropertyEditor
      */
+    @Nonnull
     @SuppressWarnings("unchecked")
     public static PropertyEditor findEditor(@Nonnull Class<?> type) {
         requireNonNull(type, "Argument 'type' cannot be  null");
@@ -64,10 +66,15 @@ public final class PropertyEditorResolver {
             editor = PropertyEditorManager.findEditor(type);
         }
 
-        if (editor != null) {
-            LOG.trace("PropertyEditor for {} is {}", type.getName(), editor.getClass().getName());
-
+        if (editor == null) {
+            editor = new NoopPropertyEditor();
         }
+
+        LOG.trace("PropertyEditor for {} is {}", type.getName(), editor.getClass().getName());
         return editor;
+    }
+
+    private static final class NoopPropertyEditor extends PropertyEditorSupport {
+
     }
 }
