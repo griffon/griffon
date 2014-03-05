@@ -94,6 +94,14 @@
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
+        <Package name="javafx.beans.property">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="javafx.collections">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
         <Package name="javax.inject">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
@@ -233,14 +241,14 @@
 
         <Package name="org.codehaus.griffon.compile.core.ast.transform">
             <Stats>
-                <TotalClasses>25</TotalClasses>
-                <ConcreteClasses>21</ConcreteClasses>
+                <TotalClasses>26</TotalClasses>
+                <ConcreteClasses>22</ConcreteClasses>
                 <AbstractClasses>4</AbstractClasses>
                 <Ca>0</Ca>
-                <Ce>28</Ce>
-                <A>0.16</A>
+                <Ce>33</Ce>
+                <A>0.15</A>
                 <I>1</I>
-                <D>0.16</D>
+                <D>0.15</D>
                 <V>1</V>
             </Stats>
 
@@ -268,6 +276,9 @@
                 </Class>
                 <Class sourceFile="EventPublisherASTTransformation.java">
                     org.codehaus.griffon.compile.core.ast.transform.EventPublisherASTTransformation
+                </Class>
+                <Class sourceFile="FXObservableASTTransformation.java">
+                    org.codehaus.griffon.compile.core.ast.transform.FXObservableASTTransformation
                 </Class>
                 <Class sourceFile="GriffonArtifactASTInjector.java">
                     org.codehaus.griffon.compile.core.ast.transform.GriffonArtifactASTInjector
@@ -337,9 +348,13 @@
                 <Package>griffon.transform</Package>
                 <Package>griffon.util</Package>
                 <Package>java.beans</Package>
+                <Package>java.io</Package>
                 <Package>java.lang</Package>
+                <Package>java.lang.annotation</Package>
                 <Package>java.lang.reflect</Package>
                 <Package>java.util</Package>
+                <Package>javafx.beans.property</Package>
+                <Package>javafx.collections</Package>
                 <Package>javax.inject</Package>
                 <Package>org.codehaus.griffon.compile.core</Package>
                 <Package>org.codehaus.griffon.compile.core.ast</Package>
@@ -351,6 +366,7 @@
                 <Package>org.codehaus.groovy.ast.stmt</Package>
                 <Package>org.codehaus.groovy.control</Package>
                 <Package>org.codehaus.groovy.control.messages</Package>
+                <Package>org.codehaus.groovy.runtime</Package>
                 <Package>org.codehaus.groovy.syntax</Package>
                 <Package>org.codehaus.groovy.transform</Package>
                 <Package>org.slf4j</Package>
