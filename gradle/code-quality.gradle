@@ -18,6 +18,7 @@ apply plugin: 'checkstyle'
 apply plugin: 'codenarc'
 apply plugin: 'findbugs'
 apply plugin: 'jdepend'
+apply plugin: 'license'
 
 def configDir = new File(buildscript.sourceFile.parentFile.parentFile, 'config')
 ext.checkstyleConfigDir = "$configDir/checkstyle"
@@ -46,4 +47,19 @@ jdepend {
     sourceSets = [sourceSets.main]
     ignoreFailures = true
     reportsDir = file("$project.buildDir/reports/jdepend")
+}
+
+license {
+    header = rootProject.file('config/HEADER')
+    strictCheck = true
+    ignoreFailures = true
+    mapping {
+        java   = 'SLASHSTAR_STYLE'
+        groovy = 'SLASHSTAR_STYLE'
+    }
+    ext.year = '2008-2014'
+}
+
+licenseTest {
+    source -= sourceSets.test.resources
 }

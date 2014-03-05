@@ -16,7 +16,6 @@
 package griffon.util;
 
 import griffon.core.editors.URIPropertyEditor;
-import griffon.exceptions.TypeConversionException;
 import org.junit.Test;
 
 import java.beans.PropertyEditorManager;
@@ -178,7 +177,6 @@ public class TypeUtilsTest {
         TypeUtils.castToNumber(new Object(), 1);
     }
 
-    @Test(expected = TypeConversionException.class)
     public void convertValue() throws URISyntaxException {
         URI expected = new URI("http://localhost");
         assertEquals(expected, TypeUtils.convertValue(URI.class, expected));

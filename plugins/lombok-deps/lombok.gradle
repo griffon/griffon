@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-
 configurations {
     compileOnly
     testCompileOnly
 }
 
+ext.toolsLocation = new File("${System.properties['java.home']}/lib/tools.jar").absolutePath
 for (location in ['lib/tools.jar', '../lib/tools.jar']) {
     File javaHome = new File(System.properties['java.home'])
     javaHome = javaHome.name == 'jre' ? javaHome.parentFile : javaHome

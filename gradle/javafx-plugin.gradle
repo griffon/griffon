@@ -26,11 +26,11 @@
 
 
 buildscript {
-    String jfxrtLocation = new File("${System.properties['java.home']}/jre/lib/jfxrt.jar").absolutePath
+    File javaHome = new File(System.properties['java.home'])
+    javaHome = javaHome.name == 'jre' ? javaHome.parentFile : javaHome
+    String jfxrtLocation = new File("${javaHome}/jre/lib/jfxrt.jar").absolutePath
     // JavaFX locations for JDK7, JDK7, JDK8
     for (location in ['lib/jfxrt.jar', 'jre/lib/jfxrt.jar', 'jre/lib/ext/jfxrt.jar']) {
-        File javaHome = new File(System.properties['java.home'])
-        javaHome = javaHome.name == 'jre' ? javaHome.parentFile : javaHome
         File file = new File(javaHome, location)
         if (file.exists()) {
             jfxrtLocation = file.absolutePath
@@ -40,15 +40,12 @@ buildscript {
 
     repositories {
         jcenter()
-        maven { url = 'http://dl.bintray.com/content/shemnon/javafx-gradle/' }
-        maven { url = 'http://repository-javafx-gradle-plugin.forge.cloudbees.com/snapshot' }
-        ivy { url = 'http://repository-javafx-gradle-plugin.forge.cloudbees.com/snapshot' }
-        mavenCentral()
-        mavenLocal()
+        maven { url 'http://dl.bintray.com/content/shemnon/javafx-gradle/' }
+        maven { url 'http://repository-javafx-gradle-plugin.forge.cloudbees.com/snapshot' }
     }
     dependencies {
         classpath 'org.bitbucket.shemnon.javafxplugin:gradle-javafx-plugin:0.4.0'
-        classpath project.files("${System.properties['java.home']}/../lib/ant-javafx.jar")
+        classpath project.files("${javaHome}/lib/ant-javafx.jar")
         classpath project.files(jfxrtLocation)
     }
 }

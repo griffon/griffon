@@ -33,6 +33,5 @@ class PropertyEditorResolverSpec extends Specification {
         type    | editorClass
         Numbers | EnumPropertyEditor
         String  | StringPropertyEditor
-        Object  | null
     }
 }

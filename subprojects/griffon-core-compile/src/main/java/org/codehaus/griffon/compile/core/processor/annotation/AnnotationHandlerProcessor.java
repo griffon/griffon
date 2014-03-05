@@ -146,7 +146,7 @@ public class AnnotationHandlerProcessor extends AbstractSpiProcessor {
             return CheckResult.valueOf("is an abstract class");
         }
 
-        if (!hasCorrectConstructor(currentClass)) {
+        if (!hasPublicNoArgsConstructor(currentClass)) {
             return CheckResult.valueOf("has no public no-args constructor");
         }
 
