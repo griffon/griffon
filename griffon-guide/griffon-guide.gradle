@@ -167,12 +167,12 @@ java2html {
 }
 
 task computeConsoleDependencies << {
-    List provided = project(":console-swing-groovy").configurations.compileOnly.collect { it.name }.sort()
-    List compile = project(":console-swing-groovy").configurations.compile.collect { it.name }.sort()
+    List provided = project(':console-swing-groovy').configurations.compileOnly.collect { it.name }.sort()
+    List compile = project(':console-swing-groovy').configurations.compile.collect { it.name }.sort()
     provided -= compile
-    List runtime = project(":console-swing-groovy").configurations.runtime.collect { it.name }.sort()
+    List runtime = project(':console-swing-groovy').configurations.runtime.collect { it.name }.sort()
     runtime -= compile
-    List testCompile = project(":console-swing-groovy").configurations.testCompile.collect { it.name }.sort()
+    List testCompile = project(':console-swing-groovy').configurations.testCompile.collect { it.name }.sort()
     List test = testCompile - compile
     List build = compile.grep { it =~ /groovy-all/ }
 
