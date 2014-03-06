@@ -21,7 +21,7 @@ import lombok.core.handlers.DomainHandler;
 import lombok.eclipse.EclipseAnnotationHandler;
 import lombok.eclipse.EclipseNode;
 import lombok.eclipse.handlers.ast.EclipseType;
-import org.codehaus.griffon.compile.datasource.DomainConstants;
+import org.codehaus.griffon.compile.domain.DomainConstants;
 import org.eclipse.jdt.internal.compiler.ast.Annotation;
 import org.kordamp.jipsy.ServiceProviderFor;
 

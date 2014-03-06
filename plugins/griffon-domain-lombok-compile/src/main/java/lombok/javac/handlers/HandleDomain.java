@@ -22,7 +22,7 @@ import lombok.core.handlers.DomainHandler;
 import lombok.javac.JavacAnnotationHandler;
 import lombok.javac.JavacNode;
 import lombok.javac.handlers.ast.JavacType;
-import org.codehaus.griffon.compile.datasource.DomainConstants;
+import org.codehaus.griffon.compile.domain.DomainConstants;
 import org.kordamp.jipsy.ServiceProviderFor;
 
 import static lombok.core.util.ErrorMessages.canBeUsedOnClassAndEnumOnly;

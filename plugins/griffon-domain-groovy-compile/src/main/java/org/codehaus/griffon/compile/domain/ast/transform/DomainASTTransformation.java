@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.compile.datasource.ast.transform;
+package org.codehaus.griffon.compile.domain.ast.transform;
 
 import griffon.plugins.domain.GriffonDomain;
 import griffon.plugins.domain.orm.Criterion;
@@ -22,7 +22,7 @@ import org.codehaus.griffon.compile.core.AnnotationHandler;
 import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
 import org.codehaus.griffon.compile.core.MethodDescriptor;
 import org.codehaus.griffon.compile.core.ast.transform.AbstractASTTransformation;
-import org.codehaus.griffon.compile.datasource.DomainConstants;
+import org.codehaus.griffon.compile.domain.DomainConstants;
 import org.codehaus.griffon.runtime.domain.GriffonDomainHandlerRegistry;
 import org.codehaus.groovy.ast.*;
 import org.codehaus.groovy.ast.expr.Expression;

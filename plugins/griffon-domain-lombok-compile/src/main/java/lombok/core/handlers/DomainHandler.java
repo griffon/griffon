@@ -17,7 +17,7 @@ package lombok.core.handlers;
 
 import lombok.ast.IMethod;
 import lombok.ast.IType;
-import org.codehaus.griffon.compile.datasource.DomainConstants;
+import org.codehaus.griffon.compile.domain.DomainConstants;
 
 /**
  * @author Andres Almiray

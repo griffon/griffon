@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.compile.datasource.ast.transform;
+package org.codehaus.griffon.compile.domain.ast.transform;
 
 import griffon.plugins.domain.Event;
 import org.codehaus.griffon.compile.core.ast.transform.GriffonMvcArtifactASTInjector;

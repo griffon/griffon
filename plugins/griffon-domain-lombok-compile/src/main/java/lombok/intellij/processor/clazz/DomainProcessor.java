@@ -22,7 +22,7 @@ import com.intellij.psi.PsiMethod;
 import de.plushnikov.intellij.lombok.processor.LombokProcessor;
 import de.plushnikov.intellij.lombok.processor.clazz.LombokClassProcessor;
 import griffon.transform.Domain;
-import org.codehaus.griffon.compile.datasource.DomainConstants;
+import org.codehaus.griffon.compile.domain.DomainConstants;
 import org.jetbrains.annotations.NotNull;
 import org.kordamp.jipsy.ServiceProviderFor;
 
