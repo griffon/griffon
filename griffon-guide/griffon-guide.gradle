@@ -31,8 +31,6 @@ buildscript {
 apply plugin: 'asciidoctor'
 apply plugin: 'java2html'
 
-ext.maven = false
-
 ext.childProjects = [
     ':griffon-core-compile',
     ':griffon-core-test',
@@ -46,10 +44,6 @@ ext.childProjects = [
 ]
 
 ext.childProjects.each { evaluationDependsOn it }
-
-repositories {
-    jcenter()
-}
 
 dependencies {
     java2html 'de.java2html:java2html:5.0'

@@ -16,6 +16,7 @@
 
 import java.text.SimpleDateFormat
 
+
 apply plugin: 'base'
 apply plugin: 'idea'
 apply plugin: 'coveralls'
@@ -34,27 +35,28 @@ buildscript {
         classpath 'org.ajoberstar:gradle-git:0.6.3'
     }
 }
-
-allprojects {
-    ext.maven = false
-}
-
 Date buildTimeAndDate = new Date()
 ext {
     buildTime = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
     buildDate = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
 }
 
-evaluationDependsOnChildren()
-
-subprojects { subproj ->
+allprojects {
     apply plugin: 'base'
     apply plugin: 'idea'
 
-    if (subproj.plugins.hasPlugin('java')) {
-        apply from: rootProject.file('gradle/publish.gradle')
-        apply from: rootProject.file('gradle/code-quality.gradle')
+    ext.maven = false
 
+    repositories {
+        jcenter()
+        maven { url 'http://dl.bintray.com/content/aalmiray/kordamp' }
+        mavenCentral()
+        mavenLocal()
+    }
+}
+
+subprojects { subproj ->
+    plugins.withType(JavaPlugin) {
         configurations {
             compileOnly
             testCompileOnly
@@ -141,15 +143,16 @@ subprojects { subproj ->
             from sourceSets.main.allSource
         }
 
-        compileJava {
-            doFirst {
-                if (rootProject.hasProperty('lint') && rootProject.lint == true) {
-                    options.compilerArgs = [
-                        '-Xlint:all', '-Xlint:deprecation', '-Xlint:unchecked'
-                    ]
-                }
+        tasks.withType(AbstractCompile) {
+            if (rootProject.hasProperty('lint') && rootProject.lint.toBoolean()) {
+                options.compilerArgs = [
+                    '-Xlint:all', '-Xlint:deprecation', '-Xlint:unchecked'
+                ]
             }
         }
+
+        subproj.apply from: rootProject.file('gradle/publish.gradle')
+        subproj.apply from: rootProject.file('gradle/code-quality.gradle')
 
         if (subproj.ext.maven == true) {
             javadoc {
