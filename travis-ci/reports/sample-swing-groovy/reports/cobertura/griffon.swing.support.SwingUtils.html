@@ -99,7 +99,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment"> */</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;41</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<span class="keyword">public</span> <span class="keyword">class</span> SwingUtils {</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;42</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_WINDOW_NULL = <span class="string">"Argument 'window' cannot be null"</span>;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_WINDOW_NULL = <span class="string">"Argument 'window' must not be null"</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;43</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;44</td>  <td class="nbHits">&nbsp;</td>
@@ -160,7 +160,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;77</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> centerOnScreen(@Nonnull JInternalFrame internalFrame) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;78</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonNull(internalFrame, <span class="string">"Argument 'internalFrame' cannot be null"</span>);</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;78</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonNull(internalFrame, <span class="string">"Argument 'internalFrame' must not be null"</span>);</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;79</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;80</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        JDesktopPane desktop = internalFrame.getDesktopPane();</span></pre></td></tr>
@@ -253,8 +253,8 @@
   <td class="src"><pre class="src">&nbsp;    @Nullable</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;132</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> Component findComponentByName(@Nonnull String name, @Nonnull Container root) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;133</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonNull(root, <span class="string">"Argument 'root' cannot be null"</span>);</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;134</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonBlank(name, <span class="string">"Argument 'name' cannot be blank"</span>);</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;133</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonNull(root, <span class="string">"Argument 'root' must not be null"</span>);</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;134</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonBlank(name, <span class="string">"Argument 'name' must not be blank"</span>);</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;135</td>  <td class="nbHitsUncovered"><a title="Line 135: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 135: Conditional coverage 0% (0/2).">        <span class="keyword">if</span> (name.equals(root.getName())) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;136</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            <span class="keyword">return</span> root;</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;137</td>  <td class="nbHits">&nbsp;</td>
@@ -320,7 +320,7 @@
   <td class="src"><pre class="src">&nbsp;    @Nonnull</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;172</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> Image takeSnapshot(@Nonnull Component component, <span class="keyword">boolean</span> usePrint) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;173</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonNull(component, <span class="string">"Argument 'component' cannot be null"</span>);</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;173</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonNull(component, <span class="string">"Argument 'component' must not be null"</span>);</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;174</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;175</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        BufferedImage image = <span class="keyword">null</span>;</span></pre></td></tr>
@@ -407,7 +407,7 @@
   <td class="src"><pre class="src">&nbsp;    @Nonnull</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;224</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> Window createApplicationFrame(@Nonnull GriffonApplication application, @Nonnull Map&lt;String, Object&gt; attributes) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;225</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(application, <span class="string">"Argument 'application' cannot be null"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;225</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(application, <span class="string">"Argument 'application' must not be null"</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;226</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        JFrame frame = <span class="keyword">null</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;227</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="comment">// try config specified first</span></pre></td></tr>
@@ -471,6 +471,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/5/14 8:22 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/7/14 5:35 PM.</div>
 </body>
 </html>

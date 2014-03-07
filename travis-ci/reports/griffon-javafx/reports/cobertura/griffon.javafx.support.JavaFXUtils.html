@@ -105,7 +105,7 @@
 <tr>  <td class="numLine">&nbsp;41</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> JavaFXUtils {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;42</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_CONTROL_NULL = <span class="string">"Argument 'control' cannot be null"</span>;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_CONTROL_NULL = <span class="string">"Argument 'control' must not be null"</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;43</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;44</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;    <span class="keyword">private</span> JavaFXUtils() {</span></pre></td></tr>
@@ -116,8 +116,8 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;48</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> configure(<span class="keyword">final</span> @Nonnull ButtonBase control, <span class="keyword">final</span> @Nonnull JavaFXAction action) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;49</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonNull(control, <span class="string">"Argument 'control' cannot be null"</span>);</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;50</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonNull(action, <span class="string">"Argument 'action' cannot be null"</span>);</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;49</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonNull(control, <span class="string">"Argument 'control' must not be null"</span>);</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;50</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonNull(action, <span class="string">"Argument 'action' must not be null"</span>);</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;51</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;52</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        action.onActionProperty().addListener(<span class="keyword">new</span> ChangeListener&lt;EventHandler&lt;ActionEvent&gt;&gt;() {</span></pre></td></tr>
@@ -206,7 +206,7 @@
 <tr>  <td class="numLine">&nbsp;109</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> setIcon(@Nonnull ButtonBase control, @Nonnull String iconUrl) {</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;110</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonNull(control, ERROR_CONTROL_NULL);</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;111</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonBlank(iconUrl, <span class="string">"Argument 'iconUrl' cannot be blank"</span>);</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;111</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonBlank(iconUrl, <span class="string">"Argument 'iconUrl' must not be blank"</span>);</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;112</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;113</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        URL resource = Thread.currentThread().getContextClassLoader().getResource(iconUrl);</span></pre></td></tr>
@@ -222,8 +222,8 @@
   <td class="src"><pre class="src">&nbsp;    @Nullable</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;121</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> Node findNode(@Nonnull Node root, @Nonnull String id) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;122</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonNull(root, <span class="string">"Argument 'root' cannot be null"</span>);</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;123</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonBlank(id, <span class="string">"Argument 'id' cannot be blank"</span>);</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;122</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonNull(root, <span class="string">"Argument 'root' must not be null"</span>);</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;123</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonBlank(id, <span class="string">"Argument 'id' must not be blank"</span>);</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;124</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;125</td>  <td class="nbHitsUncovered"><a title="Line 125: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 125: Conditional coverage 0% (0/2).">        <span class="keyword">if</span> (id.equals(root.getId())) <span class="keyword">return</span> root;</a></span></pre></td></tr>
@@ -246,6 +246,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/5/14 8:24 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/7/14 5:36 PM.</div>
 </body>
 </html>

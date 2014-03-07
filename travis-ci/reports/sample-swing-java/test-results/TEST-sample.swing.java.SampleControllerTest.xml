@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="sample.swing.java.SampleControllerTest" tests="2" failures="0" errors="0" timestamp="2014-03-05T20:23:25" hostname="testing-worker-linux-8-1-23366-linux-6-20159515" time="3.909">
+<testsuite name="sample.swing.java.SampleControllerTest" tests="2" failures="0" errors="0" timestamp="2014-03-07T17:35:36" hostname="testing-worker-linux-5-1-19517-linux-8-20297994" time="4.189">
   <properties/>
-  <testcase name="executeSayHelloActionWithInput" classname="sample.swing.java.SampleControllerTest" time="3.427"/>
-  <testcase name="executeSayHelloActionWithNoInput" classname="sample.swing.java.SampleControllerTest" time="0.48"/>
+  <testcase name="executeSayHelloActionWithInput" classname="sample.swing.java.SampleControllerTest" time="3.673"/>
+  <testcase name="executeSayHelloActionWithNoInput" classname="sample.swing.java.SampleControllerTest" time="0.514"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[[Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Griffon 2.0.0.SNAPSHOT
-[Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Build: 2014-03-05T20:02:57.681+0000
+[Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Build: 2014-03-07T17:17:07.720+0000
 [Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - JVM: 1.7.0_51 (Oracle Corporation 24.51-b03)
-[Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - OS: Linux 2.6.32-042stab079.5 amd64
+[Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - OS: Linux 2.6.32-042stab084.25 amd64
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Creating module bindings
 [Test worker] DEBUG griffon.util.AnnotationUtils - Current module order is [core, application, swing, testApplicationBootstrapper$InnerClasses, testApplicationBootstrapper$Fields]
 [Test worker] TRACE griffon.util.AnnotationUtils - Processing module 'core'
@@ -36,31 +36,31 @@
 [Test worker] TRACE griffon.util.AnnotationUtils -   adding module 'application', since all dependencies have been added
 [Test worker] TRACE griffon.util.AnnotationUtils - module dependency ordering complete
 [Test worker] DEBUG griffon.util.AnnotationUtils - computed module order is [core, swing, testApplicationBootstrapper$InnerClasses, testApplicationBootstrapper$Fields, application]
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from core:org.codehaus.griffon.runtime.core.DefaultApplicationModule@baf767d
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from swing:org.codehaus.griffon.runtime.swing.SwingModule@2c8c0e89
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from testApplicationBootstrapper$InnerClasses:org.codehaus.griffon.runtime.core.TestApplicationBootstrapper$InnerClassesModule@1f0e5b38
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from testApplicationBootstrapper$Fields:org.codehaus.griffon.runtime.core.TestApplicationBootstrapper$FieldsModule@6786c975
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from application:sample.swing.java.ApplicationModule@4214556c
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - InstanceBinding[source=griffon.core.GriffonApplication, instance=org.codehaus.griffon.runtime.core.DefaultGriffonApplication@72aff016, singleton=true]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from core:org.codehaus.griffon.runtime.core.DefaultApplicationModule@2a74c252
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from swing:org.codehaus.griffon.runtime.swing.SwingModule@5781ab44
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from testApplicationBootstrapper$InnerClasses:org.codehaus.griffon.runtime.core.TestApplicationBootstrapper$InnerClassesModule@2132a3e
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from testApplicationBootstrapper$Fields:org.codehaus.griffon.runtime.core.TestApplicationBootstrapper$FieldsModule@383a4d82
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from application:sample.swing.java.ApplicationModule@7bb6aea4
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - InstanceBinding[source=griffon.core.GriffonApplication, instance=org.codehaus.griffon.runtime.core.DefaultGriffonApplication@548bb8b2, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.ApplicationClassLoader, target=org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.ApplicationConfigurer, target=org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.resources.ResourceHandler, target=org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.util.CompositeResourceBundleBuilder, target=org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder, singleton=true]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=java.util.ResourceBundle, classifier=@javax.inject.Named(value=applicationResourceBundle), provider=org.codehaus.griffon.runtime.util.ResourceBundleProvider@7cbb6f2c, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=java.util.ResourceBundle, classifier=@javax.inject.Named(value=applicationResourceBundle), provider=org.codehaus.griffon.runtime.util.ResourceBundleProvider@210ad97b, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.Configuration, target=org.codehaus.griffon.runtime.core.DefaultConfiguration, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.ExecutorServiceManager, target=org.codehaus.griffon.runtime.core.DefaultExecutorServiceManager, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.event.EventRouter, classifier=@javax.inject.Named(value=applicationEventRouter), target=org.codehaus.griffon.runtime.core.event.DefaultEventRouter, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.event.EventRouter, target=org.codehaus.griffon.runtime.core.event.DefaultEventRouter, singleton=false]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.resources.ResourceResolver, classifier=@javax.inject.Named(value=applicationResourceResolver), provider=org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider@757ff1ad, singleton=true]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.i18n.MessageSource, classifier=@javax.inject.Named(value=applicationMessageSource), provider=org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider@22d3d11f, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.resources.ResourceResolver, classifier=@javax.inject.Named(value=applicationResourceResolver), provider=org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider@4f4c2b2f, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.i18n.MessageSource, classifier=@javax.inject.Named(value=applicationMessageSource), provider=org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider@11a74355, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.resources.ResourceInjector, classifier=@javax.inject.Named(value=applicationResourceInjector), target=org.codehaus.griffon.runtime.core.resources.DefaultApplicationResourceInjector, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.threading.UIThreadManager, target=org.codehaus.griffon.runtime.swing.SwingUIThreadManager, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.mvc.MVCGroupManager, target=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager, singleton=true]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Initialize), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@465c16, singleton=true]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Startup), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@b47a87e, singleton=true]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Ready), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@d86edfb, singleton=true]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Shutdown), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@157200ad, singleton=true]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Stop), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@6f8a68da, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Initialize), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@7c358a80, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Startup), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@1f181935, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Ready), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@671ef685, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Shutdown), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@21cacaa7, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Stop), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@8beab46, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.view.WindowManager, target=org.codehaus.griffon.runtime.swing.DefaultSwingWindowManager, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.controller.ActionManager, target=org.codehaus.griffon.runtime.swing.controller.SwingActionManager, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.artifact.ArtifactManager, target=org.codehaus.griffon.runtime.core.artifact.DefaultArtifactManager, singleton=true]
@@ -76,23 +76,23 @@
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.swing.SwingWindowDisplayHandler, classifier=@javax.inject.Named(value=windowDisplayHandler), target=org.codehaus.griffon.runtime.swing.ConfigurableSwingWindowDisplayHandler, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.addon.GriffonAddon, classifier=@javax.inject.Named(value=swing), target=org.codehaus.griffon.runtime.swing.SwingAddon, singleton=true]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Creating application injector
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Injector will be created by org.codehaus.griffon.runtime.injection.GuiceInjectorFactory@670b13df
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Injector will be created by org.codehaus.griffon.runtime.injection.GuiceInjectorFactory@3e3a2b03
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@43b3f709; key=application; value='{autoShutdown=true, title=Swing + Java, startupGroups=[sample]}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4f8dd67f; key=application; value='{autoShutdown=true, title=Swing + Java, startupGroups=[sample]}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.autoShutdown
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@43b3f709; key=application.autoShutdown; value='true'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4f8dd67f; key=application.autoShutdown; value='true'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@43b3f709; key=mvcGroups; value='{sample={model=sample.swing.java.SampleModel, controller=sample.swing.java.SampleController, view=sample.swing.java.SampleView}}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4f8dd67f; key=mvcGroups; value='{sample={model=sample.swing.java.SampleModel, controller=sample.swing.java.SampleController, view=sample.swing.java.SampleView}}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups.sample.model
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@43b3f709; key=mvcGroups.sample.model; value='sample.swing.java.SampleModel'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4f8dd67f; key=mvcGroups.sample.model; value='sample.swing.java.SampleModel'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups.sample.controller
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@43b3f709; key=mvcGroups.sample.controller; value='sample.swing.java.SampleController'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4f8dd67f; key=mvcGroups.sample.controller; value='sample.swing.java.SampleController'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.title
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@43b3f709; key=application.title; value='Swing + Java'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4f8dd67f; key=application.title; value='Swing + Java'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.startupGroups
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@43b3f709; key=application.startupGroups; value='[sample]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4f8dd67f; key=application.startupGroups; value='[sample]'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups.sample.view
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@43b3f709; key=mvcGroups.sample.view; value='sample.swing.java.SampleView'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4f8dd67f; key=mvcGroups.sample.view; value='sample.swing.java.SampleView'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler on UncaughtMVCGroupConfigurationException
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler on UncaughtMVCGroupInstantiationException
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'BootstrapStart' synchronously
@@ -154,7 +154,7 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer$2 on NewInstance
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.lifecycle.handler.disable
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@43b3f709; key=application; value='{autoShutdown=true, title=Swing + Java, startupGroups=[sample]}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4f8dd67f; key=application; value='{autoShutdown=true, title=Swing + Java, startupGroups=[sample]}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=platform.handler.linux64
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=platform
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.PlatformHandlerProvider - Using org.codehaus.griffon.runtime.core.DefaultPlatformHandler as PlatformHandler
@@ -168,22 +168,22 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'LoadAddonsStart' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.addon.AbstractAddonManager - Loading addon swing with class org.codehaus.griffon.runtime.swing.SwingAddon
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'LoadAddonStart' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.swing.SwingAddon@13d64832
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.swing.SwingAddon@7930407b
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'LoadAddonEnd' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.addon.AbstractAddonManager - Loaded addon swing
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.addon.AbstractAddonManager - Loading addons [END]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'LoadAddonsEnd' synchronously
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@43b3f709; key=mvcGroups; value='{sample={model=sample.swing.java.SampleModel, controller=sample.swing.java.SampleController, view=sample.swing.java.SampleView}}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4f8dd67f; key=mvcGroups; value='{sample={model=sample.swing.java.SampleModel, controller=sample.swing.java.SampleController, view=sample.swing.java.SampleView}}'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Adding MVC group sample
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer$3 on NewInstance
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=griffon.controller.action.interceptor.order
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=griffon
 [Test worker] DEBUG griffon.util.AnnotationUtils - computed interceptor order is []
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'model': org.codehaus.griffon.runtime.core.artifact.ModelArtifactHandler@492f3dbc
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'view': org.codehaus.griffon.runtime.core.artifact.ViewArtifactHandler@3c7e272d
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'controller': org.codehaus.griffon.runtime.core.artifact.ControllerArtifactHandler@7e3e1a61
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'service': org.codehaus.griffon.runtime.core.artifact.ServiceArtifactHandler@1f361707
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'model': org.codehaus.griffon.runtime.core.artifact.ModelArtifactHandler@19e55091
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'view': org.codehaus.griffon.runtime.core.artifact.ViewArtifactHandler@1e0c6cdf
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'controller': org.codehaus.griffon.runtime.core.artifact.ControllerArtifactHandler@41bfb3e2
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'service': org.codehaus.griffon.runtime.core.artifact.ServiceArtifactHandler@10badc27
 [Test worker] DEBUG griffon.util.ServiceLoaderUtils - Reading griffon.core.artifact.GriffonService definitions from file:/home/travis/build/griffon/griffon/samples/sample-swing-java/build/instrumented_classes/META-INF/griffon/griffon.core.artifact.GriffonService
 [Test worker] DEBUG griffon.util.ServiceLoaderUtils - Reading griffon.core.artifact.GriffonController definitions from file:/home/travis/build/griffon/griffon/samples/sample-swing-java/build/instrumented_classes/META-INF/griffon/griffon.core.artifact.GriffonController
 [Test worker] DEBUG griffon.util.ServiceLoaderUtils - Reading griffon.core.artifact.GriffonModel definitions from file:/home/travis/build/griffon/griffon/samples/sample-swing-java/build/instrumented_classes/META-INF/griffon/griffon.core.artifact.GriffonModel
@@ -237,7 +237,7 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Executing 0 interceptors for sample.swing.java.SampleController.sayHello
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Status before execution of sample.swing.java.SampleController.sayHello is OK
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=greeting.parameterized
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3b7850e8; key=greeting.parameterized; value='Hello {0}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@531963; key=greeting.parameterized; value='Hello {0}'
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Status after execution of sample.swing.java.SampleController.sayHello is OK
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'ShutdownRequested' synchronously
 [Test worker] INFO org.codehaus.griffon.runtime.core.DefaultGriffonApplication - Shutdown is in process
@@ -249,11 +249,11 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultGriffonApplication - Shutdown stage 4: execute Shutdown script
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.lifecycle.handler.disable
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@43b3f709; key=application; value='{autoShutdown=true, title=Swing + Java, startupGroups=[sample]}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4f8dd67f; key=application; value='{autoShutdown=true, title=Swing + Java, startupGroups=[sample]}'
 [Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Griffon 2.0.0.SNAPSHOT
-[Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Build: 2014-03-05T20:02:57.681+0000
+[Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Build: 2014-03-07T17:17:07.720+0000
 [Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - JVM: 1.7.0_51 (Oracle Corporation 24.51-b03)
-[Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - OS: Linux 2.6.32-042stab079.5 amd64
+[Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - OS: Linux 2.6.32-042stab084.25 amd64
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Creating module bindings
 [Test worker] DEBUG griffon.util.AnnotationUtils - Current module order is [core, application, swing, testApplicationBootstrapper$InnerClasses, testApplicationBootstrapper$Fields]
 [Test worker] TRACE griffon.util.AnnotationUtils - Processing module 'core'
@@ -282,31 +282,31 @@
 [Test worker] TRACE griffon.util.AnnotationUtils -   adding module 'application', since all dependencies have been added
 [Test worker] TRACE griffon.util.AnnotationUtils - module dependency ordering complete
 [Test worker] DEBUG griffon.util.AnnotationUtils - computed module order is [core, swing, testApplicationBootstrapper$InnerClasses, testApplicationBootstrapper$Fields, application]
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from core:org.codehaus.griffon.runtime.core.DefaultApplicationModule@4f26ed11
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from swing:org.codehaus.griffon.runtime.swing.SwingModule@4961fb0
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from testApplicationBootstrapper$InnerClasses:org.codehaus.griffon.runtime.core.TestApplicationBootstrapper$InnerClassesModule@1bfa5e2a
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from testApplicationBootstrapper$Fields:org.codehaus.griffon.runtime.core.TestApplicationBootstrapper$FieldsModule@523c25bf
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from application:sample.swing.java.ApplicationModule@6ad248c6
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - InstanceBinding[source=griffon.core.GriffonApplication, instance=org.codehaus.griffon.runtime.core.DefaultGriffonApplication@78047040, singleton=true]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from core:org.codehaus.griffon.runtime.core.DefaultApplicationModule@577a863d
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from swing:org.codehaus.griffon.runtime.swing.SwingModule@2d033ba9
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from testApplicationBootstrapper$InnerClasses:org.codehaus.griffon.runtime.core.TestApplicationBootstrapper$InnerClassesModule@2f41eb55
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from testApplicationBootstrapper$Fields:org.codehaus.griffon.runtime.core.TestApplicationBootstrapper$FieldsModule@10c131b0
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from application:sample.swing.java.ApplicationModule@7ba52267
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - InstanceBinding[source=griffon.core.GriffonApplication, instance=org.codehaus.griffon.runtime.core.DefaultGriffonApplication@129e4e49, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.ApplicationClassLoader, target=org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.ApplicationConfigurer, target=org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.resources.ResourceHandler, target=org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.util.CompositeResourceBundleBuilder, target=org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder, singleton=true]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=java.util.ResourceBundle, classifier=@javax.inject.Named(value=applicationResourceBundle), provider=org.codehaus.griffon.runtime.util.ResourceBundleProvider@6b65b74e, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=java.util.ResourceBundle, classifier=@javax.inject.Named(value=applicationResourceBundle), provider=org.codehaus.griffon.runtime.util.ResourceBundleProvider@5725a42b, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.Configuration, target=org.codehaus.griffon.runtime.core.DefaultConfiguration, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.ExecutorServiceManager, target=org.codehaus.griffon.runtime.core.DefaultExecutorServiceManager, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.event.EventRouter, classifier=@javax.inject.Named(value=applicationEventRouter), target=org.codehaus.griffon.runtime.core.event.DefaultEventRouter, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.event.EventRouter, target=org.codehaus.griffon.runtime.core.event.DefaultEventRouter, singleton=false]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.resources.ResourceResolver, classifier=@javax.inject.Named(value=applicationResourceResolver), provider=org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider@62e598f7, singleton=true]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.i18n.MessageSource, classifier=@javax.inject.Named(value=applicationMessageSource), provider=org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider@4f9db2da, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.resources.ResourceResolver, classifier=@javax.inject.Named(value=applicationResourceResolver), provider=org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider@683d2fbf, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.i18n.MessageSource, classifier=@javax.inject.Named(value=applicationMessageSource), provider=org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider@909da10, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.resources.ResourceInjector, classifier=@javax.inject.Named(value=applicationResourceInjector), target=org.codehaus.griffon.runtime.core.resources.DefaultApplicationResourceInjector, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.threading.UIThreadManager, target=org.codehaus.griffon.runtime.swing.SwingUIThreadManager, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.mvc.MVCGroupManager, target=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager, singleton=true]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Initialize), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@7a492f0b, singleton=true]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Startup), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@5aafb9e5, singleton=true]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Ready), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@46d597e6, singleton=true]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Shutdown), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@70e7a15e, singleton=true]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Stop), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@77135c3a, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Initialize), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@65cb5512, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Startup), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@83e44f4, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Ready), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@3020f366, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Shutdown), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@434bc639, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Stop), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@23c2eab3, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.view.WindowManager, target=org.codehaus.griffon.runtime.swing.DefaultSwingWindowManager, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.controller.ActionManager, target=org.codehaus.griffon.runtime.swing.controller.SwingActionManager, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.artifact.ArtifactManager, target=org.codehaus.griffon.runtime.core.artifact.DefaultArtifactManager, singleton=true]
@@ -322,23 +322,23 @@
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.swing.SwingWindowDisplayHandler, classifier=@javax.inject.Named(value=windowDisplayHandler), target=org.codehaus.griffon.runtime.swing.ConfigurableSwingWindowDisplayHandler, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.addon.GriffonAddon, classifier=@javax.inject.Named(value=swing), target=org.codehaus.griffon.runtime.swing.SwingAddon, singleton=true]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Creating application injector
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Injector will be created by org.codehaus.griffon.runtime.injection.GuiceInjectorFactory@180c20e9
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Injector will be created by org.codehaus.griffon.runtime.injection.GuiceInjectorFactory@51bea01c
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@451e01b1; key=application; value='{autoShutdown=true, title=Swing + Java, startupGroups=[sample]}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3d24ffba; key=application; value='{autoShutdown=true, title=Swing + Java, startupGroups=[sample]}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.autoShutdown
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@451e01b1; key=application.autoShutdown; value='true'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3d24ffba; key=application.autoShutdown; value='true'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@451e01b1; key=mvcGroups; value='{sample={model=sample.swing.java.SampleModel, controller=sample.swing.java.SampleController, view=sample.swing.java.SampleView}}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3d24ffba; key=mvcGroups; value='{sample={model=sample.swing.java.SampleModel, controller=sample.swing.java.SampleController, view=sample.swing.java.SampleView}}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups.sample.model
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@451e01b1; key=mvcGroups.sample.model; value='sample.swing.java.SampleModel'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3d24ffba; key=mvcGroups.sample.model; value='sample.swing.java.SampleModel'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups.sample.controller
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@451e01b1; key=mvcGroups.sample.controller; value='sample.swing.java.SampleController'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3d24ffba; key=mvcGroups.sample.controller; value='sample.swing.java.SampleController'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.title
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@451e01b1; key=application.title; value='Swing + Java'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3d24ffba; key=application.title; value='Swing + Java'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.startupGroups
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@451e01b1; key=application.startupGroups; value='[sample]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3d24ffba; key=application.startupGroups; value='[sample]'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups.sample.view
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@451e01b1; key=mvcGroups.sample.view; value='sample.swing.java.SampleView'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3d24ffba; key=mvcGroups.sample.view; value='sample.swing.java.SampleView'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler on UncaughtMVCGroupConfigurationException
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler on UncaughtMVCGroupInstantiationException
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'BootstrapStart' synchronously
@@ -400,7 +400,7 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer$2 on NewInstance
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.lifecycle.handler.disable
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@451e01b1; key=application; value='{autoShutdown=true, title=Swing + Java, startupGroups=[sample]}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3d24ffba; key=application; value='{autoShutdown=true, title=Swing + Java, startupGroups=[sample]}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=platform.handler.linux64
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=platform
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.PlatformHandlerProvider - Using org.codehaus.griffon.runtime.core.DefaultPlatformHandler as PlatformHandler
@@ -414,22 +414,22 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'LoadAddonsStart' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.addon.AbstractAddonManager - Loading addon swing with class org.codehaus.griffon.runtime.swing.SwingAddon
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'LoadAddonStart' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.swing.SwingAddon@20fc6af5
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.swing.SwingAddon@15a13207
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'LoadAddonEnd' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.addon.AbstractAddonManager - Loaded addon swing
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.addon.AbstractAddonManager - Loading addons [END]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'LoadAddonsEnd' synchronously
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@451e01b1; key=mvcGroups; value='{sample={model=sample.swing.java.SampleModel, controller=sample.swing.java.SampleController, view=sample.swing.java.SampleView}}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3d24ffba; key=mvcGroups; value='{sample={model=sample.swing.java.SampleModel, controller=sample.swing.java.SampleController, view=sample.swing.java.SampleView}}'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Adding MVC group sample
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer$3 on NewInstance
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=griffon.controller.action.interceptor.order
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=griffon
 [Test worker] DEBUG griffon.util.AnnotationUtils - computed interceptor order is []
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'model': org.codehaus.griffon.runtime.core.artifact.ModelArtifactHandler@2bc25a1d
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'view': org.codehaus.griffon.runtime.core.artifact.ViewArtifactHandler@64aa3c5c
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'controller': org.codehaus.griffon.runtime.core.artifact.ControllerArtifactHandler@6460efa5
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'service': org.codehaus.griffon.runtime.core.artifact.ServiceArtifactHandler@18156d1f
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'model': org.codehaus.griffon.runtime.core.artifact.ModelArtifactHandler@49a3e3a2
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'view': org.codehaus.griffon.runtime.core.artifact.ViewArtifactHandler@26b5c673
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'controller': org.codehaus.griffon.runtime.core.artifact.ControllerArtifactHandler@67f7bbdf
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'service': org.codehaus.griffon.runtime.core.artifact.ServiceArtifactHandler@394f62cc
 [Test worker] DEBUG griffon.util.ServiceLoaderUtils - Reading griffon.core.artifact.GriffonService definitions from file:/home/travis/build/griffon/griffon/samples/sample-swing-java/build/instrumented_classes/META-INF/griffon/griffon.core.artifact.GriffonService
 [Test worker] DEBUG griffon.util.ServiceLoaderUtils - Reading griffon.core.artifact.GriffonController definitions from file:/home/travis/build/griffon/griffon/samples/sample-swing-java/build/instrumented_classes/META-INF/griffon/griffon.core.artifact.GriffonController
 [Test worker] DEBUG griffon.util.ServiceLoaderUtils - Reading griffon.core.artifact.GriffonModel definitions from file:/home/travis/build/griffon/griffon/samples/sample-swing-java/build/instrumented_classes/META-INF/griffon/griffon.core.artifact.GriffonModel
@@ -483,7 +483,7 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Executing 0 interceptors for sample.swing.java.SampleController.sayHello
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Status before execution of sample.swing.java.SampleController.sayHello is OK
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=greeting.default
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@6a36ebaa; key=greeting.default; value='Howdy stranger!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@33182c98; key=greeting.default; value='Howdy stranger!'
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Status after execution of sample.swing.java.SampleController.sayHello is OK
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'ShutdownRequested' synchronously
 [Test worker] INFO org.codehaus.griffon.runtime.core.DefaultGriffonApplication - Shutdown is in process
@@ -495,6 +495,6 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultGriffonApplication - Shutdown stage 4: execute Shutdown script
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.lifecycle.handler.disable
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@451e01b1; key=application; value='{autoShutdown=true, title=Swing + Java, startupGroups=[sample]}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3d24ffba; key=application; value='{autoShutdown=true, title=Swing + Java, startupGroups=[sample]}'
 ]]></system-err>
 </testsuite>

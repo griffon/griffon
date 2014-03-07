@@ -73,7 +73,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment"> * @author Andres Almiray</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;28</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment"> */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;29</td>  <td class="nbHitsCovered">&nbsp;3298</td>  <td class="src"><pre class="src">&nbsp;<span class="keyword">public</span> <span class="keyword">class</span> MethodDescriptor <span class="keyword">implements</span> Comparable&lt;MethodDescriptor&gt; {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;29</td>  <td class="nbHitsCovered">&nbsp;3240</td>  <td class="src"><pre class="src">&nbsp;<span class="keyword">public</span> <span class="keyword">class</span> MethodDescriptor <span class="keyword">implements</span> Comparable&lt;MethodDescriptor&gt; {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;30</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">final</span> String methodName;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;31</td>  <td class="nbHits">&nbsp;</td>
@@ -100,7 +100,7 @@
   <td class="src"><pre class="src">&nbsp;    @Nonnull</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;43</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> MethodDescriptor forMethod(@Nonnull Method method, <span class="keyword">boolean</span> removeAbstractModifier) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;44</td>  <td class="nbHitsCovered">&nbsp;490</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, <span class="string">"Argument 'method' cannot be null"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;44</td>  <td class="nbHitsCovered">&nbsp;490</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, <span class="string">"Argument 'method' must not be null"</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;45</td>  <td class="nbHitsCovered">&nbsp;490</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">int</span> modifiers = method.getModifiers();</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;46</td>  <td class="nbHitsCovered"><a title="Line 46: Conditional coverage 100% (2/2).">&nbsp;490</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 46: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (removeAbstractModifier) {</a></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;47</td>  <td class="nbHitsCovered">&nbsp;179</td>  <td class="src"><pre class="src">&nbsp;            modifiers -= Modifier.ABSTRACT;</pre></td></tr>
@@ -160,8 +160,8 @@
 <tr>  <td class="numLine">&nbsp;83</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;84</td>  <td class="nbHitsCovered">&nbsp;506</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> MethodDescriptor(@Nonnull String methodName, @Nonnull Class&lt;?&gt;[] paramTypes, <span class="keyword">int</span> modifiers) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;85</td>  <td class="nbHitsCovered">&nbsp;506</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.methodName = requireNonBlank(methodName, <span class="string">"Argment 'methodName' cannot be blank"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;86</td>  <td class="nbHitsCovered">&nbsp;506</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(paramTypes, <span class="string">"Argument 'paramTypes' cannot be null"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;85</td>  <td class="nbHitsCovered">&nbsp;506</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.methodName = requireNonBlank(methodName, <span class="string">"Argment 'methodName' must not be blank"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;86</td>  <td class="nbHitsCovered">&nbsp;506</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(paramTypes, <span class="string">"Argument 'paramTypes' must not be null"</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;87</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;88</td>  <td class="nbHitsCovered">&nbsp;506</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.paramTypes = <span class="keyword">new</span> String[paramTypes.length];</pre></td></tr>
@@ -177,8 +177,8 @@
 <tr>  <td class="numLine">&nbsp;96</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;97</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> MethodDescriptor(@Nonnull String methodName, @Nonnull String[] paramTypes, <span class="keyword">int</span> modifiers) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;98</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.methodName = requireNonBlank(methodName, <span class="string">"Argment 'methodName' cannot be blank"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;99</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(paramTypes, <span class="string">"Argument 'paramTypes' cannot be null"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;98</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.methodName = requireNonBlank(methodName, <span class="string">"Argment 'methodName' must not be blank"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;99</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(paramTypes, <span class="string">"Argument 'paramTypes' must not be null"</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;100</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;101</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.paramTypes = <span class="keyword">new</span> String[paramTypes.length];</pre></td></tr>
@@ -258,15 +258,15 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;149</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">int</span> compareTo(MethodDescriptor md) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;150</td>  <td class="nbHitsCovered">&nbsp;3298</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">int</span> c = methodName.compareTo(md.methodName);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;151</td>  <td class="nbHitsCovered"><a title="Line 151: Conditional coverage 100% (2/2).">&nbsp;3298</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 151: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (c != 0) <span class="keyword">return</span> c;</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;152</td>  <td class="nbHitsCovered">&nbsp;632</td>  <td class="src"><pre class="src">&nbsp;        c = modifiers - md.modifiers;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;153</td>  <td class="nbHitsCovered"><a title="Line 153: Conditional coverage 100% (2/2).">&nbsp;632</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 153: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (c != 0) <span class="keyword">return</span> c;</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;154</td>  <td class="nbHitsCovered">&nbsp;614</td>  <td class="src"><pre class="src">&nbsp;        c = paramTypes.length - md.paramTypes.length;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;155</td>  <td class="nbHitsCovered"><a title="Line 155: Conditional coverage 100% (2/2).">&nbsp;614</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 155: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (c != 0) <span class="keyword">return</span> c;</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;156</td>  <td class="nbHitsCovered"><a title="Line 156: Conditional coverage 100% (2/2).">&nbsp;664</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 156: Conditional coverage 100% (2/2).">        <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i &lt; paramTypes.length; i++) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;157</td>  <td class="nbHitsCovered">&nbsp;525</td>  <td class="src"><pre class="src">&nbsp;            c = paramTypes[i].compareTo(md.paramTypes[i]);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;158</td>  <td class="nbHitsCovered"><a title="Line 158: Conditional coverage 100% (2/2).">&nbsp;525</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 158: Conditional coverage 100% (2/2).">            <span class="keyword">if</span> (c != 0) <span class="keyword">return</span> c;</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;150</td>  <td class="nbHitsCovered">&nbsp;3240</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">int</span> c = methodName.compareTo(md.methodName);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;151</td>  <td class="nbHitsCovered"><a title="Line 151: Conditional coverage 100% (2/2).">&nbsp;3240</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 151: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (c != 0) <span class="keyword">return</span> c;</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;152</td>  <td class="nbHitsCovered">&nbsp;622</td>  <td class="src"><pre class="src">&nbsp;        c = modifiers - md.modifiers;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;153</td>  <td class="nbHitsCovered"><a title="Line 153: Conditional coverage 100% (2/2).">&nbsp;622</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 153: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (c != 0) <span class="keyword">return</span> c;</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;154</td>  <td class="nbHitsCovered">&nbsp;606</td>  <td class="src"><pre class="src">&nbsp;        c = paramTypes.length - md.paramTypes.length;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;155</td>  <td class="nbHitsCovered"><a title="Line 155: Conditional coverage 100% (2/2).">&nbsp;606</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 155: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (c != 0) <span class="keyword">return</span> c;</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;156</td>  <td class="nbHitsCovered"><a title="Line 156: Conditional coverage 100% (2/2).">&nbsp;669</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 156: Conditional coverage 100% (2/2).">        <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i &lt; paramTypes.length; i++) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;157</td>  <td class="nbHitsCovered">&nbsp;530</td>  <td class="src"><pre class="src">&nbsp;            c = paramTypes[i].compareTo(md.paramTypes[i]);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;158</td>  <td class="nbHitsCovered"><a title="Line 158: Conditional coverage 100% (2/2).">&nbsp;530</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 158: Conditional coverage 100% (2/2).">            <span class="keyword">if</span> (c != 0) <span class="keyword">return</span> c;</a></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;159</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;160</td>  <td class="nbHits">&nbsp;</td>
@@ -278,7 +278,7 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;164</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">boolean</span> matches(@Nonnull MethodDescriptor md) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;165</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonNull(md, <span class="string">"Argument 'methodDescriptor' cannot be null"</span>);</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;165</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonNull(md, <span class="string">"Argument 'methodDescriptor' must not be null"</span>);</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;166</td>  <td class="nbHitsUncovered"><a title="Line 166: Conditional coverage 0% (0/6) [each condition: 0%, 0%, 0%].">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 166: Conditional coverage 0% (0/6) [each condition: 0%, 0%, 0%].">        <span class="keyword">if</span> (!methodName.equals(md.methodName) ||</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;167</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            modifiers != md.modifiers ||</pre></td></tr>
@@ -335,6 +335,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/5/14 8:24 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/7/14 5:36 PM.</div>
 </body>
 </html>

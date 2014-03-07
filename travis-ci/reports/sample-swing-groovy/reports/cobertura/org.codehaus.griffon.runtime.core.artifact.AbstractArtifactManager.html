@@ -109,17 +109,17 @@
   <td class="src"><pre class="src">&nbsp;@SuppressWarnings(<span class="string">"rawtypes"</span>)</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;46</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;<span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> AbstractArtifactManager <span class="keyword">implements</span> ArtifactManager {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;47</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_ARTIFACT_HANDLER_NULL = <span class="string">"Argument 'artifactHandler' cannot be null"</span>;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_ARTIFACT_HANDLER_NULL = <span class="string">"Argument 'artifactHandler' must not be null"</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;48</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_NAME_BLANK = <span class="string">"Argument 'name' cannot be blank"</span>;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_NAME_BLANK = <span class="string">"Argument 'name' must not be blank"</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;49</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_TYPE_BLANK = <span class="string">"Argument 'type' cannot be blank"</span>;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_TYPE_BLANK = <span class="string">"Argument 'type' must not be blank"</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;50</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_CLASS_NULL = <span class="string">"Argument 'clazz' cannot be null"</span>;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_CLASS_NULL = <span class="string">"Argument 'clazz' must not be null"</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;51</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_ARTIFACT_NULL = <span class="string">"Argument 'artifact' cannot be null"</span>;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_ARTIFACT_NULL = <span class="string">"Argument 'artifact' must not be null"</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;52</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_FULLY_QUALIFIED_CLASSNAME_BLANK = <span class="string">"Argument 'fqClassName' cannot be blank"</span>;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_FULLY_QUALIFIED_CLASSNAME_BLANK = <span class="string">"Argument 'fqClassName' must not be blank"</span>;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;53</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">final</span> Map&lt;String, Class&lt;? <span class="keyword">extends</span> GriffonArtifact&gt;[]&gt; artifacts = <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;();</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;54</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">final</span> Map&lt;String, ArtifactHandler&gt; artifactHandlers = <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;();</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;55</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">final</span> Object lock = <span class="keyword">new</span> Object[0];</pre></td></tr>
@@ -143,7 +143,7 @@
   <td class="src"><pre class="src">&nbsp;    @SuppressWarnings(<span class="string">"unchecked"</span>)</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;66</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> loadArtifactMetadata(@Nonnull Injector&lt;?&gt; injector) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;67</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(injector, <span class="string">"Argument 'injector' cannot be null"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;67</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(injector, <span class="string">"Argument 'injector' must not be null"</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;68</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        Map&lt;String, List&lt;Class&lt;? <span class="keyword">extends</span> GriffonArtifact&gt;&gt;&gt; loadedArtifacts = doLoadArtifactMetadata();</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;69</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
@@ -187,7 +187,7 @@
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> &lt;A <span class="keyword">extends</span> GriffonArtifact&gt; A newInstance(@Nonnull GriffonClass griffonClass) {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;98</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;99</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;            requireNonNull(griffonClass, <span class="string">"Argument 'griffonClass' cannot be null"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;99</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;            requireNonNull(griffonClass, <span class="string">"Argument 'griffonClass' must not be null"</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;100</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        } <span class="keyword">catch</span> (RuntimeException re) {</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;101</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> ArtifactNotFoundException(re);</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;102</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
@@ -396,6 +396,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/5/14 8:22 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/7/14 5:35 PM.</div>
 </body>
 </html>

@@ -88,9 +88,9 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment"> */</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;35</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;<span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> AbstractUIThreadManager <span class="keyword">implements</span> UIThreadManager {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;36</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_RUNNABLE_NULL = <span class="string">"Argument 'runnable' cannot be bull"</span>;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_RUNNABLE_NULL = <span class="string">"Argument 'runnable' must not be bull"</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;37</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_CALLABLE_NULL = <span class="string">"Argument 'callable' cannot be null"</span>;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_CALLABLE_NULL = <span class="string">"Argument 'callable' must not be null"</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;38</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;39</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">final</span> ExecutorService defaultExecutorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());</pre></td></tr>
@@ -105,7 +105,7 @@
   <td class="src"><pre class="src">&nbsp;    @Inject</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;45</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">void</span> setExecutorServiceManager(@Nonnull ExecutorServiceManager executorServiceManager) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;46</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(executorServiceManager, <span class="string">"Argument 'executorServiceManager' cannot be bull"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;46</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(executorServiceManager, <span class="string">"Argument 'executorServiceManager' must not be bull"</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;47</td>  <td class="nbHitsUncovered"><a title="Line 47: Conditional coverage 50% (1/2).">&nbsp;4</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 47: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (<span class="keyword">this</span>.executorServiceManager != <span class="keyword">null</span>) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;48</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            <span class="keyword">this</span>.executorServiceManager.remove(defaultExecutorService);</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;49</td>  <td class="nbHits">&nbsp;</td>
@@ -155,7 +155,7 @@
   <td class="src"><pre class="src">&nbsp;    @Nonnull</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;74</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> &lt;R&gt; Future&lt;R&gt; runFuture(@Nonnull ExecutorService executorService, @Nonnull Callable&lt;R&gt; callable) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;75</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonNull(executorService, <span class="string">"Argument 'executorService' cannot be null"</span>);</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;75</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonNull(executorService, <span class="string">"Argument 'executorService' must not be null"</span>);</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;76</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonNull(callable, ERROR_CALLABLE_NULL);</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;77</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        <span class="keyword">return</span> executorService.submit(callable);</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;78</td>  <td class="nbHits">&nbsp;</td>
@@ -188,6 +188,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/5/14 8:21 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/7/14 5:33 PM.</div>
 </body>
 </html>

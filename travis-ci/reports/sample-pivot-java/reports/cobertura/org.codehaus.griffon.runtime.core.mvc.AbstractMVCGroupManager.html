@@ -123,17 +123,17 @@
   <td class="src"><pre class="src">&nbsp;<span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> AbstractMVCGroupManager <span class="keyword">implements</span> MVCGroupManager {</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;53</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOG = LoggerFactory.getLogger(AbstractMVCGroupManager.<span class="keyword">class</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;54</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_MVCTYPE_BLANK = <span class="string">"Argument 'mvcType' cannot be blank"</span>;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_MVCTYPE_BLANK = <span class="string">"Argument 'mvcType' must not be blank"</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;55</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_MVCID_BLANK = <span class="string">"Argument 'mvcId' cannot be blank"</span>;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_MVCID_BLANK = <span class="string">"Argument 'mvcId' must not be blank"</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;56</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_CONFIGURATION_NULL = <span class="string">"Argument 'configuration' cannot be null"</span>;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_CONFIGURATION_NULL = <span class="string">"Argument 'configuration' must not be null"</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;57</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_GROUP_NULL = <span class="string">"Argument 'group' cannot be null"</span>;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_GROUP_NULL = <span class="string">"Argument 'group' must not be null"</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;58</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_CONFIG_NULL = <span class="string">"Argument 'config' cannot be null"</span>;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_CONFIG_NULL = <span class="string">"Argument 'config' must not be null"</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;59</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_ARGS_NULL = <span class="string">"Argument 'args' cannot be null"</span>;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_ARGS_NULL = <span class="string">"Argument 'args' must not be null"</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;60</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;61</td>  <td class="nbHits">&nbsp;</td>
@@ -150,7 +150,7 @@
 <tr>  <td class="numLine">&nbsp;68</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    @Inject</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;69</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> AbstractMVCGroupManager(@Nonnull GriffonApplication application) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;70</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.application = requireNonNull(application, <span class="string">"Argument 'application' cannot be null"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;70</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.application = requireNonNull(application, <span class="string">"Argument 'application' must not be null"</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;71</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;72</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
@@ -230,7 +230,7 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;120</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> initialize(@Nonnull Map&lt;String, MVCGroupConfiguration&gt; configurations) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;121</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(configurations, <span class="string">"Argument 'configurations' cannot be null"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;121</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(configurations, <span class="string">"Argument 'configurations' must not be null"</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;122</td>  <td class="nbHitsUncovered"><a title="Line 122: Conditional coverage 50% (1/2).">&nbsp;4</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 122: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (configurations.isEmpty()) <span class="keyword">return</span>;</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;123</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">synchronized</span> (lock) {</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;124</td>  <td class="nbHitsUncovered"><a title="Line 124: Conditional coverage 50% (1/2).">&nbsp;4</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 124: Conditional coverage 50% (1/2).">            <span class="keyword">if</span> (!initialized) {</a></span></pre></td></tr>
@@ -264,7 +264,7 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;146</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">void</span> removeConfiguration(@Nonnull String name) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;147</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonBlank(name, <span class="string">"Argument 'name' cannot be blank"</span>);</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;147</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonBlank(name, <span class="string">"Argument 'name' must not be blank"</span>);</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;148</td>  <td class="nbHitsUncovered"><a title="Line 148: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 148: Conditional coverage 0% (0/2).">        <span class="keyword">if</span> (!isBlank(name)) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;149</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            <span class="keyword">synchronized</span> (lock) {</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;150</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                configurations.remove(name);</span></pre></td></tr>
@@ -595,6 +595,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/5/14 8:22 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/7/14 5:34 PM.</div>
 </body>
 </html>

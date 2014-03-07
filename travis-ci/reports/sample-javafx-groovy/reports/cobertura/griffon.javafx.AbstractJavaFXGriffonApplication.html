@@ -148,7 +148,7 @@
 <tr>  <td class="numLine">&nbsp;64</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> AbstractJavaFXGriffonApplication <span class="keyword">extends</span> Application <span class="keyword">implements</span> GriffonApplication {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;65</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_SHUTDOWN_HANDLER_NULL = <span class="string">"Argument 'shutdownHandler' cannot be null"</span>;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_SHUTDOWN_HANDLER_NULL = <span class="string">"Argument 'shutdownHandler' must not be null"</span>;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;66</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;    <span class="keyword">private</span> Locale locale = Locale.getDefault();</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;67</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String[] EMPTY_ARGS = <span class="keyword">new</span> String[0];</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;68</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;    <span class="keyword">protected</span> <span class="keyword">final</span> Object[] lock = <span class="keyword">new</span> Object[0];</span></pre></td></tr>
@@ -251,13 +251,13 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;131</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">void</span> firePropertyChange(@Nonnull PropertyChangeEvent event) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;132</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        pcs.firePropertyChange(requireNonNull(event, <span class="string">"Argument 'event' cannot be null"</span>));</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;132</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        pcs.firePropertyChange(requireNonNull(event, <span class="string">"Argument 'event' must not be null"</span>));</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;133</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;    }</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;134</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;135</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">void</span> firePropertyChange(@Nonnull String propertyName, @Nullable Object oldValue, @Nullable Object newValue) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;136</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        pcs.firePropertyChange(requireNonBlank(propertyName, <span class="string">"Argument 'propertyName' cannot be blank"</span>), oldValue, newValue);</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;136</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        pcs.firePropertyChange(requireNonBlank(propertyName, <span class="string">"Argument 'propertyName' must not be blank"</span>), oldValue, newValue);</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;137</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;    }</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;138</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
@@ -343,7 +343,7 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;191</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">void</span> setPhase(@Nonnull ApplicationPhase phase) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;192</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonNull(phase, <span class="string">"Argument 'phase' cannot be null"</span>);</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;192</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonNull(phase, <span class="string">"Argument 'phase' must not be null"</span>);</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;193</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        <span class="keyword">synchronized</span> (lock) {</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;194</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            firePropertyChange(<span class="string">"phase"</span>, <span class="keyword">this</span>.phase, <span class="keyword">this</span>.phase = phase);</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;195</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        }</span></pre></td></tr>
@@ -720,6 +720,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/5/14 8:24 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/7/14 5:36 PM.</div>
 </body>
 </html>

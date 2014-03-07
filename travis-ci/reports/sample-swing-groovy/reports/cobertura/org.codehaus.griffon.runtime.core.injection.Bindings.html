@@ -107,7 +107,7 @@
 <tr>  <td class="numLineCover">&nbsp;40</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<span class="keyword">public</span> <span class="keyword">class</span> Bindings {</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;41</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; AnnotatedBindingBuilder&lt;T&gt; bind(@Nonnull Class&lt;T&gt; clazz) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;42</td>  <td class="nbHitsCovered">&nbsp;232</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(clazz, <span class="string">"Argument 'class' cannot be null"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;42</td>  <td class="nbHitsCovered">&nbsp;232</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(clazz, <span class="string">"Argument 'class' must not be null"</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;43</td>  <td class="nbHitsCovered">&nbsp;232</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> <span class="keyword">new</span> AnnotatedBindingBuilderImpl&lt;&gt;(clazz);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;44</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
@@ -145,7 +145,7 @@
   <td class="src"><pre class="src">&nbsp;        @Override</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;63</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">public</span> SingletonBindingBuilder&lt;T&gt; to(@Nonnull Class&lt;? <span class="keyword">extends</span> T&gt; target) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;64</td>  <td class="nbHitsCovered">&nbsp;128</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.target = requireNonNull(target, <span class="string">"Argument 'target' cannot be null"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;64</td>  <td class="nbHitsCovered">&nbsp;128</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.target = requireNonNull(target, <span class="string">"Argument 'target' must not be null"</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;65</td>  <td class="nbHitsCovered">&nbsp;128</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">this</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;66</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
@@ -155,7 +155,7 @@
   <td class="src"><pre class="src">&nbsp;        @Override</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;69</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">public</span> <span class="keyword">void</span> toInstance(@Nonnull T instance) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;70</td>  <td class="nbHitsCovered">&nbsp;20</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.instance = requireNonNull(instance, <span class="string">"Argument 'instance' cannot be null"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;70</td>  <td class="nbHitsCovered">&nbsp;20</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.instance = requireNonNull(instance, <span class="string">"Argument 'instance' must not be null"</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;71</td>  <td class="nbHitsCovered">&nbsp;20</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;72</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
@@ -165,7 +165,7 @@
   <td class="src"><pre class="src">&nbsp;        @Override</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;75</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">public</span> SingletonBindingBuilder&lt;T&gt; toProvider(@Nonnull Provider&lt;T&gt; provider) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;76</td>  <td class="nbHitsCovered">&nbsp;56</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.provider = requireNonNull(provider, <span class="string">"Argument 'provider' cannot be null"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;76</td>  <td class="nbHitsCovered">&nbsp;56</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.provider = requireNonNull(provider, <span class="string">"Argument 'provider' must not be null"</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;77</td>  <td class="nbHitsCovered">&nbsp;56</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">this</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;78</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
@@ -177,7 +177,7 @@
   <td class="src"><pre class="src">&nbsp;        @Override</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;82</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">public</span> SingletonBindingBuilder&lt;T&gt; toProvider(@Nonnull Class&lt;? <span class="keyword">extends</span> Provider&lt;T&gt;&gt; providerType) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;83</td>  <td class="nbHitsCovered">&nbsp;8</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.providerType = requireNonNull(providerType, <span class="string">"Argument 'providerType' cannot be null"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;83</td>  <td class="nbHitsCovered">&nbsp;8</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.providerType = requireNonNull(providerType, <span class="string">"Argument 'providerType' must not be null"</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;84</td>  <td class="nbHitsCovered">&nbsp;8</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">this</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;85</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
@@ -195,7 +195,7 @@
 <tr>  <td class="numLine">&nbsp;92</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;93</td>  <td class="nbHitsCovered">&nbsp;232</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">private</span> AnnotatedBindingBuilderImpl(@Nonnull Class&lt;T&gt; source) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;94</td>  <td class="nbHitsCovered">&nbsp;232</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.source = requireNonNull(source, <span class="string">"Argument 'source' cannot be null"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;94</td>  <td class="nbHitsCovered">&nbsp;232</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.source = requireNonNull(source, <span class="string">"Argument 'source' must not be null"</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;95</td>  <td class="nbHitsCovered">&nbsp;232</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;96</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
@@ -228,7 +228,7 @@
   <td class="src"><pre class="src">&nbsp;        @Override</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;115</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">public</span> LinkedBindingBuilder&lt;T&gt; withClassifier(@Nonnull Class&lt;? <span class="keyword">extends</span> Annotation&gt; annotationType) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;116</td>  <td class="nbHitsCovered">&nbsp;92</td>  <td class="src"><pre class="src">&nbsp;            requireNonNull(annotationType, <span class="string">"Argument 'annotationType' cannot be null"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;116</td>  <td class="nbHitsCovered">&nbsp;92</td>  <td class="src"><pre class="src">&nbsp;            requireNonNull(annotationType, <span class="string">"Argument 'annotationType' must not be null"</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;117</td>  <td class="nbHitsCovered">&nbsp;92</td>  <td class="src"><pre class="src">&nbsp;            AnnotationUtils.requireAnnotation(annotationType, Qualifier.<span class="keyword">class</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;118</td>  <td class="nbHitsCovered">&nbsp;92</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.classifierType = annotationType;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;119</td>  <td class="nbHitsCovered">&nbsp;92</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">this</span>;</pre></td></tr>
@@ -242,7 +242,7 @@
   <td class="src"><pre class="src">&nbsp;        @Override</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;124</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">public</span> LinkedBindingBuilder&lt;T&gt; withClassifier(@Nonnull Annotation annotation) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;125</td>  <td class="nbHitsCovered">&nbsp;92</td>  <td class="src"><pre class="src">&nbsp;            requireNonNull(annotation, <span class="string">"Argument 'annotation' cannot be null"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;125</td>  <td class="nbHitsCovered">&nbsp;92</td>  <td class="src"><pre class="src">&nbsp;            requireNonNull(annotation, <span class="string">"Argument 'annotation' must not be null"</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;126</td>  <td class="nbHitsCovered">&nbsp;92</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.classifier = annotation;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;127</td>  <td class="nbHitsCovered">&nbsp;92</td>  <td class="src"><pre class="src">&nbsp;            withClassifier(annotation.getClass());</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;128</td>  <td class="nbHitsCovered">&nbsp;92</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">this</span>;</pre></td></tr>
@@ -605,6 +605,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/5/14 8:22 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/7/14 5:35 PM.</div>
 </body>
 </html>

@@ -89,7 +89,7 @@
 <tr>  <td class="numLine">&nbsp;35</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="keyword">public</span> <span class="keyword">class</span> GroovyScriptResourceBundle <span class="keyword">extends</span> ResourceBundle {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;36</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_READER_NULL = <span class="string">"Argument 'reader' cannot be null"</span>;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_READER_NULL = <span class="string">"Argument 'reader' must not be null"</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;37</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">final</span> ConfigObject config;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;38</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">final</span> List&lt;String&gt; keys = <span class="keyword">new</span> ArrayList&lt;&gt;();</pre></td></tr>
@@ -124,7 +124,7 @@
 <tr>  <td class="numLine">&nbsp;57</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    @SuppressWarnings(<span class="string">"unchecked"</span>)</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;58</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> GroovyScriptResourceBundle(@Nonnull ConfigObject config, @Nonnull String source) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;59</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.config = requireNonNull(config, <span class="string">"Argument 'config' cannot be null"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;59</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.config = requireNonNull(config, <span class="string">"Argument 'config' must not be null"</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;60</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.source = source;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;61</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        keys.addAll(<span class="keyword">this</span>.config.flatten(<span class="keyword">new</span> LinkedHashMap&lt;&gt;()).keySet());</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;62</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
@@ -156,7 +156,7 @@
   <td class="src"><pre class="src">&nbsp;    @SuppressWarnings(<span class="string">"unchecked"</span>)</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;77</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> Object handleGetObject(@Nonnull String key) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;78</td>  <td class="nbHitsCovered">&nbsp;20</td>  <td class="src"><pre class="src">&nbsp;        Object value = getConfigValue(config, requireNonBlank(key, <span class="string">"Argument 'key' cannot be blank"</span>), <span class="keyword">null</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;78</td>  <td class="nbHitsCovered">&nbsp;20</td>  <td class="src"><pre class="src">&nbsp;        Object value = getConfigValue(config, requireNonBlank(key, <span class="string">"Argument 'key' must not be blank"</span>), <span class="keyword">null</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;79</td>  <td class="nbHitsUncovered"><a title="Line 79: Conditional coverage 50% (1/2).">&nbsp;20</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 79: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (<span class="keyword">null</span> == value) <span class="keyword">return</span> <span class="keyword">null</span>;</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;80</td>  <td class="nbHitsUncovered"><a title="Line 80: Conditional coverage 50% (1/2).">&nbsp;20</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 80: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (value <span class="keyword">instanceof</span> ConfigObject) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;81</td>  <td class="nbHitsUncovered"><a title="Line 81: Conditional coverage 0% (0/2).">&nbsp;0</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 81: Conditional coverage 0% (0/2).">            <span class="keyword">return</span> ((ConfigObject) value).isEmpty() ? <span class="keyword">null</span> : value;</a></span></pre></td></tr>
@@ -195,6 +195,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/5/14 8:24 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/7/14 5:36 PM.</div>
 </body>
 </html>

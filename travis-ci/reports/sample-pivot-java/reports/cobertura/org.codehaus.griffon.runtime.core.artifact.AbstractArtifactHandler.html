@@ -100,7 +100,7 @@
 <tr>  <td class="numLine">&nbsp;41</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> AbstractArtifactHandler&lt;A <span class="keyword">extends</span> GriffonArtifact&gt; <span class="keyword">implements</span> ArtifactHandler&lt;A&gt; {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;42</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_CLASS_NULL = <span class="string">"Argument 'class' cannot be null"</span>;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_CLASS_NULL = <span class="string">"Argument 'class' must not be null"</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;43</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">final</span> Class&lt;A&gt; artifactType;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;44</td>  <td class="nbHits">&nbsp;</td>
@@ -118,10 +118,10 @@
 <tr>  <td class="numLine">&nbsp;51</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    @Inject</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;52</td>  <td class="nbHitsCovered">&nbsp;16</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> AbstractArtifactHandler(@Nonnull GriffonApplication application, @Nonnull Class&lt;A&gt; artifactType, @Nonnull String type, @Nonnull String trailing) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;53</td>  <td class="nbHitsCovered">&nbsp;16</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.application = requireNonNull(application, <span class="string">"Argument 'application' cannot be null"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;54</td>  <td class="nbHitsCovered">&nbsp;16</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.artifactType = requireNonNull(artifactType, <span class="string">"Argument 'artifactType' cannot be null"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;55</td>  <td class="nbHitsCovered">&nbsp;16</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.type = requireNonBlank(type, <span class="string">"Argument 'type' cannot be blank"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;56</td>  <td class="nbHitsCovered">&nbsp;16</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.trailing = requireNonNull(trailing, <span class="string">"Argument 'trailing' cannot be null"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;53</td>  <td class="nbHitsCovered">&nbsp;16</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.application = requireNonNull(application, <span class="string">"Argument 'application' must not be null"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;54</td>  <td class="nbHitsCovered">&nbsp;16</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.artifactType = requireNonNull(artifactType, <span class="string">"Argument 'artifactType' must not be null"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;55</td>  <td class="nbHitsCovered">&nbsp;16</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.type = requireNonBlank(type, <span class="string">"Argument 'type' must not be blank"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;56</td>  <td class="nbHitsCovered">&nbsp;16</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.trailing = requireNonNull(trailing, <span class="string">"Argument 'trailing' must not be null"</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;57</td>  <td class="nbHitsCovered">&nbsp;16</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;58</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
@@ -244,7 +244,7 @@
   <td class="src"><pre class="src">&nbsp;    @Nullable</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;131</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> GriffonClass getClassFor(@Nonnull String fqnClassName) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;132</td>  <td class="nbHitsCovered">&nbsp;72</td>  <td class="src"><pre class="src">&nbsp;        requireNonBlank(fqnClassName, <span class="string">"Argument 'fqnClassName' cannot be blank"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;132</td>  <td class="nbHitsCovered">&nbsp;72</td>  <td class="src"><pre class="src">&nbsp;        requireNonBlank(fqnClassName, <span class="string">"Argument 'fqnClassName' must not be blank"</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;133</td>  <td class="nbHitsCovered">&nbsp;72</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> classesByName.get(fqnClassName);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;134</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
@@ -254,7 +254,7 @@
   <td class="src"><pre class="src">&nbsp;    @Nullable</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;137</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> GriffonClass findClassFor(@Nonnull String propertyName) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;138</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonBlank(propertyName, <span class="string">"Argument 'propertyName' cannot be blank"</span>);</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;138</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonBlank(propertyName, <span class="string">"Argument 'propertyName' must not be blank"</span>);</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;139</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;140</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        String simpleName = propertyName;</span></pre></td></tr>
@@ -307,6 +307,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/5/14 8:22 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/7/14 5:34 PM.</div>
 </body>
 </html>

@@ -99,8 +99,8 @@
 <tr>  <td class="numLine">&nbsp;42</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;43</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> CompositeResourceBundle(@Nonnull ResourceBundle[] bundles) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;44</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(bundles, <span class="string">"Argument 'bundles' cannot be null"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;45</td>  <td class="nbHitsUncovered"><a title="Line 45: Conditional coverage 50% (1/2).">&nbsp;4</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 45: Conditional coverage 50% (1/2).">        requireState(bundles.length &gt; 0, <span class="string">"Argument 'bundles' cannot be empty"</span>);</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;44</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(bundles, <span class="string">"Argument 'bundles' must not be null"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;45</td>  <td class="nbHitsUncovered"><a title="Line 45: Conditional coverage 50% (1/2).">&nbsp;4</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 45: Conditional coverage 50% (1/2).">        requireState(bundles.length &gt; 0, <span class="string">"Argument 'bundles' must not be empty"</span>);</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;46</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.bundles = <span class="keyword">new</span> ResourceBundle[bundles.length];</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;47</td>  <td class="nbHitsCovered"><a title="Line 47: Conditional coverage 100% (2/2).">&nbsp;8</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 47: Conditional coverage 100% (2/2).">        <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i &lt; bundles.length; i++) {</a></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;48</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.bundles[i] = wrapResourceBundle(bundles[i]);</pre></td></tr>
@@ -126,7 +126,7 @@
   <td class="src"><pre class="src">&nbsp;    @Nullable</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;63</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> Object handleGetObject(@Nonnull String key) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;64</td>  <td class="nbHitsCovered">&nbsp;44</td>  <td class="src"><pre class="src">&nbsp;        requireNonBlank(key, <span class="string">"Arguments 'key' cannot be blank"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;64</td>  <td class="nbHitsCovered">&nbsp;44</td>  <td class="src"><pre class="src">&nbsp;        requireNonBlank(key, <span class="string">"Arguments 'key' must not be blank"</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;65</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;66</td>  <td class="nbHitsCovered">&nbsp;44</td>  <td class="src"><pre class="src">&nbsp;        LOG.trace(<span class="string">"Searching key={}"</span>, key);</pre></td></tr>
@@ -192,7 +192,7 @@
   <td class="src"><pre class="src">&nbsp;    @Nonnull</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;104</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> ResourceBundle[] toResourceBundleArray(@Nonnull Collection&lt;ResourceBundle&gt; bundles) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;105</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(bundles, <span class="string">"Argument 'bundles' cannot be null"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;105</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(bundles, <span class="string">"Argument 'bundles' must not be null"</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;106</td>  <td class="nbHitsUncovered"><a title="Line 106: Conditional coverage 50% (1/2).">&nbsp;4</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 106: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (bundles.isEmpty()) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;107</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            <span class="keyword">return</span> <span class="keyword">new</span> ResourceBundle[0];</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;108</td>  <td class="nbHits">&nbsp;</td>
@@ -204,6 +204,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/5/14 8:24 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/7/14 5:36 PM.</div>
 </body>
 </html>

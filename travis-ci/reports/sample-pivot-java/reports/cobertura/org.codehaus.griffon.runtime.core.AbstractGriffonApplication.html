@@ -129,7 +129,7 @@
 <tr>  <td class="numLine">&nbsp;55</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> AbstractGriffonApplication <span class="keyword">extends</span> AbstractObservable <span class="keyword">implements</span> GriffonApplication {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;56</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_SHUTDOWN_HANDLER_NULL = <span class="string">"Argument 'shutdownHandler' cannot be null"</span>;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ERROR_SHUTDOWN_HANDLER_NULL = <span class="string">"Argument 'shutdownHandler' must not be null"</span>;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;57</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> Locale locale = Locale.getDefault();</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;58</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String[] EMPTY_ARGS = <span class="keyword">new</span> String[0];</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;59</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Class&lt;?&gt;[] CTOR_ARGS = <span class="keyword">new</span> Class&lt;?&gt;[]{String[].<span class="keyword">class</span>};</pre></td></tr>
@@ -164,7 +164,7 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;80</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">void</span> setInjector(@Nonnull Injector&lt;?&gt; injector) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;81</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.injector = requireNonNull(injector, <span class="string">"Argument 'injector' cannot be bull"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;81</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.injector = requireNonNull(injector, <span class="string">"Argument 'injector' must not be bull"</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;82</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.injector.injectMembers(<span class="keyword">this</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;83</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        addShutdownHandler(getWindowManager());</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;84</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        MVCGroupExceptionHandler.registerWith(<span class="keyword">this</span>);</pre></td></tr>
@@ -240,7 +240,7 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;130</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">void</span> setPhase(@Nonnull ApplicationPhase phase) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;131</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(phase, <span class="string">"Argument 'phase' cannot be null"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;131</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(phase, <span class="string">"Argument 'phase' must not be null"</span>);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;132</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">synchronized</span> (lock) {</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;133</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;            firePropertyChange(<span class="string">"phase"</span>, <span class="keyword">this</span>.phase, <span class="keyword">this</span>.phase = phase);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;134</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
@@ -622,6 +622,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/5/14 8:22 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 3/7/14 5:34 PM.</div>
 </body>
 </html>
