@@ -33,7 +33,7 @@ public class DefaultResourceHandler extends AbstractResourceHandler {
 
     @Inject
     public DefaultResourceHandler(@Nonnull ApplicationClassLoader applicationClassLoader) {
-        this.applicationClassLoader = requireNonNull(applicationClassLoader, "Argument 'applicationClassLoader' cannot be null");
+        this.applicationClassLoader = requireNonNull(applicationClassLoader, "Argument 'applicationClassLoader' must not be null");
     }
 
     @Nonnull

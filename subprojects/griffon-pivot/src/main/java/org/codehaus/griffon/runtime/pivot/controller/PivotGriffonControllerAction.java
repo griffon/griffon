@@ -42,7 +42,7 @@ public class PivotGriffonControllerAction extends AbstractAction {
 
     public PivotGriffonControllerAction(final @Nonnull UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
         super(actionManager, controller, actionName);
-        requireNonNull(uiThreadManager, "Argument 'uiThreadManager' cannot be null");
+        requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be null");
 
         toolkitAction = new PivotAction(new CallableWithArgs<Void>() {
             @Nullable

@@ -43,12 +43,12 @@ public class AnnotationUtils {
     }
 
     public static boolean isAnnotatedWith(@Nonnull Object instance, @Nonnull Class<? extends Annotation> annotationType) {
-        return isAnnotatedWith(requireNonNull(instance, "Argument 'instance' cannot be null").getClass(), annotationType);
+        return isAnnotatedWith(requireNonNull(instance, "Argument 'instance' must not be null").getClass(), annotationType);
     }
 
     public static boolean isAnnotatedWith(@Nonnull Class<?> clazz, @Nonnull Class<? extends Annotation> annotationType) {
-        requireNonNull(clazz, "Argument 'class' cannot be null");
-        requireNonNull(annotationType, "Argument 'annotationType' cannot be null");
+        requireNonNull(clazz, "Argument 'class' must not be null");
+        requireNonNull(annotationType, "Argument 'annotationType' must not be null");
 
         //noinspection ConstantConditions
         while (clazz != null) {
@@ -118,10 +118,10 @@ public class AnnotationUtils {
 
     @Nonnull
     public static <T> Map<String, T> sortByDependencies(@Nonnull Collection<T> instances, @Nonnull String suffix, @Nonnull String type, @Nonnull List<String> order) {
-        requireNonNull(instances, "Argument 'instances' cannot be null");
-        requireNonNull(suffix, "Argument 'suffix' cannot be null");
-        requireNonNull(type, "Argument 'type' cannot be null");
-        requireNonNull(order, "Argument 'order' cannot be null");
+        requireNonNull(instances, "Argument 'instances' must not be null");
+        requireNonNull(suffix, "Argument 'suffix' must not be null");
+        requireNonNull(type, "Argument 'type' must not be null");
+        requireNonNull(order, "Argument 'order' must not be null");
 
         Map<String, T> instancesByName = mapInstancesByName(instances, suffix);
 
@@ -224,17 +224,17 @@ public class AnnotationUtils {
 
     @Nonnull
     public static Named named(@Nonnull String name) {
-        return new NamedImpl(requireNonNull(name, "Argument 'name' cannot be null"));
+        return new NamedImpl(requireNonNull(name, "Argument 'name' must not be null"));
     }
 
     @Nonnull
     public static Typed typed(@Nonnull Class<?> clazz) {
-        return new TypedImpl(requireNonNull(clazz, "Argument 'clazz' cannot be null"));
+        return new TypedImpl(requireNonNull(clazz, "Argument 'clazz' must not be null"));
     }
 
     @Nonnull
     public static BindTo bindto(@Nonnull Class<?> clazz) {
-        return new BindToImpl(requireNonNull(clazz, "Argument 'clazz' cannot be null"));
+        return new BindToImpl(requireNonNull(clazz, "Argument 'clazz' must not be null"));
     }
 
     /**

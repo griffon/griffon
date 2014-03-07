@@ -30,14 +30,14 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class DefaultLanternaWindowDisplayHandler implements LanternaWindowDisplayHandler {
-    private static final String ERROR_NAME_BLANK = "Argument 'name' cannot be null";
-    private static final String ERROR_WINDOW_NULL = "Argument 'window' cannot be null";
+    private static final String ERROR_NAME_BLANK = "Argument 'name' must not be null";
+    private static final String ERROR_WINDOW_NULL = "Argument 'window' must not be null";
 
     private final GUIScreen screen;
 
     @Inject
     public DefaultLanternaWindowDisplayHandler(@Nonnull GUIScreen screen) {
-        this.screen = requireNonNull(screen, "Argument 'screen' cannot be null");
+        this.screen = requireNonNull(screen, "Argument 'screen' must not be null");
     }
 
     public void show(@Nonnull String name, @Nonnull Window window) {

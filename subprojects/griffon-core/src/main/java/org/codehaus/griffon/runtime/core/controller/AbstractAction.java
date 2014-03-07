@@ -40,9 +40,9 @@ public abstract class AbstractAction extends AbstractObservable implements Actio
     private final Object lock = new Object[0];
 
     public AbstractAction(@Nonnull ActionManager actionManager, @Nonnull GriffonController controller, @Nonnull String actionName) {
-        this.actionManager = requireNonNull(actionManager, "Argument 'actionManager' cannot be null");
-        this.controller = requireNonNull(controller, "Argument 'controller' cannot be null");
-        this.actionName = requireNonBlank(actionName, "Argument 'actionName' cannot be blank");
+        this.actionManager = requireNonNull(actionManager, "Argument 'actionManager' must not be null");
+        this.controller = requireNonNull(controller, "Argument 'controller' must not be null");
+        this.actionName = requireNonBlank(actionName, "Argument 'actionName' must not be blank");
     }
 
     @Nonnull

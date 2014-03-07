@@ -30,7 +30,7 @@ public final class Qualified<T> {
     private final T instance;
 
     public Qualified(@Nonnull T instance, @Nullable Annotation qualifier) {
-        this.instance = requireNonNull(instance, "Argument 'instance' cannot be null");
+        this.instance = requireNonNull(instance, "Argument 'instance' must not be null");
         this.qualifier = qualifier;
     }
 

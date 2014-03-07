@@ -41,7 +41,7 @@ public class MethodDescriptor implements Comparable<MethodDescriptor> {
 
     @Nonnull
     public static MethodDescriptor forMethod(@Nonnull Method method, boolean removeAbstractModifier) {
-        requireNonNull(method, "Argument 'method' cannot be null");
+        requireNonNull(method, "Argument 'method' must not be null");
         int modifiers = method.getModifiers();
         if (removeAbstractModifier) {
             modifiers -= Modifier.ABSTRACT;
@@ -82,8 +82,8 @@ public class MethodDescriptor implements Comparable<MethodDescriptor> {
     }
 
     public MethodDescriptor(@Nonnull String methodName, @Nonnull Class<?>[] paramTypes, int modifiers) {
-        this.methodName = requireNonBlank(methodName, "Argment 'methodName' cannot be blank");
-        requireNonNull(paramTypes, "Argument 'paramTypes' cannot be null");
+        this.methodName = requireNonBlank(methodName, "Argment 'methodName' must not be blank");
+        requireNonNull(paramTypes, "Argument 'paramTypes' must not be null");
 
         this.paramTypes = new String[paramTypes.length];
         for (int i = 0; i < paramTypes.length; i++) {
@@ -95,8 +95,8 @@ public class MethodDescriptor implements Comparable<MethodDescriptor> {
     }
 
     public MethodDescriptor(@Nonnull String methodName, @Nonnull String[] paramTypes, int modifiers) {
-        this.methodName = requireNonBlank(methodName, "Argment 'methodName' cannot be blank");
-        requireNonNull(paramTypes, "Argument 'paramTypes' cannot be null");
+        this.methodName = requireNonBlank(methodName, "Argment 'methodName' must not be blank");
+        requireNonNull(paramTypes, "Argument 'paramTypes' must not be null");
 
         this.paramTypes = new String[paramTypes.length];
         System.arraycopy(paramTypes, 0, this.paramTypes, 0, paramTypes.length);
@@ -162,7 +162,7 @@ public class MethodDescriptor implements Comparable<MethodDescriptor> {
     }
 
     public boolean matches(@Nonnull MethodDescriptor md) {
-        requireNonNull(md, "Argument 'methodDescriptor' cannot be null");
+        requireNonNull(md, "Argument 'methodDescriptor' must not be null");
         if (!methodName.equals(md.methodName) ||
             modifiers != md.modifiers ||
             paramTypes.length != md.paramTypes.length) {

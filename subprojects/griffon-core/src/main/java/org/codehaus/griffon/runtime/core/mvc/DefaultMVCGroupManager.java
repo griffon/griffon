@@ -59,7 +59,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     @Inject
     public DefaultMVCGroupManager(@Nonnull GriffonApplication application, @Nonnull ApplicationClassLoader applicationClassLoader) {
         super(application);
-        this.applicationClassLoader = requireNonNull(applicationClassLoader, "Argument 'applicationClassLoader' cannot be null");
+        this.applicationClassLoader = requireNonNull(applicationClassLoader, "Argument 'applicationClassLoader' must not be null");
     }
 
     @Nonnull
@@ -73,7 +73,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     }
 
     protected void doInitialize(@Nonnull Map<String, MVCGroupConfiguration> configurations) {
-        requireNonNull(configurations, "Argument 'configurations' cannot be null");
+        requireNonNull(configurations, "Argument 'configurations' must not be null");
         for (MVCGroupConfiguration configuration : configurations.values()) {
             addConfiguration(configuration);
         }

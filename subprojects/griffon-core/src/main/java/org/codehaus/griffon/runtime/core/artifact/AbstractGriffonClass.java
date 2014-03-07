@@ -46,10 +46,10 @@ import static org.codehaus.griffon.runtime.core.artifact.ClassPropertyFetcher.fo
  * @since 2.0.0
  */
 public abstract class AbstractGriffonClass implements GriffonClass {
-    private static final String ERROR_NAME_BLANK = "Argument 'name' cannot be blank";
-    private static final String ERROR_ARTIFACT_TYPE_BLANK = "Argument 'artifactType' cannot be blank";
-    private static final String ERROR_TYPE_NULL = "Argument 'type' cannot be null";
-    private static final String ERROR_APPLICATION_NULL = "Argument 'application' cannot be null";
+    private static final String ERROR_NAME_BLANK = "Argument 'name' must not be blank";
+    private static final String ERROR_ARTIFACT_TYPE_BLANK = "Argument 'artifactType' must not be blank";
+    private static final String ERROR_TYPE_NULL = "Argument 'type' must not be null";
+    private static final String ERROR_APPLICATION_NULL = "Argument 'application' must not be null";
 
     private final GriffonApplication application;
     private final Class<?> clazz;

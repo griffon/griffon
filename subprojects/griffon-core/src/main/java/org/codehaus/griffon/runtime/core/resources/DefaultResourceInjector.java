@@ -34,7 +34,7 @@ public class DefaultResourceInjector extends AbstractResourceInjector {
 
     @Inject
     public DefaultResourceInjector(@Nonnull ResourceResolver resourceResolver) {
-        this.resourceResolver = requireNonNull(resourceResolver, "Argument 'resourceResolver' cannot be null");
+        this.resourceResolver = requireNonNull(resourceResolver, "Argument 'resourceResolver' must not be null");
     }
 
     @Nullable

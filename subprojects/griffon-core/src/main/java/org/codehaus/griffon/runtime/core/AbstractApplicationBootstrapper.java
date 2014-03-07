@@ -45,7 +45,7 @@ public abstract class AbstractApplicationBootstrapper implements ApplicationBoot
     protected final GriffonApplication application;
 
     public AbstractApplicationBootstrapper(@Nonnull GriffonApplication application) {
-        this.application = requireNonNull(application, "Argument 'application' cannot be null");
+        this.application = requireNonNull(application, "Argument 'application' must not be null");
     }
 
     @Override

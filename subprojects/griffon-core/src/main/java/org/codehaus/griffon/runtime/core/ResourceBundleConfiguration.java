@@ -30,13 +30,13 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class ResourceBundleConfiguration extends AbstractConfiguration {
-    protected static final String ERROR_KEY_BLANK = "Argument 'key' cannot be blank";
+    protected static final String ERROR_KEY_BLANK = "Argument 'key' must not be blank";
     private final ResourceBundle resourceBundle;
     private final Map<String, Object> flatMap = new LinkedHashMap<>();
 
     @Inject
     public ResourceBundleConfiguration(@Nonnull ResourceBundle resourceBundle) {
-        this.resourceBundle = requireNonNull(resourceBundle, "Argument 'resourceBundle' cannot be null");
+        this.resourceBundle = requireNonNull(resourceBundle, "Argument 'resourceBundle' must not be null");
         Enumeration<String> keys = resourceBundle.getKeys();
         while (keys.hasMoreElements()) {
             String key = keys.nextElement();

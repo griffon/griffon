@@ -62,11 +62,11 @@ public class GriffonUnitRule implements MethodRule {
     }
 
     public GriffonUnitRule(@Nonnull String[] startupArgs, @Nonnull Class<? extends GriffonApplication> applicationClass, @Nonnull Class<? extends ApplicationBootstrapper> applicationBootstrapper) {
-        requireNonNull(startupArgs, "Argument 'startupArgs' cannot be null");
+        requireNonNull(startupArgs, "Argument 'startupArgs' must not be null");
         this.startupArgs = new String[startupArgs.length];
         System.arraycopy(startupArgs, 0, this.startupArgs, 0, startupArgs.length);
-        this.applicationClass = requireNonNull(applicationClass, "Argument 'applicationClass' cannot be null");
-        this.applicationBootstrapper = requireNonNull(applicationBootstrapper, "Argument 'applicationBootstrapper' cannot be null");
+        this.applicationClass = requireNonNull(applicationClass, "Argument 'applicationClass' must not be null");
+        this.applicationBootstrapper = requireNonNull(applicationBootstrapper, "Argument 'applicationBootstrapper' must not be null");
         if (!Environment.isSystemSet()) {
             System.setProperty(Environment.KEY, Environment.TEST.getName());
         }

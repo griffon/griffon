@@ -38,8 +38,8 @@ public class DefaultTaskManager implements TaskManager {
     private GriffonApplication application;
 
     public DefaultTaskManager(@Nonnull GriffonApplication application, @Nonnull ExecutorServiceManager executorServiceManager, final TaskBlocker blocker) {
-        this.application = requireNonNull(application, "Argument 'application' cannot be null");
-        this.executorServiceManager = requireNonNull(executorServiceManager, "Argument 'executorServiceManager' cannot be bull");
+        this.application = requireNonNull(application, "Argument 'application' must not be null");
+        this.executorServiceManager = requireNonNull(executorServiceManager, "Argument 'executorServiceManager' must not be bull");
         taskListenerSupport = createTaskListenerSupport();
 
         blocker.setTaskManager(this);

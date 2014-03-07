@@ -50,14 +50,14 @@ import static java.util.Objects.requireNonNull;
 public abstract class AbstractResourceInjector implements ResourceInjector {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractResourceInjector.class);
 
-    protected static final String ERROR_INSTANCE_NULL = "Argument 'instance' cannot be null";
-    protected static final String ERROR_METHOD_NULL = "Argument 'method' cannot be null";
-    protected static final String ERROR_FIELD_NULL = "Argument 'field' cannot be null";
-    protected static final String ERROR_CLASS_NULL = "Argument 'klass' cannot be null";
-    protected static final String ERROR_TYPE_NULL = "Argument 'type' cannot be null";
-    protected static final String ERROR_VALUE_NULL = "Argument 'value' cannot be null";
-    protected static final String ERROR_FULLY_QUALIFIED_NAME_BLANK = "Argument 'fqName' cannot be blank";
-    protected static final String ERROR_FULLY_QUALIFIED_FIELD_NAME_BLANK = "Argument 'fqFieldName' cannot be blank";
+    protected static final String ERROR_INSTANCE_NULL = "Argument 'instance' must not be null";
+    protected static final String ERROR_METHOD_NULL = "Argument 'method' must not be null";
+    protected static final String ERROR_FIELD_NULL = "Argument 'field' must not be null";
+    protected static final String ERROR_CLASS_NULL = "Argument 'klass' must not be null";
+    protected static final String ERROR_TYPE_NULL = "Argument 'type' must not be null";
+    protected static final String ERROR_VALUE_NULL = "Argument 'value' must not be null";
+    protected static final String ERROR_FULLY_QUALIFIED_NAME_BLANK = "Argument 'fqName' must not be blank";
+    protected static final String ERROR_FULLY_QUALIFIED_FIELD_NAME_BLANK = "Argument 'fqFieldName' must not be blank";
 
     @Override
     public void injectResources(@Nonnull Object instance) {

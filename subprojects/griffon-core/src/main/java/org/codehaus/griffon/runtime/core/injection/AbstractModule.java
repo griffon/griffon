@@ -57,7 +57,7 @@ public abstract class AbstractModule implements Module {
     }
 
     protected <T> AnnotatedBindingBuilder<T> bind(@Nonnull Class<T> clazz) {
-        requireNonNull(clazz, "Argument 'class' cannot be null");
+        requireNonNull(clazz, "Argument 'class' must not be null");
         if (currentBinding != null) {
             bindings.add(currentBinding.getBinding());
         }

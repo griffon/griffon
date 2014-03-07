@@ -49,7 +49,7 @@ public class ThemeAwareResourceInjector extends AbstractResourceInjector {
 
     @Inject
     public ThemeAwareResourceInjector(@Nonnull GriffonApplication application, @Nonnull ThemeManager themeManager) {
-        this.application = requireNonNull(application, "Argument 'application' cannot be null");
+        this.application = requireNonNull(application, "Argument 'application' must not be null");
         this.themeManager = themeManager;
 
         themeManager.addPropertyChangeListener(ThemeManager.PROPERTY_CURRENT_THEME, new PropertyChangeListener() {
@@ -84,7 +84,7 @@ public class ThemeAwareResourceInjector extends AbstractResourceInjector {
 
     @Override
     public void injectResources(@Nonnull Object instance) {
-        requireNonNull(instance, "Argument 'instance' cannot be null");
+        requireNonNull(instance, "Argument 'instance' must not be null");
         if (instance.getClass().getAnnotation(ThemeAware.class) == null) {
             super.injectResources(instance);
         } else {

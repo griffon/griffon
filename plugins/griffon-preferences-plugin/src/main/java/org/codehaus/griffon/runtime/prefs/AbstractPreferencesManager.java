@@ -53,10 +53,10 @@ import static java.util.Objects.requireNonNull;
 public abstract class AbstractPreferencesManager implements PreferencesManager {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractPreferencesManager.class);
 
-    protected static final String ERROR_INSTANCE_NULL = "Argument 'instance' cannot be null";
-    protected static final String ERROR_FIELD_NULL = "Argument 'field' cannot be null";
-    protected static final String ERROR_TYPE_NULL = "Argument 'type' cannot be null";
-    protected static final String ERROR_VALUE_NULL = "Argument 'value' cannot be null";
+    protected static final String ERROR_INSTANCE_NULL = "Argument 'instance' must not be null";
+    protected static final String ERROR_FIELD_NULL = "Argument 'field' must not be null";
+    protected static final String ERROR_TYPE_NULL = "Argument 'type' must not be null";
+    protected static final String ERROR_VALUE_NULL = "Argument 'value' must not be null";
 
     private final GriffonApplication application;
     private final InstanceStore instanceStore = new InstanceStore();

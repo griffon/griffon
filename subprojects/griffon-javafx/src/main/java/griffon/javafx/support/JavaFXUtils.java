@@ -39,15 +39,15 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  */
 public final class JavaFXUtils {
-    private static final String ERROR_CONTROL_NULL = "Argument 'control' cannot be null";
+    private static final String ERROR_CONTROL_NULL = "Argument 'control' must not be null";
 
     private JavaFXUtils() {
 
     }
 
     public static void configure(final @Nonnull ButtonBase control, final @Nonnull JavaFXAction action) {
-        requireNonNull(control, "Argument 'control' cannot be null");
-        requireNonNull(action, "Argument 'action' cannot be null");
+        requireNonNull(control, "Argument 'control' must not be null");
+        requireNonNull(action, "Argument 'action' must not be null");
 
         action.onActionProperty().addListener(new ChangeListener<EventHandler<ActionEvent>>() {
             @Override
@@ -108,7 +108,7 @@ public final class JavaFXUtils {
 
     public static void setIcon(@Nonnull ButtonBase control, @Nonnull String iconUrl) {
         requireNonNull(control, ERROR_CONTROL_NULL);
-        requireNonBlank(iconUrl, "Argument 'iconUrl' cannot be blank");
+        requireNonBlank(iconUrl, "Argument 'iconUrl' must not be blank");
 
         URL resource = Thread.currentThread().getContextClassLoader().getResource(iconUrl);
         if (resource != null) {
@@ -119,8 +119,8 @@ public final class JavaFXUtils {
 
     @Nullable
     public static Node findNode(@Nonnull Node root, @Nonnull String id) {
-        requireNonNull(root, "Argument 'root' cannot be null");
-        requireNonBlank(id, "Argument 'id' cannot be blank");
+        requireNonNull(root, "Argument 'root' must not be null");
+        requireNonBlank(id, "Argument 'id' must not be blank");
 
         if (id.equals(root.getId())) return root;
 

@@ -27,8 +27,8 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  */
 public abstract class AbstractPreferences implements Preferences {
-    private static final String ERROR_LISTENER_NULL = "Argument 'listener' cannot be null";
-    private static final String ERROR_EVENT_NULL = "Argument 'event' cannot be null";
+    private static final String ERROR_LISTENER_NULL = "Argument 'listener' must not be null";
+    private static final String ERROR_EVENT_NULL = "Argument 'event' must not be null";
 
     private final List<NodeChangeListener> nodeChangeListeners = new ArrayList<>();
     private final List<PreferenceChangeListener> changeListeners = new ArrayList<>();

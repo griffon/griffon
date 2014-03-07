@@ -37,7 +37,7 @@ public class DefaultMVCGroupConfiguration extends AbstractMVCGroupConfiguration 
     @Inject
     public DefaultMVCGroupConfiguration(@Nonnull MVCGroupManager mvcGroupManager, @Nonnull String mvcType, @Nonnull Map<String, String> members, @Nonnull Map<String, Object> config) {
         super(mvcType, members, config);
-        this.mvcGroupManager = requireNonNull(mvcGroupManager, "Argument 'mvcGroupManager' cannot be null");
+        this.mvcGroupManager = requireNonNull(mvcGroupManager, "Argument 'mvcGroupManager' must not be null");
     }
 
     public MVCGroupManager getMvcGroupManager() {

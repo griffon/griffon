@@ -33,7 +33,7 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class GroovyScriptResourceBundle extends ResourceBundle {
-    private static final String ERROR_READER_NULL = "Argument 'reader' cannot be null";
+    private static final String ERROR_READER_NULL = "Argument 'reader' must not be null";
     private final ConfigObject config;
     private final List<String> keys = new ArrayList<>();
     private final String source;
@@ -56,7 +56,7 @@ public class GroovyScriptResourceBundle extends ResourceBundle {
 
     @SuppressWarnings("unchecked")
     private GroovyScriptResourceBundle(@Nonnull ConfigObject config, @Nonnull String source) {
-        this.config = requireNonNull(config, "Argument 'config' cannot be null");
+        this.config = requireNonNull(config, "Argument 'config' must not be null");
         this.source = source;
         keys.addAll(this.config.flatten(new LinkedHashMap<>()).keySet());
     }
@@ -75,7 +75,7 @@ public class GroovyScriptResourceBundle extends ResourceBundle {
     @Override
     @SuppressWarnings("unchecked")
     protected Object handleGetObject(@Nonnull String key) {
-        Object value = getConfigValue(config, requireNonBlank(key, "Argument 'key' cannot be blank"), null);
+        Object value = getConfigValue(config, requireNonBlank(key, "Argument 'key' must not be blank"), null);
         if (null == value) return null;
         if (value instanceof ConfigObject) {
             return ((ConfigObject) value).isEmpty() ? null : value;

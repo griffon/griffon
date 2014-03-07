@@ -41,7 +41,7 @@ public abstract class AbstractMapResourceBundle extends ResourceBundle {
     @Nullable
     @Override
     protected final Object handleGetObject(@Nonnull String key) {
-        return entries.get(requireNonBlank(key, "Argument 'key' cannot be blank"));
+        return entries.get(requireNonBlank(key, "Argument 'key' must not be blank"));
     }
 
     @Nonnull

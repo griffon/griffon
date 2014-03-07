@@ -42,7 +42,7 @@ public abstract class AbstractMVCHandler implements MVCHandler {
 
     @Inject
     public AbstractMVCHandler(@Nonnull MVCGroupManager mvcGroupManager) {
-        this.mvcGroupManager = requireNonNull(mvcGroupManager, "Argument 'mvcGroupManager' cannot be null");
+        this.mvcGroupManager = requireNonNull(mvcGroupManager, "Argument 'mvcGroupManager' must not be null");
     }
 
     @Nonnull

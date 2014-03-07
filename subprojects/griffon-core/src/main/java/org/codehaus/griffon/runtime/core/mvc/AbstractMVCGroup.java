@@ -47,10 +47,10 @@ public abstract class AbstractMVCGroup implements MVCGroup {
     private final Object[] lock = new Object[0];
 
     public AbstractMVCGroup(@Nonnull MVCGroupManager mvcGroupManager, @Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> members) {
-        this.mvcGroupManager = requireNonNull(mvcGroupManager, "Argument 'mvcGroupManager' cannot be null");
-        this.configuration = requireNonNull(configuration, "Argument 'configuration' cannot be null");
+        this.mvcGroupManager = requireNonNull(mvcGroupManager, "Argument 'mvcGroupManager' must not be null");
+        this.configuration = requireNonNull(configuration, "Argument 'configuration' must not be null");
         this.mvcId = isBlank(mvcId) ? configuration.getMvcType() + "-" + UUID.randomUUID().toString() : mvcId;
-        this.members.putAll(requireNonNull(members, "Argument 'members' cannot be null"));
+        this.members.putAll(requireNonNull(members, "Argument 'members' must not be null"));
         this.alive = true;
     }
 
@@ -98,7 +98,7 @@ public abstract class AbstractMVCGroup implements MVCGroup {
     @Nullable
     @Override
     public Object getMember(@Nonnull String name) {
-        requireNonBlank(name, "Argument 'name' cannot be blank");
+        requireNonBlank(name, "Argument 'name' must not be blank");
         checkIfAlive();
         return members.get(name);
     }

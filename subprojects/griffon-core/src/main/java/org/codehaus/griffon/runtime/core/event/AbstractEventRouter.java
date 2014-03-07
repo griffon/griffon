@@ -45,16 +45,16 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  */
 public abstract class AbstractEventRouter implements EventRouter {
-    private static final String ERROR_EVENT_NAME_BLANK = "Argument 'eventName' cannot be blank";
-    private static final String ERROR_EVENT_HANDLER_BLANK = "Argument 'eventHandler' cannot be blank";
-    private static final String ERROR_MODE_BLANK = "Argument 'mode' cannot be blank";
-    private static final String ERROR_LISTENER_NULL = "Argument 'listener' cannot be null";
-    private static final String ERROR_EVENT_CLASS_NULL = "Argument 'eventClass' cannot be null";
-    private static final String ERROR_EVENT_NULL = "Argument 'event' cannot be null";
-    private static final String ERROR_CALLABLE_NULL = "Argument 'callable' cannot be null";
-    private static final String ERROR_PARAMS_NULL = "Argument 'params' cannot be null";
-    private static final String ERROR_INSTANCE_NULL = "Argument 'instance' cannot be null";
-    private static final String ERROR_OWNER_NULL = "Argument 'owner' cannot be null";
+    private static final String ERROR_EVENT_NAME_BLANK = "Argument 'eventName' must not be blank";
+    private static final String ERROR_EVENT_HANDLER_BLANK = "Argument 'eventHandler' must not be blank";
+    private static final String ERROR_MODE_BLANK = "Argument 'mode' must not be blank";
+    private static final String ERROR_LISTENER_NULL = "Argument 'listener' must not be null";
+    private static final String ERROR_EVENT_CLASS_NULL = "Argument 'eventClass' must not be null";
+    private static final String ERROR_EVENT_NULL = "Argument 'event' must not be null";
+    private static final String ERROR_CALLABLE_NULL = "Argument 'callable' must not be null";
+    private static final String ERROR_PARAMS_NULL = "Argument 'params' must not be null";
+    private static final String ERROR_INSTANCE_NULL = "Argument 'instance' must not be null";
+    private static final String ERROR_OWNER_NULL = "Argument 'owner' must not be null";
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractEventRouter.class);
     protected static final Object[] LOCK = new Object[0];

@@ -36,7 +36,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class SwingAction extends AbstractAction {
     private static final long serialVersionUID = 4598888514827528435L;
-    private static final String ERROR_CALLABLE_NULL = "Argument 'callable' cannot be null";
+    private static final String ERROR_CALLABLE_NULL = "Argument 'callable' must not be null";
     private final CallableWithArgs<?> callable;
 
     public SwingAction(@Nonnull CallableWithArgs<?> callable) {

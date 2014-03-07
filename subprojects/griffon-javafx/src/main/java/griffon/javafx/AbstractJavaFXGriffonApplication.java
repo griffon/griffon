@@ -62,7 +62,7 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public abstract class AbstractJavaFXGriffonApplication extends Application implements GriffonApplication {
-    private static final String ERROR_SHUTDOWN_HANDLER_NULL = "Argument 'shutdownHandler' cannot be null";
+    private static final String ERROR_SHUTDOWN_HANDLER_NULL = "Argument 'shutdownHandler' must not be null";
     private Locale locale = Locale.getDefault();
     public static final String[] EMPTY_ARGS = new String[0];
     protected final Object[] lock = new Object[0];
@@ -129,11 +129,11 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
     }
 
     protected void firePropertyChange(@Nonnull PropertyChangeEvent event) {
-        pcs.firePropertyChange(requireNonNull(event, "Argument 'event' cannot be null"));
+        pcs.firePropertyChange(requireNonNull(event, "Argument 'event' must not be null"));
     }
 
     protected void firePropertyChange(@Nonnull String propertyName, @Nullable Object oldValue, @Nullable Object newValue) {
-        pcs.firePropertyChange(requireNonBlank(propertyName, "Argument 'propertyName' cannot be blank"), oldValue, newValue);
+        pcs.firePropertyChange(requireNonBlank(propertyName, "Argument 'propertyName' must not be blank"), oldValue, newValue);
     }
 
     // ------------------------------------------------------
@@ -189,7 +189,7 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
     }
 
     protected void setPhase(@Nonnull ApplicationPhase phase) {
-        requireNonNull(phase, "Argument 'phase' cannot be null");
+        requireNonNull(phase, "Argument 'phase' must not be null");
         synchronized (lock) {
             firePropertyChange("phase", this.phase, this.phase = phase);
         }

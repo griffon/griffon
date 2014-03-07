@@ -33,14 +33,14 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public abstract class AbstractThreadingHandler implements ThreadingHandler {
-    private static final String ERROR_RUNNABLE_NULL = "Argument 'runnable' cannot be bull";
-    private static final String ERROR_CALLABLE_NULL = "Argument 'callable' cannot be null";
+    private static final String ERROR_RUNNABLE_NULL = "Argument 'runnable' must not be bull";
+    private static final String ERROR_CALLABLE_NULL = "Argument 'callable' must not be null";
 
     private UIThreadManager uiThreadManager;
 
     @Inject
     public void setUIThreadManager(@Nonnull UIThreadManager uiThreadManager) {
-        this.uiThreadManager = requireNonNull(uiThreadManager, "Argument 'uiThreadManager' cannot be bull");
+        this.uiThreadManager = requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be bull");
     }
 
     public boolean isUIThread() {

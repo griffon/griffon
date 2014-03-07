@@ -41,8 +41,8 @@ public class CompositeResourceBundle extends ResourceBundle {
     }
 
     public CompositeResourceBundle(@Nonnull ResourceBundle[] bundles) {
-        requireNonNull(bundles, "Argument 'bundles' cannot be null");
-        requireState(bundles.length > 0, "Argument 'bundles' cannot be empty");
+        requireNonNull(bundles, "Argument 'bundles' must not be null");
+        requireState(bundles.length > 0, "Argument 'bundles' must not be empty");
         this.bundles = new ResourceBundle[bundles.length];
         for (int i = 0; i < bundles.length; i++) {
             this.bundles[i] = wrapResourceBundle(bundles[i]);
@@ -61,7 +61,7 @@ public class CompositeResourceBundle extends ResourceBundle {
 
     @Nullable
     protected Object handleGetObject(@Nonnull String key) {
-        requireNonBlank(key, "Arguments 'key' cannot be blank");
+        requireNonBlank(key, "Arguments 'key' must not be blank");
 
         LOG.trace("Searching key={}", key);
         for (ResourceBundle bundle : bundles) {
@@ -102,7 +102,7 @@ public class CompositeResourceBundle extends ResourceBundle {
 
     @Nonnull
     private static ResourceBundle[] toResourceBundleArray(@Nonnull Collection<ResourceBundle> bundles) {
-        requireNonNull(bundles, "Argument 'bundles' cannot be null");
+        requireNonNull(bundles, "Argument 'bundles' must not be null");
         if (bundles.isEmpty()) {
             return new ResourceBundle[0];
         }

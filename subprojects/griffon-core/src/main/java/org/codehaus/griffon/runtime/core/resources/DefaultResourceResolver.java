@@ -37,8 +37,8 @@ public class DefaultResourceResolver extends AbstractResourceResolver {
     private final CompositeResourceBundleBuilder compositeResourceBundleBuilder;
 
     public DefaultResourceResolver(@Nonnull CompositeResourceBundleBuilder builder, @Nonnull String basename) {
-        this.compositeResourceBundleBuilder = requireNonNull(builder, "Argument 'builder' cannot be null");
-        this.basename = requireNonBlank(basename, "Argument 'basename' cannot be blank");
+        this.compositeResourceBundleBuilder = requireNonNull(builder, "Argument 'builder' must not be null");
+        this.basename = requireNonBlank(basename, "Argument 'basename' must not be blank");
     }
 
     @Nonnull

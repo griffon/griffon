@@ -66,7 +66,7 @@ public abstract class AbstractUIThreadWorker<T, V> extends AbstractObservable im
 
     @Inject
     public void setExecutorServiceManager(@Nonnull ExecutorServiceManager executorServiceManager) {
-        requireNonNull(executorServiceManager, "Argument 'executorServiceManager' cannot be bull");
+        requireNonNull(executorServiceManager, "Argument 'executorServiceManager' must not be bull");
         if (this.executorServiceManager != null) {
             this.executorServiceManager.remove(DEFAULT_EXECUTOR_SERVICE);
         }
@@ -76,7 +76,7 @@ public abstract class AbstractUIThreadWorker<T, V> extends AbstractObservable im
 
     @Inject
     public void setUiThreadManager(@Nonnull UIThreadManager uiThreadManager) {
-        this.uiThreadManager = requireNonNull(uiThreadManager, "Argument 'uiThreadManager' cannot be null");
+        this.uiThreadManager = requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be null");
     }
 
     protected abstract T doInBackground() throws Exception;

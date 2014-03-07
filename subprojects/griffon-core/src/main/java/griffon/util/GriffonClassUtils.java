@@ -82,16 +82,16 @@ public class GriffonClassUtils {
     private static final Set<MethodDescriptor> RESOURCE_HANDLER_METHODS = new TreeSet<>();
     private static final Set<MethodDescriptor> MESSAGE_SOURCE_METHODS = new TreeSet<>();
     private static final Set<MethodDescriptor> RESOURCE_RESOLVER_METHODS = new TreeSet<>();
-    private static final String ERROR_TYPE_NULL = "Argument 'type' cannot be null";
-    private static final String ERROR_METHOD_NAME_BLANK = "Argument 'methodName' cannot be blank";
-    private static final String ERROR_OBJECT_NULL = "Argument 'object' cannot be null";
-    private static final String ERROR_CLAZZ_NULL = "Argument 'clazz' cannot be null";
-    private static final String ERROR_DESCRIPTOR_NULL = "Argument 'descriptor' cannot be null";
-    private static final String ERROR_BEAN_NULL = "Argument 'bean' cannot be null";
-    private static final String ERROR_NAME_BLANK = "Argument 'name' cannot be blank";
-    private static final String ERROR_PROPERTIES_NULL = "Argument 'properties' cannot be null";
-    private static final String ERROR_PROPERTY_NAME_BLANK = "Argument 'propertyName' cannot be blank";
-    private static final String ERROR_METHOD_NULL = "Argument 'method' cannot be null";
+    private static final String ERROR_TYPE_NULL = "Argument 'type' must not be null";
+    private static final String ERROR_METHOD_NAME_BLANK = "Argument 'methodName' must not be blank";
+    private static final String ERROR_OBJECT_NULL = "Argument 'object' must not be null";
+    private static final String ERROR_CLAZZ_NULL = "Argument 'clazz' must not be null";
+    private static final String ERROR_DESCRIPTOR_NULL = "Argument 'descriptor' must not be null";
+    private static final String ERROR_BEAN_NULL = "Argument 'bean' must not be null";
+    private static final String ERROR_NAME_BLANK = "Argument 'name' must not be blank";
+    private static final String ERROR_PROPERTIES_NULL = "Argument 'properties' must not be null";
+    private static final String ERROR_PROPERTY_NAME_BLANK = "Argument 'propertyName' must not be blank";
+    private static final String ERROR_METHOD_NULL = "Argument 'method' must not be null";
 
     /**
      * Just add two entries to the class compatibility map
@@ -1260,7 +1260,7 @@ public class GriffonClassUtils {
      * @return True if the method is declared public static
      */
     public static boolean isPublicStatic(@Nonnull Method m) {
-        requireNonNull(m, "Argument 'method' cannot be null");
+        requireNonNull(m, "Argument 'method' must not be null");
         final int modifiers = m.getModifiers();
         return Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers);
     }
@@ -1272,7 +1272,7 @@ public class GriffonClassUtils {
      * @return True if the field is declared public static
      */
     public static boolean isPublicStatic(@Nonnull Field f) {
-        requireNonNull(f, "Argument 'field' cannot be null");
+        requireNonNull(f, "Argument 'field' must not be null");
         final int modifiers = f.getModifiers();
         return Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers);
     }
@@ -1624,7 +1624,7 @@ public class GriffonClassUtils {
      */
     public static boolean isClassBelowPackage(@Nonnull Class<?> clazz, @Nonnull List<?> packageList) {
         requireNonNull(clazz, ERROR_CLAZZ_NULL);
-        requireNonNull(packageList, "Argument 'packageList' cannot be null");
+        requireNonNull(packageList, "Argument 'packageList' must not be null");
         String classPackage = clazz.getPackage().getName();
         for (Object packageName : packageList) {
             if (packageName != null) {

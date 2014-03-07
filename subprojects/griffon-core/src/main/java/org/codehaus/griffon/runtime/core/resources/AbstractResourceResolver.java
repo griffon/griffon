@@ -35,10 +35,10 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public abstract class AbstractResourceResolver implements ResourceResolver {
-    protected static final String ERROR_KEY_BLANK = "Argument 'key' cannot be blank";
-    protected static final String ERROR_LOCALE_NULL = "Argument 'locale' cannot be null";
-    protected static final String ERROR_ARGS_NULL = "Argument 'args' cannot be null";
-    protected static final String ERROR_RESOURCE_BLANK = "Argument 'resource' cannot be blank";
+    protected static final String ERROR_KEY_BLANK = "Argument 'key' must not be blank";
+    protected static final String ERROR_LOCALE_NULL = "Argument 'locale' must not be null";
+    protected static final String ERROR_ARGS_NULL = "Argument 'args' must not be null";
+    protected static final String ERROR_RESOURCE_BLANK = "Argument 'resource' must not be blank";
 
     protected static final Object[] EMPTY_OBJECT_ARGS = new Object[0];
 

@@ -39,7 +39,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Bindings {
     public static <T> AnnotatedBindingBuilder<T> bind(@Nonnull Class<T> clazz) {
-        requireNonNull(clazz, "Argument 'class' cannot be null");
+        requireNonNull(clazz, "Argument 'class' must not be null");
         return new AnnotatedBindingBuilderImpl<>(clazz);
     }
 
@@ -61,26 +61,26 @@ public class Bindings {
         @Nonnull
         @Override
         public SingletonBindingBuilder<T> to(@Nonnull Class<? extends T> target) {
-            this.target = requireNonNull(target, "Argument 'target' cannot be null");
+            this.target = requireNonNull(target, "Argument 'target' must not be null");
             return this;
         }
 
         @Override
         public void toInstance(@Nonnull T instance) {
-            this.instance = requireNonNull(instance, "Argument 'instance' cannot be null");
+            this.instance = requireNonNull(instance, "Argument 'instance' must not be null");
         }
 
         @Nonnull
         @Override
         public SingletonBindingBuilder<T> toProvider(@Nonnull Provider<T> provider) {
-            this.provider = requireNonNull(provider, "Argument 'provider' cannot be null");
+            this.provider = requireNonNull(provider, "Argument 'provider' must not be null");
             return this;
         }
 
         @Nonnull
         @Override
         public SingletonBindingBuilder<T> toProvider(@Nonnull Class<? extends Provider<T>> providerType) {
-            this.providerType = requireNonNull(providerType, "Argument 'providerType' cannot be null");
+            this.providerType = requireNonNull(providerType, "Argument 'providerType' must not be null");
             return this;
         }
     }
@@ -91,7 +91,7 @@ public class Bindings {
         private Class<? extends Annotation> classifierType;
 
         private AnnotatedBindingBuilderImpl(@Nonnull Class<T> source) {
-            this.source = requireNonNull(source, "Argument 'source' cannot be null");
+            this.source = requireNonNull(source, "Argument 'source' must not be null");
         }
 
         @Nonnull
@@ -113,7 +113,7 @@ public class Bindings {
         @Nonnull
         @Override
         public LinkedBindingBuilder<T> withClassifier(@Nonnull Class<? extends Annotation> annotationType) {
-            requireNonNull(annotationType, "Argument 'annotationType' cannot be null");
+            requireNonNull(annotationType, "Argument 'annotationType' must not be null");
             AnnotationUtils.requireAnnotation(annotationType, Qualifier.class);
             this.classifierType = annotationType;
             return this;
@@ -122,7 +122,7 @@ public class Bindings {
         @Nonnull
         @Override
         public LinkedBindingBuilder<T> withClassifier(@Nonnull Annotation annotation) {
-            requireNonNull(annotation, "Argument 'annotation' cannot be null");
+            requireNonNull(annotation, "Argument 'annotation' must not be null");
             this.classifier = annotation;
             withClassifier(annotation.getClass());
             return this;

@@ -38,12 +38,12 @@ public class CompositeMessageSource extends AbstractMessageSource {
     }
 
     public CompositeMessageSource(@Nonnull MessageSource[] messageSources) {
-        this.messageSources = requireNonNull(messageSources, "Argument 'messageSources' cannot be null");
+        this.messageSources = requireNonNull(messageSources, "Argument 'messageSources' must not be null");
     }
 
     private static MessageSource[] toMessageSourceArray(@Nonnull Collection<MessageSource> messageSources) {
-        requireNonNull(messageSources, "Argument 'messageSources' cannot be null");
-        requireState(!messageSources.isEmpty(), "Argument 'messageSources' cannot be empty");
+        requireNonNull(messageSources, "Argument 'messageSources' must not be null");
+        requireState(!messageSources.isEmpty(), "Argument 'messageSources' must not be empty");
         return messageSources.toArray(new MessageSource[messageSources.size()]);
     }
 

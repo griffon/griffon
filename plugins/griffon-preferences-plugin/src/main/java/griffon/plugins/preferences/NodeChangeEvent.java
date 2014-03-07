@@ -35,8 +35,8 @@ public class NodeChangeEvent implements Serializable {
     private final Type type;
 
     public NodeChangeEvent(@Nonnull String path, @Nonnull Type type) {
-        this.path = requireNonBlank(path, "Argument 'path' cannot be blank");
-        this.type = requireNonNull(type, "Argument 'type' cannot be null");
+        this.path = requireNonBlank(path, "Argument 'path' must not be blank");
+        this.type = requireNonNull(type, "Argument 'type' must not be null");
     }
 
     @Nonnull

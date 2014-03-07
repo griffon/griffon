@@ -46,7 +46,7 @@ public class DefaultThemeManager extends AbstractVetoable implements ThemeManage
 
     @Inject
     public DefaultThemeManager(@Nonnull GriffonApplication application) {
-        requireNonNull(application, "Argument 'application' cannot be null");
+        requireNonNull(application, "Argument 'application' must not be null");
 
         ResourceResolver applicationResourceResolver = application.getResourceResolver();
         for (Qualified<ResourceResolver> qualified : application.getInjector().getQualifiedInstances(ResourceResolver.class)) {
@@ -88,7 +88,7 @@ public class DefaultThemeManager extends AbstractVetoable implements ThemeManage
 
     @Override
     public void setCurrentTheme(@Nonnull String theme) throws PropertyVetoException {
-        requireNonBlank(theme, "Argument 'theme' cannot be null");
+        requireNonBlank(theme, "Argument 'theme' must not be null");
         if (themes.containsKey(theme)) {
             fireVetoableChange(PROPERTY_CURRENT_THEME, this.currentTheme, theme);
             firePropertyChange(PROPERTY_CURRENT_THEME, this.currentTheme, this.currentTheme = theme);

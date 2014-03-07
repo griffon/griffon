@@ -30,14 +30,14 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class DefaultPivotWindowDisplayHandler implements PivotWindowDisplayHandler {
-    private static final String ERROR_NAME_BLANK = "Argument 'name' cannot be null";
-    private static final String ERROR_WINDOW_NULL = "Argument 'window' cannot be null";
+    private static final String ERROR_NAME_BLANK = "Argument 'name' must not be null";
+    private static final String ERROR_WINDOW_NULL = "Argument 'window' must not be null";
 
     private final Display display;
 
     @Inject
     public DefaultPivotWindowDisplayHandler(@Nonnull Display display) {
-        this.display = requireNonNull(display, "Argument 'display' cannot be null");
+        this.display = requireNonNull(display, "Argument 'display' must not be null");
     }
 
     public void show(@Nonnull String name, @Nonnull Window window) {

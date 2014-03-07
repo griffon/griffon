@@ -35,7 +35,7 @@ public final class NoopWindowManager implements WindowManager<Object> {
 
     @Inject
     public NoopWindowManager(@Nonnull GriffonApplication application) {
-        this.application = requireNonNull(application, "Argument 'application' cannot be null");
+        this.application = requireNonNull(application, "Argument 'application' must not be null");
     }
 
     @Nullable

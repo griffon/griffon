@@ -50,6 +50,6 @@ public abstract class AbstractGriffonViewScript extends AbstractGriffonMvcArtifa
     }
 
     public void setBuilder(@Nonnull FactoryBuilderSupport builder) {
-        this.builder = requireNonNull(builder, "Argument 'builder' cannot be null");
+        this.builder = requireNonNull(builder, "Argument 'builder' must not be null");
     }
 }

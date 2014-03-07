@@ -41,7 +41,7 @@ public class GroovyAwareCompositeResourceBundleBuilder extends DefaultCompositeR
     @Inject
     public GroovyAwareCompositeResourceBundleBuilder(@Nonnull ResourceHandler resourceHandler, @Nonnull ConfigReader configReader) {
         super(resourceHandler);
-        this.configReader = requireNonNull(configReader, "Argument 'reader' cannot be null");
+        this.configReader = requireNonNull(configReader, "Argument 'reader' must not be null");
     }
 
     @Nonnull

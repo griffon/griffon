@@ -36,17 +36,17 @@ import static java.util.Objects.requireNonNull;
  */
 public class DefaultDataSourceHandler implements DataSourceHandler {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultDataSourceHandler.class);
-    private static final String ERROR_DATASOURCE_BLANK = "Argument 'dataSourceName' cannot be blank";
-    private static final String ERROR_DATASOURCE_NULL = "Argument 'dataSource' cannot be null";
-    private static final String ERROR_CALLBACK_NULL = "Argument 'callback' cannot be null";
+    private static final String ERROR_DATASOURCE_BLANK = "Argument 'dataSourceName' must not be blank";
+    private static final String ERROR_DATASOURCE_NULL = "Argument 'dataSource' must not be null";
+    private static final String ERROR_CALLBACK_NULL = "Argument 'callback' must not be null";
 
     private final DataSourceFactory dataSourceFactory;
     private final DataSourceStorage dataSourceStorage;
 
     @Inject
     public DefaultDataSourceHandler(@Nonnull DataSourceFactory dataSourceFactory, @Nonnull DataSourceStorage dataSourceStorage) {
-        this.dataSourceFactory = requireNonNull(dataSourceFactory, "Argument 'dataSourceFactory' cannot be null");
-        this.dataSourceStorage = requireNonNull(dataSourceStorage, "Argument 'dataSourceStorage' cannot be null");
+        this.dataSourceFactory = requireNonNull(dataSourceFactory, "Argument 'dataSourceFactory' must not be null");
+        this.dataSourceStorage = requireNonNull(dataSourceStorage, "Argument 'dataSourceStorage' must not be null");
     }
 
     @Nullable

@@ -65,10 +65,10 @@ public class AbstractVetoable extends AbstractObservable implements Vetoable {
     }
 
     protected void fireVetoableChange(@Nonnull PropertyChangeEvent event) throws PropertyVetoException {
-        vcs.fireVetoableChange(requireNonNull(event, "Argument 'event' cannot be null"));
+        vcs.fireVetoableChange(requireNonNull(event, "Argument 'event' must not be null"));
     }
 
     protected void fireVetoableChange(@Nonnull String propertyName, @Nullable Object oldValue, @Nullable Object newValue) throws PropertyVetoException {
-        vcs.fireVetoableChange(requireNonBlank(propertyName, "Argument 'propertyName' cannot be blank"), oldValue, newValue);
+        vcs.fireVetoableChange(requireNonBlank(propertyName, "Argument 'propertyName' must not be blank"), oldValue, newValue);
     }
 }

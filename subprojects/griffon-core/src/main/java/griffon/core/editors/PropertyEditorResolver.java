@@ -55,7 +55,7 @@ public final class PropertyEditorResolver {
     @Nonnull
     @SuppressWarnings("unchecked")
     public static PropertyEditor findEditor(@Nonnull Class<?> type) {
-        requireNonNull(type, "Argument 'type' cannot be  null");
+        requireNonNull(type, "Argument 'type' must not be  null");
         LOG.trace("Searching PropertyEditor for {}", type.getName());
 
         PropertyEditor editor;

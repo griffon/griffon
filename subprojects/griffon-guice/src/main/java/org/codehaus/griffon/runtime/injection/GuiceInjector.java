@@ -51,12 +51,12 @@ import static org.codehaus.griffon.runtime.injection.MethodUtils.invokeAnnotated
  * @since 2.0.0
  */
 public class GuiceInjector implements Injector<com.google.inject.Injector> {
-    private static final String ERROR_TYPE_NULL = "Argument 'type' cannot be null";
-    private static final String ERROR_BINDINGS_NULL = "Argument 'bindings' cannot be null";
-    private static final String ERROR_DELEGATE_NULL = "Argument 'delegate' cannot be null";
-    private static final String ERROR_QUALIFIER_NULL = "Argument 'qualifier' cannot be null";
-    private static final String ERROR_INSTANCE_NULL = "Argument 'instance' cannot be null";
-    private static final String ERROR_NAME_BLANK = "Argument 'name' cannot be blank";
+    private static final String ERROR_TYPE_NULL = "Argument 'type' must not be null";
+    private static final String ERROR_BINDINGS_NULL = "Argument 'bindings' must not be null";
+    private static final String ERROR_DELEGATE_NULL = "Argument 'delegate' must not be null";
+    private static final String ERROR_QUALIFIER_NULL = "Argument 'qualifier' must not be null";
+    private static final String ERROR_INSTANCE_NULL = "Argument 'instance' must not be null";
+    private static final String ERROR_NAME_BLANK = "Argument 'name' must not be blank";
 
     private final com.google.inject.Injector delegate;
     private final Object lock = new Object[0];

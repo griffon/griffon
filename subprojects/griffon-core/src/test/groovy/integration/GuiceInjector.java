@@ -51,13 +51,13 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
 
 
     public GuiceInjector(@Nonnull com.google.inject.Injector delegate) {
-        this.delegate = requireNonNull(delegate, "Argument 'delegate' cannot be null");
+        this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
     @Nonnull
     @Override
     public <T> T getInstance(@Nonnull Class<T> type) throws InstanceNotFoundException {
-        requireNonNull(type, "Argument 'type' cannot be null");
+        requireNonNull(type, "Argument 'type' must not be null");
 
         if (isClosed()) {
             throw new InstanceNotFoundException(type, new ClosedInjectorException(this));
@@ -73,8 +73,8 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
     @Nonnull
     @Override
     public <T> T getInstance(@Nonnull Class<T> type, @Nonnull Annotation qualifier) throws InstanceNotFoundException {
-        requireNonNull(type, "Argument 'type' cannot be null");
-        requireNonNull(qualifier, "Argument 'qualifier' cannot be null");
+        requireNonNull(type, "Argument 'type' must not be null");
+        requireNonNull(qualifier, "Argument 'qualifier' must not be null");
 
         if (isClosed()) {
             throw new InstanceNotFoundException(type, qualifier, new ClosedInjectorException(this));
@@ -90,7 +90,7 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
     @Nonnull
     @Override
     public <T> Collection<T> getInstances(@Nonnull Class<T> type) throws InstanceNotFoundException {
-        requireNonNull(type, "Argument 'type' cannot be null");
+        requireNonNull(type, "Argument 'type' must not be null");
 
         if (isClosed()) {
             throw new InstanceNotFoundException(type, new ClosedInjectorException(this));
@@ -122,7 +122,7 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
     @Nonnull
     @Override
     public <T> Collection<Qualified<T>> getQualifiedInstances(@Nonnull Class<T> type) throws InstanceNotFoundException {
-        requireNonNull(type, "Argument 'type' cannot be null");
+        requireNonNull(type, "Argument 'type' must not be null");
 
         if (isClosed()) {
             throw new InstanceNotFoundException(type, new ClosedInjectorException(this));
@@ -163,7 +163,7 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
 
     @Override
     public void injectMembers(@Nonnull Object instance) throws MembersInjectionException {
-        requireNonNull(instance, "Argument 'instance' cannot be null");
+        requireNonNull(instance, "Argument 'instance' must not be null");
 
         if (isClosed()) {
             throw new MembersInjectionException(instance, new ClosedInjectorException(this));
@@ -185,7 +185,7 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
     @Nonnull
     @Override
     public Injector<com.google.inject.Injector> createNestedInjector(@Nonnull Iterable<Binding<?>> bindings) {
-        requireNonNull(bindings, "Argument 'bindings' cannot be null");
+        requireNonNull(bindings, "Argument 'bindings' must not be null");
 
         if (isClosed()) {
             throw new ClosedInjectorException(this);
@@ -197,8 +197,8 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
     @Nonnull
     @Override
     public Injector<com.google.inject.Injector> createNestedInjector(final @Nonnull String name, @Nonnull Iterable<Binding<?>> bindings) {
-        requireNonBlank(name, "Argument 'name' cannot be blank");
-        requireNonNull(bindings, "Argument 'bindings' cannot be null");
+        requireNonBlank(name, "Argument 'name' must not be blank");
+        requireNonNull(bindings, "Argument 'bindings' must not be null");
 
         if (isClosed()) {
             throw new ClosedInjectorException(this);

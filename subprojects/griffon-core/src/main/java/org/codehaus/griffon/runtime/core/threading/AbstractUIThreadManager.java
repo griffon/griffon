@@ -33,8 +33,8 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public abstract class AbstractUIThreadManager implements UIThreadManager {
-    protected static final String ERROR_RUNNABLE_NULL = "Argument 'runnable' cannot be bull";
-    protected static final String ERROR_CALLABLE_NULL = "Argument 'callable' cannot be null";
+    protected static final String ERROR_RUNNABLE_NULL = "Argument 'runnable' must not be bull";
+    protected static final String ERROR_CALLABLE_NULL = "Argument 'callable' must not be null";
 
     private final ExecutorService defaultExecutorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private static final Thread.UncaughtExceptionHandler UNCAUGHT_EXCEPTION_HANDLER = new GriffonExceptionHandler();
@@ -43,7 +43,7 @@ public abstract class AbstractUIThreadManager implements UIThreadManager {
 
     @Inject
     public void setExecutorServiceManager(@Nonnull ExecutorServiceManager executorServiceManager) {
-        requireNonNull(executorServiceManager, "Argument 'executorServiceManager' cannot be bull");
+        requireNonNull(executorServiceManager, "Argument 'executorServiceManager' must not be bull");
         if (this.executorServiceManager != null) {
             this.executorServiceManager.remove(defaultExecutorService);
         }
@@ -72,7 +72,7 @@ public abstract class AbstractUIThreadManager implements UIThreadManager {
      */
     @Nonnull
     public <R> Future<R> runFuture(@Nonnull ExecutorService executorService, @Nonnull Callable<R> callable) {
-        requireNonNull(executorService, "Argument 'executorService' cannot be null");
+        requireNonNull(executorService, "Argument 'executorService' must not be null");
         requireNonNull(callable, ERROR_CALLABLE_NULL);
         return executorService.submit(callable);
     }

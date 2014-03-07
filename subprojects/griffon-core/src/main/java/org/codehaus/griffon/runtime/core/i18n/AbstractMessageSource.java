@@ -36,10 +36,10 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public abstract class AbstractMessageSource implements MessageSource {
-    protected static final String ERROR_KEY_BLANK = "Argument 'key' cannot be blank";
-    protected static final String ERROR_LOCALE_NULL = "Argument 'locale' cannot be null";
-    protected static final String ERROR_ARGS_NULL = "Argument 'args' cannot be null";
-    protected static final String ERROR_MESSAGE_BLANK = "Argument 'message' cannot be blank";
+    protected static final String ERROR_KEY_BLANK = "Argument 'key' must not be blank";
+    protected static final String ERROR_LOCALE_NULL = "Argument 'locale' must not be null";
+    protected static final String ERROR_ARGS_NULL = "Argument 'args' must not be null";
+    protected static final String ERROR_MESSAGE_BLANK = "Argument 'message' must not be blank";
 
     protected static final Object[] EMPTY_OBJECT_ARGS = new Object[0];
 

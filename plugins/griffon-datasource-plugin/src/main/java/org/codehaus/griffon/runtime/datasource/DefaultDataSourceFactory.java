@@ -93,7 +93,7 @@ public class DefaultDataSourceFactory extends AbstractObjectFactory<DataSource> 
 
     @Override
     public void destroy(@Nonnull String name, @Nonnull DataSource instance) {
-        requireNonNull(instance, "Argument 'instance' cannot be null");
+        requireNonNull(instance, "Argument 'instance' must not be null");
         Map<String, Object> config = narrowConfig(name);
         event("DataSourceDisconnectStart", asList(config, name, instance));
         event("DataSourceDisconnectEnd", asList(name, config));
@@ -103,9 +103,9 @@ public class DefaultDataSourceFactory extends AbstractObjectFactory<DataSource> 
     @SuppressWarnings("ConstantConditions")
     private DataSource createDataSource(@Nonnull Map<String, Object> config, @Nonnull String name) {
         String driverClassName = getConfigValueAsString(config, "driverClassName", "");
-        requireNonBlank(driverClassName, "Configuration for " + name + ".driverClassName cannot be blank");
+        requireNonBlank(driverClassName, "Configuration for " + name + ".driverClassName must not be blank");
         String url = getConfigValueAsString(config, "url", "");
-        requireNonBlank(url, "Configuration for " + name + ".url cannot be blank");
+        requireNonBlank(url, "Configuration for " + name + ".url must not be blank");
 
         try {
             getApplication().getApplicationClassLoader().get().loadClass(driverClassName);

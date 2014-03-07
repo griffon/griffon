@@ -39,7 +39,7 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public abstract class AbstractArtifactHandler<A extends GriffonArtifact> implements ArtifactHandler<A> {
-    protected static final String ERROR_CLASS_NULL = "Argument 'class' cannot be null";
+    protected static final String ERROR_CLASS_NULL = "Argument 'class' must not be null";
     private final Class<A> artifactType;
     private final String type;
     private final String trailing;
@@ -50,10 +50,10 @@ public abstract class AbstractArtifactHandler<A extends GriffonArtifact> impleme
 
     @Inject
     public AbstractArtifactHandler(@Nonnull GriffonApplication application, @Nonnull Class<A> artifactType, @Nonnull String type, @Nonnull String trailing) {
-        this.application = requireNonNull(application, "Argument 'application' cannot be null");
-        this.artifactType = requireNonNull(artifactType, "Argument 'artifactType' cannot be null");
-        this.type = requireNonBlank(type, "Argument 'type' cannot be blank");
-        this.trailing = requireNonNull(trailing, "Argument 'trailing' cannot be null");
+        this.application = requireNonNull(application, "Argument 'application' must not be null");
+        this.artifactType = requireNonNull(artifactType, "Argument 'artifactType' must not be null");
+        this.type = requireNonBlank(type, "Argument 'type' must not be blank");
+        this.trailing = requireNonNull(trailing, "Argument 'trailing' must not be null");
     }
 
     @Nonnull
@@ -129,13 +129,13 @@ public abstract class AbstractArtifactHandler<A extends GriffonArtifact> impleme
 
     @Nullable
     public GriffonClass getClassFor(@Nonnull String fqnClassName) {
-        requireNonBlank(fqnClassName, "Argument 'fqnClassName' cannot be blank");
+        requireNonBlank(fqnClassName, "Argument 'fqnClassName' must not be blank");
         return classesByName.get(fqnClassName);
     }
 
     @Nullable
     public GriffonClass findClassFor(@Nonnull String propertyName) {
-        requireNonBlank(propertyName, "Argument 'propertyName' cannot be blank");
+        requireNonBlank(propertyName, "Argument 'propertyName' must not be blank");
 
         String simpleName = propertyName;
 

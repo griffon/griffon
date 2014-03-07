@@ -35,7 +35,7 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class GriffonPivotFuncRule extends GriffonPivotRule {
-    private static final String ERROR_RUNNABLE_NULL = "Argument 'runnable' cannot be null";
+    private static final String ERROR_RUNNABLE_NULL = "Argument 'runnable' must not be null";
 
     private Window window;
 
@@ -63,8 +63,8 @@ public class GriffonPivotFuncRule extends GriffonPivotRule {
 
     @Nonnull
     public <T> T find(@Nonnull String name, Class<T> type) {
-        requireNonBlank(name, "Argument 'name' cannot be blank");
-        requireNonNull(type, "Argument 'type' cannot be null");
+        requireNonBlank(name, "Argument 'name' must not be blank");
+        requireNonNull(type, "Argument 'type' must not be null");
 
         Component component = findComponentByName(name, window);
         if (component != null) {

@@ -45,7 +45,7 @@ import static java.util.Objects.requireNonNull;
 public abstract class AbstractAddonManager implements AddonManager {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractAddonManager.class);
 
-    private static final String ERROR_NAME_BLANK = "Argument 'name' cannot be blank";
+    private static final String ERROR_NAME_BLANK = "Argument 'name' must not be blank";
     private final Map<String, GriffonAddon> addons = new LinkedHashMap<>();
     private final Object lock = new Object[0];
     @GuardedBy("lock")
@@ -55,7 +55,7 @@ public abstract class AbstractAddonManager implements AddonManager {
 
     @Inject
     public AbstractAddonManager(@Nonnull GriffonApplication application) {
-        this.application = requireNonNull(application, "Argument 'application' cannot be null");
+        this.application = requireNonNull(application, "Argument 'application' must not be null");
     }
 
     @Nonnull

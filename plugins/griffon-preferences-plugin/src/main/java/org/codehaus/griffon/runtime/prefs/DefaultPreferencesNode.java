@@ -35,8 +35,8 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  */
 public class DefaultPreferencesNode extends AbstractPreferencesNode {
-    private static final String ERROR_KEY_BLANK = "Argument 'key' cannot be null";
-    private static final String ERROR_NODE_NAME_BLANK = "Argument 'nodeName' cannot be null";
+    private static final String ERROR_KEY_BLANK = "Argument 'key' must not be null";
+    private static final String ERROR_NODE_NAME_BLANK = "Argument 'nodeName' must not be null";
 
     private final Object lock = new Object[0];
     @GuardedBy("lock")
@@ -116,7 +116,7 @@ public class DefaultPreferencesNode extends AbstractPreferencesNode {
 
     public void storeChildNode(@Nonnull String nodeName, @Nonnull PreferencesNode node) {
         requireNonBlank(nodeName, ERROR_NODE_NAME_BLANK);
-        requireNonNull(node, "Argument 'node' cannot be null");
+        requireNonNull(node, "Argument 'node' must not be null");
         synchronized (lock) {
             nodes.put(nodeName, node);
         }

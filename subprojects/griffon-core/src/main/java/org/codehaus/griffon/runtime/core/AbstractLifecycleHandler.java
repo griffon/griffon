@@ -37,7 +37,7 @@ public abstract class AbstractLifecycleHandler implements LifecycleHandler {
 
     @Inject
     public AbstractLifecycleHandler(@Nonnull GriffonApplication application) {
-        this.application = requireNonNull(application, "Argument 'application' cannot be null");
+        this.application = requireNonNull(application, "Argument 'application' must not be null");
     }
 
     @Nonnull

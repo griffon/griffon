@@ -34,16 +34,16 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public abstract class AbstractEventPublisher implements EventPublisher {
-    private static final String ERROR_EVENT_NAME_BLANK = "Argument 'eventName' cannot be blank";
-    private static final String ERROR_LISTENER_NULL = "Argument 'listener' cannot be null";
-    private static final String ERROR_EVENT_CLASS_NULL = "Argument 'eventClass' cannot be null";
-    private static final String ERROR_EVENT_NULL = "Argument 'event' cannot be null";
+    private static final String ERROR_EVENT_NAME_BLANK = "Argument 'eventName' must not be blank";
+    private static final String ERROR_LISTENER_NULL = "Argument 'listener' must not be null";
+    private static final String ERROR_EVENT_CLASS_NULL = "Argument 'eventClass' must not be null";
+    private static final String ERROR_EVENT_NULL = "Argument 'event' must not be null";
 
     private EventRouter eventRouter;
 
     @Inject
     public void setEventRouter(@Nonnull EventRouter eventRouter) {
-        this.eventRouter = requireNonNull(eventRouter, "Argument 'eventRouter' cannot be null");
+        this.eventRouter = requireNonNull(eventRouter, "Argument 'eventRouter' must not be null");
     }
 
     public boolean isEventPublishingEnabled() {

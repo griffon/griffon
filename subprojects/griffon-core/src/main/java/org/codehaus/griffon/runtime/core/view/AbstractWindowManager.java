@@ -39,8 +39,8 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractWindowManager<W> implements WindowManager<W> {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractWindowManager.class);
-    protected static final String ERROR_NAME_BLANK = "Argument 'name' cannot be blank";
-    protected static final String ERROR_WINDOW_NULL = "Argument 'window' cannot be null";
+    protected static final String ERROR_NAME_BLANK = "Argument 'name' must not be blank";
+    protected static final String ERROR_WINDOW_NULL = "Argument 'window' must not be null";
     private final Map<String, W> windows = Collections.synchronizedMap(new LinkedHashMap<String, W>());
 
     private final GriffonApplication application;
@@ -48,10 +48,10 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
 
     @Inject
     public AbstractWindowManager(@Nonnull GriffonApplication application, @Nonnull WindowDisplayHandler<W> windowDisplayHandler) {
-        this.application = requireNonNull(application, "Argument 'application' cannot be null");
-        requireNonNull(application.getConfiguration(), "Argument 'application.configuration' cannot be null");
-        requireNonNull(application.getUIThreadManager(), "Argument 'application.uiThreadManager' cannot be null");
-        this.windowDisplayHandler = requireNonNull(windowDisplayHandler, "Argument 'windowDisplayHandler' cannot be null");
+        this.application = requireNonNull(application, "Argument 'application' must not be null");
+        requireNonNull(application.getConfiguration(), "Argument 'application.configuration' must not be null");
+        requireNonNull(application.getUIThreadManager(), "Argument 'application.uiThreadManager' must not be null");
+        this.windowDisplayHandler = requireNonNull(windowDisplayHandler, "Argument 'windowDisplayHandler' must not be null");
     }
 
     protected GriffonApplication getApplication() {

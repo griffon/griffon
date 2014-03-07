@@ -30,6 +30,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class DefaultPlatformHandler implements PlatformHandler {
     public void handle(@Nonnull GriffonApplication application) {
-        requireNonNull(application, "Argument 'application' cannot be null");
+        requireNonNull(application, "Argument 'application' must not be null");
     }
 }

@@ -55,7 +55,7 @@ public class DefaultObjectStorage<T> implements ObjectStorage<T> {
 
     @Override
     public void set(@Nonnull String key, @Nonnull T instance) {
-        instances.put(resolveKey(key), requireNonNull(instance, "Argument 'instance' cannot be null"));
+        instances.put(resolveKey(key), requireNonNull(instance, "Argument 'instance' must not be null"));
     }
 
     @Override

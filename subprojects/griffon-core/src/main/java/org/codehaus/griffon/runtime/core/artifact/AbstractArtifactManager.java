@@ -44,12 +44,12 @@ import static java.util.Objects.requireNonNull;
  */
 @SuppressWarnings("rawtypes")
 public abstract class AbstractArtifactManager implements ArtifactManager {
-    protected static final String ERROR_ARTIFACT_HANDLER_NULL = "Argument 'artifactHandler' cannot be null";
-    private static final String ERROR_NAME_BLANK = "Argument 'name' cannot be blank";
-    private static final String ERROR_TYPE_BLANK = "Argument 'type' cannot be blank";
-    private static final String ERROR_CLASS_NULL = "Argument 'clazz' cannot be null";
-    private static final String ERROR_ARTIFACT_NULL = "Argument 'artifact' cannot be null";
-    private static final String ERROR_FULLY_QUALIFIED_CLASSNAME_BLANK = "Argument 'fqClassName' cannot be blank";
+    protected static final String ERROR_ARTIFACT_HANDLER_NULL = "Argument 'artifactHandler' must not be null";
+    private static final String ERROR_NAME_BLANK = "Argument 'name' must not be blank";
+    private static final String ERROR_TYPE_BLANK = "Argument 'type' must not be blank";
+    private static final String ERROR_CLASS_NULL = "Argument 'clazz' must not be null";
+    private static final String ERROR_ARTIFACT_NULL = "Argument 'artifact' must not be null";
+    private static final String ERROR_FULLY_QUALIFIED_CLASSNAME_BLANK = "Argument 'fqClassName' must not be blank";
     private final Map<String, Class<? extends GriffonArtifact>[]> artifacts = new ConcurrentHashMap<>();
     private final Map<String, ArtifactHandler> artifactHandlers = new ConcurrentHashMap<>();
     private final Object lock = new Object[0];
@@ -64,7 +64,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
 
     @SuppressWarnings("unchecked")
     public final void loadArtifactMetadata(@Nonnull Injector<?> injector) {
-        requireNonNull(injector, "Argument 'injector' cannot be null");
+        requireNonNull(injector, "Argument 'injector' must not be null");
         Map<String, List<Class<? extends GriffonArtifact>>> loadedArtifacts = doLoadArtifactMetadata();
 
         Collection<Binding<?>> bindings = new ArrayList<>();
@@ -96,7 +96,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
     @SuppressWarnings("unchecked")
     public <A extends GriffonArtifact> A newInstance(@Nonnull GriffonClass griffonClass) {
         try {
-            requireNonNull(griffonClass, "Argument 'griffonClass' cannot be null");
+            requireNonNull(griffonClass, "Argument 'griffonClass' must not be null");
         } catch (RuntimeException re) {
             throw new ArtifactNotFoundException(re);
         }

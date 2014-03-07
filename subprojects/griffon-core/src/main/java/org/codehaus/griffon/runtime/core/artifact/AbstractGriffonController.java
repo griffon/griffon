@@ -49,6 +49,6 @@ public abstract class AbstractGriffonController extends AbstractGriffonMvcArtifa
     }
 
     public void invokeAction(@Nonnull String name, Object... args) {
-        getActionManager().invokeAction(this, requireNonBlank(name, "Argument 'name' cannot be blank"), args);
+        getActionManager().invokeAction(this, requireNonBlank(name, "Argument 'name' must not be blank"), args);
     }
 }

@@ -57,7 +57,7 @@ import static java.util.Objects.requireNonNull;
 public abstract class AbstractGriffonApplet extends JApplet implements GriffonApplication {
     private static final long serialVersionUID = -3489610863053527695L;
 
-    private static final String ERROR_SHUTDOWN_HANDLER_NULL = "Argument 'shutdownHandler' cannot be null";
+    private static final String ERROR_SHUTDOWN_HANDLER_NULL = "Argument 'shutdownHandler' must not be null";
     private Locale locale = Locale.getDefault();
     public static final String[] EMPTY_ARGS = new String[0];
     protected final Object[] lock = new Object[0];
@@ -153,7 +153,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
     }
 
     protected void setPhase(@Nonnull ApplicationPhase phase) {
-        requireNonNull(phase, "Argument 'phase' cannot be null");
+        requireNonNull(phase, "Argument 'phase' must not be null");
         synchronized (lock) {
             firePropertyChange("phase", this.phase, this.phase = phase);
         }

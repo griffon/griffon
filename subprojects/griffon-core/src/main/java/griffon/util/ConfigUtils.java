@@ -30,8 +30,8 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  */
 public final class ConfigUtils {
-    private static final String ERROR_CONFIG_NULL = "Argument 'config' cannot be null";
-    private static final String ERROR_KEY_BLANK = "Argument 'key' cannot be blank";
+    private static final String ERROR_CONFIG_NULL = "Argument 'config' must not be null";
+    private static final String ERROR_KEY_BLANK = "Argument 'key' must not be blank";
 
     private ConfigUtils() {
         // prevent instantiation
@@ -543,7 +543,7 @@ public final class ConfigUtils {
 
     @Nonnull
     public static Set<String> collectKeys(@Nonnull Map<String, Object> map) {
-        requireNonNull(map, "Argument 'map' cannot be null");
+        requireNonNull(map, "Argument 'map' must not be null");
 
         SortedSet<String> keys = new TreeSet<>();
         for (Map.Entry<String, Object> entry : map.entrySet()) {

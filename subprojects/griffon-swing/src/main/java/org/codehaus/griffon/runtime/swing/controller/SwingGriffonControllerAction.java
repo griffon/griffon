@@ -60,7 +60,7 @@ public class SwingGriffonControllerAction extends AbstractAction {
 
     public SwingGriffonControllerAction(final @Nonnull UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
         super(actionManager, controller, actionName);
-        requireNonNull(uiThreadManager, "Argument 'uiThreadManager' cannot be null");
+        requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be null");
 
         toolkitAction = new SwingAction(new CallableWithArgs<Void>() {
             @Nullable

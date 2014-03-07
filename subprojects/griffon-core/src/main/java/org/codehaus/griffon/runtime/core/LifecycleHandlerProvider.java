@@ -42,17 +42,17 @@ public class LifecycleHandlerProvider implements Provider<LifecycleHandler> {
     private ApplicationClassLoader applicationClassLoader;
 
     public LifecycleHandlerProvider(@Nonnull String basename) {
-        this.basename = requireNonBlank(basename, "Argument 'basename' cannot be blank");
+        this.basename = requireNonBlank(basename, "Argument 'basename' must not be blank");
     }
 
     @Inject
     public void setGriffonApplication(@Nonnull GriffonApplication application) {
-        this.application = requireNonNull(application, "Argument 'application' cannot be null");
+        this.application = requireNonNull(application, "Argument 'application' must not be null");
     }
 
     @Inject
     public void setApplicationClassLoader(ApplicationClassLoader applicationClassLoader) {
-        this.applicationClassLoader = requireNonNull(applicationClassLoader, "Argument 'applicationClassLoader' cannot be null");
+        this.applicationClassLoader = requireNonNull(applicationClassLoader, "Argument 'applicationClassLoader' must not be null");
     }
 
     @Override

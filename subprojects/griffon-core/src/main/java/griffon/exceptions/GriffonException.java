@@ -42,10 +42,10 @@ public class GriffonException extends RuntimeException {
     }
 
     protected static <T> T checkNonNull(T arg, String argName) {
-        return requireNonNull(arg, "Argument '" + argName + "' cannot be null");
+        return requireNonNull(arg, "Argument '" + argName + "' must not be null");
     }
 
     protected static String checkNonBlank(String arg, String argName) {
-        return requireNonBlank(arg, "Argument '" + argName + "' cannot be blank");
+        return requireNonBlank(arg, "Argument '" + argName + "' must not be blank");
     }
 }

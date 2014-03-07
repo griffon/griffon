@@ -34,9 +34,9 @@ public abstract class AbstractSecurityFailureHandler implements SecurityFailureH
     }
 
     public void handleFailure(@Nonnull Subject subject, @Nonnull Kind kind, @Nonnull GriffonController controller, @Nonnull String actionName) {
-        requireNonNull(subject, "Argument 'subject' cannot be null");
-        requireNonNull(kind, "Argument 'kind' cannot be null");
-        requireNonNull(controller, "Argument 'controller' cannot be null");
-        requireNonBlank(actionName, "Argument 'actionName' cannot be blank");
+        requireNonNull(subject, "Argument 'subject' must not be null");
+        requireNonNull(kind, "Argument 'kind' must not be null");
+        requireNonNull(controller, "Argument 'controller' must not be null");
+        requireNonBlank(actionName, "Argument 'actionName' must not be blank");
     }
 }

@@ -36,8 +36,8 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class DefaultGriffonModelClass extends DefaultGriffonClass implements GriffonModelClass {
-    private static final String ERROR_MODEL_NULL = "Argument 'model' cannot be null";
-    private static final String ERROR_PROPERTY_NAME_BLANK = "Argument 'propertyName' cannot be blank";
+    private static final String ERROR_MODEL_NULL = "Argument 'model' must not be null";
+    private static final String ERROR_PROPERTY_NAME_BLANK = "Argument 'propertyName' must not be blank";
 
     protected final Set<String> propertiesCache = new TreeSet<>();
     private static final Set<String> BINDABLE_PROPERTIES = new LinkedHashSet<>(

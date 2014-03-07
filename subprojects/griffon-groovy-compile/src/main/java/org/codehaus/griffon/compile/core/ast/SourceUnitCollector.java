@@ -35,8 +35,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class SourceUnitCollector extends CompilationUnit.SourceUnitOperation {
     private static final Map<String, SourceUnit> SOURCES = new LinkedHashMap<>();
-    private static final String ERROR_SOURCE_NULL = "Argument 'source' cannot be null";
-    private static final String ERROR_CLASS_NODE_NULL = "Argument 'classNode' cannot be null";
+    private static final String ERROR_SOURCE_NULL = "Argument 'source' must not be null";
+    private static final String ERROR_CLASS_NODE_NULL = "Argument 'classNode' must not be null";
 
     private static SourceUnitCollector instance;
 
@@ -62,7 +62,7 @@ public class SourceUnitCollector extends CompilationUnit.SourceUnitOperation {
     }
 
     public boolean containsSource(String name) {
-        requireNonBlank(name, "Argument 'name' cannot be blank");
+        requireNonBlank(name, "Argument 'name' must not be blank");
         return SOURCES.containsKey(name);
     }
 

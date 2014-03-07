@@ -53,7 +53,7 @@ import static java.util.Objects.requireNonNull;
 public class DefaultApplicationConfigurer implements ApplicationConfigurer {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultApplicationConfigurer.class);
 
-    private static final String ERROR_APPLICATION_NULL = "Argument 'application' cannot be null";
+    private static final String ERROR_APPLICATION_NULL = "Argument 'application' must not be null";
     private static final String KEY_APP_LIFECYCLE_HANDLER_DISABLE = "application.lifecycle.handler.disable";
     private static final String KEY_GRIFFON_CONTROLLER_ACTION_INTERCEPTOR_ORDER = "griffon.controller.action.interceptor.order";
 
@@ -80,7 +80,7 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
 
     @Override
     public void runLifecycleHandler(@Nonnull Lifecycle lifecycle) {
-        requireNonNull(lifecycle, "Argument 'lifecycle' cannot be null");
+        requireNonNull(lifecycle, "Argument 'lifecycle' must not be null");
 
         boolean skipHandler = application.getConfiguration().getAsBoolean(KEY_APP_LIFECYCLE_HANDLER_DISABLE, false);
         if (skipHandler) {

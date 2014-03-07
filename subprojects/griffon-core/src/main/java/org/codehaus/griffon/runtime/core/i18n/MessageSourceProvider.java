@@ -35,12 +35,12 @@ public class MessageSourceProvider implements Provider<MessageSource> {
     private CompositeResourceBundleBuilder resourceBundleBuilder;
 
     public MessageSourceProvider(@Nonnull String basename) {
-        this.basename = requireNonBlank(basename, "Argument 'basename' cannot be blank");
+        this.basename = requireNonBlank(basename, "Argument 'basename' must not be blank");
     }
 
     @Inject
     public void setResourceBundleBuilder(@Nonnull CompositeResourceBundleBuilder resourceBundleBuilder) {
-        this.resourceBundleBuilder = requireNonNull(resourceBundleBuilder, "Argument 'resourceBundleBuilder' cannot be null");
+        this.resourceBundleBuilder = requireNonNull(resourceBundleBuilder, "Argument 'resourceBundleBuilder' must not be null");
     }
 
     @Override

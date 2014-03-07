@@ -54,7 +54,7 @@ public class AbstractBuilderCustomizer implements BuilderCustomizer {
     }
 
     public void setVariables(@Nonnull Map<String, Object> variables) {
-        requireNonNull(variables, "Argument 'variables' cannot be null");
+        requireNonNull(variables, "Argument 'variables' must not be null");
         this.variables.clear();
         this.variables.putAll(variables);
     }
@@ -65,7 +65,7 @@ public class AbstractBuilderCustomizer implements BuilderCustomizer {
     }
 
     public void setFactories(@Nonnull Map<String, Factory> factories) {
-        requireNonNull(factories, "Argument 'factories' cannot be null");
+        requireNonNull(factories, "Argument 'factories' must not be null");
         this.factories.clear();
         this.factories.putAll(factories);
     }
@@ -76,7 +76,7 @@ public class AbstractBuilderCustomizer implements BuilderCustomizer {
     }
 
     public void setMethods(@Nonnull Map<String, Closure> methods) {
-        requireNonNull(methods, "Argument 'methods' cannot be null");
+        requireNonNull(methods, "Argument 'methods' must not be null");
         this.methods.clear();
         this.methods.putAll(methods);
     }
@@ -87,7 +87,7 @@ public class AbstractBuilderCustomizer implements BuilderCustomizer {
     }
 
     public void setProps(@Nonnull Map<String, Closure[]> props) {
-        requireNonNull(props, "Argument 'props' cannot be null");
+        requireNonNull(props, "Argument 'props' must not be null");
         this.props.clear();
         this.props.putAll(props);
     }
@@ -98,7 +98,7 @@ public class AbstractBuilderCustomizer implements BuilderCustomizer {
     }
 
     public void setAttributeDelegates(@Nonnull List<Closure> attributeDelegates) {
-        requireNonNull(attributeDelegates, "Argument 'attributeDelegates' cannot be null");
+        requireNonNull(attributeDelegates, "Argument 'attributeDelegates' must not be null");
         this.attributeDelegates.clear();
         this.attributeDelegates.addAll(attributeDelegates);
     }
@@ -109,7 +109,7 @@ public class AbstractBuilderCustomizer implements BuilderCustomizer {
     }
 
     public void setPostInstantiateDelegates(@Nonnull List<Closure> postInstantiateDelegates) {
-        requireNonNull(postInstantiateDelegates, "Argument 'postInstantiateDelegates' cannot be null");
+        requireNonNull(postInstantiateDelegates, "Argument 'postInstantiateDelegates' must not be null");
         this.postInstantiateDelegates.clear();
         this.postInstantiateDelegates.addAll(postInstantiateDelegates);
     }
@@ -120,7 +120,7 @@ public class AbstractBuilderCustomizer implements BuilderCustomizer {
     }
 
     public void setPostNodeCompletionDelegates(@Nonnull List<Closure> postNodeCompletionDelegates) {
-        requireNonNull(postNodeCompletionDelegates, "Argument 'postNodeCompletionDelegates' cannot be null");
+        requireNonNull(postNodeCompletionDelegates, "Argument 'postNodeCompletionDelegates' must not be null");
         this.postNodeCompletionDelegates.clear();
         this.postNodeCompletionDelegates.addAll(postNodeCompletionDelegates);
     }
@@ -131,7 +131,7 @@ public class AbstractBuilderCustomizer implements BuilderCustomizer {
     }
 
     public void setPreInstantiateDelegates(@Nonnull List<Closure> preInstantiateDelegates) {
-        requireNonNull(preInstantiateDelegates, "Argument 'preInstantiateDelegates' cannot be null");
+        requireNonNull(preInstantiateDelegates, "Argument 'preInstantiateDelegates' must not be null");
         this.preInstantiateDelegates.clear();
         this.preInstantiateDelegates.addAll(preInstantiateDelegates);
     }
@@ -142,7 +142,7 @@ public class AbstractBuilderCustomizer implements BuilderCustomizer {
     }
 
     public void setDisposalClosures(@Nonnull List<Closure> disposalClosures) {
-        requireNonNull(disposalClosures, "Argument 'disposalClosures' cannot be null");
+        requireNonNull(disposalClosures, "Argument 'disposalClosures' must not be null");
         this.disposalClosures.clear();
         this.disposalClosures.addAll(disposalClosures);
     }

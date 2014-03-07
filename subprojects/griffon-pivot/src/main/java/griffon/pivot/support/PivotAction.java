@@ -67,7 +67,7 @@ public class PivotAction extends Action {
 
     @Override
     public void perform(Component component) {
-        requireNonNull(callable, "Argument 'callable' cannot be null for " + this);
+        requireNonNull(callable, "Argument 'callable' must not be null for " + this);
         callable.call(component);
     }
 }

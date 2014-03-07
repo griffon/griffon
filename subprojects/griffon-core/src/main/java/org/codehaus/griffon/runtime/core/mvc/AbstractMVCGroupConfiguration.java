@@ -35,16 +35,16 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public abstract class AbstractMVCGroupConfiguration implements MVCGroupConfiguration {
-    private static final String ERROR_MEMBERS_NULL = "Argument 'members' cannot be null";
-    private static final String ERROR_ARGS_NULL = "Argument 'args' cannot be null";
+    private static final String ERROR_MEMBERS_NULL = "Argument 'members' must not be null";
+    private static final String ERROR_ARGS_NULL = "Argument 'args' must not be null";
     protected final Map<String, String> members = new LinkedHashMap<>();
     protected final Map<String, Object> config = new LinkedHashMap<>();
     protected final String mvcType;
 
     public AbstractMVCGroupConfiguration(@Nonnull String mvcType, @Nonnull Map<String, String> members, @Nonnull Map<String, Object> config) {
-        this.mvcType = requireNonBlank(mvcType, "Argument 'mvcType' cannot be blank");
+        this.mvcType = requireNonBlank(mvcType, "Argument 'mvcType' must not be blank");
         this.members.putAll(requireNonNull(members, ERROR_MEMBERS_NULL));
-        this.config.putAll(requireNonNull(config, "Argument 'config' cannot be null"));
+        this.config.putAll(requireNonNull(config, "Argument 'config' must not be null"));
     }
 
     @Override

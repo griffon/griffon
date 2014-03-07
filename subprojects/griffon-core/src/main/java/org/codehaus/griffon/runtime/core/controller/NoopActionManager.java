@@ -53,7 +53,7 @@ public class NoopActionManager implements ActionManager {
     @Nonnull
     @Override
     public String normalizeName(@Nonnull String actionName) {
-        requireNonBlank(actionName, "Argument 'actionName' cannot be blank");
+        requireNonBlank(actionName, "Argument 'actionName' must not be blank");
         if (actionName.endsWith(ACTION)) {
             actionName = actionName.substring(0, actionName.length() - ACTION.length());
         }

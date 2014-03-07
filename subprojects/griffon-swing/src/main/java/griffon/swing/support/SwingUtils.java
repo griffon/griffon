@@ -39,7 +39,7 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class SwingUtils {
-    private static final String ERROR_WINDOW_NULL = "Argument 'window' cannot be null";
+    private static final String ERROR_WINDOW_NULL = "Argument 'window' must not be null";
 
     /**
      * Centers a Window on the screen<p>
@@ -75,7 +75,7 @@ public class SwingUtils {
      * @param internalFrame a JInternalFrame object
      */
     public static void centerOnScreen(@Nonnull JInternalFrame internalFrame) {
-        requireNonNull(internalFrame, "Argument 'internalFrame' cannot be null");
+        requireNonNull(internalFrame, "Argument 'internalFrame' must not be null");
 
         JDesktopPane desktop = internalFrame.getDesktopPane();
         if (desktop == null) return;
@@ -130,8 +130,8 @@ public class SwingUtils {
      */
     @Nullable
     public static Component findComponentByName(@Nonnull String name, @Nonnull Container root) {
-        requireNonNull(root, "Argument 'root' cannot be null");
-        requireNonBlank(name, "Argument 'name' cannot be blank");
+        requireNonNull(root, "Argument 'root' must not be null");
+        requireNonBlank(name, "Argument 'name' must not be blank");
         if (name.equals(root.getName())) {
             return root;
         }
@@ -170,7 +170,7 @@ public class SwingUtils {
      */
     @Nonnull
     public static Image takeSnapshot(@Nonnull Component component, boolean usePrint) {
-        requireNonNull(component, "Argument 'component' cannot be null");
+        requireNonNull(component, "Argument 'component' must not be null");
 
         BufferedImage image = null;
         GraphicsEnvironment genv = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -222,7 +222,7 @@ public class SwingUtils {
      */
     @Nonnull
     public static Window createApplicationFrame(@Nonnull GriffonApplication application, @Nonnull Map<String, Object> attributes) {
-        requireNonNull(application, "Argument 'application' cannot be null");
+        requireNonNull(application, "Argument 'application' must not be null");
         JFrame frame = null;
         // try config specified first
         String frameClass = application.getConfiguration().getAsString("application.frameClass", JFrame.class.getName());

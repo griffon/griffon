@@ -53,7 +53,7 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  */
 public abstract class AbstractGriffonApplication extends AbstractObservable implements GriffonApplication {
-    private static final String ERROR_SHUTDOWN_HANDLER_NULL = "Argument 'shutdownHandler' cannot be null";
+    private static final String ERROR_SHUTDOWN_HANDLER_NULL = "Argument 'shutdownHandler' must not be null";
     private Locale locale = Locale.getDefault();
     public static final String[] EMPTY_ARGS = new String[0];
     private static final Class<?>[] CTOR_ARGS = new Class<?>[]{String[].class};
@@ -78,7 +78,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     }
 
     public void setInjector(@Nonnull Injector<?> injector) {
-        this.injector = requireNonNull(injector, "Argument 'injector' cannot be bull");
+        this.injector = requireNonNull(injector, "Argument 'injector' must not be bull");
         this.injector.injectMembers(this);
         addShutdownHandler(getWindowManager());
         MVCGroupExceptionHandler.registerWith(this);
@@ -128,7 +128,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     }
 
     protected void setPhase(@Nonnull ApplicationPhase phase) {
-        requireNonNull(phase, "Argument 'phase' cannot be null");
+        requireNonNull(phase, "Argument 'phase' must not be null");
         synchronized (lock) {
             firePropertyChange("phase", this.phase, this.phase = phase);
         }

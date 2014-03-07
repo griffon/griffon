@@ -56,9 +56,9 @@ public abstract class AbstractActionManager implements ActionManager {
 
     private static final String KEY_THREADING = "controller.threading";
     private static final String KEY_DISABLE_THREADING_INJECTION = "griffon.disable.threading.injection";
-    private static final String ERROR_CONTROLLER_NULL = "Argument 'controller' cannot be null";
-    private static final String ERROR_ACTION_NAME_BLANK = "Argument 'actionName' cannot be blank";
-    private static final String ERROR_ACTION_INTERCEPTOR_NULL = "Argument 'actionInterceptor' cannot be null";
+    private static final String ERROR_CONTROLLER_NULL = "Argument 'controller' must not be null";
+    private static final String ERROR_ACTION_NAME_BLANK = "Argument 'actionName' must not be blank";
+    private static final String ERROR_ACTION_INTERCEPTOR_NULL = "Argument 'actionInterceptor' must not be null";
     private final ActionCache actionCache = new ActionCache();
     private final Map<String, Threading.Policy> threadingPolicies = new ConcurrentHashMap<>();
     private final List<ActionInterceptor> interceptors = new CopyOnWriteArrayList<>();
@@ -67,7 +67,7 @@ public abstract class AbstractActionManager implements ActionManager {
 
     @Inject
     public AbstractActionManager(@Nonnull GriffonApplication application) {
-        this.application = requireNonNull(application, "Argument 'application' cannot be null");
+        this.application = requireNonNull(application, "Argument 'application' must not be null");
     }
 
     @Nonnull

@@ -38,8 +38,8 @@ public class DefaultMessageSource extends AbstractMessageSource {
     private final CompositeResourceBundleBuilder compositeResourceBundleBuilder;
 
     public DefaultMessageSource(@Nonnull CompositeResourceBundleBuilder builder, @Nonnull String basename) {
-        this.compositeResourceBundleBuilder = requireNonNull(builder, "Argument 'builder' cannot be null");
-        this.basename = requireNonBlank(basename, "Argument 'basename' cannot be blank");
+        this.compositeResourceBundleBuilder = requireNonNull(builder, "Argument 'builder' must not be null");
+        this.basename = requireNonBlank(basename, "Argument 'basename' must not be blank");
     }
 
     @Nonnull

@@ -49,7 +49,7 @@ public abstract class AbstractGriffonArtifact implements GriffonArtifact {
     private final Object lock = new Object[0];
 
     public AbstractGriffonArtifact(@Nonnull GriffonApplication application) {
-        this.application = requireNonNull(application, "Arguments 'application' cannot be null");
+        this.application = requireNonNull(application, "Arguments 'application' must not be null");
         log = LoggerFactory.getLogger("griffon.app." + getArtifactType() + "." + getClass().getName());
     }
 

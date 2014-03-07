@@ -32,7 +32,7 @@ public class ExpandableResourceBundle extends ResourceBundle {
 
     @Nonnull
     public static ResourceBundle wrapResourceBundle(@Nonnull ResourceBundle resourceBundle) {
-        requireNonNull(resourceBundle, "Argument 'resourceBundle' cannot be null");
+        requireNonNull(resourceBundle, "Argument 'resourceBundle' must not be null");
         if (!(resourceBundle instanceof ExpandableResourceBundle)) {
             return new ExpandableResourceBundle(resourceBundle);
         }
@@ -40,7 +40,7 @@ public class ExpandableResourceBundle extends ResourceBundle {
     }
 
     public ExpandableResourceBundle(@Nonnull ResourceBundle delegate) {
-        requireNonNull(delegate, "Argument 'delegate' cannot be null");
+        requireNonNull(delegate, "Argument 'delegate' must not be null");
         for (String key : delegate.keySet()) {
             Object value = getConfigValue(delegate, key);
             processKey(key, entries, value);
@@ -74,7 +74,7 @@ public class ExpandableResourceBundle extends ResourceBundle {
     @Nullable
     @Override
     protected final Object handleGetObject(@Nonnull String key) {
-        return entries.get(requireNonBlank(key, "Argument 'key' cannot be blank"));
+        return entries.get(requireNonBlank(key, "Argument 'key' must not be blank"));
     }
 
     @Nonnull

@@ -30,8 +30,8 @@ public class PreferenceChangeEvent {
     private Object newValue;
 
     public PreferenceChangeEvent(@Nonnull String path, @Nonnull String key, @Nullable Object oldValue, @Nullable Object newValue) {
-        this.path = requireNonBlank(path, "Argument 'path' cannot be blank");
-        this.key = requireNonBlank(key, "Argument 'key' cannot be blank");
+        this.path = requireNonBlank(path, "Argument 'path' must not be blank");
+        this.key = requireNonBlank(key, "Argument 'key' must not be blank");
         this.oldValue = oldValue;
         this.newValue = newValue;
     }

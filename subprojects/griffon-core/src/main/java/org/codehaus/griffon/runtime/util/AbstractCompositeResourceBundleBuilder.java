@@ -33,11 +33,11 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public abstract class AbstractCompositeResourceBundleBuilder implements CompositeResourceBundleBuilder {
-    protected static final String ERROR_FILENAME_BLANK = "Argument 'fileName' cannot be blank";
-    protected static final String ERROR_SUFFIX_BLANK = "Argument 'suffix' cannot be blank";
-    protected static final String ERROR_RESOURCE_HANDLER_NULL = "Argument 'resourceHandler' cannot be null";
-    protected static final String ERROR_BASENAME_BLANK = "Argument 'basename' cannot be blank";
-    protected static final String ERROR_LOCALE_NULL = "Argument 'locale' cannot be null";
+    protected static final String ERROR_FILENAME_BLANK = "Argument 'fileName' must not be blank";
+    protected static final String ERROR_SUFFIX_BLANK = "Argument 'suffix' must not be blank";
+    protected static final String ERROR_RESOURCE_HANDLER_NULL = "Argument 'resourceHandler' must not be null";
+    protected static final String ERROR_BASENAME_BLANK = "Argument 'basename' must not be blank";
+    protected static final String ERROR_LOCALE_NULL = "Argument 'locale' must not be null";
 
     protected final ResourceHandler resourceHandler;
 

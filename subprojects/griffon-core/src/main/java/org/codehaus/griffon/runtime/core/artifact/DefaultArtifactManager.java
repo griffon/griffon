@@ -45,7 +45,7 @@ public class DefaultArtifactManager extends AbstractArtifactManager {
 
     @Inject
     public DefaultArtifactManager(@Nonnull ApplicationClassLoader applicationClassLoader) {
-        this.applicationClassLoader = requireNonNull(applicationClassLoader, "Argument 'applicationClassLoader' cannot be null");
+        this.applicationClassLoader = requireNonNull(applicationClassLoader, "Argument 'applicationClassLoader' must not be null");
     }
 
     @Nonnull

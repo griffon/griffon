@@ -140,7 +140,7 @@ public class GriffonNameUtils {
      */
     public static String getClassName(String logicalName, String trailingName) {
         if (isBlank(logicalName)) {
-            throw new IllegalArgumentException("Argument [logicalName] cannot be null or blank");
+            throw new IllegalArgumentException("Argument [logicalName] must not be null or blank");
         }
 
         String className = capitalize(logicalName);

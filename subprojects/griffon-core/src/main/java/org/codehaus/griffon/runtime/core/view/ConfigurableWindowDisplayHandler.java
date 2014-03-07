@@ -94,16 +94,16 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler<W> {
-    protected static final String ERROR_NAME_BLANK = "Argument 'name' cannot be blank";
-    protected static final String ERROR_WINDOW_NULL = "Argument 'window' cannot be null";
+    protected static final String ERROR_NAME_BLANK = "Argument 'name' must not be blank";
+    protected static final String ERROR_WINDOW_NULL = "Argument 'window' must not be null";
 
     private final GriffonApplication application;
     private final WindowDisplayHandler<W> delegateWindowsDisplayHandler;
 
     @Inject
     public ConfigurableWindowDisplayHandler(@Nonnull GriffonApplication application, @Nonnull @Named("defaultWindowDisplayHandler") WindowDisplayHandler<W> delegateWindowsDisplayHandler) {
-        this.application = requireNonNull(application, "Argument 'application' cannot be null");
-        this.delegateWindowsDisplayHandler = requireNonNull(delegateWindowsDisplayHandler, "Argument 'delegateWindowsDisplayHandler' cannot be null");
+        this.application = requireNonNull(application, "Argument 'application' must not be null");
+        this.delegateWindowsDisplayHandler = requireNonNull(delegateWindowsDisplayHandler, "Argument 'delegateWindowsDisplayHandler' must not be null");
     }
 
     @SuppressWarnings("unchecked")

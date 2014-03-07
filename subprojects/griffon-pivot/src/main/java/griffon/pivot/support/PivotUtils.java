@@ -44,8 +44,8 @@ public class PivotUtils {
      */
     @Nullable
     public static Component findComponentByName(@Nonnull String name, @Nonnull Container root) {
-        requireNonNull(root, "Argument 'root' cannot be null");
-        requireNonBlank(name, "Argument 'name' cannot be blank");
+        requireNonNull(root, "Argument 'root' must not be null");
+        requireNonBlank(name, "Argument 'name' must not be blank");
         if (name.equals(root.getName())) {
             return root;
         }

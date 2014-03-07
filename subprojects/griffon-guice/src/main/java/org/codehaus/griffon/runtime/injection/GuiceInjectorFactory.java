@@ -55,8 +55,8 @@ public class GuiceInjectorFactory implements InjectorFactory {
     @Nonnull
     @Override
     public GuiceInjector createInjector(@Nonnull GriffonApplication application, @Nonnull Iterable<Binding<?>> bindings) {
-        requireNonNull(application, "Argument 'application' cannot be null");
-        requireNonNull(bindings, "Argument 'bindings' cannot be null");
+        requireNonNull(application, "Argument 'application' must not be null");
+        requireNonNull(bindings, "Argument 'bindings' must not be null");
         InjectorProvider injectorProvider = new InjectorProvider();
         GuiceInjector injector = createModules(application, injectorProvider, bindings);
         injectorProvider.setInjector(injector);

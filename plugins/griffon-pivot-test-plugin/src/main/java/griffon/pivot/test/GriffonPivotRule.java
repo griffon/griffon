@@ -45,7 +45,7 @@ public class GriffonPivotRule implements MethodRule {
     }
 
     public GriffonPivotRule(@Nonnull String[] startupArgs) {
-        requireNonNull(startupArgs, "Argument 'startupArgs' cannot be null");
+        requireNonNull(startupArgs, "Argument 'startupArgs' must not be null");
         this.startupArgs = new String[startupArgs.length];
         System.arraycopy(startupArgs, 0, this.startupArgs, 0, startupArgs.length);
         if (!Environment.isSystemSet()) {

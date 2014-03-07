@@ -44,8 +44,8 @@ import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.*;
  */
 public abstract class GriffonArtifactASTTransformation extends AbstractASTTransformation implements BaseConstants {
     private static final Logger LOG = LoggerFactory.getLogger(GriffonArtifactASTTransformation.class);
-    protected static final String ERROR_CLASS_NODE_NULL = "Argument 'classNode' cannot be null";
-    protected static final String ERROR_SOURCE_NULL = "Argument 'source' cannot be null";
+    protected static final String ERROR_CLASS_NODE_NULL = "Argument 'classNode' must not be null";
+    protected static final String ERROR_SOURCE_NULL = "Argument 'source' must not be null";
     private static final ClassNode GRIFFON_APPLICATION_TYPE = makeClassSafe(GriffonApplication.class);
     private static final ClassNode INJECT_TYPE = makeClassSafe(Inject.class);
 

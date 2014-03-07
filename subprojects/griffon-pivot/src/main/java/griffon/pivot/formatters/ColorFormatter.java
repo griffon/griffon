@@ -178,7 +178,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
     @Nonnull
     @SuppressWarnings("ConstantConditions")
     public static Color parseColor(@Nonnull String str) throws ParseException {
-        requireNonBlank(str, "Argument cannot be blank");
+        requireNonBlank(str, "Argument must not be blank");
         if (str.startsWith("#")) {
             switch (str.length()) {
                 case 4:

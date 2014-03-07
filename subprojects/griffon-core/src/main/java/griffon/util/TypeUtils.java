@@ -39,7 +39,7 @@ import static java.util.Objects.requireNonNull;
  */
 public final class TypeUtils {
 
-    private static final String ERROR_VALUE_NULL = "Argument 'value' cannot be null";
+    private static final String ERROR_VALUE_NULL = "Argument 'value' must not be null";
 
     private TypeUtils() {
         // prevent instantiation
@@ -189,7 +189,7 @@ public final class TypeUtils {
     @Nonnull
     @SuppressWarnings("unchecked")
     public static <T> T convertValue(@Nonnull Class<T> targetType, @Nonnull Object value, @Nullable String format) {
-        requireNonNull(targetType, "Argument 'targetType' cannot be null");
+        requireNonNull(targetType, "Argument 'targetType' must not be null");
         requireNonNull(value, ERROR_VALUE_NULL);
         if (targetType.isAssignableFrom(value.getClass())) {
             return (T) value;

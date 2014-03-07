@@ -36,8 +36,8 @@ public abstract class AbstractPreferencesNode implements PreferencesNode {
     private String path;
 
     public AbstractPreferencesNode(@Nonnull Preferences preferences, @Nullable PreferencesNode parent, @Nonnull String name) {
-        this.preferences = requireNonNull(preferences, "Argument 'preferences' cannot be null");
-        this.name = requireNonBlank(name, "Argument 'name' cannot be null");
+        this.preferences = requireNonNull(preferences, "Argument 'preferences' must not be null");
+        this.name = requireNonBlank(name, "Argument 'name' must not be null");
         this.parent = parent;
     }
 
@@ -71,7 +71,7 @@ public abstract class AbstractPreferencesNode implements PreferencesNode {
 
     @Nonnull
     public PreferencesNode merge(@Nonnull PreferencesNode other) {
-        requireNonNull(other, "Argument 'other' cannot be null");
+        requireNonNull(other, "Argument 'other' must not be null");
         for (String key : other.keys()) {
             putAt(key, other.getAt(key));
         }
@@ -86,25 +86,25 @@ public abstract class AbstractPreferencesNode implements PreferencesNode {
     }
 
     public boolean containsNode(@Nonnull Class<?> clazz) {
-        requireNonNull(clazz, "Argument 'clazz' cannot be null");
+        requireNonNull(clazz, "Argument 'clazz' must not be null");
         return containsNode(clazz.getName());
     }
 
     public boolean containsNode(@Nonnull String path) {
-        requireNonNull(path, "Argument 'path' cannot be null");
+        requireNonNull(path, "Argument 'path' must not be null");
         String[] parsedPath = parsePath(path);
         return parsedPath.length != 0 && getChildNode(parsedPath[0]) != null;
     }
 
     @Nullable
     public PreferencesNode node(@Nonnull Class<?> clazz) {
-        requireNonNull(clazz, "Argument 'clazz' cannot be null");
+        requireNonNull(clazz, "Argument 'clazz' must not be null");
         return node(clazz.getName());
     }
 
     @Nullable
     public PreferencesNode node(@Nonnull String path) {
-        requireNonNull(path, "Argument 'path' cannot be null");
+        requireNonNull(path, "Argument 'path' must not be null");
         String[] parsedPath = parsePath(path);
         if (parsedPath.length == 0) return null;
         String nodeName = parsedPath[0];
@@ -123,7 +123,7 @@ public abstract class AbstractPreferencesNode implements PreferencesNode {
 
     @Nullable
     public PreferencesNode removeNode(@Nonnull Class<?> clazz) {
-        requireNonNull(clazz, "Argument 'clazz' cannot be null");
+        requireNonNull(clazz, "Argument 'clazz' must not be null");
         return removeNode(clazz.getName());
     }
 

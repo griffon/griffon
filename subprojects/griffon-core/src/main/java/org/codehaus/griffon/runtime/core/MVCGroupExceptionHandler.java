@@ -35,7 +35,7 @@ public final class MVCGroupExceptionHandler implements CallableWithArgs<Void> {
     }
 
     private MVCGroupExceptionHandler(@Nonnull GriffonApplication application) {
-        this.application = requireNonNull(application, "Argument 'application' cannot be null");
+        this.application = requireNonNull(application, "Argument 'application' must not be null");
 
         application.getEventRouter().addEventListener("UncaughtMVCGroupConfigurationException", this);
         application.getEventRouter().addEventListener("UncaughtMVCGroupInstantiationException", this);

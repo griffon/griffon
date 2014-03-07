@@ -1242,10 +1242,10 @@ public class MethodUtils {
          */
         public MethodDescriptor(Class cls, String methodName, Class[] paramTypes, boolean exact) {
             if (cls == null) {
-                throw new IllegalArgumentException("Class cannot be null");
+                throw new IllegalArgumentException("Class must not be null");
             }
             if (methodName == null) {
-                throw new IllegalArgumentException("Method Name cannot be null");
+                throw new IllegalArgumentException("Method Name must not be null");
             }
             if (paramTypes == null) {
                 paramTypes = EMPTY_CLASS_PARAMETERS;

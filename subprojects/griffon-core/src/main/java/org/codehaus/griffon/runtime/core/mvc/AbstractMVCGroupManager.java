@@ -51,12 +51,12 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractMVCGroupManager.class);
-    protected static final String ERROR_MVCTYPE_BLANK = "Argument 'mvcType' cannot be blank";
-    protected static final String ERROR_MVCID_BLANK = "Argument 'mvcId' cannot be blank";
-    protected static final String ERROR_CONFIGURATION_NULL = "Argument 'configuration' cannot be null";
-    protected static final String ERROR_GROUP_NULL = "Argument 'group' cannot be null";
-    protected static final String ERROR_CONFIG_NULL = "Argument 'config' cannot be null";
-    protected static final String ERROR_ARGS_NULL = "Argument 'args' cannot be null";
+    protected static final String ERROR_MVCTYPE_BLANK = "Argument 'mvcType' must not be blank";
+    protected static final String ERROR_MVCID_BLANK = "Argument 'mvcId' must not be blank";
+    protected static final String ERROR_CONFIGURATION_NULL = "Argument 'configuration' must not be null";
+    protected static final String ERROR_GROUP_NULL = "Argument 'group' must not be null";
+    protected static final String ERROR_CONFIG_NULL = "Argument 'config' must not be null";
+    protected static final String ERROR_ARGS_NULL = "Argument 'args' must not be null";
 
     private final GriffonApplication application;
 
@@ -67,7 +67,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
 
     @Inject
     public AbstractMVCGroupManager(@Nonnull GriffonApplication application) {
-        this.application = requireNonNull(application, "Argument 'application' cannot be null");
+        this.application = requireNonNull(application, "Argument 'application' must not be null");
     }
 
     @Override
@@ -118,7 +118,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     }
 
     public final void initialize(@Nonnull Map<String, MVCGroupConfiguration> configurations) {
-        requireNonNull(configurations, "Argument 'configurations' cannot be null");
+        requireNonNull(configurations, "Argument 'configurations' must not be null");
         if (configurations.isEmpty()) return;
         synchronized (lock) {
             if (!initialized) {
@@ -144,7 +144,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     }
 
     public void removeConfiguration(@Nonnull String name) {
-        requireNonBlank(name, "Argument 'name' cannot be blank");
+        requireNonBlank(name, "Argument 'name' must not be blank");
         if (!isBlank(name)) {
             synchronized (lock) {
                 configurations.remove(name);

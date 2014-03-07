@@ -54,7 +54,7 @@ public class DefaultToolkitAction {
     }
 
     public void execute() {
-        requireNonNull(runnable, "Argument 'runnable' cannot be null for " + this);
+        requireNonNull(runnable, "Argument 'runnable' must not be null for " + this);
         runnable.run();
     }
 }

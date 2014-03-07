@@ -48,13 +48,13 @@ public abstract class AbstractASTInjector implements ASTInjector {
 
     @Nonnull
     public static ClassNode makeClassSafe(@Nonnull ClassNode classNode) {
-        requireNonNull(classNode, "Argument 'classNode' cannot be null");
+        requireNonNull(classNode, "Argument 'classNode' must not be null");
         return classNode.getPlainNodeReference();
     }
 
     @Nonnull
     public static ClassNode makeClassSafe(@Nonnull Class<?> klass) {
-        requireNonNull(klass, "Argument 'klass' cannot be null");
+        requireNonNull(klass, "Argument 'klass' must not be null");
         return makeClassSafe(ClassHelper.make(klass));
     }
 

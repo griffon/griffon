@@ -64,10 +64,10 @@ public abstract class AbstractObservable implements Observable {
     }
 
     protected void firePropertyChange(@Nonnull PropertyChangeEvent event) {
-        pcs.firePropertyChange(requireNonNull(event, "Argument 'event' cannot be null"));
+        pcs.firePropertyChange(requireNonNull(event, "Argument 'event' must not be null"));
     }
 
     protected void firePropertyChange(@Nonnull String propertyName, @Nullable Object oldValue, @Nullable Object newValue) {
-        pcs.firePropertyChange(requireNonBlank(propertyName, "Argument 'propertyName' cannot be blank"), oldValue, newValue);
+        pcs.firePropertyChange(requireNonBlank(propertyName, "Argument 'propertyName' must not be blank"), oldValue, newValue);
     }
 }

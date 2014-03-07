@@ -38,7 +38,7 @@ public abstract class AbstractGriffonMvcArtifact extends AbstractGriffonArtifact
     }
 
     public void setMvcGroup(@Nonnull MVCGroup group) {
-        this.group = requireNonNull(group, "Argument 'group' cannot be null");
+        this.group = requireNonNull(group, "Argument 'group' must not be null");
     }
 
     @Nonnull

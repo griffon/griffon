@@ -35,8 +35,8 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public abstract class AbstractGriffonModel extends AbstractGriffonMvcArtifact implements GriffonModel {
-    private static final String ERROR_EVENT_NULL = "Argument 'event' cannot be null";
-    private static final String ERROR_PROPERTY_NAME_BLANK = "Argument 'propertyName' cannot be blank";
+    private static final String ERROR_EVENT_NULL = "Argument 'event' must not be null";
+    private static final String ERROR_PROPERTY_NAME_BLANK = "Argument 'propertyName' must not be blank";
     protected final PropertyChangeSupport pcs;
     protected final VetoableChangeSupport vcs;
 

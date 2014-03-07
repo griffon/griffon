@@ -40,8 +40,8 @@ public abstract class AbstractObjectFactory<T> implements ObjectFactory<T> {
 
     @Inject
     public AbstractObjectFactory(@Nonnull Configuration configuration, @Nonnull GriffonApplication application) {
-        this.configuration = requireNonNull(configuration, "Argument 'configuration' cannot be null");
-        this.application = requireNonNull(application, "Argument 'application' cannot be null");
+        this.configuration = requireNonNull(configuration, "Argument 'configuration' must not be null");
+        this.application = requireNonNull(application, "Argument 'application' must not be null");
     }
 
     @Nonnull
@@ -67,7 +67,7 @@ public abstract class AbstractObjectFactory<T> implements ObjectFactory<T> {
     @Nonnull
     @SuppressWarnings({"unchecked", "ConstantConditions"})
     protected Map<String, Object> narrowConfig(@Nonnull String name) {
-        requireNonBlank(name, "Argument 'name' cannot be blank");
+        requireNonBlank(name, "Argument 'name' must not be blank");
         if (KEY_DEFAULT.equals(name) && configuration.containsKey(getSingleKey())) {
             return (Map<String, Object>) configuration.get(getSingleKey());
         } else if (configuration.containsKey(getPluralKey())) {

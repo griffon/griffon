@@ -38,12 +38,12 @@ public class CompositeResourceResolver extends AbstractResourceResolver {
     }
 
     public CompositeResourceResolver(@Nonnull ResourceResolver[] resourceResolvers) {
-        this.resourceResolvers = requireNonNull(resourceResolvers, "Argument 'resourceResolvers' cannot be null");
+        this.resourceResolvers = requireNonNull(resourceResolvers, "Argument 'resourceResolvers' must not be null");
     }
 
     private static ResourceResolver[] toResourceResolverArray(@Nonnull Collection<ResourceResolver> resourceResolvers) {
-        requireNonNull(resourceResolvers, "Argument 'resourceResolvers' cannot be null");
-        requireState(!resourceResolvers.isEmpty(), "Argument 'resourceResolvers' cannot be empty");
+        requireNonNull(resourceResolvers, "Argument 'resourceResolvers' must not be null");
+        requireState(!resourceResolvers.isEmpty(), "Argument 'resourceResolvers' must not be empty");
         return resourceResolvers.toArray(new ResourceResolver[resourceResolvers.size()]);
     }
 
