@@ -23,11 +23,14 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedOptions;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic.Kind;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 
 /**
@@ -144,16 +147,6 @@ public class ArtifactProviderProcessor extends AbstractSpiProcessor {
         if (!currentClass.getModifiers().contains(Modifier.PUBLIC)) {
             return CheckResult.valueOf("is not a public class");
         }
-
-        if (!isStaticClass(currentClass)) {
-            return CheckResult.valueOf("is not a static class");
-        }
-
-        /*
-        if (!hasCorrectConstructor(currentClass)) {
-            return CheckResult.valueOf("has no public no-args constructor");
-        }
-        */
 
         return CheckResult.OK;
     }

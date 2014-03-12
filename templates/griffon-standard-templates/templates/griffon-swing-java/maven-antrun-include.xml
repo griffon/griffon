@@ -20,27 +20,27 @@
                 </fileset>
                 <filterset>
                     <filter token="application.name"
-                            value="${project.name}"/>
+                            value="\${project.name}"/>
                     <filter
                         token="application.version"
-                        value="${project.version}"/>
+                        value="\${project.version}"/>
                     <filter token="griffon.version"
-                            value="${griffon.version}"/>
+                            value="\${griffon.version}"/>
                 </filterset>
             </copy>
         </sequential>
     </macrodef>
 
     <copy-resources
-        destination="${project.build.testOutputDirectory}"
+        destination="\${project.build.testOutputDirectory}"
         source="src/test/resources"/>
     <copy-resources
-        destination="${project.build.outputDirectory}"
+        destination="\${project.build.outputDirectory}"
         source="src/main/resources"/>
     <copy-resources
-        destination="${project.build.outputDirectory}"
+        destination="\${project.build.outputDirectory}"
         source="griffon-app/resources"/>
     <copy-resources
-        destination="${project.build.outputDirectory}"
+        destination="\${project.build.outputDirectory}"
         source="griffon-app/i18n"/>
 </project>

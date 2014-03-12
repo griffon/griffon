@@ -23,6 +23,7 @@ import lombok.javac.JavacAnnotationHandler;
 import lombok.javac.JavacNode;
 import lombok.javac.handlers.ast.JavacType;
 import org.codehaus.griffon.compile.core.EventPublisherConstants;
+import org.kordamp.jipsy.ServiceProviderFor;
 
 import static lombok.core.util.ErrorMessages.canBeUsedOnClassAndEnumOnly;
 import static lombok.javac.handlers.JavacHandlerUtil.createAnnotation;
@@ -31,7 +32,7 @@ import static lombok.javac.handlers.JavacHandlerUtil.deleteAnnotationIfNeccessar
 /**
  * @author Andres Almiray
  */
-// @ServiceProviderFor(JavacAnnotationHandler.class)
+@ServiceProviderFor(JavacAnnotationHandler.class)
 public class HandleEventPublisher extends JavacAnnotationHandler<EventPublisher> {
     private final JavacEventPublisherHandler handler = new JavacEventPublisherHandler();
 

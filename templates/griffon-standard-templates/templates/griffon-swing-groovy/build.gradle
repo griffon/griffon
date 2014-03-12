@@ -1,6 +1,21 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'net.saliman:gradle-cobertura-plugin:2.2.2'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.2.4'
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.7.0'
+    }
+}
+
 apply plugin: 'idea'
 apply plugin: 'groovy'
 apply plugin: 'application'
+apply from: 'gradle/publishing.gradle'
+apply from: 'gradle/code-coverage.gradle'
+apply from: 'gradle/code-quality.gradle'
 
 configurations {
     compileOnly
@@ -10,9 +25,6 @@ mainClassName = '${project_package}.Launcher'
 
 repositories {
     jcenter()
-    maven { url 'http://dl.bintray.com/content/aalmiray/griffon' }
-    maven { url 'http://dl.bintray.com/content/aalmiray/kordamp' }
-    mavenCentral()
 }
 
 dependencies {
@@ -20,8 +32,8 @@ dependencies {
 
     compile "org.codehaus.griffon:griffon-groovy:\$griffonVersion"
     compile "org.codehaus.griffon:griffon-swing:\$griffonVersion"
+    compile "org.codehaus.griffon:griffon-guice:\$griffonVersion"
 
-    runtime "org.codehaus.griffon:griffon-guice:\$griffonVersion"
     runtime "org.codehaus.griffon:griffon-swing-groovy:\$griffonVersion"
     runtime('log4j:log4j:1.2.17') {
         exclude group: 'ant',         module: 'ant-nodeps'
@@ -31,6 +43,7 @@ dependencies {
     runtime 'org.slf4j:slf4j-log4j12:1.7.5'
 
     testCompile "org.codehaus.griffon:griffon-core-test:\$griffonVersion"
+    testCompile "org.codehaus.griffon:griffon-fest-test:\$griffonVersion"
 }
 
 sourceSets {
@@ -76,16 +89,43 @@ gradle.taskGraph.whenReady {
 
 processResources {
     from(sourceSets.main.resources.srcDirs) {
+        exclude '**/*.properties'
+        exclude '**/*.groovy'
+        exclude '**/*.xml'
+    }
+    from(sourceSets.main.resources.srcDirs) {
         include '**/*.properties'
+        include '**/*.groovy'
         include '**/*.xml'
         filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
             'application.name': project.name,
             'application.version': project.version,
-            'griffon.version': project.version
+            'griffon.version': project.griffonVersion
         ])
     }
-    from(sourceSets.main.resources.srcDirs) {
+}
+
+processTestResources {
+    from(sourceSets.test.resources.srcDirs) {
         exclude '**/*.properties'
+        exclude '**/*.groovy'
         exclude '**/*.xml'
     }
+    from(sourceSets.test.resources.srcDirs) {
+        include '**/*.properties'
+        include '**/*.groovy'
+        include '**/*.xml'
+        filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+            'application.name': project.name,
+            'application.version': project.version,
+            'griffon.version': project.griffonVersion
+        ])
+    }
+}
+
+gradle.taskGraph.whenReady {
+    sourceSets.main.groovy.srcDirs.each    { it.mkdirs() }
+    sourceSets.test.groovy.srcDirs.each    { it.mkdirs() }
+    sourceSets.main.resources.srcDirs.each { it.mkdirs() }
+    sourceSets.test.resources.srcDirs.each { it.mkdirs() }
 }

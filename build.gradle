@@ -16,7 +16,6 @@
 
 import java.text.SimpleDateFormat
 
-
 apply plugin: 'base'
 apply plugin: 'idea'
 apply plugin: 'coveralls'
@@ -35,6 +34,7 @@ buildscript {
         classpath 'org.ajoberstar:gradle-git:0.6.3'
     }
 }
+
 Date buildTimeAndDate = new Date()
 ext {
     buildTime = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
@@ -44,8 +44,6 @@ ext {
 allprojects {
     apply plugin: 'base'
     apply plugin: 'idea'
-
-    ext.maven = false
 
     repositories {
         jcenter()
@@ -60,13 +58,6 @@ subprojects { subproj ->
         configurations {
             compileOnly
             testCompileOnly
-        }
-
-        repositories {
-            jcenter()
-            maven { url 'http://dl.bintray.com/content/aalmiray/kordamp' }
-            mavenCentral()
-            mavenLocal()
         }
 
         dependencies {
@@ -154,7 +145,7 @@ subprojects { subproj ->
         subproj.apply from: rootProject.file('gradle/publish.gradle')
         subproj.apply from: rootProject.file('gradle/code-quality.gradle')
 
-        if (subproj.ext.maven == true) {
+        if (subproj.publishJars.toBoolean()) {
             javadoc {
                 excludes = ['**/*.html', 'META-INF/**', '**/*.groovy']
 
@@ -163,9 +154,9 @@ subprojects { subproj ->
                 options.encoding    = 'UTF-8'
                 options.author      = true
                 options.version     = subproj.sourceCompatibility
-                options.windowTitle = "${subproj.ext.pomDescription} $version"
-                options.docTitle    = "${subproj.ext.pomDescription} $version"
-                options.footer      = project.javadocFooter
+                options.windowTitle = "$subproj.pomDescription $version"
+                options.docTitle    = "$subproj.pomDescription $version"
+                options.footer      = rootProject.javadocFooter
                 options.links       = ['http://www.slf4j.org/apidocs/',
                                        'http://jsr-305.googlecode.com/svn/trunk/javadoc/',
                                        'http://docs.oracle.com/javase/7/docs/api/']
@@ -174,7 +165,7 @@ subprojects { subproj ->
                     copy {
                         into task.destinationDir
                         from rootProject.file('src/javadoc/resources/img/griffon.ico'),
-                            rootProject.file('src/javadoc/resources/css/stylesheet.css')
+                             rootProject.file('src/javadoc/resources/css/stylesheet.css')
                     }
                     copy {
                         into file("${task.destinationDir}/resources")

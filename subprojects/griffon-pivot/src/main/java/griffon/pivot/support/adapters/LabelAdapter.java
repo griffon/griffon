@@ -23,16 +23,23 @@ import griffon.core.CallableWithArgs;
  */
 public class LabelAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.LabelListener {
     private CallableWithArgs<Void> textChanged;
+    private CallableWithArgs<Void> maximumLengthChanged;
 
     public CallableWithArgs<Void> getTextChanged() {
         return this.textChanged;
     }
 
-
     public void setTextChanged(CallableWithArgs<Void> textChanged) {
         this.textChanged = textChanged;
     }
 
+    public CallableWithArgs<Void> getMaximumLengthChanged() {
+        return maximumLengthChanged;
+    }
+
+    public void setMaximumLengthChanged(CallableWithArgs<Void> maximumLengthChanged) {
+        this.maximumLengthChanged = maximumLengthChanged;
+    }
 
     public void textChanged(org.apache.pivot.wtk.Label arg0, java.lang.String arg1) {
         if (textChanged != null) {
@@ -40,4 +47,9 @@ public class LabelAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.L
         }
     }
 
+    public void maximumLengthChanged(org.apache.pivot.wtk.Label arg0, int arg1) {
+        if (maximumLengthChanged != null) {
+            maximumLengthChanged.call(arg0, arg1);
+        }
+    }
 }

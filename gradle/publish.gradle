@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+if (!publishJars.toBoolean()) return
+
 apply plugin: 'maven-publish'
 
 def pomConfig = {
     name project.name
-    description project.ext.pomDescription
+    description project.pomDescription
     url 'http://griffon-framework.org'
     inceptionYear '2008'
     licenses {
@@ -76,8 +78,6 @@ publishing {
         }
     }
 }
-
-task install(dependsOn: publishToMavenLocal)
 
 jar {
     manifest {

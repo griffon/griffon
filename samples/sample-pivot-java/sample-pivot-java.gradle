@@ -31,7 +31,7 @@ ext.depProjects = [
     ':griffon-pivot',
     ':griffon-guice',
     ':griffon-core-test',
-    ':griffon-pivot-test-plugin'
+    ':griffon-pivot-test'
 ]
 
 ext.depProjects.each { evaluationDependsOn it }
@@ -45,7 +45,7 @@ dependencies {
     runtime "org.slf4j:slf4j-simple:$slf4jVersion"
 
     testCompile project(':griffon-core-test')
-    testCompile project(':griffon-pivot-test-plugin')
+    testCompile project(':griffon-pivot-test')
 }
 
 sourceSets {

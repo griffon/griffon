@@ -43,7 +43,7 @@ public class ${project_capitalized_name}View extends AbstractGriffonView {
         JFrame window = (JFrame) getApplication()
             .createApplicationContainer(Collections.<String,Object>emptyMap());
         window.setName("mainWindow");
-        window.setTitle(getApplication().getApplicationConfiguration().getAsString("application.title"));
+        window.setTitle(getApplication().getConfiguration().getAsString("application.title"));
         window.setSize(320, 120);
         window.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         window.setIconImage(getImage("/griffon-icon-48x48.png"));
