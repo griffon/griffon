@@ -13,9 +13,6 @@ buildscript {
 apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'application'
-apply from: 'gradle/publishing.gradle'
-apply from: 'gradle/code-coverage.gradle'
-apply from: 'gradle/code-quality.gradle'
 
 configurations {
     compileOnly
@@ -67,6 +64,9 @@ sourceSets {
             ]
         }
     }
+    test {
+        compileClasspath += configurations.testCompileOnly
+    }
 }
 
 javadoc {
@@ -76,6 +76,7 @@ javadoc {
 idea {
     module {
         scopes.PROVIDED.plus += configurations.compileOnly
+        scopes.PROVIDED.plus += configurations.testCompileOnly
     }
 }
 
@@ -114,6 +115,11 @@ processTestResources {
         ])
     }
 }
+
+apply from: 'gradle/publishing.gradle'
+apply from: 'gradle/code-coverage.gradle'
+apply from: 'gradle/code-quality.gradle'
+apply from: 'gradle/integration-test.gradle'
 
 gradle.taskGraph.whenReady {
     sourceSets.main.java.srcDirs.each      { it.mkdirs() }

@@ -243,7 +243,6 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
 
         List<AnnotationNode> methodAnnotations = new ArrayList<>();
         List<AnnotationNode> fieldAnnotations = new ArrayList<>();
-        System.err.println(originalProp.getField().getName());
         for (AnnotationNode annotation : originalProp.getField().getAnnotations()) {
             if (FXOBSERVABLE_CNODE.equals(annotation.getClassNode())) continue;
             Class annotationClass = annotation.getClassNode().getTypeClass();

@@ -18,9 +18,9 @@ class ${project_capitalized_name}View {
                              imageIcon('/griffon-icon-32x32.png').image,
                              imageIcon('/griffon-icon-16x16.png').image]) {
                 gridLayout(rows: 2, cols: 1)
-                label(text: bind { model.clickCount },
+                label(id: 'clickLabel', text: bind { model.clickCount },
                      horizontalAlignment: SwingConstants.CENTER)
-                button(clickAction)
+                button(id: 'clickButton', clickAction)
             }
         }
     }

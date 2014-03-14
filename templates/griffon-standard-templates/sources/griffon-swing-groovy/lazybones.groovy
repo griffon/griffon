@@ -13,25 +13,30 @@ String packagePath = props.project_package.replace('.' as char, '/' as char)
 
 processTemplates 'build.gradle', props
 processTemplates 'gradle.properties', props
-processTemplates '*.xml', props
 processTemplates 'src/main/groovy/*.groovy', props
 processTemplates 'src/test/groovy/*.groovy', props
+processTemplates 'src/integration-test/groovy/*.groovy', props
 processTemplates 'griffon-app/*/*.groovy', props
 
 File mainSources = new File(projectDir, 'src/main/groovy')
 File testSources = new File(projectDir, 'src/test/groovy')
+File integrationTestSources = new File(projectDir, 'src/integration-test/groovy')
 
 File mainSourcesPath = new File(mainSources, packagePath)
 mainSourcesPath.mkdirs()
 File testSourcesPath = new File(testSources, packagePath)
 testSourcesPath.mkdirs()
+File integrationTestSourcesPath = new File(integrationTestSources, packagePath)
+integrationTestSourcesPath.mkdirs()
 
 mainSources.eachFile { File file ->
    file.renameTo(mainSourcesPath.absolutePath + '/' + file.name)
 }
-
 testSources.eachFile { File file ->
    file.renameTo(testSourcesPath.absolutePath + '/' + props.project_capitalized_name + file.name)
+}
+integrationTestSources.eachFile { File file ->
+    file.renameTo(integrationTestSourcesPath.absolutePath + '/' + props.project_capitalized_name + file.name)
 }
 
 ['controllers', 'models', 'services', 'views'].each { String category ->

@@ -57,6 +57,7 @@ public class ${project_capitalized_name}View extends AbstractGriffonView {
         window.getContentPane().setLayout(new GridLayout(2, 1));
 
         final JLabel clickLabel = new JLabel(String.valueOf(model.getClickCount()));
+        clickLabel.setName("clickLabel");
         clickLabel.setHorizontalAlignment(SwingConstants.CENTER);
         model.addPropertyChangeListener("clickCount", new PropertyChangeListener() {
             @Override
@@ -68,7 +69,9 @@ public class ${project_capitalized_name}View extends AbstractGriffonView {
         Action action = (Action) getApplication().getActionManager()
             .actionFor(controller, "click")
             .getToolkitAction();
-        window.getContentPane().add(new JButton(action));
+        JButton button = new JButton(action);
+        button.setName("clickButton");
+        window.getContentPane().add(button);
     }
 
     private Image getImage(String path) {

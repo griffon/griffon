@@ -6,7 +6,6 @@ and Groovy as main language. The project has the following file structure
 
     .
     ├── build.gradle
-    ├── pom.xml
     ├── griffon-app
     │   ├── conf
     │   ├── controllers
@@ -28,10 +27,4 @@ Simply add your source files to `src/main/groovy`, your test cases to
     gradle test
     gradle run
 
-Or if you prefer Maven you may issue the following commands
-
-    mvn compile
-    mvn test
-    mvn exec:java
-
-Don't forget to add any extra JAR dependencies to `build.gradle` or `pom.xml`!
+Don't forget to add any extra JAR dependencies to `build.gradle`!
