@@ -24,15 +24,15 @@ import javax.inject.Provider;
  * @author Andres Almiray
  * @since 2.0.0
  */
-public final class InjectorProvider implements Provider<Injector<?>> {
-    private Injector<?> injector;
+public final class InjectorProvider implements Provider<Injector> {
+    private Injector injector;
 
-    public void setInjector(@Nonnull Injector<?> injector) {
+    public void setInjector(@Nonnull Injector injector) {
         this.injector = injector;
     }
 
     @Override
-    public Injector<?> get() {
+    public Injector get() {
         return injector;
     }
 }

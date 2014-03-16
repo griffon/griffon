@@ -23,7 +23,7 @@ import java.lang.annotation.Annotation;
  * @since 2.0.0
  */
 public class InstanceNotFoundException extends GriffonException {
-    private static final long serialVersionUID = -3878955085220083976L;
+    private static final long serialVersionUID = 4999935012183988413L;
 
     public InstanceNotFoundException(@Nonnull Class<?> type) {
         super("Could not find an instance of type " + checkNonNull(type, "type").getName());
@@ -31,6 +31,10 @@ public class InstanceNotFoundException extends GriffonException {
 
     public InstanceNotFoundException(@Nonnull Class<?> type, @Nonnull Throwable cause) {
         super("Could not find an instance of type " + checkNonNull(type, "type").getName(), checkNonNull(cause, "cause"));
+    }
+
+    public InstanceNotFoundException(@Nonnull Class<?> type, @Nonnull Annotation qualifier) {
+        super("Could not find an instance of type " + checkNonNull(type, "type").getName() + " with qualifier " + checkNonNull(qualifier, "qualifier"));
     }
 
     public InstanceNotFoundException(@Nonnull Class<?> type, @Nonnull Annotation qualifier, @Nonnull Throwable cause) {

@@ -23,11 +23,13 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Named;
+import javax.inject.Qualifier;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.*;
 
 import static griffon.util.GriffonNameUtils.getLogicalPropertyName;
+import static griffon.util.GriffonNameUtils.getPropertyName;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Objects.requireNonNull;
 
@@ -40,6 +42,31 @@ public class AnnotationUtils {
 
     private AnnotationUtils() {
 
+    }
+
+    @Nonnull
+    public static List<Annotation> harvestQualifiers(@Nonnull Class<?> klass) {
+        requireNonNull(klass, "Argument 'class' must not be null");
+        List<Annotation> list = new ArrayList<>();
+        Annotation[] annotations = klass.getAnnotations();
+        for (Annotation annotation : annotations) {
+            if (AnnotationUtils.isAnnotatedWith(annotation, Qualifier.class)) {
+                // special case @BindTo is only used during tests
+                if (BindTo.class.isAssignableFrom(annotation.getClass())) {
+                    continue;
+                }
+                // special case for @Named
+                if (Named.class.isAssignableFrom(annotation.getClass())) {
+                    Named named = (Named) annotation;
+                    if (isBlank(named.value())) {
+                        list.add(named(getPropertyName(klass)));
+                        continue;
+                    }
+                }
+                list.add(annotation);
+            }
+        }
+        return list;
     }
 
     public static boolean isAnnotatedWith(@Nonnull Object instance, @Nonnull Class<? extends Annotation> annotationType) {
@@ -246,7 +273,7 @@ public class AnnotationUtils {
         private final String value;
 
         public NamedImpl(String value) {
-            this.value = requireNonNull(value, "name");
+            this.value = requireNonNull(value, "value");
         }
 
         public String value() {
@@ -287,7 +314,7 @@ public class AnnotationUtils {
         private final Class<?> value;
 
         public TypedImpl(Class<?> value) {
-            this.value = requireNonNull(value, "artifact");
+            this.value = requireNonNull(value, "value");
         }
 
         public Class<?> value() {
@@ -328,7 +355,7 @@ public class AnnotationUtils {
         private final Class<?> value;
 
         public BindToImpl(Class<?> value) {
-            this.value = requireNonNull(value, "artifact");
+            this.value = requireNonNull(value, "value");
         }
 
         public Class<?> value() {
@@ -359,5 +386,4 @@ public class AnnotationUtils {
 
         private static final long serialVersionUID = 0;
     }
-
 }

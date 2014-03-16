@@ -16,21 +16,16 @@
 package org.codehaus.griffon.runtime.core.injection;
 
 import griffon.core.injection.*;
-import griffon.inject.BindTo;
 import griffon.util.AnnotationUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Qualifier;
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
 import java.util.List;
 
-import static griffon.util.AnnotationUtils.named;
-import static griffon.util.GriffonNameUtils.getPropertyName;
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.AnnotationUtils.harvestQualifiers;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -169,29 +164,6 @@ public class Bindings {
         @Override
         public boolean isSingleton() {
             return singleton;
-        }
-
-        protected List<Annotation> harvestQualifiers(Class<?> klass) {
-            List<Annotation> list = new ArrayList<>();
-            Annotation[] annotations = klass.getAnnotations();
-            for (Annotation annotation : annotations) {
-                if (AnnotationUtils.isAnnotatedWith(annotation, Qualifier.class)) {
-                    // special case @BindTo is only used during tests
-                    if (BindTo.class.isAssignableFrom(annotation.getClass())) {
-                        continue;
-                    }
-                    // special case for @Named
-                    if (Named.class.isAssignableFrom(annotation.getClass())) {
-                        Named named = (Named) annotation;
-                        if (isBlank(named.value())) {
-                            list.add(named(getPropertyName(klass)));
-                            continue;
-                        }
-                    }
-                    list.add(annotation);
-                }
-            }
-            return list;
         }
 
         protected void updateClassifier(Class<?> klass) {
