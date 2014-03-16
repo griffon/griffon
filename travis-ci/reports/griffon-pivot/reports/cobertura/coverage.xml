@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
 
-<coverage line-rate="0.9391025641025641" branch-rate="0.9466019417475728" lines-covered="3516" lines-valid="3744" branches-covered="1170" branches-valid="1236" complexity="1.48753280839895" version="2.0.3" timestamp="1394213783031">
+<coverage line-rate="0.9376" branch-rate="0.9450726978998385" lines-covered="3516" lines-valid="3750" branches-covered="1170" branches-valid="1238" complexity="1.487229862475442" version="2.0.3" timestamp="1394995186981">
 	<sources>
 		<source>/home/travis/build/griffon/griffon/subprojects/griffon-pivot/src/main/groovy</source>
 		<source>/home/travis/build/griffon/griffon/subprojects/griffon-pivot/src/main/java</source>
@@ -3065,7 +3065,7 @@
 				</class>
 			</classes>
 		</package>
-		<package name="griffon.pivot.support.adapters" line-rate="1.0" branch-rate="1.0" complexity="1.3435003631082063">
+		<package name="griffon.pivot.support.adapters" line-rate="0.9979115906717717" branch-rate="0.9978813559322034" complexity="1.3434782608695652">
 			<classes>
 				<class name="griffon.pivot.support.adapters.AccordionAdapter" filename="griffon/pivot/support/adapters/AccordionAdapter.java" line-rate="1.0" branch-rate="1.0" complexity="1.3333333333333333">
 					<methods>
@@ -9153,16 +9153,38 @@
 						<line number="71" hits="2" branch="false"/>
 					</lines>
 				</class>
-				<class name="griffon.pivot.support.adapters.LabelAdapter" filename="griffon/pivot/support/adapters/LabelAdapter.java" line-rate="1.0" branch-rate="1.0" complexity="1.3333333333333333">
+				<class name="griffon.pivot.support.adapters.LabelAdapter" filename="griffon/pivot/support/adapters/LabelAdapter.java" line-rate="0.5384615384615384" branch-rate="0.5" complexity="1.3333333333333333">
 					<methods>
 						<method name="&lt;init&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
 							<lines>
 								<line number="24" hits="1" branch="false"/>
 							</lines>
 						</method>
+						<method name="getMaximumLengthChanged" signature="()Lgriffon/core/CallableWithArgs;" line-rate="0.0" branch-rate="1.0">
+							<lines>
+								<line number="37" hits="0" branch="false"/>
+							</lines>
+						</method>
 						<method name="getTextChanged" signature="()Lgriffon/core/CallableWithArgs;" line-rate="1.0" branch-rate="1.0">
 							<lines>
-								<line number="28" hits="1" branch="false"/>
+								<line number="29" hits="1" branch="false"/>
+							</lines>
+						</method>
+						<method name="maximumLengthChanged" signature="(Lorg/apache/pivot/wtk/Label;I)V" line-rate="0.0" branch-rate="0.0">
+							<lines>
+								<line number="51" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
+								<line number="52" hits="0" branch="false"/>
+								<line number="54" hits="0" branch="false"/>
+							</lines>
+						</method>
+						<method name="setMaximumLengthChanged" signature="(Lgriffon/core/CallableWithArgs;)V" line-rate="0.0" branch-rate="1.0">
+							<lines>
+								<line number="41" hits="0" branch="false"/>
+								<line number="42" hits="0" branch="false"/>
 							</lines>
 						</method>
 						<method name="setTextChanged" signature="(Lgriffon/core/CallableWithArgs;)V" line-rate="1.0" branch-rate="1.0">
@@ -9173,28 +9195,38 @@
 						</method>
 						<method name="textChanged" signature="(Lorg/apache/pivot/wtk/Label;Ljava/lang/String;)V" line-rate="1.0" branch-rate="1.0">
 							<lines>
-								<line number="38" hits="2" branch="true" condition-coverage="100% (2/2)">
+								<line number="45" hits="2" branch="true" condition-coverage="100% (2/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="100%"/>
 									</conditions>
 								</line>
-								<line number="39" hits="1" branch="false"/>
-								<line number="41" hits="2" branch="false"/>
+								<line number="46" hits="1" branch="false"/>
+								<line number="48" hits="2" branch="false"/>
 							</lines>
 						</method>
 					</methods>
 					<lines>
 						<line number="24" hits="1" branch="false"/>
-						<line number="28" hits="1" branch="false"/>
+						<line number="29" hits="1" branch="false"/>
 						<line number="33" hits="1" branch="false"/>
 						<line number="34" hits="1" branch="false"/>
-						<line number="38" hits="2" branch="true" condition-coverage="100% (2/2)">
+						<line number="37" hits="0" branch="false"/>
+						<line number="41" hits="0" branch="false"/>
+						<line number="42" hits="0" branch="false"/>
+						<line number="45" hits="2" branch="true" condition-coverage="100% (2/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="100%"/>
 							</conditions>
 						</line>
-						<line number="39" hits="1" branch="false"/>
-						<line number="41" hits="2" branch="false"/>
+						<line number="46" hits="1" branch="false"/>
+						<line number="48" hits="2" branch="false"/>
+						<line number="51" hits="0" branch="true" condition-coverage="0% (0/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
+						<line number="52" hits="0" branch="false"/>
+						<line number="54" hits="0" branch="false"/>
 					</lines>
 				</class>
 				<class name="griffon.pivot.support.adapters.LabelBindingAdapter" filename="griffon/pivot/support/adapters/LabelBindingAdapter.java" line-rate="1.0" branch-rate="1.0" complexity="1.3333333333333333">
