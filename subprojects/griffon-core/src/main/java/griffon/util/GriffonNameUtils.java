@@ -15,6 +15,8 @@
  */
 package griffon.util;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -385,7 +387,7 @@ public class GriffonNameUtils {
      *
      * @param str The string to test.
      * @return <code>true</code> if the string is <code>null</code>, or
-     *         blank.
+     * blank.
      */
     public static boolean isBlank(String str) {
         if (str == null || str.length() == 0) {
@@ -473,6 +475,32 @@ public class GriffonNameUtils {
         }
         String naturalName = getNaturalName(getShortName(name));
         return naturalName.replaceAll("\\s", "-").toLowerCase();
+    }
+
+    /**
+     * Concatenates the <code>toString()</code> representation of each
+     * item in this Iterable, with the given String as a separator between each item.
+     *
+     * @param self      an Iterable of objects
+     * @param separator a String separator
+     * @return the joined String
+     */
+    @Nonnull
+    public static String join(@Nonnull Iterable self, @Nullable String separator) {
+        StringBuilder buffer = new StringBuilder();
+        boolean first = true;
+
+        if (separator == null) separator = "";
+
+        for (Object value : self) {
+            if (first) {
+                first = false;
+            } else {
+                buffer.append(separator);
+            }
+            buffer.append(String.valueOf(value));
+        }
+        return buffer.toString();
     }
 
     /**

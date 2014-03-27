@@ -37,7 +37,10 @@ import java.net.URL;
 import java.util.Map;
 
 import static griffon.javafx.support.JavaFXUtils.findNode;
+import static griffon.util.ConfigUtils.stripFilenameExtension;
 import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
 
 /**
  * JavaFX-friendly implementation of the GriffonView interface.
@@ -53,10 +56,16 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
         super(application);
     }
 
+
     @Nullable
     protected Node loadFromFXML() {
-        String baseName = resolveBasename();
-        baseName = baseName.replace('.', '/');
+        return loadFromFXML(resolveBasename());
+    }
+
+    @Nullable
+    protected Node loadFromFXML(@Nonnull String baseName) {
+        requireNonBlank(baseName, "Argument 'baseName' cannot be blank");
+        baseName = stripFilenameExtension(baseName).replace('.', '/');
         String viewName = baseName + ".fxml";
         String styleName = baseName + ".css";
 
@@ -102,6 +111,8 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
     }
 
     protected void connectActions(@Nonnull Node node, @Nonnull GriffonController controller) {
+        requireNonNull(node, "Argument 'node' cannot be null");
+        requireNonNull(controller, "Argument 'controller' cannot be null");
         ActionManager actionManager = getApplication().getActionManager();
         for (Map.Entry<String, Action> e : actionManager.actionsFor(controller).entrySet()) {
             String actionTargetName = actionManager.normalizeName(e.getKey()) + ACTION_TARGET_SUFFIX;

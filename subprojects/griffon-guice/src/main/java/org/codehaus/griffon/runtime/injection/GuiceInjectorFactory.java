@@ -32,6 +32,8 @@ import griffon.core.injection.Injector;
 import griffon.core.injection.InjectorFactory;
 import org.codehaus.griffon.runtime.core.injection.InjectorProvider;
 import org.kordamp.jipsy.ServiceProviderFor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
@@ -52,6 +54,8 @@ import static org.codehaus.griffon.runtime.injection.MethodUtils.invokeAnnotated
  */
 @ServiceProviderFor(InjectorFactory.class)
 public class GuiceInjectorFactory implements InjectorFactory {
+    private static final Logger LOG = LoggerFactory.getLogger(GuiceInjectorFactory.class);
+
     @Nonnull
     @Override
     public GuiceInjector createInjector(@Nonnull GriffonApplication application, @Nonnull Iterable<Binding<?>> bindings) {
@@ -120,6 +124,7 @@ public class GuiceInjectorFactory implements InjectorFactory {
 
         ServiceLoader<Module> moduleLoader = ServiceLoader.load(Module.class, getClass().getClassLoader());
         for (Module module : moduleLoader) {
+            LOG.trace("Adding module {}", module);
             modules.add(module);
         }
 
