@@ -76,7 +76,6 @@ class GriffonArtifactSpec extends Specification {
 
         when:
         resolveMVCHandler().withMVCGroup('simple', new MVCCallable() {
-            @Override
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,
@@ -99,7 +98,6 @@ class GriffonArtifactSpec extends Specification {
 
         when:
         resolveMVCHandler().withMVCGroup('simple', 'simple-1', new MVCCallable() {
-            @Override
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,
@@ -122,7 +120,6 @@ class GriffonArtifactSpec extends Specification {
 
         when:
         resolveMVCHandler().withMVCGroup('simple', 'simple-2', [key: 'griffon'], new MVCCallable() {
-            @Override
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,
@@ -145,7 +142,6 @@ class GriffonArtifactSpec extends Specification {
 
         when:
         resolveMVCHandler().withMVCGroup('simple', [key: 'griffon'], new MVCCallable() {
-            @Override
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,
@@ -168,7 +164,6 @@ class GriffonArtifactSpec extends Specification {
 
         when:
         resolveMVCHandler().withMVCGroup('simple', 'simple-2', key: 'griffon', new MVCCallable() {
-            @Override
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,
@@ -191,7 +186,6 @@ class GriffonArtifactSpec extends Specification {
 
         when:
         resolveMVCHandler().withMVCGroup('simple', key: 'griffon', new MVCCallable() {
-            @Override
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,

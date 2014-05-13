@@ -286,7 +286,6 @@ class GriffonApplicationSpec extends Specification {
 
         when:
         application.mvcGroupManager.withMVCGroup('simple', new MVCCallable() {
-            @Override
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,
@@ -309,7 +308,6 @@ class GriffonApplicationSpec extends Specification {
 
         when:
         application.mvcGroupManager.withMVCGroup('simple', 'simple-1', new MVCCallable() {
-            @Override
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,
@@ -332,7 +330,6 @@ class GriffonApplicationSpec extends Specification {
 
         when:
         application.mvcGroupManager.withMVCGroup('simple', 'simple-2', [key: 'griffon'], new MVCCallable() {
-            @Override
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,
@@ -355,7 +352,6 @@ class GriffonApplicationSpec extends Specification {
 
         when:
         application.mvcGroupManager.withMVCGroup('simple', [key: 'griffon'], new MVCCallable() {
-            @Override
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,
@@ -378,7 +374,6 @@ class GriffonApplicationSpec extends Specification {
 
         when:
         application.mvcGroupManager.withMVCGroup('simple', 'simple-2', key: 'griffon', new MVCCallable() {
-            @Override
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,
@@ -401,7 +396,6 @@ class GriffonApplicationSpec extends Specification {
 
         when:
         application.mvcGroupManager.withMVCGroup('simple', key: 'griffon', new MVCCallable() {
-            @Override
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,
