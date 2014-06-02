@@ -17,6 +17,7 @@
 if (!publishJars.toBoolean()) return
 
 apply plugin: 'maven-publish'
+apply plugin: 'bintray'
 
 def pomConfig = {
     name project.name
@@ -95,3 +96,25 @@ jar {
         )
     }
 }
+
+/*
+if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = ''
+if (!project.hasProperty('bintrayApiKey')) ext.bintrayApiKey = ''
+
+bintray {
+    user = project.bintrayUsername
+    key = project.bintrayApiKey
+    publications = ['mavenCustom']
+    def projectName = project.name
+    def projectDesc = project.pomDescription
+    pkg {
+        repo = 'Griffon'
+        userOrg = 'aalmiray'
+        name = projectName
+        desc = projectDesc
+        licenses = ['Apache-2.0']
+        labels = ['griffon']
+    }
+    dryRun = true
+}
+*/
