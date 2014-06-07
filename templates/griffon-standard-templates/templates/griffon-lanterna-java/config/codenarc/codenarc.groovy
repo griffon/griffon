@@ -26,7 +26,7 @@ ruleset {
     ruleset('rulesets/exceptions.xml')
     // ruleset('rulesets/logging.xml')
     ruleset('rulesets/braces.xml') {
-        exclude 'IfStatementBraces'
+       exclude 'IfStatementBraces'
     }
     ruleset('rulesets/size.xml')
     ruleset('rulesets/junit.xml')

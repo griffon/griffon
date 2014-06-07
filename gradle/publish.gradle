@@ -69,7 +69,7 @@ def pomConfig = {
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        mavenCustom(MavenPublication) {
             from components.java
             artifact sourceJar
 
@@ -108,13 +108,12 @@ bintray {
     def projectName = project.name
     def projectDesc = project.pomDescription
     pkg {
-        repo = 'Griffon'
-        userOrg = 'aalmiray'
+        repo = 'griffon'
+        userOrg = 'griffon'
         name = projectName
         desc = projectDesc
         licenses = ['Apache-2.0']
         labels = ['griffon']
     }
-    dryRun = true
 }
 */
