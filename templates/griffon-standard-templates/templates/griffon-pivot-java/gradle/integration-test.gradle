@@ -1,0 +1,42 @@
+configurations {
+    integrationTestCompile {
+        extendsFrom testCompile
+    }
+    integrationTestRuntime {
+        extendsFrom integrationTestCompile, testRuntime
+    }
+}
+
+sourceSets {
+    integrationTest {
+        if (file('src/integration-test/java').exists()) {
+            java.srcDirs file('src/integration-test/java')
+        }
+        if (file('src/integration-test/groovy').exists()) {
+            groovy.srcDirs file('src/integration-test/groovy')
+        }
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += compileClasspath
+    }
+}
+
+idea {
+    module {
+        testSourceDirs += sourceSets.integrationTest.allSource.srcDirs
+    }
+}
+
+task integrationTest(type: Test, dependsOn: jar) {
+    testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    reports.html.enabled = false
+}
+
+task integrationTestReport(type: TestReport) {
+    destinationDir = file("${buildDir}/reports/integration-tests")
+    reportOn integrationTest.binResultsDir
+}
+
+integrationTest.mustRunAfter test
+integrationTest.finalizedBy integrationTestReport
+check.dependsOn integrationTestReport
