@@ -1,9 +1,0 @@
-Most of the times invoking the Griffon command requires a network connection open in order to resolve dependencies. There are times when network access is not available. It's possible to instruct the command line to avoid performing network checks whenever the network is down or unavailable. this is done by activating offline mode. Simply set the following flag: @griffon.offline.mode@.
-
-For example, compiling an application in offline mode is done by invoking
-
-{code}
-griffon -Dgriffon.offline.mode=true compile
-{code}
-
-It's worth noting that all dependencies and plugins should be able to be resolved using the local dependency cache and any configured [local artifact repositories|guide:artifactRepositories]. If any of such dependencies fails to be resolved then it's very likely that the command will fail to perform its job.

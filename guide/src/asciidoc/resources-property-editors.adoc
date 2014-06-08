@@ -1,0 +1,42 @@
+
+[[_resources_property_editors]]
+= Property Editors
+
+Resource injection makes use of the http://docs.oracle.com/javase/6/docs/api/java/beans/PropertyEditor.html[PropertyEditor]
+mechanism provided by the +java.beans+ package. The default +{link_resources_injector}+ queries
++http://docs.oracle.com/javase/6/docs/api/java/beans/PropertyEditorManager.html[PropertyEditorManager]+
+whenever a resource value must be transformed to a target type.
+
+PropertyEditorManager provides methods for registering custom PropertyEditors, it also
+follows a class name convention to load PropertyEditors should a custom one is not
+programmatically registered. Griffon applications will automatically load and register
+PropertyEditors from the following classpath resource: +/META-INF/services/java.beans.PropertyEditor+.
+Each line follows the format
+
+[source]
+----
+target.type = full.qualified.classname
+----
+
+The following table enumerates the default PropertyEditors loaded by Griffon at startup.
+Plugins such as +griffon-swing+ and +griffon-javafx+ may register additional editors.
+
+[cols="2*", options="header"]
+|===
+| Type | Editor Class
+| java.lang.String     | griffon.core.editors.StringPropertyEditor
+| java.io.File         | griffon.core.editors.FilePropertyEditor
+| java.net.URL         | griffon.core.editors.URLPropertyEditor
+| java.net.URI         | griffon.core.editors.URIPropertyEditor
+| java.math.BigDecimal | griffon.core.editors.BigDecimalPropertyEditor
+| java.math.BigInteger | griffon.core.editors.BigIntegerPropertyEditor
+| java.lang.Boolean    | griffon.core.editors.BooleanPropertyEditor
+| java.lang.Byte       | griffon.core.editors.BytePropertyEditor
+| java.lang.Short      | griffon.core.editors.ShortPropertyEditor
+| java.lang.Integer    | griffon.core.editors.IntegerPropertyEditor
+| java.lang.Long       | griffon.core.editors.LongPropertyEditor
+| java.lang.Float      | griffon.core.editors.FloatPropertyEditor
+| java.lang.Double     | griffon.core.editors.DoublePropertyEditor
+| java.util.Calendar   | griffon.core.editors.CalendarPropertyEditor
+| java.util.Date       | griffon.core.editors.DatePropertyEditor
+|===

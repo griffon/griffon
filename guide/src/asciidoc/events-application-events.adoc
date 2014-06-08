@@ -1,0 +1,23 @@
+
+[[_events_application_events]]
+= Application Events
+
+The following events will be triggered by the application when dealing with artifacts
+
+NewInstance(Class klass, Object instance):: When a new artifact is created.
+DestroyInstance(Class klass, Object instance):: When an artifact instance is destroyed.
+LoadAddonsStart(GriffonApplication application):: Before any <<_addons,addons>> are
+initialized, during the <<_overview_lifecycle_initialize>> phase.
+LoadAddonsEnd(GriffonApplication application, Map<String, GriffonAddon> addons):: After
+all <<_addons,addons>> have been initialized, during the <<_overview_lifecycle_initialize>> phase.
+LoadAddonStart(String name, GriffonAddon addon, GriffonApplication application):: Before
+an addon is initialized, during the <<_overview_lifecycle_initialize>> phase.
+LoadAddonEnd(String name, GriffonAddon addon, GriffonApplication application):: After
+an addon has been initialized, during the <<_overview_lifecycle_initialize>> phase.
+
+These events will be triggered when dealing with MVC groups
+
+InitializeMVCGroup(MVCGroupConfiguration configuration, MVCGroup group):: When a new MVC
+group is initialized.
+CreateMVCGroup(MVCGroup group):: When a new MVC group is created.
+DestroyMVCGroup(MVCGroup group):: When an MVC group is destroyed.

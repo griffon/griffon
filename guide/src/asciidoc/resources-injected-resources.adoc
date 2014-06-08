@@ -1,0 +1,54 @@
+
+[[_resources_injected_resources]]
+= Resource Injection
+
+Resources may be automatically injected to any instance created via the application's
++Injector+. Injection points must be annotated with +{link_injected_resource}+
+which can be set on properties (Groovy), fields (Java and Groovy) and setter methods (Java and Groovy).
+@InjectedResource is a perfect companion to <<_models,models>> as the following example shows
+
+.griffon-app/resources/resources.properties
+[source]
+----
+sample.SampleModel.griffonLogo = /griffon-logo-48x48.png
+logo = /griffon-logo-{0}x{0}.png
+----
+
+.griffon-app/models/sample/SampleModel.groovy
+[source,groovy]
+----
+package sample
+
+import griffon.core.resources.InjectedResource
+import javax.swing.Icon
+
+class SampleModel {
+    @InjectedResource Icon griffonLogo
+    @InjectedResource(key='logo', args=['16']) Icon smallGriffonLogo
+    @InjectedResource(key='logo', args=['64']) Icon largeGriffonLogo
+}
+----
+
++@InjectedResource+ assumes a naming convention in order to determine the resource key
+to use. These are the rules applied by the default by +{link_resources_injector}+:
+
+ - If a value is specified for the +key+ argument then use it as is.
+ - otherwise construct a key based in the field name prefixed with the full qualified
+   class name of the field's owner.
+
+You may also specify a default value if the resource definition is not found, however
+be aware that this value must be set as a String thus guaranteeing a type conversion.
+An optional +format+ value may be specified as a hint to the PropertyEditor used during
+value conversion, for example
+
+.griffon-app/models/sample/SampleModel.groovy
+[source,groovy]
+----
+package sample
+
+import griffon.core.resources.InjectedResource
+class SampleModel {
+    @InjectedResource(defaultValue='10.04.2013 2:30 PM', format='dd.MM.yyyy h:mm a')
+    Date date
+}
+----

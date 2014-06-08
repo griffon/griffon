@@ -1,0 +1,94 @@
+/*
+ * Copyright 2008-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+apply plugin: 'java'
+apply plugin: 'application'
+apply from: rootProject.file('gradle/javafx-plugin.gradle')
+apply from: rootProject.file('gradle/coverage.gradle')
+
+mainClassName = 'sample.javafx.java.Launcher'
+
+configurations {
+    compileOnly
+    testCompileOnly
+}
+
+ext.depProjects = [
+    ':griffon-core',
+    ':griffon-javafx',
+    ':griffon-guice',
+    ':griffon-core-test'
+]
+
+ext.depProjects.each { evaluationDependsOn it }
+
+dependencies {
+    compileOnly project(':griffon-core-compile')
+
+    compile project(':griffon-javafx')
+    compile project(':griffon-guice')
+
+    runtime "org.slf4j:slf4j-simple:$slf4jVersion"
+
+    testCompile project(':griffon-core-test')
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = [
+                'griffon-app/conf',
+                'griffon-app/controllers',
+                'griffon-app/models',
+                'griffon-app/views',
+                'griffon-app/services',
+                'griffon-app/lifecycle',
+                'src/main/java'
+            ]
+        }
+        resources {
+            srcDirs = [
+                'griffon-app/resources',
+                'griffon-app/i18n',
+                'src/main/resources'
+            ]
+        }
+    }
+}
+
+javafx {
+    mainClass = mainClassName
+}
+
+gradle.taskGraph.whenReady {
+    sourceSets.main.java.srcDirs.each { it.mkdirs() }
+    sourceSets.main.resources.srcDirs.each { it.mkdirs() }
+}
+
+cobertura {
+    coverageFormats = ['html', 'xml']
+    List cd = []
+    Set csd = [] as Set
+    project.depProjects.each { String projectName ->
+        cd << project(projectName).sourceSets.main.output.classesDir.path
+        csd << project(projectName).sourceSets.main.allSource.srcDirs
+    }
+    cd << sourceSets.main.output.classesDir.path
+    csd << sourceSets.main.allSource.srcDirs
+
+    coverageDirs = cd
+    coverageSourceDirs = csd
+}

@@ -1,0 +1,10 @@
+language: java
+
+install:
+    - TERM=dumb ./gradlew -q assemble
+
+script:
+    - TERM=dumb ./gradlew clean build
+
+jdk:
+    - oraclejdk7

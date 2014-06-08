@@ -1,0 +1,16 @@
+language: java
+script: ./gradlew check test integrationTest cobertura
+jdk: oraclejdk7
+env:
+  matrix:
+  - TERM=dumb
+  global:
+    secure: LRj23pXG7ikrc/eJ/lcrl+KZ5R7iR1XQVlax7HI/9j6U8abYuIRi0IT34DQwcQSgZB3kXs0bWHxsIR7iz/nCH4S6bDRvImFPKwg20XMdRTbZaREx1eYPy+odXdBf/3BGbmBQ8HLrdxOVTltFWZGvvR49jScQd3z/O8k2FZln43c=
+before_install:
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
+after_success:
+- ./update-gh-pages.sh
+- ./gradlew projectCoberturaMerge projectCoberturaReport coveralls
+after_failure:
+- ./update-gh-pages.sh

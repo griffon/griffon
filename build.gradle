@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2014 the original author or authors.
+ * Copyright 2008-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,120 +15,174 @@
  */
 
 import java.text.SimpleDateFormat
-import org.apache.ivy.plugins.resolver.URLResolver
 
 apply plugin: 'base'
 apply plugin: 'idea'
-apply plugin: 'eclipse'
+apply plugin: 'coveralls'
+apply plugin: 'build-dashboard'
+apply from: 'gradle/idea.gradle'
 
 buildscript {
     repositories {
         jcenter()
-        maven {
-            name "Ben's Maven repo"
-            url 'http://dl.bintray.com/content/bmuschko/maven'
-        }
-        maven {
-            name "Ben's Gradle Plugins repo"
-            url 'http://dl.bintray.com/content/bmuschko/gradle-plugins'
-        }
     }
+
     dependencies {
-        classpath 'org.gradle.api.plugins:gradle-izpack-plugin:0.2.2'
-        classpath 'org.gradle.api.plugins:gradle-java2html-plugin:0.4'
-    }
-}
-
-evaluationDependsOn(':griffon-rt')
-evaluationDependsOn(':griffon-cli')
-evaluationDependsOn(':griffon-resources')
-evaluationDependsOn(':griffon-scripts')
-evaluationDependsOn(':griffon-shell')
-evaluationDependsOn(':griffon-wrapper')
-evaluationDependsOn(':griffon-guide')
-
-// dependsOnChildren()
-
-subprojects { subproj ->
-    apply plugin: 'idea'
-    if(plugins.hasPlugin('java')){
-        sourceCompatibility = 1.5
-        targetCompatibility = 1.5
-        group = 'org.codehaus.griffon'
-
-        apply from: "${rootDir}/gradle/coverage.gradle"
-        apply from: "${rootDir}/gradle/codeQuality.gradle"
-    }
-
-    repositories {
-        jcenter()
-        maven { url 'http://repository.codehaus.org' }
-        maven { url 'http://repository.springsource.com/maven/bundles/release' }
-        maven { url 'http://gradle.artifactoryonline.com/gradle/libs-releases-local' }
-        maven { url 'http://repository.sonatype.org/content/groups/public' }
-        maven { url 'http://repo.grails.org/grails/core/' }
-        mavenCentral()
+        classpath 'net.saliman:gradle-cobertura-plugin:2.2.2'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.2.4'
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.7.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.3'
+        classpath 'org.ajoberstar:gradle-git:0.6.3'
     }
 }
 
 Date buildTimeAndDate = new Date()
 ext {
-    buildTime = new SimpleDateFormat('dd-MMM-yyyy').format(buildTimeAndDate)
-    buildDate = new SimpleDateFormat('hh:mm aa').format(buildTimeAndDate)
+    buildTime = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
+    buildDate = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
 }
 
-configure(mavenizedProjects()) { proj ->
-    proj.apply from: "${rootDir}/gradle/maven.gradle"
-    proj.task('checkManifest') {
-        dependsOn proj.classes
-        doLast {
-            proj.tasks.withType(Jar).each { jarfile ->
-                jarfile.manifest {
-                    attributes(
-                        'Built-By': System.properties['user.name'],
-                        'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.getProperty("java.vm.version") + ")",
-                        'Build-Date': buildTime,
-                        'Build-Time': buildDate,
-                        'Specification-Title': proj.name,
-                        'Specification-Version': project.version,
-                        'Specification-Vendor': 'griffon-framework.org',
-                        'Implementation-Title': proj.name,
-                        'Implementation-Version': project.version,
-                        'Implementation-Vendor': 'griffon-framework.org'
-                    )
+allprojects {
+    apply plugin: 'base'
+    apply plugin: 'idea'
+
+    repositories {
+        jcenter()
+        maven { url 'http://dl.bintray.com/content/aalmiray/kordamp' }
+    }
+}
+
+subprojects { subproj ->
+    plugins.withType(JavaPlugin) {
+        configurations {
+            compileOnly
+            testCompileOnly
+        }
+
+        dependencies {
+            testCompile 'junit:junit:4.11'
+            testCompile 'com.google.guiceberry:guiceberry:3.3.1'
+            testCompile("com.google.inject:guice:$guiceVersion") {
+                exclude group: 'org.sonatype.sisu.inject', module: 'cglib'
+            }
+            testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
+            testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+            testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
+        }
+
+        sourceSets {
+            main {
+                compileClasspath += configurations.compileOnly
+            }
+            test {
+                compileClasspath += configurations.testCompileOnly
+            }
+        }
+
+        javadoc {
+            classpath += configurations.compileOnly
+        }
+
+        idea {
+            module {
+                scopes.PROVIDED.plus += configurations.compileOnly
+                scopes.PROVIDED.plus += configurations.testCompileOnly
+            }
+        }
+
+        processResources {
+            from(sourceSets.main.resources.srcDirs) {
+                exclude '**/*.properties'
+                exclude '**/*.groovy'
+                exclude '**/*.xml'
+            }
+            from(sourceSets.main.resources.srcDirs) {
+                include '**/*.properties'
+                include '**/*.groovy'
+                include '**/*.xml'
+                filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+                    'application.name': project.name,
+                    'application.version': project.version,
+                    'griffon.version': project.version
+                ])
+            }
+        }
+
+        processTestResources {
+            from(sourceSets.test.resources.srcDirs) {
+                exclude '**/*.properties'
+                exclude '**/*.groovy'
+                exclude '**/*.xml'
+            }
+            from(sourceSets.test.resources.srcDirs) {
+                include '**/*.properties'
+                include '**/*.groovy'
+                include '**/*.xml'
+                filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+                    'application.name': project.name,
+                    'application.version': project.version,
+                    'griffon.version': project.version
+                ])
+            }
+        }
+
+        task sourceJar(type: Jar) {
+            group 'Build'
+            description 'An archive of the source code'
+            classifier 'sources'
+            from sourceSets.main.allSource
+        }
+
+        tasks.withType(AbstractCompile) {
+            if (rootProject.hasProperty('lint') && rootProject.lint.toBoolean()) {
+                options.compilerArgs = [
+                    '-Xlint:all', '-Xlint:deprecation', '-Xlint:unchecked'
+                ]
+            }
+        }
+
+        subproj.apply from: rootProject.file('gradle/publish.gradle')
+        subproj.apply from: rootProject.file('gradle/code-quality.gradle')
+
+        if (subproj.publishJars.toBoolean()) {
+            javadoc {
+                excludes = ['**/*.html', 'META-INF/**', '**/*.groovy']
+
+                options.use         = true
+                options.splitIndex  = true
+                options.encoding    = 'UTF-8'
+                options.author      = true
+                options.version     = subproj.sourceCompatibility
+                options.windowTitle = "$subproj.pomDescription $version"
+                options.docTitle    = "$subproj.pomDescription $version"
+                options.footer      = rootProject.javadocFooter
+                options.links       = ['http://www.slf4j.org/apidocs/',
+                                       'http://jsr-305.googlecode.com/svn/trunk/javadoc/',
+                                       'http://docs.oracle.com/javase/7/docs/api/']
+
+                doLast { task ->
+                    copy {
+                        into task.destinationDir
+                        from rootProject.file('src/javadoc/resources/img/griffon.ico'),
+                             rootProject.file('src/javadoc/resources/css/stylesheet.css')
+                    }
+                    copy {
+                        into file("${task.destinationDir}/resources")
+                        from rootProject.file('src/javadoc/resources/img/')
+                    }
                 }
             }
         }
     }
-    proj.jar.dependsOn proj.checkManifest
 }
 
-// @todo move apply statements to the top of the build script
-apply from: "${rootDir}/gradle/package.gradle"
-apply from: "${rootDir}/gradle/installer.gradle"
+task projectCoberturaMerge(type: ProjectCoberturaMergeTask) {
 
-task allTests(dependsOn: [clean, project(':griffon-rt').test, project(':griffon-cli').test]) {
-    description = "Runs all tests."
 }
 
-task fullDist(dependsOn: [zipBinary, zipSource, tarBinary, tarSource, izPackCreateInstaller, deb]) {
-    description = "Assembles all packages."
+task projectCoberturaReport(type: ProjectCoberturaReportTask) {
+
 }
 
-task bambooStage1(dependsOn: allTests) {
-    description = "Makes a full test run and assembles all packages."
-}
-
-task bambooStage2(dependsOn: [bambooStage1, fullDist, rpm]) {
-    description = "Makes a full test run and assembles all packages."
-}
-
-def mavenizedProjects() {
-    [
-        project(':griffon-rt'),
-        project(':griffon-cli'),
-        project(':griffon-resources'),
-        project(':griffon-scripts'),
-        project(':griffon-shell')
-    ]
-}
+if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = ''
+if (!project.hasProperty('bintrayApiKey')) ext.bintrayApiKey = ''

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2014 the original author or authors.
+ * Copyright 2008-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,28 +16,11 @@
 
 apply plugin: 'groovy'
 
-configurations {
-    compile.transitive = false
-}
-
 repositories {
     jcenter()
-    maven { url 'http://repository.codehaus.org/' }
-    maven { url 'http://repo.grails.org/grails/core/' }
-    maven { url 'http://repository.springsource.com/maven/bundles/release' }
-    maven { url 'http://download.java.net/maven/2/' }
-    mavenCentral()
 }
 
 dependencies {
+    compile 'net.sourceforge.cobertura:cobertura:2.0.3'
     compile gradleApi()
-    compile("org.grails:grails-docs:$grailsDocsVersion",
-         "org.codehaus.groovy:groovy-all:$groovyVersion",
-         'radeox:radeox:1.0-b2',
-         'com.lowagie:itext:2.0.8',
-         'org.xhtmlrenderer:core-renderer:R8',
-         "log4j:log4j:${log4jVersion}",
-         "org.slf4j:slf4j-api:$slf4jVersion",
-         "org.slf4j:slf4j-log4j12:$slf4jVersion",
-         "org.slf4j:jcl-over-slf4j:$slf4jVersion")
 }

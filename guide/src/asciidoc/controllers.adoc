@@ -1,0 +1,98 @@
+
+[[_controllers]]
+= Controllers
+
+Controllers are the entry point for your application's logic. Each controller has
+access to their +model+ and +view+ instances from their respective MVC group.
+
+Controller actions are defined as public methods on a controller class, for example
+in Groovy you'd write
+
+[source,groovy]
+[subs="verbatim,attributes"]
+----
+package sample
+
+import griffon.core.artifact.GriffonController
+
+@griffon.metadata.ArtifactProviderFor(GriffonController)
+class SampleController {
+    def model
+
+    void click() {
+        model.clickCount++
+    }
+}
+----
+
+The corresponding code for Java 8 would be
+
+[source,java]
+[subs="verbatim,attributes"]
+----
+package sample;
+
+import griffon.core.artifact.GriffonController;
+
+@griffon.metadata.ArtifactProviderFor(GriffonController.class)
+public class SampleController {
+    private SampleModel model;
+
+    public void setModel(SampleModel model) {
+        this.model = model;
+    }
+
+    public void click() {
+        runInsideUIAsync(() -> {
+            model.setClickCount(model.getClickCount() + 1);
+        });
+    }
+}
+----
+
+Actions must follow these rules in order to be considered as such:
+
+ - must have public visibility modifier.
+ - name does not match an event handler, i.e, it does not begin with +on+.
+ - must pass +{link_is_plain_method}+.
+ - must have +void+ as return type.
+
+The application's +{link_action_manager}+ will automatically configure an +{link_controller_action}+
+instance for each matching controller action. These +Action+ instances can be later used
+within Views to link them to UI components. The following example shows a Swing View
+making use of the configured +clickAction+ from +SampleController+
+
+[source,groovy]
+[subs="verbatim,attributes"]
+----
+package sample
+
+import griffon.core.artifact.GriffonView
+
+@griffon.metadata.ArtifactProviderFor(GriffonView)
+class SampleView {
+    FactoryBuilderSupport builder
+    SampleModel model
+
+    void initUI() {
+        builder.with {
+            application(title: 'Clicker', pack: true)) {
+                button(clickAction, label: bind { model.clickCount })
+            }
+        }
+    }
+}
+----
+
+Controllers can perform other tasks too:
+
+ - listen to <<_events_application_events,application events>>.
+ - react to MVC initialization/destruction via a pair of methods (+mvcGroupInit()+, +mvcGroupDestroy()+).
+ - hold references to <<_services,services>>.
+ - participate in dependency injection (members must be annotated with +@javax.inject.Inject+).
+
+:leveloffset: 2
+include::controllers-actions-and-threads.adoc[]
+include::controllers-actionmanager.adoc[]
+include::controllers-action-interceptors.adoc[]
+:leveloffset: 1
