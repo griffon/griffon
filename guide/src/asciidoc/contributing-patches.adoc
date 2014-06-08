@@ -24,7 +24,7 @@ on. For example, as soon as you fork a repository and clone the fork locally, ex
 [source]
 [subs="verbatim,attributes"]
 ----
-git checkout -b mine
+$ git checkout -b mine
 ----
 
 This will create a new local branch called +mine+ based off the +master+ branch.
@@ -58,8 +58,8 @@ repository that have been added since you last fetched and merged:
 [source]
 [subs="verbatim,attributes"]
 ----
-git checkout master
-git pull upstream
+$ git checkout master
+$ git pull upstream
 ----
 
 This should complete without any problems or conflicts. Next, rebase your local
@@ -68,8 +68,8 @@ branch against the now up-to-date master:
 [source]
 [subs="verbatim,attributes"]
 ----
-git checkout mine
-git rebase master
+$ git checkout mine
+$ git rebase master
 ----
 
 What this does is rearrange the commits such that all of your changes come after
@@ -81,8 +81,8 @@ You'll now be able to do a clean merge from your local branch to master:
 [source]
 [subs="verbatim,attributes"]
 ----
-git checkout master
-git merge mine
+$ git checkout master
+$ git merge mine
 ----
 
 Finally, you must push your changes to your remote repository on GitHub, otherwise
@@ -91,7 +91,7 @@ the core developers won't be able to pick them up:
 [source]
 [subs="verbatim,attributes"]
 ----
-git push
+$ git push
 ----
 
 You're now ready to send the pull request from the GitHub user interface.

@@ -160,33 +160,7 @@ java2html {
     }
 }
 
-task computeConsoleDependencies << {
-    List provided = project(':console-swing-groovy').configurations.compileOnly.collect { it.name }.sort()
-    List compile = project(':console-swing-groovy').configurations.compile.collect { it.name }.sort()
-    provided -= compile
-    List runtime = project(':console-swing-groovy').configurations.runtime.collect { it.name }.sort()
-    runtime -= compile
-    List testCompile = project(':console-swing-groovy').configurations.testCompile.collect { it.name }.sort()
-    List test = testCompile - compile
-    List build = compile.grep { it =~ /groovy-all/ }
-
-    def writeFile = { String name, List contents ->
-        File file = new File("${buildDir}/generated-dependencies/${name}.adoc")
-        file.parentFile.mkdirs()
-        file.withPrintWriter { w ->
-            contents.each { dep -> w.println(" - $dep") }
-        }
-    }
-
-    writeFile('build', build)
-    writeFile('provided', provided)
-    writeFile('compile', compile)
-    writeFile('runtime', runtime)
-    writeFile('test', test)
-}
-
 asciidoctor {
-    dependsOn computeConsoleDependencies
     baseDir = project.file('src/asciidoc')
     sourceDocumentName = project.file('src/asciidoc/index.adoc')
     options = [

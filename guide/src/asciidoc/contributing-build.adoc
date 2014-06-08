@@ -18,7 +18,7 @@ get the core framework run:
 [source]
 [subs="verbatim,attributes"]
 ----
-git clone {griffon-source-url}
+$ git clone {griffon-source-url}
 ----
 
 This will create a +griffon+ directory in your current working directory containing
@@ -31,7 +31,7 @@ All you have to do to run the full suite of tests is:
 [source]
 [subs="verbatim,attributes"]
 ----
-./gradlew test
+$ ./gradlew test
 ----
 
 These will take a while, so consider running individual tests using the command line.
@@ -40,7 +40,7 @@ For example, to run the test case @MappingDslTests@ simply execute the following
 [source]
 [subs="verbatim,attributes"]
 ----
-./gradlew -Dtest.single=EnvironmentTests :griffon-core:test
+$ ./gradlew -Dtest.single=EnvironmentTests :griffon-core:test
 ----
 
 Note that you need to specify the sub-project that the test case resides in, because
@@ -53,7 +53,7 @@ You need to run the following gradle task:
 [source]
 [subs="verbatim,attributes"]
 ----
-./gradlew idea
+$ ./gradlew idea
 ----
 
 Then open the project file which is generated in IDEA. Simple!

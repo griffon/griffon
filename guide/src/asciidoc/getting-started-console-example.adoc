@@ -5,112 +5,71 @@
 
 == Creating a Project
 
-The first task at hand is deciding which build tool to use. Both Gradle and Maven are popular choices.
-The Griffon team recommends using Gradle as it delivers a much better experience than Maven or even Ant+Ivy.
-The following sections show sample build files for Gradle, Maven and Ant with Groovy as the target language. You may
-use Java instead if you want of course, however Groovy is more expressive with less clutter, thus lending itself
-for a better learning experience. But don't worry if you're nor familiar with Groovy, this guide includes further
-examples where Java is the main language.
+The first is to get Lazybones installed on your system. The easiest way to achieve
+this goal is to install http://gvmtool.net[GVM] first
 
-=== Gradle
+[source]
+----
+$ curl -s get.gvmtool.net | bash
+----
 
-The following listing shows a typical Gradle build file for a Griffon project
+Install the latest version of Lazybones with the following command
 
-[[gradle-build-file]]
-.build.gradle
+[source]
+----
+$ gvm install lazybones
+----
+
+Next, add the official Griffon Lazybones templates repository to your Lazybones
+configuration. Edit +$USER_HOME/.lazybones/config.groovy+ and paste the following
+content
+
+.$USER_HOME/.lazybones/config.groovy
 [source,groovy]
-[subs="verbatim,attributes"]
 ----
-include::{console-swing-groovy}/build.gradle.txt[]
+bintrayRepositories = [
+    "griffon/griffon-lazybones-templates",
+    "pledbrook/lazybones-templates"
+]
 ----
-<1> Project properties
-<2> Apply +groovy+ plugin for compiling Groovy sources
-<3> Apply +application+ plugin for running and packaging
-<4> APT will run automatically
-<5> Standard Griffon project layout
-<6> Needed for compile-time generation of metadata
-<7> Groovy specific support for Griffon
-<8> Toolkit specific support
-<9> Groovy SwingBuilder
-<10> An implementation of JSR 330 is required
-<11> Logging framework
-<12> Log4j to Slf4j connector
-<13> Test dependencies
 
-=== Maven
+We're now ready to create the project. You can list all available templates with
+the following command
 
-Maven is another popular choice among developers. The following listing displays the minimal setup that's
-required to build a Griffon application with Maven.
-
-.pom.xml
-[source,xml]
-[subs="verbatim,attributes"]
+[source]
 ----
-include::{console-swing-groovy}/pom.xml.txt[]
+$ lazybones list
+Available templates in griffon/griffon-lazybones-templates:
+
+    griffon-lanterna-java
+    griffon-swing-groovy
+    griffon-javafx-groovy
+    griffon-javafx-java
+    griffon-swing-java
+    griffon-pivot-java
+    griffon-pivot-groovy
+    griffon-plugin-single
+    griffon-lanterna-groovy
 ----
-<1> Project properties
-<2> Apply +groovy+ plugin for compiling Groovy sources
-<3> Apply +application+ plugin for running and packaging
-<4> APT required for compile-time generation of metadata
-<5> Standard Griffon project layout
-<6> Needed for compile-time generation of metadata
-<7> Groovy specific support for Griffon
-<8> Toolkit specific support
-<9> Groovy SwingBuilder
-<10> An implementation of JSR 330 is required
-<11> Logging framework
-<12> Log4j to Slf4j connector
-<13> Test dependencies
 
-Notice the similarities with the <<gradle-build-file,gradle>> build file as marked with each one
-of the 12 callouts.
+Alright, let's create an simple project using Swing as main UI toolkit and Groovy
+as main language
 
-=== Ant
-
-Ant build files are simple in nature however their complexity max grow exponentially as more
-behavior is needed. The following shows a very basic Ant build file that assumes all dependencies
-are located relative to the project
-
-.build.xml
-[source,xml]
-[subs="verbatim,attributes"]
+[source]
 ----
-include::{console-swing-groovy}/build.xml.txt[]
+$ lazybones create griffon-swing-groovy console
+Creating project from template griffon-swing-groovy (latest) in 'console'
+Define value for 'group' [org.example]: console
+Define value for 'version' [0.1.0-SNAPSHOT]:
+Define value for 'package' [console]:
+Define value for 'griffonVersion' [2.0.0.BETA]:
 ----
-<1> Project properties
-<2> Classpath definitions
-<3> Load +groovy+ task for compiling Groovy sources
-<4> Standard Griffon project layout
-<5> Run the application
-<6> Compile tests
-<7> Run tests and generate report
-
-These are the dependencies as required by this project:
-
-.build
-include::{projectdir}/build/generated-dependencies/build.adoc[]
-
-.provided
-include::{projectdir}/build/generated-dependencies/provided.adoc[]
-
-.compile
-include::{projectdir}/build/generated-dependencies/compile.adoc[]
-
-.runtime
-include::{projectdir}/build/generated-dependencies/runtime.adoc[]
-
-.test
-include::{projectdir}/build/generated-dependencies/test.adoc[]
-
-It's assumed that JUnit is properly configured in your Ant distribution.
-
-TODO: insert section on Lazybones templates
 
 == Project Layout
 
-Take a moment to familiarize yourself with the standard Griffon project layout. Every Griffon
-project shares the same layout, making it easy to dive in as artifacts are located in specific
-directories according to their responsibilities and behavior.
+Take a moment to familiarize yourself with the standard Griffon project layout.
+Every Griffon project shares the same layout, making it easy to dive in as artifacts
+are located in specific directories according to their responsibilities and behavior.
 
 [source]
 ----
@@ -138,6 +97,33 @@ of the finished application running. A small Groovy script has been executed, yo
 can see the result on the bottom right side
 
 image::console-swing-groovy.png[Swing, 50%, 50%, align="center"]
+
+=== Gradle
+
+The following listing shows the Gradle build file generated by the Lazybones template
+
+[[gradle-build-file]]
+.build.gradle
+[source,groovy]
+[subs="verbatim,attributes"]
+----
+include::{console-swing-groovy}/build.gradle.txt[]
+----
+<1> Project properties
+<2> Apply +groovy+ plugin for compiling Groovy sources
+<3> Apply +application+ plugin for running and packaging
+<4> APT will run automatically
+<5> Standard Griffon project layout
+<6> Needed for compile-time generation of metadata
+<7> Groovy specific support for Griffon
+<8> Toolkit specific support
+<9> An implementation of JSR 330 is required
+<10> Groovy SwingBuilder
+<11> Logging framework
+<12> Log4j to Slf4j connector
+<13> Test dependencies
+
+Alright, let's get started with the code. We'll visit the Model first.
 
 === Model
 
@@ -216,7 +202,7 @@ Modules can define several bindings, even override existing bindings. In our par
 case we defined a binding [conum,data-value=1]_1_ for +Evaluator+ and override a
 a binding [conum,data-value=2]_2_ for +SwingWindowDisplayHandler+. The latter is
 supplied by the +swing+ module thus me must mark it as a dependency [conum,data-value=3]_3_
-in our module definition. The implementation of out custom +SwingWindowDisplayHandler+
+in our module definition. The implementation of our custom +SwingWindowDisplayHandler+
 is quite trivial, as shown by the following snippet
 
 .src/main/groovy/console/CenteringWindowDisplayHandler.groovy
@@ -248,24 +234,11 @@ scripts in context of it's +{link_composite_builder}+.
 
 == Running the application
 
-Running the application requires you to execute a build tool specific command
+Running the application requires you to execute the +run+ task
 
-.gradle
 [source]
 ----
-gradle run
-----
-
-.maven
-[source]
-----
-mvn compile exec:java
-----
-
-.ant
-[source]
-----
-ant compile run
+$ gradle run
 ----
 
 == Testing
@@ -284,22 +257,10 @@ include::{console-swing-groovy}/src/test/groovy/console/ConsoleControllerTest.gr
 <6> Stimulus
 <7> Validate after waiting 2 seconds at most
 
-Running tests requires executing a build tool specific command
+Running tests requires executing the +test+ task
 
-.gradle
 [source]
 ----
-gradle test
+$ gradle test
 ----
 
-.maven
-[source]
-----
-mvn test
-----
-
-.ant
-[source]
-----
-ant test
-----
