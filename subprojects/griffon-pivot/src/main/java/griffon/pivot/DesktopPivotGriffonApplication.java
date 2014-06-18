@@ -17,6 +17,8 @@ package griffon.pivot;
 
 import org.apache.pivot.wtk.DesktopApplicationContext;
 
+import javax.swing.SwingUtilities;
+
 /**
  * @author Andres Almiray
  * @since 2.0.0
@@ -30,11 +32,20 @@ public class DesktopPivotGriffonApplication extends AbstractPivotGriffonApplicat
         super(args);
     }
 
-    public static void main(String[] args) {
-        DesktopApplicationContext.main(DesktopPivotGriffonApplication.class, args);
+    public static void main(final String[] args) {
+        doRun(args);
     }
 
     public static void run(String[] args) {
-        DesktopApplicationContext.main(DesktopPivotGriffonApplication.class, args);
+        doRun(args);
+    }
+
+    private static void doRun(final String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                DesktopApplicationContext.main(DesktopPivotGriffonApplication.class, args);
+            }
+        });
     }
 }
