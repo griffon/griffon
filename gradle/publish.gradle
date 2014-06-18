@@ -74,6 +74,13 @@ publishing {
             artifact sourceJar
 
             pom.withXml {
+                // al dependencies should use the default scope (compile) but
+                // Gradle insists in using runtime as default
+                asNode().dependencies.dependency.each { dep ->
+                    if (dep.scope.text() == 'runtime') {
+                        dep.remove(dep.scope)
+                    }
+                }
                 asNode().children().last() + pomConfig
             }
         }
