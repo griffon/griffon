@@ -19,10 +19,16 @@ package org.codehaus.griffon.gradle
 import org.apache.tools.ant.filters.ReplaceTokens
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.tooling.BuildException
 
 class GriffonPlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
+        if (!project.hasProperty('griffonVersion')) {
+            throw new BuildException("You must define a project property named 'griffonVersion'",
+                new IllegalStateException("Project property 'griffonVersion' is undefined"))
+        }
+
         applyPluginIfAbsent(project, 'idea')
         applyPluginIfAbsent(project, 'java')
         applyPluginIfAbsent(project, 'application')
@@ -35,9 +41,9 @@ class GriffonPlugin implements Plugin<Project> {
         project.configurations.create('testCompileOnly')
 
         // add default dependencies
-        project.dependencies.add('compile', 'org.codehaus.griffon:griffon-core:' + project.ext.griffonVersion)
-        project.dependencies.add('compileOnly', 'org.codehaus.griffon:griffon-core-compile:' + project.ext.griffonVersion)
-        project.dependencies.add('testCompile', 'org.codehaus.griffon:griffon-core-test:' + project.ext.griffonVersion)
+        project.dependencies.add('compile', 'org.codehaus.griffon:griffon-core:' + project.griffonVersion)
+        project.dependencies.add('compileOnly', 'org.codehaus.griffon:griffon-core-compile:' + project.griffonVersion)
+        project.dependencies.add('testCompile', 'org.codehaus.griffon:griffon-core-test:' + project.griffonVersion)
 
         // wire up classpaths with compile time dependencies
         project.sourceSets.main.compileClasspath += project.configurations.compileOnly
