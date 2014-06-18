@@ -50,6 +50,7 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
     private static final String ACTION_TARGET_SUFFIX = "ActionTarget";
+    private static final String FXML_SUFFIX = ".fxml";
 
     @Inject
     public AbstractJavaFXGriffonView(@Nonnull GriffonApplication application) {
@@ -65,8 +66,11 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
     @Nullable
     protected Node loadFromFXML(@Nonnull String baseName) {
         requireNonBlank(baseName, "Argument 'baseName' cannot be blank");
-        baseName = stripFilenameExtension(baseName).replace('.', '/');
-        String viewName = baseName + ".fxml";
+        if (baseName.endsWith(FXML_SUFFIX)) {
+            baseName = stripFilenameExtension(baseName);
+        }
+        baseName = baseName.replace('.', '/');
+        String viewName = baseName + FXML_SUFFIX;
         String styleName = baseName + ".css";
 
         URL viewResource = getResourceAsURL(viewName);
