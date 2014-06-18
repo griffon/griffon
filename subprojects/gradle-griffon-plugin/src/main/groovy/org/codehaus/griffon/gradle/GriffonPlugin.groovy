@@ -36,7 +36,7 @@ class GriffonPlugin implements Plugin<Project> {
 
         // add default dependencies
         project.dependencies.add('compile', 'org.codehaus.griffon:griffon-core:' + project.ext.griffonVersion)
-        project.dependencies.add('compileOnly', 'org.codehaus.griffon:griffon-groovy-compile:' + project.ext.griffonVersion)
+        project.dependencies.add('compileOnly', 'org.codehaus.griffon:griffon-core-compile:' + project.ext.griffonVersion)
         project.dependencies.add('testCompile', 'org.codehaus.griffon:griffon-core-test:' + project.ext.griffonVersion)
 
         // wire up classpaths with compile time dependencies

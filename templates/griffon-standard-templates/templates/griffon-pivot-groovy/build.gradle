@@ -4,26 +4,21 @@ buildscript {
     }
 
     dependencies {
+        classpath 'org.codehaus.griffon:gradle-griffon-plugin:1.0.0.BETA'
         classpath 'net.saliman:gradle-cobertura-plugin:2.2.2'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.2.4'
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.7.0'
     }
 }
 
-apply plugin: 'idea'
 apply plugin: 'groovy'
-apply plugin: 'application'
-
-configurations {
-    compileOnly
-    testCompileOnly
-}
+apply plugin: 'org.codehaus.griffon.griffon'
+apply from: 'gradle/publishing.gradle'
+apply from: 'gradle/code-coverage.gradle'
+apply from: 'gradle/code-quality.gradle'
+apply from: 'gradle/integration-test.gradle'
 
 mainClassName = '${project_package}.Launcher'
-
-repositories {
-    jcenter()
-}
 
 dependencies {
     compileOnly "org.codehaus.griffon:griffon-groovy-compile:\$griffonVersion"
@@ -40,92 +35,5 @@ dependencies {
     }
     runtime 'org.slf4j:slf4j-log4j12:1.7.7'
 
-    testCompile "org.codehaus.griffon:griffon-core-test:\$griffonVersion"
     testCompile "org.codehaus.griffon:griffon-pivot-test:\$griffonVersion"
-}
-
-sourceSets {
-    main {
-        compileClasspath += configurations.compileOnly
-        groovy {
-            srcDirs = [
-                'griffon-app/conf',
-                'griffon-app/controllers',
-                'griffon-app/models',
-                'griffon-app/views',
-                'griffon-app/services',
-                'griffon-app/lifecycle',
-                'src/main/groovy'
-            ]
-        }
-        resources {
-            srcDirs = [
-                'griffon-app/resources',
-                'griffon-app/i18n',
-                'src/main/resources'
-            ]
-        }
-    }
-    test {
-        compileClasspath += configurations.testCompileOnly
-    }
-}
-
-javadoc {
-    classpath += configurations.compileOnly
-}
-
-idea {
-    module {
-        scopes.PROVIDED.plus += configurations.compileOnly
-        scopes.PROVIDED.plus += configurations.testCompileOnly
-    }
-}
-
-processResources {
-    from(sourceSets.main.resources.srcDirs) {
-        exclude '**/*.properties'
-        exclude '**/*.groovy'
-        exclude '**/*.xml'
-    }
-    from(sourceSets.main.resources.srcDirs) {
-        include '**/*.properties'
-        include '**/*.groovy'
-        include '**/*.xml'
-        filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
-            'application.name': project.name,
-            'application.version': project.version,
-            'griffon.version': project.griffonVersion
-        ])
-    }
-}
-
-processTestResources {
-    from(sourceSets.test.resources.srcDirs) {
-        exclude '**/*.properties'
-        exclude '**/*.groovy'
-        exclude '**/*.xml'
-    }
-    from(sourceSets.test.resources.srcDirs) {
-        include '**/*.properties'
-        include '**/*.groovy'
-        include '**/*.xml'
-        filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
-            'application.name': project.name,
-            'application.version': project.version,
-            'griffon.version': project.griffonVersion
-        ])
-    }
-}
-
-apply from: 'gradle/publishing.gradle'
-apply from: 'gradle/code-coverage.gradle'
-apply from: 'gradle/code-quality.gradle'
-apply from: 'gradle/integration-test.gradle'
-
-gradle.taskGraph.whenReady {
-    sourceSets.main.groovy.srcDirs.each    { it.mkdirs() }
-    sourceSets.test.groovy.srcDirs.each    { it.mkdirs() }
-    sourceSets.main.resources.srcDirs.each { it.mkdirs() }
-    sourceSets.test.resources.srcDirs.each { it.mkdirs() }
 }
