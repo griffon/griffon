@@ -48,14 +48,14 @@
 
         <Package name="griffon.pivot">
             <Stats>
-                <TotalClasses>4</TotalClasses>
-                <ConcreteClasses>1</ConcreteClasses>
+                <TotalClasses>5</TotalClasses>
+                <ConcreteClasses>2</ConcreteClasses>
                 <AbstractClasses>3</AbstractClasses>
                 <Ca>1</Ca>
-                <Ce>11</Ce>
-                <A>0.75</A>
+                <Ce>12</Ce>
+                <A>0.6</A>
                 <I>0.92</I>
-                <D>0.67</D>
+                <D>0.52</D>
                 <V>1</V>
             </Stats>
 
@@ -75,6 +75,9 @@
                 <Class sourceFile="DesktopPivotGriffonApplication.java">
                     griffon.pivot.DesktopPivotGriffonApplication
                 </Class>
+                <Class sourceFile="DesktopPivotGriffonApplication.java">
+                    griffon.pivot.DesktopPivotGriffonApplication$1
+                </Class>
             </ConcreteClasses>
 
             <DependsUpon>
@@ -85,6 +88,7 @@
                 <Package>griffon.util</Package>
                 <Package>java.lang</Package>
                 <Package>java.util</Package>
+                <Package>javax.swing</Package>
                 <Package>org.apache.pivot.collections</Package>
                 <Package>org.apache.pivot.wtk</Package>
                 <Package>org.codehaus.griffon.runtime.core</Package>
@@ -724,6 +728,10 @@
         </Package>
 
         <Package name="java.util">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="javax.swing">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 

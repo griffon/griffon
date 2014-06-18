@@ -40,7 +40,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.399s</div>
+<div class="counter">3.164s</div>
 <p>duration</p>
 </div>
 </td>
@@ -62,6 +62,9 @@
 <li>
 <a href="#tab0">Tests</a>
 </li>
+<li>
+<a href="#tab1">Standard error</a>
+</li>
 </ul>
 <div id="tab0" class="tab">
 <h2>Tests</h2>
@@ -75,7 +78,7 @@
 </thead>
 <tr>
 <td class="success">Load Groovy and properties bundles</td>
-<td>0.384s</td>
+<td>3.149s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -85,10 +88,136 @@
 </tr>
 </table>
 </div>
+<div id="tab1" class="tab">
+<h2>Standard error</h2>
+<span class="code">
+<pre>java.lang.instrument.IllegalClassFormatException: Error while instrumenting class groovy/util/ConfigBinding.
+	at org.jacoco.agent.rt.internal_5d10cad.CoverageTransformer.transform(CoverageTransformer.java:91)
+	at sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+	at sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:424)
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:800)
+	at java.security.SecureClassLoader.defineClass(SecureClassLoader.java:142)
+	at java.net.URLClassLoader.defineClass(URLClassLoader.java:449)
+	at java.net.URLClassLoader.access$100(URLClassLoader.java:71)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:361)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at griffon.util.ConfigReader.parse(ConfigReader.groovy:297)
+	at griffon.util.ConfigReader$parse$1.callCurrent(Unknown Source)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallCurrent(CallSiteArray.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(AbstractCallSite.java:133)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(AbstractCallSite.java:145)
+	at griffon.util.ConfigReader.parse(ConfigReader.groovy:173)
+	at org.codehaus.griffon.runtime.groovy.util.GroovyScriptResourceBundle.&lt;init&gt;(GroovyScriptResourceBundle.java:42)
+	at org.codehaus.griffon.runtime.groovy.util.GroovyAwareCompositeResourceBundleBuilder.loadBundleFromClass(GroovyAwareCompositeResourceBundleBuilder.java:54)
+	at org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder.loadBundlesFor(DefaultCompositeResourceBundleBuilder.java:48)
+	at org.codehaus.griffon.runtime.util.AbstractCompositeResourceBundleBuilder.create(AbstractCompositeResourceBundleBuilder.java:73)
+	at org.codehaus.griffon.runtime.util.AbstractCompositeResourceBundleBuilder.create(AbstractCompositeResourceBundleBuilder.java:52)
+	at griffon.util.CompositeResourceBundleBuilder$create.call(Unknown Source)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:45)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:108)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:116)
+	at org.codehaus.griffon.runtime.util.GroovyAwareCompositeResourceBundleBuilderSpec.$spock_feature_0_0(GroovyAwareCompositeResourceBundleBuilderSpec.groovy:54)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.extension.MethodInvocation.invokeTargetMethod(MethodInvocation.java:91)
+	at org.spockframework.runtime.extension.MethodInvocation.proceed(MethodInvocation.java:85)
+	at org.spockframework.runtime.extension.builtin.AbstractRuleInterceptor$1.evaluate(AbstractRuleInterceptor.java:37)
+	at com.google.guiceberry.junit4.GuiceBerryRule$1.evaluate(GuiceBerryRule.java:55)
+	at org.spockframework.runtime.extension.builtin.MethodRuleInterceptor.intercept(MethodRuleInterceptor.java:40)
+	at org.spockframework.runtime.extension.MethodInvocation.proceed(MethodInvocation.java:84)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:319)
+	at org.spockframework.runtime.BaseSpecRunner.invokeFeatureMethod(BaseSpecRunner.java:285)
+	at org.spockframework.runtime.BaseSpecRunner.doRunIteration(BaseSpecRunner.java:256)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:330)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:311)
+	at org.spockframework.runtime.BaseSpecRunner.runIteration(BaseSpecRunner.java:223)
+	at org.spockframework.runtime.BaseSpecRunner.initializeAndRunIteration(BaseSpecRunner.java:214)
+	at org.spockframework.runtime.ParameterizedSpecRunner.runIterations(ParameterizedSpecRunner.java:119)
+	at org.spockframework.runtime.ParameterizedSpecRunner.runParameterizedFeature(ParameterizedSpecRunner.java:43)
+	at org.spockframework.runtime.BaseSpecRunner.doRunFeature(BaseSpecRunner.java:198)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:330)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:311)
+	at org.spockframework.runtime.BaseSpecRunner.runFeature(BaseSpecRunner.java:175)
+	at org.spockframework.runtime.BaseSpecRunner.runFeatures(BaseSpecRunner.java:152)
+	at org.spockframework.runtime.BaseSpecRunner.doRunSpec(BaseSpecRunner.java:112)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:138)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:330)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:311)
+	at org.spockframework.runtime.BaseSpecRunner.runSpec(BaseSpecRunner.java:91)
+	at org.spockframework.runtime.BaseSpecRunner.run(BaseSpecRunner.java:82)
+	at org.spockframework.runtime.Sputnik.run(Sputnik.java:63)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecuter.runTestClass(JUnitTestClassExecuter.java:86)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecuter.execute(JUnitTestClassExecuter.java:49)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassProcessor.processTestClass(JUnitTestClassProcessor.java:69)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:48)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)
+	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.messaging.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:32)
+	at org.gradle.messaging.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:93)
+	at com.sun.proxy.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.processTestClass(TestWorker.java:105)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)
+	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.messaging.remote.internal.hub.MessageHub$Handler.run(MessageHub.java:355)
+	at org.gradle.internal.concurrent.DefaultExecutorFactory$StoppableExecutorImpl$1.run(DefaultExecutorFactory.java:64)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:744)
+Caused by: java.lang.IllegalStateException: Missing or invalid stackmap frames.
+	at org.jacoco.agent.rt.internal_5d10cad.core.internal.instr.FrameTracker.assertValidFrames(FrameTracker.java:613)
+	at org.jacoco.agent.rt.internal_5d10cad.core.internal.instr.FrameTracker.pop(FrameTracker.java:602)
+	at org.jacoco.agent.rt.internal_5d10cad.core.internal.instr.FrameTracker.visitVarInsn(FrameTracker.java:386)
+	at org.jacoco.agent.rt.internal_5d10cad.asm.MethodVisitor.visitVarInsn(Unknown Source)
+	at org.jacoco.agent.rt.internal_5d10cad.asm.MethodVisitor.visitVarInsn(Unknown Source)
+	at org.jacoco.agent.rt.internal_5d10cad.asm.tree.VarInsnNode.accept(Unknown Source)
+	at org.jacoco.agent.rt.internal_5d10cad.asm.tree.InsnList.accept(Unknown Source)
+	at org.jacoco.agent.rt.internal_5d10cad.asm.tree.MethodNode.accept(Unknown Source)
+	at org.jacoco.agent.rt.internal_5d10cad.core.internal.flow.ClassProbesAdapter$1.visitEnd(ClassProbesAdapter.java:124)
+	at org.jacoco.agent.rt.internal_5d10cad.asm.ClassReader.b(Unknown Source)
+	at org.jacoco.agent.rt.internal_5d10cad.asm.ClassReader.accept(Unknown Source)
+	at org.jacoco.agent.rt.internal_5d10cad.asm.ClassReader.accept(Unknown Source)
+	at org.jacoco.agent.rt.internal_5d10cad.core.instr.Instrumenter.instrument(Instrumenter.java:74)
+	at org.jacoco.agent.rt.internal_5d10cad.core.instr.Instrumenter.instrument(Instrumenter.java:87)
+	at org.jacoco.agent.rt.internal_5d10cad.CoverageTransformer.transform(CoverageTransformer.java:89)
+	... 101 more
+</pre>
+</span>
+</div>
 </div>
 <div id="footer">
 <p>Generated by 
-<a href="http://www.gradle.org">Gradle 1.12</a> at Jun 18, 2014 9:20:15 AM</p>
+<a href="http://www.gradle.org">Gradle 1.12</a> at Jun 18, 2014 7:27:22 PM</p>
 </div>
 </div>
 </body>
