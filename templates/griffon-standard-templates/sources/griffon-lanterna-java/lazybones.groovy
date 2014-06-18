@@ -11,6 +11,7 @@ props.project_package = ask("Define value for 'package' ["+ props.project_group 
 props.griffon_version = ask("Define value for 'griffonVersion' [@griffon.version@]: ", "@griffon.version@", "griffonVersion")
 String packagePath = props.project_package.replace('.' as char, '/' as char)
 
+processTemplates 'pom.xml', props
 processTemplates 'build.gradle', props
 processTemplates 'gradle.properties', props
 processTemplates 'src/main/java/*.java', props

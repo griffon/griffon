@@ -15,10 +15,17 @@ and Java as main language. The project has the following file structure
     │   ├── resources
     │   ├── services
     │   └── views
+    ├── maven-antrun-include.xml
+    ├── pom.xml
     └── src
-        └── main
+        ├── integration-test
+        │   └── java
+        ├── main
+        │   ├── java
+        │   └── resources
+        └── test
             ├── java
-            └── resources
+            └── resources
 
 Simply add your source files to `src/main/java`, your test cases to
 `src/test/java` and then you will be able to build your project with
@@ -28,3 +35,11 @@ Simply add your source files to `src/main/java`, your test cases to
     gradle run
 
 Don't forget to add any extra JAR dependencies to `build.gradle`!
+
+If you prefer building with Maven then execute the following commands
+
+    mvn compile
+    mvn test
+    mvn exec:java
+
+Don't forget to add any extra JAR dependencies to `pom.xml`!
