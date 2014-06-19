@@ -188,3 +188,15 @@ asciidoctor {
         }
     }
 }
+
+task guide(type: Copy, dependsOn: [apiDocs, java2html, asciidoctor]) {
+    destinationDir = "$buildDir/guide" as File
+    from("$buildDir/api") { into 'api' }
+    from("$buildDir/java2html") { into 'api-src'}
+    from("$buildDir/asciidoc")
+}
+
+task guideZip(type: Zip, dependsOn: guide) {
+    baseName = 'griffon-guide'
+    from "$buildDir/guide"
+}
