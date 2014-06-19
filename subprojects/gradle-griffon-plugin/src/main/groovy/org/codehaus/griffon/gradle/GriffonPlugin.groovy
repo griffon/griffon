@@ -46,8 +46,8 @@ class GriffonPlugin implements Plugin<Project> {
         project.dependencies.add('testCompile', 'org.codehaus.griffon:griffon-core-test:' + project.griffonVersion)
 
         // wire up classpaths with compile time dependencies
-        project.sourceSets.main.compileClasspath += project.configurations.compileOnly
-        project.sourceSets.test.compileClasspath += project.configurations.testCompileOnly
+        project.sourceSets.main.compileClasspath += [project.configurations.compileOnly]
+        project.sourceSets.test.compileClasspath += [project.configurations.testCompileOnly]
 
         String sourceSetName = project.plugins.hasPlugin('groovy') ? 'groovy' : 'java'
 
@@ -69,14 +69,14 @@ class GriffonPlugin implements Plugin<Project> {
         ]
 
         // adjust javadoc/groovydoc classpath
-        project.javadoc.classpath += project.configurations.compileOnly
+        project.javadoc.classpath += [project.configurations.compileOnly]
         if (sourceSetName == 'groovy') {
-            project.groovydoc.classpath += project.configurations.compileOnly
+            project.groovydoc.classpath += [project.configurations.compileOnly]
         }
 
         // adjust IntelliJ classpath
-        project.idea.module.scopes.PROVIDED.plus += project.configurations.compileOnly
-        project.idea.module.scopes.PROVIDED.plus += project.configurations.testCompileOnly
+        project.idea.module.scopes.PROVIDED.plus += [project.configurations.compileOnly]
+        project.idea.module.scopes.PROVIDED.plus += [project.configurations.testCompileOnly]
 
         // define default exclusions
         project.processResources {

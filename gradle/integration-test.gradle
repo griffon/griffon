@@ -31,8 +31,8 @@ sourceSets {
         if (file('src/integration-test/groovy').exists()) {
             groovy.srcDirs file('src/integration-test/groovy')
         }
-        compileClasspath += sourceSets.main.output
-        runtimeClasspath += compileClasspath
+        compileClasspath += [sourceSets.main.output]
+        runtimeClasspath += [compileClasspath]
     }
 }
 
