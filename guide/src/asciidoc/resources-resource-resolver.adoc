@@ -33,7 +33,7 @@ in +key+ is null.
 
 The simplest way to resolve a message thus results like this
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 getApplication().getResourceResolver().resolveResource('menu.icon')
@@ -43,14 +43,14 @@ The set of methods that take a +List+ as arguments are meant to be used from Gro
 code whereas those that take an +Object[]+ are meant for Java code; this leads to
 better idiomatic code as the following examples reveal
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 getApplication().getResourceResolver()
                 .resolveResource('groovy.icon.resource', ['small']))
 ----
 
-[source,java]
+[source,java,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 getApplication().getResourceResolver()
@@ -59,7 +59,7 @@ getApplication().getResourceResolver()
 
 Of course you may also use +List+ versions in Java, like this
 
-[source,java]
+[source,java,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 getApplication().getResourceResolver()
@@ -91,7 +91,7 @@ Assuming there are three icon files stored at +griffon-app/resources/img/icons+ 
 filenames are +menu-small.png+, +menu-medium.png+ and +menu-large.png+, a component may
 resolve any of them with
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 Object icon = getApplication().getResourceResolver()
@@ -112,7 +112,7 @@ menu.icon = /img/icons/menu-{:size}.png
 
 Which may be resolved in this manner
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 Object icon = getApplication().getResourceResolver()
@@ -127,7 +127,7 @@ message on the fly. In order to accomplish this feat resources must be defined a
 closures. The following message uses the value of the current running environment
 to determine the text of a warning to be displayed on a label
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 import java.awt.Rectangle
@@ -147,7 +147,7 @@ are automatically transformed to the expected type.
 
 Here's how it can be done
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 import javax.swing.Icon
@@ -177,7 +177,7 @@ hello.icon = @[action.icon]
 
 Resolving those keys results in
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 assert getApplication()

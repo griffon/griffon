@@ -44,7 +44,7 @@ The +Builder.groovy+ is no longer required. Its functions are now handled by
 customization
 
 .src/main/com/acme/MiglayoutBuilderCustomizer.java
-[source,java]
+[source,java,options="nowrap"]
 [subs="verbatim"]
 ----
 import griffon.inject.DependsOn;
@@ -71,7 +71,7 @@ public class MiglayoutBuilderCustomizer extends AbstractBuilderCustomizer {
 ----
 
 .src/main/com/acme/MiglayoutModule.java
-[source,java]
+[source,java,options="nowrap"]
 [subs="verbatim"]
 ----
 import griffon.core.injection.Module;
@@ -102,7 +102,7 @@ source directory (+src/main/java+ or +src/main/groovy+ depending on your prefere
 The following snippet shows an skeleton implementation
 
 .src/main/Events.groovy
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim"]
 ----
 import griffon.core.event.EventHandler
@@ -123,7 +123,7 @@ The value for this annotation must be the basic interface that defines the artif
 type, for example
 
 .griffon-app/models/sample/SampleModel.groovy
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim"]
 ----
 import griffon.core.artifact.GriffonModel
@@ -145,7 +145,7 @@ as public methods.
 View scripts have been upgraded to classes. You can use the following skeleton View
 class as an starting point
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim"]
 ----
 import griffon.core.artifact.GriffonView
@@ -172,7 +172,7 @@ Next, place the contents of your old View script inside [conum,data-value=1]_1_.
 These scripts must be migrated to full classes too. Here's the basic skeleton code
 for any lifecycle handler
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim"]
 ----
 import griffon.core.GriffonApplication
@@ -200,10 +200,10 @@ Griffon 2.x no longer segregates tests between +unit+ and +functional+. You must
 your build tool's native support for both types (this is quite simple with Gradle).
 Move all unit tests under +src/test/java+ or +src/test/groovy+ depending on your
 choice of main language. The base +GriffonUnitTestCase+ class no longer exist. Use
-any testing framework you're comfortable with to write uni tests (Junit4, Spock, etc).
+any testing framework you're comfortable with to write unit tests (Junit4, Spock, etc).
 Use the following template if you need to write artifact tests
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim"]
 ----
 import griffon.core.test.GriffonUnitRule

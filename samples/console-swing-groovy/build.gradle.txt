@@ -4,128 +4,36 @@ buildscript {
     }
 
     dependencies {
+        classpath 'org.codehaus.griffon:gradle-griffon-plugin:{gradle_griffon_version}'
         classpath 'net.saliman:gradle-cobertura-plugin:2.2.4'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.4.0'
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.9.0'
     }
 }
 
-apply plugin: 'idea'
-apply plugin: 'groovy'                                                        //<2>
-apply plugin: 'application'                                                  //<3> <4>
-
-configurations {
-    compileOnly
-    testCompileOnly
-}
-
-mainClassName = 'console.Launcher'                                            //<1>
-
-repositories {
-    jcenter()
-}
-
-dependencies {
-    compileOnly "org.codehaus.griffon:griffon-groovy-compile:$griffonVersion" //<6>
-
-    compile "org.codehaus.griffon:griffon-groovy:$griffonVersion"             //<7>
-    compile "org.codehaus.griffon:griffon-swing:$griffonVersion"              //<8>
-    compile "org.codehaus.griffon:griffon-guice:$griffonVersion"              //<9>
-
-    runtime "org.codehaus.griffon:griffon-swing-groovy:$griffonVersion"       //<10>
-    runtime('log4j:log4j:1.2.17') {                                           //<11>
-        exclude group: 'ant',         module: 'ant-nodeps'
-        exclude group: 'ant',         module: 'ant-junit'
-        exclude group: 'ant-contrib', module: 'ant-contrib'
-    }
-    runtime 'org.slf4j:slf4j-log4j12:1.7.7'                                   //<12>
-
-    testCompile "org.codehaus.griffon:griffon-core-test:$griffonVersion"      //<13>
-    testCompile "org.codehaus.griffon:griffon-fest-test:$griffonVersion"      //<13>
-}
-
-sourceSets {
-    main {
-        compileClasspath += configurations.compileOnly
-        groovy {                                                              //<5>
-            srcDirs = [
-                'griffon-app/conf',
-                'griffon-app/controllers',
-                'griffon-app/models',
-                'griffon-app/views',
-                'griffon-app/services',
-                'griffon-app/lifecycle',
-                'src/main/groovy'
-            ]
-        }
-        resources {                                                           //<5>
-            srcDirs = [
-                'griffon-app/resources',
-                'griffon-app/i18n',
-                'src/main/resources'
-            ]
-        }
-    }
-    test {
-        compileClasspath += configurations.testCompileOnly
-    }
-}
-
-javadoc {
-    classpath += configurations.compileOnly
-}
-
-idea {
-    module {
-        scopes.PROVIDED.plus += configurations.compileOnly
-        scopes.PROVIDED.plus += configurations.testCompileOnly
-    }
-}
-
-processResources {
-    from(sourceSets.main.resources.srcDirs) {
-        exclude '**/*.properties'
-        exclude '**/*.groovy'
-        exclude '**/*.xml'
-    }
-    from(sourceSets.main.resources.srcDirs) {
-        include '**/*.properties'
-        include '**/*.groovy'
-        include '**/*.xml'
-        filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
-            'application.name': project.name,
-            'application.version': project.version,
-            'griffon.version': project.griffonVersion
-        ])
-    }
-}
-
-processTestResources {
-    from(sourceSets.test.resources.srcDirs) {
-        exclude '**/*.properties'
-        exclude '**/*.groovy'
-        exclude '**/*.xml'
-    }
-    from(sourceSets.test.resources.srcDirs) {
-        include '**/*.properties'
-        include '**/*.groovy'
-        include '**/*.xml'
-        filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
-            'application.name': project.name,
-            'application.version': project.version,
-            'griffon.version': project.griffonVersion
-        ])
-    }
-}
-
+apply plugin: 'groovy'
+apply plugin: 'org.codehaus.griffon.griffon'
 apply from: 'gradle/publishing.gradle'
 apply from: 'gradle/code-coverage.gradle'
 apply from: 'gradle/code-quality.gradle'
 apply from: 'gradle/integration-test.gradle'
 
-gradle.taskGraph.whenReady {
-    sourceSets.main.groovy.srcDirs.each    { it.mkdirs() }
-    sourceSets.test.groovy.srcDirs.each    { it.mkdirs() }
-    sourceSets.main.resources.srcDirs.each { it.mkdirs() }
-    sourceSets.test.resources.srcDirs.each { it.mkdirs() }
+mainClassName = 'console.Launcher'
+
+dependencies {
+    compileOnly "org.codehaus.griffon:griffon-groovy-compile:$griffonVersion"
+
+    compile "org.codehaus.griffon:griffon-groovy:$griffonVersion"
+    compile "org.codehaus.griffon:griffon-swing:$griffonVersion"
+    compile "org.codehaus.griffon:griffon-guice:$griffonVersion"
+
+    runtime "org.codehaus.griffon:griffon-swing-groovy:$griffonVersion"
+    runtime('log4j:log4j:1.2.17') {
+        exclude group: 'ant',         module: 'ant-nodeps'
+        exclude group: 'ant',         module: 'ant-junit'
+        exclude group: 'ant-contrib', module: 'ant-contrib'
+    }
+    runtime 'org.slf4j:slf4j-log4j12:1.7.7'
+
+    testCompile "org.codehaus.griffon:griffon-fest-test:$griffonVersion"
 }

@@ -55,7 +55,7 @@ means they know how to handle observable properties out of the box. We only need
 concerned in triggering a +java.beans.PropertyChangeEvent+ when a property changes value.
 
 .sample-swing-java/griffon-app/models/sample/swing/java/SampleModel.java
-[source,java]
+[source,java,options="nowrap"]
 ----
 include::{sample-swing-java}/griffon-app/models/sample/swing/java/SampleModel.java[lines=16..-1]
 ----
@@ -75,7 +75,7 @@ the framework. This type of byte code manipulation is expected to work for every
 based artifact.
 
 .sample-swing-groovy/griffon-app/models/sample/swing/groovy/SampleModel.groovy
-[source,groovy]
+[source,groovy,options="nowrap"]
 ----
 include::{sample-swing-groovy}/griffon-app/models/sample/swing/groovy/SampleModel.groovy[lines=16..-1]
 ----
@@ -93,7 +93,7 @@ rely on additional components, such as Services, to do they work. This is exactl
 case as there's a +SampleService+ instance injected into our controllers.
 
 .sample-swing-java/griffon-app/controllers/sample/swing/java/SampleController.java
-[source,java]
+[source,java,options="nowrap"]
 ----
 include::{sample-swing-java}/griffon-app/controllers/sample/swing/java/SampleController.java[lines=16..-1]
 ----
@@ -108,7 +108,7 @@ output we must inform the View of the new value. This is done by updating the mo
 inside the UI thread [conum,data-value=4]_4_.
 
 .sample-swing-groovy/griffon-app/controllers/sample/swing/groovy/SampleController.groovy
-[source,groovy]
+[source,groovy,options="nowrap"]
 ----
 include::{sample-swing-groovy}/griffon-app/controllers/sample/swing/groovy/SampleController.groovy[lines=16..-1]
 ----
@@ -131,13 +131,13 @@ The following service shows another facility provide by the
 resources.
 
 .sample-swing-java/griffon-app/services/sample/swing/java/SampleService.java
-[source,java]
+[source,java,options="nowrap"]
 ----
 include::{sample-swing-java}/griffon-app/services/sample/swing/java/SampleService.java[lines=16..-1]
 ----
 
 .sample-swing-groovy/griffon-app/services/sample/swing/groovy/SampleService.groovy
-[source,groovy]
+[source,groovy,options="nowrap"]
 ----
 include::{sample-swing-groovy}/griffon-app/services/sample/swing/groovy/SampleService.groovy[lines=16..-1]
 ----
@@ -148,7 +148,7 @@ We come to the final piece of the puzzle: the View. Components are arranged in a
 one column vertical grid
 
 .sample-swing-java/griffon-app/views/sample/swing/java/SampleView.java
-[source,java]
+[source,java,options="nowrap"]
 ----
 include::{sample-swing-java}/griffon-app/views/sample/swing/java/SampleView.java[lines=16..-1]
 ----
@@ -162,7 +162,7 @@ View components, also how controller actions can be transformed into toolkit act
 that may be applied to buttons [conum,data-value=4]_4_ for example.
 
 .sample-swing-groovy/griffon-app/views/sample/swing/groovy/SampleView.groovy
-[source,groovy]
+[source,groovy,options="nowrap"]
 ----
 include::{sample-swing-groovy}/griffon-app/views/sample/swing/groovy/SampleView.groovy[lines=16..-1]
 ----
@@ -201,7 +201,7 @@ idea to get started with it now. Among the several features found in JavaFX you'
 === Model
 
 .sample-javafx-java/griffon-app/models/sample/javafx/java/SampleModel.java
-[source,java]
+[source,java,options="nowrap"]
 ----
 include::{sample-javafx-java}/griffon-app/models/sample/javafx/java/SampleModel.java[lines=16..-1]
 ----
@@ -215,7 +215,7 @@ they provide much more behavior than that; values may be cached automatically fo
 example, avoiding bindings to be updated needlessly.
 
 .sample-javafx-groovy/griffon-app/models/sample/javafx/groovy/SampleModel.groovy
-[source,groovy]
+[source,groovy,options="nowrap"]
 
 ----
 include::{sample-javafx-groovy}/griffon-app/models/sample/javafx/groovy/SampleModel.groovy[lines=16..-1]
@@ -232,7 +232,7 @@ Have a look at the controller for this application. See if you can spot the diff
 between its Swing counterpart.
 
 .sample-javafx-java/griffon-app/controllers/sample/javafx/java/SampleController.java
-[source,java]
+[source,java,options="nowrap"]
 ----
 include::{sample-javafx-java}/griffon-app/controllers/sample/javafx/java/SampleController.java[lines=16..-1]
 ----
@@ -247,7 +247,7 @@ the Controller only talks to the View via the Model, and the Model exposes an id
 contract for its properties we didn't have to change the Controller at all.
 
 .sample-javafx-groovy/griffon-app/controllers/sample/javafx/groovy/SampleController.groovy
-[source,groovy]
+[source,groovy,options="nowrap"]
 
 ----
 include::{sample-javafx-groovy}/griffon-app/controllers/sample/javafx/groovy/SampleController.groovy[lines=16..-1]
@@ -268,13 +268,13 @@ Given that the service operates with raw data and has no ties to the toolkit in 
 expect no changes from the Swing example.
 
 .sample-javafx-java/griffon-app/services/sample/javafx/java/SampleService.java
-[source,java]
+[source,java,options="nowrap"]
 ----
 include::{sample-javafx-java}/griffon-app/services/sample/javafx/java/SampleService.java[lines=16..-1]
 ----
 
 .sample-javafx-groovy/griffon-app/services/sample/javafx/groovy/SampleService.groovy
-[source,groovy]
+[source,groovy,options="nowrap"]
 
 ----
 include::{sample-javafx-groovy}/griffon-app/services/sample/javafx/groovy/SampleService.groovy[lines=16..-1]
@@ -287,7 +287,7 @@ remember we mentioned FXML as one of the strong features delivered by JavaFX and
 we chose to implement the Java based View by reading an fxml file by convention.
 
 .sample-javafx-java/griffon-app/views/sample/javafx/java/SampleView.java
-[source,java]
+[source,java,options="nowrap"]
 ----
 include::{sample-javafx-java}/griffon-app/views/sample/javafx/java/SampleView.java[lines=16..-1]
 ----
@@ -319,7 +319,7 @@ The naming convention is one of two steps, you must also connect the controller 
 a helper method [conum,data-value=4]_4_ as shown in the View.
 
 .sample-javafx-groovy/griffon-app/views/sample/javafx/groovy/SampleView.groovy
-[source,groovy]
+[source,groovy,options="nowrap"]
 
 ----
 include::{sample-javafx-groovy}/griffon-app/views/sample/javafx/groovy/SampleView.groovy[lines=16..-1]
@@ -358,7 +358,7 @@ it's a good thing to use observable properties in the Model, and so the followin
 Model is identical to the <<_swing,Swing>> version.
 
 .sample-lanterna-java/griffon-app/models/sample/lanterna/java/SampleModel.java
-[source,java]
+[source,java,options="nowrap"]
 ----
 include::{sample-lanterna-java}/griffon-app/models/sample/lanterna/java/SampleModel.java[lines=16..-1]
 ----
@@ -372,7 +372,7 @@ smallest building block you can still configure how it's assembled. Have a look 
 the application's configuration to find out how
 
 .sample-lanterna-groovy/griffon-app/conf/sample/lanterna/groovy/Config.groovy
-[source,groovy]
+[source,groovy,options="nowrap"]
 ----
 include::{sample-lanterna-groovy}/griffon-app/conf/sample/lanterna/groovy/Config.groovy[lines=16..-1]
 ----
@@ -387,7 +387,7 @@ the Groovy binding implementation would look as verbose as the Java version; we
 decided to take a shortcut for demonstrations purposes.
 
 .sample-lanterna-java/griffon-app/controllers/sample/lanterna/java/SampleController.java
-[source,java]
+[source,java,options="nowrap"]
 ----
 include::{sample-lanterna-java}/griffon-app/controllers/sample/lanterna/java/SampleController.java[lines=16..-1]
 ----
@@ -397,7 +397,7 @@ include::{sample-lanterna-java}/griffon-app/controllers/sample/lanterna/java/Sam
 <4> Get back inside the UI thread
 
 .sample-lanterna-groovy/griffon-app/controllers/sample/lanterna/groovy/SampleController.groovy
-[source,groovy]
+[source,groovy,options="nowrap"]
 ----
 include::{sample-lanterna-groovy}/griffon-app/controllers/sample/lanterna/groovy/SampleController.groovy[lines=16..-1]
 ----
@@ -412,13 +412,13 @@ Again, services should not be affected by the choice of UI tookit so the followi
 Service definitions are identical to the previous ones be saw earlier.
 
 .sample-lanterna-java/griffon-app/services/sample/lanterna/java/SampleService.java
-[source,java]
+[source,java,options="nowrap"]
 ----
 include::{sample-lanterna-java}/griffon-app/services/sample/lanterna/java/SampleService.java[lines=16..-1]
 ----
 
 .sample-lanterna-groovy/griffon-app/services/sample/lanterna/groovy/SampleService.groovy
-[source,groovy]
+[source,groovy,options="nowrap"]
 ----
 include::{sample-lanterna-groovy}/griffon-app/services/sample/lanterna/groovy/SampleService.groovy[lines=16..-1]
 ----
@@ -433,7 +433,7 @@ reason for which we must explicitly mode the value of the +input+ component into
 the +input+ Model property as soon as the button is clicked.
 
 .sample-lanterna-java/griffon-app/views/sample/lanterna/java/SampleView.java
-[source,java]
+[source,java,options="nowrap"]
 ----
 include::{sample-lanterna-java}/griffon-app/views/sample/lanterna/java/SampleView.java[lines=16..-1]
 ----
@@ -446,7 +446,7 @@ Fortunately we can rely on the observable +output+ Model property to write back 
 value to the +output+ component as soon as said property gets updated.
 
 .sample-lanterna-groovy/griffon-app/views/sample/lanterna/groovy/SampleView.groovy
-[source,groovy]
+[source,groovy,options="nowrap"]
 ----
 include::{sample-lanterna-groovy}/griffon-app/views/sample/lanterna/groovy/SampleView.groovy[lines=16..-1]
 ----
@@ -481,7 +481,7 @@ notice that the Java Model is identical and there's no Groovy Model
 === Model
 
 .sample-pivot-java/griffon-app/models/sample/pivot/java/SampleModel.java
-[source,java]
+[source,java,options="nowrap"]
 ----
 include::{sample-pivot-java}/griffon-app/models/sample/pivot/java/SampleModel.java[lines=16..-1]
 ----
@@ -495,7 +495,7 @@ The Pivot Controllers follow the same rules than the Lanterna ones, and as such 
 see there are no differences between one another.
 
 .sample-pivot-java/griffon-app/controllers/sample/pivot/java/SampleController.java
-[source,java]
+[source,java,options="nowrap"]
 ----
 include::{sample-pivot-java}/griffon-app/controllers/sample/pivot/java/SampleController.java[lines=16..-1]
 ----
@@ -505,7 +505,7 @@ include::{sample-pivot-java}/griffon-app/controllers/sample/pivot/java/SampleCon
 <4> Get back inside the UI thread
 
 .sample-pivot-groovy/griffon-app/controllers/sample/pivot/groovy/SampleController.groovy
-[source,groovy]
+[source,groovy,options="nowrap"]
 ----
 include::{sample-pivot-groovy}/griffon-app/controllers/sample/pivot/groovy/SampleController.groovy[lines=16..-1]
 ----
@@ -519,13 +519,13 @@ include::{sample-pivot-groovy}/griffon-app/controllers/sample/pivot/groovy/Sampl
 Services remain constant again, what a surprise, right?
 
 .sample-pivot-java/griffon-app/services/sample/pivot/java/SampleService.java
-[source,java]
+[source,java,options="nowrap"]
 ----
 include::{sample-pivot-java}/griffon-app/services/sample/pivot/java/SampleService.java[lines=16..-1]
 ----
 
 .sample-pivot-groovy/griffon-app/services/sample/pivot/groovy/SampleService.groovy
-[source,groovy]
+[source,groovy,options="nowrap"]
 ----
 include::{sample-pivot-groovy}/griffon-app/services/sample/pivot/groovy/SampleService.groovy[lines=16..-1]
 ----
@@ -538,7 +538,7 @@ that both +input+ and +output+ Model properties have to be explicitly bound usin
 the native support exposed by the toolkit.
 
 .sample-pivot-java/griffon-app/views/sample/pivot/java/SampleView.java
-[source,java]
+[source,java,options="nowrap"]
 ----
 include::{sample-pivot-java}/griffon-app/views/sample/pivot/java/SampleView.java[lines=16..-1]
 ----
@@ -548,7 +548,7 @@ include::{sample-pivot-java}/griffon-app/views/sample/pivot/java/SampleView.java
 <4> Hook actions by convention
 
 .sample-pivot-groovy/griffon-app/views/sample/pivot/groovy/SampleView.groovy
-[source,groovy]
+[source,groovy,options="nowrap"]
 ----
 include::{sample-pivot-groovy}/griffon-app/views/sample/pivot/groovy/SampleView.groovy[lines=16..-1]
 ----

@@ -11,7 +11,7 @@ from objects that do not hold a reference to it.
 
 Here's an example of a custom bean that's able to resolve messages
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 @griffon.transform.MessageSourceAware
@@ -22,7 +22,7 @@ class Bean {
 
 This class can be used in the following way
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 class SampleService {
@@ -39,7 +39,7 @@ The application's +MessageSource+ will be injected to annotated beans if no name
 specified as an argument to +MessageSourceAware+. You may define multiple +MessageSource+
 bindings as long as you qualify them with a distinct name, such as
 
-[source,java]
+[source,java,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 @ServiceProviderFor(Module.class)
@@ -62,7 +62,7 @@ public class ApplicationModule extends AbstractModule {
 
 Then make use of any of these bindings like so
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 @griffon.transform.MessageSourceAware('foo')

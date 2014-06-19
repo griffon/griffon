@@ -92,7 +92,7 @@ class GriffonPlugin implements Plugin<Project> {
                 filter(ReplaceTokens, tokens: [
                     'application.name'   : project.name,
                     'application.version': project.version,
-                    'griffon.version'    : project.ext.griffonVersion
+                    'griffon.version'    : project.griffonVersion
                 ])
             }
         }
@@ -111,7 +111,7 @@ class GriffonPlugin implements Plugin<Project> {
                 filter(ReplaceTokens, tokens: [
                     'application.name'   : project.name,
                     'application.version': project.version,
-                    'griffon.version'    : project.ext.griffonVersion
+                    'griffon.version'    : project.griffonVersion
                 ])
             }
         }

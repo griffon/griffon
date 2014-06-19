@@ -32,7 +32,7 @@ never throw +NoSuchMessageException+ nor return +null+ unless the passed in +key
 
 The simplest way to resolve a message thus results like this
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 getApplication().getMessageSource().getMessage('some.key')
@@ -42,14 +42,14 @@ The set of methods that take a +List+ as arguments are meant to be used from Gro
 code whereas those that take an +Object[]+ are meant for Java code; this leads to
 better idiomatic code as the following examples reveal
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 getApplication().getMessageSource()
                 .getMessage('groovy.message', ['apples', 'bananas'])
 ----
 
-[source,java]
+[source,java,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 getApplication().getMessageSource()
@@ -58,7 +58,7 @@ getApplication().getMessageSource()
 
 Of course you may also use +List+ versions in Java, like this
 
-[source,java]
+[source,java,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 getApplication().getMessageSource()
@@ -89,7 +89,7 @@ yoda.says = {0} is the path to the dark side. {0} leads to {1}. {1} leads to {2}
 
 Then the code used to resolve them
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 String quote = getApplication().getMessageSource()
@@ -97,7 +97,7 @@ String quote = getApplication().getMessageSource()
 assert quote == 'An apple a day keeps the doctor away'
 ----
 
-[source,java]
+[source,java,options="nowrap"]
 ----
 String quote = getApplication().getMessageSource()
                                .getMessage("yoday.says", new Object[]{"Fear", "Anger", "Hate"});
@@ -119,7 +119,7 @@ yoda.says = {:foo} is the path to the dark side. {:foo} leads to {:bar}. {:bar} 
 
 Which may be resolved in this manner
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 String quote = getApplication().getMessageSource()
@@ -127,7 +127,7 @@ String quote = getApplication().getMessageSource()
 assert quote == 'An apple a day keeps the doctor away
 ----
 
-[source,java]
+[source,java,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 import static griffon.util.CollectionUtils.map;
@@ -147,7 +147,7 @@ closures and must return a String value; if they do not then their return value 
 be translated to a String. The following message uses the value of the current running
 environment to determine the text of a warning to be displayed on a label
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 import griffon.util.Environment
@@ -177,7 +177,7 @@ hello.world = @[famous.quote]
 
 Resolving those keys results in
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 assert getApplication()

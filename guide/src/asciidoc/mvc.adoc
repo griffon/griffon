@@ -13,7 +13,7 @@ those provided by <<_addons,Addons>>).
 
 Here's how a typical MVC group configuration looks like
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 mvcGroups {
@@ -34,7 +34,7 @@ relies on calling +{link_mvc_group_init}+ on the group member.
 MVC group configurations accept a special key that defines additional configuration
 for that group, as it can be seen in the following snippet
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 mvcGroups {
@@ -61,7 +61,7 @@ Values placed under this key become available to MVC members during the call to
 +{link_mvc_group_init}+, as part of the arguments sent to that method. Here's how
 the +FooController+ can reach the key defined in the configuration
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 @ArtifactProviderFor(GriffonController.class

@@ -8,7 +8,7 @@ any controller action is invoked by the framework. For example, you may want to 
 the execution of a particular action given specific permissions; the +shiro+ plugin uses
 annotations that are handled by an +ActionInterceptor+, like this
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 import griffon.core.artifact.GriffonController
@@ -29,7 +29,7 @@ class PrinterController {
 The +scaffolding+ plugin on the other hand modifies the arguments sent to the action.
 Take the following snippet for example
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 import griffon.core.artifact.GriffonController
@@ -78,7 +78,7 @@ that provides sensible defaults. Say you'd want to know how much time it took fo
 to be executed, also if an exception occurred during its execution. This interceptor could
 be implemented as follows
 
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 package com.acme
@@ -138,7 +138,7 @@ up by the +ActionManager+. The following example shows how the previous +TracerA
 can be registered in a +Module+
 
 .src/main/com/acme/ApplicationModule.groovy
-[source,groovy]
+[source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 package com.acme

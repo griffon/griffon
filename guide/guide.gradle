@@ -162,23 +162,26 @@ java2html {
 
 asciidoctor {
     baseDir = project.file('src/asciidoc')
-    sourceDocumentName = project.file('src/asciidoc/index.adoc')
     options = [
         attributes: [
-            toc                 : 'left',
-            doctype             : 'book',
-            icons               : 'font',
-            sectlink            : true,
-            sectanchors         : true,
-            numbered            : true,
-            linkattrs           : true,
-            imagesdir           : 'images',
-            'source-highlighter': 'coderay',
-            'griffon-version'   : project.version,
-            'griffon-group'     : project.group,
-            'griffon-source-url': griffonSourceUrl
+            toc                     : 'left',
+            doctype                 : 'book',
+            icons                   : 'font',
+            encoding                : 'utf-8',
+            sectlink                : true,
+            sectanchors             : true,
+            numbered                : true,
+            linkattrs               : true,
+            imagesdir               : 'images',
+            stylesheet              : 'src/resources/css/style.css',
+            'source-highlighter'    : 'coderay',
+            'griffon-version'       : project.version,
+            'griffon-group'         : project.group,
+            'griffon-source-url'    : griffonSourceUrl,
+            'gradle_griffon_version': '1.0.0.BETA'
         ]
     ]
+    sourceDocumentName = project.file('src/asciidoc/index.adoc')
 
     doLast { task ->
         copy {
