@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-<meta httpEquiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <title>Test results - Class griffon.swing.editors.DimensionPropertyEditorSpec</title>
 <link href="css/base-style.css" rel="stylesheet" type="text/css"/>
 <link href="css/style.css" rel="stylesheet" type="text/css"/>
@@ -40,7 +40,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.028s</div>
+<div class="counter">0.033s</div>
 <p>duration</p>
 </div>
 </td>
@@ -75,17 +75,17 @@
 </thead>
 <tr>
 <td class="success">Dimension format ' ' should be equal to #Error:dimension</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Dimension format ' 10, 20 ' should be equal to #Error:dimension</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Dimension format ' 10, 20' should be equal to #Error:dimension</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -95,7 +95,7 @@
 </tr>
 <tr>
 <td class="success">Dimension format '10' should be equal to #Error:dimension</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -105,11 +105,16 @@
 </tr>
 <tr>
 <td class="success">Dimension format '10, 20' should be equal to #Error:dimension</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Dimension format '10,20' should be equal to #Error:dimension</td>
+<td>0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Dimension format '[10, 20]' should be equal to #Error:dimension</td>
 <td>0s</td>
 <td class="success">passed</td>
 </tr>
@@ -119,18 +124,13 @@
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Dimension format '[10, 20]' should be equal to #Error:dimension</td>
+<td class="success">Dimension format '[10]' should be equal to #Error:dimension</td>
 <td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Dimension format '[10]' should be equal to #Error:dimension</td>
 <td>0s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Dimension format '[10]' should be equal to #Error:dimension</td>
-<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -140,7 +140,7 @@
 </tr>
 <tr>
 <td class="success">Dimension format '[]' should be equal to #Error:dimension</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -150,7 +150,7 @@
 </tr>
 <tr>
 <td class="success">Dimension format '[w:10, h:20]' should be equal to #Error:dimension</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -160,22 +160,22 @@
 </tr>
 <tr>
 <td class="success">Dimension format '[width:10, height:20]' should be equal to #Error:dimension</td>
-<td>0s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Dimension format '[width:10, height:20]' should be equal to #Error:dimension</td>
 <td>0.002s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Dimension format 'java.awt.Dimension[width=10,height=20]' should be equal to #Error:dimension</td>
+<td class="success">Dimension format '[width:10, height:20]' should be equal to #Error:dimension</td>
 <td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
+<td class="success">Dimension format 'java.awt.Dimension[width=10,height=20]' should be equal to #Error:dimension</td>
+<td>0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
 <td class="success">Dimension format 'null' should be equal to #Error:dimension</td>
-<td>0.012s</td>
+<td>0.015s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -190,7 +190,7 @@
 </tr>
 <tr>
 <td class="success">Invalid dimension format '1, 2, 3'</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -199,17 +199,17 @@
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Invalid dimension format '[java.lang.Object@5250c5b0]'</td>
-<td>0.001s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Invalid dimension format '[w:b]'</td>
+<td class="success">Invalid dimension format '[java.lang.Object@79641ab1]'</td>
 <td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Invalid dimension format '[w:java.lang.Object@34e2d008]'</td>
+<td class="success">Invalid dimension format '[w:b]'</td>
+<td>0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Invalid dimension format '[w:java.lang.Object@1b1498ba]'</td>
 <td>0.001s</td>
 <td class="success">passed</td>
 </tr>
@@ -224,8 +224,8 @@
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Invalid dimension format 'java.lang.Object@16c7d858'</td>
-<td>0.001s</td>
+<td class="success">Invalid dimension format 'java.lang.Object@6536e939'</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -233,7 +233,7 @@
 </div>
 <div id="footer">
 <p>Generated by 
-<a href="http://www.gradle.org">Gradle 1.11</a> at Jun 20, 2014 11:16:48 AM</p>
+<a href="http://www.gradle.org">Gradle 1.12</a> at Jun 20, 2014 12:15:12 PM</p>
 </div>
 </div>
 </body>
