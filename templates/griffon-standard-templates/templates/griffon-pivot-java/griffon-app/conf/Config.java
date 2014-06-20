@@ -17,9 +17,9 @@ public class Config extends AbstractMapResourceBundle {
             )
             .e("mvcGroups", CollectionUtils.map()
                 .e("${project_property_name}", CollectionUtils.map()
-                    .e("model", "${project_package}.${project_capitalized_name}Model")
-                    .e("view", "${project_package}.${project_capitalized_name}View")
-                    .e("controller", "${project_package}.${project_capitalized_name}Controller")
+                    .e("model", "${project_package}.${project_class_name}Model")
+                    .e("view", "${project_package}.${project_class_name}View")
+                    .e("controller", "${project_package}.${project_class_name}Controller")
                 )
             );
     }

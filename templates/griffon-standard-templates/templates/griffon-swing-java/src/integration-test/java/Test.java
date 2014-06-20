@@ -5,7 +5,7 @@ import org.fest.swing.fixture.FrameFixture;
 import org.junit.Rule;
 import org.junit.Test;
 
-public class ${project_capitalized_name}Test {
+public class ${project_class_name}Test {
     static {
         System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
         System.setProperty("griffon.swing.edt.violations.check", "true");

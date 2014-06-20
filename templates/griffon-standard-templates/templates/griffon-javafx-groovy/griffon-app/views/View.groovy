@@ -4,9 +4,9 @@ import griffon.core.artifact.GriffonView
 import griffon.metadata.ArtifactProviderFor
 
 @ArtifactProviderFor(GriffonView)
-class ${project_capitalized_name}View {
+class ${project_class_name}View {
     FactoryBuilderSupport builder
-    ${project_capitalized_name}Model model
+    ${project_class_name}Model model
 
     void initUI() {
         builder.application(title: application.configuration['application.title'],

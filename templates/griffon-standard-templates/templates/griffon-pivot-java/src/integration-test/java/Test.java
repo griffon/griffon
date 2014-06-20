@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.fail;
 
-public class ${project_capitalized_name}Test {
+public class ${project_class_name}Test {
     @Rule
     public final GriffonPivotFuncRule pivot = new GriffonPivotFuncRule();
 

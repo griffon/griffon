@@ -5,6 +5,6 @@ import griffon.transform.FXObservable
 import griffon.metadata.ArtifactProviderFor
 
 @ArtifactProviderFor(GriffonModel)
-class ${project_capitalized_name}Model {
+class ${project_class_name}Model {
     @FXObservable String clickCount = "0"
 }

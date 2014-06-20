@@ -5,9 +5,9 @@ import griffon.metadata.ArtifactProviderFor
 import java.beans.PropertyChangeListener
 
 @ArtifactProviderFor(GriffonView)
-class ${project_capitalized_name}View {
+class ${project_class_name}View {
     FactoryBuilderSupport builder
-    ${project_capitalized_name}Model model
+    ${project_class_name}Model model
 
     void mvcGroupInit(Map<String, Object> args) {
         model.addPropertyChangeListener('clickCount', { evt ->

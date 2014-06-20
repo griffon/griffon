@@ -18,23 +18,23 @@ import javax.inject.Inject;
 import java.util.Collections;
 
 @ArtifactProviderFor(GriffonView.class)
-public class ${project_capitalized_name}View extends AbstractJavaFXGriffonView {
-    private ${project_capitalized_name}Controller controller;
-    private ${project_capitalized_name}Model model;
+public class ${project_class_name}View extends AbstractJavaFXGriffonView {
+    private ${project_class_name}Controller controller;
+    private ${project_class_name}Model model;
 
     @FXML
     private Label clickLabel;
 
     @Inject
-    public ${project_capitalized_name}View(@Nonnull GriffonApplication application) {
+    public ${project_class_name}View(@Nonnull GriffonApplication application) {
         super(application);
     }
 
-    public void setController(${project_capitalized_name}Controller controller) {
+    public void setController(${project_class_name}Controller controller) {
         this.controller = controller;
     }
 
-    public void setModel(${project_capitalized_name}Model model) {
+    public void setModel(${project_class_name}Model model) {
         this.model = model;
     }
 

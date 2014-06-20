@@ -21,20 +21,20 @@ import static java.util.Arrays.asList;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
 @ArtifactProviderFor(GriffonView.class)
-public class ${project_capitalized_name}View extends AbstractGriffonView {
-    private ${project_capitalized_name}Model model;
-    private ${project_capitalized_name}Controller controller;
+public class ${project_class_name}View extends AbstractGriffonView {
+    private ${project_class_name}Model model;
+    private ${project_class_name}Controller controller;
 
     @Inject
-    public ${project_capitalized_name}View(@Nonnull GriffonApplication application) {
+    public ${project_class_name}View(@Nonnull GriffonApplication application) {
         super(application);
     }
 
-    public void setModel(${project_capitalized_name}Model model) {
+    public void setModel(${project_class_name}Model model) {
         this.model = model;
     }
 
-    public void setController(${project_capitalized_name}Controller controller) {
+    public void setController(${project_class_name}Controller controller) {
         this.controller = controller;
     }
 
@@ -75,6 +75,6 @@ public class ${project_capitalized_name}View extends AbstractGriffonView {
     }
 
     private Image getImage(String path) {
-        return Toolkit.getDefaultToolkit().getImage(${project_capitalized_name}View.class.getResource(path));
+        return Toolkit.getDefaultToolkit().getImage(${project_class_name}View.class.getResource(path));
     }
 }
