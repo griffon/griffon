@@ -10,15 +10,15 @@ import javax.inject.Inject;
 import griffon.transform.Threading;
 
 @ArtifactProviderFor(GriffonController.class)
-public class ${project_capitalized_name}Controller extends AbstractGriffonController {
-    private ${project_capitalized_name}Model model;
+public class ${project_class_name}Controller extends AbstractGriffonController {
+    private ${project_class_name}Model model;
 
     @Inject
-    public ${project_capitalized_name}Controller(@Nonnull GriffonApplication application) {
+    public ${project_class_name}Controller(@Nonnull GriffonApplication application) {
         super(application);
     }
 
-    public void setModel(${project_capitalized_name}Model model) {
+    public void setModel(${project_class_name}Model model) {
         this.model = model;
     }
 

@@ -5,8 +5,8 @@ import griffon.metadata.ArtifactProviderFor
 import griffon.transform.Threading
 
 @ArtifactProviderFor(GriffonController)
-class ${project_capitalized_name}Controller {
-    ${project_capitalized_name}Model model
+class ${project_class_name}Controller {
+    ${project_class_name}Model model
 
     @Threading(Threading.Policy.INSIDE_UITHREAD_ASYNC)
     void click() {

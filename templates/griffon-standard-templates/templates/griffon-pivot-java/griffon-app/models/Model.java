@@ -9,11 +9,11 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 @ArtifactProviderFor(GriffonModel.class)
-public class ${project_capitalized_name}Model extends AbstractGriffonModel {
+public class ${project_class_name}Model extends AbstractGriffonModel {
     private int clickCount = 0;
 
     @Inject
-    public ${project_capitalized_name}Model(@Nonnull GriffonApplication application) {
+    public ${project_class_name}Model(@Nonnull GriffonApplication application) {
         super(application);
     }
 
