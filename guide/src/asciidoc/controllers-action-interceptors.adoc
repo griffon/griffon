@@ -2,7 +2,7 @@
 [[_controllers_action_interceptors]]
 = Action Interceptors
 
-{link_action_interceptor}s open a new set of possibilities by allowing developers
+++{link_action_interceptor}++s open a new set of possibilities by allowing developers
 and <<_addons,addon>> authors to define code that should be executed before and after
 any controller action is invoked by the framework. For example, you may want to protect
 the execution of a particular action given specific permissions; the +shiro+ plugin uses
@@ -172,6 +172,7 @@ interceptor provided by the +shiro+ plugin and the +scaffolding+ interceptor pro
 should be called before +scaffolding+. This can be accomplished by adding the following
 snippet to +Config.groovy+
 
-{code}
+[source,groovy,options="nowrap"]
+[subs="verbatim,attributes"]
 griffon.controller.action.interceptor.order = ['security', 'scaffolding']
-{code}
+----

@@ -47,6 +47,8 @@ customization
 [source,java,options="nowrap"]
 [subs="verbatim"]
 ----
+package com.acme;
+
 import griffon.inject.DependsOn;
 import groovy.swing.factory.LayoutFactory;
 import net.miginfocom.swing.MigLayout;
@@ -74,6 +76,8 @@ public class MiglayoutBuilderCustomizer extends AbstractBuilderCustomizer {
 [source,java,options="nowrap"]
 [subs="verbatim"]
 ----
+package com.acme;
+
 import griffon.core.injection.Module;
 import griffon.inject.DependsOn;
 import griffon.util.BuilderCustomizer;
@@ -126,6 +130,8 @@ type, for example
 [source,groovy,options="nowrap"]
 [subs="verbatim"]
 ----
+package sample
+
 import griffon.core.artifact.GriffonModel
 import griffon.metadata.ArtifactProviderFor
 
@@ -145,9 +151,12 @@ as public methods.
 View scripts have been upgraded to classes. You can use the following skeleton View
 class as an starting point
 
+.griffon-app/views/sample/SampleView.groovy
 [source,groovy,options="nowrap"]
 [subs="verbatim"]
 ----
+package sample
+
 import griffon.core.artifact.GriffonView
 import griffon.metadata.ArtifactProviderFor
 
@@ -172,6 +181,7 @@ Next, place the contents of your old View script inside [conum,data-value=1]_1_.
 These scripts must be migrated to full classes too. Here's the basic skeleton code
 for any lifecycle handler
 
+.griffon-app/lifecycle/Initialize.groovy
 [source,groovy,options="nowrap"]
 [subs="verbatim"]
 ----
@@ -203,9 +213,12 @@ choice of main language. The base +GriffonUnitTestCase+ class no longer exist. U
 any testing framework you're comfortable with to write unit tests (Junit4, Spock, etc).
 Use the following template if you need to write artifact tests
 
+.src/test/sample/SampleControllerTest.groovy
 [source,groovy,options="nowrap"]
 [subs="verbatim"]
 ----
+package sample
+
 import griffon.core.test.GriffonUnitRule
 import griffon.core.test.TestFor
 import org.junit.Rule
