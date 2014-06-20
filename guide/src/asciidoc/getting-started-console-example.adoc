@@ -5,7 +5,7 @@
 
 == Creating a Project
 
-The first is to get Lazybones installed on your system. The easiest way to achieve
+The first step is to get Lazybones installed on your system. The easiest way to achieve
 this goal is to install http://gvmtool.net[GVM] first
 
 [source]
@@ -53,17 +53,18 @@ Available templates in griffon/griffon-lazybones-templates:
 ----
 
 Notice that template names follow a naming convention identifying the main UI toolkit
-and main programming language. Alright, let's create an simple project using Swing as
+and main programming language. Alright, let's create a simple project using Swing as
 main UI toolkit and Groovy as main language
 
 [source]
+[subs="verbatim,attributes"]
 ----
 $ lazybones create griffon-swing-groovy console
 Creating project from template griffon-swing-groovy (latest) in 'console'
 Define value for 'group' [org.example]: console
 Define value for 'version' [0.1.0-SNAPSHOT]:
 Define value for 'package' [console]:
-Define value for 'griffonVersion' [2.0.0.BETA]:
+Define value for 'griffonVersion' [{griffon_version}]:
 ----
 
 == Project Layout
@@ -191,7 +192,7 @@ include::{console-swing-groovy}/src/main/groovy/console/ApplicationModule.groovy
 Modules can define several bindings, even override existing bindings. In our particular
 case we defined a binding [conum,data-value=1]_1_ for +Evaluator+ and overrode a
 binding [conum,data-value=2]_2_ for +SwingWindowDisplayHandler+. The latter is
-supplied by the +swing+ module thus me must mark it as a dependency [conum,data-value=3]_3_
+supplied by the +swing+ module thus we must mark it as a dependency [conum,data-value=3]_3_
 in our module definition. The implementation of our custom +SwingWindowDisplayHandler+
 is quite trivial, as shown by the following snippet
 
@@ -264,13 +265,13 @@ include::{console-swing-groovy}/src/test/groovy/console/ConsoleControllerTest.gr
 <7> Validate after waiting 2 seconds at most
 
 At the heart we have the +@TestFor+ [conum,data-value=1]_1_ annotation and a JUnit4 rule:
-+ @GriffonUnitRule+ [conum,data-value=4]_4_. These two key elements are responsible for
++@GriffonUnitRule+ [conum,data-value=4]_4_. These two key elements are responsible for
 injecting the required behavior to the test case. +@TestFor+ identifies the type of component,
 a Controller in this case, that's under test; it assumes a suitable private field [conum,data-value=2]_2_
-to be defined in the testcase. This filed is used to inject the instance under test.
+to be defined in the testcase. This field is used to inject the instance under test.
 The +GriffonUnitRule+ is responsible for bootstrapping a barebones application and putting
 together all the required bindings. Notice that the test case can participate in dependency
-injection [conum,data-value=3]_3_ too.
+injection too [conum,data-value=3]_3_.
 
 Running tests requires executing the +test+ task
 
