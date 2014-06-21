@@ -31,7 +31,9 @@ class GriffonPlugin implements Plugin<Project> {
 
         applyPluginIfAbsent(project, 'idea')
         applyPluginIfAbsent(project, 'java')
-        applyPluginIfAbsent(project, 'application')
+        if (!project.hasProperty('griffonPlugin') || !project.griffonPlugin) {
+            applyPluginIfAbsent(project, 'application')
+        }
 
         // enable jcenter by default
         project.repositories.jcenter()

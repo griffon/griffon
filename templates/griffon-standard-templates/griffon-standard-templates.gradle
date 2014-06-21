@@ -40,11 +40,11 @@ tasks.withType(Zip) { task ->
         copy {
             File destDir = task.source.files.iterator().next().parentFile
             into destDir
+            from(file('sources/common'))
             from(file("sources/${destDir.name}")) {
                 filter(org.apache.tools.ant.filters.ReplaceTokens,
                     tokens: ['griffon.version': project.version])
             }
-            from(file('sources/common'))
         }
     }
 }
