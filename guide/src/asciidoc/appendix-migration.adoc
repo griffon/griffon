@@ -105,19 +105,45 @@ The +Events+ script usually placed in +griffon-app/conf+ should be moved to the 
 source directory (+src/main/java+ or +src/main/groovy+ depending on your preferences).
 The following snippet shows an skeleton implementation
 
-.src/main/Events.groovy
+.src/main/com/acme/ApplicationEventHandler.groovy
 [source,groovy,options="nowrap"]
 [subs="verbatim"]
 ----
+package com.acme
+
 import griffon.core.event.EventHandler
 
-class Events implements EventHandler {
+class ApplicationEventHandler implements EventHandler {
     // event handlers as public methods
 }
 ----
 
 You must add event handlers as public methods following the conventions explained
-in the <<_events_consuming,consuming events>> section.
+in the <<_events_consuming,consuming events>> section. Don't forget to register this
+class using a module. The default +ApplicationModule+ class provided by all basic
+project templates is a good start.
+
+.src/main/groovy/com/acme/ApplicationModule.groovy
+[source,groovy,options="nowrap"]
+[subs="verbatim"]
+----
+package com.acme
+
+import griffon.core.event.EventHandler
+import griffon.core.injection.Module
+import org.codehaus.griffon.runtime.core.injection.AbstractModule
+import org.kordamp.jipsy.ServiceProviderFor
+
+@ServiceProviderFor(Module)
+class ApplicationModule extends AbstractModule {
+    @Override
+    protected void doConfigure() {
+        bind(EventHandler)
+            .to(ApplicationEventHandler)
+            .asSingleton()
+    }
+}
+----
 
 == Artifacts
 

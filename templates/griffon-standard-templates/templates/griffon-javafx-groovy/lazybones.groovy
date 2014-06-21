@@ -21,7 +21,6 @@ processTemplates 'build.gradle', props
 processTemplates 'gradle.properties', props
 processTemplates 'src/main/groovy/*.groovy', props
 processTemplates 'src/test/groovy/*.groovy', props
-processTemplates 'src/integration-test/groovy/*.groovy', props
 processTemplates 'griffon-app/*/*.groovy', props
 
 File mainSources = new File(projectDir, 'src/main/groovy')

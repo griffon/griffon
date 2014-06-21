@@ -19,9 +19,9 @@ String packagePath = props.project_package.replace('.' as char, '/' as char)
 processTemplates 'pom.xml', props
 processTemplates 'build.gradle', props
 processTemplates 'gradle.properties', props
+processTemplates 'griffon-app/resources/*.fxml', props
 processTemplates 'src/main/java/*.java', props
 processTemplates 'src/test/java/*.java', props
-processTemplates 'src/integration-test/java/*.java', props
 processTemplates 'griffon-app/*/*.java', props
 
 File mainSources = new File(projectDir, 'src/main/java')

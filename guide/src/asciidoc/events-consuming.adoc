@@ -16,11 +16,10 @@ an application listener, those conventions are:
    as the first parameter, and the callable itself as the second parameter.
 
 There is a global, per-application event handler that can be registered. If you want
-to take advantage of this feature you must define a class named +Events+. Lastly both
-Controller and Service instances are automatically registered as application event
-listeners.
-
-NOTE: You can also write the +Events+ class in Java.
+to take advantage of this feature you must define a class that implements the
++{link_event_handler}+ interface. This class must be registered with a +{link_module}+.
+Lastly both Controller and Service instances are automatically registered as application
+event listeners.
 
 == Examples
 
@@ -28,19 +27,43 @@ These are some examples of event handlers:
 
 Display a message right before default MVC groups are instantiated
 
-.src/main/Events.groovy
+.src/main/com/acme/ApplicationEventHandler.groovy
 [source,groovy,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
+package com.acme
+
 import griffon.core.GriffonApplication
 import griffon.core.event.EventHandler
 
-class Events implements EventHandler {
+class ApplicationEventHandler implements EventHandler {
     void onBootstrapEnd(GriffonApplication application) {
         println """
             Application configuration has finished loading.
             MVC Groups will be initialized now.
         """.stripIndent(12)
+    }
+}
+----
+
+.src/main/groovy/com/acme/ApplicationModule.groovy
+[source,groovy,options="nowrap"]
+[subs="verbatim"]
+----
+package com.acme
+
+import griffon.core.event.EventHandler
+import griffon.core.injection.Module
+import org.codehaus.griffon.runtime.core.injection.AbstractModule
+import org.kordamp.jipsy.ServiceProviderFor
+
+@ServiceProviderFor(Module)
+class ApplicationModule extends AbstractModule {
+    @Override
+    protected void doConfigure() {
+        bind(EventHandler)
+            .to(ApplicationEventHandler)
+            .asSingleton()
     }
 }
 ----
