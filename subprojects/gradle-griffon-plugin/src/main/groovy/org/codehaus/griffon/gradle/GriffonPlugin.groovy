@@ -19,6 +19,7 @@ package org.codehaus.griffon.gradle
 import org.apache.tools.ant.filters.ReplaceTokens
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.plugins.ide.eclipse.EclipsePlugin
 import org.gradle.tooling.BuildException
 
 class GriffonPlugin implements Plugin<Project> {
@@ -29,10 +30,10 @@ class GriffonPlugin implements Plugin<Project> {
                 new IllegalStateException("Project property 'griffonVersion' is undefined"))
         }
 
-        applyPluginIfAbsent(project, 'idea')
-        applyPluginIfAbsent(project, 'java')
+        project.apply(plugin: 'idea')
+        project.apply(plugin: 'java')
         if (!project.hasProperty('griffonPlugin') || !project.griffonPlugin) {
-            applyPluginIfAbsent(project, 'application')
+            project.apply(plugin: 'application')
         }
 
         // enable jcenter by default
@@ -74,6 +75,13 @@ class GriffonPlugin implements Plugin<Project> {
         project.javadoc.classpath += [project.configurations.compileOnly]
         if (sourceSetName == 'groovy') {
             project.groovydoc.classpath += [project.configurations.compileOnly]
+        }
+
+        // adjust Eclipse classpath, but only if EclipsePlugin is applied
+        // TODO: Replace with plugins.withId('eclipse') for gradle 2
+        project.plugins.withType(EclipsePlugin) {
+            project.eclipse.classpath.plusConfigurations += [project.configurations.compileOnly]
+            project.eclipse.classpath.plusConfigurations += [project.configurations.testCompileOnly]
         }
 
         // adjust IntelliJ classpath
@@ -127,9 +135,4 @@ class GriffonPlugin implements Plugin<Project> {
         }
     }
 
-    private void applyPluginIfAbsent(Project project, String plugin) {
-        if (!project.plugins.hasPlugin(plugin)) {
-            project.apply(plugin: plugin)
-        }
-    }
 }
