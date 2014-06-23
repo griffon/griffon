@@ -1,3 +1,32 @@
 
 [[_threading_async]]
 = Asynchronous Calls
+
+Similarly to synchronous calls, asynchronous calls inside the UI thread are made by
+invoking the +runInsideUIAsync+ method. This method results in the same behavior as
+calling +SwingUtilities.invokeLater()+ when using Swing.
+
+[source,groovy,options="nowrap"]
+[subs="verbatim,attributes"]
+----
+package sample
+
+import java.awt.event.ActionEvent
+import griffon.core.artifact.GriffonController
+
+@griffon.metadata.ArtifactProviderFor(GriffonController)
+class SampleController {
+    def model
+
+    void work(evt = null) {
+        // will be invoked outside of the UI thread by default
+        def value = model.value
+        // do some calculations
+        runInsideUIAsync {
+            // back inside the UI Thread
+            model.result = ...
+        }
+    }
+}
+----
+
