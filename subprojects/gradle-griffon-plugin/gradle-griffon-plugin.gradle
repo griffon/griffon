@@ -16,11 +16,19 @@
 
 apply plugin: 'groovy'
 
+/*
+ * This is needed for gradle 1.12, because it still uses groovy 1.8.
+ * TODO: Remove when migrated to gradle 2.0, which uses groovy 2.3
+ */
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.group == 'org.spockframework' && details.requested.name == 'spock-core') {
+            details.useVersion '0.7-groovy-1.8'
+        }
+    }
+}
+
 dependencies {
     compile gradleApi()
-    testCompile('org.spockframework:spock-core:0.7-groovy-1.8') {
-        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
-        exclude group: 'org.hamcrest', module: 'hamcrest-core'
-    }
     testCompile 'cglib:cglib-nodep:2.2.2'
 }
