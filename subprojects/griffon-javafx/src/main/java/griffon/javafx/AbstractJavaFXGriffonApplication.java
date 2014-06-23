@@ -69,7 +69,7 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
     private ApplicationPhase phase = ApplicationPhase.INITIALIZE;
 
     private final List<ShutdownHandler> shutdownHandlers = new ArrayList<>();
-    private final String[] startupArgs;
+    private String[] startupArgs;
     private final Object shutdownLock = new Object();
     private final Logger log;
     private Injector<?> injector;
@@ -286,6 +286,13 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
 
     public void initialize() {
         if (getPhase() == ApplicationPhase.INITIALIZE) {
+            Parameters parameters = getParameters();
+            if (parameters != null && parameters.getRaw().size() > 0) {
+                int length = parameters.getRaw().size();
+                startupArgs = new String[length];
+                System.arraycopy(parameters.getRaw().toArray(), 0, startupArgs, 0, length);
+            }
+
             getApplicationConfigurer().init();
         }
     }
