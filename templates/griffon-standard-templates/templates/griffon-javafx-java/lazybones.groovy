@@ -47,3 +47,8 @@ testSources.eachFile { File file ->
         file.renameTo(artifactSourcesPath.absolutePath + '/' + props.project_capitalized_name + file.name)
     }
 }
+
+File fxml = new File(projectDir, "griffon-app/resources/app.fxml")
+File fxmlPath = new File(projectDir, "griffon-app/resources/$packagePath")
+fxmlPath.mkdirs()
+fxml.renameTo(fxmlPath.absolutePath + '/' + props.project_property_name + '.fxml')

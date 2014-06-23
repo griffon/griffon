@@ -1,5 +1,13 @@
+import java.text.SimpleDateFormat
+
 apply plugin: 'maven-publish'
 apply plugin: 'bintray'
+
+Date buildTimeAndDate = new Date()
+ext {
+    buildTime = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
+    buildDate = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+}
 
 def pomConfig = {
     name project.name
