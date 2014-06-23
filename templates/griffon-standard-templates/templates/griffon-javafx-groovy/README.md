@@ -1,8 +1,8 @@
 Basic Griffon JavaFX/Groovy project
 -----------------------------------
 
-You have just created a basic Griffon application with Swing as UI toolkit
-and Groovy as main language. The project has the following file structure
+You have just created a basic Griffon application with JavaFX as the UI toolkit
+and Groovy as the main language. The project has the following file structure
 
     .
     ├── build.gradle
