@@ -30,10 +30,10 @@ class GriffonPlugin implements Plugin<Project> {
                 new IllegalStateException("Project property 'griffonVersion' is undefined"))
         }
 
-        applyPluginIfAbsent(project, 'idea')
-        applyPluginIfAbsent(project, 'java')
+        project.apply(plugin: 'idea')
+        project.apply(plugin: 'java')
         if (!project.hasProperty('griffonPlugin') || !project.griffonPlugin) {
-            applyPluginIfAbsent(project, 'application')
+            project.apply(plugin: 'application')
         }
 
         // enable jcenter by default
@@ -135,9 +135,4 @@ class GriffonPlugin implements Plugin<Project> {
         }
     }
 
-    private void applyPluginIfAbsent(Project project, String plugin) {
-        if (!project.plugins.hasPlugin(plugin)) {
-            project.apply(plugin: plugin)
-        }
-    }
 }
