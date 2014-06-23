@@ -1,3 +1,61 @@
 
 [[_models_property_listener_transformation]]
 = The @PropertyListener AST Transformation
+
+The +{link_property_listener}+ helps you to register ++PropertyChangeListener++s
+without so much effort. The following code
+
+[source,groovy,options="nowrap"]
+[subs="verbatim,attributes"]
+----
+import griffon.transform.PropertyListener
+import griffon.transform.Observable
+import griffon.metadata.ArtifactProviderFor
+
+@ArtifactProviderFor(GriffonModel)
+@PropertyListener(snoopAll)
+class SampleModel {
+    def controller
+    @Observable String name
+
+    @Observable
+    @PropertyListener({controller.someAction(it)})
+    String lastname
+
+    def snoopAll = { evt -> ... }
+}
+----
+
+is equivalent to this one
+
+[source,groovy,options="nowrap"]
+[subs="verbatim,attributes"]
+----
+import java.beans.PropeetyChangeListener
+import griffon.transform.Observable
+import griffon.metadata.ArtifactProviderFor
+
+@ArtifactProviderFor(GriffonModel)
+@PropertyListener(snoopAll)
+class SampleModel {
+    def controller
+    @Observable String name
+    @Observable String lastname
+
+    def snoopAll = { evt -> ... }
+
+    SampleModel() {
+        addPropertyChangeListener(snoopAll as PropertyChangeListener)
+        addPropertyChangeListener('lastname', {
+            controller.someAction(it)
+        } as PropertyChangeListener)
+    }
+}
+----
+
++{link_property_listener}+ accepts the following values
+
+ * in-place definition of a closure
+ * reference of a closure property defined in the same class
+ * a List of any of the previous two
+
