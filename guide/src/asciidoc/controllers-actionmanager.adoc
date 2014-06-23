@@ -1,3 +1,118 @@
 
 [[_controllers_actionmanager]]
 = The ActionManager
+
+Controller actions may automatically be wrapped and exposed as toolkit specific actions;
+this greatly simplifies how actions can be configured based on i18n concerns.
+
+At the heart of this feature lies the +{link_action_manager}+. This component is responsible
+for instantiating, configuring and keeping references to all actions per controller.
+It will automatically harvest all action candidates from a Controller once it has been
+instantiated. Each action has all of its properties configured following this strategy:
+
+ * match +<controller.class.name>+.action.+<action.name>+.+<key>+
+ * match application.action.+<action.name>+.+<key>+
+
++<action.name>+ should be properly capitalized. In other words, you can configure action
+properties specifically per Controller or application wide. Available keys are
+
+.Swing
+[cols="3*", options="header"]
+|===
+| Key               | Type    | Default Value
+| name              | String  | Natural name minus the `Action` suffix
+| accelerator       | String  | undefined
+| long_description  | String  | undefined
+| short_description | String  | undefined
+| mnemonic          | String  | undefined
+| small_icon        | String  | undefined
+| large_icon        | String  | undefined
+| enabled           | boolean | true
+| selected          | boolean | false
+|===
+
+.JavaFX
+[cols="3*", options="header"]
+|===
+| Key               | Type    | Default Value
+| name              | String  | Natural name minus the `Action` suffix
+| accelerator       | String  | undefined
+| long_description  | String  | undefined
+| short_description | String  | undefined
+| mnemonic          | String  | undefined
+| small_icon        | String  | undefined
+| large_icon        | String  | undefined
+| enabled           | boolean | true
+| selected          | boolean | false
+|===
+
+.Pivot
+[cols="3*", options="header"]
+|===
+| Key         | Type    | Default Value
+| name        | String  | Natural name minus the `Action` suffix
+| description | String  | undefined
+| enabled     | boolean | true
+|===
+
+.Lanterna
+[cols="3*", options="header"]
+|===
+| Key               | Type    | Default Value
+| name              | String  | Natural name minus the `Action` suffix
+|===
+
+Icon keys should point to an URL available in the classpath.
+
+Values must be placed in resources files following the <<_resources,internationalization>> guidelines.
+
+== Configuration Examples
+
+The following Controller defines 2 actions, one of them uses the +Action+ suffix because its name clashes
+with a known Java keyword.
+
+[source,groovy,options="nowrap"]
+[subs="verbatim,attributes"]
+----
+package sample
+
+import java.awt.event.ActionEvent
+
+import griffon.core.artifact.GriffonController
+
+@griffon.metadata.ArtifactProviderFor(GriffonController)
+class SampleController {
+    void close(ActionEvent evt) { ... }
+    void newAction(ActionEvent evt) { ... }
+}
+----
+
+The +{link_action_manager}+ will generate and configure the following actions:
+
+ * +newAction+
+ * +closeAction+
+
+The following keys are expected to be available in the application's i18n resources (i.e. +griffon-app/i18n/messages.properties+)
+
+[source,options="nowrap"]
+[subs="verbatim,attributes"]
+----
+sample.SampleController.action.New.name = New
+sample.SampleController.action.Open.name = Open
+sample.SampleController.action.Close.name = Close
+sample.SampleController.action.Delete.name = Delete
+# additional keys per action elided
+----
+
+In the case that you'd like the close action to be customized for all controllers, say using
+the Spanish language, then you'll have to provide a file named +griffon-app/i18n/messages_es.properties+
+with the following keys
+
+[source,options="nowrap"]
+[subs="verbatim,attributes"]
+----
+application.action.Close.name = Cerrar
+----
+
+Make sure to remove any controller specific keys when reaching for application wide configuration.
+

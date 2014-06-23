@@ -1,3 +1,34 @@
 
 [[_threading_transformation]]
 = The @ThreadingAware AST Transformation
+
+Any component may gain the ability to execute code in a particular thread, following
+the selected UI toolkit's execution rules. It injects the behavior of +{link_threadinghandler}+
+into the annotated class.
+
+This feature is just a shortcut to avoid reaching for the +UIThreadManager+ instance
+from objects that do not hold a reference to it.
+
+Here's an example of a custom component that's able to call its methods in different
+threads
+
+[source,groovy,options="nowrap"]
+[subs="verbatim,attributes"]
+----
+package sample
+
+@griffon.transform.ThreadingAware
+class Sample {
+    void doStuff() {
+        runOutsideUIThread {
+            // executed outside of the UI thread
+        }
+    }
+
+    void moreStuff() {
+        runInsideUIAsync {
+            // executed asynchronously inside the UI thread
+        }
+    }
+}
+----
