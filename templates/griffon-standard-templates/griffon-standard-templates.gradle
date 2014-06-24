@@ -26,6 +26,8 @@ buildscript {
 
 apply plugin: 'lazybones-templates'
 
+if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = ''
+if (!project.hasProperty('bintrayApiKey')) ext.bintrayApiKey = ''
 
 lazybones {
     repositoryUrl = 'https://api.bintray.com/content/griffon/griffon-lazybones-templates'
