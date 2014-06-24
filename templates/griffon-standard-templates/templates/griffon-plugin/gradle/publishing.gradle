@@ -1,0 +1,76 @@
+if (!publishJars.toBoolean()) return
+
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+def pomConfig = {
+    name project.name
+    description project.projectDescription
+    url project.projectUrl
+    inceptionYear project.projectInceptionYear
+    licenses {
+        license([:]) {
+            name 'The Apache Software License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            distribution 'repo'
+        }
+    }
+}
+
+publishing {
+    publications {
+        mavenCustom(MavenPublication) {
+            from components.java
+            artifact sourceJar
+
+            pom.withXml {
+                // all dependencies should use the default scope (compile) but
+                // Gradle insists in using runtime as default
+                asNode().dependencies.dependency.each { dep ->
+                    if (dep.scope.text() == 'runtime') {
+                        dep.remove(dep.scope)
+                    }
+                }
+                asNode().children().last() + pomConfig
+            }
+        }
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+            'Built-By': System.properties['user.name'],
+            'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.getProperty("java.vm.version") + ")",
+            'Build-Date': buildTime,
+            'Build-Time': buildDate,
+            'Specification-Title': project.name,
+            'Specification-Version': project.version,
+            'Specification-Vendor': 'griffon-framework.org',
+            'Implementation-Title': project.name,
+            'Implementation-Version': project.version,
+            'Implementation-Vendor': 'griffon-framework.org'
+        )
+    }
+}
+
+if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = ''
+if (!project.hasProperty('bintrayApiKey')) ext.bintrayApiKey = ''
+
+bintray {
+    user = project.bintrayUsername
+    key = project.bintrayApiKey
+    publications = ['mavenCustom']
+    pkg {
+        repo = 'griffon-plugins'
+        userOrg = 'griffon'
+        name = project.name
+        desc = project.projectDescription
+        licenses = ['Apache-2.0']
+        labels = ['griffon', '${plugin_full_name}']
+        websiteUrl = project.projectWebsiteUrl
+        issueTrackerUrl = project.projectIssueTrackerUrl
+        vcsUrl = project.projectVcsUrl
+        publicDownloadNumbers = true
+    }
+}

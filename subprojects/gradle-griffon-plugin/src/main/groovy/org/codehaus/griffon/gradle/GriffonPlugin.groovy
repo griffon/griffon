@@ -40,8 +40,8 @@ class GriffonPlugin implements Plugin<Project> {
         project.repositories.jcenter()
 
         // add compile time configurations
-        project.configurations.create('compileOnly')
-        project.configurations.create('testCompileOnly')
+        project.configurations.maybeCreate('compileOnly')
+        project.configurations.maybeCreate('testCompileOnly')
 
         // add default dependencies
         project.dependencies.add('compile', 'org.codehaus.griffon:griffon-core:' + project.griffonVersion)

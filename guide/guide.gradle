@@ -23,12 +23,12 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:0.7.0'
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:0.7.1'
         classpath 'org.gradle.api.plugins:gradle-java2html-plugin:0.4'
     }
 }
 
-apply plugin: 'asciidoctor'
+apply plugin: 'org.asciidoctor.gradle.asciidoctor'
 apply plugin: 'java2html'
 
 ext.childProjects = [
@@ -62,8 +62,6 @@ task copyDocs(type: Copy) {
         }
     }
 }
-
-evaluationDependsOn(":console-swing-groovy")
 
 task apiDocs(type: Javadoc, dependsOn: copyDocs) {
     source          = file("${buildDir}/sources")

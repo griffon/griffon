@@ -17,7 +17,7 @@
 if (!publishJars.toBoolean()) return
 
 apply plugin: 'maven-publish'
-apply plugin: 'bintray'
+apply plugin: 'com.jfrog.bintray'
 
 def pomConfig = {
     name project.name
@@ -104,7 +104,6 @@ jar {
     }
 }
 
-/*
 if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = ''
 if (!project.hasProperty('bintrayApiKey')) ext.bintrayApiKey = ''
 
@@ -112,15 +111,16 @@ bintray {
     user = project.bintrayUsername
     key = project.bintrayApiKey
     publications = ['mavenCustom']
-    def projectName = project.name
-    def projectDesc = project.pomDescription
     pkg {
         repo = 'griffon'
         userOrg = 'griffon'
-        name = projectName
-        desc = projectDesc
+        name = project.name
+        desc = project.pomDescription
         licenses = ['Apache-2.0']
         labels = ['griffon']
+        websiteUrl = 'http://griffon-framework.org'
+        issueTrackerUrl = 'http://jira.codehaus.org/browse/griffon'
+        vcsUrl = "https://github.com/griffon/${project.name}.git"
+        publicDownloadNumbers = true
     }
 }
-*/

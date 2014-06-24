@@ -1,0 +1,14 @@
+include 'subprojects/griffon-${plugin_name}'
+include 'subprojects/griffon-${plugin_name}-guide'
+
+rootProject.name = '${plugin_full_name}'
+rootProject.children.each { project ->
+    int slash = project.name.indexOf('/')
+    String fileBaseName = project.name[(slash+1)..-1]
+    String projectDirName = project.name
+    project.name = fileBaseName
+    project.projectDir = new File(settingsDir, projectDirName)
+    project.buildFileName = "\${fileBaseName}.gradle"
+    assert project.projectDir.isDirectory()
+    assert project.buildFile.isFile()
+}
