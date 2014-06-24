@@ -166,14 +166,14 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;82</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">void</span> addDirtyRegion(JComponent component, <span class="keyword">int</span> x, <span class="keyword">int</span> y, <span class="keyword">int</span> w, <span class="keyword">int</span> h) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;83</td>  <td class="nbHitsCovered">&nbsp;182</td>  <td class="src"><pre class="src">&nbsp;        checkThreadViolations(component);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;84</td>  <td class="nbHitsCovered">&nbsp;182</td>  <td class="src"><pre class="src">&nbsp;        delegate.addDirtyRegion(component, x, y, w, h);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;85</td>  <td class="nbHitsCovered">&nbsp;182</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;83</td>  <td class="nbHitsCovered">&nbsp;181</td>  <td class="src"><pre class="src">&nbsp;        checkThreadViolations(component);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;84</td>  <td class="nbHitsCovered">&nbsp;181</td>  <td class="src"><pre class="src">&nbsp;        delegate.addDirtyRegion(component, x, y, w, h);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;85</td>  <td class="nbHitsCovered">&nbsp;181</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;86</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;87</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">void</span> checkThreadViolations(JComponent c) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;88</td>  <td class="nbHitsUncovered"><a title="Line 88: Conditional coverage 16% (1/6) [each condition: 50%, 0%, 0%].">&nbsp;191</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 88: Conditional coverage 16% (1/6) [each condition: 50%, 0%, 0%].">        <span class="keyword">if</span> (!SwingUtilities.isEventDispatchThread() &amp;&amp; (completeCheck || c.isShowing())) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;88</td>  <td class="nbHitsUncovered"><a title="Line 88: Conditional coverage 16% (1/6) [each condition: 50%, 0%, 0%].">&nbsp;190</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 88: Conditional coverage 16% (1/6) [each condition: 50%, 0%, 0%].">        <span class="keyword">if</span> (!SwingUtilities.isEventDispatchThread() &amp;&amp; (completeCheck || c.isShowing())) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;89</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            <span class="keyword">boolean</span> repaint = <span class="keyword">false</span>;</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;90</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            <span class="keyword">boolean</span> fromSwing = <span class="keyword">false</span>;</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;91</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            <span class="keyword">boolean</span> imageUpdate = <span class="keyword">false</span>;</span></pre></td></tr>
@@ -224,7 +224,7 @@
 <tr>  <td class="numLineCover">&nbsp;122</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            violationFound(c, stackTrace);</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;123</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;124</td>  <td class="nbHitsCovered">&nbsp;191</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;124</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;125</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;126</td>  <td class="nbHits">&nbsp;</td>
@@ -294,7 +294,7 @@
   <td class="src"><pre class="src">&nbsp;    @Override</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;165</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> Image getVolatileOffscreenBuffer(Component component, <span class="keyword">int</span> i, <span class="keyword">int</span> i1) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;166</td>  <td class="nbHitsCovered">&nbsp;29</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> delegate.getVolatileOffscreenBuffer(component, i, i1);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;166</td>  <td class="nbHitsCovered">&nbsp;28</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> delegate.getVolatileOffscreenBuffer(component, i, i1);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;167</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;168</td>  <td class="nbHits">&nbsp;</td>
@@ -312,7 +312,7 @@
   <td class="src"><pre class="src">&nbsp;    @Override</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;175</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">boolean</span> isDoubleBufferingEnabled() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;176</td>  <td class="nbHitsCovered">&nbsp;159</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> delegate.isDoubleBufferingEnabled();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;176</td>  <td class="nbHitsCovered">&nbsp;154</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> delegate.isDoubleBufferingEnabled();</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;177</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;178</td>  <td class="nbHits">&nbsp;</td>
@@ -406,6 +406,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 6/23/14 10:55 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 6/24/14 8:05 PM.</div>
 </body>
 </html>
