@@ -1,0 +1,16 @@
+
+[[_overview_shutdown_handlers]]
+= Shutdown Handlers
+
+Applications have the option to let particular artifacts abort the shutdown sequence
+and/or perform a task while the shutdown sequence is in process. Artifacts that desire
+to be part of the shutdown sequence should implement the +{link_shutdown_handler}+
+interface and register themselves with the application instance.
+
+The contract of a +{link_shutdown_handler}+ is very simple
+
+* +boolean canShutdown(GriffonApplication application)+ - return *+false+* to abort the shutdown sequence.
+* +void onShutdown(GriffonApplication application)+ - called if the shutdown sequence was not aborted.
+
+++{link_shutdown_handler}++s will be called on the same order as they were registered.
+

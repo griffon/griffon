@@ -18,11 +18,14 @@ package org.codehaus.griffon.runtime.lanterna;
 import griffon.builder.lanterna.LanternaBuilderCustomizer;
 import griffon.core.injection.Module;
 import griffon.inject.DependsOn;
+import griffon.lanterna.LanternaWindowDisplayHandler;
 import griffon.util.BuilderCustomizer;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.kordamp.jipsy.ServiceProviderFor;
 
 import javax.inject.Named;
+
+import static griffon.util.AnnotationUtils.named;
 
 /**
  * @author Andres Almiray
@@ -36,6 +39,10 @@ public class LanternaBuilderModule extends AbstractModule {
         // tag::bindings[]
         bind(BuilderCustomizer.class)
             .to(LanternaBuilderCustomizer.class)
+            .asSingleton();
+        bind(LanternaWindowDisplayHandler.class)
+            .withClassifier(named("windowDisplayHandler"))
+            .to(GroovyAwareConfigurableLanternaWindowDisplayHandler.class)
             .asSingleton();
         // end::bindings[]
     }

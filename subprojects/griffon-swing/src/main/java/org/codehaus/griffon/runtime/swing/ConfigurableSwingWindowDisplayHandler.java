@@ -51,7 +51,7 @@ public class ConfigurableSwingWindowDisplayHandler extends ConfigurableWindowDis
         if (!options.isEmpty()) {
             Object handler = options.get("show");
             if (canBeRun(handler)) {
-                run((CallableWithArgs<?>) handler, window);
+                run(handler, name, window);
                 return;
             } else if (options.get("handler") instanceof SwingWindowDisplayHandler) {
                 ((SwingWindowDisplayHandler) options.get("handler")).show(name, window);
@@ -69,7 +69,7 @@ public class ConfigurableSwingWindowDisplayHandler extends ConfigurableWindowDis
         if (!options.isEmpty()) {
             Object defaultShow = options.get("defaultShow");
             if (canBeRun(defaultShow)) {
-                run((CallableWithArgs<?>) defaultShow, window);
+                run(defaultShow, name, window);
                 return;
             }
         }
@@ -85,7 +85,7 @@ public class ConfigurableSwingWindowDisplayHandler extends ConfigurableWindowDis
         if (!options.isEmpty()) {
             Object handler = options.get("hide");
             if (canBeRun(handler)) {
-                run((CallableWithArgs) handler, window);
+                run(handler, name, window);
                 return;
             } else if (options.get("handler") instanceof SwingWindowDisplayHandler) {
                 ((SwingWindowDisplayHandler) options.get("handler")).hide(name, window);
@@ -103,15 +103,17 @@ public class ConfigurableSwingWindowDisplayHandler extends ConfigurableWindowDis
         if (!options.isEmpty()) {
             Object defaultHide = options.get("defaultHide");
             if (canBeRun(defaultHide)) {
-                run((CallableWithArgs<?>) defaultHide, window);
+                run(defaultHide, name, window);
                 return;
             }
         }
         fetchDefaultWindowDisplayHandler().hide(name, window);
     }
 
-    protected void run(@Nonnull CallableWithArgs<?> handler, @Nonnull JInternalFrame window) {
-        handler.call(window);
+    protected void run(@Nonnull Object handler, @Nonnull String name, @Nonnull JInternalFrame window) {
+        if (handler instanceof CallableWithArgs) {
+            ((CallableWithArgs<?>) handler).call(name, window);
+        }
     }
 
     @Nonnull

@@ -29,14 +29,10 @@ import java.util.regex.Pattern;
  */
 
 public class Metadata extends Properties {
-    private static final long serialVersionUID = 5403698530204420558L;
 
     public static final String FILE = "application.properties";
     public static final String APPLICATION_VERSION = "application.version";
     public static final String APPLICATION_NAME = "application.name";
-    public static final String APPLICATION_GRIFFON_VERSION = "application.griffon.version";
-    public static final String GRIFFON_START_DIR = "griffon.start.dir";
-    public static final String GRIFFON_WORKING_DIR = "griffon.working.dir";
 
     private static final Pattern SKIP_PATTERN = Pattern.compile("^.*/griffon-.*.jar!/application.properties$");
     private static Reference<Metadata> metadata = new SoftReference<>(new Metadata());
@@ -169,13 +165,6 @@ public class Metadata extends Properties {
     }
 
     /**
-     * @return The Griffon version used to build the application
-     */
-    public String getGriffonVersion() {
-        return (String) get(APPLICATION_GRIFFON_VERSION);
-    }
-
-    /**
      * @return The environment the application expects to run in
      */
     public String getEnvironment() {
@@ -187,116 +176,6 @@ public class Metadata extends Properties {
      */
     public String getApplicationName() {
         return (String) get(APPLICATION_NAME);
-    }
-
-    /**
-     * Obtains a map (name->version) of installed plugins specified in the project metadata
-     *
-     * @return A map of installed plugins
-     */
-    public Map<String, String> getInstalledPlugins() {
-        Map<String, String> newMap = new LinkedHashMap<>();
-
-        for (Map.Entry<Object, Object> entry : entrySet()) {
-            String key = entry.getKey().toString();
-            Object val = entry.getValue();
-            if (key.startsWith("plugins.") && val != null) {
-                newMap.put(key.substring(8), val.toString());
-            }
-        }
-        return newMap;
-    }
-
-    public Map<String, String> getArchetype() {
-        Map<String, String> newMap = new LinkedHashMap<>();
-
-        for (Map.Entry<Object, Object> entry : entrySet()) {
-            String key = entry.getKey().toString();
-            Object val = entry.getValue();
-            if (key.startsWith("archetype.") && val != null) {
-                newMap.put("name", key.substring(10));
-                newMap.put("version", val.toString());
-                break;
-            }
-        }
-        return newMap;
-    }
-
-    /**
-     * Returns the application's starting directory.<p>
-     * The value comes from the System property 'griffon.start.dir'
-     * if set. Result may be null.
-     *
-     * @return The application start directory path
-     */
-    public String getGriffonStartDir() {
-        String griffonStartDir = (String) get(GRIFFON_START_DIR);
-        if (griffonStartDir == null) {
-            griffonStartDir = System.getProperty(GRIFFON_START_DIR);
-            if (griffonStartDir != null && griffonStartDir.length() > 1 &&
-                griffonStartDir.startsWith("\"") && griffonStartDir.endsWith("\"")) {
-                // normalize without double quotes
-                griffonStartDir = griffonStartDir.substring(1, griffonStartDir.length() - 1);
-                System.setProperty(GRIFFON_START_DIR, griffonStartDir);
-            }
-            if (griffonStartDir != null && griffonStartDir.length() > 1 &&
-                griffonStartDir.startsWith("'") && griffonStartDir.endsWith("'")) {
-                // normalize without single quotes
-                griffonStartDir = griffonStartDir.substring(1, griffonStartDir.length() - 1);
-                System.setProperty(GRIFFON_START_DIR, griffonStartDir);
-            }
-            if (griffonStartDir != null) {
-                put(GRIFFON_START_DIR, griffonStartDir);
-            }
-        }
-        return griffonStartDir;
-    }
-
-    /**
-     * Returns ia non-null value for the application's starting directory.<p>
-     * the path to new File(".") if that path is writable, returns
-     * the value of 'user.dir' otherwise.
-     *
-     * @return The application start directory path
-     */
-    public String getGriffonStartDirSafe() {
-        String griffonStartDir = getGriffonStartDir();
-        if (griffonStartDir == null) {
-            File path = new File(".");
-            if (path.canWrite()) {
-                return path.getAbsolutePath();
-            }
-            return System.getProperty("user.dir");
-        }
-        return griffonStartDir;
-    }
-
-    /**
-     * @return The application working directory
-     */
-    public File getGriffonWorkingDir() {
-        String griffonWorkingDir = (String) get(GRIFFON_WORKING_DIR);
-        if (griffonWorkingDir == null) {
-            String griffonStartDir = getGriffonStartDirSafe();
-            File workDir = new File(griffonStartDir);
-            if (workDir.canWrite()) {
-                put(GRIFFON_WORKING_DIR, griffonStartDir);
-                return workDir;
-            } else {
-                try {
-                    File temp = File.createTempFile("griffon", ".tmp");
-                    temp.deleteOnExit();
-                    workDir = new File(temp.getParent(), getApplicationName());
-                    put(GRIFFON_WORKING_DIR, workDir.getAbsolutePath());
-                    return workDir;
-                } catch (IOException ioe) {
-                    // ignore ??
-                    // should not happen
-                }
-            }
-        }
-
-        return new File(griffonWorkingDir);
     }
 
     /**

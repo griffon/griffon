@@ -132,7 +132,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
         Locale oldValue = this.locale;
         this.locale = locale;
         Locale.setDefault(locale);
-        firePropertyChange("locale", oldValue, locale);
+        firePropertyChange(PROPERTY_LOCALE, oldValue, locale);
     }
 
     public void addShutdownHandler(@Nonnull ShutdownHandler handler) {
@@ -155,7 +155,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
     protected void setPhase(@Nonnull ApplicationPhase phase) {
         requireNonNull(phase, "Argument 'phase' must not be null");
         synchronized (lock) {
-            firePropertyChange("phase", this.phase, this.phase = phase);
+            firePropertyChange(PROPERTY_PHASE, this.phase, this.phase = phase);
         }
     }
 
@@ -363,21 +363,24 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
 
         Object startupGroups = getConfiguration().get("application.startupGroups", null);
         if (startupGroups instanceof List) {
-            if (log.isInfoEnabled()) {
-                log.info("Initializing all startup groups: " + startupGroups);
-            }
+            log.info("Initializing all startup groups: {}", startupGroups);
 
             for (String groupName : (List<String>) startupGroups) {
-                getMvcGroupManager().createMVCGroup(groupName);
+                getMvcGroupManager().createMVCGroup(groupName.trim());
             }
         } else if (startupGroups != null && startupGroups.getClass().isArray()) {
             Object[] groups = (Object[]) startupGroups;
-            if (log.isInfoEnabled()) {
-                log.info("Initializing all startup groups: " + Arrays.toString(groups));
-            }
+            log.info("Initializing all startup groups: {}", Arrays.toString(groups));
 
             for (Object groupName : groups) {
-                getMvcGroupManager().createMVCGroup(String.valueOf(groupName));
+                getMvcGroupManager().createMVCGroup(String.valueOf(groupName).trim());
+            }
+        } else if (startupGroups != null && startupGroups instanceof String) {
+            String[] groups = ((String) startupGroups).split(",");
+            log.info("Initializing all startup groups: {}", Arrays.toString(groups));
+
+            for (String groupName : groups) {
+                getMvcGroupManager().createMVCGroup(groupName.trim());
             }
         }
 

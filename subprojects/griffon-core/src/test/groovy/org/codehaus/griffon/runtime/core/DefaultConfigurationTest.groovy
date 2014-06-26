@@ -78,7 +78,7 @@ class DefaultConfigurationTest extends Specification {
         }
     }
 
-    def 'Can resolved nested keys from sample application configuration'() {
+    def 'Can resolve nested keys from sample application configuration'() {
         given:
         ResourceBundle bundle = new AppResourceBundle()
         Configuration configuration = new DefaultConfiguration(bundle)

@@ -18,11 +18,14 @@ package org.codehaus.griffon.runtime.javafx;
 import griffon.builder.javafx.JavafxBuilderCustomizer;
 import griffon.core.injection.Module;
 import griffon.inject.DependsOn;
+import griffon.javafx.JavaFXWindowDisplayHandler;
 import griffon.util.BuilderCustomizer;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.kordamp.jipsy.ServiceProviderFor;
 
 import javax.inject.Named;
+
+import static griffon.util.AnnotationUtils.named;
 
 /**
  * @author Andres Almiray
@@ -36,6 +39,10 @@ public class JavafxBuilderModule extends AbstractModule {
         // tag::bindings[]
         bind(BuilderCustomizer.class)
             .to(JavafxBuilderCustomizer.class)
+            .asSingleton();
+        bind(JavaFXWindowDisplayHandler.class)
+            .withClassifier(named("windowDisplayHandler"))
+            .to(GroovyAwareConfigurableJavaFXWindowDisplayHandler.class)
             .asSingleton();
         // end::bindings[]
     }

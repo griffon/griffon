@@ -18,11 +18,14 @@ package org.codehaus.griffon.runtime.swing;
 import griffon.builder.swing.SwingBuilderCustomizer;
 import griffon.core.injection.Module;
 import griffon.inject.DependsOn;
+import griffon.swing.SwingWindowDisplayHandler;
 import griffon.util.BuilderCustomizer;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.kordamp.jipsy.ServiceProviderFor;
 
 import javax.inject.Named;
+
+import static griffon.util.AnnotationUtils.named;
 
 /**
  * @author Andres Almiray
@@ -36,6 +39,10 @@ public class SwingBuilderModule extends AbstractModule {
         // tag::bindings[]
         bind(BuilderCustomizer.class)
             .to(SwingBuilderCustomizer.class)
+            .asSingleton();
+        bind(SwingWindowDisplayHandler.class)
+            .withClassifier(named("windowDisplayHandler"))
+            .to(GroovyAwareConfigurableSwingWindowDisplayHandler.class)
             .asSingleton();
         // end::bindings[]
     }

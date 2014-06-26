@@ -18,11 +18,14 @@ package org.codehaus.griffon.runtime.pivot;
 import griffon.builder.pivot.PivotBuilderCustomizer;
 import griffon.core.injection.Module;
 import griffon.inject.DependsOn;
+import griffon.pivot.PivotWindowDisplayHandler;
 import griffon.util.BuilderCustomizer;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.kordamp.jipsy.ServiceProviderFor;
 
 import javax.inject.Named;
+
+import static griffon.util.AnnotationUtils.named;
 
 /**
  * @author Andres Almiray
@@ -36,6 +39,10 @@ public class PivotBuilderModule extends AbstractModule {
         // tag::bindings[]
         bind(BuilderCustomizer.class)
             .to(PivotBuilderCustomizer.class)
+            .asSingleton();
+        bind(PivotWindowDisplayHandler.class)
+            .withClassifier(named("windowDisplayHandler"))
+            .to(GroovyAwareConfigurablePivotWindowDisplayHandler.class)
             .asSingleton();
         // end::bindings[]
     }

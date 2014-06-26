@@ -17,6 +17,7 @@ package griffon.util
 
 import griffon.core.ApplicationClassLoader
 import griffon.core.env.Environment
+import griffon.core.env.GriffonEnvironment
 import griffon.core.env.Metadata
 import org.codehaus.groovy.runtime.InvokerHelper
 
@@ -56,7 +57,7 @@ class ConfigReader {
                 .e("userHome", System.getProperty("user.home"))
                 .e("appName", Metadata.getCurrent().getApplicationName())
                 .e("appVersion", Metadata.getCurrent().getApplicationVersion())
-                .e("griffonVersion", Metadata.getCurrent().getGriffonVersion()));
+                .e("griffonVersion", GriffonEnvironment.getGriffonVersion()));
             configReader.registerConditionalBlock("environments", Environment.getCurrent().getName())
             configReader.registerConditionalBlock("projects", Metadata.getCurrent().getApplicationName())
             configReader.registerConditionalBlock("platforms", GriffonApplicationUtils.getPlatform())

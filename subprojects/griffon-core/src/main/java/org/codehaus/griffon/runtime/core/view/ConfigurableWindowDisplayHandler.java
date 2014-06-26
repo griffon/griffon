@@ -39,11 +39,11 @@ import static java.util.Objects.requireNonNull;
  * <pre>
  *     windowManager {
  *         myWindowName = [
- *             show: {window -> ... },
- *             hide: {window -> ... }
+ *             show: {name, window -> ... },
+ *             hide: {name, window -> ... }
  *         ]
  *         myOtherWindowName = [
- *             show: {window -> ... }
+ *             show: {name, window -> ... }
  *         ]
  *     }
  * </pre>
@@ -60,7 +60,7 @@ import static java.util.Objects.requireNonNull;
  *             handler: new MyCustomWindowDisplayHandler()
  *         ]
  *         myOtherWindowName = [
- *             show: {window -> ... }
+ *             show: {name, window -> ... }
  *         ]
  *     }
  * </pre>
@@ -71,7 +71,7 @@ import static java.util.Objects.requireNonNull;
  *     windowManager {
  *         defaultHandler = new MyCustomWindowDisplayHandler()
  *         myOtherWindowName = [
- *             show: {window -> ... }
+ *             show: {name, window -> ... }
  *         ]
  *     }
  * </pre>
@@ -81,9 +81,9 @@ import static java.util.Objects.requireNonNull;
  * <p/>
  * <pre>
  *     windowManager {
- *         defaultHide = {window -> ... }
+ *         defaultHide = {name, window -> ... }
  *         myOtherWindowName = [
- *             show: {window -> ... }
+ *             show: {name, window -> ... }
  *         ]
  *     }
  * </pre>
@@ -115,7 +115,7 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
         if (!options.isEmpty()) {
             Object handler = options.get("show");
             if (canBeRun(handler)) {
-                run((CallableWithArgs<?>) handler, window);
+                run(handler, name, window);
                 return;
             } else if (options.get("handler") instanceof WindowDisplayHandler) {
                 ((WindowDisplayHandler<W>) options.get("handler")).show(name, window);
@@ -131,7 +131,7 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
         if (!options.isEmpty()) {
             Object defaultShow = options.get("defaultShow");
             if (canBeRun(defaultShow)) {
-                run((CallableWithArgs<?>) defaultShow, window);
+                run(defaultShow, name, window);
                 return;
             }
         }
@@ -148,7 +148,7 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
         if (!options.isEmpty()) {
             Object handler = options.get("hide");
             if (canBeRun(handler)) {
-                run((CallableWithArgs<?>) handler, window);
+                run(handler, name, window);
                 return;
             } else if (options.get("handler") instanceof WindowDisplayHandler) {
                 ((WindowDisplayHandler<W>) options.get("handler")).hide(name, window);
@@ -164,16 +164,17 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
         if (!options.isEmpty()) {
             Object defaultHide = options.get("defaultHide");
             if (canBeRun(defaultHide)) {
-                run((CallableWithArgs<?>) defaultHide, window);
+                run(defaultHide, name, window);
                 return;
             }
         }
         fetchDefaultWindowDisplayHandler().hide(name, window);
     }
 
+    @SuppressWarnings("unchecked")
     protected boolean handleShowByInjectedHandler(@Nonnull String name, @Nonnull W window) {
         try {
-            WindowDisplayHandler handler = getApplication().getInjector()
+            WindowDisplayHandler<W> handler = getApplication().getInjector()
                 .getInstance(WindowDisplayHandler.class, named(name));
             handler.show(name, window);
             return true;
@@ -183,9 +184,10 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     protected boolean handleHideByInjectedHandler(@Nonnull String name, @Nonnull W window) {
         try {
-            WindowDisplayHandler handler = getApplication().getInjector()
+            WindowDisplayHandler<W> handler = getApplication().getInjector()
                 .getInstance(WindowDisplayHandler.class, named(name));
             handler.hide(name, window);
             return true;
@@ -203,8 +205,10 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
         return obj instanceof CallableWithArgs;
     }
 
-    protected void run(CallableWithArgs<?> handler, W window) {
-        handler.call(window);
+    protected void run(@Nonnull Object handler, @Nonnull String name, @Nonnull W window) {
+        if (handler instanceof CallableWithArgs) {
+            ((CallableWithArgs<?>) handler).call(name, window);
+        }
     }
 
     protected Map<String, Object> windowManagerBlock() {

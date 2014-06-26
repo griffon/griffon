@@ -1,7 +1,6 @@
 import uk.co.cacoethes.util.NameType
 
 Map props = [:]
-File projectDir = targetDir instanceof File ? targetDir : new File(String.valueOf(targetDir))
 String projectName = projectDir.name
 projectName = !projectName.startsWith('griffon-') ? 'griffon-' + projectName : projectName
 projectName += !projectName.endsWith('-plugin') ? '-plugin' : ''
@@ -26,7 +25,7 @@ props.project_group = ask("Define value for 'group' [org.codehaus.griffon.plugin
 props.project_version = ask("Define value for 'version' [0.1.0.SNAPSHOT]: ", "0.1.0.SNAPSHOT", "version")
 props.project_package = ask("Define value for 'package' [org.codehaus.griffon.runtime." +pluginName + "]: ",
                         'org.codehaus.griffon.runtime.' + pluginName, "package")
-props.griffon_version = ask("Define value for 'griffonVersion' [2.0.0.BETA2]: ", "2.0.0.BETA2", "griffonVersion")
+props.griffon_version = ask("Define value for 'griffonVersion' [2.0.0.BETA3]: ", "2.0.0.BETA3", "griffonVersion")
 props.project_website = ask("Define value for 'website' [http://artifacts.griffon-framework.org/plugin/" + pluginName +"]: ",
                         "http://artifacts.griffon-framework.org/plugin/" + pluginName, "website")
 props.project_issue_tracker = ask("Define value for 'issueTracker' [http://jira.codehaus.org/browse/griffon]: ",
@@ -62,3 +61,4 @@ pluginDir.renameTo(projectDir.absolutePath + '/subprojects/griffon-' + pluginNam
 guideDir.renameTo(projectDir.absolutePath + '/subprojects/griffon-' + pluginName + '-guide')
 
 projectDir.renameTo(projectName)
+new File(projectName, 'lazybones.groovy').delete()

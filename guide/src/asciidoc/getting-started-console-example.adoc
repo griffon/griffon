@@ -49,7 +49,7 @@ Available templates in griffon/griffon-lazybones-templates:
     griffon-pivot-groovy
     griffon-swing-java
     griffon-swing-groovy
-    griffon-plugin-single
+    griffon-plugin
 ----
 
 Notice that template names follow a naming convention identifying the main UI toolkit
@@ -62,9 +62,9 @@ main UI toolkit and Groovy as main language
 $ lazybones create griffon-swing-groovy console
 Creating project from template griffon-swing-groovy (latest) in 'console'
 Define value for 'group' [org.example]: console
-Define value for 'version' [0.1.0-SNAPSHOT]:
+Define value for 'version' [0.1.0.SNAPSHOT]:
 Define value for 'package' [console]:
-Define value for 'griffonVersion' [{griffon_version}]:
+Define value for 'griffonVersion' [{griffon-version}]:
 ----
 
 == Project Layout
@@ -95,6 +95,26 @@ console
         ├── groovy
         └── resources
 ----
+
+Griffon uses "convention over configuration" approach to enable a fast development pace.
+This typically means that the name and location of files is used instead of explicit
+configuration, hence you need to familiarize yourself with the directory structure provided
+by Griffon.
+
+Here is a breakdown and links to relevant sections:
+
+ * +griffon-app+ - top level directory for Groovy sources.
+ ** +conf+ - <<_overview_configuration,Configuration sources>>.
+ ** +models+ - <<_models,Models>>.
+ ** +views+ - <<_views,Views>>.
+ ** +controllers+ - <<_controllers,Controllers>>.
+ ** +services+ - <<_services,Services>>.
+ ** +resources+ - <<_resources,Images, properties files, etc>>.
+ ** +i18n+ - <<_internationalization,Support for internationalization (i18n)>>.
+ * +src+ - Supporting sources.
+ ** +main+ - Other Groovy/Java sources.
+ * +test+ - <<_testing,Unit tests>>.
+ * +integration-test+ - <<_testing,Integration tests>>.
 
 Here's an screenshot of the finished application running to give you an idea of what
 we're aiming at with this example . A small Groovy script has been executed, you
@@ -243,6 +263,7 @@ $ mvn compile exec:java
 Now that we know the basic structure of a Griffon application and how to run it we turn
 to testing.
 
+[[_console_example_testing]]
 == Testing
 
 It's always a good idea to test out the code we write. It's pretty easy to write tests for

@@ -1,0 +1,39 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'org.codehaus.griffon:gradle-griffon-plugin:1.0.0.BETA2'
+        classpath 'net.saliman:gradle-cobertura-plugin:2.2.4'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.4.1'
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.9.0'
+    }
+}
+
+apply plugin: 'groovy'
+apply plugin: 'org.codehaus.griffon.griffon'
+apply from: 'gradle/publishing.gradle'
+apply from: 'gradle/code-coverage.gradle'
+apply from: 'gradle/code-quality.gradle'
+apply from: 'gradle/integration-test.gradle'
+
+mainClassName = '${project_package}.Launcher'
+
+dependencies {
+    compileOnly "org.codehaus.griffon:griffon-groovy-compile:\$griffonVersion"
+
+    compile "org.codehaus.griffon:griffon-groovy:\$griffonVersion"
+    compile "org.codehaus.griffon:griffon-pivot:\$griffonVersion"
+    compile "org.codehaus.griffon:griffon-guice:\$griffonVersion"
+
+    runtime "org.codehaus.griffon:griffon-pivot-groovy:\$griffonVersion"
+    runtime('log4j:log4j:1.2.17') {
+        exclude group: 'ant',         module: 'ant-nodeps'
+        exclude group: 'ant',         module: 'ant-junit'
+        exclude group: 'ant-contrib', module: 'ant-contrib'
+    }
+    runtime 'org.slf4j:slf4j-log4j12:1.7.7'
+
+    testCompile "org.codehaus.griffon:griffon-pivot-test:\$griffonVersion"
+}

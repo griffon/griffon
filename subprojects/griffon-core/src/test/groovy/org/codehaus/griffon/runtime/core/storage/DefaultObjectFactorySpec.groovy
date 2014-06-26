@@ -97,6 +97,7 @@ class TestConfiguration extends AbstractConfiguration {
         return resourceBundle.containsKey(key)
     }
 
+    @Nonnull
     @Override
     Map<String, Object> asFlatMap() {
         return [
@@ -105,6 +106,7 @@ class TestConfiguration extends AbstractConfiguration {
         ]
     }
 
+    @Nonnull
     @Override
     ResourceBundle asResourceBundle() {
         return resourceBundle

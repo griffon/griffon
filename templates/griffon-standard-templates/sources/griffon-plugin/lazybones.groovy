@@ -1,7 +1,6 @@
 import uk.co.cacoethes.util.NameType
 
 Map props = [:]
-File projectDir = targetDir instanceof File ? targetDir : new File(String.valueOf(targetDir))
 String projectName = projectDir.name
 projectName = !projectName.startsWith('griffon-') ? 'griffon-' + projectName : projectName
 projectName += !projectName.endsWith('-plugin') ? '-plugin' : ''
@@ -62,3 +61,4 @@ pluginDir.renameTo(projectDir.absolutePath + '/subprojects/griffon-' + pluginNam
 guideDir.renameTo(projectDir.absolutePath + '/subprojects/griffon-' + pluginName + '-guide')
 
 projectDir.renameTo(projectName)
+new File(projectName, 'lazybones.groovy').delete()

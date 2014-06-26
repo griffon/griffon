@@ -5,26 +5,21 @@ You have just created a basic Griffon Plugin project. The project has the
 following file structure
 
     .
+    ├── README.md
     ├── build.gradle
-    ├── griffon-app
-    │   ├── conf
-    │   ├── controllers
-    │   ├── i18n
-    │   ├── lifecycle
-    │   ├── models
-    │   ├── resources
-    │   ├── services
-    │   └── views
-    └── src
-        └── main
-            ├── java
-            └── resources
+    ├── config
+    ├── gradle
+    └── subprojects
+        ├── plugin
+        │   └── src
+        │       ├── main
+        │       │   └── java
+        │       └── test
+        │           └── resources
+        └── guide
+            └── src
+                ├── asciidoc
+                ├── javadoc
+                │   └── resources
+                └── resources
 
-Simply add your source files to `src/main/java`, your test cases to
-`src/test/java` and then you will be able to build your project with
-
-    gradle build
-    gradle test
-    gradle run
-
-Don't forget to add any extra JAR dependencies to `build.gradle`!

@@ -14,39 +14,4 @@
  * limitations under the License.
  */
 
-buildscript {
-    repositories {
-        maven { url 'http://dl.bintray.com/pledbrook/plugins' }
-    }
-
-    dependencies {
-        classpath 'uk.co.cacoethes:lazybones-gradle:1.1'
-    }
-}
-
-apply plugin: 'lazybones-templates'
-
-if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = ''
-if (!project.hasProperty('bintrayApiKey')) ext.bintrayApiKey = ''
-
-lazybones {
-    repositoryUrl = 'https://api.bintray.com/content/griffon/griffon-lazybones-templates'
-    repositoryUsername = project.bintrayUsername
-    repositoryApiKey = project.bintrayApiKey
-}
-
-// A bit hacky but gets the job done -> must replace
-// @griffon.version@ on lazybones.groovy
-tasks.withType(Zip) { task ->
-    task.doFirst {
-        copy {
-            File destDir = task.source.files.iterator().next().parentFile
-            into destDir
-            from(file('sources/common'))
-            from(file("sources/${destDir.name}")) {
-                filter(org.apache.tools.ant.filters.ReplaceTokens,
-                    tokens: ['griffon.version': project.version])
-            }
-        }
-    }
-}
+apply from: rootProject.file('templates/shared-files/shared.gradle')

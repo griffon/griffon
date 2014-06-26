@@ -119,6 +119,14 @@ public class GriffonEnvironment {
         return BUILD_DATE + "T" + BUILD_TIME;
     }
 
+    public static String getBuildDate() {
+        return BUILD_DATE;
+    }
+
+    public static String getBuildTime() {
+        return BUILD_TIME;
+    }
+
     public static String prettyPrint() {
         padLeft("Griffon", 8, " ");
 
