@@ -162,6 +162,14 @@
             </UsedBy>
         </Package>
 
+        <Package name="griffon.core">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.lanterna">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
         <Package name="griffon.lanterna.support">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
@@ -204,11 +212,11 @@
 
         <Package name="org.codehaus.griffon.runtime.lanterna">
             <Stats>
-                <TotalClasses>1</TotalClasses>
-                <ConcreteClasses>1</ConcreteClasses>
+                <TotalClasses>2</TotalClasses>
+                <ConcreteClasses>2</ConcreteClasses>
                 <AbstractClasses>0</AbstractClasses>
                 <Ca>0</Ca>
-                <Ce>3</Ce>
+                <Ce>8</Ce>
                 <A>0</A>
                 <I>1</I>
                 <D>0</D>
@@ -219,14 +227,22 @@
             </AbstractClasses>
 
             <ConcreteClasses>
+                <Class sourceFile="GroovyAwareConfigurableLanternaWindowDisplayHandler.java">
+                    org.codehaus.griffon.runtime.lanterna.GroovyAwareConfigurableLanternaWindowDisplayHandler
+                </Class>
                 <Class sourceFile="LanternaBuilderModule.java">
                     org.codehaus.griffon.runtime.lanterna.LanternaBuilderModule
                 </Class>
             </ConcreteClasses>
 
             <DependsUpon>
+                <Package>com.googlecode.lanterna.gui</Package>
                 <Package>griffon.builder.lanterna</Package>
+                <Package>griffon.core</Package>
+                <Package>griffon.lanterna</Package>
                 <Package>griffon.util</Package>
+                <Package>groovy.lang</Package>
+                <Package>java.lang</Package>
                 <Package>org.codehaus.griffon.runtime.core.injection</Package>
             </DependsUpon>
 

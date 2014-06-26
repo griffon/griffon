@@ -327,7 +327,15 @@
             </UsedBy>
         </Package>
 
+        <Package name="griffon.core">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
         <Package name="griffon.exceptions">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.pivot">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
@@ -421,11 +429,11 @@
 
         <Package name="org.codehaus.griffon.runtime.pivot">
             <Stats>
-                <TotalClasses>1</TotalClasses>
-                <ConcreteClasses>1</ConcreteClasses>
+                <TotalClasses>2</TotalClasses>
+                <ConcreteClasses>2</ConcreteClasses>
                 <AbstractClasses>0</AbstractClasses>
                 <Ca>0</Ca>
-                <Ce>3</Ce>
+                <Ce>8</Ce>
                 <A>0</A>
                 <I>1</I>
                 <D>0</D>
@@ -436,6 +444,9 @@
             </AbstractClasses>
 
             <ConcreteClasses>
+                <Class sourceFile="GroovyAwareConfigurablePivotWindowDisplayHandler.java">
+                    org.codehaus.griffon.runtime.pivot.GroovyAwareConfigurablePivotWindowDisplayHandler
+                </Class>
                 <Class sourceFile="PivotBuilderModule.java">
                     org.codehaus.griffon.runtime.pivot.PivotBuilderModule
                 </Class>
@@ -443,7 +454,12 @@
 
             <DependsUpon>
                 <Package>griffon.builder.pivot</Package>
+                <Package>griffon.core</Package>
+                <Package>griffon.pivot</Package>
                 <Package>griffon.util</Package>
+                <Package>groovy.lang</Package>
+                <Package>java.lang</Package>
+                <Package>org.apache.pivot.wtk</Package>
                 <Package>org.codehaus.griffon.runtime.core.injection</Package>
             </DependsUpon>
 

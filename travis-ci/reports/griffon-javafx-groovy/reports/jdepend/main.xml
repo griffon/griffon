@@ -127,6 +127,14 @@
             </UsedBy>
         </Package>
 
+        <Package name="griffon.core">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.javafx">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
         <Package name="griffon.javafx.support">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
@@ -201,11 +209,11 @@
 
         <Package name="org.codehaus.griffon.runtime.javafx">
             <Stats>
-                <TotalClasses>1</TotalClasses>
-                <ConcreteClasses>1</ConcreteClasses>
+                <TotalClasses>2</TotalClasses>
+                <ConcreteClasses>2</ConcreteClasses>
                 <AbstractClasses>0</AbstractClasses>
                 <Ca>0</Ca>
-                <Ce>3</Ce>
+                <Ce>8</Ce>
                 <A>0</A>
                 <I>1</I>
                 <D>0</D>
@@ -216,6 +224,9 @@
             </AbstractClasses>
 
             <ConcreteClasses>
+                <Class sourceFile="GroovyAwareConfigurableJavaFXWindowDisplayHandler.java">
+                    org.codehaus.griffon.runtime.javafx.GroovyAwareConfigurableJavaFXWindowDisplayHandler
+                </Class>
                 <Class sourceFile="JavafxBuilderModule.java">
                     org.codehaus.griffon.runtime.javafx.JavafxBuilderModule
                 </Class>
@@ -223,7 +234,12 @@
 
             <DependsUpon>
                 <Package>griffon.builder.javafx</Package>
+                <Package>griffon.core</Package>
+                <Package>griffon.javafx</Package>
                 <Package>griffon.util</Package>
+                <Package>groovy.lang</Package>
+                <Package>java.lang</Package>
+                <Package>javafx.stage</Package>
                 <Package>org.codehaus.griffon.runtime.core.injection</Package>
             </DependsUpon>
 
