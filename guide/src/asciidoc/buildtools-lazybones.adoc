@@ -1,0 +1,39 @@
+
+[[_buildtools_lazybones]]
+= Lazybones
+
+{link_lazybones} allows you to create a new project structure for any framework or
+library for which the tool has a template.
+
+== Configuration
+
+All standard Griffon templates are published to https://bintray.com/griffon/griffon-lazybones-templates
+You must configure this repository with Lazybones settings file. Edit +$USER_HOME/.lazybones/config.groovy+
+and paste the following content
+
+.$USER_HOME/.lazybones/config.groovy
+[source,groovy,options="nowrap"]
+----
+bintrayRepositories = [
+    "griffon/griffon-lazybones-templates",
+    "pledbrook/lazybones-templates"
+]
+----
+
+Invoking the `lazybones list` command should result in all currently available Griffon project
+templates to be displayed in the output.
+
+== Templates
+
+The following templates are available at the standard template repository
+
+griffon-swing-java:: A template that initializes an application with Swing and Java.
+griffon-swing-groovy:: A template that initializes an application with Swing and Groovy.
+griffon-javafx-ava:: A template that initializes an application with JavaFX and Java.
+griffon-javafx-groovy:: A template that initializes an application with JavaFX and Groovy.
+griffon-pivot-java:: A template that initializes an application with Pivot and Java.
+griffon-pivot-groovy:: A template that initializes an application with Pivot and Groovy.
+griffon-lanterna-java:: A template that initializes an application with Lanterna and Java.
+griffon-lanterna-groovy:: A template that initializes tan application with Lanterna and Groovy.
+griffon-plugin:: A template that initializes a Griffon plugin project.
+

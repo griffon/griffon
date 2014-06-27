@@ -163,6 +163,7 @@ class GriffonPlugin implements Plugin<Project> {
                 // add default dependencies
                 project.dependencies.add('compile', 'org.codehaus.griffon:griffon-core:' + extension.version)
                 project.dependencies.add('compileOnly', 'org.codehaus.griffon:griffon-core-compile:' + extension.version)
+                project.dependencies.add('testCompileOnly', 'org.codehaus.griffon:griffon-core-compile:' + extension.version)
                 project.dependencies.add('testCompile', 'org.codehaus.griffon:griffon-core-test:' + extension.version)
 
                 processMainResources(project, extension)

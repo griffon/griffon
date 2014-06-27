@@ -1,0 +1,32 @@
+
+[[_buildtools_gvm]]
+= GVM
+
+From http://gvmtool.net[GVM's] website
+
+> GVM is a tool for managing parallel Versions of multiple Software Development Kits
+> on most Unix based systems. It provides a convenient command line interface for
+> installing, switching, removing and listing Candidates.
+
+GVM can be used to install and keep up to date other build tools that make your life
+easier when developing Griffon projects. These tools are +lazybones+ and +gradle+.
+Installing GVM itself is as easy as typing the following on a command prompt
+
+[source]
+----
+$ curl -s get.gvmtool.net | bash
+----
+
+Next install the latest versions of +lazybones+ and +gradle+ by invoking
+
+[source]
+----
+$ gvm install lazybones
+$ gvm install gradle
+----
+
+GVM works on POSIX compliant environments, event on Windows if https://www.cygwin.com/[Cygwin]
+is installed. We recommend you to install http://babun.github.io/[Babun shell] as it enables
+much more features than plain Cygwin. There's also a Power Shell alternative:
+https://github.com/flofreud/posh-gvm[posh-gvm].
+
