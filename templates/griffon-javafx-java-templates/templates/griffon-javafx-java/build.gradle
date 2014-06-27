@@ -12,6 +12,13 @@ buildscript {
 }
 
 apply plugin: 'org.codehaus.griffon.griffon'
+
+griffon {
+    disableDependencyResolution = false
+    includeGroovyDependencies = false
+    version = '${griffon_version}'
+}
+
 apply from: 'gradle/publishing.gradle'
 apply from: 'gradle/code-coverage.gradle'
 apply from: 'gradle/code-quality.gradle'
@@ -24,8 +31,8 @@ javafx {
 }
 
 dependencies {
-    compile "org.codehaus.griffon:griffon-javafx:\$griffonVersion"
-    compile "org.codehaus.griffon:griffon-guice:\$griffonVersion"
+    compile "org.codehaus.griffon:griffon-javafx:\${griffon.version}"
+    compile "org.codehaus.griffon:griffon-guice:\${griffon.version}"
 
     runtime('log4j:log4j:1.2.17') {
         exclude group: 'ant',         module: 'ant-nodeps'

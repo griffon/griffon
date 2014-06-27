@@ -1,10 +1,17 @@
 apply plugin: 'groovy'
 apply plugin: 'org.codehaus.griffon.griffon'
+
+griffon {
+    disableDependencyResolution = false
+    includeGroovyDependencies = false
+    version = rootProject.griffonVersion
+}
+
 rootProject.file('gradle/coverage.gradle')
 
 dependencies {
-    compile "org.codehaus.griffon:griffon-core:$griffonVersion"
+    compile "org.codehaus.griffon:griffon-core:${griffon.version}"
 
-    testRuntime "org.codehaus.griffon:griffon-guice:$griffonVersion"
-    testRuntime "org.codehaus.griffon:griffon-groovy:$griffonVersion"
+    testRuntime "org.codehaus.griffon:griffon-guice:${griffon.version}"
+    testRuntime "org.codehaus.griffon:griffon-groovy:${griffon.version}"
 }

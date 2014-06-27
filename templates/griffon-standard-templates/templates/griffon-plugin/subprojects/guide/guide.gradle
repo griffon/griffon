@@ -1,7 +1,6 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url 'http://dl.bintray.com/content/aalmiray/asciidoctor' }
         maven { url 'http://dl.bintray.com/content/bmuschko/maven' }
         maven { url 'http://dl.bintray.com/content/bmuschko/gradle-plugins' }
     }
@@ -139,7 +138,7 @@ asciidoctor {
             numbered                : true,
             linkattrs               : true,
             imagesdir               : 'images',
-            stylesheet              : 'src/resources/css/style.css',
+            stylesheet              : file('src/resources/css/style.css'),
             'source-highlighter'    : 'coderay',
             'project-name'          : '${plugin_full_natural_name}',
             'project-author'        : '${project_author}',
@@ -148,7 +147,7 @@ asciidoctor {
             'project-url'           : project.projectWebsiteUrl,
             'project-vcs'           : project.projectVcsUrl,
             'project-issue-tracker' : project.projectIssueTrackerUrl,
-            'griffon-version'       : project.griffonVersion
+            'griffon-version'       : rootProject.griffonVersion
         ]
     ]
     sourceDocumentName = project.file('src/asciidoc/index.adoc')

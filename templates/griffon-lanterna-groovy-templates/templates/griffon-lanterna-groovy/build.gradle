@@ -13,6 +13,13 @@ buildscript {
 
 apply plugin: 'groovy'
 apply plugin: 'org.codehaus.griffon.griffon'
+
+griffon {
+    disableDependencyResolution = false
+    includeGroovyDependencies = true
+    version = '${griffon_version}'
+}
+
 apply from: 'gradle/publishing.gradle'
 apply from: 'gradle/code-coverage.gradle'
 apply from: 'gradle/code-quality.gradle'
@@ -21,13 +28,13 @@ apply from: 'gradle/integration-test.gradle'
 mainClassName = '${project_package}.Launcher'
 
 dependencies {
-    compileOnly "org.codehaus.griffon:griffon-groovy-compile:\$griffonVersion"
+    compileOnly "org.codehaus.griffon:griffon-groovy-compile:\${griffon.version}"
 
-    compile "org.codehaus.griffon:griffon-groovy:\$griffonVersion"
-    compile "org.codehaus.griffon:griffon-lanterna:\$griffonVersion"
-    compile "org.codehaus.griffon:griffon-guice:\$griffonVersion"
+    compile "org.codehaus.griffon:griffon-groovy:\${griffon.version}"
+    compile "org.codehaus.griffon:griffon-lanterna:\${griffon.version}"
+    compile "org.codehaus.griffon:griffon-guice:\${griffon.version}"
 
-    runtime "org.codehaus.griffon:griffon-lanterna-groovy:\$griffonVersion"
+    runtime "org.codehaus.griffon:griffon-lanterna-groovy:\${griffon.version}"
     runtime('log4j:log4j:1.2.17') {
         exclude group: 'ant',         module: 'ant-nodeps'
         exclude group: 'ant',         module: 'ant-junit'

@@ -12,6 +12,13 @@ buildscript {
 }
 
 apply plugin: 'org.codehaus.griffon.griffon'
+
+griffon {
+    disableDependencyResolution = false
+    includeGroovyDependencies = false
+    version = '${griffon_version}'
+}
+
 apply from: 'gradle/publishing.gradle'
 apply from: 'gradle/code-coverage.gradle'
 apply from: 'gradle/code-quality.gradle'
@@ -20,8 +27,8 @@ apply from: 'gradle/integration-test.gradle'
 mainClassName = '${project_package}.Launcher'
 
 dependencies {
-    compile "org.codehaus.griffon:griffon-pivot:\$griffonVersion"
-    compile "org.codehaus.griffon:griffon-guice:\$griffonVersion"
+    compile "org.codehaus.griffon:griffon-pivot:\${griffon.version}"
+    compile "org.codehaus.griffon:griffon-guice:\${griffon.version}"
 
     runtime('log4j:log4j:1.2.17') {
         exclude group: 'ant',         module: 'ant-nodeps'
@@ -30,5 +37,5 @@ dependencies {
     }
     runtime 'org.slf4j:slf4j-log4j12:1.7.7'
 
-    testCompile "org.codehaus.griffon:griffon-pivot-test:\$griffonVersion"
+    testCompile "org.codehaus.griffon:griffon-pivot-test:\${griffon.version}"
 }

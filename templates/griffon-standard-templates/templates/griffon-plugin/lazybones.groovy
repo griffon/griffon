@@ -22,7 +22,7 @@ props.plugin_full_natural_name = transformText(props.plugin_full_name, from: Nam
 props.project_year = Calendar.instance.get(Calendar.YEAR)
 props.project_author = System.getProperty('user.name')
 props.project_group = ask("Define value for 'group' [org.codehaus.griffon.plugins]: ", "org.codehaus.griffon.plugins", "group")
-props.project_version = ask("Define value for 'version' [0.1.0.SNAPSHOT]: ", "0.1.0.SNAPSHOT", "version")
+props.project_version = ask("Define value for 'version' [0.1.0-SNAPSHOT]: ", "0.1.0-SNAPSHOT", "version")
 props.project_package = ask("Define value for 'package' [org.codehaus.griffon.runtime." +pluginName + "]: ",
                         'org.codehaus.griffon.runtime.' + pluginName, "package")
 props.griffon_version = ask("Define value for 'griffonVersion' [2.0.0.BETA3]: ", "2.0.0.BETA3", "griffonVersion")

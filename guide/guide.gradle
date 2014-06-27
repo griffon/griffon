@@ -17,7 +17,6 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url 'http://dl.bintray.com/content/aalmiray/asciidoctor' }
         maven { url 'http://dl.bintray.com/content/bmuschko/maven' }
         maven { url 'http://dl.bintray.com/content/bmuschko/gradle-plugins' }
     }
@@ -171,7 +170,7 @@ asciidoctor {
             numbered                : true,
             linkattrs               : true,
             imagesdir               : 'images',
-            stylesheet              : 'src/resources/css/style.css',
+            stylesheet              : file('src/resources/css/style.css'),
             'source-highlighter'    : 'coderay',
             'griffon-version'       : project.version,
             'griffon-group'         : project.group,

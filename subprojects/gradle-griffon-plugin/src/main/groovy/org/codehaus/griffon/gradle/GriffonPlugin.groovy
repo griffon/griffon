@@ -17,25 +17,18 @@
 package org.codehaus.griffon.gradle
 
 import org.apache.tools.ant.filters.ReplaceTokens
+import org.gradle.BuildAdapter
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.plugins.ide.eclipse.EclipsePlugin
-import org.gradle.tooling.BuildException
+import org.gradle.api.invocation.Gradle
 
+/**
+ * @author Andres Almiray
+ */
 class GriffonPlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
-        if (!project.hasProperty('griffonVersion')) {
-            throw new BuildException("You must define a project property named 'griffonVersion'",
-                new IllegalStateException("Project property 'griffonVersion' is undefined"))
-        }
-
-        if (!project.hasProperty('griffonIncludeGroovyDependencies')) {
-            project.ext.griffonIncludeGroovyDependencies = null
-        }
-        if (!project.hasProperty('griffonDisableResolution')) {
-            project.ext.griffonDisableResolution = false
-        }
+        GriffonExtension extension = project.extensions.create('griffon', GriffonExtension, project)
 
         applyDefaultPlugins(project)
 
@@ -49,32 +42,25 @@ class GriffonPlugin implements Plugin<Project> {
         configureDefaultSourceSets(project, sourceSetName)
         adjustJavadocClasspath(project, sourceSetName)
         adjustIdeClasspaths(project)
-        processMainResources(project)
-        processTestResources(project)
         createDefaultDirectoryStructure(project, sourceSetName)
+
+        registerBuildListener(project, extension)
     }
 
-    protected void applyDefaultDependencies(Project project) {
+    private void applyDefaultDependencies(final Project project) {
         // add compile time configurations
         project.configurations.maybeCreate('compileOnly')
         project.configurations.maybeCreate('testCompileOnly')
         project.configurations.maybeCreate('griffon').visible = false
 
-        // add default dependencies
-        project.dependencies.add('compile', 'org.codehaus.griffon:griffon-core:' + project.griffonVersion)
-        project.dependencies.add('compileOnly', 'org.codehaus.griffon:griffon-core-compile:' + project.griffonVersion)
-        project.dependencies.add('testCompile', 'org.codehaus.griffon:griffon-core-test:' + project.griffonVersion)
-
         // wire up classpaths with compile time dependencies
         project.sourceSets.main.compileClasspath += [project.configurations.compileOnly]
         project.sourceSets.test.compileClasspath += [project.configurations.testCompileOnly]
 
-        if (!project.griffonDisableResolution.toBoolean()) {
-            GriffonPluginResolutionStrategy.applyTo(project)
-        }
+        GriffonPluginResolutionStrategy.applyTo(project)
     }
 
-    protected void applyDefaultPlugins(Project project) {
+    private void applyDefaultPlugins(Project project) {
         project.apply(plugin: 'idea')
         project.apply(plugin: 'java')
         if (!project.hasProperty('griffonPlugin') || !project.griffonPlugin) {
@@ -82,17 +68,16 @@ class GriffonPlugin implements Plugin<Project> {
         }
     }
 
-    protected void adjustJavadocClasspath(Project project, String sourceSetName) {
+    private void adjustJavadocClasspath(Project project, String sourceSetName) {
         project.javadoc.classpath += [project.configurations.compileOnly]
         if (sourceSetName == 'groovy') {
             project.groovydoc.classpath += [project.configurations.compileOnly]
         }
     }
 
-    protected void adjustIdeClasspaths(Project project) {
+    private void adjustIdeClasspaths(Project project) {
         // adjust Eclipse classpath, but only if EclipsePlugin is applied
-        // TODO: Replace with plugins.withId('eclipse') for gradle 2
-        project.plugins.withType(EclipsePlugin) {
+        project.plugins.withId('eclipse') {
             project.eclipse.classpath.plusConfigurations += [project.configurations.compileOnly]
             project.eclipse.classpath.plusConfigurations += [project.configurations.testCompileOnly]
         }
@@ -102,7 +87,7 @@ class GriffonPlugin implements Plugin<Project> {
         project.idea.module.scopes.PROVIDED.plus += [project.configurations.testCompileOnly]
     }
 
-    protected void configureDefaultSourceSets(Project project, String sourceSetName) {
+    private void configureDefaultSourceSets(Project project, String sourceSetName) {
         // configure default source directories
         project.sourceSets.main[sourceSetName].srcDirs = [
             'griffon-app/conf',
@@ -121,7 +106,7 @@ class GriffonPlugin implements Plugin<Project> {
         ]
     }
 
-    protected void processMainResources(Project project) {
+    private void processMainResources(Project project, GriffonExtension extension) {
         project.processResources {
             from(project.sourceSets.main.resources.srcDirs) {
                 exclude '**/*.properties'
@@ -135,13 +120,13 @@ class GriffonPlugin implements Plugin<Project> {
                 filter(ReplaceTokens, tokens: [
                     'application.name'   : project.name,
                     'application.version': project.version,
-                    'griffon.version'    : project.griffonVersion
+                    'griffon.version'    : extension.version
                 ])
             }
         }
     }
 
-    protected void processTestResources(Project project) {
+    private void processTestResources(Project project, GriffonExtension extension) {
         project.processTestResources {
             from(project.sourceSets.test.resources.srcDirs) {
                 exclude '**/*.properties'
@@ -155,18 +140,34 @@ class GriffonPlugin implements Plugin<Project> {
                 filter(ReplaceTokens, tokens: [
                     'application.name'   : project.name,
                     'application.version': project.version,
-                    'griffon.version'    : project.griffonVersion
+                    'griffon.version'    : extension.version
                 ])
             }
         }
     }
 
-    protected createDefaultDirectoryStructure(Project project, String sourceSetName) {
+    private createDefaultDirectoryStructure(Project project, String sourceSetName) {
         project.gradle.taskGraph.whenReady {
             project.sourceSets.main[sourceSetName].srcDirs.each { it.mkdirs() }
             project.sourceSets.test[sourceSetName].srcDirs.each { it.mkdirs() }
             project.sourceSets.main.resources.srcDirs.each { it.mkdirs() }
             project.sourceSets.test.resources.srcDirs.each { it.mkdirs() }
         }
+    }
+
+    private void registerBuildListener(
+        final Project project, final GriffonExtension extension) {
+        project.gradle.addBuildListener(new BuildAdapter() {
+            @Override
+            void projectsEvaluated(Gradle gradle) {
+                // add default dependencies
+                project.dependencies.add('compile', 'org.codehaus.griffon:griffon-core:' + extension.version)
+                project.dependencies.add('compileOnly', 'org.codehaus.griffon:griffon-core-compile:' + extension.version)
+                project.dependencies.add('testCompile', 'org.codehaus.griffon:griffon-core-test:' + extension.version)
+
+                processMainResources(project, extension)
+                processTestResources(project, extension)
+            }
+        })
     }
 }

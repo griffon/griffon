@@ -21,6 +21,9 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.ResolvableDependencies
 
+/**
+ * @author Andres Almiray
+ */
 class GriffonPluginResolutionStrategy {
     private static final String PLUGIN_PREFIX = 'griffon-'
     private static final String PLUGIN_SUFFIX = '-plugin'
@@ -47,6 +50,10 @@ class GriffonPluginResolutionStrategy {
 
         @Override
         void execute(ResolvableDependencies resolvableDependencies) {
+            if (resolver.project.extensions.getByName(GRIFFON_CONFIGURATION).disableDependencyResolution) {
+                return
+            }
+
             if (!resolver.dependencyMap) {
                 resolver.project.configurations.getByName(GRIFFON_CONFIGURATION).resolve()
             }
@@ -70,8 +77,8 @@ class GriffonPluginResolutionStrategy {
             project.logger.debug("UI toolkit for project {} is {}", project.name, toolkit)
             String toolkitRegex = (TOOLKIT_NAMES - toolkit).join('|')
 
-            boolean groovyDependenciesEnabled = project.griffonIncludeGroovyDependencies?.toBoolean() ||
-                (project.plugins.hasPlugin('groovy') && project.griffonIncludeGroovyDependencies == null)
+            boolean groovyDependenciesEnabled = griffonExtension.includeGroovyDependencies?.toBoolean() ||
+                (project.plugins.hasPlugin('groovy') && griffonExtension.includeGroovyDependencies == null)
             project.logger.debug("Groovy dependencies are {}enabled in project {}", (groovyDependenciesEnabled ? '': 'NOT '),project.name)
 
             resolvableDependencies.dependencies.each { Dependency dependency ->
@@ -114,6 +121,10 @@ class GriffonPluginResolutionStrategy {
             }
 
             project.configurations.getByName(GRIFFON_CONFIGURATION).incoming.dependencies.clear()
+        }
+
+        private Object getGriffonExtension() {
+            project.extensions.getByName(GRIFFON_CONFIGURATION)
         }
 
         private String resolveToolkitName() {
