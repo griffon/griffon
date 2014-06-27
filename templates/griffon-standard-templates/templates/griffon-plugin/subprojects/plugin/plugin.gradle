@@ -7,11 +7,9 @@ griffon {
     version = rootProject.griffonVersion
 }
 
-rootProject.file('gradle/coverage.gradle')
+apply from: rootProject.file('gradle/code-coverage.gradle')
 
 dependencies {
-    compile "org.codehaus.griffon:griffon-core:${griffon.version}"
-
     testRuntime "org.codehaus.griffon:griffon-guice:${griffon.version}"
     testRuntime "org.codehaus.griffon:griffon-groovy:${griffon.version}"
 }
