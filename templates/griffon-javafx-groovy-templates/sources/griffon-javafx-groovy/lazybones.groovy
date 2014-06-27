@@ -1,3 +1,4 @@
+import uk.co.cacoethes.util.NameType
 Map props = [:]
 if (projectDir.name =~ /\-/) {
     props.project_class_name = transformText(projectDir.name, from: NameType.HYPHENATED, to: NameType.CAMEL_CASE)
