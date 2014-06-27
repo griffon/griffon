@@ -17,10 +17,8 @@
 package org.codehaus.griffon.gradle
 
 import org.apache.tools.ant.filters.ReplaceTokens
-import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.Configuration
 import org.gradle.plugins.ide.eclipse.EclipsePlugin
 import org.gradle.tooling.BuildException
 
@@ -32,8 +30,11 @@ class GriffonPlugin implements Plugin<Project> {
                 new IllegalStateException("Project property 'griffonVersion' is undefined"))
         }
 
-        if (!project.hasProperty('griffonIncludeGroovyRuntime')) {
-            project.ext.griffonIncludeGroovyRuntime = null
+        if (!project.hasProperty('griffonIncludeGroovyDependencies')) {
+            project.ext.griffonIncludeGroovyDependencies = null
+        }
+        if (!project.hasProperty('griffonDisableResolution')) {
+            project.ext.griffonDisableResolution = false
         }
 
         applyDefaultPlugins(project)
@@ -57,7 +58,7 @@ class GriffonPlugin implements Plugin<Project> {
         // add compile time configurations
         project.configurations.maybeCreate('compileOnly')
         project.configurations.maybeCreate('testCompileOnly')
-        project.configurations.maybeCreate('griffonPlugin').visible = false
+        project.configurations.maybeCreate('griffon').visible = false
 
         // add default dependencies
         project.dependencies.add('compile', 'org.codehaus.griffon:griffon-core:' + project.griffonVersion)
@@ -68,7 +69,9 @@ class GriffonPlugin implements Plugin<Project> {
         project.sourceSets.main.compileClasspath += [project.configurations.compileOnly]
         project.sourceSets.test.compileClasspath += [project.configurations.testCompileOnly]
 
-        GriffonPluginResolutionStrategy.applyTo(project)
+        if (!project.griffonDisableResolution.toBoolean()) {
+            GriffonPluginResolutionStrategy.applyTo(project)
+        }
     }
 
     protected void applyDefaultPlugins(Project project) {
