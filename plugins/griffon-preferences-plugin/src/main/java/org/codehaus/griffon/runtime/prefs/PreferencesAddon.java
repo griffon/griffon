@@ -15,15 +15,12 @@
  */
 package org.codehaus.griffon.runtime.prefs;
 
-import griffon.core.ApplicationEvent;
-import griffon.core.CallableWithArgs;
 import griffon.core.GriffonApplication;
 import griffon.plugins.preferences.PreferencesManager;
 import griffon.plugins.preferences.PreferencesPersistor;
 import org.codehaus.griffon.runtime.core.addon.AbstractGriffonAddon;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.FileNotFoundException;
@@ -42,8 +39,9 @@ public class PreferencesAddon extends AbstractGriffonAddon {
     @Inject
     private PreferencesPersistor preferencesPersistor;
 
+    private boolean preferencesWereRead;
+
     public void init(@Nonnull GriffonApplication application) {
-        boolean preferencesWereRead = false;
         try {
             preferencesPersistor.read(preferencesManager);
             preferencesWereRead = true;
@@ -56,22 +54,18 @@ public class PreferencesAddon extends AbstractGriffonAddon {
                 getLog().warn("Cannot read preferences", sanitize(e));
             }
         }
+    }
 
+    @Override
+    public void onShutdown(@Nonnull GriffonApplication application) {
         if (preferencesWereRead) {
-            application.getEventRouter().addEventListener(ApplicationEvent.SHUTDOWN_START.getName(), new CallableWithArgs<Void>() {
-                @Override
-                @Nullable
-                public Void call(@Nullable Object... args) {
-                    try {
-                        preferencesPersistor.write(preferencesManager);
-                    } catch (IOException e) {
-                        if (getLog().isWarnEnabled()) {
-                            getLog().warn("Cannot persist preferences", sanitize(e));
-                        }
-                    }
-                    return null;
+            try {
+                preferencesPersistor.write(preferencesManager);
+            } catch (IOException e) {
+                if (getLog().isWarnEnabled()) {
+                    getLog().warn("Cannot persist preferences", sanitize(e));
                 }
-            });
+            }
         }
     }
 }

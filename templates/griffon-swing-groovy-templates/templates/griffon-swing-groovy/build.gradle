@@ -18,6 +18,7 @@ griffon {
     disableDependencyResolution = false
     includeGroovyDependencies = true
     version = '${griffon_version}'
+    toolkit = 'swing'
 }
 
 apply from: 'gradle/publishing.gradle'
@@ -28,13 +29,8 @@ apply from: 'gradle/integration-test.gradle'
 mainClassName = '${project_package}.Launcher'
 
 dependencies {
-    compileOnly "org.codehaus.griffon:griffon-groovy-compile:\${griffon.version}"
-
-    compile "org.codehaus.griffon:griffon-groovy:\${griffon.version}"
-    compile "org.codehaus.griffon:griffon-swing:\${griffon.version}"
     compile "org.codehaus.griffon:griffon-guice:\${griffon.version}"
 
-    runtime "org.codehaus.griffon:griffon-swing-groovy:\${griffon.version}"
     runtime('log4j:log4j:1.2.17') {
         exclude group: 'ant',         module: 'ant-nodeps'
         exclude group: 'ant',         module: 'ant-junit'

@@ -21,6 +21,7 @@ import org.gradle.BuildAdapter
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.invocation.Gradle
+import org.gradle.tooling.BuildException
 
 /**
  * @author Andres Almiray
@@ -146,12 +147,21 @@ class GriffonPlugin implements Plugin<Project> {
         }
     }
 
-    private createDefaultDirectoryStructure(Project project, String sourceSetName) {
+    private void createDefaultDirectoryStructure(Project project, String sourceSetName) {
         project.gradle.taskGraph.whenReady {
             project.sourceSets.main[sourceSetName].srcDirs.each { it.mkdirs() }
             project.sourceSets.test[sourceSetName].srcDirs.each { it.mkdirs() }
             project.sourceSets.main.resources.srcDirs.each { it.mkdirs() }
             project.sourceSets.test.resources.srcDirs.each { it.mkdirs() }
+        }
+    }
+
+    private void validateToolkit(Project project, GriffonExtension extension) {
+        if (extension.toolkit) {
+            if (!GriffonExtension.TOOLKIT_NAMES.contains(extension.toolkit)) {
+                throw new BuildException("The value of griffon.toolkit can only be one of ${GriffonExtension.TOOLKIT_NAMES.join(',')}",
+                    new IllegalStateException(extension.toolkit))
+            }
         }
     }
 
@@ -165,6 +175,8 @@ class GriffonPlugin implements Plugin<Project> {
                 project.dependencies.add('compileOnly', 'org.codehaus.griffon:griffon-core-compile:' + extension.version)
                 project.dependencies.add('testCompileOnly', 'org.codehaus.griffon:griffon-core-compile:' + extension.version)
                 project.dependencies.add('testCompile', 'org.codehaus.griffon:griffon-core-test:' + extension.version)
+
+                validateToolkit(project, extension)
 
                 processMainResources(project, extension)
                 processTestResources(project, extension)

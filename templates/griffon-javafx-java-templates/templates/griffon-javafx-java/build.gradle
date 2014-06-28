@@ -17,6 +17,7 @@ griffon {
     disableDependencyResolution = false
     includeGroovyDependencies = false
     version = '${griffon_version}'
+    toolkit = 'javafx'
 }
 
 apply from: 'gradle/publishing.gradle'
@@ -31,7 +32,6 @@ javafx {
 }
 
 dependencies {
-    compile "org.codehaus.griffon:griffon-javafx:\${griffon.version}"
     compile "org.codehaus.griffon:griffon-guice:\${griffon.version}"
 
     runtime('log4j:log4j:1.2.17') {

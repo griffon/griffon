@@ -53,7 +53,24 @@ The following dependencies are added by default too
  * on +testCompileOnly+
  ** org.codehaus.griffon:griffon-core-compile:{griffon-version}
 
-The +griffon+ configuration can be used to resolve dependencies using {link_bom} configurations.
+If the *toolkit* conventional property is defined (plugins may opt to skip it) then
+the following dependencies are added
+
+ * on +compile+
+ ** org.codehaus.griffon:griffon-<toolkit>:{griffon-version}
+
+If the +groovy+ plugin is applied then the following dependencies are also added
+
+  * on +compile+
+  ** org.codehaus.griffon:griffon-groovy:{griffon-version}
+  * on +compile+
+  ** org.codehaus.griffon:griffon-<toolkit>-groovy:{griffon-version}
+  * on +compileOnly+
+  ** org.codehaus.griffon:griffon-groovy-compile:{griffon-version}
+  * on +testCompileOnly+
+  ** org.codehaus.griffon:griffon-groovy-compile:{griffon-version}
+
+The +griffon+ configuration can be used to resolve dependencies using {link_bom} files.
 Assume for a moment that the +griffon-scaffolding-plugin+ is comprised of the following
 modules
 
@@ -92,9 +109,10 @@ The Griffon plugin adds some properties to the project, which you can use to con
 [cols="4*", options="header"]
 |===
 | Property name               | Type    | Default value     | Description
-| disableDependencyResolution | boolean | false             | Disable automatic inclusion of dependencies defined with the _griffon_ configuration
-| includeGroovyDependencies   | boolean | -                 | Force inclusion of Groovy dependencies defined with the _griffon_ configuration
-| version                     | String  | {griffon-version} | The Griffon version to use for Griffon core dependencies
+| disableDependencyResolution | boolean | false             | Disable automatic inclusion of dependencies defined with the _griffon_ configuration.
+| includeGroovyDependencies   | boolean | -                 | Force inclusion of Groovy dependencies defined with the _griffon_ configuration.
+| toolkit                     | String  | _                 | The UI toolkit to use. May be left unset. Valid values are +swing+, +javafx+, +pivot+, +lanterna+.
+| version                     | String  | {griffon-version} | The Griffon version to use for Griffon core dependencies.
 |===
 
 The *includeGroovyDependencies* property has 3 states: +unset+, +false+ and +true+.

@@ -22,7 +22,11 @@ import org.gradle.api.Project
  * @author Andres Almiray
  */
 class GriffonExtension {
+    static final List<String> TOOLKIT_NAMES = ['swing', 'javafx', 'pivot', 'lanterna']
+
     String version = '2.0.0.BETA3'
+
+    String toolkit
 
     Boolean includeGroovyDependencies
 

@@ -29,7 +29,6 @@ class GriffonPluginResolutionStrategy {
     private static final String PLUGIN_SUFFIX = '-plugin'
     private static final String GRIFFON_CONFIGURATION = 'griffon'
     private static final List<String> CONFIGURATION_NAMES = ['compile', 'compileOnly', 'testCompileOnly', 'testCompile', 'runtime']
-    private static final List<String> TOOLKIT_NAMES = ['swing', 'javafx', 'pivot', 'lanterna']
 
     static void applyTo(Project project) {
         GriffonPluginDependencyResolver resolver = new GriffonPluginDependencyResolver(project)
@@ -73,13 +72,19 @@ class GriffonPluginResolutionStrategy {
 
         @Override
         void execute(ResolvableDependencies resolvableDependencies) {
-            String toolkit = resolveToolkitName()
+            String toolkit = griffonExtension.toolkit
             project.logger.debug("UI toolkit for project {} is {}", project.name, toolkit)
-            String toolkitRegex = (TOOLKIT_NAMES - toolkit).join('|')
+            String toolkitRegex = (GriffonExtension.TOOLKIT_NAMES - toolkit).join('|')
 
             boolean groovyDependenciesEnabled = griffonExtension.includeGroovyDependencies?.toBoolean() ||
                 (project.plugins.hasPlugin('groovy') && griffonExtension.includeGroovyDependencies == null)
-            project.logger.debug("Groovy dependencies are {}enabled in project {}", (groovyDependenciesEnabled ? '': 'NOT '),project.name)
+            project.logger.debug("Groovy dependencies are {}enabled in project {}", (groovyDependenciesEnabled ? '' : 'NOT '), project.name)
+
+            appendDependency('griffon-' + toolkit, 'compile', coordinatesFor(toolkit))
+            maybeIncludeGroovyDependency(groovyDependenciesEnabled, 'griffon-groovy', 'compile', coordinatesFor('groovy'))
+            maybeIncludeGroovyDependency(groovyDependenciesEnabled, 'griffon-' + toolkit + '-groovy', 'compile', coordinatesFor(toolkit + '-groovy'))
+            maybeIncludeGroovyDependency(groovyDependenciesEnabled, 'griffon-groovy-compile', 'compileOnly', coordinatesFor('groovy-compile'))
+            maybeIncludeGroovyDependency(groovyDependenciesEnabled, 'griffon-groovy-compile', 'testCompileOnly', coordinatesFor('groovy-compile'))
 
             resolvableDependencies.dependencies.each { Dependency dependency ->
                 String pluginName = dependency.name
@@ -123,20 +128,12 @@ class GriffonPluginResolutionStrategy {
             project.configurations.getByName(GRIFFON_CONFIGURATION).incoming.dependencies.clear()
         }
 
-        private Object getGriffonExtension() {
-            project.extensions.getByName(GRIFFON_CONFIGURATION)
+        private String coordinatesFor(String artifactId) {
+            'org.codehaus.griffon:griffon-' + artifactId + ':' + griffonExtension.version
         }
 
-        private String resolveToolkitName() {
-            String toolkit = null
-            project.configurations.compile.incoming.dependencies.each { Dependency dependency ->
-                for (candidate in TOOLKIT_NAMES) {
-                    if (dependency.name == 'griffon-' + candidate) {
-                        toolkit = candidate
-                    }
-                }
-            }
-            toolkit
+        private GriffonExtension getGriffonExtension() {
+            project.extensions.getByName(GRIFFON_CONFIGURATION)
         }
 
         private boolean maybeIncludeGroovyDependency(boolean groovyDependenciesEnabled, String artifactId, String scope, String dependencyCoordinates) {
