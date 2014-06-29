@@ -180,9 +180,11 @@ class GriffonPlugin implements Plugin<Project> {
                 boolean groovyDependenciesEnabled = extension.includeGroovyDependencies?.toBoolean() ||
                     (project.plugins.hasPlugin('groovy') && extension.includeGroovyDependencies == null)
 
-                appendDependency(extension.toolkit)
+                if (extension.toolkit) {
+                    appendDependency(extension.toolkit)
+                    maybeIncludeGroovyDependency(groovyDependenciesEnabled, extension.toolkit + '-groovy')
+                }
                 maybeIncludeGroovyDependency(groovyDependenciesEnabled, 'groovy')
-                maybeIncludeGroovyDependency(groovyDependenciesEnabled, extension.toolkit + '-groovy')
                 maybeIncludeGroovyDependency(groovyDependenciesEnabled, 'groovy-compile')
 
                 processMainResources(project, extension)
