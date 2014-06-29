@@ -80,12 +80,6 @@ class GriffonPluginResolutionStrategy {
                 (project.plugins.hasPlugin('groovy') && griffonExtension.includeGroovyDependencies == null)
             project.logger.debug("Groovy dependencies are {}enabled in project {}", (groovyDependenciesEnabled ? '' : 'NOT '), project.name)
 
-            appendDependency('griffon-' + toolkit, 'compile', coordinatesFor(toolkit))
-            maybeIncludeGroovyDependency(groovyDependenciesEnabled, 'griffon-groovy', 'compile', coordinatesFor('groovy'))
-            maybeIncludeGroovyDependency(groovyDependenciesEnabled, 'griffon-' + toolkit + '-groovy', 'compile', coordinatesFor(toolkit + '-groovy'))
-            maybeIncludeGroovyDependency(groovyDependenciesEnabled, 'griffon-groovy-compile', 'compileOnly', coordinatesFor('groovy-compile'))
-            maybeIncludeGroovyDependency(groovyDependenciesEnabled, 'griffon-groovy-compile', 'testCompileOnly', coordinatesFor('groovy-compile'))
-
             resolvableDependencies.dependencies.each { Dependency dependency ->
                 String pluginName = dependency.name
                 if (pluginName.startsWith(PLUGIN_PREFIX) && pluginName.endsWith(PLUGIN_SUFFIX)) {
@@ -152,7 +146,7 @@ class GriffonPluginResolutionStrategy {
                 dependencyMap.get('compileOnly', []) << dependencyCoordinates
                 project.logger.debug("Adding {} to 'testCompileOnly' configuration", dependencyCoordinates)
                 dependencyMap.get('testCompileOnly', []) << dependencyCoordinates
-            } else if (scope == 'test') {
+            } else if (scope == 'test' && artifactId.endsWith('-test')) {
                 project.logger.debug("Adding {} to 'testCompile' configuration", dependencyCoordinates)
                 dependencyMap.get('testCompile', []) << dependencyCoordinates
             } else {

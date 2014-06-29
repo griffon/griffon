@@ -171,15 +171,43 @@ class GriffonPlugin implements Plugin<Project> {
             @Override
             void projectsEvaluated(Gradle gradle) {
                 // add default dependencies
-                project.dependencies.add('compile', 'org.codehaus.griffon:griffon-core:' + extension.version)
-                project.dependencies.add('compileOnly', 'org.codehaus.griffon:griffon-core-compile:' + extension.version)
-                project.dependencies.add('testCompileOnly', 'org.codehaus.griffon:griffon-core-compile:' + extension.version)
-                project.dependencies.add('testCompile', 'org.codehaus.griffon:griffon-core-test:' + extension.version)
+                appendDependency('core')
+                appendDependency('core-compile')
+                appendDependency('core-test')
 
                 validateToolkit(project, extension)
 
+                boolean groovyDependenciesEnabled = extension.includeGroovyDependencies?.toBoolean() ||
+                    (project.plugins.hasPlugin('groovy') && extension.includeGroovyDependencies == null)
+
+                appendDependency(extension.toolkit)
+                maybeIncludeGroovyDependency(groovyDependenciesEnabled, 'groovy')
+                maybeIncludeGroovyDependency(groovyDependenciesEnabled, extension.toolkit + '-groovy')
+                maybeIncludeGroovyDependency(groovyDependenciesEnabled, 'groovy-compile')
+
                 processMainResources(project, extension)
                 processTestResources(project, extension)
+            }
+
+            private boolean maybeIncludeGroovyDependency(boolean groovyDependenciesEnabled, String artifactId) {
+                if (artifactId =~ /groovy/) {
+                    if (groovyDependenciesEnabled) {
+                        appendDependency(artifactId)
+                    }
+                    return true
+                }
+                false
+            }
+
+            private void appendDependency(String artifactId) {
+                if (artifactId.endsWith('-compile')) {
+                    project.dependencies.add('compileOnly', ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':'))
+                    project.dependencies.add('testCompileOnly', ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':'))
+                } else if (artifactId.endsWith('-test')) {
+                    project.dependencies.add('testCompile', ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':'))
+                } else {
+                    project.dependencies.add('compile', ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':'))
+                }
             }
         })
     }
