@@ -11,6 +11,7 @@ buildscript {
     }
 }
 
+apply plugin: 'groovy'
 apply plugin: 'org.codehaus.griffon.griffon'
 
 griffon {
@@ -38,4 +39,8 @@ dependencies {
     runtime 'org.slf4j:slf4j-log4j12:1.7.7'
 
     testCompile "org.codehaus.griffon:griffon-fest-test:\${griffon.version}"
+    testCompile 'org.codehaus.groovy:groovy-all:2.3.3'
+    testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
 }
+
+compileGroovy.enabled = false

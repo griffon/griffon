@@ -40,9 +40,11 @@ class GriffonPlugin implements Plugin<Project> {
 
         String sourceSetName = project.plugins.hasPlugin('groovy') ? 'groovy' : 'java'
 
+        configureDefaultSourceSets(project, 'java')
         configureDefaultSourceSets(project, sourceSetName)
         adjustJavadocClasspath(project, sourceSetName)
         adjustIdeClasspaths(project)
+        createDefaultDirectoryStructure(project, 'java')
         createDefaultDirectoryStructure(project, sourceSetName)
 
         registerBuildListener(project, extension)

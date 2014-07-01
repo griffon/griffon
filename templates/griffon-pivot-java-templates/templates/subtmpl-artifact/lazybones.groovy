@@ -13,8 +13,8 @@ if (tmplQualifiers) {
     if (tmplQualifiers[2]) className = tmplQualifiers[2].capitalize()
 } else {
     def templateNames = templateDir.list().findAll {
-        it.endsWith('.java')
-    }.collect { it.toLowerCase() - '.java' }
+        it.endsWith('.java') || it.endsWith('.groovy')
+    }.collect { it.toLowerCase() - '.java' - '.groovy' }
     println '\nThe following artifact templates are available\n'
     templateNames.each { println "  $it" }
     println '  mvcgroup'
@@ -36,6 +36,8 @@ processArtifact = { artifactClass, artifactTemplate, artifactType, artifactPath 
     props.project_class_name = artifactClass
     String suffix = artifactTemplate.capitalize()
     String templateName = suffix + '.java'
+    File templateFile = new File(templateDir, templateName)
+    if (!templateFile.exists()) templateName = suffix + '.groovy'
 
     props.artifact_type = artifactType
     if (props.project_class_name.endsWith(suffix)) {
@@ -81,6 +83,16 @@ if (artifactBaseName == 'mvcgroup') {
     processArtifact(className, 'Test', artifactType, 'src/test/java')
 } else if (artifactBaseName == 'integrationtest') {
     processArtifact(className, 'IntegrationTest', 'view', 'src/integration-test/java')
+} else if (artifactBaseName == 'spec') {
+    String artifactType = ''
+    ['Controller', 'Model', 'Service'].each { s ->
+        if (className.endsWith(s)) {
+            artifactType = s.toLowerCase()
+        }
+    }
+    processArtifact(className, 'Spec', artifactType, 'src/test/groovy')
+} else if (artifactBaseName == 'integrationspec') {
+    processArtifact(className, 'IntegrationSpec', 'view', 'src/integration-test/groovy')
 } else {
     processArtifact(className, artifactBaseName.capitalize(), artifactBaseName, 'griffon-app/' + artifactBaseName + 's')
     if (artifactBaseName != 'view') {
