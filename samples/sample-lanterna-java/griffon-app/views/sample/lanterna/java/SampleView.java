@@ -24,7 +24,7 @@ import griffon.core.artifact.GriffonView;
 import griffon.lanterna.support.LanternaAction;
 import griffon.lanterna.widgets.MutableButton;
 import griffon.metadata.ArtifactProviderFor;
-import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
+import org.codehaus.griffon.runtime.lanterna.artifact.AbstractLanternaGriffonView;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -33,7 +33,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Collections;
 
 @ArtifactProviderFor(GriffonView.class)
-public class SampleView extends AbstractGriffonView {
+public class SampleView extends AbstractLanternaGriffonView {
     private SampleController controller;                                         //<1>
     private SampleModel model;                                                   //<1>
 
@@ -62,9 +62,7 @@ public class SampleView extends AbstractGriffonView {
         final TextBox input = new TextBox();
         panel.addComponent(input);
 
-        LanternaAction sayHelloAction = (LanternaAction) getApplication().getActionManager()
-            .actionFor(controller, "sayHello")
-            .getToolkitAction();
+        LanternaAction sayHelloAction = toolkitActionFor(controller, "sayHello");
         final Runnable runnable = sayHelloAction.getRunnable();
         sayHelloAction.setRunnable(new Runnable() {                              //<3>
             @Override

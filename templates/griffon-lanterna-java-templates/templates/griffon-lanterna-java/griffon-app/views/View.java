@@ -8,7 +8,7 @@ import griffon.core.artifact.GriffonView;
 import griffon.lanterna.support.LanternaAction;
 import griffon.lanterna.widgets.MutableButton;
 import griffon.metadata.ArtifactProviderFor;
-import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
+import org.codehaus.griffon.runtime.lanterna.artifact.AbstractLanternaGriffonView;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -17,7 +17,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Collections;
 
 @ArtifactProviderFor(GriffonView.class)
-public class ${project_class_name}View extends AbstractGriffonView {
+public class ${project_class_name}View extends AbstractLanternaGriffonView {
     private ${project_class_name}Model model;
     private ${project_class_name}Controller controller;
 
@@ -44,9 +44,7 @@ public class ${project_class_name}View extends AbstractGriffonView {
         final Label clickLabel = new Label(String.valueOf(model.getClickCount()));
         panel.addComponent(clickLabel);
 
-        LanternaAction clickAction = (LanternaAction) getApplication().getActionManager()
-            .actionFor(controller, "click")
-            .getToolkitAction();
+        LanternaAction clickAction = toolkitActionFor(controller, "click");
         panel.addComponent(new MutableButton(clickAction));
 
         model.addPropertyChangeListener("clickCount", new PropertyChangeListener() {

@@ -2,11 +2,10 @@ package ${project_package};
 
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonView;
-import griffon.core.controller.Action;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.pivot.support.PivotAction;
 import org.apache.pivot.serialization.SerializationException;
-import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
+import org.codehaus.griffon.runtime.pivot.artifact.AbstractPivotGriffonView;
 import org.apache.pivot.wtk.*;
 
 import javax.annotation.Nonnull;
@@ -18,7 +17,7 @@ import java.util.Collections;
 import static java.util.Arrays.asList;
 
 @ArtifactProviderFor(GriffonView.class)
-public class ${project_class_name}View extends AbstractGriffonView {
+public class ${project_class_name}View extends AbstractPivotGriffonView {
     private ${project_class_name}Model model;
     private ${project_class_name}Controller controller;
 
@@ -53,11 +52,10 @@ public class ${project_class_name}View extends AbstractGriffonView {
         final Label clickLabel = new Label(String.valueOf(model.getClickCount()));
         vbox.add(clickLabel);
 
-        Action clickAction = getApplication().getActionManager()
-            .actionFor(controller, "click");
+        PivotAction clickAction = toolkitActionFor(controller, "click");
         final Button button = new PushButton(clickAction.getName());
         button.setName("clickButton");
-        button.setAction((PivotAction) clickAction.getToolkitAction());
+        button.setAction(clickAction);
         vbox.add(button);
 
         model.addPropertyChangeListener("clickCount", new PropertyChangeListener() {

@@ -18,7 +18,7 @@ package sample.swing.java;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonView;
 import griffon.metadata.ArtifactProviderFor;
-import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
+import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -36,7 +36,7 @@ import static java.util.Arrays.asList;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
 @ArtifactProviderFor(GriffonView.class)
-public class SampleView extends AbstractGriffonView {
+public class SampleView extends AbstractSwingGriffonView {
     private SampleController controller;                                         //<1>
     private SampleModel model;                                                   //<1>
 
@@ -56,7 +56,7 @@ public class SampleView extends AbstractGriffonView {
     @Override
     public void initUI() {
         JFrame window = (JFrame) getApplication()
-            .createApplicationContainer(Collections.<String,Object>emptyMap());
+            .createApplicationContainer(Collections.<String, Object>emptyMap());
         window.setName("mainWindow");
         window.setTitle(getApplication().getConfiguration().getAsString("application.title"));
         window.setSize(320, 120);
@@ -93,9 +93,7 @@ public class SampleView extends AbstractGriffonView {
         });
         window.getContentPane().add(nameField);
 
-        Action action = (Action) getApplication().getActionManager()             //<4>
-            .actionFor(controller, "sayHello")
-            .getToolkitAction();
+        Action action = toolkitActionFor(controller, "sayHello");                //<4>
         final JButton button = new JButton(action);
         button.setName("sayHelloButton");
         window.getContentPane().add(button);

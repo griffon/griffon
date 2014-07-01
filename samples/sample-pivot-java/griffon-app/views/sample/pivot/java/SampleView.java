@@ -17,13 +17,12 @@ package sample.pivot.java;
 
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonView;
-import griffon.core.controller.Action;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.pivot.support.PivotAction;
 import griffon.pivot.support.adapters.TextInputContentAdapter;
 import org.apache.pivot.serialization.SerializationException;
 import org.apache.pivot.wtk.*;
-import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
+import org.codehaus.griffon.runtime.pivot.artifact.AbstractPivotGriffonView;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -32,7 +31,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Collections;
 
 @ArtifactProviderFor(GriffonView.class)
-public class SampleView extends AbstractGriffonView {
+public class SampleView extends AbstractPivotGriffonView {
     private SampleController controller;                                         //<1>
     private SampleModel model;                                                   //<1>
 
@@ -76,11 +75,10 @@ public class SampleView extends AbstractGriffonView {
         });
         vbox.add(input);
 
-        Action sayHelloAction = getApplication().getActionManager()
-            .actionFor(controller, "sayHello");
+        PivotAction sayHelloAction = toolkitActionFor(controller, "sayHello");
         final Button button = new PushButton(sayHelloAction.getName());
         button.setName("sayHelloButton");
-        button.setAction((PivotAction) sayHelloAction.getToolkitAction());       //<4>
+        button.setAction(sayHelloAction);                                        //<4>
         vbox.add(button);
 
         final TextInput output = new TextInput();

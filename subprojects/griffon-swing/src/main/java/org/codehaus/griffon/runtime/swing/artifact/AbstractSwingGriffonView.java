@@ -13,38 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.core.artifact;
+package org.codehaus.griffon.runtime.swing.artifact;
 
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
-import griffon.core.artifact.GriffonView;
-import griffon.core.artifact.GriffonViewClass;
 import griffon.core.controller.Action;
+import griffon.swing.support.SwingAction;
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 /**
- * Base implementation of the GriffonView interface.
+ * Swing-friendly implementation of the GriffonView interface.
  *
  * @author Andres Almiray
  * @since 2.0.0
  */
-public abstract class AbstractGriffonView extends AbstractGriffonMvcArtifact implements GriffonView {
+public abstract class AbstractSwingGriffonView extends AbstractGriffonView {
     @Inject
-    public AbstractGriffonView(@Nonnull GriffonApplication application) {
+    public AbstractSwingGriffonView(@Nonnull GriffonApplication application) {
         super(application);
     }
 
-    @Nonnull
-    @Override
-    protected String getArtifactType() {
-        return GriffonViewClass.TYPE;
-    }
-
     @Nullable
-    protected Action actionFor(@Nonnull GriffonController controller, @Nonnull String actionName) {
-        return getApplication().getActionManager().actionFor(controller, actionName);
+    protected SwingAction toolkitActionFor(@Nonnull GriffonController controller, @Nonnull String actionName) {
+        Action action = actionFor(controller, actionName);
+        return action != null ? (SwingAction) action.getToolkitAction() : null;
     }
 }

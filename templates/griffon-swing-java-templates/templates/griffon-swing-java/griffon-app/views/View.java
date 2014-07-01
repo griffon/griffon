@@ -3,7 +3,7 @@ package ${project_package};
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonView;
 import griffon.metadata.ArtifactProviderFor;
-import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
+import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -21,7 +21,7 @@ import static java.util.Arrays.asList;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
 @ArtifactProviderFor(GriffonView.class)
-public class ${project_class_name}View extends AbstractGriffonView {
+public class ${project_class_name}View extends AbstractSwingGriffonView {
     private ${project_class_name}Model model;
     private ${project_class_name}Controller controller;
 
@@ -66,9 +66,7 @@ public class ${project_class_name}View extends AbstractGriffonView {
             }
         });
         window.getContentPane().add(clickLabel);
-        Action action = (Action) getApplication().getActionManager()
-            .actionFor(controller, "click")
-            .getToolkitAction();
+        Action action = toolkitActionFor(controller, "click");
         JButton button = new JButton(action);
         button.setName("clickButton");
         window.getContentPane().add(button);

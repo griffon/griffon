@@ -57,7 +57,6 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
         super(application);
     }
 
-
     @Nullable
     protected Node loadFromFXML() {
         return loadFromFXML(resolveBasename());
@@ -125,5 +124,11 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
             JavaFXAction action = (JavaFXAction) e.getValue().getToolkitAction();
             control.addEventHandler(ActionEvent.ACTION, action.getOnAction());
         }
+    }
+
+    @Nullable
+    protected JavaFXAction toolkitActionFor(@Nonnull GriffonController controller, @Nonnull String actionName) {
+        Action action = actionFor(controller, actionName);
+        return action != null ? (JavaFXAction) action.getToolkitAction() : null;
     }
 }
