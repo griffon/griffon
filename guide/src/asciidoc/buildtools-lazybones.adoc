@@ -51,3 +51,21 @@ The +swing+ and +pivot+ *artifact* templates provided additional artifact templa
 
 integrationTest:: A standard integration Test artifact.
 
+You can invoke any of these templates in the following ways
+
+[source]
+----
+$ lazybones generate artifact::controller
+----
+
+This command creates a new _Controller_ artifact. You'll be asked for a package and
+a class name.
+
+[source]
+----
+$ lazybones generate artifact::mvcgroup::com.acme::group
+----
+
+This command creates an _MVC Group_ whose package is _com.acme_ and class name is
+_group_. There will be 5 new artifacts in total.
+

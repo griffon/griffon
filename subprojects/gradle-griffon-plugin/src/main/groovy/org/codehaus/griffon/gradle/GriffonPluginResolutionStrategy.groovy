@@ -122,10 +122,6 @@ class GriffonPluginResolutionStrategy {
             project.configurations.getByName(GRIFFON_CONFIGURATION).incoming.dependencies.clear()
         }
 
-        private String coordinatesFor(String artifactId) {
-            'org.codehaus.griffon:griffon-' + artifactId + ':' + griffonExtension.version
-        }
-
         private GriffonExtension getGriffonExtension() {
             project.extensions.getByName(GRIFFON_CONFIGURATION)
         }
