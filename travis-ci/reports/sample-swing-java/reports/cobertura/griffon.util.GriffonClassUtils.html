@@ -3097,16 +3097,16 @@
   <td class="src"><pre class="src">&nbsp;    @Nonnull</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1767</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> PropertyDescriptor[] getPropertyDescriptors(@Nonnull Class&lt;?&gt; beanClass) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1768</td>  <td class="nbHitsCovered">&nbsp;164</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(beanClass, ERROR_CLAZZ_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1768</td>  <td class="nbHitsCovered">&nbsp;168</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(beanClass, ERROR_CLAZZ_NULL);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1769</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1770</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="comment">// Look up any cached descriptors for this bean class</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1771</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        PropertyDescriptor[] descriptors;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1772</td>  <td class="nbHitsCovered">&nbsp;164</td>  <td class="src"><pre class="src">&nbsp;        descriptors = descriptorsCache.get(beanClass.getName());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1773</td>  <td class="nbHitsCovered"><a title="Line 1773: Conditional coverage 100% (2/2).">&nbsp;164</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 1773: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (descriptors != <span class="keyword">null</span>) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1774</td>  <td class="nbHitsCovered">&nbsp;141</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> descriptors;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1772</td>  <td class="nbHitsCovered">&nbsp;168</td>  <td class="src"><pre class="src">&nbsp;        descriptors = descriptorsCache.get(beanClass.getName());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1773</td>  <td class="nbHitsCovered"><a title="Line 1773: Conditional coverage 100% (2/2).">&nbsp;168</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 1773: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (descriptors != <span class="keyword">null</span>) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1774</td>  <td class="nbHitsCovered">&nbsp;144</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> descriptors;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1775</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1776</td>  <td class="nbHits">&nbsp;</td>
@@ -3117,19 +3117,19 @@
   <td class="src"><pre class="src">&nbsp;        BeanInfo beanInfo;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1779</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1780</td>  <td class="nbHitsCovered">&nbsp;23</td>  <td class="src"><pre class="src">&nbsp;            beanInfo = Introspector.getBeanInfo(beanClass);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1780</td>  <td class="nbHitsCovered">&nbsp;24</td>  <td class="src"><pre class="src">&nbsp;            beanInfo = Introspector.getBeanInfo(beanClass);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;1781</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        } <span class="keyword">catch</span> (IntrospectionException e) {</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;1782</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            <span class="keyword">return</span> (<span class="keyword">new</span> PropertyDescriptor[0]);</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1783</td>  <td class="nbHitsCovered">&nbsp;23</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1784</td>  <td class="nbHitsCovered">&nbsp;23</td>  <td class="src"><pre class="src">&nbsp;        descriptors = beanInfo.getPropertyDescriptors();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1785</td>  <td class="nbHitsUncovered"><a title="Line 1785: Conditional coverage 50% (1/2).">&nbsp;23</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 1785: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (descriptors == <span class="keyword">null</span>) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1783</td>  <td class="nbHitsCovered">&nbsp;24</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1784</td>  <td class="nbHitsCovered">&nbsp;24</td>  <td class="src"><pre class="src">&nbsp;        descriptors = beanInfo.getPropertyDescriptors();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1785</td>  <td class="nbHitsUncovered"><a title="Line 1785: Conditional coverage 50% (1/2).">&nbsp;24</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 1785: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (descriptors == <span class="keyword">null</span>) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;1786</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            descriptors = <span class="keyword">new</span> PropertyDescriptor[0];</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1787</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1788</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1789</td>  <td class="nbHitsCovered">&nbsp;23</td>  <td class="src"><pre class="src">&nbsp;        descriptorsCache.put(beanClass.getName(), descriptors);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1790</td>  <td class="nbHitsCovered">&nbsp;23</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> descriptors;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1789</td>  <td class="nbHitsCovered">&nbsp;24</td>  <td class="src"><pre class="src">&nbsp;        descriptorsCache.put(beanClass.getName(), descriptors);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1790</td>  <td class="nbHitsCovered">&nbsp;24</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> descriptors;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1791</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1792</td>  <td class="nbHits">&nbsp;</td>
@@ -4068,6 +4068,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 7/1/14 12:41 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 7/1/14 3:18 PM.</div>
 </body>
 </html>

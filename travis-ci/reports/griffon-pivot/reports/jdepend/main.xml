@@ -211,11 +211,11 @@
                 <TotalClasses>3</TotalClasses>
                 <ConcreteClasses>3</ConcreteClasses>
                 <AbstractClasses>0</AbstractClasses>
-                <Ca>2</Ca>
+                <Ca>3</Ca>
                 <Ce>7</Ce>
                 <A>0</A>
-                <I>0.78</I>
-                <D>0.22</D>
+                <I>0.7</I>
+                <D>0.3</D>
                 <V>1</V>
             </Stats>
 
@@ -246,6 +246,7 @@
 
             <UsedBy>
                 <Package>griffon.pivot.formatters</Package>
+                <Package>org.codehaus.griffon.runtime.pivot.artifact</Package>
                 <Package>org.codehaus.griffon.runtime.pivot.controller</Package>
             </UsedBy>
         </Package>
@@ -767,6 +768,10 @@
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
+        <Package name="org.codehaus.griffon.runtime.core.artifact">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
         <Package name="org.codehaus.griffon.runtime.core.controller">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
@@ -856,6 +861,41 @@
 
             <UsedBy>
                 <Package>griffon.pivot</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="org.codehaus.griffon.runtime.pivot.artifact">
+            <Stats>
+                <TotalClasses>1</TotalClasses>
+                <ConcreteClasses>0</ConcreteClasses>
+                <AbstractClasses>1</AbstractClasses>
+                <Ca>0</Ca>
+                <Ce>6</Ce>
+                <A>1</A>
+                <I>1</I>
+                <D>1</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+                <Class sourceFile="AbstractPivotGriffonView.java">
+                    org.codehaus.griffon.runtime.pivot.artifact.AbstractPivotGriffonView
+                </Class>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>griffon.core</Package>
+                <Package>griffon.core.artifact</Package>
+                <Package>griffon.core.controller</Package>
+                <Package>griffon.pivot.support</Package>
+                <Package>java.lang</Package>
+                <Package>org.codehaus.griffon.runtime.core.artifact</Package>
+            </DependsUpon>
+
+            <UsedBy>
             </UsedBy>
         </Package>
 

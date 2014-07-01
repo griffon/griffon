@@ -279,11 +279,11 @@
                 <TotalClasses>4</TotalClasses>
                 <ConcreteClasses>4</ConcreteClasses>
                 <AbstractClasses>0</AbstractClasses>
-                <Ca>3</Ca>
+                <Ca>4</Ca>
                 <Ce>8</Ce>
                 <A>0</A>
-                <I>0.73</I>
-                <D>0.27</D>
+                <I>0.67</I>
+                <D>0.33</D>
                 <V>1</V>
             </Stats>
 
@@ -319,6 +319,7 @@
             <UsedBy>
                 <Package>griffon.swing</Package>
                 <Package>griffon.swing.formatters</Package>
+                <Package>org.codehaus.griffon.runtime.swing.artifact</Package>
                 <Package>org.codehaus.griffon.runtime.swing.controller</Package>
             </UsedBy>
         </Package>
@@ -404,6 +405,10 @@
         </Package>
 
         <Package name="org.codehaus.griffon.runtime.core.addon">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.codehaus.griffon.runtime.core.artifact">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
@@ -505,6 +510,41 @@
                 <Package>org.jdesktop.swinghelper.debug</Package>
                 <Package>org.slf4j</Package>
                 <Package>sun.awt</Package>
+            </DependsUpon>
+
+            <UsedBy>
+            </UsedBy>
+        </Package>
+
+        <Package name="org.codehaus.griffon.runtime.swing.artifact">
+            <Stats>
+                <TotalClasses>1</TotalClasses>
+                <ConcreteClasses>0</ConcreteClasses>
+                <AbstractClasses>1</AbstractClasses>
+                <Ca>0</Ca>
+                <Ce>6</Ce>
+                <A>1</A>
+                <I>1</I>
+                <D>1</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+                <Class sourceFile="AbstractSwingGriffonView.java">
+                    org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView
+                </Class>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>griffon.core</Package>
+                <Package>griffon.core.artifact</Package>
+                <Package>griffon.core.controller</Package>
+                <Package>griffon.swing.support</Package>
+                <Package>java.lang</Package>
+                <Package>org.codehaus.griffon.runtime.core.artifact</Package>
             </DependsUpon>
 
             <UsedBy>
