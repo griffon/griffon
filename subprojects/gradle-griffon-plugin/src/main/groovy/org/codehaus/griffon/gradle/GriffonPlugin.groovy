@@ -149,10 +149,15 @@ class GriffonPlugin implements Plugin<Project> {
 
     private void createDefaultDirectoryStructure(Project project, String sourceSetName) {
         project.gradle.taskGraph.whenReady {
-            project.sourceSets.main[sourceSetName].srcDirs.each { it.mkdirs() }
-            project.sourceSets.test[sourceSetName].srcDirs.each { it.mkdirs() }
-            project.sourceSets.main.resources.srcDirs.each { it.mkdirs() }
-            project.sourceSets.test.resources.srcDirs.each { it.mkdirs() }
+            def createIfNotExists = { File dir ->
+                if (!dir.exists()) {
+                    dir.mkdirs()
+                }
+            }
+            project.sourceSets.main[sourceSetName].srcDirs.each(createIfNotExists)
+            project.sourceSets.test[sourceSetName].srcDirs.each(createIfNotExists)
+            project.sourceSets.main.resources.srcDirs.each(createIfNotExists)
+            project.sourceSets.test.resources.srcDirs.each(createIfNotExists)
         }
     }
 
