@@ -3,11 +3,9 @@ package ${project_package}
 import griffon.core.test.GriffonFestRule
 import org.fest.swing.fixture.FrameFixture
 import org.junit.Rule
-import org.junit.Test
+import spock.lang.Specification
 
-import static org.junit.Assert.fail
-
-class ${project_class_name}IntegrationTest {
+class ${project_class_name}IntegrationSpec extends Specification {
     static {
         System.setProperty('griffon.swing.edt.violations.check', 'true')
         System.setProperty('griffon.swing.edt.hang.monitor', 'true')
@@ -18,8 +16,8 @@ class ${project_class_name}IntegrationTest {
 
     private FrameFixture window
 
-    @Test
-    void smokeTest() {
-        fail('Not implemented yet!')
+    void "This is a smoke test" () {
+        expect:
+            false
     }
 }

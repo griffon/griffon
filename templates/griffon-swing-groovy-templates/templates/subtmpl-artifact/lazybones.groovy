@@ -81,6 +81,16 @@ if (artifactBaseName == 'mvcgroup') {
     processArtifact(className, 'Test', artifactType, 'src/test/groovy')
 } else if (artifactBaseName == 'integrationtest') {
     processArtifact(className, 'IntegrationTest', 'view', 'src/integration-test/groovy')
+} else if (artifactBaseName == 'spec') {
+    String artifactType = ''
+    ['Controller', 'Model', 'Service'].each { s ->
+        if (className.endsWith(s)) {
+            artifactType = s.toLowerCase()
+        }
+    }
+    processArtifact(className, 'Spec', artifactType, 'src/test/groovy')
+} else if (artifactBaseName == 'integrationspec') {
+    processArtifact(className, 'IntegrationSpec', 'view', 'src/integration-test/groovy')
 } else {
     processArtifact(className, artifactBaseName.capitalize(), artifactBaseName, 'griffon-app/' + artifactBaseName + 's')
     if (artifactBaseName != 'view') {

@@ -2,16 +2,14 @@ package ${project_package}
 
 import griffon.pivot.test.GriffonPivotFuncRule
 import org.junit.Rule
-import org.junit.Test
+import spock.lang.Specification
 
-import static org.junit.Assert.fail
-
-class ${project_class_name}IntegrationTest {
+class ${project_class_name}IntegrationSpec extends Specification {
     @Rule
     public final GriffonPivotFuncRule pivot = new GriffonPivotFuncRule()
 
-    @Test
-    void smokeTest() {
-        fail("Not yet implemented!")
+    void "This is a smoke test" () {
+        expect:
+            false
     }
 }
