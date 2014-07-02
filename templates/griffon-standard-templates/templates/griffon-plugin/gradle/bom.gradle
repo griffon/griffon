@@ -1,0 +1,44 @@
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+publishing {
+    publications {
+        mavenBom(MavenPublication) {
+            artifacts = []
+        }
+    }
+}
+
+publishToMavenLocal.dependsOn generateBom
+
+gradle.taskGraph.whenReady { g ->
+    def generatePom = gradle.taskGraph.allTasks.find { it.name == 'generatePomFileForMavenBomPublication' }
+    generatePom?.doLast {
+        copy {
+            into project.file("${buildDir}/publications/mavenBom")
+            from generateBom.outputDir
+            rename generateBom.outputFile.name, 'pom-default.xml'
+        }
+    }
+}
+
+if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = ''
+if (!project.hasProperty('bintrayApiKey')) ext.bintrayApiKey = ''
+
+bintray {
+    user = project.bintrayUsername
+    key = project.bintrayApiKey
+    publications = ['mavenBom']
+    pkg {
+        repo = 'griffon-plugins'
+        userOrg = 'griffon'
+        name = project.name
+        desc = project.projectDescription
+        licenses = ['Apache-2.0']
+        labels = ['griffon', '${plugin_full_name}']
+        websiteUrl = project.projectWebsiteUrl
+        issueTrackerUrl = project.projectIssueTrackerUrl
+        vcsUrl = project.projectVcsUrl
+        publicDownloadNumbers = true
+    }
+}

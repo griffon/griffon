@@ -22,6 +22,7 @@ import org.codehaus.griffon.gradle.tasks.AggregateCoberturaReportTask
 import org.codehaus.griffon.gradle.tasks.GenerateBomTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.Task
 
 class GriffonBuildPlugin implements Plugin<Project> {
     @Override

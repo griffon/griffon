@@ -62,7 +62,8 @@ task apiDocs(type: Javadoc, dependsOn: copyDocs) {
     options.footer      = project.javadocFooter
     options.links       = ['http://www.slf4j.org/apidocs/',
                            'http://jsr-305.googlecode.com/svn/trunk/javadoc/',
-                           'http://docs.oracle.com/javase/7/docs/api/']
+                           'http://docs.oracle.com/javase/7/docs/api/',
+                           'http://griffon.github.io/griffon/guide/api/']
 
     doLast { task ->
         copy {

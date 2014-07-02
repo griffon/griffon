@@ -22,6 +22,7 @@ apply plugin: 'coveralls'
 apply plugin: 'build-dashboard'
 apply from: 'gradle/idea.gradle'
 apply plugin: 'org.codehaus.griffon.griffon-build'
+apply from: 'gradle/bom.gradle'
 
 Date buildTimeAndDate = new Date()
 ext {
@@ -46,6 +47,31 @@ allprojects {
 
 subprojects { subproj ->
     plugins.withType(JavaPlugin) {
+        configurations {
+            compileOnly
+            testCompileOnly
+        }
+
+        sourceSets {
+            main {
+                compileClasspath += [configurations.compileOnly]
+            }
+            test {
+                compileClasspath += [configurations.testCompileOnly]
+            }
+        }
+
+        javadoc {
+            classpath += [configurations.compileOnly]
+        }
+
+        idea {
+            module {
+                scopes.PROVIDED.plus += [configurations.compileOnly]
+                scopes.PROVIDED.plus += [configurations.testCompileOnly]
+            }
+        }
+
         dependencies {
             testCompile 'junit:junit:4.11'
             testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
@@ -84,7 +110,8 @@ subprojects { subproj ->
                 options.footer      = rootProject.javadocFooter
                 options.links       = ['http://www.slf4j.org/apidocs/',
                                        'http://jsr-305.googlecode.com/svn/trunk/javadoc/',
-                                       'http://docs.oracle.com/javase/7/docs/api/']
+                                       'http://docs.oracle.com/javase/7/docs/api/',
+                                       'http://griffon.github.io/griffon/guide/api/']
 
                 doLast { task ->
                     copy {
