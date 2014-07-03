@@ -66,6 +66,11 @@ subprojects { subproj ->
             testCompileOnly
         }
 
+        subproj.tasks.withType(JavaCompile) {
+            sourceCompatibility = '1.7'
+            targetCompatibility = '1.7'
+        }
+
         dependencies {
             testCompile 'junit:junit:4.11'
             testCompile 'com.google.guiceberry:guiceberry:3.3.1'
