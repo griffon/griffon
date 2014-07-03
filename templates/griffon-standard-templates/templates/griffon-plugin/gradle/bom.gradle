@@ -1,6 +1,10 @@
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
+generateBom {
+    additionalDependencies = []
+}
+
 publishing {
     publications {
         mavenBom(MavenPublication) {

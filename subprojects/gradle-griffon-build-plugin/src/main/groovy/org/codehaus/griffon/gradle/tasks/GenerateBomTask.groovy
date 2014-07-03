@@ -17,6 +17,7 @@ package org.codehaus.griffon.gradle.tasks
 
 import groovy.xml.MarkupBuilder
 import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
@@ -28,6 +29,7 @@ class GenerateBomTask extends DefaultTask {
     static final TASK_NAME = 'generateBom'
 
     @OutputDirectory File outputDir
+    @Input List<String> additionalDependencies = []
 
     GenerateBomTask() {
         outputDir = project.file("${project.buildDir.path}/bom")
@@ -68,6 +70,19 @@ class GenerateBomTask extends DefaultTask {
                             groupId('${project.groupId}')
                             artifactId(projectName)
                             version('${project.version}')
+                            scope(scopeName)
+                        }
+                    }
+                    additionalDependencies.each { String dep ->
+                        def (groupName, artifactName, versionNum) = dep.split(':')
+                        String scopeName = 'compile'
+                        if (artifactName.endsWith('-compile')) scopeName = 'provided'
+                        if (artifactName.endsWith('-test')) scopeName = 'test'
+
+                        dependency {
+                            groupId(groupName)
+                            artifactId(artifactName)
+                            version(versionNum)
                             scope(scopeName)
                         }
                     }
