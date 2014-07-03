@@ -1886,7 +1886,7 @@ span.line-numbers { border-right: 1px solid #E5E5E5; color: #999; display: inlin
 <div id="header">
 <h1>The Griffon Guide</h1>
 <span id="author" class="author">Andres Almiray</span><br>
-<span id="revnumber">version 2.0.0.BETA2</span>
+<span id="revnumber">version 2.0.0.BETA3</span>
 <br><span id="revremark">The Desktop/Embedded application framework for the JVM</span>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -1923,7 +1923,7 @@ span.line-numbers { border-right: 1px solid #E5E5E5; color: #999; display: inlin
 </ul>
 </li>
 <li><a href="#_running_the_application">2.2.3. Running the application</a></li>
-<li><a href="#_testing">2.2.4. Testing</a></li>
+<li><a href="#_console_example_testing">2.2.4. Testing</a></li>
 </ul>
 </li>
 </ul>
@@ -1931,21 +1931,36 @@ span.line-numbers { border-right: 1px solid #E5E5E5; color: #999; display: inlin
 <li><a href="#_overview">3. Application Overview</a></li>
 <li>
 <ul class="sectlevel2">
-<li><a href="#_overview_lifecycle">3.1. Lifecycle</a></li>
+<li><a href="#_overview_configuration">3.1. Configuration</a></li>
 <li>
 <ul class="sectlevel3">
-<li><a href="#_overview_lifecycle_initialize">3.1.1. Initialize</a></li>
-<li><a href="#_overview_lifecycle_startup">3.1.2. Startup</a></li>
-<li><a href="#_overview_lifecycle_ready">3.1.3. Ready</a></li>
-<li><a href="#_overview_lifecycle_shutdown">3.1.4. Shutdown</a></li>
-<li><a href="#_overview_lifecycle_stop">3.1.5. Stop</a></li>
+<li><a href="#_basic_configuration">3.1.1. Basic Configuration</a></li>
+<li><a href="#_internationalization_support">3.1.2. Internationalization Support</a></li>
 </ul>
 </li>
-<li><a href="#_overview_modules">3.2. Modules</a></li>
+<li><a href="#_overview_metadata">3.2. Metadata</a></li>
 <li>
 <ul class="sectlevel3">
-<li><a href="#_overview_module_definition">3.2.1. Module Definition</a></li>
-<li><a href="#_overview_module_configuration">3.2.2. Module Configuration</a></li>
+<li><a href="#_overview_metadata_application">3.2.1. Application Metadata</a></li>
+<li><a href="#_overview_metadata_environment">3.2.2. Application Environment</a></li>
+<li><a href="#_overview_metadata_griffon_environment">3.2.3. Griffon Environment</a></li>
+</ul>
+</li>
+<li><a href="#_overview_lifecycle">3.3. Lifecycle</a></li>
+<li>
+<ul class="sectlevel3">
+<li><a href="#_overview_lifecycle_initialize">3.3.1. Initialize</a></li>
+<li><a href="#_overview_lifecycle_startup">3.3.2. Startup</a></li>
+<li><a href="#_overview_lifecycle_ready">3.3.3. Ready</a></li>
+<li><a href="#_overview_lifecycle_shutdown">3.3.4. Shutdown</a></li>
+<li><a href="#_overview_lifecycle_stop">3.3.5. Stop</a></li>
+</ul>
+</li>
+<li><a href="#_overview_modules">3.4. Modules</a></li>
+<li>
+<ul class="sectlevel3">
+<li><a href="#_overview_module_definition">3.4.1. Module Definition</a></li>
+<li><a href="#_overview_module_configuration">3.4.2. Module Configuration</a></li>
 <li>
 <ul class="sectlevel4">
 <li><a href="#_overview_instance_binding">Instance Binding</a></li>
@@ -1956,6 +1971,8 @@ span.line-numbers { border-right: 1px solid #E5E5E5; color: #999; display: inlin
 </li>
 </ul>
 </li>
+<li><a href="#_overview_shutdown_handlers">3.5. Shutdown Handlers</a></li>
+<li><a href="#_overview_startupargs">3.6. Startup Arguments</a></li>
 </ul>
 </li>
 <li><a href="#_mvc">4. The MVC Pattern</a></li>
@@ -1994,6 +2011,11 @@ span.line-numbers { border-right: 1px solid #E5E5E5; color: #999; display: inlin
 <ul class="sectlevel2">
 <li><a href="#_controllers_actions_and_threads">6.1. Actions and Threads</a></li>
 <li><a href="#_controllers_actionmanager">6.2. The ActionManager</a></li>
+<li>
+<ul class="sectlevel3">
+<li><a href="#_configuration_examples">6.2.1. Configuration Examples</a></li>
+</ul>
+</li>
 <li><a href="#_controllers_action_interceptors">6.3. Action Interceptors</a></li>
 <li>
 <ul class="sectlevel3">
@@ -2008,8 +2030,16 @@ span.line-numbers { border-right: 1px solid #E5E5E5; color: #999; display: inlin
 <li>
 <ul class="sectlevel2">
 <li><a href="#_views_windowmanager">8.1. The WindowManager</a></li>
+<li>
+<ul class="sectlevel3">
+<li><a href="#_views_windowmanager_dsl">8.1.1. WindowManager DSL</a></li>
+<li><a href="#_views_windowmanager_starting_window">8.1.2. Starting Window</a></li>
+<li><a href="#_views_windowmanager_display_handlers">8.1.3. Custom WindowDisplayHandlers</a></li>
+</ul>
+</li>
 <li><a href="#_views_swing">8.2. Swing Specific</a></li>
 <li><a href="#_views_javafx">8.3. JavaFX Specific</a></li>
+<li><a href="#_views_builder_customizers">8.4. BuilderCustomizers</a></li>
 </ul>
 </li>
 <li><a href="#_threading">9. Threading</a></li>
@@ -2093,26 +2123,66 @@ span.line-numbers { border-right: 1px solid #E5E5E5; color: #999; display: inlin
 </ul>
 </li>
 <li><a href="#_testing">14. Testing</a></li>
-<li><a href="#_contributing">15. Contributing</a></li>
 <li>
 <ul class="sectlevel2">
-<li><a href="#_contributing_issues">15.1. Issues</a></li>
-<li>
-<ul class="sectlevel3">
-<li><a href="#_reviewing_issues">15.1.1. Reviewing issues</a></li>
+<li><a href="#_testing_unit">14.1. Unit Testing</a></li>
+<li><a href="#_testing_integration">14.2. Integration Testing</a></li>
 </ul>
 </li>
-<li><a href="#_contributing_build">15.2. Build</a></li>
+<li><a href="#_buildtools">15. Build Tools</a></li>
+<li>
+<ul class="sectlevel2">
+<li><a href="#_buildtools_gvm">15.1. GVM</a></li>
+<li><a href="#_buildtools_lazybones">15.2. Lazybones</a></li>
 <li>
 <ul class="sectlevel3">
-<li><a href="#_running_the_test_suite">15.2.1. Running the test suite</a></li>
-<li><a href="#_developing_in_intellij_idea">15.2.2. Developing in IntelliJ IDEA</a></li>
+<li><a href="#_configuration_2">15.2.1. Configuration</a></li>
+<li><a href="#_templates">15.2.2. Templates</a></li>
 </ul>
 </li>
-<li><a href="#_contributing_patches">15.3. Patches</a></li>
+<li><a href="#_buildtools_gradle">15.3. Gradle</a></li>
 <li>
 <ul class="sectlevel3">
-<li><a href="#_forking_and_pull_requests">15.3.1. Forking and Pull Requests</a></li>
+<li><a href="#_the_griffon_plugin">15.3.1. The "griffon" Plugin</a></li>
+<li>
+<ul class="sectlevel4">
+<li><a href="#_usage">Usage</a></li>
+<li><a href="#_convention_properties">Convention properties</a></li>
+</ul>
+</li>
+<li><a href="#_the_griffon_build_plugin">15.3.2. The "griffon-build" Plugin</a></li>
+<li>
+<ul class="sectlevel4">
+<li><a href="#_usage_2">Usage</a></li>
+<li><a href="#_tasks">Tasks</a></li>
+<li><a href="#_convention_properties_2">Convention Properties</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_buildtools_maven">15.4. Maven</a></li>
+</ul>
+</li>
+<li><a href="#_contributing">16. Contributing</a></li>
+<li>
+<ul class="sectlevel2">
+<li><a href="#_contributing_issues">16.1. Issues</a></li>
+<li>
+<ul class="sectlevel3">
+<li><a href="#_reviewing_issues">16.1.1. Reviewing issues</a></li>
+</ul>
+</li>
+<li><a href="#_contributing_build">16.2. Build</a></li>
+<li>
+<ul class="sectlevel3">
+<li><a href="#_running_the_test_suite">16.2.1. Running the test suite</a></li>
+<li><a href="#_developing_in_intellij_idea">16.2.2. Developing in IntelliJ IDEA</a></li>
+</ul>
+</li>
+<li><a href="#_contributing_patches">16.3. Patches</a></li>
+<li>
+<ul class="sectlevel3">
+<li><a href="#_forking_and_pull_requests">16.3.1. Forking and Pull Requests</a></li>
 </ul>
 </li>
 </ul>
@@ -2161,7 +2231,7 @@ span.line-numbers { border-right: 1px solid #E5E5E5; color: #999; display: inlin
 </ul>
 </li>
 <li><a href="#_appendix_ast_transformations">Appendix C: AST Transformations</a></li>
-<li><a href="#_appenidx_sample_applications">Appendix D: Sample Applications</a></li>
+<li><a href="#_appendix_sample_applications">Appendix D: Sample Applications</a></li>
 <li>
 <ul class="sectlevel2">
 <li><a href="#_swing_2">1.1. Swing</a></li>
@@ -2292,7 +2362,7 @@ JavaFX 2.2 (the version included in JDK7).</p>
 <div class="sect3">
 <h4 id="_gradle"><a class="anchor" href="#_gradle"></a>2.1.2. Gradle</h4>
 <div class="paragraph">
-<p><a href="http://gradle.org">Gradle</a> 1.12 was used to thoroughly test the Griffon source code and as such
+<p><a href="http://gradle.org">Gradle</a> 2.0 was used to thoroughly test the Griffon source code and as such
 is guaranteed to work. We suggest installing <a href="http://gvmtool.net">GVM</a> as a means to keep your
 Gradle installation up to date. GVM can also be used to install <a href="http://github.com/pledbrook/lazybones">Lazybones</a>,
 a templating tool for creating Griffon projects.</p>
@@ -2365,7 +2435,7 @@ Available templates in griffon/griffon-lazybones-templates:
     griffon-pivot-groovy
     griffon-swing-java
     griffon-swing-groovy
-    griffon-plugin-single</code></pre>
+    griffon-plugin</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2380,7 +2450,7 @@ Creating project from template griffon-swing-groovy (latest) in 'console'
 Define value for 'group' [org.example]: console
 Define value for 'version' [0.1.0-SNAPSHOT]:
 Define value for 'package' [console]:
-Define value for 'griffonVersion' [{griffon_version}]:</code></pre>
+Define value for 'griffonVersion' [2.0.0.BETA3]:</code></pre>
 </div>
 </div>
 </div>
@@ -2415,6 +2485,63 @@ are located in specific directories according to their responsibilities and beha
 </div>
 </div>
 <div class="paragraph">
+<p>Griffon uses "convention over configuration" approach to enable a fast development pace.
+This typically means that the name and location of files is used instead of explicit
+configuration, hence you need to familiarize yourself with the directory structure provided
+by Griffon.</p>
+</div>
+<div class="paragraph">
+<p>Here is a breakdown and links to relevant sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>griffon-app</code> - top level directory for Groovy sources.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>conf</code> - <a href="#_overview_configuration">Configuration sources</a>.</p>
+</li>
+<li>
+<p><code>models</code> - <a href="#_models">Models</a>.</p>
+</li>
+<li>
+<p><code>views</code> - <a href="#_views">Views</a>.</p>
+</li>
+<li>
+<p><code>controllers</code> - <a href="#_controllers">Controllers</a>.</p>
+</li>
+<li>
+<p><code>services</code> - <a href="#_services">Services</a>.</p>
+</li>
+<li>
+<p><code>resources</code> - <a href="#_resources">Images, properties files, etc</a>.</p>
+</li>
+<li>
+<p><code>i18n</code> - <a href="#_internationalization">Support for internationalization (i18n)</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>src</code> - Supporting sources.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>main</code> - Other Groovy/Java sources.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>test</code> - <a href="#_testing">Unit tests</a>.</p>
+</li>
+<li>
+<p><code>integration-test</code> - <a href="#_testing">Integration tests</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
 <p>Here&#8217;s an screenshot of the finished application running to give you an idea of what
 we&#8217;re aiming at with this example . A small Groovy script has been executed, you
 can see the result on the bottom right side</p>
@@ -2438,15 +2565,23 @@ can see the result on the bottom right side</p>
     }
 
     dependencies {
-        classpath <span class="string"><span class="delimiter">'</span><span class="content">org.codehaus.griffon:gradle-griffon-plugin:1.0.0.BETA</span><span class="delimiter">'</span></span>
+        classpath <span class="string"><span class="delimiter">'</span><span class="content">org.codehaus.griffon:gradle-griffon-plugin:1.0.0.BETA2</span><span class="delimiter">'</span></span>
         classpath <span class="string"><span class="delimiter">'</span><span class="content">net.saliman:gradle-cobertura-plugin:2.2.4</span><span class="delimiter">'</span></span>
-        classpath <span class="string"><span class="delimiter">'</span><span class="content">org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.4.0</span><span class="delimiter">'</span></span>
+        classpath <span class="string"><span class="delimiter">'</span><span class="content">org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.4.1</span><span class="delimiter">'</span></span>
         classpath <span class="string"><span class="delimiter">'</span><span class="content">nl.javadude.gradle.plugins:license-gradle-plugin:0.9.0</span><span class="delimiter">'</span></span>
     }
 }
 
 apply <span class="key">plugin</span>: <span class="string"><span class="delimiter">'</span><span class="content">groovy</span><span class="delimiter">'</span></span>
 apply <span class="key">plugin</span>: <span class="string"><span class="delimiter">'</span><span class="content">org.codehaus.griffon.griffon</span><span class="delimiter">'</span></span>
+
+griffon {
+    disableDependencyResolution = <span class="predefined-constant">false</span>
+    includeGroovyDependencies = <span class="predefined-constant">true</span>
+    version = <span class="string"><span class="delimiter">'</span><span class="content">2.0.0.BETA3</span><span class="delimiter">'</span></span>
+    toolkit = <span class="string"><span class="delimiter">'</span><span class="content">swing</span></span><span class="error">
+</span>}
+
 apply <span class="key">from</span>: <span class="string"><span class="delimiter">'</span><span class="content">gradle/publishing.gradle</span><span class="delimiter">'</span></span>
 apply <span class="key">from</span>: <span class="string"><span class="delimiter">'</span><span class="content">gradle/code-coverage.gradle</span><span class="delimiter">'</span></span>
 apply <span class="key">from</span>: <span class="string"><span class="delimiter">'</span><span class="content">gradle/code-quality.gradle</span><span class="delimiter">'</span></span>
@@ -2455,13 +2590,8 @@ apply <span class="key">from</span>: <span class="string"><span class="delimiter
 mainClassName = <span class="string"><span class="delimiter">'</span><span class="content">console.Launcher</span><span class="delimiter">'</span></span>
 
 dependencies {
-    compileOnly <span class="string"><span class="delimiter">&quot;</span><span class="content">org.codehaus.griffon:griffon-groovy-compile:</span><span class="inline"><span class="inline-delimiter">$</span>griffonVersion</span><span class="delimiter">&quot;</span></span>
+    compile <span class="string"><span class="delimiter">&quot;</span><span class="content">org.codehaus.griffon:griffon-guice:</span><span class="inline"><span class="inline-delimiter">${</span>griffon.version<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span>
 
-    compile <span class="string"><span class="delimiter">&quot;</span><span class="content">org.codehaus.griffon:griffon-groovy:</span><span class="inline"><span class="inline-delimiter">$</span>griffonVersion</span><span class="delimiter">&quot;</span></span>
-    compile <span class="string"><span class="delimiter">&quot;</span><span class="content">org.codehaus.griffon:griffon-swing:</span><span class="inline"><span class="inline-delimiter">$</span>griffonVersion</span><span class="delimiter">&quot;</span></span>
-    compile <span class="string"><span class="delimiter">&quot;</span><span class="content">org.codehaus.griffon:griffon-guice:</span><span class="inline"><span class="inline-delimiter">$</span>griffonVersion</span><span class="delimiter">&quot;</span></span>
-
-    runtime <span class="string"><span class="delimiter">&quot;</span><span class="content">org.codehaus.griffon:griffon-swing-groovy:</span><span class="inline"><span class="inline-delimiter">$</span>griffonVersion</span><span class="delimiter">&quot;</span></span>
     runtime(<span class="string"><span class="delimiter">'</span><span class="content">log4j:log4j:1.2.17</span><span class="delimiter">'</span></span>) {
         exclude <span class="key">group</span>: <span class="string"><span class="delimiter">'</span><span class="content">ant</span><span class="delimiter">'</span></span>,         <span class="key">module</span>: <span class="string"><span class="delimiter">'</span><span class="content">ant-nodeps</span><span class="delimiter">'</span></span>
         exclude <span class="key">group</span>: <span class="string"><span class="delimiter">'</span><span class="content">ant</span><span class="delimiter">'</span></span>,         <span class="key">module</span>: <span class="string"><span class="delimiter">'</span><span class="content">ant-junit</span><span class="delimiter">'</span></span>
@@ -2469,7 +2599,7 @@ dependencies {
     }
     runtime <span class="string"><span class="delimiter">'</span><span class="content">org.slf4j:slf4j-log4j12:1.7.7</span><span class="delimiter">'</span></span>
 
-    testCompile <span class="string"><span class="delimiter">&quot;</span><span class="content">org.codehaus.griffon:griffon-fest-test:</span><span class="inline"><span class="inline-delimiter">$</span>griffonVersion</span><span class="delimiter">&quot;</span></span>
+    testCompile <span class="string"><span class="delimiter">&quot;</span><span class="content">org.codehaus.griffon:griffon-fest-test:</span><span class="inline"><span class="inline-delimiter">${</span>griffon.version<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span>
 }</code></pre>
 </div>
 </div>
@@ -2818,7 +2948,7 @@ to testing.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_testing"><a class="anchor" href="#_testing"></a>2.2.4. Testing</h4>
+<h4 id="_console_example_testing"><a class="anchor" href="#_console_example_testing"></a>2.2.4. Testing</h4>
 <div class="paragraph">
 <p>It&#8217;s always a good idea to test out the code we write. It&#8217;s pretty easy to write tests for
 regular components such as <code>Evaluator</code> and <code>GroovyShellEvaluator</code>, as they require little
@@ -2970,7 +3100,309 @@ injection too <em class="conum">3</em>.</p>
 <h2 id="_overview"><a class="anchor" href="#_overview"></a>3. Application Overview</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_overview_lifecycle"><a class="anchor" href="#_overview_lifecycle"></a>3.1. Lifecycle</h3>
+<h3 id="_overview_configuration"><a class="anchor" href="#_overview_configuration"></a>3.1. Configuration</h3>
+<div class="paragraph">
+<p>It may seem odd that in a framework that embraces "convention-over-configuration"
+that we tackle this topic now, but since what configuration there is typically a
+one off, it is best to get it out the way.</p>
+</div>
+<div class="sect3">
+<h4 id="_basic_configuration"><a class="anchor" href="#_basic_configuration"></a>3.1.1. Basic Configuration</h4>
+<div class="paragraph">
+<p>For general configuration Griffon provides a file called <code>griffon-app/conf/Config.groovy</code>.
+This file uses Groovy&#8217;s ConfigSlurper which is very similar to Java properties files
+except it is pure Groovy hence you can re-use variables and use proper Java types!</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s a typical configuration file</p>
+</div>
+<div class="listingblock">
+<div class="title">griffon-app/conf/sample/swing/groovy/Config.groovy</div>
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy"><span class="keyword">package</span> sample.swing.groovy
+
+application {
+    title = <span class="string"><span class="delimiter">'</span><span class="content">Swing + Groovy</span><span class="delimiter">'</span></span>
+    startupGroups = [<span class="string"><span class="delimiter">'</span><span class="content">sample</span><span class="delimiter">'</span></span>]
+    autoShutdown = <span class="predefined-constant">true</span>
+}
+mvcGroups {
+    <span class="comment">// MVC Group for &quot;sample&quot;</span>
+    <span class="string"><span class="delimiter">'</span><span class="content">sample</span><span class="delimiter">'</span></span> {
+        model      = <span class="string"><span class="delimiter">'</span><span class="content">sample.swing.groovy.SampleModel</span><span class="delimiter">'</span></span>
+        view       = <span class="string"><span class="delimiter">'</span><span class="content">sample.swing.groovy.SampleView</span><span class="delimiter">'</span></span>
+        controller = <span class="string"><span class="delimiter">'</span><span class="content">sample.swing.groovy.SampleController</span><span class="delimiter">'</span></span>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can define this file using Java too</p>
+</div>
+<div class="listingblock">
+<div class="title">griffon-app/conf/sample/swing/java/Config.java</div>
+<div class="content">
+<pre class="CodeRay nowrap"><code class="java language-java"><span class="keyword">package</span> <span class="namespace">sample.swing.java</span>;
+
+<span class="keyword">import</span> <span class="include">griffon.util.AbstractMapResourceBundle</span>;
+<span class="keyword">import</span> <span class="include">griffon.util.CollectionUtils</span>;
+
+<span class="keyword">import</span> <span class="include">javax.annotation.Nonnull</span>;
+<span class="keyword">import</span> <span class="include">java.util.Map</span>;
+
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">java.util.Arrays.asList</span>;
+
+<span class="directive">public</span> <span class="type">class</span> <span class="class">Config</span> <span class="directive">extends</span> AbstractMapResourceBundle {
+    <span class="annotation">@Override</span>
+    <span class="directive">protected</span> <span class="type">void</span> initialize(<span class="annotation">@Nonnull</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Object</span>&gt; entries) {
+        CollectionUtils.map(entries)
+            .e(<span class="string"><span class="delimiter">&quot;</span><span class="content">application</span><span class="delimiter">&quot;</span></span>, CollectionUtils.map()
+                .e(<span class="string"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Swing + Java</span><span class="delimiter">&quot;</span></span>)
+                .e(<span class="string"><span class="delimiter">&quot;</span><span class="content">startupGroups</span><span class="delimiter">&quot;</span></span>, asList(<span class="string"><span class="delimiter">&quot;</span><span class="content">sample</span><span class="delimiter">&quot;</span></span>))
+                .e(<span class="string"><span class="delimiter">&quot;</span><span class="content">autoShutdown</span><span class="delimiter">&quot;</span></span>, <span class="predefined-constant">true</span>)
+            )
+            .e(<span class="string"><span class="delimiter">&quot;</span><span class="content">mvcGroups</span><span class="delimiter">&quot;</span></span>, CollectionUtils.map()
+                .e(<span class="string"><span class="delimiter">&quot;</span><span class="content">sample</span><span class="delimiter">&quot;</span></span>, CollectionUtils.map()
+                    .e(<span class="string"><span class="delimiter">&quot;</span><span class="content">model</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">sample.swing.java.SampleModel</span><span class="delimiter">&quot;</span></span>)
+                    .e(<span class="string"><span class="delimiter">&quot;</span><span class="content">view</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">sample.swing.java.SampleView</span><span class="delimiter">&quot;</span></span>)
+                    .e(<span class="string"><span class="delimiter">&quot;</span><span class="content">controller</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">sample.swing.java.SampleController</span><span class="delimiter">&quot;</span></span>)
+                )
+            );
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or if you prefer properties files then do the following</p>
+</div>
+<div class="listingblock">
+<div class="title">griffon-app/resources/Config.properties</div>
+<div class="content">
+<pre class="CodeRay nowrap"><code class="java language-java">application.title = Swing + Groovy
+application.startupGroups = sample
+application.autoShutdown = <span class="predefined-constant">true</span>
+mvcGroups.sample.model = sample.swing.groovy.SampleModel
+mvcGroups.sample.view = sample.swing.groovy.SampleView
+mvcGroups.sample.controller = sample.swing.groovy.SampleController</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Take special note that this file must be placed under <code>griffon-app/resources</code> instead.</p>
+</div>
+<div class="paragraph">
+<p>The application&#8217;s runtime configuration is available through the <code>configuration</code> property
+of the application instance.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_internationalization_support"><a class="anchor" href="#_internationalization_support"></a>3.1.2. Internationalization Support</h4>
+<div class="paragraph">
+<p>Configuration files are i18n aware which means you can append
+locale specific strings to a configuration file, for example <code>Config_de_CH.groovy</code>.
+Locale suffixes are resolved from least to most specific; for a locale with
+language = <em>de</em>, country = <em>CH</em> and variant = <em>Basel</em> the following files are loaded in order</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Config.groovy</code></p>
+</li>
+<li>
+<p><code>Config.properties</code></p>
+</li>
+<li>
+<p><code>Config_de.groovy</code></p>
+</li>
+<li>
+<p><code>Config_de.properties</code></p>
+</li>
+<li>
+<p><code>Config_de_CH.groovy</code></p>
+</li>
+<li>
+<p><code>Config_de_CH.properties</code></p>
+</li>
+<li>
+<p><code>Config_de_CH_Basel.groovy</code></p>
+</li>
+<li>
+<p><code>Config_de_CH_Basel.properties</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The current <code>java.util.Locale</code> is used to determine values for language, country and variant.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_overview_metadata"><a class="anchor" href="#_overview_metadata"></a>3.2. Metadata</h3>
+<div class="paragraph">
+<p>The Griffon runtime keeps track of useful metadata that can be consumed by applications.
+The following sections describe them with more detail.</p>
+</div>
+<div class="sect3">
+<h4 id="_overview_metadata_application"><a class="anchor" href="#_overview_metadata_application"></a>3.2.1. Application Metadata</h4>
+<div class="paragraph">
+<p>Access to the application&#8217;s metadata file (<code>application.properties</code>) is available by
+querying the <code><a href="api/griffon/core/env/Metadata.html" target="_blank">Metadata</a></code> singleton. Here&#8217;s a snippet of code that shows how to
+setup a welcome message that displays the application&#8217;s name and version</p>
+</div>
+<div class="listingblock">
+<div class="title">griffon-app/views/sample/SampleView.groovy</div>
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy"><span class="keyword">package</span> sample
+
+<span class="keyword">import</span> <span class="include">griffon.core.artifact.GriffonView</span>
+<span class="keyword">import</span> <span class="include">griffon.core.env.Metadata</span>
+<span class="keyword">import</span> <span class="include">griffon.metadata.ArtifactProviderFor</span>
+
+<span class="annotation">@ArtifactProviderFor</span>(GriffonView)
+<span class="type">class</span> <span class="class">SampleView</span> {
+    FactoryBuilderSupport builder
+
+    <span class="type">void</span> initUI() {
+        Metadata meta = Metadata.current
+        builder.with {
+            application(<span class="key">pack</span>: <span class="predefined-constant">true</span>,
+                <span class="key">title</span>: application.configuration[<span class="string"><span class="delimiter">'</span><span class="content">application.title</span><span class="delimiter">'</span></span>]) {
+                label <span class="string"><span class="delimiter">&quot;</span><span class="content">Hello, I'm </span><span class="inline"><span class="inline-delimiter">${</span>meta[<span class="string"><span class="delimiter">'</span><span class="content">application.name</span><span class="delimiter">'</span></span>]<span class="inline-delimiter">}</span></span><span class="content">-</span><span class="inline"><span class="inline-delimiter">${</span>meta[<span class="string"><span class="delimiter">'</span><span class="content">application.version</span><span class="delimiter">'</span></span>]<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span>
+            }
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are also a few helpful methods found in <code><a href="api/griffon/core/env/Metadata.html" target="_blank">Metadata</a></code></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>getApplicationName()</code> - same result as <code>meta[<em>application.name</em>]</code></p>
+</li>
+<li>
+<p><code>getApplicationVersion()</code> - same result as <code>meta[<em>application.version</em>]</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_overview_metadata_environment"><a class="anchor" href="#_overview_metadata_environment"></a>3.2.2. Application Environment</h4>
+<div class="paragraph">
+<p>A Griffon application can run in several environments, default ones being
+<code>DEVELOPMENT</code>, <code>TEST</code> and <code>PRODUCTION</code>. Applications can inspect its current running
+environment by means of the <code><a href="api/griffon/core/env/Environment.html" target="_blank">Environment</a></code> enum.</p>
+</div>
+<div class="paragraph">
+<p>The following example enhances the previous one by displaying the current running
+environment</p>
+</div>
+<div class="listingblock">
+<div class="title">griffon-app/views/sample/SampleView.groovy</div>
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy"><span class="keyword">package</span> sample
+
+<span class="keyword">import</span> <span class="include">griffon.core.artifact.GriffonView</span>
+<span class="keyword">import</span> <span class="include">griffon.core.env.Metadata</span>
+<span class="keyword">import</span> <span class="include">griffon.core.env.Environment</span>
+<span class="keyword">import</span> <span class="include">griffon.metadata.ArtifactProviderFor</span>
+
+<span class="annotation">@ArtifactProviderFor</span>(GriffonView)
+<span class="type">class</span> <span class="class">SampleView</span> {
+    FactoryBuilderSupport builder
+
+    <span class="type">void</span> initUI() {
+        Metadata meta = Metadata.current
+        builder.with {
+            application(<span class="key">pack</span>: <span class="predefined-constant">true</span>,
+                <span class="key">title</span>: application.configuration[<span class="string"><span class="delimiter">'</span><span class="content">application.title</span><span class="delimiter">'</span></span>]) {
+                gridLayout <span class="key">cols</span>: <span class="integer">1</span>, <span class="key">rows</span>: <span class="integer">2</span>
+                label <span class="string"><span class="delimiter">&quot;</span><span class="content">Hello, I'm </span><span class="inline"><span class="inline-delimiter">${</span>meta[<span class="string"><span class="delimiter">'</span><span class="content">application.name</span><span class="delimiter">'</span></span>]<span class="inline-delimiter">}</span></span><span class="content">-</span><span class="inline"><span class="inline-delimiter">${</span>meta[<span class="string"><span class="delimiter">'</span><span class="content">application.version</span><span class="delimiter">'</span></span>]<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span>
+                label <span class="string"><span class="delimiter">&quot;</span><span class="content">Current environment is </span><span class="inline"><span class="inline-delimiter">${</span>Environment.current<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span>
+            }
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The default environment is DEVELOPMENT. A different value can be specified by setting
+a proper value for the <code>griffon.env</code> System property. The <code><a href="api/griffon/core/env/Environment.html" target="_blank">Environment</a></code> class
+recognizes the following aliases</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>dev</code> - short for <code>development</code>.</p>
+</li>
+<li>
+<p><code>prod</code> - short for <code>production</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_overview_metadata_griffon_environment"><a class="anchor" href="#_overview_metadata_griffon_environment"></a>3.2.3. Griffon Environment</h4>
+<div class="paragraph">
+<p>The <code><a href="api/griffon/core/env/GriffonEnvironment.html" target="_blank">GriffonEnvironment</a></code> gives you access to the following values</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Griffon version</p>
+</li>
+<li>
+<p>Griffon build date &amp; time</p>
+</li>
+<li>
+<p>JVM version</p>
+</li>
+<li>
+<p>OS version</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s an example displaying all values</p>
+</div>
+<div class="listingblock">
+<div class="title">griffon-app/views/sample/SampleView.groovy</div>
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy"><span class="keyword">package</span> sample
+
+<span class="keyword">import</span> <span class="include">griffon.core.artifact.GriffonView</span>
+<span class="keyword">import</span> <span class="include">griffon.core.env.Metadata</span>
+<span class="keyword">import</span> <span class="include">griffon.core.env.Environment</span>
+<span class="keyword">import</span> <span class="include">griffon.metadata.ArtifactProviderFor</span>
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">griffon.core.env.GriffonEnvironment.*</span>
+
+<span class="annotation">@ArtifactProviderFor</span>(GriffonView)
+<span class="type">class</span> <span class="class">SampleView</span> {
+    FactoryBuilderSupport builder
+
+    <span class="type">void</span> initUI() {
+        Metadata meta = Metadata.current
+        builder.with {
+            application(<span class="key">pack</span>: <span class="predefined-constant">true</span>,
+                <span class="key">title</span>: application.configuration[<span class="string"><span class="delimiter">'</span><span class="content">application.title</span><span class="delimiter">'</span></span>]) {
+                gridLayout <span class="key">cols</span>: <span class="integer">1</span>, <span class="key">rows</span>: <span class="integer">6</span>
+                label <span class="string"><span class="delimiter">&quot;</span><span class="content">Hello, I'm </span><span class="inline"><span class="inline-delimiter">${</span>meta[<span class="string"><span class="delimiter">'</span><span class="content">application.name</span><span class="delimiter">'</span></span>]<span class="inline-delimiter">}</span></span><span class="content">-</span><span class="inline"><span class="inline-delimiter">${</span>meta[<span class="string"><span class="delimiter">'</span><span class="content">application.version</span><span class="delimiter">'</span></span>]<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span>
+                label <span class="string"><span class="delimiter">&quot;</span><span class="content">Current environment is </span><span class="inline"><span class="inline-delimiter">${</span>Environment.current<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span>
+                label <span class="string"><span class="delimiter">&quot;</span><span class="content">Griffon version is </span><span class="inline"><span class="inline-delimiter">${</span>getGriffonVersion()<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span>
+                label <span class="string"><span class="delimiter">&quot;</span><span class="content">Build date/time is </span><span class="inline"><span class="inline-delimiter">${</span>getBuildDateTime()<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span>
+                label <span class="string"><span class="delimiter">&quot;</span><span class="content">JVM version is </span><span class="inline"><span class="inline-delimiter">${</span>getJvmVersion()<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span>
+                label <span class="string"><span class="delimiter">&quot;</span><span class="content">OS version is </span><span class="inline"><span class="inline-delimiter">${</span>getOsVersion()<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span>
+            }
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_overview_lifecycle"><a class="anchor" href="#_overview_lifecycle"></a>3.3. Lifecycle</h3>
 <div class="paragraph">
 <p>Every Griffon application goes through the same lifecycle phases no matter in which
 mode they are running, with the exception of applet mode where there is an additional
@@ -2982,7 +3414,7 @@ inspired by JSR-296, the Swing Application Framework.</p>
 time. Class names match each phase name; you&#8217;ll find them inside <code>griffon-app/lifecycle</code>.</p>
 </div>
 <div class="sect3">
-<h4 id="_overview_lifecycle_initialize"><a class="anchor" href="#_overview_lifecycle_initialize"></a>3.1.1. Initialize</h4>
+<h4 id="_overview_lifecycle_initialize"><a class="anchor" href="#_overview_lifecycle_initialize"></a>3.3.1. Initialize</h4>
 <div class="paragraph">
 <p>The initialization phase is the first to be called by the application&#8217;s life cycle.
 The application instance has just been created and its configuration has been read.</p>
@@ -3006,7 +3438,7 @@ has been read but before <a href="#_addons">addons</a> and managers are initiali
 </div>
 </div>
 <div class="sect3">
-<h4 id="_overview_lifecycle_startup"><a class="anchor" href="#_overview_lifecycle_startup"></a>3.1.2. Startup</h4>
+<h4 id="_overview_lifecycle_startup"><a class="anchor" href="#_overview_lifecycle_startup"></a>3.3.2. Startup</h4>
 <div class="paragraph">
 <p>This phase is responsible for instantiating all MVC groups that have been defined
 in the application&#8217;s configuration and that also have been marked as startup groups
@@ -3027,7 +3459,7 @@ initialized.
 </div>
 </div>
 <div class="sect3">
-<h4 id="_overview_lifecycle_ready"><a class="anchor" href="#_overview_lifecycle_ready"></a>3.1.3. Ready</h4>
+<h4 id="_overview_lifecycle_ready"><a class="anchor" href="#_overview_lifecycle_ready"></a>3.3.3. Ready</h4>
 <div class="paragraph">
 <p>This phase will be called right after <code>Startup</code> with the condition that no pending
 events are available in the UI queue. The application&#8217;s main window will be displayed
@@ -3035,7 +3467,7 @@ at the end of this phase.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_overview_lifecycle_shutdown"><a class="anchor" href="#_overview_lifecycle_shutdown"></a>3.1.4. Shutdown</h4>
+<h4 id="_overview_lifecycle_shutdown"><a class="anchor" href="#_overview_lifecycle_shutdown"></a>3.3.4. Shutdown</h4>
 <div class="paragraph">
 <p>Called when the application is about to close. Any artifact can invoke the shutdown
 sequence by calling <code>shutdown()</code> on the <code><a href="api/griffon/core/GriffonApplication.html" target="_blank">GriffonApplication</a></code> instance.</p>
@@ -3055,7 +3487,7 @@ event handlers interested in the <code><a href="#_events_lifecycle_events">Shutd
 </div>
 </div>
 <div class="sect3">
-<h4 id="_overview_lifecycle_stop"><a class="anchor" href="#_overview_lifecycle_stop"></a>3.1.5. Stop</h4>
+<h4 id="_overview_lifecycle_stop"><a class="anchor" href="#_overview_lifecycle_stop"></a>3.3.5. Stop</h4>
 <div class="paragraph">
 <p>This phase is only available when running on applet mode. It will be called when the
 applet container invokes <code>destroy()</code> on the applet instance.</p>
@@ -3063,14 +3495,14 @@ applet container invokes <code>destroy()</code> on the applet instance.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_overview_modules"><a class="anchor" href="#_overview_modules"></a>3.2. Modules</h3>
+<h3 id="_overview_modules"><a class="anchor" href="#_overview_modules"></a>3.4. Modules</h3>
 <div class="paragraph">
 <p><code><a href="api/griffon/core/injection/Module.html" target="_blank">Module</a></code>s define components that can be injected using the JSR 330 API.
 Module definitions are highly influenced by the Guice 3.x API however they do not
 impose a strict dependency on Guice.</p>
 </div>
 <div class="sect3">
-<h4 id="_overview_module_definition"><a class="anchor" href="#_overview_module_definition"></a>3.2.1. Module Definition</h4>
+<h4 id="_overview_module_definition"><a class="anchor" href="#_overview_module_definition"></a>3.4.1. Module Definition</h4>
 <div class="paragraph">
 <p>All modules must implement the <code><a href="api/griffon/core/injection/Module.html" target="_blank">Module</a></code> interface shown next</p>
 </div>
@@ -3160,7 +3592,7 @@ are specified using the <code><a href="api/griffon/inject/DependsOn.html" target
 </div>
 </div>
 <div class="sect3">
-<h4 id="_overview_module_configuration"><a class="anchor" href="#_overview_module_configuration"></a>3.2.2. Module Configuration</h4>
+<h4 id="_overview_module_configuration"><a class="anchor" href="#_overview_module_configuration"></a>3.4.2. Module Configuration</h4>
 <div class="paragraph">
 <p>Modules perform their duty by defining bindings, of which there are 4 kinds</p>
 </div>
@@ -3239,6 +3671,83 @@ type that will be used to lazily instantiate the provider before obtaining the t
     .toProvider(CalculatorProvider.class);</code></pre>
 </div>
 </div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_overview_shutdown_handlers"><a class="anchor" href="#_overview_shutdown_handlers"></a>3.5. Shutdown Handlers</h3>
+<div class="paragraph">
+<p>Applications have the option to let particular artifacts abort the shutdown sequence
+and/or perform a task while the shutdown sequence is in process. Artifacts that desire
+to be part of the shutdown sequence should implement the <code><a href="api/griffon/core/ShutdownHandler.html" target="_blank">ShutdownHandler</a></code>
+interface and register themselves with the application instance.</p>
+</div>
+<div class="paragraph">
+<p>The contract of a <code><a href="api/griffon/core/ShutdownHandler.html" target="_blank">ShutdownHandler</a></code> is very simple</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>boolean canShutdown(GriffonApplication application)</code> - return <strong><code>false</code></strong> to abort the shutdown sequence.</p>
+</li>
+<li>
+<p><code>void onShutdown(GriffonApplication application)</code> - called if the shutdown sequence was not aborted.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code><a href="api/griffon/core/ShutdownHandler.html" target="_blank">ShutdownHandler</a></code>s will be called on the same order as they were registered.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_overview_startupargs"><a class="anchor" href="#_overview_startupargs"></a>3.6. Startup Arguments</h3>
+<div class="paragraph">
+<p>Command line arguments can be passed to the application and be accessed by calling
+<code>getStartupArgs()</code> on the application instance. This will return a copy of the args
+(if any) defined at the command line.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s a typical example of this feature in development mode</p>
+</div>
+<div class="listingblock">
+<div class="title">src/main/groovy/sample/ApplicationEventHandler.groovy</div>
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy"><span class="keyword">package</span> sample
+
+<span class="keyword">import</span> <span class="include">griffon.core.GriffonApplication</span>
+<span class="keyword">import</span> <span class="include">griffon.core.event.EventHandler</span>
+
+<span class="type">class</span> <span class="class">ApplicationEventHandler</span> <span class="directive">implements</span> <span class="predefined-type">EventHandler</span> {
+    <span class="type">void</span> onBootstrapStart(GriffonApplication application) {
+        println application.startupArgs
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Arguments must be defined in the build file if using Gradle</p>
+</div>
+<div class="listingblock">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy">run {
+    args = [<span class="string"><span class="delimiter">'</span><span class="content">one</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">two</span><span class="delimiter">'</span></span>]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Running the application with <code>run</code> command results in an output similar to the following</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay"><code>$ gradle run
+:compileJava
+:compileGroovy
+:processResources
+:classes
+:run
+// logging statements elided
+[one, two]</code></pre>
 </div>
 </div>
 </div>
@@ -3632,9 +4141,21 @@ from objects that do not hold a reference to it.</p>
 <div class="sect1">
 <h2 id="_models"><a class="anchor" href="#_models"></a>5. Models</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>This chapter describe models and all binding options.</p>
+</div>
+<div class="paragraph">
+<p>Models are very simple in nature. Their responsibility is to hold data that can be
+used by both Controller and View to communicate with each other. In other words,
+Models are <strong>not</strong> equivalent to domain classes.</p>
+</div>
 <div class="sect2">
 <h3 id="_models_binding_swing"><a class="anchor" href="#_models_binding_swing"></a>5.1. Swing Binding</h3>
-
+<div class="paragraph">
+<p>Binding in Griffon is achieved by leveraging Java Beans' <code>java.beans.PropertyChangeEvent</code>
+and their related classes, thus binding will work with any class that fires this type of
+event, regardless of its usage of <code><a href="api/griffon/transform/Observable.html" target="_blank">@griffon.transform.Observable</a></code> or not.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_models_binding_javafx"><a class="anchor" href="#_models_binding_javafx"></a>5.2. JavaFX Binding</h3>
@@ -3642,15 +4163,149 @@ from objects that do not hold a reference to it.</p>
 </div>
 <div class="sect2">
 <h3 id="_models_observable_transformation"><a class="anchor" href="#_models_observable_transformation"></a>5.3. The @Observable AST Transformation</h3>
-
+<div class="paragraph">
+<p>The <code><a href="api/griffon/transform/Observable.html" target="_blank">@griffon.transform.Observable</a></code> transformation will inject the behavior of <code><a href="api/griffon/core/Observable.html" target="_blank">Observable</a></code>
+into the annotated class. It basically injects an instance of <code>java.beans.PropertyChangeSupport</code>
+and all methods required to make the model an observable class. It will also make sure that
+a <code>java.beans.PropertyChangeEvent</code> is fired for each observable property whenever said
+property changes value.</p>
+</div>
+<div class="paragraph">
+<p>The following is a list of all methods added by <code><a href="api/griffon/transform/Observable.html" target="_blank">@griffon.transform.Observable</a></code></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>void addPropertyChangeListener(PropertyChangeListener listener)</p>
+</li>
+<li>
+<p>void addPropertyChangeListener(String propertyName, PropertyChangeListener listener)</p>
+</li>
+<li>
+<p>void removePropertyChangeListener(PropertyChangeListener listener)</p>
+</li>
+<li>
+<p>void removePropertyChangeListener(String propertyName, PropertyChangeListener listener)</p>
+</li>
+<li>
+<p>PropertyChangeListener[] getPropertyChangeListeners()</p>
+</li>
+<li>
+<p>PropertyChangeListener[] getPropertyChangeListeners(String propertyName)</p>
+</li>
+<li>
+<p>void firePropertyChange(String propertyName, Object oldValue, Object newValue)</p>
+</li>
+</ul>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_models_vetoable_transformation"><a class="anchor" href="#_models_vetoable_transformation"></a>5.4. The @Vetoable AST Transformation</h3>
-
+<div class="paragraph">
+<p>The <code><a href="api/griffon/transform/Vetoable.html" target="_blank">@griffon.transform.Vetoable</a></code> transformation will inject the behavior of <code><a href="api/griffon/core/Vetoable.html" target="_blank">Vetoable</a></code>
+into the annotated class. It basically injects an instance of <code>java.beans.VetoableChangeSupport</code>
+and all methods required to make the model a vetoable class. It will also make sure that
+a <code>java.beans.PropertyChangeEvent</code> is fired for each vetoable property whenever said
+property changes value.</p>
+</div>
+<div class="paragraph">
+<p>The following is a list of all methods added by <code><a href="api/griffon/transform/Vetoable.html" target="_blank">@griffon.transform.Vetoable</a></code></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>void addVetoableChangeListener(VetoableChangeListener listener)</p>
+</li>
+<li>
+<p>void addVetoableChangeListener(String propertyName, VetoableChangeListener listener)</p>
+</li>
+<li>
+<p>void removeVetoableChangeListener(VetoableChangeListener listener)</p>
+</li>
+<li>
+<p>void removeVetoableChangeListener(String propertyName, VetoableChangeListener listener)</p>
+</li>
+<li>
+<p>VetoableChangeListener[] getVetoableChangeListeners()</p>
+</li>
+<li>
+<p>VetoableChangeListener[] getVetoableChangeListeners(String propertyName)</p>
+</li>
+<li>
+<p>void fireVetoableChange(String propertyName, Object oldValue, Object newValue)</p>
+</li>
+</ul>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_models_property_listener_transformation"><a class="anchor" href="#_models_property_listener_transformation"></a>5.5. The @PropertyListener AST Transformation</h3>
+<div class="paragraph">
+<p>The <code><a href="api/griffon/transform/PropertyListener.html" target="_blank">@griffon.transform.PropertyListener</a></code> helps you to register <code>PropertyChangeListener</code>s
+without so much effort. The following code</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy"><span class="keyword">import</span> <span class="include">griffon.transform.PropertyListener</span>
+<span class="keyword">import</span> <span class="include">griffon.transform.Observable</span>
+<span class="keyword">import</span> <span class="include">griffon.metadata.ArtifactProviderFor</span>
 
+<span class="annotation">@ArtifactProviderFor</span>(GriffonModel)
+<span class="annotation">@PropertyListener</span>(snoopAll)
+<span class="type">class</span> <span class="class">SampleModel</span> {
+    <span class="keyword">def</span> controller
+    <span class="annotation">@Observable</span> <span class="predefined-type">String</span> name
+
+    <span class="annotation">@Observable</span>
+    <span class="annotation">@PropertyListener</span>({controller.someAction(<span class="local-variable">it</span>)})
+    <span class="predefined-type">String</span> lastname
+
+    <span class="keyword">def</span> snoopAll = { evt -&gt; ... }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>is equivalent to this one</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy"><span class="keyword">import</span> <span class="include">java.beans.PropeetyChangeListener</span>
+<span class="keyword">import</span> <span class="include">griffon.transform.Observable</span>
+<span class="keyword">import</span> <span class="include">griffon.metadata.ArtifactProviderFor</span>
+
+<span class="annotation">@ArtifactProviderFor</span>(GriffonModel)
+<span class="annotation">@PropertyListener</span>(snoopAll)
+<span class="type">class</span> <span class="class">SampleModel</span> {
+    <span class="keyword">def</span> controller
+    <span class="annotation">@Observable</span> <span class="predefined-type">String</span> name
+    <span class="annotation">@Observable</span> <span class="predefined-type">String</span> lastname
+
+    <span class="keyword">def</span> snoopAll = { evt -&gt; ... }
+
+    <span class="predefined-type">SampleModel</span>() {
+        addPropertyChangeListener(snoopAll <span class="keyword">as</span> <span class="predefined-type">PropertyChangeListener</span>)
+        addPropertyChangeListener(<span class="string"><span class="delimiter">'</span><span class="content">lastname</span><span class="delimiter">'</span></span>, {
+            controller.someAction(<span class="local-variable">it</span>)
+        } <span class="keyword">as</span> <span class="predefined-type">PropertyChangeListener</span>)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code><a href="api/griffon/transform/PropertyListener.html" target="_blank">@griffon.transform.PropertyListener</a></code> accepts the following values</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>in-place definition of a closure</p>
+</li>
+<li>
+<p>reference of a closure property defined in the same class</p>
+</li>
+<li>
+<p>a List of any of the previous two</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 </div>
@@ -3773,11 +4428,387 @@ making use of the configured <code>clickAction</code> from <code>SampleControlle
 </div>
 <div class="sect2">
 <h3 id="_controllers_actions_and_threads"><a class="anchor" href="#_controllers_actions_and_threads"></a>6.1. Actions and Threads</h3>
+<div class="paragraph">
+<p>A key aspect that you must always keep in mind is proper <a href="#_threading">threading</a>.
+Often times controller actions will be bound in response to an event driven by the UI.
+Those actions will usually be invoked in the same thread that triggered the event,
+which would be the UI thread. When that happens you must make sure that the executed
+code is short and that it quickly returns control to the UI thread. Failure to do so
+may result in unresponsive applications.</p>
+</div>
+<div class="paragraph">
+<p>The following example is the typical usage one finds out there</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy"><span class="keyword">package</span> sample
 
+<span class="keyword">import</span> <span class="include">groovy.sql.Sql</span>
+<span class="keyword">import</span> <span class="include">java.awt.event.ActionEvent</span>
+<span class="keyword">import</span> <span class="include">griffon.core.artifact.GriffonController</span>
+
+<span class="annotation">@griffon</span>.metadata.ArtifactProviderFor(GriffonController)
+<span class="type">class</span> <span class="class">BadController</span> {
+    <span class="keyword">def</span> model
+
+    <span class="type">void</span> badAction(<span class="predefined-type">ActionEvent</span> evt = <span class="predefined-constant">null</span>) {
+        <span class="keyword">def</span> sql = Sql.newInstance(
+            app.config.datasource.url,
+            model.username,
+            model.password,
+            app.config.datasource.driver
+        )
+        model.products.clear()
+        sql.eachRow(<span class="string"><span class="delimiter">&quot;</span><span class="content">select * from products</span><span class="delimiter">&quot;</span></span>) { product -&gt;
+            model.products &lt;&lt; [product.id, product.name, product.price]
+        }
+        sql.close()
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>What&#8217;s wrong with this code? It&#8217;s very likely that this action is triggered by clicking
+on a button, in which case its body will be executed inside the UI thread. This means
+the database query will be executed on the UI thread too. The model is also updated,
+once could assume the model is bound to an UI component. This update should happen inside
+the UI thread, but clearly that&#8217;s not what&#8217;s happening here.</p>
+</div>
+<div class="paragraph">
+<p>In order to simplify things the Griffon runtime (via the <code><a href="api/griffon/core/controller/ActionManager.html" target="_blank">ActionManager</a></code>) assumes
+by default that all actions will be invoked <strong>outside</strong> of the UI thread. This solves the
+first problem, that of realizing a database operation on the wrong thread. The second
+problem, updating the model, can be solved in the following manner</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy"><span class="keyword">package</span> sample
+
+<span class="keyword">import</span> <span class="include">groovy.sql.Sql</span>
+<span class="keyword">import</span> <span class="include">java.awt.event.ActionEvent</span>
+<span class="keyword">import</span> <span class="include">griffon.core.artifact.GriffonController</span>
+
+<span class="annotation">@griffon</span>.metadata.ArtifactProviderFor(GriffonController)
+<span class="type">class</span> <span class="class">GoodController</span> {
+    <span class="keyword">def</span> model
+
+    <span class="type">void</span> goodAction(<span class="predefined-type">ActionEvent</span> evt = <span class="predefined-constant">null</span>) {                           <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="keyword">def</span> sql = Sql.newInstance(
+            app.config.datasource.url,
+            model.username,
+            model.password,
+            app.config.datasource.driver
+        )
+
+        <span class="keyword">try</span> {
+            <span class="predefined-type">List</span> results = <span class="type">[]</span>
+            sql.eachRow(<span class="string"><span class="delimiter">&quot;</span><span class="content">select * from products</span><span class="delimiter">&quot;</span></span>) { product -&gt;
+                results &lt;&lt; [product.id, product.name, product.price]
+            }
+
+            runInsideUIAsync {                                          <i class="conum" data-value="2"></i><b>(2)</b>
+                model.products.clear()
+                model.products.addAll(results)
+            }
+        } <span class="keyword">finally</span> {
+            sql.close()
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Executed outside the UI thread</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Go back inside the UI thread</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>There are other options at your disposal to make sure the code behaves properly according to
+the specific threading rules of a particular UI toolkit. These options are covered in
+the <a href="#_threading">threading</a> chapter.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_controllers_actionmanager"><a class="anchor" href="#_controllers_actionmanager"></a>6.2. The ActionManager</h3>
+<div class="paragraph">
+<p>Controller actions may automatically be wrapped and exposed as toolkit specific actions;
+this greatly simplifies how actions can be configured based on i18n concerns.</p>
+</div>
+<div class="paragraph">
+<p>At the heart of this feature lies the <code><a href="api/griffon/core/controller/ActionManager.html" target="_blank">ActionManager</a></code>. This component is responsible
+for instantiating, configuring and keeping references to all actions per controller.
+It will automatically harvest all action candidates from a Controller once it has been
+instantiated. Each action has all of its properties configured following this strategy:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>match <code>&lt;controller.class.name&gt;</code>.action.<code>&lt;action.name&gt;</code>.<code>&lt;key&gt;</code></p>
+</li>
+<li>
+<p>match application.action.<code>&lt;action.name&gt;</code>.<code>&lt;key&gt;</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>&lt;action.name&gt;</code> should be properly capitalized. In other words, you can configure action
+properties specifically per Controller or application wide. Available keys are</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width:100%; ">
+<caption class="title">Table 1. Swing</caption>
+<colgroup>
+<col style="width:33%;">
+<col style="width:33%;">
+<col style="width:33%;"> 
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Key</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Natural name minus the <code>Action</code> suffix</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">accelerator</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">undefined</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">long_description</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">undefined</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">short_description</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">undefined</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mnemonic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">undefined</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">small_icon</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">undefined</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">large_icon</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">undefined</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selected</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+</tr>
+</tbody>
+</table>
 
+<table class="tableblock frame-all grid-all" style="width:100%; ">
+<caption class="title">Table 2. JavaFX</caption>
+<colgroup>
+<col style="width:33%;">
+<col style="width:33%;">
+<col style="width:33%;"> 
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Key</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Natural name minus the <code>Action</code> suffix</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">accelerator</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">undefined</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">long_description</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">undefined</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">short_description</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">undefined</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mnemonic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">undefined</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">small_icon</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">undefined</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">large_icon</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">undefined</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">selected</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+</tr>
+</tbody>
+</table>
+
+<table class="tableblock frame-all grid-all" style="width:100%; ">
+<caption class="title">Table 3. Pivot</caption>
+<colgroup>
+<col style="width:33%;">
+<col style="width:33%;">
+<col style="width:33%;"> 
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Key</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Natural name minus the <code>Action</code> suffix</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">description</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">undefined</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+</tr>
+</tbody>
+</table>
+
+<table class="tableblock frame-all grid-all" style="width:100%; ">
+<caption class="title">Table 4. Lanterna</caption>
+<colgroup>
+<col style="width:33%;">
+<col style="width:33%;">
+<col style="width:33%;"> 
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Key</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Natural name minus the <code>Action</code> suffix</p></td>
+</tr>
+</tbody>
+</table>
+
+<div class="paragraph">
+<p>Icon keys should point to an URL available in the classpath.</p>
+</div>
+<div class="paragraph">
+<p>Values must be placed in resources files following the <a href="#_resources">internationalization</a> guidelines.</p>
+</div>
+<div class="sect3">
+<h4 id="_configuration_examples"><a class="anchor" href="#_configuration_examples"></a>6.2.1. Configuration Examples</h4>
+<div class="paragraph">
+<p>The following Controller defines 2 actions, one of them uses the <code>Action</code> suffix because its name clashes
+with a known Java keyword.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy"><span class="keyword">package</span> sample
+
+<span class="keyword">import</span> <span class="include">java.awt.event.ActionEvent</span>
+
+<span class="keyword">import</span> <span class="include">griffon.core.artifact.GriffonController</span>
+
+<span class="annotation">@griffon</span>.metadata.ArtifactProviderFor(GriffonController)
+<span class="type">class</span> <span class="class">SampleController</span> {
+    <span class="type">void</span> close(<span class="predefined-type">ActionEvent</span> evt) { ... }
+    <span class="type">void</span> newAction(<span class="predefined-type">ActionEvent</span> evt) { ... }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code><a href="api/griffon/core/controller/ActionManager.html" target="_blank">ActionManager</a></code> will generate and configure the following actions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>newAction</code></p>
+</li>
+<li>
+<p><code>closeAction</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following keys are expected to be available in the application&#8217;s i18n resources (i.e. <code>griffon-app/i18n/messages.properties</code>)</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay nowrap"><code>sample.SampleController.action.New.name = New
+sample.SampleController.action.Open.name = Open
+sample.SampleController.action.Close.name = Close
+sample.SampleController.action.Delete.name = Delete
+# additional keys per action elided</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the case that you&#8217;d like the close action to be customized for all controllers, say using
+the Spanish language, then you&#8217;ll have to provide a file named <code>griffon-app/i18n/messages_es.properties</code>
+with the following keys</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay nowrap"><code>application.action.Close.name = Cerrar</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Make sure to remove any controller specific keys when reaching for application wide configuration.</p>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_controllers_action_interceptors"><a class="anchor" href="#_controllers_action_interceptors"></a>6.3. Action Interceptors</h3>
@@ -3984,7 +5015,60 @@ snippet to <code>Config.groovy</code></p>
 <div class="sect1">
 <h2 id="_services"><a class="anchor" href="#_services"></a>7. Services</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>Services are responsible for the application logic that does not belong to a single
+controller. They are meant to be treated as singletons, injected to MVC members by
+following a naming convention. Services must be located inside the <code>griffon-app/services</code></p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s say you want to create a Math service. A trivial implementation of an addition
+operation performed by the <code>MathService</code> would look like the following snippet</p>
+</div>
+<div class="listingblock">
+<div class="title">griffon-app/services/sample/MathService.groovy</div>
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy"><span class="keyword">package</span> sample
 
+<span class="keyword">import</span> <span class="include">griffon.core.artifact.GriffonService</span>
+
+<span class="annotation">@griffon</span>.metadata.ArtifactProviderFor(GriffonService)
+<span class="type">class</span> <span class="class">MathService</span> {
+    <span class="keyword">def</span> <span class="function">addition</span>(a, b) { a + b }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Using this service from a Controller is a straight forward task, you just have to
+define an injection point and annotated it with <code>@javax.inject.Inject</code></p>
+</div>
+<div class="listingblock">
+<div class="title">griffon-app/controllers/sample/SampleService.groovy</div>
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy"><span class="keyword">package</span> sample
+
+<span class="keyword">import</span> <span class="include">griffon.core.artifact.GriffonController</span>
+
+<span class="annotation">@griffon</span>.metadata.ArtifactProviderFor(GriffonController)
+<span class="type">class</span> <span class="class">SampleController</span>
+    <span class="predefined-type">SampleModel</span> model
+
+    <span class="annotation">@javax</span>.inject.Inject
+    <span class="directive">private</span> MathService mathService
+
+    <span class="type">void</span> calculate(evt = <span class="predefined-constant">null</span>) {
+        model.result = mathService.addition model.a, model.b
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Given that services are inherently treated as singletons they are also automatically
+registered as application event listeners. Be aware that services will be instantiated
+lazily which means that some events might not reach a particular service if it has not
+been instantiated by the framework by the time of event publication. It&#8217;s also discouraged
+to use Groovy&#8217;s <code>@Singleton</code> annotation on a Service class as it will cause trouble with
+the automatic singleton management Griffon has in place.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -3992,7 +5076,207 @@ snippet to <code>Config.groovy</code></p>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_views_windowmanager"><a class="anchor" href="#_views_windowmanager"></a>8.1. The WindowManager</h3>
+<div class="paragraph">
+<p>Although the following API refers directly to <code>Swing</code> in all examples it&#8217;s possible to use
+the <code><a href="api/griffon/core/view/WindowManager.html" target="_blank">WindowManager</a></code> with other toolkits such as <code>JavaFX</code>, <code>Pivot</code> and <code>Lanterna</code> as
+there are specific <code><a href="api/griffon/core/view/WindowManager.html" target="_blank">WindowManager</a></code> implementations plus helper classes for those
+UI toolkits too.</p>
+</div>
+<div class="paragraph">
+<p>The <code><a href="api/griffon/core/view/WindowManager.html" target="_blank">WindowManager</a></code> class is responsible for keeping track of all the windows
+managed by the application. It also controls how these windows are displayed (via a
+pair of methods: <code>show</code>, <code>hide</code>). <code><a href="api/griffon/core/view/WindowManager.html" target="_blank">WindowManager</a></code> relies on an instance of
+<code><a href="api/griffon/core/view/WindowDisplayHandler.html" target="_blank">WindowDisplayHandler</a></code> to actually show or hide a window. The default implementation
+simple shows and hide windows directly, however you can change this behavior by setting
+a different implementation of <code><a href="api/griffon/core/view/WindowDisplayHandler.html" target="_blank">WindowDisplayHandler</a></code> on the application instance.</p>
+</div>
+<div class="sect3">
+<h4 id="_views_windowmanager_dsl"><a class="anchor" href="#_views_windowmanager_dsl"></a>8.1.1. WindowManager DSL</h4>
+<div class="paragraph">
+<p>This configuration can be set in <code>griffon-app/conf/Config.groovy</code> file, here is how it looks</p>
+</div>
+<div class="listingblock">
+<div class="title">griffon-app/conf/Config.groovy</div>
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy">windowManager {
+    myWindowName = [
+        <span class="key">show</span>: {name, window -&gt; ... },
+        <span class="key">hide</span>: {name, window -&gt; ... }
+    ]
+    myOtherWindowName = [
+        <span class="key">show</span>: {name, window -&gt; ... }
+    ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The name of each entry must match the value of the Window&#8217;s <code>name:</code> property (if supported)
+or the name used to register the Window with the <code><a href="api/griffon/core/view/WindowManager.html" target="_blank">WindowManager</a></code>. Each entry may
+have any the following options</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">show</dt>
+<dd>
+<p>Used to show the window to the screen. It must be a closure that takes two
+parameters: the name of the window and the window to be displayed.</p>
+</dd>
+<dt class="hdlist1">hide</dt>
+<dd>
+<p>Used to hide the window from the screen. It must be a closure that takes two
+parameters: the name of the window and the window to be hidden.</p>
+</dd>
+<dt class="hdlist1">handler</dt>
+<dd>
+<p>A custom <code><a href="api/griffon/core/view/WindowDisplayHandler.html" target="_blank">WindowDisplayHandler</a></code> instance.</p>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="icon-note" title="Note"></i>
+</td>
+<td class="content">
+You must use <code><a href="api/griffon/core/CallableWithArgs.html" target="_blank">CallableWithArgs</a></code> instead of closures if using the Java version
+of the <code>Config</code> file.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The first two options have priority over the third one. If one is missing then the
+<code><a href="api/griffon/core/view/WindowManager.html" target="_blank">WindowManager</a></code> will invoke the default behavior. There is one last option
+that can be used to override the default behavior provided to all windows</p>
+</div>
+<div class="listingblock">
+<div class="title">griffon-app/conf/Config.groovy</div>
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy">windowManager {
+    defaultHandler = <span class="keyword">new</span> MyCustomWindowDisplayHandler()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can go a bit further by specifying a global show or hide behavior as shown in the
+following example</p>
+</div>
+<div class="listingblock">
+<div class="title">griffon-app/conf/Config.groovy</div>
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy">windowManager {
+    <span class="key">defaultShow</span>: {name, window -&gt; ... },
+    myWindowName = [
+        <span class="key">show</span>: {name, window -&gt; ... },
+        <span class="key">hide</span>: {name, window -&gt; ... }
+    ]
+    myOtherWindowName = [
+        <span class="key">show</span>: {name, window -&gt; ... }
+    ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_views_windowmanager_starting_window"><a class="anchor" href="#_views_windowmanager_starting_window"></a>8.1.2. Starting Window</h4>
+<div class="paragraph">
+<p>By default the <code><a href="api/griffon/core/view/WindowManager.html" target="_blank">WindowManager</a></code> picks the first available window from the managed
+windows list to be the starting window. However, this behavior can be configured,
+by means of the WindowManager DSL. Simply specify a value for <code>windowManager.startingWindow</code>,
+like this</p>
+</div>
+<div class="listingblock">
+<div class="title">griffon-app/conf/Config.groovy</div>
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy">windowManager {
+    startingWindow = <span class="string"><span class="delimiter">'</span><span class="content">primary</span><span class="delimiter">'</span></span>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This configuration flag accepts two types of values:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>a String that defines the name of the Window. You must make sure the Window has a
+matching name property or was attached to the <code><a href="api/griffon/core/view/WindowManager.html" target="_blank">WindowManager</a></code> with the
+same name</p>
+</li>
+<li>
+<p>a Number that defines the index of the Window in the list of managed windows.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If no match is found then the default behavior will be executed.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_views_windowmanager_display_handlers"><a class="anchor" href="#_views_windowmanager_display_handlers"></a>8.1.3. Custom WindowDisplayHandlers</h4>
+<div class="paragraph">
+<p>The following example shows how you can center on screen all managed windows</p>
+</div>
+<div class="listingblock">
+<div class="title">src/main/groovy/sample/CenteringWindowDisplayHandler.groovy</div>
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy"><span class="keyword">package</span> sample
 
+<span class="keyword">import</span> <span class="include">org.codehaus.griffon.runtime.swing.DefaultSwingWindowDisplayHandler</span>
+
+<span class="keyword">import</span> <span class="include">javax.annotation.Nonnull</span>
+<span class="keyword">import</span> <span class="include">java.awt.Window</span>
+
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">griffon.swing.support.SwingUtils.centerOnScreen</span>
+
+<span class="type">class</span> <span class="class">CenteringWindowDisplayHandler</span> <span class="directive">extends</span> DefaultSwingWindowDisplayHandler {
+    <span class="annotation">@Override</span>
+    <span class="type">void</span> show(<span class="annotation">@Nonnull</span> <span class="predefined-type">String</span> name, <span class="annotation">@Nonnull</span> <span class="predefined-type">Window</span> window) {
+        centerOnScreen(window)
+        <span class="local-variable">super</span>.show(name, window)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can register <code>CenteringWindowDisplayHandler</code> using the WindowManager DSL. Alternatively
+you may use a <a href="#_overview_modules">Module</a> to register the class/instance.</p>
+</div>
+<div class="listingblock">
+<div class="title">src/main/groovy/sample/ApplicationModule.groovy</div>
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy"><span class="keyword">package</span> sample
+
+<span class="keyword">import</span> <span class="include">griffon.core.injection.Module</span>
+<span class="keyword">import</span> <span class="include">griffon.inject.DependsOn</span>
+<span class="keyword">import</span> <span class="include">griffon.swing.SwingWindowDisplayHandler</span>
+<span class="keyword">import</span> <span class="include">org.codehaus.griffon.runtime.core.injection.AbstractModule</span>
+<span class="keyword">import</span> <span class="include">org.kordamp.jipsy.ServiceProviderFor</span>
+
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">griffon.util.AnnotationUtils.named</span>
+
+<span class="annotation">@DependsOn</span>(<span class="string"><span class="delimiter">'</span><span class="content">swing</span><span class="delimiter">'</span></span>)
+<span class="annotation">@ServiceProviderFor</span>(Module)
+<span class="type">class</span> <span class="class">ApplicationModule</span> <span class="directive">extends</span> AbstractModule {
+    <span class="annotation">@Override</span>
+    <span class="directive">protected</span> <span class="type">void</span> doConfigure() {
+        bind(SwingWindowDisplayHandler)
+            .withClassifier(named(<span class="string"><span class="delimiter">'</span><span class="content">defaultWindowDisplayHandler</span><span class="delimiter">'</span></span>))
+            .to(CenteringWindowDisplayHandler)
+            .asSingleton()
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This example is equivalent to defining a <code><a href="api/griffon/core/view/WindowDisplayHandler.html" target="_blank">WindowDisplayHandler</a></code> for all windows.
+You may target specific windows, by define multiple bindings, making sure that the name
+of the classifier matches the window name. Notice the explicit dependency on the <code>swing</code> module.
+If this dependency is left out it&#8217;s very likely that the <code><a href="api/griffon/core/view/WindowManager.html" target="_blank">WindowManager</a></code> will fail
+to pick the correct <code><a href="api/griffon/core/view/WindowDisplayHandler.html" target="_blank">WindowDisplayHandler</a></code>.</p>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_views_swing"><a class="anchor" href="#_views_swing"></a>8.2. Swing Specific</h3>
@@ -4000,6 +5284,10 @@ snippet to <code>Config.groovy</code></p>
 </div>
 <div class="sect2">
 <h3 id="_views_javafx"><a class="anchor" href="#_views_javafx"></a>8.3. JavaFX Specific</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_views_builder_customizers"><a class="anchor" href="#_views_builder_customizers"></a>8.4. BuilderCustomizers</h3>
 
 </div>
 </div>
@@ -4014,27 +5302,236 @@ explain the threading facilities exposed by the Griffon framework.</p>
 </div>
 <div class="sect2">
 <h3 id="_threading_sync"><a class="anchor" href="#_threading_sync"></a>9.1. Synchronous Calls</h3>
+<div class="paragraph">
+<p>Synchronous calls inside the UI thread are made by invoking the <code>runInsideUISync</code> method.
+This method results in the same behavior as calling <code>SwingUtilities.invokeAndWait()</code> when
+using Swing.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy"><span class="keyword">package</span> sample
 
+<span class="keyword">import</span> <span class="include">java.awt.event.ActionEvent</span>
+<span class="keyword">import</span> <span class="include">griffon.core.artifact.GriffonController</span>
+
+<span class="annotation">@griffon</span>.metadata.ArtifactProviderFor(GriffonController)
+<span class="type">class</span> <span class="class">SampleController</span> {
+    <span class="keyword">def</span> model
+
+    <span class="type">void</span> work(evt = <span class="predefined-constant">null</span>) {
+        <span class="comment">// will be invoked outside of the UI thread by default</span>
+        <span class="keyword">def</span> value = model.value
+        <span class="comment">// do some calculations</span>
+        runInsideUISync {
+            <span class="comment">// back inside the UI thread</span>
+            model.result = ...
+        }
+    }
+}</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_threading_async"><a class="anchor" href="#_threading_async"></a>9.2. Asynchronous Calls</h3>
+<div class="paragraph">
+<p>Similarly to synchronous calls, asynchronous calls inside the UI thread are made by
+invoking the <code>runInsideUIAsync</code> method. This method results in the same behavior as
+calling <code>SwingUtilities.invokeLater()</code> when using Swing.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy"><span class="keyword">package</span> sample
 
+<span class="keyword">import</span> <span class="include">java.awt.event.ActionEvent</span>
+<span class="keyword">import</span> <span class="include">griffon.core.artifact.GriffonController</span>
+
+<span class="annotation">@griffon</span>.metadata.ArtifactProviderFor(GriffonController)
+<span class="type">class</span> <span class="class">SampleController</span> {
+    <span class="keyword">def</span> model
+
+    <span class="type">void</span> work(evt = <span class="predefined-constant">null</span>) {
+        <span class="comment">// will be invoked outside of the UI thread by default</span>
+        <span class="keyword">def</span> value = model.value
+        <span class="comment">// do some calculations</span>
+        runInsideUIAsync {
+            <span class="comment">// back inside the UI Thread</span>
+            model.result = ...
+        }
+    }
+}</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_threading_outside"><a class="anchor" href="#_threading_outside"></a>9.3. Outside Calls</h3>
+<div class="paragraph">
+<p>Making sure a block of code is executed outside the UI thread is made by invoking
+the <code>execOutsideUI</code> method. This method is smart enough to figure out if the unit
+of work is already outside of the UI thread; otherwise it instructs the Griffon
+runtime to runt he unit in a different thread. This is usually performed by a
+helper <code>java.util.concurrent.ExecutorService</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy"><span class="keyword">package</span> sample
 
+<span class="keyword">import</span> <span class="include">java.awt.event.ActionEvent</span>
+<span class="keyword">import</span> <span class="include">griffon.core.artifact.GriffonController</span>
+
+<span class="annotation">@griffon</span>.metadata.ArtifactProviderFor(GriffonController)
+<span class="type">class</span> <span class="class">SampleController</span> {
+    <span class="keyword">def</span> model
+
+    <span class="type">void</span> work(evt = <span class="predefined-constant">null</span>) {
+        <span class="comment">// will be invoked outside of the UI thread by default</span>
+        <span class="keyword">def</span> value = model.value
+        <span class="comment">// do some calculations</span>
+        runInsideUIAsync {
+            <span class="comment">// back inside the UI thread</span>
+            model.result = ...
+            runOutsideUI {
+                <span class="comment">// do more calculations</span>
+            }
+        }
+    }
+}</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_threading_additional_methods"><a class="anchor" href="#_threading_additional_methods"></a>9.4. Additional Threading Methods</h3>
-
+<div class="paragraph">
+<p>There are two additional methods that complement the generic threading facilities
+that Griffon exposes to the application and its artifacts</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">isUIThread()</dt>
+<dd>
+<p>Returns <code>true</code> if the current thread is the UI thread, <code>false</code> otherwise.
+Functionally equivalent to calling <code>SwingUtilities.isEventDispatchThread()</code> in Swing.</p>
+</dd>
+<dt class="hdlist1">runFuture(ExecutorService s, Callable c)</dt>
+<dd>
+<p>schedules a callable on the target <code>ExecutorService</code>.
+The executor service can be left unspecified, if so a default Thread pool executor will be used.</p>
+</dd>
+</dl>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_threading_annotation"><a class="anchor" href="#_threading_annotation"></a>9.5. The @Threading Annotation</h3>
+<div class="paragraph">
+<p>The <code><a href="api/griffon/transform/Threading.html" target="_blank">@griffon.transform.Threading</a></code> annotation can be used to alter the default behavior of
+executing a controller action outside of the UI thread. There are 4 possible values
+that can be specified for this annotation</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">INSIDE_UITHREAD_SYNC</dt>
+<dd>
+<p>Executes the code in a synchronous call inside the UI thread.
+Equivalent to wrapping the code with <code>runInsideUISync</code>.</p>
+</dd>
+<dt class="hdlist1">INSIDE_UITHREAD_ASYNC</dt>
+<dd>
+<p>Executes the code in an asynchronous call inside the UI thread.
+Equivalent to wrapping the code with <code>runInsideUIAsync</code>.</p>
+</dd>
+<dt class="hdlist1">OUTSIDE_UITHREAD</dt>
+<dd>
+<p>Executes the code outside of the UI thread. Equivalent to wrapping
+the code with <code>runOutsideUI</code>.</p>
+</dd>
+<dt class="hdlist1">SKIP</dt>
+<dd>
+<p>Executes the code in the same thread as the invoker, whichever it may be.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This annotation can be usend as an AST transformation on any other component that&#8217;s not
+a controller. Any component may gain the ability to execute code in a particular thread,
+following the selected UI toolkit&#8217;s execution rules.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s an example of a custom component that&#8217;s able to call its methods in different
+threads</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy"><span class="keyword">package</span> sample
 
+<span class="keyword">import</span> <span class="include">griffon.transform.Threading</span>
+
+<span class="type">class</span> <span class="class">Sample</span> {
+    <span class="annotation">@Threading</span>
+    <span class="type">void</span> doStuff() {
+        <span class="comment">// executed outside of the UI thread</span>
+    }
+
+    <span class="annotation">@Threading</span>(Threading.Policy.INSIDE_UITHREAD_SYNC)
+    <span class="type">void</span> moreStuff() {
+        <span class="comment">// executed synchronously inside the UI thread</span>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You must annotate a method with <code><a href="api/griffon/transform/Threading.html" target="_blank">@griffon.transform.Threading</a></code>. Annotated methods must conform to these rules</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>must be public.</p>
+</li>
+<li>
+<p>name does not match an event handler.</p>
+</li>
+<li>
+<p>must pass <code><a href="api/griffon/util/GriffonClassUtils.html#isPlainMethod" target="_blank">GriffonClassUtils.isPlainMethod()</a></code>.</p>
+</li>
+<li>
+<p>must have @void@ as return type.</p>
+</li>
+</ul>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_threading_transformation"><a class="anchor" href="#_threading_transformation"></a>9.6. The @ThreadingAware AST Transformation</h3>
+<div class="paragraph">
+<p>Any component may gain the ability to execute code in a particular thread, following
+the selected UI toolkit&#8217;s execution rules. It injects the behavior of <code><a href="api/griffon/core/threading/ThreadingHandler.html" target="_blank">ThreadingHandler</a></code>
+into the annotated class.</p>
+</div>
+<div class="paragraph">
+<p>This feature is just a shortcut to avoid reaching for the <code>UIThreadManager</code> instance
+from objects that do not hold a reference to it.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s an example of a custom component that&#8217;s able to call its methods in different
+threads</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy"><span class="keyword">package</span> sample
 
+<span class="annotation">@griffon</span>.transform.ThreadingAware
+<span class="type">class</span> <span class="class">Sample</span> {
+    <span class="type">void</span> doStuff() {
+        runOutsideUIThread {
+            <span class="comment">// executed outside of the UI thread</span>
+        }
+    }
+
+    <span class="type">void</span> moreStuff() {
+        runInsideUIAsync {
+            <span class="comment">// executed asynchronously inside the UI thread</span>
+        }
+    }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -4410,7 +5907,75 @@ the application from entering the <a href="#_overview_lifecycle_shutdown">Shutdo
 </div>
 <div class="sect2">
 <h3 id="_events_eventpublisher_transformation"><a class="anchor" href="#_events_eventpublisher_transformation"></a>10.6. The @EventPublisher AST Transformation</h3>
+<div class="paragraph">
+<p>Any component may gain the ability to publish events through an <code><a href="api/griffon/core/event/EventRouter.html" target="_blank">EventRouter</a></code>
+instance. You only need annotate the class with <code><a href="api/griffon/transform/EventPublisher.html" target="_blank">@griffon.transform.EventPublisher</a></code>
+and it will automatically gain all methods exposed by <code><a href="api/griffon/core/event/EventPublisher.html" target="_blank">EventPublisher</a></code>.</p>
+</div>
+<div class="paragraph">
+<p>The following example shows a trivial usage of this feature</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy"><span class="annotation">@griffon</span>.transform.EventPublisher
+<span class="type">class</span> <span class="class">Publisher</span> {
+   <span class="type">void</span> doit(<span class="predefined-type">String</span> name) {
+      publishEvent(<span class="string"><span class="delimiter">'</span><span class="content">arg</span><span class="delimiter">'</span></span>, [name])
+   }
 
+   <span class="type">void</span> doit() {
+      publishEvent(<span class="string"><span class="delimiter">'</span><span class="content">empty</span><span class="delimiter">'</span></span>)
+   }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The application&#8217;s event router will be used by default. If you&#8217;d like your custom
+event publisher to use a private <code><a href="api/griffon/core/event/EventRouter.html" target="_blank">EventRouter</a></code> then you must define a binding
+for it using a specific name, like this</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy"><span class="keyword">import</span> <span class="include">griffon.core.injection.Module</span>
+<span class="keyword">import</span> <span class="include">griffon.core.event.EventRouter</span>
+<span class="keyword">import</span> <span class="include">org.kordamp.jipsy.ServiceProviderFor</span>
+<span class="keyword">import</span> <span class="include">org.codehaus.griffon.runtime.core.injection.AbstractModule</span>
+<span class="keyword">import</span> <span class="include">org.codehaus.griffon.runtime.core.event.DefaultEventRouter</span>
+
+<span class="keyword">import</span> <span class="include">javax.inject.Named</span>
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">griffon.util.AnnotationUtils.named</span>
+
+<span class="annotation">@ServiceProviderFor</span>(Module)
+<span class="annotation">@Named</span>
+<span class="type">class</span> <span class="class">ApplicationModule</span> <span class="directive">extends</span> AbstractModule {
+    <span class="annotation">@Override</span>
+    <span class="directive">protected</span> <span class="type">void</span> doConfigure() {
+        bind(EventRouter)
+            .withClassifier(named(<span class="string"><span class="delimiter">'</span><span class="content">my-private-event-router</span><span class="delimiter">'</span></span>))
+            .to(DefaultEventRouter)
+            .asSingleton()
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next specify the named <code><a href="api/griffon/core/event/EventRouter.html" target="_blank">EventRouter</a></code> as a parameter on the <code><a href="api/griffon/transform/EventPublisher.html" target="_blank">@griffon.transform.EventPublisher</a></code>
+transformation</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy"><span class="annotation">@griffon</span>.transform.EventPublisher(<span class="string"><span class="delimiter">'</span><span class="content">my-private-event-router</span><span class="delimiter">'</span></span>)
+<span class="type">class</span> <span class="class">Publisher</span> {
+   <span class="type">void</span> doit(<span class="predefined-type">String</span> name) {
+      publishEvent(<span class="string"><span class="delimiter">'</span><span class="content">arg</span><span class="delimiter">'</span></span>, [name])
+   }
+
+   <span class="type">void</span> doit() {
+      publishEvent(<span class="string"><span class="delimiter">'</span><span class="content">empty</span><span class="delimiter">'</span></span>)
+   }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -5392,6 +6957,7 @@ Each line follows the format</p>
 Plugins such as <code>griffon-swing</code> and <code>griffon-javafx</code> may register additional editors.</p>
 </div>
 <table class="tableblock frame-all grid-all" style="width:100%; ">
+<caption class="title">Table 5. PropertyEditor mappings</caption>
 <colgroup>
 <col style="width:50%;">
 <col style="width:50%;"> 
@@ -5481,11 +7047,603 @@ Plugins such as <code>griffon-swing</code> and <code>griffon-javafx</code> may r
 <div class="sect1">
 <h2 id="_testing"><a class="anchor" href="#_testing"></a>14. Testing</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_testing_unit"><a class="anchor" href="#_testing_unit"></a>14.1. Unit Testing</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_testing_integration"><a class="anchor" href="#_testing_integration"></a>14.2. Integration Testing</h3>
 
 </div>
 </div>
+</div>
 <div class="sect1">
-<h2 id="_contributing"><a class="anchor" href="#_contributing"></a>15. Contributing</h2>
+<h2 id="_buildtools"><a class="anchor" href="#_buildtools"></a>15. Build Tools</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_buildtools_gvm"><a class="anchor" href="#_buildtools_gvm"></a>15.1. GVM</h3>
+<div class="paragraph">
+<p>From <a href="http://gvmtool.net">GVM&#8217;s</a> website</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>GVM is a tool for managing parallel Versions of multiple Software Development Kits
+on most Unix based systems. It provides a convenient command line interface for
+installing, switching, removing and listing Candidates.</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>GVM can be used to install and keep up to date other build tools that make your life
+easier when developing Griffon projects. These tools are <code>lazybones</code> and <code>gradle</code>.
+Installing GVM itself is as easy as typing the following on a command prompt</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay"><code>$ curl -s get.gvmtool.net | bash</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next install the latest versions of <code>lazybones</code> and <code>gradle</code> by invoking</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay"><code>$ gvm install lazybones
+$ gvm install gradle</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>GVM works on POSIX compliant environments, event on Windows if <a href="https://www.cygwin.com/">Cygwin</a>
+is installed. We recommend you to install <a href="http://babun.github.io/">Babun shell</a> as it enables
+much more features than plain Cygwin. There&#8217;s also a Power Shell alternative:
+<a href="https://github.com/flofreud/posh-gvm">posh-gvm</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_buildtools_lazybones"><a class="anchor" href="#_buildtools_lazybones"></a>15.2. Lazybones</h3>
+<div class="paragraph">
+<p><a href="https://github.com/pledbrook/lazybones" target="_blank">Lazybones</a> allows you to create a new project structure for any framework or
+library for which the tool has a template.</p>
+</div>
+<div class="sect3">
+<h4 id="_configuration_2"><a class="anchor" href="#_configuration_2"></a>15.2.1. Configuration</h4>
+<div class="paragraph">
+<p>All standard Griffon templates are published to <a href="https://bintray.com/griffon/griffon-lazybones-templates">https://bintray.com/griffon/griffon-lazybones-templates</a>
+You must configure this repository with Lazybones settings file. Edit <code>$USER_HOME/.lazybones/config.groovy</code>
+and paste the following content</p>
+</div>
+<div class="listingblock">
+<div class="title">$USER_HOME/.lazybones/config.groovy</div>
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy">bintrayRepositories = [
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">griffon/griffon-lazybones-templates</span><span class="delimiter">&quot;</span></span>,
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">pledbrook/lazybones-templates</span><span class="delimiter">&quot;</span></span>
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Invoking the <code>lazybones list</code> command should result in all currently available Griffon project
+templates to be displayed in the output.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_templates"><a class="anchor" href="#_templates"></a>15.2.2. Templates</h4>
+<div class="paragraph">
+<p>The following templates are available at the standard template repository</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">griffon-swing-java</dt>
+<dd>
+<p>A template that initializes an application with Swing and Java.</p>
+</dd>
+<dt class="hdlist1">griffon-swing-groovy</dt>
+<dd>
+<p>A template that initializes an application with Swing and Groovy.</p>
+</dd>
+<dt class="hdlist1">griffon-javafx-ava</dt>
+<dd>
+<p>A template that initializes an application with JavaFX and Java.</p>
+</dd>
+<dt class="hdlist1">griffon-javafx-groovy</dt>
+<dd>
+<p>A template that initializes an application with JavaFX and Groovy.</p>
+</dd>
+<dt class="hdlist1">griffon-pivot-java</dt>
+<dd>
+<p>A template that initializes an application with Pivot and Java.</p>
+</dd>
+<dt class="hdlist1">griffon-pivot-groovy</dt>
+<dd>
+<p>A template that initializes an application with Pivot and Groovy.</p>
+</dd>
+<dt class="hdlist1">griffon-lanterna-java</dt>
+<dd>
+<p>A template that initializes an application with Lanterna and Java.</p>
+</dd>
+<dt class="hdlist1">griffon-lanterna-groovy</dt>
+<dd>
+<p>A template that initializes tan application with Lanterna and Groovy.</p>
+</dd>
+<dt class="hdlist1">griffon-plugin</dt>
+<dd>
+<p>A template that initializes a Griffon plugin project.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>All application project templates include a subtemplate named <strong>artifact</strong> that provides the
+following artifact templates</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">model</dt>
+<dd>
+<p>A standard Model artifact.</p>
+</dd>
+<dt class="hdlist1">view</dt>
+<dd>
+<p>A toolkit specific View artifact.</p>
+</dd>
+<dt class="hdlist1">controller</dt>
+<dd>
+<p>A standard Controller artifact.</p>
+</dd>
+<dt class="hdlist1">service</dt>
+<dd>
+<p>A standard Service artifact.</p>
+</dd>
+<dt class="hdlist1">test</dt>
+<dd>
+<p>A standard unit Test artifact.</p>
+</dd>
+<dt class="hdlist1">mvcgroup</dt>
+<dd>
+<p>Initializes Model, View, Controller, Test and IntegrationTest artifacts for a single MVC group.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>The <code>swing</code> and <code>pivot</code> <strong>artifact</strong> templates provided additional artifact templates</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">integrationTest</dt>
+<dd>
+<p>A standard integration Test artifact.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>You can invoke any of these templates in the following ways</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay"><code>$ lazybones generate artifact::controller</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command creates a new <em>Controller</em> artifact. You&#8217;ll be asked for a package and
+a class name.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay"><code>$ lazybones generate artifact::mvcgroup::com.acme::group</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command creates an <em>MVC Group</em> whose package is <em>com.acme</em> and class name is
+<em>group</em>. There will be 5 new artifacts in total.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_buildtools_gradle"><a class="anchor" href="#_buildtools_gradle"></a>15.3. Gradle</h3>
+<div class="paragraph">
+<p><a href="http://www.gradle.org/" target="_blank">Gradle</a> is the preferred build tool for a Griffon project. The <a href="#_buildtools_lazybones">Lazybones</a>
+templates create a default <code>build.gradle</code> file that contains the minimum configuration
+to build, test and package a Griffon application or plugin.</p>
+</div>
+<div class="sect3">
+<h4 id="_the_griffon_plugin"><a class="anchor" href="#_the_griffon_plugin"></a>15.3.1. The "griffon" Plugin</h4>
+<div class="paragraph">
+<p>The Griffon plugin adds default dependencies and conventional configuration to a Griffon
+project. This configuration follows the standard Griffon project layout.</p>
+</div>
+<div class="sect4">
+<h5 id="_usage"><a class="anchor" href="#_usage"></a>Usage</h5>
+<div class="paragraph">
+<p>To use the Griffon plugin, include in your build script:</p>
+</div>
+<div class="listingblock">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy">buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath <span class="string"><span class="delimiter">'</span><span class="content">org.codehaus.griffon:gradle-griffon-plugin:1.0.0.BETA2</span><span class="delimiter">'</span></span>
+    }
+}
+
+apply <span class="key">plugin</span>: <span class="string"><span class="delimiter">'</span><span class="content">org.codehaus.griffon.griffon</span><span class="delimiter">'</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This plugin performs the following configurations when applied to a project</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Register <em>jcenter()</em> as default repository.</p>
+</li>
+<li>
+<p>Apply the following plugins: <code>idea</code>, <code>java</code>, <code>application</code>.</p>
+</li>
+<li>
+<p>Create additional compile-time only configurations: <em>compileOnly</em>, <em>testCompileOnly</em>.</p>
+</li>
+<li>
+<p>Resolve plugin dependencies using the <em>griffon</em> configuration.</p>
+</li>
+<li>
+<p>Adjusts javadoc/groovydoc/idea/eclipse classpaths given the new configurations.</p>
+</li>
+<li>
+<p>Configures standard source directories with <code>main</code> and <code>test</code> source sets.</p>
+</li>
+<li>
+<p>Adjusts how <code>main</code> and <code>test</code> resource processing is performed.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following dependencies are added by default too</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>on <code>compile</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p>org.codehaus.griffon:griffon-core:2.0.0.BETA3</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>on <code>compileOnly</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p>org.codehaus.griffon:griffon-core-compile:2.0.0.BETA3</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>on <code>testCompile</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p>org.codehaus.griffon:griffon-core-test:2.0.0.BETA3</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>on <code>testCompileOnly</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p>org.codehaus.griffon:griffon-core-compile:2.0.0.BETA3</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If the <strong>toolkit</strong> conventional property is defined (plugins may opt to skip it) then
+the following dependencies are added</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>on <code>compile</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p>org.codehaus.griffon:griffon-&lt;toolkit&gt;:2.0.0.BETA3</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If the <code>groovy</code> plugin is applied then the following dependencies are also added</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>on <code>compile</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p>org.codehaus.griffon:griffon-groovy:2.0.0.BETA3</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>on <code>compile</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p>org.codehaus.griffon:griffon-&lt;toolkit&gt;-groovy:2.0.0.BETA3</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>on <code>compileOnly</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p>org.codehaus.griffon:griffon-groovy-compile:2.0.0.BETA3</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>on <code>testCompileOnly</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p>org.codehaus.griffon:griffon-groovy-compile:2.0.0.BETA3</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>griffon</code> configuration can be used to resolve dependencies using <a href="http://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html" target="_blank">BOM</a> files.
+Assume for a moment that the <code>griffon-scaffolding-plugin</code> is comprised of the following
+modules</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>griffon-scaffolding - the core of the plugin, UI toolkit agnostic.</p>
+</li>
+<li>
+<p>griffon-scaffolding-swing - Swing specific additions.</p>
+</li>
+<li>
+<p>griffon-scaffolding-javafx-groovy - Groovy enhancements via <code><a href="api/griffon/util/BuilderCustomizer.html" target="_blank">BuilderCustomizer</a></code>.</p>
+</li>
+<li>
+<p>griffon-scaffolding-javafx - JavaFX specific additions.</p>
+</li>
+<li>
+<p>griffon-scaffolding-javafx-groovy - Groovy enhancements via <code><a href="api/griffon/util/BuilderCustomizer.html" target="_blank">BuilderCustomizer</a></code>.</p>
+</li>
+<li>
+<p>griffon-scaffolding-groovy-compile - AST transformations.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>As you can appreciate those are quite the set. You can manually define any of these
+dependencies on the build file, but given the many combinations it may be a bit hard
+to determine which dependencies should be added and which shouldn&#8217;t. The <em>griffon</em>
+configuration can make this decision for you; you just have to use it in the following
+way</p>
+</div>
+<div class="listingblock">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy">dependencies {
+    griffon <span class="string"><span class="delimiter">'</span><span class="content">org.codehaus.griffon.plugins:griffon-scaffolding-plugin:0.0.0-SNAPSHOT</span><span class="delimiter">'</span></span>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will add all required dependencies to your build by taking into account the project&#8217;s
+choice of UI toolkit and whether the <code>groovy</code> plugin has been applied or not. This
+behavior can be configured and/or disabled by using the conventional properties
+describe in the next section.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_convention_properties"><a class="anchor" href="#_convention_properties"></a>Convention properties</h5>
+<div class="paragraph">
+<p>The Griffon plugin adds some properties to the project, which you can use to configure its behaviour.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width:100%; ">
+<caption class="title">Table 6. Griffon plugin - properties</caption>
+<colgroup>
+<col style="width:25%;">
+<col style="width:25%;">
+<col style="width:25%;">
+<col style="width:25%;"> 
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">disableDependencyResolution</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"> false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disable automatic inclusion of dependencies defined with the <em>griffon</em> configuration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">includeGroovyDependencies</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"> -</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Force inclusion of Groovy dependencies defined with the <em>griffon</em> configuration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">toolkit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"> _</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The UI toolkit to use. May be left unset. Valid values are <code>swing</code>, <code>javafx</code>, <code>pivot</code>, <code>lanterna</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"> 2.0.0.BETA3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Griffon version to use for Griffon core dependencies.</p></td>
+</tr>
+</tbody>
+</table>
+
+<div class="paragraph">
+<p>The <strong>includeGroovyDependencies</strong> property has 3 states: <code>unset</code>, <code>false</code> and <code>true</code>.
+Groovy dependencies will be added automatically to the project <strong>only</strong> if the value
+of <strong>includeGroovyDependencies</strong> is <code>unset</code> (default) and the <code>groovy</code> plugin has been
+applied to the project or if the value of <strong>includeGroovyDependencies</strong> is set to <code>true</code>.
+When the value of <strong>includeGroovyDependencies</strong> is set to <code>false</code> then Groovy dependencies
+will not be added, even if the <code>groovy</code> plugin has been applied. This is useful for
+Java projects that use <a href="http://spockframework.org/" target="_blank">Spock</a> for testing, as you need the <code>groovy</code> plugin in
+order to compile Spock specifications but you wouldn&#8217;t want Groovy dependencies to
+be pulled in for compilation.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_the_griffon_build_plugin"><a class="anchor" href="#_the_griffon_build_plugin"></a>15.3.2. The "griffon-build" Plugin</h4>
+<div class="paragraph">
+<p>The Griffon Build plugin enables useful tasks required for plugin authors, such as
+the aggregation of Cobertura data files and reports; generation of a plugin BOM file,
+and more.</p>
+</div>
+<div class="sect4">
+<h5 id="_usage_2"><a class="anchor" href="#_usage_2"></a>Usage</h5>
+<div class="paragraph">
+<p>To use the Griffon Build plugin, include in your build script:</p>
+</div>
+<div class="listingblock">
+<div class="title">build.gradle</div>
+<div class="content">
+<pre class="CodeRay nowrap"><code class="groovy language-groovy">buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath <span class="string"><span class="delimiter">'</span><span class="content">org.codehaus.griffon:gradle-griffon-build-plugin:1.0.0.BETA2</span><span class="delimiter">'</span></span>
+    }
+}
+
+apply <span class="key">plugin</span>: <span class="string"><span class="delimiter">'</span><span class="content">org.codehaus.griffon.griffon-build</span><span class="delimiter">'</span></span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_tasks"><a class="anchor" href="#_tasks"></a>Tasks</h5>
+<div class="paragraph">
+<p>The Griffon Build plugin adds a number of tasks to your project, as shown below.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width:100%; ">
+<caption class="title">Table 7. Griffon Build plugin - tasks</caption>
+<colgroup>
+<col style="width:25%;">
+<col style="width:25%;">
+<col style="width:25%;">
+<col style="width:25%;"> 
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Task name</th>
+<th class="tableblock halign-left valign-top">Depends on</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">aggregateCoberturaMerge</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"> <code>AggregateCoberturaMergeTask</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Aggregates all cobertura data files found in the project.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">aggregateCoberturaReport</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"> <code>AggregateCoberturaReport</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Generates a project-wide Cobertura report.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GenerateBomTask</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"> <code>GenerateBomTask</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Generates a BOM file that includes all subprojects.</p></td>
+</tr>
+</tbody>
+</table>
+
+</div>
+<div class="sect4">
+<h5 id="_convention_properties_2"><a class="anchor" href="#_convention_properties_2"></a>Convention Properties</h5>
+<div class="paragraph">
+<p>The Griffon Build plugin adds a number of convention properties to the project, shown below.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width:100%; ">
+<caption class="title">Table 8. Griffon Build plugin - tasks</caption>
+<colgroup>
+<col style="width:25%;">
+<col style="width:25%;">
+<col style="width:25%;">
+<col style="width:25%;"> 
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">coverageOutputDatafile</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"> <em>buildDir</em>/cobertura/cobertura.ser</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the data file to produce during instrumentation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">coverageReportDir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"> <em>reportsDir</em>/cobertura</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to report directory for coverage report.</p></td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_buildtools_maven"><a class="anchor" href="#_buildtools_maven"></a>15.4. Maven</h3>
+
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_contributing"><a class="anchor" href="#_contributing"></a>16. Contributing</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Griffon is an open source project with an active community and we rely heavily on
@@ -5494,7 +7652,7 @@ people can contribute to Griffon. One of these is by writing plugins and making 
 publicly available. In this chapter, we&#8217;ll look at some of the other options.</p>
 </div>
 <div class="sect2">
-<h3 id="_contributing_issues"><a class="anchor" href="#_contributing_issues"></a>15.1. Issues</h3>
+<h3 id="_contributing_issues"><a class="anchor" href="#_contributing_issues"></a>16.1. Issues</h3>
 <div class="paragraph">
 <p>Griffon uses <a href="http://jira.codehaus.org/browse/griffon">JIRA</a> to track issues in the
 ore framework, its documentation, its website, and many of the public plugins. If
@@ -5509,7 +7667,7 @@ you are using. Also, an issue is much more likely to be dealt with if you attach
 a reproducible sample application.</p>
 </div>
 <div class="sect3">
-<h4 id="_reviewing_issues"><a class="anchor" href="#_reviewing_issues"></a>15.1.1. Reviewing issues</h4>
+<h4 id="_reviewing_issues"><a class="anchor" href="#_reviewing_issues"></a>16.1.1. Reviewing issues</h4>
 <div class="paragraph">
 <p>There are quite a few old issues in JIRA, some of which may no longer be valid.
 The core team can&#8217;t track down these alone, so a very simple contribution that you
@@ -5528,7 +7686,7 @@ explanation why.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_contributing_build"><a class="anchor" href="#_contributing_build"></a>15.2. Build</h3>
+<h3 id="_contributing_build"><a class="anchor" href="#_contributing_build"></a>16.2. Build</h3>
 <div class="paragraph">
 <p>If you&#8217;re interested in contributing fixes and features to the core framework, you
 will have to learn how to get hold of the project&#8217;s source, build it and test it
@@ -5561,7 +7719,7 @@ get the core framework run:</p>
 all the project source files. The next step is to get a Griffon installation from the source.</p>
 </div>
 <div class="sect3">
-<h4 id="_running_the_test_suite"><a class="anchor" href="#_running_the_test_suite"></a>15.2.1. Running the test suite</h4>
+<h4 id="_running_the_test_suite"><a class="anchor" href="#_running_the_test_suite"></a>16.2.1. Running the test suite</h4>
 <div class="paragraph">
 <p>All you have to do to run the full suite of tests is:</p>
 </div>
@@ -5585,7 +7743,7 @@ the top-level "test" target won&#8217;t work&#8230;.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_developing_in_intellij_idea"><a class="anchor" href="#_developing_in_intellij_idea"></a>15.2.2. Developing in IntelliJ IDEA</h4>
+<h4 id="_developing_in_intellij_idea"><a class="anchor" href="#_developing_in_intellij_idea"></a>16.2.2. Developing in IntelliJ IDEA</h4>
 <div class="paragraph">
 <p>You need to run the following gradle task:</p>
 </div>
@@ -5600,14 +7758,14 @@ the top-level "test" target won&#8217;t work&#8230;.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_contributing_patches"><a class="anchor" href="#_contributing_patches"></a>15.3. Patches</h3>
+<h3 id="_contributing_patches"><a class="anchor" href="#_contributing_patches"></a>16.3. Patches</h3>
 <div class="paragraph">
 <p>If you want to submit patches to the project, you simply need to fork the repository
 on GitHub rather than clone it directly. Then you will commit your changes to your
 fork and send a pull request for a core team member to review.</p>
 </div>
 <div class="sect3">
-<h4 id="_forking_and_pull_requests"><a class="anchor" href="#_forking_and_pull_requests"></a>15.3.1. Forking and Pull Requests</h4>
+<h4 id="_forking_and_pull_requests"><a class="anchor" href="#_forking_and_pull_requests"></a>16.3.1. Forking and Pull Requests</h4>
 <div class="paragraph">
 <p>One of the benefits of <a href="http://github.com">GitHub</a> is the way that you can easily
 contribute to a project by <a href="http://help.github.com/fork-a-repo/">forking the repository</a>
@@ -5756,7 +7914,7 @@ a suitable Slf4j binding of your choice.</p>
 <div class="paragraph">
 <p>The <code>Builder.groovy</code> is no longer required. Its functions are now handled by
 <code><a href="api/griffon/util/BuilderCustomizer.html" target="_blank">BuilderCustomizer</a></code> classes bound in a <code><a href="api/griffon/core/injection/Module.html" target="_blank">Module</a></code>. You must add
-<code>griffon-groovy-2.0.0.BETA2.jar</code> as a compile dependency in order to use
+<code>griffon-groovy-2.0.0.BETA3.jar</code> as a compile dependency in order to use
 <code>BuilderCustomizers</code>. Here&#8217;s an example for adding a <a href="http://miglayout.com">Miglayout</a>
 customization</p>
 </div>
@@ -6212,6 +8370,10 @@ Depends on: <code>swing</code></p>
 <div class="content">
 <pre class="CodeRay nowrap"><code class="java language-java">bind(BuilderCustomizer.class)
     .to(SwingBuilderCustomizer.class)
+    .asSingleton();
+bind(SwingWindowDisplayHandler.class)
+    .withClassifier(named(<span class="string"><span class="delimiter">&quot;</span><span class="content">windowDisplayHandler</span><span class="delimiter">&quot;</span></span>))
+    .to(GroovyAwareConfigurableSwingWindowDisplayHandler.class)
     .asSingleton();</code></pre>
 </div>
 </div>
@@ -6257,6 +8419,10 @@ Depends on: <code>javafx</code></p>
 <div class="content">
 <pre class="CodeRay nowrap"><code class="java language-java">bind(BuilderCustomizer.class)
     .to(JavafxBuilderCustomizer.class)
+    .asSingleton();
+bind(JavaFXWindowDisplayHandler.class)
+    .withClassifier(named(<span class="string"><span class="delimiter">&quot;</span><span class="content">windowDisplayHandler</span><span class="delimiter">&quot;</span></span>))
+    .to(GroovyAwareConfigurableJavaFXWindowDisplayHandler.class)
     .asSingleton();</code></pre>
 </div>
 </div>
@@ -6306,6 +8472,10 @@ Depends on: <code>lanterna</code></p>
 <div class="content">
 <pre class="CodeRay nowrap"><code class="java language-java">bind(BuilderCustomizer.class)
     .to(LanternaBuilderCustomizer.class)
+    .asSingleton();
+bind(LanternaWindowDisplayHandler.class)
+    .withClassifier(named(<span class="string"><span class="delimiter">&quot;</span><span class="content">windowDisplayHandler</span><span class="delimiter">&quot;</span></span>))
+    .to(GroovyAwareConfigurableLanternaWindowDisplayHandler.class)
     .asSingleton();</code></pre>
 </div>
 </div>
@@ -6351,6 +8521,10 @@ Depends on: <code>pivot</code></p>
 <div class="content">
 <pre class="CodeRay nowrap"><code class="java language-java">bind(BuilderCustomizer.class)
     .to(PivotBuilderCustomizer.class)
+    .asSingleton();
+bind(PivotWindowDisplayHandler.class)
+    .withClassifier(named(<span class="string"><span class="delimiter">&quot;</span><span class="content">windowDisplayHandler</span><span class="delimiter">&quot;</span></span>))
+    .to(GroovyAwareConfigurablePivotWindowDisplayHandler.class)
     .asSingleton();</code></pre>
 </div>
 </div>
@@ -6362,7 +8536,7 @@ Depends on: <code>pivot</code></p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The following list summarizes all AST transformations available to Groovy based
-projects when the <code>griffon-groovy-compile-2.0.0.BETA2.jar</code> dependency is
+projects when the <code>griffon-groovy-compile-2.0.0.BETA3.jar</code> dependency is
 added to a project</p>
 </div>
 <div class="ulist">
@@ -6395,6 +8569,9 @@ added to a project</p>
 <p><a href="#_threading_transformation">@ThreadingAware</a></p>
 </li>
 <li>
+<p><a href="#_threading_transformation">@ThreadingAware</a></p>
+</li>
+<li>
 <p><a href="#_models_vetoable_transformation">@Vetoable</a></p>
 </li>
 </ul>
@@ -6402,7 +8579,7 @@ added to a project</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_appenidx_sample_applications"><a class="anchor" href="#_appenidx_sample_applications"></a>Appendix D: Sample Applications</h2>
+<h2 id="_appendix_sample_applications"><a class="anchor" href="#_appendix_sample_applications"></a>Appendix D: Sample Applications</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This appendix showcases the same application implemented with different languages
@@ -6765,7 +8942,7 @@ one column vertical grid</p>
 <span class="keyword">import</span> <span class="include">griffon.core.GriffonApplication</span>;
 <span class="keyword">import</span> <span class="include">griffon.core.artifact.GriffonView</span>;
 <span class="keyword">import</span> <span class="include">griffon.metadata.ArtifactProviderFor</span>;
-<span class="keyword">import</span> <span class="include">org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView</span>;
+<span class="keyword">import</span> <span class="include">org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView</span>;
 
 <span class="keyword">import</span> <span class="include">javax.annotation.Nonnull</span>;
 <span class="keyword">import</span> <span class="include">javax.inject.Inject</span>;
@@ -6783,7 +8960,7 @@ one column vertical grid</p>
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE</span>;
 
 <span class="annotation">@ArtifactProviderFor</span>(GriffonView.class)
-<span class="directive">public</span> <span class="type">class</span> <span class="class">SampleView</span> <span class="directive">extends</span> AbstractGriffonView {
+<span class="directive">public</span> <span class="type">class</span> <span class="class">SampleView</span> <span class="directive">extends</span> AbstractSwingGriffonView {
     <span class="directive">private</span> SampleController controller;                                         <i class="conum" data-value="1"></i><b>(1)</b>
     <span class="directive">private</span> <span class="predefined-type">SampleModel</span> model;                                                   <i class="conum" data-value="1"></i><b>(1)</b>
 
@@ -6803,7 +8980,7 @@ one column vertical grid</p>
     <span class="annotation">@Override</span>
     <span class="directive">public</span> <span class="type">void</span> initUI() {
         <span class="predefined-type">JFrame</span> window = (<span class="predefined-type">JFrame</span>) getApplication()
-            .createApplicationContainer(<span class="predefined-type">Collections</span>.&lt;<span class="predefined-type">String</span>,<span class="predefined-type">Object</span>&gt;emptyMap());
+            .createApplicationContainer(<span class="predefined-type">Collections</span>.&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Object</span>&gt;emptyMap());
         window.setName(<span class="string"><span class="delimiter">&quot;</span><span class="content">mainWindow</span><span class="delimiter">&quot;</span></span>);
         window.setTitle(getApplication().getConfiguration().getAsString(<span class="string"><span class="delimiter">&quot;</span><span class="content">application.title</span><span class="delimiter">&quot;</span></span>));
         window.setSize(<span class="integer">320</span>, <span class="integer">120</span>);
@@ -6840,9 +9017,7 @@ one column vertical grid</p>
         });
         window.getContentPane().add(nameField);
 
-        <span class="predefined-type">Action</span> action = (<span class="predefined-type">Action</span>) getApplication().getActionManager()             <i class="conum" data-value="4"></i><b>(4)</b>
-            .actionFor(controller, <span class="string"><span class="delimiter">&quot;</span><span class="content">sayHello</span><span class="delimiter">&quot;</span></span>)
-            .getToolkitAction();
+        <span class="predefined-type">Action</span> action = toolkitActionFor(controller, <span class="string"><span class="delimiter">&quot;</span><span class="content">sayHello</span><span class="delimiter">&quot;</span></span>);                <i class="conum" data-value="4"></i><b>(4)</b>
         <span class="directive">final</span> <span class="predefined-type">JButton</span> button = <span class="keyword">new</span> <span class="predefined-type">JButton</span>(action);
         button.setName(<span class="string"><span class="delimiter">&quot;</span><span class="content">sayHelloButton</span><span class="delimiter">&quot;</span></span>);
         window.getContentPane().add(button);
@@ -6942,8 +9117,8 @@ that may be applied to buttons <em class="conum">4</em> for example.</p>
 </table>
 </div>
 <div class="paragraph">
-<p>The Groovy version is again much terse thanks to the <a href="http://groovy.codehaus.org/Swing+Builder">SwingBuilder DSL</a>.
-Notice how easy is to bind <em class="conum">3</em> model properties using the +bind+ node.
+<p>The Groovy version is again much terser thanks to the <a href="http://groovy.codehaus.org/Swing+Builder">SwingBuilder DSL</a>.
+Notice how easy it&#8217;s to bind <em class="conum">3</em> model properties using the +bind+ node.
 The controller action is also transformed into an UI toolkit specific action however
 this time it&#8217;s easier to grab: by convention all controller actions are exposed as variables
 to the corresponding <code>builder</code>.</p>
@@ -7825,7 +10000,7 @@ the <code>input</code> Model property as soon as the button is clicked.</p>
 <span class="keyword">import</span> <span class="include">griffon.lanterna.support.LanternaAction</span>;
 <span class="keyword">import</span> <span class="include">griffon.lanterna.widgets.MutableButton</span>;
 <span class="keyword">import</span> <span class="include">griffon.metadata.ArtifactProviderFor</span>;
-<span class="keyword">import</span> <span class="include">org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView</span>;
+<span class="keyword">import</span> <span class="include">org.codehaus.griffon.runtime.lanterna.artifact.AbstractLanternaGriffonView</span>;
 
 <span class="keyword">import</span> <span class="include">javax.annotation.Nonnull</span>;
 <span class="keyword">import</span> <span class="include">javax.inject.Inject</span>;
@@ -7834,7 +10009,7 @@ the <code>input</code> Model property as soon as the button is clicked.</p>
 <span class="keyword">import</span> <span class="include">java.util.Collections</span>;
 
 <span class="annotation">@ArtifactProviderFor</span>(GriffonView.class)
-<span class="directive">public</span> <span class="type">class</span> <span class="class">SampleView</span> <span class="directive">extends</span> AbstractGriffonView {
+<span class="directive">public</span> <span class="type">class</span> <span class="class">SampleView</span> <span class="directive">extends</span> AbstractLanternaGriffonView {
     <span class="directive">private</span> SampleController controller;                                         <i class="conum" data-value="1"></i><b>(1)</b>
     <span class="directive">private</span> <span class="predefined-type">SampleModel</span> model;                                                   <i class="conum" data-value="1"></i><b>(1)</b>
 
@@ -7863,9 +10038,7 @@ the <code>input</code> Model property as soon as the button is clicked.</p>
         <span class="directive">final</span> TextBox input = <span class="keyword">new</span> TextBox();
         panel.addComponent(input);
 
-        LanternaAction sayHelloAction = (LanternaAction) getApplication().getActionManager()
-            .actionFor(controller, <span class="string"><span class="delimiter">&quot;</span><span class="content">sayHello</span><span class="delimiter">&quot;</span></span>)
-            .getToolkitAction();
+        LanternaAction sayHelloAction = toolkitActionFor(controller, <span class="string"><span class="delimiter">&quot;</span><span class="content">sayHello</span><span class="delimiter">&quot;</span></span>);
         <span class="directive">final</span> <span class="predefined-type">Runnable</span> runnable = sayHelloAction.getRunnable();
         sayHelloAction.setRunnable(<span class="keyword">new</span> <span class="predefined-type">Runnable</span>() {                              <i class="conum" data-value="3"></i><b>(3)</b>
             <span class="annotation">@Override</span>
@@ -8239,13 +10412,12 @@ the native support exposed by the toolkit.</p>
 
 <span class="keyword">import</span> <span class="include">griffon.core.GriffonApplication</span>;
 <span class="keyword">import</span> <span class="include">griffon.core.artifact.GriffonView</span>;
-<span class="keyword">import</span> <span class="include">griffon.core.controller.Action</span>;
 <span class="keyword">import</span> <span class="include">griffon.metadata.ArtifactProviderFor</span>;
 <span class="keyword">import</span> <span class="include">griffon.pivot.support.PivotAction</span>;
 <span class="keyword">import</span> <span class="include">griffon.pivot.support.adapters.TextInputContentAdapter</span>;
 <span class="keyword">import</span> <span class="include">org.apache.pivot.serialization.SerializationException</span>;
 <span class="keyword">import</span> <span class="include">org.apache.pivot.wtk</span>.*;
-<span class="keyword">import</span> <span class="include">org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView</span>;
+<span class="keyword">import</span> <span class="include">org.codehaus.griffon.runtime.pivot.artifact.AbstractPivotGriffonView</span>;
 
 <span class="keyword">import</span> <span class="include">javax.annotation.Nonnull</span>;
 <span class="keyword">import</span> <span class="include">javax.inject.Inject</span>;
@@ -8254,7 +10426,7 @@ the native support exposed by the toolkit.</p>
 <span class="keyword">import</span> <span class="include">java.util.Collections</span>;
 
 <span class="annotation">@ArtifactProviderFor</span>(GriffonView.class)
-<span class="directive">public</span> <span class="type">class</span> <span class="class">SampleView</span> <span class="directive">extends</span> AbstractGriffonView {
+<span class="directive">public</span> <span class="type">class</span> <span class="class">SampleView</span> <span class="directive">extends</span> AbstractPivotGriffonView {
     <span class="directive">private</span> SampleController controller;                                         <i class="conum" data-value="1"></i><b>(1)</b>
     <span class="directive">private</span> <span class="predefined-type">SampleModel</span> model;                                                   <i class="conum" data-value="1"></i><b>(1)</b>
 
@@ -8298,11 +10470,10 @@ the native support exposed by the toolkit.</p>
         });
         vbox.add(input);
 
-        <span class="predefined-type">Action</span> sayHelloAction = getApplication().getActionManager()
-            .actionFor(controller, <span class="string"><span class="delimiter">&quot;</span><span class="content">sayHello</span><span class="delimiter">&quot;</span></span>);
+        PivotAction sayHelloAction = toolkitActionFor(controller, <span class="string"><span class="delimiter">&quot;</span><span class="content">sayHello</span><span class="delimiter">&quot;</span></span>);
         <span class="directive">final</span> <span class="predefined-type">Button</span> button = <span class="keyword">new</span> PushButton(sayHelloAction.getName());
         button.setName(<span class="string"><span class="delimiter">&quot;</span><span class="content">sayHelloButton</span><span class="delimiter">&quot;</span></span>);
-        button.setAction((PivotAction) sayHelloAction.getToolkitAction());       <i class="conum" data-value="4"></i><b>(4)</b>
+        button.setAction(sayHelloAction);                                        <i class="conum" data-value="4"></i><b>(4)</b>
         vbox.add(button);
 
         <span class="directive">final</span> TextInput output = <span class="keyword">new</span> TextInput();
@@ -8406,8 +10577,8 @@ greeting.parameterized = Hello {0}</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 2.0.0.BETA2<br>
-Last updated 2014-06-08 14:00:44 CEST
+Version 2.0.0.BETA3<br>
+Last updated 2014-07-03 13:51:15 CEST
 </div>
 </div>
 </body>
