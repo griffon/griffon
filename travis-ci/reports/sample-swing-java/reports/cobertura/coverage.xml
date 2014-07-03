@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
 
-<coverage line-rate="0.3254101809002945" branch-rate="0.20184426229508196" lines-covered="3094" lines-valid="9508" branches-covered="788" branches-valid="3904" complexity="2.2869269949066213" version="2.0.3" timestamp="1404227930351">
+<coverage line-rate="0.325" branch-rate="0.2011758691206544" lines-covered="3094" lines-valid="9520" branches-covered="787" branches-valid="3912" complexity="2.2869860110216194" version="2.0.3" timestamp="1404382409866">
 	<sources>
 		<source>/home/travis/build/griffon/griffon/subprojects/griffon-fest-test/src/main/resources</source>
 		<source>/home/travis/build/griffon/griffon/subprojects/griffon-core-test/src/main/resources</source>
@@ -2825,7 +2825,7 @@
 				</class>
 			</classes>
 		</package>
-		<package name="griffon.core.env" line-rate="0.21678321678321677" branch-rate="0.037037037037037035" complexity="2.8085106382978724">
+		<package name="griffon.core.env" line-rate="0.2080536912751678" branch-rate="0.034482758620689655" complexity="2.78">
 			<classes>
 				<class name="griffon.core.env.ApplicationPhase" filename="griffon/core/env/ApplicationPhase.java" line-rate="1.0" branch-rate="1.0" complexity="0.0">
 					<methods>
@@ -3075,6 +3075,78 @@
 					</methods>
 					<lines>
 						<line number="148" hits="0" branch="false"/>
+					</lines>
+				</class>
+				<class name="griffon.core.env.Feature" filename="griffon/core/env/Feature.java" line-rate="0.0" branch-rate="0.0" complexity="2.3333333333333335">
+					<methods>
+						<method name="&lt;init&gt;" signature="()V" line-rate="0.0" branch-rate="1.0">
+							<lines>
+								<line number="28" hits="0" branch="false"/>
+							</lines>
+						</method>
+						<method name="isFeatureEnabled" signature="(Ljava/lang/String;)Z" line-rate="0.0" branch-rate="0.0">
+							<lines>
+								<line number="32" hits="0" branch="false"/>
+								<line number="33" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
+								<line number="34" hits="0" branch="false"/>
+								<line number="36" hits="0" branch="true" condition-coverage="0% (0/4)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+										<condition number="1" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
+							</lines>
+						</method>
+						<method name="setFeatureEnabled" signature="(Ljava/lang/String;Z)V" line-rate="0.0" branch-rate="1.0">
+							<lines>
+								<line number="41" hits="0" branch="false"/>
+								<line number="42" hits="0" branch="false"/>
+								<line number="43" hits="0" branch="false"/>
+							</lines>
+						</method>
+						<method name="withFeature" signature="(Ljava/lang/String;Ljava/lang/Runnable;)V" line-rate="0.0" branch-rate="0.0">
+							<lines>
+								<line number="46" hits="0" branch="false"/>
+								<line number="47" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
+								<line number="48" hits="0" branch="false"/>
+								<line number="50" hits="0" branch="false"/>
+							</lines>
+						</method>
+					</methods>
+					<lines>
+						<line number="28" hits="0" branch="false"/>
+						<line number="32" hits="0" branch="false"/>
+						<line number="33" hits="0" branch="true" condition-coverage="0% (0/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
+						<line number="34" hits="0" branch="false"/>
+						<line number="36" hits="0" branch="true" condition-coverage="0% (0/4)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+								<condition number="1" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
+						<line number="41" hits="0" branch="false"/>
+						<line number="42" hits="0" branch="false"/>
+						<line number="43" hits="0" branch="false"/>
+						<line number="46" hits="0" branch="false"/>
+						<line number="47" hits="0" branch="true" condition-coverage="0% (0/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
+						<line number="48" hits="0" branch="false"/>
+						<line number="50" hits="0" branch="false"/>
 					</lines>
 				</class>
 				<class name="griffon.core.env.GriffonEnvironment" filename="griffon/core/env/GriffonEnvironment.java" line-rate="0.5211267605633803" branch-rate="0.0" complexity="1.75">
@@ -22372,31 +22444,31 @@
 						</method>
 						<method name="compareTo" signature="(Lgriffon/util/MethodDescriptor;)I" line-rate="1.0" branch-rate="1.0">
 							<lines>
-								<line number="150" hits="4680" branch="false"/>
-								<line number="151" hits="4680" branch="true" condition-coverage="100% (2/2)">
+								<line number="150" hits="4728" branch="false"/>
+								<line number="151" hits="4728" branch="true" condition-coverage="100% (2/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="100%"/>
 									</conditions>
 								</line>
-								<line number="152" hits="1212" branch="false"/>
-								<line number="153" hits="1212" branch="true" condition-coverage="100% (2/2)">
+								<line number="152" hits="1218" branch="false"/>
+								<line number="153" hits="1218" branch="true" condition-coverage="100% (2/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="100%"/>
 									</conditions>
 								</line>
-								<line number="154" hits="1198" branch="false"/>
-								<line number="155" hits="1198" branch="true" condition-coverage="100% (2/2)">
+								<line number="154" hits="1202" branch="false"/>
+								<line number="155" hits="1202" branch="true" condition-coverage="100% (2/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="100%"/>
 									</conditions>
 								</line>
-								<line number="156" hits="1327" branch="true" condition-coverage="100% (2/2)">
+								<line number="156" hits="1336" branch="true" condition-coverage="100% (2/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="100%"/>
 									</conditions>
 								</line>
-								<line number="157" hits="1049" branch="false"/>
-								<line number="158" hits="1049" branch="true" condition-coverage="100% (2/2)">
+								<line number="157" hits="1058" branch="false"/>
+								<line number="158" hits="1058" branch="true" condition-coverage="100% (2/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="100%"/>
 									</conditions>
@@ -22406,7 +22478,7 @@
 						</method>
 						<method name="compareTo" signature="(Ljava/lang/Object;)I" line-rate="1.0" branch-rate="1.0">
 							<lines>
-								<line number="29" hits="4680" branch="false"/>
+								<line number="29" hits="4728" branch="false"/>
 							</lines>
 						</method>
 						<method name="equals" signature="(Ljava/lang/Object;)Z" line-rate="0.0" branch-rate="0.0">
@@ -22532,7 +22604,7 @@
 						</method>
 					</methods>
 					<lines>
-						<line number="29" hits="4680" branch="false"/>
+						<line number="29" hits="4728" branch="false"/>
 						<line number="35" hits="2" branch="false"/>
 						<line number="39" hits="482" branch="false"/>
 						<line number="44" hits="840" branch="false"/>
@@ -22628,31 +22700,31 @@
 						<line number="143" hits="0" branch="false"/>
 						<line number="145" hits="0" branch="false"/>
 						<line number="146" hits="0" branch="false"/>
-						<line number="150" hits="4680" branch="false"/>
-						<line number="151" hits="4680" branch="true" condition-coverage="100% (2/2)">
+						<line number="150" hits="4728" branch="false"/>
+						<line number="151" hits="4728" branch="true" condition-coverage="100% (2/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="100%"/>
 							</conditions>
 						</line>
-						<line number="152" hits="1212" branch="false"/>
-						<line number="153" hits="1212" branch="true" condition-coverage="100% (2/2)">
+						<line number="152" hits="1218" branch="false"/>
+						<line number="153" hits="1218" branch="true" condition-coverage="100% (2/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="100%"/>
 							</conditions>
 						</line>
-						<line number="154" hits="1198" branch="false"/>
-						<line number="155" hits="1198" branch="true" condition-coverage="100% (2/2)">
+						<line number="154" hits="1202" branch="false"/>
+						<line number="155" hits="1202" branch="true" condition-coverage="100% (2/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="100%"/>
 							</conditions>
 						</line>
-						<line number="156" hits="1327" branch="true" condition-coverage="100% (2/2)">
+						<line number="156" hits="1336" branch="true" condition-coverage="100% (2/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="100%"/>
 							</conditions>
 						</line>
-						<line number="157" hits="1049" branch="false"/>
-						<line number="158" hits="1049" branch="true" condition-coverage="100% (2/2)">
+						<line number="157" hits="1058" branch="false"/>
+						<line number="158" hits="1058" branch="true" condition-coverage="100% (2/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="100%"/>
 							</conditions>
@@ -32583,12 +32655,12 @@
 						</method>
 						<method name="findActionAsMethod" signature="(Lgriffon/core/artifact/GriffonController;Ljava/lang/String;)Ljava/lang/reflect/Method;" line-rate="0.75" branch-rate="0.6">
 							<lines>
-								<line number="250" hits="44" branch="true" condition-coverage="50% (1/2)">
+								<line number="250" hits="40" branch="true" condition-coverage="50% (1/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="50%"/>
 									</conditions>
 								</line>
-								<line number="251" hits="44" branch="true" condition-coverage="62% (5/8)">
+								<line number="251" hits="40" branch="true" condition-coverage="62% (5/8)">
 									<conditions>
 										<condition number="0" type="jump" coverage="100%"/>
 										<condition number="1" type="jump" coverage="50%"/>
@@ -32838,12 +32910,12 @@
 						<line number="241" hits="0" branch="false"/>
 						<line number="244" hits="0" branch="false"/>
 						<line number="246" hits="4" branch="false"/>
-						<line number="250" hits="44" branch="true" condition-coverage="50% (1/2)">
+						<line number="250" hits="40" branch="true" condition-coverage="50% (1/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="50%"/>
 							</conditions>
 						</line>
-						<line number="251" hits="44" branch="true" condition-coverage="62% (5/8)">
+						<line number="251" hits="40" branch="true" condition-coverage="62% (5/8)">
 							<conditions>
 								<condition number="0" type="jump" coverage="100%"/>
 								<condition number="1" type="jump" coverage="50%"/>
@@ -43515,7 +43587,7 @@
 				</class>
 			</classes>
 		</package>
-		<package name="org.jdesktop.swinghelper.debug" line-rate="0.43258426966292135" branch-rate="0.19148936170212766" complexity="2.1666666666666665">
+		<package name="org.jdesktop.swinghelper.debug" line-rate="0.43258426966292135" branch-rate="0.18085106382978725" complexity="2.1666666666666665">
 			<classes>
 				<class name="org.jdesktop.swinghelper.debug.CheckThreadViolationRepaintManager" filename="org/jdesktop/swinghelper/debug/CheckThreadViolationRepaintManager.java" line-rate="0.2857142857142857" branch-rate="0.07894736842105263" complexity="1.8518518518518519">
 					<methods>
@@ -43893,7 +43965,7 @@
 						<line number="231" hits="0" branch="false"/>
 					</lines>
 				</class>
-				<class name="org.jdesktop.swinghelper.debug.EventDispatchThreadHangMonitor" filename="org/jdesktop/swinghelper/debug/EventDispatchThreadHangMonitor.java" line-rate="0.6379310344827587" branch-rate="0.45" complexity="2.5714285714285716">
+				<class name="org.jdesktop.swinghelper.debug.EventDispatchThreadHangMonitor" filename="org/jdesktop/swinghelper/debug/EventDispatchThreadHangMonitor.java" line-rate="0.6379310344827587" branch-rate="0.4" complexity="2.5714285714285716">
 					<methods>
 						<method name="&lt;clinit&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
 							<lines>
@@ -43934,7 +44006,7 @@
 						</method>
 						<method name="access$600" signature="(Lorg/jdesktop/swinghelper/debug/EventDispatchThreadHangMonitor;)Z" line-rate="1.0" branch-rate="1.0">
 							<lines>
-								<line number="61" hits="106" branch="false"/>
+								<line number="61" hits="104" branch="false"/>
 							</lines>
 						</method>
 						<method name="checkForDeadlock" signature="()V" line-rate="0.0" branch-rate="0.0">
@@ -43964,20 +44036,20 @@
 								<line number="307" hits="0" branch="false"/>
 							</lines>
 						</method>
-						<method name="dispatchEvent" signature="(Ljava/awt/AWTEvent;)V" line-rate="1.0" branch-rate="1.0">
+						<method name="dispatchEvent" signature="(Ljava/awt/AWTEvent;)V" line-rate="1.0" branch-rate="0.8333333333333334">
 							<lines>
-								<line number="243" hits="295" branch="false"/>
-								<line number="244" hits="295" branch="false"/>
-								<line number="246" hits="295" branch="false"/>
-								<line number="247" hits="295" branch="true" condition-coverage="100% (6/6)">
+								<line number="243" hits="296" branch="false"/>
+								<line number="244" hits="296" branch="false"/>
+								<line number="246" hits="296" branch="false"/>
+								<line number="247" hits="296" branch="true" condition-coverage="83% (5/6)">
 									<conditions>
 										<condition number="0" type="jump" coverage="100%"/>
 										<condition number="1" type="jump" coverage="100%"/>
-										<condition number="2" type="jump" coverage="100%"/>
+										<condition number="2" type="jump" coverage="50%"/>
 									</conditions>
 								</line>
 								<line number="249" hits="1" branch="false"/>
-								<line number="252" hits="295" branch="false"/>
+								<line number="252" hits="296" branch="false"/>
 							</lines>
 						</method>
 						<method name="getInstance" signature="()Lorg/jdesktop/swinghelper/debug/EventDispatchThreadHangMonitor;" line-rate="0.0" branch-rate="1.0">
@@ -44012,11 +44084,11 @@
 						</method>
 						<method name="postDispatchEvent" signature="()V" line-rate="1.0" branch-rate="0.75">
 							<lines>
-								<line number="267" hits="295" branch="false"/>
-								<line number="269" hits="295" branch="false"/>
-								<line number="270" hits="295" branch="false"/>
-								<line number="274" hits="295" branch="false"/>
-								<line number="275" hits="295" branch="true" condition-coverage="100% (2/2)">
+								<line number="267" hits="296" branch="false"/>
+								<line number="269" hits="296" branch="false"/>
+								<line number="270" hits="296" branch="false"/>
+								<line number="274" hits="296" branch="false"/>
+								<line number="275" hits="296" branch="true" condition-coverage="100% (2/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="100%"/>
 									</conditions>
@@ -44028,16 +44100,16 @@
 								</line>
 								<line number="277" hits="12" branch="false"/>
 								<line number="279" hits="12" branch="false"/>
-								<line number="280" hits="295" branch="false"/>
-								<line number="281" hits="295" branch="false"/>
+								<line number="280" hits="296" branch="false"/>
+								<line number="281" hits="296" branch="false"/>
 							</lines>
 						</method>
 						<method name="preDispatchEvent" signature="()V" line-rate="1.0" branch-rate="1.0">
 							<lines>
-								<line number="258" hits="295" branch="false"/>
-								<line number="259" hits="295" branch="false"/>
-								<line number="260" hits="295" branch="false"/>
-								<line number="261" hits="295" branch="false"/>
+								<line number="258" hits="296" branch="false"/>
+								<line number="259" hits="296" branch="false"/>
+								<line number="260" hits="296" branch="false"/>
+								<line number="261" hits="296" branch="false"/>
 							</lines>
 						</method>
 						<method name="setTimeout" signature="(J)V" line-rate="0.0" branch-rate="0.0">
@@ -44065,7 +44137,7 @@
 						</method>
 					</methods>
 					<lines>
-						<line number="61" hits="106" branch="false"/>
+						<line number="61" hits="104" branch="false"/>
 						<line number="62" hits="1" branch="false"/>
 						<line number="63" hits="1" branch="false"/>
 						<line number="76" hits="1" branch="false"/>
@@ -44090,27 +44162,27 @@
 							</conditions>
 						</line>
 						<line number="234" hits="0" branch="false"/>
-						<line number="243" hits="295" branch="false"/>
-						<line number="244" hits="295" branch="false"/>
-						<line number="246" hits="295" branch="false"/>
-						<line number="247" hits="295" branch="true" condition-coverage="100% (6/6)">
+						<line number="243" hits="296" branch="false"/>
+						<line number="244" hits="296" branch="false"/>
+						<line number="246" hits="296" branch="false"/>
+						<line number="247" hits="296" branch="true" condition-coverage="83% (5/6)">
 							<conditions>
 								<condition number="0" type="jump" coverage="100%"/>
 								<condition number="1" type="jump" coverage="100%"/>
-								<condition number="2" type="jump" coverage="100%"/>
+								<condition number="2" type="jump" coverage="50%"/>
 							</conditions>
 						</line>
 						<line number="249" hits="1" branch="false"/>
-						<line number="252" hits="295" branch="false"/>
-						<line number="258" hits="295" branch="false"/>
-						<line number="259" hits="295" branch="false"/>
-						<line number="260" hits="295" branch="false"/>
-						<line number="261" hits="295" branch="false"/>
-						<line number="267" hits="295" branch="false"/>
-						<line number="269" hits="295" branch="false"/>
-						<line number="270" hits="295" branch="false"/>
-						<line number="274" hits="295" branch="false"/>
-						<line number="275" hits="295" branch="true" condition-coverage="100% (2/2)">
+						<line number="252" hits="296" branch="false"/>
+						<line number="258" hits="296" branch="false"/>
+						<line number="259" hits="296" branch="false"/>
+						<line number="260" hits="296" branch="false"/>
+						<line number="261" hits="296" branch="false"/>
+						<line number="267" hits="296" branch="false"/>
+						<line number="269" hits="296" branch="false"/>
+						<line number="270" hits="296" branch="false"/>
+						<line number="274" hits="296" branch="false"/>
+						<line number="275" hits="296" branch="true" condition-coverage="100% (2/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="100%"/>
 							</conditions>
@@ -44122,8 +44194,8 @@
 						</line>
 						<line number="277" hits="12" branch="false"/>
 						<line number="279" hits="12" branch="false"/>
-						<line number="280" hits="295" branch="false"/>
-						<line number="281" hits="295" branch="false"/>
+						<line number="280" hits="296" branch="false"/>
+						<line number="281" hits="296" branch="false"/>
 						<line number="284" hits="0" branch="false"/>
 						<line number="285" hits="0" branch="false"/>
 						<line number="286" hits="0" branch="true" condition-coverage="0% (0/2)">
@@ -44169,11 +44241,11 @@
 					<methods>
 						<method name="&lt;init&gt;" signature="(J)V" line-rate="1.0" branch-rate="1.0">
 							<lines>
-								<line number="101" hits="295" branch="false"/>
-								<line number="104" hits="295" branch="false"/>
-								<line number="108" hits="295" branch="false"/>
-								<line number="110" hits="295" branch="false"/>
-								<line number="111" hits="295" branch="false"/>
+								<line number="101" hits="296" branch="false"/>
+								<line number="104" hits="296" branch="false"/>
+								<line number="108" hits="296" branch="false"/>
+								<line number="110" hits="296" branch="false"/>
+								<line number="111" hits="296" branch="false"/>
 							</lines>
 						</method>
 						<method name="access$700" signature="(Lorg/jdesktop/swinghelper/debug/EventDispatchThreadHangMonitor$DispatchInfo;)Ljava/lang/Thread;" line-rate="1.0" branch-rate="1.0">
@@ -44187,18 +44259,18 @@
 						</method>
 						<method name="checkForHang" signature="()V" line-rate="0.6666666666666666" branch-rate="0.5">
 							<lines>
-								<line number="114" hits="3" branch="true" condition-coverage="50% (1/2)">
+								<line number="114" hits="6" branch="true" condition-coverage="50% (1/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="50%"/>
 									</conditions>
 								</line>
 								<line number="115" hits="0" branch="false"/>
-								<line number="117" hits="3" branch="false"/>
+								<line number="117" hits="6" branch="false"/>
 							</lines>
 						</method>
 						<method name="dispose" signature="()V" line-rate="0.5" branch-rate="0.25">
 							<lines>
-								<line number="177" hits="295" branch="true" condition-coverage="50% (1/2)">
+								<line number="177" hits="296" branch="true" condition-coverage="50% (1/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="50%"/>
 									</conditions>
@@ -44209,7 +44281,7 @@
 									</conditions>
 								</line>
 								<line number="179" hits="0" branch="false"/>
-								<line number="182" hits="295" branch="false"/>
+								<line number="182" hits="296" branch="false"/>
 							</lines>
 						</method>
 						<method name="examineHang" signature="()V" line-rate="0.0" branch-rate="0.0">
@@ -44292,24 +44364,24 @@
 						</method>
 						<method name="timeSoFar" signature="()J" line-rate="1.0" branch-rate="1.0">
 							<lines>
-								<line number="173" hits="3" branch="false"/>
+								<line number="173" hits="6" branch="false"/>
 							</lines>
 						</method>
 					</methods>
 					<lines>
 						<line number="89" hits="24" branch="false"/>
-						<line number="101" hits="295" branch="false"/>
-						<line number="104" hits="295" branch="false"/>
-						<line number="108" hits="295" branch="false"/>
-						<line number="110" hits="295" branch="false"/>
-						<line number="111" hits="295" branch="false"/>
-						<line number="114" hits="3" branch="true" condition-coverage="50% (1/2)">
+						<line number="101" hits="296" branch="false"/>
+						<line number="104" hits="296" branch="false"/>
+						<line number="108" hits="296" branch="false"/>
+						<line number="110" hits="296" branch="false"/>
+						<line number="111" hits="296" branch="false"/>
+						<line number="114" hits="6" branch="true" condition-coverage="50% (1/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="50%"/>
 							</conditions>
 						</line>
 						<line number="115" hits="0" branch="false"/>
-						<line number="117" hits="3" branch="false"/>
+						<line number="117" hits="6" branch="false"/>
 						<line number="122" hits="0" branch="true" condition-coverage="0% (0/6)">
 							<conditions>
 								<condition number="0" type="jump" coverage="0%"/>
@@ -44372,8 +44444,8 @@
 						</line>
 						<line number="163" hits="0" branch="false"/>
 						<line number="166" hits="0" branch="false"/>
-						<line number="173" hits="3" branch="false"/>
-						<line number="177" hits="295" branch="true" condition-coverage="50% (1/2)">
+						<line number="173" hits="6" branch="false"/>
+						<line number="177" hits="296" branch="true" condition-coverage="50% (1/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="50%"/>
 							</conditions>
@@ -44384,7 +44456,7 @@
 							</conditions>
 						</line>
 						<line number="179" hits="0" branch="false"/>
-						<line number="182" hits="295" branch="false"/>
+						<line number="182" hits="296" branch="false"/>
 					</lines>
 				</class>
 				<class name="org.jdesktop.swinghelper.debug.EventDispatchThreadHangMonitor$HangChecker" filename="org/jdesktop/swinghelper/debug/EventDispatchThreadHangMonitor.java" line-rate="1.0" branch-rate="1.0" complexity="2.5714285714285716">
@@ -44400,33 +44472,33 @@
 						</method>
 						<method name="run" signature="()V" line-rate="1.0" branch-rate="1.0">
 							<lines>
-								<line number="202" hits="49" branch="false"/>
-								<line number="203" hits="49" branch="true" condition-coverage="100% (4/4)">
+								<line number="202" hits="45" branch="false"/>
+								<line number="203" hits="45" branch="true" condition-coverage="100% (4/4)">
 									<conditions>
 										<condition number="0" type="jump" coverage="100%"/>
 										<condition number="1" type="jump" coverage="100%"/>
 									</conditions>
 								</line>
-								<line number="208" hits="46" branch="false"/>
-								<line number="212" hits="3" branch="false"/>
-								<line number="213" hits="3" branch="false"/>
-								<line number="214" hits="3" branch="false"/>
+								<line number="208" hits="39" branch="false"/>
+								<line number="212" hits="6" branch="false"/>
+								<line number="213" hits="6" branch="false"/>
+								<line number="214" hits="6" branch="false"/>
 							</lines>
 						</method>
 					</methods>
 					<lines>
 						<line number="199" hits="2" branch="false"/>
-						<line number="202" hits="49" branch="false"/>
-						<line number="203" hits="49" branch="true" condition-coverage="100% (4/4)">
+						<line number="202" hits="45" branch="false"/>
+						<line number="203" hits="45" branch="true" condition-coverage="100% (4/4)">
 							<conditions>
 								<condition number="0" type="jump" coverage="100%"/>
 								<condition number="1" type="jump" coverage="100%"/>
 							</conditions>
 						</line>
-						<line number="208" hits="46" branch="false"/>
-						<line number="212" hits="3" branch="false"/>
-						<line number="213" hits="3" branch="false"/>
-						<line number="214" hits="3" branch="false"/>
+						<line number="208" hits="39" branch="false"/>
+						<line number="212" hits="6" branch="false"/>
+						<line number="213" hits="6" branch="false"/>
+						<line number="214" hits="6" branch="false"/>
 					</lines>
 				</class>
 			</classes>

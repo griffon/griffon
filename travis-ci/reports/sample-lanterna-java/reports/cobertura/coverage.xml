@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
 
-<coverage line-rate="0.3314253804271953" branch-rate="0.2120274914089347" lines-covered="2374" lines-valid="7163" branches-covered="617" branches-valid="2910" complexity="2.0706521739130435" version="2.0.3" timestamp="1404317715295">
+<coverage line-rate="0.33087108013937283" branch-rate="0.21144619602467443" lines-covered="2374" lines-valid="7175" branches-covered="617" branches-valid="2918" complexity="2.0710409472126297" version="2.0.3" timestamp="1404382449361">
 	<sources>
 		<source>/home/travis/build/griffon/griffon/subprojects/griffon-core-test/src/main/resources</source>
 		<source>/home/travis/build/griffon/griffon/samples/sample-lanterna-java/src/main/resources</source>
@@ -2822,7 +2822,7 @@
 				</class>
 			</classes>
 		</package>
-		<package name="griffon.core.env" line-rate="0.21678321678321677" branch-rate="0.037037037037037035" complexity="2.8085106382978724">
+		<package name="griffon.core.env" line-rate="0.2080536912751678" branch-rate="0.034482758620689655" complexity="2.78">
 			<classes>
 				<class name="griffon.core.env.ApplicationPhase" filename="griffon/core/env/ApplicationPhase.java" line-rate="1.0" branch-rate="1.0" complexity="0.0">
 					<methods>
@@ -3072,6 +3072,78 @@
 					</methods>
 					<lines>
 						<line number="148" hits="0" branch="false"/>
+					</lines>
+				</class>
+				<class name="griffon.core.env.Feature" filename="griffon/core/env/Feature.java" line-rate="0.0" branch-rate="0.0" complexity="2.3333333333333335">
+					<methods>
+						<method name="&lt;init&gt;" signature="()V" line-rate="0.0" branch-rate="1.0">
+							<lines>
+								<line number="28" hits="0" branch="false"/>
+							</lines>
+						</method>
+						<method name="isFeatureEnabled" signature="(Ljava/lang/String;)Z" line-rate="0.0" branch-rate="0.0">
+							<lines>
+								<line number="32" hits="0" branch="false"/>
+								<line number="33" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
+								<line number="34" hits="0" branch="false"/>
+								<line number="36" hits="0" branch="true" condition-coverage="0% (0/4)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+										<condition number="1" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
+							</lines>
+						</method>
+						<method name="setFeatureEnabled" signature="(Ljava/lang/String;Z)V" line-rate="0.0" branch-rate="1.0">
+							<lines>
+								<line number="41" hits="0" branch="false"/>
+								<line number="42" hits="0" branch="false"/>
+								<line number="43" hits="0" branch="false"/>
+							</lines>
+						</method>
+						<method name="withFeature" signature="(Ljava/lang/String;Ljava/lang/Runnable;)V" line-rate="0.0" branch-rate="0.0">
+							<lines>
+								<line number="46" hits="0" branch="false"/>
+								<line number="47" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
+								<line number="48" hits="0" branch="false"/>
+								<line number="50" hits="0" branch="false"/>
+							</lines>
+						</method>
+					</methods>
+					<lines>
+						<line number="28" hits="0" branch="false"/>
+						<line number="32" hits="0" branch="false"/>
+						<line number="33" hits="0" branch="true" condition-coverage="0% (0/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
+						<line number="34" hits="0" branch="false"/>
+						<line number="36" hits="0" branch="true" condition-coverage="0% (0/4)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+								<condition number="1" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
+						<line number="41" hits="0" branch="false"/>
+						<line number="42" hits="0" branch="false"/>
+						<line number="43" hits="0" branch="false"/>
+						<line number="46" hits="0" branch="false"/>
+						<line number="47" hits="0" branch="true" condition-coverage="0% (0/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
+						<line number="48" hits="0" branch="false"/>
+						<line number="50" hits="0" branch="false"/>
 					</lines>
 				</class>
 				<class name="griffon.core.env.GriffonEnvironment" filename="griffon/core/env/GriffonEnvironment.java" line-rate="0.5211267605633803" branch-rate="0.0" complexity="1.75">
@@ -14717,31 +14789,31 @@
 						</method>
 						<method name="compareTo" signature="(Lgriffon/util/MethodDescriptor;)I" line-rate="1.0" branch-rate="1.0">
 							<lines>
-								<line number="150" hits="2364" branch="false"/>
-								<line number="151" hits="2364" branch="true" condition-coverage="100% (2/2)">
+								<line number="150" hits="2338" branch="false"/>
+								<line number="151" hits="2338" branch="true" condition-coverage="100% (2/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="100%"/>
 									</conditions>
 								</line>
-								<line number="152" hits="622" branch="false"/>
-								<line number="153" hits="622" branch="true" condition-coverage="100% (2/2)">
+								<line number="152" hits="595" branch="false"/>
+								<line number="153" hits="595" branch="true" condition-coverage="100% (2/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="100%"/>
 									</conditions>
 								</line>
-								<line number="154" hits="614" branch="false"/>
-								<line number="155" hits="614" branch="true" condition-coverage="100% (2/2)">
+								<line number="154" hits="587" branch="false"/>
+								<line number="155" hits="587" branch="true" condition-coverage="100% (2/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="100%"/>
 									</conditions>
 								</line>
-								<line number="156" hits="665" branch="true" condition-coverage="100% (2/2)">
+								<line number="156" hits="673" branch="true" condition-coverage="100% (2/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="100%"/>
 									</conditions>
 								</line>
-								<line number="157" hits="526" branch="false"/>
-								<line number="158" hits="526" branch="true" condition-coverage="100% (2/2)">
+								<line number="157" hits="534" branch="false"/>
+								<line number="158" hits="534" branch="true" condition-coverage="100% (2/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="100%"/>
 									</conditions>
@@ -14751,7 +14823,7 @@
 						</method>
 						<method name="compareTo" signature="(Ljava/lang/Object;)I" line-rate="1.0" branch-rate="1.0">
 							<lines>
-								<line number="29" hits="2364" branch="false"/>
+								<line number="29" hits="2338" branch="false"/>
 							</lines>
 						</method>
 						<method name="equals" signature="(Ljava/lang/Object;)Z" line-rate="0.0" branch-rate="0.0">
@@ -14877,7 +14949,7 @@
 						</method>
 					</methods>
 					<lines>
-						<line number="29" hits="2364" branch="false"/>
+						<line number="29" hits="2338" branch="false"/>
 						<line number="35" hits="1" branch="false"/>
 						<line number="39" hits="153" branch="false"/>
 						<line number="44" hits="332" branch="false"/>
@@ -14973,31 +15045,31 @@
 						<line number="143" hits="0" branch="false"/>
 						<line number="145" hits="0" branch="false"/>
 						<line number="146" hits="0" branch="false"/>
-						<line number="150" hits="2364" branch="false"/>
-						<line number="151" hits="2364" branch="true" condition-coverage="100% (2/2)">
+						<line number="150" hits="2338" branch="false"/>
+						<line number="151" hits="2338" branch="true" condition-coverage="100% (2/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="100%"/>
 							</conditions>
 						</line>
-						<line number="152" hits="622" branch="false"/>
-						<line number="153" hits="622" branch="true" condition-coverage="100% (2/2)">
+						<line number="152" hits="595" branch="false"/>
+						<line number="153" hits="595" branch="true" condition-coverage="100% (2/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="100%"/>
 							</conditions>
 						</line>
-						<line number="154" hits="614" branch="false"/>
-						<line number="155" hits="614" branch="true" condition-coverage="100% (2/2)">
+						<line number="154" hits="587" branch="false"/>
+						<line number="155" hits="587" branch="true" condition-coverage="100% (2/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="100%"/>
 							</conditions>
 						</line>
-						<line number="156" hits="665" branch="true" condition-coverage="100% (2/2)">
+						<line number="156" hits="673" branch="true" condition-coverage="100% (2/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="100%"/>
 							</conditions>
 						</line>
-						<line number="157" hits="526" branch="false"/>
-						<line number="158" hits="526" branch="true" condition-coverage="100% (2/2)">
+						<line number="157" hits="534" branch="false"/>
+						<line number="158" hits="534" branch="true" condition-coverage="100% (2/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="100%"/>
 							</conditions>
@@ -24928,12 +25000,12 @@
 						</method>
 						<method name="findActionAsMethod" signature="(Lgriffon/core/artifact/GriffonController;Ljava/lang/String;)Ljava/lang/reflect/Method;" line-rate="0.75" branch-rate="0.6">
 							<lines>
-								<line number="250" hits="20" branch="true" condition-coverage="50% (1/2)">
+								<line number="250" hits="8" branch="true" condition-coverage="50% (1/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="50%"/>
 									</conditions>
 								</line>
-								<line number="251" hits="20" branch="true" condition-coverage="62% (5/8)">
+								<line number="251" hits="8" branch="true" condition-coverage="62% (5/8)">
 									<conditions>
 										<condition number="0" type="jump" coverage="100%"/>
 										<condition number="1" type="jump" coverage="50%"/>
@@ -25183,12 +25255,12 @@
 						<line number="241" hits="0" branch="false"/>
 						<line number="244" hits="0" branch="false"/>
 						<line number="246" hits="2" branch="false"/>
-						<line number="250" hits="20" branch="true" condition-coverage="50% (1/2)">
+						<line number="250" hits="8" branch="true" condition-coverage="50% (1/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="50%"/>
 							</conditions>
 						</line>
-						<line number="251" hits="20" branch="true" condition-coverage="62% (5/8)">
+						<line number="251" hits="8" branch="true" condition-coverage="62% (5/8)">
 							<conditions>
 								<condition number="0" type="jump" coverage="100%"/>
 								<condition number="1" type="jump" coverage="50%"/>
