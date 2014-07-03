@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<BugCollection version="2.0.2" sequence="0" timestamp="1404382143535" analysisTimestamp="1404382143573" release="">
+<BugCollection version="2.0.2" sequence="0" timestamp="1404390791591" analysisTimestamp="1404390791627" release="">
   <Project projectName="">
     <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/services/griffon.core.injection.Module</Jar>
     <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonView</Jar>
     <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonService</Jar>
     <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonController</Jar>
     <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonModel</Jar>
-    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/SampleController.class</Jar>
-    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/SampleService.class</Jar>
     <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/SampleController$1.class</Jar>
-    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/Config.class</Jar>
-    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/Launcher.class</Jar>
+    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/ApplicationModule.class</Jar>
     <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/SampleView.class</Jar>
     <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/SampleModel.class</Jar>
-    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/ApplicationModule.class</Jar>
+    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/Config.class</Jar>
+    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/SampleController.class</Jar>
+    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/Launcher.class</Jar>
+    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/SampleService.class</Jar>
     <AuxClasspathEntry>/usr/lib/jvm/java-7-oracle/jre/lib/jfxrt.jar</AuxClasspathEntry>
     <AuxClasspathEntry>/home/travis/build/griffon/griffon/subprojects/griffon-javafx/build/libs/griffon-javafx-2.0.0.BETA3.jar</AuxClasspathEntry>
     <AuxClasspathEntry>/home/travis/build/griffon/griffon/subprojects/griffon-guice/build/libs/griffon-guice-2.0.0.BETA3.jar</AuxClasspathEntry>
@@ -31,8 +31,8 @@
     <SrcDir>/home/travis/build/griffon/griffon/samples/sample-javafx-java/griffon-app/models/sample/javafx/java/SampleModel.java</SrcDir>
     <SrcDir>/home/travis/build/griffon/griffon/samples/sample-javafx-java/griffon-app/views/sample/javafx/java/SampleView.java</SrcDir>
     <SrcDir>/home/travis/build/griffon/griffon/samples/sample-javafx-java/griffon-app/services/sample/javafx/java/SampleService.java</SrcDir>
-    <SrcDir>/home/travis/build/griffon/griffon/samples/sample-javafx-java/src/main/java/sample/javafx/java/Launcher.java</SrcDir>
     <SrcDir>/home/travis/build/griffon/griffon/samples/sample-javafx-java/src/main/java/sample/javafx/java/ApplicationModule.java</SrcDir>
+    <SrcDir>/home/travis/build/griffon/griffon/samples/sample-javafx-java/src/main/java/sample/javafx/java/Launcher.java</SrcDir>
   </Project>
   <Errors errors="5" missingClasses="0">
     <Error>
@@ -161,7 +161,7 @@
       <StackTrace>org.gradle.process.internal.launcher.GradleWorkerMain.main(GradleWorkerMain.java:37)</StackTrace>
     </Error>
   </Errors>
-  <FindBugsSummary timestamp="Thu, 3 Jul 2014 10:09:03 +0000" total_classes="8" referenced_classes="135" total_bugs="0" total_size="106" num_packages="1" vm_version="24.51-b03" cpu_seconds="24.94" clock_seconds="8.82" peak_mbytes="150.58" alloc_mbytes="683.00" gc_seconds="0.07">
+  <FindBugsSummary timestamp="Thu, 3 Jul 2014 12:33:11 +0000" total_classes="8" referenced_classes="135" total_bugs="0" total_size="106" num_packages="1" vm_version="24.51-b03" cpu_seconds="19.43" clock_seconds="7.76" peak_mbytes="144.72" alloc_mbytes="683.00" gc_seconds="0.09">
     <PackageStats package="sample.javafx.java" total_bugs="0" total_types="8" total_size="106">
       <ClassStats class="sample.javafx.java.ApplicationModule" sourceFile="ApplicationModule.java" interface="false" size="6" bugs="0"/>
       <ClassStats class="sample.javafx.java.Config" sourceFile="Config.java" interface="false" size="6" bugs="0"/>
@@ -173,20 +173,19 @@
       <ClassStats class="sample.javafx.java.SampleView" sourceFile="SampleView.java" interface="false" size="31" bugs="0"/>
     </PackageStats>
     <FindBugsProfile>
-      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassInfoAnalysisEngine" totalMilliseconds="1581" invocations="1061" avgMicrosecondsPerInvocation="1490" maxMicrosecondsPerInvocation="71388" standardDeviationMircosecondsPerInvocation="3931"/>
-      <ClassProfile name="edu.umd.cs.findbugs.detect.FieldItemSummary" totalMilliseconds="971" invocations="135" avgMicrosecondsPerInvocation="7196" maxMicrosecondsPerInvocation="97805" standardDeviationMircosecondsPerInvocation="16757"/>
-      <ClassProfile name="edu.umd.cs.findbugs.detect.NoteDirectlyRelevantTypeQualifiers" totalMilliseconds="616" invocations="135" avgMicrosecondsPerInvocation="4565" maxMicrosecondsPerInvocation="71059" standardDeviationMircosecondsPerInvocation="11725"/>
-      <ClassProfile name="edu.umd.cs.findbugs.util.TopologicalSort" totalMilliseconds="398" invocations="1029" avgMicrosecondsPerInvocation="387" maxMicrosecondsPerInvocation="32917" standardDeviationMircosecondsPerInvocation="1350"/>
-      <ClassProfile name="edu.umd.cs.findbugs.OpcodeStack$JumpInfoFactory" totalMilliseconds="324" invocations="311" avgMicrosecondsPerInvocation="1043" maxMicrosecondsPerInvocation="16128" standardDeviationMircosecondsPerInvocation="1383"/>
-      <ClassProfile name="edu.umd.cs.findbugs.detect.BuildObligationPolicyDatabase" totalMilliseconds="299" invocations="135" avgMicrosecondsPerInvocation="2216" maxMicrosecondsPerInvocation="30925" standardDeviationMircosecondsPerInvocation="4469"/>
-      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.JavaClassAnalysisEngine" totalMilliseconds="273" invocations="188" avgMicrosecondsPerInvocation="1456" maxMicrosecondsPerInvocation="32918" standardDeviationMircosecondsPerInvocation="3815"/>
-      <ClassProfile name="edu.umd.cs.findbugs.detect.FunctionsThatMightBeMistakenForProcedures" totalMilliseconds="233" invocations="135" avgMicrosecondsPerInvocation="1727" maxMicrosecondsPerInvocation="25905" standardDeviationMircosecondsPerInvocation="4234"/>
-      <ClassProfile name="edu.umd.cs.findbugs.detect.OverridingEqualsNotSymmetrical" totalMilliseconds="196" invocations="135" avgMicrosecondsPerInvocation="1459" maxMicrosecondsPerInvocation="20272" standardDeviationMircosecondsPerInvocation="3272"/>
-      <ClassProfile name="edu.umd.cs.findbugs.detect.CalledMethods" totalMilliseconds="189" invocations="135" avgMicrosecondsPerInvocation="1402" maxMicrosecondsPerInvocation="19931" standardDeviationMircosecondsPerInvocation="3353"/>
-      <ClassProfile name="edu.umd.cs.findbugs.detect.EqualsOperandShouldHaveClassCompatibleWithThis" totalMilliseconds="157" invocations="135" avgMicrosecondsPerInvocation="1164" maxMicrosecondsPerInvocation="18039" standardDeviationMircosecondsPerInvocation="2751"/>
-      <ClassProfile name="edu.umd.cs.findbugs.classfile.impl.ZipCodeBaseFactory" totalMilliseconds="145" invocations="28" avgMicrosecondsPerInvocation="5181" maxMicrosecondsPerInvocation="137443" standardDeviationMircosecondsPerInvocation="25455"/>
-      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.IsNullValueDataflowFactory" totalMilliseconds="134" invocations="26" avgMicrosecondsPerInvocation="5159" maxMicrosecondsPerInvocation="21190" standardDeviationMircosecondsPerInvocation="5324"/>
-      <ClassProfile name="edu.umd.cs.findbugs.ba.npe.NullDerefAndRedundantComparisonFinder" totalMilliseconds="130" invocations="26" avgMicrosecondsPerInvocation="5001" maxMicrosecondsPerInvocation="31457" standardDeviationMircosecondsPerInvocation="6985"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassInfoAnalysisEngine" totalMilliseconds="1324" invocations="1061" avgMicrosecondsPerInvocation="1248" maxMicrosecondsPerInvocation="69056" standardDeviationMircosecondsPerInvocation="3548"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FieldItemSummary" totalMilliseconds="827" invocations="135" avgMicrosecondsPerInvocation="6127" maxMicrosecondsPerInvocation="91253" standardDeviationMircosecondsPerInvocation="14706"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.NoteDirectlyRelevantTypeQualifiers" totalMilliseconds="577" invocations="135" avgMicrosecondsPerInvocation="4275" maxMicrosecondsPerInvocation="68310" standardDeviationMircosecondsPerInvocation="11401"/>
+      <ClassProfile name="edu.umd.cs.findbugs.util.TopologicalSort" totalMilliseconds="368" invocations="1029" avgMicrosecondsPerInvocation="358" maxMicrosecondsPerInvocation="30178" standardDeviationMircosecondsPerInvocation="1255"/>
+      <ClassProfile name="edu.umd.cs.findbugs.OpcodeStack$JumpInfoFactory" totalMilliseconds="280" invocations="311" avgMicrosecondsPerInvocation="900" maxMicrosecondsPerInvocation="12420" standardDeviationMircosecondsPerInvocation="1208"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.BuildObligationPolicyDatabase" totalMilliseconds="265" invocations="135" avgMicrosecondsPerInvocation="1968" maxMicrosecondsPerInvocation="26477" standardDeviationMircosecondsPerInvocation="3939"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.JavaClassAnalysisEngine" totalMilliseconds="254" invocations="188" avgMicrosecondsPerInvocation="1351" maxMicrosecondsPerInvocation="25823" standardDeviationMircosecondsPerInvocation="3336"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FunctionsThatMightBeMistakenForProcedures" totalMilliseconds="218" invocations="135" avgMicrosecondsPerInvocation="1617" maxMicrosecondsPerInvocation="24060" standardDeviationMircosecondsPerInvocation="3951"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.OverridingEqualsNotSymmetrical" totalMilliseconds="182" invocations="135" avgMicrosecondsPerInvocation="1353" maxMicrosecondsPerInvocation="20005" standardDeviationMircosecondsPerInvocation="3037"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.impl.ZipCodeBaseFactory" totalMilliseconds="170" invocations="28" avgMicrosecondsPerInvocation="6095" maxMicrosecondsPerInvocation="162287" standardDeviationMircosecondsPerInvocation="30061"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.CalledMethods" totalMilliseconds="146" invocations="135" avgMicrosecondsPerInvocation="1086" maxMicrosecondsPerInvocation="18082" standardDeviationMircosecondsPerInvocation="2623"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.EqualsOperandShouldHaveClassCompatibleWithThis" totalMilliseconds="144" invocations="135" avgMicrosecondsPerInvocation="1068" maxMicrosecondsPerInvocation="18037" standardDeviationMircosecondsPerInvocation="2542"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.MethodGenFactory" totalMilliseconds="121" invocations="26" avgMicrosecondsPerInvocation="4658" maxMicrosecondsPerInvocation="111792" standardDeviationMircosecondsPerInvocation="21428"/>
     </FindBugsProfile>
   </FindBugsSummary>
   <ClassFeatures></ClassFeatures>
