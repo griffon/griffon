@@ -35,7 +35,9 @@ configurations {
 dependencies {
     compile project(':griffon-groovy')
     compile project(':griffon-javafx')
-    compile 'org.codehaus.groovyfx:groovyfx:0.4.0'
+    compile('org.codehaus.groovyfx:groovyfx:0.4.0') {
+        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+    }
 
     compileOnly project.files(project.jfxrtLocation)
     compileOnly project(':griffon-core-compile')

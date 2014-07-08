@@ -77,8 +77,12 @@ subprojects { subproj ->
             testCompile("com.google.inject:guice:$guiceVersion") {
                 exclude group: 'org.sonatype.sisu.inject', module: 'cglib'
             }
-            testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
-            testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+            if (!subproj.name.startsWith('gradle-')) {
+                testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
+            }
+            testCompile('org.spockframework:spock-core:0.7-groovy-2.0') {
+                exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+            }
             testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
         }
 
