@@ -1,0 +1,67 @@
+/*
+ * Copyright 2008-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import com.intellij.patterns.*
+import com.intellij.openapi.diagnostic.*
+
+/**
+ * @author Kasper Fock
+ * @author David Askirk
+ * @author Peter Gromov
+ * @author Andres Almiray
+ */
+
+['Controller', 'Model', 'View', 'Service'].each { type ->
+    String artifactPath = type.toLowerCase() + 's'
+    contributor(ctype: PsiJavaPatterns.psiClass().withName(PlatformPatterns.string().matches(/.*${type}/))) {
+        def path = psiClass?.containingFile?.originalFile?.virtualFile?.path
+        if (path && path =~ ".*/*griffon-app/${artifactPath}/.*") {
+            delegatesTo(findClass("griffon.core.artifact.Griffon${type}"))
+        }
+    }
+}
+
+contributor(scope: annotatedScope(ctype: 'griffon.transform.EventPublisher')) {
+    delegatesTo(findClass('griffon.core.event.EventPublisher'))
+}
+
+contributor(scope: annotatedScope(ctype: 'griffon.transform.MVCAware')) {
+    delegatesTo(findClass('griffon.core.mvc.MVCHandler'))
+}
+
+contributor(scope: annotatedScope(ctype: 'griffon.transform.ThreadingAware')) {
+    delegatesTo(findClass('griffon.core.threading.ThreadingHandler'))
+}
+
+contributor(scope: annotatedScope(ctype: 'griffon.transform.ResourcesAware')) {
+    delegatesTo(findClass('griffon.core.resources.ResourceHandler'))
+}
+
+contributor(scope: annotatedScope(ctype: 'griffon.transform.MessageSourceAware')) {
+    delegatesTo(findClass('griffon.core.i18n.MessageSource'))
+}
+
+contributor(scope: annotatedScope(ctype: 'griffon.transform.ResourceResolverAware')) {
+    delegatesTo(findClass('griffon.core.resources.ResourceResolver'))
+}
+
+contributor(scope: annotatedScope(ctype: 'griffon.transform.Observable')) {
+    delegatesTo(findClass('griffon.core.Observable'))
+}
+
+contributor(scope: annotatedScope(ctype: 'griffon.transform.Vetoable')) {
+    delegatesTo(findClass('griffon.core.Vetoable'))
+}
