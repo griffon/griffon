@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Named;
 import javax.inject.Qualifier;
 import java.io.Serializable;
@@ -67,6 +68,21 @@ public class AnnotationUtils {
             }
         }
         return list;
+    }
+
+    @Nullable
+    public static <A extends Annotation> A findAnnotation(@Nonnull Class<?> klass, @Nonnull Class<A> annotationType) {
+        requireNonNull(klass, "Argument 'class' must not be null");
+        requireNonNull(annotationType, "Argument 'annotationType' must not be null");
+        while (klass != null) {
+            for (Annotation annotation : klass.getAnnotations()) {
+                if (annotationType.isAssignableFrom(annotation.getClass())) {
+                    return (A) annotation;
+                }
+            }
+            klass = klass.getSuperclass();
+        }
+        return null;
     }
 
     public static boolean isAnnotatedWith(@Nonnull Object instance, @Nonnull Class<? extends Annotation> annotationType) {

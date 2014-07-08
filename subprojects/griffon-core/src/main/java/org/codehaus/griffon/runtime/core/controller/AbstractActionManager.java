@@ -19,12 +19,17 @@ import griffon.core.Configuration;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonControllerClass;
-import griffon.core.controller.*;
+import griffon.core.controller.AbortActionExecution;
+import griffon.core.controller.Action;
+import griffon.core.controller.ActionExecutionStatus;
+import griffon.core.controller.ActionInterceptor;
+import griffon.core.controller.ActionManager;
 import griffon.core.i18n.MessageSource;
 import griffon.core.i18n.NoSuchMessageException;
 import griffon.core.threading.UIThreadManager;
 import griffon.exceptions.InstanceMethodInvocationException;
 import griffon.transform.Threading;
+import griffon.util.AnnotationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +38,12 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EventObject;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -41,7 +51,11 @@ import static griffon.core.GriffonExceptionHandler.sanitize;
 import static griffon.util.CollectionUtils.reverse;
 import static griffon.util.GriffonClassUtils.EMPTY_ARGS;
 import static griffon.util.GriffonClassUtils.invokeExactInstanceMethod;
-import static griffon.util.GriffonNameUtils.*;
+import static griffon.util.GriffonNameUtils.capitalize;
+import static griffon.util.GriffonNameUtils.getNaturalName;
+import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.GriffonNameUtils.uncapitalize;
 import static griffon.util.TypeUtils.castToBoolean;
 import static java.lang.reflect.Modifier.isPublic;
 import static java.lang.reflect.Modifier.isStatic;
@@ -55,6 +69,7 @@ public abstract class AbstractActionManager implements ActionManager {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractActionManager.class);
 
     private static final String KEY_THREADING = "controller.threading";
+    private static final String KEY_THREADING_DEFAULT = "controller.threading.default";
     private static final String KEY_DISABLE_THREADING_INJECTION = "griffon.disable.threading.injection";
     private static final String ERROR_CONTROLLER_NULL = "Argument 'controller' must not be null";
     private static final String ERROR_ACTION_NAME_BLANK = "Argument 'actionName' must not be blank";
@@ -263,10 +278,50 @@ public abstract class AbstractActionManager implements ActionManager {
         Method method = findActionAsMethod(controller, actionName);
         if (method != null) {
             Threading annotation = method.getAnnotation(Threading.class);
-            return annotation == null ? Threading.Policy.OUTSIDE_UITHREAD : annotation.value();
+            return annotation == null ? resolveThreadingPolicy(controller) : annotation.value();
         }
 
         return Threading.Policy.OUTSIDE_UITHREAD;
+    }
+
+    @Nonnull
+    private Threading.Policy resolveThreadingPolicy(@Nonnull GriffonController controller) {
+        Threading annotation = AnnotationUtils.findAnnotation(controller.getClass(), Threading.class);
+        return annotation == null ? resolveThreadingPolicy() : annotation.value();
+    }
+
+    @Nonnull
+    private Threading.Policy resolveThreadingPolicy() {
+        Object value = getConfiguration().get(KEY_THREADING_DEFAULT);
+        if (value == null) {
+            return Threading.Policy.OUTSIDE_UITHREAD;
+        }
+
+        if (value instanceof Threading.Policy) {
+            return (Threading.Policy) value;
+        }
+
+        String policy = String.valueOf(value).toLowerCase();
+        switch (policy) {
+            case "sync":
+            case "inside sync":
+            case "inside uithread sync":
+            case "inside_uithread_sync":
+                return Threading.Policy.INSIDE_UITHREAD_SYNC;
+            case "async":
+            case "inside async":
+            case "inside uithread async":
+            case "inside_uithread_async":
+                return Threading.Policy.INSIDE_UITHREAD_ASYNC;
+            case "outside":
+            case "outside uithread":
+            case "outside_uithread":
+                return Threading.Policy.OUTSIDE_UITHREAD;
+            case "skip":
+                return Threading.Policy.SKIP;
+            default:
+                throw new IllegalArgumentException("Value '" + policy + "' cannot be translated into " + Threading.Policy.class.getName());
+        }
     }
 
     private boolean isThreadingDisabled(@Nonnull String actionName) {

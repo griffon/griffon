@@ -21,14 +21,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <p>Annotates a method or property.</p>
+ * <p>Annotates a calls or method.</p>
  * <p/>
  * Annotated elements must follow these rules
  * <ul>
- * <li>must be a public method or property</li>
+ * <li>must be a public method</li>
  * <li>name does not match an event handler</li>
  * <li>must pass {@code griffon.util.GriffonClassUtils.isPlainMethod()} if it's a method</li>
- * <li>its value must be a closure (including curried method pointers) if it's a property</li>
  * </ul>
  * <p/>
  * This annotation takes {@code griffon.util.Threading.Policy} as value, with {@code Threading.Policy.OUTSIDE_UITHREAD} being
@@ -73,7 +72,7 @@ import java.lang.annotation.Target;
  * @since 2.0.0
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+@Target({ElementType.TYPE, ElementType.METHOD})
 public @interface Threading {
     Policy value() default Policy.OUTSIDE_UITHREAD;
 
