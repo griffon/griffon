@@ -1,0 +1,75 @@
+/*
+ * Copyright 2008-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'me.champeau.gradle:jbake-gradle-plugin:0.2'
+        classpath 'org.asciidoctor:asciidoctor-java-integration:0.1.4'
+    }
+}
+
+apply plugin: 'base'
+apply plugin: 'jetty'
+apply plugin: 'me.champeau.jbake'
+
+configurations {
+    docs
+}
+
+dependencies {
+    docs project(':griffon-guide')
+}
+
+jbake {
+    configuration['asciidoctor.attributes.export'] = true
+    configuration['asciidoctor.attributes.export.prefix'] = 'jbake-'
+    configuration['griffon.version'] = project.version
+}
+
+task(guide, dependsOn: [':griffon-guide:guide']) {
+    // generates guide on the spot
+}
+
+task(copyGuide, type: Copy) {
+    destinationDir = file("$buildDir/guide")
+    from(tasks.getByPath(':griffon-guide:guide').destinationDir) {
+        into 'latest'
+    }
+    from(tasks.getByPath(':griffon-guide:guide').destinationDir) {
+        into project.version
+    }
+}
+
+task(site, type: Copy, dependsOn: ['jbake', copyGuide]) {
+    destinationDir = file("$buildDir/site")
+    from jbake.output
+    from(copyGuide.destinationDir) {
+        into 'guide'
+    }
+}
+
+jettyRun {
+    contextPath = ''
+    webAppSourceDirectory = file("$buildDir/site")
+}
+
+task(siteRun, dependsOn: ['site', 'jettyRun']) {
+
+}

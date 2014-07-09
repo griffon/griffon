@@ -1,0 +1,55 @@
+= Griffon 2.0.0.BETA Released
+Andres Almiray
+2014-06-08
+:jbake-type: post
+:jbake-status: published
+:category: news
+:idprefix:
+
+== Griffon 2.0.0.BETA Released
+
+The Griffon team is happy to announce the release of Griffon 2.0.0.BETA, hot on
+the heels of http://gr8conf.eu[Gr8conf EU]!
+
+This release marks an important milestone in the framework's history as it lets go
+of the last remaining legacy bits inherit from the Grails codebase (the build system)
+while embracing the latest tools available in the Groovy Ecosystem.
+
+The griffon command line tool is no more. Long live Gradle! From now on, every Griffon
+project is a valid Gradle project. There's no longer a need for custom IDE plugins as
+Gradle is well supported by all IDEs. An often brought subject, that of dependency
+resolution, is now rendered moot as Gradle is much better at handling this particular
+topic than the griffon command ever was.
+
+The following list summarizes the changes brought by this release
+
+ * the new JDK baseline is JDK7.
+ * the Griffon 2.0 API is JDK8 friendly, which means you may use lambda expressions.
+   where a functional interface is expected.
+ * Groovy support has been moved to its own plugin, thus enabling developers to write.
+   applications with just Java, drastically reducing the deployment size of an application.
+ * JSR 330 is used in core, enabling better module reusability.
+ * the runtime API is mostly binary compatible though classes have been moved to other packages.
+ * archetype support is now provided by https://github.com/pledbrook/lazybones[Lazybones].
+
+The latest version of the Griffon Guide is available at http://griffon.github.io/griffon/guide/index.html
+New binaries are posted at https://bintray.com/griffon[Griffon's Bintray repository].
+
+The Griffon Guide includes a section about migration
+
+    http://griffon.github.io/griffon/guide/index.html#_appendix_migration
+
+Please take special note about migrating existing Griffon projects from 1.X to 2.X: all
+plugins from the 1.X series do not work with Griffon 2.X. Update versions of popular plugins
+will begin to appear in the coming days. Keep an eye on
+
+    https://bintray.com/griffon/griffon-plugins
+
+Despite this, we look forward to your feedback. Please report any problems you find to
+the Griffon User list, or better yet file a bug at http://jira.codehaus.org/browse/griffon
+
+Remember you can also contact the team on Twitter: http://twitter.com/theaviary[@theaviary].
+
+Many thanks to all who contributed to this release!
+
+-- The Griffon Team

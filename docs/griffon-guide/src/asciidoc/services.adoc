@@ -1,0 +1,60 @@
+
+[[_services]]
+= Services
+
+Services are responsible for the application logic that does not belong to a single
+controller. They are meant to be treated as singletons, injected to MVC members by
+following a naming convention. Services must be located inside the +griffon-app/services+
+
+Let's say you want to create a Math service. A trivial implementation of an addition
+operation performed by the +MathService+ would look like the following snippet
+
+.griffon-app/services/sample/MathService.groovy
+[source,groovy,options="nowrap"]
+[subs="verbatim,attributes"]
+----
+package sample
+
+import griffon.core.artifact.GriffonService
+
+@griffon.metadata.ArtifactProviderFor(GriffonService)
+class MathService {
+    def addition(a, b) { a + b }
+}
+----
+
+Using this service from a Controller is a straight forward task, you just have to
+define an injection point and annotated it with +@javax.inject.Inject+
+
+.griffon-app/controllers/sample/SampleService.groovy
+[source,groovy,options="nowrap"]
+[subs="verbatim,attributes"]
+----
+package sample
+
+import griffon.core.artifact.GriffonController
+
+@griffon.metadata.ArtifactProviderFor(GriffonController)
+class SampleController
+    SampleModel model
+
+    @javax.inject.Inject
+    private MathService mathService
+
+    void calculate(evt = null) {
+        model.result = mathService.addition model.a, model.b
+    }
+}
+----
+
+Given that services are inherently treated as singletons they are also automatically
+registered as application event listeners. Be aware that services will be instantiated
+lazily which means that some events might not reach a particular service if it has not
+been instantiated by the framework by the time of event publication. It's also discouraged
+to use Groovy's +@Singleton+ annotation on a Service class as it will cause trouble with
+the automatic singleton management Griffon has in place.
+
+== Life Cycle
+
+TBD (discuss @PostConstruct & @PreDestroy]
+
