@@ -42,6 +42,55 @@ There are also a few helpful methods found in +{link_metadata}+
 * +getApplicationName()+ - same result as +meta['application.name']+
 * +getApplicationVersion()+ - same result as +meta['application.version']+
 
+[[_overview_metadata_feature]]
+== Feature
+
+A +{link_feature}+ is a boolean flag that determines if a capability is available to
+the application at runtime. ++{link_feature}++s are nothing more than a +System+
+property. They can be written as properties on +{link_metadata}+ too. If a feature
+key is found in both +System+ properties and +{link_metadata}+ then the former
+takes precedence. Here's an example of a module that decides if a specific binding
+should be applied over another
+
+.src/main/groovy/org/opendolphin/demo/DolphinModule.groovy
+[source,groovy,options="nowrap"]
+----
+package org.opendolphin.demo
+
+import griffon.core.env.Feature
+import griffon.core.injection.Module
+import org.codehaus.griffon.runtime.core.injection.AbstractModule
+import org.kordamp.jipsy.ServiceProviderFor
+import org.opendolphin.core.client.comm.ClientConnector
+import org.opendolphin.demo.injection.HttpClientConnectorProvider
+import org.opendolphin.demo.injection.InMemoryClientConnectorProvider
+
+@ServiceProviderFor(Module)
+class DolphinModule extends AbstractModule {
+    @Override
+    protected void doConfigure() {
+        bind(ClientConnector)
+            .toProvider(InMemoryClientConnectorProvider)
+            .asSingleton()
+
+        Feature.withFeature('dolphin.remote') {
+            bind(ClientConnector)
+                .toProvider(HttpClientConnectorProvider)
+                .asSingleton()
+        }
+    }
+}
+----
+
+The remote option can be enabled when running the application with +-Ddolphin.remote=true+
+or adding the following entry to +griffon-app/resources/application.properties+
+
+.griffon-app/resources/application.properties
+[source,java,options="nowrap"]
+----
+dolphin.remote=true
+----
+
 [[_overview_metadata_environment]]
 == Application Environment
 
@@ -86,11 +135,6 @@ recognizes the following aliases
 
  * +dev+ - short for +development+.
  * +prod+ - short for +production+.
-
-[[_overview_metadata_feature]]
-== Feature
-
-TBD
 
 [[_overview_metadata_griffon_environment]]
 == Griffon Environment

@@ -43,41 +43,40 @@ The +Builder.groovy+ is no longer required. Its functions are now handled by
 +BuilderCustomizers+. Here's an example for adding a http://miglayout.com[Miglayout]
 customization
 
-.src/main/com/acme/MiglayoutBuilderCustomizer.java
+.src/main/java/griffon/builder/swing/MiglayoutSwingBuilderCustomizer.java
 [source,java,options="nowrap"]
 [subs="verbatim"]
 ----
-package com.acme;
+package griffon.builder.swing;
 
 import griffon.inject.DependsOn;
 import groovy.swing.factory.LayoutFactory;
 import net.miginfocom.swing.MigLayout;
 import groovy.util.Factory;
-import org.codehaus.griffon.runtime.core.view.AbstractBuilderCustomizer;
+import org.codehaus.griffon.runtime.groovy.view.AbstractBuilderCustomizer;
 
 import javax.inject.Named;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Named("miglayout")
 @DependsOn({"swing"})
-@SuppressWarnings("rawtypes")
-public class MiglayoutBuilderCustomizer extends AbstractBuilderCustomizer {
-    @SuppressWarnings("unchecked")
-    public MiglayoutBuilderCustomizer() {
+@Named("miglayout-swing")
+public class MiglayoutSwingBuilderCustomizer extends AbstractBuilderCustomizer {
+    public MiglayoutSwingBuilderCustomizer() {
         Map<String, Factory> factories = new LinkedHashMap<>();
-        factories.put("miglayout", new LayoutFactory(MigLayout.class));
+        factories.put("migLayout", new LayoutFactory(MigLayout.class));
         setFactories(factories);
     }
 }
 ----
 
-.src/main/com/acme/MiglayoutModule.java
+.src/main/java/org/codehaus/griffon/runtime/miglayout/MiglayoutSwingGroovyModule.java
 [source,java,options="nowrap"]
 [subs="verbatim"]
 ----
-package com.acme;
+package org.codehaus.griffon.runtime.miglayout;
 
+import griffon.builder.swing.MiglayoutSwingBuilderCustomizer;
 import griffon.core.injection.Module;
 import griffon.inject.DependsOn;
 import griffon.util.BuilderCustomizer;
@@ -86,15 +85,17 @@ import org.kordamp.jipsy.ServiceProviderFor;
 
 import javax.inject.Named;
 
-@ServiceProviderFor(Module.class)
 @DependsOn("swing-groovy")
-@Named("miglayout-groovy")
-public class MiglayoutModule extends AbstractModule {
+@Named("miglayout-swing-groovy")
+@ServiceProviderFor(Module.class)
+public class MiglayoutSwingGroovyModule extends AbstractModule {
     @Override
     protected void doConfigure() {
+        // tag::bindings[]
         bind(BuilderCustomizer.class)
-            .to(MiglayoutBuilderCustomizer.class)
+            .to(MiglayoutSwingBuilderCustomizer.class)
             .asSingleton();
+        // end::bindings[]
     }
 }
 ----
@@ -105,7 +106,7 @@ The +Events+ script usually placed in +griffon-app/conf+ should be moved to the 
 source directory (+src/main/java+ or +src/main/groovy+ depending on your preferences).
 The following snippet shows an skeleton implementation
 
-.src/main/com/acme/ApplicationEventHandler.groovy
+.src/main/groovy/com/acme/ApplicationEventHandler.groovy
 [source,groovy,options="nowrap"]
 [subs="verbatim"]
 ----

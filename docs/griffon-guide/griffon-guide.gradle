@@ -173,7 +173,8 @@ asciidoctor {
             numbered                : true,
             linkattrs               : true,
             imagesdir               : 'images',
-            stylesheet              : file('src/resources/css/style.css'),
+            linkcss                 : true,
+            stylesheet              : 'css/style.css',
             'source-highlighter'    : 'coderay',
             'griffon-version'       : project.version,
             'griffon-group'         : project.group,
@@ -188,6 +189,10 @@ asciidoctor {
             into file("${task.outputDir}/images/")
             from rootProject.file('src/media/banners/large.png')
             rename '.*', 'griffon-banner-large.png'
+        }
+        copy {
+            into file("${task.outputDir}/css/")
+            from file('src/resources/css/style.css')
         }
     }
 }

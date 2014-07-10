@@ -19,25 +19,246 @@ target.type = full.qualified.classname
 ----
 
 The following table enumerates the default PropertyEditors loaded by Griffon at startup.
-Plugins such as +griffon-swing+ and +griffon-javafx+ may register additional editors.
 
-.PropertyEditor mappings
-[cols="2*", options="header"]
+.Core PropertyEditor mappings
+[cols="3*", options="header"]
 |===
-| Type | Editor Class
-| java.lang.String     | griffon.core.editors.StringPropertyEditor
-| java.io.File         | griffon.core.editors.FilePropertyEditor
-| java.net.URL         | griffon.core.editors.URLPropertyEditor
-| java.net.URI         | griffon.core.editors.URIPropertyEditor
-| java.math.BigDecimal | griffon.core.editors.BigDecimalPropertyEditor
-| java.math.BigInteger | griffon.core.editors.BigIntegerPropertyEditor
-| java.lang.Boolean    | griffon.core.editors.BooleanPropertyEditor
-| java.lang.Byte       | griffon.core.editors.BytePropertyEditor
-| java.lang.Short      | griffon.core.editors.ShortPropertyEditor
-| java.lang.Integer    | griffon.core.editors.IntegerPropertyEditor
-| java.lang.Long       | griffon.core.editors.LongPropertyEditor
-| java.lang.Float      | griffon.core.editors.FloatPropertyEditor
-| java.lang.Double     | griffon.core.editors.DoublePropertyEditor
-| java.util.Calendar   | griffon.core.editors.CalendarPropertyEditor
-| java.util.Date       | griffon.core.editors.DatePropertyEditor
+
+| Type
+| Editor Class
+| Format
+
+| java.lang.String
+| griffon.core.editors.StringPropertyEditor
+| 
+
+| java.io.File
+| griffon.core.editors.FilePropertyEditor
+|
+
+| java.net.URL
+| griffon.core.editors.URLPropertyEditor
+|
+
+| java.net.URI
+| griffon.core.editors.URIPropertyEditor
+|
+
+| java.math.BigDecimal
+| griffon.core.editors.BigDecimalPropertyEditor
+| 'currency', 'percent'
+
+| java.math.BigInteger
+| griffon.core.editors.BigIntegerPropertyEditor
+| 'currency', 'percent'
+
+| java.lang.Boolean
+| griffon.core.editors.BooleanPropertyEditor
+| 'boolean', 'query', 'switch'
+
+| java.lang.Byte
+| griffon.core.editors.BytePropertyEditor
+| 'currency', 'percent'
+
+| java.lang.Short
+| griffon.core.editors.ShortPropertyEditor
+| 'currency', 'percent'
+
+| java.lang.Integer
+| griffon.core.editors.IntegerPropertyEditor
+| 'currency', 'percent'
+
+| java.lang.Long
+| griffon.core.editors.LongPropertyEditor
+| 'currency', 'percent'
+
+| java.lang.Float
+| griffon.core.editors.FloatPropertyEditor
+| 'currency', 'percent'
+
+| java.lang.Double
+| griffon.core.editors.DoublePropertyEditor
+| 'currency', 'percent'
+
+| java.util.Calendar
+| griffon.core.editors.CalendarPropertyEditor
+|
+
+| java.util.Date
+| griffon.core.editors.DatePropertyEditor
+|
+
 |===
+
+Where the following apply
+
+ * 'currency' and 'percent' are literal values.
+ * 'boolean' accepts +true+ and +false+ as values.
+ * 'query' accepts +yes+ and +no+ as values.
+ * 'switch' accepts +on+ and +off+ as values.
+
+Core UI Toolkit dependencies, such as +griffon-swing+ and +griffon-javafx+, deliver
+additional PropertyEditors. The following tables summarize these additions
+
+.Swing PropertyEditor mappings
+[cols="3*", options="header"]
+|===
+
+| Type
+| Editor Class
+| Format
+
+| java.awt.Color
+| griffon.swing.editors.ColorPropertyEditor
+| #RGB ; #RGBA ; #RRGGBB; #RRGGBBAA ; Color constant
+
+| java.awt.Dimension
+| griffon.swing.editors.DimensionPropertyEditor
+| width, height
+
+| java.awt.Font
+| griffon.swing.editors.FontPropertyEditor
+| family-style-size
+
+| java.awt.GradientPaint
+| griffon.swing.editors.GradientPaintPropertyEditor
+| x1, y1, #RGB, x2, y2, #RGB, CYCLIC
+
+| java.awt.Image
+| griffon.swing.editors.ImagePropertyEditor
+| path/to/image_file
+
+| java.awt.Insets
+| griffon.swing.editors.InsetsPropertyEditor
+| top, left, bottom, right
+
+| java.awt.LinearGradientPaint
+| griffon.swing.editors.LinearGradientPaintPropertyEditor
+| xy, y1, x2, x2, [0.0, 1.0], [#RGB, #RGB], REPEAT
+
+| java.awt.Point
+| griffon.swing.editors.PointPropertyEditor
+| x, y
+
+| java.awt.Polygon
+| griffon.swing.editors.PolygonPropertyEditor
+| x1, y1, x2, y2, ..., xn, yn
+
+| java.awt.RadialGradientPaint
+| griffon.swing.editors.RadialGradientPaintPropertyEditor
+| xy, y1, r, fx, fy, [0.0, 1.0], [#RGB, #RGB], REPEAT
+
+| java.awt.Rectangle
+| griffon.swing.editors.RectanglePropertyEditor
+| x, y, width, height
+
+| java.awt.geom.Point2D
+| griffon.swing.editors.Point2DPropertyEditor
+| x, y
+
+| java.awt.geom.Rectangle2D
+| griffon.swing.editors.Rectangle2DPropertyEditor
+| x, y, width, height
+
+| java.awt.image.BufferedImage
+| griffon.swing.editors.BufferedImagePropertyEditor
+| path/to/image_file
+
+| javax.swing.Icon
+| griffon.swing.editors.IconPropertyEditor
+| path/to/image_file
+
+|===
+
+Where the following apply
+
+ * `R`, `G`, `B` and `A` represent an hexadecimal number.
+ * CYCLIC may be +true+ or +false+.
+ * REPEAT must be one of +MultipleGradientPaint.CycleMethod+.
+ * GradientPaint supports another format: x1, y1 | x2, y2, | #RGB, #RGB | CYCLIC
+ * Color supports all color constants defined by +griffon.swing.support.Colors+.
+ * All color formats are supported by gradient editors.
+
+The following styles are supported by `FontPropertyEditor`
+
+ * BOLD
+ * ITALIC
+ * BOLDITALIC
+ * PLAIN
+
+.JavaFX PropertyEditor mappings
+[cols="3*", options="header"]
+|===
+
+| Type
+| Editor Class
+| Format
+
+| javafx.geometry.Dimension2D
+| griffon.javafx.editors.Dimension2DPropertyEditor
+| width, height
+
+| javafx.geometry.Insets
+| griffon.javafx.editors.InsetsPropertyEditor
+| top, left, bottom, right
+
+| javafx.geometry.Point2D
+| griffon.javafx.editors.Point2DPropertyEditor
+| x, y
+
+| javafx.geometry.Rectangle2D
+| griffon.javafx.editors.Rectangle2DPropertyEditor
+| x, y , width, height
+
+| javafx.scene.image.Image
+| griffon.javafx.editors.ImagePropertyEditor
+| path/to/image_file
+
+| javafx.scene.paint.Color
+| griffon.javafx.editors.ColorPropertyEditor
+| #RGB ; #RGBA ; #RRGGBB; #RRGGBBAA ; Color constant
+
+|===
+
+
+Where the following apply
+
+ * `R`, `G`, `B` and `A` represent an hexadecimal number.
+
+.Pivot PropertyEditor mappings
+[cols="3*", options="header"]
+|===
+
+| Type
+| Editor Class
+| Format
+
+| java.awt.Color
+| griffon.pivot.editors.ColorPropertyEditor
+| #RGB ; #RGBA ; #RRGGBB; #RRGGBBAA ; Color constant
+
+| org.apache.pivot.wtk.Bounds
+| griffon.pivot.editors.BoundsPropertyEditor
+| x, y , width, height
+
+| org.apache.pivot.wtk.Dimensions
+| griffon.pivot.editors.DimensionsPropertyEditor
+| width, height
+
+| org.apache.pivot.wtk.Insets
+| griffon.pivot.editors.InsetsPropertyEditor
+| top, left, right, bottom
+
+| org.apache.pivot.wtk.Point
+| griffon.pivot.editors.PointPropertyEditor
+| x, y
+
+|===
+
+
+Where the following apply
+
+ * `R`, `G`, `B` and `A` represent an hexadecimal number.
+ * Color supports all color constants defined by +griffon.pivot.support.Colors+.
+
+

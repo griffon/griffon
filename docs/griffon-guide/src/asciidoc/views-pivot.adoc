@@ -1,0 +1,33 @@
+
+[[_views_pivot]]
+= Pivot Specific
+
+Apache {link_pivot} is an open-source platform for building installable Internet applications (IIAs).
+It combines the enhanced productivity and usability features of a modern user interface toolkit
+with the robustness of the Java platform.
+
+Pivot has a deep listener hierarchy as opposed to the simple one found in Swing.
+This listener hierarchy does not follow the conventions set forth by the JavaBeans
+Conventions, thus making it difficult to extrapolate synthetic properties based
+on event methods when using Groovy builders, as it happens with Swing classes.
+However this plugin applies a convention for wiring up listeners. Take for example
+`Button` and `ButtonPressListener`, the following example shows how to wire up a
+`buttonPressed` event handler.
+
+[source,groovy,options="nowrap"]
+----
+button('Click me!') {
+    buttonPressListener {
+        buttonPressed = { source -> println "You pressed on button ${source}!" }
+    }
+}
+----
+
+For each listener in the Pivot listener list there's a corresponding node matching
+their name. For each method of such listener interface there's a variable matching
+its name that may have a closure assigned to it. The closure must match the same
+arguments as the method.
+
+Refer to the <<_builder_nodes_pivot,list of nodes>> that become available when
+the +griffon-pivot-groovy-{griffon-version}.jar+ is added as a dependency.
+

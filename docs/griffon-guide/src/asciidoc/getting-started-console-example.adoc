@@ -67,6 +67,7 @@ Define value for 'package' [console]:
 Define value for 'griffonVersion' [{griffon-version}]:
 ----
 
+[[_getting_started_console_example_layout]]
 == Project Layout
 
 Take a moment to familiarize yourself with the standard Griffon project layout.
@@ -136,6 +137,7 @@ include::{console-swing-groovy}/build.gradle.txt[]
 
 Alright, let's get started with the code. We'll visit the Model first.
 
+[[_getting_started_console_example_model]]
 === Model
 
 The model for this application is simple: it contains properties that hold the script to be
@@ -154,6 +156,7 @@ include::{console-swing-groovy}/griffon-app/models/console/ConsoleModel.groovy[l
 Griffon Models are *_not_* domain classes like the ones you find in Grails; they're more akin
 to presentation models, and as such, they're used to transfer data between Views and Controllers.
 
+[[_getting_started_console_example_controller]]
 === Controller
 
 The controller is also trivial: throw the contents of the script from the model at an +Evaluator+,
@@ -174,8 +177,8 @@ include::{console-swing-groovy}/griffon-app/controllers/console/ConsoleControlle
 The Griffon framework will inject references to the other portions of the MVC triad if fields
 named +model+, +view+, and +controller+ are present in the Model, Controller or View. This allows
 us to access the view widgets and the model data if needed. Any other class members annotated with
-+@Inject+ participate in dependency injection as laid out by JSR 330, in this case the controller
-will get an instance of +Evaluator+ if a suitable implementation is bound.
++@javax.inject.Inject+ participate in dependency injection as laid out by JSR 330, in this case the
+controller will get an instance of +Evaluator+ if a suitable implementation is bound.
 
 The +executeScript+ [conum,data-value=3]_3_ method will be used later in the View in combination
 with a button. You may notice that there's no explicit threading management. All Swing developers
@@ -224,6 +227,7 @@ include::{console-swing-groovy}/src/main/groovy/console/CenteringWindowDisplayHa
 
 This handler is only concerned with centering the window on the screen before showing it.
 
+[[_getting_started_console_example_view]]
 === View
 
 The view classes contain the visual components for your application. Please paste the following code

@@ -2,5 +2,162 @@
 [[_views_builder_customizers]]
 = BuilderCustomizers
 
-TBD
+Recall from the <<_getting_started_console_example_view,ConsoleView>> sample application
+that you can use a Groovy DSL for building View components when the main language
+of the application is Groovy. This DSL is configured with default nodes that are
+tightly coupled with the chosen UI toolkit.
+
+== Extending the UI DSL
+
+The UI DSL can be extended by registering new ++{link_builder_customizer}++s with the application
+using a +{link_module}+. The +{link_builder_customizer}+ instance defines methods
+that can be used to configure every aspect of +groovy.factory.FactoryBuilderSupport+.
+Here's an example of the +miglayout-swing+ extension
+
+.src/main/java/griffon/builder/swing/MiglayoutSwingBuilderCustomizer.java
+[source,java,options="nowrap"]
+[subs="verbatim"]
+----
+package griffon.builder.swing;
+
+import griffon.inject.DependsOn;
+import groovy.swing.factory.LayoutFactory;
+import net.miginfocom.swing.MigLayout;
+import groovy.util.Factory;
+import org.codehaus.griffon.runtime.groovy.view.AbstractBuilderCustomizer;
+
+import javax.inject.Named;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+@DependsOn("swing")
+@Named("miglayout-swing")
+public class MiglayoutSwingBuilderCustomizer extends AbstractBuilderCustomizer {
+    public MiglayoutSwingBuilderCustomizer() {
+        Map<String, Factory> factories = new LinkedHashMap<>();
+        factories.put("migLayout", new LayoutFactory(MigLayout.class));
+        setFactories(factories);
+    }
+}
+----
+
+This customizer registers a single factory, +miglayout+. It also defines a dependency
+on the +swing+ customizer in order for its customizations to be applied after ++swing++'s.
+The customizer is registered using the following {link_module}.
+
+.src/main/java/org/codehaus/griffon/runtime/miglayout/MiglayoutSwingGroovyModule.java
+[source,java,options="nowrap"]
+[subs="verbatim"]
+----
+package org.codehaus.griffon.runtime.miglayout;
+
+import griffon.builder.swing.MiglayoutSwingBuilderCustomizer;
+import griffon.core.injection.Module;
+import griffon.inject.DependsOn;
+import griffon.util.BuilderCustomizer;
+import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.kordamp.jipsy.ServiceProviderFor;
+
+import javax.inject.Named;
+
+@DependsOn("swing-groovy")
+@Named("miglayout-swing-groovy")
+@ServiceProviderFor(Module.class)
+public class MiglayoutSwingGroovyModule extends AbstractModule {
+    @Override
+    protected void doConfigure() {
+        bind(BuilderCustomizer.class)
+            .to(MiglayoutSwingBuilderCustomizer.class)
+            .asSingleton();
+    }
+}
+----
+
+This module is loaded before +swing-groovy+, as per the +{link_depends_on}+ definition;
+thus ensuring that the customizations from this customizer are applied after.
+
+== Default DSL Nodes
+
+The +griffon-groovy+ dependency delivers the following nodes
+
+=== Root
+
+Identifies the top level node of a secondary View script. View scripts are expected
+to return the top level node, however there may be times when further customizations
+prevent this from happening, for example wiring up a custom listener. When that happens
+the result has to be made explicit otherwise the script will return the wrong value.
+Using the +root()+ node avoids forgetting this fact while also providing an alias for
+the node.
+
+.griffon-app/views/com/acme/Secondary.groovy
+[source,groovy,options="nowrap"]
+[subs="verbatim"]
+----
+root(
+    tree(id: 'mytree')
+)
+
+mytree.addTreeSelectionModel(new DefaultTreeSelectionModel() { /* ... */ })
+----
+
+.griffon-app/views/com/acme/PrimaryView.groovy
+[source,groovy,options="nowrap"]
+[subs="verbatim"]
+----
+package com.acme
+
+import griffon.core.artifact.GriffonView
+import griffon.metadata.ArtifactProviderFor
+
+@ArtifactProviderFor(GriffonView)
+class PrimaryView {
+    def builder
+
+    void initUI() {
+        builder.with {
+            build(Secondary)
+            application(title: 'Sample') {
+                borderLayout()
+                label 'Options', constraints: NORTH
+                widget root(SampleSecondary)
+            }
+        }
+    }
+}
+----
+
+This node accepts an additional parameter +name+ that can be used to override the
+default alias assigned to the node. If you specify a value for this parameter when
+the node is built then you'll need to use it again to retrieve the node.
+
+=== MetaComponent
+
+Enables the usage of a meta-component as a View node. Meta-components are MVC groups
+that contain additional configuration, for example
+
+[source,groovy,options="nowrap"]
+[subs="verbatim"]
+----
+mvcGroups {
+    'custom' {
+        model      = 'sample.CustomModel'
+        view       = 'sample.CustomView'
+        controller = 'sample.CustomController'
+        config {
+            component = true
+            title = 'My Default Title'
+        }
+    }
+}
+----
+
+The +metaComponent()+ node instantiates the MVC group and attaches the top node from
+the groups' View member into the current hierarchy. Using the previous group definition
+in a View is straight forward
+
+[source,groovy,options="nowrap"]
+[subs="verbatim"]
+----
+metaComponent('custom', title: 'Another Title')
+----
 
