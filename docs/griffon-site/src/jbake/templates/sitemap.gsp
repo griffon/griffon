@@ -3,7 +3,7 @@
 <%published_content.each {content -> %>
     <url>
         <loc>${config.site_host}${content.uri}</loc>
-        <lastmod>${content.date.format("yyyy-MM-dd")}</lastmod>
+        <lastmod>${content.date?.format("yyyy-MM-dd")}</lastmod>
     </url>
 <%}%>
 </urlset>
