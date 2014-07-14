@@ -19,11 +19,11 @@ and Groovy as main language. The project has the following file structure
     ├── pom.xml
     └── src
         ├── main
-        │   ├── groovy
-        │   └── resources
+        │   ├── groovy
+        │   └── resources
         └── test
             ├── groovy
-            └── resources
+            └── resources
 
 Simply add your source files to `src/main/groovy`, your test cases to
 `src/test/groovy` and then you will be able to build your project with

@@ -11,15 +11,15 @@ following file structure
     ├── gradle
     └── subprojects
         ├── plugin
-        │   └── src
-        │       ├── main
-        │       │   └── java
-        │       └── test
-        │           └── resources
+        │   └── src
+        │       ├── main
+        │       │   └── java
+        │       └── test
+        │           └── resources
         └── guide
             └── src
                 ├── asciidoc
                 ├── javadoc
-                │   └── resources
+                │   └── resources
                 └── resources
 

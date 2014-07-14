@@ -19,13 +19,13 @@ and Java as main language. The project has the following file structure
     ├── pom.xml
     └── src
         ├── integration-test
-        │   └── java
+        │   └── java
         ├── main
-        │   ├── java
-        │   └── resources
+        │   ├── java
+        │   └── resources
         └── test
             ├── java
-            └── resources
+            └── resources
 
 Simply add your source files to `src/main/java`, your test cases to
 `src/test/java` and then you will be able to build your project with
