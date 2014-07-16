@@ -34,22 +34,22 @@ tasks.withType(Zip) { task ->
             into destDir
             if (file("sources/${destDir.name}").exists()) {
                 from(rootProject.file('templates/shared-files/sources'))
-                if (destDir.name == 'griffon-standard-templates') {
-                    from(file("sources/${destDir.name}")) {
-                        exclude 'installer'
-                        exclude 'gradle/package.gradle'
-                        filter(org.apache.tools.ant.filters.ReplaceTokens,
-                            tokens: ['griffon.version': project.version])
-                    }
-                } else {
-                    from(file("sources/${destDir.name}")) {
-                        filter(org.apache.tools.ant.filters.ReplaceTokens,
-                            tokens: ['griffon.version': project.version])
-                    }
-                    from(rootProject.file('src/media')) {
-                        include 'griffon*'
-                        into 'src/media'
-                    }
+            }
+            if (destDir.name == 'griffon-plugin') {
+                from(file("sources/${destDir.name}")) {
+                    exclude 'installer'
+                    exclude 'gradle/package.gradle'
+                    filter(org.apache.tools.ant.filters.ReplaceTokens,
+                        tokens: ['griffon.version': project.version])
+                }
+            } else {
+                from(file("sources/${destDir.name}")) {
+                    filter(org.apache.tools.ant.filters.ReplaceTokens,
+                        tokens: ['griffon.version': project.version])
+                }
+                from(rootProject.file('src/media')) {
+                    include 'griffon*'
+                    into 'src/media'
                 }
             }
         }
