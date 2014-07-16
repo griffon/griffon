@@ -1,6 +1,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 apply plugin: 'izpack'
+apply plugin: 'macAppBundle'
 
 dependencies {
     izpack 'org.codehaus.izpack:izpack-standalone-compiler:4.3.5'
@@ -37,4 +38,10 @@ izpack {
         'app.binary': project.name,
         'app.java.version': targetCompatibility
     ]
+}
+
+macAppBundle {
+    mainClassName = project.mainClassName
+    icon = 'src/media/griffon.icns'
+    javaProperties.put('apple.laf.useScreenMenuBar', 'true')
 }

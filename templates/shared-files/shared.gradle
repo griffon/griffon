@@ -46,6 +46,10 @@ tasks.withType(Zip) { task ->
                         filter(org.apache.tools.ant.filters.ReplaceTokens,
                             tokens: ['griffon.version': project.version])
                     }
+                    from(rootProject.file('src/media')) {
+                        include 'griffon*'
+                        into 'src/media'
+                    }
                 }
             }
         }
