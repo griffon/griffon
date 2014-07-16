@@ -1,0 +1,40 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+apply plugin: 'izpack'
+
+dependencies {
+    izpack 'org.codehaus.izpack:izpack-standalone-compiler:4.3.5'
+}
+
+task prepareIzpack(type: Copy, dependsOn: installApp) {
+    destinationDir = file("$buildDir/install/izpack")
+    from('installer/izpack/resources') {
+        into 'resources'
+        filter(ReplaceTokens, tokens: ['griffon.version': griffon.version])
+    }
+    into('binary') {
+        from installApp.destinationDir
+    }
+}
+
+izPackCreateInstaller.dependsOn prepareIzpack
+izPackCreateInstaller.doFirst {
+    ant.chmod(dir: "$buildDir/install/izpack/binary/bin", excludes: '*.bat', perm: 'ugo+x')
+}
+
+izpack {
+    baseDir = file("$buildDir/install/izpack")
+    installFile = file('installer/izpack/installer.xml')
+    outputFile = file("$buildDir/distributions/${project.name}-installer-${version}.jar")
+    compression = 'deflate'
+    compressionLevel = 9
+    appProperties = [
+        'app.group': 'Applications',
+        'app.name': project.name,
+        'app.title': project.name,
+        'app.version': project.version,
+        'app.subpath': "${project.name}-${project.version}",
+        'app.binary': project.name,
+        'app.java.version': targetCompatibility
+    ]
+}
