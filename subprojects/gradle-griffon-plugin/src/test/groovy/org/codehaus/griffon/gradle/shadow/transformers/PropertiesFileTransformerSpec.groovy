@@ -41,7 +41,7 @@ class PropertiesFileTransformerSpec extends Specification {
         transform = expected ? 'can be' : 'can not be'
     }
 
-    void excerciseAllTransformConfigurations() {
+    void exerciseAllTransformConfigurations() {
         given:
         Transformer transformer = new PropertiesFileTransformer()
         transformer.mergeStrategy = mergeStrategy
@@ -64,7 +64,7 @@ class PropertiesFileTransformerSpec extends Specification {
         'f.properties' | 'append'      | ';'            | ['foo': 'foo'] | ['foo': 'bar'] || ['foo': 'foo;bar']
     }
 
-    void excerciseAllTransformConfigurationsWithPaths() {
+    void exerciseAllTransformConfigurationsWithPaths() {
         given:
         Transformer transformer = new PropertiesFileTransformer()
         transformer.paths = paths
@@ -87,7 +87,7 @@ class PropertiesFileTransformerSpec extends Specification {
         'foo.properties' | []                | ['foo': 'foo'] | ['foo': 'bar'] || ['foo': 'foo']
     }
 
-    void excerciseAllTransformConfigurationsWithMappings() {
+    void exerciseAllTransformConfigurationsWithMappings() {
         given:
         Transformer transformer = new PropertiesFileTransformer()
         transformer.mappings = mappings
