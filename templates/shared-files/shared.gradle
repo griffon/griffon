@@ -35,7 +35,7 @@ tasks.withType(Zip) { task ->
             if (file("sources/${destDir.name}").exists()) {
                 from(rootProject.file('templates/shared-files/sources'))
             }
-            if (destDir.name == 'griffon-plugin') {
+            if (destDir.name == 'griffon-plugin' || destDir.name.startsWith('subtmpl-')) {
                 from(file("sources/${destDir.name}")) {
                     exclude 'installer'
                     exclude 'gradle/package.gradle'
