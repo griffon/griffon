@@ -19,11 +19,6 @@ import org.apache.tools.ant.filters.ReplaceTokens
 apply plugin: 'groovy'
 apply from: rootProject.file('gradle/coverage.gradle')
 
-configurations {
-    compileOnly
-    testCompileOnly
-}
-
 dependencies {
     compile 'javax.inject:javax.inject:1'
     compile 'com.google.code.findbugs:jsr305:2.0.2'
