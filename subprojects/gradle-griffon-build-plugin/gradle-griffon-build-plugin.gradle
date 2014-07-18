@@ -21,3 +21,27 @@ dependencies {
     compile gradleApi()
     compile 'net.sourceforge.cobertura:cobertura:2.0.3'
 }
+
+bintray {
+    user = project.bintrayUsername
+    key = project.bintrayApiKey
+    publications = ['mavenCustom']
+    pkg {
+        repo = 'griffon'
+        userOrg = 'griffon'
+        name = project.name
+        desc = project.pomDescription
+        licenses = ['Apache-2.0']
+        labels = ['griffon']
+        websiteUrl = 'http://griffon-framework.org'
+        issueTrackerUrl = 'http://jira.codehaus.org/browse/griffon'
+        vcsUrl = "https://github.com/griffon/griffon.git"
+        publicDownloadNumbers = true
+        version {
+            vcsTag = project.version
+            attributes = [
+                'gradle-plugin': ['org.codehaus.griffon.griffon-build', project.group, project.name].join(':')
+            ]
+        }
+    }
+}
