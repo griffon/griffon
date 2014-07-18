@@ -11,6 +11,7 @@ buildscript {
         classpath 'org.gradle.api.plugins:gradle-izpack-plugin:0.2.3'
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.0.2'
         classpath 'edu.sc.seis.gradle:macappbundle:2.0.0'
+        classpath 'org.kordamp.gradle:stats-gradle-plugin:0.1.1'
     }
 }
 
@@ -30,6 +31,7 @@ apply from: 'gradle/code-quality.gradle'
 apply from: 'gradle/javafx-plugin.gradle'
 apply from: 'gradle/package.gradle'
 apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'org.kordamp.gradle.stats'
 
 mainClassName = '${project_package}.Launcher'
 
