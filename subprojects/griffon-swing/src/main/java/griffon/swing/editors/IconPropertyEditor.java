@@ -76,7 +76,7 @@ public class IconPropertyEditor extends AbstractPropertyEditor {
         try {
             handleAsImage(ImageIO.read(file));
         } catch (IOException e) {
-            throw illegalValue(file, Icon.class);
+            throw illegalValue(file, Icon.class, e);
         }
     }
 
@@ -84,7 +84,7 @@ public class IconPropertyEditor extends AbstractPropertyEditor {
         try {
             handleAsImage(ImageIO.read(url));
         } catch (IOException e) {
-            throw illegalValue(url, Icon.class);
+            throw illegalValue(url, Icon.class, e);
         }
     }
 
@@ -92,7 +92,7 @@ public class IconPropertyEditor extends AbstractPropertyEditor {
         try {
             handleAsURL(uri.toURL());
         } catch (MalformedURLException e) {
-            throw illegalValue(uri, Icon.class);
+            throw illegalValue(uri, Icon.class, e);
         }
     }
 
@@ -100,7 +100,7 @@ public class IconPropertyEditor extends AbstractPropertyEditor {
         try {
             handleAsImage(ImageIO.read(stream));
         } catch (IOException e) {
-            throw illegalValue(stream, Icon.class);
+            throw illegalValue(stream, Icon.class, e);
         }
     }
 
@@ -108,7 +108,7 @@ public class IconPropertyEditor extends AbstractPropertyEditor {
         try {
             handleAsImage(ImageIO.read(stream));
         } catch (IOException e) {
-            throw illegalValue(stream, Icon.class);
+            throw illegalValue(stream, Icon.class, e);
         }
     }
 

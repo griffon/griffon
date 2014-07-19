@@ -70,7 +70,7 @@ public class BufferedImagePropertyEditor extends AbstractPropertyEditor {
         try {
             super.setValueInternal(ImageIO.read(file));
         } catch (IOException e) {
-            throw illegalValue(file, BufferedImage.class);
+            throw illegalValue(file, BufferedImage.class, e);
         }
     }
 
@@ -78,7 +78,7 @@ public class BufferedImagePropertyEditor extends AbstractPropertyEditor {
         try {
             super.setValueInternal(ImageIO.read(url));
         } catch (IOException e) {
-            throw illegalValue(url, BufferedImage.class);
+            throw illegalValue(url, BufferedImage.class, e);
         }
     }
 
@@ -86,7 +86,7 @@ public class BufferedImagePropertyEditor extends AbstractPropertyEditor {
         try {
             handleAsURL(uri.toURL());
         } catch (MalformedURLException e) {
-            throw illegalValue(uri, BufferedImage.class);
+            throw illegalValue(uri, BufferedImage.class, e);
         }
     }
 
@@ -94,7 +94,7 @@ public class BufferedImagePropertyEditor extends AbstractPropertyEditor {
         try {
             super.setValueInternal(ImageIO.read(stream));
         } catch (IOException e) {
-            throw illegalValue(stream, BufferedImage.class);
+            throw illegalValue(stream, BufferedImage.class, e);
         }
     }
 
@@ -102,7 +102,7 @@ public class BufferedImagePropertyEditor extends AbstractPropertyEditor {
         try {
             super.setValueInternal(ImageIO.read(stream));
         } catch (IOException e) {
-            throw illegalValue(stream, BufferedImage.class);
+            throw illegalValue(stream, BufferedImage.class, e);
         }
     }
 }

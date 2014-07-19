@@ -267,7 +267,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
                 colorEditor.setValueInternal(list.get(i));
                 colors[i] = (Color) colorEditor.getValue();
             } catch (Exception e) {
-                throw illegalValue(list.get(i), RadialGradientPaint.class);
+                throw illegalValue(list.get(i), RadialGradientPaint.class, e);
             }
         }
 
