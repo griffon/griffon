@@ -89,7 +89,7 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
     @Nullable
     public W getStartingWindow() {
         W window;
-        Object value = application.getConfiguration().get("windowManager.startingWindow", null);
+        Object value = resolveStartingWindowFromConfiguration();
         LOG.debug("windowManager.startingWindow configured to {}", value);
 
         if (value instanceof String) {
@@ -108,6 +108,11 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
         LOG.debug("Starting Window is {}", window);
 
         return window;
+    }
+
+    @Nullable
+    protected Object resolveStartingWindowFromConfiguration() {
+        return application.getConfiguration().get("windowManager.startingWindow", null);
     }
 
     @Override

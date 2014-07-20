@@ -135,12 +135,16 @@ class GriffonPlugin implements Plugin<Project> {
             from(project.sourceSets.test.resources.srcDirs) {
                 exclude '**/*.properties'
                 exclude '**/*.groovy'
+                exclude '**/*.html'
                 exclude '**/*.xml'
+                exclude '**/*.txt'
             }
             from(project.sourceSets.test.resources.srcDirs) {
                 include '**/*.properties'
                 include '**/*.groovy'
+                include '**/*.html'
                 include '**/*.xml'
+                include '**/*.txt'
                 filter(ReplaceTokens, tokens: [
                     'application.name'   : project.name,
                     'application.version': project.version,

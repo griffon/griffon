@@ -23,9 +23,11 @@ processTemplates 'gradle.properties', props
 processTemplates 'src/main/groovy/*.groovy', props
 processTemplates 'src/test/groovy/*.groovy', props
 processTemplates 'griffon-app/*/*.groovy', props
+processTemplates 'maven/distribution/bin/*', props
 
 File mainSources = new File(projectDir, 'src/main/groovy')
 File testSources = new File(projectDir, 'src/test/groovy')
+File binSources = new File(projectDir, 'maven/distribution/bin')
 
 File mainSourcesPath = new File(mainSources, packagePath)
 mainSourcesPath.mkdirs()
@@ -38,6 +40,8 @@ mainSources.eachFile { File file ->
 testSources.eachFile { File file ->
     file.renameTo(testSourcesPath.absolutePath + '/' + props.project_capitalized_name + file.name)
 }
+new File(binSources, 'run-app').renameTo(binSources.absolutePath + '/' + props.project_name)
+new File(binSources, 'run-app.bat').renameTo(binSources.absolutePath + '/' + props.project_name + '.bat')
 
 ['controllers', 'models', 'services', 'views'].each { String category ->
     File artifactDir = new File(projectDir, "griffon-app/$category")

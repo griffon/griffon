@@ -33,17 +33,24 @@ tasks.withType(Zip) { task ->
             File destDir = task.source.files.iterator().next().parentFile
             into destDir
             if (file("sources/${destDir.name}").exists()) {
-                from(rootProject.file('templates/shared-files/sources'))
-            }
-            if (destDir.name == 'griffon-plugin' || destDir.name.startsWith('subtmpl-')) {
                 from(file("sources/${destDir.name}")) {
+                    filter(org.apache.tools.ant.filters.ReplaceTokens,
+                        tokens: ['griffon.version': project.version])
+                }
+            }
+
+            if (destDir.name.startsWith('subtmpl-')) {
+                // continue
+            } else if (destDir.name == 'griffon-plugin') {
+                from(rootProject.file('templates/shared-files/sources')) {
                     exclude 'installer'
+                    exclude 'maven'
                     exclude 'gradle/package.gradle'
                     filter(org.apache.tools.ant.filters.ReplaceTokens,
                         tokens: ['griffon.version': project.version])
                 }
             } else {
-                from(file("sources/${destDir.name}")) {
+                from(rootProject.file('templates/shared-files/sources')) {
                     filter(org.apache.tools.ant.filters.ReplaceTokens,
                         tokens: ['griffon.version': project.version])
                 }

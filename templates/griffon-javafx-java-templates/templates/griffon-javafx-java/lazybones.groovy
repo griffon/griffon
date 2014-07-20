@@ -25,9 +25,11 @@ processTemplates 'griffon-app/resources/*.fxml', props
 processTemplates 'src/main/java/*.java', props
 processTemplates 'src/test/java/*.java', props
 processTemplates 'griffon-app/*/*.java', props
+processTemplates 'maven/distribution/bin/*', props
 
 File mainSources = new File(projectDir, 'src/main/java')
 File testSources = new File(projectDir, 'src/test/java')
+File binSources = new File(projectDir, 'maven/distribution/bin')
 
 File mainSourcesPath = new File(mainSources, packagePath)
 mainSourcesPath.mkdirs()
@@ -40,6 +42,8 @@ mainSources.eachFile { File file ->
 testSources.eachFile { File file ->
     file.renameTo(testSourcesPath.absolutePath + '/' + props.project_capitalized_name + file.name)
 }
+new File(binSources, 'run-app').renameTo(binSources.absolutePath + '/' + props.project_name)
+new File(binSources, 'run-app.bat').renameTo(binSources.absolutePath + '/' + props.project_name + '.bat')
 
 ['controllers', 'models', 'services', 'views'].each { String category ->
     File artifactDir = new File(projectDir, "griffon-app/$category")

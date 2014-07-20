@@ -1,4 +1,4 @@
-<project name="console-swing-groovy" basedir=".">
+<project name="ant-macros" basedir=".">
     <macrodef name="copy-resources">
         <attribute name="source"/>
         <attribute name="destination"/>
@@ -7,14 +7,18 @@
                 <fileset dir="@{source}">
                     <exclude name="**/*.properties"/>
                     <exclude name="**/*.groovy"/>
+                    <exclude name="**/*.html"/>
                     <exclude name="**/*.xml"/>
+                    <exclude name="**/*.txt"/>
                 </fileset>
-             </copy>
+            </copy>
             <copy todir="@{destination}">
                 <fileset dir="@{source}">
                     <include name="**/*.properties"/>
                     <include name="**/*.groovy"/>
+                    <include name="**/*.html"/>
                     <include name="**/*.xml"/>
+                    <include name="**/*.txt"/>
                 </fileset>
                 <filterset>
                     <filter token="application.name"
@@ -28,17 +32,4 @@
             </copy>
         </sequential>
     </macrodef>
-
-    <copy-resources
-        destination="${project.build.testOutputDirectory}"
-        source="src/test/resources"/>
-    <copy-resources
-        destination="${project.build.outputDirectory}"
-        source="src/main/resources"/>
-    <copy-resources
-        destination="${project.build.outputDirectory}"
-        source="griffon-app/resources"/>
-    <copy-resources
-        destination="${project.build.outputDirectory}"
-        source="griffon-app/i18n"/>
 </project>

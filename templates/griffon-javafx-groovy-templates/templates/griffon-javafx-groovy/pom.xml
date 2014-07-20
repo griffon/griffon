@@ -93,13 +93,14 @@
                 <version>1.7</version>
                 <executions>
                     <execution>
+                        <id>process-resources</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
                         <configuration>
                             <tasks>
-                                <ant antfile="maven-antrun-include.xml"/>
+                                <ant antfile="maven/process-resources.xml"/>
                             </tasks>
                         </configuration>
                     </execution>
@@ -116,6 +117,27 @@
                     <keyStorePassword>example-password</keyStorePassword>
                     <allPermissions/>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>maven/assembly-descriptor.xml</descriptor>
+                    </descriptors>
+                    <outputDirectory>\${project.build.directory}/distributions</outputDirectory>
+                    <workDirectory>\${project.build.directory}/assembly/work</workDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-distribution</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>assembly</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

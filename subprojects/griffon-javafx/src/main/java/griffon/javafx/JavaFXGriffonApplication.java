@@ -37,7 +37,7 @@ public class JavaFXGriffonApplication extends AbstractJavaFXGriffonApplication {
         this(EMPTY_ARGS);
     }
 
-    public JavaFXGriffonApplication(String[] args) {
+    public JavaFXGriffonApplication(@Nonnull String[] args) {
         super(args);
     }
 
