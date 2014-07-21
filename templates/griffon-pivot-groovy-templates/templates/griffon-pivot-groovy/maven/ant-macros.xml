@@ -3,7 +3,7 @@
         <attribute name="source"/>
         <attribute name="destination"/>
         <sequential>
-            <copy todir="@{destination}">
+            <copy todir="@{destination}" overwrite="true">
                 <fileset dir="@{source}">
                     <exclude name="**/*.properties"/>
                     <exclude name="**/*.groovy"/>
@@ -12,7 +12,7 @@
                     <exclude name="**/*.txt"/>
                 </fileset>
             </copy>
-            <copy todir="@{destination}">
+            <copy todir="@{destination}" overwrite="true">
                 <fileset dir="@{source}">
                     <include name="**/*.properties"/>
                     <include name="**/*.groovy"/>

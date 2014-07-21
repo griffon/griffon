@@ -9,7 +9,7 @@ dependencies {
 
 task prepareIzpack(type: Copy, dependsOn: installApp) {
     destinationDir = file("$buildDir/install/izpack")
-    from('installer/izpack/resources') {
+    from('src/main/izpack/resources') {
         into 'resources'
         filter(ReplaceTokens, tokens: ['griffon.version': griffon.version])
     }
@@ -25,8 +25,8 @@ izPackCreateInstaller.doFirst {
 
 izpack {
     baseDir = file("$buildDir/install/izpack")
-    installFile = file('installer/izpack/install.xml')
-    outputFile = file("$buildDir/distributions/${project.name}-installer-${version}.jar")
+    installFile = file('src/main/izpack/install.xml')
+    outputFile = file("$buildDir/distributions/${project.name}-${version}-installer.jar")
     compression = 'deflate'
     compressionLevel = 9
     appProperties = [

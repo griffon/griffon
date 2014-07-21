@@ -1,0 +1,26 @@
+javadoc {
+    excludes = ['**/*.html', 'META-INF/**', '**/*.groovy']
+
+    options.use         = true
+    options.splitIndex  = true
+    options.encoding    = 'UTF-8'
+    options.author      = true
+    options.version     = true
+    options.windowTitle = "$name $version API"
+    options.docTitle    = "$name $version API"
+    options.links       = ['http://www.slf4j.org/apidocs/',
+                           'http://jsr-305.googlecode.com/svn/trunk/javadoc/',
+                           'http://docs.oracle.com/javase/7/docs/api/']
+
+    doLast { task ->
+        copy {
+            into task.destinationDir
+            from rootProject.file('src/javadoc/resources/img/griffon.ico'),
+                rootProject.file('src/javadoc/resources/css/stylesheet.css')
+        }
+        copy {
+            into file("${task.destinationDir}/resources")
+            from rootProject.file('src/javadoc/resources/img/')
+        }
+    }
+}

@@ -1,0 +1,66 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.5'
+    }
+}
+
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+
+task copyPom(type: Copy) {
+    destinationDir = file("${project.buildDir}/pom")
+    from(file('src/pom')) {
+        filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+            'project.version': project.version,
+            'groovy.version': project.groovyVersion,
+            'griffon.version': rootProject.version,
+        ])
+    }
+}
+
+publishing {
+    publications {
+        mavenPom(MavenPublication) {
+            artifacts = []
+        }
+    }
+}
+
+publishToMavenLocal.dependsOn copyPom
+
+gradle.taskGraph.whenReady { g ->
+    def generatePom = gradle.taskGraph.allTasks.find { it.name == 'generatePomFileForMavenPomPublication' }
+    generatePom?.doLast {
+        copy {
+            into project.file("${buildDir}/publications/mavenPom")
+            from copyPom.destinationDir
+            rename 'master-pom.xml', 'pom-default.xml'
+        }
+    }
+}
+
+if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = ''
+if (!project.hasProperty('bintrayApiKey')) ext.bintrayApiKey = ''
+
+bintray {
+    user = project.bintrayUsername
+    key = project.bintrayApiKey
+    publications = ['mavenPom']
+    pkg {
+        repo = 'griffon'
+        userOrg = 'griffon'
+        name = project.name
+        desc = 'Master POM for Griffon application projects'
+        licenses = ['Apache-2.0']
+        labels = ['griffon']
+        websiteUrl = 'http://griffon-framework.org'
+        issueTrackerUrl = 'http://jira.codehaus.org/browse/griffon'
+        vcsUrl = "https://github.com/griffon/griffon.git"
+        publicDownloadNumbers = true
+    }
+}

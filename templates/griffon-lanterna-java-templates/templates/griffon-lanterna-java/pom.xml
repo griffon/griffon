@@ -6,161 +6,32 @@
     <artifactId>${project_name}</artifactId>
     <packaging>jar</packaging>
     <version>${project_version}</version>
-    <name>${project_capitalized_name}</name>
+
+    <parent>
+        <groupId>org.codehaus.griffon</groupId>
+        <artifactId>application-master-pom</artifactId>
+        <version>1.0.0.RC1</version>
+    </parent>
 
     <properties>
         <griffon.version>${griffon_version}</griffon.version>
         <application.main.class>${project_package}.Launcher</application.main.class>
-        <compiler.source.level>1.7</compiler.source.level>
-        <compiler.target.level>1.7</compiler.target.level>
     </properties>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.9</version>
-                <executions>
-                    <execution>
-                        <id>add-source</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>griffon-app/conf</source>
-                                <source>griffon-app/controllers</source>
-                                <source>griffon-app/models</source>
-                                <source>griffon-app/services</source>
-                                <source>griffon-app/views</source>
-                                <source>griffon-app/lifecycle</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>add-resource</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>add-resource</goal>
-                        </goals>
-                        <configuration>
-                            <resources>
-                                <resource>
-                                    <directory>griffon-app/resources</directory>
-                                    <directory>griffon-app/i18n</directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
-                <configuration>
-                    <mainClass>\${application.main.class}</mainClass>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.bsc.maven</groupId>
-                <artifactId>maven-processor-plugin</artifactId>
-                <version>2.2.4</version>
-                <executions>
-                    <execution>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>process</goal>
-                        </goals>
-                        <configuration>
-                            <addCompileSourceRoots>true</addCompileSourceRoots>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.7</version>
-                <executions>
-                    <execution>
-                        <id>process-resources</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <tasks>
-                                <ant antfile="maven/process-resources.xml"/>
-                            </tasks>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>\${compiler.source.level}</source>
-                    <target>\${compiler.target.level}</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.16</version>
-                <configuration>
-                    <classpathDependencyExcludes>
-                        <classpathDependencyExclude>
-                            org.codehaus.griffon:griffon-core-compile
-                        </classpathDependencyExclude>
-                    </classpathDependencyExcludes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <descriptors>
-                        <descriptor>maven/assembly-descriptor.xml</descriptor>
-                    </descriptors>
-                    <outputDirectory>\${project.build.directory}/distributions</outputDirectory>
-                    <workDirectory>\${project.build.directory}/assembly/work</workDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-distribution</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>assembly</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
     <dependencies>
+        <!-- compile -->
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-core-compile</artifactId>
-            <version>\${griffon.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-lanterna</artifactId>
-            <version>\${griffon.version}</version>
         </dependency>
+        <!-- runtime -->
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-guice</artifactId>
-            <version>\${griffon.version}</version>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
@@ -174,20 +45,18 @@
             <version>1.7.7</version>
             <scope>runtime</scope>
         </dependency>
+        <!-- test -->
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-core-test</artifactId>
-            <version>\${griffon.version}</version>
-            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-core</artifactId>
         </dependency>
     </dependencies>
-
-    <repositories>
-        <repository>
-            <id>JCenter</id>
-            <url>http://jcenter.bintray.com/</url>
-        </repository>
-    </repositories>
-
 </project>
-
