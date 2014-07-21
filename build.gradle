@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat
 
 apply plugin: 'base'
 apply plugin: 'idea'
-apply plugin: 'coveralls'
+apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'build-dashboard'
 apply from: 'gradle/idea.gradle'
 
@@ -30,7 +30,7 @@ buildscript {
 
     dependencies {
         classpath 'net.saliman:gradle-cobertura-plugin:2.2.4'
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.6.1'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.6.6'
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.10.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.5'
         classpath 'org.ajoberstar:gradle-git:0.9.0'
