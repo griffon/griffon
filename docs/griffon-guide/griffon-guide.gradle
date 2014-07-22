@@ -160,6 +160,12 @@ java2html {
     }
 }
 
+def loadProperties(File file) {
+    Properties props = new Properties()
+    file.withReader { Reader reader -> props.load(reader) }
+    props
+}
+
 asciidoctor {
     baseDir = project.file('src/asciidoc')
     options = [
@@ -179,7 +185,7 @@ asciidoctor {
             'griffon-version'       : project.version,
             'griffon-group'         : project.group,
             'griffon-source-url'    : griffonSourceUrl,
-            'gradle-griffon-version': '1.0.0.RC1'
+            'gradle-griffon-version': loadProperties(project(':gradle-griffon-plugin').file('gradle.properties')).version
         ]
     ]
     sourceDocumentName = project.file('src/asciidoc/index.adoc')
