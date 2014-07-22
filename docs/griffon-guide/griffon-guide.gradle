@@ -185,7 +185,8 @@ asciidoctor {
             'griffon-version'       : project.version,
             'griffon-group'         : project.group,
             'griffon-source-url'    : griffonSourceUrl,
-            'gradle-griffon-version': loadProperties(project(':gradle-griffon-plugin').file('gradle.properties')).version
+            'gradle-griffon-version': loadProperties(project(':gradle-griffon-plugin').file('gradle.properties')).version,
+            'application-master-pom': loadProperties(project(':application-master-pom').file('gradle.properties')).version
         ]
     ]
     sourceDocumentName = project.file('src/asciidoc/index.adoc')
