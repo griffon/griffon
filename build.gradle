@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat
 apply plugin: 'base'
 apply plugin: 'idea'
 apply plugin: 'com.github.kt3k.coveralls'
-apply plugin: 'build-dashboard'
+// apply plugin: 'build-dashboard'
 apply from: 'gradle/idea.gradle'
 
 buildscript {
@@ -59,6 +59,8 @@ allprojects {
         }
     }
 }
+
+ext.projectsWithCoverage = []
 
 subprojects { subproj ->
     plugins.withType(JavaPlugin) {
@@ -164,6 +166,7 @@ subprojects { subproj ->
         subproj.apply from: rootProject.file('gradle/code-quality.gradle')
 
         if (subproj.publishJars.toBoolean()) {
+            projectsWithCoverage << subproj
             javadoc {
                 excludes = ['**/*.html', 'META-INF/**', '**/*.groovy']
 
@@ -201,4 +204,23 @@ task projectCoberturaMerge(type: ProjectCoberturaMergeTask) {
 
 task projectCoberturaReport(type: ProjectCoberturaReportTask) {
 
+}
+
+if (rootProject.hasProperty('jacocoRoot')) {
+    evaluationDependsOnChildren()
+
+    task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
+        dependsOn = projectsWithCoverage.test
+        group = "Reporting"
+        description = "Aggregate Jacoco coverage reports."
+        additionalSourceDirs = files(projectsWithCoverage.sourceSets.main.allSource.srcDirs)
+        sourceDirectories = files(projectsWithCoverage.sourceSets.main.allSource.srcDirs)
+        classDirectories = files(projectsWithCoverage.sourceSets.main.output)
+        executionData = files(projectsWithCoverage.jacocoTestReport.executionData)
+        reports {
+            html.enabled = true
+            xml.enabled = true
+            csv.enabled = false
+        }
+    }
 }
