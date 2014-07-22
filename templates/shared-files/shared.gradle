@@ -29,8 +29,8 @@ lazybones {
 // @griffon.version@ on lazybones.groovy
 tasks.withType(Zip) { task ->
     task.doFirst {
+        File destDir = task.source.files.iterator().next().parentFile
         copy {
-            File destDir = task.source.files.iterator().next().parentFile
             into destDir
             if (destDir.name.startsWith('subtmpl-')) {
                 // continue
@@ -54,6 +54,13 @@ tasks.withType(Zip) { task ->
                 from(rootProject.file('src/javadoc')) {
                     into 'src/javadoc'
                 }
+            }
+        }
+
+        if (file("sources/${destDir.name}").exists()) {
+            copy {
+                into destDir
+                from(file("sources/${destDir.name}"))
             }
         }
     }

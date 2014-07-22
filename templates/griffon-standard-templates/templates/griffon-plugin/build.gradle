@@ -13,6 +13,7 @@ buildscript {
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.10.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.5'
         classpath 'org.ajoberstar:gradle-git:0.9.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.4'
     }
 }
 
@@ -26,8 +27,8 @@ apply from: 'gradle/bom.gradle'
 
 Date buildTimeAndDate = new Date()
 ext {
-    buildTime = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
-    buildDate = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+    buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
+    buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
 }
 
 allprojects {
@@ -47,6 +48,8 @@ allprojects {
 
 subprojects { subproj ->
     plugins.withType(JavaPlugin) {
+        subproj.apply plugin: 'versions'
+
         configurations {
             compileOnly
             testCompileOnly
@@ -97,34 +100,7 @@ subprojects { subproj ->
         subproj.apply from: rootProject.file('gradle/code-quality.gradle')
 
         if (subproj.publishJars.toBoolean()) {
-            javadoc {
-                excludes = ['**/*.html', 'META-INF/**', '**/*.groovy']
-
-                options.use         = true
-                options.splitIndex  = true
-                options.encoding    = 'UTF-8'
-                options.author      = true
-                options.version     = subproj.sourceCompatibility
-                options.windowTitle = "\$subproj.projectDescription \$version"
-                options.docTitle    = "\$subproj.projectDescription \$version"
-                options.footer      = rootProject.javadocFooter
-                options.links       = ['http://www.slf4j.org/apidocs/',
-                                       'http://jsr-305.googlecode.com/svn/trunk/javadoc/',
-                                       'http://docs.oracle.com/javase/7/docs/api/',
-                                       'http://griffon.github.io/griffon/guide/api/']
-
-                doLast { task ->
-                    copy {
-                        into task.destinationDir
-                        from project(':griffon-${plugin_name}-guide').file('src/javadoc/resources/img/griffon.ico'),
-                             project(':griffon-${plugin_name}-guide').file('src/javadoc/resources/css/stylesheet.css')
-                    }
-                    copy {
-                        into file("\${task.destinationDir}/resources")
-                        from project(':griffon-${plugin_name}-guide').file('src/javadoc/resources/img/')
-                    }
-                }
-            }
+            subproj.apply from: rootProject.file('gradle/docs.gradle')
         }
     }
 }
