@@ -49,6 +49,7 @@
         <plugin.javafx.version>2.0</plugin.javafx.version>
         <plugin.jdepend.version>2.0</plugin.jdepend.version>
         <plugin.jxr.version>2.4</plugin.jxr.version>
+        <plugin.osxappbundle.version>1.0.1</plugin.osxappbundle.version>
         <plugin.processor.version>2.2.4</plugin.processor.version>
         <plugin.project-info-reports.version>2.7</plugin.project-info-reports.version>
         <plugin.site.version>3.4</plugin.site.version>
@@ -740,5 +741,33 @@
                 </plugins>
             </build>
         </profile>
+        <!--
+        <profile>
+            <id>macbundle</id>
+            <build>
+                <defaultGoal>package</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>com.agiliumlabs.osxappbundle</groupId>
+                        <artifactId>osxappbundle-maven-plugin</artifactId>
+                        <version>${plugin.osxappbundle.version}</version>
+                        <inherited>true</inherited>
+                        <configuration>
+                            <mainClass>${application.main.class}</mainClass>
+                            <iconFile>src/media/griffon.icns</iconFile>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>bundle</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        -->
     </profiles>
 </project>
