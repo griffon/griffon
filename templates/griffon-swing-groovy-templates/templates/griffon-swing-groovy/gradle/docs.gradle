@@ -6,8 +6,8 @@ javadoc {
     options.encoding    = 'UTF-8'
     options.author      = true
     options.version     = true
-    options.windowTitle = "$name $version API"
-    options.docTitle    = "$name $version API"
+    options.windowTitle = "$project.name $project.version API"
+    options.docTitle    = "$project.name $project.version API"
     options.links       = ['http://www.slf4j.org/apidocs/',
                            'http://junit.org/javadoc/latest/',
                            'http://docs.oracle.com/javase/7/docs/api/',
@@ -32,9 +32,9 @@ groovydoc {
     use = true
     source = project.sourceSets.main.allSource
     classpath = javadoc.classpath
-    ext.windowtitle = "$name $version API"
-    ext.doctitle = "$name $version API"
-    header = "$name $version API"
+    ext.windowtitle = "$project.name $project.version API"
+    ext.doctitle = "$project.name $project.version API"
+    header = "$project.name $project.version API"
     includePrivate = false
     link 'http://www.slf4j.org/apidocs/', 'org.slf4j.'
     link 'http://docs.oracle.com/javase/7/docs/api/', 'java.', 'org.xml.', 'javax.', 'org.w3c.'
