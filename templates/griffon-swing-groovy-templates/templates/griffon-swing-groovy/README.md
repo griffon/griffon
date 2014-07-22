@@ -15,7 +15,6 @@ and Groovy as main language. The project has the following file structure
     │   ├── resources
     │   ├── services
     │   └── views
-    ├── maven-antrun-include.xml
     ├── pom.xml
     └── src
         ├── integration-test
@@ -40,6 +39,6 @@ If you prefer building with Maven then execute the following commands
 
     mvn compile
     mvn test
-    mvn exec:java
+    mvn -Prun
 
 Don't forget to add any extra JAR dependencies to `pom.xml`!
