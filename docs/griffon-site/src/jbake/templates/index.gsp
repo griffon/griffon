@@ -2,9 +2,14 @@
 
 <% include "menu.gsp" %>
 
-<div class="page-header">
-    <p align="center"><img src="/img/griffon-banner-large.png"
+<div class="container">
+    <div class="page-header">
+         <p align="center"><img src="/img/griffon-banner-large.png"
                            alt="griffon banner"></p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
 
     <p><a
         href="http://griffon-framework.org/">Griffon</a> is desktop application development platform for the JVM.Inspired by <a
@@ -114,5 +119,14 @@ Available templates in griffon/griffon-lazybones-templates
 </div>
 </div>
     </div>
+
+        </div>
+
+        <div class="col-sm-4">
+        <a class="twitter-timeline"  href="https://twitter.com/theaviary"  data-widget-id="492016338076848130">Tweets by @theaviary</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+        </div>
+    </div>
+
 
 <% include "footer.gsp" %>
