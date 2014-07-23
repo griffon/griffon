@@ -13,30 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.gradle
+package org.codehaus.griffon.gradle.tasks
 
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import spock.lang.Shared
 import spock.lang.Specification
 
-abstract class AbstractPluginSpecification extends Specification {
+abstract class AbstractTaskSpecification extends Specification {
     @Shared
-    Project project
+    Project rootProject
 
-    Project project(Closure<Project> configuration = null) {
+    Project project(String name, Closure<Project> configuration = null) {
+        project(name, null, configuration)
+    }
+
+    Project project(String name, Project parent, Closure<Project> configuration = null) {
         deleteProjectDir()
-        project = ProjectBuilder.builder().build()
-        if (configuration)
+        ProjectBuilder builder = ProjectBuilder.builder().withName(name)
+        if (parent) {
+            builder = builder.withParent(parent)
+        }
+        Project project = builder.build()
+        if (configuration) {
             project.with(configuration)
-        return project
+        }
+        project
     }
 
     def cleanupSpec() {
         deleteProjectDir()
     }
 
-    void deleteProjectDir() {
-        project?.projectDir?.deleteDir()
+    def deleteProjectDir() {
+        rootProject?.projectDir?.deleteDir()
     }
 }

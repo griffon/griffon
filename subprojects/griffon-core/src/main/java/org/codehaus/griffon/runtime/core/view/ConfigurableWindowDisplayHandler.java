@@ -19,6 +19,8 @@ import griffon.core.CallableWithArgs;
 import griffon.core.GriffonApplication;
 import griffon.core.view.WindowDisplayHandler;
 import griffon.exceptions.InstanceNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -94,6 +96,8 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler<W> {
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigurableWindowDisplayHandler.class);
+
     protected static final String ERROR_NAME_BLANK = "Argument 'name' must not be blank";
     protected static final String ERROR_WINDOW_NULL = "Argument 'window' must not be null";
 
@@ -115,9 +119,11 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
         if (!options.isEmpty()) {
             Object handler = options.get("show");
             if (canBeRun(handler)) {
+                LOG.trace("Showing {} with show: handler", name);
                 run(handler, name, window);
                 return;
             } else if (options.get("handler") instanceof WindowDisplayHandler) {
+                LOG.trace("Showing {} with handler: handler", name);
                 ((WindowDisplayHandler<W>) options.get("handler")).show(name, window);
                 return;
             }
@@ -131,11 +137,13 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
         if (!options.isEmpty()) {
             Object defaultShow = options.get("defaultShow");
             if (canBeRun(defaultShow)) {
+                LOG.trace("Showing {} with defaultShow: handler", name);
                 run(defaultShow, name, window);
                 return;
             }
         }
 
+        LOG.trace("Showing {} with default handler", name);
         fetchDefaultWindowDisplayHandler().show(name, window);
     }
 
@@ -148,9 +156,11 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
         if (!options.isEmpty()) {
             Object handler = options.get("hide");
             if (canBeRun(handler)) {
+                LOG.trace("Hiding {} with hide: handler", name);
                 run(handler, name, window);
                 return;
             } else if (options.get("handler") instanceof WindowDisplayHandler) {
+                LOG.trace("Hiding {} with handler: handler", name);
                 ((WindowDisplayHandler<W>) options.get("handler")).hide(name, window);
                 return;
             }
@@ -164,10 +174,13 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
         if (!options.isEmpty()) {
             Object defaultHide = options.get("defaultHide");
             if (canBeRun(defaultHide)) {
+                LOG.trace("Hiding {} with defaultHide: handler", name);
                 run(defaultHide, name, window);
                 return;
             }
         }
+
+        LOG.trace("Hiding {} with default handler", name);
         fetchDefaultWindowDisplayHandler().hide(name, window);
     }
 
@@ -176,6 +189,7 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
         try {
             WindowDisplayHandler<W> handler = getApplication().getInjector()
                 .getInstance(WindowDisplayHandler.class, named(name));
+            LOG.trace("Showing {} with injected handler", name);
             handler.show(name, window);
             return true;
         } catch (InstanceNotFoundException infe) {
@@ -189,6 +203,7 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
         try {
             WindowDisplayHandler<W> handler = getApplication().getInjector()
                 .getInstance(WindowDisplayHandler.class, named(name));
+            LOG.trace("Hiding {} with injected handler", name);
             handler.hide(name, window);
             return true;
         } catch (InstanceNotFoundException infe) {

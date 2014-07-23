@@ -21,6 +21,8 @@ import griffon.core.view.WindowDisplayHandler;
 import griffon.exceptions.InstanceNotFoundException;
 import griffon.swing.SwingWindowDisplayHandler;
 import org.codehaus.griffon.runtime.core.view.ConfigurableWindowDisplayHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -38,6 +40,8 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class ConfigurableSwingWindowDisplayHandler extends ConfigurableWindowDisplayHandler<Window> implements SwingWindowDisplayHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigurableSwingWindowDisplayHandler.class);
+
     @Inject
     public ConfigurableSwingWindowDisplayHandler(@Nonnull GriffonApplication application, @Nonnull @Named("defaultWindowDisplayHandler") SwingWindowDisplayHandler delegateWindowsDisplayHandler) {
         super(application, delegateWindowsDisplayHandler);
@@ -51,9 +55,11 @@ public class ConfigurableSwingWindowDisplayHandler extends ConfigurableWindowDis
         if (!options.isEmpty()) {
             Object handler = options.get("show");
             if (canBeRun(handler)) {
+                LOG.trace("Showing {} with show: handler", name);
                 run(handler, name, window);
                 return;
             } else if (options.get("handler") instanceof SwingWindowDisplayHandler) {
+                LOG.trace("Showing {} with handler: handler", name);
                 ((SwingWindowDisplayHandler) options.get("handler")).show(name, window);
                 return;
             }
@@ -61,6 +67,7 @@ public class ConfigurableSwingWindowDisplayHandler extends ConfigurableWindowDis
 
         SwingWindowDisplayHandler handler = resolveSwingWindowDisplayHandler(name);
         if (handler != null) {
+            LOG.trace("Showing {} with injected handler", name);
             handler.show(name, window);
             return;
         }
@@ -69,11 +76,13 @@ public class ConfigurableSwingWindowDisplayHandler extends ConfigurableWindowDis
         if (!options.isEmpty()) {
             Object defaultShow = options.get("defaultShow");
             if (canBeRun(defaultShow)) {
+                LOG.trace("Showing {} with defaultShow: handler", name);
                 run(defaultShow, name, window);
                 return;
             }
         }
 
+        LOG.trace("Showing {} with default handler", name);
         fetchDefaultWindowDisplayHandler().show(name, window);
     }
 
@@ -85,9 +94,11 @@ public class ConfigurableSwingWindowDisplayHandler extends ConfigurableWindowDis
         if (!options.isEmpty()) {
             Object handler = options.get("hide");
             if (canBeRun(handler)) {
+                LOG.trace("Hiding {} with hide: handler", name);
                 run(handler, name, window);
                 return;
             } else if (options.get("handler") instanceof SwingWindowDisplayHandler) {
+                LOG.trace("Hiding {} with handler: handler", name);
                 ((SwingWindowDisplayHandler) options.get("handler")).hide(name, window);
                 return;
             }
@@ -95,6 +106,7 @@ public class ConfigurableSwingWindowDisplayHandler extends ConfigurableWindowDis
 
         SwingWindowDisplayHandler handler = resolveSwingWindowDisplayHandler(name);
         if (handler != null) {
+            LOG.trace("Hiding {} with injected handler", name);
             handler.hide(name, window);
             return;
         }
@@ -103,10 +115,13 @@ public class ConfigurableSwingWindowDisplayHandler extends ConfigurableWindowDis
         if (!options.isEmpty()) {
             Object defaultHide = options.get("defaultHide");
             if (canBeRun(defaultHide)) {
+                LOG.trace("Hiding {} with defaultHide: handler", name);
                 run(defaultHide, name, window);
                 return;
             }
         }
+
+        LOG.trace("Hiding {} with default handler", name);
         fetchDefaultWindowDisplayHandler().hide(name, window);
     }
 
@@ -127,6 +142,7 @@ public class ConfigurableSwingWindowDisplayHandler extends ConfigurableWindowDis
         try {
             SwingWindowDisplayHandler handler = getApplication().getInjector()
                 .getInstance(SwingWindowDisplayHandler.class, named(name));
+            LOG.trace("Showing {} with injected handler", name);
             handler.show(name, window);
             return true;
         } catch (InstanceNotFoundException infe) {
@@ -139,6 +155,7 @@ public class ConfigurableSwingWindowDisplayHandler extends ConfigurableWindowDis
         try {
             SwingWindowDisplayHandler handler = getApplication().getInjector()
                 .getInstance(SwingWindowDisplayHandler.class, named(name));
+            LOG.trace("Hiding {} with injected handler", name);
             handler.hide(name, window);
             return true;
         } catch (InstanceNotFoundException infe) {

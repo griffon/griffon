@@ -22,4 +22,10 @@ dependencies {
     compile project(':griffon-pivot')
 
     compileOnly project(':griffon-core-compile')
+
+    testCompile project(':griffon-core-test')
+    testCompile project(':griffon-pivot-test')
+    testCompile "com.jayway.awaitility:awaitility-groovy:$awaitilityVersion"
+
+    testRuntime project(':griffon-guice')
 }
