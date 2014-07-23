@@ -48,6 +48,7 @@ ext {
 allprojects {
     apply plugin: 'base'
     apply plugin: 'idea'
+    apply plugin: 'versions'
 
     repositories {
         jcenter()
@@ -64,7 +65,6 @@ ext.projectsWithCoverage = []
 
 subprojects { subproj ->
     plugins.withType(JavaPlugin) {
-        subproj.apply plugin: 'versions'
 
         configurations {
             compileOnly

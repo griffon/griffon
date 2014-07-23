@@ -19,7 +19,6 @@ buildscript {
 
 apply plugin: 'base'
 apply plugin: 'idea'
-apply plugin: 'versions'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'build-dashboard'
 apply from: 'gradle/idea.gradle'
@@ -35,6 +34,7 @@ ext {
 allprojects {
     apply plugin: 'base'
     apply plugin: 'idea'
+    apply plugin: 'versions'
 
     repositories {
         jcenter()
@@ -49,8 +49,6 @@ allprojects {
 
 subprojects { subproj ->
     plugins.withType(JavaPlugin) {
-        subproj.apply plugin: 'versions'
-
         configurations {
             compileOnly
             testCompileOnly
