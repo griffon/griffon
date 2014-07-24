@@ -199,8 +199,8 @@ asciidoctor {
             rename '.*', 'griffon-banner-large.png'
         }
         copy {
-            into file("${task.outputDir}/css/")
-            from file('src/resources/css/style.css')
+            into task.outputDir
+            from file('src/resources')
         }
     }
 }
