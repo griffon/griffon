@@ -15,8 +15,7 @@ that can be used to configure every aspect of +groovy.factory.FactoryBuilderSupp
 Here's an example of the +miglayout-swing+ extension
 
 .src/main/java/griffon/builder/swing/MiglayoutSwingBuilderCustomizer.java
-[source,java,options="nowrap"]
-[subs="verbatim"]
+[source,java,linenums,options="nowrap"]
 ----
 package griffon.builder.swing;
 
@@ -46,8 +45,7 @@ on the +swing+ customizer in order for its customizations to be applied after ++
 The customizer is registered using the following {link_module}.
 
 .src/main/java/org/codehaus/griffon/runtime/miglayout/MiglayoutSwingGroovyModule.java
-[source,java,options="nowrap"]
-[subs="verbatim"]
+[source,java,linenums,options="nowrap"]
 ----
 package org.codehaus.griffon.runtime.miglayout;
 
@@ -90,8 +88,7 @@ Using the +root()+ node avoids forgetting this fact while also providing an alia
 the node.
 
 .griffon-app/views/com/acme/Secondary.groovy
-[source,groovy,options="nowrap"]
-[subs="verbatim"]
+[source,groovy,linenums,options="nowrap"]
 ----
 root(
     tree(id: 'mytree')
@@ -101,8 +98,7 @@ mytree.addTreeSelectionModel(new DefaultTreeSelectionModel() { /* ... */ })
 ----
 
 .griffon-app/views/com/acme/PrimaryView.groovy
-[source,groovy,options="nowrap"]
-[subs="verbatim"]
+[source,groovy,linenums,options="nowrap"]
 ----
 package com.acme
 
@@ -135,8 +131,7 @@ the node is built then you'll need to use it again to retrieve the node.
 Enables the usage of a meta-component as a View node. Meta-components are MVC groups
 that contain additional configuration, for example
 
-[source,groovy,options="nowrap"]
-[subs="verbatim"]
+[source,groovy,linenums,options="nowrap"]
 ----
 mvcGroups {
     'custom' {
@@ -156,7 +151,6 @@ the groups' View member into the current hierarchy. Using the previous group def
 in a View is straight forward
 
 [source,groovy,options="nowrap"]
-[subs="verbatim"]
 ----
 metaComponent('custom', title: 'Another Title')
 ----

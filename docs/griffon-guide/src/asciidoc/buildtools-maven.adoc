@@ -39,7 +39,7 @@ The +application-master-pom+ configures the following plugins
 
 Of which the following are applied by default
 
-[source,xml,options="nowrap"]
+[source,xml,linenums,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 include::{master-pom}[tags=plugins,indent=0]
@@ -49,7 +49,7 @@ include::{master-pom}[tags=plugins,indent=0]
 
 All Griffon core dependencies have benn added using a +<dependencyManagement>+ block as shown next
 
-[source,xml,options="nowrap"]
+[source,xml,linenums,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 include::{master-pom}[tags=dependencyManagement,indent=0]
@@ -63,7 +63,7 @@ compile-time metadata generation via {link_jipsy}, {link_gipsy} and other AST tr
 You must exclude these dependencies from the +maven-surefire-plugin+. The following is the
 default configuration provided by the master pom
 
-[source,xml,options="nowrap"]
+[source,xml,linenums,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 include::{master-pom}[tags=plugin_surefire,indent=0]
@@ -73,7 +73,7 @@ include::{master-pom}[tags=plugin_surefire,indent=0]
 
 The following repositories are added by default
 
-[source,xml,options="nowrap"]
+[source,xml,linenums,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 include::{master-pom}[tags=repositories,indent=0]
@@ -87,7 +87,7 @@ The master pom enables a few profiles to take care of special tasks.
 
 This profile compiles and runs the application. Enable it with +maven -Prun+.
 
-[source,xml,options="nowrap"]
+[source,xml,linenums,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 include::{master-pom}[tags=profile_run,indent=0]
@@ -98,7 +98,7 @@ include::{master-pom}[tags=profile_run,indent=0]
 This profile packages the application using the +maven-assembly-plugin+.
 Enable it with +maven -Pdistribution+.
 
-[source,xml,options="nowrap"]
+[source,xml,linenums,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 include::{master-pom}[tags=profile_distribution,indent=0]
@@ -111,7 +111,7 @@ Enable it with +maven -izpack+. You must execute the +distribution+
 profile before running the +izpack+ profile. You *CAN NOT* combine
 both profiles.
 
-[source,xml,options="nowrap"]
+[source,xml,linenums,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 include::{master-pom}[tags=profile_izpack,indent=0]

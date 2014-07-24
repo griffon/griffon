@@ -14,7 +14,6 @@ in 3 versions, with 2 flavors each (one Groovy, the other Java friendly).
 Locating a group configuration is easily done by specifying the name you're interested in finding
 
 [source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 MVCGroupConfiguration configuration = application.mvcGroupManager.findConfiguration('foo')
 ----
@@ -23,7 +22,6 @@ Once you have a configuration reference you can instantiate a group with it by c
 any of the variants of the +create+ method
 
 [source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 MVCGroupConfiguration configuration = application.mvcGroupManager.findConfiguration('foo')
 MVCGroup group1 = configuration.create('foo1')
@@ -38,7 +36,6 @@ default +MVCGroupManager+ will complain when this happens and will automatically
 out an exception. This behavior may be changed by setting a configuration key in +Config.groovy+
 
 [source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 griffon.mvcid.collision = 'warning' // accepted values are 'warning', 'exception' (default)
 ----
@@ -56,7 +53,6 @@ Groups will be available by id regardless of how they were instantiated. You can
 the +MVCGroupManager+ for a particular group at any time, for example
 
 [source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 def g1 = application.mvcGroupManager.groups.foo1
 def g2 = application.mvcGroupManager.findGroup('foo1')
@@ -69,7 +65,6 @@ It's also possible to query all models, views, controllers and builders on their
 Say you'd want to inspect all currently instantiated models, this is how it can be done
 
 [source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 application.mvcGroupManager.models.each { model ->
     // do something with model

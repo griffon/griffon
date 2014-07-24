@@ -9,7 +9,6 @@ The simplest way is to pass in new values as part of the arguments map that
 +{link_mvc_group_init}+ receives, for example
 
 [source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 MVCGroup group = application.mvcGroupManager.buildMVCGroup('foo', [key: 'foo'])
 ----
@@ -18,7 +17,6 @@ However is you wish to use the special +config+ key that every MVC group configu
  may have then you must instantiate the group in the following way
 
 [source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 MVCGroupConfiguration configuration = application.mvcGroupManager
                                           .cloneMVCConfiguration('foo', [key: 'someValue'])
@@ -40,8 +38,7 @@ There may be times when you don't want these events to be placed in the event bu
 in order to speed up group creation/destruction. Use the following configuration to
 gain this effect:
 
-[source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,groovy,linenums,options="nowrap"]
 ----
 mvcGroups {
     // MVC Group for "sample"
@@ -71,8 +68,7 @@ the previous events this one will be sent to the event bus even if no component 
 it. Skipping publication of this event may result in a slight increase of speed during
 group instantiation. Use the following configuration to gain this effect:
 
-[source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,groovy,linenums,options="nowrap"]
 ----
 mvcGroups {
     // MVC Group for "sample"
@@ -99,8 +95,7 @@ This is the counterpart of the +NewInstance+ event. Skipping publication of this
 may result in a slight increase of speed when a group or any artifact instance is destroyed.
 Use the following configuration to gain this effect:
 
-[source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,groovy,linenums,options="nowrap"]
 ----
 mvcGroups {
     // MVC Group for "sample"
@@ -129,8 +124,7 @@ the application's event bus. However you may want to avoid this automatic regist
 altogether, as it can lead to performance improvements. You can disable this feature
 with the following configuration:
 
-[source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,groovy,linenums,options="nowrap"]
 ----
 mvcGroups {
     // MVC Group for "sample"

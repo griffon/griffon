@@ -8,20 +8,22 @@ which can be set on properties (Groovy), fields (Java and Groovy) and setter met
 @InjectedResource is a perfect companion to <<_models,models>> as the following example shows
 
 .griffon-app/resources/resources.properties
-[source]
+[source,java,linenums,options="nowrap"]
 ----
 sample.SampleModel.griffonLogo = /griffon-logo-48x48.png
 logo = /griffon-logo-{0}x{0}.png
 ----
 
 .griffon-app/models/sample/SampleModel.groovy
-[source,groovy,options="nowrap"]
+[source,groovy,linenums,options="nowrap"]
 ----
 package sample
 
 import griffon.core.resources.InjectedResource
 import javax.swing.Icon
+import griffon.core.artifact.GriffonModel
 
+@griffon.metadata.ArtifactProviderFor(GriffonModel)
 class SampleModel {
     @InjectedResource Icon griffonLogo
     @InjectedResource(key='logo', args=['16']) Icon smallGriffonLogo
@@ -42,11 +44,14 @@ An optional +format+ value may be specified as a hint to the PropertyEditor used
 value conversion, for example
 
 .griffon-app/models/sample/SampleModel.groovy
-[source,groovy,options="nowrap"]
+[source,groovy,linenums,options="nowrap"]
 ----
 package sample
 
 import griffon.core.resources.InjectedResource
+import griffon.core.artifact.GriffonModel
+
+@griffon.metadata.ArtifactProviderFor(GriffonModel)
 class SampleModel {
     @InjectedResource(defaultValue='10.04.2013 2:30 PM', format='dd.MM.yyyy h:mm a')
     Date date

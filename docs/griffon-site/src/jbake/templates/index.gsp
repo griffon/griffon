@@ -103,8 +103,8 @@ Available templates in griffon/griffon-lazybones-templates
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint"><code>\$ gradle build
-\$ gradle run
-\$ gradle test</code></pre>
+\$ gradle test
+\$ gradle run</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -114,7 +114,7 @@ Available templates in griffon/griffon-lazybones-templates
 <div class="content">
 <pre class="prettyprint"><code>\$ mvn compile
 \$ mvn test
-\$ mvn exec:java</code></pre>
+\$ mvn -Prun</code></pre>
 </div>
 </div>
 </div>

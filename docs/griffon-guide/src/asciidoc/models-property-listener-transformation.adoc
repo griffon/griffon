@@ -5,14 +5,13 @@
 The +{link_property_listener}+ helps you to register ++PropertyChangeListener++s
 without so much effort. The following code
 
-[source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,groovy,linenums,options="nowrap"]
 ----
 import griffon.transform.PropertyListener
 import griffon.transform.Observable
-import griffon.metadata.ArtifactProviderFor
+import griffon.core.artifact.GriffonModel
 
-@ArtifactProviderFor(GriffonModel)
+@griffon.metadata.ArtifactProviderFor(GriffonModel)
 @PropertyListener(snoopAll)
 class SampleModel {
     def controller
@@ -28,14 +27,13 @@ class SampleModel {
 
 is equivalent to this one
 
-[source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,groovy,linenums,options="nowrap"]
 ----
 import java.beans.PropeetyChangeListener
 import griffon.transform.Observable
-import griffon.metadata.ArtifactProviderFor
+import griffon.core.artifact.GriffonModel
 
-@ArtifactProviderFor(GriffonModel)
+@griffon.metadata.ArtifactProviderFor(GriffonModel)
 @PropertyListener(snoopAll)
 class SampleModel {
     def controller

@@ -28,8 +28,7 @@ These are some examples of event handlers:
 Display a message right before default MVC groups are instantiated
 
 .src/main/com/acme/ApplicationEventHandler.groovy
-[source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,groovy,linenums,options="nowrap"]
 ----
 package com.acme
 
@@ -47,8 +46,7 @@ class ApplicationEventHandler implements EventHandler {
 ----
 
 .src/main/groovy/com/acme/ApplicationModule.groovy
-[source,groovy,options="nowrap"]
-[subs="verbatim"]
+[source,groovy,linenums,options="nowrap"]
 ----
 package com.acme
 
@@ -71,9 +69,13 @@ class ApplicationModule extends AbstractModule {
 Print the name of the application plus a short message when the application is about to shut down.
 
 .griffon-app/controller/MyController.groovy
-[source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,groovy,linenums,options="nowrap"]
 ----
+package com.acme
+
+import griffon.core.artifact.GriffonController
+
+@griffon.metadata.ArtifactProviderFor(GriffonController)
 class MyController {
     void onShutdownStart(application)
         println "${application.configuration['application.title']} is shutting down"
@@ -84,9 +86,13 @@ class MyController {
 Print a message every time the event "Foo" is published
 
 .griffon-app/controller/MyController.groovy
-[source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,groovy,linenums,options="nowrap"]
 ----
+package com.acme
+
+import griffon.core.artifact.GriffonController
+
+@griffon.metadata.ArtifactProviderFor(GriffonController)
 class MyController {
     void mvcGroupInit(Map<String, Object> args) {
         application.eventRouter.addEventListener([
@@ -104,9 +110,13 @@ class MyController {
 An alternative to the previous example using a +CallableWithArgs+ event handler
 
 .griffon-app/controller/MyController.groovy
-[source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,groovy,linenums,options="nowrap"]
 ----
+package com.acme
+
+import griffon.core.artifact.GriffonController
+
+@griffon.metadata.ArtifactProviderFor(GriffonController)
 class MyController {
     void mvcGroupInit(Map<String, Object> args) {
         application.eventRouter.addEventListener('Foo',
@@ -124,9 +134,13 @@ class MyController {
 An alternative to the previous example using a custom event class
 
 .griffon-app/controller/MyController.groovy
-[source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,groovy,linenums,options="nowrap"]
 ----
+package com.acme
+
+import griffon.core.artifact.GriffonController
+
+@griffon.metadata.ArtifactProviderFor(GriffonController)
 class MyController {
     void mvcGroupInit(Map<String, Object> args) {
         application.eventRouter.addListener(Foo) {

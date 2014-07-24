@@ -8,8 +8,7 @@ and it will automatically gain all methods exposed by +{link_event_publisher}+.
 
 The following example shows a trivial usage of this feature
 
-[source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,groovy,linenums,options="nowrap"]
 ----
 @griffon.transform.EventPublisher
 class Publisher {
@@ -27,8 +26,7 @@ The application's event router will be used by default. If you'd like your custo
 event publisher to use a private +{link_event_router}+ then you must define a binding
 for it using a specific name, like this
 
-[source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,groovy,linenums,options="nowrap"]
 ----
 import griffon.core.injection.Module
 import griffon.core.event.EventRouter
@@ -55,8 +53,7 @@ class ApplicationModule extends AbstractModule {
 Next specify the named +{link_event_router}+ as a parameter on the +{link_event_publisher_ast}+
 transformation
 
-[source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,groovy,linenums,options="nowrap"]
 ----
 @griffon.transform.EventPublisher('my-private-event-router')
 class Publisher {

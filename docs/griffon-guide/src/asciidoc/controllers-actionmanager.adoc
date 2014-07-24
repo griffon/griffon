@@ -71,8 +71,7 @@ Values must be placed in resources files following the <<_resources,internationa
 The following Controller defines 2 actions, one of them uses the +Action+ suffix because its name clashes
 with a known Java keyword.
 
-[source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,groovy,linenums,options="nowrap"]
 ----
 package sample
 
@@ -94,8 +93,7 @@ The +{link_action_manager}+ will generate and configure the following actions:
 
 The following keys are expected to be available in the application's i18n resources (i.e. +griffon-app/i18n/messages.properties+)
 
-[source,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,java,linenums,options="nowrap"]
 ----
 sample.SampleController.action.New.name = New
 sample.SampleController.action.Open.name = Open
@@ -108,8 +106,7 @@ In the case that you'd like the close action to be customized for all controller
 the Spanish language, then you'll have to provide a file named +griffon-app/i18n/messages_es.properties+
 with the following keys
 
-[source,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,java,linenums,options="nowrap"]
 ----
 application.action.Close.name = Cerrar
 ----

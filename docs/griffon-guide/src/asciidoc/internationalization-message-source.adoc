@@ -33,7 +33,6 @@ never throw +NoSuchMessageException+ nor return +null+ unless the passed in +key
 The simplest way to resolve a message thus results like this
 
 [source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 getApplication().getMessageSource().getMessage('some.key')
 ----
@@ -43,14 +42,12 @@ code whereas those that take an +Object[]+ are meant for Java code; this leads t
 better idiomatic code as the following examples reveal
 
 [source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 getApplication().getMessageSource()
                 .getMessage('groovy.message', ['apples', 'bananas'])
 ----
 
 [source,java,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 getApplication().getMessageSource()
                 .getMessage("java.message", new Object[]{"unicorns", "rainbows"});
@@ -59,7 +56,6 @@ getApplication().getMessageSource()
 Of course you may also use +List+ versions in Java, like this
 
 [source,java,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 getApplication().getMessageSource()
                 .getMessage("hybrid.message", Arrays.asList("bells", "whistles"));
@@ -80,8 +76,7 @@ facilities. These formats work with all versions of the +getMessage()+ method th
 take a +List+ or an +Object[]+ as arguments. Examples follow. First the messages
 stored in a properties file
 
-[source]
-[subs="verbatim,attributes"]
+[source,java,linenums,options="nowrap"]
 ----
 healthy.proverb = An {0} a day keeps the {1} away
 yoda.says = {0} is the path to the dark side. {0} leads to {1}. {1} leads to {2}. {2} leads to suffering.
@@ -90,7 +85,6 @@ yoda.says = {0} is the path to the dark side. {0} leads to {1}. {1} leads to {2}
 Then the code used to resolve them
 
 [source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 String quote = getApplication().getMessageSource()
                                .getMessage('healthy.proverb', ['apple', 'doctor'])
@@ -110,8 +104,7 @@ The following format is non-standard (i.e, not supported by +MessageFormat+) and
 only be resolved by Griffon. This format uses symbols instead of numbers as placeholders
 for arguments. Thus the previous messages can be rewritten as follows
 
-[source]
-[subs="verbatim,attributes"]
+[source,java,linenums,options="nowrap"]
 ----
 healthy.proverb = An {:fruit} a day keeps the {:occupation} away
 yoda.says = {:foo} is the path to the dark side. {:foo} leads to {:bar}. {:bar} leads to {:foobar}. {:foobar} leads to suffering.
@@ -120,7 +113,6 @@ yoda.says = {:foo} is the path to the dark side. {:foo} leads to {:bar}. {:bar} 
 Which may be resolved in this manner
 
 [source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 String quote = getApplication().getMessageSource()
                                .getMessage('healthy.proverb', [fruit: 'apple', occupation: 'doctor'])
@@ -128,7 +120,6 @@ assert quote == 'An apple a day keeps the doctor away
 ----
 
 [source,java,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 import static griffon.util.CollectionUtils.map;
 String quote = getApplication().getMessageSource()
@@ -147,8 +138,7 @@ closures and must return a String value; if they do not then their return value 
 be translated to a String. The following message uses the value of the current running
 environment to determine the text of a warning to be displayed on a label
 
-[source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,groovy,linenums,options="nowrap"]
 ----
 import griffon.util.Environment
 
@@ -168,8 +158,7 @@ as if one key were an alias for the other. +MessageSource+ supports the notion o
 referenced keys for this matter. In order to achieve this, the value of the alias
 key must define the aliased key with a special format, for example
 
-[source]
-[subs="verbatim,attributes"]
+[source,java,linenums,options="nowrap"]
 ----
 famous.quote = This is {0}!
 hello.world = @[famous.quote]
@@ -178,7 +167,6 @@ hello.world = @[famous.quote]
 Resolving those keys results in
 
 [source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 assert getApplication()
            .getMessageSource()

@@ -11,8 +11,7 @@ impose a strict dependency on Guice.
 
 All modules must implement the +{link_module}+ interface shown next
 
-[source,java,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,java,linenums,options="nowrap"]
 ----
 include::{rootdir}/subprojects/griffon-core/src/main/java/griffon/core/injection/Module.java[lines=25..-1]
 ----
@@ -21,8 +20,7 @@ They also require to have a well defined name. This can be achieved by annotatin
 class with +@javax.inject.Named+. If a value for +@javax.inject.Named+ is not defined then
 one will be automatically calculated using the fully qualified class name. For example
 
-[source,java,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,java,linenums,options="nowrap"]
 ----
 package org.example;
 
@@ -44,8 +42,7 @@ public class CustomModule extends AbstractModule {
 
 Results in a module named +org.example.custom+, where as the following definition
 
-[source,java,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,java,linenums,options="nowrap"]
 ----
 package org.example;
 
@@ -70,8 +67,7 @@ that's the case then the bindings of this module are processed after their depen
 allows dependent modules to override bindings made by their dependencies. Module dependencies
 are specified using the +{link_depends_on}+ annotation, like so
 
-[source,java,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,java,linenums,options="nowrap"]
 ----
 import griffon.core.injection.Module;
 import griffon.inject.DependsOn;
@@ -113,7 +109,6 @@ not both; +classifier+ has precedence over +classifier_type+.
 This binding is used to define explicit and eager singletons, for example
 
 [source,java,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 bind(Calculator.class)
     .toInstance(new GroovyShellCalculator());
@@ -127,7 +122,6 @@ _source_ is an interface while the _target_ is a concrete implementation. If the
 is omitted then the binding assumes the _source_ to be a concrete type.
 
 [source,java,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 bind(Calculator.class)
     .to(GroovyShellCalculator.class);
@@ -141,7 +135,6 @@ how the instance should be created. Bindings of this type require an eager insta
 type +javax.inject.Provider+.
 
 [source,java,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 bind(Calculator.class)
     .toProvider(new CalculatorProvider());
@@ -154,7 +147,6 @@ Finally we have the most flexible binding as it lets you specify a +javax.inject
 type that will be used to lazily instantiate the provider before obtaining the type instance.
 
 [source,java,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 bind(Calculator.class)
     .toProvider(CalculatorProvider.class);

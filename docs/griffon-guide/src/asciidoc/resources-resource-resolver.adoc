@@ -34,7 +34,6 @@ in +key+ is null.
 The simplest way to resolve a message thus results like this
 
 [source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 getApplication().getResourceResolver().resolveResource('menu.icon')
 ----
@@ -44,14 +43,12 @@ code whereas those that take an +Object[]+ are meant for Java code; this leads t
 better idiomatic code as the following examples reveal
 
 [source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 getApplication().getResourceResolver()
                 .resolveResource('groovy.icon.resource', ['small']))
 ----
 
 [source,java,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 getApplication().getResourceResolver()
                 .resolveResource("java.icon.resource", new Object[]{"large"});
@@ -60,7 +57,6 @@ getApplication().getResourceResolver()
 Of course you may also use +List+ versions in Java, like this
 
 [source,java,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 getApplication().getResourceResolver()
                 .resolveResource("hybrid.icon.resource", Arrays.asList("medium"));
@@ -81,7 +77,7 @@ facilities. These formats work with all versions of the +resolveResource()+ meth
 take a +List+ or an +Object[]+ as arguments. Examples follow. First the resource
 definitions stored in a properties file
 
-[source]
+[source,java,linenums,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 menu.icon = /img/icons/menu-{0}.png
@@ -92,7 +88,6 @@ filenames are +menu-small.png+, +menu-medium.png+ and +menu-large.png+, a compon
 resolve any of them with
 
 [source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 Object icon = getApplication().getResourceResolver()
                               .resolveResource('menu.icon', ['large'])
@@ -104,8 +99,7 @@ The following format is non-standard (i.e, not supported by +MessageFormat+) and
 only be resolved by Griffon. This format uses symbols instead of numbers as placeholders
 for arguments. Thus the previous messages can be rewritten as follows
 
-[source]
-[subs="verbatim,attributes"]
+[source,java,linenums,options="nowrap"]
 ----
 menu.icon = /img/icons/menu-{:size}.png
 ----
@@ -113,7 +107,6 @@ menu.icon = /img/icons/menu-{:size}.png
 Which may be resolved in this manner
 
 [source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 Object icon = getApplication().getResourceResolver()
                               .resolveResource('menu.icon', [size: 'large'])
@@ -127,8 +120,7 @@ message on the fly. In order to accomplish this feat resources must be defined a
 closures. The following message uses the value of the current running environment
 to determine the text of a warning to be displayed on a label
 
-[source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,groovy,linenums,options="nowrap"]
 ----
 import java.awt.Rectangle
 
@@ -148,7 +140,6 @@ are automatically transformed to the expected type.
 Here's how it can be done
 
 [source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 import javax.swing.Icon
 import java.beans.PropertyEditor
@@ -168,8 +159,7 @@ as if one key were an alias for the other. +ResourceResolver+ supports the notio
 referenced keys for this matter. In order to achieve this, the value of the alias
 key must define the aliased key with a special format, for example
 
-[source]
-[subs="verbatim,attributes"]
+[source,java,linenums,options="nowrap"]
 ----
 action.icon = /img/icons/action-{0}.png
 hello.icon = @[action.icon]
@@ -178,7 +168,6 @@ hello.icon = @[action.icon]
 Resolving those keys results in
 
 [source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 assert getApplication()
            .getResourceResolver()

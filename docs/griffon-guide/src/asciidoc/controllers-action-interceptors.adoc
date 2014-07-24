@@ -8,8 +8,7 @@ any controller action is invoked by the framework. For example, you may want to 
 the execution of a particular action given specific permissions; the +shiro+ plugin uses
 annotations that are handled by an +ActionInterceptor+, like this
 
-[source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,groovy,linenums,options="nowrap"]
 ----
 import griffon.core.artifact.GriffonController
 import griffon.metadata.ArtifactProviderFor
@@ -29,8 +28,7 @@ class PrinterController {
 The +scaffolding+ plugin on the other hand modifies the arguments sent to the action.
 Take the following snippet for example
 
-[source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,groovy,linenums,options="nowrap"]
 ----
 import griffon.core.artifact.GriffonController
 import griffon.metadata.ArtifactProviderFor
@@ -78,8 +76,7 @@ that provides sensible defaults. Say you'd want to know how much time it took fo
 to be executed, also if an exception occurred during its execution. This interceptor could
 be implemented as follows
 
-[source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,groovy,linenums,options="nowrap"]
 ----
 package com.acme
 
@@ -138,8 +135,7 @@ up by the +ActionManager+. The following example shows how the previous +TracerA
 can be registered in a +Module+
 
 .src/main/com/acme/ApplicationModule.groovy
-[source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
+[source,groovy,linenums,options="nowrap"]
 ----
 package com.acme
 
@@ -173,7 +169,6 @@ should be called before +scaffolding+. This can be accomplished by adding the fo
 snippet to +Config.groovy+
 
 [source,groovy,options="nowrap"]
-[subs="verbatim,attributes"]
 ----
 griffon.controller.action.interceptor.order = ['security', 'scaffolding']
 ----

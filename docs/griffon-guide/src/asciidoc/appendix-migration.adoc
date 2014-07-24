@@ -44,8 +44,7 @@ The +Builder.groovy+ is no longer required. Its functions are now handled by
 customization
 
 .src/main/java/griffon/builder/swing/MiglayoutSwingBuilderCustomizer.java
-[source,java,options="nowrap"]
-[subs="verbatim"]
+[source,java,linenums,options="nowrap"]
 ----
 package griffon.builder.swing;
 
@@ -71,8 +70,7 @@ public class MiglayoutSwingBuilderCustomizer extends AbstractBuilderCustomizer {
 ----
 
 .src/main/java/org/codehaus/griffon/runtime/miglayout/MiglayoutSwingGroovyModule.java
-[source,java,options="nowrap"]
-[subs="verbatim"]
+[source,java,linenums,options="nowrap"]
 ----
 package org.codehaus.griffon.runtime.miglayout;
 
@@ -107,8 +105,7 @@ source directory (+src/main/java+ or +src/main/groovy+ depending on your prefere
 The following snippet shows an skeleton implementation
 
 .src/main/groovy/com/acme/ApplicationEventHandler.groovy
-[source,groovy,options="nowrap"]
-[subs="verbatim"]
+[source,groovy,linenums,options="nowrap"]
 ----
 package com.acme
 
@@ -125,8 +122,7 @@ class using a module. The default +ApplicationModule+ class provided by all basi
 project templates is a good start.
 
 .src/main/groovy/com/acme/ApplicationModule.groovy
-[source,groovy,options="nowrap"]
-[subs="verbatim"]
+[source,groovy,linenums,options="nowrap"]
 ----
 package com.acme
 
@@ -154,8 +150,7 @@ The value for this annotation must be the basic interface that defines the artif
 type, for example
 
 .griffon-app/models/sample/SampleModel.groovy
-[source,groovy,options="nowrap"]
-[subs="verbatim"]
+[source,groovy,linenums,options="nowrap"]
 ----
 package sample
 
@@ -179,8 +174,7 @@ View scripts have been upgraded to classes. You can use the following skeleton V
 class as an starting point
 
 .griffon-app/views/sample/SampleView.groovy
-[source,groovy,options="nowrap"]
-[subs="verbatim"]
+[source,groovy,linenums,options="nowrap"]
 ----
 package sample
 
@@ -209,8 +203,7 @@ These scripts must be migrated to full classes too. Here's the basic skeleton co
 for any lifecycle handler
 
 .griffon-app/lifecycle/Initialize.groovy
-[source,groovy,options="nowrap"]
-[subs="verbatim"]
+[source,groovy,linenums,options="nowrap"]
 ----
 import griffon.core.GriffonApplication
 import org.codehaus.griffon.runtime.core.AbstractLifecycleHandler
@@ -241,8 +234,7 @@ any testing framework you're comfortable with to write unit tests (Junit4, Spock
 Use the following template if you need to write artifact tests
 
 .src/test/sample/SampleControllerTest.groovy
-[source,groovy,options="nowrap"]
-[subs="verbatim"]
+[source,groovy,linenums,options="nowrap"]
 ----
 package sample
 

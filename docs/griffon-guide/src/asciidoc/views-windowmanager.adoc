@@ -20,7 +20,7 @@ a different implementation of +{link_window_display_handler}+ on the application
 This configuration can be set in +griffon-app/conf/Config.groovy+ file, here is how it looks
 
 .griffon-app/conf/Config.groovy
-[source,groovy,options="nowrap"]
+[source,groovy,linenums,options="nowrap"]
 ----
 windowManager {
     myWindowName = [
@@ -51,7 +51,7 @@ The first two options have priority over the third one. If one is missing then t
 that can be used to override the default behavior provided to all windows
 
 .griffon-app/conf/Config.groovy
-[source,groovy,options="nowrap"]
+[source,groovy,linenums,options="nowrap"]
 ----
 windowManager {
     defaultHandler = new MyCustomWindowDisplayHandler()
@@ -62,7 +62,7 @@ You can go a bit further by specifying a global show or hide behavior as shown i
 following example
 
 .griffon-app/conf/Config.groovy
-[source,groovy,options="nowrap"]
+[source,groovy,linenums,options="nowrap"]
 ----
 windowManager {
     defaultShow: {name, window -> ... },
@@ -85,7 +85,7 @@ by means of the WindowManager DSL. Simply specify a value for +windowManager.sta
 like this
 
 .griffon-app/conf/Config.groovy
-[source,groovy,options="nowrap"]
+[source,groovy,linenums,options="nowrap"]
 ----
 windowManager {
     startingWindow = 'primary'
@@ -107,7 +107,7 @@ If no match is found then the default behavior will be executed.
 The following example shows how you can center on screen all managed windows
 
 .src/main/groovy/sample/CenteringWindowDisplayHandler.groovy
-[source,groovy,options="nowrap"]
+[source,groovy,linenums,options="nowrap"]
 ----
 package sample
 
@@ -131,7 +131,7 @@ You can register +CenteringWindowDisplayHandler+ using the WindowManager DSL. Al
 you may use a <<_overview_modules, Module>> to register the class/instance.
 
 .src/main/groovy/sample/ApplicationModule.groovy
-[source,groovy,options="nowrap"]
+[source,groovy,linenums,options="nowrap"]
 ----
 package sample
 

@@ -16,7 +16,7 @@ is a simple case of cloning the repository you're interested in. For example, to
 get the core framework run:
 
 [source]
-[subs="verbatim,attributes"]
+[subs="attributes"]
 ----
 $ git clone {griffon-source-url}
 ----
@@ -29,7 +29,6 @@ all the project source files. The next step is to get a Griffon installation fro
 All you have to do to run the full suite of tests is:
 
 [source]
-[subs="verbatim,attributes"]
 ----
 $ ./gradlew test
 ----
@@ -38,7 +37,6 @@ These will take a while, so consider running individual tests using the command 
 For example, to run the test case @MappingDslTests@ simply execute the following command:
 
 [source]
-[subs="verbatim,attributes"]
 ----
 $ ./gradlew -Dtest.single=EnvironmentTests :griffon-core:test
 ----
@@ -51,7 +49,6 @@ the top-level "test" target won't work....
 You need to run the following gradle task:
 
 [source]
-[subs="verbatim,attributes"]
 ----
 $ ./gradlew idea
 ----
