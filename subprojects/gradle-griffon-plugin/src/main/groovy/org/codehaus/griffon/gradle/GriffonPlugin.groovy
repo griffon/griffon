@@ -182,6 +182,8 @@ class GriffonPlugin implements Plugin<Project> {
         project.gradle.addBuildListener(new BuildAdapter() {
             @Override
             void projectsEvaluated(Gradle gradle) {
+                project.repositories.mavenLocal()
+
                 // add default dependencies
                 appendDependency('core')
                 appendDependency('core-compile')
