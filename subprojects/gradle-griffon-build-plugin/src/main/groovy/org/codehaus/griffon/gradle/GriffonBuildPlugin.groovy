@@ -56,7 +56,7 @@ class GriffonBuildPlugin implements Plugin<Project> {
         registerBuildListener(project)
     }
 
-    private void getRegisterBuildListener(final Project project) {
+    private void registerBuildListener(final Project project) {
         project.gradle.addBuildListener(new BuildAdapter() {
             @Override
             void projectsEvaluated(Gradle gradle) {
