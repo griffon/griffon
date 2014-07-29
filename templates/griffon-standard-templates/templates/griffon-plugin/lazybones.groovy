@@ -16,6 +16,7 @@ if (projectName =~ /\-/) {
 
 props.plugin_name = pluginName
 props.plugin_full_name = 'griffon-' + pluginName + '-plugin'
+props.plugin_base_name = 'griffon-' + pluginName
 props.plugin_natural_name = transformText(pluginName, from: NameType.HYPHENATED, to: NameType.NATURAL)
 props.plugin_full_natural_name = transformText(props.plugin_full_name, from: NameType.HYPHENATED, to: NameType.NATURAL)
 
