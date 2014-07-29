@@ -60,7 +60,7 @@
 </div>
 <div class="paragraph">
 <p>Next register the <code>griffon-lazybones-templates</code> repository with Lazybones'
-config file. Edit <code>\$USER_HOME/.lazybones.config.groovy</code></p>
+config file. Edit <code>\$USER_HOME/.lazybones/config.groovy</code></p>
 </div>
 <div class="listingblock">
 <div class="content">
