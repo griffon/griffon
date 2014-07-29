@@ -1,0 +1,271 @@
+
+[[_appendix_migration]]
+= Migrating from Griffon 1.x
+:numbered:
+
+Griffon 2.x has tried to be as close as possible to Griffon 1.x in terms of concepts
+and APIs, however some changes were introduced that require your attention when
+migrating an application from Griffon 1.x
+
+== Build Configuration
+
+There is no longer a specific Griffon buildtime tool nor configuration settings.
+You must pick a build tool (we recommend http://gradle.org[Gradle]) and use that
+tool's configuration to match your needs. The simplest way to get started is to
+select an appropriate http://github.com/pledbrook/layzbones[Lazybones] template
+to create an empty project, then copy the files you need.
+
+Build time plugins and scripts are now within the realm of a particular build tool.
+
+=== Dependencies
+
+Dependencies used to be configured inside +griffon-app/conf/BuildConfig.groovy+. Now
+that the file is gone you must configured dependencies using the native support of
+the build tool you choose. Of particular note is that all griffon dependencies are
+now standard JAR archives available from Maven compatible repositories, so they should
+work no matter which dependency resolution you pick.
+
+== Runtime Configuration
+
+=== Application and Config Scripts
+
+The files +Application.groovy+ and +Config.groovy+ have been merged into a single
+file : +Config.groovy+. The +log4j+ DSL is no longer used, so please move your
+logging settings to +src/resources/log4j.properties+; you can also use the XML variant
+if you want. Griffon 2.x does not forces Log4j on you either, you're free to pick
+a suitable Slf4j binding of your choice.
+
+=== Builder Script
+
+The +Builder.groovy+ is no longer required. Its functions are now handled by
++{link_builder_customizer}+ classes bound in a +{link_module}+. You must add
++griffon-groovy-{griffon-version}.jar+ as a compile dependency in order to use
++BuilderCustomizers+. Here's an example for adding a http://miglayout.com[Miglayout]
+customization
+
+.src/main/java/griffon/builder/swing/MiglayoutSwingBuilderCustomizer.java
+[source,java,linenums,options="nowrap"]
+----
+package griffon.builder.swing;
+
+import griffon.inject.DependsOn;
+import groovy.swing.factory.LayoutFactory;
+import net.miginfocom.swing.MigLayout;
+import groovy.util.Factory;
+import org.codehaus.griffon.runtime.groovy.view.AbstractBuilderCustomizer;
+
+import javax.inject.Named;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+@DependsOn({"swing"})
+@Named("miglayout-swing")
+public class MiglayoutSwingBuilderCustomizer extends AbstractBuilderCustomizer {
+    public MiglayoutSwingBuilderCustomizer() {
+        Map<String, Factory> factories = new LinkedHashMap<>();
+        factories.put("migLayout", new LayoutFactory(MigLayout.class));
+        setFactories(factories);
+    }
+}
+----
+
+.src/main/java/org/codehaus/griffon/runtime/miglayout/MiglayoutSwingGroovyModule.java
+[source,java,linenums,options="nowrap"]
+----
+package org.codehaus.griffon.runtime.miglayout;
+
+import griffon.builder.swing.MiglayoutSwingBuilderCustomizer;
+import griffon.core.injection.Module;
+import griffon.inject.DependsOn;
+import griffon.util.BuilderCustomizer;
+import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.kordamp.jipsy.ServiceProviderFor;
+
+import javax.inject.Named;
+
+@DependsOn("swing-groovy")
+@Named("miglayout-swing-groovy")
+@ServiceProviderFor(Module.class)
+public class MiglayoutSwingGroovyModule extends AbstractModule {
+    @Override
+    protected void doConfigure() {
+        // tag::bindings[]
+        bind(BuilderCustomizer.class)
+            .to(MiglayoutSwingBuilderCustomizer.class)
+            .asSingleton();
+        // end::bindings[]
+    }
+}
+----
+
+=== Events Script
+
+The +Events+ script usually placed in +griffon-app/conf+ should be moved to the main
+source directory (+src/main/java+ or +src/main/groovy+ depending on your preferences).
+The following snippet shows an skeleton implementation
+
+.src/main/groovy/com/acme/ApplicationEventHandler.groovy
+[source,groovy,linenums,options="nowrap"]
+----
+package com.acme
+
+import griffon.core.event.EventHandler
+
+class ApplicationEventHandler implements EventHandler {
+    // event handlers as public methods
+}
+----
+
+You must add event handlers as public methods following the conventions explained
+in the <<_events_consuming,consuming events>> section. Don't forget to register this
+class using a module. The default +ApplicationModule+ class provided by all basic
+project templates is a good start.
+
+.src/main/groovy/com/acme/ApplicationModule.groovy
+[source,groovy,linenums,options="nowrap"]
+----
+package com.acme
+
+import griffon.core.event.EventHandler
+import griffon.core.injection.Module
+import org.codehaus.griffon.runtime.core.injection.AbstractModule
+import org.kordamp.jipsy.ServiceProviderFor
+
+@ServiceProviderFor(Module)
+class ApplicationModule extends AbstractModule {
+    @Override
+    protected void doConfigure() {
+        bind(EventHandler)
+            .to(ApplicationEventHandler)
+            .asSingleton()
+    }
+}
+----
+
+== Artifacts
+
+All artifacts must be annotated with +{link_artifact_provider_for}+ without exception.
+Failure to follow this rule will make Griffon miss the artifact during bootstrap.
+The value for this annotation must be the basic interface that defines the artifact's
+type, for example
+
+.griffon-app/models/sample/SampleModel.groovy
+[source,groovy,linenums,options="nowrap"]
+----
+package sample
+
+import griffon.core.artifact.GriffonModel
+import griffon.metadata.ArtifactProviderFor
+
+@ArtifactProviderFor(GriffonModel)
+class SampleModel {
+    ...
+}
+----
+
+=== Controllers
+
+Closure properties as actions are no longer supported. All actions must be defined
+as public methods.
+
+=== Views
+
+View scripts have been upgraded to classes. You can use the following skeleton View
+class as an starting point
+
+.griffon-app/views/sample/SampleView.groovy
+[source,groovy,linenums,options="nowrap"]
+----
+package sample
+
+import griffon.core.artifact.GriffonView
+import griffon.metadata.ArtifactProviderFor
+
+@ArtifactProviderFor(GriffonView)
+class SampleView {
+    def builder
+    def model
+
+    void initUI() {
+        builder.with {
+            //<1>
+        }
+    }
+}
+----
+<1> UI components
+
+Next, place the contents of your old View script inside [conum,data-value=1]_1_.
+
+== Lifecycle Scripts
+
+These scripts must be migrated to full classes too. Here's the basic skeleton code
+for any lifecycle handler
+
+.griffon-app/lifecycle/Initialize.groovy
+[source,groovy,linenums,options="nowrap"]
+----
+import griffon.core.GriffonApplication
+import org.codehaus.griffon.runtime.core.AbstractLifecycleHandler
+
+import javax.annotation.Nonnull
+import javax.inject.Inject
+
+class Initialize extends AbstractLifecycleHandler {
+    @Inject
+    Initialize(@Nonnull GriffonApplication application) {
+        super(application)
+    }
+
+    @Override
+    void execute() {
+        // do the work
+    }
+}
+----
+
+== Tests
+
+Griffon 2.x no longer segregates tests between +unit+ and +functional+. You must use
+your build tool's native support for both types (this is quite simple with Gradle).
+Move all unit tests under +src/test/java+ or +src/test/groovy+ depending on your
+choice of main language. The base +GriffonUnitTestCase+ class no longer exist. Use
+any testing framework you're comfortable with to write unit tests (Junit4, Spock, etc).
+Use the following template if you need to write artifact tests
+
+.src/test/sample/SampleControllerTest.groovy
+[source,groovy,linenums,options="nowrap"]
+----
+package sample
+
+import griffon.core.test.GriffonUnitRule
+import griffon.core.test.TestFor
+import org.junit.Rule
+import org.junit.Test
+
+import static com.jayway.awaitility.Awaitility.await
+import static java.util.concurrent.TimeUnit.SECONDS
+
+@TestFor(SampleController)
+class SampleControllerTest {
+    private SampleController controller
+
+    @Rule
+    public final GriffonUnitRule griffon = new GriffonUnitRule()
+
+    @Test
+    void testControllerAction() {
+        // given:
+        // setup collaborators
+
+        // when:
+        // stimulus
+        controller.invokeAction('nameOfTheAction')
+
+        // then:
+        // use Awaitility to successfully wait for async processing to finish
+        await().atMost(2, SECONDS)
+        assert someCondition
+    }
+}
+----

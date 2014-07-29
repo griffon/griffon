@@ -1,0 +1,35 @@
+<project name="ant-macros" basedir=".">
+    <macrodef name="copy-resources">
+        <attribute name="source"/>
+        <attribute name="destination"/>
+        <sequential>
+            <copy todir="@{destination}" overwrite="true">
+                <fileset dir="@{source}">
+                    <exclude name="**/*.properties"/>
+                    <exclude name="**/*.groovy"/>
+                    <exclude name="**/*.html"/>
+                    <exclude name="**/*.xml"/>
+                    <exclude name="**/*.txt"/>
+                </fileset>
+            </copy>
+            <copy todir="@{destination}" overwrite="true">
+                <fileset dir="@{source}">
+                    <include name="**/*.properties"/>
+                    <include name="**/*.groovy"/>
+                    <include name="**/*.html"/>
+                    <include name="**/*.xml"/>
+                    <include name="**/*.txt"/>
+                </fileset>
+                <filterset>
+                    <filter token="application.name"
+                            value="${project.name}"/>
+                    <filter
+                        token="application.version"
+                        value="${project.version}"/>
+                    <filter token="griffon.version"
+                            value="${griffon.version}"/>
+                </filterset>
+            </copy>
+        </sequential>
+    </macrodef>
+</project>

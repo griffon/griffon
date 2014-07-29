@@ -17,13 +17,8 @@
 apply plugin: 'groovy'
 apply from: rootProject.file('gradle/coverage.gradle')
 
-configurations {
-    compileOnly
-    testCompileOnly
-}
-
 dependencies {
     compile project(':griffon-core')
     compileOnly project(':griffon-core-compile')
-    compile 'com.googlecode.lanterna:lanterna:2.1.7'
+    compile 'com.googlecode.lanterna:lanterna:2.1.8'
 }

@@ -58,7 +58,7 @@ public class TestDesktopPivotApplication extends DesktopPivotGriffonApplication 
     public TestDesktopPivotApplication() {
     }
 
-    public TestDesktopPivotApplication(String[] args) {
+    public TestDesktopPivotApplication(@Nonnull String[] args) {
         super(args);
     }
 

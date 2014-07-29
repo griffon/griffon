@@ -16,26 +16,14 @@
 
 apply plugin: 'groovy'
 apply from: rootProject.file('gradle/coverage.gradle')
-
-for (location in ['lib/jfxrt.jar', 'jre/lib/jfxrt.jar', 'jre/lib/ext/jfxrt.jar']) {
-    File javaHome = new File(System.properties['java.home'])
-    javaHome = javaHome.name == 'jre' ? javaHome.parentFile : javaHome
-    File file = new File(javaHome, location)
-    if (file.exists()) {
-        ext.jfxrtLocation = file.absolutePath
-        break
-    }
-}
-
-configurations {
-    compileOnly
-    testCompileOnly
-}
+apply from: rootProject.file('gradle/javafx.gradle')
 
 dependencies {
     compile project(':griffon-groovy')
     compile project(':griffon-javafx')
-    compile 'org.codehaus.groovyfx:groovyfx:0.4.0'
+    compile('org.codehaus.groovyfx:groovyfx:0.4.0') {
+        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+    }
 
     compileOnly project.files(project.jfxrtLocation)
     compileOnly project(':griffon-core-compile')

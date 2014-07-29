@@ -1,0 +1,16 @@
+<project name="process-resources-script" basedir=".">
+    <include file="${project.build.directory}/../maven/ant-macros.xml"/>
+
+    <copy-resources
+        destination="${project.build.testOutputDirectory}"
+        source="src/test/resources"/>
+    <copy-resources
+        destination="${project.build.outputDirectory}"
+        source="src/main/resources"/>
+    <copy-resources
+        destination="${project.build.outputDirectory}"
+        source="griffon-app/resources"/>
+    <copy-resources
+        destination="${project.build.outputDirectory}"
+        source="griffon-app/i18n"/>
+</project>

@@ -1,0 +1,191 @@
+
+[[_buildtools_gradle]]
+= Gradle
+
+{link_gradle} is the preferred build tool for a Griffon project. The <<_buildtools_lazybones,Lazybones>>
+templates create a default +build.gradle+ file that contains the minimum configuration
+to build, test and package a Griffon application or plugin.
+
+== The "griffon" Plugin
+
+The Griffon plugin adds default dependencies and conventional configuration to a Griffon
+project. This configuration follows the standard Griffon project layout.
+
+=== Usage
+
+To use the Griffon plugin, include in your build script:
+
+.build.gradle
+[source,groovy,linenums,options="nowrap"]
+[subs="attributes"]
+----
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'org.codehaus.griffon:gradle-griffon-plugin:{gradle-griffon-version}'
+    }
+}
+
+apply plugin: 'org.codehaus.griffon.griffon'
+----
+
+This plugin performs the following configurations when applied to a project
+
+ * Register _jcenter()_ as default repository.
+ * Apply the following plugins: +idea+, +java+, +application+.
+ * Create additional compile-time only configurations: _compileOnly_, _testCompileOnly_.
+ * Resolve plugin dependencies using the _griffon_ configuration.
+ * Adjusts javadoc/groovydoc/idea/eclipse classpaths given the new configurations.
+ * Configures standard source directories with +main+ and +test+ source sets.
+ * Adjusts how +main+ and +test+ resource processing is performed.
+
+The following dependencies are added by default too
+
+ * on +compile+
+ ** org.codehaus.griffon:griffon-core:{griffon-version}
+ * on +compileOnly+
+ ** org.codehaus.griffon:griffon-core-compile:{griffon-version}
+ * on +testCompile+
+ ** org.codehaus.griffon:griffon-core-test:{griffon-version}
+ * on +testCompileOnly+
+ ** org.codehaus.griffon:griffon-core-compile:{griffon-version}
+
+If the *toolkit* conventional property is defined (plugins may opt to skip it) then
+the following dependencies are added
+
+ * on +compile+
+ ** org.codehaus.griffon:griffon-<toolkit>:{griffon-version}
+
+If the +groovy+ plugin is applied then the following dependencies are also added
+
+  * on +compile+
+  ** org.codehaus.griffon:griffon-groovy:{griffon-version}
+  * on +compile+
+  ** org.codehaus.griffon:griffon-<toolkit>-groovy:{griffon-version}
+  * on +compileOnly+
+  ** org.codehaus.griffon:griffon-groovy-compile:{griffon-version}
+  * on +testCompileOnly+
+  ** org.codehaus.griffon:griffon-groovy-compile:{griffon-version}
+
+The +griffon+ configuration can be used to resolve dependencies using {link_bom} files.
+Assume for a moment that the +griffon-scaffolding-plugin+ is comprised of the following
+modules
+
+ * griffon-scaffolding - the core of the plugin, UI toolkit agnostic.
+ * griffon-scaffolding-swing - Swing specific additions.
+ * griffon-scaffolding-javafx-groovy - Groovy enhancements via +{link_build_customizer}+.
+ * griffon-scaffolding-javafx - JavaFX specific additions.
+ * griffon-scaffolding-javafx-groovy - Groovy enhancements via +{link_build_customizer}+.
+ * griffon-scaffolding-groovy-compile - AST transformations.
+
+As you can appreciate those are quite the set. You can manually define any of these
+dependencies on the build file, but given the many combinations it may be a bit hard
+to determine which dependencies should be added and which shouldn't. The _griffon_
+configuration can make this decision for you; you just have to use it in the following
+way
+
+.build.gradle
+[source,groovy,options="nowrap"]
+[subs="attributes"]
+----
+dependencies {
+    griffon 'org.codehaus.griffon.plugins:griffon-scaffolding-plugin:0.0.0-SNAPSHOT'
+}
+----
+
+This will add all required dependencies to your build by taking into account the project's
+choice of UI toolkit and whether the +groovy+ plugin has been applied or not. This
+behavior can be configured and/or disabled by using the conventional properties
+describe in the next section.
+
+=== Convention properties
+
+The Griffon plugin adds some properties to the project, which you can use to configure its behaviour.
+
+.Griffon plugin - properties
+[cols="4*", options="header"]
+|===
+| Property name               | Type    | Default value     | Description
+| disableDependencyResolution | boolean | false             | Disable automatic inclusion of dependencies defined with the _griffon_ configuration.
+| includeGroovyDependencies   | boolean | -                 | Force inclusion of Groovy dependencies defined with the _griffon_ configuration.
+| toolkit                     | String  | _                 | The UI toolkit to use. May be left unset. Valid values are +swing+, +javafx+, +pivot+, +lanterna+.
+| version                     | String  | {griffon-version} | The Griffon version to use for Griffon core dependencies.
+|===
+
+The *includeGroovyDependencies* property has 3 states: +unset+, +false+ and +true+.
+Groovy dependencies will be added automatically to the project *only* if the value
+of *includeGroovyDependencies* is +unset+ (default) and the +groovy+ plugin has been
+applied to the project or if the value of *includeGroovyDependencies* is set to +true+.
+When the value of *includeGroovyDependencies* is set to +false+ then Groovy dependencies
+will not be added, even if the +groovy+ plugin has been applied. This is useful for
+Java projects that use {link_spock} for testing, as you need the +groovy+ plugin in
+order to compile Spock specifications but you wouldn't want Groovy dependencies to
+be pulled in for compilation.
+
+== The "griffon-build" Plugin
+
+The Griffon Build plugin enables useful tasks required for plugin authors, such as
+the aggregation of Cobertura data files and reports; generation of a plugin BOM file,
+and more.
+
+=== Usage
+
+To use the Griffon Build plugin, include in your build script:
+
+.build.gradle
+[source,groovy,linenums,options="nowrap"]
+[subs="attributes"]
+----
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'org.codehaus.griffon:gradle-griffon-build-plugin:{gradle-griffon-version}'
+    }
+}
+
+apply plugin: 'org.codehaus.griffon.griffon-build'
+----
+
+=== Tasks
+
+The Griffon Build plugin adds a number of tasks to your project, as shown below.
+
+.Griffon Build plugin - tasks
+[cols="4*", options="header"]
+|===
+| Task name                | Depends on | Type                          | Description
+| aggregateCoberturaMerge  | -          | +AggregateCoberturaMergeTask+ | Aggregates all cobertura data files found in the project.
+| aggregateCoberturaReport | -          | +AggregateCoberturaReport+    | Generates a project-wide Cobertura report.
+| GenerateBomTask          | -          | +GenerateBomTask+             | Generates a BOM file that includes all subprojects.
+|===
+
+=== Convention Properties
+
+The Griffon Build plugin adds a number of convention properties to the project, shown below.
+
+.Griffon Build plugin - tasks
+[cols="4*", options="header"]
+|===
+| Property name          | Type | Default value                      | Description
+| coverageOutputDatafile | File | _buildDir_/cobertura/cobertura.ser | Path to the data file to produce during instrumentation.
+| coverageReportDir      | File | _reportsDir_/cobertura             | Path to report directory for coverage report.
+|===
+
+== Dependencies
+
+Whether you're using the +griffon+ plugin or not it's very important you take special
+note of the dependencies ending with +-compile+. As an application developer these
+dependencies belong to either _compileOnly_ or _testCompileOnly_ configurations, as these
+dependencies contain functionality that should not be exposed at runtime, such as compile-time
+metadata generation via {link_jipsy}, {link_gipsy} and other AST transformations.
+
+The only reason for a +-compile+ dependency to appear on a _compile_ or _testCompile_ configuration
+is for testing out new compile-time metadata generators. This task is usually performed in
+plugin projects.
+

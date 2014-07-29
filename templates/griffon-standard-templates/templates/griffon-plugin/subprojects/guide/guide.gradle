@@ -6,7 +6,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:0.7.1'
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:0.7.3'
         classpath 'org.gradle.api.plugins:gradle-java2html-plugin:0.4'
     }
 }
@@ -85,13 +85,13 @@ task java2html {
 }
 
 task jarApi(type: Jar, dependsOn: apiDocs) {
-    archiveName    = "${plugin_full_name}-\${version}-javadoc.jar"
+    archiveName    = "\${pluginBaseName}-plugin-\${version}-javadoc.jar"
     destinationDir = "\$buildDir/assemble/jars" as File
     from "\$buildDir/api"
 }
 
 task jarSourceHtml(type: Jar, dependsOn: java2html) {
-    archiveName    = "${plugin_full_name}-\${version}-sources-html.jar"
+    archiveName    = "\${pluginBaseName}-plugin-\${version}-sources-html.jar"
     destinationDir = "\$buildDir/assemble/jars" as File
     from "\$buildDir/java2html"
 }
@@ -139,8 +139,10 @@ asciidoctor {
             numbered                : true,
             linkattrs               : true,
             imagesdir               : 'images',
-            stylesheet              : file('src/resources/css/style.css'),
+            linkcss                 : true,
+            stylesheet              : 'css/style.css',
             'source-highlighter'    : 'coderay',
+            'coderay-linenums-mode' : 'inline',
             'project-name'          : '${plugin_full_natural_name}',
             'project-author'        : '${project_author}',
             'project-version'       : project.version,
@@ -152,6 +154,13 @@ asciidoctor {
         ]
     ]
     sourceDocumentName = project.file('src/asciidoc/index.adoc')
+
+    doLast { task ->
+        copy {
+            into task.outputDir
+            from file('src/resources')
+        }
+    }
 }
 
 task guide(type: Copy, dependsOn: [apiDocs, java2html, asciidoctor]) {
@@ -162,6 +171,6 @@ task guide(type: Copy, dependsOn: [apiDocs, java2html, asciidoctor]) {
 }
 
 task guideZip(type: Zip, dependsOn: guide) {
-    baseName = 'griffon-guide'
+    baseName = '\${pluginBaseName}-guide'
     from "\$buildDir/guide"
 }

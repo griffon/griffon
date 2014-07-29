@@ -20,6 +20,8 @@ import griffon.exceptions.InstanceNotFoundException;
 import griffon.javafx.JavaFXWindowDisplayHandler;
 import javafx.stage.Window;
 import org.codehaus.griffon.runtime.core.view.ConfigurableWindowDisplayHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -32,6 +34,8 @@ import static griffon.util.AnnotationUtils.named;
  * @since 2.0.0
  */
 public class ConfigurableJavaFXWindowDisplayHandler extends ConfigurableWindowDisplayHandler<Window> implements JavaFXWindowDisplayHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigurableJavaFXWindowDisplayHandler.class);
+
     @Inject
     public ConfigurableJavaFXWindowDisplayHandler(@Nonnull GriffonApplication application, @Nonnull @Named("defaultWindowDisplayHandler") JavaFXWindowDisplayHandler delegateWindowsDisplayHandler) {
         super(application, delegateWindowsDisplayHandler);
@@ -48,6 +52,7 @@ public class ConfigurableJavaFXWindowDisplayHandler extends ConfigurableWindowDi
         try {
             JavaFXWindowDisplayHandler handler = getApplication().getInjector()
                 .getInstance(JavaFXWindowDisplayHandler.class, named(name));
+            LOG.trace("Showing {} with injected handler", name);
             handler.show(name, window);
             return true;
         } catch (InstanceNotFoundException infe) {
@@ -60,6 +65,7 @@ public class ConfigurableJavaFXWindowDisplayHandler extends ConfigurableWindowDi
         try {
             JavaFXWindowDisplayHandler handler = getApplication().getInjector()
                 .getInstance(JavaFXWindowDisplayHandler.class, named(name));
+            LOG.trace("Hiding {} with injected handler", name);
             handler.hide(name, window);
             return true;
         } catch (InstanceNotFoundException infe) {

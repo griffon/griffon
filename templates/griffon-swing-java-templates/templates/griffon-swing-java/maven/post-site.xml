@@ -1,0 +1,15 @@
+<project name="post-site-script" basedir=".">
+    <copy todir="${project.build.directory}/site/apidocs/" overwrite="true">
+        <fileset dir="src/javadoc/resources/img">
+            <include name="*.ico"/>
+        </fileset>
+    </copy>
+    <copy todir="${project.build.directory}/site/apidocs/" overwrite="true">
+        <fileset dir="src/javadoc/resources/css">
+            <include name="*.css"/>
+        </fileset>
+    </copy>
+    <copy todir="${project.build.directory}/site/apidocs/resources" overwrite="true">
+        <fileset dir="src/javadoc/resources/img"/>
+    </copy>
+</project>

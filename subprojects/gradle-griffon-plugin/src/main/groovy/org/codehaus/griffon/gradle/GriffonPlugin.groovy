@@ -20,6 +20,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 import org.gradle.BuildAdapter
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.invocation.Gradle
 import org.gradle.tooling.BuildException
 
@@ -134,12 +135,16 @@ class GriffonPlugin implements Plugin<Project> {
             from(project.sourceSets.test.resources.srcDirs) {
                 exclude '**/*.properties'
                 exclude '**/*.groovy'
+                exclude '**/*.html'
                 exclude '**/*.xml'
+                exclude '**/*.txt'
             }
             from(project.sourceSets.test.resources.srcDirs) {
                 include '**/*.properties'
                 include '**/*.groovy'
+                include '**/*.html'
                 include '**/*.xml'
+                include '**/*.txt'
                 filter(ReplaceTokens, tokens: [
                     'application.name'   : project.name,
                     'application.version': project.version,
@@ -177,6 +182,8 @@ class GriffonPlugin implements Plugin<Project> {
         project.gradle.addBuildListener(new BuildAdapter() {
             @Override
             void projectsEvaluated(Gradle gradle) {
+                project.repositories.mavenLocal()
+
                 // add default dependencies
                 appendDependency('core')
                 appendDependency('core-compile')
@@ -196,6 +203,18 @@ class GriffonPlugin implements Plugin<Project> {
 
                 processMainResources(project, extension)
                 processTestResources(project, extension)
+
+                project.plugins.withId('org.kordamp.gradle.stats') { plugin ->
+                    Task statsTask = project.tasks.findByName('stats')
+                    statsTask.paths += [
+                        model     : [name: 'Models', path: 'griffon-app/models'],
+                        view      : [name: 'Views', path: 'griffon-app/views'],
+                        controller: [name: 'Controllers', path: 'griffon-app/controllers'],
+                        service   : [name: 'Services', path: 'griffon-app/services'],
+                        config    : [name: 'Configuration', path: 'griffon-app/conf'],
+                        lifecycle : [name: 'Lifecycle', path: 'griffon-app/lifecycle']
+                    ]
+                }
             }
 
             private boolean maybeIncludeGroovyDependency(boolean groovyDependenciesEnabled, String artifactId) {

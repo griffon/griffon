@@ -1,0 +1,36 @@
+
+[[_buildtools_eclipse]]
+= Eclipse
+
+There is no need to install a plugin in Eclipse in order to develop Griffon
+applications, as every Griffon project is a valid Gradle/Maven project.
+
+There's however special support for code suggestions when dealing with Groovy artifacts
+or Groovy classes annotated with a special set of annotations. This support is
+delivered using the DSLD feature found in Eclipse if the Groovy Eclipse plugin is
+installed. The following table summarizes the enhancements delivered by this feature
+
+.Artifacts
+[cols="2*", options="header"]
+|===
+| Path                                          | Type
+| griffon-app/controllers/**/*Controller.groovy | griffon.core.artifact.GriffonController
+| griffon-app/models/**/*Model.groovy           | griffon.core.artifact.GriffonModel
+| griffon-app/services/**/*Service.groovy       | griffon.core.artifact.GriffonService
+| griffon-app/views/**/*View.groovy             | griffon.core.artifact.GriffonView
+|===
+
+.Annotations
+[cols="2*", options="header"]
+|===
+| Annotation                               | Type
+| @griffon.transform.EventPublisher        | griffon.core.event.EventPublisher
+| @griffon.transform.MVCAware              | griffon.core.mvc.MVCHandler
+| @griffon.transform.ThreadingAware        | griffon.core.threading.ThreadingHandler
+| @griffon.transform.ResourcesAware        | griffon.core.resources.ResourceHandler
+| @griffon.transform.MessageSourceAware    | griffon.core.i18n.MessageSource
+| @griffon.transform.ResourceResolverAware | griffon.core.resources.ResourceResolver
+| @griffon.transform.Observable            | griffon.core.Observable
+| @griffon.transform.Vetoable              | griffon.core.Vetoable
+|===
+

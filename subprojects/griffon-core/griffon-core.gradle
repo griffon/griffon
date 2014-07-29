@@ -14,20 +14,33 @@
  * limitations under the License.
  */
 
+import org.apache.tools.ant.filters.ReplaceTokens
+
 apply plugin: 'groovy'
 apply from: rootProject.file('gradle/coverage.gradle')
 
-configurations {
-    compileOnly
-    testCompileOnly
-}
-
 dependencies {
     compile 'javax.inject:javax.inject:1'
-    compile 'com.google.code.findbugs:jsr305:2.0.2'
+    compile 'com.google.code.findbugs:jsr305:3.0.0'
     compile "org.slf4j:slf4j-api:$slf4jVersion"
 
     compileOnly 'mrj:MRJToolkitStubs:1.0'
 
     testRuntime "org.slf4j:slf4j-simple:$slf4jVersion"
+}
+
+project.processResources {
+    from(project.sourceSets.main.resources.srcDirs) {
+        exclude '**/*.properties'
+    }
+    from(project.sourceSets.main.resources.srcDirs) {
+        include '**/*.properties'
+        filter(ReplaceTokens, tokens: [
+            'built.by': System.properties['user.name'],
+            'created.by': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})".toString(),
+            'build.date': buildDate,
+            'build.time': buildTime,
+            'griffon.version': project.version
+        ])
+    }
 }

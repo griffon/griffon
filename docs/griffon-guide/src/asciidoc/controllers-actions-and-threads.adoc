@@ -1,0 +1,94 @@
+
+[[_controllers_actions_and_threads]]
+= Actions and Threads
+
+A key aspect that you must always keep in mind is proper <<_threading,threading>>.
+Often times controller actions will be bound in response to an event driven by the UI.
+Those actions will usually be invoked in the same thread that triggered the event,
+which would be the UI thread. When that happens you must make sure that the executed
+code is short and that it quickly returns control to the UI thread. Failure to do so
+may result in unresponsive applications.
+
+The following example is the typical usage one finds out there
+
+[source,groovy,linenums,options="nowrap"]
+----
+package sample
+
+import groovy.sql.Sql
+import java.awt.event.ActionEvent
+import griffon.core.artifact.GriffonController
+
+@griffon.metadata.ArtifactProviderFor(GriffonController)
+class BadController {
+    def model
+
+    void badAction(ActionEvent evt = null) {
+        def sql = Sql.newInstance(
+            app.config.datasource.url,
+            model.username,
+            model.password,
+            app.config.datasource.driver
+        )
+        model.products.clear()
+        sql.eachRow("select * from products") { product ->
+            model.products << [product.id, product.name, product.price]
+        }
+        sql.close()
+    }
+}
+----
+
+What's wrong with this code? It's very likely that this action is triggered by clicking
+on a button, in which case its body will be executed inside the UI thread. This means
+the database query will be executed on the UI thread too. The model is also updated,
+once could assume the model is bound to an UI component. This update should happen inside
+the UI thread, but clearly that's not what's happening here.
+
+In order to simplify things the Griffon runtime (via the +{link_action_manager}+) assumes
+by default that all actions will be invoked *outside* of the UI thread. This solves the
+first problem, that of realizing a database operation on the wrong thread. The second
+problem, updating the model, can be solved in the following manner
+
+[source,groovy,linenums,options="nowrap"]
+----
+package sample
+
+import groovy.sql.Sql
+import java.awt.event.ActionEvent
+import griffon.core.artifact.GriffonController
+
+@griffon.metadata.ArtifactProviderFor(GriffonController)
+class GoodController {
+    def model
+
+    void goodAction(ActionEvent evt = null) {                           //<1>
+        def sql = Sql.newInstance(
+            app.config.datasource.url,
+            model.username,
+            model.password,
+            app.config.datasource.driver
+        )
+
+        try {
+            List results = []
+            sql.eachRow("select * from products") { product ->
+                results << [product.id, product.name, product.price]
+            }
+
+            runInsideUIAsync {                                          //<2>
+                model.products.clear()
+                model.products.addAll(results)
+            }
+        } finally {
+            sql.close()
+        }
+    }
+}
+----
+<1> Executed outside the UI thread
+<2> Go back inside the UI thread
+
+There are other options at your disposal to make sure the code behaves properly according to
+the specific threading rules of a particular UI toolkit. These options are covered in
+the <<_threading,threading>> chapter.

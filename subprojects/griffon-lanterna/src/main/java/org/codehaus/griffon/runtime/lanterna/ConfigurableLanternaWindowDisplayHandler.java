@@ -20,6 +20,8 @@ import griffon.core.GriffonApplication;
 import griffon.exceptions.InstanceNotFoundException;
 import griffon.lanterna.LanternaWindowDisplayHandler;
 import org.codehaus.griffon.runtime.core.view.ConfigurableWindowDisplayHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -32,6 +34,8 @@ import static griffon.util.AnnotationUtils.named;
  * @since 2.0.0
  */
 public class ConfigurableLanternaWindowDisplayHandler extends ConfigurableWindowDisplayHandler<Window> implements LanternaWindowDisplayHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigurableLanternaWindowDisplayHandler.class);
+
     @Inject
     public ConfigurableLanternaWindowDisplayHandler(@Nonnull GriffonApplication application, @Nonnull @Named("defaultWindowDisplayHandler") LanternaWindowDisplayHandler delegateWindowsDisplayHandler) {
         super(application, delegateWindowsDisplayHandler);
@@ -48,6 +52,7 @@ public class ConfigurableLanternaWindowDisplayHandler extends ConfigurableWindow
         try {
             LanternaWindowDisplayHandler handler = getApplication().getInjector()
                 .getInstance(LanternaWindowDisplayHandler.class, named(name));
+            LOG.trace("Showing {} with injected handler", name);
             handler.show(name, window);
             return true;
         } catch (InstanceNotFoundException infe) {
@@ -60,6 +65,7 @@ public class ConfigurableLanternaWindowDisplayHandler extends ConfigurableWindow
         try {
             LanternaWindowDisplayHandler handler = getApplication().getInjector()
                 .getInstance(LanternaWindowDisplayHandler.class, named(name));
+            LOG.trace("Hide {} with injected handler", name);
             handler.hide(name, window);
             return true;
         } catch (InstanceNotFoundException infe) {

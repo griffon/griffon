@@ -29,16 +29,38 @@ lazybones {
 // @griffon.version@ on lazybones.groovy
 tasks.withType(Zip) { task ->
     task.doFirst {
+        File destDir = task.source.files.iterator().next().parentFile
         copy {
-            File destDir = task.source.files.iterator().next().parentFile
             into destDir
-            if (file("sources/${destDir.name}").exists()) {
-                from(rootProject.file('templates/shared-files/sources'))
-                from(file("sources/${destDir.name}")) {
+            if (destDir.name.startsWith('subtmpl-')) {
+                // continue
+            } else if (destDir.name == 'griffon-plugin') {
+                from(rootProject.file('templates/shared-files/sources')) {
+                    exclude 'src'
+                    exclude 'maven'
+                    exclude 'gradle/package.gradle'
                     filter(org.apache.tools.ant.filters.ReplaceTokens,
                         tokens: ['griffon.version': project.version])
-
                 }
+            } else {
+                from(rootProject.file('templates/shared-files/sources')) {
+                    filter(org.apache.tools.ant.filters.ReplaceTokens,
+                        tokens: ['griffon.version': project.version])
+                }
+                from(rootProject.file('src/media')) {
+                    include 'griffon*'
+                    into 'src/media'
+                }
+                from(rootProject.file('src/javadoc')) {
+                    into 'src/javadoc'
+                }
+            }
+        }
+
+        if (file("sources/${destDir.name}").exists()) {
+            copy {
+                into destDir
+                from(file("sources/${destDir.name}"))
             }
         }
     }

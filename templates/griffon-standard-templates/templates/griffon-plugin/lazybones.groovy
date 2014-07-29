@@ -16,6 +16,7 @@ if (projectName =~ /\-/) {
 
 props.plugin_name = pluginName
 props.plugin_full_name = 'griffon-' + pluginName + '-plugin'
+props.plugin_base_name = 'griffon-' + pluginName
 props.plugin_natural_name = transformText(pluginName, from: NameType.HYPHENATED, to: NameType.NATURAL)
 props.plugin_full_natural_name = transformText(props.plugin_full_name, from: NameType.HYPHENATED, to: NameType.NATURAL)
 
@@ -25,7 +26,7 @@ props.project_group = ask("Define value for 'group' [org.codehaus.griffon.plugin
 props.project_version = ask("Define value for 'version' [0.1.0-SNAPSHOT]: ", "0.1.0-SNAPSHOT", "version")
 props.project_package = ask("Define value for 'package' [org.codehaus.griffon.runtime." +pluginName + "]: ",
                         'org.codehaus.griffon.runtime.' + pluginName, "package")
-props.griffon_version = ask("Define value for 'griffonVersion' [2.0.0.BETA3]: ", "2.0.0.BETA3", "griffonVersion")
+props.griffon_version = ask("Define value for 'griffonVersion' [2.0.0.RC1]: ", "2.0.0.RC1", "griffonVersion")
 props.project_website = ask("Define value for 'website' [http://artifacts.griffon-framework.org/plugin/" + pluginName +"]: ",
                         "http://artifacts.griffon-framework.org/plugin/" + pluginName, "website")
 props.project_issue_tracker = ask("Define value for 'issueTracker' [http://jira.codehaus.org/browse/griffon]: ",
@@ -37,6 +38,7 @@ String packagePath = props.project_package.replace('.' as char, '/' as char)
 
 processTemplates 'build.gradle', props
 processTemplates 'gradle/publishing.gradle', props
+processTemplates 'gradle/docs.gradle', props
 processTemplates 'subprojects/guide/guide.gradle', props
 processTemplates 'gradle.properties', props
 processTemplates 'settings.gradle', props

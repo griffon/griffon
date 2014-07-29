@@ -1,0 +1,104 @@
+/*
+ * Copyright 2008-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package dsld
+
+import org.codehaus.groovy.ast.ClassNode
+import org.codehaus.groovy.ast.expr.MethodCallExpression
+
+/**
+ * @author Andrew Eisenberg
+ * @author Andres Almiray
+ */
+
+supportsVersion(groovyEclipse: '2.5.1')
+
+def griffonArtifact = { String folder ->
+    sourceFolderOfCurrentType("griffon-app/" + folder)
+}
+
+[
+    [
+        pointcut: griffonArtifact('controllers'),
+        suffix: 'Controller'
+    ],
+    [
+        pointcut: griffonArtifact('models'),
+        suffix: 'Model'
+    ],
+    [
+        pointcut: griffonArtifact('services'),
+        suffix: 'Service'
+    ],
+    [
+        pointcut: griffonArtifact('views'),
+        suffix: 'View'
+    ],
+].each { desc ->
+    contribute(desc.pointcut) {
+        if (currentType?.name?.endsWith(desc.suffix)) {
+            provider = "Griffon Core"
+            if (desc.suffix != 'Service') {
+                delegatesTo "griffon.core.artifact.GriffonMvcArtifact"
+            }
+            delegatesTo "griffon.core.artifact.GriffonArtifact"
+            delegatesTo "griffon.core.mvc.MVCHandler"
+            delegatesTo "griffon.core.threading.ThreadingHandler"
+            delegatesTo "griffon.core.resources.ResourceHandler"
+            delegatesTo "griffon.core.artifact.Griffon${desc.suffix}".toString()
+        }
+    }
+}
+
+contribute(enclosingClass(annotatedBy('griffon.transform.EventPublisher'))) {
+    provider = "Griffon DSL"
+    delegatesTo "griffon.core.event.EventPublisher"
+}
+
+contribute(enclosingClass(annotatedBy('griffon.transform.MVCAware'))) {
+    provider = "Griffon DSL"
+    delegatesTo "griffon.core.mvc.MVCHandler"
+}
+
+contribute(enclosingClass(annotatedBy('griffon.transform.ThreadingAware'))) {
+    provider = "Griffon DSL"
+    delegatesTo "griffon.core.threading.ThreadingHandler"
+}
+
+contribute(enclosingClass(annotatedBy('griffon.transform.ResourcesAware'))) {
+    provider = "Griffon DSL"
+    delegatesTo "griffon.core.resources.ResourceHandler"
+}
+
+contribute(enclosingClass(annotatedBy('griffon.transform.MessageSourceAware'))) {
+    provider = "Griffon DSL"
+    delegatesTo "griffon.core.i18n.MessageSource"
+}
+
+contribute(enclosingClass(annotatedBy('griffon.transform.ResourceResolverAware'))) {
+    provider = "Griffon DSL"
+    delegatesTo "griffon.core.resources.ResourceResolver"
+}
+
+contribute(enclosingClass(annotatedBy('griffon.transform.Observable'))) {
+    provider = "Griffon DSL"
+    delegatesTo "griffon.core.Observable"
+}
+
+contribute(enclosingClass(annotatedBy('griffon.transform.Vetoable'))) {
+    provider = "Griffon DSL"
+    delegatesTo "griffon.core.Vetoable"
+}

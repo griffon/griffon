@@ -1,0 +1,31 @@
+<project name="prepare-izpack-script" basedir=".">
+    <include file="${project.build.directory}/../maven/ant-macros.xml"/>
+
+    <copy-resources
+        destination="${izpack.staging.dir}"
+        source="src/main/izpack"/>
+
+    <copy-resources
+        destination="${izpack.staging.dir}/binary"
+        source="${project.build.directory}/distributions/${project.artifactId}-${project.version}-dist/${project.artifactId}-${project.version}"/>
+
+    <taskdef name="izpack" classpath="${org.codehaus.izpack:izpack-standalone-compiler:jar}"
+             classname="com.izforge.izpack.ant.IzPackTask"/>
+
+    <izpack input="${izpack.staging.dir}/install.xml"
+            output="${project.build.directory}/distributions/${project.artifactId}-${project.version}-installer.jar"
+            installerType="standard"
+            inheritAll="true"
+            compression="deflate"
+            compressionLevel="9"
+            basedir="${izpack.staging.dir}"
+            izPackDir="${izpack.staging.dir}/">
+        <property name="app.group" value="Applications"/>
+        <property name="app.name" value="${project.artifactId}"/>
+        <property name="app.title" value="${project.artifactId}"/>
+        <property name="app.version" value="${project.version}"/>
+        <property name="app.subpath" value="${project.artifactId}-${project.version}"/>
+        <property name="app.binary" value="${project.artifactId}"/>
+        <property name="app.java.version" value="${compiler.target.level}"/>
+    </izpack>
+</project>

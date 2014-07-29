@@ -22,7 +22,15 @@ import griffon.util.MethodDescriptor;
 import org.codehaus.griffon.compile.core.AnnotationHandler;
 import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
 import org.codehaus.griffon.compile.core.ThreadingAwareConstants;
-import org.codehaus.groovy.ast.*;
+import org.codehaus.groovy.ast.ASTNode;
+import org.codehaus.groovy.ast.AnnotatedNode;
+import org.codehaus.groovy.ast.AnnotationNode;
+import org.codehaus.groovy.ast.ClassHelper;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.MethodNode;
+import org.codehaus.groovy.ast.Parameter;
+import org.codehaus.groovy.ast.Variable;
+import org.codehaus.groovy.ast.VariableScope;
 import org.codehaus.groovy.ast.expr.ClosureExpression;
 import org.codehaus.groovy.ast.expr.MethodCallExpression;
 import org.codehaus.groovy.ast.expr.PropertyExpression;
@@ -50,7 +58,7 @@ import static org.codehaus.griffon.compile.core.ast.transform.ThreadingAwareASTT
 @AnnotationHandlerFor(Threading.class)
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class ThreadingASTTransformation extends AbstractASTTransformation implements ThreadingAwareConstants, AnnotationHandler {
-    private static ClassNode THREADING_CNODE = makeClassSafe(Threading.class);
+    private static final ClassNode THREADING_CNODE = makeClassSafe(Threading.class);
     private static final ClassNode GRIFFON_CONTROLLER_CNODE = makeClassSafe(GriffonController.class);
 
     /**
@@ -81,6 +89,32 @@ public class ThreadingASTTransformation extends AbstractASTTransformation implem
         Threading.Policy threadingPolicy = getThreadingPolicy(annotation);
         if (threadingPolicy == Threading.Policy.SKIP) return;
 
+        String threadingMethod = resolveThreadingMethod(threadingPolicy);
+
+        if (node instanceof MethodNode) {
+            ClassNode declaringClass = node.getDeclaringClass();
+            if (declaringClass.implementsInterface(GRIFFON_CONTROLLER_CNODE)) {
+                return;
+            }
+
+            addThreadingHandlerIfNeeded(source, declaringClass);
+            handleMethodForInjection(declaringClass, (MethodNode) node, threadingMethod);
+        } else if (node instanceof ClassNode) {
+            ClassNode declaringClass = (ClassNode) node;
+            if (declaringClass.implementsInterface(GRIFFON_CONTROLLER_CNODE)) {
+                return;
+            }
+
+            addThreadingHandlerIfNeeded(source, declaringClass);
+            for (MethodNode methodNode : declaringClass.getAllDeclaredMethods()) {
+                threadingPolicy = getThreadingPolicy(methodNode, threadingPolicy);
+                threadingMethod = resolveThreadingMethod(threadingPolicy);
+                handleMethodForInjection(declaringClass, methodNode, threadingMethod);
+            }
+        }
+    }
+
+    private String resolveThreadingMethod(Threading.Policy threadingPolicy) {
         String threadingMethod = METHOD_RUN_OUTSIDE_UI;
         switch (threadingPolicy) {
             case INSIDE_UITHREAD_SYNC:
@@ -93,22 +127,21 @@ public class ThreadingASTTransformation extends AbstractASTTransformation implem
             default:
                 break;
         }
-
-        ClassNode declaringClass = node.getDeclaringClass();
-        if (declaringClass.implementsInterface(GRIFFON_CONTROLLER_CNODE)) {
-            return;
-        }
-
-        if (node instanceof MethodNode) {
-            addThreadingHandlerIfNeeded(source, declaringClass);
-            handleMethodForInjection(declaringClass, (MethodNode) node, threadingMethod);
-        }
+        return threadingMethod;
     }
 
     public static Threading.Policy getThreadingPolicy(AnnotationNode annotation) {
         PropertyExpression value = (PropertyExpression) annotation.getMember("value");
         if (value == null) return Threading.Policy.OUTSIDE_UITHREAD;
         return Threading.Policy.valueOf(value.getPropertyAsString());
+    }
+
+    public static Threading.Policy getThreadingPolicy(MethodNode method, Threading.Policy defaultPolicy) {
+        List<AnnotationNode> annotations = method.getAnnotations(THREADING_CNODE);
+        if(annotations.size() > 0) {
+            return getThreadingPolicy(annotations.get(0));
+        }
+        return defaultPolicy;
     }
 
     public static void handleMethodForInjection(ClassNode classNode, MethodNode method, String threadingMethod) {

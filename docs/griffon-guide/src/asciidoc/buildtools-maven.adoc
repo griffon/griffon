@@ -1,0 +1,118 @@
+
+[[_buildtools_maven]]
+= Maven
+
+Application projects can also be built using {link_maven}. The <<_buildtools_lazybones,Lazybones>>
+templates create a default +pom.xml+ file that contains the minimum configuration
+to build, test and package a Griffon application. The bulk of the conventions is performed by
+the {link_application_master_pom}.
+
+== Plugins
+
+The +application-master-pom+ configures the following plugins
+
+.application-master-pom - plugins
+[cols="3*", options="header"]
+|===
+| Group                    | ArtifactId                        | Version
+| com.zenjava              | javafx-maven-plugin               | 2.0
+| org.apache.maven.plugins | maven-antrun-plugin               | 1.7
+| org.apache.maven.plugins | maven-assembly-plugin             | 2.4
+| org.apache.maven.plugins | maven-checkstyle-plugin           | 2.12.1
+| org.apache.maven.plugins | maven-compiler-plugin             | 3.1
+| org.apache.maven.plugins | maven-dependency-plugin           | 2.8
+| org.codehaus.mojo        | exec-maven-plugin                 | 1.2.1
+| org.apache.maven.plugins | maven-javadoc-plugin              | 2.9.1
+| org.apache.maven.plugins | maven-jxr-plugin                  | 2.4
+| org.apache.maven.plugins | maven-project-info-reports-plugin | 2.7
+| org.apache.maven.plugins | maven-release-plugin              | 2.1
+| org.apache.maven.plugins | maven-site-plugin                 | 3.4
+| org.apache.maven.plugins | maven-surefire-plugin             | 2.17
+| org.apache.maven.plugins | maven-surefire-report-plugin      | 2.17
+| org.bsc.maven            | maven-processor-plugin            | 2.2.4
+| org.codehaus.gmavenplus  | gmavenplus-plugin                 | 1.2
+| org.codehaus.mojo        | build-helper-maven-plugin         | 1.9
+| org.codehaus.mojo        | findbugs-maven-plugin             | 2.5.4
+| org.codehaus.mojo        | jdepend-maven-plugin              | 2.0
+| org.codehaus.mojo        | versions-maven-plugin             | 2.1
+|===
+
+Of which the following are applied by default
+
+[source,xml,linenums,options="nowrap"]
+[subs="verbatim,attributes"]
+----
+include::{master-pom}[tags=plugins,indent=0]
+----
+
+== Dependencies
+
+All Griffon core dependencies have benn added using a +<dependencyManagement>+ block as shown next
+
+[source,xml,linenums,options="nowrap"]
+[subs="verbatim,attributes"]
+----
+include::{master-pom}[tags=dependencyManagement,indent=0]
+----
+
+It's very important you take special note of the dependencies ending with +-compile+. As an
+application developer these dependencies belong to the _provided_ scope, as these
+dependencies contain functionality that should not be exposed at runtime, such as
+compile-time metadata generation via {link_jipsy}, {link_gipsy} and other AST transformations.
+
+You must exclude these dependencies from the +maven-surefire-plugin+. The following is the
+default configuration provided by the master pom
+
+[source,xml,linenums,options="nowrap"]
+[subs="verbatim,attributes"]
+----
+include::{master-pom}[tags=plugin_surefire,indent=0]
+----
+
+== Repositories
+
+The following repositories are added by default
+
+[source,xml,linenums,options="nowrap"]
+[subs="verbatim,attributes"]
+----
+include::{master-pom}[tags=repositories,indent=0]
+----
+
+== Profiles
+
+The master pom enables a few profiles to take care of special tasks.
+
+=== Run
+
+This profile compiles and runs the application. Enable it with +maven -Prun+.
+
+[source,xml,linenums,options="nowrap"]
+[subs="verbatim,attributes"]
+----
+include::{master-pom}[tags=profile_run,indent=0]
+----
+
+=== Distribution
+
+This profile packages the application using the +maven-assembly-plugin+.
+Enable it with +maven -Pdistribution+.
+
+[source,xml,linenums,options="nowrap"]
+[subs="verbatim,attributes"]
+----
+include::{master-pom}[tags=profile_distribution,indent=0]
+----
+
+=== Izpack
+
+This profile creates an universal installer using {link_izpack}.
+Enable it with +maven -izpack+. You must execute the +distribution+
+profile before running the +izpack+ profile. You *CAN NOT* combine
+both profiles.
+
+[source,xml,linenums,options="nowrap"]
+[subs="verbatim,attributes"]
+----
+include::{master-pom}[tags=profile_izpack,indent=0]
+----

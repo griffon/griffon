@@ -2,7 +2,7 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   echo -e "Starting gh-pages update\n"
 
   #copy data were interested in to other place
-  for projectDir in subprojects plugins samples
+  for projectDir in subprojects samples
   do
     for project in `ls $TRAVIS_BUILD_DIR/$projectDir`
     do

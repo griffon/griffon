@@ -27,12 +27,15 @@ class Xml2GroovySpec extends Specification {
     @Shared
     private String expected = getClass().getResourceAsStream('/griffon/util/application.groovy').text
 
+    @Shared
+    private String expected8 = getClass().getResourceAsStream('/griffon/util/application_jdk8.groovy').text
+
     def "Parse application.xml from #type"() {
         given:
         String output = Xml2Groovy.instance.parse(input)
 
         expect:
-        expected.trim() == output.trim()
+        expected.trim() == output.trim() || expected8.trim() == output.trim()
 
         where:
         type          | input
@@ -48,7 +51,7 @@ class Xml2GroovySpec extends Specification {
         String output = Xml2Groovy.instance.parseText(new File(APPLICATION_XML).text)
 
         expect:
-        expected.trim() == output.trim()
+        expected.trim() == output.trim() || expected8.trim() == output.trim()
     }
 
     def "Bad application.xml from #type results in error"() {

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+<processing>
+
+  <!--
+  <job name="Copy base native launchers">
+    <os family="windows" />
+    <executefile name="cmd.exe">
+      <arg>/c</arg>
+      <arg>cd /d $INSTALL_PATH\bin &amp; for %i in (griffon startGriffon) do copy %i.bat</arg>
+    </executefile>
+  </job>
+  -->
+
+  <!-- ProcessPanel is not needed in Unix, but it's difficult to hide it.
+       So print a message. rather than leaving a blank panel. -->
+  <job name="Export path">
+    <os family="unix" />
+    <executefile name="/bin/echo">
+      <arg>All readings are nominal. System is ready.</arg>
+    </executefile>
+  </job>
+
+</processing>

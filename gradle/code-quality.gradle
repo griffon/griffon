@@ -18,7 +18,7 @@ apply plugin: 'checkstyle'
 apply plugin: 'codenarc'
 apply plugin: 'findbugs'
 apply plugin: 'jdepend'
-apply plugin: 'license'
+apply plugin: 'com.github.hierynomus.license'
 
 def configDir = new File(buildscript.sourceFile.parentFile.parentFile, 'config')
 ext.checkstyleConfigDir = "$configDir/checkstyle"
@@ -34,7 +34,7 @@ codenarc {
 }
 
 findbugs {
-    toolVersion = '2.0.2'
+    toolVersion = '2.0.3'
     sourceSets = [sourceSets.main]
     ignoreFailures = true
     reportsDir = file("$project.buildDir/reports/findbugs")

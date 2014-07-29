@@ -17,13 +17,8 @@
 apply plugin: 'java'
 apply from: rootProject.file('gradle/coverage.gradle')
 
-configurations {
-    compileOnly
-    testCompileOnly
-}
-
 dependencies {
     compile project(':griffon-core')
     compile 'junit:junit:4.11'
-    compile 'com.jayway.awaitility:awaitility:1.4.0'
+    compile "com.jayway.awaitility:awaitility:$awaitilityVersion"
 }

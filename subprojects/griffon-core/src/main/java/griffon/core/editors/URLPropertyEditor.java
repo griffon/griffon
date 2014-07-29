@@ -56,7 +56,7 @@ public class URLPropertyEditor extends AbstractPropertyEditor {
         try {
             super.setValueInternal(file.toURI().toURL());
         } catch (MalformedURLException e) {
-            throw illegalValue(file, URL.class);
+            throw illegalValue(file, URL.class, e);
         }
     }
 }

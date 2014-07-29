@@ -18,8 +18,8 @@ import java.text.SimpleDateFormat
 
 apply plugin: 'base'
 apply plugin: 'idea'
-apply plugin: 'coveralls'
-apply plugin: 'build-dashboard'
+apply plugin: 'com.github.kt3k.coveralls'
+// apply plugin: 'build-dashboard'
 apply from: 'gradle/idea.gradle'
 
 buildscript {
@@ -30,23 +30,25 @@ buildscript {
 
     dependencies {
         classpath 'net.saliman:gradle-cobertura-plugin:2.2.4'
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.4.1'
-        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.9.0'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.4.1'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:1.0.2'
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.5'
         classpath 'org.ajoberstar:gradle-git:0.9.0'
         classpath 'uk.co.cacoethes:lazybones-gradle:1.1'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.4'
     }
 }
 
 Date buildTimeAndDate = new Date()
 ext {
-    buildTime = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
-    buildDate = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+    buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
+    buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
 }
 
 allprojects {
     apply plugin: 'base'
     apply plugin: 'idea'
+    apply plugin: 'versions'
 
     repositories {
         jcenter()
@@ -59,8 +61,11 @@ allprojects {
     }
 }
 
+ext.projectsWithCoverage = []
+
 subprojects { subproj ->
     plugins.withType(JavaPlugin) {
+
         configurations {
             compileOnly
             testCompileOnly
@@ -77,8 +82,12 @@ subprojects { subproj ->
             testCompile("com.google.inject:guice:$guiceVersion") {
                 exclude group: 'org.sonatype.sisu.inject', module: 'cglib'
             }
-            testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
-            testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+            if (!subproj.name.startsWith('gradle-')) {
+                testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
+            }
+            testCompile('org.spockframework:spock-core:0.7-groovy-2.0') {
+                exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+            }
             testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
         }
 
@@ -157,6 +166,7 @@ subprojects { subproj ->
         subproj.apply from: rootProject.file('gradle/code-quality.gradle')
 
         if (subproj.publishJars.toBoolean()) {
+            projectsWithCoverage << subproj
             javadoc {
                 excludes = ['**/*.html', 'META-INF/**', '**/*.groovy']
 
@@ -164,7 +174,7 @@ subprojects { subproj ->
                 options.splitIndex  = true
                 options.encoding    = 'UTF-8'
                 options.author      = true
-                options.version     = subproj.sourceCompatibility
+                options.version     = true
                 options.windowTitle = "$subproj.pomDescription $version"
                 options.docTitle    = "$subproj.pomDescription $version"
                 options.footer      = rootProject.javadocFooter
@@ -194,4 +204,23 @@ task projectCoberturaMerge(type: ProjectCoberturaMergeTask) {
 
 task projectCoberturaReport(type: ProjectCoberturaReportTask) {
 
+}
+
+if (rootProject.hasProperty('jacocoRoot')) {
+    evaluationDependsOnChildren()
+
+    task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
+        dependsOn = projectsWithCoverage.test
+        group = "Reporting"
+        description = "Aggregate Jacoco coverage reports."
+        additionalSourceDirs = files(projectsWithCoverage.sourceSets.main.allSource.srcDirs)
+        sourceDirectories = files(projectsWithCoverage.sourceSets.main.allSource.srcDirs)
+        classDirectories = files(projectsWithCoverage.sourceSets.main.output)
+        executionData = files(projectsWithCoverage.jacocoTestReport.executionData)
+        reports {
+            html.enabled = true
+            xml.enabled = true
+            csv.enabled = false
+        }
+    }
 }

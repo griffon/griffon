@@ -1,0 +1,158 @@
+
+[[_overview_modules]]
+= Modules
+
+++{link_module}++s define components that can be injected using the JSR 330 API.
+Module definitions are highly influenced by the Guice 3.x API however they do not
+impose a strict dependency on Guice.
+
+[[_overview_module_definition]]
+== Module Definition
+
+All modules must implement the +{link_module}+ interface shown next
+
+[source,java,linenums,options="nowrap"]
+----
+include::{rootdir}/subprojects/griffon-core/src/main/java/griffon/core/injection/Module.java[lines=25..-1]
+----
+
+They also require to have a well defined name. This can be achieved by annotating the module
+class with +@javax.inject.Named+. If a value for +@javax.inject.Named+ is not defined then
+one will be automatically calculated using the fully qualified class name. For example
+
+[source,java,linenums,options="nowrap"]
+----
+package org.example;
+
+import griffon.core.injection.Module;
+import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.kordamp.jipsy.ServiceProviderFor;
+
+import javax.inject.Named;
+
+@ServiceProviderFor(Module.class)
+@Named
+public class CustomModule extends AbstractModule {
+    @Override
+    protected void doConfigure() {
+        // bindings
+    }
+}
+----
+
+Results in a module named +org.example.custom+, where as the following definition
+
+[source,java,linenums,options="nowrap"]
+----
+package org.example;
+
+import griffon.core.injection.Module;
+import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.kordamp.jipsy.ServiceProviderFor;
+
+import javax.inject.Named;
+
+@ServiceProviderFor(Module.class)
+@Named("custom")
+public class CustomModule extends AbstractModule {
+    @Override
+    protected void doConfigure() {
+        // bindings
+    }
+}
+----
+
+Results in a module simply called +custom+. A module may depend on another module; when
+that's the case then the bindings of this module are processed after their dependencies. This
+allows dependent modules to override bindings made by their dependencies. Module dependencies
+are specified using the +{link_depends_on}+ annotation, like so
+
+[source,java,linenums,options="nowrap"]
+----
+import griffon.core.injection.Module;
+import griffon.inject.DependsOn;
+import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.kordamp.jipsy.ServiceProviderFor;
+
+import javax.inject.Named;
+
+@ServiceProviderFor(Module.class)
+@DependsOn("parent-module")
+@Named
+public class CustomModule extends AbstractModule {
+    @Override
+    protected void doConfigure() {
+        // bindings
+    }
+}
+----
+
+[[_overview_module_configuration]]
+== Module Configuration
+
+Modules perform their duty by defining bindings, of which there are 4 kinds
+
+ * {link_instance_binding}
+ * {link_target_binding}
+ * {link_provider_binding}
+ * {link_provider_type_binding}
+
+Bindings have an scope, either +singleton+ or +prototype+. +InstanceBinding+ is the only
+binding that has +singleton+ as implicit scope; this setting can't be changed.
+All bindings accept a +classifier+ or an +classifier_type+. Classifiers are annotations that
+have been annotated with +@javax.inject.Qualifier+. You must specify one or the other but
+not both; +classifier+ has precedence over +classifier_type+.
+
+[[_overview_instance_binding]]
+=== Instance Binding
+
+This binding is used to define explicit and eager singletons, for example
+
+[source,java,options="nowrap"]
+----
+bind(Calculator.class)
+    .toInstance(new GroovyShellCalculator());
+----
+
+[[_overview_target_binding]]
+=== Target Binding
+
+This binding enables you to specify the _source_ type and _target_ type. Typically the
+_source_ is an interface while the _target_ is a concrete implementation. If the _target_
+is omitted then the binding assumes the _source_ to be a concrete type.
+
+[source,java,options="nowrap"]
+----
+bind(Calculator.class)
+    .to(GroovyShellCalculator.class);
+----
+
+[[_overview_provider_binding]]
+=== Provider Binding
+
+This binding behaves like a factory, giving you the power to decide with extreme precision
+how the instance should be created. Bindings of this type require an eager instance of
+type +javax.inject.Provider+.
+
+[source,java,options="nowrap"]
+----
+bind(Calculator.class)
+    .toProvider(new CalculatorProvider());
+----
+
+[[_overview_provider_type_binding]]
+=== Provider Type Binding
+
+Finally we have the most flexible binding as it lets you specify a +javax.injectProvider+
+type that will be used to lazily instantiate the provider before obtaining the type instance.
+
+[source,java,options="nowrap"]
+----
+bind(Calculator.class)
+    .toProvider(CalculatorProvider.class);
+----
+
+== The Guice Injector
+
+TBD
+

@@ -17,13 +17,10 @@ package org.codehaus.griffon.gradle
 
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
-
 import spock.lang.Shared
 import spock.lang.Specification
 
-
 abstract class AbstractPluginSpecification extends Specification {
-
     @Shared
     Project project
 
@@ -39,7 +36,7 @@ abstract class AbstractPluginSpecification extends Specification {
         deleteProjectDir()
     }
 
-    def deleteProjectDir() {
+    void deleteProjectDir() {
         project?.projectDir?.deleteDir()
     }
 }

@@ -11,7 +11,7 @@ props.project_name = transformText(props.project_class_name, from: NameType.CAME
 props.project_group = ask("Define value for 'group' [org.example]: ", "org.example", "group")
 props.project_name = ask("Define value for 'artifactId' [" + props.project_name + "]: ", props.project_name , "artifactId")
 props.project_version = ask("Define value for 'version' [0.1.0-SNAPSHOT]: ", "0.1.0-SNAPSHOT", "version")
-props.griffon_version = ask("Define value for 'griffonVersion' [2.0.0.BETA3]: ", "2.0.0.BETA3", "griffonVersion")
+props.griffon_version = ask("Define value for 'griffonVersion' [2.0.0.RC1]: ", "2.0.0.RC1", "griffonVersion")
 props.project_package = ask("Define value for 'package' [" + props.project_group + "]: ", props.project_group, "package")
 props.project_class_name = ask("Define value for 'className' [" + props.project_class_name + "]: ", props.project_class_name, "className").capitalize()
 props.project_property_name = transformText(props.project_class_name, from: NameType.CAMEL_CASE, to: NameType.PROPERTY)
@@ -25,10 +25,12 @@ processTemplates 'src/main/groovy/*.groovy', props
 processTemplates 'src/test/groovy/*.groovy', props
 processTemplates 'src/integration-test/groovy/*.groovy', props
 processTemplates 'griffon-app/*/*.groovy', props
+processTemplates 'maven/distribution/bin/*', props
 
 File mainSources = new File(projectDir, 'src/main/groovy')
 File testSources = new File(projectDir, 'src/test/groovy')
 File integrationTestSources = new File(projectDir, 'src/integration-test/groovy')
+File binSources = new File(projectDir, 'maven/distribution/bin')
 
 File mainSourcesPath = new File(mainSources, packagePath)
 mainSourcesPath.mkdirs()
@@ -46,6 +48,8 @@ testSources.eachFile { File file ->
 integrationTestSources.eachFile { File file ->
     file.renameTo(integrationTestSourcesPath.absolutePath + '/' + props.project_capitalized_name + file.name)
 }
+new File(binSources, 'run-app').renameTo(binSources.absolutePath + '/' + props.project_name)
+new File(binSources, 'run-app.bat').renameTo(binSources.absolutePath + '/' + props.project_name + '.bat')
 
 ['controllers', 'models', 'services', 'views'].each { String category ->
     File artifactDir = new File(projectDir, "griffon-app/$category")

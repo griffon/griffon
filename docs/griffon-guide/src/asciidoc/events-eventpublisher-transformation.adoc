@@ -1,0 +1,69 @@
+
+[[_events_eventpublisher_transformation]]
+= The @EventPublisher AST Transformation
+
+Any component may gain the ability to publish events through an +{link_event_router}+
+instance. You only need annotate the class with +{link_event_publisher_ast}+
+and it will automatically gain all methods exposed by +{link_event_publisher}+.
+
+The following example shows a trivial usage of this feature
+
+[source,groovy,linenums,options="nowrap"]
+----
+@griffon.transform.EventPublisher
+class Publisher {
+   void doit(String name) {
+      publishEvent('arg', [name])
+   }
+
+   void doit() {
+      publishEvent('empty')
+   }
+}
+----
+
+The application's event router will be used by default. If you'd like your custom
+event publisher to use a private +{link_event_router}+ then you must define a binding
+for it using a specific name, like this
+
+[source,groovy,linenums,options="nowrap"]
+----
+import griffon.core.injection.Module
+import griffon.core.event.EventRouter
+import org.kordamp.jipsy.ServiceProviderFor
+import org.codehaus.griffon.runtime.core.injection.AbstractModule
+import org.codehaus.griffon.runtime.core.event.DefaultEventRouter
+
+import javax.inject.Named
+import static griffon.util.AnnotationUtils.named
+
+@ServiceProviderFor(Module)
+@Named
+class ApplicationModule extends AbstractModule {
+    @Override
+    protected void doConfigure() {
+        bind(EventRouter)
+            .withClassifier(named('my-private-event-router'))
+            .to(DefaultEventRouter)
+            .asSingleton()
+    }
+}
+----
+
+Next specify the named +{link_event_router}+ as a parameter on the +{link_event_publisher_ast}+
+transformation
+
+[source,groovy,linenums,options="nowrap"]
+----
+@griffon.transform.EventPublisher('my-private-event-router')
+class Publisher {
+   void doit(String name) {
+      publishEvent('arg', [name])
+   }
+
+   void doit() {
+      publishEvent('empty')
+   }
+}
+----
+

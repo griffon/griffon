@@ -64,7 +64,7 @@ public class ImagePropertyEditor extends AbstractPropertyEditor {
         try {
             handleAsURL(file.toURI().toURL());
         } catch (MalformedURLException e) {
-            throw illegalValue(file, URL.class);
+            throw illegalValue(file, URL.class, e);
         }
     }
 
@@ -72,7 +72,7 @@ public class ImagePropertyEditor extends AbstractPropertyEditor {
         try {
             super.setValueInternal(new Image(url.toString()));
         } catch (Exception e) {
-            throw illegalValue(url, URL.class);
+            throw illegalValue(url, URL.class, e);
         }
     }
 
@@ -80,7 +80,7 @@ public class ImagePropertyEditor extends AbstractPropertyEditor {
         try {
             handleAsURL(uri.toURL());
         } catch (MalformedURLException e) {
-            throw illegalValue(uri, URL.class);
+            throw illegalValue(uri, URL.class, e);
         }
     }
 
@@ -88,7 +88,7 @@ public class ImagePropertyEditor extends AbstractPropertyEditor {
         try {
             super.setValueInternal(new Image(stream));
         } catch (Exception e) {
-            throw illegalValue(stream, URL.class);
+            throw illegalValue(stream, URL.class, e);
         }
     }
 }

@@ -15,15 +15,14 @@ and Groovy as main language. The project has the following file structure
     │   ├── resources
     │   ├── services
     │   └── views
-    ├── maven-antrun-include.xml
     ├── pom.xml
     └── src
         ├── main
-        │   ├── groovy
-        │   └── resources
+        │   ├── groovy
+        │   └── resources
         └── test
             ├── groovy
-            └── resources
+            └── resources
 
 Simply add your source files to `src/main/groovy`, your test cases to
 `src/test/groovy` and then you will be able to build your project with
@@ -38,6 +37,6 @@ If you prefer building with Maven then execute the following commands
 
     mvn compile
     mvn test
-    mvn exec:java
+    mvn -Prun
 
 Don't forget to add any extra JAR dependencies to `pom.xml`!

@@ -71,7 +71,7 @@ public class JavafxBuilderCustomizer extends AbstractBuilderCustomizer {
         setPreInstantiateDelegates(builder.getPreInstantiateDelegates());
         setPostInstantiateDelegates(builder.getPostInstantiateDelegates());
         setPostNodeCompletionDelegates(builder.getPostNodeCompletionDelegates());
-        // setDisposalClosures(builder.getDisposalClosures());
+        setDisposalClosures(builder.getDisposalClosures());
         setMethodMissingDelegate(builder.getMethodMissingDelegate());
         setPropertyMissingDelegate(builder.getPropertyMissingDelegate());
     }

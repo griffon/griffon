@@ -18,11 +18,8 @@ package griffon.core.env;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.InputStream;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
+import java.util.Properties;
 
 import static griffon.util.GriffonNameUtils.isBlank;
 
@@ -43,41 +40,22 @@ public class GriffonEnvironment {
         String version = null;
 
         try {
-            Enumeration<URL> resources = GriffonEnvironment.class.getClassLoader().getResources("META-INF/MANIFEST.MF");
-            Manifest griffonManifest = null;
+            Properties griffonProperties = new Properties();
+            URL griffonPropertiesResource = GriffonEnvironment.class.getClassLoader().getResource("META-INF/griffon-core.properties");
 
-            while (resources.hasMoreElements()) {
-                URL resource = resources.nextElement();
-
-                InputStream inputStream = null;
-                Manifest mf = null;
-                try {
-                    inputStream = resource.openStream();
-                    mf = new Manifest(inputStream);
-                } finally {
-                    if (inputStream != null) {
-                        inputStream.close();
-                    }
-                }
-                String implTitle = mf.getMainAttributes().getValue(Attributes.Name.IMPLEMENTATION_TITLE);
-                if (!isBlank(implTitle) && implTitle.equals(GRIFFON_IMPLEMENTATION_TITLE)) {
-                    griffonManifest = mf;
-                    break;
-                }
-            }
-
-            if (griffonManifest != null) {
-                buildDate = griffonManifest.getMainAttributes().getValue("Build-Date");
-                buildTime = griffonManifest.getMainAttributes().getValue("Build-Time");
-                version = griffonManifest.getMainAttributes().getValue(Attributes.Name.IMPLEMENTATION_VERSION);
+            if (griffonPropertiesResource != null) {
+                griffonProperties.load(griffonPropertiesResource.openStream());
+                buildDate = griffonProperties.getProperty("build.date");
+                buildTime = griffonProperties.getProperty("build.time");
+                version = griffonProperties.getProperty("griffon.version");
             }
 
             if (isBlank(buildDate) || isBlank(buildTime) || isBlank(version)) {
-                LOG.error("Unable to read Griffon version from MANIFEST.MF Are you sure the griffon-core jar is in the classpath?");
+                LOG.error("Unable to read Griffon version from META-INF/griffon-core.properties. Are you sure the griffon-core jar is in the classpath?");
                 buildDate = buildTime = version = "";
             }
         } catch (Exception e) {
-            LOG.error("Unable to read Griffon version from MANIFEST.MF Are you sure the griffon-core jar is in the classpath? " + e.getMessage(), e);
+            LOG.error("Unable to read Griffon version from META-INF/griffon-core.properties. Are you sure the griffon-core jar is in the classpath? " + e.getMessage(), e);
             buildDate = buildTime = version = "";
         }
 

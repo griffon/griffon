@@ -43,9 +43,8 @@ public class ${project_class_name}View extends AbstractJavaFXGriffonView {
         Stage stage = (Stage) getApplication()
             .createApplicationContainer(Collections.<String,Object>emptyMap());
         stage.setTitle(getApplication().getConfiguration().getAsString("application.title"));
-        stage.setWidth(200);
-        stage.setHeight(60);
         stage.setScene(init());
+        stage.sizeToScene();
         getApplication().getWindowManager().attach("${name}", stage);
     }
 

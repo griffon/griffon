@@ -20,6 +20,8 @@ import griffon.exceptions.InstanceNotFoundException;
 import griffon.pivot.PivotWindowDisplayHandler;
 import org.apache.pivot.wtk.Window;
 import org.codehaus.griffon.runtime.core.view.ConfigurableWindowDisplayHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -32,6 +34,8 @@ import static griffon.util.AnnotationUtils.named;
  * @since 2.0.0
  */
 public class ConfigurablePivotWindowDisplayHandler extends ConfigurableWindowDisplayHandler<Window> implements PivotWindowDisplayHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigurablePivotWindowDisplayHandler.class);
+
     @Inject
     public ConfigurablePivotWindowDisplayHandler(@Nonnull GriffonApplication application, @Nonnull @Named("defaultWindowDisplayHandler") PivotWindowDisplayHandler delegateWindowsDisplayHandler) {
         super(application, delegateWindowsDisplayHandler);
@@ -48,6 +52,7 @@ public class ConfigurablePivotWindowDisplayHandler extends ConfigurableWindowDis
         try {
             PivotWindowDisplayHandler handler = getApplication().getInjector()
                 .getInstance(PivotWindowDisplayHandler.class, named(name));
+            LOG.trace("Showing {} with injected handler", name);
             handler.show(name, window);
             return true;
         } catch (InstanceNotFoundException infe) {
@@ -60,6 +65,7 @@ public class ConfigurablePivotWindowDisplayHandler extends ConfigurableWindowDis
         try {
             PivotWindowDisplayHandler handler = getApplication().getInjector()
                 .getInstance(PivotWindowDisplayHandler.class, named(name));
+            LOG.trace("Hiding {} with injected handler", name);
             handler.hide(name, window);
             return true;
         } catch (InstanceNotFoundException infe) {
