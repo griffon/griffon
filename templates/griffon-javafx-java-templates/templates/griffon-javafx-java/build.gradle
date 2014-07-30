@@ -4,12 +4,12 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.0.0.RC1'
+        classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.0.0.RC2'
         classpath 'net.saliman:gradle-cobertura-plugin:2.2.4'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:1.0.2'
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
         classpath 'org.gradle.api.plugins:gradle-izpack-plugin:0.2.3'
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.0.2'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.0.3'
         classpath 'edu.sc.seis.gradle:macappbundle:2.0.0'
         classpath 'org.kordamp.gradle:stats-gradle-plugin:0.1.1'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.4'
@@ -58,10 +58,12 @@ dependencies {
 
 compileGroovy.enabled = false
 
-import org.codehaus.griffon.gradle.shadow.transformers.*
+import com.github.jengelman.gradle.plugins.shadow.transformers.*
 shadowJar {
-    mergeServiceFiles()
-    transform(GriffonFileTransformer)
+    transform(ServiceFileTransformer)
+    transform(ServiceFileTransformer) {
+        path = 'META-INF/griffon'
+    }
     transform(PropertiesFileTransformer) {
         paths = [
             'META-INF/editors/java.beans.PropertyEditor'
