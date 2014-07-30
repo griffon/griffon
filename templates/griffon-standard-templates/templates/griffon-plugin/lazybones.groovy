@@ -29,8 +29,8 @@ props.project_package = ask("Define value for 'package' [org.codehaus.griffon.ru
 props.griffon_version = ask("Define value for 'griffonVersion' [2.0.0.RC2]: ", "2.0.0.RC2", "griffonVersion")
 props.project_website = ask("Define value for 'website' [http://artifacts.griffon-framework.org/plugin/" + pluginName +"]: ",
                         "http://artifacts.griffon-framework.org/plugin/" + pluginName, "website")
-props.project_issue_tracker = ask("Define value for 'issueTracker' [http://jira.codehaus.org/browse/griffon]: ",
-                              "http://jira.codehaus.org/browse/griffon", "issueTracker")
+props.project_issue_tracker = ask("Define value for 'issueTracker' [http://artifacts.griffon-framework.org/plugin/" + pluginName +"/issues]: ",
+                              "http://artifacts.griffon-framework.org/plugin/" + pluginName +"/issues", "issueTracker")
 props.project_vcs = ask("Define value for 'vcs' [https://github.com/griffon/" + props.plugin_full_name +".git]: ",
                     "https://github.com/griffon/" + props.plugin_full_name, "vcs")
 

@@ -41,7 +41,7 @@ task copyDocs(type: Copy) {
 task apiDocs(type: Javadoc, dependsOn: copyDocs) {
     source          = file("\$buildDir/sources")
     destinationDir  = file("\$buildDir/api")
-    title           = "${plugin_full_natural_name} \$version"
+    title           = "\$projectDescription \$version"
     classpath       = project.ext.childProjects.collect { projectName ->
                           [project(projectName).sourceSets.main.output,
                            project(projectName).configurations.compile,
@@ -57,12 +57,14 @@ task apiDocs(type: Javadoc, dependsOn: copyDocs) {
     options.version     = true
     options.source      = project.sourceCompatibility
     options.overview    = file('src/javadoc/overview.html')
-    options.windowTitle = "${plugin_full_name} \$version"
-    options.docTitle    = "${plugin_full_name} \$version"
+    options.windowTitle = "\$projectDescription  \$version"
+    options.docTitle    = "\$projectDescription  \$version"
     options.footer      = project.javadocFooter
     options.links       = ['http://www.slf4j.org/apidocs/',
-                           'http://jsr-305.googlecode.com/svn/trunk/javadoc/',
+                           'http://junit.org/javadoc/latest/',
                            'http://docs.oracle.com/javase/7/docs/api/',
+                           'http://jsr-305.googlecode.com/svn/trunk/javadoc/',
+                           'http://atinject.googlecode.com/svn/trunk/javadoc/',
                            'http://griffon.github.io/griffon/guide/api/']
 
     doLast { task ->
