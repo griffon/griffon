@@ -36,7 +36,7 @@ class AggregateCoberturaMergeTask extends DefaultTask {
         args << '--basedir'
         args << project.projectDir.absolutePath
         project.subprojects.each { prj ->
-            if (prj.name.endsWith('-compile')) return
+            // if (prj.name.endsWith('-compile')) return
             if (prj.plugins.hasPlugin(AggregateCoberturaExtension.COBERTURA_NAME)) {
                 File coverageOutputDatafile = prj.extensions.findByName(AggregateCoberturaExtension.COBERTURA_NAME).coverageOutputDatafile
                 if (coverageOutputDatafile.exists()) {

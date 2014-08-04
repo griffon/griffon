@@ -38,7 +38,7 @@ class AggregateCoberturaReportTask extends DefaultTask {
         args << '--destination'
         args << extension.coverageReportDir
         project.subprojects.each { prj ->
-            if (prj.name.endsWith('-compile')) return
+            // if (prj.name.endsWith('-compile')) return
             if (prj.plugins.hasPlugin('java')) {
                 args.addAll(prj.sourceSets.main.java.srcDirs)
             }
