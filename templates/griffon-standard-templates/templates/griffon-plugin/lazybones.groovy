@@ -36,12 +36,12 @@ props.project_vcs = ask("Define value for 'vcs' [https://github.com/griffon/" + 
 
 String packagePath = props.project_package.replace('.' as char, '/' as char)
 
-processTemplates 'build.gradle', props
-processTemplates 'gradle/publishing.gradle', props
-processTemplates 'gradle/docs.gradle', props
-processTemplates 'subprojects/guide/guide.gradle', props
-processTemplates 'gradle.properties', props
 processTemplates 'settings.gradle', props
+processTemplates 'gradle.properties', props
+processTemplates 'gradle/bom.gradle', props
+processTemplates 'gradle/docs.gradle', props
+processTemplates 'gradle/publishing.gradle', props
+processTemplates 'subprojects/guide/guide.gradle', props
 processTemplates 'subprojects/plugin/gradle.properties', props
 processTemplates 'subprojects/plugin/src/main/java/*.java', props
 processTemplates 'subprojects/guide/src/javadoc/*.html', props

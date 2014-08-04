@@ -6,7 +6,7 @@ apply plugin: 'com.jfrog.bintray'
 def pomConfig = {
     name project.name
     description project.projectDescription
-    url project.projectUrl
+    url project.projectWebsiteUrl
     inceptionYear project.projectInceptionYear
     licenses {
         license([:]) {
@@ -41,7 +41,7 @@ jar {
     manifest {
         attributes(
             'Built-By': System.properties['user.name'],
-            'Created-By': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})".toString(),
+            'Created-By': "\${System.properties['java.version']} (\${System.properties['java.vendor']} \${System.properties['java.vm.version']})".toString(),
             'Build-Date': buildDate,
             'Build-Time': buildTime,
             'Specification-Title': project.name,

@@ -25,6 +25,7 @@ apply plugin: 'build-dashboard'
 apply from: 'gradle/idea.gradle'
 apply plugin: 'org.codehaus.griffon.griffon-build'
 apply from: 'gradle/bom.gradle'
+apply plugin: 'github-pages'
 
 Date buildTimeAndDate = new Date()
 ext {
@@ -104,3 +105,22 @@ subprojects { subproj ->
         }
     }
 }
+
+evaluationDependsOnChildren()
+
+if (!project.hasProperty('githubUsername')) ext.githubUsername = ''
+if (!project.hasProperty('githubPassword')) ext.githubPassword = ''
+
+githubPages {
+    repoUri = project.projectVcsUrl
+    pages {
+        from project(":${pluginBaseName}-guide").guide.outputs.files
+    }
+
+    credentials {
+        username = githubUsername
+        password = githubPassword
+    }
+}
+
+publishGhPages.dependsOn(project(":${pluginBaseName}-guide").guide)

@@ -136,7 +136,7 @@ public class GroovyAwareMVCGroupManager extends DefaultMVCGroupManager {
 
     @Nonnull
     protected Collection<BuilderCustomizer> resolveBuilderCustomizers(@Nonnull GriffonApplication application) {
-        Collection<BuilderCustomizer> customizerInstances = getApplication().getInjector().getInstances(BuilderCustomizer.class);
+        Collection<BuilderCustomizer> customizerInstances = application.getInjector().getInstances(BuilderCustomizer.class);
         return sortByDependencies(customizerInstances, BUILDER_CUSTOMIZER, "customizer").values();
     }
 }
