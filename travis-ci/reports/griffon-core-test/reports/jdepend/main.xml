@@ -15,7 +15,36 @@
         </Package>
 
         <Package name="griffon.core.injection">
-            <error>No stats available: package referenced, but not analyzed.</error>
+            <Stats>
+                <TotalClasses>1</TotalClasses>
+                <ConcreteClasses>0</ConcreteClasses>
+                <AbstractClasses>1</AbstractClasses>
+                <Ca>3</Ca>
+                <Ce>1</Ce>
+                <A>1</A>
+                <I>0.25</I>
+                <D>0.25</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+                <Class sourceFile="TestingModule.java">
+                    griffon.core.injection.TestingModule
+                </Class>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>java.lang</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>griffon.core.test</Package>
+                <Package>org.codehaus.griffon.runtime.core</Package>
+                <Package>org.codehaus.griffon.runtime.core.injection</Package>
+            </UsedBy>
         </Package>
 
         <Package name="griffon.core.test">
@@ -102,10 +131,10 @@
                 <ConcreteClasses>5</ConcreteClasses>
                 <AbstractClasses>0</AbstractClasses>
                 <Ca>1</Ca>
-                <Ce>10</Ce>
+                <Ce>12</Ce>
                 <A>0</A>
-                <I>0.91</I>
-                <D>0.09</D>
+                <I>0.92</I>
+                <D>0.08</D>
                 <V>1</V>
             </Stats>
 
@@ -132,6 +161,7 @@
 
             <DependsUpon>
                 <Package>griffon.core</Package>
+                <Package>griffon.core.injection</Package>
                 <Package>griffon.core.test</Package>
                 <Package>griffon.inject</Package>
                 <Package>griffon.util</Package>
@@ -141,6 +171,7 @@
                 <Package>java.util</Package>
                 <Package>javax.inject</Package>
                 <Package>org.codehaus.griffon.runtime.core.injection</Package>
+                <Package>org.slf4j</Package>
             </DependsUpon>
 
             <UsedBy>
@@ -149,7 +180,34 @@
         </Package>
 
         <Package name="org.codehaus.griffon.runtime.core.injection">
-            <error>No stats available: package referenced, but not analyzed.</error>
+            <Stats>
+                <TotalClasses>1</TotalClasses>
+                <ConcreteClasses>0</ConcreteClasses>
+                <AbstractClasses>1</AbstractClasses>
+                <Ca>1</Ca>
+                <Ce>1</Ce>
+                <A>1</A>
+                <I>0.5</I>
+                <D>0.5</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+                <Class sourceFile="AbstractTestingModule.java">
+                    org.codehaus.griffon.runtime.core.injection.AbstractTestingModule
+                </Class>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>griffon.core.injection</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>org.codehaus.griffon.runtime.core</Package>
+            </UsedBy>
         </Package>
 
         <Package name="org.junit.rules">
@@ -157,6 +215,10 @@
         </Package>
 
         <Package name="org.junit.runners.model">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.slf4j">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
     </Packages>
