@@ -20,7 +20,7 @@ import griffon.core.injection.Module
 import griffon.core.test.GriffonUnitRule
 import griffon.core.test.TestFor
 import griffon.inject.DependsOn
-import org.codehaus.griffon.runtime.core.injection.AbstractModule
+import org.codehaus.griffon.runtime.core.injection.AbstractTestingModule
 import org.junit.Rule
 import org.junit.Test
 
@@ -70,7 +70,7 @@ class ConsoleControllerTest {
     }
 
     @DependsOn('application')
-    private static class TestModule extends AbstractModule {
+    private static class TestModule extends AbstractTestingModule {
         @Override
         protected void doConfigure() {
             bind(Evaluator)

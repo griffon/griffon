@@ -108,11 +108,16 @@ public abstract class AbstractApplicationBootstrapper implements ApplicationBoot
     protected void collectModuleBindings(@Nonnull Collection<Module> modules) {
         List<Module> moduleInstances = loadModules();
         moduleInstances.add(0, new DefaultApplicationModule());
-        Map<String, Module> sortedModules = sortByDependencies(moduleInstances, "Module", "module");
+        Map<String, Module> sortedModules = sortModules(moduleInstances);
         for (Map.Entry<String, Module> entry : sortedModules.entrySet()) {
             LOG.debug("Loading module bindings from {}:{}", entry.getKey(), entry.getValue());
             modules.add(entry.getValue());
         }
+    }
+
+    @Nonnull
+    protected Map<String, Module> sortModules(@Nonnull List<Module> moduleInstances) {
+        return sortByDependencies(moduleInstances, "Module", "module");
     }
 
     @Nonnull

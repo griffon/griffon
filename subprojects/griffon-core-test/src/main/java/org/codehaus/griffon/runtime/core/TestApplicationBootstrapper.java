@@ -17,13 +17,16 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.core.GriffonApplication;
 import griffon.core.injection.Module;
+import griffon.core.injection.TestingModule;
 import griffon.core.test.TestCaseAware;
 import griffon.inject.BindTo;
 import griffon.util.AnnotationUtils;
-import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.codehaus.griffon.runtime.core.injection.AbstractTestingModule;
 import org.codehaus.griffon.runtime.core.injection.AnnotatedBindingBuilder;
 import org.codehaus.griffon.runtime.core.injection.LinkedBindingBuilder;
 import org.codehaus.griffon.runtime.core.injection.SingletonBindingBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Named;
@@ -36,7 +39,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static griffon.util.AnnotationUtils.named;
 import static griffon.util.GriffonNameUtils.getPropertyName;
@@ -47,6 +52,8 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @since 2.0.0
  */
 public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper implements TestCaseAware {
+    private static final Logger LOG = LoggerFactory.getLogger(TestApplicationBootstrapper.class);
+
     private static final String METHOD_MODULES = "modules";
     private static final String METHOD_MODULE_OVERRIDES = "moduleOverrides";
     private Object testCase;
@@ -73,6 +80,27 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
         return modules;
     }
 
+    @Nonnull
+    @Override
+    protected Map<String, Module> sortModules(@Nonnull List<Module> moduleInstances) {
+        Map<String, Module> sortedModules = super.sortModules(moduleInstances);
+        // move all `TestingModules` at the end
+        // turns out the map is of type LinkedHashMap so insertion order is retained
+        Map<String, Module> testingModules = new LinkedHashMap<>();
+        for (Map.Entry<String, Module> e : sortedModules.entrySet()) {
+            if (e.getValue() instanceof TestingModule) {
+                testingModules.put(e.getKey(), e.getValue());
+            }
+        }
+        for (String key : testingModules.keySet()) {
+            sortedModules.remove(key);
+        }
+        sortedModules.putAll(testingModules);
+
+        LOG.debug("computed {} order is {}", "Module", sortedModules.keySet());
+
+        return sortedModules;
+    }
 
     @SuppressWarnings("unchecked")
     private List<Module> doCollectModulesFromMethod() {
@@ -165,7 +193,7 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
         return list;
     }
 
-    private class InnerClassesModule extends AbstractModule {
+    private class InnerClassesModule extends AbstractTestingModule {
         @Override
         @SuppressWarnings("unchecked")
         protected void doConfigure() {
@@ -199,7 +227,7 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
         }
     }
 
-    private class FieldsModule extends AbstractModule {
+    private class FieldsModule extends AbstractTestingModule {
         @Override
         @SuppressWarnings("unchecked")
         protected void doConfigure() {

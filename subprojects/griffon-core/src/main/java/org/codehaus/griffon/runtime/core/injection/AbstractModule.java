@@ -30,9 +30,9 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public abstract class AbstractModule implements Module {
-    private final List<Binding<?>> bindings = new ArrayList<>();
-    private BindingBuilder<?> currentBinding;
-    private boolean configured;
+    protected final List<Binding<?>> bindings = new ArrayList<>();
+    protected BindingBuilder<?> currentBinding;
+    protected boolean configured;
 
     public final void configure() {
         requireState(!configured, "Module " + this + " has already been configured");
