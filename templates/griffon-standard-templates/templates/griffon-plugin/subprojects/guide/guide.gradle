@@ -120,9 +120,9 @@ java2html {
     overview {
         srcDirs        = files("\$buildDir/java2html")
         destDir        = file("\$buildDir/java2html")
-        windowTitle    = "${plugin_full_natural_name} \$version"
-        docTitle       = "${plugin_full_natural_name} \$version"
-        docDescription = "${plugin_full_natural_name} \$version"
+        windowTitle    = "\$projectDescription  \$version"
+        docTitle       = "\$projectDescription  \$version"
+        docDescription = "\$projectDescription  \$version"
         icon           = file('src/javadoc/resources/img/griffon.ico')
         stylesheet     = file('src/javadoc/resources/css/stylesheet.css')
     }
@@ -132,27 +132,27 @@ asciidoctor {
     baseDir = project.file('src/asciidoc')
     options = [
         attributes: [
-            toc                     : 'left',
-            doctype                 : 'book',
-            icons                   : 'font',
-            encoding                : 'utf-8',
-            sectlink                : true,
-            sectanchors             : true,
-            numbered                : true,
-            linkattrs               : true,
-            imagesdir               : 'images',
-            linkcss                 : true,
-            stylesheet              : 'css/style.css',
-            'source-highlighter'    : 'coderay',
-            'coderay-linenums-mode' : 'inline',
-            'project-name'          : '${plugin_full_natural_name}',
-            'project-author'        : '${project_author}',
-            'project-version'       : project.version,
-            'project-group'         : project.group,
-            'project-url'           : project.projectWebsiteUrl,
-            'project-vcs'           : project.projectVcsUrl,
-            'project-issue-tracker' : project.projectIssueTrackerUrl,
-            'griffon-version'       : rootProject.griffonVersion
+            toc                    : 'left',
+            doctype                : 'book',
+            icons                  : 'font',
+            encoding               : 'utf-8',
+            sectlink               : true,
+            sectanchors            : true,
+            numbered               : true,
+            linkattrs              : true,
+            imagesdir              : 'images',
+            linkcss                : true,
+            stylesheet             : 'css/style.css',
+            'source-highlighter'   : 'coderay',
+            'coderay-linenums-mode': 'inline',
+            'project-name'         : "${project.projectDescription} ${project.version}",
+            'project-author'       : '${project_author}',
+            'project-version'      : project.version,
+            'project-group'        : project.group,
+            'project-url'          : project.projectWebsiteUrl,
+            'project-vcs'          : project.projectVcsUrl,
+            'project-issue-tracker': project.projectIssueTrackerUrl,
+            'griffon-version'      : rootProject.griffonVersion
         ]
     ]
     sourceDocumentName = project.file('src/asciidoc/index.adoc')

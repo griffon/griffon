@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 /*
  * Copyright 2008-2014 the original author or authors.
  *
@@ -37,10 +39,42 @@ dependencies {
     docs project(':griffon-guide')
 }
 
+task pluginList << {
+    URL url = 'https://api.github.com/users/griffon-plugins/repos?sort=full_name'.toURL()
+    def json = new JsonSlurper().parse(url)
+
+    String content = '''
+        :linkattrs:
+        :icons: 'font'
+
+        [cols="1,^,^,^,^"]
+        |====
+    '''.stripIndent(8)
+
+    json.each { repo ->
+        content += """| link:${repo.html_url}[${repo.name}, window="_blank"]"""
+        content += """pass:[<iframe src="http://ghbtns.com/github-btn.html?user=griffon-plugins&repo=${repo.name}&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>] """
+        content += """pass:[<iframe src="http://ghbtns.com/github-btn.html?user=griffon-plugins&repo=${repo.name}&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe>] """
+        content += """| image:http://img.shields.io/badge/docs-api-blue.svg[API, link="http://griffon-plugins.github.io/${repo.name}/"] """
+        content += """| image:http://img.shields.io/travis/griffon-plugins/${repo.name}/master.svg[Build Status, link="https://travis-ci.org/griffon-plugins/${repo.name}/"] """
+        content += """| image:http://img.shields.io/coveralls/griffon-plugins/${repo.name}/master.svg[Coverage Status, link="https://coveralls.io/r/griffon-plugins/${repo.name}/"] """
+        content += """| image:http://img.shields.io/github/issues/${repo.full_name}.svg[Open Issues, link="https://github.com/griffon-plugins/${repo.name}/issues"]"""
+        content += '\n'
+    }
+
+    content += '|====\n'
+
+    File pluginFile = new File("${buildDir}/tmp/plugins.adoc")
+    pluginFile.parentFile.mkdirs()
+    pluginFile.text = content
+}
+
 jbake {
+    dependsOn pluginList
     configuration['asciidoctor.attributes.export'] = true
     configuration['asciidoctor.attributes.export.prefix'] = 'jbake-'
     configuration['griffon.version'] = project.version
+    configuration['project-build-dir'] = project.buildDir.absolutePath
 }
 
 task(guide, dependsOn: [':griffon-guide:guide']) {
@@ -50,14 +84,11 @@ task(guide, dependsOn: [':griffon-guide:guide']) {
 task(copyGuide, type: Copy) {
     destinationDir = file("$buildDir/guide")
     from(tasks.getByPath(':griffon-guide:guide').destinationDir) {
-        into 'latest'
-    }
-    from(tasks.getByPath(':griffon-guide:guide').destinationDir) {
         into project.version
     }
 }
 
-task(site, type: Copy, dependsOn: ['jbake', copyGuide]) {
+task(site, type: Copy, dependsOn: [jbake, copyGuide]) {
     destinationDir = file("$buildDir/site")
     from jbake.output
     from(copyGuide.destinationDir) {
@@ -70,6 +101,9 @@ jettyRun {
     webAppSourceDirectory = file("$buildDir/site")
 }
 
-task(siteRun, dependsOn: ['site', 'jettyRun']) {
+task(siteRun, dependsOn: ['site', 'jettyRun']) { }
 
+task(siteZip, type: Zip, dependsOn: site) {
+    baseName = 'griffon-site'
+    from site.destinationDir
 }
