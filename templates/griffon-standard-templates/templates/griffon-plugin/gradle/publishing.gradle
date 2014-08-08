@@ -64,10 +64,10 @@ bintray {
     pkg {
         repo = 'griffon-plugins'
         userOrg = 'griffon'
-        name = project.name
-        desc = project.projectDescription
+        name = rootProject.name
+        desc = rootProject.projectDescription
         licenses = ['Apache-2.0']
-        labels = ['griffon', '${plugin_full_name}']
+        labels = ((rootProject.projectLabels.split(',') + project.projectLabels.split(',')) as List).unique()
         websiteUrl = project.projectWebsiteUrl
         issueTrackerUrl = project.projectIssueTrackerUrl
         vcsUrl = project.projectVcsUrl

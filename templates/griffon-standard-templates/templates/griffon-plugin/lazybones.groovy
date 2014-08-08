@@ -38,7 +38,6 @@ String packagePath = props.project_package.replace('.' as char, '/' as char)
 
 processTemplates 'settings.gradle', props
 processTemplates 'gradle.properties', props
-processTemplates 'gradle/bom.gradle', props
 processTemplates 'gradle/docs.gradle', props
 processTemplates 'gradle/publishing.gradle', props
 processTemplates 'subprojects/guide/guide.gradle', props
