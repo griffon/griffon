@@ -47,14 +47,16 @@ task pluginList << {
         :linkattrs:
         :icons: 'font'
 
-        [cols="1,^,^,^,^"]
+        [cols="2,5*^"]
         |====
     '''.stripIndent(8)
 
     json.each { repo ->
         content += """| link:${repo.html_url}[${repo.name}, window="_blank"]"""
-        content += """pass:[<iframe src="http://ghbtns.com/github-btn.html?user=griffon-plugins&repo=${repo.name}&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>] """
-        content += """pass:[<iframe src="http://ghbtns.com/github-btn.html?user=griffon-plugins&repo=${repo.name}&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe>] """
+        content += """pass:[<ul class="list-inline">
+        <li><iframe src="http://ghbtns.com/github-btn.html?user=griffon-plugins&repo=${repo.name}&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe></li>
+        <li><iframe src="http://ghbtns.com/github-btn.html?user=griffon-plugins&repo=${repo.name}&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe></li></ul>]""".stripIndent(8)
+        content += """| image:http://img.shields.io/badge/download-BOM-bb00bb.svg[link="https://bintray.com/griffon/griffon-plugins/${repo.name}/_latestVersion"]"""
         content += """| image:http://img.shields.io/badge/docs-api-blue.svg[API, link="http://griffon-plugins.github.io/${repo.name}/"] """
         content += """| image:http://img.shields.io/travis/griffon-plugins/${repo.name}/master.svg[Build Status, link="https://travis-ci.org/griffon-plugins/${repo.name}/"] """
         content += """| image:http://img.shields.io/coveralls/griffon-plugins/${repo.name}/master.svg[Coverage Status, link="https://coveralls.io/r/griffon-plugins/${repo.name}/"] """
