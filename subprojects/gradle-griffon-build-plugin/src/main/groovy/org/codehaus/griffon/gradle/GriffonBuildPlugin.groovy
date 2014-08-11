@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.codehaus.griffon.gradle
 
 import org.codehaus.griffon.gradle.tasks.AggregateCoberturaExtension
@@ -23,7 +22,6 @@ import org.codehaus.griffon.gradle.tasks.GenerateBomTask
 import org.gradle.BuildAdapter
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.Task
 import org.gradle.api.invocation.Gradle
 
 class GriffonBuildPlugin implements Plugin<Project> {
