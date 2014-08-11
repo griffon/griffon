@@ -26,6 +26,8 @@ griffon {
     toolkit = 'javafx'
 }
 
+mainClassName = '${project_package}.Launcher'
+
 apply from: 'gradle/publishing.gradle'
 apply from: 'gradle/code-coverage.gradle'
 apply from: 'gradle/code-quality.gradle'
@@ -35,8 +37,6 @@ apply from: 'gradle/docs.gradle'
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'org.kordamp.gradle.stats'
 apply plugin: 'com.github.ben-manes.versions'
-
-mainClassName = '${project_package}.Launcher'
 
 javafx {
     mainClass = mainClassName
