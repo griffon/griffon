@@ -9,6 +9,11 @@ import static org.junit.Assert.fail
 
 @TestFor(${project_class_name}Controller)
 class ${project_class_name}ControllerTest {
+    static {
+        // force initialization JavaFX Toolkit
+        new javafx.embed.swing.JFXPanel()
+    }
+
     private ${project_class_name}Controller controller
 
     @Rule
