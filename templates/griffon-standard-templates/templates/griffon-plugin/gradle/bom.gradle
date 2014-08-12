@@ -17,10 +17,12 @@ publishToMavenLocal.dependsOn generateBom
 
 gradle.taskGraph.whenReady { g ->
     def generatePom = gradle.taskGraph.allTasks.find { it.name == 'generatePomFileForMavenBomPublication' }
+    def publicationExt = project.extensions.findByType(PublishingExtension)
+    def pub = publicationExt.publications.findByName('mavenBom')
     generatePom?.doLast {
         copy {
-            into project.file("${buildDir}/publications/mavenBom")
-            from generateBom.outputDir
+            into pub.asNormalisedPublication().pomFile.parentFile
+            from generateBom.outputFile
             rename generateBom.outputFile.name, 'pom-default.xml'
         }
     }

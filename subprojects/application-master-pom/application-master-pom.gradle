@@ -35,9 +35,11 @@ publishToMavenLocal.dependsOn copyPom
 
 gradle.taskGraph.whenReady { g ->
     def generatePom = gradle.taskGraph.allTasks.find { it.name == 'generatePomFileForMavenPomPublication' }
+    def publicationExt = project.extensions.findByType(PublishingExtension)
+    def pub = publicationExt.publications.findByName('mavenPom')
     generatePom?.doLast {
         copy {
-            into project.file("${buildDir}/publications/mavenPom")
+            into pub.asNormalisedPublication().pomFile.parentFile
             from copyPom.destinationDir
             rename 'master-pom.xml', 'pom-default.xml'
         }
