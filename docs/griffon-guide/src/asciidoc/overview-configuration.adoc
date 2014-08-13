@@ -8,7 +8,7 @@ one off, it is best to get it out the way.
 
 == Basic Configuration
 
-For general configuration Griffon provides a file called +griffon-app/conf/Config.groovy+.
+For general configuration Griffon provides a file called `griffon-app/conf/Config.groovy`.
 This file uses Groovy's ConfigSlurper which is very similar to Java properties files
 except it is pure Groovy hence you can re-use variables and use proper Java types!
 
@@ -41,25 +41,25 @@ mvcGroups.sample.view = sample.swing.groovy.SampleView
 mvcGroups.sample.controller = sample.swing.groovy.SampleController
 ----
 
-Take special note that this file must be placed under +griffon-app/resources+ instead.
+Take special note that this file must be placed under `griffon-app/resources` instead.
 
-The application's runtime configuration is available through the +configuration+ property
+The application's runtime configuration is available through the `configuration` property
 of the application instance.
 
 == Internationalization Support
 
 Configuration files are i18n aware which means you can append
-locale specific strings to a configuration file, for example +Config_de_CH.groovy+.
+locale specific strings to a configuration file, for example `Config_de_CH.groovy`.
 Locale suffixes are resolved from least to most specific; for a locale with
-language = \'de\', country = \'CH\' and variant = \'Basel\' the following files are loaded in order
+`language = 'de'`, `country = 'CH'` and `variant = 'Basel'` the following files are loaded in order
 
- * +Config.groovy+
- * +Config.properties+
- * +Config_de.groovy+
- * +Config_de.properties+
- * +Config_de_CH.groovy+
- * +Config_de_CH.properties+
- * +Config_de_CH_Basel.groovy+
- * +Config_de_CH_Basel.properties+
+ * `Config.groovy`
+ * `Config.properties`
+ * `Config_de.groovy`
+ * `Config_de.properties`
+ * `Config_de_CH.groovy`
+ * `Config_de_CH.properties`
+ * `Config_de_CH_Basel.groovy`
+ * `Config_de_CH_Basel.properties`
 
-The current +java.util.Locale+ is used to determine values for language, country and variant.
+The current `java.util.Locale` is used to determine values for language, country and variant.

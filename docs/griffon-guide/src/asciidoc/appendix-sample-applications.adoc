@@ -7,7 +7,7 @@ This appendix showcases the same application implemented with different language
 and different UI toolkits. The application presents a very simple form where a user
 is asked for his or her name. Once a button is clicked a reply will appear within
 the same window. In order to achieve this Models hold 2 observable properties: the
-first to keep track of the +input+, the second to do the same for the +output+.
+first to keep track of the `input`, the second to do the same for the `output`.
 Views are only concerned with values coming from the model and as such never
 interact directly with Controllers. Controllers in turn only interact with Models
 and a Service used to transform the input value into the output value. The single
@@ -44,7 +44,7 @@ we'll show the Java version of an artifact, then we'll show it's Groovy counterp
 
 Instances of +{link_griffon_model}+ implement the +{link_observable}+ interface which
 means they know how to handle observable properties out of the box. We only need to be
-concerned in triggering a +java.beans.PropertyChangeEvent+ when a property changes value.
+concerned in triggering a `java.beans.PropertyChangeEvent` when a property changes value.
 
 .sample-swing-java/griffon-app/models/sample/swing/java/SampleModel.java
 [source,java,linenums,options="nowrap"]
@@ -53,7 +53,7 @@ include::{sample-swing-java}/griffon-app/models/sample/swing/java/SampleModel.ja
 ----
 <1> Define a private field for the property
 <2> Property accessor
-<3> Property mutator must fire a +PropertyChangeEvent+
+<3> Property mutator must fire a `PropertyChangeEvent`
 
 The code is quite straight forward, there's nothing much to see here other than making
 sure to follow the rules for creating observable properties. The Groovy version sports
@@ -82,7 +82,7 @@ to what we showed in the Java version.
 Controllers provide actions that are used to fill up the application's interaction.
 They usually manipulate values coming from Views via Model properties. Controllers may
 rely on additional components, such as Services, to do they work. This is exactly our
-case as there's a +SampleService+ instance injected into our controllers.
+case as there's a `SampleService` instance injected into our controllers.
 
 .sample-swing-java/griffon-app/controllers/sample/swing/java/SampleController.java
 [source,java,linenums,options="nowrap"]
@@ -95,7 +95,7 @@ include::{sample-swing-java}/griffon-app/controllers/sample/swing/java/SampleCon
 <4> Get back inside the UI thread
 
 Of particular note is the fact that actions are always executed outside off the UI thread
-unless otherwise configured with an +@Threading+ annotation. Once we have computed the right
+unless otherwise configured with an `@Threading` annotation. Once we have computed the right
 output we must inform the View of the new value. This is done by updating the model
 inside the UI thread [conum,data-value=4]_4_.
 
@@ -164,10 +164,10 @@ include::{sample-swing-groovy}/griffon-app/views/sample/swing/groovy/SampleView.
 <4> Hook in controller action by name
 
 The Groovy version is again much terser thanks to the http://groovy.codehaus.org/Swing\+Builder[SwingBuilder DSL].
-Notice how easy it's to bind [conum,data-value=3]_3_ model properties using the +bind+ node.
+Notice how easy it's to bind [conum,data-value=3]_3_ model properties using the `bind` node.
 The controller action is also transformed into an UI toolkit specific action however
 this time it's easier to grab: by convention all controller actions are exposed as variables
-to the corresponding +builder+.
+to the corresponding `builder`.
 
 === Resources
 
@@ -199,9 +199,9 @@ include::{sample-javafx-java}/griffon-app/models/sample/javafx/java/SampleModel.
 ----
 <1> Define a private field for the property
 <2> Property accessor
-<3> Pass-thru values to +Property+
+<3> Pass-thru values to `Property`
 
-The Model makes use of JavaFX's observable properties .These properties are roughly
+The Model makes use of JavaFX's observable properties. These properties are roughly
 equivalent in behavior to the ones we saw back in the <<_swing,Swing>> example, however
 they provide much more behavior than that; values may be cached automatically for
 example, avoiding bindings to be updated needlessly.
@@ -214,8 +214,8 @@ include::{sample-javafx-groovy}/griffon-app/models/sample/javafx/groovy/SampleMo
 ----
 <1> Observable property
 
-Similarly to +@Observable+ we find that Groovy based JavaFX models can use another AST
-transformation named +@FXObservable+. This transformation generates equivalent byte code
+Similarly to `@Observable` we find that Groovy based JavaFX models can use another AST
+transformation named `@FXObservable`. This transformation generates equivalent byte code
 to the Java based Model we saw earlier.
 
 === Controller
@@ -249,8 +249,8 @@ include::{sample-javafx-groovy}/griffon-app/controllers/sample/javafx/groovy/Sam
 <4> Get back inside the UI thread
 
 Opposed to its Swing counterpart here we have to add an explicit threading block when
-updating model properties. This is because the +bind+ node for JavaFX components is not
-aware of the same rules than the +bind+ node for Swing components. Nevertheless the
+updating model properties. This is because the `bind` node for JavaFX components is not
+aware of the same rules than the `bind` node for Swing components. Nevertheless the
 code remains short and to the point.
 
 === Service
@@ -286,8 +286,8 @@ include::{sample-javafx-java}/griffon-app/views/sample/javafx/java/SampleView.ja
 <3> Injected by FXMLLoader
 <4> Hook actions by convention
 
-+FXMLLoader+ can inject components to an instance as long as that instance exposes
-fields annotated with +@FXML+; fields names must match component ids [conum,data-value=2]_2_
+`FXMLLoader` can inject components to an instance as long as that instance exposes
+fields annotated with `@FXML`; fields names must match component ids [conum,data-value=2]_2_
 as defined in the fxml file, which is shown next:
 
 .sample-javafx-java/griffon-app/resources/sample/javafx/java/sample.fxml
@@ -298,14 +298,14 @@ include::{sample-javafx-java}/griffon-app/resources/sample/javafx/java/sample.fx
 ----
 <1> Naming convention for automatic action binding
 
-Please pay special attention to the +fx:id+ given to the button. Griffon applies a naming
+Please pay special attention to the `fx:id` given to the button. Griffon applies a naming
 convention to match controller actions to JavaFX components that can handle said actions.
 Let's review what we have here:
 
- - +SampleController+ exposes an action named +sayHello+
- - the button has an +fx:id+ value of +sayHelloActionTarget+
+ - `SampleController` exposes an action named `sayHello`
+ - the button has an `fx:id` value of `sayHelloActionTarget`
 
-Given this we infer that the +fx:id+ value must be of the form +<actionName>ActionTarget+.
+Given this we infer that the `fx:id` value must be of the form `<actionName>ActionTarget`.
 The naming convention is one of two steps, you must also connect the controller using
 a helper method [conum,data-value=4]_4_ as shown in the View.
 
@@ -354,7 +354,7 @@ include::{sample-lanterna-java}/griffon-app/models/sample/lanterna/java/SampleMo
 ----
 <1> Define a private field for the property
 <2> Property accessor
-<3> Property mutator must fire a +PropertyChangeEvent+
+<3> Property mutator must fire a `PropertyChangeEvent`
 
 For reasons we'll see in the Groovy View and Controller we decided to skip a Model
 for the Groovy version. This also demonstrates that even though and MVC group is the
@@ -370,8 +370,8 @@ include::{sample-lanterna-groovy}/griffon-app/conf/sample/lanterna/groovy/Config
 === Controller
 
 We find that for the Java version the Controler it's identical to the <<_swing,Swing>>
-and <<_javafx, JavaFX>> versions. For the Groovy one we notice that both +input+
-and +output+ view components are accessed directly. We know we've said in the past
+and <<_javafx, JavaFX>> versions. For the Groovy one we notice that both `input`
+and `output` view components are accessed directly. We know we've said in the past
 that a Controller should never do this but because Lanterna exposes no bind mechanism
 the Groovy binding implementation would look as verbose as the Java version; we
 decided to take a shortcut for demonstrations purposes.
@@ -419,8 +419,8 @@ We'd expect the View to follow the same pattern we've seen in the previous examp
 that is, create two components that will be bound to model properties and a button
 that's connected to a Controller action. Here we see that the Java version is rather
 verbose due to the fact that Lanterna has no observable UI components. This is the
-reason for which we must explicitly mode the value of the +input+ component into
-the +input+ Model property as soon as the button is clicked.
+reason for which we must explicitly mode the value of the `input` component into
+the `input` Model property as soon as the button is clicked.
 
 .sample-lanterna-java/griffon-app/views/sample/lanterna/java/SampleView.java
 [source,java,linenums,options="nowrap"]
@@ -432,8 +432,8 @@ include::{sample-lanterna-java}/griffon-app/views/sample/lanterna/java/SampleVie
 <3> Apply component-to-model binding
 <4> Hook actions by convention
 
-Fortunately we can rely on the observable +output+ Model property to write back the
-value to the +output+ component as soon as said property gets updated.
+Fortunately we can rely on the observable `output` Model property to write back the
+value to the `output` component as soon as said property gets updated.
 
 .sample-lanterna-groovy/griffon-app/views/sample/lanterna/groovy/SampleView.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -477,7 +477,7 @@ include::{sample-pivot-java}/griffon-app/models/sample/pivot/java/SampleModel.ja
 ----
 <1> Define a private field for the property
 <2> Property accessor
-<3> Property mutator must fire a +PropertyChangeEvent+
+<3> Property mutator must fire a `PropertyChangeEvent`
 
 === Controller
 
@@ -524,7 +524,7 @@ include::{sample-pivot-groovy}/griffon-app/services/sample/pivot/groovy/SampleSe
 
 If you squint your eyes you'll see that the View is almost identical to the <<_swing,Swing>>
 and <<_lanterna,Lanterna>> Views. Besides using toolkit specific components we notice
-that both +input+ and +output+ Model properties have to be explicitly bound using
+that both `input` and `output` Model properties have to be explicitly bound using
 the native support exposed by the toolkit.
 
 .sample-pivot-java/griffon-app/views/sample/pivot/java/SampleView.java

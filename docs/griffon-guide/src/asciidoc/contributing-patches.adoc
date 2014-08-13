@@ -26,19 +26,19 @@ on. For example, as soon as you fork a repository and clone the fork locally, ex
 $ git checkout -b mine
 ----
 
-This will create a new local branch called +mine+ based off the +master+ branch.
-Of course, you can name the branch whatever you like - you don't have to use +mine+.
+This will create a new local branch called `mine` based off the `master` branch.
+Of course, you can name the branch whatever you like - you don't have to use `mine`.
 
 [discrete]
-=== Create JIRAs for non-trivial changes
+=== Create an Issue for non-trivial changes
 
-For any non-trivial changes, raise a JIRA issue if one doesn't already exist. That
+For any non-trivial changes, raise an issue if one doesn't already exist. That
 helps us keep track of what changes go into each new version of Griffon.
 
 [discrete]
-=== Include JIRA issue ID in commit messages
+=== Include Issue ID in commit messages
 
-This may not seem particularly important, but having a JIRA issue ID in a commit
+This may not seem particularly important, but having an issue ID in a commit
 message means that we can find out at a later date why a change was made. Include
 the ID in any and all commits that relate to that issue. If a commit isn't related
 to an issue, then there's no need to include an issue ID.
@@ -49,9 +49,9 @@ to an issue, then there's no need to include an issue ID.
 Since the core developers must merge your commits into the main repository, it makes
 life much easier if your fork on GitHub is up to date before you send a pull request.
 
-Let's say you have the main repository set up as a remote called +upstream+ and you
-want to submit a pull request. Also, all your changes are currently on the local +mine+
-branch but not on +master+. The first step involves pulling any changes from the main
+Let's say you have the main repository set up as a remote called `upstream` and you
+want to submit a pull request. Also, all your changes are currently on the local `mine`
+branch but not on `master`. The first step involves pulling any changes from the main
 repository that have been added since you last fetched and merged:
 
 [source]
@@ -98,3 +98,4 @@ A pull request can contain any number of commits and it may be related to any nu
 of issues. In the pull request message, please specify the IDs of all issues that
 the request relates to. Also give a brief description of the work you have done,
 such as: "I refactored the resources injector and added support for custom number editors (GRIFFON-xxxx)".
+

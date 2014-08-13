@@ -2,7 +2,7 @@
 [[_resources_resource_resolver_transformation]]
 = The @ResourceResolverAware AST Transformation
 
-Any component may gain the ability to resolve resources through a +ResourceResolver+
+Any component may gain the ability to resolve resources through a `ResourceResolver`
 instance. You only need annotate the class with +{link_resource_resolver_aware}+
 and it will automatically gain all methods exposed by +{link_resource_resolver}+.
 
@@ -33,8 +33,8 @@ class SampleService {
 }
 ----
 
-The application's +ResourceResolver+ will be injected to annotated beans if no name is
-specified as an argument to +ResourceResolverAware+. You may define multiple +ResourceResolver+
+The application's `ResourceResolver` will be injected to annotated beans if no name is
+specified as an argument to `ResourceResolverAware`. You may define multiple `ResourceResolver`
 bindings as long as you qualify them with a distinct name, such as
 
 [source,java,linenums,options="nowrap"]

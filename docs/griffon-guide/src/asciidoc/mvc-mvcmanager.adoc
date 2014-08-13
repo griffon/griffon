@@ -3,11 +3,11 @@
 = The MVCGroupManager
 
 This class is responsible for holding the configuration of all MVC groups no matter
-how they were defined, which can be either in +Config.groovy+ or in an <<_addon, addon>> descriptor.
+how they were defined, which can be either in `Config.groovy` or in an <<_addon, addon>> descriptor.
 
 During the startup sequence an instance of +{link_mvc_group_manager}+ will be created
 and initialized. Later the application will instruct this instance to create all startup
-groups as required. +MVCGroupManager+ has a handful set of methods that deal with
+groups as required. `MVCGroupManager` has a handful set of methods that deal with
 MVC group configuration alone; however those that deal with group instantiation come
 in 3 versions, with 2 flavors each (one Groovy, the other Java friendly).
 
@@ -19,7 +19,7 @@ MVCGroupConfiguration configuration = application.mvcGroupManager.findConfigurat
 ----
 
 Once you have a configuration reference you can instantiate a group with it by calling
-any of the variants of the +create+ method
+any of the variants of the `create` method
 
 [source,groovy,options="nowrap"]
 ----
@@ -32,8 +32,8 @@ MVCGroup group4 = configuration.create(someKey: 'someValue')
 ----
 
 Be aware that creating groups with the same name is usually not a good idea. The
-default +MVCGroupManager+ will complain when this happens and will automatically spit
-out an exception. This behavior may be changed by setting a configuration key in +Config.groovy+
+default `MVCGroupManager` will complain when this happens and will automatically spit
+out an exception. This behavior may be changed by setting a configuration key in `Config.groovy`
 
 [source,groovy,options="nowrap"]
 ----
@@ -50,7 +50,7 @@ methods. Any class annotated with the <<_mvc_mvcaware_transformation,@griffon.tr
 will also gain access to these methods.
 
 Groups will be available by id regardless of how they were instantiated. You can ask
-the +MVCGroupManager+ for a particular group at any time, for example
+the `MVCGroupManager` for a particular group at any time, for example
 
 [source,groovy,options="nowrap"]
 ----

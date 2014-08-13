@@ -13,7 +13,7 @@ The simplest way is to pass in new values as part of the arguments map that
 MVCGroup group = application.mvcGroupManager.buildMVCGroup('foo', [key: 'foo'])
 ----
 
-However is you wish to use the special +config+ key that every MVC group configuratio
+However is you wish to use the special `config` key that every MVC group configuratio
  may have then you must instantiate the group in the following way
 
 [source,groovy,options="nowrap"]
@@ -23,12 +23,12 @@ MVCGroupConfiguration configuration = application.mvcGroupManager
 MVCGroup group = configuration.create()
 ----
 
-Note that you can still send custom arguments to the +create()+ method.
+Note that you can still send custom arguments to the `create()` method.
 
 [[_mvc_configuring_mvc_groups]]
 == Configuring MVC groups
 
-The following options are available to all MVC groups as long as you use the +config+ key.
+The following options are available to all MVC groups as long as you use the `config` key.
 
 === Disabling Lifecycle Events
 
@@ -91,7 +91,7 @@ The following events will be disabled with this setting:
 
 === Disabling Destruction Events
 
-This is the counterpart of the +NewInstance+ event. Skipping publication of this event
+This is the counterpart of the `NewInstance` event. Skipping publication of this event
 may result in a slight increase of speed when a group or any artifact instance is destroyed.
 Use the following configuration to gain this effect:
 

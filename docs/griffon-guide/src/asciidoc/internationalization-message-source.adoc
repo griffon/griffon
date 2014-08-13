@@ -15,11 +15,11 @@ the behavior exposed by +{link_message_source}+. This interface exposes the foll
  - String getMessage(String key, Map args, Locale locale)
  - Object resolveMessageValue(String key, Locale locale)
 
-The first set throws +NoSuchMessageException+ if a message could not be resolved given
-the key sent as argument. The following methods take and additional +defaultMessage+ 
+The first set throws `NoSuchMessageException` if a message could not be resolved given
+the key sent as argument. The following methods take and additional `defaultMessage`
 parameter that may be used if no configured message is found. If this optional parameter
-were to be null then the +key+ is used as the message; in other words, these methods
-never throw +NoSuchMessageException+ nor return +null+ unless the passed in +key+ is null.
+were to be null then the `key` is used as the message; in other words, these methods
+never throw `NoSuchMessageException` nor return `null` unless the passed in `key` is null.
 
  - String getMessage(String key, String defaultMessage)
  - String getMessage(String key, Locale locale, String defaultMessage)
@@ -37,8 +37,8 @@ The simplest way to resolve a message thus results like this
 getApplication().getMessageSource().getMessage('some.key')
 ----
 
-The set of methods that take a +List+ as arguments are meant to be used from Groovy
-code whereas those that take an +Object[]+ are meant for Java code; this leads to
+The set of methods that take a `List` as arguments are meant to be used from Groovy
+code whereas those that take an `Object[]` are meant for Java code; this leads to
 better idiomatic code as the following examples reveal
 
 [source,groovy,options="nowrap"]
@@ -53,7 +53,7 @@ getApplication().getMessageSource()
                 .getMessage("java.message", new Object[]{"unicorns", "rainbows"});
 ----
 
-Of course you may also use +List+ versions in Java, like this
+Of course you may also use `List` versions in Java, like this
 
 [source,java,options="nowrap"]
 ----
@@ -71,9 +71,9 @@ either properties files or Groovy scripts, please refer to the
 === Standard Format
 
 The first set of message formats are those supported by the JDK's
-+http://docs.oracle.com/javase/6/docs/api/java/text/MessageFormat.html[MessageFormat]+
-facilities. These formats work with all versions of the +getMessage()+ method that
-take a +List+ or an +Object[]+ as arguments. Examples follow. First the messages
+`http://docs.oracle.com/javase/6/docs/api/java/text/MessageFormat.html[MessageFormat]`
+facilities. These formats work with all versions of the `getMessage()` method that
+take a `List` or an `Object[]` as arguments. Examples follow. First the messages
 stored in a properties file
 
 [source,java,linenums,options="nowrap"]
@@ -100,7 +100,7 @@ assertEquals(quote, "Fear is the path to the dark side. Fear leads to Anger. Ang
 
 === Map Format
 
-The following format is non-standard (i.e, not supported by +MessageFormat+) and can
+The following format is non-standard (i.e, not supported by `MessageFormat`) and can
 only be resolved by Griffon. This format uses symbols instead of numbers as placeholders
 for arguments. Thus the previous messages can be rewritten as follows
 
@@ -154,7 +154,7 @@ warning.label = { args ->
 == Reference Keys
 
 There may be times where you would want to have a 2 keys reference the same value,
-as if one key were an alias for the other. +MessageSource+ supports the notion of
+as if one key were an alias for the other. `MessageSource` supports the notion of
 referenced keys for this matter. In order to achieve this, the value of the alias
 key must define the aliased key with a special format, for example
 

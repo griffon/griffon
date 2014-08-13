@@ -21,7 +21,7 @@ $ gvm install lazybones
 ----
 
 Next, add the official Griffon Lazybones templates repository to your Lazybones
-configuration. Edit +$USER_HOME/.lazybones/config.groovy+ and paste the following
+configuration. Edit `$USER_HOME/.lazybones/config.groovy` and paste the following
 content
 
 .$USER_HOME/.lazybones/config.groovy
@@ -104,18 +104,18 @@ by Griffon.
 
 Here is a breakdown and links to relevant sections:
 
- * +griffon-app+ - top level directory for Groovy sources.
- ** +conf+ - <<_overview_configuration,Configuration sources>>.
- ** +models+ - <<_models,Models>>.
- ** +views+ - <<_views,Views>>.
- ** +controllers+ - <<_controllers,Controllers>>.
- ** +services+ - <<_services,Services>>.
- ** +resources+ - <<_resources,Images, properties files, etc>>.
- ** +i18n+ - <<_internationalization,Support for internationalization (i18n)>>.
- * +src+ - Supporting sources.
- ** +main+ - Other Groovy/Java sources.
- * +test+ - <<_testing,Unit tests>>.
- * +integration-test+ - <<_testing,Integration tests>>.
+ * `griffon-app` - top level directory for Groovy sources.
+ ** `conf` - <<_overview_configuration,Configuration sources>>.
+ ** `models` - <<_models,Models>>.
+ ** `views` - <<_views,Views>>.
+ ** `controllers` - <<_controllers,Controllers>>.
+ ** `services` - <<_services,Services>>.
+ ** `resources` - <<_resources,Images, properties files, etc>>.
+ ** `i18n` - <<_internationalization,Support for internationalization (i18n)>>.
+ * `src` - Supporting sources.
+ ** `main` - Other Groovy/Java sources.
+ * `test` - <<_testing,Unit tests>>.
+ * `integration-test` - <<_testing,Integration tests>>.
 
 Here's an screenshot of the finished application running to give you an idea of what
 we're aiming at with this example . A small Groovy script has been executed, you
@@ -142,7 +142,7 @@ Alright, let's get started with the code. We'll visit the Model first.
 
 The model for this application is simple: it contains properties that hold the script to be
 evaluated and the results of the evaluation. Make sure you paste the following code into
-+griffon-app/models/console/ConsoleModel.groovy+.
+`griffon-app/models/console/ConsoleModel.groovy`.
 
 .griffon-app/models/console/ConsoleModel.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -159,9 +159,9 @@ to presentation models, and as such, they're used to transfer data between Views
 [[_getting_started_console_example_controller]]
 === Controller
 
-The controller is also trivial: throw the contents of the script from the model at an +Evaluator+,
+The controller is also trivial: throw the contents of the script from the model at an `Evaluator`,
 then store the result back into the model. Make sure you paste the following code into
-+griffon-app/controllers/console/ConsoleController.groovy+.
+`griffon-app/controllers/console/ConsoleController.groovy`.
 
 .griffon-app/controllers/console/ConsoleController.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -175,12 +175,12 @@ include::{console-swing-groovy}/griffon-app/controllers/console/ConsoleControlle
 <5> Write back result to Model
 
 The Griffon framework will inject references to the other portions of the MVC triad if fields
-named +model+, +view+, and +controller+ are present in the Model, Controller or View. This allows
+named `model`, `view`, and `controller` are present in the Model, Controller or View. This allows
 us to access the view widgets and the model data if needed. Any other class members annotated with
-+@javax.inject.Inject+ participate in dependency injection as laid out by JSR 330, in this case the
-controller will get an instance of +Evaluator+ if a suitable implementation is bound.
+`@javax.inject.Inject` participate in dependency injection as laid out by JSR 330, in this case the
+controller will get an instance of `Evaluator` if a suitable implementation is bound.
 
-The +executeScript+ [conum,data-value=3]_3_ method will be used later in the View in combination
+The `executeScript` [conum,data-value=3]_3_ method will be used later in the View in combination
 with a button. You may notice that there's no explicit threading management. All Swing developers
 know they must obey the Swing Rule: long running computations must run outside of the EDT; all UI
 components should be queried/modified inside the EDT. It turns out Griffon is aware of this rule,
@@ -188,7 +188,7 @@ making sure an action is called outside of the EDT by default; all bindings made
 via the model will be updated inside the EDT [conum,data-value=5]_5_. We'll setup the bindings in
 the next listing.
 
-We must create a +{link_module}+ in order to bind +Evaluator+.
+We must create a +{link_module}+ in order to bind `Evaluator`.
 These are the required class definitions
 
 .src/main/groovy/console/Evaluator.groovy
@@ -210,13 +210,13 @@ include::{console-swing-groovy}/src/main/groovy/console/ApplicationModule.groovy
 ----
 <1> Binding definition
 <2> Overriding an existing binding
-<3> Loaded after +swing+ module
+<3> Loaded after `swing` module
 
 Modules can define several bindings, even override existing bindings. In our particular
-case we defined a binding [conum,data-value=1]_1_ for +Evaluator+ and overrode a
-binding [conum,data-value=2]_2_ for +SwingWindowDisplayHandler+. The latter is
-supplied by the +swing+ module thus we must mark it as a dependency [conum,data-value=3]_3_
-in our module definition. The implementation of our custom +SwingWindowDisplayHandler+
+case we defined a binding [conum,data-value=1]_1_ for `Evaluator` and overrode a
+binding [conum,data-value=2]_2_ for `SwingWindowDisplayHandler`. The latter is
+supplied by the `swing` module thus we must mark it as a dependency [conum,data-value=3]_3_
+in our module definition. The implementation of our custom `SwingWindowDisplayHandler`
 is quite trivial, as shown by the following snippet
 
 .src/main/groovy/console/CenteringWindowDisplayHandler.groovy
@@ -231,7 +231,7 @@ This handler is only concerned with centering the window on the screen before sh
 === View
 
 The view classes contain the visual components for your application. Please paste the following code
-into +griffon-app/views/console/ConsoleView.groovy+.
+into `griffon-app/views/console/ConsoleView.groovy`.
 
 .griffon-app/views/console/ConsoleView.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -249,16 +249,16 @@ scripts in context of it's +{link_composite_builder}+.
 
 == Running the application
 
-Running the application requires you to execute the +run+ task if using Gradle
+Running the application requires you to execute the `run` task if using Gradle
 
 [source]
 ----
 $ ./gradlew run
 ----
 
-Or the +exec:java+ plugin goal if using Maven. Take special note that this goal assumes classes
-have been compiled already, so it's best to pair it up with +compile+ for safe measure. Or better
-yet, use the pre-configured +run+ profile, like so
+Or the `exec:java` plugin goal if using Maven. Take special note that this goal assumes classes
+have been compiled already, so it's best to pair it up with `compile` for safe measure. Or better
+yet, use the pre-configured `run` profile, like so
 
 [source]
 ----
@@ -272,9 +272,9 @@ to testing.
 == Testing
 
 It's always a good idea to test out the code we write. It's pretty easy to write tests for
-regular components such as +Evaluator+ and +GroovyShellEvaluator+, as they require little
+regular components such as `Evaluator` and `GroovyShellEvaluator`, as they require little
 to no external dependencies. Testing Griffon artifacts such as Controllers and Models on the
-other hand requires a bit more of effort, but not much as shown by +ConsoleControllerTest+
+other hand requires a bit more of effort, but not much as shown by `ConsoleControllerTest`
 
 .src/test/groovy/console/ConsoleControllerTest.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -282,23 +282,23 @@ other hand requires a bit more of effort, but not much as shown by +ConsoleContr
 include::{console-swing-groovy}/src/test/groovy/console/ConsoleControllerTest.groovy[lines=16..-1]
 ----
 <1> Indicate class under test
-<2> Injected by +GriffonUnitRule+ given [conum,data-value=1]_1_
-<3> Injected by +GriffonUnitRule+ via JSR 330
-<4> Instantiates and configures a +GriffonAplication+ for testing
+<2> Injected by `GriffonUnitRule` given [conum,data-value=1]_1_
+<3> Injected by `GriffonUnitRule` via JSR 330
+<4> Instantiates and configures a `GriffonAplication` for testing
 <5> Setup collaborators
 <6> Stimulus
 <7> Validate after waiting 2 seconds at most
 
-At the heart we have the +@TestFor+ [conum,data-value=1]_1_ annotation and a JUnit4 rule:
-+@GriffonUnitRule+ [conum,data-value=4]_4_. These two key elements are responsible for
-injecting the required behavior to the test case. +@TestFor+ identifies the type of component,
+At the heart we have the `@TestFor` [conum,data-value=1]_1_ annotation and a JUnit4 rule:
+`@GriffonUnitRule` [conum,data-value=4]_4_. These two key elements are responsible for
+injecting the required behavior to the test case. `@TestFor` identifies the type of component,
 a Controller in this case, that's under test; it assumes a suitable private field [conum,data-value=2]_2_
 to be defined in the testcase. This field is used to inject the instance under test.
-The +GriffonUnitRule+ is responsible for bootstrapping a barebones application and putting
+The `GriffonUnitRule` is responsible for bootstrapping a barebones application and putting
 together all the required bindings. Notice that the test case can participate in dependency
 injection too [conum,data-value=3]_3_.
 
-Running tests requires executing the +test+ task
+Running tests requires executing the `test` task
 
 [source]
 ----

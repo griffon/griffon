@@ -10,17 +10,17 @@ for instantiating, configuring and keeping references to all actions per control
 It will automatically harvest all action candidates from a Controller once it has been
 instantiated. Each action has all of its properties configured following this strategy:
 
- * match +<controller.class.name>+.action.+<action.name>+.+<key>+
- * match application.action.+<action.name>+.+<key>+
+ * match `<controller.class.name>`.action.`<action.name>`.`<key>`
+ * match application.action.`<action.name>`.`<key>`
 
-+<action.name>+ should be properly capitalized. In other words, you can configure action
+`<action.name>` should be properly capitalized. In other words, you can configure action
 properties specifically per Controller or application wide. Available keys are
 
 .Swing
 [cols="3*", options="header"]
 |===
 | Key               | Type    | Default Value
-| name              | String  | Natural name minus the +Action+ suffix
+| name              | String  | Natural name minus the `Action` suffix
 | accelerator       | String  | undefined
 | long_description  | String  | undefined
 | short_description | String  | undefined
@@ -35,7 +35,7 @@ properties specifically per Controller or application wide. Available keys are
 [cols="3*", options="header"]
 |===
 | Key               | Type    | Default Value
-| name              | String  | Natural name minus the +Action+ suffix
+| name              | String  | Natural name minus the `Action` suffix
 | accelerator       | String  | undefined
 | long_description  | String  | undefined
 | short_description | String  | undefined
@@ -50,7 +50,7 @@ properties specifically per Controller or application wide. Available keys are
 [cols="3*", options="header"]
 |===
 | Key         | Type    | Default Value
-| name        | String  | Natural name minus the +Action+ suffix
+| name        | String  | Natural name minus the `Action` suffix
 | description | String  | undefined
 | enabled     | boolean | true
 |===
@@ -59,7 +59,7 @@ properties specifically per Controller or application wide. Available keys are
 [cols="3*", options="header"]
 |===
 | Key               | Type    | Default Value
-| name              | String  | Natural name minus the +Action+ suffix
+| name              | String  | Natural name minus the `Action` suffix
 |===
 
 Icon keys should point to an URL available in the classpath.
@@ -68,7 +68,7 @@ Values must be placed in resources files following the <<_resources,internationa
 
 == Configuration Examples
 
-The following Controller defines 2 actions, one of them uses the +Action+ suffix because its name clashes
+The following Controller defines 2 actions, one of them uses the `Action` suffix because its name clashes
 with a known Java keyword.
 
 [source,groovy,linenums,options="nowrap"]
@@ -88,10 +88,10 @@ class SampleController {
 
 The +{link_action_manager}+ will generate and configure the following actions:
 
- * +newAction+
- * +closeAction+
+ * `newAction`
+ * `closeAction`
 
-The following keys are expected to be available in the application's i18n resources (i.e. +griffon-app/i18n/messages.properties+)
+The following keys are expected to be available in the application's i18n resources (i.e. `griffon-app/i18n/messages.properties`)
 
 [source,java,linenums,options="nowrap"]
 ----
@@ -103,7 +103,7 @@ sample.SampleController.action.Delete.name = Delete
 ----
 
 In the case that you'd like the close action to be customized for all controllers, say using
-the Spanish language, then you'll have to provide a file named +griffon-app/i18n/messages_es.properties+
+the Spanish language, then you'll have to provide a file named `griffon-app/i18n/messages_es.properties`
 with the following keys
 
 [source,java,linenums,options="nowrap"]

@@ -15,12 +15,12 @@ the behavior exposed by +{link_resource_resolver}+. This interface exposes the f
  - Object resolveResource(String key, Map args, Locale locale)
  - Object resolveResorceValue(String key, Locale locale)
 
-The first set throws +NoSuchResourceException+ if a message could not be resolved given
-the key sent as argument. The following methods take and additional +defaultValue+ 
+The first set throws `NoSuchResourceException` if a message could not be resolved given
+the key sent as argument. The following methods take and additional `defaultValue`
 parameter that may be used if no configured resource is found. If this optional parameter
-were to be null then the +key+ is used as the literal value of the resource; in other words,
-these methods never throw +NoSuchResourceException+ nor return +null+ unless the passed
-in +key+ is null.
+were to be null then the `key` is used as the literal value of the resource; in other words,
+these methods never throw `NoSuchResourceException` nor return `null` unless the passed
+in `key` is null.
 
  - Object resolveResource(String key, Object defaultValue)
  - Object resolveResource(String key, Locale locale, Object defaultValue)
@@ -38,8 +38,8 @@ The simplest way to resolve a message thus results like this
 getApplication().getResourceResolver().resolveResource('menu.icon')
 ----
 
-The set of methods that take a +List+ as arguments are meant to be used from Groovy
-code whereas those that take an +Object[]+ are meant for Java code; this leads to
+The set of methods that take a `List` as arguments are meant to be used from Groovy
+code whereas those that take an `Object[]` are meant for Java code; this leads to
 better idiomatic code as the following examples reveal
 
 [source,groovy,options="nowrap"]
@@ -54,7 +54,7 @@ getApplication().getResourceResolver()
                 .resolveResource("java.icon.resource", new Object[]{"large"});
 ----
 
-Of course you may also use +List+ versions in Java, like this
+Of course you may also use `List` versions in Java, like this
 
 [source,java,options="nowrap"]
 ----
@@ -72,9 +72,9 @@ either properties files or Groovy scripts, please refer to the
 === Standard Format
 
 The first set of resource formats are those supported by the JDK's
-+http://docs.oracle.com/javase/6/docs/api/java/text/MessageFormat.html[MessageFormat]+
-facilities. These formats work with all versions of the +resolveResource()+ method that
-take a +List+ or an +Object[]+ as arguments. Examples follow. First the resource
+`http://docs.oracle.com/javase/6/docs/api/java/text/MessageFormat.html[MessageFormat]`
+facilities. These formats work with all versions of the `resolveResource()` method that
+take a `List` or an `Object[]` as arguments. Examples follow. First the resource
 definitions stored in a properties file
 
 [source,java,linenums,options="nowrap"]
@@ -82,8 +82,8 @@ definitions stored in a properties file
 menu.icon = /img/icons/menu-{0}.png
 ----
 
-Assuming there are three icon files stored at +griffon-app/resources/img/icons+ whose
-filenames are +menu-small.png+, +menu-medium.png+ and +menu-large.png+, a component may
+Assuming there are three icon files stored at `griffon-app/resources/img/icons` whose
+filenames are `menu-small.png`, `menu-medium.png` and `menu-large.png`, a component may
 resolve any of them with
 
 [source,groovy,options="nowrap"]
@@ -94,7 +94,7 @@ Object icon = getApplication().getResourceResolver()
 
 === Map Format
 
-The following format is non-standard (i.e, not supported by +MessageFormat+) and can
+The following format is non-standard (i.e, not supported by `MessageFormat`) and can
 only be resolved by Griffon. This format uses symbols instead of numbers as placeholders
 for arguments. Thus the previous messages can be rewritten as follows
 
@@ -131,8 +131,8 @@ computed.instance = { x, y, w, h ->
 
 == Type Conversion
 
-Note that the return value of +resolveResource+ is marked as +Object+ but you'll get
-a +String+ from the first two formats. You'll have to rely on <<_resources_property_editors,property editors>>
+Note that the return value of `resolveResource` is marked as `Object` but you'll get
+a `String` from the first two formats. You'll have to rely on <<_resources_property_editors,property editors>>
 in order to transform the value into the correct type. <<_resources_injected_resources,Injected resources>>
 are automatically transformed to the expected type.
 
@@ -154,7 +154,7 @@ Icon icon = propertyEditor.getValue()
 == Reference Keys
 
 There may be times where you would want to have a 2 keys reference the same value,
-as if one key were an alias for the other. +ResourceResolver+ supports the notion of
+as if one key were an alias for the other. `ResourceResolver` supports the notion of
 referenced keys for this matter. In order to achieve this, the value of the alias
 key must define the aliased key with a special format, for example
 

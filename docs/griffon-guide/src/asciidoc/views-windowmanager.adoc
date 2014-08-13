@@ -2,14 +2,14 @@
 [[_views_windowmanager]]
 = The WindowManager
 
-Although the following API refers directly to +Swing+ in all examples it's possible to use
-the +{link_window_manager}+ with other toolkits such as +JavaFX+, +Pivot+ and +Lanterna+ as
+Although the following API refers directly to `Swing` in all examples it's possible to use
+the +{link_window_manager}+ with other toolkits such as `JavaFX`, `Pivot` and `Lanterna` as
 there are specific +{link_window_manager}+ implementations plus helper classes for those
 UI toolkits too.
 
 The +{link_window_manager}+ class is responsible for keeping track of all the windows
 managed by the application. It also controls how these windows are displayed (via a
-pair of methods: +show+, +hide+). +{link_window_manager}+ relies on an instance of
+pair of methods: `show`, `hide`). +{link_window_manager}+ relies on an instance of
 +{link_window_display_handler}+ to actually show or hide a window. The default implementation
 simple shows and hide windows directly, however you can change this behavior by setting
 a different implementation of +{link_window_display_handler}+ on the application instance.
@@ -17,7 +17,7 @@ a different implementation of +{link_window_display_handler}+ on the application
 [[_views_windowmanager_dsl]]
 == WindowManager DSL
 
-This configuration can be set in +griffon-app/conf/Config.groovy+ file, here is how it looks
+This configuration can be set in `griffon-app/conf/Config.groovy` file, here is how it looks
 
 .griffon-app/conf/Config.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -33,7 +33,7 @@ windowManager {
 }
 ----
 
-The name of each entry must match the value of the Window's +name:+ property (if supported)
+The name of each entry must match the value of the Window's `name:` property (if supported)
 or the name used to register the Window with the +{link_window_manager}+. Each entry may
 have any the following options
 
@@ -45,7 +45,7 @@ parameters: the name of the window and the window to be hidden.
 handler:: A custom +{link_window_display_handler}+ instance.
 
 NOTE: You must use +{link_callable_with_args}+ instead of closures if using the Java version
-of the +Config+ file.
+of the `Config` file.
 
 The first two options have priority over the third one. If one is missing then the
 +{link_window_manager}+ will invoke the default behavior. There is one last option
@@ -82,7 +82,7 @@ windowManager {
 
 By default the +{link_window_manager}+ picks the first available window from the managed
 windows list to be the starting window. However, this behavior can be configured,
-by means of the WindowManager DSL. Simply specify a value for +windowManager.startingWindow+,
+by means of the WindowManager DSL. Simply specify a value for `windowManager.startingWindow`,
 like this
 
 .griffon-app/conf/Config.groovy
@@ -128,7 +128,7 @@ class CenteringWindowDisplayHandler extends DefaultSwingWindowDisplayHandler {
 }
 ----
 
-You can register +CenteringWindowDisplayHandler+ using the WindowManager DSL. Alternatively
+You can register `CenteringWindowDisplayHandler` using the WindowManager DSL. Alternatively
 you may use a <<_overview_modules, Module>> to register the class/instance.
 
 .src/main/groovy/sample/ApplicationModule.groovy
@@ -159,7 +159,7 @@ class ApplicationModule extends AbstractModule {
 
 This example is equivalent to defining a +{link_window_display_handler}+ for all windows.
 You may target specific windows, by define multiple bindings, making sure that the name
-of the classifier matches the window name. Notice the explicit dependency on the +swing+ module.
+of the classifier matches the window name. Notice the explicit dependency on the `swing` module.
 If this dependency is left out it's very likely that the +{link_window_manager}+ will fail
 to pick the correct +{link_window_display_handler}+.
 

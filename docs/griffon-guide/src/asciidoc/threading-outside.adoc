@@ -3,10 +3,10 @@
 = Outside Calls
 
 Making sure a block of code is executed outside the UI thread is made by invoking
-the +execOutsideUI+ method. This method is smart enough to figure out if the unit
+the `execOutsideUI` method. This method is smart enough to figure out if the unit
 of work is already outside of the UI thread; otherwise it instructs the Griffon
 runtime to runt he unit in a different thread. This is usually performed by a
-helper +java.util.concurrent.ExecutorService+.
+helper `java.util.concurrent.ExecutorService`.
 
 [source,groovy,linenums,options="nowrap"]
 ----

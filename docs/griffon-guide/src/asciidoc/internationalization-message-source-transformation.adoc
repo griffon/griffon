@@ -2,7 +2,7 @@
 [[_internationalization_message_source_transformation]]
 = The @MessageSourceAware AST Transformation
 
-Any component may gain the ability to resolve messages through a +MessageSource+
+Any component may gain the ability to resolve messages through a `MessageSource`
 instance. You only need annotate the class with +{link_message_source_aware}+
 and it will automatically gain all methods exposed by +{link_message_source}+.
 
@@ -33,8 +33,8 @@ class SampleService {
 }
 ----
 
-The application's +MessageSource+ will be injected to annotated beans if no name is
-specified as an argument to +MessageSourceAware+. You may define multiple +MessageSource+
+The application's `MessageSource` will be injected to annotated beans if no name is
+specified as an argument to `MessageSourceAware`. You may define multiple `MessageSource`
 bindings as long as you qualify them with a distinct name, such as
 
 [source,java,linenums,options="nowrap"]

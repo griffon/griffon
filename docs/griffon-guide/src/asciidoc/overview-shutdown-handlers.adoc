@@ -9,8 +9,8 @@ interface and register themselves with the application instance.
 
 The contract of a +{link_shutdown_handler}+ is very simple
 
-* +boolean canShutdown(GriffonApplication application)+ - return *+false+* to abort the shutdown sequence.
-* +void onShutdown(GriffonApplication application)+ - called if the shutdown sequence was not aborted.
+* `boolean canShutdown(GriffonApplication application)` - return *`false`* to abort the shutdown sequence.
+* `void onShutdown(GriffonApplication application)` - called if the shutdown sequence was not aborted.
 
 ++{link_shutdown_handler}++s will be called on the same order as they were registered.
 

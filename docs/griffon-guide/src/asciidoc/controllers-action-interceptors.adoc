@@ -5,8 +5,8 @@
 ++{link_action_interceptor}++s open a new set of possibilities by allowing developers
 and <<_addons,addon>> authors to define code that should be executed before and after
 any controller action is invoked by the framework. For example, you may want to protect
-the execution of a particular action given specific permissions; the +shiro+ plugin uses
-annotations that are handled by an +ActionInterceptor+, like this
+the execution of a particular action given specific permissions; the `shiro` plugin uses
+annotations that are handled by an `ActionInterceptor`, like this
 
 [source,groovy,linenums,options="nowrap"]
 ----
@@ -25,7 +25,7 @@ class PrinterController {
 }
 ----
 
-The +scaffolding+ plugin on the other hand modifies the arguments sent to the action.
+The `scaffolding` plugin on the other hand modifies the arguments sent to the action.
 Take the following snippet for example
 
 [source,groovy,linenums,options="nowrap"]
@@ -63,15 +63,15 @@ class StrutsController {
 }
 ----
 
-Note that the +login+ action requires an instance of +LoginCommandObject+. The +scaffolding+
+Note that the `login` action requires an instance of `LoginCommandObject`. The `scaffolding`
 plugin is aware of this fact; it will create an instance of said class, wire up an scaffolded
-view in a dialog and present it to the user. The +LoginCommandObject+ instance will be set
+view in a dialog and present it to the user. The `LoginCommandObject` instance will be set
 as the action's arguments if it validates successfully, otherwise action execution is aborted.
 
 == Implementing an Action Interceptor
 
 Action interceptors must implement the +{link_action_interceptor}+ interface. There's a
-handy base class (+org.codehaus.griffon.runtime.core.controller.AbstractActionInterceptor+)
+handy base class (`org.codehaus.griffon.runtime.core.controller.AbstractActionInterceptor`)
 that provides sensible defaults. Say you'd want to know how much time it took for an action
 to be executed, also if an exception occurred during its execution. This interceptor could
 be implemented as follows
@@ -108,31 +108,31 @@ by the +{link_action_manager}+ at very specific points during the lifetime and e
 of controller actions.
 
 void configure(GriffonController controller, String actionName, Method method):: The
-+configure()+ method is called during the configuration phase, when the +ActionManager+
+`configure()` method is called during the configuration phase, when the `ActionManager`
 creates the actions. This method is called once in the lifetime of an action.
 Object[] before(GriffonController controller, String actionName, Object[] args):: The
-+before()+ method is executed every time an action is about to be invoked. This method
+`before()` method is executed every time an action is about to be invoked. This method
 is responsible for adjusting the arguments (if needed) or aborting the action execution
 altogether. Any exception thrown by an interceptor in this method will halt action
 execution however only +{link_abort_execution_exception}+ is interpreted as a graceful abort.
 boolean exception(Exception exception, GriffonController controller, String actionName, Object[] args):: The
-+exception()+ method is invoked only when an exception occurred during the action's execution.
-Implementors must return +true+ if the exception was handled successfully. The exception will
-be rethrown by the +ActionManager+ if no interceptor handled the exception. This happens as the
+`exception()` method is invoked only when an exception occurred during the action's execution.
+Implementors must return `true` if the exception was handled successfully. The exception will
+be rethrown by the `ActionManager` if no interceptor handled the exception. This happens as the
 last step of the action interception procedure.
 void after(ActionExecutionStatus status, GriffonController controller, String actionName, Object[] args):: The
-+after()+ method is called after an action has been executed. Any exceptions occurred during
-the action's execution should have been handled by +exception()+. The +status+ argument
-specifies if the action was successfully executed (+OK+), if it was aborted by an
-interceptor (+ABORTERD+) or if an exception occurred during its execution (+EXCEPTION+).
+`after()` method is called after an action has been executed. Any exceptions occurred during
+the action's execution should have been handled by `exception()`. The `status` argument
+specifies if the action was successfully executed (`OK`), if it was aborted by an
+interceptor (`ABORTERD`) or if an exception occurred during its execution (`EXCEPTION`).
 
 Action interceptors can participate in Dependency Injection.
 
 == Configuration
 
 Action Interceptors must be registered within a +{link_module}+ in order to be picked
-up by the +ActionManager+. The following example shows how the previous +TracerActionInterceptor+
-can be registered in a +Module+
+up by the `ActionManager`. The following example shows how the previous `TracerActionInterceptor`
+can be registered in a `Module`
 
 .src/main/com/acme/ApplicationModule.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -162,11 +162,11 @@ An Interceptor may define a dependency on another interceptor; use the +{link_de
 annotation to express the relationship.
 
 It's also possible to globally override the order of execution of interceptors, or
-define and order when interceptors are orthogonal. Take for example the +security+
-interceptor provided by the +shiro+ plugin and the +scaffolding+ interceptor provided by
-+scaffolding+ plugin. These interceptors know nothing about each other however +security+
-should be called before +scaffolding+. This can be accomplished by adding the following
-snippet to +Config.groovy+
+define and order when interceptors are orthogonal. Take for example the `security`
+interceptor provided by the `shiro` plugin and the `scaffolding` interceptor provided by
+`scaffolding` plugin. These interceptors know nothing about each other however `security`
+should be called before `scaffolding`. This can be accomplished by adding the following
+snippet to `Config.groovy`
 
 [source,groovy,options="nowrap"]
 ----

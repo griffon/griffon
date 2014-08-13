@@ -3,8 +3,8 @@
 = Publishing Events
 
 Any instance that obtains a reference to an +{link_event_router}+ can publish events.
-+{link_griffon_application}+ exposes the application wide +EventRouter+ via a read-only
-property. You may use Dependency Injection to inject an +EventRouter+ to any class too.
++{link_griffon_application}+ exposes the application wide `EventRouter` via a read-only
+property. You may use Dependency Injection to inject an `EventRouter` to any class too.
 
 Publishing an event can be done synchronously on the current thread, asynchronously to
 the current thread, or asynchronously relative to the UI thread. For example, the following
@@ -17,7 +17,7 @@ application.eventRouter.publish('MyEventName', ['arg0', 'arg1'])
 ----
 
 Whereas the following snippet guarantees that all event handlers that are interested in
-an event of type +MyEventName+ will be called outside of the UI thread
+an event of type `MyEventName` will be called outside of the UI thread
 
 [source,groovy,options="nowrap"]
 ----
@@ -34,7 +34,7 @@ application.eventRouter.publishAsync('MyEventName', ['arg0', 'arg1'])
 
 Alternatively, you may specify an instance of a subclass of +{link_event}+ as the sole
 argument to any of these methods. The event instance will be the single argument sent
-to the event handlers when the +event+ methods are invoked in this way.
+to the event handlers when the `event` methods are invoked in this way.
 
 There may be times when event publishing must be stopped for a while. If that's the
 case then you can instruct the application to stop delivering events by invoking the

@@ -3,14 +3,14 @@
 = Property Editors
 
 Resource injection makes use of the http://docs.oracle.com/javase/6/docs/api/java/beans/PropertyEditor.html[PropertyEditor]
-mechanism provided by the +java.beans+ package. The default +{link_resources_injector}+ queries
-+http://docs.oracle.com/javase/6/docs/api/java/beans/PropertyEditorManager.html[PropertyEditorManager]+
+mechanism provided by the `java.beans` package. The default +{link_resources_injector}+ queries
+`http://docs.oracle.com/javase/6/docs/api/java/beans/PropertyEditorManager.html[PropertyEditorManager]`
 whenever a resource value must be transformed to a target type.
 
 PropertyEditorManager provides methods for registering custom PropertyEditors, it also
 follows a class name convention to load PropertyEditors should a custom one is not
 programmatically registered. Griffon applications will automatically load and register
-PropertyEditors from the following classpath resource: +/META-INF/services/java.beans.PropertyEditor+.
+PropertyEditors from the following classpath resource: `/META-INF/services/java.beans.PropertyEditor`.
 Each line follows the format
 
 [source]
@@ -93,11 +93,11 @@ The following table enumerates the default PropertyEditors loaded by Griffon at 
 Where the following apply
 
  * 'currency' and 'percent' are literal values.
- * 'boolean' accepts +true+ and +false+ as values.
- * 'query' accepts +yes+ and +no+ as values.
- * 'switch' accepts +on+ and +off+ as values.
+ * 'boolean' accepts `true` and `false` as values.
+ * 'query' accepts `yes` and `no` as values.
+ * 'switch' accepts `on` and `off` as values.
 
-Core UI Toolkit dependencies, such as +griffon-swing+ and +griffon-javafx+, deliver
+Core UI Toolkit dependencies, such as `griffon-swing` and `griffon-javafx`, deliver
 additional PropertyEditors. The following tables summarize these additions
 
 .Swing PropertyEditor mappings
@@ -172,14 +172,14 @@ additional PropertyEditors. The following tables summarize these additions
 
 Where the following apply
 
- * +R+, +G+, +B+ and +A+ represent an hexadecimal number.
- * CYCLIC may be +true+ or +false+.
- * REPEAT must be one of +MultipleGradientPaint.CycleMethod+.
+ * `R`, `G`, `B` and `A` represent an hexadecimal number.
+ * CYCLIC may be `true` or `false`.
+ * REPEAT must be one of `MultipleGradientPaint.CycleMethod`.
  * GradientPaint supports another format: x1, y1 | x2, y2, | #RGB, #RGB | CYCLIC
- * Color supports all color constants defined by +griffon.swing.support.Colors+.
+ * Color supports all color constants defined by `griffon.swing.support.Colors`.
  * All color formats are supported by gradient editors.
 
-The following styles are supported by +FontPropertyEditor+
+The following styles are supported by `FontPropertyEditor`
 
  * BOLD
  * ITALIC
@@ -223,7 +223,7 @@ The following styles are supported by +FontPropertyEditor+
 
 Where the following apply
 
- * +R+, +G+, +B+ and +A+ represent an hexadecimal number.
+ * `R`, `G`, `B` and `A` represent an hexadecimal number.
 
 .Pivot PropertyEditor mappings
 [cols="3*", options="header"]
@@ -258,7 +258,7 @@ Where the following apply
 
 Where the following apply
 
- * +R+, +G+, +B+ and +A+ represent an hexadecimal number.
- * Color supports all color constants defined by +griffon.pivot.support.Colors+.
+ * `R`, `G`, `B` and `A` represent an hexadecimal number.
+ * Color supports all color constants defined by `griffon.pivot.support.Colors`.
 
 

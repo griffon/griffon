@@ -17,7 +17,7 @@ include::{rootdir}/subprojects/griffon-core/src/main/java/griffon/core/injection
 ----
 
 They also require to have a well defined name. This can be achieved by annotating the module
-class with +@javax.inject.Named+. If a value for +@javax.inject.Named+ is not defined then
+class with `@javax.inject.Named`. If a value for `@javax.inject.Named` is not defined then
 one will be automatically calculated using the fully qualified class name. For example
 
 [source,java,linenums,options="nowrap"]
@@ -40,7 +40,7 @@ public class CustomModule extends AbstractModule {
 }
 ----
 
-Results in a module named +org.example.custom+, where as the following definition
+Results in a module named `org.example.custom`, where as the following definition
 
 [source,java,linenums,options="nowrap"]
 ----
@@ -62,7 +62,7 @@ public class CustomModule extends AbstractModule {
 }
 ----
 
-Results in a module simply called +custom+. A module may depend on another module; when
+Results in a module simply called `custom`. A module may depend on another module; when
 that's the case then the bindings of this module are processed after their dependencies. This
 allows dependent modules to override bindings made by their dependencies. Module dependencies
 are specified using the +{link_depends_on}+ annotation, like so
@@ -97,11 +97,11 @@ Modules perform their duty by defining bindings, of which there are 4 kinds
  * {link_provider_binding}
  * {link_provider_type_binding}
 
-Bindings have an scope, either +singleton+ or +prototype+. +InstanceBinding+ is the only
-binding that has +singleton+ as implicit scope; this setting can't be changed.
-All bindings accept a +classifier+ or an +classifier_type+. Classifiers are annotations that
-have been annotated with +@javax.inject.Qualifier+. You must specify one or the other but
-not both; +classifier+ has precedence over +classifier_type+.
+Bindings have an scope, either `singleton` or `prototype`. `InstanceBinding` is the only
+binding that has `singleton` as implicit scope; this setting can't be changed.
+All bindings accept a `classifier` or an `classifier_type`. Classifiers are annotations that
+have been annotated with `@javax.inject.Qualifier`. You must specify one or the other but
+not both; `classifier` has precedence over `classifier_type`.
 
 [[_overview_instance_binding]]
 === Instance Binding
@@ -132,7 +132,7 @@ bind(Calculator.class)
 
 This binding behaves like a factory, giving you the power to decide with extreme precision
 how the instance should be created. Bindings of this type require an eager instance of
-type +javax.inject.Provider+.
+type `javax.inject.Provider`.
 
 [source,java,options="nowrap"]
 ----
@@ -143,7 +143,7 @@ bind(Calculator.class)
 [[_overview_provider_type_binding]]
 === Provider Type Binding
 
-Finally we have the most flexible binding as it lets you specify a +javax.injectProvider+
+Finally we have the most flexible binding as it lets you specify a `javax.injectProvider`
 type that will be used to lazily instantiate the provider before obtaining the type instance.
 
 [source,java,options="nowrap"]
@@ -178,7 +178,7 @@ public class MyQuartzModule extends QuartzModule {
 }
 ----
 
-When compiled this class generates a metadata file at +META-INF/services/com.google.inject.Module+ with
+When compiled this class generates a metadata file at `META-INF/services/com.google.inject.Module` with
 contents similar to
 
 [source,java,linenums,options="nowrap"]
@@ -188,7 +188,7 @@ contents similar to
 com.acme.MyQuartzModule
 ----
 
-Of course the usage of +@ServiceProviderFor+ is just a convenience, you can generate the metadata file
+Of course the usage of `@ServiceProviderFor` is just a convenience, you can generate the metadata file
 by other means. The important thing is that the file must be available in the classpath.
 
 Guice modules are added after all Griffon modules, this means they have the chance to override any bindings

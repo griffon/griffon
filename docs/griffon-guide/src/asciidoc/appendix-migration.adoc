@@ -19,7 +19,7 @@ Build time plugins and scripts are now within the realm of a particular build to
 
 === Dependencies
 
-Dependencies used to be configured inside +griffon-app/conf/BuildConfig.groovy+. Now
+Dependencies used to be configured inside `griffon-app/conf/BuildConfig.groovy`. Now
 that the file is gone you must configured dependencies using the native support of
 the build tool you choose. Of particular note is that all griffon dependencies are
 now standard JAR archives available from Maven compatible repositories, so they should
@@ -29,18 +29,18 @@ work no matter which dependency resolution you pick.
 
 === Application and Config Scripts
 
-The files +Application.groovy+ and +Config.groovy+ have been merged into a single
-file : +Config.groovy+. The +log4j+ DSL is no longer used, so please move your
-logging settings to +src/resources/log4j.properties+; you can also use the XML variant
+The files `Application.groovy` and `Config.groovy` have been merged into a single
+file : `Config.groovy`. The `log4j` DSL is no longer used, so please move your
+logging settings to `src/resources/log4j.properties`; you can also use the XML variant
 if you want. Griffon 2.x does not forces Log4j on you either, you're free to pick
 a suitable Slf4j binding of your choice.
 
 === Builder Script
 
-The +Builder.groovy+ is no longer required. Its functions are now handled by
+The `Builder.groovy` is no longer required. Its functions are now handled by
 +{link_builder_customizer}+ classes bound in a +{link_module}+. You must add
 +griffon-groovy-{griffon-version}.jar+ as a compile dependency in order to use
-+BuilderCustomizers+. Here's an example for adding a http://miglayout.com[Miglayout]
+`BuilderCustomizers`. Here's an example for adding a http://miglayout.com[Miglayout]
 customization
 
 .src/main/java/griffon/builder/swing/MiglayoutSwingBuilderCustomizer.java
@@ -100,8 +100,8 @@ public class MiglayoutSwingGroovyModule extends AbstractModule {
 
 === Events Script
 
-The +Events+ script usually placed in +griffon-app/conf+ should be moved to the main
-source directory (+src/main/java+ or +src/main/groovy+ depending on your preferences).
+The `Events` script usually placed in `griffon-app/conf` should be moved to the main
+source directory (`src/main/java` or `src/main/groovy` depending on your preferences).
 The following snippet shows an skeleton implementation
 
 .src/main/groovy/com/acme/ApplicationEventHandler.groovy
@@ -118,7 +118,7 @@ class ApplicationEventHandler implements EventHandler {
 
 You must add event handlers as public methods following the conventions explained
 in the <<_events_consuming,consuming events>> section. Don't forget to register this
-class using a module. The default +ApplicationModule+ class provided by all basic
+class using a module. The default `ApplicationModule` class provided by all basic
 project templates is a good start.
 
 .src/main/groovy/com/acme/ApplicationModule.groovy
@@ -226,10 +226,10 @@ class Initialize extends AbstractLifecycleHandler {
 
 == Tests
 
-Griffon 2.x no longer segregates tests between +unit+ and +functional+. You must use
+Griffon 2.x no longer segregates tests between `unit` and `functional`. You must use
 your build tool's native support for both types (this is quite simple with Gradle).
-Move all unit tests under +src/test/java+ or +src/test/groovy+ depending on your
-choice of main language. The base +GriffonUnitTestCase+ class no longer exist. Use
+Move all unit tests under `src/test/java` or `src/test/groovy` depending on your
+choice of main language. The base `GriffonUnitTestCase` class no longer exist. Use
 any testing framework you're comfortable with to write unit tests (Junit4, Spock, etc).
 Use the following template if you need to write artifact tests
 
