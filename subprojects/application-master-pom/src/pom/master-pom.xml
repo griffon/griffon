@@ -189,42 +189,6 @@
         <finalName>${project.artifactId}-${project.version}</finalName>
         <pluginManagement>
             <plugins>
-                <!-- tag::plugin_shade[] -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-shade-plugin</artifactId>
-                    <version>${plugin.shade.version}</version>
-                    <inherited>true</inherited>
-                    <configuration>
-                        <transformers>
-                            <transformer implementation="org.kordamp.shade.resources.ServicesResourceTransformer"/>
-                            <transformer implementation="org.kordamp.shade.resources.ServicesResourceTransformer">
-                                <path>META-INF/griffon</path>
-                            </transformer>
-                            <transformer implementation="org.kordamp.shade.resources.PropertiesFileTransformer">
-                                <paths>
-                                    <path>META-INF/editors/java.beans.PropertyEditor</path>
-                                </paths>
-                            </transformer>
-                        </transformers>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>shade</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.kordamp.shade</groupId>
-                            <artifactId>shade-ext</artifactId>
-                            <version>${plugin.shade_ext_transformers.version}</version>
-                        </dependency>
-                    </dependencies>
-                </plugin>
-                <!-- end::plugin_shade[] -->
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
@@ -692,10 +656,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-            </plugin>
         </plugins>
         <!-- end::plugins[] -->
     </build>
@@ -818,6 +778,55 @@
             </build>
         </profile>
         <!-- end::profile_run[] -->
+        <!-- tag::profile_shade[] -->
+        <profile>
+            <id>shade</id>
+            <build>
+                <defaultGoal>package</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-shade-plugin</artifactId>
+                        <version>${plugin.shade.version}</version>
+                        <inherited>true</inherited>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+                                        <Main-Class>${application.main.class}</Main-Class>
+                                    </manifestEntries>
+                                </transformer>
+                                <transformer implementation="org.kordamp.shade.resources.ServicesResourceTransformer"/>
+                                <transformer implementation="org.kordamp.shade.resources.ServicesResourceTransformer">
+                                    <path>META-INF/griffon</path>
+                                </transformer>
+                                <transformer implementation="org.kordamp.shade.resources.PropertiesFileTransformer">
+                                    <paths>
+                                        <path>META-INF/editors/java.beans.PropertyEditor</path>
+                                    </paths>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>shade</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.kordamp.shade</groupId>
+                                <artifactId>maven-shade-ext-transformers</artifactId>
+                                <version>${plugin.shade_ext_transformers.version}</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- end::profile_shade[] -->
         <!--
         <profile>
             <id>macbundle</id>

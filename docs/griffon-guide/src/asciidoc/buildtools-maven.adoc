@@ -108,7 +108,7 @@ include::{master-pom}[tags=profile_distribution,indent=0]
 === Izpack
 
 This profile creates an universal installer using {link_izpack}.
-Enable it with `maven -izpack`. You must execute the `distribution`
+Enable it with `maven -Pizpack`. You must execute the `distribution`
 profile before running the `izpack` profile. You *CAN NOT* combine
 both profiles.
 
@@ -117,3 +117,15 @@ both profiles.
 ----
 include::{master-pom}[tags=profile_izpack,indent=0]
 ----
+
+=== Shade
+
+This profile crates a single JAR by combining the application's classes
+and its dependencies. Enable it with `maven -Pshade`.
+
+[source,xml,linenums,options="nowrap"]
+[subs="verbatim,attributes"]
+----
+include::{master-pom}[tags=profile_shade,indent=0]
+----
+
