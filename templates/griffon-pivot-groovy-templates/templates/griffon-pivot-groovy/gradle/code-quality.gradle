@@ -1,30 +1,32 @@
-apply plugin: 'findbugs'
 apply plugin: 'jdepend'
 apply plugin: 'com.github.hierynomus.license'
 
 def configDir = new File(buildscript.sourceFile.parentFile.parentFile, 'config')
 ext.checkstyleConfigDir = "$configDir/checkstyle"
 
-findbugs {
-    toolVersion = '2.0.3'
-    sourceSets = [sourceSets.main]
-    ignoreFailures = true
-    reportsDir = file("$project.buildDir/reports/findbugs")
-    effort = 'max'
-    reportLevel = 'high'
-}
-
-findbugsMain {
-    reports {
-        xml.enabled = false
-        html.enabled = true
+if (project.hasProperty('findBugsEnabled') && project.findBugsEnabled.toBoolean()) {
+    apply plugin: 'findbugs'
+    findbugs {
+        toolVersion = '2.0.3'
+        sourceSets = [sourceSets.main]
+        ignoreFailures = true
+        reportsDir = file("$project.buildDir/reports/findbugs")
+        effort = 'max'
+        reportLevel = 'high'
     }
-}
 
-findbugsTest {
-    reports {
-        xml.enabled = false
-        html.enabled = true
+    findbugsMain {
+        reports {
+            xml.enabled = false
+            html.enabled = true
+        }
+    }
+
+    findbugsTest {
+        reports {
+            xml.enabled = false
+            html.enabled = true
+        }
     }
 }
 
