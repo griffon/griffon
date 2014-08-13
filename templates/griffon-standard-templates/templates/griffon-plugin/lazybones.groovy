@@ -1,4 +1,5 @@
 import uk.co.cacoethes.util.NameType
+import org.apache.commons.io.FileUtils
 
 Map props = [:]
 String projectName = projectDir.name
@@ -50,16 +51,24 @@ File mainSources = new File(projectDir, 'subprojects/plugin/src/main/java')
 File mainSourcesPath = new File(mainSources, packagePath)
 mainSourcesPath.mkdirs()
 
+def renameFile = { File from, String path ->
+    if (from.file) {
+        File to = new File(path)
+        to.parentFile.mkdirs()
+        FileUtils.moveFile(from, to)
+    }
+}
+
 mainSources.eachFile { File file ->
-    file.renameTo(mainSourcesPath.absolutePath + '/' + props.project_class_name + file.name)
+    renamefile(file, mainSourcesPath.absolutePath + '/' + props.project_class_name + file.name)
 }
 
 File pluginDir = new File(projectDir, 'subprojects/plugin')
 File guideDir = new File(projectDir, 'subprojects/guide')
-new File(pluginDir, 'plugin.gradle').renameTo(pluginDir.absolutePath + '/griffon-' + pluginName + '.gradle')
-new File(guideDir, 'guide.gradle').renameTo(guideDir.absolutePath + '/griffon-' + pluginName + '-guide.gradle')
-pluginDir.renameTo(projectDir.absolutePath + '/subprojects/griffon-' + pluginName)
-guideDir.renameTo(projectDir.absolutePath + '/subprojects/griffon-' + pluginName + '-guide')
+renameFile(new File(pluginDir, 'plugin.gradle'), pluginDir.absolutePath + '/griffon-' + pluginName + '.gradle')
+renameFile(new File(guideDir, 'guide.gradle'), guideDir.absolutePath + '/griffon-' + pluginName + '-guide.gradle')
+renameFile(pluginDir, projectDir.absolutePath + '/subprojects/griffon-' + pluginName)
+renameFile(guideDir, projectDir.absolutePath + '/subprojects/griffon-' + pluginName + '-guide')
 
-projectDir.renameTo(projectName)
+renameFile(projectDir, projectName)
 new File(projectName, 'lazybones.groovy').delete()

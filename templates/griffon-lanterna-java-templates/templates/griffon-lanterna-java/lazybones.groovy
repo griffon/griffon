@@ -1,4 +1,5 @@
 import uk.co.cacoethes.util.NameType
+import org.apache.commons.io.FileUtils
 
 Map props = [:]
 if (projectDir.name =~ /\-/) {
@@ -39,23 +40,31 @@ testSourcesPath.mkdirs()
 File integrationTestSourcesPath = new File(integrationTestSources, packagePath)
 integrationTestSourcesPath.mkdirs()
 
+def renameFile = { File from, String path ->
+    if (from.file) {
+        File to = new File(path)
+        to.parentFile.mkdirs()
+        FileUtils.moveFile(from, to)
+    }
+}
 mainSources.eachFile { File file ->
-    file.renameTo(mainSourcesPath.absolutePath + '/' + file.name)
+    renameFile(file, mainSourcesPath.absolutePath + '/' + file.name)
 }
 testSources.eachFile { File file ->
-    file.renameTo(testSourcesPath.absolutePath + '/' + props.project_capitalized_name + file.name)
+    renameFile(file, testSourcesPath.absolutePath + '/' + props.project_capitalized_name + file.name)
 }
 integrationTestSources.eachFile { File file ->
-    file.renameTo(integrationTestSourcesPath.absolutePath + '/' + props.project_capitalized_name + file.name)
+    renameFile(file, integrationTestSourcesPath.absolutePath + '/' + props.project_capitalized_name + file.name)
 }
-new File(binSources, 'run-app').renameTo(binSources.absolutePath + '/' + props.project_name)
-new File(binSources, 'run-app.bat').renameTo(binSources.absolutePath + '/' + props.project_name + '.bat')
+
+renameFile(new File(binSources, 'run-app'), binSources.absolutePath + '/' + props.project_name)
+renameFile(new File(binSources, 'run-app.bat'), binSources.absolutePath + '/' + props.project_name + '.bat')
 
 ['controllers', 'models', 'services', 'views'].each { String category ->
     File artifactDir = new File(projectDir, "griffon-app/$category")
     artifactDir.eachFile { File file ->
         File artifactSourcesPath = new File(projectDir, "griffon-app/$category/$packagePath")
         artifactSourcesPath.mkdirs()
-        file.renameTo(artifactSourcesPath.absolutePath + '/' + props.project_capitalized_name + file.name)
+        renameFile(file, artifactSourcesPath.absolutePath + '/' + props.project_capitalized_name + file.name)
     }
 }
