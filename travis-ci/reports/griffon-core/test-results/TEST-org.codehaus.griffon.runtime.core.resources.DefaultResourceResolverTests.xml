@@ -1,12 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.codehaus.griffon.runtime.core.resources.DefaultResourceResolverTests" tests="6" skipped="0" failures="0" errors="0" timestamp="2014-08-13T16:04:47" hostname="testing-worker-linux-6-2-30093-linux-5-32449583" time="0.144">
+<testsuite name="org.codehaus.griffon.runtime.core.resources.DefaultResourceResolverTests" tests="6" skipped="0" failures="0" errors="0" timestamp="2014-08-13T17:16:39" hostname="testing-worker-linux-11-1-1899-linux-9-32449583" time="0.105">
   <properties/>
-  <testcase name="exerciseFormatResource" classname="org.codehaus.griffon.runtime.core.resources.DefaultResourceResolverTests" time="0.042"/>
-  <testcase name="resolveResourceValueWithReferencedKey" classname="org.codehaus.griffon.runtime.core.resources.DefaultResourceResolverTests" time="0.006"/>
-  <testcase name="exerciseAllExceptionThrowingMethods" classname="org.codehaus.griffon.runtime.core.resources.DefaultResourceResolverTests" time="0.038"/>
-  <testcase name="exerciseAllMethodsWithDefaultValue" classname="org.codehaus.griffon.runtime.core.resources.DefaultResourceResolverTests" time="0.016"/>
-  <testcase name="resolveAllFormatsByProperties" classname="org.codehaus.griffon.runtime.core.resources.DefaultResourceResolverTests" time="0.005"/>
-  <testcase name="resolveResourceFromCustomResourceResolver" classname="org.codehaus.griffon.runtime.core.resources.DefaultResourceResolverTests" time="0.034"/>
+  <testcase name="exerciseFormatResource" classname="org.codehaus.griffon.runtime.core.resources.DefaultResourceResolverTests" time="0.025"/>
+  <testcase name="resolveResourceValueWithReferencedKey" classname="org.codehaus.griffon.runtime.core.resources.DefaultResourceResolverTests" time="0.007"/>
+  <testcase name="exerciseAllExceptionThrowingMethods" classname="org.codehaus.griffon.runtime.core.resources.DefaultResourceResolverTests" time="0.03"/>
+  <testcase name="exerciseAllMethodsWithDefaultValue" classname="org.codehaus.griffon.runtime.core.resources.DefaultResourceResolverTests" time="0.012"/>
+  <testcase name="resolveAllFormatsByProperties" classname="org.codehaus.griffon.runtime.core.resources.DefaultResourceResolverTests" time="0.006"/>
+  <testcase name="resolveResourceFromCustomResourceResolver" classname="org.codehaus.griffon.runtime.core.resources.DefaultResourceResolverTests" time="0.023"/>
   <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
+  <system-err><![CDATA[[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=reference.key
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4991b0eb; key=reference.key; value='@[referenced.key]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=referenced.key
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4991b0eb; key=referenced.key; value='what's up doc?'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=not.a.reference.key1
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4991b0eb; key=not.a.reference.key1; value='@[NOT'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=not.a.reference.key2
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4991b0eb; key=not.a.reference.key2; value='NOT]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=not.a.reference.key3
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4991b0eb; key=not.a.reference.key3; value='@[]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.index
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4991b0eb; key=healthy.proverb.index; value='An {0} a day keeps the {1} away'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.index
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4991b0eb; key=famous.quote.index; value='This is {0}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.index
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4991b0eb; key=healthy.proverb.index; value='An {0} a day keeps the {1} away'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.index
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4991b0eb; key=famous.quote.index; value='This is {0}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.map
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4991b0eb; key=healthy.proverb.map; value='An {:fruit} a day keeps the {:occupation} away'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.map
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4991b0eb; key=famous.quote.map; value='This is {:location}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.bogus
+]]></system-err>
 </testsuite>
