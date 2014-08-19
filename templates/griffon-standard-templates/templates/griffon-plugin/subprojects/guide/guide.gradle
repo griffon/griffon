@@ -57,8 +57,8 @@ task apiDocs(type: Javadoc, dependsOn: copyDocs) {
     options.version     = true
     options.source      = project.sourceCompatibility
     options.overview    = file('src/javadoc/overview.html')
-    options.windowTitle = "\$projectDescription  \$version"
-    options.docTitle    = "\$projectDescription  \$version"
+    options.windowTitle = "\$projectDescription \$version"
+    options.docTitle    = "\$projectDescription \$version"
     options.footer      = project.javadocFooter
     options.links       = ['http://www.slf4j.org/apidocs/',
                            'http://junit.org/javadoc/latest/',
@@ -120,9 +120,9 @@ java2html {
     overview {
         srcDirs        = files("\$buildDir/java2html")
         destDir        = file("\$buildDir/java2html")
-        windowTitle    = "\$projectDescription  \$version"
-        docTitle       = "\$projectDescription  \$version"
-        docDescription = "\$projectDescription  \$version"
+        windowTitle    = "\$projectDescription \$version"
+        docTitle       = "\$projectDescription \$version"
+        docDescription = "\$projectDescription \$version"
         icon           = file('src/javadoc/resources/img/griffon.ico')
         stylesheet     = file('src/javadoc/resources/css/stylesheet.css')
     }
@@ -145,7 +145,7 @@ asciidoctor {
             stylesheet             : 'css/style.css',
             'source-highlighter'   : 'coderay',
             'coderay-linenums-mode': 'inline',
-            'project-name'         : "${project.projectDescription} ${project.version}",
+            'project-name'         : "\${project.projectDescription} \${project.version}",
             'project-author'       : '${project_author}',
             'project-version'      : project.version,
             'project-group'        : project.group,
@@ -173,6 +173,6 @@ task guide(type: Copy, dependsOn: [apiDocs, java2html, asciidoctor]) {
 }
 
 task guideZip(type: Zip, dependsOn: guide) {
-    baseName = '\${pluginBaseName}-guide'
+    baseName = "\${pluginBaseName}-guide"
     from "\$buildDir/guide"
 }
