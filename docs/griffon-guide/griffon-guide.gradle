@@ -190,7 +190,7 @@ asciidoctor {
             'application-master-pom': loadProperties(project(':application-master-pom').file('gradle.properties')).version
         ]
     ]
-    sourceDocumentName = project.file('src/asciidoc/index.adoc')
+    sourceDocumentNames = files('src/asciidoc/index.adoc')
 
     doLast { task ->
         copy {
