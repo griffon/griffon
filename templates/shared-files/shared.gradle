@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-apply plugin: 'lazybones-templates'
+apply plugin: 'uk.co.cacoethes.lazybones-templates'
 
 if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = ''
 if (!project.hasProperty('bintrayApiKey')) ext.bintrayApiKey = ''
 
 lazybones {
-    repositoryUrl = 'https://api.bintray.com/content/griffon/griffon-lazybones-templates'
+    repositoryName = 'griffon/griffon-lazybones-templates'
     repositoryUsername = project.bintrayUsername
     repositoryApiKey = project.bintrayApiKey
 }
