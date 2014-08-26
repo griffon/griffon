@@ -44,8 +44,14 @@ tasks.withType(Zip) { task ->
                 }
             } else {
                 from(rootProject.file('templates/shared-files/sources')) {
+                    exclude '**/*.png'
+                    exclude '**/*.jar'
                     filter(org.apache.tools.ant.filters.ReplaceTokens,
                         tokens: ['griffon.version': project.version])
+                }
+                from(rootProject.file('templates/shared-files/sources')) {
+                    include '**/*.png'
+                    include '**/*.jar'
                 }
                 from(rootProject.file('src/media')) {
                     include 'griffon*'
