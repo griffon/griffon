@@ -4050,24 +4050,24 @@
   <td class="src"><pre class="src">&nbsp;    @Nullable</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;2329</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> Class&lt;?&gt;[] convertToTypeArray(@Nullable Object[] args) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;2330</td>  <td class="nbHitsUncovered"><a title="Line 2330: Conditional coverage 50% (1/2).">&nbsp;52</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 2330: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (args == <span class="keyword">null</span>) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;2330</td>  <td class="nbHitsUncovered"><a title="Line 2330: Conditional coverage 50% (1/2).">&nbsp;51</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 2330: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (args == <span class="keyword">null</span>) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;2331</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            <span class="keyword">return</span> <span class="keyword">null</span>;</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;2332</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;2333</td>  <td class="nbHitsCovered">&nbsp;52</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">int</span> s = args.length;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;2334</td>  <td class="nbHitsCovered">&nbsp;52</td>  <td class="src"><pre class="src">&nbsp;        Class&lt;?&gt;[] ans = <span class="keyword">new</span> Class&lt;?&gt;[s];</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;2335</td>  <td class="nbHitsCovered"><a title="Line 2335: Conditional coverage 100% (2/2).">&nbsp;128</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 2335: Conditional coverage 100% (2/2).">        <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i &lt; s; i++) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;2336</td>  <td class="nbHitsCovered">&nbsp;76</td>  <td class="src"><pre class="src">&nbsp;            Object o = args[i];</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;2337</td>  <td class="nbHitsUncovered"><a title="Line 2337: Conditional coverage 50% (1/2).">&nbsp;76</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 2337: Conditional coverage 50% (1/2).">            ans[i] = o != <span class="keyword">null</span> ? o.getClass() : <span class="keyword">null</span>;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;2333</td>  <td class="nbHitsCovered">&nbsp;51</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">int</span> s = args.length;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;2334</td>  <td class="nbHitsCovered">&nbsp;51</td>  <td class="src"><pre class="src">&nbsp;        Class&lt;?&gt;[] ans = <span class="keyword">new</span> Class&lt;?&gt;[s];</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;2335</td>  <td class="nbHitsCovered"><a title="Line 2335: Conditional coverage 100% (2/2).">&nbsp;126</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 2335: Conditional coverage 100% (2/2).">        <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i &lt; s; i++) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;2336</td>  <td class="nbHitsCovered">&nbsp;75</td>  <td class="src"><pre class="src">&nbsp;            Object o = args[i];</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;2337</td>  <td class="nbHitsUncovered"><a title="Line 2337: Conditional coverage 50% (1/2).">&nbsp;75</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 2337: Conditional coverage 50% (1/2).">            ans[i] = o != <span class="keyword">null</span> ? o.getClass() : <span class="keyword">null</span>;</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;2338</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;2339</td>  <td class="nbHitsCovered">&nbsp;52</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> ans;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;2339</td>  <td class="nbHitsCovered">&nbsp;51</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> ans;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;2340</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;2341</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 8/26/14 7:29 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 8/26/14 8:02 PM.</div>
 </body>
 </html>
