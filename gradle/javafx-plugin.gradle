@@ -40,16 +40,12 @@ buildscript {
 
     repositories {
         jcenter()
-        maven { url 'http://dl.bintray.com/content/shemnon/javafx-gradle/' }
-        maven { url 'http://repository-javafx-gradle-plugin.forge.cloudbees.com/snapshot' }
     }
     dependencies {
-        classpath 'org.bitbucket.shemnon.javafxplugin:gradle-javafx-plugin:0.4.0'
+        classpath 'org.bitbucket.shemnon.javafxplugin:gradle-javafx-plugin:8.1.1'
         classpath project.files("${javaHome}/lib/ant-javafx.jar")
         classpath project.files(jfxrtLocation)
     }
 }
 
-if (!project.plugins.findPlugin(org.bitbucket.shemnon.javafxplugin.JavaFXPlugin)) {
-    project.apply(plugin: org.bitbucket.shemnon.javafxplugin.JavaFXPlugin)
-}
+project.apply(plugin: org.bitbucket.shemnon.javafxplugin.JavaFXPlugin)
