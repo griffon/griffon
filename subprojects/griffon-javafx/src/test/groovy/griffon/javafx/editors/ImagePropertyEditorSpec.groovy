@@ -15,7 +15,7 @@
  */
 package griffon.javafx.editors
 
-// import javafx.embed.swing.JFXPanel
+import javafx.embed.swing.JFXPanel
 import javafx.scene.image.Image
 import spock.lang.Shared
 import spock.lang.Specification
@@ -33,7 +33,7 @@ class ImagePropertyEditorSpec extends Specification {
 
     void setupSpec() {
         // force toolkit initialization
-        // new JFXPanel()
+        new JFXPanel()
     }
 
     void "Image format '#format' should be equal to #image"() {
