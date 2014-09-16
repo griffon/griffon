@@ -1,3 +1,5 @@
+import spock.lang.Specification
+
 /*
  * Copyright 2008-2014 the original author or authors.
  *
@@ -5,7 +7,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,12 +16,11 @@
  * limitations under the License.
  */
 
-apply plugin: 'groovy'
-apply from: rootProject.file('gradle/coverage.gradle')
+class DummySpec extends Specification {
+    void 'Dummy spec'() {
+        // placeholder for enabling aggregate JaCoCo reports
 
-dependencies {
-    compile project(':griffon-pivot')
-    compile project(':griffon-core-test')
-
-    testRuntime project(':griffon-guice')
+        expect:
+        true
+    }
 }

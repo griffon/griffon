@@ -27,4 +27,9 @@ dependencies {
 
     compileOnly project.files(project.jfxrtLocation)
     compileOnly project(':griffon-core-compile')
+
+    testCompileOnly project.files(project.jfxrtLocation)
+
+    testCompile project(':griffon-core-test')
+    testRuntime project(':griffon-guice')
 }

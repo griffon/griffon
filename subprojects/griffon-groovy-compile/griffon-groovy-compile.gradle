@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-apply plugin: 'java'
+apply plugin: 'groovy'
 apply from: rootProject.file('gradle/coverage.gradle')
 apply from: rootProject.file('gradle/javafx.gradle')
 
@@ -25,3 +25,5 @@ dependencies {
     compile "org.kordamp.gipsy:gipsy:${jipsyVersion}"
     compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
 }
+
+compileGroovy.enabled = false
