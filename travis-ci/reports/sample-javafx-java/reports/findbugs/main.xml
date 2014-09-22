@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<BugCollection version="2.0.3" sequence="0" timestamp="1409083170255" analysisTimestamp="1409083170308" release="">
+<BugCollection version="3.0.0" sequence="0" timestamp="1411372886398" analysisTimestamp="1411372886428" release="">
   <Project projectName="">
-    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/SampleController.class</Jar>
-    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/SampleModel.class</Jar>
     <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/ApplicationModule.class</Jar>
-    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/SampleView.class</Jar>
-    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/SampleController$1.class</Jar>
     <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/Launcher.class</Jar>
-    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/Config.class</Jar>
+    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/SampleView.class</Jar>
     <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/SampleService.class</Jar>
+    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/SampleModel.class</Jar>
+    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/SampleController.class</Jar>
+    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/SampleController$1.class</Jar>
+    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/sample/javafx/java/Config.class</Jar>
     <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/services/griffon.core.injection.Module</Jar>
-    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonModel</Jar>
-    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonView</Jar>
     <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonService</Jar>
+    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonView</Jar>
+    <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonModel</Jar>
     <Jar>/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonController</Jar>
-    <AuxClasspathEntry>/usr/lib/jvm/java-7-oracle/jre/lib/jfxrt.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/usr/lib/jvm/java-8-oracle/jre/lib/ext/jfxrt.jar</AuxClasspathEntry>
     <AuxClasspathEntry>/home/travis/build/griffon/griffon/subprojects/griffon-javafx/build/libs/griffon-javafx-2.0.0.RC2.jar</AuxClasspathEntry>
     <AuxClasspathEntry>/home/travis/build/griffon/griffon/subprojects/griffon-guice/build/libs/griffon-guice-2.0.0.RC2.jar</AuxClasspathEntry>
     <AuxClasspathEntry>/home/travis/build/griffon/griffon/subprojects/griffon-core/build/libs/griffon-core-2.0.0.RC2.jar</AuxClasspathEntry>
@@ -38,61 +38,13 @@
     <Error>
       <ErrorMessage>Cannot open codebase filesystem:/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/services/griffon.core.injection.Module</ErrorMessage>
       <Exception>java.io.IOException: Wrong magic bytes of 23204765 for zip file /home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/services/griffon.core.injection.Module of 155 bytes</Exception>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ZipFileCodeBase.&lt;init&gt;(ZipFileCodeBase.java:85)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ZipFileCodeBase.&lt;init&gt;(ZipFileCodeBase.java:87)</StackTrace>
       <StackTrace>edu.umd.cs.findbugs.classfile.impl.ZipCodeBaseFactory.makeZipCodeBase(ZipCodeBaseFactory.java:39)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassFactory.createFilesystemCodeBase(ClassFactory.java:117)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.FilesystemCodeBaseLocator.openCodeBase(FilesystemCodeBaseLocator.java:75)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassPathBuilder.processWorkList(ClassPathBuilder.java:601)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassPathBuilder.build(ClassPathBuilder.java:221)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.FindBugs2.buildClassPath(FindBugs2.java:795)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.FindBugs2.execute(FindBugs2.java:218)</StackTrace>
-      <StackTrace>org.gradle.api.plugins.quality.internal.findbugs.FindBugsExecuter.runFindbugs(FindBugsExecuter.java:44)</StackTrace>
-      <StackTrace>org.gradle.api.plugins.quality.internal.findbugs.FindBugsWorkerServer.execute(FindBugsWorkerServer.java:45)</StackTrace>
-      <StackTrace>org.gradle.api.plugins.quality.internal.findbugs.FindBugsWorkerServer.execute(FindBugsWorkerServer.java:35)</StackTrace>
-      <StackTrace>org.gradle.api.plugins.quality.internal.findbugs.FindBugsWorkerServer.execute(FindBugsWorkerServer.java:26)</StackTrace>
-      <StackTrace>org.gradle.process.internal.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:78)</StackTrace>
-      <StackTrace>org.gradle.process.internal.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:35)</StackTrace>
-      <StackTrace>org.gradle.process.internal.child.ImplementationClassLoaderWorker.execute(ImplementationClassLoaderWorker.java:85)</StackTrace>
-      <StackTrace>org.gradle.process.internal.child.ImplementationClassLoaderWorker.execute(ImplementationClassLoaderWorker.java:41)</StackTrace>
-      <StackTrace>org.gradle.process.internal.child.IsolatedApplicationClassLoaderWorker.call(IsolatedApplicationClassLoaderWorker.java:48)</StackTrace>
-      <StackTrace>org.gradle.process.internal.child.IsolatedApplicationClassLoaderWorker.call(IsolatedApplicationClassLoaderWorker.java:30)</StackTrace>
-      <StackTrace>org.gradle.process.internal.launcher.GradleWorkerMain.run(GradleWorkerMain.java:32)</StackTrace>
-      <StackTrace>org.gradle.process.internal.launcher.GradleWorkerMain.main(GradleWorkerMain.java:37)</StackTrace>
-    </Error>
-    <Error>
-      <ErrorMessage>Cannot open codebase filesystem:/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonModel</ErrorMessage>
-      <Exception>java.io.IOException: Wrong magic bytes of 23204765 for zip file /home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonModel of 171 bytes</Exception>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ZipFileCodeBase.&lt;init&gt;(ZipFileCodeBase.java:85)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ZipCodeBaseFactory.makeZipCodeBase(ZipCodeBaseFactory.java:39)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassFactory.createFilesystemCodeBase(ClassFactory.java:117)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.FilesystemCodeBaseLocator.openCodeBase(FilesystemCodeBaseLocator.java:75)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassPathBuilder.processWorkList(ClassPathBuilder.java:601)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassPathBuilder.build(ClassPathBuilder.java:221)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.FindBugs2.buildClassPath(FindBugs2.java:795)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.FindBugs2.execute(FindBugs2.java:218)</StackTrace>
-      <StackTrace>org.gradle.api.plugins.quality.internal.findbugs.FindBugsExecuter.runFindbugs(FindBugsExecuter.java:44)</StackTrace>
-      <StackTrace>org.gradle.api.plugins.quality.internal.findbugs.FindBugsWorkerServer.execute(FindBugsWorkerServer.java:45)</StackTrace>
-      <StackTrace>org.gradle.api.plugins.quality.internal.findbugs.FindBugsWorkerServer.execute(FindBugsWorkerServer.java:35)</StackTrace>
-      <StackTrace>org.gradle.api.plugins.quality.internal.findbugs.FindBugsWorkerServer.execute(FindBugsWorkerServer.java:26)</StackTrace>
-      <StackTrace>org.gradle.process.internal.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:78)</StackTrace>
-      <StackTrace>org.gradle.process.internal.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:35)</StackTrace>
-      <StackTrace>org.gradle.process.internal.child.ImplementationClassLoaderWorker.execute(ImplementationClassLoaderWorker.java:85)</StackTrace>
-      <StackTrace>org.gradle.process.internal.child.ImplementationClassLoaderWorker.execute(ImplementationClassLoaderWorker.java:41)</StackTrace>
-      <StackTrace>org.gradle.process.internal.child.IsolatedApplicationClassLoaderWorker.call(IsolatedApplicationClassLoaderWorker.java:48)</StackTrace>
-      <StackTrace>org.gradle.process.internal.child.IsolatedApplicationClassLoaderWorker.call(IsolatedApplicationClassLoaderWorker.java:30)</StackTrace>
-      <StackTrace>org.gradle.process.internal.launcher.GradleWorkerMain.run(GradleWorkerMain.java:32)</StackTrace>
-      <StackTrace>org.gradle.process.internal.launcher.GradleWorkerMain.main(GradleWorkerMain.java:37)</StackTrace>
-    </Error>
-    <Error>
-      <ErrorMessage>Cannot open codebase filesystem:/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonView</ErrorMessage>
-      <Exception>java.io.IOException: Wrong magic bytes of 23204765 for zip file /home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonView of 170 bytes</Exception>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ZipFileCodeBase.&lt;init&gt;(ZipFileCodeBase.java:85)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ZipCodeBaseFactory.makeZipCodeBase(ZipCodeBaseFactory.java:39)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassFactory.createFilesystemCodeBase(ClassFactory.java:117)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.FilesystemCodeBaseLocator.openCodeBase(FilesystemCodeBaseLocator.java:75)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassPathBuilder.processWorkList(ClassPathBuilder.java:601)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassPathBuilder.build(ClassPathBuilder.java:221)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.FindBugs2.buildClassPath(FindBugs2.java:795)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassFactory.createFilesystemCodeBase(ClassFactory.java:121)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.FilesystemCodeBaseLocator.openCodeBase(FilesystemCodeBaseLocator.java:77)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassPathBuilder.processWorkList(ClassPathBuilder.java:607)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassPathBuilder.build(ClassPathBuilder.java:226)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.FindBugs2.buildClassPath(FindBugs2.java:677)</StackTrace>
       <StackTrace>edu.umd.cs.findbugs.FindBugs2.execute(FindBugs2.java:218)</StackTrace>
       <StackTrace>org.gradle.api.plugins.quality.internal.findbugs.FindBugsExecuter.runFindbugs(FindBugsExecuter.java:44)</StackTrace>
       <StackTrace>org.gradle.api.plugins.quality.internal.findbugs.FindBugsWorkerServer.execute(FindBugsWorkerServer.java:45)</StackTrace>
@@ -110,13 +62,61 @@
     <Error>
       <ErrorMessage>Cannot open codebase filesystem:/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonService</ErrorMessage>
       <Exception>java.io.IOException: Wrong magic bytes of 23204765 for zip file /home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonService of 173 bytes</Exception>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ZipFileCodeBase.&lt;init&gt;(ZipFileCodeBase.java:85)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ZipFileCodeBase.&lt;init&gt;(ZipFileCodeBase.java:87)</StackTrace>
       <StackTrace>edu.umd.cs.findbugs.classfile.impl.ZipCodeBaseFactory.makeZipCodeBase(ZipCodeBaseFactory.java:39)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassFactory.createFilesystemCodeBase(ClassFactory.java:117)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.FilesystemCodeBaseLocator.openCodeBase(FilesystemCodeBaseLocator.java:75)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassPathBuilder.processWorkList(ClassPathBuilder.java:601)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassPathBuilder.build(ClassPathBuilder.java:221)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.FindBugs2.buildClassPath(FindBugs2.java:795)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassFactory.createFilesystemCodeBase(ClassFactory.java:121)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.FilesystemCodeBaseLocator.openCodeBase(FilesystemCodeBaseLocator.java:77)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassPathBuilder.processWorkList(ClassPathBuilder.java:607)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassPathBuilder.build(ClassPathBuilder.java:226)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.FindBugs2.buildClassPath(FindBugs2.java:677)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.FindBugs2.execute(FindBugs2.java:218)</StackTrace>
+      <StackTrace>org.gradle.api.plugins.quality.internal.findbugs.FindBugsExecuter.runFindbugs(FindBugsExecuter.java:44)</StackTrace>
+      <StackTrace>org.gradle.api.plugins.quality.internal.findbugs.FindBugsWorkerServer.execute(FindBugsWorkerServer.java:45)</StackTrace>
+      <StackTrace>org.gradle.api.plugins.quality.internal.findbugs.FindBugsWorkerServer.execute(FindBugsWorkerServer.java:35)</StackTrace>
+      <StackTrace>org.gradle.api.plugins.quality.internal.findbugs.FindBugsWorkerServer.execute(FindBugsWorkerServer.java:26)</StackTrace>
+      <StackTrace>org.gradle.process.internal.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:78)</StackTrace>
+      <StackTrace>org.gradle.process.internal.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:35)</StackTrace>
+      <StackTrace>org.gradle.process.internal.child.ImplementationClassLoaderWorker.execute(ImplementationClassLoaderWorker.java:85)</StackTrace>
+      <StackTrace>org.gradle.process.internal.child.ImplementationClassLoaderWorker.execute(ImplementationClassLoaderWorker.java:41)</StackTrace>
+      <StackTrace>org.gradle.process.internal.child.IsolatedApplicationClassLoaderWorker.call(IsolatedApplicationClassLoaderWorker.java:48)</StackTrace>
+      <StackTrace>org.gradle.process.internal.child.IsolatedApplicationClassLoaderWorker.call(IsolatedApplicationClassLoaderWorker.java:30)</StackTrace>
+      <StackTrace>org.gradle.process.internal.launcher.GradleWorkerMain.run(GradleWorkerMain.java:32)</StackTrace>
+      <StackTrace>org.gradle.process.internal.launcher.GradleWorkerMain.main(GradleWorkerMain.java:37)</StackTrace>
+    </Error>
+    <Error>
+      <ErrorMessage>Cannot open codebase filesystem:/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonView</ErrorMessage>
+      <Exception>java.io.IOException: Wrong magic bytes of 23204765 for zip file /home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonView of 170 bytes</Exception>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ZipFileCodeBase.&lt;init&gt;(ZipFileCodeBase.java:87)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ZipCodeBaseFactory.makeZipCodeBase(ZipCodeBaseFactory.java:39)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassFactory.createFilesystemCodeBase(ClassFactory.java:121)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.FilesystemCodeBaseLocator.openCodeBase(FilesystemCodeBaseLocator.java:77)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassPathBuilder.processWorkList(ClassPathBuilder.java:607)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassPathBuilder.build(ClassPathBuilder.java:226)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.FindBugs2.buildClassPath(FindBugs2.java:677)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.FindBugs2.execute(FindBugs2.java:218)</StackTrace>
+      <StackTrace>org.gradle.api.plugins.quality.internal.findbugs.FindBugsExecuter.runFindbugs(FindBugsExecuter.java:44)</StackTrace>
+      <StackTrace>org.gradle.api.plugins.quality.internal.findbugs.FindBugsWorkerServer.execute(FindBugsWorkerServer.java:45)</StackTrace>
+      <StackTrace>org.gradle.api.plugins.quality.internal.findbugs.FindBugsWorkerServer.execute(FindBugsWorkerServer.java:35)</StackTrace>
+      <StackTrace>org.gradle.api.plugins.quality.internal.findbugs.FindBugsWorkerServer.execute(FindBugsWorkerServer.java:26)</StackTrace>
+      <StackTrace>org.gradle.process.internal.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:78)</StackTrace>
+      <StackTrace>org.gradle.process.internal.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:35)</StackTrace>
+      <StackTrace>org.gradle.process.internal.child.ImplementationClassLoaderWorker.execute(ImplementationClassLoaderWorker.java:85)</StackTrace>
+      <StackTrace>org.gradle.process.internal.child.ImplementationClassLoaderWorker.execute(ImplementationClassLoaderWorker.java:41)</StackTrace>
+      <StackTrace>org.gradle.process.internal.child.IsolatedApplicationClassLoaderWorker.call(IsolatedApplicationClassLoaderWorker.java:48)</StackTrace>
+      <StackTrace>org.gradle.process.internal.child.IsolatedApplicationClassLoaderWorker.call(IsolatedApplicationClassLoaderWorker.java:30)</StackTrace>
+      <StackTrace>org.gradle.process.internal.launcher.GradleWorkerMain.run(GradleWorkerMain.java:32)</StackTrace>
+      <StackTrace>org.gradle.process.internal.launcher.GradleWorkerMain.main(GradleWorkerMain.java:37)</StackTrace>
+    </Error>
+    <Error>
+      <ErrorMessage>Cannot open codebase filesystem:/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonModel</ErrorMessage>
+      <Exception>java.io.IOException: Wrong magic bytes of 23204765 for zip file /home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonModel of 171 bytes</Exception>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ZipFileCodeBase.&lt;init&gt;(ZipFileCodeBase.java:87)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ZipCodeBaseFactory.makeZipCodeBase(ZipCodeBaseFactory.java:39)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassFactory.createFilesystemCodeBase(ClassFactory.java:121)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.FilesystemCodeBaseLocator.openCodeBase(FilesystemCodeBaseLocator.java:77)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassPathBuilder.processWorkList(ClassPathBuilder.java:607)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassPathBuilder.build(ClassPathBuilder.java:226)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.FindBugs2.buildClassPath(FindBugs2.java:677)</StackTrace>
       <StackTrace>edu.umd.cs.findbugs.FindBugs2.execute(FindBugs2.java:218)</StackTrace>
       <StackTrace>org.gradle.api.plugins.quality.internal.findbugs.FindBugsExecuter.runFindbugs(FindBugsExecuter.java:44)</StackTrace>
       <StackTrace>org.gradle.api.plugins.quality.internal.findbugs.FindBugsWorkerServer.execute(FindBugsWorkerServer.java:45)</StackTrace>
@@ -134,13 +134,13 @@
     <Error>
       <ErrorMessage>Cannot open codebase filesystem:/home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonController</ErrorMessage>
       <Exception>java.io.IOException: Wrong magic bytes of 23204765 for zip file /home/travis/build/griffon/griffon/samples/sample-javafx-java/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonController of 176 bytes</Exception>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ZipFileCodeBase.&lt;init&gt;(ZipFileCodeBase.java:85)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ZipFileCodeBase.&lt;init&gt;(ZipFileCodeBase.java:87)</StackTrace>
       <StackTrace>edu.umd.cs.findbugs.classfile.impl.ZipCodeBaseFactory.makeZipCodeBase(ZipCodeBaseFactory.java:39)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassFactory.createFilesystemCodeBase(ClassFactory.java:117)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.FilesystemCodeBaseLocator.openCodeBase(FilesystemCodeBaseLocator.java:75)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassPathBuilder.processWorkList(ClassPathBuilder.java:601)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassPathBuilder.build(ClassPathBuilder.java:221)</StackTrace>
-      <StackTrace>edu.umd.cs.findbugs.FindBugs2.buildClassPath(FindBugs2.java:795)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassFactory.createFilesystemCodeBase(ClassFactory.java:121)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.FilesystemCodeBaseLocator.openCodeBase(FilesystemCodeBaseLocator.java:77)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassPathBuilder.processWorkList(ClassPathBuilder.java:607)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.classfile.impl.ClassPathBuilder.build(ClassPathBuilder.java:226)</StackTrace>
+      <StackTrace>edu.umd.cs.findbugs.FindBugs2.buildClassPath(FindBugs2.java:677)</StackTrace>
       <StackTrace>edu.umd.cs.findbugs.FindBugs2.execute(FindBugs2.java:218)</StackTrace>
       <StackTrace>org.gradle.api.plugins.quality.internal.findbugs.FindBugsExecuter.runFindbugs(FindBugsExecuter.java:44)</StackTrace>
       <StackTrace>org.gradle.api.plugins.quality.internal.findbugs.FindBugsWorkerServer.execute(FindBugsWorkerServer.java:45)</StackTrace>
@@ -156,30 +156,32 @@
       <StackTrace>org.gradle.process.internal.launcher.GradleWorkerMain.main(GradleWorkerMain.java:37)</StackTrace>
     </Error>
   </Errors>
-  <FindBugsSummary timestamp="Tue, 26 Aug 2014 19:59:30 +0000" total_classes="8" referenced_classes="135" total_bugs="0" total_size="106" num_packages="1" vm_version="24.60-b09" cpu_seconds="28.09" clock_seconds="13.60" peak_mbytes="152.29" alloc_mbytes="683.00" gc_seconds="0.87">
-    <PackageStats package="sample.javafx.java" total_bugs="0" total_types="8" total_size="106">
-      <ClassStats class="sample.javafx.java.ApplicationModule" sourceFile="ApplicationModule.java" interface="false" size="6" bugs="0"/>
-      <ClassStats class="sample.javafx.java.Config" sourceFile="Config.java" interface="false" size="6" bugs="0"/>
+  <FindBugsSummary timestamp="Mon, 22 Sep 2014 08:01:26 +0000" total_classes="8" referenced_classes="142" total_bugs="0" total_size="119" num_packages="1" java_version="1.8.0_20" vm_version="25.20-b23" cpu_seconds="27.08" clock_seconds="2.93" peak_mbytes="167.49" alloc_mbytes="683.00" gc_seconds="0.07">
+    <PackageStats package="sample.javafx.java" total_bugs="0" total_types="8" total_size="119">
+      <ClassStats class="sample.javafx.java.ApplicationModule" sourceFile="ApplicationModule.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="sample.javafx.java.Config" sourceFile="Config.java" interface="false" size="15" bugs="0"/>
       <ClassStats class="sample.javafx.java.Launcher" sourceFile="Launcher.java" interface="false" size="7" bugs="0"/>
       <ClassStats class="sample.javafx.java.SampleController" sourceFile="SampleController.java" interface="false" size="15" bugs="0"/>
       <ClassStats class="sample.javafx.java.SampleController$1" sourceFile="SampleController.java" interface="false" size="8" bugs="0"/>
       <ClassStats class="sample.javafx.java.SampleModel" sourceFile="SampleModel.java" interface="false" size="24" bugs="0"/>
       <ClassStats class="sample.javafx.java.SampleService" sourceFile="SampleService.java" interface="false" size="9" bugs="0"/>
-      <ClassStats class="sample.javafx.java.SampleView" sourceFile="SampleView.java" interface="false" size="31" bugs="0"/>
+      <ClassStats class="sample.javafx.java.SampleView" sourceFile="SampleView.java" interface="false" size="32" bugs="0"/>
     </PackageStats>
     <FindBugsProfile>
-      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassInfoAnalysisEngine" totalMilliseconds="2257" invocations="1013" avgMicrosecondsPerInvocation="2228" maxMicrosecondsPerInvocation="144029" standardDeviationMircosecondsPerInvocation="7407"/>
-      <ClassProfile name="edu.umd.cs.findbugs.detect.FieldItemSummary" totalMilliseconds="1311" invocations="135" avgMicrosecondsPerInvocation="9714" maxMicrosecondsPerInvocation="190544" standardDeviationMircosecondsPerInvocation="24012"/>
-      <ClassProfile name="edu.umd.cs.findbugs.OpcodeStack$JumpInfoFactory" totalMilliseconds="922" invocations="312" avgMicrosecondsPerInvocation="2957" maxMicrosecondsPerInvocation="62122" standardDeviationMircosecondsPerInvocation="5105"/>
-      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.UnconditionalValueDerefDataflowFactory" totalMilliseconds="667" invocations="26" avgMicrosecondsPerInvocation="25676" maxMicrosecondsPerInvocation="526829" standardDeviationMircosecondsPerInvocation="100666"/>
-      <ClassProfile name="edu.umd.cs.findbugs.util.TopologicalSort" totalMilliseconds="525" invocations="981" avgMicrosecondsPerInvocation="535" maxMicrosecondsPerInvocation="49060" standardDeviationMircosecondsPerInvocation="2163"/>
-      <ClassProfile name="edu.umd.cs.findbugs.detect.BuildObligationPolicyDatabase" totalMilliseconds="479" invocations="135" avgMicrosecondsPerInvocation="3548" maxMicrosecondsPerInvocation="42734" standardDeviationMircosecondsPerInvocation="7201"/>
-      <ClassProfile name="edu.umd.cs.findbugs.detect.NoteDirectlyRelevantTypeQualifiers" totalMilliseconds="476" invocations="135" avgMicrosecondsPerInvocation="3529" maxMicrosecondsPerInvocation="48999" standardDeviationMircosecondsPerInvocation="7740"/>
-      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.JavaClassAnalysisEngine" totalMilliseconds="383" invocations="188" avgMicrosecondsPerInvocation="2038" maxMicrosecondsPerInvocation="34473" standardDeviationMircosecondsPerInvocation="4656"/>
-      <ClassProfile name="edu.umd.cs.findbugs.detect.FunctionsThatMightBeMistakenForProcedures" totalMilliseconds="321" invocations="135" avgMicrosecondsPerInvocation="2381" maxMicrosecondsPerInvocation="29080" standardDeviationMircosecondsPerInvocation="5559"/>
-      <ClassProfile name="edu.umd.cs.findbugs.detect.CalledMethods" totalMilliseconds="282" invocations="135" avgMicrosecondsPerInvocation="2090" maxMicrosecondsPerInvocation="53865" standardDeviationMircosecondsPerInvocation="5949"/>
-      <ClassProfile name="edu.umd.cs.findbugs.detect.OverridingEqualsNotSymmetrical" totalMilliseconds="247" invocations="135" avgMicrosecondsPerInvocation="1830" maxMicrosecondsPerInvocation="30442" standardDeviationMircosecondsPerInvocation="4147"/>
-      <ClassProfile name="edu.umd.cs.findbugs.detect.EqualsOperandShouldHaveClassCompatibleWithThis" totalMilliseconds="197" invocations="135" avgMicrosecondsPerInvocation="1466" maxMicrosecondsPerInvocation="23606" standardDeviationMircosecondsPerInvocation="3491"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassInfoAnalysisEngine" totalMilliseconds="569" invocations="1166" avgMicrosecondsPerInvocation="488" maxMicrosecondsPerInvocation="29691" standardDeviationMircosecondsPerInvocation="1607"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FieldItemSummary" totalMilliseconds="255" invocations="142" avgMicrosecondsPerInvocation="1796" maxMicrosecondsPerInvocation="31893" standardDeviationMircosecondsPerInvocation="4534"/>
+      <ClassProfile name="edu.umd.cs.findbugs.OpcodeStack$JumpInfoFactory" totalMilliseconds="200" invocations="358" avgMicrosecondsPerInvocation="559" maxMicrosecondsPerInvocation="8491" standardDeviationMircosecondsPerInvocation="843"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.JavaClassAnalysisEngine" totalMilliseconds="108" invocations="197" avgMicrosecondsPerInvocation="552" maxMicrosecondsPerInvocation="27887" standardDeviationMircosecondsPerInvocation="2336"/>
+      <ClassProfile name="edu.umd.cs.findbugs.util.TopologicalSort" totalMilliseconds="93" invocations="1133" avgMicrosecondsPerInvocation="82" maxMicrosecondsPerInvocation="12343" standardDeviationMircosecondsPerInvocation="405"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.NoteDirectlyRelevantTypeQualifiers" totalMilliseconds="93" invocations="142" avgMicrosecondsPerInvocation="657" maxMicrosecondsPerInvocation="16571" standardDeviationMircosecondsPerInvocation="1810"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.BuildObligationPolicyDatabase" totalMilliseconds="67" invocations="142" avgMicrosecondsPerInvocation="473" maxMicrosecondsPerInvocation="6985" standardDeviationMircosecondsPerInvocation="1036"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.MethodGenFactory" totalMilliseconds="62" invocations="26" avgMicrosecondsPerInvocation="2386" maxMicrosecondsPerInvocation="50509" standardDeviationMircosecondsPerInvocation="9634"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassDataAnalysisEngine" totalMilliseconds="58" invocations="1182" avgMicrosecondsPerInvocation="49" maxMicrosecondsPerInvocation="1150" standardDeviationMircosecondsPerInvocation="51"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.OverridingEqualsNotSymmetrical" totalMilliseconds="58" invocations="142" avgMicrosecondsPerInvocation="408" maxMicrosecondsPerInvocation="20554" standardDeviationMircosecondsPerInvocation="1797"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FunctionsThatMightBeMistakenForProcedures" totalMilliseconds="54" invocations="142" avgMicrosecondsPerInvocation="383" maxMicrosecondsPerInvocation="6006" standardDeviationMircosecondsPerInvocation="908"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.CalledMethods" totalMilliseconds="45" invocations="142" avgMicrosecondsPerInvocation="317" maxMicrosecondsPerInvocation="4175" standardDeviationMircosecondsPerInvocation="760"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.TypeDataflowFactory" totalMilliseconds="42" invocations="26" avgMicrosecondsPerInvocation="1647" maxMicrosecondsPerInvocation="15094" standardDeviationMircosecondsPerInvocation="3398"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.IsNullValueDataflowFactory" totalMilliseconds="42" invocations="26" avgMicrosecondsPerInvocation="1621" maxMicrosecondsPerInvocation="18716" standardDeviationMircosecondsPerInvocation="3539"/>
     </FindBugsProfile>
   </FindBugsSummary>
   <ClassFeatures></ClassFeatures>
