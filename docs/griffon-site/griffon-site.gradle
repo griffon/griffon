@@ -23,7 +23,8 @@ buildscript {
 
     dependencies {
         classpath 'me.champeau.gradle:jbake-gradle-plugin:0.2'
-        classpath 'org.asciidoctor:asciidoctor-java-integration:0.1.4'
+        classpath 'org.jbake:jbake-core:2.3.2'
+        classpath 'org.asciidoctor:asciidoctorj:1.5.0'
     }
 }
 
@@ -56,7 +57,7 @@ task pluginList << {
         content += """pass:[<ul class="list-inline">
         <li><iframe src="http://ghbtns.com/github-btn.html?user=griffon-plugins&repo=${repo.name}&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe></li>
         <li><iframe src="http://ghbtns.com/github-btn.html?user=griffon-plugins&repo=${repo.name}&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe></li></ul>]""".stripIndent(8)
-        content += """| image:http://img.shields.io/badge/download-latest-bb00bb.svg[link="https://bintray.com/griffon/griffon-plugins/${repo.name}/_latestVersion"]"""
+        content += """| image:https://api.bintray.com/packages/griffon/griffon-plugins/${repo.name}/images/download.svg[link="https://bintray.com/griffon/griffon-plugins/${repo.name}/_latestVersion"]"""
         content += """| image:http://img.shields.io/badge/docs-api-blue.svg[API, link="http://griffon-plugins.github.io/${repo.name}/"] """
         content += """| image:http://img.shields.io/travis/griffon-plugins/${repo.name}/master.svg[Build Status, link="https://travis-ci.org/griffon-plugins/${repo.name}/"] """
         content += """| image:http://img.shields.io/coveralls/griffon-plugins/${repo.name}/master.svg[Coverage Status, link="https://coveralls.io/r/griffon-plugins/${repo.name}/"] """
