@@ -25,10 +25,10 @@ import javax.inject.Inject;
 
 @ArtifactProviderFor(GriffonController.class)
 public class SampleController extends AbstractGriffonController {
-    private SampleModel model;                                             //<1>
+    private SampleModel model;                                          //<1>
 
     @Inject
-    private SampleService sampleService;                                   //<2>
+    private SampleService sampleService;                                //<2>
 
     @Inject
     public SampleController(@Nonnull GriffonApplication application) {
@@ -39,9 +39,9 @@ public class SampleController extends AbstractGriffonController {
         this.model = model;
     }
 
-    public void sayHello() {                                               //<3>
+    public void sayHello() {                                            //<3>
         final String result = sampleService.sayHello(model.getInput());
-        runInsideUIAsync(new Runnable() {                                  //<4>
+        runInsideUIAsync(new Runnable() {                               //<4>
             @Override
             public void run() {
                 model.setOutput(result);
