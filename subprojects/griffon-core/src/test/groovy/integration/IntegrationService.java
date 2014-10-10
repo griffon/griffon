@@ -15,22 +15,13 @@
  */
 package integration;
 
-import griffon.core.GriffonApplication;
 import griffon.core.i18n.MessageSource;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
-
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Arrays.asList;
 
 public class IntegrationService extends AbstractGriffonService {
-    @Inject
-    public IntegrationService(@Nonnull GriffonApplication application) {
-        super(application);
-    }
-
     public String sayHello(String input) {
         MessageSource messageSource = getApplication().getMessageSource();
         if (isBlank(input)) {

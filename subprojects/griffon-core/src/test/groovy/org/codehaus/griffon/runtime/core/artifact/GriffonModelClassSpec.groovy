@@ -27,7 +27,8 @@ class GriffonModelClassSpec extends Specification {
 
     void 'Get and Set properties on model instance'() {
         given:
-        SimpleModel model = new SimpleModel(new TestGriffonApplication())
+        SimpleModel model = new SimpleModel()
+        model.application = new TestGriffonApplication()
 
         // expect:
         assert griffonClass.getModelPropertyValue(model, 'value1') == null

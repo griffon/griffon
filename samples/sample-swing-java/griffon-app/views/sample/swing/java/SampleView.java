@@ -15,14 +15,15 @@
  */
 package sample.swing.java;
 
-import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonView;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView;
 
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.GridLayout;
@@ -39,11 +40,6 @@ import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 public class SampleView extends AbstractSwingGriffonView {
     private SampleController controller;                                         //<1>
     private SampleModel model;                                                   //<1>
-
-    @Inject
-    public SampleView(@Nonnull GriffonApplication application) {
-        super(application);
-    }
 
     public void setController(SampleController controller) {
         this.controller = controller;

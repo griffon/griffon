@@ -15,7 +15,6 @@
  */
 package org.codehaus.griffon.runtime.groovy.view;
 
-import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonView;
 import griffon.core.artifact.GriffonViewClass;
 import groovy.util.FactoryBuilderSupport;
@@ -33,10 +32,6 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGriffonViewScript extends AbstractGriffonMvcArtifactScript implements GriffonView {
     private FactoryBuilderSupport builder;
-
-    public AbstractGriffonViewScript(@Nonnull GriffonApplication application) {
-        super(application);
-    }
 
     @Nonnull
     @Override

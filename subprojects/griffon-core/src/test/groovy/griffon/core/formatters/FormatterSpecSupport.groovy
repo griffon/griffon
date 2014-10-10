@@ -32,11 +32,13 @@ abstract class FormatterSpecSupport extends Specification {
 
     static Date epochAsDate() {
         // Thu Jan 01 00:00:00 1970
+        TimeZone.setDefault(TimeZone.getTimeZone('Etc/GMT'))
         clearTime(new Date(0))
     }
 
     static Calendar epochAsCalendar() {
         // Thu Jan 01 00:00:00 1970
+        TimeZone.setDefault(TimeZone.getTimeZone('Etc/GMT'))
         Calendar c = Calendar.getInstance()
         c.time = epochAsDate()
         c

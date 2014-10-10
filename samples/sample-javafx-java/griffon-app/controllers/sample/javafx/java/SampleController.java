@@ -15,12 +15,10 @@
  */
 package sample.javafx.java;
 
-import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 @ArtifactProviderFor(GriffonController.class)
@@ -29,11 +27,6 @@ public class SampleController extends AbstractGriffonController {
 
     @Inject
     private SampleService sampleService;                                //<2>
-
-    @Inject
-    public SampleController(@Nonnull GriffonApplication application) {
-        super(application);
-    }
 
     public void setModel(SampleModel model) {
         this.model = model;

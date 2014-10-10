@@ -32,7 +32,18 @@ import javax.inject.Inject;
  * @since 2.0.0
  */
 public abstract class AbstractSwingGriffonView extends AbstractGriffonView {
+    public AbstractSwingGriffonView() {
+
+    }
+
+    /**
+     * Creates a new instance of this class.
+     *
+     * @param application the GriffonApplication that holds this artifact.
+     * @deprecated Griffon prefers field injection over constructor injector for artifacts as of 2.1.0
+     */
     @Inject
+    @Deprecated
     public AbstractSwingGriffonView(@Nonnull GriffonApplication application) {
         super(application);
     }

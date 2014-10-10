@@ -15,7 +15,6 @@
  */
 package org.codehaus.griffon.runtime.groovy.artifact;
 
-import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonMvcArtifact;
 import griffon.core.mvc.MVCGroup;
 
@@ -29,10 +28,6 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGriffonMvcArtifactScript extends AbstractGriffonArtifactScript implements GriffonMvcArtifact {
     private MVCGroup group;
-
-    public AbstractGriffonMvcArtifactScript(@Nonnull GriffonApplication application) {
-        super(application);
-    }
 
     public void setMvcGroup(@Nonnull MVCGroup group) {
         this.group = requireNonNull(group, "Argument 'group' must not be null");

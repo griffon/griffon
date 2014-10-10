@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
+import javax.inject.Inject;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
@@ -34,20 +35,18 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * @author Andres Almiray
  */
 public abstract class AbstractGriffonArtifactScript extends Script implements GriffonArtifact {
     private final Logger log;
-    private final GriffonApplication application;
+    @Inject
+    private GriffonApplication application;
     @GuardedBy("lock")
     private GriffonClass griffonClass;
     private final Object lock = new Object[0];
 
-    public AbstractGriffonArtifactScript(@Nonnull GriffonApplication application) {
-        this.application = requireNonNull(application, "Arguments 'application' must not be null");
+    public AbstractGriffonArtifactScript() {
         log = LoggerFactory.getLogger("griffon.app." + getArtifactType() + "." + getClass().getName());
     }
 

@@ -15,21 +15,12 @@
  */
 package integration;
 
-import griffon.core.GriffonApplication;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
 public class SimpleController extends AbstractGriffonController {
     private SimpleModel model;
     private String key;
     private String mvcId;
-
-    @Inject
-    public SimpleController(@Nonnull GriffonApplication application) {
-        super(application);
-    }
 
     public void setModel(SimpleModel model) {
         this.model = model;

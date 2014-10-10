@@ -15,17 +15,20 @@
  */
 package sample.pivot.java;
 
-import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonView;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.pivot.support.PivotAction;
 import griffon.pivot.support.adapters.TextInputContentAdapter;
 import org.apache.pivot.serialization.SerializationException;
-import org.apache.pivot.wtk.*;
+import org.apache.pivot.wtk.BoxPane;
+import org.apache.pivot.wtk.Button;
+import org.apache.pivot.wtk.Label;
+import org.apache.pivot.wtk.Orientation;
+import org.apache.pivot.wtk.PushButton;
+import org.apache.pivot.wtk.TextInput;
+import org.apache.pivot.wtk.Window;
 import org.codehaus.griffon.runtime.pivot.artifact.AbstractPivotGriffonView;
 
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
@@ -34,11 +37,6 @@ import java.util.Collections;
 public class SampleView extends AbstractPivotGriffonView {
     private SampleController controller;                                         //<1>
     private SampleModel model;                                                   //<1>
-
-    @Inject
-    public SampleView(@Nonnull GriffonApplication application) {
-        super(application);
-    }
 
     public void setController(SampleController controller) {
         this.controller = controller;

@@ -15,22 +15,14 @@
  */
 package integration;
 
-import griffon.core.GriffonApplication;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 
 public class SimpleModel extends AbstractGriffonModel {
     private String value1;
     private String value2;
-
-    @Inject
-    public SimpleModel(@Nonnull GriffonApplication application) {
-        super(application);
-    }
 
     public String getValue1() {
         return this.value1;
