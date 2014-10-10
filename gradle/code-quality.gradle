@@ -16,7 +16,7 @@
 
 apply plugin: 'checkstyle'
 apply plugin: 'codenarc'
-apply plugin: 'findbugs'
+// apply plugin: 'findbugs'
 apply plugin: 'jdepend'
 apply plugin: 'com.github.hierynomus.license'
 
@@ -33,6 +33,7 @@ codenarc {
     configFile = file("$configDir/codenarc/codenarc.groovy")
 }
 
+/*
 findbugs {
     toolVersion = '3.0.0'
     sourceSets = [sourceSets.main]
@@ -41,6 +42,7 @@ findbugs {
     effort = 'max'
     reportLevel = 'high'
 }
+*/
 
 jdepend {
     toolVersion = '2.9.1'
