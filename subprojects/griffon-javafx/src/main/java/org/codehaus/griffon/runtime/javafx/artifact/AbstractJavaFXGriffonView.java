@@ -52,7 +52,18 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
     private static final String ACTION_TARGET_SUFFIX = "ActionTarget";
     private static final String FXML_SUFFIX = ".fxml";
 
+    public AbstractJavaFXGriffonView() {
+
+    }
+
+    /**
+     * Creates a new instance of this class.
+     *
+     * @param application the GriffonApplication that holds this artifact.
+     * @deprecated Griffon prefers field injection over constructor injector for artifacts as of 2.1.0
+     */
     @Inject
+    @Deprecated
     public AbstractJavaFXGriffonView(@Nonnull GriffonApplication application) {
         super(application);
     }

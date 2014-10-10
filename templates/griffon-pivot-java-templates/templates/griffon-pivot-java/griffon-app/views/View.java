@@ -1,6 +1,5 @@
 package ${project_package};
 
-import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonView;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.pivot.support.PivotAction;
@@ -8,8 +7,6 @@ import org.apache.pivot.serialization.SerializationException;
 import org.codehaus.griffon.runtime.pivot.artifact.AbstractPivotGriffonView;
 import org.apache.pivot.wtk.*;
 
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
@@ -20,11 +17,6 @@ import static java.util.Arrays.asList;
 public class ${project_class_name}View extends AbstractPivotGriffonView {
     private ${project_class_name}Model model;
     private ${project_class_name}Controller controller;
-
-    @Inject
-    public ${project_class_name}View(@Nonnull GriffonApplication application) {
-        super(application);
-    }
 
     public void setModel(${project_class_name}Model model) {
         this.model = model;

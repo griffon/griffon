@@ -1,6 +1,5 @@
 package ${project_package};
 
-import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonView;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.fxml.FXML;
@@ -12,8 +11,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.Collections;
 
 @ArtifactProviderFor(GriffonView.class)
@@ -23,11 +20,6 @@ public class ${project_class_name}View extends AbstractJavaFXGriffonView {
 
     @FXML
     private Label clickLabel;
-
-    @Inject
-    public ${project_class_name}View(@Nonnull GriffonApplication application) {
-        super(application);
-    }
 
     public void setController(${project_class_name}Controller controller) {
         this.controller = controller;

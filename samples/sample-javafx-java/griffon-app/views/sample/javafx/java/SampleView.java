@@ -15,7 +15,6 @@
  */
 package sample.javafx.java;
 
-import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonView;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.fxml.FXML;
@@ -28,8 +27,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.Collections;
 
 @ArtifactProviderFor(GriffonView.class)
@@ -42,11 +39,6 @@ public class SampleView extends AbstractJavaFXGriffonView {
     @FXML
     private Label output;                                                 //<2>
 
-    @Inject
-    public SampleView(@Nonnull GriffonApplication application) {
-        super(application);
-    }
-
     public void setController(SampleController controller) {
         this.controller = controller;
     }
@@ -58,7 +50,7 @@ public class SampleView extends AbstractJavaFXGriffonView {
     @Override
     public void initUI() {
         Stage stage = (Stage) getApplication()
-            .createApplicationContainer(Collections.<String,Object>emptyMap());
+            .createApplicationContainer(Collections.<String, Object>emptyMap());
         stage.setTitle(getApplication().getConfiguration().getAsString("application.title"));
         stage.setWidth(400);
         stage.setHeight(120);

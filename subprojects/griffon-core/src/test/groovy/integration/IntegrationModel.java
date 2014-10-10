@@ -15,20 +15,11 @@
  */
 package integration;
 
-import griffon.core.GriffonApplication;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
-
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
 public class IntegrationModel extends AbstractGriffonModel {
     private String input;
     private String output;
-
-    @Inject
-    public IntegrationModel(@Nonnull GriffonApplication application) {
-        super(application);
-    }
 
     public String getInput() {
         return input;

@@ -32,7 +32,18 @@ import static griffon.util.GriffonNameUtils.requireNonBlank;
  * @since 2.0.0
  */
 public abstract class AbstractGriffonController extends AbstractGriffonMvcArtifact implements GriffonController {
+    public AbstractGriffonController() {
+
+    }
+
+    /**
+     * Creates a new instance of this class.
+     *
+     * @param application the GriffonApplication that holds this artifact.
+     * @deprecated Griffon prefers field injection over constructor injector for artifacts as of 2.1.0
+     */
     @Inject
+    @Deprecated
     public AbstractGriffonController(@Nonnull GriffonApplication application) {
         super(application);
     }

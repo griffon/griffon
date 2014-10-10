@@ -42,8 +42,9 @@ public class GriffonArtifactASTInjector extends AbstractASTInjector implements B
     private static final ClassNode INJECT_TYPE = makeClassSafe(Inject.class);
 
     public void inject(@Nonnull ClassNode classNode, @Nonnull String artifactType) {
-        FieldNode applicationField = injectField(classNode, APPLICATION, PRIVATE, GRIFFON_APPLICATION_TYPE, null, false);
+        injectedField(classNode, GRIFFON_APPLICATION_TYPE, APPLICATION);
 
+        /*
         ConstructorNode constructor = classNode.addConstructor(
             PUBLIC,
             params(param(GRIFFON_APPLICATION_TYPE, APPLICATION)),
@@ -51,6 +52,7 @@ public class GriffonArtifactASTInjector extends AbstractASTInjector implements B
             assigns(field(applicationField), var(APPLICATION))
         );
         constructor.addAnnotation(new AnnotationNode(INJECT_TYPE));
+        */
 
         // GriffonClass getGriffonClass()
         injectMethod(classNode, new MethodNode(

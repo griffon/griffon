@@ -20,6 +20,7 @@ import griffon.core.artifact.GriffonMvcArtifact;
 import griffon.core.mvc.MVCGroup;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
@@ -33,6 +34,18 @@ import static java.util.Objects.requireNonNull;
 public abstract class AbstractGriffonMvcArtifact extends AbstractGriffonArtifact implements GriffonMvcArtifact {
     private MVCGroup group;
 
+    public AbstractGriffonMvcArtifact() {
+
+    }
+
+    /**
+     * Creates a new instance of this class.
+     *
+     * @param application the GriffonApplication that holds this artifact.
+     * @deprecated Griffon prefers field injection over constructor injector for artifacts as of 2.1.0
+     */
+    @Inject
+    @Deprecated
     public AbstractGriffonMvcArtifact(@Nonnull GriffonApplication application) {
         super(application);
     }

@@ -19,9 +19,12 @@ import griffon.core.GriffonApplication;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.compile.core.BaseConstants;
 import org.codehaus.griffon.compile.core.ast.SourceUnitCollector;
-import org.codehaus.groovy.ast.*;
+import org.codehaus.groovy.ast.ASTNode;
+import org.codehaus.groovy.ast.AnnotationNode;
+import org.codehaus.groovy.ast.ClassHelper;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.ast.expr.ClassExpression;
-import org.codehaus.groovy.ast.expr.ConstructorCallExpression;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.control.SourceUnit;
 import org.slf4j.Logger;
@@ -31,9 +34,8 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
 
-import static java.lang.reflect.Modifier.PUBLIC;
 import static java.util.Objects.requireNonNull;
-import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.*;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectInterface;
 
 /**
  * Handles generation of code for Griffon artifacts.
@@ -70,24 +72,12 @@ public abstract class GriffonArtifactASTTransformation extends AbstractASTTransf
         if (superScriptClassNode != null && allowsScriptAsArtifact() && classNode.isDerivedFrom(ClassHelper.SCRIPT_TYPE)) {
             LOG.debug("Setting {} as the superclass of {}", superScriptClassNode.getName(), classNode.getName());
             classNode.setSuperClass(superScriptClassNode);
-            injectConstructor(classNode);
         } else if (superClassNode != null && ClassHelper.OBJECT_TYPE.equals(superClass)) {
             LOG.debug("Setting {} as the superclass of {}", superClassNode.getName(), classNode.getName());
             classNode.setSuperClass(superClassNode);
-            injectConstructor(classNode);
         } else if (!classNode.implementsInterface(getInterfaceNode())) {
             inject(classNode, superClass);
         }
-    }
-
-    protected void injectConstructor(ClassNode classNode) {
-        ConstructorNode constructor = classNode.addConstructor(
-            PUBLIC,
-            params(param(GRIFFON_APPLICATION_TYPE, APPLICATION)),
-            NO_EXCEPTIONS,
-            stmnt(new ConstructorCallExpression(ClassNode.SUPER, vars(APPLICATION)))
-        );
-        constructor.addAnnotation(new AnnotationNode(INJECT_TYPE));
     }
 
     protected void inject(ClassNode classNode, ClassNode superClass) {

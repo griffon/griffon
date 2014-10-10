@@ -28,7 +28,8 @@ class NoopActionManagerSpec extends Specification {
     void 'Verify NoopActionManager'() {
         given:
         ActionManager actionManager = new NoopActionManager()
-        GriffonController controller = new SimpleController(new TestGriffonApplication())
+        GriffonController controller = new SimpleController()
+        controller.application = new TestGriffonApplication()
 
         when:
         actionManager.createActions(controller)

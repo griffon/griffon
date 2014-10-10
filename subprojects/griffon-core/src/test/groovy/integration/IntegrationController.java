@@ -15,10 +15,8 @@
  */
 package integration;
 
-import griffon.core.GriffonApplication;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 public class IntegrationController extends AbstractGriffonController {
@@ -26,11 +24,6 @@ public class IntegrationController extends AbstractGriffonController {
 
     @Inject
     private IntegrationService sampleService;
-
-    @Inject
-    public IntegrationController(@Nonnull GriffonApplication application) {
-        super(application);
-    }
 
     public void setModel(IntegrationModel model) {
         this.model = model;

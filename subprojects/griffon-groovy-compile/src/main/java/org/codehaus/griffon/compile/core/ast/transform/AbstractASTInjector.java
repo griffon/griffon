@@ -16,17 +16,25 @@
 package org.codehaus.griffon.compile.core.ast.transform;
 
 import griffon.core.GriffonApplication;
+import org.codehaus.griffon.compile.core.ast.GriffonASTUtils;
+import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
 import org.codehaus.groovy.ast.MethodNode;
+import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.ast.expr.FieldExpression;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Named;
+
+import java.lang.reflect.Modifier;
 
 import static griffon.util.GriffonNameUtils.getGetterName;
+import static griffon.util.GriffonNameUtils.isBlank;
 import static java.lang.reflect.Modifier.isPrivate;
 import static java.util.Objects.requireNonNull;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_ARGS;
@@ -45,6 +53,7 @@ public abstract class AbstractASTInjector implements ASTInjector {
     private static final ClassNode INJECT_TYPE = makeClassSafe(Inject.class);
     private static final String PROPERTY_APPLICATION = "application";
     private static final String METHOD_GET_APPLICATION = "getApplication";
+    public static final ClassNode NAMED_TYPE = makeClassSafe(Named.class);
 
     @Nonnull
     public static ClassNode makeClassSafe(@Nonnull ClassNode classNode) {
@@ -98,5 +107,22 @@ public abstract class AbstractASTInjector implements ASTInjector {
     @Nonnull
     public static Expression applicationProperty(@Nonnull ClassNode classNode, @Nonnull String property) {
         return call(applicationExpression(classNode), getGetterName(property), NO_ARGS);
+    }
+
+    @Nonnull
+    public static FieldExpression injectedField(@Nonnull ClassNode owner, @Nonnull ClassNode type, @Nonnull String name) {
+        return injectedField(owner, type, name, null);
+    }
+
+    @Nonnull
+    public static FieldExpression injectedField(@Nonnull ClassNode owner, @Nonnull ClassNode type, @Nonnull String name, @Nullable String qualifierName) {
+        FieldNode fieldNode = GriffonASTUtils.injectField(owner, name, Modifier.PRIVATE, type, null, false);
+        fieldNode.addAnnotation(new AnnotationNode(INJECT_TYPE));
+        if (!isBlank(qualifierName)) {
+            AnnotationNode namedAnnotation = new AnnotationNode(NAMED_TYPE);
+            namedAnnotation.addMember("value", new ConstantExpression(qualifierName));
+            fieldNode.addAnnotation(namedAnnotation);
+        }
+        return new FieldExpression(fieldNode);
     }
 }

@@ -3,15 +3,12 @@ package ${project_package};
 import com.googlecode.lanterna.gui.Window;
 import com.googlecode.lanterna.gui.component.Label;
 import com.googlecode.lanterna.gui.component.Panel;
-import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonView;
 import griffon.lanterna.support.LanternaAction;
 import griffon.lanterna.widgets.MutableButton;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.lanterna.artifact.AbstractLanternaGriffonView;
 
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
@@ -20,11 +17,6 @@ import java.util.Collections;
 public class ${project_class_name}View extends AbstractLanternaGriffonView {
     private ${project_class_name}Model model;
     private ${project_class_name}Controller controller;
-
-    @Inject
-    public ${project_class_name}View(@Nonnull GriffonApplication application) {
-        super(application);
-    }
 
     public void setModel(${project_class_name}Model model) {
         this.model = model;

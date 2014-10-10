@@ -1,12 +1,9 @@
 package ${project_package};
 
-import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonView;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView;
 
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -24,11 +21,6 @@ import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 public class ${project_class_name}View extends AbstractSwingGriffonView {
     private ${project_class_name}Model model;
     private ${project_class_name}Controller controller;
-
-    @Inject
-    public ${project_class_name}View(@Nonnull GriffonApplication application) {
-        super(application);
-    }
 
     public void setModel(${project_class_name}Model model) {
         this.model = model;

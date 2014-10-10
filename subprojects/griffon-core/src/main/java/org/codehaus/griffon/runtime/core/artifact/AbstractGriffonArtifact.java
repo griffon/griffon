@@ -16,7 +16,12 @@
 package org.codehaus.griffon.runtime.core.artifact;
 
 import griffon.core.GriffonApplication;
-import griffon.core.artifact.*;
+import griffon.core.artifact.GriffonArtifact;
+import griffon.core.artifact.GriffonClass;
+import griffon.core.artifact.GriffonController;
+import griffon.core.artifact.GriffonModel;
+import griffon.core.artifact.GriffonMvcArtifact;
+import griffon.core.artifact.GriffonView;
 import griffon.core.mvc.MVCCallable;
 import griffon.core.mvc.MVCGroup;
 import org.slf4j.Logger;
@@ -25,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
+import javax.inject.Inject;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
@@ -32,8 +38,6 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * Base implementation of the GriffonArtifact interface.
@@ -43,14 +47,28 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGriffonArtifact implements GriffonArtifact {
     private final Logger log;
-    private final GriffonApplication application;
     @GuardedBy("lock")
     private GriffonClass griffonClass;
     private final Object lock = new Object[0];
 
-    public AbstractGriffonArtifact(@Nonnull GriffonApplication application) {
-        this.application = requireNonNull(application, "Arguments 'application' must not be null");
+    @Inject
+    protected GriffonApplication application;
+
+    public AbstractGriffonArtifact() {
         log = LoggerFactory.getLogger("griffon.app." + getArtifactType() + "." + getClass().getName());
+    }
+
+    /**
+     * Creates a new instance of this class.
+     *
+     * @param application the GriffonApplication that holds this artifact.
+     * @deprecated Griffon prefers field injection over constructor injector for artifacts as of 2.1.0
+     */
+    @Inject
+    @Deprecated
+    public AbstractGriffonArtifact(@Nonnull GriffonApplication application) {
+        this();
+        this.application = application;
     }
 
     @Nonnull

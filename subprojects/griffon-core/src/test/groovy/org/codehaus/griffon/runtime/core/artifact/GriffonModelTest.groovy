@@ -28,7 +28,8 @@ class GriffonModelTest {
     @Test
     void modelAsObservable() {
         // given:
-        SimpleModel model = new SimpleModel(new TestGriffonApplication())
+        SimpleModel model = new SimpleModel()
+        model.application = new TestGriffonApplication()
         PropertyChangeListener listener1 = new PropertyChangeListenerWitness()
         PropertyChangeListener listener2 = new PropertyChangeListenerWitness()
         model.addPropertyChangeListener(listener1)
@@ -70,7 +71,8 @@ class GriffonModelTest {
     @Test
     void modelAsVetoable() {
         // given:
-        SimpleModel model = new SimpleModel(new TestGriffonApplication())
+        SimpleModel model = new SimpleModel()
+        model.application = new TestGriffonApplication()
         VetoableChangeListener vlistener1 = new VetoableChangeListenerWitness()
         VetoableChangeListener vlistener2 = new VetoableChangeListenerWitness()
         PropertyChangeListener plistener1 = new PropertyChangeListenerWitness()

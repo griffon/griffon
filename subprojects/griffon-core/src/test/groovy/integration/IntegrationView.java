@@ -15,21 +15,12 @@
  */
 package integration;
 
-import griffon.core.GriffonApplication;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
-
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
 public class IntegrationView extends AbstractGriffonView implements Invokable {
     private IntegrationController controller;
     private IntegrationModel model;
     private boolean invoked;
-
-    @Inject
-    public IntegrationView(@Nonnull GriffonApplication application) {
-        super(application);
-    }
 
     public void setController(IntegrationController controller) {
         this.controller = controller;
