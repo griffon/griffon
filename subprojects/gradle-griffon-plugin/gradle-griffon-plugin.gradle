@@ -17,6 +17,9 @@
 apply plugin: 'groovy'
 apply from: rootProject.file('gradle/coverage.gradle')
 
+sourceCompatibility = '1.7'
+targetCompatibility = '1.7'
+
 dependencies {
     compile gradleApi()
     testCompile 'cglib:cglib-nodep:2.2.2'
