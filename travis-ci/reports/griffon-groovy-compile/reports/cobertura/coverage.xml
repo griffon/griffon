@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
 
-<coverage line-rate="0.21836734693877552" branch-rate="0.12893553223388307" lines-covered="321" lines-valid="1470" branches-covered="86" branches-valid="667" complexity="2.5714285714285716" version="2.0.3" timestamp="1411372969767">
+<coverage line-rate="0.2186648501362398" branch-rate="0.12855007473841554" lines-covered="321" lines-valid="1468" branches-covered="86" branches-valid="669" complexity="2.5692307692307694" version="2.0.3" timestamp="1413749244310">
 	<sources>
 		<source>/home/travis/build/griffon/griffon/subprojects/griffon-groovy-compile/src/main/groovy</source>
 		<source>/home/travis/build/griffon/griffon/subprojects/griffon-groovy-compile/src/main/java</source>
@@ -1891,7 +1891,7 @@
 				</class>
 			</classes>
 		</package>
-		<package name="org.codehaus.griffon.compile.core.ast.transform" line-rate="0.20698924731182797" branch-rate="0.1416490486257928" complexity="2.7848101265822787">
+		<package name="org.codehaus.griffon.compile.core.ast.transform" line-rate="0.2073608617594255" branch-rate="0.14105263157894737" complexity="2.779874213836478">
 			<classes>
 				<class name="org.codehaus.griffon.compile.core.ast.transform.ASTInjector" filename="org/codehaus/griffon/compile/core/ast/transform/ASTInjector.java" line-rate="1.0" branch-rate="1.0" complexity="1.0">
 					<methods>
@@ -1899,37 +1899,23 @@
 					<lines>
 					</lines>
 				</class>
-				<class name="org.codehaus.griffon.compile.core.ast.transform.AbstractASTInjector" filename="org/codehaus/griffon/compile/core/ast/transform/AbstractASTInjector.java" line-rate="0.0" branch-rate="0.0" complexity="2.5714285714285716">
+				<class name="org.codehaus.griffon.compile.core.ast.transform.AbstractASTInjector" filename="org/codehaus/griffon/compile/core/ast/transform/AbstractASTInjector.java" line-rate="0.0" branch-rate="0.0" complexity="2.3333333333333335">
 					<methods>
 						<method name="&lt;clinit&gt;" signature="()V" line-rate="0.0" branch-rate="1.0">
 							<lines>
-								<line number="43" hits="0" branch="false"/>
-								<line number="44" hits="0" branch="false"/>
-								<line number="45" hits="0" branch="false"/>
+								<line number="51" hits="0" branch="false"/>
+								<line number="52" hits="0" branch="false"/>
+								<line number="53" hits="0" branch="false"/>
+								<line number="56" hits="0" branch="false"/>
 							</lines>
 						</method>
 						<method name="&lt;init&gt;" signature="()V" line-rate="0.0" branch-rate="1.0">
 							<lines>
-								<line number="42" hits="0" branch="false"/>
+								<line number="50" hits="0" branch="false"/>
 							</lines>
 						</method>
 						<method name="applicationExpression" signature="(Lorg/codehaus/groovy/ast/ClassNode;)Lorg/codehaus/groovy/ast/expr/Expression;" line-rate="0.0" branch-rate="0.0">
 							<lines>
-								<line number="78" hits="0" branch="false"/>
-								<line number="79" hits="0" branch="true" condition-coverage="0% (0/2)">
-									<conditions>
-										<condition number="0" type="jump" coverage="0%"/>
-									</conditions>
-								</line>
-								<line number="80" hits="0" branch="false"/>
-								<line number="82" hits="0" branch="false"/>
-								<line number="83" hits="0" branch="true" condition-coverage="0% (0/4)">
-									<conditions>
-										<condition number="0" type="jump" coverage="0%"/>
-										<condition number="1" type="jump" coverage="0%"/>
-									</conditions>
-								</line>
-								<line number="84" hits="0" branch="false"/>
 								<line number="87" hits="0" branch="false"/>
 								<line number="88" hits="0" branch="true" condition-coverage="0% (0/2)">
 									<conditions>
@@ -1945,69 +1931,90 @@
 									</conditions>
 								</line>
 								<line number="93" hits="0" branch="false"/>
-								<line number="95" hits="0" branch="false"/>
+								<line number="96" hits="0" branch="false"/>
+								<line number="97" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
+								<line number="98" hits="0" branch="false"/>
+								<line number="100" hits="0" branch="false"/>
+								<line number="101" hits="0" branch="true" condition-coverage="0% (0/4)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+										<condition number="1" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
+								<line number="102" hits="0" branch="false"/>
+								<line number="104" hits="0" branch="false"/>
 							</lines>
 						</method>
 						<method name="applicationProperty" signature="(Lorg/codehaus/groovy/ast/ClassNode;Ljava/lang/String;)Lorg/codehaus/groovy/ast/expr/Expression;" line-rate="0.0" branch-rate="1.0">
 							<lines>
-								<line number="100" hits="0" branch="false"/>
+								<line number="109" hits="0" branch="false"/>
 							</lines>
 						</method>
 						<method name="currentThread" signature="()Lorg/codehaus/groovy/ast/expr/Expression;" line-rate="0.0" branch-rate="1.0">
 							<lines>
-								<line number="63" hits="0" branch="false"/>
+								<line number="72" hits="0" branch="false"/>
+							</lines>
+						</method>
+						<method name="injectedField" signature="(Lorg/codehaus/groovy/ast/ClassNode;Lorg/codehaus/groovy/ast/ClassNode;Ljava/lang/String;)Lorg/codehaus/groovy/ast/expr/FieldExpression;" line-rate="0.0" branch-rate="1.0">
+							<lines>
+								<line number="114" hits="0" branch="false"/>
+							</lines>
+						</method>
+						<method name="injectedField" signature="(Lorg/codehaus/groovy/ast/ClassNode;Lorg/codehaus/groovy/ast/ClassNode;Ljava/lang/String;Ljava/lang/String;)Lorg/codehaus/groovy/ast/expr/FieldExpression;" line-rate="0.0" branch-rate="0.0">
+							<lines>
+								<line number="119" hits="0" branch="false"/>
+								<line number="120" hits="0" branch="false"/>
+								<line number="121" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
+								<line number="122" hits="0" branch="false"/>
+								<line number="123" hits="0" branch="false"/>
+								<line number="124" hits="0" branch="false"/>
+								<line number="126" hits="0" branch="false"/>
 							</lines>
 						</method>
 						<method name="makeClassSafe" signature="(Ljava/lang/Class;)Lorg/codehaus/groovy/ast/ClassNode;" line-rate="0.0" branch-rate="1.0">
 							<lines>
-								<line number="57" hits="0" branch="false"/>
-								<line number="58" hits="0" branch="false"/>
+								<line number="66" hits="0" branch="false"/>
+								<line number="67" hits="0" branch="false"/>
 							</lines>
 						</method>
 						<method name="makeClassSafe" signature="(Lorg/codehaus/groovy/ast/ClassNode;)Lorg/codehaus/groovy/ast/ClassNode;" line-rate="0.0" branch-rate="1.0">
 							<lines>
-								<line number="51" hits="0" branch="false"/>
-								<line number="52" hits="0" branch="false"/>
+								<line number="60" hits="0" branch="false"/>
+								<line number="61" hits="0" branch="false"/>
 							</lines>
 						</method>
 						<method name="myClass" signature="()Lorg/codehaus/groovy/ast/expr/Expression;" line-rate="0.0" branch-rate="1.0">
 							<lines>
-								<line number="68" hits="0" branch="false"/>
+								<line number="77" hits="0" branch="false"/>
 							</lines>
 						</method>
 						<method name="myClassLoader" signature="()Lorg/codehaus/groovy/ast/expr/Expression;" line-rate="0.0" branch-rate="1.0">
 							<lines>
-								<line number="73" hits="0" branch="false"/>
+								<line number="82" hits="0" branch="false"/>
 							</lines>
 						</method>
 					</methods>
 					<lines>
-						<line number="42" hits="0" branch="false"/>
-						<line number="43" hits="0" branch="false"/>
-						<line number="44" hits="0" branch="false"/>
-						<line number="45" hits="0" branch="false"/>
+						<line number="50" hits="0" branch="false"/>
 						<line number="51" hits="0" branch="false"/>
 						<line number="52" hits="0" branch="false"/>
-						<line number="57" hits="0" branch="false"/>
-						<line number="58" hits="0" branch="false"/>
-						<line number="63" hits="0" branch="false"/>
-						<line number="68" hits="0" branch="false"/>
-						<line number="73" hits="0" branch="false"/>
-						<line number="78" hits="0" branch="false"/>
-						<line number="79" hits="0" branch="true" condition-coverage="0% (0/2)">
-							<conditions>
-								<condition number="0" type="jump" coverage="0%"/>
-							</conditions>
-						</line>
-						<line number="80" hits="0" branch="false"/>
+						<line number="53" hits="0" branch="false"/>
+						<line number="56" hits="0" branch="false"/>
+						<line number="60" hits="0" branch="false"/>
+						<line number="61" hits="0" branch="false"/>
+						<line number="66" hits="0" branch="false"/>
+						<line number="67" hits="0" branch="false"/>
+						<line number="72" hits="0" branch="false"/>
+						<line number="77" hits="0" branch="false"/>
 						<line number="82" hits="0" branch="false"/>
-						<line number="83" hits="0" branch="true" condition-coverage="0% (0/4)">
-							<conditions>
-								<condition number="0" type="jump" coverage="0%"/>
-								<condition number="1" type="jump" coverage="0%"/>
-							</conditions>
-						</line>
-						<line number="84" hits="0" branch="false"/>
 						<line number="87" hits="0" branch="false"/>
 						<line number="88" hits="0" branch="true" condition-coverage="0% (0/2)">
 							<conditions>
@@ -2023,8 +2030,35 @@
 							</conditions>
 						</line>
 						<line number="93" hits="0" branch="false"/>
-						<line number="95" hits="0" branch="false"/>
+						<line number="96" hits="0" branch="false"/>
+						<line number="97" hits="0" branch="true" condition-coverage="0% (0/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
+						<line number="98" hits="0" branch="false"/>
 						<line number="100" hits="0" branch="false"/>
+						<line number="101" hits="0" branch="true" condition-coverage="0% (0/4)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+								<condition number="1" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
+						<line number="102" hits="0" branch="false"/>
+						<line number="104" hits="0" branch="false"/>
+						<line number="109" hits="0" branch="false"/>
+						<line number="114" hits="0" branch="false"/>
+						<line number="119" hits="0" branch="false"/>
+						<line number="120" hits="0" branch="false"/>
+						<line number="121" hits="0" branch="true" condition-coverage="0% (0/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
+						<line number="122" hits="0" branch="false"/>
+						<line number="123" hits="0" branch="false"/>
+						<line number="124" hits="0" branch="false"/>
+						<line number="126" hits="0" branch="false"/>
 					</lines>
 				</class>
 				<class name="org.codehaus.griffon.compile.core.ast.transform.AbstractASTTransformation" filename="org/codehaus/griffon/compile/core/ast/transform/AbstractASTTransformation.java" line-rate="0.46511627906976744" branch-rate="0.34375" complexity="2.9523809523809526">
@@ -4028,24 +4062,20 @@
 						<method name="inject" signature="(Lorg/codehaus/groovy/ast/ClassNode;Ljava/lang/String;)V" line-rate="0.0" branch-rate="1.0">
 							<lines>
 								<line number="45" hits="0" branch="false"/>
-								<line number="47" hits="0" branch="false"/>
-								<line number="49" hits="0" branch="false"/>
-								<line number="51" hits="0" branch="false"/>
-								<line number="53" hits="0" branch="false"/>
-								<line number="56" hits="0" branch="false"/>
-								<line number="62" hits="0" branch="false"/>
-								<line number="63" hits="0" branch="false"/>
+								<line number="58" hits="0" branch="false"/>
+								<line number="64" hits="0" branch="false"/>
 								<line number="65" hits="0" branch="false"/>
 								<line number="67" hits="0" branch="false"/>
-								<line number="68" hits="0" branch="false"/>
-								<line number="72" hits="0" branch="false"/>
-								<line number="75" hits="0" branch="false"/>
-								<line number="79" hits="0" branch="false"/>
-								<line number="85" hits="0" branch="false"/>
-								<line number="88" hits="0" branch="false"/>
-								<line number="89" hits="0" branch="false"/>
+								<line number="69" hits="0" branch="false"/>
+								<line number="70" hits="0" branch="false"/>
+								<line number="74" hits="0" branch="false"/>
+								<line number="77" hits="0" branch="false"/>
+								<line number="81" hits="0" branch="false"/>
+								<line number="87" hits="0" branch="false"/>
 								<line number="90" hits="0" branch="false"/>
 								<line number="91" hits="0" branch="false"/>
+								<line number="92" hits="0" branch="false"/>
+								<line number="93" hits="0" branch="false"/>
 							</lines>
 						</method>
 					</methods>
@@ -4057,108 +4087,95 @@
 						<line number="41" hits="0" branch="false"/>
 						<line number="42" hits="0" branch="false"/>
 						<line number="45" hits="0" branch="false"/>
-						<line number="47" hits="0" branch="false"/>
-						<line number="49" hits="0" branch="false"/>
-						<line number="51" hits="0" branch="false"/>
-						<line number="53" hits="0" branch="false"/>
-						<line number="56" hits="0" branch="false"/>
-						<line number="62" hits="0" branch="false"/>
-						<line number="63" hits="0" branch="false"/>
+						<line number="58" hits="0" branch="false"/>
+						<line number="64" hits="0" branch="false"/>
 						<line number="65" hits="0" branch="false"/>
 						<line number="67" hits="0" branch="false"/>
-						<line number="68" hits="0" branch="false"/>
-						<line number="72" hits="0" branch="false"/>
-						<line number="75" hits="0" branch="false"/>
-						<line number="79" hits="0" branch="false"/>
-						<line number="85" hits="0" branch="false"/>
-						<line number="88" hits="0" branch="false"/>
-						<line number="89" hits="0" branch="false"/>
+						<line number="69" hits="0" branch="false"/>
+						<line number="70" hits="0" branch="false"/>
+						<line number="74" hits="0" branch="false"/>
+						<line number="77" hits="0" branch="false"/>
+						<line number="81" hits="0" branch="false"/>
+						<line number="87" hits="0" branch="false"/>
 						<line number="90" hits="0" branch="false"/>
 						<line number="91" hits="0" branch="false"/>
+						<line number="92" hits="0" branch="false"/>
+						<line number="93" hits="0" branch="false"/>
 					</lines>
 				</class>
-				<class name="org.codehaus.griffon.compile.core.ast.transform.GriffonArtifactASTTransformation" filename="org/codehaus/griffon/compile/core/ast/transform/GriffonArtifactASTTransformation.java" line-rate="0.2727272727272727" branch-rate="0.15789473684210525" complexity="2.4285714285714284">
+				<class name="org.codehaus.griffon.compile.core.ast.transform.GriffonArtifactASTTransformation" filename="org/codehaus/griffon/compile/core/ast/transform/GriffonArtifactASTTransformation.java" line-rate="0.3125" branch-rate="0.15789473684210525" complexity="2.5384615384615383">
 					<methods>
 						<method name="&lt;clinit&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
 							<lines>
-								<line number="46" hits="1" branch="false"/>
-								<line number="49" hits="1" branch="false"/>
-								<line number="50" hits="1" branch="false"/>
+								<line number="48" hits="1" branch="false"/>
+								<line number="51" hits="1" branch="false"/>
+								<line number="52" hits="1" branch="false"/>
 							</lines>
 						</method>
 						<method name="&lt;init&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
 							<lines>
-								<line number="45" hits="4" branch="false"/>
+								<line number="47" hits="4" branch="false"/>
 							</lines>
 						</method>
 						<method name="allowsScriptAsArtifact" signature="()Z" line-rate="1.0" branch-rate="1.0">
 							<lines>
-								<line number="63" hits="3" branch="false"/>
+								<line number="65" hits="3" branch="false"/>
 							</lines>
 						</method>
 						<method name="getSuperClassNode" signature="(Lorg/codehaus/groovy/ast/ClassNode;)Lorg/codehaus/groovy/ast/ClassNode;" line-rate="0.0" branch-rate="1.0">
 							<lines>
-								<line number="119" hits="0" branch="false"/>
+								<line number="109" hits="0" branch="false"/>
 							</lines>
 						</method>
 						<method name="getSuperScriptClassNode" signature="(Lorg/codehaus/groovy/ast/ClassNode;)Lorg/codehaus/groovy/ast/ClassNode;" line-rate="0.0" branch-rate="1.0">
 							<lines>
-								<line number="115" hits="0" branch="false"/>
+								<line number="105" hits="0" branch="false"/>
 							</lines>
 						</method>
 						<method name="inject" signature="(Lorg/codehaus/groovy/ast/ClassNode;Lorg/codehaus/groovy/ast/ClassNode;)V" line-rate="0.0" branch-rate="0.0">
 							<lines>
-								<line number="94" hits="0" branch="false"/>
-								<line number="95" hits="0" branch="true" condition-coverage="0% (0/2)">
-									<conditions>
-										<condition number="0" type="jump" coverage="0%"/>
-									</conditions>
-								</line>
-								<line number="97" hits="0" branch="true" condition-coverage="0% (0/2)">
-									<conditions>
-										<condition number="0" type="jump" coverage="0%"/>
-									</conditions>
-								</line>
-								<line number="98" hits="0" branch="false"/>
-								<line number="99" hits="0" branch="false"/>
-								<line number="101" hits="0" branch="false"/>
-								<line number="103" hits="0" branch="true" condition-coverage="0% (0/2)">
-									<conditions>
-										<condition number="0" type="jump" coverage="0%"/>
-									</conditions>
-								</line>
-								<line number="104" hits="0" branch="false"/>
-								<line number="106" hits="0" branch="false"/>
-								<line number="107" hits="0" branch="false"/>
-								<line number="108" hits="0" branch="false"/>
-								<line number="110" hits="0" branch="false"/>
-							</lines>
-						</method>
-						<method name="injectConstructor" signature="(Lorg/codehaus/groovy/ast/ClassNode;)V" line-rate="0.0" branch-rate="1.0">
-							<lines>
 								<line number="84" hits="0" branch="false"/>
-								<line number="86" hits="0" branch="false"/>
+								<line number="85" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
+								<line number="87" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
 								<line number="88" hits="0" branch="false"/>
-								<line number="90" hits="0" branch="false"/>
+								<line number="89" hits="0" branch="false"/>
 								<line number="91" hits="0" branch="false"/>
+								<line number="93" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
+								<line number="94" hits="0" branch="false"/>
+								<line number="96" hits="0" branch="false"/>
+								<line number="97" hits="0" branch="false"/>
+								<line number="98" hits="0" branch="false"/>
+								<line number="100" hits="0" branch="false"/>
 							</lines>
 						</method>
 						<method name="isArtifact" signature="(Lorg/codehaus/groovy/ast/ClassNode;Lorg/codehaus/groovy/control/SourceUnit;Lorg/codehaus/groovy/ast/ClassNode;)Z" line-rate="0.625" branch-rate="0.2">
 							<lines>
-								<line number="137" hits="1" branch="false"/>
-								<line number="138" hits="1" branch="false"/>
-								<line number="139" hits="1" branch="false"/>
-								<line number="140" hits="1" branch="true" condition-coverage="33% (2/6)">
+								<line number="127" hits="1" branch="false"/>
+								<line number="128" hits="1" branch="false"/>
+								<line number="129" hits="1" branch="false"/>
+								<line number="130" hits="1" branch="true" condition-coverage="33% (2/6)">
 									<conditions>
 										<condition number="0" type="jump" coverage="50%"/>
 										<condition number="1" type="jump" coverage="50%"/>
 										<condition number="2" type="jump" coverage="0%"/>
 									</conditions>
 								</line>
-								<line number="141" hits="1" branch="false"/>
-								<line number="143" hits="0" branch="false"/>
-								<line number="144" hits="0" branch="false"/>
-								<line number="145" hits="0" branch="true" condition-coverage="0% (0/4)">
+								<line number="131" hits="1" branch="false"/>
+								<line number="133" hits="0" branch="false"/>
+								<line number="134" hits="0" branch="false"/>
+								<line number="135" hits="0" branch="true" condition-coverage="0% (0/4)">
 									<conditions>
 										<condition number="0" type="jump" coverage="0%"/>
 										<condition number="1" type="jump" coverage="0%"/>
@@ -4168,7 +4185,7 @@
 						</method>
 						<method name="isOrImplements" signature="(Lorg/codehaus/groovy/ast/ClassNode;Lorg/codehaus/groovy/ast/ClassNode;)Z" line-rate="0.0" branch-rate="0.0">
 							<lines>
-								<line number="133" hits="0" branch="true" condition-coverage="0% (0/4)">
+								<line number="123" hits="0" branch="true" condition-coverage="0% (0/4)">
 									<conditions>
 										<condition number="0" type="jump" coverage="0%"/>
 										<condition number="1" type="jump" coverage="0%"/>
@@ -4178,31 +4195,29 @@
 						</method>
 						<method name="postInject" signature="(Lorg/codehaus/groovy/ast/ClassNode;)V" line-rate="0.0" branch-rate="1.0">
 							<lines>
-								<line number="130" hits="0" branch="false"/>
+								<line number="120" hits="0" branch="false"/>
 							</lines>
 						</method>
 						<method name="transform" signature="(Lorg/codehaus/groovy/ast/ClassNode;)V" line-rate="0.0" branch-rate="0.0">
 							<lines>
-								<line number="67" hits="0" branch="false"/>
-								<line number="68" hits="0" branch="false"/>
 								<line number="69" hits="0" branch="false"/>
-								<line number="70" hits="0" branch="true" condition-coverage="0% (0/6)">
+								<line number="70" hits="0" branch="false"/>
+								<line number="71" hits="0" branch="false"/>
+								<line number="72" hits="0" branch="true" condition-coverage="0% (0/6)">
 									<conditions>
 										<condition number="0" type="jump" coverage="0%"/>
 										<condition number="1" type="jump" coverage="0%"/>
 										<condition number="2" type="jump" coverage="0%"/>
 									</conditions>
 								</line>
-								<line number="71" hits="0" branch="false"/>
-								<line number="72" hits="0" branch="false"/>
 								<line number="73" hits="0" branch="false"/>
-								<line number="74" hits="0" branch="true" condition-coverage="0% (0/4)">
+								<line number="74" hits="0" branch="false"/>
+								<line number="75" hits="0" branch="true" condition-coverage="0% (0/4)">
 									<conditions>
 										<condition number="0" type="jump" coverage="0%"/>
 										<condition number="1" type="jump" coverage="0%"/>
 									</conditions>
 								</line>
-								<line number="75" hits="0" branch="false"/>
 								<line number="76" hits="0" branch="false"/>
 								<line number="77" hits="0" branch="false"/>
 								<line number="78" hits="0" branch="true" condition-coverage="0% (0/2)">
@@ -4216,67 +4231,65 @@
 						</method>
 						<method name="visit" signature="([Lorg/codehaus/groovy/ast/ASTNode;Lorg/codehaus/groovy/control/SourceUnit;)V" line-rate="0.7142857142857143" branch-rate="0.6666666666666666">
 							<lines>
-								<line number="53" hits="4" branch="false"/>
-								<line number="54" hits="4" branch="false"/>
-								<line number="55" hits="4" branch="true" condition-coverage="75% (3/4)">
+								<line number="55" hits="4" branch="false"/>
+								<line number="56" hits="4" branch="false"/>
+								<line number="57" hits="4" branch="true" condition-coverage="75% (3/4)">
 									<conditions>
 										<condition number="0" type="jump" coverage="50%"/>
 										<condition number="1" type="jump" coverage="100%"/>
 									</conditions>
 								</line>
-								<line number="56" hits="1" branch="true" condition-coverage="50% (1/2)">
+								<line number="58" hits="1" branch="true" condition-coverage="50% (1/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="50%"/>
 									</conditions>
 								</line>
-								<line number="57" hits="4" branch="false"/>
-								<line number="59" hits="0" branch="false"/>
-								<line number="60" hits="0" branch="false"/>
+								<line number="59" hits="4" branch="false"/>
+								<line number="61" hits="0" branch="false"/>
+								<line number="62" hits="0" branch="false"/>
 							</lines>
 						</method>
 					</methods>
 					<lines>
-						<line number="45" hits="4" branch="false"/>
-						<line number="46" hits="1" branch="false"/>
-						<line number="49" hits="1" branch="false"/>
-						<line number="50" hits="1" branch="false"/>
-						<line number="53" hits="4" branch="false"/>
-						<line number="54" hits="4" branch="false"/>
-						<line number="55" hits="4" branch="true" condition-coverage="75% (3/4)">
+						<line number="47" hits="4" branch="false"/>
+						<line number="48" hits="1" branch="false"/>
+						<line number="51" hits="1" branch="false"/>
+						<line number="52" hits="1" branch="false"/>
+						<line number="55" hits="4" branch="false"/>
+						<line number="56" hits="4" branch="false"/>
+						<line number="57" hits="4" branch="true" condition-coverage="75% (3/4)">
 							<conditions>
 								<condition number="0" type="jump" coverage="50%"/>
 								<condition number="1" type="jump" coverage="100%"/>
 							</conditions>
 						</line>
-						<line number="56" hits="1" branch="true" condition-coverage="50% (1/2)">
+						<line number="58" hits="1" branch="true" condition-coverage="50% (1/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="50%"/>
 							</conditions>
 						</line>
-						<line number="57" hits="4" branch="false"/>
-						<line number="59" hits="0" branch="false"/>
-						<line number="60" hits="0" branch="false"/>
-						<line number="63" hits="3" branch="false"/>
-						<line number="67" hits="0" branch="false"/>
-						<line number="68" hits="0" branch="false"/>
+						<line number="59" hits="4" branch="false"/>
+						<line number="61" hits="0" branch="false"/>
+						<line number="62" hits="0" branch="false"/>
+						<line number="65" hits="3" branch="false"/>
 						<line number="69" hits="0" branch="false"/>
-						<line number="70" hits="0" branch="true" condition-coverage="0% (0/6)">
+						<line number="70" hits="0" branch="false"/>
+						<line number="71" hits="0" branch="false"/>
+						<line number="72" hits="0" branch="true" condition-coverage="0% (0/6)">
 							<conditions>
 								<condition number="0" type="jump" coverage="0%"/>
 								<condition number="1" type="jump" coverage="0%"/>
 								<condition number="2" type="jump" coverage="0%"/>
 							</conditions>
 						</line>
-						<line number="71" hits="0" branch="false"/>
-						<line number="72" hits="0" branch="false"/>
 						<line number="73" hits="0" branch="false"/>
-						<line number="74" hits="0" branch="true" condition-coverage="0% (0/4)">
+						<line number="74" hits="0" branch="false"/>
+						<line number="75" hits="0" branch="true" condition-coverage="0% (0/4)">
 							<conditions>
 								<condition number="0" type="jump" coverage="0%"/>
 								<condition number="1" type="jump" coverage="0%"/>
 							</conditions>
 						</line>
-						<line number="75" hits="0" branch="false"/>
 						<line number="76" hits="0" branch="false"/>
 						<line number="77" hits="0" branch="false"/>
 						<line number="78" hits="0" branch="true" condition-coverage="0% (0/2)">
@@ -4287,57 +4300,52 @@
 						<line number="79" hits="0" branch="false"/>
 						<line number="81" hits="0" branch="false"/>
 						<line number="84" hits="0" branch="false"/>
-						<line number="86" hits="0" branch="false"/>
+						<line number="85" hits="0" branch="true" condition-coverage="0% (0/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
+						<line number="87" hits="0" branch="true" condition-coverage="0% (0/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
 						<line number="88" hits="0" branch="false"/>
-						<line number="90" hits="0" branch="false"/>
+						<line number="89" hits="0" branch="false"/>
 						<line number="91" hits="0" branch="false"/>
+						<line number="93" hits="0" branch="true" condition-coverage="0% (0/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
 						<line number="94" hits="0" branch="false"/>
-						<line number="95" hits="0" branch="true" condition-coverage="0% (0/2)">
-							<conditions>
-								<condition number="0" type="jump" coverage="0%"/>
-							</conditions>
-						</line>
-						<line number="97" hits="0" branch="true" condition-coverage="0% (0/2)">
-							<conditions>
-								<condition number="0" type="jump" coverage="0%"/>
-							</conditions>
-						</line>
+						<line number="96" hits="0" branch="false"/>
+						<line number="97" hits="0" branch="false"/>
 						<line number="98" hits="0" branch="false"/>
-						<line number="99" hits="0" branch="false"/>
-						<line number="101" hits="0" branch="false"/>
-						<line number="103" hits="0" branch="true" condition-coverage="0% (0/2)">
-							<conditions>
-								<condition number="0" type="jump" coverage="0%"/>
-							</conditions>
-						</line>
-						<line number="104" hits="0" branch="false"/>
-						<line number="106" hits="0" branch="false"/>
-						<line number="107" hits="0" branch="false"/>
-						<line number="108" hits="0" branch="false"/>
-						<line number="110" hits="0" branch="false"/>
-						<line number="115" hits="0" branch="false"/>
-						<line number="119" hits="0" branch="false"/>
-						<line number="130" hits="0" branch="false"/>
-						<line number="133" hits="0" branch="true" condition-coverage="0% (0/4)">
+						<line number="100" hits="0" branch="false"/>
+						<line number="105" hits="0" branch="false"/>
+						<line number="109" hits="0" branch="false"/>
+						<line number="120" hits="0" branch="false"/>
+						<line number="123" hits="0" branch="true" condition-coverage="0% (0/4)">
 							<conditions>
 								<condition number="0" type="jump" coverage="0%"/>
 								<condition number="1" type="jump" coverage="0%"/>
 							</conditions>
 						</line>
-						<line number="137" hits="1" branch="false"/>
-						<line number="138" hits="1" branch="false"/>
-						<line number="139" hits="1" branch="false"/>
-						<line number="140" hits="1" branch="true" condition-coverage="33% (2/6)">
+						<line number="127" hits="1" branch="false"/>
+						<line number="128" hits="1" branch="false"/>
+						<line number="129" hits="1" branch="false"/>
+						<line number="130" hits="1" branch="true" condition-coverage="33% (2/6)">
 							<conditions>
 								<condition number="0" type="jump" coverage="50%"/>
 								<condition number="1" type="jump" coverage="50%"/>
 								<condition number="2" type="jump" coverage="0%"/>
 							</conditions>
 						</line>
-						<line number="141" hits="1" branch="false"/>
-						<line number="143" hits="0" branch="false"/>
-						<line number="144" hits="0" branch="false"/>
-						<line number="145" hits="0" branch="true" condition-coverage="0% (0/4)">
+						<line number="131" hits="1" branch="false"/>
+						<line number="133" hits="0" branch="false"/>
+						<line number="134" hits="0" branch="false"/>
+						<line number="135" hits="0" branch="true" condition-coverage="0% (0/4)">
 							<conditions>
 								<condition number="0" type="jump" coverage="0%"/>
 								<condition number="1" type="jump" coverage="0%"/>

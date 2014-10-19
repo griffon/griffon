@@ -455,11 +455,11 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;268</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> requireState(<span class="keyword">boolean</span> condition, String message) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;269</td>  <td class="nbHitsCovered"><a title="Line 269: Conditional coverage 100% (2/2).">&nbsp;406</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 269: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (!condition) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;269</td>  <td class="nbHitsCovered"><a title="Line 269: Conditional coverage 100% (2/2).">&nbsp;431</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 269: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (!condition) {</a></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;270</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(message);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;271</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;272</td>  <td class="nbHitsCovered">&nbsp;403</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;272</td>  <td class="nbHitsCovered">&nbsp;428</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;273</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;274</td>  <td class="nbHits">&nbsp;</td>
@@ -494,8 +494,8 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;289</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isEventHandler(@Nonnull String name) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;290</td>  <td class="nbHitsCovered">&nbsp;24</td>  <td class="src"><pre class="src">&nbsp;        requireNonBlank(name, ERROR_NAME_BLANK);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;291</td>  <td class="nbHitsCovered">&nbsp;24</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> EVENT_HANDLER_PATTERN.matcher(name).matches();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;290</td>  <td class="nbHitsCovered">&nbsp;23</td>  <td class="src"><pre class="src">&nbsp;        requireNonBlank(name, ERROR_NAME_BLANK);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;291</td>  <td class="nbHitsCovered">&nbsp;23</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> EVENT_HANDLER_PATTERN.matcher(name).matches();</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;292</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;293</td>  <td class="nbHits">&nbsp;</td>
@@ -570,9 +570,9 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;329</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isEventHandler(@Nonnull MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;330</td>  <td class="nbHitsCovered">&nbsp;2363</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;331</td>  <td class="nbHitsCovered"><a title="Line 331: Conditional coverage 100% (2/2).">&nbsp;2363</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 331: Conditional coverage 100% (2/2).">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;332</td>  <td class="nbHitsCovered"><a title="Line 332: Conditional coverage 100% (2/2).">&nbsp;2187</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 332: Conditional coverage 100% (2/2).">            EVENT_HANDLER_PATTERN.matcher(method.getName()).matches();</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;330</td>  <td class="nbHitsCovered">&nbsp;2475</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;331</td>  <td class="nbHitsCovered"><a title="Line 331: Conditional coverage 100% (2/2).">&nbsp;2475</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 331: Conditional coverage 100% (2/2).">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;332</td>  <td class="nbHitsCovered"><a title="Line 332: Conditional coverage 100% (2/2).">&nbsp;2291</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 332: Conditional coverage 100% (2/2).">            EVENT_HANDLER_PATTERN.matcher(method.getName()).matches();</a></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;333</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;334</td>  <td class="nbHits">&nbsp;</td>
@@ -734,8 +734,8 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;417</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isBasicMethod(@Nonnull MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;418</td>  <td class="nbHitsCovered">&nbsp;2286</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;419</td>  <td class="nbHitsUncovered"><a title="Line 419: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">&nbsp;2286</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 419: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp; BASIC_METHODS.contains(method);</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;418</td>  <td class="nbHitsCovered">&nbsp;2388</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;419</td>  <td class="nbHitsUncovered"><a title="Line 419: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">&nbsp;2388</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 419: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp; BASIC_METHODS.contains(method);</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;420</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;421</td>  <td class="nbHits">&nbsp;</td>
@@ -786,9 +786,9 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;445</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isGroovyInjectedMethod(@Nonnull MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;446</td>  <td class="nbHitsCovered">&nbsp;1881</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;447</td>  <td class="nbHitsUncovered"><a title="Line 447: Conditional coverage 50% (1/2).">&nbsp;1881</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 447: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;448</td>  <td class="nbHitsUncovered"><a title="Line 448: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">&nbsp;1881</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 448: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">            (method.getName().startsWith(<span class="string">"super$"</span>) || method.getName().startsWith(<span class="string">"this$"</span>));</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;446</td>  <td class="nbHitsCovered">&nbsp;1965</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;447</td>  <td class="nbHitsUncovered"><a title="Line 447: Conditional coverage 50% (1/2).">&nbsp;1965</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 447: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;448</td>  <td class="nbHitsUncovered"><a title="Line 448: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">&nbsp;1965</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 448: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">            (method.getName().startsWith(<span class="string">"super$"</span>) || method.getName().startsWith(<span class="string">"this$"</span>));</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;449</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;450</td>  <td class="nbHits">&nbsp;</td>
@@ -863,9 +863,9 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;486</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isGetterMethod(@Nonnull MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;487</td>  <td class="nbHitsCovered">&nbsp;258</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;488</td>  <td class="nbHitsUncovered"><a title="Line 488: Conditional coverage 50% (1/2).">&nbsp;258</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 488: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;489</td>  <td class="nbHitsCovered"><a title="Line 489: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">&nbsp;258</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 489: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">            (GETTER_PATTERN_1.matcher(method.getName()).matches() || GETTER_PATTERN_2.matcher(method.getName()).matches());</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;487</td>  <td class="nbHitsCovered">&nbsp;270</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;488</td>  <td class="nbHitsUncovered"><a title="Line 488: Conditional coverage 50% (1/2).">&nbsp;270</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 488: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;489</td>  <td class="nbHitsCovered"><a title="Line 489: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">&nbsp;270</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 489: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">            (GETTER_PATTERN_1.matcher(method.getName()).matches() || GETTER_PATTERN_2.matcher(method.getName()).matches());</a></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;490</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;491</td>  <td class="nbHits">&nbsp;</td>
@@ -932,8 +932,8 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;523</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isSetterMethod(@Nonnull MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;524</td>  <td class="nbHitsCovered">&nbsp;181</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;525</td>  <td class="nbHitsUncovered"><a title="Line 525: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">&nbsp;181</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 525: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp; SETTER_PATTERN.matcher(method.getName()).matches();</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;524</td>  <td class="nbHitsCovered">&nbsp;189</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;525</td>  <td class="nbHitsUncovered"><a title="Line 525: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">&nbsp;189</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 525: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp; SETTER_PATTERN.matcher(method.getName()).matches();</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;526</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;527</td>  <td class="nbHits">&nbsp;</td>
@@ -1004,9 +1004,9 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;561</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isArtifactMethod(@Nonnull MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;562</td>  <td class="nbHitsCovered">&nbsp;1662</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;563</td>  <td class="nbHitsUncovered"><a title="Line 563: Conditional coverage 50% (1/2).">&nbsp;1662</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 563: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;564</td>  <td class="nbHitsCovered"><a title="Line 564: Conditional coverage 100% (2/2).">&nbsp;1662</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 564: Conditional coverage 100% (2/2).">            ARTIFACT_METHODS.contains(method);</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;562</td>  <td class="nbHitsCovered">&nbsp;1734</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;563</td>  <td class="nbHitsUncovered"><a title="Line 563: Conditional coverage 50% (1/2).">&nbsp;1734</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 563: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;564</td>  <td class="nbHitsCovered"><a title="Line 564: Conditional coverage 100% (2/2).">&nbsp;1734</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 564: Conditional coverage 100% (2/2).">            ARTIFACT_METHODS.contains(method);</a></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;565</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;566</td>  <td class="nbHits">&nbsp;</td>
@@ -1077,9 +1077,9 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;600</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isMvcMethod(@Nonnull MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;601</td>  <td class="nbHitsCovered">&nbsp;514</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;602</td>  <td class="nbHitsUncovered"><a title="Line 602: Conditional coverage 50% (1/2).">&nbsp;514</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 602: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;603</td>  <td class="nbHitsCovered"><a title="Line 603: Conditional coverage 100% (2/2).">&nbsp;514</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 603: Conditional coverage 100% (2/2).">            MVC_METHODS.contains(method);</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;601</td>  <td class="nbHitsCovered">&nbsp;534</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;602</td>  <td class="nbHitsUncovered"><a title="Line 602: Conditional coverage 50% (1/2).">&nbsp;534</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 602: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;603</td>  <td class="nbHitsCovered"><a title="Line 603: Conditional coverage 100% (2/2).">&nbsp;534</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 603: Conditional coverage 100% (2/2).">            MVC_METHODS.contains(method);</a></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;604</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;605</td>  <td class="nbHits">&nbsp;</td>
@@ -1150,9 +1150,9 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;639</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isThreadingMethod(@Nonnull MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;640</td>  <td class="nbHitsCovered">&nbsp;1891</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;641</td>  <td class="nbHitsUncovered"><a title="Line 641: Conditional coverage 50% (1/2).">&nbsp;1891</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 641: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;642</td>  <td class="nbHitsCovered"><a title="Line 642: Conditional coverage 100% (2/2).">&nbsp;1891</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 642: Conditional coverage 100% (2/2).">            THREADING_METHODS.contains(method);</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;640</td>  <td class="nbHitsCovered">&nbsp;1975</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;641</td>  <td class="nbHitsUncovered"><a title="Line 641: Conditional coverage 50% (1/2).">&nbsp;1975</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 641: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;642</td>  <td class="nbHitsCovered"><a title="Line 642: Conditional coverage 100% (2/2).">&nbsp;1975</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 642: Conditional coverage 100% (2/2).">            THREADING_METHODS.contains(method);</a></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;643</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;644</td>  <td class="nbHits">&nbsp;</td>
@@ -1223,9 +1223,9 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;678</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isEventPublisherMethod(@Nonnull MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;679</td>  <td class="nbHitsCovered">&nbsp;293</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;680</td>  <td class="nbHitsUncovered"><a title="Line 680: Conditional coverage 50% (1/2).">&nbsp;293</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 680: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;681</td>  <td class="nbHitsCovered"><a title="Line 681: Conditional coverage 100% (2/2).">&nbsp;293</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 681: Conditional coverage 100% (2/2).">            EVENT_PUBLISHER_METHODS.contains(method);</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;679</td>  <td class="nbHitsCovered">&nbsp;305</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;680</td>  <td class="nbHitsUncovered"><a title="Line 680: Conditional coverage 50% (1/2).">&nbsp;305</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 680: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;681</td>  <td class="nbHitsCovered"><a title="Line 681: Conditional coverage 100% (2/2).">&nbsp;305</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 681: Conditional coverage 100% (2/2).">            EVENT_PUBLISHER_METHODS.contains(method);</a></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;682</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;683</td>  <td class="nbHits">&nbsp;</td>
@@ -1296,9 +1296,9 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;717</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isObservableMethod(@Nonnull MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;718</td>  <td class="nbHitsCovered">&nbsp;292</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;719</td>  <td class="nbHitsUncovered"><a title="Line 719: Conditional coverage 50% (1/2).">&nbsp;292</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 719: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;720</td>  <td class="nbHitsCovered"><a title="Line 720: Conditional coverage 100% (2/2).">&nbsp;292</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 720: Conditional coverage 100% (2/2).">            OBSERVABLE_METHODS.contains(method);</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;718</td>  <td class="nbHitsCovered">&nbsp;304</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;719</td>  <td class="nbHitsUncovered"><a title="Line 719: Conditional coverage 50% (1/2).">&nbsp;304</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 719: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;720</td>  <td class="nbHitsCovered"><a title="Line 720: Conditional coverage 100% (2/2).">&nbsp;304</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 720: Conditional coverage 100% (2/2).">            OBSERVABLE_METHODS.contains(method);</a></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;721</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;722</td>  <td class="nbHits">&nbsp;</td>
@@ -1369,9 +1369,9 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;756</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isResourceHandlerMethod(@Nonnull MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;757</td>  <td class="nbHitsCovered">&nbsp;268</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;758</td>  <td class="nbHitsUncovered"><a title="Line 758: Conditional coverage 50% (1/2).">&nbsp;268</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 758: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;759</td>  <td class="nbHitsCovered"><a title="Line 759: Conditional coverage 100% (2/2).">&nbsp;268</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 759: Conditional coverage 100% (2/2).">            RESOURCE_HANDLER_METHODS.contains(method);</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;757</td>  <td class="nbHitsCovered">&nbsp;280</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;758</td>  <td class="nbHitsUncovered"><a title="Line 758: Conditional coverage 50% (1/2).">&nbsp;280</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 758: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;759</td>  <td class="nbHitsCovered"><a title="Line 759: Conditional coverage 100% (2/2).">&nbsp;280</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 759: Conditional coverage 100% (2/2).">            RESOURCE_HANDLER_METHODS.contains(method);</a></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;760</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;761</td>  <td class="nbHits">&nbsp;</td>
@@ -1552,11 +1552,11 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;855</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isInstanceMethod(@Nonnull MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;856</td>  <td class="nbHitsCovered">&nbsp;14423</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;857</td>  <td class="nbHitsCovered">&nbsp;14423</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">int</span> modifiers = method.getModifiers();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;858</td>  <td class="nbHitsUncovered"><a title="Line 858: Conditional coverage 50% (1/2).">&nbsp;14423</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 858: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> Modifier.isPublic(modifiers) &amp;&amp;</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;859</td>  <td class="nbHitsUncovered"><a title="Line 859: Conditional coverage 50% (1/2).">&nbsp;14423</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 859: Conditional coverage 50% (1/2).">            !Modifier.isAbstract(modifiers) &amp;&amp;</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;860</td>  <td class="nbHitsCovered"><a title="Line 860: Conditional coverage 100% (2/2).">&nbsp;14423</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 860: Conditional coverage 100% (2/2).">            !Modifier.isStatic(modifiers);</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;856</td>  <td class="nbHitsCovered">&nbsp;15063</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;857</td>  <td class="nbHitsCovered">&nbsp;15063</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">int</span> modifiers = method.getModifiers();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;858</td>  <td class="nbHitsUncovered"><a title="Line 858: Conditional coverage 50% (1/2).">&nbsp;15063</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 858: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> Modifier.isPublic(modifiers) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;859</td>  <td class="nbHitsUncovered"><a title="Line 859: Conditional coverage 50% (1/2).">&nbsp;15063</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 859: Conditional coverage 50% (1/2).">            !Modifier.isAbstract(modifiers) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;860</td>  <td class="nbHitsCovered"><a title="Line 860: Conditional coverage 100% (2/2).">&nbsp;15063</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 860: Conditional coverage 100% (2/2).">            !Modifier.isStatic(modifiers);</a></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;861</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;862</td>  <td class="nbHits">&nbsp;</td>
@@ -1603,8 +1603,8 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;883</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isPlainMethod(@Nonnull Method method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;884</td>  <td class="nbHitsCovered">&nbsp;2466</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;885</td>  <td class="nbHitsCovered">&nbsp;2466</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> isPlainMethod(MethodDescriptor.forMethod(method));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;884</td>  <td class="nbHitsCovered">&nbsp;2576</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;885</td>  <td class="nbHitsCovered">&nbsp;2576</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> isPlainMethod(MethodDescriptor.forMethod(method));</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;886</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;887</td>  <td class="nbHits">&nbsp;</td>
@@ -1651,18 +1651,18 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;908</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isPlainMethod(@Nonnull MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;909</td>  <td class="nbHitsCovered">&nbsp;2466</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;910</td>  <td class="nbHitsCovered"><a title="Line 910: Conditional coverage 100% (2/2).">&nbsp;2466</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 910: Conditional coverage 100% (2/2).">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;911</td>  <td class="nbHitsCovered"><a title="Line 911: Conditional coverage 100% (2/2).">&nbsp;2286</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 911: Conditional coverage 100% (2/2).">            !isBasicMethod(method) &amp;&amp;</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;912</td>  <td class="nbHitsUncovered"><a title="Line 912: Conditional coverage 50% (1/2).">&nbsp;1881</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 912: Conditional coverage 50% (1/2).">            !isGroovyInjectedMethod(method) &amp;&amp;</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;913</td>  <td class="nbHitsCovered"><a title="Line 913: Conditional coverage 100% (2/2).">&nbsp;1881</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 913: Conditional coverage 100% (2/2).">            !isThreadingMethod(method) &amp;&amp;</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;914</td>  <td class="nbHitsCovered"><a title="Line 914: Conditional coverage 100% (2/2).">&nbsp;1611</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 914: Conditional coverage 100% (2/2).">            !isArtifactMethod(method) &amp;&amp;</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;915</td>  <td class="nbHitsCovered"><a title="Line 915: Conditional coverage 100% (2/2).">&nbsp;441</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 915: Conditional coverage 100% (2/2).">            !isMvcMethod(method) &amp;&amp;</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;916</td>  <td class="nbHitsUncovered"><a title="Line 916: Conditional coverage 50% (1/2).">&nbsp;270</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 916: Conditional coverage 50% (1/2).">            !isEventPublisherMethod(method) &amp;&amp;</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;917</td>  <td class="nbHitsCovered"><a title="Line 917: Conditional coverage 100% (2/2).">&nbsp;270</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 917: Conditional coverage 100% (2/2).">            !isObservableMethod(method) &amp;&amp;</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;918</td>  <td class="nbHitsUncovered"><a title="Line 918: Conditional coverage 50% (1/2).">&nbsp;258</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 918: Conditional coverage 50% (1/2).">            !isResourceHandlerMethod(method) &amp;&amp;</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;919</td>  <td class="nbHitsCovered"><a title="Line 919: Conditional coverage 100% (2/2).">&nbsp;258</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 919: Conditional coverage 100% (2/2).">            !isGetterMethod(method) &amp;&amp;</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;920</td>  <td class="nbHitsCovered"><a title="Line 920: Conditional coverage 100% (2/2).">&nbsp;181</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 920: Conditional coverage 100% (2/2).">            !isSetterMethod(method) &amp;&amp;</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;909</td>  <td class="nbHitsCovered">&nbsp;2576</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;910</td>  <td class="nbHitsCovered"><a title="Line 910: Conditional coverage 100% (2/2).">&nbsp;2576</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 910: Conditional coverage 100% (2/2).">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;911</td>  <td class="nbHitsCovered"><a title="Line 911: Conditional coverage 100% (2/2).">&nbsp;2388</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 911: Conditional coverage 100% (2/2).">            !isBasicMethod(method) &amp;&amp;</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;912</td>  <td class="nbHitsUncovered"><a title="Line 912: Conditional coverage 50% (1/2).">&nbsp;1965</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 912: Conditional coverage 50% (1/2).">            !isGroovyInjectedMethod(method) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;913</td>  <td class="nbHitsCovered"><a title="Line 913: Conditional coverage 100% (2/2).">&nbsp;1965</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 913: Conditional coverage 100% (2/2).">            !isThreadingMethod(method) &amp;&amp;</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;914</td>  <td class="nbHitsCovered"><a title="Line 914: Conditional coverage 100% (2/2).">&nbsp;1683</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 914: Conditional coverage 100% (2/2).">            !isArtifactMethod(method) &amp;&amp;</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;915</td>  <td class="nbHitsCovered"><a title="Line 915: Conditional coverage 100% (2/2).">&nbsp;461</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 915: Conditional coverage 100% (2/2).">            !isMvcMethod(method) &amp;&amp;</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;916</td>  <td class="nbHitsUncovered"><a title="Line 916: Conditional coverage 50% (1/2).">&nbsp;282</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 916: Conditional coverage 50% (1/2).">            !isEventPublisherMethod(method) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;917</td>  <td class="nbHitsCovered"><a title="Line 917: Conditional coverage 100% (2/2).">&nbsp;282</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 917: Conditional coverage 100% (2/2).">            !isObservableMethod(method) &amp;&amp;</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;918</td>  <td class="nbHitsUncovered"><a title="Line 918: Conditional coverage 50% (1/2).">&nbsp;270</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 918: Conditional coverage 50% (1/2).">            !isResourceHandlerMethod(method) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;919</td>  <td class="nbHitsCovered"><a title="Line 919: Conditional coverage 100% (2/2).">&nbsp;270</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 919: Conditional coverage 100% (2/2).">            !isGetterMethod(method) &amp;&amp;</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;920</td>  <td class="nbHitsCovered"><a title="Line 920: Conditional coverage 100% (2/2).">&nbsp;189</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 920: Conditional coverage 100% (2/2).">            !isSetterMethod(method) &amp;&amp;</a></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;921</td>  <td class="nbHitsUncovered"><a title="Line 921: Conditional coverage 50% (1/2).">&nbsp;19</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 921: Conditional coverage 50% (1/2).">            !isContributionMethod(method);</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;922</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
@@ -2866,33 +2866,33 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1647</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> setPropertiesNoException(@Nonnull Object bean, @Nonnull Map&lt;String, Object&gt; properties) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1648</td>  <td class="nbHitsCovered">&nbsp;117</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(bean, ERROR_BEAN_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1649</td>  <td class="nbHitsCovered">&nbsp;117</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(properties, ERROR_PROPERTIES_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1650</td>  <td class="nbHitsCovered"><a title="Line 1650: Conditional coverage 100% (2/2).">&nbsp;117</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 1650: Conditional coverage 100% (2/2).">        <span class="keyword">for</span> (Map.Entry&lt;String, Object&gt; entry : properties.entrySet()) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1648</td>  <td class="nbHitsCovered">&nbsp;123</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(bean, ERROR_BEAN_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1649</td>  <td class="nbHitsCovered">&nbsp;123</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(properties, ERROR_PROPERTIES_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1650</td>  <td class="nbHitsCovered"><a title="Line 1650: Conditional coverage 100% (2/2).">&nbsp;123</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 1650: Conditional coverage 100% (2/2).">        <span class="keyword">for</span> (Map.Entry&lt;String, Object&gt; entry : properties.entrySet()) {</a></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1651</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1652</td>  <td class="nbHitsCovered">&nbsp;1008</td>  <td class="src"><pre class="src">&nbsp;                setPropertyValue(bean, entry.getKey(), entry.getValue());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1653</td>  <td class="nbHitsCovered">&nbsp;713</td>  <td class="src"><pre class="src">&nbsp;            } <span class="keyword">catch</span> (PropertyException e) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1652</td>  <td class="nbHitsCovered">&nbsp;1056</td>  <td class="src"><pre class="src">&nbsp;                setPropertyValue(bean, entry.getKey(), entry.getValue());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1653</td>  <td class="nbHitsCovered">&nbsp;747</td>  <td class="src"><pre class="src">&nbsp;            } <span class="keyword">catch</span> (PropertyException e) {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1654</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                <span class="comment">// ignore</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1655</td>  <td class="nbHitsCovered">&nbsp;295</td>  <td class="src"><pre class="src">&nbsp;            }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1656</td>  <td class="nbHitsCovered">&nbsp;1008</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1657</td>  <td class="nbHitsCovered">&nbsp;117</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1655</td>  <td class="nbHitsCovered">&nbsp;309</td>  <td class="src"><pre class="src">&nbsp;            }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1656</td>  <td class="nbHitsCovered">&nbsp;1056</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1657</td>  <td class="nbHitsCovered">&nbsp;123</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1658</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1659</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> setPropertyValue(@Nonnull Object bean, @Nonnull String name, @Nullable Object value) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1660</td>  <td class="nbHitsCovered">&nbsp;1011</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(bean, ERROR_BEAN_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1661</td>  <td class="nbHitsCovered">&nbsp;1011</td>  <td class="src"><pre class="src">&nbsp;        requireNonBlank(name, ERROR_NAME_BLANK);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1660</td>  <td class="nbHitsCovered">&nbsp;1059</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(bean, ERROR_BEAN_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1661</td>  <td class="nbHitsCovered">&nbsp;1059</td>  <td class="src"><pre class="src">&nbsp;        requireNonBlank(name, ERROR_NAME_BLANK);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1662</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1663</td>  <td class="nbHitsCovered">&nbsp;1011</td>  <td class="src"><pre class="src">&nbsp;            setProperty(bean, name, value);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1664</td>  <td class="nbHitsCovered">&nbsp;713</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">catch</span> (IllegalAccessException | NoSuchMethodException e) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1665</td>  <td class="nbHitsCovered">&nbsp;713</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> PropertyException(bean, name, value, e);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1663</td>  <td class="nbHitsCovered">&nbsp;1059</td>  <td class="src"><pre class="src">&nbsp;            setProperty(bean, name, value);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1664</td>  <td class="nbHitsCovered">&nbsp;747</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">catch</span> (IllegalAccessException | NoSuchMethodException e) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1665</td>  <td class="nbHitsCovered">&nbsp;747</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> PropertyException(bean, name, value, e);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;1666</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        } <span class="keyword">catch</span> (InvocationTargetException e) {</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;1667</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> PropertyException(bean, name, value, e.getTargetException());</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1668</td>  <td class="nbHitsCovered">&nbsp;298</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1669</td>  <td class="nbHitsCovered">&nbsp;298</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1668</td>  <td class="nbHitsCovered">&nbsp;312</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1669</td>  <td class="nbHitsCovered">&nbsp;312</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1670</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1671</td>  <td class="nbHits">&nbsp;</td>
@@ -2971,11 +2971,11 @@
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">throws</span> IllegalAccessException, InvocationTargetException,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1712</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        NoSuchMethodException {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1713</td>  <td class="nbHitsCovered">&nbsp;1018</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(bean, ERROR_BEAN_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1714</td>  <td class="nbHitsCovered">&nbsp;1018</td>  <td class="src"><pre class="src">&nbsp;        requireNonBlank(name, ERROR_NAME_BLANK);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1713</td>  <td class="nbHitsCovered">&nbsp;1066</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(bean, ERROR_BEAN_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1714</td>  <td class="nbHitsCovered">&nbsp;1066</td>  <td class="src"><pre class="src">&nbsp;        requireNonBlank(name, ERROR_NAME_BLANK);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1715</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1716</td>  <td class="nbHitsUncovered"><a title="Line 1716: Conditional coverage 50% (1/2).">&nbsp;1018</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 1716: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> getPropertyDescriptor(bean <span class="keyword">instanceof</span> Class ? (Class&lt;?&gt;) bean : bean.getClass(), name);</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1716</td>  <td class="nbHitsUncovered"><a title="Line 1716: Conditional coverage 50% (1/2).">&nbsp;1066</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 1716: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> getPropertyDescriptor(bean <span class="keyword">instanceof</span> Class ? (Class&lt;?&gt;) bean : bean.getClass(), name);</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1717</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1718</td>  <td class="nbHits">&nbsp;</td>
@@ -3030,21 +3030,21 @@
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">throws</span> IllegalAccessException, InvocationTargetException,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1743</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        NoSuchMethodException {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1744</td>  <td class="nbHitsCovered">&nbsp;1018</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(clazz, ERROR_CLAZZ_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1745</td>  <td class="nbHitsCovered">&nbsp;1018</td>  <td class="src"><pre class="src">&nbsp;        requireNonBlank(name, ERROR_NAME_BLANK);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1744</td>  <td class="nbHitsCovered">&nbsp;1066</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(clazz, ERROR_CLAZZ_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1745</td>  <td class="nbHitsCovered">&nbsp;1066</td>  <td class="src"><pre class="src">&nbsp;        requireNonBlank(name, ERROR_NAME_BLANK);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1746</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1747</td>  <td class="nbHitsCovered">&nbsp;1018</td>  <td class="src"><pre class="src">&nbsp;        PropertyDescriptor[] descriptors = getPropertyDescriptors(clazz);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1748</td>  <td class="nbHitsCovered"><a title="Line 1748: Conditional coverage 100% (2/2).">&nbsp;8600</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 1748: Conditional coverage 100% (2/2).">        <span class="keyword">for</span> (PropertyDescriptor descriptor : descriptors) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1749</td>  <td class="nbHitsCovered"><a title="Line 1749: Conditional coverage 100% (2/2).">&nbsp;8004</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 1749: Conditional coverage 100% (2/2).">            <span class="keyword">if</span> (name.equals(descriptor.getName())) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1750</td>  <td class="nbHitsCovered">&nbsp;422</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">return</span> (descriptor);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1747</td>  <td class="nbHitsCovered">&nbsp;1066</td>  <td class="src"><pre class="src">&nbsp;        PropertyDescriptor[] descriptors = getPropertyDescriptors(clazz);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1748</td>  <td class="nbHitsCovered"><a title="Line 1748: Conditional coverage 100% (2/2).">&nbsp;9006</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 1748: Conditional coverage 100% (2/2).">        <span class="keyword">for</span> (PropertyDescriptor descriptor : descriptors) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1749</td>  <td class="nbHitsCovered"><a title="Line 1749: Conditional coverage 100% (2/2).">&nbsp;8382</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 1749: Conditional coverage 100% (2/2).">            <span class="keyword">if</span> (name.equals(descriptor.getName())) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1750</td>  <td class="nbHitsCovered">&nbsp;442</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">return</span> (descriptor);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1751</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1752</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1753</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1754</td>  <td class="nbHitsCovered">&nbsp;596</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> <span class="keyword">null</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1754</td>  <td class="nbHitsCovered">&nbsp;624</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> <span class="keyword">null</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1755</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1756</td>  <td class="nbHits">&nbsp;</td>
@@ -3071,16 +3071,16 @@
   <td class="src"><pre class="src">&nbsp;    @Nonnull</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1767</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> PropertyDescriptor[] getPropertyDescriptors(@Nonnull Class&lt;?&gt; beanClass) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1768</td>  <td class="nbHitsCovered">&nbsp;1654</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(beanClass, ERROR_CLAZZ_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1768</td>  <td class="nbHitsCovered">&nbsp;1732</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(beanClass, ERROR_CLAZZ_NULL);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1769</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1770</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="comment">// Look up any cached descriptors for this bean class</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1771</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        PropertyDescriptor[] descriptors;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1772</td>  <td class="nbHitsCovered">&nbsp;1654</td>  <td class="src"><pre class="src">&nbsp;        descriptors = descriptorsCache.get(beanClass.getName());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1773</td>  <td class="nbHitsCovered"><a title="Line 1773: Conditional coverage 100% (2/2).">&nbsp;1654</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 1773: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (descriptors != <span class="keyword">null</span>) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1774</td>  <td class="nbHitsCovered">&nbsp;1638</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> descriptors;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1772</td>  <td class="nbHitsCovered">&nbsp;1732</td>  <td class="src"><pre class="src">&nbsp;        descriptors = descriptorsCache.get(beanClass.getName());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1773</td>  <td class="nbHitsCovered"><a title="Line 1773: Conditional coverage 100% (2/2).">&nbsp;1732</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 1773: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (descriptors != <span class="keyword">null</span>) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1774</td>  <td class="nbHitsCovered">&nbsp;1716</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> descriptors;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1775</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1776</td>  <td class="nbHits">&nbsp;</td>
@@ -3318,30 +3318,30 @@
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">throws</span> IllegalAccessException, InvocationTargetException,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1914</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        NoSuchMethodException {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1915</td>  <td class="nbHitsCovered">&nbsp;1013</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(bean, ERROR_BEAN_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1916</td>  <td class="nbHitsCovered">&nbsp;1013</td>  <td class="src"><pre class="src">&nbsp;        requireNonBlank(name, ERROR_NAME_BLANK);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1915</td>  <td class="nbHitsCovered">&nbsp;1061</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(bean, ERROR_BEAN_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1916</td>  <td class="nbHitsCovered">&nbsp;1061</td>  <td class="src"><pre class="src">&nbsp;        requireNonBlank(name, ERROR_NAME_BLANK);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1917</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1918</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="comment">// Retrieve the property setter method for the specified property</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1919</td>  <td class="nbHitsCovered">&nbsp;1013</td>  <td class="src"><pre class="src">&nbsp;        PropertyDescriptor descriptor = getPropertyDescriptor(bean, name);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1920</td>  <td class="nbHitsCovered"><a title="Line 1920: Conditional coverage 100% (2/2).">&nbsp;1013</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 1920: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (descriptor == <span class="keyword">null</span>) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1921</td>  <td class="nbHitsCovered">&nbsp;596</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchMethodException(<span class="string">"Unknown property '"</span> +</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1922</td>  <td class="nbHitsCovered">&nbsp;596</td>  <td class="src"><pre class="src">&nbsp;                name + <span class="string">"' on class '"</span> + bean.getClass() + <span class="string">"'"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1919</td>  <td class="nbHitsCovered">&nbsp;1061</td>  <td class="src"><pre class="src">&nbsp;        PropertyDescriptor descriptor = getPropertyDescriptor(bean, name);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1920</td>  <td class="nbHitsCovered"><a title="Line 1920: Conditional coverage 100% (2/2).">&nbsp;1061</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 1920: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (descriptor == <span class="keyword">null</span>) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1921</td>  <td class="nbHitsCovered">&nbsp;624</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchMethodException(<span class="string">"Unknown property '"</span> +</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1922</td>  <td class="nbHitsCovered">&nbsp;624</td>  <td class="src"><pre class="src">&nbsp;                name + <span class="string">"' on class '"</span> + bean.getClass() + <span class="string">"'"</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1923</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1924</td>  <td class="nbHitsCovered">&nbsp;417</td>  <td class="src"><pre class="src">&nbsp;        Method writeMethod = getWriteMethod(bean.getClass(), descriptor);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1925</td>  <td class="nbHitsCovered"><a title="Line 1925: Conditional coverage 100% (2/2).">&nbsp;417</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 1925: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (writeMethod == <span class="keyword">null</span>) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1926</td>  <td class="nbHitsCovered">&nbsp;117</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchMethodException(<span class="string">"Property '"</span> + name +</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1927</td>  <td class="nbHitsCovered">&nbsp;117</td>  <td class="src"><pre class="src">&nbsp;                <span class="string">"' has no setter method in class '"</span> + bean.getClass() + <span class="string">"'"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1924</td>  <td class="nbHitsCovered">&nbsp;437</td>  <td class="src"><pre class="src">&nbsp;        Method writeMethod = getWriteMethod(bean.getClass(), descriptor);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1925</td>  <td class="nbHitsCovered"><a title="Line 1925: Conditional coverage 100% (2/2).">&nbsp;437</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 1925: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (writeMethod == <span class="keyword">null</span>) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1926</td>  <td class="nbHitsCovered">&nbsp;123</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchMethodException(<span class="string">"Property '"</span> + name +</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1927</td>  <td class="nbHitsCovered">&nbsp;123</td>  <td class="src"><pre class="src">&nbsp;                <span class="string">"' has no setter method in class '"</span> + bean.getClass() + <span class="string">"'"</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1928</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1929</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1930</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="comment">// type conversion needed?</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1931</td>  <td class="nbHitsCovered">&nbsp;300</td>  <td class="src"><pre class="src">&nbsp;        Class&lt;?&gt; propertyType = descriptor.getPropertyType();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1932</td>  <td class="nbHitsUncovered"><a title="Line 1932: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">&nbsp;300</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 1932: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">        <span class="keyword">if</span> (value != <span class="keyword">null</span> &amp;&amp; !propertyType.isAssignableFrom(value.getClass())) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1931</td>  <td class="nbHitsCovered">&nbsp;314</td>  <td class="src"><pre class="src">&nbsp;        Class&lt;?&gt; propertyType = descriptor.getPropertyType();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1932</td>  <td class="nbHitsUncovered"><a title="Line 1932: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">&nbsp;314</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 1932: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">        <span class="keyword">if</span> (value != <span class="keyword">null</span> &amp;&amp; !propertyType.isAssignableFrom(value.getClass())) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;1933</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            value = TypeUtils.convertValue(propertyType, value);</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1934</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
@@ -3349,8 +3349,8 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1936</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="comment">// Call the property setter</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1937</td>  <td class="nbHitsCovered">&nbsp;300</td>  <td class="src"><pre class="src">&nbsp;        writeMethod.invoke(bean, value);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1938</td>  <td class="nbHitsCovered">&nbsp;300</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1937</td>  <td class="nbHitsCovered">&nbsp;314</td>  <td class="src"><pre class="src">&nbsp;        writeMethod.invoke(bean, value);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1938</td>  <td class="nbHitsCovered">&nbsp;314</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1939</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1940</td>  <td class="nbHits">&nbsp;</td>
@@ -3471,9 +3471,9 @@
   <td class="src"><pre class="src">&nbsp;    @Nullable</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;2005</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> Method getWriteMethod(@Nonnull Class&lt;?&gt; clazz, @Nonnull PropertyDescriptor descriptor) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;2006</td>  <td class="nbHitsCovered">&nbsp;417</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(clazz, ERROR_CLAZZ_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;2007</td>  <td class="nbHitsCovered">&nbsp;417</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(descriptor, ERROR_DESCRIPTOR_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;2008</td>  <td class="nbHitsCovered">&nbsp;417</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> (MethodUtils.getAccessibleMethod(clazz, descriptor.getWriteMethod()));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;2006</td>  <td class="nbHitsCovered">&nbsp;437</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(clazz, ERROR_CLAZZ_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;2007</td>  <td class="nbHitsCovered">&nbsp;437</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(descriptor, ERROR_DESCRIPTOR_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;2008</td>  <td class="nbHitsCovered">&nbsp;437</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> (MethodUtils.getAccessibleMethod(clazz, descriptor.getWriteMethod()));</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;2009</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;2010</td>  <td class="nbHits">&nbsp;</td>
@@ -4020,24 +4020,24 @@
   <td class="src"><pre class="src">&nbsp;    @Nullable</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;2329</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> Class&lt;?&gt;[] convertToTypeArray(@Nullable Object[] args) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;2330</td>  <td class="nbHitsUncovered"><a title="Line 2330: Conditional coverage 50% (1/2).">&nbsp;527</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 2330: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (args == <span class="keyword">null</span>) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;2330</td>  <td class="nbHitsUncovered"><a title="Line 2330: Conditional coverage 50% (1/2).">&nbsp;545</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 2330: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (args == <span class="keyword">null</span>) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;2331</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            <span class="keyword">return</span> <span class="keyword">null</span>;</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;2332</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;2333</td>  <td class="nbHitsCovered">&nbsp;527</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">int</span> s = args.length;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;2334</td>  <td class="nbHitsCovered">&nbsp;527</td>  <td class="src"><pre class="src">&nbsp;        Class&lt;?&gt;[] ans = <span class="keyword">new</span> Class&lt;?&gt;[s];</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;2335</td>  <td class="nbHitsCovered"><a title="Line 2335: Conditional coverage 100% (2/2).">&nbsp;1393</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 2335: Conditional coverage 100% (2/2).">        <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i &lt; s; i++) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;2336</td>  <td class="nbHitsCovered">&nbsp;866</td>  <td class="src"><pre class="src">&nbsp;            Object o = args[i];</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;2337</td>  <td class="nbHitsUncovered"><a title="Line 2337: Conditional coverage 50% (1/2).">&nbsp;866</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 2337: Conditional coverage 50% (1/2).">            ans[i] = o != <span class="keyword">null</span> ? o.getClass() : <span class="keyword">null</span>;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;2333</td>  <td class="nbHitsCovered">&nbsp;545</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">int</span> s = args.length;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;2334</td>  <td class="nbHitsCovered">&nbsp;545</td>  <td class="src"><pre class="src">&nbsp;        Class&lt;?&gt;[] ans = <span class="keyword">new</span> Class&lt;?&gt;[s];</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;2335</td>  <td class="nbHitsCovered"><a title="Line 2335: Conditional coverage 100% (2/2).">&nbsp;1443</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 2335: Conditional coverage 100% (2/2).">        <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i &lt; s; i++) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;2336</td>  <td class="nbHitsCovered">&nbsp;898</td>  <td class="src"><pre class="src">&nbsp;            Object o = args[i];</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;2337</td>  <td class="nbHitsUncovered"><a title="Line 2337: Conditional coverage 50% (1/2).">&nbsp;898</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 2337: Conditional coverage 50% (1/2).">            ans[i] = o != <span class="keyword">null</span> ? o.getClass() : <span class="keyword">null</span>;</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;2338</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;2339</td>  <td class="nbHitsCovered">&nbsp;527</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> ans;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;2339</td>  <td class="nbHitsCovered">&nbsp;545</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> ans;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;2340</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;2341</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 9/22/14 8:02 AM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 10/19/14 8:07 PM.</div>
 </body>
 </html>

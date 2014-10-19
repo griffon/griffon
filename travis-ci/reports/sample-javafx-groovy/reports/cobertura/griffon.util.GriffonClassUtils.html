@@ -570,9 +570,9 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;329</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isEventHandler(@Nonnull MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;330</td>  <td class="nbHitsCovered">&nbsp;64</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;331</td>  <td class="nbHitsCovered"><a title="Line 331: Conditional coverage 100% (2/2).">&nbsp;64</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 331: Conditional coverage 100% (2/2).">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;332</td>  <td class="nbHitsCovered"><a title="Line 332: Conditional coverage 100% (2/2).">&nbsp;48</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 332: Conditional coverage 100% (2/2).">            EVENT_HANDLER_PATTERN.matcher(method.getName()).matches();</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;330</td>  <td class="nbHitsCovered">&nbsp;66</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;331</td>  <td class="nbHitsCovered"><a title="Line 331: Conditional coverage 100% (2/2).">&nbsp;66</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 331: Conditional coverage 100% (2/2).">        <span class="keyword">return</span> isInstanceMethod(method) &amp;&amp;</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;332</td>  <td class="nbHitsCovered"><a title="Line 332: Conditional coverage 100% (2/2).">&nbsp;50</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 332: Conditional coverage 100% (2/2).">            EVENT_HANDLER_PATTERN.matcher(method.getName()).matches();</a></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;333</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;334</td>  <td class="nbHits">&nbsp;</td>
@@ -1552,11 +1552,11 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;855</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isInstanceMethod(@Nonnull MethodDescriptor method) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;856</td>  <td class="nbHitsCovered">&nbsp;980</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;857</td>  <td class="nbHitsCovered">&nbsp;980</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">int</span> modifiers = method.getModifiers();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;858</td>  <td class="nbHitsUncovered"><a title="Line 858: Conditional coverage 50% (1/2).">&nbsp;980</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 858: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> Modifier.isPublic(modifiers) &amp;&amp;</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;859</td>  <td class="nbHitsUncovered"><a title="Line 859: Conditional coverage 50% (1/2).">&nbsp;980</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 859: Conditional coverage 50% (1/2).">            !Modifier.isAbstract(modifiers) &amp;&amp;</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;860</td>  <td class="nbHitsCovered"><a title="Line 860: Conditional coverage 100% (2/2).">&nbsp;980</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 860: Conditional coverage 100% (2/2).">            !Modifier.isStatic(modifiers);</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;856</td>  <td class="nbHitsCovered">&nbsp;982</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(method, ERROR_METHOD_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;857</td>  <td class="nbHitsCovered">&nbsp;982</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">int</span> modifiers = method.getModifiers();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;858</td>  <td class="nbHitsUncovered"><a title="Line 858: Conditional coverage 50% (1/2).">&nbsp;982</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 858: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> Modifier.isPublic(modifiers) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;859</td>  <td class="nbHitsUncovered"><a title="Line 859: Conditional coverage 50% (1/2).">&nbsp;982</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 859: Conditional coverage 50% (1/2).">            !Modifier.isAbstract(modifiers) &amp;&amp;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;860</td>  <td class="nbHitsCovered"><a title="Line 860: Conditional coverage 100% (2/2).">&nbsp;982</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 860: Conditional coverage 100% (2/2).">            !Modifier.isStatic(modifiers);</a></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;861</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;862</td>  <td class="nbHits">&nbsp;</td>
@@ -4038,6 +4038,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 9/22/14 8:02 AM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 10/19/14 8:07 PM.</div>
 </body>
 </html>
