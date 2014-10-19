@@ -21,6 +21,8 @@ import org.codehaus.griffon.runtime.core.addon.AbstractGriffonAddon;
 
 import javax.annotation.Nonnull;
 import javax.inject.Named;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 @Named("integration")
@@ -44,6 +46,16 @@ public class IntegrationAddon extends AbstractGriffonAddon implements Invokable 
             .e("simple", CollectionUtils.<String, Object>map()
                 .e("model", "integration.SimpleModel")
                 .e("view", "integration.SimpleView")
+                .e("controller", "integration.SimpleController"))
+            .e("sample", CollectionUtils.<String, Object>map()
+                .e("model", "integration.SimpleModel")
+                .e("view", "integration.SimpleView")
                 .e("controller", "integration.SimpleController"));
+    }
+
+    @Nonnull
+    @Override
+    public List<String> getStartupGroups() {
+        return Arrays.asList("sample");
     }
 }

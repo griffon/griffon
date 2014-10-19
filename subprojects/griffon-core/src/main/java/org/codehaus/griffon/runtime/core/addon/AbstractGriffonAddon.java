@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,6 +53,12 @@ public class AbstractGriffonAddon implements GriffonAddon {
     @Override
     public Map<String, Map<String, Object>> getMvcGroups() {
         return Collections.emptyMap();
+    }
+
+    @Nonnull
+    @Override
+    public List<String> getStartupGroups() {
+        return Collections.emptyList();
     }
 
     @Override

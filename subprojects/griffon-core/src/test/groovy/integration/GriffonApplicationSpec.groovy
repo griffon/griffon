@@ -229,15 +229,20 @@ class GriffonApplicationSpec extends Specification {
 
     def 'Verify MVCGroupManager'() {
         expect:
-        application.mvcGroupManager.configurations.size() == 2
+        application.mvcGroupManager.configurations.size() == 3
         application.mvcGroupManager.findConfiguration('integration')
         application.mvcGroupManager.findConfiguration('simple')
+        application.mvcGroupManager.findConfiguration('sample')
         application.mvcGroupManager.configurations.containsKey('integration')
         application.mvcGroupManager.configurations.containsKey('simple')
+        application.mvcGroupManager.configurations.containsKey('sample')
 
         application.mvcGroupManager.models.containsKey('integration')
         application.mvcGroupManager.controllers.containsKey('integration')
         application.mvcGroupManager.views.containsKey('integration')
+        application.mvcGroupManager.models.containsKey('sample')
+        application.mvcGroupManager.controllers.containsKey('sample')
+        application.mvcGroupManager.views.containsKey('sample')
     }
 
     def 'Verify ArtifactManager'() {

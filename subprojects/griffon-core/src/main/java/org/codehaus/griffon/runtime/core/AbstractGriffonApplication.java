@@ -15,8 +15,18 @@
  */
 package org.codehaus.griffon.runtime.core;
 
-import griffon.core.*;
+import griffon.core.ApplicationBootstrapper;
+import griffon.core.ApplicationClassLoader;
+import griffon.core.ApplicationConfigurer;
+import griffon.core.ApplicationEvent;
+import griffon.core.CallableWithArgs;
+import griffon.core.Configuration;
+import griffon.core.ExecutorServiceManager;
+import griffon.core.GriffonApplication;
+import griffon.core.GriffonExceptionHandler;
+import griffon.core.ShutdownHandler;
 import griffon.core.addon.AddonManager;
+import griffon.core.addon.GriffonAddon;
 import griffon.core.artifact.ArtifactManager;
 import griffon.core.controller.ActionManager;
 import griffon.core.env.ApplicationPhase;
@@ -39,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import static griffon.util.AnnotationUtils.named;
@@ -353,6 +364,20 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
             for (String groupName : groups) {
                 getMvcGroupManager().createMVCGroup(groupName.trim());
+            }
+        }
+
+        for (Map.Entry<String, GriffonAddon> e : getAddonManager().getAddons().entrySet()) {
+            List<String> groups = e.getValue().getStartupGroups();
+            if (groups.isEmpty()) {
+                continue;
+            }
+            log.info("Initializing all {} startup groups: {}", e.getKey(), groups);
+            Map<String, Map<String, Object>> mvcGroups = e.getValue().getMvcGroups();
+            for (String groupName : groups) {
+                if (mvcGroups.containsKey(groupName)) {
+                    getMvcGroupManager().createMVCGroup(groupName.trim());
+                }
             }
         }
 

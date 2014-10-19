@@ -20,6 +20,7 @@ import griffon.core.ShutdownHandler;
 import org.slf4j.Logger;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,4 +39,13 @@ public interface GriffonAddon extends ShutdownHandler {
 
     @Nonnull
     Map<String, Map<String, Object>> getMvcGroups();
+
+    /**
+     * Returns a list of MVCGroup names that should be auto started.</p>
+     *
+     * @return a list of MVCGroup names that this addon contributes.
+     * @since 2.1.0
+     */
+    @Nonnull
+    List<String> getStartupGroups();
 }
