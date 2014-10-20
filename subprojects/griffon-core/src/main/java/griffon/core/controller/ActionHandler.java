@@ -1,11 +1,11 @@
 /*
- * Copyright 2008-2014 the original author or authors.
+ * Copyright 2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,32 +15,35 @@
  */
 package griffon.core.controller;
 
-import griffon.core.artifact.GriffonController;
-
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 
 /**
  * @author Andres Almiray
- * @since 2.0.0
- * @deprecated use {@code ActionHandler} instead.
+ * @since 2.1.0
  */
-@Deprecated
-public interface ActionInterceptor {
-    String SUFFIX = "ActionInterceptor";
+public interface ActionHandler {
+    String SUFFIX = "ActionHandler";
+
+    /**
+     * Update the action's properties.
+     * <p/>
+     *
+     * @param action the action to be updated
+     */
+    void update(@Nonnull Action action);
 
     /**
      * Inspect the action during the configuration phase.
      * <p/>
      * This is the perfect time to search for annotations or any other information
-     * required by the action. Interceptors have the option to cache such inspections
+     * required by the action. handlers have the option to cache such inspections
      * and recall them during {@code before()}, {@code after()} and {@code exception()}.
      *
-     * @param controller the controller that owns the action
-     * @param actionName the action's name
-     * @param method     the method that represents the action itself
+     * @param action the action to be configured
+     * @param method the method that represents the action itself
      */
-    void configure(@Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Method method);
+    void configure(@Nonnull Action action, @Nonnull Method method);
 
     /**
      * Called before an action is executed.
@@ -51,26 +54,24 @@ public interface ActionInterceptor {
      * to modify the arguments as it deem necessary. Failure to return an appropriate
      * value will most likely cause an error during the action's execution.
      *
-     * @param controller the controller that owns the action
-     * @param actionName the action's name
-     * @param args       the action's arguments
+     * @param action the action to execute
+     * @param args   the action's arguments
      * @return arguments to be sent to the action
-     * @throws AbortActionExecution if action execution should be aborted.
+     * @throws griffon.core.controller.AbortActionExecution if action execution should be aborted.
      */
     @Nonnull
-    Object[] before(@Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Object[] args);
+    Object[] before(@Nonnull Action action, @Nonnull Object[] args);
 
     /**
      * Called after the action has been aborted or executed, even if an exception
      * occurred during execution.
      * <p/>
      *
-     * @param status     a flag that indicates the execution status of the action
-     * @param controller the controller that owns the action
-     * @param actionName the action's name
-     * @param args       the arguments sent to the action
+     * @param status a flag that indicates the execution status of the action
+     * @param action the action to execute
+     * @param args   the arguments sent to the action
      */
-    void after(@Nonnull ActionExecutionStatus status, @Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Object[] args);
+    void after(@Nonnull ActionExecutionStatus status, @Nonnull Action action, @Nonnull Object[] args);
 
     /**
      * Called after the action has been executed when an exception occurred
@@ -79,12 +80,11 @@ public interface ActionInterceptor {
      * The exception will be rethrown by the ActionManager if is not handled by
      * any interceptor.
      *
-     * @param exception  the exception thrown during the action's execution
-     * @param controller the controller that owns the action
-     * @param actionName the action's name
-     * @param args       the arguments sent to the action during execution
+     * @param exception the exception thrown during the action's execution
+     * @param action    the action to execute
+     * @param args      the arguments sent to the action during execution
      * @return <code>true</code> if the exception was handled successfully,
      * <code>false</code> otherwise.
      */
-    boolean exception(@Nonnull Exception exception, @Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Object[] args);
+    boolean exception(@Nonnull Exception exception, @Nonnull Action action, @Nonnull Object[] args);
 }

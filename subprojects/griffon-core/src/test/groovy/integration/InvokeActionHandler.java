@@ -15,16 +15,17 @@
  */
 package integration;
 
-import griffon.core.artifact.GriffonController;
+import griffon.core.controller.Action;
 import griffon.core.controller.ActionExecutionStatus;
-import org.codehaus.griffon.runtime.core.controller.AbstractActionInterceptor;
+import org.codehaus.griffon.runtime.core.controller.AbstractActionHandler;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 
-public class InvokeActionInterceptor extends AbstractActionInterceptor {
+public class InvokeActionHandler extends AbstractActionHandler {
     private boolean abort;
     private boolean configure;
+    private boolean update;
     private boolean before;
     private boolean after;
     private boolean exception;
@@ -35,6 +36,10 @@ public class InvokeActionInterceptor extends AbstractActionInterceptor {
 
     public boolean isConfigure() {
         return configure;
+    }
+
+    public boolean isUpdate() {
+        return update;
     }
 
     public boolean isBefore() {
@@ -50,33 +55,39 @@ public class InvokeActionInterceptor extends AbstractActionInterceptor {
     }
 
     @Override
-    public void configure(@Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Method method) {
+    public void update(@Nonnull Action action) {
+        update = true;
+        super.update(action);
+    }
+
+    @Override
+    public void configure(@Nonnull Action action, @Nonnull Method method) {
         configure = true;
-        assert qualifyActionName(controller, actionName).equals(controller.getClass().getName() + "." + actionName);
-        super.configure(controller, actionName, method);
+        assert action.getFullyQualifiedName().equals(action.getController().getClass().getName() + "." + action.getActionName());
+        super.configure(action, method);
     }
 
     @Nonnull
     @Override
-    public Object[] before(@Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Object[] args) {
-        if ("abort".equals(actionName)) {
+    public Object[] before(@Nonnull Action action, @Nonnull Object[] args) {
+        if ("abort".equals(action.getActionName())) {
             abort = true;
             throw abortActionExecution();
         }
         before = true;
-        return super.before(controller, actionName, args);
+        return super.before(action, args);
     }
 
     @Override
-    public void after(@Nonnull ActionExecutionStatus status, @Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Object[] args) {
+    public void after(@Nonnull ActionExecutionStatus status, @Nonnull Action action, @Nonnull Object[] args) {
         after = true;
-        super.after(status, controller, actionName, args);
+        super.after(status, action, args);
     }
 
     @Override
-    public boolean exception(@Nonnull Exception exception, @Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Object[] args) {
+    public boolean exception(@Nonnull Exception exception, @Nonnull Action action, @Nonnull Object[] args) {
         this.exception = true;
-        super.exception(exception, controller, actionName, args);
-        return actionName.equals("handleException");
+        super.exception(exception, action, args);
+        return action.getActionName().equals("handleException");
     }
 }

@@ -26,7 +26,7 @@ import javax.inject.Inject;
  * @author Andres Almiray
  * @since 2.0.0
  */
-public class DefaultActionManager extends AbstractActionManager{
+public class DefaultActionManager extends AbstractActionManager {
     @Inject
     public DefaultActionManager(@Nonnull GriffonApplication application) {
         super(application);

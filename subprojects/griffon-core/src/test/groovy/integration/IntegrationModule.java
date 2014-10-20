@@ -17,7 +17,7 @@ package integration;
 
 import griffon.core.LifecycleHandler;
 import griffon.core.addon.GriffonAddon;
-import griffon.core.controller.ActionInterceptor;
+import griffon.core.controller.ActionHandler;
 import griffon.core.env.Lifecycle;
 import griffon.core.i18n.MessageSource;
 import griffon.core.resources.ResourceResolver;
@@ -62,8 +62,8 @@ public class IntegrationModule extends AbstractModule {
             .to(IntegrationAddon.class)
             .asSingleton();
 
-        bind(ActionInterceptor.class)
-            .to(InvokeActionInterceptor.class)
+        bind(ActionHandler.class)
+            .to(InvokeActionHandler.class)
             .asSingleton();
     }
 }
