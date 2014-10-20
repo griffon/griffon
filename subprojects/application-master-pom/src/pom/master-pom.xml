@@ -36,6 +36,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- plugins -->
         <plugin.antrun.version>1.7</plugin.antrun.version>
+        <plugin.appassembler.version>1.8.1</plugin.appassembler.version>
         <plugin.assembly.version>2.4</plugin.assembly.version>
         <plugin.buildhelper.version>1.9</plugin.buildhelper.version>
         <plugin.changes.version>2.8</plugin.changes.version>
@@ -741,6 +742,41 @@
     <!-- end::repositories[] -->
 
     <profiles>
+        <!-- tag::profile_binary[] -->
+        <profile>
+            <id>binary</id>
+            <build>
+                <defaultGoal>package</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>appassembler-maven-plugin</artifactId>
+                        <version>${plugin.appassembler.version}</version>
+                        <configuration>
+                            <assembleDirectory>${project.build.directory}/binary</assembleDirectory>
+                            <repositoryLayout>flat</repositoryLayout>
+                            <repositoryName>lib</repositoryName>
+                            <programs>
+                                <program>
+                                    <mainClass>${application.main.class}</mainClass>
+                                    <id>${project.artifactId}</id>
+                                </program>
+                            </programs>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>make-distribution</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>assemble</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- end::profile_binary[] -->
         <!-- tag::profile_distribution[] -->
         <profile>
             <id>distribution</id>

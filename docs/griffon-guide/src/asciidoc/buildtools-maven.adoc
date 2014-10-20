@@ -24,6 +24,7 @@ The `application-master-pom` configures the following plugins
 | org.jacoco               | jacoco-maven-plugin               | 0.7.2.201409121644
 | com.zenjava              | javafx-maven-plugin               | 2.0
 | org.codehaus.mojo        | jdepend-maven-plugin              | 2.0
+| org.apache.maven.plugins | maven-appassembler-plugin         | 1.8.1
 | org.apache.maven.plugins | maven-antrun-plugin               | 1.7
 | org.apache.maven.plugins | maven-assembly-plugin             | 2.4
 | org.apache.maven.plugins | maven-compiler-plugin             | 3.1
@@ -97,10 +98,23 @@ This profile compiles and runs the application. Enable it with `maven -Prun`.
 include::{master-pom}[tags=profile_run,indent=0]
 ----
 
+=== Binary
+
+This profile packages the application using the `maven-appassembler-plugin`.
+Enable it with `maven -Pbinary`.
+
+[source,xml,linenums,options="nowrap"]
+[subs="verbatim,attributes"]
+----
+include::{master-pom}[tags=profile_binary,indent=0]
+----
+
 === Distribution
 
 This profile packages the application using the `maven-assembly-plugin`.
-Enable it with `maven -Pdistribution`.
+Enable it with `maven -Pdistribution`. You must execute the `binary`
+profile before running the `distribution` profile. You *CAN NOT* combine
+both profiles.
 
 [source,xml,linenums,options="nowrap"]
 [subs="verbatim,attributes"]
