@@ -60,6 +60,12 @@ public abstract class AbstractAction extends AbstractObservable implements Actio
         return actionName;
     }
 
+    @Nonnull
+    @Override
+    public String getFullyQualifiedName() {
+        return getController().getClass().getName() + "." + getActionName();
+    }
+
     @Override
     public boolean isEnabled() {
         return enabled;

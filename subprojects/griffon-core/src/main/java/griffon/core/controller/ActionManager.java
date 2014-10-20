@@ -39,7 +39,70 @@ public interface ActionManager {
     @Nonnull
     String normalizeName(@Nonnull String actionName);
 
+    /**
+     * Updates all actions currently configured.
+     *
+     * @since 2.1.0
+     */
+    void updateActions();
+
+    /**
+     * Updates all actions belonging to the supplied controller.
+     *
+     * @param controller the controller that owns the actions to be updated.
+     * @since 2.1.0
+     */
+    void updateActions(@Nonnull GriffonController controller);
+
+    /**
+     * Update the action's properties using registered {@code ActionHandler}s.
+     *
+     * @param action the action to be updated
+     * @since 2.1.0
+     */
+    void updateAction(@Nonnull Action action);
+
+    /**
+     * Update the action's properties using registered {@code ActionHandler}s.
+     *
+     * @param controller the controller that owns the action
+     * @param actionName the action's name
+     * @since 2.1.0
+     */
+    void updateAction(@Nonnull GriffonController controller, @Nonnull String actionName);
+
+    /**
+     * Execute the action using registered {@code ActionHandler}s.
+     *
+     * @param controller the controller that owns the action
+     * @param actionName the action's name
+     * @param args       additional arguments to be sent to the action
+     */
     void invokeAction(@Nonnull GriffonController controller, @Nonnull String actionName, Object... args);
 
+    /**
+     * Execute the action using registered {@code ActionHandler}s.
+     *
+     * @param action the action to be invoked
+     * @param args   additional arguments to be sent to the action
+     * @since 2.1.0
+     */
+    void invokeAction(@Nonnull Action action, @Nonnull Object... args);
+
+    /**
+     * Register an {@code ActionHandler} with this instance.
+     *
+     * @param actionHandler the handler to be added to this ActionManager
+     * @since 2.1.0
+     */
+    void addActionHandler(@Nonnull ActionHandler actionHandler);
+
+    /**
+     * Register an {@code ActionInterceptor} with this instance.
+     *
+     * @param actionInterceptor the interceptor to be added to this ActionManager
+     * @deprecated use {@code addActionHandler} instead.
+     */
+    @Deprecated
     void addActionInterceptor(@Nonnull ActionInterceptor actionInterceptor);
 }

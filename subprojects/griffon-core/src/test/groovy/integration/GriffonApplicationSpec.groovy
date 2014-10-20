@@ -21,7 +21,8 @@ import griffon.core.LifecycleHandler
 import griffon.core.ShutdownHandler
 import griffon.core.addon.GriffonAddon
 import griffon.core.artifact.*
-import griffon.core.controller.ActionInterceptor
+import griffon.core.controller.ActionHandler
+import griffon.core.controller.ActionManager
 import griffon.core.env.ApplicationPhase
 import griffon.core.env.Lifecycle
 import griffon.core.mvc.MVCCallable
@@ -132,8 +133,8 @@ class GriffonApplicationSpec extends Specification {
 
     def "Check groups"() {
         // given:
-        InvokeActionInterceptor interceptor = application.injector.getInstance(ActionInterceptor)
-        assert interceptor.configure
+        InvokeActionHandler handler = application.injector.getInstance(ActionHandler)
+        assert handler.configure
         assert ['foo', 'bar'] == application.startupArgs
 
         when:
@@ -141,15 +142,17 @@ class GriffonApplicationSpec extends Specification {
 
         then:
         group
-        !interceptor.abort
-        !interceptor.before
-        !interceptor.after
-        !interceptor.exception
+        handler.configure
+        !handler.abort
+        !handler.before
+        !handler.after
+        !handler.exception
+        !handler.update
     }
 
     def 'Invoke abort Action'() {
         given:
-        InvokeActionInterceptor interceptor = application.injector.getInstance(ActionInterceptor)
+        InvokeActionHandler handler = application.injector.getInstance(ActionHandler)
         MVCGroup group = application.mvcGroupManager.findGroup('integration')
         invokables << group.view
 
@@ -157,15 +160,17 @@ class GriffonApplicationSpec extends Specification {
         group.controller.invokeAction('abort')
 
         then:
-        interceptor.abort
-        !interceptor.before
-        interceptor.after
-        !interceptor.exception
+        handler.configure
+        handler.abort
+        !handler.before
+        handler.after
+        !handler.exception
+        !handler.update
     }
 
     def 'Invoke sayHello Action'() {
         given:
-        InvokeActionInterceptor interceptor = application.injector.getInstance(ActionInterceptor)
+        InvokeActionHandler handler = application.injector.getInstance(ActionHandler)
         MVCGroup group = application.mvcGroupManager.findGroup('integration')
         invokables << group.view
 
@@ -173,28 +178,32 @@ class GriffonApplicationSpec extends Specification {
         group.controller.invokeAction('sayHello')
 
         then:
-        interceptor.before
-        interceptor.after
-        !interceptor.exception
+        handler.configure
+        handler.before
+        handler.after
+        !handler.exception
+        !handler.update
     }
 
     def 'Invoke handleException Action'() {
         given:
-        InvokeActionInterceptor interceptor = application.injector.getInstance(ActionInterceptor)
+        InvokeActionHandler handler = application.injector.getInstance(ActionHandler)
         MVCGroup group = application.mvcGroupManager.findGroup('integration')
 
         when:
         group.controller.invokeAction('handleException')
 
         then:
-        interceptor.before
-        interceptor.after
-        interceptor.exception
+        handler.configure
+        handler.before
+        handler.after
+        handler.exception
+        !handler.update
     }
 
     def 'Invoke throwException Action'() {
         given:
-        InvokeActionInterceptor interceptor = application.injector.getInstance(ActionInterceptor)
+        InvokeActionHandler handler = application.injector.getInstance(ActionHandler)
         MVCGroup group = application.mvcGroupManager.findGroup('integration')
 
         when:
@@ -202,9 +211,21 @@ class GriffonApplicationSpec extends Specification {
 
         then:
         thrown(RuntimeException)
-        interceptor.before
-        interceptor.after
-        interceptor.exception
+        handler.before
+        handler.after
+        handler.exception
+    }
+
+    def 'Invoke update Action'() {
+        given:
+        InvokeActionHandler handler = application.injector.getInstance(ActionHandler)
+        ActionManager actionManager = application.actionManager
+
+        when:
+        actionManager.updateActions()
+
+        then:
+        handler.update
     }
 
     def 'Verify ActionManager'() {

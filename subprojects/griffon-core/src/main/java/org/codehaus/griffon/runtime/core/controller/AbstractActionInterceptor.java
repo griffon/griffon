@@ -29,7 +29,9 @@ import static java.util.Objects.requireNonNull;
 /**
  * @author Andres Almiray
  * @since 2.0.0
+ * @deprecated use {@code ActionHandler} instead.
  */
+@Deprecated
 public class AbstractActionInterceptor implements ActionInterceptor {
     private static final String ERROR_CONTROLLER_NULL = "Argument 'controller' must not be null";
     private static final String ERROR_ACTION_NAME_BLANK = "Argument 'actionName' must not be blank";

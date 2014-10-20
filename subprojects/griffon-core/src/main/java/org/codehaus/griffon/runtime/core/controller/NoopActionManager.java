@@ -17,6 +17,7 @@ package org.codehaus.griffon.runtime.core.controller;
 
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
+import griffon.core.controller.ActionHandler;
 import griffon.core.controller.ActionInterceptor;
 import griffon.core.controller.ActionManager;
 
@@ -61,10 +62,41 @@ public class NoopActionManager implements ActionManager {
     }
 
     @Override
+    public void updateActions() {
+
+    }
+
+    @Override
+    public void updateActions(@Nonnull GriffonController controller) {
+
+    }
+
+    @Override
+    public void updateAction(@Nonnull Action action) {
+
+    }
+
+    @Override
+    public void updateAction(@Nonnull GriffonController controller, @Nonnull String actionName) {
+
+    }
+
+    @Override
     public void invokeAction(@Nonnull GriffonController controller, @Nonnull String actionName, Object... args) {
 
     }
 
+    @Override
+    public void invokeAction(@Nonnull Action action, @Nonnull Object... args) {
+
+    }
+
+    @Override
+    public void addActionHandler(@Nonnull ActionHandler actionHandler) {
+
+    }
+
+    @Deprecated
     @Override
     public void addActionInterceptor(@Nonnull ActionInterceptor actionInterceptor) {
 

@@ -1,0 +1,177 @@
+
+[[_controllers_action_handlers]]
+= Action Handlers
+
+++{link_action_handler}++s open a new set of possibilities by allowing developers
+and <<_addons,addon>> authors to define code that should be executed before and after
+any controller action is invoked by the framework. For example, you may want to protect
+the execution of a particular action given specific permissions; the `shiro` plugin uses
+annotations that are handled by an `ActionHandler`, like this
+
+[source,groovy,linenums,options="nowrap"]
+----
+import griffon.core.artifact.GriffonController
+import griffon.metadata.ArtifactProviderFor
+import griffon.plugins.shiro.annotation.*
+
+@ArtifactProviderFor(GriffonController)
+@RequiresAuthentication
+class PrinterController {
+   @RequiresPermission('printer:print')
+   void print () { ... }
+
+   @RequiresRoles('administrator')
+   void configure() { ... }
+}
+----
+
+The `scaffolding` plugin on the other hand modifies the arguments sent to the action.
+Take the following snippet for example
+
+[source,groovy,linenums,options="nowrap"]
+----
+import griffon.core.artifact.GriffonController
+import griffon.metadata.ArtifactProviderFor
+import griffon.plugins.shiro.annotation.*
+import org.apache.shiro.authc.UsernamePasswordToken
+impprt org.apache.shiro.subject.Subject
+import javax.swing.JOptionPane
+
+import javax.inject.Inject
+
+@ArtifactProviderFor(GriffonController)
+class StrutsController {
+    @Inject
+    private Subject subject
+
+    @RequiresGuest
+    void login(LoginCommandObject cmd) {
+        try {
+            subject.login(new UsernamePasswordToken(cmd.username, cmd.password))
+        } catch(Exception e) {
+            JOptionPane.showMessageDialog(
+                app.windowManager.findWindow('mainWindow'),
+                'Invalid username and/or password',
+                'Security Failure', JOptionPane.ERROR_MESSAGE)
+        }
+    }
+
+    @RequiresAuthentication
+    void logout() {
+        subject.logout()
+    }
+}
+----
+
+Note that the `login` action requires an instance of `LoginCommandObject`. The `scaffolding`
+plugin is aware of this fact; it will create an instance of said class, wire up an scaffolded
+view in a dialog and present it to the user. The `LoginCommandObject` instance will be set
+as the action's arguments if it validates successfully, otherwise action execution is aborted.
+
+== Implementing an Action Handler
+
+Action handlers must implement the +{link_action_handler}+ interface. There's a
+handy base class (`org.codehaus.griffon.runtime.core.controller.AbstractActionHandler`)
+that provides sensible defaults. Say you'd want to know how much time it took for an action
+to be executed, also if an exception occurred during its execution. This handler could
+be implemented as follows
+
+[source,groovy,linenums,options="nowrap"]
+----
+package com.acme
+
+import griffon.core.controller.Action
+import griffon.core.controller.ActionExecutionStatus
+import org.codehaus.griffon.runtime.core.controller.AbstractActionHandler
+
+import javax.inject.Named
+
+@Named('tracer')
+class TracerActionHandler extends AbstractActionHandler {
+    private final Map<String, Long> TIMES = [:]
+
+    Object[] before(Action action, Object[] args) {
+        TIMES[action.fullyQuallifiedName] = System.currentTimeMillis()
+        return super.before(controller, actionName, args)
+    }
+
+    void after(ActionExecutionStatus status, Action action, Object[] args) {
+        long time = System.currentTimeMillis() - TIMES[action.fullyQuallifiedName]
+        println("Action ${action.fullyQuallifiedName} took ${time} ms [${status}]")
+    }
+}
+----
+
+The +{link_action_handler}+  interface defines a handful of methods that are invoked
+by the +{link_action_manager}+ at very specific points during the lifetime and execution
+of controller actions.
+
+void configure(Action action, Method method):: The `configure()` method is called during
+the configuration phase, when the `ActionManager` creates the actions. This method is
+called once in the lifetime of an action.
+void update(Action action):: The `update()` method can be called at any time. Its responsibility
+is to update the action's properties, such as the enabled state, given the current state
+of the application.
+Object[] before(Action action, Object[] args):: The `before()` method is executed every
+time an action is about to be invoked. This method is responsible for adjusting the
+arguments (if needed) or aborting the action execution altogether. Any exception thrown
+by an handler in this method will halt action execution however only +{link_abort_execution_exception}+
+is interpreted as a graceful abort.
+boolean exception(Exception exception, Action action, Object[] args):: The `exception()`
+method is invoked only when an exception occurred during the action's execution.
+Implementors must return `true` if the exception was handled successfully. The exception will
+be rethrown by the `ActionManager` if no handler handled the exception. This happens as the
+last step of the action interception procedure.
+void after(ActionExecutionStatus status, Action axtion, Object[] args):: The `after()` method
+is called after an action has been executed. Any exceptions occurred during the action's
+execution should have been handled by `exception()`. The `status` argument specifies if
+the action was successfully executed (`OK`), if it was aborted by an handler (`ABORTERD`)
+or if an exception occurred during its execution (`EXCEPTION`).
+
+Action handlers can participate in Dependency Injection.
+
+== Configuration
+
+Action Handlers must be registered within a +{link_module}+ in order to be picked
+up by the `ActionManager`. The following example shows how the previous `TracerActionHandler`
+can be registered in a `Module`
+
+.src/main/com/acme/ApplicationModule.groovy
+[source,groovy,linenums,options="nowrap"]
+----
+package com.acme
+
+import griffon.core.injection.Module
+import griffon.core.controller.ActionHandler
+import org.codehaus.griffon.runtime.core.injection.AbstractModule
+import org.kordamp.jipsy.ServiceProviderFor
+
+import javax.inject.Named
+
+@ServiceProviderFor(Module)
+@Named('application')
+public class ApplicationModule extends AbstractModule {
+    @Override
+    protected void doConfigure() {
+        bind(ActionHandler)
+            .to(TracerActionHandler)
+            .asSingleton()
+    }
+}
+----
+
+An Handler may define a dependency on another handler; use the +{link_depends_on}+
+annotation to express the relationship.
+
+It's also possible to globally override the order of execution of handlers, or
+define and order when handlers are orthogonal. Take for example the `security`
+handler provided by the `shiro` plugin and the `scaffolding` handler provided by
+`scaffolding` plugin. These handlers know nothing about each other however `security`
+should be called before `scaffolding`. This can be accomplished by adding the following
+snippet to `Config.groovy`
+
+[source,groovy,options="nowrap"]
+----
+griffon.controller.action.handler.order = ['security', 'scaffolding']
+----
+

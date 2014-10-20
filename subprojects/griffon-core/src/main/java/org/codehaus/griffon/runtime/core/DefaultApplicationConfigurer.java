@@ -15,10 +15,17 @@
  */
 package org.codehaus.griffon.runtime.core;
 
-import griffon.core.*;
+import griffon.core.ApplicationClassLoader;
+import griffon.core.ApplicationConfigurer;
+import griffon.core.ApplicationEvent;
+import griffon.core.CallableWithArgs;
+import griffon.core.GriffonApplication;
+import griffon.core.LifecycleHandler;
+import griffon.core.PlatformHandler;
 import griffon.core.artifact.ArtifactHandler;
 import griffon.core.artifact.ArtifactManager;
 import griffon.core.artifact.GriffonController;
+import griffon.core.controller.ActionHandler;
 import griffon.core.controller.ActionInterceptor;
 import griffon.core.env.Lifecycle;
 import griffon.core.event.EventHandler;
@@ -36,7 +43,11 @@ import javax.annotation.concurrent.GuardedBy;
 import javax.inject.Inject;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
 import static griffon.util.AnnotationUtils.named;
@@ -55,7 +66,7 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
 
     private static final String ERROR_APPLICATION_NULL = "Argument 'application' must not be null";
     private static final String KEY_APP_LIFECYCLE_HANDLER_DISABLE = "application.lifecycle.handler.disable";
-    private static final String KEY_GRIFFON_CONTROLLER_ACTION_INTERCEPTOR_ORDER = "griffon.controller.action.interceptor.order";
+    private static final String KEY_GRIFFON_CONTROLLER_ACTION_HANDLER_ORDER = "griffon.controller.action.handler.order";
 
     private final Object lock = new Object();
     @GuardedBy("lock")
@@ -239,12 +250,18 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
         });
 
         Injector<?> injector = application.getInjector();
-        Collection<ActionInterceptor> interceptorInstances = injector.getInstances(ActionInterceptor.class);
-        List<String> interceptorOrder = application.getConfiguration().get(KEY_GRIFFON_CONTROLLER_ACTION_INTERCEPTOR_ORDER, Collections.<String>emptyList());
-        Map<String, ActionInterceptor> sortedInterceptors = sortByDependencies(interceptorInstances, ActionInterceptor.SUFFIX, "interceptor", interceptorOrder);
+        Collection<ActionHandler> handlerInstances = injector.getInstances(ActionHandler.class);
+        List<String> handlerOrder = application.getConfiguration().get(KEY_GRIFFON_CONTROLLER_ACTION_HANDLER_ORDER, Collections.<String>emptyList());
+        Map<String, ActionHandler> sortedHandlers = sortByDependencies(handlerInstances, ActionHandler.SUFFIX, "handler", handlerOrder);
 
-        for (ActionInterceptor interceptor : sortedInterceptors.values()) {
-            application.getActionManager().addActionInterceptor(interceptor);
+        for (ActionHandler handler : sortedHandlers.values()) {
+            application.getActionManager().addActionHandler(handler);
+        }
+
+        Collection<ActionInterceptor> interceptorInstances = injector.getInstances(ActionInterceptor.class);
+        if (!interceptorInstances.isEmpty()) {
+            application.getLog().error(ActionInterceptor.class.getName() + " have been deprecated and is no longer supported");
+            throw new UnsupportedOperationException(ActionInterceptor.class.getName() + " have been deprecated and is no longer supported");
         }
     }
 

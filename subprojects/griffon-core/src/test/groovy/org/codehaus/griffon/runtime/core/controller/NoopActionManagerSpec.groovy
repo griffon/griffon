@@ -17,7 +17,7 @@ package org.codehaus.griffon.runtime.core.controller
 
 import griffon.core.artifact.GriffonController
 import griffon.core.controller.ActionManager
-import integration.InvokeActionInterceptor
+import integration.InvokeActionHandler
 import integration.SimpleController
 import integration.TestGriffonApplication
 import spock.lang.Specification
@@ -34,7 +34,7 @@ class NoopActionManagerSpec extends Specification {
         when:
         actionManager.createActions(controller)
         actionManager.invokeAction(controller, 'sayHello')
-        actionManager.addActionInterceptor(new InvokeActionInterceptor())
+        actionManager.addActionHandler(new InvokeActionHandler())
 
         then:
         !actionManager.actionsFor(controller)

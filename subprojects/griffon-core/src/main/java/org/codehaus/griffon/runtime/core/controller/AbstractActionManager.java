@@ -22,6 +22,7 @@ import griffon.core.artifact.GriffonControllerClass;
 import griffon.core.controller.AbortActionExecution;
 import griffon.core.controller.Action;
 import griffon.core.controller.ActionExecutionStatus;
+import griffon.core.controller.ActionHandler;
 import griffon.core.controller.ActionInterceptor;
 import griffon.core.controller.ActionManager;
 import griffon.core.i18n.MessageSource;
@@ -39,6 +40,7 @@ import javax.inject.Inject;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EventObject;
 import java.util.List;
@@ -73,10 +75,11 @@ public abstract class AbstractActionManager implements ActionManager {
     private static final String KEY_DISABLE_THREADING_INJECTION = "griffon.disable.threading.injection";
     private static final String ERROR_CONTROLLER_NULL = "Argument 'controller' must not be null";
     private static final String ERROR_ACTION_NAME_BLANK = "Argument 'actionName' must not be blank";
-    private static final String ERROR_ACTION_INTERCEPTOR_NULL = "Argument 'actionInterceptor' must not be null";
+    private static final String ERROR_ACTION_HANDLER_NULL = "Argument 'actionHandler' must not be null";
+    private static final String ERROR_ACTION_NULL = "Argument 'action' must not be null";
     private final ActionCache actionCache = new ActionCache();
     private final Map<String, Threading.Policy> threadingPolicies = new ConcurrentHashMap<>();
-    private final List<ActionInterceptor> interceptors = new CopyOnWriteArrayList<>();
+    private final List<ActionHandler> handlers = new CopyOnWriteArrayList<>();
 
     private final GriffonApplication application;
 
@@ -128,11 +131,11 @@ public abstract class AbstractActionManager implements ActionManager {
             Action action = createAndConfigureAction(controller, actionName);
 
             Method method = findActionAsMethod(controller, actionName);
-            final String qualifiedActionName = controller.getClass().getName() + "." + actionName;
-            for (ActionInterceptor interceptor : interceptors) {
+            final String qualifiedActionName = action.getFullyQualifiedName();
+            for (ActionHandler handler : handlers) {
                 if (method != null) {
-                    LOG.debug("Configuring action {} with {}", qualifiedActionName, interceptor);
-                    interceptor.configure(controller, actionName, method);
+                    LOG.debug("Configuring action {} with {}", qualifiedActionName, handler);
+                    handler.configure(action, method);
                 }
             }
 
@@ -147,32 +150,66 @@ public abstract class AbstractActionManager implements ActionManager {
         }
     }
 
-    public void invokeAction(@Nonnull final GriffonController controller, @Nonnull final String actionName, @Nonnull final Object... args) {
+    @Override
+    public void updateActions() {
+        for (Action action : actionCache.allActions()) {
+            updateAction(action);
+        }
+    }
+
+    @Override
+    public void updateActions(@Nonnull GriffonController controller) {
+        for (Action action : actionsFor(controller).values()) {
+            updateAction(action);
+        }
+    }
+
+    @Override
+    public void updateAction(@Nonnull Action action) {
+        requireNonNull(action, ERROR_ACTION_NULL);
+
+        final String qualifiedActionName = action.getFullyQualifiedName();
+        for (ActionHandler handler : handlers) {
+            LOG.trace("Calling {}.update() on {}", handler, qualifiedActionName);
+            handler.update(action);
+        }
+    }
+
+    @Override
+    public void updateAction(@Nonnull GriffonController controller, @Nonnull String actionName) {
         requireNonNull(controller, ERROR_CONTROLLER_NULL);
         requireNonBlank(actionName, ERROR_ACTION_NAME_BLANK);
+        updateAction(actionFor(controller, actionName));
+    }
+
+    @Override
+    public void invokeAction(@Nonnull final Action action, @Nonnull final Object... args) {
+        requireNonNull(action, ERROR_ACTION_NULL);
+        final GriffonController controller = action.getController();
+        final String actionName = action.getActionName();
         Runnable runnable = new Runnable() {
             @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
             public void run() {
                 Object[] updatedArgs = args;
-                List<ActionInterceptor> copy = new ArrayList<>(interceptors);
-                List<ActionInterceptor> invokedInterceptors = new ArrayList<>();
+                List<ActionHandler> copy = new ArrayList<>(handlers);
+                List<ActionHandler> invokedHandlers = new ArrayList<>();
 
-                final String qualifiedActionName = controller.getClass().getName() + "." + actionName;
+                final String qualifiedActionName = action.getFullyQualifiedName();
                 ActionExecutionStatus status = ActionExecutionStatus.OK;
 
                 if (LOG.isDebugEnabled()) {
                     int size = copy.size();
-                    LOG.debug("Executing " + size + " interceptor" + (size != 1 ? "s" : "") + " for " + qualifiedActionName);
+                    LOG.debug("Executing " + size + " handler" + (size != 1 ? "s" : "") + " for " + qualifiedActionName);
                 }
 
-                for (ActionInterceptor interceptor : copy) {
-                    invokedInterceptors.add(interceptor);
+                for (ActionHandler handler : copy) {
+                    invokedHandlers.add(handler);
                     try {
-                        LOG.trace("Calling {}.before() on {}", interceptor, qualifiedActionName);
-                        updatedArgs = interceptor.before(controller, actionName, updatedArgs);
+                        LOG.trace("Calling {}.before() on {}", handler, qualifiedActionName);
+                        updatedArgs = handler.before(action, updatedArgs);
                     } catch (AbortActionExecution aae) {
                         status = ActionExecutionStatus.ABORTED;
-                        LOG.debug("Execution of {} was aborted by {}", qualifiedActionName, interceptor);
+                        LOG.debug("Execution of {} was aborted by {}", qualifiedActionName, handler);
                         break;
                     }
                 }
@@ -191,16 +228,16 @@ public abstract class AbstractActionManager implements ActionManager {
                     LOG.trace("Status after execution of {} is {}", qualifiedActionName, status);
 
                     if (exception != null) {
-                        for (ActionInterceptor interceptor : reverse(invokedInterceptors)) {
-                            LOG.trace("Calling {}.exception() on {}", interceptor, qualifiedActionName);
-                            exceptionWasHandled = interceptor.exception(exception, controller, actionName, updatedArgs);
+                        for (ActionHandler handler : reverse(invokedHandlers)) {
+                            LOG.trace("Calling {}.exception() on {}", handler, qualifiedActionName);
+                            exceptionWasHandled = handler.exception(exception, action, updatedArgs);
                         }
                     }
                 }
 
-                for (ActionInterceptor interceptor : reverse(invokedInterceptors)) {
-                    LOG.trace("Calling {}.after() on {}", interceptor, qualifiedActionName);
-                    interceptor.after(status, controller, actionName, updatedArgs);
+                for (ActionHandler handler : reverse(invokedHandlers)) {
+                    LOG.trace("Calling {}.after() on {}", handler, qualifiedActionName);
+                    handler.after(status, action, updatedArgs);
                 }
 
                 if (exception != null && !exceptionWasHandled) {
@@ -210,6 +247,12 @@ public abstract class AbstractActionManager implements ActionManager {
             }
         };
         invokeAction(controller, actionName, runnable);
+    }
+
+    public void invokeAction(@Nonnull final GriffonController controller, @Nonnull final String actionName, @Nonnull final Object... args) {
+        requireNonNull(controller, ERROR_CONTROLLER_NULL);
+        requireNonBlank(actionName, ERROR_ACTION_NAME_BLANK);
+        invokeAction(actionFor(controller, actionName), args);
     }
 
     protected void doInvokeAction(@Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Object[] updatedArgs) {
@@ -242,7 +285,7 @@ public abstract class AbstractActionManager implements ActionManager {
             threadingPolicies.put(fullQualifiedActionName, policy);
         }
 
-        LOG.debug("Executing {}.{} with policy {}", controller.getClass().getName(), actionName, policy);
+        LOG.debug("Executing {} with policy {}", fullQualifiedActionName, policy);
 
         switch (policy) {
             case OUTSIDE_UITHREAD:
@@ -341,12 +384,16 @@ public abstract class AbstractActionManager implements ActionManager {
         return false;
     }
 
-    public void addActionInterceptor(@Nonnull ActionInterceptor actionInterceptor) {
-        requireNonNull(actionInterceptor, ERROR_ACTION_INTERCEPTOR_NULL);
-        if (interceptors.contains(actionInterceptor)) {
+    public void addActionHandler(@Nonnull ActionHandler actionHandler) {
+        requireNonNull(actionHandler, ERROR_ACTION_HANDLER_NULL);
+        if (handlers.contains(actionHandler)) {
             return;
         }
-        interceptors.add(actionInterceptor);
+        handlers.add(actionHandler);
+    }
+
+    public void addActionInterceptor(@Nonnull ActionInterceptor actionInterceptor) {
+        throw new UnsupportedOperationException(ActionInterceptor.class.getName() + " have been deprecated and are no longer supported");
     }
 
     @Nonnull
@@ -426,6 +473,19 @@ public abstract class AbstractActionManager implements ActionManager {
             }
 
             cache.put(new WeakReference<>(controller), actions);
+        }
+
+        public Collection<Action> allActions() {
+            // create a copy to avoid CME
+            List<Action> actions = new ArrayList<>();
+
+            synchronized (cache) {
+                for (Map<String, Action> map : cache.values()) {
+                    actions.addAll(map.values());
+                }
+            }
+
+            return actions;
         }
     }
 }
