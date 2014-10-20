@@ -18,15 +18,8 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>${project.basedir}/maven/distribution</directory>
+            <directory>${project.build.directory}/binary</directory>
             <outputDirectory>/</outputDirectory>
         </fileSet>
     </fileSets>
-    <dependencySets>
-        <dependencySet>
-            <outputDirectory>/lib</outputDirectory>
-            <useProjectArtifact>true</useProjectArtifact>
-            <scope>runtime</scope>
-        </dependencySet>
-    </dependencySets>
 </assembly>
