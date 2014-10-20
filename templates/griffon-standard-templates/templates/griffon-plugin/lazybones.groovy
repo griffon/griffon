@@ -60,7 +60,7 @@ def renameFile = { File from, String path ->
 }
 
 mainSources.eachFile { File file ->
-    renamefile(file, mainSourcesPath.absolutePath + '/' + props.project_class_name + file.name)
+    renameFile(file, mainSourcesPath.absolutePath + '/' + props.project_class_name + file.name)
 }
 
 File pluginDir = new File(projectDir, 'subprojects/plugin')
