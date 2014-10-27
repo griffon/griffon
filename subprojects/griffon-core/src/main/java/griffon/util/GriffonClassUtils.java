@@ -26,6 +26,7 @@ import griffon.core.resources.ResourceHandler;
 import griffon.core.resources.ResourceResolver;
 import griffon.core.threading.ThreadingHandler;
 import griffon.exceptions.BeanInstantiationException;
+import griffon.exceptions.FieldException;
 import griffon.exceptions.InstanceMethodInvocationException;
 import griffon.exceptions.PropertyException;
 import griffon.exceptions.StaticMethodInvocationException;
@@ -40,7 +41,16 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
@@ -90,6 +100,7 @@ public class GriffonClassUtils {
     private static final String ERROR_BEAN_NULL = "Argument 'bean' must not be null";
     private static final String ERROR_NAME_BLANK = "Argument 'name' must not be blank";
     private static final String ERROR_PROPERTIES_NULL = "Argument 'properties' must not be null";
+    private static final String ERROR_FIELDS_NULL = "Argument 'fields' must not be null";
     private static final String ERROR_PROPERTY_NAME_BLANK = "Argument 'propertyName' must not be blank";
     private static final String ERROR_METHOD_NULL = "Argument 'method' must not be null";
 
@@ -1256,7 +1267,7 @@ public class GriffonClassUtils {
     /**
      * Determine whether the method is declared public static
      *
-     * @param m
+     * @param m the method to be tested
      * @return True if the method is declared public static
      */
     public static boolean isPublicStatic(@Nonnull Method m) {
@@ -1268,7 +1279,7 @@ public class GriffonClassUtils {
     /**
      * Determine whether the field is declared public static
      *
-     * @param f
+     * @param f the field to be tested
      * @return True if the field is declared public static
      */
     public static boolean isPublicStatic(@Nonnull Field f) {
@@ -1280,7 +1291,7 @@ public class GriffonClassUtils {
     /**
      * Calculate the name for a getter method to retrieve the specified property
      *
-     * @param propertyName
+     * @param propertyName the name of the property
      * @return The name for the getter method for this property, if it were to exist, i.e. getConstraints
      */
     @Nonnull
@@ -1359,8 +1370,8 @@ public class GriffonClassUtils {
     /**
      * Get the value of a declared field on an object
      *
-     * @param obj
-     * @param name
+     * @param obj  the instance that owns the field
+     * @param name the name of the file to lookup
      * @return The object value or null if there is no such field or access problems
      */
     @Nullable
@@ -1380,8 +1391,8 @@ public class GriffonClassUtils {
     /**
      * Get the a declared field on an object
      *
-     * @param obj
-     * @param name
+     * @param obj  the instance that owns the field
+     * @param name the name of the file to lookup
      * @return The field or null if there is no such field or access problems
      */
     @Nullable
@@ -1394,8 +1405,8 @@ public class GriffonClassUtils {
     /**
      * Get the a declared field on a class
      *
-     * @param clazz
-     * @param name
+     * @param clazz the clazz that owns the field
+     * @param name  the name of the file to lookup
      * @return The field or null if there is no such field or access problems
      */
     @Nullable
@@ -1414,8 +1425,8 @@ public class GriffonClassUtils {
     /**
      * Work out if the specified object has a public field with the name supplied.
      *
-     * @param obj
-     * @param name
+     * @param obj  the instance that owns the field
+     * @param name the name of the file to lookup
      * @return True if a public field with the name exists
      */
     public static boolean isPublicField(@Nonnull Object obj, @Nonnull String name) {
@@ -1453,7 +1464,7 @@ public class GriffonClassUtils {
     }
 
     /**
-     * Creates a concrete collection for the suppied interface
+     * Creates a concrete collection for the supplied interface
      *
      * @param interfaceType The interface
      * @return ArrayList for List, TreeSet for SortedSet, HashSet for Set etc.
@@ -1636,7 +1647,204 @@ public class GriffonClassUtils {
         return false;
     }
 
-    public static void setProperties(@Nonnull Object bean, @Nonnull Map<String, Object> properties) {
+    /**
+     * Sets or updates an object's properties.
+     * <p/>
+     * This method will attempt setting a property using a matching
+     * {@code PropertyDescriptor}; next it will try direct field
+     * access if the property was not found.
+     *
+     * @param bean       the target object on which properties will be set
+     * @param properties names and values for properties to be set
+     * @throws PropertyException if a property could be found
+     * @since 2.1.0
+     */
+    public static void setPropertiesOrFields(@Nonnull Object bean, @Nonnull Map<String, Object> properties) throws PropertyException {
+        requireNonNull(bean, ERROR_BEAN_NULL);
+        requireNonNull(properties, ERROR_PROPERTIES_NULL);
+        for (Map.Entry<String, Object> entry : properties.entrySet()) {
+            setPropertyOrFieldValue(bean, entry.getKey(), entry.getValue());
+        }
+    }
+
+    /**
+     * Sets or updates an object's properties.
+     * <p/>
+     * This method will attempt setting a property using a matching
+     * {@code PropertyDescriptor}; next it will try direct field
+     * access if the property was not found.
+     *
+     * @param bean       the target object on which properties will be set
+     * @param properties names and values for properties to be set
+     * @since 2.1.0
+     */
+    public static void setPropertiesOrFieldsNoException(@Nonnull Object bean, @Nonnull Map<String, Object> properties) {
+        requireNonNull(bean, ERROR_BEAN_NULL);
+        requireNonNull(properties, ERROR_PROPERTIES_NULL);
+        for (Map.Entry<String, Object> entry : properties.entrySet()) {
+            try {
+                setPropertyOrFieldValue(bean, entry.getKey(), entry.getValue());
+            } catch (PropertyException pe) {
+                // ignore
+            }
+        }
+    }
+
+    /**
+     * Sets or updates an object's property.
+     * <p/>
+     * This method will attempt setting a property using a matching
+     * {@code PropertyDescriptor}; next it will try direct field
+     * access if the property was not found.
+     *
+     * @param bean  the target object on which the property will be set
+     * @param name  the name of the property to set
+     * @param value the value to be set
+     * @throws PropertyException if the property could not be found
+     * @since 2.1.0
+     */
+    public static void setPropertyOrFieldValue(@Nonnull Object bean, @Nonnull String name, @Nullable Object value) throws PropertyException {
+        try {
+            setPropertyValue(bean, name, value);
+        } catch (PropertyException pe) {
+            try {
+                setFieldValue(bean, name, value);
+            } catch (FieldException fe) {
+                throw pe;
+            }
+        }
+    }
+
+    /**
+     * Sets or updates an object's properties.
+     * <p/>
+     * This method will attempt setting a property using direct field
+     * access; next it will try a {@code PropertyDescriptor} if a
+     * matching field name was not found.
+     *
+     * @param bean       the target object on which properties will be set
+     * @param properties names and values for properties to be set
+     * @throws FieldException if the field could not be found
+     * @since 2.1.0
+     */
+    public static void setFieldsOrProperties(@Nonnull Object bean, @Nonnull Map<String, Object> properties) throws FieldException {
+        requireNonNull(bean, ERROR_BEAN_NULL);
+        requireNonNull(properties, ERROR_PROPERTIES_NULL);
+        for (Map.Entry<String, Object> entry : properties.entrySet()) {
+            setFieldOrPropertyValue(bean, entry.getKey(), entry.getValue());
+        }
+    }
+
+    /**
+     * Sets or updates an object's properties.
+     * <p/>
+     * This method will attempt setting a property using direct field
+     * access; next it will try a {@code PropertyDescriptor} if a
+     * matching field name was not found.
+     *
+     * @param bean       the target object on which properties will be set
+     * @param properties names and values for properties to be set
+     * @since 2.1.0
+     */
+    public static void setFieldsOrPropertiesNoException(@Nonnull Object bean, @Nonnull Map<String, Object> properties) {
+        requireNonNull(bean, ERROR_BEAN_NULL);
+        requireNonNull(properties, ERROR_PROPERTIES_NULL);
+        for (Map.Entry<String, Object> entry : properties.entrySet()) {
+            try {
+                setFieldOrPropertyValue(bean, entry.getKey(), entry.getValue());
+            } catch (FieldException pe) {
+                // ignore
+            }
+        }
+    }
+
+    /**
+     * Sets or updates an object's property.
+     * <p/>
+     * This method will attempt setting a property using direct field
+     * access; next it will try a {@code PropertyDescriptor} if a
+     * matching field name was not found.
+     *
+     * @param bean  the target object on which the property will be set
+     * @param name  the name of the property to set
+     * @param value the value to be set
+     * @throws FieldException if the property could not be found
+     * @since 2.1.0
+     */
+    public static void setFieldOrPropertyValue(@Nonnull Object bean, @Nonnull String name, @Nullable Object value) throws FieldException {
+        try {
+            setFieldValue(bean, name, value);
+        } catch (FieldException fe) {
+            try {
+                setPropertyValue(bean, name, value);
+            } catch (PropertyException pe) {
+                throw fe;
+            }
+        }
+    }
+
+    /**
+     * Sets or updates field values on an object.
+     *
+     * @param bean   the target object on which field values will be set
+     * @param fields names and values of fields to be set
+     * @throws FieldException if a field could not be found
+     * @since 2.1.0
+     */
+    public static void setFields(@Nonnull Object bean, @Nonnull Map<String, Object> fields) throws FieldException {
+        requireNonNull(bean, ERROR_BEAN_NULL);
+        requireNonNull(fields, ERROR_FIELDS_NULL);
+        for (Map.Entry<String, Object> entry : fields.entrySet()) {
+            setFieldValue(bean, entry.getKey(), entry.getValue());
+        }
+    }
+
+    /**
+     * Sets or updates field values on an object.
+     *
+     * @param bean   the target object on which field values will be set
+     * @param fields names and values of fields to be set
+     * @since 2.1.0
+     */
+    public static void setFieldsNoException(@Nonnull Object bean, @Nonnull Map<String, Object> fields) {
+        requireNonNull(bean, ERROR_BEAN_NULL);
+        requireNonNull(fields, ERROR_FIELDS_NULL);
+        for (Map.Entry<String, Object> entry : fields.entrySet()) {
+            try {
+                setFieldValue(bean, entry.getKey(), entry.getValue());
+            } catch (FieldException e) {
+                // ignore
+            }
+        }
+    }
+
+    /**
+     * Sets or updates an object's field.
+     *
+     * @param bean  the target object on which the field will be set
+     * @param name  the name of the field to set
+     * @param value the value to be set
+     * @throws FieldException if the field could not be found
+     * @since 2.1.0
+     */
+    public static void setFieldValue(@Nonnull Object bean, @Nonnull String name, @Nullable Object value) throws FieldException {
+        requireNonNull(bean, ERROR_BEAN_NULL);
+        requireNonBlank(name, ERROR_NAME_BLANK);
+        try {
+            setField(bean, name, value);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            throw new FieldException(bean, name, value, e);
+        }
+    }
+
+    /**
+     * Sets or updates properties on an object.
+     *
+     * @param bean       the target object on which properties will be set
+     * @param properties names and values of properties to be set
+     * @throws PropertyException if a property could not be found
+     */
+    public static void setProperties(@Nonnull Object bean, @Nonnull Map<String, Object> properties) throws PropertyException {
         requireNonNull(bean, ERROR_BEAN_NULL);
         requireNonNull(properties, ERROR_PROPERTIES_NULL);
         for (Map.Entry<String, Object> entry : properties.entrySet()) {
@@ -1644,6 +1852,12 @@ public class GriffonClassUtils {
         }
     }
 
+    /**
+     * Sets or updates properties on an object.
+     *
+     * @param bean       the target object on which properties will be set
+     * @param properties names and values of properties to be set
+     */
     public static void setPropertiesNoException(@Nonnull Object bean, @Nonnull Map<String, Object> properties) {
         requireNonNull(bean, ERROR_BEAN_NULL);
         requireNonNull(properties, ERROR_PROPERTIES_NULL);
@@ -1656,7 +1870,16 @@ public class GriffonClassUtils {
         }
     }
 
-    public static void setPropertyValue(@Nonnull Object bean, @Nonnull String name, @Nullable Object value) {
+    /**
+     * /**
+     * Sets or updates a property on an object.
+     *
+     * @param bean  the target object on which the property will be set
+     * @param name  the name of the property to set
+     * @param value the value to be set
+     * @throws PropertyException if the property could not be found
+     */
+    public static void setPropertyValue(@Nonnull Object bean, @Nonnull String name, @Nullable Object value) throws PropertyException {
         requireNonNull(bean, ERROR_BEAN_NULL);
         requireNonBlank(name, ERROR_NAME_BLANK);
         try {
@@ -1668,8 +1891,16 @@ public class GriffonClassUtils {
         }
     }
 
+    /**
+     * Returns the value of a property.
+     *
+     * @param bean the owner of the property
+     * @param name the name of the property to retrieve
+     * @return the value read from the matching property
+     * @throws PropertyException if the property could not be found
+     */
     @Nullable
-    public static Object getPropertyValue(@Nonnull Object bean, @Nonnull String name) {
+    public static Object getPropertyValue(@Nonnull Object bean, @Nonnull String name) throws PropertyException {
         requireNonNull(bean, ERROR_BEAN_NULL);
         requireNonBlank(name, ERROR_NAME_BLANK);
         try {
@@ -1892,13 +2123,49 @@ public class GriffonClassUtils {
     }
 
     /**
-     * Sets the value of the specified property of the specified bean,
-     * no matter which property reference format is used, with no
-     * type conversions.
+     * Sets the value of the specified field of the specified bean.
+     *
+     * @param bean  Bean whose field is to be mutated
+     * @param name  Name of the field to be mutated
+     * @param value The value to be set on the property
+     * @throws IllegalAccessException   if the caller does not have
+     *                                  access to the field
+     * @throws IllegalArgumentException if <code>bean</code> or
+     *                                  <code>name</code> is null
+     * @throws NoSuchFieldException     if the named field cannot be found
+     * @since 2.1.0
+     */
+    public static void setField(@Nonnull Object bean, @Nonnull String name, @Nullable Object value)
+        throws NoSuchFieldException, IllegalAccessException {
+        requireNonNull(bean, ERROR_BEAN_NULL);
+        requireNonBlank(name, ERROR_NAME_BLANK);
+
+        Class<?> declaringClass = bean.getClass();
+        while (declaringClass != null) {
+            try {
+                Field field = bean.getClass().getDeclaredField(name);
+
+                // type conversion needed?
+                Class<?> propertyType = field.getType();
+                if (value != null && !propertyType.isAssignableFrom(value.getClass())) {
+                    value = TypeUtils.convertValue(propertyType, value);
+                }
+
+                field.setAccessible(true);
+                field.set(bean, value);
+                return;
+            } catch (NoSuchFieldException nsfe) {
+                declaringClass = declaringClass.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(name);
+    }
+
+    /**
+     * Sets the value of the specified property of the specified bean.
      *
      * @param bean  Bean whose property is to be mutated
-     * @param name  Possibly indexed and/or nested name of the property
-     *              to be mutated
+     * @param name  Name of the property to be mutated
      * @param value The value to be set on the property
      * @throws IllegalAccessException    if the caller does not have
      *                                   access to the property accessor method
