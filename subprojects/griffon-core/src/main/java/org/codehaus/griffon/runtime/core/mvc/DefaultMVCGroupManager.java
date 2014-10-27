@@ -18,7 +18,12 @@ package org.codehaus.griffon.runtime.core.mvc;
 import griffon.core.ApplicationClassLoader;
 import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
-import griffon.core.artifact.*;
+import griffon.core.artifact.ArtifactManager;
+import griffon.core.artifact.GriffonArtifact;
+import griffon.core.artifact.GriffonClass;
+import griffon.core.artifact.GriffonController;
+import griffon.core.artifact.GriffonMvcArtifact;
+import griffon.core.artifact.GriffonView;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.exceptions.MVCGroupInstantiationException;
@@ -35,7 +40,8 @@ import java.util.Map;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
 import static griffon.util.ConfigUtils.getConfigValueAsBoolean;
-import static griffon.util.GriffonClassUtils.setPropertiesNoException;
+import static griffon.util.GriffonClassUtils.setPropertiesOrFieldsNoException;
+import static griffon.util.GriffonNameUtils.capitalize;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
@@ -53,6 +59,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     private static final String CONFIG_KEY_EVENTS_INSTANTIATION = "events.instantiation";
     private static final String CONFIG_KEY_EVENTS_DESTRUCTION = "events.destruction";
     private static final String CONFIG_KEY_EVENTS_LISTENER = "events.listener";
+    private static final String KEY_PARENT_GROUP = "parentGroup";
 
     private final ApplicationClassLoader applicationClassLoader;
 
@@ -178,6 +185,16 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             .e("mvcType", configuration.getMvcType())
             .e("mvcId", mvcId)
             .e("configuration", configuration);
+
+        if (args.containsKey(KEY_PARENT_GROUP)) {
+            if (args.get(KEY_PARENT_GROUP) instanceof MVCGroup) {
+                MVCGroup parentGroup = (MVCGroup) args.get(KEY_PARENT_GROUP);
+                for (Map.Entry<String, Object> e : parentGroup.getMembers().entrySet()) {
+                    args.put("parent" + capitalize(e.getKey()), e.getValue());
+                }
+            }
+        }
+
         argsCopy.putAll(args);
         return argsCopy;
     }
@@ -279,7 +296,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
     private void fillArtifactMemberProperties(@Nonnull String type, @Nonnull GriffonArtifact member, @Nonnull Map<String, Object> args) {
         // set the args and instances
-        setPropertiesNoException(member, args);
+        setPropertiesOrFieldsNoException(member, args);
     }
 
     protected void fillNonArtifactMemberProperties(@Nonnull String type, @Nonnull Object member, @Nonnull Map<String, Object> args) {
