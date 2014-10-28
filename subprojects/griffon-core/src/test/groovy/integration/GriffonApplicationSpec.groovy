@@ -311,7 +311,7 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVCGroup('simple', new MVCCallable() {
+        application.mvcGroupManager.withMVC('simple', new MVCCallable() {
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,
@@ -333,7 +333,7 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVCGroup('simple', 'simple-1', new MVCCallable() {
+        application.mvcGroupManager.withMVC('simple', 'simple-1', new MVCCallable() {
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,
@@ -355,7 +355,7 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVCGroup('simple', 'simple-2', [key: 'griffon'], new MVCCallable() {
+        application.mvcGroupManager.withMVC('simple', 'simple-2', [key: 'griffon'], new MVCCallable() {
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,
@@ -377,7 +377,7 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVCGroup('simple', [key: 'griffon'], new MVCCallable() {
+        application.mvcGroupManager.withMVC('simple', [key: 'griffon'], new MVCCallable() {
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,
@@ -399,7 +399,7 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVCGroup('simple', 'simple-2', key: 'griffon', new MVCCallable() {
+        application.mvcGroupManager.withMVC('simple', 'simple-2', key: 'griffon', new MVCCallable() {
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,
@@ -421,7 +421,7 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVCGroup('simple', key: 'griffon', new MVCCallable() {
+        application.mvcGroupManager.withMVC('simple', key: 'griffon', new MVCCallable() {
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,

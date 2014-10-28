@@ -21,6 +21,7 @@ import griffon.core.artifact.GriffonMvcArtifact;
 import griffon.core.artifact.GriffonView;
 import griffon.core.mvc.MVCCallable;
 import griffon.core.mvc.MVCGroup;
+import griffon.core.mvc.MVCGroupCallable;
 import griffon.core.mvc.MVCGroupManager;
 import griffon.core.mvc.MVCHandler;
 
@@ -43,6 +44,10 @@ public abstract class AbstractMVCHandler implements MVCHandler {
     @Inject
     public AbstractMVCHandler(@Nonnull MVCGroupManager mvcGroupManager) {
         this.mvcGroupManager = requireNonNull(mvcGroupManager, "Argument 'mvcGroupManager' must not be null");
+    }
+
+    protected MVCGroupManager getMvcGroupManager() {
+        return mvcGroupManager;
     }
 
     @Nonnull
@@ -109,27 +114,51 @@ public abstract class AbstractMVCHandler implements MVCHandler {
         mvcGroupManager.destroyMVCGroup(mvcId);
     }
 
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCCallable<M, V, C> handler) {
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCCallable<M, V, C> handler) {
+        mvcGroupManager.withMVC(mvcType, mvcId, handler);
+    }
+
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCCallable<M, V, C> handler) {
+        mvcGroupManager.withMVC(args, mvcType, handler);
+    }
+
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCCallable<M, V, C> handler) {
+        mvcGroupManager.withMVC(args, mvcType, mvcId, handler);
+    }
+
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCCallable<M, V, C> handler) {
+        mvcGroupManager.withMVC(mvcType, args, handler);
+    }
+
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull MVCCallable<M, V, C> handler) {
+        mvcGroupManager.withMVC(mvcType, handler);
+    }
+
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCCallable<M, V, C> handler) {
+        mvcGroupManager.withMVC(mvcType, mvcId, args, handler);
+    }
+
+    public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupCallable handler) {
         mvcGroupManager.withMVCGroup(mvcType, mvcId, handler);
     }
 
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCCallable<M, V, C> handler) {
+    public void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCGroupCallable handler) {
         mvcGroupManager.withMVCGroup(args, mvcType, handler);
     }
 
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCCallable<M, V, C> handler) {
+    public void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupCallable handler) {
         mvcGroupManager.withMVCGroup(args, mvcType, mvcId, handler);
     }
 
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCCallable<M, V, C> handler) {
+    public void withMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCGroupCallable handler) {
         mvcGroupManager.withMVCGroup(mvcType, args, handler);
     }
 
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull MVCCallable<M, V, C> handler) {
+    public void withMVCGroup(@Nonnull String mvcType, @Nonnull MVCGroupCallable handler) {
         mvcGroupManager.withMVCGroup(mvcType, handler);
     }
 
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCCallable<M, V, C> handler) {
+    public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCGroupCallable handler) {
         mvcGroupManager.withMVCGroup(mvcType, mvcId, args, handler);
     }
 }

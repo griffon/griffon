@@ -29,7 +29,7 @@ import java.util.Map;
  * @author Andres Almiray
  * @since 2.0.0
  */
-public interface MVCGroup {
+public interface MVCGroup extends MVCHandler {
     /**
      * Returns the configuration of this group.
      *

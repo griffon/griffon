@@ -15,6 +15,7 @@
  */
 package griffon.exceptions;
 
+import griffon.core.artifact.GriffonArtifact;
 import griffon.core.artifact.GriffonClass;
 
 import javax.annotation.Nonnull;
@@ -24,7 +25,7 @@ import javax.annotation.Nonnull;
  * @since 2.0.0
  */
 public class ArtifactNotFoundException extends GriffonException {
-    private static final long serialVersionUID = 8086921685542978484L;
+    private static final long serialVersionUID = -7881105306242340254L;
 
     public ArtifactNotFoundException(@Nonnull Throwable cause) {
         super("Could not find artifact", checkNonNull(cause, "cause"));
@@ -38,11 +39,19 @@ public class ArtifactNotFoundException extends GriffonException {
         super(format(griffonClass), checkNonNull(cause, "cause"));
     }
 
+    public ArtifactNotFoundException(@Nonnull Class<? extends GriffonArtifact> clazz, @Nonnull String name) {
+        super(format(clazz, name));
+    }
+
     private static String format(GriffonClass griffonClass) {
         return "Could not find artifact for " + checkNonNull(griffonClass, "griffonClass").getPropertyName();
     }
 
     private static String format(Class<?> clazz) {
         return "Could not find artifact for " + checkNonNull(clazz, "clazz");
+    }
+
+    private static String format(Class<? extends GriffonArtifact> clazz, String name) {
+        return "Could not find artifact of type " + checkNonNull(clazz, "clazz") + " named " + checkNonBlank(name, "name");
     }
 }

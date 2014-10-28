@@ -18,7 +18,9 @@ package org.codehaus.griffon.compile.core.ast.transform;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonClass;
 import org.codehaus.griffon.compile.core.BaseConstants;
-import org.codehaus.groovy.ast.*;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.FieldNode;
+import org.codehaus.groovy.ast.MethodNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,16 +45,6 @@ public class GriffonArtifactASTInjector extends AbstractASTInjector implements B
 
     public void inject(@Nonnull ClassNode classNode, @Nonnull String artifactType) {
         injectedField(classNode, GRIFFON_APPLICATION_TYPE, APPLICATION);
-
-        /*
-        ConstructorNode constructor = classNode.addConstructor(
-            PUBLIC,
-            params(param(GRIFFON_APPLICATION_TYPE, APPLICATION)),
-            NO_EXCEPTIONS,
-            assigns(field(applicationField), var(APPLICATION))
-        );
-        constructor.addAnnotation(new AnnotationNode(INJECT_TYPE));
-        */
 
         // GriffonClass getGriffonClass()
         injectMethod(classNode, new MethodNode(

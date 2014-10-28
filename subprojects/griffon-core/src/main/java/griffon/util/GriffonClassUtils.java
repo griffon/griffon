@@ -165,7 +165,7 @@ public class GriffonClassUtils {
             }
         }
 
-        MVC_METHODS.add(new MethodDescriptor("getMvcGroup"));
+        // MVC_METHODS.add(new MethodDescriptor("getMvcGroup"));
         for (Method method : MVCHandler.class.getMethods()) {
             MethodDescriptor md = MethodDescriptor.forMethod(method, true);
             if (!MVC_METHODS.contains(md)) {
@@ -2133,10 +2133,11 @@ public class GriffonClassUtils {
      * @throws IllegalArgumentException if <code>bean</code> or
      *                                  <code>name</code> is null
      * @throws NoSuchFieldException     if the named field cannot be found
+     * @throws FieldException           if the field cannot be set
      * @since 2.1.0
      */
     public static void setField(@Nonnull Object bean, @Nonnull String name, @Nullable Object value)
-        throws NoSuchFieldException, IllegalAccessException {
+        throws NoSuchFieldException, IllegalAccessException, FieldException {
         requireNonNull(bean, ERROR_BEAN_NULL);
         requireNonBlank(name, ERROR_NAME_BLANK);
 
@@ -2152,8 +2153,12 @@ public class GriffonClassUtils {
                 }
 
                 field.setAccessible(true);
-                field.set(bean, value);
-                return;
+                try {
+                    field.set(bean, value);
+                    return;
+                } catch (IllegalArgumentException iae) {
+                    throw new FieldException(bean, name, value, iae);
+                }
             } catch (NoSuchFieldException nsfe) {
                 declaringClass = declaringClass.getSuperclass();
             }
@@ -2175,10 +2180,11 @@ public class GriffonClassUtils {
      *                                   throws an exception
      * @throws NoSuchMethodException     if an accessor method for this
      *                                   property cannot be found
+     * @throws PropertyException         if the property cannot be set
      */
     public static void setProperty(@Nonnull Object bean, @Nonnull String name, @Nullable Object value)
         throws IllegalAccessException, InvocationTargetException,
-        NoSuchMethodException {
+        NoSuchMethodException, PropertyException {
         requireNonNull(bean, ERROR_BEAN_NULL);
         requireNonBlank(name, ERROR_NAME_BLANK);
 
@@ -2201,7 +2207,11 @@ public class GriffonClassUtils {
         }
 
         // Call the property setter
-        writeMethod.invoke(bean, value);
+        try {
+            writeMethod.invoke(bean, value);
+        } catch (IllegalArgumentException iae) {
+            throw new PropertyException(bean, name, value, iae);
+        }
     }
 
     /**

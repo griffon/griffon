@@ -16,6 +16,7 @@
 package griffon.core.artifact;
 
 import griffon.core.mvc.MVCGroup;
+import griffon.core.mvc.MVCHandler;
 
 import javax.annotation.Nonnull;
 import java.util.Map;

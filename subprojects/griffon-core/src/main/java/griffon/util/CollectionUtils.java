@@ -183,6 +183,11 @@ public final class CollectionUtils {
         public int hashCode() {
             return delegate.hashCode();
         }
+
+        @Override
+        public String toString() {
+            return delegate.toString();
+        }
     }
 
     public static class ListBuilder<E> implements List<E> {
@@ -261,6 +266,11 @@ public final class CollectionUtils {
         @Override
         public int hashCode() {
             return delegate.hashCode();
+        }
+
+        @Override
+        public String toString() {
+            return delegate.toString();
         }
 
         public E get(int i) {
@@ -372,6 +382,11 @@ public final class CollectionUtils {
         @Override
         public int hashCode() {
             return delegate.hashCode();
+        }
+
+        @Override
+        public String toString() {
+            return delegate.toString();
         }
     }
 }

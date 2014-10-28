@@ -22,8 +22,10 @@ import griffon.core.artifact.GriffonMvcArtifact;
 import griffon.core.artifact.GriffonView;
 import griffon.core.mvc.MVCCallable;
 import griffon.core.mvc.MVCGroup;
+import griffon.core.mvc.MVCGroupCallable;
 import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.core.mvc.MVCGroupManager;
+import griffon.exceptions.ArtifactNotFoundException;
 import griffon.exceptions.MVCGroupConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +59,8 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     protected static final String ERROR_GROUP_NULL = "Argument 'group' must not be null";
     protected static final String ERROR_CONFIG_NULL = "Argument 'config' must not be null";
     protected static final String ERROR_ARGS_NULL = "Argument 'args' must not be null";
+    protected static final String ERROR_NAME_BLANK = "Argument 'name' cannot be blank";
+    protected static final String ERROR_TYPE_NULL = "Argument 'type' cannot be null";
 
     private final GriffonApplication application;
 
@@ -241,7 +245,23 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
                 }
             } catch (Exception x) {
                 LOG.warn("Could not destroy group [{}] of type {}", mvcId, configuration.getMvcType(), sanitize(x));
+            }
+        }
+    }
 
+    @SuppressWarnings("unchecked")
+    protected void withMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCGroupCallable handler) {
+        MVCGroup group = null;
+        try {
+            group = buildMVCGroup(configuration, mvcId, args);
+            handler.call(group);
+        } finally {
+            try {
+                if (group != null) {
+                    destroyMVCGroup(group.getMvcId());
+                }
+            } catch (Exception x) {
+                LOG.warn("Could not destroy group [{}] of type {}", mvcId, configuration.getMvcType(), sanitize(x));
             }
         }
     }
@@ -324,32 +344,128 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     }
 
     @Override
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull MVCCallable<M, V, C> handler) {
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull MVCCallable<M, V, C> handler) {
         withMVCGroup(findConfiguration(mvcType), null, Collections.<String, Object>emptyMap(), handler);
     }
 
     @Override
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCCallable<M, V, C> handler) {
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCCallable<M, V, C> handler) {
         withMVCGroup(findConfiguration(mvcType), mvcId, Collections.<String, Object>emptyMap(), handler);
     }
 
     @Override
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCCallable<M, V, C> handler) {
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCCallable<M, V, C> handler) {
         withMVCGroup(findConfiguration(mvcType), mvcId, args, handler);
     }
 
     @Override
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCCallable<M, V, C> handler) {
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCCallable<M, V, C> handler) {
         withMVCGroup(findConfiguration(mvcType), mvcId, args, handler);
     }
 
     @Override
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCCallable<M, V, C> handler) {
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCCallable<M, V, C> handler) {
         withMVCGroup(findConfiguration(mvcType), null, args, handler);
     }
 
     @Override
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCCallable<M, V, C> handler) {
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCCallable<M, V, C> handler) {
         withMVCGroup(findConfiguration(mvcType), null, args, handler);
+    }
+
+    @Override
+    public void withMVCGroup(@Nonnull String mvcType, @Nonnull MVCGroupCallable handler) {
+        withMVCGroup(findConfiguration(mvcType), null, Collections.<String, Object>emptyMap(), handler);
+    }
+
+    @Override
+    public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupCallable handler) {
+        withMVCGroup(findConfiguration(mvcType), mvcId, Collections.<String, Object>emptyMap(), handler);
+    }
+
+    @Override
+    public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCGroupCallable handler) {
+        withMVCGroup(findConfiguration(mvcType), mvcId, args, handler);
+    }
+
+    @Override
+    public void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupCallable handler) {
+        withMVCGroup(findConfiguration(mvcType), mvcId, args, handler);
+    }
+
+    @Override
+    public void withMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCGroupCallable handler) {
+        withMVCGroup(findConfiguration(mvcType), null, args, handler);
+    }
+
+    @Override
+    public void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCGroupCallable handler) {
+        withMVCGroup(findConfiguration(mvcType), null, args, handler);
+    }
+
+    @Nonnull
+    @Override
+    public <C extends GriffonController> C getController(@Nonnull String name, @Nonnull Class<C> type) throws ArtifactNotFoundException {
+        requireNonBlank(name, ERROR_NAME_BLANK);
+        requireNonNull(type, ERROR_TYPE_NULL);
+        GriffonController controller = getControllers().get(name);
+        if (controller != null) {
+            return type.cast(controller);
+        }
+        throw new ArtifactNotFoundException(type, name);
+    }
+
+    @Nonnull
+    @Override
+    public <M extends GriffonModel> M getModel(@Nonnull String name, @Nonnull Class<M> type) throws ArtifactNotFoundException {
+        requireNonBlank(name, ERROR_NAME_BLANK);
+        requireNonNull(type, ERROR_TYPE_NULL);
+        GriffonModel model = getModels().get(name);
+        if (model != null) {
+            return type.cast(model);
+        }
+        throw new ArtifactNotFoundException(type, name);
+    }
+
+    @Nonnull
+    @Override
+    public <V extends GriffonView> V getView(@Nonnull String name, @Nonnull Class<V> type) throws ArtifactNotFoundException {
+        requireNonBlank(name, ERROR_NAME_BLANK);
+        requireNonNull(type, ERROR_TYPE_NULL);
+        GriffonView view = getViews().get(name);
+        if (view != null) {
+            return type.cast(view);
+        }
+        throw new ArtifactNotFoundException(type, name);
+    }
+
+    @Nullable
+    @Override
+    public <C extends GriffonController> C findController(@Nonnull String name, @Nonnull Class<C> type) {
+        try {
+            return getController(name, type);
+        } catch (ArtifactNotFoundException anfe) {
+            return null;
+        }
+    }
+
+    @Nullable
+    @Override
+    public <M extends GriffonModel> M findModel(@Nonnull String name, @Nonnull Class<M> type) {
+        try {
+            return getModel(name, type);
+        } catch (ArtifactNotFoundException anfe) {
+            return null;
+        }
+    }
+
+    @Nullable
+    @Override
+    public <V extends GriffonView> V findView(@Nonnull String name, @Nonnull Class<V> type) {
+        try {
+            return getView(name, type);
+        } catch (ArtifactNotFoundException anfe) {
+            return null;
+        }
     }
 }
