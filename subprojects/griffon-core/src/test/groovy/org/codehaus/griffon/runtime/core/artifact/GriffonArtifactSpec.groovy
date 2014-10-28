@@ -75,7 +75,7 @@ class GriffonArtifactSpec extends Specification {
         List checks = []
 
         when:
-        resolveMVCHandler().withMVCGroup('simple', new MVCCallable() {
+        resolveMVCHandler().withMVC('simple', new MVCCallable() {
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,
@@ -97,7 +97,7 @@ class GriffonArtifactSpec extends Specification {
         List checks = []
 
         when:
-        resolveMVCHandler().withMVCGroup('simple', 'simple-1', new MVCCallable() {
+        resolveMVCHandler().withMVC('simple', 'simple-1', new MVCCallable() {
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,
@@ -119,7 +119,7 @@ class GriffonArtifactSpec extends Specification {
         List checks = []
 
         when:
-        resolveMVCHandler().withMVCGroup('simple', 'simple-2', [key: 'griffon'], new MVCCallable() {
+        resolveMVCHandler().withMVC('simple', 'simple-2', [key: 'griffon'], new MVCCallable() {
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,
@@ -141,7 +141,7 @@ class GriffonArtifactSpec extends Specification {
         List checks = []
 
         when:
-        resolveMVCHandler().withMVCGroup('simple', [key: 'griffon'], new MVCCallable() {
+        resolveMVCHandler().withMVC('simple', [key: 'griffon'], new MVCCallable() {
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,
@@ -163,7 +163,7 @@ class GriffonArtifactSpec extends Specification {
         List checks = []
 
         when:
-        resolveMVCHandler().withMVCGroup('simple', 'simple-2', key: 'griffon', new MVCCallable() {
+        resolveMVCHandler().withMVC('simple', 'simple-2', key: 'griffon', new MVCCallable() {
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,
@@ -185,7 +185,7 @@ class GriffonArtifactSpec extends Specification {
         List checks = []
 
         when:
-        resolveMVCHandler().withMVCGroup('simple', key: 'griffon', new MVCCallable() {
+        resolveMVCHandler().withMVC('simple', key: 'griffon', new MVCCallable() {
             void call(
                 @Nullable GriffonModel model,
                 @Nullable GriffonView view,

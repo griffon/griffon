@@ -19,6 +19,7 @@ import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonModel;
 import griffon.core.artifact.GriffonView;
+import griffon.exceptions.ArtifactNotFoundException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -116,4 +117,73 @@ public interface MVCGroupManager extends MVCHandler {
     Map<String, ? extends GriffonController> getControllers();
 
     GriffonApplication getApplication();
+
+    /**
+     * Finds a named controller.
+     *
+     * @param name the name of the group that holds the controller
+     * @param type the type of the controller
+     * @return the controller instance if found
+     * @throws ArtifactNotFoundException if the named controller could not be found
+     * @since 2.1.0
+     */
+    @Nonnull
+    <C extends GriffonController> C getController(@Nonnull String name, @Nonnull Class<C> type) throws ArtifactNotFoundException;
+
+    /**
+     * Finds a named model.
+     *
+     * @param name the name of the group that holds the model
+     * @param type the type of the model
+     * @return the model instance if found
+     * @throws ArtifactNotFoundException if the named model could not be found
+     * @since 2.1.0
+     */
+    @Nonnull
+    <M extends GriffonModel> M getModel(@Nonnull String name, @Nonnull Class<M> type) throws ArtifactNotFoundException;
+
+    /**
+     * Finds a named view.
+     *
+     * @param name the name of the group that holds the view
+     * @param type the type of the view
+     * @return the view instance if found
+     * @throws ArtifactNotFoundException if the named view could not be found
+     * @since 2.1.0
+     */
+    @Nonnull
+    <V extends GriffonView> V getView(@Nonnull String name, @Nonnull Class<V> type) throws ArtifactNotFoundException;
+
+    /**
+     * Finds a named controller.
+     *
+     * @param name the name of the group that holds the controller
+     * @param type the type of the controller
+     * @return the controller instance if found
+     * @since 2.1.0
+     */
+    @Nullable
+    <C extends GriffonController> C findController(@Nonnull String name, @Nonnull Class<C> type);
+
+    /**
+     * Finds a named model.
+     *
+     * @param name the name of the group that holds the model
+     * @param type the type of the model
+     * @return the model instance if found
+     * @since 2.1.0
+     */
+    @Nullable
+    <M extends GriffonModel> M findModel(@Nonnull String name, @Nonnull Class<M> type);
+
+    /**
+     * Finds a named view.
+     *
+     * @param name the name of the group that holds the view
+     * @param type the type of the view
+     * @return the view instance if found
+     * @since 2.1.0
+     */
+    @Nullable
+    <V extends GriffonView> V findView(@Nonnull String name, @Nonnull Class<V> type);
 }

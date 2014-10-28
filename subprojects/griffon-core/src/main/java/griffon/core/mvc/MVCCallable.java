@@ -22,14 +22,14 @@ import griffon.core.artifact.GriffonView;
 import javax.annotation.Nullable;
 
 /**
- * An specialized closure for working with MVC members.
+ * An specialized function for working with MVC members.
  *
  * @author Andres Almiray
  * @since 2.0.0
  */
 public interface MVCCallable<M extends GriffonModel, V extends GriffonView, C extends GriffonController> {
     /**
-     * Executes this closure<p>
+     * Executes this function<p>
      *
      * @param model      the Model member of the group
      * @param view       the View member of the group
