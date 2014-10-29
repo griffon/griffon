@@ -15,9 +15,13 @@
  */
 package org.codehaus.griffon.runtime.core.view;
 
+import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
+import griffon.core.env.ApplicationPhase;
+import griffon.core.event.EventRouter;
 import griffon.core.view.WindowDisplayHandler;
 import griffon.core.view.WindowManager;
+import griffon.exceptions.InstanceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,9 +31,11 @@ import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableCollection;
 import static java.util.Objects.requireNonNull;
 
@@ -38,9 +44,9 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public abstract class AbstractWindowManager<W> implements WindowManager<W> {
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractWindowManager.class);
     protected static final String ERROR_NAME_BLANK = "Argument 'name' must not be blank";
     protected static final String ERROR_WINDOW_NULL = "Argument 'window' must not be null";
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractWindowManager.class);
     private final Map<String, W> windows = Collections.synchronizedMap(new LinkedHashMap<String, W>());
 
     private final GriffonApplication application;
@@ -57,7 +63,6 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
     protected GriffonApplication getApplication() {
         return application;
     }
-
 
     @Override
     @Nullable
@@ -136,6 +141,7 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
 
         LOG.debug("Attaching window with name: '{}' at index {} {}", name, windows.size(), window);
         windows.put(name, window);
+        event(ApplicationEvent.WINDOW_ATTACHED, asList(name, window));
     }
 
     protected abstract void doAttach(@Nonnull W window);
@@ -150,6 +156,7 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
 
             LOG.debug("Detaching window with name: '{}' {}", name, window);
             windows.remove(name);
+            event(ApplicationEvent.WINDOW_DETACHED, asList(name, window));
         }
     }
 
@@ -272,5 +279,20 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
     @Override
     public boolean isAutoShutdown() {
         return application.getConfiguration().getAsBoolean("application.autoShutdown", true);
+    }
+
+    protected void event(@Nonnull ApplicationEvent evt, @Nonnull List<?> args) {
+        event(evt.getName(), args);
+    }
+
+    protected void event(@Nonnull String evt, @Nonnull List<?> args) {
+        try {
+            EventRouter eventRouter = getApplication().getEventRouter();
+            eventRouter.publishEvent(evt, args);
+        } catch (InstanceNotFoundException infe) {
+            if (getApplication().getPhase() != ApplicationPhase.SHUTDOWN) {
+                throw infe;
+            }
+        }
     }
 }

@@ -18,8 +18,6 @@ package org.codehaus.griffon.runtime.pivot;
 import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.env.ApplicationPhase;
-import griffon.core.event.EventRouter;
-import griffon.exceptions.InstanceNotFoundException;
 import griffon.pivot.PivotWindowDisplayHandler;
 import griffon.pivot.PivotWindowManager;
 import griffon.pivot.support.adapters.WindowStateAdapter;
@@ -31,7 +29,6 @@ import org.codehaus.griffon.runtime.core.view.AbstractWindowManager;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
@@ -114,17 +111,6 @@ public class DefaultPivotWindowManager extends AbstractWindowManager<Window> imp
          */
         public void windowClosed(Window arg0, Display arg1, Window arg2) {
             event(ApplicationEvent.WINDOW_HIDDEN, asList(arg0));
-        }
-    }
-
-    private void event(@Nonnull ApplicationEvent evt, List<?> args) {
-        try {
-            EventRouter eventRouter = getApplication().getEventRouter();
-            eventRouter.publishEvent(evt.getName(), args);
-        } catch (InstanceNotFoundException infe) {
-            if (getApplication().getPhase() != ApplicationPhase.SHUTDOWN) {
-                throw infe;
-            }
         }
     }
 }

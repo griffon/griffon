@@ -18,8 +18,6 @@ package org.codehaus.griffon.runtime.swing;
 import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.env.ApplicationPhase;
-import griffon.core.event.EventRouter;
-import griffon.exceptions.InstanceNotFoundException;
 import griffon.swing.SwingWindowDisplayHandler;
 import griffon.swing.SwingWindowManager;
 import griffon.util.GriffonNameUtils;
@@ -39,7 +37,10 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Arrays.asList;
@@ -115,6 +116,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
             LOG.debug("Attaching internal frame with name: '" + name + "' at index " + internalFrames.size() + " " + internalFrame);
         }
         internalFrames.put(name, internalFrame);
+        event(ApplicationEvent.WINDOW_ATTACHED, asList(name, internalFrame));
     }
 
     protected void doAttach(@Nonnull JInternalFrame internalFrame) {
@@ -140,6 +142,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
                 LOG.debug("Detaching internalFrame with name: '" + name + "' " + window);
             }
             internalFrames.remove(name);
+            event(ApplicationEvent.WINDOW_DETACHED, asList(name, window));
         }
     }
 
@@ -340,17 +343,6 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
          */
         public void internalFrameClosed(InternalFrameEvent event) {
             event(ApplicationEvent.WINDOW_HIDDEN, asList(event.getSource()));
-        }
-    }
-
-    private void event(@Nonnull ApplicationEvent evt, List<Object> args) {
-        try {
-            EventRouter eventRouter = getApplication().getEventRouter();
-            eventRouter.publishEvent(evt.getName(), args);
-        } catch (InstanceNotFoundException infe) {
-            if (getApplication().getPhase() != ApplicationPhase.SHUTDOWN) {
-                throw infe;
-            }
         }
     }
 }
