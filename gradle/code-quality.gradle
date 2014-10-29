@@ -24,6 +24,7 @@ def configDir = new File(buildscript.sourceFile.parentFile.parentFile, 'config')
 ext.checkstyleConfigDir = "$configDir/checkstyle"
 
 checkstyle {
+    toolVersion = '6.0'
     configFile = new File(checkstyleConfigDir, 'checkstyle.xml')
     configProperties.checkstyleConfigDir = checkstyleConfigDir
 }
@@ -60,6 +61,7 @@ license {
         groovy = 'SLASHSTAR_STYLE'
     }
     ext.year = '2008-2014'
+    exclude '**/*.png'
 }
 
 licenseTest {
