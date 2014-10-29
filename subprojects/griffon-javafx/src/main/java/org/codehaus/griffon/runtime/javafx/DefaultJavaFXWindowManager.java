@@ -18,8 +18,6 @@ package org.codehaus.griffon.runtime.javafx;
 import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.env.ApplicationPhase;
-import griffon.core.event.EventRouter;
-import griffon.exceptions.InstanceNotFoundException;
 import griffon.javafx.JavaFXWindowDisplayHandler;
 import griffon.javafx.JavaFXWindowManager;
 import javafx.event.EventHandler;
@@ -30,7 +28,6 @@ import org.codehaus.griffon.runtime.core.view.AbstractWindowManager;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
@@ -127,17 +124,6 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> im
          */
         public void handle(WindowEvent windowEvent) {
             event(ApplicationEvent.WINDOW_HIDDEN, asList(windowEvent.getSource()));
-        }
-    }
-
-    private void event(@Nonnull ApplicationEvent evt, List<?> args) {
-        try {
-            EventRouter eventRouter = getApplication().getEventRouter();
-            eventRouter.publishEvent(evt.getName(), args);
-        } catch (InstanceNotFoundException infe) {
-            if (getApplication().getPhase() != ApplicationPhase.SHUTDOWN) {
-                throw infe;
-            }
         }
     }
 }

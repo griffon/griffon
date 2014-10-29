@@ -20,8 +20,6 @@ import com.googlecode.lanterna.gui.listener.WindowAdapter;
 import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.env.ApplicationPhase;
-import griffon.core.event.EventRouter;
-import griffon.exceptions.InstanceNotFoundException;
 import griffon.lanterna.LanternaWindowDisplayHandler;
 import griffon.lanterna.LanternaWindowManager;
 import org.codehaus.griffon.runtime.core.view.AbstractWindowManager;
@@ -29,7 +27,6 @@ import org.codehaus.griffon.runtime.core.view.AbstractWindowManager;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
@@ -94,17 +91,6 @@ public class DefaultLanternaWindowManager extends AbstractWindowManager<Window> 
         public void onWindowShown(Window window) {
             super.onWindowShown(window);
             event(ApplicationEvent.WINDOW_SHOWN, asList(window));
-        }
-    }
-
-    private void event(@Nonnull ApplicationEvent evt, List<?> args) {
-        try {
-            EventRouter eventRouter = getApplication().getEventRouter();
-            eventRouter.publishEvent(evt.getName(), args);
-        } catch (InstanceNotFoundException infe) {
-            if (getApplication().getPhase() != ApplicationPhase.SHUTDOWN) {
-                throw infe;
-            }
         }
     }
 }
