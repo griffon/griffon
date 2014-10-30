@@ -42,7 +42,13 @@ ext.childProjects = [
     ':griffon-core'
 ]
 
-ext.childProjects.each { evaluationDependsOn it }
+def sampleApps = []
+for (toolkit in ['swing', 'javafx', 'pivot', 'lanterna']) {
+    for (lang in ['groovy', 'java']) {
+        sampleApps << ":sample-${toolkit}-${lang}".toString()
+    }
+}
+(ext.childProjects + sampleApps).each { evaluationDependsOn it }
 
 dependencies {
     java2html 'de.java2html:java2html:5.0'
@@ -70,10 +76,10 @@ task apiDocs(type: Javadoc, dependsOn: copyDocs) {
     destinationDir  = file("$buildDir/api")
     title           = "Griffon $version"
     classpath       = project.ext.childProjects.collect { projectName ->
-                          [project(projectName).sourceSets.main.output,
-                           project(projectName).configurations.compile,
-                           project(projectName).configurations.compileOnly]
-                      }.flatten().sum() as FileCollection
+        [project(projectName).sourceSets.main.output,
+         project(projectName).configurations.compile,
+         project(projectName).configurations.compileOnly]
+    }.flatten().sum() as FileCollection
 
     excludes = ['**/*.html', 'META-INF/**', '**/*.groovy']
 
@@ -95,7 +101,7 @@ task apiDocs(type: Javadoc, dependsOn: copyDocs) {
         copy {
             into task.destinationDir
             from rootProject.file('src/javadoc/resources/img/griffon.ico'),
-                 rootProject.file('src/javadoc/resources/css/stylesheet.css')
+                rootProject.file('src/javadoc/resources/css/stylesheet.css')
         }
         copy {
             into file("${task.destinationDir}/resources")
@@ -166,6 +172,10 @@ def loadProperties(File file) {
     props
 }
 
+task sampleStats() << {
+    sampleApps.each { p -> project(p).tasks.findByName('stats').computeLoc() }
+}
+
 asciidoctor {
     baseDir = project.file('src/asciidoc')
     options = [
@@ -204,6 +214,7 @@ asciidoctor {
         }
     }
 }
+asciidoctor.dependsOn sampleStats
 
 task guide(type: Copy, dependsOn: [apiDocs, java2html, asciidoctor]) {
     destinationDir = "$buildDir/guide" as File
