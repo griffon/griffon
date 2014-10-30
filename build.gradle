@@ -34,6 +34,7 @@ buildscript {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.6'
         classpath 'org.ajoberstar:gradle-git:0.11.2'
         classpath 'uk.co.cacoethes:lazybones-gradle:1.2.2'
+        classpath 'org.kordamp.gradle:stats-gradle-plugin:0.1.2'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.5'
     }
 }
@@ -192,6 +193,20 @@ subprojects { subproj ->
                     }
                 }
             }
+        }
+
+        subproj.apply plugin: 'org.kordamp.gradle.stats'
+        if (subproj.projectDir.parentFile.name == 'samples') {
+            def statsTask = subproj.tasks.findByName('stats')
+            statsTask.formats = ['txt']
+            statsTask.paths += [
+                model     : [name: 'Models', path: 'griffon-app/models'],
+                view      : [name: 'Views', path: 'griffon-app/views'],
+                controller: [name: 'Controllers', path: 'griffon-app/controllers'],
+                service   : [name: 'Services', path: 'griffon-app/services'],
+                config    : [name: 'Configuration', path: 'griffon-app/conf'],
+                lifecycle : [name: 'Lifecycle', path: 'griffon-app/lifecycle']
+            ]
         }
     }
 }
