@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" tests="21" skipped="0" failures="0" errors="0" timestamp="2014-10-29T09:42:09" hostname="testing-worker-linux-8-2-30776-linux-16-39361435" time="1.179">
+<testsuite name="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" tests="21" skipped="0" failures="0" errors="0" timestamp="2014-10-30T12:50:41" hostname="testing-worker-linux-5-1-9996-linux-8-39485274" time="1.115">
   <properties/>
-  <testcase name="Invoking an event by name in synchronous mode with a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.095"/>
-  <testcase name="Invoking an event by name in asynchronous mode with a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.208"/>
+  <testcase name="Invoking an event by name in synchronous mode with a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.058"/>
+  <testcase name="Invoking an event by name in asynchronous mode with a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.207"/>
   <testcase name="Invoking an event by name in outside mode with a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.002"/>
-  <testcase name="Invoking an event by name in synchronous mode with a Map listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.001"/>
-  <testcase name="Invoking an event by name in asynchronous mode with a Map listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.202"/>
+  <testcase name="Invoking an event by name in synchronous mode with a Map listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.002"/>
+  <testcase name="Invoking an event by name in asynchronous mode with a Map listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.201"/>
   <testcase name="Invoking an event by name in outside mode with a Map listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.001"/>
-  <testcase name="Invoking an event by name in synchronous mode with a bean listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.013"/>
+  <testcase name="Invoking an event by name in synchronous mode with a bean listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.008"/>
   <testcase name="Invoking an event by name in asynchronous mode with a bean listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.202"/>
-  <testcase name="Invoking an event by name in outside mode with a bean listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.003"/>
-  <testcase name="Invoking an event in synchronous mode with a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.004"/>
-  <testcase name="Invoking an event in asynchronous mode with a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.203"/>
+  <testcase name="Invoking an event by name in outside mode with a bean listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.002"/>
+  <testcase name="Invoking an event in synchronous mode with a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.003"/>
+  <testcase name="Invoking an event in asynchronous mode with a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.202"/>
   <testcase name="Invoking an event in outside mode with a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.002"/>
   <testcase name="Invoking an event in synchronous mode with a Map listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.001"/>
   <testcase name="Invoking an event in asynchronous mode with a Map listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.201"/>
@@ -19,9 +19,9 @@
   <testcase name="Register and unregister a callable listener by name" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.003"/>
   <testcase name="Register and unregister a Map listener by name" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.002"/>
   <testcase name="Register and unregister a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.002"/>
-  <testcase name="Register and unregister a bean listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.008"/>
-  <testcase name="Register and unregister a bean listener with nested listeners" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.016"/>
-  <testcase name="Register and unregister an invalid bean listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.002"/>
+  <testcase name="Register and unregister a bean listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.002"/>
+  <testcase name="Register and unregister a bean listener with nested listeners" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.011"/>
+  <testcase name="Register and unregister an invalid bean listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestEventHandler on MyEvent1
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' synchronously
@@ -41,13 +41,13 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestEventHandler on MyEvent1
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' outside UI
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' outside UI
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$EventHandler@112f136
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$EventHandler@31dc3894
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$EventHandler@2f131a15
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$EventHandler@ff3c78d
 [DefaultEventRouter-10] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' asynchronously
 [DefaultEventRouter-10] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' asynchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$EventHandler@6ec14060
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$EventHandler@5badd193
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' outside UI
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' outside UI
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestEventHandler on MyEvent1
@@ -80,15 +80,15 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestEventHandler on MyEvent1
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$EventHandler@36e2065a
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$EventHandler@36e2065a
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$EventHandler@512290c1
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$EventHandler@512290c1
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.Subject$1 on MyEvent1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener org.codehaus.griffon.runtime.core.event.Subject@79b3ccdc
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener org.codehaus.griffon.runtime.core.event.Subject@6642dbc6
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener org.codehaus.griffon.runtime.core.event.Subject$1 on MyEvent1
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener java.lang.Object@2b6e376
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener java.lang.Object@17120de0
 ]]></system-err>
 </testsuite>
