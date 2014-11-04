@@ -17,6 +17,7 @@ package browser
 
 import griffon.core.artifact.GriffonView
 import griffon.metadata.ArtifactProviderFor
+import javafx.beans.value.ChangeListener
 
 @ArtifactProviderFor(GriffonView)
 class BrowserView {
@@ -26,7 +27,7 @@ class BrowserView {
 
     void initUI() {
         builder.application(title: application.configuration['application.title'],
-            width: 800, height: 600, centerOnScreen: true) {
+            width: 1024, height: 600, centerOnScreen: true) {
             scene {
                 vbox {
                     hbox {
@@ -47,7 +48,28 @@ class BrowserView {
             }
         }
 
-        builder.urlField.text = 'http://griffon-framework.org'
+        setupListeners()
+
+        builder.urlField.text = 'http://new.griffon-framework.org'
         controller.openUrl()
+    }
+
+    private void setupListeners() {
+        builder.browser.engine.loadWorker.messageProperty().addListener({ observableValue, oldValue, newValue ->
+            builder.model.status = newValue
+            // update history and textField value if a link
+            // was clicked. Sadly this check is brittle as we
+            // rely on 'parsing' the message value *sigh*
+            if (newValue.startsWith('Loading http')) {
+                String url = newValue[8..-1]
+                builder.urlField.text = url
+            }
+        } as ChangeListener)
+
+        builder.browser.engine.loadWorker.progressProperty().addListener({ observableValue, oldValue, newValue ->
+            if (newValue > 0.0d && newValue < 1.0d) {
+                builder.model.status = "Loading: ${(newValue * 100).intValue()} %"
+            }
+        } as ChangeListener)
     }
 }

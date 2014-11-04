@@ -19,12 +19,12 @@ import griffon.core.artifact.GriffonController
 import griffon.metadata.ArtifactProviderFor
 import griffon.transform.Threading
 
+@Threading(Threading.Policy.SKIP)
 @ArtifactProviderFor(GriffonController)
 class BrowserController {
     def model
     def builder
 
-    @Threading(Threading.Policy.SKIP)
     void back() {
         if (builder.browser.engine.history.entries.size() > 0) {
             builder.browser.engine.history.go(-1)
@@ -32,7 +32,6 @@ class BrowserController {
         }
     }
 
-    @Threading(Threading.Policy.SKIP)
     void forward() {
         if (builder.browser.engine.history.entries.size() > 0) {
             builder.browser.engine.history.go(1)
@@ -40,12 +39,10 @@ class BrowserController {
         }
     }
 
-    @Threading(Threading.Policy.SKIP)
     void reload() {
         builder.browser.engine.reload()
     }
 
-    @Threading(Threading.Policy.SKIP)
     void openUrl() {
         String url = model.url
         if (url.indexOf('://') < 0) url = 'http://' + url

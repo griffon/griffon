@@ -20,10 +20,9 @@ application {
 }
 mvcGroups {
     // MVC Group for "browser"
-    'browser' {
+    browser {
         model      = 'browser.BrowserModel'
         view       = 'browser.BrowserView'
         controller = 'browser.BrowserController'
-        wirings    = 'browser.BrowserWirings'
     }
 }
