@@ -14,7 +14,7 @@ if (tmplQualifiers) {
 } else {
     def templateNames = templateDir.list().findAll {
         it.endsWith('.java') || it.endsWith('.groovy')
-    }.collect { it.toLowerCase() - '.java' - '.groovy' }
+    }.collect { it.toLowerCase() - '.java' - '.groovy' }.sort() - 'lazybones'
     println '\nThe following artifact templates are available\n'
     templateNames.each { println "  $it" }
     println '  mvcgroup'
