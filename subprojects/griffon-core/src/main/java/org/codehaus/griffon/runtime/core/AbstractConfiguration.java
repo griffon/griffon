@@ -19,8 +19,14 @@ import griffon.core.Configuration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Properties;
 
-import static griffon.util.TypeUtils.*;
+import static griffon.util.CollectionUtils.toProperties;
+import static griffon.util.TypeUtils.castToBoolean;
+import static griffon.util.TypeUtils.castToDouble;
+import static griffon.util.TypeUtils.castToFloat;
+import static griffon.util.TypeUtils.castToInt;
+import static griffon.util.TypeUtils.castToLong;
 
 /**
  * @author Andres Almiray
@@ -108,5 +114,11 @@ public abstract class AbstractConfiguration implements Configuration {
     public String getAsString(@Nonnull String key, @Nullable String defaultValue) {
         Object value = get(key);
         return value != null ? String.valueOf(value) : defaultValue;
+    }
+
+    @Nonnull
+    @Override
+    public Properties asProperties() {
+        return toProperties(asFlatMap());
     }
 }

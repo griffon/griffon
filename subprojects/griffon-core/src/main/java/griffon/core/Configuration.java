@@ -18,6 +18,7 @@ package griffon.core;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 /**
@@ -32,6 +33,9 @@ public interface Configuration {
 
     @Nonnull
     ResourceBundle asResourceBundle();
+
+    @Nonnull
+    Properties asProperties();
 
     @Nullable
     Object get(@Nonnull String key);

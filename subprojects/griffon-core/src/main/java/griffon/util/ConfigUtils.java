@@ -17,10 +17,20 @@ package griffon.util;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
-import static griffon.util.TypeUtils.*;
+import static griffon.util.TypeUtils.castToBoolean;
+import static griffon.util.TypeUtils.castToDouble;
+import static griffon.util.TypeUtils.castToFloat;
+import static griffon.util.TypeUtils.castToInt;
+import static griffon.util.TypeUtils.castToLong;
+import static griffon.util.TypeUtils.castToNumber;
 import static java.util.Collections.unmodifiableSortedSet;
 import static java.util.Objects.requireNonNull;
 
@@ -524,7 +534,7 @@ public final class ConfigUtils {
      *
      * @param path the file path (may be <code>null</code>)
      * @return the path with stripped filename extension,
-     *         or <code>null</code> if none
+     * or <code>null</code> if none
      */
     public static String stripFilenameExtension(String path) {
         if (path == null) {
