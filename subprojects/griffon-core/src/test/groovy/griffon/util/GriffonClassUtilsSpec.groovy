@@ -33,7 +33,6 @@ import java.lang.reflect.Method
 class GriffonClassUtilsSpec extends Specification {
     void "isResourceResolverMethod() returns #result for '#method'"() {
         expect:
-        println method
         assert result == GriffonClassUtils.isResourceResolverMethod(method)
 
         where:
@@ -42,7 +41,6 @@ class GriffonClassUtilsSpec extends Specification {
 
     void "isResourceHandlerMethod() returns #result for '#method'"() {
         expect:
-        println method
         assert result == GriffonClassUtils.isResourceHandlerMethod(method)
 
         where:
@@ -51,7 +49,6 @@ class GriffonClassUtilsSpec extends Specification {
 
     void "isEventPublisherMethod() returns #result for '#method'"() {
         expect:
-        println method
         assert result == GriffonClassUtils.isEventPublisherMethod(method)
 
         where:
@@ -60,7 +57,6 @@ class GriffonClassUtilsSpec extends Specification {
 
     void "isMessageSourceMethod() returns #result for '#method'"() {
         expect:
-        println method
         assert result == GriffonClassUtils.isMessageSourceMethod(method)
 
         where:
@@ -69,7 +65,6 @@ class GriffonClassUtilsSpec extends Specification {
 
     void "isMvcMethod() returns #result for '#method'"() {
         expect:
-        println method
         assert result == GriffonClassUtils.isMvcMethod(method)
 
         where:
@@ -80,7 +75,6 @@ class GriffonClassUtilsSpec extends Specification {
 
     void "isThreadingMethod() returns #result for '#method'"() {
         expect:
-        println method
         assert result == GriffonClassUtils.isThreadingMethod(method)
 
         where:
@@ -89,7 +83,6 @@ class GriffonClassUtilsSpec extends Specification {
 
     void "isObservableMethod() returns #result for '#method'"() {
         expect:
-        println method
         assert result == GriffonClassUtils.isObservableMethod(method)
 
         where:
@@ -100,7 +93,6 @@ class GriffonClassUtilsSpec extends Specification {
 
     void "isArtifactMethod() returns #result for '#method'"() {
         expect:
-        println method
         assert result == GriffonClassUtils.isArtifactMethod(method)
 
         where:
