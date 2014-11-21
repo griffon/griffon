@@ -1,58 +1,949 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" tests="25" skipped="0" failures="0" errors="0" timestamp="2014-11-20T16:05:56" hostname="testing-worker-linux-4-2-26826-linux-12-41614511" time="1.255">
+<testsuite name="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" tests="25" skipped="0" failures="0" errors="0" timestamp="2014-11-21T11:07:38" hostname="testing-worker-linux-8-2-4535-linux-1-41701978" time="0.389">
   <properties/>
-  <testcase name="Bootstrap application" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.687"/>
-  <testcase name="Verify withMvcGroup(type , handler)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.064"/>
-  <testcase name="Verify withMvcGroup(type, id , handler)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.028"/>
-  <testcase name="Verify withMvcGroup(type, id, map , handler)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.033"/>
-  <testcase name="Verify withMvcGroup(type, map , handler)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.023"/>
-  <testcase name="Verify withMvcGroup(map, type, id , handler)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.165"/>
-  <testcase name="Verify withMvcGroup(map, type , handler)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.056"/>
-  <testcase name="Verify buildMVCGroup(type)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.014"/>
-  <testcase name="Verify buildMVCGroup(type, id)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.02"/>
-  <testcase name="Verify buildMVCGroup(type, map)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.015"/>
-  <testcase name="Verify buildMVCGroup(map, type)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.013"/>
-  <testcase name="Verify buildMVCGroup(type, id, map)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.014"/>
-  <testcase name="Verify buildMVCGroup(map, type, id)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.013"/>
-  <testcase name="Verify createMVCGroup(type)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.014"/>
-  <testcase name="Verify createMVCGroup(type, id)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.012"/>
+  <testcase name="Bootstrap application" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.085"/>
+  <testcase name="Verify withMvcGroup(type , handler)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.017"/>
+  <testcase name="Verify withMvcGroup(type, id , handler)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.017"/>
+  <testcase name="Verify withMvcGroup(type, id, map , handler)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.016"/>
+  <testcase name="Verify withMvcGroup(type, map , handler)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.02"/>
+  <testcase name="Verify withMvcGroup(map, type, id , handler)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.024"/>
+  <testcase name="Verify withMvcGroup(map, type , handler)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.022"/>
+  <testcase name="Verify buildMVCGroup(type)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.013"/>
+  <testcase name="Verify buildMVCGroup(type, id)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.013"/>
+  <testcase name="Verify buildMVCGroup(type, map)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.016"/>
+  <testcase name="Verify buildMVCGroup(map, type)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.015"/>
+  <testcase name="Verify buildMVCGroup(type, id, map)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.015"/>
+  <testcase name="Verify buildMVCGroup(map, type, id)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.015"/>
+  <testcase name="Verify createMVCGroup(type)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.015"/>
+  <testcase name="Verify createMVCGroup(type, id)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.015"/>
   <testcase name="Verify createMVCGroup(type, map)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.015"/>
-  <testcase name="Verify createMVCGroup(map, type)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.012"/>
-  <testcase name="Verify createMVCGroup(type, id, map)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.01"/>
-  <testcase name="Verify createMVCGroup(map, type, id)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.011"/>
-  <testcase name="Verify destroyMVCGroup(id)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.01"/>
+  <testcase name="Verify createMVCGroup(map, type)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.014"/>
+  <testcase name="Verify createMVCGroup(type, id, map)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.008"/>
+  <testcase name="Verify createMVCGroup(map, type, id)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.008"/>
+  <testcase name="Verify destroyMVCGroup(id)" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.009"/>
   <testcase name="Execute runnable inside UI sync" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.003"/>
   <testcase name="Execute runnable inside UI async" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.002"/>
-  <testcase name="Execute runnable outside UI" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.002"/>
+  <testcase name="Execute runnable outside UI" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.003"/>
   <testcase name="Execute future" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.003"/>
-  <testcase name="Execute future with ExecutorService" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.003"/>
-  <system-out><![CDATA[{application=integration.TestGriffonApplication@1f591295, mvcType=sample, mvcId=sample, configuration=MVCGroupConfiguration{mvcType='sample', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, model=integration.SimpleModel@4c3bf5af, view=integration.SimpleView@28a52329, controller=integration.SimpleController@332dd95f, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6e9a4738[sample:sample]}
-{application=integration.TestGriffonApplication@1f591295, mvcType=simple, mvcId=simple, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@716a976b[integration:integration], parentView=integration.IntegrationView@74c658ae, parentController=integration.IntegrationController@5fd491e9, parentModel=integration.IntegrationModel@3ad16dc5, model=integration.SimpleModel@58b1882a, view=integration.SimpleView@3d2882ff, controller=integration.SimpleController@b407ee3, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@7a904221[simple:simple]}
-{application=integration.TestGriffonApplication@1f591295, mvcType=simple, mvcId=simple-1, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@716a976b[integration:integration], parentView=integration.IntegrationView@74c658ae, parentController=integration.IntegrationController@5fd491e9, parentModel=integration.IntegrationModel@3ad16dc5, model=integration.SimpleModel@50ed48ca, view=integration.SimpleView@50562f75, controller=integration.SimpleController@10e434bf, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@4e49f684[simple:simple-1]}
-{application=integration.TestGriffonApplication@1f591295, mvcType=simple, mvcId=simple-2, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@716a976b[integration:integration], key=griffon, parentView=integration.IntegrationView@74c658ae, parentController=integration.IntegrationController@5fd491e9, parentModel=integration.IntegrationModel@3ad16dc5, model=integration.SimpleModel@1100b075, view=integration.SimpleView@48efe2e7, controller=integration.SimpleController@2ef15fea, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@50c59175[simple:simple-2]}
-{application=integration.TestGriffonApplication@1f591295, mvcType=simple, mvcId=simple, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@716a976b[integration:integration], key=griffon, parentView=integration.IntegrationView@74c658ae, parentController=integration.IntegrationController@5fd491e9, parentModel=integration.IntegrationModel@3ad16dc5, model=integration.SimpleModel@386ee6f0, view=integration.SimpleView@13956999, controller=integration.SimpleController@51cdf920, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@11beaa27[simple:simple]}
-{application=integration.TestGriffonApplication@1f591295, mvcType=simple, mvcId=simple-2, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@716a976b[integration:integration], key=griffon, parentView=integration.IntegrationView@74c658ae, parentController=integration.IntegrationController@5fd491e9, parentModel=integration.IntegrationModel@3ad16dc5, model=integration.SimpleModel@51c9e454, view=integration.SimpleView@3763936e, controller=integration.SimpleController@66e53b3b, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@3d44b2d8[simple:simple-2]}
-{application=integration.TestGriffonApplication@1f591295, mvcType=simple, mvcId=simple, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@716a976b[integration:integration], key=griffon, parentView=integration.IntegrationView@74c658ae, parentController=integration.IntegrationController@5fd491e9, parentModel=integration.IntegrationModel@3ad16dc5, model=integration.SimpleModel@6e17422c, view=integration.SimpleView@684dd29a, controller=integration.SimpleController@76e89b95, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@2ca29efc[simple:simple]}
-{application=integration.TestGriffonApplication@1f591295, mvcType=simple, mvcId=simple, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@716a976b[integration:integration], parentView=integration.IntegrationView@74c658ae, parentController=integration.IntegrationController@5fd491e9, parentModel=integration.IntegrationModel@3ad16dc5, model=integration.SimpleModel@932dbe5, view=integration.SimpleView@c4741c8, controller=integration.SimpleController@b758ea8, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@5deb2623[simple:simple]}
-{application=integration.TestGriffonApplication@1f591295, mvcType=simple, mvcId=simple-1, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@716a976b[integration:integration], parentView=integration.IntegrationView@74c658ae, parentController=integration.IntegrationController@5fd491e9, parentModel=integration.IntegrationModel@3ad16dc5, model=integration.SimpleModel@74e67302, view=integration.SimpleView@5341a3f8, controller=integration.SimpleController@579f4d8d, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@5c91b185[simple:simple-1]}
-{application=integration.TestGriffonApplication@1f591295, mvcType=simple, mvcId=simple, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@716a976b[integration:integration], key=griffon, parentView=integration.IntegrationView@74c658ae, parentController=integration.IntegrationController@5fd491e9, parentModel=integration.IntegrationModel@3ad16dc5, model=integration.SimpleModel@1b28b776, view=integration.SimpleView@45288988, controller=integration.SimpleController@68765785, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@393ace97[simple:simple]}
-{application=integration.TestGriffonApplication@1f591295, mvcType=simple, mvcId=simple, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@716a976b[integration:integration], key=griffon, parentView=integration.IntegrationView@74c658ae, parentController=integration.IntegrationController@5fd491e9, parentModel=integration.IntegrationModel@3ad16dc5, model=integration.SimpleModel@6692fc7e, view=integration.SimpleView@3c025556, controller=integration.SimpleController@53237a37, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@ee7bcd7[simple:simple]}
-{application=integration.TestGriffonApplication@1f591295, mvcType=simple, mvcId=simple-2, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@716a976b[integration:integration], key=griffon, parentView=integration.IntegrationView@74c658ae, parentController=integration.IntegrationController@5fd491e9, parentModel=integration.IntegrationModel@3ad16dc5, model=integration.SimpleModel@7fe7d079, view=integration.SimpleView@51e18236, controller=integration.SimpleController@19dbb8ff, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@2a69ae17[simple:simple-2]}
-{application=integration.TestGriffonApplication@1f591295, mvcType=simple, mvcId=simple-2, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@716a976b[integration:integration], key=griffon, parentView=integration.IntegrationView@74c658ae, parentController=integration.IntegrationController@5fd491e9, parentModel=integration.IntegrationModel@3ad16dc5, model=integration.SimpleModel@6bccd73b, view=integration.SimpleView@36610846, controller=integration.SimpleController@72394235, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@15475373[simple:simple-2]}
-{application=integration.TestGriffonApplication@1f591295, mvcType=simple, mvcId=simple, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@716a976b[integration:integration], parentView=integration.IntegrationView@74c658ae, parentController=integration.IntegrationController@5fd491e9, parentModel=integration.IntegrationModel@3ad16dc5, model=integration.SimpleModel@18bf3bef, view=integration.SimpleView@26222386, controller=integration.SimpleController@1e32f59d, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@3141f1e3[simple:simple]}
-{application=integration.TestGriffonApplication@1f591295, mvcType=simple, mvcId=simple-1, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@716a976b[integration:integration], parentView=integration.IntegrationView@74c658ae, parentController=integration.IntegrationController@5fd491e9, parentModel=integration.IntegrationModel@3ad16dc5, model=integration.SimpleModel@502e4652, view=integration.SimpleView@69bc3dc, controller=integration.SimpleController@2ee53656, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@33c2ed7d[simple:simple-1]}
-{application=integration.TestGriffonApplication@1f591295, mvcType=simple, mvcId=simple, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@716a976b[integration:integration], key=griffon, parentView=integration.IntegrationView@74c658ae, parentController=integration.IntegrationController@5fd491e9, parentModel=integration.IntegrationModel@3ad16dc5, model=integration.SimpleModel@49218541, view=integration.SimpleView@4ef15db5, controller=integration.SimpleController@6a7ce813, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6dbb916c[simple:simple]}
-{application=integration.TestGriffonApplication@1f591295, mvcType=simple, mvcId=simple, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@716a976b[integration:integration], key=griffon, parentView=integration.IntegrationView@74c658ae, parentController=integration.IntegrationController@5fd491e9, parentModel=integration.IntegrationModel@3ad16dc5, model=integration.SimpleModel@6e75174e, view=integration.SimpleView@20c69ba3, controller=integration.SimpleController@11c74e26, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@718a7daf[simple:simple]}
-{application=integration.TestGriffonApplication@1f591295, mvcType=simple, mvcId=simple-2, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@716a976b[integration:integration], key=griffon, parentView=integration.IntegrationView@74c658ae, parentController=integration.IntegrationController@5fd491e9, parentModel=integration.IntegrationModel@3ad16dc5, model=integration.SimpleModel@811895e, view=integration.SimpleView@2ad4eaf6, controller=integration.SimpleController@3235268, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@42458806[simple:simple-2]}
-{application=integration.TestGriffonApplication@1f591295, mvcType=simple, mvcId=simple-2, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@716a976b[integration:integration], key=griffon, parentView=integration.IntegrationView@74c658ae, parentController=integration.IntegrationController@5fd491e9, parentModel=integration.IntegrationModel@3ad16dc5, model=integration.SimpleModel@469aa269, view=integration.SimpleView@4b146316, controller=integration.SimpleController@523dd80e, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@3c566ff7[simple:simple-2]}
-{application=integration.TestGriffonApplication@1f591295, mvcType=simple, mvcId=simple, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@716a976b[integration:integration], parentView=integration.IntegrationView@74c658ae, parentController=integration.IntegrationController@5fd491e9, parentModel=integration.IntegrationModel@3ad16dc5, model=integration.SimpleModel@2fcc0bfe, view=integration.SimpleView@47a8d1c2, controller=integration.SimpleController@7be98c91, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@744f6dcc[simple:simple]}
+  <testcase name="Execute future with ExecutorService" classname="org.codehaus.griffon.runtime.core.artifact.GriffonArtifactSpec" time="0.004"/>
+  <system-out><![CDATA[{application=integration.TestGriffonApplication@3e34c7aa, mvcType=sample, mvcId=sample, configuration=MVCGroupConfiguration{mvcType='sample', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, model=integration.SimpleModel@166d45e3, view=integration.SimpleView@66e18d00, controller=integration.SimpleController@7dac2e55, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@76f3d7e4[sample:sample]}
+{application=integration.TestGriffonApplication@3e34c7aa, mvcType=simple, mvcId=simple, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6a8fe6c3[integration:integration], parentView=integration.IntegrationView@6ee66f9d, parentController=integration.IntegrationController@3cebeb2a, parentModel=integration.IntegrationModel@263e263b, model=integration.SimpleModel@72c1918b, view=integration.SimpleView@2ad5d4be, controller=integration.SimpleController@298d8ef5, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@2c7e76be[simple:simple]}
+{application=integration.TestGriffonApplication@3e34c7aa, mvcType=simple, mvcId=simple-1, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6a8fe6c3[integration:integration], parentView=integration.IntegrationView@6ee66f9d, parentController=integration.IntegrationController@3cebeb2a, parentModel=integration.IntegrationModel@263e263b, model=integration.SimpleModel@5e6c167a, view=integration.SimpleView@c2daf98, controller=integration.SimpleController@7522cad3, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@780f695f[simple:simple-1]}
+{application=integration.TestGriffonApplication@3e34c7aa, mvcType=simple, mvcId=simple-2, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6a8fe6c3[integration:integration], key=griffon, parentView=integration.IntegrationView@6ee66f9d, parentController=integration.IntegrationController@3cebeb2a, parentModel=integration.IntegrationModel@263e263b, model=integration.SimpleModel@3fde9812, view=integration.SimpleView@e579736, controller=integration.SimpleController@552cee68, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@19d05b60[simple:simple-2]}
+{application=integration.TestGriffonApplication@3e34c7aa, mvcType=simple, mvcId=simple, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6a8fe6c3[integration:integration], key=griffon, parentView=integration.IntegrationView@6ee66f9d, parentController=integration.IntegrationController@3cebeb2a, parentModel=integration.IntegrationModel@263e263b, model=integration.SimpleModel@7d5ebb16, view=integration.SimpleView@17529a11, controller=integration.SimpleController@60cf6c6c, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@566d5b0a[simple:simple]}
+{application=integration.TestGriffonApplication@3e34c7aa, mvcType=simple, mvcId=simple-2, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6a8fe6c3[integration:integration], key=griffon, parentView=integration.IntegrationView@6ee66f9d, parentController=integration.IntegrationController@3cebeb2a, parentModel=integration.IntegrationModel@263e263b, model=integration.SimpleModel@57bc13b9, view=integration.SimpleView@37cf8ca2, controller=integration.SimpleController@4af357b4, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@17ce2eff[simple:simple-2]}
+{application=integration.TestGriffonApplication@3e34c7aa, mvcType=simple, mvcId=simple, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6a8fe6c3[integration:integration], key=griffon, parentView=integration.IntegrationView@6ee66f9d, parentController=integration.IntegrationController@3cebeb2a, parentModel=integration.IntegrationModel@263e263b, model=integration.SimpleModel@35af3849, view=integration.SimpleView@2cbc908e, controller=integration.SimpleController@74ae3335, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@f2a35d6[simple:simple]}
+{application=integration.TestGriffonApplication@3e34c7aa, mvcType=simple, mvcId=simple, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6a8fe6c3[integration:integration], parentView=integration.IntegrationView@6ee66f9d, parentController=integration.IntegrationController@3cebeb2a, parentModel=integration.IntegrationModel@263e263b, model=integration.SimpleModel@168f394a, view=integration.SimpleView@16a71b0b, controller=integration.SimpleController@26165f93, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@18216f2b[simple:simple]}
+{application=integration.TestGriffonApplication@3e34c7aa, mvcType=simple, mvcId=simple-1, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6a8fe6c3[integration:integration], parentView=integration.IntegrationView@6ee66f9d, parentController=integration.IntegrationController@3cebeb2a, parentModel=integration.IntegrationModel@263e263b, model=integration.SimpleModel@770b400c, view=integration.SimpleView@59da72a5, controller=integration.SimpleController@4d2444ca, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@5e6f3272[simple:simple-1]}
+{application=integration.TestGriffonApplication@3e34c7aa, mvcType=simple, mvcId=simple, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6a8fe6c3[integration:integration], key=griffon, parentView=integration.IntegrationView@6ee66f9d, parentController=integration.IntegrationController@3cebeb2a, parentModel=integration.IntegrationModel@263e263b, model=integration.SimpleModel@73490293, view=integration.SimpleView@790c0905, controller=integration.SimpleController@16e100fa, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@31ba5cf6[simple:simple]}
+{application=integration.TestGriffonApplication@3e34c7aa, mvcType=simple, mvcId=simple, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6a8fe6c3[integration:integration], key=griffon, parentView=integration.IntegrationView@6ee66f9d, parentController=integration.IntegrationController@3cebeb2a, parentModel=integration.IntegrationModel@263e263b, model=integration.SimpleModel@1381e9a7, view=integration.SimpleView@d79cdfd, controller=integration.SimpleController@6e476d48, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@9b8f85[simple:simple]}
+{application=integration.TestGriffonApplication@3e34c7aa, mvcType=simple, mvcId=simple-2, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6a8fe6c3[integration:integration], key=griffon, parentView=integration.IntegrationView@6ee66f9d, parentController=integration.IntegrationController@3cebeb2a, parentModel=integration.IntegrationModel@263e263b, model=integration.SimpleModel@5f9eb2a1, view=integration.SimpleView@a66a937, controller=integration.SimpleController@565de859, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@16c13ce0[simple:simple-2]}
+{application=integration.TestGriffonApplication@3e34c7aa, mvcType=simple, mvcId=simple-2, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6a8fe6c3[integration:integration], key=griffon, parentView=integration.IntegrationView@6ee66f9d, parentController=integration.IntegrationController@3cebeb2a, parentModel=integration.IntegrationModel@263e263b, model=integration.SimpleModel@3f0b699, view=integration.SimpleView@3ad6899e, controller=integration.SimpleController@25ef9418, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@1d4e9e11[simple:simple-2]}
+{application=integration.TestGriffonApplication@3e34c7aa, mvcType=simple, mvcId=simple, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6a8fe6c3[integration:integration], parentView=integration.IntegrationView@6ee66f9d, parentController=integration.IntegrationController@3cebeb2a, parentModel=integration.IntegrationModel@263e263b, model=integration.SimpleModel@1b8ca75f, view=integration.SimpleView@159857c9, controller=integration.SimpleController@4c8e4e36, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@2559efa0[simple:simple]}
+{application=integration.TestGriffonApplication@3e34c7aa, mvcType=simple, mvcId=simple-1, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6a8fe6c3[integration:integration], parentView=integration.IntegrationView@6ee66f9d, parentController=integration.IntegrationController@3cebeb2a, parentModel=integration.IntegrationModel@263e263b, model=integration.SimpleModel@ce020bf, view=integration.SimpleView@322120eb, controller=integration.SimpleController@58efede0, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@bbdadac[simple:simple-1]}
+{application=integration.TestGriffonApplication@3e34c7aa, mvcType=simple, mvcId=simple, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6a8fe6c3[integration:integration], key=griffon, parentView=integration.IntegrationView@6ee66f9d, parentController=integration.IntegrationController@3cebeb2a, parentModel=integration.IntegrationModel@263e263b, model=integration.SimpleModel@3d48cfe5, view=integration.SimpleView@1a6fb541, controller=integration.SimpleController@7cd9ab6d, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@56ab9d2b[simple:simple]}
+{application=integration.TestGriffonApplication@3e34c7aa, mvcType=simple, mvcId=simple, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6a8fe6c3[integration:integration], key=griffon, parentView=integration.IntegrationView@6ee66f9d, parentController=integration.IntegrationController@3cebeb2a, parentModel=integration.IntegrationModel@263e263b, model=integration.SimpleModel@2d6747fc, view=integration.SimpleView@4ac52aac, controller=integration.SimpleController@7bf6725a, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@71befaca[simple:simple]}
+{application=integration.TestGriffonApplication@3e34c7aa, mvcType=simple, mvcId=simple-2, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6a8fe6c3[integration:integration], key=griffon, parentView=integration.IntegrationView@6ee66f9d, parentController=integration.IntegrationController@3cebeb2a, parentModel=integration.IntegrationModel@263e263b, model=integration.SimpleModel@66710ba6, view=integration.SimpleView@502cd8e, controller=integration.SimpleController@4dae0bd6, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@4b40d003[simple:simple-2]}
+{application=integration.TestGriffonApplication@3e34c7aa, mvcType=simple, mvcId=simple-2, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6a8fe6c3[integration:integration], key=griffon, parentView=integration.IntegrationView@6ee66f9d, parentController=integration.IntegrationController@3cebeb2a, parentModel=integration.IntegrationModel@263e263b, model=integration.SimpleModel@2502cef6, view=integration.SimpleView@367f1965, controller=integration.SimpleController@b3254c7, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@46bf4d6a[simple:simple-2]}
+{application=integration.TestGriffonApplication@3e34c7aa, mvcType=simple, mvcId=simple, configuration=MVCGroupConfiguration{mvcType='simple', members={model=integration.SimpleModel, view=integration.SimpleView, controller=integration.SimpleController}, config={}}, parentGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6a8fe6c3[integration:integration], parentView=integration.IntegrationView@6ee66f9d, parentController=integration.IntegrationController@3cebeb2a, parentModel=integration.IntegrationModel@263e263b, model=integration.SimpleModel@75f95e35, view=integration.SimpleView@3b83c5de, controller=integration.SimpleController@220e3a05, mvcGroup=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@1ee6f733[simple:simple]}
 ]]></system-out>
   <system-err><![CDATA[[Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Griffon 2.1.0-SNAPSHOT
-[Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Build: 2014-11-20T16:01:19.642+0000
+[Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Build: 2014-11-21T11:04:01.489+0000
 [Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - JVM: 1.8.0_25 (Oracle Corporation 25.25-b02)
 [Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - OS: Linux 2.6.32-042stab090.5 amd64
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Creating module bindings
+[Test worker] DEBUG griffon.util.AnnotationUtils - Current module order is [core, integration]
+[Test worker] TRACE griffon.util.AnnotationUtils - Processing module 'core'
+[Test worker] TRACE griffon.util.AnnotationUtils -   depends on '[]'
+[Test worker] TRACE griffon.util.AnnotationUtils -   adding module 'core', since all dependencies have been added
+[Test worker] TRACE griffon.util.AnnotationUtils - Processing module 'integration'
+[Test worker] TRACE griffon.util.AnnotationUtils -   depends on '[]'
+[Test worker] TRACE griffon.util.AnnotationUtils -   adding module 'integration', since all dependencies have been added
+[Test worker] TRACE griffon.util.AnnotationUtils - module dependency ordering complete
+[Test worker] DEBUG griffon.util.AnnotationUtils - computed module order is [core, integration]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from core:org.codehaus.griffon.runtime.core.DefaultApplicationModule@42d4e767
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from integration:integration.IntegrationModule@2e4f0783
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - InstanceBinding[source=griffon.core.GriffonApplication, instance=integration.TestGriffonApplication@3e34c7aa, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.ApplicationClassLoader, target=org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.ApplicationConfigurer, target=org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.resources.ResourceHandler, target=org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.util.CompositeResourceBundleBuilder, target=org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=java.util.ResourceBundle, classifier=@javax.inject.Named(value=applicationResourceBundle), provider=org.codehaus.griffon.runtime.util.ResourceBundleProvider@5b3ee0d4, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.Configuration, target=org.codehaus.griffon.runtime.core.DefaultConfiguration, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.ExecutorServiceManager, target=org.codehaus.griffon.runtime.core.DefaultExecutorServiceManager, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.event.EventRouter, classifier=@javax.inject.Named(value=applicationEventRouter), target=org.codehaus.griffon.runtime.core.event.DefaultEventRouter, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.event.EventRouter, target=org.codehaus.griffon.runtime.core.event.DefaultEventRouter, singleton=false]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.resources.ResourceResolver, classifier=@javax.inject.Named(value=applicationResourceResolver), provider=org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider@d1b872f, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.i18n.MessageSource, classifier=@javax.inject.Named(value=applicationMessageSource), provider=org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider@3ea8a15b, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.resources.ResourceInjector, classifier=@javax.inject.Named(value=applicationResourceInjector), target=org.codehaus.griffon.runtime.core.resources.DefaultApplicationResourceInjector, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.threading.UIThreadManager, target=org.codehaus.griffon.runtime.core.threading.DefaultUIThreadManager, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.mvc.MVCGroupManager, target=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Initialize), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@26b928b3, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Startup), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@a2d44f0, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Ready), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@5bde9865, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Shutdown), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@2087583c, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Stop), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@4f14102f, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.view.WindowManager, target=org.codehaus.griffon.runtime.core.view.NoopWindowManager, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.controller.ActionManager, target=org.codehaus.griffon.runtime.core.controller.DefaultActionManager, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.artifact.ArtifactManager, target=org.codehaus.griffon.runtime.core.artifact.DefaultArtifactManager, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.artifact.ArtifactHandler, classifier=@griffon.inject.Typed(value=interface griffon.core.artifact.GriffonModel), target=org.codehaus.griffon.runtime.core.artifact.ModelArtifactHandler, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.artifact.ArtifactHandler, classifier=@griffon.inject.Typed(value=interface griffon.core.artifact.GriffonView), target=org.codehaus.griffon.runtime.core.artifact.ViewArtifactHandler, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.artifact.ArtifactHandler, classifier=@griffon.inject.Typed(value=interface griffon.core.artifact.GriffonController), target=org.codehaus.griffon.runtime.core.artifact.ControllerArtifactHandler, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.artifact.ArtifactHandler, classifier=@griffon.inject.Typed(value=interface griffon.core.artifact.GriffonService), target=org.codehaus.griffon.runtime.core.artifact.ServiceArtifactHandler, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderTypeBinding[source=griffon.core.PlatformHandler, providerType=class org.codehaus.griffon.runtime.core.PlatformHandlerProvider, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.addon.AddonManager, target=org.codehaus.griffon.runtime.core.addon.DefaultAddonManager, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.event.EventHandler, target=org.codehaus.griffon.runtime.core.event.DefaultEventHandler, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.GriffonExceptionHandler, target=griffon.core.GriffonExceptionHandler, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.addon.GriffonAddon, classifier=@javax.inject.Named(value=integration), target=integration.IntegrationAddon, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.controller.ActionHandler, target=integration.InvokeActionHandler, singleton=true]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Creating application injector
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Injector will be created by integration.GuiceInjectorFactory@2f7ed7f9
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler on UncaughtMVCGroupConfigurationException
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler on UncaughtMVCGroupInstantiationException
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'BootstrapStart' synchronously
+[Test worker] DEBUG griffon.util.ServiceLoaderUtils - Reading java.beans.PropertyEditor definitions from file:/home/travis/build/griffon/griffon/subprojects/griffon-core/build/resources/main/META-INF/editors/java.beans.PropertyEditor
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Registering griffon.core.editors.StringPropertyEditor as editor for java.lang.String
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Registering griffon.core.editors.FilePropertyEditor as editor for java.io.File
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Registering griffon.core.editors.URLPropertyEditor as editor for java.net.URL
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Registering griffon.core.editors.URIPropertyEditor as editor for java.net.URI
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Registering griffon.core.editors.BigDecimalPropertyEditor as editor for java.math.BigDecimal
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Registering griffon.core.editors.BigIntegerPropertyEditor as editor for java.math.BigInteger
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Registering griffon.core.editors.BooleanPropertyEditor as editor for java.lang.Boolean
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Registering griffon.core.editors.BytePropertyEditor as editor for java.lang.Byte
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Registering griffon.core.editors.ShortPropertyEditor as editor for java.lang.Short
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Registering griffon.core.editors.IntegerPropertyEditor as editor for java.lang.Integer
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Registering griffon.core.editors.LongPropertyEditor as editor for java.lang.Long
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Registering griffon.core.editors.FloatPropertyEditor as editor for java.lang.Float
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Registering griffon.core.editors.DoublePropertyEditor as editor for java.lang.Double
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Registering griffon.core.editors.CalendarPropertyEditor as editor for java.util.Calendar
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Registering griffon.core.editors.DatePropertyEditor as editor for java.util.Date
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Registering griffon.core.editors.BooleanPropertyEditor as editor for boolean
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Registering griffon.core.editors.BytePropertyEditor as editor for byte
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Registering griffon.core.editors.ShortPropertyEditor as editor for short
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Registering griffon.core.editors.IntegerPropertyEditor as editor for int
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Registering griffon.core.editors.LongPropertyEditor as editor for long
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Registering griffon.core.editors.FloatPropertyEditor as editor for float
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Registering griffon.core.editors.DoublePropertyEditor as editor for double
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer$2 on NewInstance
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@138e7494; key=application; value='{startupGroups=[integration], autoShutdown=true, title=integration}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.startupGroups
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@138e7494; key=application.startupGroups; value='[integration]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@138e7494; key=mvcGroups; value='{integration={view=integration.IntegrationView, config={color=#0000FF}, controller=integration.IntegrationController, model=integration.IntegrationModel}}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups.integration.view
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@138e7494; key=mvcGroups.integration.view; value='integration.IntegrationView'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.autoShutdown
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@138e7494; key=application.autoShutdown; value='true'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups.integration.config.color
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@138e7494; key=mvcGroups.integration.config.color; value='#0000FF'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups.integration.controller
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@138e7494; key=mvcGroups.integration.controller; value='integration.IntegrationController'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.title
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@138e7494; key=application.title; value='integration'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups.integration.model
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@138e7494; key=mvcGroups.integration.model; value='integration.IntegrationModel'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.lifecycle.handler.disable
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@138e7494; key=application; value='{startupGroups=[integration], autoShutdown=true, title=integration}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=platform.handler.linux64
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=platform
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.PlatformHandlerProvider - Using org.codehaus.griffon.runtime.core.DefaultPlatformHandler as PlatformHandler
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.addon.AbstractAddonManager - Loading addons [START]
+[Test worker] DEBUG griffon.util.AnnotationUtils - Current addon order is [integration]
+[Test worker] TRACE griffon.util.AnnotationUtils - Processing addon 'integration'
+[Test worker] TRACE griffon.util.AnnotationUtils -   depends on '[]'
+[Test worker] TRACE griffon.util.AnnotationUtils -   adding addon 'integration', since all dependencies have been added
+[Test worker] TRACE griffon.util.AnnotationUtils - addon dependency ordering complete
+[Test worker] DEBUG griffon.util.AnnotationUtils - computed addon order is [integration]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'LoadAddonsStart' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.addon.AbstractAddonManager - Loading addon integration with class integration.IntegrationAddon
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'LoadAddonStart' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener integration.IntegrationAddon@100a8fbb
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.addon.AbstractAddonManager - Adding MVC group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.addon.AbstractAddonManager - Adding MVC group sample
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'LoadAddonEnd' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.addon.AbstractAddonManager - Loaded addon integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.addon.AbstractAddonManager - Loading addons [END]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'LoadAddonsEnd' synchronously
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@138e7494; key=mvcGroups; value='{integration={view=integration.IntegrationView, config={color=#0000FF}, controller=integration.IntegrationController, model=integration.IntegrationModel}}'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Adding MVC group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer$3 on NewInstance
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=griffon.controller.action.handler.order
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=griffon
+[Test worker] DEBUG griffon.util.AnnotationUtils - Current handler order is [invoke]
+[Test worker] TRACE griffon.util.AnnotationUtils - Processing handler 'invoke'
+[Test worker] TRACE griffon.util.AnnotationUtils -   depends on '[]'
+[Test worker] TRACE griffon.util.AnnotationUtils -   adding handler 'invoke', since all dependencies have been added
+[Test worker] TRACE griffon.util.AnnotationUtils - handler dependency ordering complete
+[Test worker] DEBUG griffon.util.AnnotationUtils - computed handler order is [invoke]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'model': org.codehaus.griffon.runtime.core.artifact.ModelArtifactHandler@3fb6e15e
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'view': org.codehaus.griffon.runtime.core.artifact.ViewArtifactHandler@4c4cbccc
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'controller': org.codehaus.griffon.runtime.core.artifact.ControllerArtifactHandler@774d0b68
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'service': org.codehaus.griffon.runtime.core.artifact.ServiceArtifactHandler@78f8f68b
+[Test worker] DEBUG griffon.util.ServiceLoaderUtils - Reading griffon.core.artifact.GriffonView definitions from file:/home/travis/build/griffon/griffon/subprojects/griffon-core/build/resources/test/META-INF/griffon/griffon.core.artifact.GriffonView
+[Test worker] DEBUG griffon.util.ServiceLoaderUtils - Reading griffon.core.artifact.GriffonController definitions from file:/home/travis/build/griffon/griffon/subprojects/griffon-core/build/resources/test/META-INF/griffon/griffon.core.artifact.GriffonController
+[Test worker] DEBUG griffon.util.ServiceLoaderUtils - Reading griffon.core.artifact.GriffonService definitions from file:/home/travis/build/griffon/griffon/subprojects/griffon-core/build/resources/test/META-INF/griffon/griffon.core.artifact.GriffonService
+[Test worker] DEBUG griffon.util.ServiceLoaderUtils - Reading griffon.core.artifact.GriffonModel definitions from file:/home/travis/build/griffon/griffon/subprojects/griffon-core/build/resources/test/META-INF/griffon/griffon.core.artifact.GriffonModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.DefaultArtifactManager - Artifacts of type 'view' = 2
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.DefaultArtifactManager - Artifacts of type 'controller' = 2
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.DefaultArtifactManager - Artifacts of type 'service' = 1
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.DefaultArtifactManager - Artifacts of type 'model' = 2
+[Test worker] TRACE org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - InstanceBinding[source=griffon.core.artifact.GriffonClass, classifier=@griffon.inject.Typed(value=class integration.IntegrationView), instance=Artifact[view] > Integration, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - TargetBinding[source=integration.IntegrationView, target=integration.IntegrationView, singleton=false]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - InstanceBinding[source=griffon.core.artifact.GriffonClass, classifier=@griffon.inject.Typed(value=class integration.SimpleView), instance=Artifact[view] > Simple, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - TargetBinding[source=integration.SimpleView, target=integration.SimpleView, singleton=false]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - InstanceBinding[source=griffon.core.artifact.GriffonClass, classifier=@griffon.inject.Typed(value=class integration.IntegrationController), instance=Artifact[controller] > Integration, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - TargetBinding[source=integration.IntegrationController, target=integration.IntegrationController, singleton=false]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - InstanceBinding[source=griffon.core.artifact.GriffonClass, classifier=@griffon.inject.Typed(value=class integration.SimpleController), instance=Artifact[controller] > Simple, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - TargetBinding[source=integration.SimpleController, target=integration.SimpleController, singleton=false]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - InstanceBinding[source=griffon.core.artifact.GriffonClass, classifier=@griffon.inject.Typed(value=class integration.IntegrationService), instance=Artifact[service] > Integration, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - TargetBinding[source=integration.IntegrationService, target=integration.IntegrationService, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - InstanceBinding[source=griffon.core.artifact.GriffonClass, classifier=@griffon.inject.Typed(value=class integration.IntegrationModel), instance=Artifact[model] > Integration, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - TargetBinding[source=integration.IntegrationModel, target=integration.IntegrationModel, singleton=false]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - InstanceBinding[source=griffon.core.artifact.GriffonClass, classifier=@griffon.inject.Typed(value=class integration.SimpleModel), instance=Artifact[model] > Simple, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - TargetBinding[source=integration.SimpleModel, target=integration.SimpleModel, singleton=false]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'BootstrapEnd' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'StartupStart' synchronously
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.startupGroups
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@138e7494; key=application.startupGroups; value='[integration]'
 [Test worker] INFO integration.TestGriffonApplication - Initializing all startup groups: [integration]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'integration' with name 'integration'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.IntegrationView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.IntegrationController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.IntegrationModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.IntegrationView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.IntegrationView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.IntegrationController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.IntegrationController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.IntegrationController
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integration.IntegrationController.action.Abort.name
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.action.Abort.name
+[Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - integration.IntegrationController.action.Abort.name = Abort
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.abort with integration.InvokeActionHandler@272ebe3d
+[Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Action for integration.IntegrationController.abort stored as abort
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integration.IntegrationController.action.HandleException.name
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.action.HandleException.name
+[Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - integration.IntegrationController.action.HandleException.name = Handle Exception
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.handleException with integration.InvokeActionHandler@272ebe3d
+[Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Action for integration.IntegrationController.handleException stored as handleException
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integration.IntegrationController.action.SayHello.name
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.action.SayHello.name
+[Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - integration.IntegrationController.action.SayHello.name = Say Hello
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.sayHello with integration.InvokeActionHandler@272ebe3d
+[Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Action for integration.IntegrationController.sayHello stored as sayHello
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integration.IntegrationController.action.ThrowException.name
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.action.ThrowException.name
+[Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - integration.IntegrationController.action.ThrowException.name = Throw Exception
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.throwException with integration.InvokeActionHandler@272ebe3d
+[Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Action for integration.IntegrationController.throwException stored as throwException
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.IntegrationModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.IntegrationModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group integration:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6a8fe6c3[integration:integration]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'integration'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] INFO integration.TestGriffonApplication - Initializing all integration startup groups: [sample]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group sample
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'sample' with name 'sample'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group sample:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@76f3d7e4[sample:sample]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'sample'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.lifecycle.handler.disable
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@138e7494; key=application; value='{startupGroups=[integration], autoShutdown=true, title=integration}'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'StartupEnd' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'ReadyStart' synchronously
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.lifecycle.handler.disable
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@138e7494; key=application; value='{startupGroups=[integration], autoShutdown=true, title=integration}'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'ReadyEnd' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'simple' with name 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for integration.SimpleModel
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for integration.SimpleModel is griffon.core.editors.PropertyEditorResolver$NoopPropertyEditor
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@2c7e76be[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@2c7e76be[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener integration.SimpleController@298d8ef5
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@2c7e76be[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to null
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-1
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'simple' with name 'simple-1'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for integration.SimpleModel
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for integration.SimpleModel is griffon.core.editors.PropertyEditorResolver$NoopPropertyEditor
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple-1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@780f695f[simple:simple-1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'simple-1'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-1
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple-1' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@780f695f[simple:simple-1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'simple-1'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener integration.SimpleController@7522cad3
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple-1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@780f695f[simple:simple-1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-1
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple-1' points to null
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-2
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'simple' with name 'simple-2'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for integration.SimpleModel
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for integration.SimpleModel is griffon.core.editors.PropertyEditorResolver$NoopPropertyEditor
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple-2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@19d05b60[simple:simple-2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'simple-2'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-2
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple-2' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@19d05b60[simple:simple-2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'simple-2'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener integration.SimpleController@552cee68
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple-2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@19d05b60[simple:simple-2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-2
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple-2' points to null
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'simple' with name 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for integration.SimpleModel
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for integration.SimpleModel is griffon.core.editors.PropertyEditorResolver$NoopPropertyEditor
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@566d5b0a[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@566d5b0a[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener integration.SimpleController@60cf6c6c
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@566d5b0a[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to null
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-2
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'simple' with name 'simple-2'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for integration.SimpleModel
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for integration.SimpleModel is griffon.core.editors.PropertyEditorResolver$NoopPropertyEditor
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple-2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@17ce2eff[simple:simple-2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'simple-2'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-2
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple-2' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@17ce2eff[simple:simple-2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'simple-2'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener integration.SimpleController@4af357b4
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple-2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@17ce2eff[simple:simple-2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-2
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple-2' points to null
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'simple' with name 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for integration.SimpleModel
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for integration.SimpleModel is griffon.core.editors.PropertyEditorResolver$NoopPropertyEditor
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@f2a35d6[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@f2a35d6[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener integration.SimpleController@74ae3335
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@f2a35d6[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to null
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'simple' with name 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for integration.SimpleModel
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for integration.SimpleModel is griffon.core.editors.PropertyEditorResolver$NoopPropertyEditor
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@18216f2b[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@18216f2b[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener integration.SimpleController@26165f93
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@18216f2b[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to null
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-1
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'simple' with name 'simple-1'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for integration.SimpleModel
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for integration.SimpleModel is griffon.core.editors.PropertyEditorResolver$NoopPropertyEditor
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple-1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@5e6f3272[simple:simple-1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'simple-1'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-1
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple-1' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@5e6f3272[simple:simple-1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'simple-1'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener integration.SimpleController@4d2444ca
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple-1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@5e6f3272[simple:simple-1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-1
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple-1' points to null
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'simple' with name 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for integration.SimpleModel
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for integration.SimpleModel is griffon.core.editors.PropertyEditorResolver$NoopPropertyEditor
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@31ba5cf6[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@31ba5cf6[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener integration.SimpleController@16e100fa
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@31ba5cf6[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to null
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'simple' with name 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for integration.SimpleModel
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for integration.SimpleModel is griffon.core.editors.PropertyEditorResolver$NoopPropertyEditor
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@9b8f85[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@9b8f85[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener integration.SimpleController@6e476d48
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@9b8f85[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to null
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-2
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'simple' with name 'simple-2'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for integration.SimpleModel
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for integration.SimpleModel is griffon.core.editors.PropertyEditorResolver$NoopPropertyEditor
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple-2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@16c13ce0[simple:simple-2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'simple-2'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-2
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple-2' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@16c13ce0[simple:simple-2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'simple-2'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener integration.SimpleController@565de859
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple-2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@16c13ce0[simple:simple-2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-2
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple-2' points to null
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-2
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'simple' with name 'simple-2'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for integration.SimpleModel
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for integration.SimpleModel is griffon.core.editors.PropertyEditorResolver$NoopPropertyEditor
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple-2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@1d4e9e11[simple:simple-2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'simple-2'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-2
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple-2' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@1d4e9e11[simple:simple-2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'simple-2'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener integration.SimpleController@25ef9418
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple-2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@1d4e9e11[simple:simple-2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-2
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple-2' points to null
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'simple' with name 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for integration.SimpleModel
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for integration.SimpleModel is griffon.core.editors.PropertyEditorResolver$NoopPropertyEditor
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@2559efa0[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@2559efa0[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener integration.SimpleController@4c8e4e36
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@2559efa0[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to null
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-1
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'simple' with name 'simple-1'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for integration.SimpleModel
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for integration.SimpleModel is griffon.core.editors.PropertyEditorResolver$NoopPropertyEditor
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple-1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@bbdadac[simple:simple-1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'simple-1'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-1
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple-1' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@bbdadac[simple:simple-1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'simple-1'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener integration.SimpleController@58efede0
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple-1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@bbdadac[simple:simple-1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-1
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple-1' points to null
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'simple' with name 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for integration.SimpleModel
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for integration.SimpleModel is griffon.core.editors.PropertyEditorResolver$NoopPropertyEditor
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@56ab9d2b[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@56ab9d2b[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener integration.SimpleController@7cd9ab6d
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@56ab9d2b[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to null
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'simple' with name 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for integration.SimpleModel
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for integration.SimpleModel is griffon.core.editors.PropertyEditorResolver$NoopPropertyEditor
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@71befaca[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@71befaca[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener integration.SimpleController@7bf6725a
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@71befaca[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to null
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-2
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'simple' with name 'simple-2'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for integration.SimpleModel
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for integration.SimpleModel is griffon.core.editors.PropertyEditorResolver$NoopPropertyEditor
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple-2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@4b40d003[simple:simple-2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'simple-2'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-2
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple-2' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@4b40d003[simple:simple-2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'simple-2'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener integration.SimpleController@4dae0bd6
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple-2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@4b40d003[simple:simple-2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-2
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple-2' points to null
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-2
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'simple' with name 'simple-2'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for integration.SimpleModel
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for integration.SimpleModel is griffon.core.editors.PropertyEditorResolver$NoopPropertyEditor
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple-2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@46bf4d6a[simple:simple-2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'simple-2'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-2
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple-2' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@46bf4d6a[simple:simple-2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'simple-2'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener integration.SimpleController@b3254c7
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple-2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@46bf4d6a[simple:simple-2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple-2
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple-2' points to null
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'simple' with name 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleModel
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleView
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for integration.SimpleModel
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for integration.SimpleModel is griffon.core.editors.PropertyEditorResolver$NoopPropertyEditor
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@1ee6f733[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@1ee6f733[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'simple'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener integration.SimpleController@220e3a05
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@1ee6f733[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to null
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'ShutdownRequested' synchronously
 [Test worker] INFO integration.TestGriffonApplication - Shutdown is in process
+[Test worker] DEBUG integration.TestGriffonApplication - Shutdown stage 1: notify all event listeners
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.AbstractGriffonApplication$1 on ShutdownStart
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'ShutdownStart' synchronously
+[Test worker] DEBUG integration.TestGriffonApplication - Shutdown stage 2: notify all shutdown handlers
+[Test worker] DEBUG integration.TestGriffonApplication - Shutdown stage 3: destroy all MVC groups
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'integration' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6a8fe6c3[integration:integration]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'integration'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener integration.IntegrationController@3cebeb2a
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group integration:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6a8fe6c3[integration:integration]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'integration' points to null
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group sample
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'sample' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@76f3d7e4[sample:sample]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'sample'
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener integration.SimpleController@7dac2e55
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group sample:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@76f3d7e4[sample:sample]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group sample
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'sample' points to null
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
+[Test worker] DEBUG integration.TestGriffonApplication - Shutdown stage 4: execute Shutdown script
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.lifecycle.handler.disable
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@138e7494; key=application; value='{startupGroups=[integration], autoShutdown=true, title=integration}'
 ]]></system-err>
 </testsuite>
