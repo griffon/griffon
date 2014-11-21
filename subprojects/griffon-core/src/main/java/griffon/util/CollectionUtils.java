@@ -139,6 +139,7 @@ public final class CollectionUtils {
      *
      * @param map the Map instance ot adapt as a Properties instance
      * @return a new Properties instance backed by the supplied Map.
+     * @since 2.1.0
      */
     @Nonnull
     public static Properties toProperties(@Nonnull Map<String, Object> map) {
