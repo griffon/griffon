@@ -23,12 +23,12 @@ buildscript {
 
     dependencies {
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:0.7.3'
-        classpath 'org.gradle.api.plugins:gradle-java2html-plugin:0.4'
+        classpath 'com.bmuschko:gradle-java2html-plugin:2.0'
     }
 }
 
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
-apply plugin: 'java2html'
+apply plugin: 'com.bmuschko.java2html'
 
 ext.childProjects = [
     ':griffon-core-compile',
@@ -72,7 +72,7 @@ task copyDocs(type: Copy) {
 }
 
 task apiDocs(type: Javadoc, dependsOn: copyDocs) {
-    source          = file("${buildDir}/sources")
+    source          = copyDocs.destinationDir
     destinationDir  = file("$buildDir/api")
     title           = "Griffon $version"
     classpath       = project.ext.childProjects.collect { projectName ->
@@ -115,46 +115,39 @@ task apiDocs(type: Javadoc, dependsOn: copyDocs) {
     }
 }
 
-task java2html {
+task generateJava2html {
     dependsOn apiDocs
     dependsOn "java2htmlGenerateOverview"
     dependsOn java2htmlConvertCode
 }
 
-task jarApi(type: Jar, dependsOn: apiDocs) {
+task apiJar(type: Jar, dependsOn: apiDocs) {
     archiveName    = "griffon-core-${project.version}-javadoc.jar"
     destinationDir = "$buildDir/assemble/jars" as File
-    from "$buildDir/api"
+    from copyDocs.destinationDir
 }
 
-task jarSourceHtml(type: Jar, dependsOn: java2html) {
+task sourceHtmlJar(type: Jar, dependsOn: generateJava2html) {
     archiveName    = "griffon-core-${project.version}-sources-html.jar"
     destinationDir = "$buildDir/assemble/jars" as File
-    from "$buildDir/java2html"
+    from java2htmlConvertCode.destDir
 }
 
-task jarDocs(dependsOn: [jarApi, jarSourceHtml]) { }
+task docsJar(dependsOn: [apiJar, sourceHtmlJar]) { }
 
 java2html {
     conversion {
         srcDirs = files("${buildDir}/sources")
-        destDir = file("${buildDir}/java2html")
         tabs = 4
-        style = 'eclipse'
-        outputFormat = 'html'
-        showLineNumbers = true
+        style = 'kawa'
         addLineAnchors = true
         showFileName = true
         useShortFileName = true
         overwrite = true
         showDefaultTitle = true
-        includeDocumentHeader = true
-        includeDocumentFooter = true
     }
 
     overview {
-        srcDirs = files("${buildDir}/java2html")
-        destDir = file("${buildDir}/java2html")
         windowTitle = "Griffon $version"
         docTitle = "Griffon $version"
         docDescription = """Griffon is a Grails like application framework for developing desktop
@@ -216,14 +209,14 @@ asciidoctor {
 }
 asciidoctor.dependsOn sampleStats
 
-task guide(type: Copy, dependsOn: [apiDocs, java2html, asciidoctor]) {
+task guide(type: Copy, dependsOn: [apiDocs, generateJava2html, asciidoctor]) {
     destinationDir = "$buildDir/guide" as File
-    from("$buildDir/api") { into 'api' }
-    from("$buildDir/java2html") { into 'api-src'}
-    from("$buildDir/asciidoc")
+    from(apiDocs.destinationDir) { into 'api' }
+    from(java2htmlConvertCode.destDir) { into 'api-src'}
+    from asciidoctor.outputDir
 }
 
 task guideZip(type: Zip, dependsOn: guide) {
     baseName = 'griffon-guide'
-    from "$buildDir/guide"
+    from guide.destinationDir
 }
