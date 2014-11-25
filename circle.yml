@@ -1,0 +1,16 @@
+machine:
+  java:
+    version: openjdk8
+
+test:
+  pre:
+    - export DISPLAY=:99.0
+    - sh -e /etc/init.d/xvfb start
+  override:
+    - gradle check test integrationTest
+
+general:
+  branches:
+    only:
+      - master
+      - development
