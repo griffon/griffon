@@ -22,7 +22,7 @@
     <artifactId>application-master-pom</artifactId>
     <version>@project.version@</version>
     <packaging>pom</packaging>
-    <name>${project.artifactId}</name>
+    <name>${project.groupId}:${project.artifactId}</name>
 
     <properties>
         <griffon.version>@griffon.version@</griffon.version>
@@ -75,101 +75,105 @@
         <pmd.skip>false</pmd.skip>
     </properties>
 
+    <prerequisites>
+        <maven>3.0.4</maven>
+    </prerequisites>
+
     <!-- tag::dependencyManagement[] -->
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.codehaus.griffon</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>griffon-core</artifactId>
                 <version>${griffon.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.griffon</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>griffon-core-compile</artifactId>
                 <version>${griffon.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.griffon</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>griffon-core-test</artifactId>
                 <version>${griffon.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.griffon</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>griffon-groovy</artifactId>
                 <version>${griffon.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.griffon</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>griffon-groovy-compile</artifactId>
                 <version>${griffon.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.griffon</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>griffon-swing</artifactId>
                 <version>${griffon.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.griffon</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>griffon-swing-groovy</artifactId>
                 <version>${griffon.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.griffon</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>griffon-fest-test</artifactId>
                 <version>${griffon.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.griffon</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>griffon-javafx</artifactId>
                 <version>${griffon.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.griffon</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>griffon-javafx-groovy</artifactId>
                 <version>${griffon.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.griffon</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>griffon-lanterna</artifactId>
                 <version>${griffon.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.griffon</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>griffon-lanterna-groovy</artifactId>
                 <version>${griffon.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.griffon</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>griffon-pivot</artifactId>
                 <version>${griffon.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.griffon</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>griffon-pivot-groovy</artifactId>
                 <version>${griffon.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.griffon</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>griffon-pivot-test</artifactId>
                 <version>${griffon.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.griffon</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>griffon-guice</artifactId>
                 <version>${griffon.version}</version>
                 <scope>runtime</scope>
@@ -896,6 +900,9 @@
                                 <transformer implementation="org.kordamp.shade.resources.ServicesResourceTransformer"/>
                                 <transformer implementation="org.kordamp.shade.resources.ServicesResourceTransformer">
                                     <path>META-INF/griffon</path>
+                                </transformer>
+                                <transformer implementation="org.kordamp.shade.resources.ServicesResourceTransformer">
+                                    <path>META-INF/types</path>
                                 </transformer>
                                 <transformer implementation="org.kordamp.shade.resources.PropertiesFileTransformer">
                                     <paths>
