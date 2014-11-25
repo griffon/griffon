@@ -2,12 +2,16 @@ machine:
   java:
     version: oraclejdk8
 
+dependencies:
+  override:
+    - ./gradlew dependencies --stacktrace
+
 test:
   pre:
     - export DISPLAY=:99.0
     - sh -e /etc/init.d/xvfb start
   override:
-    - gradle check test integrationTest
+    - ./gradlew check test integrationTest
 
 general:
   branches:
