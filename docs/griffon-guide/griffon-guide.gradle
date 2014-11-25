@@ -137,7 +137,7 @@ task docsJar(dependsOn: [apiJar, sourceHtmlJar]) { }
 
 java2html {
     conversion {
-        srcDirs = copyDocs.destinationDir
+        srcDirs = files(copyDocs.destinationDir)
         tabs = 4
         style = 'kawa'
         addLineAnchors = true
