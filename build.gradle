@@ -44,6 +44,8 @@ Date buildTimeAndDate = new Date()
 ext {
     buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
     buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+    projectsWithCoverage = []
+    projectsWithClirr = []
 }
 
 allprojects {
@@ -60,11 +62,6 @@ allprojects {
             options.addStringOption('Xdoclint:none', '-quiet')
         }
     }
-}
-
-ext {
-    projectsWithCoverage = []
-    projectsWithClirr = []
 }
 
 subprojects { subproj ->
