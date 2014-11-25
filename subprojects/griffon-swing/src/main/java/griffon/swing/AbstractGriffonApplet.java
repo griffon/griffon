@@ -64,18 +64,16 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public abstract class AbstractGriffonApplet extends JApplet implements GriffonApplication {
-    private static final long serialVersionUID = -3489610863053527695L;
-
-    private static final String ERROR_SHUTDOWN_HANDLER_NULL = "Argument 'shutdownHandler' must not be null";
-    private Locale locale = Locale.getDefault();
     public static final String[] EMPTY_ARGS = new String[0];
+    private static final long serialVersionUID = -3489610863053527695L;
+    private static final String ERROR_SHUTDOWN_HANDLER_NULL = "Argument 'shutdownHandler' must not be null";
     protected final Object[] lock = new Object[0];
-    private ApplicationPhase phase = ApplicationPhase.INITIALIZE;
-
     private final List<ShutdownHandler> shutdownHandlers = new ArrayList<>();
     private final String[] startupArgs;
     private final Object shutdownLock = new Object();
     private final Logger log;
+    private Locale locale = Locale.getDefault();
+    private ApplicationPhase phase = ApplicationPhase.INITIALIZE;
     private Injector<?> injector;
 
     public AbstractGriffonApplet() {
@@ -83,8 +81,8 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
     }
 
     public AbstractGriffonApplet(@Nonnull String[] args) {
-        startupArgs = new String[args.length];
-        System.arraycopy(args, 0, startupArgs, 0, args.length);
+        requireNonNull(args, "Argument 'args' must not be null");
+        startupArgs = Arrays.copyOf(args, args.length);
         log = LoggerFactory.getLogger(getClass());
     }
 
@@ -111,16 +109,16 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
 
     // ------------------------------------------------------
 
-    public void setInjector(@Nonnull Injector<?> injector) {
-        this.injector = requireNonNull(injector, "Argument 'injector' cannot be bull");
-        this.injector.injectMembers(this);
-        addShutdownHandler(getWindowManager());
-        MVCGroupExceptionHandler.registerWith(this);
-    }
-
     @Nonnull
     public Locale getLocale() {
         return locale;
+    }
+
+    public void setLocale(@Nonnull Locale locale) {
+        Locale oldValue = this.locale;
+        this.locale = locale;
+        Locale.setDefault(locale);
+        firePropertyChange(PROPERTY_LOCALE, oldValue, locale);
     }
 
     @Nonnull
@@ -135,13 +133,6 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
 
     public void setLocaleAsString(@Nullable String locale) {
         setLocale(parseLocale(locale));
-    }
-
-    public void setLocale(@Nonnull Locale locale) {
-        Locale oldValue = this.locale;
-        this.locale = locale;
-        Locale.setDefault(locale);
-        firePropertyChange(PROPERTY_LOCALE, oldValue, locale);
     }
 
     public void addShutdownHandler(@Nonnull ShutdownHandler handler) {
@@ -244,6 +235,13 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
     @Override
     public Injector<?> getInjector() {
         return injector;
+    }
+
+    public void setInjector(@Nonnull Injector<?> injector) {
+        this.injector = requireNonNull(injector, "Argument 'injector' cannot be bull");
+        this.injector.injectMembers(this);
+        addShutdownHandler(getWindowManager());
+        MVCGroupExceptionHandler.registerWith(this);
     }
 
     @Nonnull

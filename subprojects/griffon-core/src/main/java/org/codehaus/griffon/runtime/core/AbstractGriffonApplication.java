@@ -64,18 +64,16 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  */
 public abstract class AbstractGriffonApplication extends AbstractObservable implements GriffonApplication {
-    private static final String ERROR_SHUTDOWN_HANDLER_NULL = "Argument 'shutdownHandler' must not be null";
-    private Locale locale = Locale.getDefault();
     public static final String[] EMPTY_ARGS = new String[0];
+    private static final String ERROR_SHUTDOWN_HANDLER_NULL = "Argument 'shutdownHandler' must not be null";
     private static final Class<?>[] CTOR_ARGS = new Class<?>[]{String[].class};
-
     protected final Object[] lock = new Object[0];
-    private ApplicationPhase phase = ApplicationPhase.INITIALIZE;
-
     private final List<ShutdownHandler> shutdownHandlers = new ArrayList<>();
     private final String[] startupArgs;
     private final Object shutdownLock = new Object();
     private final Logger log;
+    private Locale locale = Locale.getDefault();
+    private ApplicationPhase phase = ApplicationPhase.INITIALIZE;
     private Injector<?> injector;
 
     public AbstractGriffonApplication() {
@@ -83,21 +81,33 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     }
 
     public AbstractGriffonApplication(@Nonnull String[] args) {
-        startupArgs = new String[args.length];
-        System.arraycopy(args, 0, startupArgs, 0, args.length);
+        requireNonNull(args, "Argument 'args' must not be null");
+        startupArgs = Arrays.copyOf(args, args.length);
         log = LoggerFactory.getLogger(getClass());
     }
 
-    public void setInjector(@Nonnull Injector<?> injector) {
-        this.injector = requireNonNull(injector, "Argument 'injector' must not be bull");
-        this.injector.injectMembers(this);
-        addShutdownHandler(getWindowManager());
-        MVCGroupExceptionHandler.registerWith(this);
+    @Nonnull
+    public static GriffonApplication run(@Nonnull Class<? extends GriffonApplication> applicationClass, @Nonnull String[] args) throws Exception {
+        GriffonExceptionHandler.registerExceptionHandler();
+
+        GriffonApplication application = applicationClass.getDeclaredConstructor(CTOR_ARGS).newInstance(new Object[]{args});
+        ApplicationBootstrapper bootstrapper = new DefaultApplicationBootstrapper(application);
+        bootstrapper.bootstrap();
+        bootstrapper.run();
+
+        return application;
     }
 
     @Nonnull
     public Locale getLocale() {
         return locale;
+    }
+
+    public void setLocale(@Nonnull Locale locale) {
+        Locale oldValue = this.locale;
+        this.locale = locale;
+        Locale.setDefault(locale);
+        firePropertyChange(PROPERTY_LOCALE, oldValue, locale);
     }
 
     @Nonnull
@@ -112,13 +122,6 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
     public void setLocaleAsString(@Nullable String locale) {
         setLocale(parseLocale(locale));
-    }
-
-    public void setLocale(@Nonnull Locale locale) {
-        Locale oldValue = this.locale;
-        this.locale = locale;
-        Locale.setDefault(locale);
-        firePropertyChange(PROPERTY_LOCALE, oldValue, locale);
     }
 
     public void addShutdownHandler(@Nonnull ShutdownHandler handler) {
@@ -221,6 +224,13 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     @Override
     public Injector<?> getInjector() {
         return injector;
+    }
+
+    public void setInjector(@Nonnull Injector<?> injector) {
+        this.injector = requireNonNull(injector, "Argument 'injector' must not be bull");
+        this.injector.injectMembers(this);
+        addShutdownHandler(getWindowManager());
+        MVCGroupExceptionHandler.registerWith(this);
     }
 
     @Nonnull
@@ -388,17 +398,5 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
     protected void event(@Nonnull ApplicationEvent event, @Nullable List<?> args) {
         getEventRouter().publishEvent(event.getName(), args);
-    }
-
-    @Nonnull
-    public static GriffonApplication run(@Nonnull Class<? extends GriffonApplication> applicationClass, @Nonnull String[] args) throws Exception {
-        GriffonExceptionHandler.registerExceptionHandler();
-
-        GriffonApplication application = applicationClass.getDeclaredConstructor(CTOR_ARGS).newInstance(new Object[]{args});
-        ApplicationBootstrapper bootstrapper = new DefaultApplicationBootstrapper(application);
-        bootstrapper.bootstrap();
-        bootstrapper.run();
-
-        return application;
     }
 }
