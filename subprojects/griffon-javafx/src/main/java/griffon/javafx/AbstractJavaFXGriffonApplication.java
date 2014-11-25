@@ -15,7 +15,14 @@
  */
 package griffon.javafx;
 
-import griffon.core.*;
+import griffon.core.ApplicationClassLoader;
+import griffon.core.ApplicationConfigurer;
+import griffon.core.ApplicationEvent;
+import griffon.core.CallableWithArgs;
+import griffon.core.Configuration;
+import griffon.core.ExecutorServiceManager;
+import griffon.core.GriffonApplication;
+import griffon.core.ShutdownHandler;
 import griffon.core.addon.AddonManager;
 import griffon.core.addon.GriffonAddon;
 import griffon.core.artifact.ArtifactManager;
@@ -64,27 +71,26 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public abstract class AbstractJavaFXGriffonApplication extends Application implements GriffonApplication {
-    private static final String ERROR_SHUTDOWN_HANDLER_NULL = "Argument 'shutdownHandler' must not be null";
-    private Locale locale = Locale.getDefault();
     public static final String[] EMPTY_ARGS = new String[0];
+    private static final String ERROR_SHUTDOWN_HANDLER_NULL = "Argument 'shutdownHandler' must not be null";
     protected final Object[] lock = new Object[0];
-    private ApplicationPhase phase = ApplicationPhase.INITIALIZE;
-
+    protected final PropertyChangeSupport pcs;
     private final List<ShutdownHandler> shutdownHandlers = new ArrayList<>();
-    private String[] startupArgs;
     private final Object shutdownLock = new Object();
     private final Logger log;
+    private Locale locale = Locale.getDefault();
+    private ApplicationPhase phase = ApplicationPhase.INITIALIZE;
+    private String[] startupArgs;
     private Injector<?> injector;
-    protected final PropertyChangeSupport pcs;
 
     public AbstractJavaFXGriffonApplication() {
         this(EMPTY_ARGS);
     }
 
     public AbstractJavaFXGriffonApplication(@Nonnull String[] args) {
+        requireNonNull(args, "Argument 'args' must not be null");
         pcs = new PropertyChangeSupport(this);
-        startupArgs = new String[args.length];
-        System.arraycopy(args, 0, startupArgs, 0, args.length);
+        startupArgs = Arrays.copyOf(args, args.length);
         log = LoggerFactory.getLogger(getClass());
     }
 
@@ -140,16 +146,16 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
 
     // ------------------------------------------------------
 
-    public void setInjector(@Nonnull Injector<?> injector) {
-        this.injector = requireNonNull(injector, "Argument 'injector' cannot be bull");
-        this.injector.injectMembers(this);
-        addShutdownHandler(getWindowManager());
-        MVCGroupExceptionHandler.registerWith(this);
-    }
-
     @Nonnull
     public Locale getLocale() {
         return locale;
+    }
+
+    public void setLocale(@Nonnull Locale locale) {
+        Locale oldValue = this.locale;
+        this.locale = locale;
+        Locale.setDefault(locale);
+        firePropertyChange(PROPERTY_LOCALE, oldValue, locale);
     }
 
     @Nonnull
@@ -164,13 +170,6 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
 
     public void setLocaleAsString(@Nullable String locale) {
         setLocale(parseLocale(locale));
-    }
-
-    public void setLocale(@Nonnull Locale locale) {
-        Locale oldValue = this.locale;
-        this.locale = locale;
-        Locale.setDefault(locale);
-        firePropertyChange(PROPERTY_LOCALE, oldValue, locale);
     }
 
     public void addShutdownHandler(@Nonnull ShutdownHandler handler) {
@@ -273,6 +272,13 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
     @Override
     public Injector<?> getInjector() {
         return injector;
+    }
+
+    public void setInjector(@Nonnull Injector<?> injector) {
+        this.injector = requireNonNull(injector, "Argument 'injector' cannot be bull");
+        this.injector.injectMembers(this);
+        addShutdownHandler(getWindowManager());
+        MVCGroupExceptionHandler.registerWith(this);
     }
 
     @Nonnull

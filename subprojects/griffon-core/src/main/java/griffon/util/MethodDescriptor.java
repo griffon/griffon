@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
@@ -98,8 +99,7 @@ public class MethodDescriptor implements Comparable<MethodDescriptor> {
         this.methodName = requireNonBlank(methodName, "Argment 'methodName' must not be blank");
         requireNonNull(paramTypes, "Argument 'paramTypes' must not be null");
 
-        this.paramTypes = new String[paramTypes.length];
-        System.arraycopy(paramTypes, 0, this.paramTypes, 0, paramTypes.length);
+        this.paramTypes = Arrays.copyOf(paramTypes, paramTypes.length);
 
         this.modifiers = modifiers;
         this.hashCode = 31 * methodName.hashCode() + modifiers;

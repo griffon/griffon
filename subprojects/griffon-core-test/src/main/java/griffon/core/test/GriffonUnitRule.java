@@ -29,6 +29,7 @@ import org.junit.runners.model.Statement;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 
 import static java.util.Objects.requireNonNull;
 
@@ -63,8 +64,7 @@ public class GriffonUnitRule implements MethodRule {
 
     public GriffonUnitRule(@Nonnull String[] startupArgs, @Nonnull Class<? extends GriffonApplication> applicationClass, @Nonnull Class<? extends ApplicationBootstrapper> applicationBootstrapper) {
         requireNonNull(startupArgs, "Argument 'startupArgs' must not be null");
-        this.startupArgs = new String[startupArgs.length];
-        System.arraycopy(startupArgs, 0, this.startupArgs, 0, startupArgs.length);
+        this.startupArgs = Arrays.copyOf(startupArgs, startupArgs.length);
         this.applicationClass = requireNonNull(applicationClass, "Argument 'applicationClass' must not be null");
         this.applicationBootstrapper = requireNonNull(applicationBootstrapper, "Argument 'applicationBootstrapper' must not be null");
         if (!Environment.isSystemSet()) {
