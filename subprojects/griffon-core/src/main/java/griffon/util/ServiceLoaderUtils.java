@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
@@ -50,13 +49,15 @@ public class ServiceLoaderUtils {
         requireNonBlank(path, "Argument 'path' must not be blank");
         requireNonNull(type, "Argument 'type' must not be null");
         requireNonNull(processor, "Argument 'processor' must not be null");
-        String normalizedPath = path.endsWith(File.separator) ? path : path + File.separator;
+        // "The name of a resource is a /-separated path name that identifies the resource."
+        String normalizedPath = path.endsWith("/") ? path : path + "/";
 
         Enumeration<URL> urls;
 
         try {
             urls = classLoader.getResources(normalizedPath + type.getName());
         } catch (IOException ioe) {
+            LOG.error(ioe.getClass().getName() + " error loading resources of type \"" + type.getName() + "\" from \"" + normalizedPath + "\".");
             return false;
         }
 
