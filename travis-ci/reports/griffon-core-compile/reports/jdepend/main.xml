@@ -4,14 +4,14 @@
 
         <Package name="griffon.metadata">
             <Stats>
-                <TotalClasses>3</TotalClasses>
+                <TotalClasses>2</TotalClasses>
                 <ConcreteClasses>0</ConcreteClasses>
-                <AbstractClasses>3</AbstractClasses>
-                <Ca>3</Ca>
+                <AbstractClasses>2</AbstractClasses>
+                <Ca>2</Ca>
                 <Ce>2</Ce>
                 <A>1</A>
-                <I>0.4</I>
-                <D>0.4</D>
+                <I>0.5</I>
+                <D>0.5</D>
                 <V>1</V>
             </Stats>
 
@@ -21,9 +21,6 @@
                 </Class>
                 <Class sourceFile="PropertyEditorFor.java">
                     griffon.metadata.PropertyEditorFor
-                </Class>
-                <Class sourceFile="TypeProviderFor.java">
-                    griffon.metadata.TypeProviderFor
                 </Class>
             </AbstractClasses>
 
@@ -38,7 +35,6 @@
             <UsedBy>
                 <Package>org.codehaus.griffon.compile.core.processor.artifact</Package>
                 <Package>org.codehaus.griffon.compile.core.processor.editor</Package>
-                <Package>org.codehaus.griffon.compile.core.processor.type</Package>
             </UsedBy>
         </Package>
 
@@ -353,54 +349,6 @@
                 <Package>javax.lang.model</Package>
                 <Package>javax.lang.model.element</Package>
                 <Package>javax.lang.model.util</Package>
-                <Package>javax.tools</Package>
-                <Package>org.kordamp.jipsy.processor</Package>
-            </DependsUpon>
-
-            <UsedBy>
-            </UsedBy>
-        </Package>
-
-        <Package name="org.codehaus.griffon.compile.core.processor.type">
-            <Stats>
-                <TotalClasses>4</TotalClasses>
-                <ConcreteClasses>4</ConcreteClasses>
-                <AbstractClasses>0</AbstractClasses>
-                <Ca>0</Ca>
-                <Ce>10</Ce>
-                <A>0</A>
-                <I>1</I>
-                <D>0</D>
-                <V>1</V>
-            </Stats>
-
-            <AbstractClasses>
-            </AbstractClasses>
-
-            <ConcreteClasses>
-                <Class sourceFile="Type.java">
-                    org.codehaus.griffon.compile.core.processor.type.Type
-                </Class>
-                <Class sourceFile="TypeCollector.java">
-                    org.codehaus.griffon.compile.core.processor.type.TypeCollector
-                </Class>
-                <Class sourceFile="TypePersistence.java">
-                    org.codehaus.griffon.compile.core.processor.type.TypePersistence
-                </Class>
-                <Class sourceFile="TypeProviderProcessor.java">
-                    org.codehaus.griffon.compile.core.processor.type.TypeProviderProcessor
-                </Class>
-            </ConcreteClasses>
-
-            <DependsUpon>
-                <Package>griffon.metadata</Package>
-                <Package>java.io</Package>
-                <Package>java.lang</Package>
-                <Package>java.util</Package>
-                <Package>java.util.regex</Package>
-                <Package>javax.annotation.processing</Package>
-                <Package>javax.lang.model</Package>
-                <Package>javax.lang.model.element</Package>
                 <Package>javax.tools</Package>
                 <Package>org.kordamp.jipsy.processor</Package>
             </DependsUpon>
