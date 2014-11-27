@@ -24,9 +24,9 @@ import griffon.exceptions.GriffonException;
 import griffon.javafx.support.JavaFXAction;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.util.Callback;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
 
 import javax.annotation.Nonnull;
@@ -90,12 +90,8 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
 
         FXMLLoader fxmlLoader = new FXMLLoader(viewResource);
         fxmlLoader.setResources(getApplication().getMessageSource().asResourceBundle());
-        fxmlLoader.setControllerFactory(new Callback<Class<?>, Object>() {
-            @Override
-            public Object call(Class<?> aClass) {
-                return getMvcGroup().getView();
-            }
-        });
+        fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory(getApplication().getApplicationClassLoader().get()));
+        fxmlLoader.setClassLoader(getApplication().getApplicationClassLoader().get());
 
         try {
             fxmlLoader.load();
