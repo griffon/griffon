@@ -22,9 +22,6 @@ branches:
   except:
     - gh-pages
 
-# Do not build on tags (GitHub only)
-skip_tags: true
-
 #---------------------------------#
 #    environment configuration    #
 #---------------------------------#
@@ -46,8 +43,9 @@ install:
 
 # to run your custom scripts instead of automatic MSBuild
 build_script:
-  - gradlew clean test integrationTest
+  - gradlew clean test integrationTest -x :sample-javafx-groovy:jfxJar -x :sample-javafx-groovy:jfxDeploy -x :sample-javafx-java:jfxJar -x :sample-javafx-java:jfxDeploy --stacktrace
 cache:
+  - .gradle
   - C:\Users\appveyor\.gradle
 
 #---------------------------------#

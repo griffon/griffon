@@ -1,17 +1,3 @@
-machine:
-  java:
-    version: oraclejdk8
-
-dependencies:
-  override:
-    - ./gradlew -q dependencies
- cache_directories:
-    - ".gradle"
-
-test:
-  override:
-    - ./gradlew -q test integrationTest
-
 general:
   branches:
     only:
@@ -19,3 +5,20 @@ general:
       - development
     ignore:
       - gh-pages
+
+machine:
+  java:
+    version: oraclejdk8
+  environment:
+    TERM: dumb
+    GRADLE_OPTS: -Xmx256m -Xms256m -Xss320k -XX:+UseCompressedOops -Dfile.encoding=UTF-8
+
+dependencies:
+  cache_directories:
+    - "~/.gradle"
+  override:
+    - ./gradlew -q dependencies
+
+test:
+  override:
+    - ./gradlew -q test integrationTest -x :sample-javafx-groovy:jfxJar -x :sample-javafx-groovy:jfxDeploy -x :sample-javafx-java:jfxJar -x :sample-javafx-java:jfxDeploy --stacktrace
