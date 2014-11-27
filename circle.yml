@@ -4,11 +4,11 @@ machine:
 
 dependencies:
   override:
-    - ./gradlew dependencies
+    - ./gradlew -q dependencies
 
 test:
   override:
-    - ./gradlew check test integrationTest
+    - ./gradlew -q check test integrationTest
 
 general:
   branches:

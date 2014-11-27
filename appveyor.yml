@@ -29,9 +29,16 @@ skip_tags: true
 #    environment configuration    #
 #---------------------------------#
 
+environment:
+  JAVA_HOME: C:\Program Files\Java\jdk1.8.0
+
 # this is how to allow failing jobs in the matrix
 matrix:
   fast_finish: true     # set this flag to immediately finish build once one of the jobs fails.
+
+# scripts that run after cloning repository
+install:
+  - gradlew --version
 
 #---------------------------------#
 #       build configuration       #
@@ -39,7 +46,9 @@ matrix:
 
 # to run your custom scripts instead of automatic MSBuild
 build_script:
-  - gradlew.bat build -x test -x integrationTest
+  - gradlew clean build -x test -x integrationTest
+cache:
+  - C:\Users\appveyor\.gradle
 
 #---------------------------------#
 #       tests configuration       #
@@ -47,7 +56,7 @@ build_script:
 
 # to run your custom scripts instead of automatic tests
 test_script:
-  - gradlew.bat test integrationTest
+  - gradlew test integrationTest
 
 #---------------------------------#
 #        global handlers          #
