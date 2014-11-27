@@ -5,13 +5,17 @@ machine:
 dependencies:
   override:
     - ./gradlew -q dependencies
+ cache_directories:
+    - ".gradle"
 
 test:
   override:
-    - ./gradlew -q check test integrationTest
+    - ./gradlew -q test integrationTest
 
 general:
   branches:
     only:
       - master
       - development
+    ignore:
+      - gh-pages

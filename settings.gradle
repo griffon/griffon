@@ -1,3 +1,9 @@
+boolean fullBuild = true
+boolean travis = (System.env['TRAVIS'] ?: false) as boolean
+boolean appveyor = (System.env['APPVEYOR'] ?: false) as boolean
+boolean circleci = (System.env['CIRCLECI'] ?: false) as boolean
+fullBuild = !travis && !appveyor && !circleci
+
 include 'subprojects/griffon-core'
 include 'subprojects/griffon-core-compile'
 include 'subprojects/griffon-core-test'
@@ -16,7 +22,6 @@ include 'subprojects/griffon-fest-test'
 include 'subprojects/griffon-pivot-test'
 include 'subprojects/gradle-griffon-plugin'
 include 'subprojects/gradle-griffon-build-plugin'
-include 'subprojects/application-master-pom'
 include 'samples/sample-swing-java'
 include 'samples/sample-swing-groovy'
 include 'samples/sample-javafx-java'
@@ -25,26 +30,29 @@ include 'samples/sample-lanterna-java'
 include 'samples/sample-lanterna-groovy'
 include 'samples/sample-pivot-java'
 include 'samples/sample-pivot-groovy'
-include 'samples/editor-swing-groovy'
-include 'samples/editor-swing-java'
-include 'samples/browser-javafx-groovy'
-include 'samples/console-swing-groovy'
-include 'templates/griffon-swing-java-templates'
-include 'templates/griffon-swing-groovy-templates'
-include 'templates/griffon-javafx-java-templates'
-include 'templates/griffon-javafx-groovy-templates'
-include 'templates/griffon-pivot-java-templates'
-include 'templates/griffon-pivot-groovy-templates'
-include 'templates/griffon-lanterna-java-templates'
-include 'templates/griffon-lanterna-groovy-templates'
-include 'templates/griffon-standard-templates'
-include 'docs/griffon-guide'
-include 'docs/griffon-site'
+if (fullBuild) {
+    include 'subprojects/application-master-pom'
+    include 'samples/editor-swing-groovy'
+    include 'samples/editor-swing-java'
+    include 'samples/browser-javafx-groovy'
+    include 'samples/console-swing-groovy'
+    include 'templates/griffon-swing-java-templates'
+    include 'templates/griffon-swing-groovy-templates'
+    include 'templates/griffon-javafx-java-templates'
+    include 'templates/griffon-javafx-groovy-templates'
+    include 'templates/griffon-pivot-java-templates'
+    include 'templates/griffon-pivot-groovy-templates'
+    include 'templates/griffon-lanterna-java-templates'
+    include 'templates/griffon-lanterna-groovy-templates'
+    include 'templates/griffon-standard-templates'
+    include 'docs/griffon-guide'
+    include 'docs/griffon-site'
+}
 
 rootProject.name = 'griffon'
 rootProject.children.each { project ->
     int slash = project.name.indexOf('/')
-    String fileBaseName = project.name[(slash+1)..-1]
+    String fileBaseName = project.name[(slash + 1)..-1]
     String projectDirName = project.name
     project.name = fileBaseName
     project.projectDir = new File(settingsDir, projectDirName)
