@@ -1,6 +1,6 @@
 language: java
 install: true
-script: ./gradlew check test integrationTest cobertura -x :browser-javafx-groovy:jfxJar -x :browser-javafx-groovy:jfxDeploy -x :sample-javafx-groovy:jfxJar -x :sample-javafx-groovy:jfxDeploy -x :sample-javafx-java:jfxJar -x :sample-javafx-java:jfxDeploy
+script: ./gradlew check test integrationTest cobertura -x :sample-javafx-groovy:jfxJar -x :sample-javafx-groovy:jfxDeploy -x :sample-javafx-java:jfxJar -x :sample-javafx-java:jfxDeploy --stacktrace
 jdk: oraclejdk8
 env:
   matrix:
