@@ -1,0 +1,58 @@
+# Notes:
+#   - Minimal appveyor.yml file is an empty file. All sections are optional.
+#   - Indent each level of configuration with 2 spaces. Do not use tabs!
+#   - All section names are case-sensitive.
+#   - Section names should be unique on each level.
+
+#---------------------------------#
+#      general configuration      #
+#---------------------------------#
+
+# version format
+version: 2.1.0.{build}
+
+# branches to build
+branches:
+  # whitelist
+  only:
+    - master
+    - development
+
+  # blacklist
+  except:
+    - gh-pages
+
+# Do not build on tags (GitHub only)
+skip_tags: true
+
+#---------------------------------#
+#    environment configuration    #
+#---------------------------------#
+
+# this is how to allow failing jobs in the matrix
+matrix:
+  fast_finish: true     # set this flag to immediately finish build once one of the jobs fails.
+
+#---------------------------------#
+#       build configuration       #
+#---------------------------------#
+
+# to run your custom scripts instead of automatic MSBuild
+build_script:
+  - gradlew.bat build -x test -x integrationTest
+
+#---------------------------------#
+#       tests configuration       #
+#---------------------------------#
+
+# to run your custom scripts instead of automatic tests
+test_script:
+  - gradlew.bat test integrationTest
+
+#---------------------------------#
+#        global handlers          #
+#---------------------------------#
+
+# on build failure
+on_failure:
+  - echo Somebody setup us the bomb

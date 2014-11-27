@@ -49,7 +49,7 @@ public class DefaultExecutorServiceManager implements ExecutorServiceManager {
     public void shutdownAll() {
         for (ExecutorService executorService : executorServices) {
             if (!executorService.isShutdown()) {
-                executorService.shutdownNow();
+                executorService.shutdown();
             }
         }
     }
