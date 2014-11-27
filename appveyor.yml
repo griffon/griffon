@@ -46,7 +46,7 @@ install:
 
 # to run your custom scripts instead of automatic MSBuild
 build_script:
-  - gradlew clean build -x test -x integrationTest
+  - gradlew clean check test integrationTest
 cache:
   - C:\Users\appveyor\.gradle
 
@@ -54,9 +54,7 @@ cache:
 #       tests configuration       #
 #---------------------------------#
 
-# to run your custom scripts instead of automatic tests
-test_script:
-  - gradlew test integrationTest
+test: off
 
 #---------------------------------#
 #        global handlers          #
