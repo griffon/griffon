@@ -81,33 +81,33 @@ public abstract class AbstractMVCHandler implements MVCHandler {
     }
 
     @Nonnull
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType) {
-        return mvcGroupManager.createMVCGroup(args, mvcType);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType) {
+        return mvcGroupManager.createMVC(args, mvcType);
     }
 
     @Nonnull
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
-        return mvcGroupManager.createMVCGroup(args, mvcType, mvcId);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
+        return mvcGroupManager.createMVC(args, mvcType, mvcId);
     }
 
     @Nonnull
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType) {
-        return mvcGroupManager.createMVCGroup(mvcType);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType) {
+        return mvcGroupManager.createMVC(mvcType);
     }
 
     @Nonnull
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args) {
-        return mvcGroupManager.createMVCGroup(mvcType, args);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull Map<String, Object> args) {
+        return mvcGroupManager.createMVC(mvcType, args);
     }
 
     @Nonnull
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId) {
-        return mvcGroupManager.createMVCGroup(mvcType, mvcId);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull String mvcId) {
+        return mvcGroupManager.createMVC(mvcType, mvcId);
     }
 
     @Nonnull
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
-        return mvcGroupManager.createMVCGroup(mvcType, mvcId, args);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
+        return mvcGroupManager.createMVC(mvcType, mvcId, args);
     }
 
     public void destroyMVCGroup(@Nonnull String mvcId) {

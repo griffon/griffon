@@ -22,7 +22,7 @@ import java.util.Map;
 
 /**
  * Identifies an artifact that belongs to an MVC group.<p>
- * The main difference between {@code buildMVCGroup} and {@code createMVCGroup} methods is that
+ * The main difference between {@code buildMVCGroup} and {@code createMVC} methods is that
  * the formers will return a Map of instances where there could be more than strict MVC members
  * (like actions or charts), the latters will always return the canonical MVC members of a group
  * and nothing more.
@@ -37,7 +37,7 @@ public interface GriffonMvcArtifact extends GriffonArtifact {
      * same MVC group right after each instance has been created.
      * Each entry on the <tt>args</tt> Map points either to an MVC
      * member or a variable that was defined using any of the {@code buildMVCGroup}
-     * and/or {@code createMVCGroup} methods that can take a Map as parameter.
+     * and/or {@code createMVC} methods that can take a Map as parameter.
      *
      * @param args a Map of MVC instances or variables keyed by type.
      */

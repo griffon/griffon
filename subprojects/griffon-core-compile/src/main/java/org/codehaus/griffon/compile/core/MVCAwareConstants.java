@@ -41,7 +41,7 @@ public interface MVCAwareConstants extends BaseConstants {
     String MVC_GROUP_MANAGER_TYPE = "griffon.core.mvc.MVCGroupManager";
     String GRIFFON_MVC_ARTIFACT_TYPE = "griffon.core.artifact.GriffonMvcArtifact";
 
-    String METHOD_CREATE_MVC_GROUP = "createMVCGroup";
+    String METHOD_CREATE_MVC = "createMVC";
     String METHOD_BUILD_MVC_GROUP = "buildMVCGroup";
     String METHOD_WITH_MVC_GROUP = "withMVCGroup";
     String METHOD_WITH_MVC = "withMVC";
@@ -107,13 +107,13 @@ public interface MVCAwareConstants extends BaseConstants {
         annotatedMethod(
             annotations(JAVAX_ANNOTATION_NONNULL),
             typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),
-            METHOD_CREATE_MVC_GROUP,
+            METHOD_CREATE_MVC,
             args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
         ),
         annotatedMethod(
             annotations(JAVAX_ANNOTATION_NONNULL),
             typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),
-            METHOD_CREATE_MVC_GROUP,
+            METHOD_CREATE_MVC,
             args(
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
@@ -121,7 +121,7 @@ public interface MVCAwareConstants extends BaseConstants {
         annotatedMethod(
             annotations(JAVAX_ANNOTATION_NONNULL),
             typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),
-            METHOD_CREATE_MVC_GROUP,
+            METHOD_CREATE_MVC,
             args(
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
@@ -129,7 +129,7 @@ public interface MVCAwareConstants extends BaseConstants {
         annotatedMethod(
             annotations(JAVAX_ANNOTATION_NONNULL),
             typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),
-            METHOD_CREATE_MVC_GROUP,
+            METHOD_CREATE_MVC,
             args(
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
@@ -137,7 +137,7 @@ public interface MVCAwareConstants extends BaseConstants {
         annotatedMethod(
             annotations(JAVAX_ANNOTATION_NONNULL),
             typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),
-            METHOD_CREATE_MVC_GROUP,
+            METHOD_CREATE_MVC,
             args(
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
@@ -146,7 +146,7 @@ public interface MVCAwareConstants extends BaseConstants {
         annotatedMethod(
             annotations(JAVAX_ANNOTATION_NONNULL),
             typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),
-            METHOD_CREATE_MVC_GROUP,
+            METHOD_CREATE_MVC,
             args(
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),

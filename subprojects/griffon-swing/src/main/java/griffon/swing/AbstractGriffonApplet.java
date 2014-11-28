@@ -373,21 +373,21 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
             log.info("Initializing all startup groups: {}", startupGroups);
 
             for (String groupName : (List<String>) startupGroups) {
-                getMvcGroupManager().createMVCGroup(groupName.trim());
+                getMvcGroupManager().createMVC(groupName.trim());
             }
         } else if (startupGroups != null && startupGroups.getClass().isArray()) {
             Object[] groups = (Object[]) startupGroups;
             log.info("Initializing all startup groups: {}", Arrays.toString(groups));
 
             for (Object groupName : groups) {
-                getMvcGroupManager().createMVCGroup(String.valueOf(groupName).trim());
+                getMvcGroupManager().createMVC(String.valueOf(groupName).trim());
             }
         } else if (startupGroups != null && startupGroups instanceof String) {
             String[] groups = ((String) startupGroups).split(",");
             log.info("Initializing all startup groups: {}", Arrays.toString(groups));
 
             for (String groupName : groups) {
-                getMvcGroupManager().createMVCGroup(groupName.trim());
+                getMvcGroupManager().createMVC(groupName.trim());
             }
         }
 
@@ -400,7 +400,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
             Map<String, Map<String, Object>> mvcGroups = e.getValue().getMvcGroups();
             for (String groupName : groups) {
                 if (mvcGroups.containsKey(groupName)) {
-                    getMvcGroupManager().createMVCGroup(groupName.trim());
+                    getMvcGroupManager().createMVC(groupName.trim());
                 }
             }
         }

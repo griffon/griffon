@@ -32,7 +32,7 @@ class ContainerController {
             File file = new File(builder.fileChooserWindow.selectedFile.toString())
             // let's calculate an unique id for the next mvc group
             String mvcIdentifier = file.name + '-' + System.currentTimeMillis()
-            createMVCGroup('editor', mvcIdentifier, [
+            createMVC('editor', mvcIdentifier, [
                 document: new Document(file: file, title: file.name),
                 tabGroup: builder.tabGroup,
                 tabName: file.name,

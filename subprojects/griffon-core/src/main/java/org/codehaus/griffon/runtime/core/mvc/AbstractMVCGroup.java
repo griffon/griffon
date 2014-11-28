@@ -161,26 +161,26 @@ public abstract class AbstractMVCGroup extends AbstractMVCHandler implements MVC
 
     @Nonnull
     @Override
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType) {
-        return super.createMVCGroup(injectParentGroup(args), mvcType);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType) {
+        return super.createMVC(injectParentGroup(args), mvcType);
     }
 
     @Nonnull
     @Override
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
-        return super.createMVCGroup(injectParentGroup(args), mvcType, mvcId);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
+        return super.createMVC(injectParentGroup(args), mvcType, mvcId);
     }
 
     @Nonnull
     @Override
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args) {
-        return super.createMVCGroup(mvcType, injectParentGroup(args));
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull Map<String, Object> args) {
+        return super.createMVC(mvcType, injectParentGroup(args));
     }
 
     @Nonnull
     @Override
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
-        return super.createMVCGroup(mvcType, mvcId, injectParentGroup(args));
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
+        return super.createMVC(mvcType, mvcId, injectParentGroup(args));
     }
 
     @Override
@@ -245,14 +245,14 @@ public abstract class AbstractMVCGroup extends AbstractMVCHandler implements MVC
 
     @Nonnull
     @Override
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId) {
-        return super.createMVCGroup(mvcType, mvcId, injectParentGroup());
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull String mvcId) {
+        return super.createMVC(mvcType, mvcId, injectParentGroup());
     }
 
     @Nonnull
     @Override
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType) {
-        return super.createMVCGroup(mvcType, injectParentGroup());
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType) {
+        return super.createMVC(mvcType, injectParentGroup());
     }
 
     @Nonnull

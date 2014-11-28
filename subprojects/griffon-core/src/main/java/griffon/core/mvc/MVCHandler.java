@@ -29,7 +29,7 @@ import java.util.Map;
  * There are 3 types of methods used for instantiating a group:
  * <ul>
  * <ol>{@code buildMVCGroup()} - creates a new group instance returning all members.</ol>
- * <ol>{@code createMVCGroup()} - creates a new group instance returning only Model, View and Controller members.</ol>
+ * <ol>{@code createMVC()} - creates a new group instance returning only Model, View and Controller members.</ol>
  * <ol>{@code withMVCGroup()} - creates a new group instance and destroys it immediately after it has been processed by the callback.</ol>
  * <ol>{@code withMVC()} - creates a new group instance and destroys it immediately after it has been processed by the callback.</ol>
  * </ul>
@@ -333,7 +333,7 @@ public interface MVCHandler {
      * An instance of the "foo" group can be created as follows
      * <p/>
      * <pre>
-     * def (m, v, c) = createMVCGroup('foo')
+     * def (m, v, c) = createMVC('foo')
      * assert (c instanceof FooController)
      * </pre>
      *
@@ -344,7 +344,7 @@ public interface MVCHandler {
      *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
-    List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType);
+    List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType);
 
     /**
      * Instantiates an MVC group of the specified type with additional variables.<p>
@@ -380,8 +380,8 @@ public interface MVCHandler {
      * instance by creating the groups in the following way:
      * <p/>
      * <pre>
-     * def (m1, v1, c1) = createMVCGroup('foo')
-     * def (m2, v2, c2) = createMVCGroup('bar', model: m1)
+     * def (m1, v1, c1) = createMVC('foo')
+     * def (m2, v2, c2) = createMVC('bar', model: m1)
      * assert fm1 == m2
      * </pre>
      *
@@ -394,7 +394,7 @@ public interface MVCHandler {
      *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
-    List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType);
+    List<? extends GriffonMvcArtifact> createMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType);
 
     /**
      * Instantiates an MVC group of the specified type with additional variables.<p>
@@ -430,8 +430,8 @@ public interface MVCHandler {
      * instance by creating the groups in the following way:
      * <p/>
      * <pre>
-     * def (m1, v1, c1) = createMVCGroup('foo')
-     * def (m2, v2, c2) = createMVCGroup('bar', model: m1)
+     * def (m1, v1, c1) = createMVC('foo')
+     * def (m2, v2, c2) = createMVC('bar', model: m1)
      * assert fm1 == m2
      * </pre>
      *
@@ -444,7 +444,7 @@ public interface MVCHandler {
      *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
-    List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args);
+    List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull Map<String, Object> args);
 
     /**
      * Instantiates an MVC group of the specified type with a particular name.<p>
@@ -467,7 +467,7 @@ public interface MVCHandler {
      * An instance of the "foo" group can be created as follows
      * <p/>
      * <pre>
-     * def (m, v, c) = createMVCGroup('foo', 'foo' + System.currenttimeMillis())
+     * def (m, v, c) = createMVC('foo', 'foo' + System.currenttimeMillis())
      * assert (c instanceof FooController)
      * </pre>
      * <p/>
@@ -481,7 +481,7 @@ public interface MVCHandler {
      *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
-    List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId);
+    List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull String mvcId);
 
     /**
      * Instantiates an MVC group of the specified type with a particular name.<p>
@@ -511,8 +511,8 @@ public interface MVCHandler {
      * We can create two instances of the same group that share the same model instance in the following way:
      * <p/>
      * <pre>
-     * def (m1, v1, c1) = createMVCGroup('foo', 'foo1')
-     * def (m2, v2, c2) = createMVCGroup('foo', 'foo2', model: m1)
+     * def (m1, v1, c1) = createMVC('foo', 'foo1')
+     * def (m2, v2, c2) = createMVC('foo', 'foo2', model: m1)
      * assert fm1 == m2
      * </pre>
      * <p/>
@@ -528,7 +528,7 @@ public interface MVCHandler {
      *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
-    List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId);
+    List<? extends GriffonMvcArtifact> createMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId);
 
     /**
      * Instantiates an MVC group of the specified type with a particular name.<p>
@@ -558,8 +558,8 @@ public interface MVCHandler {
      * We can create two instances of the same group that share the same model instance in the following way:
      * <p/>
      * <pre>
-     * def (m1, v1, c1) = createMVCGroup('foo', 'foo1')
-     * def (m2, v2, c2) = createMVCGroup('foo', 'foo2', model: m1)
+     * def (m1, v1, c1) = createMVC('foo', 'foo1')
+     * def (m2, v2, c2) = createMVC('foo', 'foo2', model: m1)
      * assert fm1 == m2
      * </pre>
      * <p/>
@@ -575,7 +575,7 @@ public interface MVCHandler {
      *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
-    List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args);
+    List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args);
 
     /**
      * Destroys an MVC group identified by a particular name.<p>
