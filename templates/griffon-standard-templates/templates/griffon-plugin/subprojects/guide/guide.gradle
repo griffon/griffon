@@ -33,7 +33,11 @@ task copyDocs(type: Copy) {
                 include 'griffon/metadata/**/*'
             }
         } else {
-            from(project(projectName).sourceSets.main.allSource)
+            from(project(projectName).sourceSets.main.allSource) {
+                include '**/*.java'
+                include '**/*.groovy'
+                include '**/*.html'
+            }
         }
     }
 }
@@ -147,7 +151,7 @@ asciidoctor {
         include 'index.adoc'
     }
     resources {
-        from file('src/resources')
+        from file('src/docs/resources')
     }
 }
 
