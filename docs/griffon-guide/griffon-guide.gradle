@@ -124,7 +124,7 @@ task generateJava2html {
 task apiJar(type: Jar, dependsOn: apiDocs) {
     archiveName    = "griffon-core-${project.version}-javadoc.jar"
     destinationDir = "$buildDir/assemble/jars" as File
-    from copyDocs.destinationDir
+    from apiDocs.destinationDir
 }
 
 task sourceHtmlJar(type: Jar, dependsOn: generateJava2html) {
@@ -170,7 +170,8 @@ task sampleStats() << {
 }
 
 asciidoctor {
-    baseDir = project.file('src/asciidoc')
+    baseDir   = project.file('src/docs/asciidoc')
+    sourceDir = project.file('src/docs/asciidoc')
     options = [
         attributes: [
             toc                     : 'left',
@@ -211,7 +212,7 @@ asciidoctor.dependsOn sampleStats
 
 task guide(type: Copy, dependsOn: [apiDocs, generateJava2html, asciidoctor]) {
     destinationDir = "$buildDir/guide" as File
-    from(apiDocs.destinationDir) { into 'api' }
+    from(apiDocs.destinationDir)       { into 'api' }
     from(java2htmlConvertCode.destDir) { into 'api-src'}
     from asciidoctor.outputDir
 }

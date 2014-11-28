@@ -6,13 +6,13 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.0'
-        classpath 'org.gradle.api.plugins:gradle-java2html-plugin:0.4'
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.1'
+        classpath 'com.bmuschko:gradle-java2html-plugin:2.0'
     }
 }
 
 apply plugin: 'org.asciidoctor.gradle.asciidoctor'
-apply plugin: 'java2html'
+apply plugin: 'com.bmuschko.java2html'
 
 ext.childProjects = [
     ':griffon-${plugin_name}'
@@ -25,7 +25,7 @@ dependencies {
 }
 
 task copyDocs(type: Copy) {
-    destinationDir = "\$buildDir/sources" as File
+    destinationDir = "\${buildDir}/sources" as File
     project.ext.childProjects.each { projectName ->
         if (projectName.endsWith('-compile')) {
             from(project(projectName).sourceSets.main.allSource) {
@@ -39,9 +39,9 @@ task copyDocs(type: Copy) {
 }
 
 task apiDocs(type: Javadoc, dependsOn: copyDocs) {
-    source          = file("\$buildDir/sources")
-    destinationDir  = file("\$buildDir/api")
-    title           = "\$projectDescription \$version"
+    source          = copyDocs.destinationDir
+    destinationDir  = file("\${buildDir}/api")
+    title           = "\${pluginBaseName} \${project.version}"
     classpath       = project.ext.childProjects.collect { projectName ->
                           [project(projectName).sourceSets.main.output,
                            project(projectName).configurations.compile,
@@ -57,15 +57,15 @@ task apiDocs(type: Javadoc, dependsOn: copyDocs) {
     options.version     = true
     options.source      = project.sourceCompatibility
     options.overview    = file('src/javadoc/overview.html')
-    options.windowTitle = "\$projectDescription \$version"
-    options.docTitle    = "\$projectDescription \$version"
+    options.windowTitle = "\${pluginBaseName} \${project.version}"
+    options.docTitle    = "\${pluginBaseName} \${project.version}"
     options.footer      = project.javadocFooter
     options.links       = ['http://www.slf4j.org/apidocs/',
                            'http://junit.org/javadoc/latest/',
                            'http://docs.oracle.com/javase/7/docs/api/',
                            'http://jsr-305.googlecode.com/svn/trunk/javadoc/',
                            'http://atinject.googlecode.com/svn/trunk/javadoc/',
-                           'http://griffon.github.io/griffon/guide/api/']
+                           'http://new.griffon-framework.org/guide/latest/api/']
 
     doLast { task ->
         copy {
@@ -80,97 +80,85 @@ task apiDocs(type: Javadoc, dependsOn: copyDocs) {
     }
 }
 
-task java2html {
+task generateJava2html {
     dependsOn apiDocs
     dependsOn "java2htmlGenerateOverview"
     dependsOn java2htmlConvertCode
 }
 
-task jarApi(type: Jar, dependsOn: apiDocs) {
+task javadocJar(type: Jar, dependsOn: apiDocs) {
     archiveName    = "\${pluginBaseName}-plugin-\${version}-javadoc.jar"
-    destinationDir = "\$buildDir/assemble/jars" as File
-    from "\$buildDir/api"
+    destinationDir = "\${buildDir}/assemble/jars" as File
+    from apiDocs.destinationDir
 }
 
-task jarSourceHtml(type: Jar, dependsOn: java2html) {
+task sourceHtmlJar(type: Jar, dependsOn: java2html) {
     archiveName    = "\${pluginBaseName}-plugin-\${version}-sources-html.jar"
-    destinationDir = "\$buildDir/assemble/jars" as File
-    from "\$buildDir/java2html"
+    destinationDir = "\${buildDir}/assemble/jars" as File
+    from java2htmlConvertCode.destDir
 }
 
-task jarDocs(dependsOn: [jarApi, jarSourceHtml]) { }
+task docsJar(dependsOn: [javadocJar, sourceHtmlJar]) { }
 
 java2html {
     conversion {
-        srcDirs = files("\$buildDir/sources")
-        destDir = file("\$buildDir/java2html")
+        srcDirs = files(copyDocs.destinationDir)
         tabs = 4
-        style = 'eclipse'
-        outputFormat = 'html'
-        showLineNumbers = true
+        style = 'kawa'
         addLineAnchors = true
         showFileName = true
         useShortFileName = true
         overwrite = true
         showDefaultTitle = true
-        includeDocumentHeader = true
-        includeDocumentFooter = true
     }
 
     overview {
-        srcDirs        = files("\$buildDir/java2html")
-        destDir        = file("\$buildDir/java2html")
-        windowTitle    = "\$projectDescription \$version"
-        docTitle       = "\$projectDescription \$version"
-        docDescription = "\$projectDescription \$version"
+        windowTitle    = "\${pluginBaseName} \${project.version}"
+        docTitle       = "\${pluginBaseName} \${project.version}"
+        docDescription = "\${pluginBaseName} \${project.version}"
         icon           = file('src/javadoc/resources/img/griffon.ico')
         stylesheet     = file('src/javadoc/resources/css/stylesheet.css')
     }
 }
 
 asciidoctor {
-    baseDir = project.file('src/asciidoc')
-    options = [
-        attributes: [
-            toc                    : 'left',
-            doctype                : 'book',
-            icons                  : 'font',
-            encoding               : 'utf-8',
-            sectlink               : true,
-            sectanchors            : true,
-            numbered               : true,
-            linkattrs              : true,
-            imagesdir              : 'images',
-            linkcss                : true,
-            stylesheet             : 'css/style.css',
-            'source-highlighter'   : 'coderay',
-            'coderay-linenums-mode': 'table',
-            'project-title'        : project.projectDescription,
-            'project-author'       : '${project_author}',
-            'project-url'          : project.projectWebsiteUrl,
-            'project-vcs'          : project.projectVcsUrl,
-            'project-issue-tracker': project.projectIssueTrackerUrl,
-            'griffon-version'      : rootProject.griffonVersion
-        ]
+    attributes = [
+        toc                    : 'left',
+        doctype                : 'book',
+        icons                  : 'font',
+        encoding               : 'utf-8',
+        sectlink               : true,
+        sectanchors            : true,
+        numbered               : true,
+        linkattrs              : true,
+        imagesdir              : 'images',
+        linkcss                : true,
+        stylesheet             : 'css/style.css',
+        'source-highlighter'   : 'coderay',
+        'coderay-linenums-mode': 'table',
+        'project-title'        : project.projectDescription,
+        'project-author'       : '${project_author}',
+        'project-url'          : project.projectWebsiteUrl,
+        'project-vcs'          : project.projectVcsUrl,
+        'project-issue-tracker': project.projectIssueTrackerUrl,
+        'griffon-version'      : rootProject.griffonVersion
     ]
-    sourceDocumentNames = files('src/asciidoc/index.adoc')
-
-    doLast { task ->
-        copy {
-            into task.outputDir
-            from file('src/resources')
-        }
+    sources {
+        include 'index.adoc'
+    }
+    resources {
+        from file('src/resources')
     }
 }
 
-task guide(type: Copy, dependsOn: [apiDocs, java2html, asciidoctor]) {
-    destinationDir = "\$buildDir/guide" as File
-    from("\$buildDir/api") { into 'api' }
-    from("\$buildDir/java2html") { into 'api-src'}
-    from("\$buildDir/asciidoc")
+task guide(type: Copy, dependsOn: [apiDocs, generateJava2html, asciidoctor]) {
+    destinationDir = "\${buildDir}/guide" as File
+    from(apiDocs.destinationDir)       { into 'api' }
+    from(java2htmlConvertCode.destDir) { into 'api-src'}
+    from("\${asciidoctor.outputDir}/html5")
 }
 
 task guideZip(type: Zip, dependsOn: guide) {
     baseName = "\${pluginBaseName}-guide"
-    from "\$buildDir/guide"
+    from guide.destinationDir
 }
