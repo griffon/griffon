@@ -227,7 +227,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     }
 
     @Nonnull
-    protected List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> args) {
+    protected List<? extends GriffonMvcArtifact> createMVC(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> args) {
         MVCGroup group = buildMVCGroup(findConfiguration(configuration.getMvcType()), mvcId, args);
         return asList(group.getModel(), group.getView(), group.getController());
     }
@@ -309,38 +309,38 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
 
     @Nonnull
     @Override
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType) {
-        return createMVCGroup(findConfiguration(mvcType), null, Collections.<String, Object>emptyMap());
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType) {
+        return createMVC(findConfiguration(mvcType), null, Collections.<String, Object>emptyMap());
     }
 
     @Nonnull
     @Override
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType) {
-        return createMVCGroup(findConfiguration(mvcType), null, args);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType) {
+        return createMVC(findConfiguration(mvcType), null, args);
     }
 
     @Nonnull
     @Override
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args) {
-        return createMVCGroup(findConfiguration(mvcType), null, args);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull Map<String, Object> args) {
+        return createMVC(findConfiguration(mvcType), null, args);
     }
 
     @Nonnull
     @Override
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId) {
-        return createMVCGroup(findConfiguration(mvcType), mvcId, Collections.<String, Object>emptyMap());
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull String mvcId) {
+        return createMVC(findConfiguration(mvcType), mvcId, Collections.<String, Object>emptyMap());
     }
 
     @Nonnull
     @Override
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
-        return createMVCGroup(findConfiguration(mvcType), mvcId, args);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
+        return createMVC(findConfiguration(mvcType), mvcId, args);
     }
 
     @Nonnull
     @Override
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
-        return createMVCGroup(findConfiguration(mvcType), mvcId, args);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
+        return createMVC(findConfiguration(mvcType), mvcId, args);
     }
 
     @Override

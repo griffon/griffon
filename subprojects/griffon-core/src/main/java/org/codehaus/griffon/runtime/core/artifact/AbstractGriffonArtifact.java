@@ -162,8 +162,8 @@ public abstract class AbstractGriffonArtifact implements GriffonArtifact {
 
     @Nonnull
     @Override
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType) {
-        return application.getMvcGroupManager().createMVCGroup(mvcType);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType) {
+        return application.getMvcGroupManager().createMVC(mvcType);
     }
 
     @Override
@@ -173,14 +173,14 @@ public abstract class AbstractGriffonArtifact implements GriffonArtifact {
 
     @Nonnull
     @Override
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId) {
-        return application.getMvcGroupManager().createMVCGroup(mvcType, mvcId);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull String mvcId) {
+        return application.getMvcGroupManager().createMVC(mvcType, mvcId);
     }
 
     @Nonnull
     @Override
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
-        return application.getMvcGroupManager().createMVCGroup(args, mvcType, mvcId);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
+        return application.getMvcGroupManager().createMVC(args, mvcType, mvcId);
     }
 
     @Override
@@ -202,8 +202,8 @@ public abstract class AbstractGriffonArtifact implements GriffonArtifact {
 
     @Nonnull
     @Override
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType) {
-        return application.getMvcGroupManager().createMVCGroup(args, mvcType);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType) {
+        return application.getMvcGroupManager().createMVC(args, mvcType);
     }
 
     @Override
@@ -225,8 +225,8 @@ public abstract class AbstractGriffonArtifact implements GriffonArtifact {
 
     @Nonnull
     @Override
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args) {
-        return application.getMvcGroupManager().createMVCGroup(mvcType, args);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull Map<String, Object> args) {
+        return application.getMvcGroupManager().createMVC(mvcType, args);
     }
 
     @Override
@@ -247,8 +247,8 @@ public abstract class AbstractGriffonArtifact implements GriffonArtifact {
 
     @Nonnull
     @Override
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
-        return application.getMvcGroupManager().createMVCGroup(mvcType, mvcId, args);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
+        return application.getMvcGroupManager().createMVC(mvcType, mvcId, args);
     }
 
     @Override

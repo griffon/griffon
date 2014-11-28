@@ -133,8 +133,8 @@ public abstract class AbstractGriffonArtifactScript extends Script implements Gr
     }
 
     @Nonnull
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType) {
-        return application.getMvcGroupManager().createMVCGroup(mvcType);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType) {
+        return application.getMvcGroupManager().createMVC(mvcType);
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCCallable<M, V, C> handler) {
@@ -142,13 +142,13 @@ public abstract class AbstractGriffonArtifactScript extends Script implements Gr
     }
 
     @Nonnull
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId) {
-        return application.getMvcGroupManager().createMVCGroup(mvcType, mvcId);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull String mvcId) {
+        return application.getMvcGroupManager().createMVC(mvcType, mvcId);
     }
 
     @Nonnull
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
-        return application.getMvcGroupManager().createMVCGroup(args, mvcType, mvcId);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
+        return application.getMvcGroupManager().createMVC(args, mvcType, mvcId);
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCCallable<M, V, C> handler) {
@@ -166,8 +166,8 @@ public abstract class AbstractGriffonArtifactScript extends Script implements Gr
     }
 
     @Nonnull
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType) {
-        return application.getMvcGroupManager().createMVCGroup(args, mvcType);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType) {
+        return application.getMvcGroupManager().createMVC(args, mvcType);
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull MVCCallable<M, V, C> handler) {
@@ -185,8 +185,8 @@ public abstract class AbstractGriffonArtifactScript extends Script implements Gr
     }
 
     @Nonnull
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args) {
-        return application.getMvcGroupManager().createMVCGroup(mvcType, args);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull Map<String, Object> args) {
+        return application.getMvcGroupManager().createMVC(mvcType, args);
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCCallable<M, V, C> handler) {
@@ -203,8 +203,8 @@ public abstract class AbstractGriffonArtifactScript extends Script implements Gr
     }
 
     @Nonnull
-    public List<? extends GriffonMvcArtifact> createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
-        return application.getMvcGroupManager().createMVCGroup(mvcType, mvcId, args);
+    public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
+        return application.getMvcGroupManager().createMVC(mvcType, mvcId, args);
     }
 
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCCallable<M, V, C> handler) {

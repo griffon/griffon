@@ -38,12 +38,12 @@ import java.lang.annotation.Target;
  * <li><code>public MVCGroup buildMVCGroup(String mvcType, Map&lt;String, Object&gt; args)</code></li>
  * <li><code>public MVCGroup buildMVCGroup(Map&lt;String, Object&gt; args, String mvcType, String mvcId)</code></li>
  * <li><code>public MVCGroup buildMVCGroup(String mvcType, String mvcId, Map&lt;String, Object&gt; args)</code></li>
- * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVCGroup(String mvcType)</code></li>
- * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVCGroup(Map&lt;String, Object&gt; args, String mvcType)</code></li>
- * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVCGroup(String mvcType, Map&lt;String, Object&gt; args)</code></li>
- * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVCGroup(String mvcType, String mvcId)</code></li>
- * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVCGroup(Map&lt;String, Object&gt; args, String mvcType, String mvcId)</code></li>
- * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVCGroup(String mvcType, String mvcId, Map&lt;String, Object&gt; args)</code></li>
+ * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVC(String mvcType)</code></li>
+ * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVC(Map&lt;String, Object&gt; args, String mvcType)</code></li>
+ * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVC(String mvcType, Map&lt;String, Object&gt; args)</code></li>
+ * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVC(String mvcType, String mvcId)</code></li>
+ * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVC(Map&lt;String, Object&gt; args, String mvcType, String mvcId)</code></li>
+ * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVC(String mvcType, String mvcId, Map&lt;String, Object&gt; args)</code></li>
  * <li><code>public void destroyMVCGroup(String mvcId)</code></li>
  * <li><code>public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(String mvcType, MVCCallable&lt;M, V, C&gt; handler)</code></li>
  * <li><code>public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(String mvcType, String mvcId, MVCCallable&lt;M, V, C&gt; handler)</code></li>

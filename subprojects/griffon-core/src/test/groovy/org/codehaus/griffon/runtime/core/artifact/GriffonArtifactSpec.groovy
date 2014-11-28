@@ -292,9 +292,9 @@ class GriffonArtifactSpec extends Specification {
         group.destroy()
     }
 
-    def 'Verify createMVCGroup(type)'() {
+    def 'Verify createMVC(type)'() {
         given:
-        List members = resolveMVCHandler().createMVCGroup('simple')
+        List members = resolveMVCHandler().createMVC('simple')
 
         expect:
         members[0] instanceof SimpleModel
@@ -307,9 +307,9 @@ class GriffonArtifactSpec extends Specification {
         members[2].mvcGroup.destroy()
     }
 
-    def 'Verify createMVCGroup(type, id)'() {
+    def 'Verify createMVC(type, id)'() {
         given:
-        List members = resolveMVCHandler().createMVCGroup('simple', 'simple-1')
+        List members = resolveMVCHandler().createMVC('simple', 'simple-1')
 
         expect:
         members[0] instanceof SimpleModel
@@ -322,9 +322,9 @@ class GriffonArtifactSpec extends Specification {
         members[2].mvcGroup.destroy()
     }
 
-    def 'Verify createMVCGroup(type, map)'() {
+    def 'Verify createMVC(type, map)'() {
         given:
-        List members = resolveMVCHandler().createMVCGroup('simple', [key: 'griffon'])
+        List members = resolveMVCHandler().createMVC('simple', [key: 'griffon'])
 
         expect:
         members[0] instanceof SimpleModel
@@ -337,9 +337,9 @@ class GriffonArtifactSpec extends Specification {
         members[2].mvcGroup.destroy()
     }
 
-    def 'Verify createMVCGroup(map, type)'() {
+    def 'Verify createMVC(map, type)'() {
         given:
-        List members = resolveMVCHandler().createMVCGroup('simple', key: 'griffon')
+        List members = resolveMVCHandler().createMVC('simple', key: 'griffon')
 
         expect:
         members[0] instanceof SimpleModel
@@ -352,9 +352,9 @@ class GriffonArtifactSpec extends Specification {
         members[2].mvcGroup.destroy()
     }
 
-    def 'Verify createMVCGroup(type, id, map)'() {
+    def 'Verify createMVC(type, id, map)'() {
         given:
-        List members = resolveMVCHandler().createMVCGroup('simple', 'simple-2', [key: 'griffon'])
+        List members = resolveMVCHandler().createMVC('simple', 'simple-2', [key: 'griffon'])
 
         expect:
         members[0] instanceof SimpleModel
@@ -367,9 +367,9 @@ class GriffonArtifactSpec extends Specification {
         members[2].mvcGroup.destroy()
     }
 
-    def 'Verify createMVCGroup(map, type, id)'() {
+    def 'Verify createMVC(map, type, id)'() {
         given:
-        List members = resolveMVCHandler().createMVCGroup('simple', 'simple-2', key: 'griffon')
+        List members = resolveMVCHandler().createMVC('simple', 'simple-2', key: 'griffon')
 
         expect:
         members[0] instanceof SimpleModel
