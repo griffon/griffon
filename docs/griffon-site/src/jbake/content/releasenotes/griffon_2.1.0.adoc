@@ -1,0 +1,99 @@
+= Griffon 2.1.0 Release Notes
+Andres Almiray
+2014-11-24
+:jbake-type: post
+:jbake-status: published
+:category: releasenotes
+:idprefix:
+:linkattrs:
+:path-griffon-core: /guide/2.1.0/api/griffon/core
+
+== Griffon 2.1.0 Release Notes
+
+=== Dependencies
+
+The following dependencies have been upgraded
+
+ * org.codehaus.groovy:groovy-all:2.3.8
+ * com.jayway.awaitility:awaitility:1.6.2
+ * com.jayway.awaitility:awaitility-groovy:1.6.2
+
+=== Runtime
+
+==== MVC
+
+In previous versions instances of `link:{path-griffon-core}/mvc/MVCGroup.html[MVCGroup, window="_blank"]` would let you
+create other `link:{path-griffon-core}/mvc/MVCGroup.html[MVCGroup, window="_blank"]` instances, with no direct relationship
+between the two unless explicitly stated (via an additional argument Map). This is no longer the case.
+
+Child groups may now have a direct relationship with the parent group that created them. The `parentGroup` property will be
+set to the correct `link:{path-griffon-core}/mvc/MVCGroup.html[MVCGroup, window="_blank"]` instance in every group member
+that defines it. Fine grained parent properties matching each member (such as `parentController`, `parentModel` and
+`parentView`) will also be set automatically. There are 2 sample applications that demonstrate this new feature in action
+
+ * link:https://github.com/griffon/griffon/tree/master/samples/editor-swing-groovy[editor-swing-groovy, window="_blank"]
+ * link:https://github.com/griffon/griffon/tree/master/samples/editor-swing-java[editor-swing-java, window="_blank"]
+
+`link:{path-griffon-core}/mvc/MVCGroupManager.html[MVCGroupManager, window="_blank"]` added getter/finder methods for
+Controllers, Models and Views. Finder methods may return a null value if the matching artifact was not found. Getter
+methods on the other hand will throw a `link:/guide/2.1.0/api/griffon/exceptions/ArtifactNotFoundException.html[ArtifactNotFoundException, window="_blank"]`
+if the artifact could not be found.
+
+The `link:{path-griffon-core}/mvc/MVCHandler.html[MVCHandler, window="_blank"]` interface has been altered to better handle MVCGroups.
+Methods that sport `MVCGroup` in their name work with instances (`createMVCGroup` and `withMCGroup`) of
+`link:{path-griffon-core}/mvc/MVCGroup.html[MVCGroup, window="_blank"]`, either they take such type as argument or return
+instances of it. In contrast, methods that only have `MVC` on their names (`createMVC` and `withMC`) work with individual
+MVC members, such as Controller, Model and View. The following table summarizes the changes
+
+[cols="4*",options="header"]
+|===
+
+| Old Name       | New Name       | Return Type | Args
+
+| buildMVCGroup  | createMVCGroup | MVCGroup    |
+| createMVCGroup | createMVC      | List        |
+| withMVCGroup   | withMVCGroup   | void        | MVCGroupCallable
+| withMVCGroup   | withMVC        | void        | MVCCallable
+
+|===
+
+Finally, base artifacts such as Services can no longer create new MVCGroups by themselves, as this capability has been removed
+from the base `link:{path-griffon-core}/artifact/GriffonArtifact.html[GriffonArtifact, window="_blank"]` interface.
+
+==== Actions
+
+The `link:{path-griffon-core}/controller/ActionHandler.html[ActionHandler, window="_blank"]` interface supersedes
+`link:{path-griffon-core}/controller/ActionInterceptor.html[ActionInterceptor, window="_blank"]` interface, as it delivers
+a much better abstraction for configuring, handling and updating actions an their properties.
+`link:{path-griffon-core}/controller/ActionManager.html[ActionManager, window="_blank"]` also gained the capability to
+update an action or a set of actions.
+
+==== Addons
+
+``link:{path-griffon-core}/addon/GriffonAddon.html[GriffonAddon, window="_blank"]``s now have the capability of supplying
+startup groups. These groups are initialized during the `STARTUP` phase, right after the startup groups defined by the application.
+
+=== Compiletime
+
+==== Types Metadata
+
+The `link:http://docs.oracle.com/javase/7/docs/api/java/util/ServiceLoader.html[java.util.ServiceLoader, window="_blank"]` class
+allows you to load instances of a particular type as long as it conforms to the following rules
+
+ . the type implements a well known interface.
+ . the type is a concrete class.
+ . the type is a public, non-static class.
+ . the type provides a no-args constructor.
+
+However sometimes you'd need to load types in a similar fashion without being forced by the last 3 rules, that is, you may
+want to load a type that is an interface or that provides a constructor with one or more arguments. If you ever encounter
+this scenario then annotate the classes/interfaces with `link:/guide/2.1.0/api/griffon/metadata/TypeProviderFor.html[@TypeProviderFor, window="_blank"]`
+and load them using `link:/guide/2.1.0/api/griffon/util/ServiceLoaderUtils.html[ServiceLoaderUtils, window="_blank"]`.
+For example the `griffon-mybatis-plugin` loads instances of
+`link:http://griffon-plugins.github.io/griffon-mybatis-plugin/api/griffon/plugins/mybatis/MybatisMapper.html[MybatisMapper, window="_blank"]`
+using this mechanism.
+
+=== Compatibility
+
+Full binary compatibility report between Griffon 2.0.0 and 2.1.0 can be found
+link:../reports/2.1.0/compatibility-report.html[here].
