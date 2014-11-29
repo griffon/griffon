@@ -37,7 +37,7 @@ class MetaComponentFactory extends AbstractFactory {
         String mvcId = attributes.remove('mvcId')
         mvcId = attributes.containsKey('mvcId') ? attributes.remove('mvcId') : mvcId
 
-        MVCGroup mvcGroup = builder.application.buildMVCGroup(mvcType, mvcId, attributes)
+        MVCGroup mvcGroup = builder.application.createMVCGroup(mvcType, mvcId, attributes)
         def root = mvcGroup.getScriptResult('view')
 
         Closure destroyEventHandler

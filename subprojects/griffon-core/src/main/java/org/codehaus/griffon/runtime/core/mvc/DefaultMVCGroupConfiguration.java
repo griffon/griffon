@@ -47,6 +47,6 @@ public class DefaultMVCGroupConfiguration extends AbstractMVCGroupConfiguration 
     @Nonnull
     @Override
     protected MVCGroup instantiateMVCGroup(@Nullable String mvcId, @Nonnull Map<String, Object> args) {
-        return getMvcGroupManager().buildMVCGroup(getMvcType(), mvcId, args);
+        return getMvcGroupManager().createMVCGroup(getMvcType(), mvcId, args);
     }
 }

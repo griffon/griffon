@@ -137,26 +137,26 @@ public abstract class AbstractMVCGroup extends AbstractMVCHandler implements MVC
 
     @Nonnull
     @Override
-    public MVCGroup buildMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType) {
-        return super.buildMVCGroup(injectParentGroup(args), mvcType);
+    public MVCGroup createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType) {
+        return super.createMVCGroup(injectParentGroup(args), mvcType);
     }
 
     @Nonnull
     @Override
-    public MVCGroup buildMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
-        return super.buildMVCGroup(injectParentGroup(args), mvcType, mvcId);
+    public MVCGroup createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
+        return super.createMVCGroup(injectParentGroup(args), mvcType, mvcId);
     }
 
     @Nonnull
     @Override
-    public MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args) {
-        return super.buildMVCGroup(mvcType, injectParentGroup(args));
+    public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args) {
+        return super.createMVCGroup(mvcType, injectParentGroup(args));
     }
 
     @Nonnull
     @Override
-    public MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
-        return super.buildMVCGroup(mvcType, mvcId, injectParentGroup(args));
+    public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
+        return super.createMVCGroup(mvcType, mvcId, injectParentGroup(args));
     }
 
     @Nonnull
@@ -257,14 +257,14 @@ public abstract class AbstractMVCGroup extends AbstractMVCHandler implements MVC
 
     @Nonnull
     @Override
-    public MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId) {
-        return super.buildMVCGroup(mvcType, mvcId, injectParentGroup());
+    public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId) {
+        return super.createMVCGroup(mvcType, mvcId, injectParentGroup());
     }
 
     @Nonnull
     @Override
-    public MVCGroup buildMVCGroup(@Nonnull String mvcType) {
-        return super.buildMVCGroup(mvcType, injectParentGroup());
+    public MVCGroup createMVCGroup(@Nonnull String mvcType) {
+        return super.createMVCGroup(mvcType, injectParentGroup());
     }
 
     @Nonnull

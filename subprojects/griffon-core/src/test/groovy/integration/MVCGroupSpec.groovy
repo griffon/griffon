@@ -81,7 +81,7 @@ class MVCGroupSpec extends Specification {
     def 'Creating an MVCGroup through a group does set implicit parent group'() {
         given:
         List checks = []
-        MVCGroup parentGroup = application.mvcGroupManager.buildMVCGroup('simple', 'parent1')
+        MVCGroup parentGroup = application.mvcGroupManager.createMVCGroup('simple', 'parent1')
 
         when:
         parentGroup.withMVCGroup('simple') { MVCGroup group ->
@@ -101,7 +101,7 @@ class MVCGroupSpec extends Specification {
     def 'Creating an MVCGroup through an artifact does set implicit parent group'() {
         given:
         List checks = []
-        MVCGroup parentGroup = application.mvcGroupManager.buildMVCGroup('simple', 'parent2')
+        MVCGroup parentGroup = application.mvcGroupManager.createMVCGroup('simple', 'parent2')
 
         when:
         parentGroup.controller.withMVCGroup('simple') { MVCGroup group ->

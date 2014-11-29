@@ -179,11 +179,6 @@ public class GriffonClassUtils {
             }
         }
 
-        // Special cases due to the usage of varargs
-        // MVC_METHODS.add(new MethodDescriptor("buildMVCGroup", new Class<?>[]{Object[].class}));
-        // MVC_METHODS.add(new MethodDescriptor("createMVC", new Class<?>[]{Object[].class}));
-        // MVC_METHODS.add(new MethodDescriptor("withMVCGroup", new Class<?>[]{Object[].class}));
-
         // GriffonView
         MVC_METHODS.add(new MethodDescriptor("initUI"));
         // GriffonController
