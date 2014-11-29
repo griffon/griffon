@@ -1,0 +1,38 @@
+= Griffon 2.1.0 Released
+Andres Almiray
+2014-11-24
+:jbake-type: post
+:jbake-status: published
+:category: news
+:linkattrs:
+:idprefix:
+:path-griffon-core: /guide/2.1.0/api/griffon/core
+
+== Griffon 2.1.0 Released
+
+The Griffon team is happy to announce the release of Griffon 2.1.0!
+
+The following list summarizes the changes brought by this release:
+
+ * MVC group management has been overhauled. It should be much easier and intuitive to work with MVC groups now.
+ * Actions can have their properties updated at any time using `ActionHandlers`. Think for example updating an action's
+   enabled state if its security constraints are not met.
+ * Addons can supply startup groups.
+ * Lazybones project templates have been updated.
+ * Buildtime and runtime dependencies have been updated.
+
+Be warned that the changes made to `link:{path-griffon-core}/mvc/MVCGroup.html[MVCGroup, window="_blank"]` and
+`link:{path-griffon-core}/mvc/MVCGroupManager.html[MVCGroupManager, window="_blank"]` break binary compatibility. Migration
+should be straight forward and only concerns those developers that make explicit use of the `buildMVCGroup`, `createMVCGroup`
+and `withMVCGroup` methods.
+
+A more detailed description of the changes and compatibility issues can be found at the link:/releasenotes/griffon_2.1.0.html[release notes, window="_blank"].
+
+We look forward to your feedback. Please report any problems you find to the Griffon User list,
+or better yet, file a bug at http://github.com/griffon/griffon/issues
+
+Remember you can also contact the team on Twitter: http://twitter.com/theaviary[@theaviary].
+
+Many thanks to all who contributed to this release!
+
+The Griffon Team
