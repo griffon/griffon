@@ -76,38 +76,38 @@ public abstract class AbstractGriffonMvcArtifact extends AbstractGriffonArtifact
 
     @Nonnull
     @Override
-    public MVCGroup buildMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType) {
-        return group.buildMVCGroup(args, mvcType);
+    public MVCGroup createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType) {
+        return group.createMVCGroup(args, mvcType);
     }
 
     @Nonnull
     @Override
-    public MVCGroup buildMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
-        return group.buildMVCGroup(args, mvcType, mvcId);
+    public MVCGroup createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
+        return group.createMVCGroup(args, mvcType, mvcId);
     }
 
     @Nonnull
     @Override
-    public MVCGroup buildMVCGroup(@Nonnull String mvcType) {
-        return group.buildMVCGroup(mvcType);
+    public MVCGroup createMVCGroup(@Nonnull String mvcType) {
+        return group.createMVCGroup(mvcType);
     }
 
     @Nonnull
     @Override
-    public MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args) {
-        return group.buildMVCGroup(mvcType, args);
+    public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args) {
+        return group.createMVCGroup(mvcType, args);
     }
 
     @Nonnull
     @Override
-    public MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId) {
-        return group.buildMVCGroup(mvcType, mvcId);
+    public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId) {
+        return group.createMVCGroup(mvcType, mvcId);
     }
 
     @Nonnull
     @Override
-    public MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
-        return group.buildMVCGroup(mvcType, mvcId, args);
+    public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
+        return group.createMVCGroup(mvcType, mvcId, args);
     }
 
     @Nonnull

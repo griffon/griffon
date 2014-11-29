@@ -32,12 +32,12 @@ import java.lang.annotation.Target;
  * The following methods will be added to classes annotated with &#064;MVCAware
  * <ul>
  * <p/>
- * <li><code>public MVCGroup buildMVCGroup(String mvcType)</code></li>
- * <li><code>public MVCGroup buildMVCGroup(String mvcType, String mvcId)</code></li>
- * <li><code>public MVCGroup buildMVCGroup(Map&lt;String, Object&gt; args, String mvcType)</code></li>
- * <li><code>public MVCGroup buildMVCGroup(String mvcType, Map&lt;String, Object&gt; args)</code></li>
- * <li><code>public MVCGroup buildMVCGroup(Map&lt;String, Object&gt; args, String mvcType, String mvcId)</code></li>
- * <li><code>public MVCGroup buildMVCGroup(String mvcType, String mvcId, Map&lt;String, Object&gt; args)</code></li>
+ * <li><code>public MVCGroup createMVCGroup(String mvcType)</code></li>
+ * <li><code>public MVCGroup createMVCGroup(String mvcType, String mvcId)</code></li>
+ * <li><code>public MVCGroup createMVCGroup(Map&lt;String, Object&gt; args, String mvcType)</code></li>
+ * <li><code>public MVCGroup createMVCGroup(String mvcType, Map&lt;String, Object&gt; args)</code></li>
+ * <li><code>public MVCGroup createMVCGroup(Map&lt;String, Object&gt; args, String mvcType, String mvcId)</code></li>
+ * <li><code>public MVCGroup createMVCGroup(String mvcType, String mvcId, Map&lt;String, Object&gt; args)</code></li>
  * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVC(String mvcType)</code></li>
  * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVC(Map&lt;String, Object&gt; args, String mvcType)</code></li>
  * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVC(String mvcType, Map&lt;String, Object&gt; args)</code></li>

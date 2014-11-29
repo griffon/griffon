@@ -28,7 +28,7 @@ import java.util.Map;
  * Base contract for classes that can manipulate MVC groups.
  * There are 3 types of methods used for instantiating a group:
  * <ul>
- * <ol>{@code buildMVCGroup()} - creates a new group instance returning all members.</ol>
+ * <ol>{@code createMVCGroup()} - creates a new group instance returning all members.</ol>
  * <ol>{@code createMVC()} - creates a new group instance returning only Model, View and Controller members.</ol>
  * <ol>{@code withMVCGroup()} - creates a new group instance and destroys it immediately after it has been processed by the callback.</ol>
  * <ol>{@code withMVC()} - creates a new group instance and destroys it immediately after it has been processed by the callback.</ol>
@@ -68,7 +68,7 @@ public interface MVCHandler {
      * An instance of the "foo" group can be created as follows
      * <p/>
      * <pre>
-     * Map<String, Object> fooGroup = buildMVCGroup('foo')
+     * Map<String, Object> fooGroup = createMVCGroup('foo')
      * assert (fooGroup.controller instanceof FooController)
      * </pre>
      *
@@ -79,7 +79,7 @@ public interface MVCHandler {
      *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
-    MVCGroup buildMVCGroup(@Nonnull String mvcType);
+    MVCGroup createMVCGroup(@Nonnull String mvcType);
 
     /**
      * Instantiates an MVC group of the specified type with a particular name.<p>
@@ -102,7 +102,7 @@ public interface MVCHandler {
      * An instance of the "foo" group can be created as follows
      * <p/>
      * <pre>
-     * Map<String, Object> fooGroup = buildMVCGroup('foo', 'foo' + System.currentTimeMillis())
+     * MVCGroup fooGroup = createMVCGroup('foo', 'foo' + System.currentTimeMillis())
      * assert (fooGroup.controller instanceof FooController)
      * </pre>
      * <p/>
@@ -116,7 +116,7 @@ public interface MVCHandler {
      *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
-    MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId);
+    MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId);
 
     /**
      * Instantiates an MVC group of the specified type with additional variables.<p>
@@ -152,8 +152,8 @@ public interface MVCHandler {
      * instance by creating the groups in the following way:
      * <p/>
      * <pre>
-     * Map<String, Object> fooGroup = buildMVCGroup('foo')
-     * Map<String, Object> barGroup = buildMVCGroup('bar', model: fooGroup.model)
+     * MVCGroup fooGroup = createMVCGroup('foo')
+     * MVCGroup barGroup = createMVCGroup('bar', model: fooGroup.model)
      * assert fooGroup.model == barGroup.model
      * </pre>
      *
@@ -166,7 +166,7 @@ public interface MVCHandler {
      *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
-    MVCGroup buildMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType);
+    MVCGroup createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType);
 
     /**
      * Instantiates an MVC group of the specified type with additional variables.<p>
@@ -202,8 +202,8 @@ public interface MVCHandler {
      * instance by creating the groups in the following way:
      * <p/>
      * <pre>
-     * Map<String, Object> fooGroup = buildMVCGroup('foo')
-     * Map<String, Object> barGroup = buildMVCGroup('bar', model: fooGroup.model)
+     * MVCGroup fooGroup = createMVCGroup('foo')
+     * MVCGroup barGroup = createMVCGroup('bar', model: fooGroup.model)
      * assert fooGroup.model == barGroup.model
      * </pre>
      *
@@ -216,7 +216,7 @@ public interface MVCHandler {
      *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
-    MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args);
+    MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args);
 
     /**
      * Instantiates an MVC group of the specified type with a particular name.<p>
@@ -246,8 +246,8 @@ public interface MVCHandler {
      * We can create two instances of the same group that share the same model instance in the following way:
      * <p/>
      * <pre>
-     * Map<String, Object> fooGroup1 = buildMVCGroup('foo', 'foo1')
-     * Map<String, Object> fooGroup2 = buildMVCGroup('bar', 'foo2', model: fooGroup1.model)
+     * MVCGroup fooGroup1 = createMVCGroup('foo', 'foo1')
+     * MVCGroup fooGroup2 = createMVCGroup('bar', 'foo2', model: fooGroup1.model)
      * assert fooGroup1.model == fooGroup2.model
      * </pre>
      * <p/>
@@ -263,7 +263,7 @@ public interface MVCHandler {
      *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
-    MVCGroup buildMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId);
+    MVCGroup createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId);
 
     /**
      * Instantiates an MVC group of the specified type with a particular name.<p>
@@ -293,8 +293,8 @@ public interface MVCHandler {
      * We can create two instances of the same group that share the same model instance in the following way:
      * <p/>
      * <pre>
-     * Map<String, Object> fooGroup1 = buildMVCGroup('foo', 'foo1')
-     * Map<String, Object> fooGroup2 = buildMVCGroup('bar', 'foo2', model: fooGroup1.model)
+     * MVCGroup fooGroup1 = createMVCGroup('foo', 'foo1')
+     * MVCGroup fooGroup2 = createMVCGroup('bar', 'foo2', model: fooGroup1.model)
      * assert fooGroup1.model == fooGroup2.model
      * </pre>
      * <p/>
@@ -310,7 +310,7 @@ public interface MVCHandler {
      *          configuration or if a group with the same mvcId exists already.
      */
     @Nonnull
-    MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args);
+    MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args);
 
     /**
      * Instantiates an MVC group of the specified type returning only the MVC parts.<p>

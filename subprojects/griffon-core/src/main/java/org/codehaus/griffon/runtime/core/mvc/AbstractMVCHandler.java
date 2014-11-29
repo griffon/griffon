@@ -51,33 +51,33 @@ public abstract class AbstractMVCHandler implements MVCHandler {
     }
 
     @Nonnull
-    public MVCGroup buildMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType) {
-        return mvcGroupManager.buildMVCGroup(args, mvcType);
+    public MVCGroup createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType) {
+        return mvcGroupManager.createMVCGroup(args, mvcType);
     }
 
     @Nonnull
-    public MVCGroup buildMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
-        return mvcGroupManager.buildMVCGroup(args, mvcType, mvcId);
+    public MVCGroup createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
+        return mvcGroupManager.createMVCGroup(args, mvcType, mvcId);
     }
 
     @Nonnull
-    public MVCGroup buildMVCGroup(@Nonnull String mvcType) {
-        return mvcGroupManager.buildMVCGroup(mvcType);
+    public MVCGroup createMVCGroup(@Nonnull String mvcType) {
+        return mvcGroupManager.createMVCGroup(mvcType);
     }
 
     @Nonnull
-    public MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args) {
-        return mvcGroupManager.buildMVCGroup(mvcType, args);
+    public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args) {
+        return mvcGroupManager.createMVCGroup(mvcType, args);
     }
 
     @Nonnull
-    public MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId) {
-        return mvcGroupManager.buildMVCGroup(mvcType, mvcId);
+    public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId) {
+        return mvcGroupManager.createMVCGroup(mvcType, mvcId);
     }
 
     @Nonnull
-    public MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
-        return mvcGroupManager.buildMVCGroup(mvcType, mvcId, args);
+    public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
+        return mvcGroupManager.createMVCGroup(mvcType, mvcId, args);
     }
 
     @Nonnull

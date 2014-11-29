@@ -42,7 +42,7 @@ public interface MVCAwareConstants extends BaseConstants {
     String GRIFFON_MVC_ARTIFACT_TYPE = "griffon.core.artifact.GriffonMvcArtifact";
 
     String METHOD_CREATE_MVC = "createMVC";
-    String METHOD_BUILD_MVC_GROUP = "buildMVCGroup";
+    String METHOD_CREATE_MVC_GROUP = "createMVCGroup";
     String METHOD_WITH_MVC_GROUP = "withMVCGroup";
     String METHOD_WITH_MVC = "withMVC";
     String METHOD_DESTROY_MVC_GROUP = "destroyMVCGroup";
@@ -60,19 +60,19 @@ public interface MVCAwareConstants extends BaseConstants {
         annotatedMethod(
             annotations(JAVAX_ANNOTATION_NONNULL),
             type(MVC_GROUP),
-            METHOD_BUILD_MVC_GROUP,
+            METHOD_CREATE_MVC_GROUP,
             args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
         ),
         annotatedMethod(
             annotations(JAVAX_ANNOTATION_NONNULL),
             type(MVC_GROUP),
-            METHOD_BUILD_MVC_GROUP,
+            METHOD_CREATE_MVC_GROUP,
             args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING), type(JAVA_LANG_STRING))
         ),
         annotatedMethod(
             annotations(JAVAX_ANNOTATION_NONNULL),
             type(MVC_GROUP),
-            METHOD_BUILD_MVC_GROUP,
+            METHOD_CREATE_MVC_GROUP,
             args(
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
@@ -80,7 +80,7 @@ public interface MVCAwareConstants extends BaseConstants {
         annotatedMethod(
             annotations(JAVAX_ANNOTATION_NONNULL),
             type(MVC_GROUP),
-            METHOD_BUILD_MVC_GROUP,
+            METHOD_CREATE_MVC_GROUP,
             args(
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
@@ -88,7 +88,7 @@ public interface MVCAwareConstants extends BaseConstants {
         annotatedMethod(
             annotations(JAVAX_ANNOTATION_NONNULL),
             type(MVC_GROUP),
-            METHOD_BUILD_MVC_GROUP,
+            METHOD_CREATE_MVC_GROUP,
             args(
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
@@ -97,7 +97,7 @@ public interface MVCAwareConstants extends BaseConstants {
         annotatedMethod(
             annotations(JAVAX_ANNOTATION_NONNULL),
             type(MVC_GROUP),
-            METHOD_BUILD_MVC_GROUP,
+            METHOD_CREATE_MVC_GROUP,
             args(
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),

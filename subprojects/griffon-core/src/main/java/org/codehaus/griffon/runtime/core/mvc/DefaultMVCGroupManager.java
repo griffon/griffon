@@ -87,7 +87,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     }
 
     @Nonnull
-    protected MVCGroup buildMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> args) {
+    protected MVCGroup createMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> args) {
         requireNonNull(configuration, ERROR_CONFIGURATION_NULL);
         requireNonNull(args, ERROR_ARGS_NULL);
 

@@ -228,7 +228,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
 
     @Nonnull
     protected List<? extends GriffonMvcArtifact> createMVC(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> args) {
-        MVCGroup group = buildMVCGroup(findConfiguration(configuration.getMvcType()), mvcId, args);
+        MVCGroup group = createMVCGroup(findConfiguration(configuration.getMvcType()), mvcId, args);
         return asList(group.getModel(), group.getView(), group.getController());
     }
 
@@ -236,7 +236,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     protected <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCCallable<M, V, C> handler) {
         MVCGroup group = null;
         try {
-            group = buildMVCGroup(configuration, mvcId, args);
+            group = createMVCGroup(configuration, mvcId, args);
             handler.call((M) group.getModel(), (V) group.getView(), (C) group.getController());
         } finally {
             try {
@@ -253,7 +253,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     protected void withMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCGroupCallable handler) {
         MVCGroup group = null;
         try {
-            group = buildMVCGroup(configuration, mvcId, args);
+            group = createMVCGroup(configuration, mvcId, args);
             handler.call(group);
         } finally {
             try {
@@ -267,44 +267,44 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     }
 
     @Nonnull
-    protected abstract MVCGroup buildMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> args);
+    protected abstract MVCGroup createMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> args);
 
     protected abstract void doInitialize(@Nonnull Map<String, MVCGroupConfiguration> configurations);
 
     @Nonnull
     @Override
-    public MVCGroup buildMVCGroup(@Nonnull String mvcType) {
-        return buildMVCGroup(findConfiguration(mvcType), null, Collections.<String, Object>emptyMap());
+    public MVCGroup createMVCGroup(@Nonnull String mvcType) {
+        return createMVCGroup(findConfiguration(mvcType), null, Collections.<String, Object>emptyMap());
     }
 
     @Nonnull
     @Override
-    public MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId) {
-        return buildMVCGroup(findConfiguration(mvcType), mvcId, Collections.<String, Object>emptyMap());
+    public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId) {
+        return createMVCGroup(findConfiguration(mvcType), mvcId, Collections.<String, Object>emptyMap());
     }
 
     @Nonnull
     @Override
-    public MVCGroup buildMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType) {
-        return buildMVCGroup(findConfiguration(mvcType), null, args);
+    public MVCGroup createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType) {
+        return createMVCGroup(findConfiguration(mvcType), null, args);
     }
 
     @Nonnull
     @Override
-    public MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args) {
-        return buildMVCGroup(findConfiguration(mvcType), null, args);
+    public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args) {
+        return createMVCGroup(findConfiguration(mvcType), null, args);
     }
 
     @Nonnull
     @Override
-    public MVCGroup buildMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
-        return buildMVCGroup(findConfiguration(mvcType), mvcId, args);
+    public MVCGroup createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
+        return createMVCGroup(findConfiguration(mvcType), mvcId, args);
     }
 
     @Nonnull
     @Override
-    public MVCGroup buildMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
-        return buildMVCGroup(findConfiguration(mvcType), mvcId, args);
+    public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
+        return createMVCGroup(findConfiguration(mvcType), mvcId, args);
     }
 
     @Nonnull

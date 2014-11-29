@@ -438,9 +438,9 @@ class GriffonApplicationSpec extends Specification {
         checks.every { it == true }
     }
 
-    def 'Verify buildMVCGroup(type)'() {
+    def 'Verify createMVCGroup(type)'() {
         given:
-        MVCGroup group = application.mvcGroupManager.buildMVCGroup('simple')
+        MVCGroup group = application.mvcGroupManager.createMVCGroup('simple')
 
         expect:
         group.model instanceof SimpleModel
@@ -453,9 +453,9 @@ class GriffonApplicationSpec extends Specification {
         group.destroy()
     }
 
-    def 'Verify buildMVCGroup(type, id)'() {
+    def 'Verify createMVCGroup(type, id)'() {
         given:
-        MVCGroup group = application.mvcGroupManager.buildMVCGroup('simple', 'simple-1')
+        MVCGroup group = application.mvcGroupManager.createMVCGroup('simple', 'simple-1')
 
         expect:
         group.model instanceof SimpleModel
@@ -468,9 +468,9 @@ class GriffonApplicationSpec extends Specification {
         group.destroy()
     }
 
-    def 'Verify buildMVCGroup(type, map)'() {
+    def 'Verify createMVCGroup(type, map)'() {
         given:
-        MVCGroup group = application.mvcGroupManager.buildMVCGroup('simple', [key: 'griffon'])
+        MVCGroup group = application.mvcGroupManager.createMVCGroup('simple', [key: 'griffon'])
 
         expect:
         group.model instanceof SimpleModel
@@ -483,9 +483,9 @@ class GriffonApplicationSpec extends Specification {
         group.destroy()
     }
 
-    def 'Verify buildMVCGroup(map, type)'() {
+    def 'Verify createMVCGroup(map, type)'() {
         given:
-        MVCGroup group = application.mvcGroupManager.buildMVCGroup('simple', key: 'griffon')
+        MVCGroup group = application.mvcGroupManager.createMVCGroup('simple', key: 'griffon')
 
         expect:
         group.model instanceof SimpleModel
@@ -498,9 +498,9 @@ class GriffonApplicationSpec extends Specification {
         group.destroy()
     }
 
-    def 'Verify buildMVCGroup(type, id, map)'() {
+    def 'Verify createMVCGroup(type, id, map)'() {
         given:
-        MVCGroup group = application.mvcGroupManager.buildMVCGroup('simple', 'simple-2', [key: 'griffon'])
+        MVCGroup group = application.mvcGroupManager.createMVCGroup('simple', 'simple-2', [key: 'griffon'])
 
         expect:
         group.model instanceof SimpleModel
@@ -513,9 +513,9 @@ class GriffonApplicationSpec extends Specification {
         group.destroy()
     }
 
-    def 'Verify buildMVCGroup(map, type, id)'() {
+    def 'Verify createMVCGroup(map, type, id)'() {
         given:
-        MVCGroup group = application.mvcGroupManager.buildMVCGroup('simple', 'simple-2', key: 'griffon')
+        MVCGroup group = application.mvcGroupManager.createMVCGroup('simple', 'simple-2', key: 'griffon')
 
         expect:
         group.model instanceof SimpleModel
