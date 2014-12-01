@@ -31,8 +31,8 @@ import static org.codehaus.griffon.compile.core.MethodDescriptor.wildcard;
  */
 public interface MVCAwareConstants extends BaseConstants {
     String MVC_GROUP_MANAGER_PROPERTY = "mvcGroupManager";
-    String MVC_CALLABLE_TYPE = "griffon.core.mvc.MVCCallable";
-    String MVC_GROUP_CALLABLE_TYPE = "griffon.core.mvc.MVCGroupCallable";
+    String MVC_FUNCTION_TYPE = "griffon.core.mvc.MVCFunction";
+    String MVC_GROUP_FUNCTION_TYPE = "griffon.core.mvc.MVCGroupFunction";
     String GRIFFON_MODEL_TYPE = "griffon.core.artifact.GriffonModel";
     String GRIFFON_VIEW_TYPE = "griffon.core.artifact.GriffonView";
     String GRIFFON_CONTROLLER_TYPE = "griffon.core.artifact.GriffonController";
@@ -163,7 +163,7 @@ public interface MVCAwareConstants extends BaseConstants {
             METHOD_WITH_MVC,
             args(
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_CALLABLE_TYPE, M, V, C))
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
         ),
         method(
             type(VOID),
@@ -176,7 +176,7 @@ public interface MVCAwareConstants extends BaseConstants {
             args(
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_CALLABLE_TYPE, M, V, C))
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
         ),
         method(
             type(VOID),
@@ -190,7 +190,7 @@ public interface MVCAwareConstants extends BaseConstants {
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_CALLABLE_TYPE, M, V, C))
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
         ),
         method(
             type(VOID),
@@ -204,7 +204,7 @@ public interface MVCAwareConstants extends BaseConstants {
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_CALLABLE_TYPE, M, V, C))
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
         ),
         method(
             type(VOID),
@@ -217,7 +217,7 @@ public interface MVCAwareConstants extends BaseConstants {
             args(
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_CALLABLE_TYPE, M, V, C))
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
         ),
         method(
             type(VOID),
@@ -230,7 +230,7 @@ public interface MVCAwareConstants extends BaseConstants {
             args(
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_CALLABLE_TYPE, M, V, C))
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
         ),
 
         method(
@@ -238,7 +238,7 @@ public interface MVCAwareConstants extends BaseConstants {
             METHOD_WITH_MVC_GROUP,
             args(
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_CALLABLE_TYPE))
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))
         ),
         method(
             type(VOID),
@@ -246,7 +246,7 @@ public interface MVCAwareConstants extends BaseConstants {
             args(
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_CALLABLE_TYPE))
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))
         ),
         method(
             type(VOID),
@@ -255,7 +255,7 @@ public interface MVCAwareConstants extends BaseConstants {
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_CALLABLE_TYPE))
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))
         ),
         method(
             type(VOID),
@@ -264,7 +264,7 @@ public interface MVCAwareConstants extends BaseConstants {
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_CALLABLE_TYPE))
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))
         ),
         method(
             type(VOID),
@@ -272,7 +272,7 @@ public interface MVCAwareConstants extends BaseConstants {
             args(
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_CALLABLE_TYPE))
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))
         ),
         method(
             type(VOID),
@@ -280,7 +280,7 @@ public interface MVCAwareConstants extends BaseConstants {
             args(
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_CALLABLE_TYPE))
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))
         )
     };
 }
