@@ -98,9 +98,9 @@ task(site, type: Copy, dependsOn: [jbake, copyGuide]) {
         into 'guide'
     }
 
-    doFirst {
+    doLast {
         copy {
-            into file("$buildDir/site/reports/${project.version}")
+            into file("${destinationDir}/reports/${project.version}")
             from(rootProject.tasks.clirrRootReport.reportsDir)
         }
     }
@@ -108,7 +108,7 @@ task(site, type: Copy, dependsOn: [jbake, copyGuide]) {
 
 jettyRun {
     contextPath = ''
-    webAppSourceDirectory = file("$buildDir/site")
+    webAppSourceDirectory = file(site.destinationDir)
 }
 
 task(siteRun, dependsOn: ['site', 'jettyRun']) { }

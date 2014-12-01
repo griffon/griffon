@@ -22,7 +22,7 @@ import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonModel;
 import griffon.core.artifact.GriffonMvcArtifact;
 import griffon.core.artifact.GriffonView;
-import griffon.core.mvc.MVCCallable;
+import griffon.core.mvc.MVCFunction;
 import griffon.core.mvc.MVCGroup;
 import groovy.lang.Script;
 import org.slf4j.Logger;
@@ -137,7 +137,7 @@ public abstract class AbstractGriffonArtifactScript extends Script implements Gr
         return application.getMvcGroupManager().createMVC(mvcType);
     }
 
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCCallable<M, V, C> handler) {
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCFunction<M, V, C> handler) {
         application.getMvcGroupManager().withMVC(mvcType, mvcId, handler);
     }
 
@@ -151,7 +151,7 @@ public abstract class AbstractGriffonArtifactScript extends Script implements Gr
         return application.getMvcGroupManager().createMVC(args, mvcType, mvcId);
     }
 
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCCallable<M, V, C> handler) {
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCFunction<M, V, C> handler) {
         application.getMvcGroupManager().withMVC(args, mvcType, mvcId, handler);
     }
 
@@ -170,7 +170,7 @@ public abstract class AbstractGriffonArtifactScript extends Script implements Gr
         return application.getMvcGroupManager().createMVC(args, mvcType);
     }
 
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull MVCCallable<M, V, C> handler) {
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull MVCFunction<M, V, C> handler) {
         application.getMvcGroupManager().withMVC(mvcType, handler);
     }
 
@@ -189,11 +189,11 @@ public abstract class AbstractGriffonArtifactScript extends Script implements Gr
         return application.getMvcGroupManager().createMVC(mvcType, args);
     }
 
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCCallable<M, V, C> handler) {
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCFunction<M, V, C> handler) {
         application.getMvcGroupManager().withMVC(args, mvcType, handler);
     }
 
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCCallable<M, V, C> handler) {
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCFunction<M, V, C> handler) {
         application.getMvcGroupManager().withMVC(mvcType, args, handler);
     }
 
@@ -207,7 +207,7 @@ public abstract class AbstractGriffonArtifactScript extends Script implements Gr
         return application.getMvcGroupManager().createMVC(mvcType, mvcId, args);
     }
 
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCCallable<M, V, C> handler) {
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCFunction<M, V, C> handler) {
         application.getMvcGroupManager().withMVC(mvcType, mvcId, args, handler);
     }
 

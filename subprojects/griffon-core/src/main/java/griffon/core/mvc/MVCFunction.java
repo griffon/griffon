@@ -27,13 +27,12 @@ import javax.annotation.Nullable;
  * @author Andres Almiray
  * @since 2.0.0
  */
-public interface MVCCallable<M extends GriffonModel, V extends GriffonView, C extends GriffonController> {
+public interface MVCFunction<M extends GriffonModel, V extends GriffonView, C extends GriffonController> {
     /**
-     * Executes this function<p>
-     *
-     * @param model      the Model member of the group
+     * Applies this function<p>
+     *  @param model      the Model member of the group
      * @param view       the View member of the group
      * @param controller the Controller member of the group
      */
-    void call(@Nullable M model, @Nullable V view, @Nullable C controller);
+    void apply(@Nullable M model, @Nullable V view, @Nullable C controller);
 }

@@ -25,7 +25,7 @@ import griffon.core.controller.ActionHandler
 import griffon.core.controller.ActionManager
 import griffon.core.env.ApplicationPhase
 import griffon.core.env.Lifecycle
-import griffon.core.mvc.MVCCallable
+import griffon.core.mvc.MVCFunction
 import griffon.core.mvc.MVCGroup
 import org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper
 import spock.lang.Shared
@@ -311,11 +311,9 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVC('simple', new MVCCallable() {
-            void call(
-                @Nullable GriffonModel model,
-                @Nullable GriffonView view,
-                @Nullable GriffonController controller) {
+        application.mvcGroupManager.withMVC('simple', new MVCFunction() {
+            void apply(
+                @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
                 checks << (controller instanceof SimpleController)
@@ -333,11 +331,9 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVC('simple', 'simple-1', new MVCCallable() {
-            void call(
-                @Nullable GriffonModel model,
-                @Nullable GriffonView view,
-                @Nullable GriffonController controller) {
+        application.mvcGroupManager.withMVC('simple', 'simple-1', new MVCFunction() {
+            void apply(
+                @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
                 checks << (controller instanceof SimpleController)
@@ -355,11 +351,9 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVC('simple', 'simple-2', [key: 'griffon'], new MVCCallable() {
-            void call(
-                @Nullable GriffonModel model,
-                @Nullable GriffonView view,
-                @Nullable GriffonController controller) {
+        application.mvcGroupManager.withMVC('simple', 'simple-2', [key: 'griffon'], new MVCFunction() {
+            void apply(
+                @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
                 checks << (controller instanceof SimpleController)
@@ -377,11 +371,9 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVC('simple', [key: 'griffon'], new MVCCallable() {
-            void call(
-                @Nullable GriffonModel model,
-                @Nullable GriffonView view,
-                @Nullable GriffonController controller) {
+        application.mvcGroupManager.withMVC('simple', [key: 'griffon'], new MVCFunction() {
+            void apply(
+                @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
                 checks << (controller instanceof SimpleController)
@@ -399,11 +391,9 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVC('simple', 'simple-2', key: 'griffon', new MVCCallable() {
-            void call(
-                @Nullable GriffonModel model,
-                @Nullable GriffonView view,
-                @Nullable GriffonController controller) {
+        application.mvcGroupManager.withMVC('simple', 'simple-2', key: 'griffon', new MVCFunction() {
+            void apply(
+                @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
                 checks << (controller instanceof SimpleController)
@@ -421,11 +411,9 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVC('simple', key: 'griffon', new MVCCallable() {
-            void call(
-                @Nullable GriffonModel model,
-                @Nullable GriffonView view,
-                @Nullable GriffonController controller) {
+        application.mvcGroupManager.withMVC('simple', key: 'griffon', new MVCFunction() {
+            void apply(
+                @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
                 checks << (controller instanceof SimpleController)

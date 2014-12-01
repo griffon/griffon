@@ -23,11 +23,11 @@ import javax.annotation.Nullable;
  * @author Andres Almiray
  * @since 2.1.0
  */
-public interface MVCGroupCallable {
+public interface MVCGroupFunction {
     /**
-     * Executes this function<p>
+     * Applies this function<p>
      *
      * @param group the MVC group
      */
-    void call(@Nullable MVCGroup group);
+    void apply(@Nullable MVCGroup group);
 }

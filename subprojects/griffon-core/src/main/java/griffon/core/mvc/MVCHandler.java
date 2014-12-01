@@ -623,7 +623,7 @@ public interface MVCHandler {
      *          - if the type specified is not found in the application's
      *          configuration
      */
-    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull MVCCallable<M, V, C> handler);
+    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull MVCFunction<M, V, C> handler);
 
     /**
      * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>
@@ -665,7 +665,7 @@ public interface MVCHandler {
      *          - if the type specified is not found in the application's
      *          configuration
      */
-    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCCallable<M, V, C> handler);
+    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCFunction<M, V, C> handler);
 
     /**
      * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>
@@ -715,7 +715,7 @@ public interface MVCHandler {
      *          - if the type specified is not found in the application's
      *          configuration
      */
-    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCCallable<M, V, C> handler);
+    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCFunction<M, V, C> handler);
 
     /**
      * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>
@@ -765,7 +765,7 @@ public interface MVCHandler {
      *          - if the type specified is not found in the application's
      *          configuration
      */
-    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCCallable<M, V, C> handler);
+    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCFunction<M, V, C> handler);
 
     /**
      * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>
@@ -812,7 +812,7 @@ public interface MVCHandler {
      *          - if the type specified is not found in the application's
      *          configuration
      */
-    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCCallable<M, V, C> handler);
+    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCFunction<M, V, C> handler);
 
     /**
      * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>
@@ -859,7 +859,7 @@ public interface MVCHandler {
      *          - if the type specified is not found in the application's
      *          configuration
      */
-    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCCallable<M, V, C> handler);
+    <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCFunction<M, V, C> handler);
 
     /**
      * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>
@@ -899,7 +899,7 @@ public interface MVCHandler {
      *          configuration
      * @since 2.1.0
      */
-    void withMVCGroup(@Nonnull String mvcType, @Nonnull MVCGroupCallable handler);
+    void withMVCGroup(@Nonnull String mvcType, @Nonnull MVCGroupFunction handler);
 
     /**
      * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>
@@ -942,7 +942,7 @@ public interface MVCHandler {
      *          configuration
      * @since 2.1.0
      */
-    void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupCallable handler);
+    void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupFunction handler);
 
     /**
      * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>
@@ -993,7 +993,7 @@ public interface MVCHandler {
      *          configuration
      * @since 2.1.0
      */
-    void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCGroupCallable handler);
+    void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCGroupFunction handler);
 
     /**
      * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>
@@ -1044,7 +1044,7 @@ public interface MVCHandler {
      *          configuration
      * @since 2.1.0
      */
-    void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupCallable handler);
+    void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupFunction handler);
 
     /**
      * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>
@@ -1092,7 +1092,7 @@ public interface MVCHandler {
      *          configuration
      * @since 2.1.0
      */
-    void withMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCGroupCallable handler);
+    void withMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCGroupFunction handler);
 
     /**
      * Instantiates an MVC group of the specified type then destroys it after it has been handled.<p>
@@ -1140,5 +1140,5 @@ public interface MVCHandler {
      *          configuration
      * @since 2.1.0
      */
-    void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCGroupCallable handler);
+    void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCGroupFunction handler);
 }
