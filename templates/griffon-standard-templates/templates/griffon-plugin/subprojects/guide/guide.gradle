@@ -6,12 +6,12 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.1'
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.2'
         classpath 'com.bmuschko:gradle-java2html-plugin:2.0'
     }
 }
 
-apply plugin: 'org.asciidoctor.gradle.asciidoctor'
+apply plugin: 'org.asciidoctor.convert'
 apply plugin: 'com.bmuschko.java2html'
 
 ext.childProjects = [

@@ -6,7 +6,7 @@ Now that we know which are the different ways to instantiate MVC groups we can g
 back to customizing them.
 
 The simplest way is to pass in new values as part of the arguments map that
-+{link_mvc_group_init}+ receives, for example
+`{link_mvc_group_init}` receives, for example
 
 [source,groovy,options="nowrap"]
 ----
@@ -57,9 +57,9 @@ mvcGroups {
 
 The following events will be disabled with this setting:
 
- - +<<_events_application_events,InitializeMVCGroup>>+
- - +<<_events_application_events,CreateMVCGroup>>+
- - +<<_events_application_events,DestroyMVCGroup>>+
+ - `<<_events_application_events,InitializeMVCGroup>>`
+ - `<<_events_application_events,CreateMVCGroup>>`
+ - `<<_events_application_events,DestroyMVCGroup>>`
 
 === Disabling Instantiation Events
 
@@ -87,7 +87,7 @@ mvcGroups {
 
 The following events will be disabled with this setting:
 
- - +<<_events_application_events,NewInstance>>+
+ - `<<_events_application_events,NewInstance>>`
 
 === Disabling Destruction Events
 
@@ -114,7 +114,7 @@ mvcGroups {
 
 The following events will be disabled with this setting:
 
- - +<<_events_application_events,DestroyInstance>>+
+ - `<<_events_application_events,DestroyInstance>>`
 
 === Disabling Controllers as Application Event Listeners
 
@@ -143,5 +143,5 @@ mvcGroups {
 
 You can still manually register a controller as an application event handler at any time,
 with the caveat that it's now your responsibility to unregister it when the time is
-appropriate, most typically during the group's destroy sequence when +{link_mvc_group_destroy}+
+appropriate, most typically during the group's destroy sequence when `{link_mvc_group_destroy}`
 is invoked.

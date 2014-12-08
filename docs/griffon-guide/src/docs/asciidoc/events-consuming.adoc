@@ -5,7 +5,7 @@
 Any artifact or class that abides to the following conventions can be registered as
 an application listener, those conventions are:
 
- - it is a Map, a +{link_callable_with_args}+ or an Object.
+ - it is a Map, a `{link_callable_with_args}` or an Object.
  - in the case of a Map, each key maps to `<EventName>`, the value must be a CallableWithArgs.
  - in the case of object, public methods whose name matches `on<EventName>` will be used
    as event handlers.
@@ -17,7 +17,7 @@ an application listener, those conventions are:
 
 There is a global, per-application event handler that can be registered. If you want
 to take advantage of this feature you must define a class that implements the
-+{link_event_handler}+ interface. This class must be registered with a +{link_module}+.
+`{link_event_handler}` interface. This class must be registered with a `{link_module}`.
 Lastly both Controller and Service instances are automatically registered as application
 event listeners.
 

@@ -2,9 +2,9 @@
 [[_events_eventpublisher_transformation]]
 = The @EventPublisher AST Transformation
 
-Any component may gain the ability to publish events through an +{link_event_router}+
-instance. You only need annotate the class with +{link_event_publisher_ast}+
-and it will automatically gain all methods exposed by +{link_event_publisher}+.
+Any component may gain the ability to publish events through an `{link_event_router}`
+instance. You only need annotate the class with `{link_event_publisher_ast}`
+and it will automatically gain all methods exposed by `{link_event_publisher}`.
 
 The following example shows a trivial usage of this feature
 
@@ -23,7 +23,7 @@ class Publisher {
 ----
 
 The application's event router will be used by default. If you'd like your custom
-event publisher to use a private +{link_event_router}+ then you must define a binding
+event publisher to use a private `{link_event_router}` then you must define a binding
 for it using a specific name, like this
 
 [source,groovy,linenums,options="nowrap"]
@@ -50,7 +50,7 @@ class ApplicationModule extends AbstractModule {
 }
 ----
 
-Next specify the named +{link_event_router}+ as a parameter on the +{link_event_publisher_ast}+
+Next specify the named `{link_event_router}` as a parameter on the `{link_event_publisher_ast}`
 transformation
 
 [source,groovy,linenums,options="nowrap"]

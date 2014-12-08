@@ -45,7 +45,7 @@ the database query will be executed on the UI thread too. The model is also upda
 once could assume the model is bound to an UI component. This update should happen inside
 the UI thread, but clearly that's not what's happening here.
 
-In order to simplify things the Griffon runtime (via the +{link_action_manager}+) assumes
+In order to simplify things the Griffon runtime (via the `{link_action_manager}`) assumes
 by default that all actions will be invoked *outside* of the UI thread. This solves the
 first problem, that of realizing a database operation on the wrong thread. The second
 problem, updating the model, can be solved in the following manner

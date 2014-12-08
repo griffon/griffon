@@ -2,8 +2,8 @@
 [[_events_publishing]]
 = Publishing Events
 
-Any instance that obtains a reference to an +{link_event_router}+ can publish events.
-+{link_griffon_application}+ exposes the application wide `EventRouter` via a read-only
+Any instance that obtains a reference to an `{link_event_router}` can publish events.
+`{link_griffon_application}` exposes the application wide `EventRouter` via a read-only
 property. You may use Dependency Injection to inject an `EventRouter` to any class too.
 
 Publishing an event can be done synchronously on the current thread, asynchronously to
@@ -32,7 +32,7 @@ one (regardless if the current one is the UI thread or not) then use the followi
 application.eventRouter.publishAsync('MyEventName', ['arg0', 'arg1'])
 ----
 
-Alternatively, you may specify an instance of a subclass of +{link_event}+ as the sole
+Alternatively, you may specify an instance of a subclass of `{link_event}` as the sole
 argument to any of these methods. The event instance will be the single argument sent
 to the event handlers when the `event` methods are invoked in this way.
 

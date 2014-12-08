@@ -9,8 +9,8 @@ tightly coupled with the chosen UI toolkit.
 
 == Extending the UI DSL
 
-The UI DSL can be extended by registering new ++{link_builder_customizer}++s with the application
-using a +{link_module}+. The +{link_builder_customizer}+ instance defines methods
+The UI DSL can be extended by registering new ``{link_builder_customizer}``s with the application
+using a `{link_module}`. The `{link_builder_customizer}` instance defines methods
 that can be used to configure every aspect of `groovy.factory.FactoryBuilderSupport`.
 Here's an example of the `miglayout-swing` extension
 
@@ -41,7 +41,7 @@ public class MiglayoutSwingBuilderCustomizer extends AbstractBuilderCustomizer {
 ----
 
 This customizer registers a single factory, `miglayout`. It also defines a dependency
-on the `swing` customizer in order for its customizations to be applied after ++swing++'s.
+on the `swing` customizer in order for its customizations to be applied after ``swing``'s.
 The customizer is registered using the following {link_module}.
 
 .src/main/java/org/codehaus/griffon/runtime/miglayout/MiglayoutSwingGroovyModule.java
@@ -71,7 +71,7 @@ public class MiglayoutSwingGroovyModule extends AbstractModule {
 }
 ----
 
-This module is loaded before `swing-groovy`, as per the +{link_depends_on}+ definition;
+This module is loaded before `swing-groovy`, as per the `{link_depends_on}` definition;
 thus ensuring that the customizations from this customizer are applied after.
 
 == Default DSL Nodes

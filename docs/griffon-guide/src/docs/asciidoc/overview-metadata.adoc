@@ -9,7 +9,7 @@ The following sections describe them with more detail.
 == Application Metadata
 
 Access to the application's metadata file (`application.properties`) is available by
-querying the +{link_metadata}+ singleton. Here's a snippet of code that shows how to
+querying the `{link_metadata}` singleton. Here's a snippet of code that shows how to
 setup a welcome message that displays the application's name and version
 
 .griffon-app/views/sample/SampleView.groovy
@@ -37,7 +37,7 @@ class SampleView {
 }
 ----
 
-There are also a few helpful methods found in +{link_metadata}+
+There are also a few helpful methods found in `{link_metadata}`
 
 * `getApplicationName()` - same result as `meta['application.name']`
 * `getApplicationVersion()` - same result as `meta['application.version']`
@@ -45,10 +45,10 @@ There are also a few helpful methods found in +{link_metadata}+
 [[_overview_metadata_feature]]
 == Feature
 
-A +{link_feature}+ is a boolean flag that determines if a capability is available to
-the application at runtime. ++{link_feature}++s are nothing more than a `System`
-property. They can be written as properties on +{link_metadata}+ too. If a feature
-key is found in both `System` properties and +{link_metadata}+ then the former
+A `{link_feature}` is a boolean flag that determines if a capability is available to
+the application at runtime. ``{link_feature}``s are nothing more than a `System`
+property. They can be written as properties on `{link_metadata}` too. If a feature
+key is found in both `System` properties and `{link_metadata}` then the former
 takes precedence. Here's an example of a module that decides if a specific binding
 should be applied over another
 
@@ -96,7 +96,7 @@ dolphin.remote=true
 
 A Griffon application can run in several environments, default ones being
 `DEVELOPMENT`, `TEST` and `PRODUCTION`. Applications can inspect its current running
-environment by means of the +{link_environment}+ enum.
+environment by means of the `{link_environment}` enum.
 
 The following example enhances the previous one by displaying the current running
 environment
@@ -130,7 +130,7 @@ class SampleView {
 ----
 
 The default environment is DEVELOPMENT. A different value can be specified by setting
-a proper value for the `griffon.env` System property. The +{link_environment}+ class
+a proper value for the `griffon.env` System property. The `{link_environment}` class
 recognizes the following aliases
 
  * `dev` - short for `development`.
@@ -139,7 +139,7 @@ recognizes the following aliases
 [[_overview_metadata_griffon_environment]]
 == Griffon Environment
 
-The +{link_griffon_environment}+ gives you access to the following values
+The `{link_griffon_environment}` gives you access to the following values
 
  * Griffon version
  * Griffon build date & time

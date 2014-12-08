@@ -38,8 +38,8 @@ a suitable Slf4j binding of your choice.
 === Builder Script
 
 The `Builder.groovy` is no longer required. Its functions are now handled by
-+{link_builder_customizer}+ classes bound in a +{link_module}+. You must add
-+griffon-groovy-{griffon-version}.jar+ as a compile dependency in order to use
+`{link_builder_customizer}` classes bound in a `{link_module}`. You must add
+`griffon-groovy-{griffon-version}.jar` as a compile dependency in order to use
 `BuilderCustomizers`. Here's an example for adding a http://miglayout.com[Miglayout]
 customization
 
@@ -144,7 +144,7 @@ class ApplicationModule extends AbstractModule {
 
 == Artifacts
 
-All artifacts must be annotated with +{link_artifact_provider_for}+ without exception.
+All artifacts must be annotated with `{link_artifact_provider_for}` without exception.
 Failure to follow this rule will make Griffon miss the artifact during bootstrap.
 The value for this annotation must be the basic interface that defines the artifact's
 type, for example

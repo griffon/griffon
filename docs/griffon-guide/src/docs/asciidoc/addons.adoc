@@ -5,14 +5,14 @@
 Addons allow plugin authors to perform the following tasks
 
  * Perform initialization code during the <<_overview_lifecycle_initialize, Initialize>> phase.
- * Supply additional configuration that can be used to define new ++{link_mvc_group_configuration}++s.
+ * Supply additional configuration that can be used to define new ``{link_mvc_group_configuration}``s.
 
-Addons are automatically registered as ++{link_shutdown_handler}++s with the application
+Addons are automatically registered as ``{link_shutdown_handler}``s with the application
 instance. They are also registered as <<_events_consuming, event handlers>> with the application's
-+{link_event_router}+.
+`{link_event_router}`.
 
-Addons must be registered with a +{link_module}+ in order to be discovered by the runtime.
-Here's a simple example of a custom Addon that prints out the name of an +{link_mvc_group}+
+Addons must be registered with a `{link_module}` in order to be discovered by the runtime.
+Here's a simple example of a custom Addon that prints out the name of an `{link_mvc_group}`
 when said group is initialized
 
 [source,java,linenums,options="nowrap"]
@@ -34,7 +34,7 @@ public class InspectorAddon extends AbstractGriffonAddon {
 }
 ----
 
-And here is how it can be registered with a +{link_module}+
+And here is how it can be registered with a `{link_module}`
 
 [source,java,linenums,options="nowrap"]
 ----

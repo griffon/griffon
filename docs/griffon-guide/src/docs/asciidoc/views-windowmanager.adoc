@@ -3,16 +3,16 @@
 = The WindowManager
 
 Although the following API refers directly to `Swing` in all examples it's possible to use
-the +{link_window_manager}+ with other toolkits such as `JavaFX`, `Pivot` and `Lanterna` as
-there are specific +{link_window_manager}+ implementations plus helper classes for those
+the `{link_window_manager}` with other toolkits such as `JavaFX`, `Pivot` and `Lanterna` as
+there are specific `{link_window_manager}` implementations plus helper classes for those
 UI toolkits too.
 
-The +{link_window_manager}+ class is responsible for keeping track of all the windows
+The `{link_window_manager}` class is responsible for keeping track of all the windows
 managed by the application. It also controls how these windows are displayed (via a
-pair of methods: `show`, `hide`). +{link_window_manager}+ relies on an instance of
-+{link_window_display_handler}+ to actually show or hide a window. The default implementation
+pair of methods: `show`, `hide`). `{link_window_manager}` relies on an instance of
+`{link_window_display_handler}` to actually show or hide a window. The default implementation
 simple shows and hide windows directly, however you can change this behavior by setting
-a different implementation of +{link_window_display_handler}+ on the application instance.
+a different implementation of `{link_window_display_handler}` on the application instance.
 
 [[_views_windowmanager_dsl]]
 == WindowManager DSL
@@ -34,7 +34,7 @@ windowManager {
 ----
 
 The name of each entry must match the value of the Window's `name:` property (if supported)
-or the name used to register the Window with the +{link_window_manager}+. Each entry may
+or the name used to register the Window with the `{link_window_manager}`. Each entry may
 have any the following options
 
 [horizontal]
@@ -42,13 +42,13 @@ show:: Used to show the window to the screen. It must be a closure that takes tw
 parameters: the name of the window and the window to be displayed.
 hide:: Used to hide the window from the screen. It must be a closure that takes two
 parameters: the name of the window and the window to be hidden.
-handler:: A custom +{link_window_display_handler}+ instance.
+handler:: A custom `{link_window_display_handler}` instance.
 
-NOTE: You must use +{link_callable_with_args}+ instead of closures if using the Java version
+NOTE: You must use `{link_callable_with_args}` instead of closures if using the Java version
 of the `Config` file.
 
 The first two options have priority over the third one. If one is missing then the
-+{link_window_manager}+ will invoke the default behavior. There is one last option
+`{link_window_manager}` will invoke the default behavior. There is one last option
 that can be used to override the default behavior provided to all windows
 
 .griffon-app/conf/Config.groovy
@@ -80,7 +80,7 @@ windowManager {
 [[_views_windowmanager_starting_window]]
 == Starting Window
 
-By default the +{link_window_manager}+ picks the first available window from the managed
+By default the `{link_window_manager}` picks the first available window from the managed
 windows list to be the starting window. However, this behavior can be configured,
 by means of the WindowManager DSL. Simply specify a value for `windowManager.startingWindow`,
 like this
@@ -96,7 +96,7 @@ windowManager {
 This configuration flag accepts two types of values:
 
  * a String that defines the name of the Window. You must make sure the Window has a
-   matching name property or was attached to the +{link_window_manager}+ with the
+   matching name property or was attached to the `{link_window_manager}` with the
    same name
  * a Number that defines the index of the Window in the list of managed windows.
 
@@ -157,9 +157,9 @@ class ApplicationModule extends AbstractModule {
 }
 ----
 
-This example is equivalent to defining a +{link_window_display_handler}+ for all windows.
+This example is equivalent to defining a `{link_window_display_handler}` for all windows.
 You may target specific windows, by define multiple bindings, making sure that the name
 of the classifier matches the window name. Notice the explicit dependency on the `swing` module.
-If this dependency is left out it's very likely that the +{link_window_manager}+ will fail
-to pick the correct +{link_window_display_handler}+.
+If this dependency is left out it's very likely that the `{link_window_manager}` will fail
+to pick the correct `{link_window_display_handler}`.
 

@@ -17,17 +17,17 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url 'http://dl.bintray.com/content/bmuschko/maven' }
-        maven { url 'http://dl.bintray.com/content/bmuschko/gradle-plugins' }
+        //maven { url 'http://dl.bintray.com/content/bmuschko/maven' }
+        //maven { url 'http://dl.bintray.com/content/bmuschko/gradle-plugins' }
     }
 
     dependencies {
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:0.7.3'
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.2'
         classpath 'com.bmuschko:gradle-java2html-plugin:2.0'
     }
 }
 
-apply plugin: 'org.asciidoctor.gradle.asciidoctor'
+apply plugin: 'org.asciidoctor.convert'
 apply plugin: 'com.bmuschko.java2html'
 
 ext.childProjects = [
@@ -170,41 +170,36 @@ task sampleStats() << {
 }
 
 asciidoctor {
-    baseDir   = project.file('src/docs/asciidoc')
-    sourceDir = project.file('src/docs/asciidoc')
-    options = [
-        attributes: [
-            toc                     : 'left',
-            doctype                 : 'book',
-            icons                   : 'font',
-            encoding                : 'utf-8',
-            sectlink                : true,
-            sectanchors             : true,
-            numbered                : true,
-            linkattrs               : true,
-            imagesdir               : 'images',
-            linkcss                 : true,
-            stylesheet              : 'css/style.css',
-            'source-highlighter'    : 'coderay',
-            'coderay-linenums-mode' : 'table',
-            'griffon-version'       : project.version,
-            'griffon-group'         : project.group,
-            'griffon-source-url'    : griffonSourceUrl,
-            'gradle-griffon-version': loadProperties(project(':gradle-griffon-plugin').file('gradle.properties')).version,
-            'application-master-pom': loadProperties(project(':application-master-pom').file('gradle.properties')).version
-        ]
+    attributes = [
+        toc                     : 'left',
+        doctype                 : 'book',
+        icons                   : 'font',
+        encoding                : 'utf-8',
+        sectlink                : true,
+        sectanchors             : true,
+        numbered                : true,
+        linkattrs               : true,
+        imagesdir               : 'images',
+        linkcss                 : true,
+        stylesheet              : 'css/style.css',
+        'source-highlighter'    : 'coderay',
+        'coderay-linenums-mode' : 'table',
+        'griffon-version'       : project.version,
+        'griffon-group'         : project.group,
+        'griffon-source-url'    : griffonSourceUrl,
+        'gradle-griffon-version': loadProperties(project(':gradle-griffon-plugin').file('gradle.properties')).version,
+        'application-master-pom': loadProperties(project(':application-master-pom').file('gradle.properties')).version
     ]
-    sourceDocumentNames = files('src/asciidoc/index.adoc')
 
-    doLast { task ->
-        copy {
-            into file("${task.outputDir}/images/")
-            from rootProject.file('src/media/banners/large.png')
+    sources {
+        include 'index.adoc'
+    }
+
+    resources {
+        from file('src/resources')
+        from(rootProject.file('src/media/banners/large.png')) {
+            into 'images'
             rename '.*', 'griffon-banner-large.png'
-        }
-        copy {
-            into task.outputDir
-            from file('src/resources')
         }
     }
 }
@@ -214,7 +209,7 @@ task guide(type: Copy, dependsOn: [apiDocs, generateJava2html, asciidoctor]) {
     destinationDir = "$buildDir/guide" as File
     from(apiDocs.destinationDir)       { into 'api' }
     from(java2htmlConvertCode.destDir) { into 'api-src'}
-    from asciidoctor.outputDir
+    from("${asciidoctor.outputDir}/html5")
 }
 
 task guideZip(type: Zip, dependsOn: guide) {

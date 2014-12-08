@@ -2,14 +2,14 @@
 [[_overview_modules]]
 = Modules
 
-++{link_module}++s define components that can be injected using the JSR-330 API.
+``{link_module}``s define components that can be injected using the JSR-330 API.
 Module definitions are highly influenced by the Guice 3.x API however they do not
 impose a strict dependency on Guice.
 
 [[_overview_module_definition]]
 == Module Definition
 
-All modules must implement the +{link_module}+ interface shown next
+All modules must implement the `{link_module}` interface shown next
 
 [source,java,linenums,options="nowrap"]
 ----
@@ -65,7 +65,7 @@ public class CustomModule extends AbstractModule {
 Results in a module simply called `custom`. A module may depend on another module; when
 that's the case then the bindings of this module are processed after their dependencies. This
 allows dependent modules to override bindings made by their dependencies. Module dependencies
-are specified using the +{link_depends_on}+ annotation, like so
+are specified using the `{link_depends_on}` annotation, like so
 
 [source,java,linenums,options="nowrap"]
 ----
@@ -154,8 +154,8 @@ bind(Calculator.class)
 
 == The Guice Injector
 
-The dependency +griffon-guide-{griffon-version}+ uses {link_google_guice} to implement the JSR-330 API
-that +griffon-core-{griffon-version}+ requires. As an additional feature this dependency can automatically
+The dependency `griffon-guide-{griffon-version}` uses {link_google_guice} to implement the JSR-330 API
+that `griffon-core-{griffon-version}` requires. As an additional feature this dependency can automatically
 load Guice modules during startup. The only requirement is a metadata file that defines the module class
 that should be loaded.
 
