@@ -389,6 +389,10 @@
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
+        <Package name="javafx.util">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
         <Package name="org.codehaus.griffon.runtime.core">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
@@ -491,14 +495,14 @@
 
         <Package name="org.codehaus.griffon.runtime.javafx.artifact">
             <Stats>
-                <TotalClasses>1</TotalClasses>
-                <ConcreteClasses>0</ConcreteClasses>
+                <TotalClasses>2</TotalClasses>
+                <ConcreteClasses>1</ConcreteClasses>
                 <AbstractClasses>1</AbstractClasses>
                 <Ca>0</Ca>
-                <Ce>16</Ce>
-                <A>1</A>
+                <Ce>18</Ce>
+                <A>0.5</A>
                 <I>1</I>
-                <D>1</D>
+                <D>0.5</D>
                 <V>1</V>
             </Stats>
 
@@ -509,6 +513,9 @@
             </AbstractClasses>
 
             <ConcreteClasses>
+                <Class sourceFile="AbstractJavaFXGriffonView.java">
+                    org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView$1
+                </Class>
             </ConcreteClasses>
 
             <DependsUpon>
@@ -516,6 +523,7 @@
                 <Package>griffon.core.artifact</Package>
                 <Package>griffon.core.controller</Package>
                 <Package>griffon.core.i18n</Package>
+                <Package>griffon.core.mvc</Package>
                 <Package>griffon.exceptions</Package>
                 <Package>griffon.javafx.support</Package>
                 <Package>griffon.util</Package>
@@ -527,6 +535,7 @@
                 <Package>javafx.event</Package>
                 <Package>javafx.fxml</Package>
                 <Package>javafx.scene</Package>
+                <Package>javafx.util</Package>
                 <Package>org.codehaus.griffon.runtime.core.artifact</Package>
             </DependsUpon>
 
