@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">1.126s</div>
+<div class="counter">1.157s</div>
 <p>duration</p>
 </div>
 </td>
@@ -63,9 +63,6 @@
 <li>
 <a href="#tab0">Tests</a>
 </li>
-<li>
-<a href="#tab1">Standard error</a>
-</li>
 </ul>
 <div id="tab0" class="tab">
 <h2>Tests</h2>
@@ -79,32 +76,32 @@
 </thead>
 <tr>
 <td class="success">Invoking an event by name in asynchronous mode with a Map listener</td>
-<td>0.202s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Invoking an event by name in asynchronous mode with a bean listener</td>
 <td>0.201s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
+<td class="success">Invoking an event by name in asynchronous mode with a bean listener</td>
+<td>0.205s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
 <td class="success">Invoking an event by name in asynchronous mode with a callable listener</td>
-<td>0.208s</td>
+<td>0.201s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Invoking an event by name in outside mode with a Map listener</td>
-<td>0.002s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Invoking an event by name in outside mode with a bean listener</td>
 <td>0.003s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Invoking an event by name in outside mode with a callable listener</td>
+<td class="success">Invoking an event by name in outside mode with a bean listener</td>
 <td>0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Invoking an event by name in outside mode with a callable listener</td>
+<td>0.008s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -114,17 +111,17 @@
 </tr>
 <tr>
 <td class="success">Invoking an event by name in synchronous mode with a bean listener</td>
-<td>0.009s</td>
+<td>0.024s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Invoking an event by name in synchronous mode with a callable listener</td>
-<td>0.057s</td>
+<td>0.087s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Invoking an event in asynchronous mode with a Map listener</td>
-<td>0.201s</td>
+<td>0.203s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -139,7 +136,7 @@
 </tr>
 <tr>
 <td class="success">Invoking an event in outside mode with a callable listener</td>
-<td>0.003s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -149,32 +146,32 @@
 </tr>
 <tr>
 <td class="success">Invoking an event in synchronous mode with a callable listener</td>
-<td>0.004s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Register and unregister a Map listener by name</td>
-<td>0.003s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Register and unregister a bean listener</td>
 <td>0.002s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Register and unregister a bean listener with nested listeners</td>
-<td>0.013s</td>
+<td class="success">Register and unregister a Map listener by name</td>
+<td>0.002s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Register and unregister a callable listener</td>
+<td class="success">Register and unregister a bean listener</td>
+<td>0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Register and unregister a bean listener with nested listeners</td>
 <td>0.003s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
+<td class="success">Register and unregister a callable listener</td>
+<td>0.002s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
 <td class="success">Register and unregister a callable listener by name</td>
-<td>0.004s</td>
+<td>0.003s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -184,83 +181,10 @@
 </tr>
 </table>
 </div>
-<div id="tab1" class="tab">
-<h2>Standard error</h2>
-<span class="code">
-<pre>[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestEventHandler on MyEvent1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestEventHandler on MyEvent1
-[DefaultEventRouter-10] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' asynchronously
-[DefaultEventRouter-10] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' asynchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestEventHandler on MyEvent1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' outside UI
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' outside UI
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestEventHandler on MyEvent1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestEventHandler on MyEvent1
-[DefaultEventRouter-10] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' asynchronously
-[DefaultEventRouter-10] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' asynchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestEventHandler on MyEvent1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' outside UI
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' outside UI
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$EventHandler@14de424
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$EventHandler@27f7fb8f
-[DefaultEventRouter-10] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' asynchronously
-[DefaultEventRouter-10] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' asynchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$EventHandler@b260fd3
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' outside UI
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' outside UI
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestEventHandler on MyEvent1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestEventHandler on MyEvent1
-[DefaultEventRouter-10] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' asynchronously
-[DefaultEventRouter-10] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' asynchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestEventHandler on MyEvent1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' outside UI
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' outside UI
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestEventHandler on MyEvent1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestEventHandler on MyEvent1
-[DefaultEventRouter-10] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' asynchronously
-[DefaultEventRouter-10] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' asynchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestEventHandler on MyEvent1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' outside UI
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' outside UI
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestEventHandler on MyEvent1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestEventHandler on MyEvent1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestEventHandler on MyEvent1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestEventHandler on MyEvent1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestEventHandler on MyEvent1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestEventHandler on MyEvent1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$EventHandler@1079b608
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$EventHandler@1079b608
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.event.Subject$1 on MyEvent1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener org.codehaus.griffon.runtime.core.event.Subject@6731d2d7
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener org.codehaus.griffon.runtime.core.event.Subject$1 on MyEvent1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent1' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'MyEvent2' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener java.lang.Object@64bc3b02
-</pre>
-</span>
-</div>
 </div>
 <div id="footer">
 <p>Generated by 
-<a href="http://www.gradle.org">Gradle 2.1</a> at Dec 8, 2014 10:24:48 PM</p>
+<a href="http://www.gradle.org">Gradle 2.1</a> at Dec 8, 2014 10:51:18 PM</p>
 </div>
 </div>
 </body>
