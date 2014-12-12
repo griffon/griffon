@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
 
 /**
  * Handles generation of code for Griffon controllers.
- * <p/>
+ * <p>
  *
  * @author Andres Almiray
  * @since 2.0.0
@@ -63,7 +63,13 @@ public class GriffonControllerASTTransformation extends GriffonArtifactASTTransf
     protected ASTInjector[] getASTInjectors() {
         return new ASTInjector[]{
             new GriffonMvcArtifactASTInjector(),
-            new GriffonControllerASTInjector()
+            new GriffonControllerASTInjector(),
+            new AbstractASTInjector() {
+                @Override
+                public void inject(@Nonnull ClassNode classNode, @Nonnull String artifactType) {
+                    AbstractASTTransformation.injectApplication(classNode);
+                }
+            }
         };
     }
 }

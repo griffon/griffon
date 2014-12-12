@@ -15,6 +15,7 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
+import griffon.core.mvc.MVCGroup;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.stmt.EmptyStatement;
@@ -22,7 +23,12 @@ import org.codehaus.groovy.ast.stmt.EmptyStatement;
 import javax.annotation.Nonnull;
 
 import static java.lang.reflect.Modifier.PUBLIC;
-import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.*;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_EXCEPTIONS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_PARAMS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectMethod;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectProperty;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.param;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.params;
 import static org.codehaus.groovy.ast.ClassHelper.MAP_TYPE;
 import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
 
@@ -31,8 +37,12 @@ import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
  * @since 2.0.0
  */
 public class GriffonMvcArtifactASTInjector extends GriffonArtifactASTInjector {
+    private static final ClassNode MVC_GROUP_TYPE = makeClassSafe(MVCGroup.class);
+
     public void inject(@Nonnull ClassNode classNode, @Nonnull String artifactType) {
         super.inject(classNode, artifactType);
+
+        injectProperty(classNode, "mvcGroup", MVC_GROUP_TYPE);
 
         // void mvcGroupInit(Map args)
         injectMethod(classNode, new MethodNode(

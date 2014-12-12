@@ -18,7 +18,14 @@ package org.codehaus.griffon.compile.core.ast.transform;
 import griffon.core.GriffonApplication;
 import org.codehaus.griffon.compile.core.MethodDescriptor;
 import org.codehaus.griffon.compile.core.ast.GriffonASTUtils;
-import org.codehaus.groovy.ast.*;
+import org.codehaus.groovy.ast.ASTNode;
+import org.codehaus.groovy.ast.AnnotationNode;
+import org.codehaus.groovy.ast.ClassHelper;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.FieldNode;
+import org.codehaus.groovy.ast.GenericsType;
+import org.codehaus.groovy.ast.MethodNode;
+import org.codehaus.groovy.ast.Parameter;
 import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.ast.expr.FieldExpression;
@@ -41,8 +48,20 @@ import java.util.List;
 import static griffon.util.GriffonNameUtils.getGetterName;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.lang.reflect.Modifier.PRIVATE;
+import static java.lang.reflect.Modifier.PUBLIC;
 import static java.lang.reflect.Modifier.isPrivate;
-import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.*;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_ARGS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_EXCEPTIONS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_PARAMS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.THIS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.args;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.call;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.field;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectField;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectMethod;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.returns;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.stmnt;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.var;
 
 /**
  * Base class for all of Griffon's ASTTransformation implementations.
@@ -57,20 +76,6 @@ public abstract class AbstractASTTransformation implements ASTTransformation {
     public static final ClassNode NAMED_TYPE = makeClassSafe(Named.class);
     private static final String PROPERTY_APPLICATION = "application";
     private static final String METHOD_GET_APPLICATION = "getApplication";
-
-    public void addError(String msg, ASTNode expr, SourceUnit source) {
-        int line = expr.getLineNumber();
-        int col = expr.getColumnNumber();
-        source.getErrorCollector().addErrorAndContinue(
-            new SyntaxErrorMessage(new SyntaxException(msg + '\n', line, col), source)
-        );
-    }
-
-    protected void checkNodesForAnnotationAndType(ASTNode node1, ASTNode node2) {
-        if (!(node1 instanceof AnnotationNode) || !(node2 instanceof ClassNode)) {
-            throw new IllegalArgumentException("Internal error: wrong types: " + node1.getClass() + " / " + node2.getClass());
-        }
-    }
 
     public static Expression emptyMap() {
         return new StaticMethodCallExpression
@@ -110,6 +115,29 @@ public abstract class AbstractASTTransformation implements ASTTransformation {
         } catch (IllegalStateException iae) {
             FieldNode field = injectField(classNode, PROPERTY_APPLICATION, PRIVATE, GRIFFON_APPLICATION_TYPE, null, false);
             field.addAnnotation(new AnnotationNode(INJECT_TYPE));
+        }
+
+        MethodNode method = classNode.getDeclaredMethod(METHOD_GET_APPLICATION, NO_PARAMS);
+        if (method == null) {
+            injectMethod(classNode, new MethodNode(
+                METHOD_GET_APPLICATION,
+                PUBLIC,
+                GRIFFON_APPLICATION_TYPE,
+                NO_PARAMS,
+                NO_EXCEPTIONS,
+                returns(field(classNode, PROPERTY_APPLICATION))
+            ));
+        }
+        method = classNode.getMethod(METHOD_GET_APPLICATION, NO_PARAMS);
+        if (method == null && !isPrivate(method.getModifiers())) {
+            injectMethod(classNode, new MethodNode(
+                METHOD_GET_APPLICATION,
+                PUBLIC,
+                GRIFFON_APPLICATION_TYPE,
+                NO_PARAMS,
+                NO_EXCEPTIONS,
+                returns(field(classNode, PROPERTY_APPLICATION))
+            ));
         }
     }
 
@@ -284,6 +312,20 @@ public abstract class AbstractASTTransformation implements ASTTransformation {
             );
             newMethod.setGenericsTypes(method.getGenericsTypes());
             injectMethod(classNode, newMethod);
+        }
+    }
+
+    public void addError(String msg, ASTNode expr, SourceUnit source) {
+        int line = expr.getLineNumber();
+        int col = expr.getColumnNumber();
+        source.getErrorCollector().addErrorAndContinue(
+            new SyntaxErrorMessage(new SyntaxException(msg + '\n', line, col), source)
+        );
+    }
+
+    protected void checkNodesForAnnotationAndType(ASTNode node1, ASTNode node2) {
+        if (!(node1 instanceof AnnotationNode) || !(node2 instanceof ClassNode)) {
+            throw new IllegalArgumentException("Internal error: wrong types: " + node1.getClass() + " / " + node2.getClass());
         }
     }
 }

@@ -182,11 +182,38 @@ public class GriffonASTUtils {
         if (deep) {
             if (!hasOrInheritsField(classNode, name, modifiers, type)) {
                 return getFurthestParent(classNode).addField(name, modifiers, type, initialExpression);
+            } else {
+                getFieldDeep(classNode, name, modifiers, type);
             }
         } else {
             if (!hasField(classNode, name, modifiers, type)) {
                 return classNode.addField(name, modifiers, type, initialExpression);
+            } else {
+                return getField(classNode, name, modifiers, type);
             }
+        }
+        return null;
+    }
+
+    public static FieldNode getField(ClassNode classNode, String name, int modifiers, ClassNode type) {
+        FieldNode fieldNode = classNode.getDeclaredField(name);
+        return fieldNode != null && fieldNode.getModifiers() == modifiers &&
+            fieldNode.getType().equals(type) ? fieldNode : null;
+    }
+
+    public static FieldNode getFieldDeep(ClassNode classNode, String name, int modifiers, ClassNode type) {
+        FieldNode fieldNode = getField(classNode, name, modifiers, type);
+        if (fieldNode != null) {
+            return fieldNode;
+        }
+
+        ClassNode parent = classNode.getSuperClass();
+        while (parent != null && !getFullName(parent).equals(JAVA_LANG_OBJECT)) {
+            fieldNode = getField(parent, name, modifiers, type);
+            if (fieldNode != null) {
+                return fieldNode;
+            }
+            parent = parent.getSuperClass();
         }
         return null;
     }

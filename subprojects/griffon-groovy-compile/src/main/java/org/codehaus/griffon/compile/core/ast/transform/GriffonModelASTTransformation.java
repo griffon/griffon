@@ -17,6 +17,7 @@ package org.codehaus.griffon.compile.core.ast.transform;
 
 import griffon.core.artifact.GriffonModel;
 import griffon.core.artifact.GriffonModelClass;
+import org.codehaus.griffon.compile.core.ast.SourceUnitCollector;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.control.CompilePhase;
@@ -29,7 +30,7 @@ import javax.annotation.Nonnull;
 
 /**
  * Handles generation of code for Griffon models.
- * <p/>
+ * <p>
  *
  * @author Andres Almiray
  * @since 2.0.0
@@ -66,7 +67,8 @@ public class GriffonModelASTTransformation extends GriffonArtifactASTTransformat
             new AbstractASTInjector() {
                 @Override
                 public void inject(@Nonnull ClassNode classNode, @Nonnull String artifactType) {
-                    VetoableASTTransformation.applicationExpression(classNode);
+                    AbstractASTTransformation.injectApplication(classNode);
+                    VetoableASTTransformation.addVetoableIfNeeded(SourceUnitCollector.getInstance().getSourceUnit(classNode), classNode);
                 }
             }
         };

@@ -62,7 +62,13 @@ public class GriffonServiceASTTransformation extends GriffonArtifactASTTransform
 
     protected ASTInjector[] getASTInjectors() {
         return new ASTInjector[]{
-            new GriffonArtifactASTInjector()
+            new GriffonArtifactASTInjector(),
+            new AbstractASTInjector() {
+                @Override
+                public void inject(@Nonnull ClassNode classNode, @Nonnull String artifactType) {
+                    AbstractASTTransformation.injectApplication(classNode);
+                }
+            }
         };
     }
 }

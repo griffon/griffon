@@ -39,17 +39,33 @@ import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectInterf
 
 /**
  * Handles generation of code for Griffon artifacts.
- * <p/>
+ * <p>
  *
  * @author Andres Almiray
  * @since 2.0.0
  */
 public abstract class GriffonArtifactASTTransformation extends AbstractASTTransformation implements BaseConstants {
-    private static final Logger LOG = LoggerFactory.getLogger(GriffonArtifactASTTransformation.class);
     protected static final String ERROR_CLASS_NODE_NULL = "Argument 'classNode' must not be null";
     protected static final String ERROR_SOURCE_NULL = "Argument 'source' must not be null";
+    private static final Logger LOG = LoggerFactory.getLogger(GriffonArtifactASTTransformation.class);
     private static final ClassNode GRIFFON_APPLICATION_TYPE = makeClassSafe(GriffonApplication.class);
     private static final ClassNode INJECT_TYPE = makeClassSafe(Inject.class);
+
+    public static boolean isOrImplements(ClassNode fieldType, ClassNode interfaceType) {
+        return fieldType.equals(interfaceType) || fieldType.implementsInterface(interfaceType);
+    }
+
+    protected static boolean isArtifact(@Nonnull ClassNode classNode, @Nonnull SourceUnit source, @Nonnull ClassNode artifactType) {
+        requireNonNull(classNode, ERROR_CLASS_NODE_NULL);
+        requireNonNull(source, ERROR_SOURCE_NULL);
+        List<AnnotationNode> annotations = classNode.getAnnotations(makeClassSafe(ArtifactProviderFor.class));
+        if (annotations == null || annotations.isEmpty() || annotations.size() != 1) {
+            return false;
+        }
+        AnnotationNode artifact = annotations.get(0);
+        Expression value = artifact.getMember("value");
+        return value instanceof ClassExpression && value.getType().equals(artifactType);
+    }
 
     public void visit(ASTNode[] nodes, SourceUnit source) {
         ModuleNode moduleNode = (ModuleNode) nodes[0];
@@ -82,7 +98,6 @@ public abstract class GriffonArtifactASTTransformation extends AbstractASTTransf
 
     protected void inject(ClassNode classNode, ClassNode superClass) {
         SourceUnit superSource = SourceUnitCollector.getInstance().getSourceUnit(superClass);
-        if (matches(superClass, superSource)) return;
 
         if (superSource == null) {
             ClassNode interfaceNode = getInterfaceNode();
@@ -94,7 +109,7 @@ public abstract class GriffonArtifactASTTransformation extends AbstractASTTransf
                 injector.inject(classNode, getArtifactType());
             }
             postInject(classNode);
-        } else {
+        } else if (!matches(superClass, superSource)) {
             transform(superClass);
         }
     }
@@ -117,21 +132,5 @@ public abstract class GriffonArtifactASTTransformation extends AbstractASTTransf
 
     protected void postInject(ClassNode classNode) {
 
-    }
-
-    public static boolean isOrImplements(ClassNode fieldType, ClassNode interfaceType) {
-        return fieldType.equals(interfaceType) || fieldType.implementsInterface(interfaceType);
-    }
-
-    protected static boolean isArtifact(@Nonnull ClassNode classNode, @Nonnull SourceUnit source, @Nonnull ClassNode artifactType) {
-        requireNonNull(classNode, ERROR_CLASS_NODE_NULL);
-        requireNonNull(source, ERROR_SOURCE_NULL);
-        List<AnnotationNode> annotations = classNode.getAnnotations(makeClassSafe(ArtifactProviderFor.class));
-        if (annotations == null || annotations.isEmpty() || annotations.size() != 1) {
-            return false;
-        }
-        AnnotationNode artifact = annotations.get(0);
-        Expression value = artifact.getMember("value");
-        return value instanceof ClassExpression && value.getType().equals(artifactType);
     }
 }

@@ -30,7 +30,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
-
 import java.lang.reflect.Modifier;
 
 import static griffon.util.GriffonNameUtils.getGetterName;
@@ -48,12 +47,12 @@ import static org.codehaus.groovy.ast.expr.VariableExpression.THIS_EXPRESSION;
  * @since 2.0.0
  */
 public abstract class AbstractASTInjector implements ASTInjector {
+    public static final ClassNode NAMED_TYPE = makeClassSafe(Named.class);
     private static final ClassNode THREAD_TYPE = ClassHelper.make(Thread.class).getPlainNodeReference();
     private static final ClassNode GRIFFON_APPLICATION_TYPE = makeClassSafe(GriffonApplication.class);
     private static final ClassNode INJECT_TYPE = makeClassSafe(Inject.class);
     private static final String PROPERTY_APPLICATION = "application";
     private static final String METHOD_GET_APPLICATION = "getApplication";
-    public static final ClassNode NAMED_TYPE = makeClassSafe(Named.class);
 
     @Nonnull
     public static ClassNode makeClassSafe(@Nonnull ClassNode classNode) {
@@ -117,8 +116,10 @@ public abstract class AbstractASTInjector implements ASTInjector {
     @Nonnull
     public static FieldExpression injectedField(@Nonnull ClassNode owner, @Nonnull ClassNode type, @Nonnull String name, @Nullable String qualifierName) {
         FieldNode fieldNode = GriffonASTUtils.injectField(owner, name, Modifier.PRIVATE, type, null, false);
-        fieldNode.addAnnotation(new AnnotationNode(INJECT_TYPE));
-        if (!isBlank(qualifierName)) {
+        if (fieldNode.getAnnotations(INJECT_TYPE) == null) {
+            fieldNode.addAnnotation(new AnnotationNode(INJECT_TYPE));
+        }
+        if (!isBlank(qualifierName) && fieldNode.getAnnotations(NAMED_TYPE) == null) {
             AnnotationNode namedAnnotation = new AnnotationNode(NAMED_TYPE);
             namedAnnotation.addMember("value", new ConstantExpression(qualifierName));
             fieldNode.addAnnotation(namedAnnotation);
