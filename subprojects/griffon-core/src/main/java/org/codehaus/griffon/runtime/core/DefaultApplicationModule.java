@@ -15,7 +15,14 @@
  */
 package org.codehaus.griffon.runtime.core;
 
-import griffon.core.*;
+import griffon.core.ApplicationClassLoader;
+import griffon.core.ApplicationConfigurer;
+import griffon.core.Configuration;
+import griffon.core.Context;
+import griffon.core.ExecutorServiceManager;
+import griffon.core.GriffonExceptionHandler;
+import griffon.core.LifecycleHandler;
+import griffon.core.PlatformHandler;
 import griffon.core.addon.AddonManager;
 import griffon.core.artifact.ArtifactHandler;
 import griffon.core.artifact.ArtifactManager;
@@ -32,7 +39,11 @@ import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import griffon.util.CompositeResourceBundleBuilder;
 import org.codehaus.griffon.runtime.core.addon.DefaultAddonManager;
-import org.codehaus.griffon.runtime.core.artifact.*;
+import org.codehaus.griffon.runtime.core.artifact.ControllerArtifactHandler;
+import org.codehaus.griffon.runtime.core.artifact.DefaultArtifactManager;
+import org.codehaus.griffon.runtime.core.artifact.ModelArtifactHandler;
+import org.codehaus.griffon.runtime.core.artifact.ServiceArtifactHandler;
+import org.codehaus.griffon.runtime.core.artifact.ViewArtifactHandler;
 import org.codehaus.griffon.runtime.core.controller.DefaultActionManager;
 import org.codehaus.griffon.runtime.core.event.DefaultEventHandler;
 import org.codehaus.griffon.runtime.core.event.DefaultEventRouter;
@@ -63,6 +74,11 @@ public class DefaultApplicationModule extends AbstractModule {
         // tag::bindings[]
         bind(ApplicationClassLoader.class)
             .to(DefaultApplicationClassLoader.class)
+            .asSingleton();
+
+        bind(Context.class)
+            .withClassifier(named("applicationContext"))
+            .to(DefaultContext.class)
             .asSingleton();
 
         bind(ApplicationConfigurer.class)

@@ -15,6 +15,7 @@
  */
 package griffon.core.mvc;
 
+import griffon.core.Context;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonModel;
@@ -59,10 +60,14 @@ public interface MVCGroupManager extends MVCHandler {
      * @param configuration the configuration of the group
      * @param mvcId         the id to use for the group
      * @param members       the instance members of the group
+     * @param parentGroup   the parent group (if any)
      * @return a ready-to-use MVCGroup instance
      */
     @Nonnull
-    MVCGroup newMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> members);
+    MVCGroup newMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> members, @Nullable MVCGroup parentGroup);
+
+    @Nonnull
+    Context newContext(@Nullable MVCGroup parentGroup);
 
     /**
      * Initializes this manager with the group configurations provided by the application and addons.

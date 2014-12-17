@@ -89,6 +89,9 @@ public interface GriffonApplication extends Observable {
     Injector<?> getInjector();
 
     @Nonnull
+    Context getContext();
+
+    @Nonnull
     <W> WindowManager<W> getWindowManager();
 
     // --== Lifecycle ==--

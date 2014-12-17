@@ -15,6 +15,7 @@
  */
 package org.codehaus.griffon.runtime.core.mvc;
 
+import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.core.mvc.MVCGroupManager;
 
@@ -29,8 +30,8 @@ import java.util.Map;
  * @since 2.0.0
  */
 public class DefaultMVCGroup extends AbstractMVCGroup {
-    public DefaultMVCGroup(@Nonnull MVCGroupManager mvcGroupManager, @Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> members) {
-        super(mvcGroupManager, configuration, mvcId, members);
+    public DefaultMVCGroup(@Nonnull MVCGroupManager mvcGroupManager, @Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> members, @Nullable MVCGroup parentGroup) {
+        super(mvcGroupManager, configuration, mvcId, members, parentGroup);
     }
 
     public String toString() {

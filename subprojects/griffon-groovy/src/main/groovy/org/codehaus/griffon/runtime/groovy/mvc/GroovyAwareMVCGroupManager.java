@@ -52,8 +52,8 @@ public class GroovyAwareMVCGroupManager extends DefaultMVCGroupManager {
 
     @Nonnull
     @Override
-    public MVCGroup newMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> members) {
-        return new GroovyAwareMVCGroup(this, configuration, mvcId, members);
+    public MVCGroup newMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> members, @Nullable MVCGroup parentGroup) {
+        return new GroovyAwareMVCGroup(this, configuration, mvcId, members, parentGroup);
     }
 
     @Nonnull

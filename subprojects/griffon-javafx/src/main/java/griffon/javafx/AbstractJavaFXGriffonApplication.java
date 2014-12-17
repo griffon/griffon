@@ -20,6 +20,7 @@ import griffon.core.ApplicationConfigurer;
 import griffon.core.ApplicationEvent;
 import griffon.core.CallableWithArgs;
 import griffon.core.Configuration;
+import griffon.core.Context;
 import griffon.core.ExecutorServiceManager;
 import griffon.core.GriffonApplication;
 import griffon.core.ShutdownHandler;
@@ -200,6 +201,12 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
     @Override
     public ApplicationClassLoader getApplicationClassLoader() {
         return injector.getInstance(ApplicationClassLoader.class);
+    }
+
+    @Nonnull
+    @Override
+    public Context getContext() {
+        return injector.getInstance(Context.class, named("applicationContext"));
     }
 
     @Nonnull

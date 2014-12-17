@@ -16,6 +16,7 @@
 package org.codehaus.griffon.runtime.core.controller;
 
 import griffon.core.Configuration;
+import griffon.core.Context;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonControllerClass;
@@ -27,8 +28,11 @@ import griffon.core.controller.ActionInterceptor;
 import griffon.core.controller.ActionManager;
 import griffon.core.i18n.MessageSource;
 import griffon.core.i18n.NoSuchMessageException;
+import griffon.core.mvc.MVCGroup;
 import griffon.core.threading.UIThreadManager;
+import griffon.exceptions.GriffonException;
 import griffon.exceptions.InstanceMethodInvocationException;
+import griffon.inject.Contextual;
 import griffon.transform.Threading;
 import griffon.util.AnnotationUtils;
 import org.slf4j.Logger;
@@ -37,6 +41,8 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Named;
+import java.lang.annotation.Annotation;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -53,6 +59,7 @@ import static griffon.core.GriffonExceptionHandler.sanitize;
 import static griffon.util.CollectionUtils.reverse;
 import static griffon.util.GriffonClassUtils.EMPTY_ARGS;
 import static griffon.util.GriffonClassUtils.invokeExactInstanceMethod;
+import static griffon.util.GriffonClassUtils.invokeInstanceMethod;
 import static griffon.util.GriffonNameUtils.capitalize;
 import static griffon.util.GriffonNameUtils.getNaturalName;
 import static griffon.util.GriffonNameUtils.isBlank;
@@ -88,6 +95,19 @@ public abstract class AbstractActionManager implements ActionManager {
         this.application = requireNonNull(application, "Argument 'application' must not be null");
     }
 
+    @Nullable
+    private static Method findActionAsMethod(@Nonnull GriffonController controller, @Nonnull String actionName) {
+        for (Method method : controller.getClass().getMethods()) {
+            if (actionName.equals(method.getName()) &&
+                isPublic(method.getModifiers()) &&
+                !isStatic(method.getModifiers()) &&
+                method.getReturnType() == Void.TYPE) {
+                return method;
+            }
+        }
+        return null;
+    }
+
     @Nonnull
     protected Configuration getConfiguration() {
         return application.getConfiguration();
@@ -111,11 +131,11 @@ public abstract class AbstractActionManager implements ActionManager {
     @Nonnull
     public Map<String, Action> actionsFor(@Nonnull GriffonController controller) {
         requireNonNull(controller, ERROR_CONTROLLER_NULL);
-        Map<String, Action> actions = actionCache.get(controller);
+        Map<String, ActionWrapper> actions = actionCache.get(controller);
         if (actions.isEmpty()) {
             LOG.trace("No actions defined for controller {}", controller);
         }
-        return actions;
+        return Collections.<String, Action>unmodifiableMap(actions);
     }
 
     @Nullable
@@ -128,18 +148,20 @@ public abstract class AbstractActionManager implements ActionManager {
     public void createActions(@Nonnull GriffonController controller) {
         GriffonControllerClass griffonClass = (GriffonControllerClass) controller.getGriffonClass();
         for (String actionName : griffonClass.getActionNames()) {
-            Action action = createAndConfigureAction(controller, actionName);
-
             Method method = findActionAsMethod(controller, actionName);
-            final String qualifiedActionName = action.getFullyQualifiedName();
-            for (ActionHandler handler : handlers) {
-                if (method != null) {
-                    LOG.debug("Configuring action {} with {}", qualifiedActionName, handler);
-                    handler.configure(action, method);
-                }
+            if (method == null) {
+                throw new GriffonException(controller.getClass().getCanonicalName() + " does not define an action named " + actionName);
             }
 
-            Map<String, Action> actions = actionCache.get(controller);
+            ActionWrapper action = wrapAction(createAndConfigureAction(controller, actionName), method);
+
+            final String qualifiedActionName = action.getFullyQualifiedName();
+            for (ActionHandler handler : handlers) {
+                LOG.debug("Configuring action {} with {}", qualifiedActionName, handler);
+                handler.configure(action, method);
+            }
+
+            Map<String, ActionWrapper> actions = actionCache.get(controller);
             if (actions.isEmpty()) {
                 actions = new TreeMap<>();
                 actionCache.set(controller, actions);
@@ -148,6 +170,11 @@ public abstract class AbstractActionManager implements ActionManager {
             LOG.trace("Action for {} stored as {}", qualifiedActionName, actionKey);
             actions.put(actionKey, action);
         }
+    }
+
+    @Nonnull
+    private ActionWrapper wrapAction(@Nonnull Action action, @Nonnull Method method) {
+        return new ActionWrapper(action, method);
     }
 
     @Override
@@ -193,6 +220,8 @@ public abstract class AbstractActionManager implements ActionManager {
                 Object[] updatedArgs = args;
                 List<ActionHandler> copy = new ArrayList<>(handlers);
                 List<ActionHandler> invokedHandlers = new ArrayList<>();
+
+                updatedArgs = injectFromContext(action, updatedArgs);
 
                 final String qualifiedActionName = action.getFullyQualifiedName();
                 ActionExecutionStatus status = ActionExecutionStatus.OK;
@@ -249,6 +278,35 @@ public abstract class AbstractActionManager implements ActionManager {
         invokeAction(controller, actionName, runnable);
     }
 
+    @Nonnull
+    private Object[] injectFromContext(@Nonnull Action action, @Nonnull Object[] args) {
+        ActionWrapper wrappedAction = null;
+        if (action instanceof ActionWrapper) {
+            wrappedAction = (ActionWrapper) action;
+        } else {
+            wrappedAction = wrapAction(action, findActionAsMethod(action.getController(), action.getActionName()));
+        }
+
+        MVCGroup group = action.getController().getMvcGroup();
+        if (group == null) {
+            // This case only occurs during testing, when an artifact is
+            // instantiated without a group
+            return args;
+        }
+
+        Context context = group.getContext();
+        List<String> namedArgs = wrappedAction.namedArgs;
+
+        if (wrappedAction.hasContextualArgs) {
+            args = new Object[namedArgs.size()];
+            for (int i = 0; i < namedArgs.size(); i++) {
+                args[i] = context.get(wrappedAction.namedArgs.get(i));
+            }
+        }
+
+        return args;
+    }
+
     public void invokeAction(@Nonnull final GriffonController controller, @Nonnull final String actionName, @Nonnull final Object... args) {
         requireNonNull(controller, ERROR_CONTROLLER_NULL);
         requireNonBlank(actionName, ERROR_ACTION_NAME_BLANK);
@@ -257,7 +315,7 @@ public abstract class AbstractActionManager implements ActionManager {
 
     protected void doInvokeAction(@Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Object[] updatedArgs) {
         try {
-            invokeExactInstanceMethod(controller, actionName, updatedArgs);
+            invokeInstanceMethod(controller, actionName, updatedArgs);
         } catch (InstanceMethodInvocationException imie) {
             if (imie.getCause() instanceof NoSuchMethodException) {
                 // try again but this time remove the 1st arg if it's
@@ -301,19 +359,6 @@ public abstract class AbstractActionManager implements ActionManager {
             default:
                 runnable.run();
         }
-    }
-
-    @Nullable
-    private static Method findActionAsMethod(@Nonnull GriffonController controller, @Nonnull String actionName) {
-        for (Method method : controller.getClass().getMethods()) {
-            if (actionName.equals(method.getName()) &&
-                isPublic(method.getModifiers()) &&
-                !isStatic(method.getModifiers()) &&
-                method.getReturnType() == Void.TYPE) {
-                return method;
-            }
-        }
-        return null;
     }
 
     @Nonnull
@@ -441,13 +486,46 @@ public abstract class AbstractActionManager implements ActionManager {
         }
     }
 
+    private static class ActionWrapper extends ActionDecorator {
+        private final List<String> namedArgs = new ArrayList<>();
+        private boolean hasContextualArgs;
+
+        public ActionWrapper(@Nonnull Action delegate, @Nonnull Method method) {
+            super(delegate);
+
+            Class<?>[] parameterTypes = method.getParameterTypes();
+            Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+            hasContextualArgs = method.getAnnotation(Contextual.class) != null;
+            for (int i = 0; i < parameterTypes.length; i++) {
+                Class<?> type = parameterTypes[i];
+
+                Annotation[] annotations = parameterAnnotations[i];
+                String name = type.getCanonicalName();
+                if (annotations != null) {
+                    for (Annotation annotation : annotations) {
+                        if (Contextual.class.isAssignableFrom(annotation.annotationType())) {
+                            hasContextualArgs = true;
+                        }
+                        if (Named.class.isAssignableFrom(annotation.annotationType())) {
+                            Named named = (Named) annotation;
+                            if (!isBlank(named.value())) {
+                                name = named.value();
+                            }
+                        }
+                    }
+                }
+                namedArgs.add(name);
+            }
+        }
+    }
+
     private static class ActionCache {
-        private final Map<WeakReference<GriffonController>, Map<String, Action>> cache = new ConcurrentHashMap<>();
+        private final Map<WeakReference<GriffonController>, Map<String, ActionWrapper>> cache = new ConcurrentHashMap<>();
 
         @Nonnull
-        public Map<String, Action> get(@Nonnull GriffonController controller) {
+        public Map<String, ActionWrapper> get(@Nonnull GriffonController controller) {
             synchronized (cache) {
-                for (Map.Entry<WeakReference<GriffonController>, Map<String, Action>> entry : cache.entrySet()) {
+                for (Map.Entry<WeakReference<GriffonController>, Map<String, ActionWrapper>> entry : cache.entrySet()) {
                     GriffonController test = entry.getKey().get();
                     if (test == controller) {
                         return entry.getValue();
@@ -457,7 +535,7 @@ public abstract class AbstractActionManager implements ActionManager {
             return Collections.emptyMap();
         }
 
-        public void set(@Nonnull GriffonController controller, @Nonnull Map<String, Action> actions) {
+        public void set(@Nonnull GriffonController controller, @Nonnull Map<String, ActionWrapper> actions) {
             WeakReference<GriffonController> existingController = null;
             synchronized (cache) {
                 for (WeakReference<GriffonController> key : cache.keySet()) {
@@ -480,7 +558,7 @@ public abstract class AbstractActionManager implements ActionManager {
             List<Action> actions = new ArrayList<>();
 
             synchronized (cache) {
-                for (Map<String, Action> map : cache.values()) {
+                for (Map<String, ActionWrapper> map : cache.values()) {
                     actions.addAll(map.values());
                 }
             }

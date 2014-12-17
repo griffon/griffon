@@ -15,6 +15,7 @@
  */
 package org.codehaus.griffon.runtime.core.mvc;
 
+import griffon.core.Context;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonControllerClass;
 import griffon.core.artifact.GriffonModel;
@@ -24,8 +25,8 @@ import griffon.core.artifact.GriffonView;
 import griffon.core.artifact.GriffonViewClass;
 import griffon.core.mvc.MVCFunction;
 import griffon.core.mvc.MVCGroup;
-import griffon.core.mvc.MVCGroupFunction;
 import griffon.core.mvc.MVCGroupConfiguration;
+import griffon.core.mvc.MVCGroupFunction;
 import griffon.core.mvc.MVCGroupManager;
 
 import javax.annotation.Nonnull;
@@ -36,6 +37,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static griffon.util.GriffonClassUtils.requireState;
+import static griffon.util.GriffonClassUtils.setPropertyOrFieldValue;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Collections.unmodifiableMap;
@@ -50,16 +52,38 @@ import static java.util.Objects.requireNonNull;
 public abstract class AbstractMVCGroup extends AbstractMVCHandler implements MVCGroup {
     protected final MVCGroupConfiguration configuration;
     protected final String mvcId;
+    protected final Context context;
     protected final Map<String, Object> members = new LinkedHashMap<>();
-    private boolean alive;
     private final Object[] lock = new Object[0];
+    protected MVCGroup parentGroup;
+    private boolean alive;
 
-    public AbstractMVCGroup(@Nonnull MVCGroupManager mvcGroupManager, @Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> members) {
+    public AbstractMVCGroup(@Nonnull MVCGroupManager mvcGroupManager, @Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> members, @Nullable MVCGroup parentGroup) {
         super(mvcGroupManager);
         this.configuration = requireNonNull(configuration, "Argument 'configuration' must not be null");
         this.mvcId = isBlank(mvcId) ? configuration.getMvcType() + "-" + UUID.randomUUID().toString() : mvcId;
         this.members.putAll(requireNonNull(members, "Argument 'members' must not be null"));
         this.alive = true;
+        this.parentGroup = parentGroup;
+        this.context = mvcGroupManager.newContext(parentGroup);
+
+        for (Object o : this.members.values()) {
+            if (o instanceof GriffonMvcArtifact) {
+                setPropertyOrFieldValue(o, "mvcGroup", this);
+            }
+        }
+    }
+
+    @Nonnull
+    @Override
+    public Context getContext() {
+        return context;
+    }
+
+    @Nullable
+    @Override
+    public MVCGroup getParentGroup() {
+        return parentGroup;
     }
 
     @Nonnull
@@ -118,6 +142,8 @@ public abstract class AbstractMVCGroup extends AbstractMVCHandler implements MVC
         if (isAlive()) {
             getMvcGroupManager().destroyMVCGroup(mvcId);
             members.clear();
+            parentGroup = null;
+            context.destroy();
             synchronized (lock) {
                 alive = false;
             }

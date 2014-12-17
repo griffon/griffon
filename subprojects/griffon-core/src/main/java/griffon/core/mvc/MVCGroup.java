@@ -15,6 +15,7 @@
  */
 package griffon.core.mvc;
 
+import griffon.core.Context;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonModel;
 import griffon.core.artifact.GriffonView;
@@ -115,4 +116,10 @@ public interface MVCGroup extends MVCHandler {
      * @return true if the group has not been destroyed yet, false otherwise
      */
     boolean isAlive();
+
+    @Nonnull
+    Context getContext();
+
+    @Nullable
+    MVCGroup getParentGroup();
 }

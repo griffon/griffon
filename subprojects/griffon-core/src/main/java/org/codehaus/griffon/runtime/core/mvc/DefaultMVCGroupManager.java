@@ -17,6 +17,7 @@ package org.codehaus.griffon.runtime.core.mvc;
 
 import griffon.core.ApplicationClassLoader;
 import griffon.core.ApplicationEvent;
+import griffon.core.Context;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.ArtifactManager;
 import griffon.core.artifact.GriffonArtifact;
@@ -29,6 +30,7 @@ import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.exceptions.MVCGroupInstantiationException;
 import griffon.exceptions.NewInstanceException;
 import griffon.util.CollectionUtils;
+import org.codehaus.griffon.runtime.core.DefaultContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,8 +77,15 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     }
 
     @Nonnull
-    public MVCGroup newMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> members) {
-        return new DefaultMVCGroup(this, configuration, mvcId, members);
+    public MVCGroup newMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> members, @Nullable MVCGroup parentGroup) {
+        return new DefaultMVCGroup(this, configuration, mvcId, members, parentGroup);
+    }
+
+    @Nonnull
+    @Override
+    public Context newContext(@Nullable MVCGroup parentGroup) {
+        Context parentContext = parentGroup != null ? parentGroup.getContext() : getApplication().getContext();
+        return new DefaultContext(parentContext);
     }
 
     protected void doInitialize(@Nonnull Map<String, MVCGroupConfiguration> configurations) {
@@ -114,7 +123,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             getApplication().getEventRouter().setEventPublishingEnabled(isEventPublishingEnabled);
         }
 
-        MVCGroup group = newMVCGroup(configuration, mvcId, instances);
+        MVCGroup group = newMVCGroup(configuration, mvcId, instances, (MVCGroup) args.get(KEY_PARENT_GROUP));
         adjustMvcArguments(group, argsCopy);
 
         boolean fireEvents = isConfigFlagEnabled(configuration, CONFIG_KEY_EVENTS_LIFECYCLE);

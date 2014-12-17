@@ -16,6 +16,7 @@
 package org.codehaus.griffon.runtime.groovy.mvc;
 
 import griffon.core.artifact.GriffonViewClass;
+import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.core.mvc.MVCGroupManager;
 import groovy.lang.Script;
@@ -34,8 +35,8 @@ public class GroovyAwareMVCGroup extends DefaultMVCGroup {
     public static final String BUILDER = "builder";
     protected final Map<String, Object> scriptResults = new LinkedHashMap<>();
 
-    public GroovyAwareMVCGroup(@Nonnull MVCGroupManager mvcGroupManager, @Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> members) {
-        super(mvcGroupManager, configuration, mvcId, members);
+    public GroovyAwareMVCGroup(@Nonnull MVCGroupManager mvcGroupManager, @Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> members, @Nullable MVCGroup parentGroup) {
+        super(mvcGroupManager, configuration, mvcId, members, parentGroup);
     }
 
     public FactoryBuilderSupport getBuilder() {
