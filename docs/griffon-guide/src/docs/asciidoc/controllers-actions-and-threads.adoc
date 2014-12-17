@@ -25,10 +25,10 @@ class BadController {
 
     void badAction(ActionEvent evt = null) {
         def sql = Sql.newInstance(
-            app.config.datasource.url,
+            application.configuration.datasource.url,
             model.username,
             model.password,
-            app.config.datasource.driver
+            application.configuration.datasource.driver
         )
         model.products.clear()
         sql.eachRow("select * from products") { product ->
@@ -64,10 +64,10 @@ class GoodController {
 
     void goodAction(ActionEvent evt = null) {                           //<1>
         def sql = Sql.newInstance(
-            app.config.datasource.url,
+            application.configuration.datasource.url,
             model.username,
             model.password,
-            app.config.datasource.driver
+            application.configuration.datasource.driver
         )
 
         try {
