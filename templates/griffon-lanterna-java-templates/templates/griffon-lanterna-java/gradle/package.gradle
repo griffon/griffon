@@ -1,7 +1,5 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-ext.macosx = System.getProperty('os.name').contains('Mac OS')
-
 apply plugin: 'izpack'
 if (macosx) apply plugin: 'macAppBundle'
 

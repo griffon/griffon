@@ -27,6 +27,14 @@ griffon {
     toolkit = 'pivot'
 }
 
+ext {
+    macosx = System.getProperty('os.name').contains('Mac OS')
+    runJvmArgs = []
+}
+if (macosx) {
+    runJvmArgs += ["-Xdock:name=${project.name}", "-Xdock:icon=${file('src/media/griffon.icns').canonicalPath}"]
+}
+
 apply from: 'gradle/publishing.gradle'
 apply from: 'gradle/code-coverage.gradle'
 apply from: 'gradle/code-quality.gradle'
