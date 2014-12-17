@@ -76,7 +76,8 @@ jbake {
     dependsOn pluginList
     configuration['asciidoctor.attributes.export'] = true
     configuration['asciidoctor.attributes.export.prefix'] = 'jbake-'
-    configuration['griffon.version'] = project.version
+    configuration['griffon.version.current'] = project.version
+    configuration['griffon.version.previous'] = rootProject.previousVersion
     configuration['project-build-dir'] = project.buildDir.absolutePath
 }
 

@@ -33,7 +33,7 @@ buildscript {
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
         classpath 'org.ajoberstar:gradle-git:0.12.0'
-        classpath 'uk.co.cacoethes:lazybones-gradle:1.2.2'
+        classpath 'uk.co.cacoethes:lazybones-gradle:1.2.3'
         classpath 'org.kordamp.gradle:stats-gradle-plugin:0.1.3'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.6'
         classpath 'org.kordamp.gradle:clirr-gradle-plugin:0.1.0'
@@ -172,7 +172,7 @@ subprojects { subproj ->
 
                 clirr {
                     failOnErrors = false
-                    baseline = ['org.codehaus.griffon', subproj.name, '2.0.0'].join(':')
+                    baseline = ['org.codehaus.griffon', subproj.name, rootProject.previousVersion].join(':')
                 }
 
                 projectsWithClirr << subproj
