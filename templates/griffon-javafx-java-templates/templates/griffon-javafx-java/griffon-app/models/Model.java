@@ -25,6 +25,6 @@ public class ${project_class_name}Model extends AbstractGriffonModel {
     }
 
     public String getClickCount() {
-        return clickCount == null ? null : clickCountProperty().get();
+        return clickCountProperty().get();
     }
 }
