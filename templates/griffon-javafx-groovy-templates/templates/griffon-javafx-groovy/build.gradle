@@ -29,10 +29,6 @@ griffon {
 
 ext {
     macosx = System.getProperty('os.name').contains('Mac OS')
-    runJvmArgs = []
-}
-if (macosx) {
-    runJvmArgs += ["-Xdock:name=${project.name}", "-Xdock:icon=${file('src/media/griffon.icns').canonicalPath}"]
 }
 
 mainClassName = '${project_package}.Launcher'
@@ -59,7 +55,7 @@ dependencies {
         exclude group: 'ant',         module: 'ant-junit'
         exclude group: 'ant-contrib', module: 'ant-contrib'
     }
-    runtime 'org.slf4j:slf4j-log4j12:1.7.7'
+    runtime 'org.slf4j:slf4j-log4j12:1.7.9'
 
     testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
 }
@@ -78,8 +74,4 @@ shadowJar {
             'META-INF/editors/java.beans.PropertyEditor'
         ]
     }
-}
-
-run {
-    jvmArgs = runJvmArgs
 }

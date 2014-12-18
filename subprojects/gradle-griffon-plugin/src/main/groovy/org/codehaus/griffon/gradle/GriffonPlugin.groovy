@@ -22,12 +22,15 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.invocation.Gradle
+import org.gradle.api.tasks.Copy
 import org.gradle.tooling.BuildException
 
 /**
  * @author Andres Almiray
  */
 class GriffonPlugin implements Plugin<Project> {
+    private static final boolean MACOSX = System.getProperty('os.name').contains('Mac OS')
+
     @Override
     void apply(Project project) {
         GriffonExtension extension = project.extensions.create('griffon', GriffonExtension, project)
@@ -42,11 +45,11 @@ class GriffonPlugin implements Plugin<Project> {
         String sourceSetName = project.plugins.hasPlugin('groovy') ? 'groovy' : 'java'
 
         configureDefaultSourceSets(project, 'java')
-        configureDefaultSourceSets(project, sourceSetName)
+        if (sourceSetName != 'java') configureDefaultSourceSets(project, sourceSetName)
         adjustJavadocClasspath(project, sourceSetName)
         adjustIdeClasspaths(project)
         createDefaultDirectoryStructure(project, 'java')
-        createDefaultDirectoryStructure(project, sourceSetName)
+        if (sourceSetName != 'java') createDefaultDirectoryStructure(project, sourceSetName)
 
         registerBuildListener(project, extension)
     }
@@ -122,7 +125,7 @@ class GriffonPlugin implements Plugin<Project> {
                 include '**/*.groovy'
                 include '**/*.xml'
                 filter(ReplaceTokens, tokens: [
-                    'application.name'   : project.name,
+                    'application.name'   : project.applicationName,
                     'application.version': project.version,
                     'griffon.version'    : extension.version
                 ])
@@ -146,11 +149,50 @@ class GriffonPlugin implements Plugin<Project> {
                 include '**/*.xml'
                 include '**/*.txt'
                 filter(ReplaceTokens, tokens: [
-                    'application.name'   : project.name,
+                    'application.name'   : project.applicationName,
                     'application.version': project.version,
                     'griffon.version'    : extension.version
                 ])
             }
+        }
+    }
+
+    private void configureApplicationSettings(Project project, GriffonExtension extension) {
+        Task createDistributionFiles = project.tasks.create(name: 'createDistributionFiles', type: Copy, group: 'Application') {
+            destinationDir = project.file("${project.buildDir}/assemble/distribution")
+            from(project.file('src/media')) {
+                into 'resources'
+                include '*.icns', '*.ico'
+            }
+            from(project.file('.')) {
+                include 'README*', 'INSTALL*', 'LICENSE*'
+            }
+        }
+        project.applicationDistribution.from(createDistributionFiles)
+
+        if (MACOSX) {
+            List jvmArgs = project.applicationDefaultJvmArgs
+            if (!(jvmArgs.find { it.startsWith('-Xdock:name=') })) {
+                jvmArgs << "-Xdock:name=${project.applicationName}"
+            }
+            if (!(jvmArgs.find { it.startsWith('-Xdock:icon=') })) {
+                jvmArgs << ('-Xdock:icon=$APP_HOME/resources/' + extension.applicationIconName)
+            }
+
+            Task runTask = project.tasks.findByName('run')
+            jvmArgs = (project.applicationDefaultJvmArgs + runTask.jvmArgs).unique()
+            if (!(jvmArgs.find { it.startsWith('-Xdock:name=') })) {
+                jvmArgs << "-Xdock:name=${project.applicationName}"
+            }
+
+            String iconElem = jvmArgs.find { it.startsWith('-Xdock:icon=$APP_HOME/resources') }
+            jvmArgs -= iconElem
+            if (!(jvmArgs.find { it.startsWith('-Xdock:icon=') })) {
+                File iconFile = project.file("src/media/${extension.applicationIconName}")
+                if (!iconFile.exists()) iconFile = project.file('src/media/griffon.icns')
+                jvmArgs << "-Xdock:icon=${iconFile.canonicalPath}"
+            }
+            runTask.jvmArgs = jvmArgs
         }
     }
 
@@ -190,6 +232,9 @@ class GriffonPlugin implements Plugin<Project> {
                 appendDependency('core-test')
 
                 validateToolkit(project, extension)
+                project.plugins.withId('application') { plugin ->
+                    configureApplicationSettings(project, extension)
+                }
 
                 boolean groovyDependenciesEnabled = extension.includeGroovyDependencies?.toBoolean() ||
                     (project.plugins.hasPlugin('groovy') && extension.includeGroovyDependencies == null)
