@@ -1417,7 +1417,7 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;750</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="comment">// Make sure we have a method to check</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;751</td>  <td class="nbHitsCovered"><a title="Line 751: Conditional coverage 100% (2/2).">&nbsp;24</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 751: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (method == <span class="keyword">null</span>) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;751</td>  <td class="nbHitsCovered"><a title="Line 751: Conditional coverage 100% (2/2).">&nbsp;30</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 751: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (method == <span class="keyword">null</span>) {</a></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;752</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> (<span class="keyword">null</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;753</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
@@ -1425,19 +1425,19 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;755</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="comment">// If the requested method is not public we cannot call it</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;756</td>  <td class="nbHitsUncovered"><a title="Line 756: Conditional coverage 50% (1/2).">&nbsp;18</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 756: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (!Modifier.isPublic(method.getModifiers())) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;756</td>  <td class="nbHitsUncovered"><a title="Line 756: Conditional coverage 50% (1/2).">&nbsp;24</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 756: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (!Modifier.isPublic(method.getModifiers())) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;757</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            <span class="keyword">return</span> (<span class="keyword">null</span>);</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;758</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;759</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;760</td>  <td class="nbHitsCovered">&nbsp;18</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">boolean</span> sameClass = <span class="keyword">true</span>;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;761</td>  <td class="nbHitsUncovered"><a title="Line 761: Conditional coverage 50% (1/2).">&nbsp;18</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 761: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (clazz == <span class="keyword">null</span>) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;760</td>  <td class="nbHitsCovered">&nbsp;24</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">boolean</span> sameClass = <span class="keyword">true</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;761</td>  <td class="nbHitsUncovered"><a title="Line 761: Conditional coverage 50% (1/2).">&nbsp;24</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 761: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (clazz == <span class="keyword">null</span>) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;762</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            clazz = method.getDeclaringClass();</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;763</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        } <span class="keyword">else</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;764</td>  <td class="nbHitsCovered">&nbsp;18</td>  <td class="src"><pre class="src">&nbsp;            sameClass = clazz.equals(method.getDeclaringClass());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;765</td>  <td class="nbHitsUncovered"><a title="Line 765: Conditional coverage 50% (1/2).">&nbsp;18</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 765: Conditional coverage 50% (1/2).">            <span class="keyword">if</span> (!method.getDeclaringClass().isAssignableFrom(clazz)) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;764</td>  <td class="nbHitsCovered">&nbsp;24</td>  <td class="src"><pre class="src">&nbsp;            sameClass = clazz.equals(method.getDeclaringClass());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;765</td>  <td class="nbHitsUncovered"><a title="Line 765: Conditional coverage 50% (1/2).">&nbsp;24</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 765: Conditional coverage 50% (1/2).">            <span class="keyword">if</span> (!method.getDeclaringClass().isAssignableFrom(clazz)) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;766</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(clazz.getName() +</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;767</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                    <span class="string">" is not assignable from "</span> + method.getDeclaringClass().getName());</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;768</td>  <td class="nbHits">&nbsp;</td>
@@ -1448,12 +1448,12 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;771</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="comment">// If the class is public, we are done</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;772</td>  <td class="nbHitsUncovered"><a title="Line 772: Conditional coverage 50% (1/2).">&nbsp;18</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 772: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (Modifier.isPublic(clazz.getModifiers())) {</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;773</td>  <td class="nbHitsUncovered"><a title="Line 773: Conditional coverage 75% (3/4) [each condition: 100%, 50%].">&nbsp;18</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 773: Conditional coverage 75% (3/4) [each condition: 100%, 50%].">            <span class="keyword">if</span> (!sameClass &amp;&amp; !Modifier.isPublic(method.getDeclaringClass().getModifiers())) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;772</td>  <td class="nbHitsUncovered"><a title="Line 772: Conditional coverage 50% (1/2).">&nbsp;24</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 772: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (Modifier.isPublic(clazz.getModifiers())) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;773</td>  <td class="nbHitsUncovered"><a title="Line 773: Conditional coverage 75% (3/4) [each condition: 100%, 50%].">&nbsp;24</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 773: Conditional coverage 75% (3/4) [each condition: 100%, 50%].">            <span class="keyword">if</span> (!sameClass &amp;&amp; !Modifier.isPublic(method.getDeclaringClass().getModifiers())) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;774</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                setMethodAccessible(method); <span class="comment">// Default access superclass workaround</span></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;775</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;776</td>  <td class="nbHitsCovered">&nbsp;18</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> (method);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;776</td>  <td class="nbHitsCovered">&nbsp;24</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> (method);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;777</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;778</td>  <td class="nbHits">&nbsp;</td>
@@ -2322,6 +2322,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 12/12/14 11:18 AM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 12/18/14 3:31 AM.</div>
 </body>
 </html>

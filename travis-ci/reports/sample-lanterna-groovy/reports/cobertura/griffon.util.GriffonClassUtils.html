@@ -3423,8 +3423,8 @@
 <tr>  <td class="numLine">&nbsp;1972</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;1973</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        PropertyDescriptor[] descriptors = getPropertyDescriptors(clazz);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1974</td>  <td class="nbHitsUncovered"><a title="Line 1974: Conditional coverage 50% (1/2).">&nbsp;20</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 1974: Conditional coverage 50% (1/2).">        <span class="keyword">for</span> (PropertyDescriptor descriptor : descriptors) {</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1975</td>  <td class="nbHitsCovered"><a title="Line 1975: Conditional coverage 100% (2/2).">&nbsp;20</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 1975: Conditional coverage 100% (2/2).">            <span class="keyword">if</span> (name.equals(descriptor.getName())) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1974</td>  <td class="nbHitsUncovered"><a title="Line 1974: Conditional coverage 50% (1/2).">&nbsp;22</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 1974: Conditional coverage 50% (1/2).">        <span class="keyword">for</span> (PropertyDescriptor descriptor : descriptors) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1975</td>  <td class="nbHitsCovered"><a title="Line 1975: Conditional coverage 100% (2/2).">&nbsp;22</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 1975: Conditional coverage 100% (2/2).">            <span class="keyword">if</span> (name.equals(descriptor.getName())) {</a></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;1976</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">return</span> (descriptor);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1977</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            }</pre></td></tr>
@@ -4003,11 +4003,11 @@
   <td class="src"><pre class="src">&nbsp;    @Nullable</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;2317</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> Object invokeInstanceMethod(@Nonnull Object object, @Nonnull String methodName, Object... args) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;2318</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonNull(object, ERROR_OBJECT_NULL);</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;2319</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonBlank(methodName, ERROR_METHOD_NAME_BLANK);</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;2318</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(object, ERROR_OBJECT_NULL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;2319</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        requireNonBlank(methodName, ERROR_METHOD_NAME_BLANK);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;2320</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;2321</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            <span class="keyword">return</span> invokeMethod(object, methodName, args);</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;2321</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> invokeMethod(object, methodName, args);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;2322</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        } <span class="keyword">catch</span> (NoSuchMethodException | IllegalAccessException e) {</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;2323</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> InstanceMethodInvocationException(object, methodName, args, e);</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;2324</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        } <span class="keyword">catch</span> (InvocationTargetException e) {</span></pre></td></tr>
@@ -4040,11 +4040,11 @@
   <td class="src"><pre class="src">&nbsp;    @Nullable</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;2340</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> Object invokeExactInstanceMethod(@Nonnull Object object, @Nonnull String methodName, Object... args) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;2341</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        requireNonNull(object, ERROR_OBJECT_NULL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;2342</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        requireNonBlank(methodName, ERROR_METHOD_NAME_BLANK);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;2341</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonNull(object, ERROR_OBJECT_NULL);</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;2342</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        requireNonBlank(methodName, ERROR_METHOD_NAME_BLANK);</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;2343</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;2344</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> invokeExactMethod(object, methodName, args);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;2344</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            <span class="keyword">return</span> invokeExactMethod(object, methodName, args);</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;2345</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        } <span class="keyword">catch</span> (NoSuchMethodException | IllegalAccessException e) {</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;2346</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> InstanceMethodInvocationException(object, methodName, args, e);</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;2347</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        } <span class="keyword">catch</span> (InvocationTargetException e) {</span></pre></td></tr>
@@ -4498,6 +4498,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 12/12/14 11:19 AM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 12/18/14 3:33 AM.</div>
 </body>
 </html>
