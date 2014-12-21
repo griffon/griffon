@@ -27,6 +27,7 @@ import griffon.core.artifact.GriffonMvcArtifact;
 import griffon.core.artifact.GriffonView;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
+import griffon.exceptions.GriffonException;
 import griffon.exceptions.MVCGroupInstantiationException;
 import griffon.exceptions.NewInstanceException;
 import griffon.util.CollectionUtils;
@@ -380,9 +381,9 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         try {
             return applicationClassLoader.get().loadClass(className);
         } catch (ClassNotFoundException e) {
-            // ignored
+            // #39 do not ignore this CNFE
+            throw new GriffonException(e.toString(), e);
         }
-        return null;
     }
 
     protected static final class ClassHolder {
