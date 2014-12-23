@@ -180,6 +180,16 @@ subprojects { subproj ->
 
             projectsWithCoverage << subproj
 
+            test {
+                testLogging {
+                    afterSuite { desc, result ->
+                        if (!desc.parent) {
+                            println "Test results ${project.name}: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} passed, ${result.failedTestCount} failed, ${result.skippedTestCount} skipped)"
+                        }
+                    }
+                }
+            }
+
             javadoc {
                 excludes = ['**/*.html', 'META-INF/**', '**/*.groovy']
 
