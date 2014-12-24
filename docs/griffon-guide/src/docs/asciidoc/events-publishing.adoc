@@ -13,7 +13,7 @@ UI thread itself
 
 [source,groovy,options="nowrap"]
 ----
-application.eventRouter.publish('MyEventName', ['arg0', 'arg1'])
+application.eventRouter.publishEvent('MyEventName', ['arg0', 'arg1'])
 ----
 
 Whereas the following snippet guarantees that all event handlers that are interested in

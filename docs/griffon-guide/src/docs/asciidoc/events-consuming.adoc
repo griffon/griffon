@@ -102,7 +102,7 @@ class MyController {
 
     void fooAction() {
         // do something
-        application.eventRouter.publish('Foo')
+        application.eventRouter.publishEvent('Foo')
     }
 }
 ----
@@ -126,7 +126,7 @@ class MyController {
 
     void fooAction() {
         // do something
-        application.eventRouter.publish('Foo')
+        application.eventRouter.publishEvent('Foo')
     }
 }
 ----
@@ -150,7 +150,7 @@ class MyController {
 
     void fooAction() {
         // do something
-        application.eventRouter.publish(new MyController.Foo(this))
+        application.eventRouter.publishEvent(new MyController.Foo(this))
     }
 
     static class Foo extends griffon.core.Event {
