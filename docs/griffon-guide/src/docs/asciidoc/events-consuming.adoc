@@ -143,9 +143,7 @@ import griffon.core.artifact.GriffonController
 @griffon.metadata.ArtifactProviderFor(GriffonController)
 class MyController {
     void mvcGroupInit(Map<String, Object> args) {
-        application.eventRouter.addListener(Foo) {
-            e -> assert e instanceof Foo
-        }
+        application.eventRouter.addListener(Foo) { e -> assert e instanceof Foo }
     }
 
     void fooAction() {

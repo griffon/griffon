@@ -21,7 +21,7 @@ an event of type `MyEventName` will be called outside of the UI thread
 
 [source,groovy,options="nowrap"]
 ----
-application.eventRouter.publishOutsideUI('MyEventName', ['arg0', 'arg1'])
+application.eventRouter.publishEventOutsideUI('MyEventName', ['arg0', 'arg1'])
 ----
 
 Finally, if you'd want event notification to be handed in a thread that is not the current
@@ -29,7 +29,7 @@ one (regardless if the current one is the UI thread or not) then use the followi
 
 [source,groovy,options="nowrap"]
 ----
-application.eventRouter.publishAsync('MyEventName', ['arg0', 'arg1'])
+application.eventRouter.publishEventAsync('MyEventName', ['arg0', 'arg1'])
 ----
 
 Alternatively, you may specify an instance of a subclass of `{link_event}` as the sole
