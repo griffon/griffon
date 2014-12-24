@@ -29,7 +29,7 @@
 </td>
 <td>
 <div class="infoBox" id="failures">
-<div class="counter">0</div>
+<div class="counter">6</div>
 <p>failures</p>
 </div>
 </td>
@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.117s</div>
+<div class="counter">0.144s</div>
 <p>duration</p>
 </div>
 </td>
@@ -50,8 +50,8 @@
 </div>
 </td>
 <td>
-<div class="infoBox success" id="successRate">
-<div class="percent">100%</div>
+<div class="infoBox failures" id="successRate">
+<div class="percent">45%</div>
 <p>successful</p>
 </div>
 </td>
@@ -61,13 +61,943 @@
 <div id="tabs">
 <ul class="tabLinks">
 <li>
-<a href="#tab0">Tests</a>
+<a href="#tab0">Failed tests</a>
 </li>
 <li>
-<a href="#tab1">Standard error</a>
+<a href="#tab1">Tests</a>
+</li>
+<li>
+<a href="#tab2">Standard error</a>
 </li>
 </ul>
 <div id="tab0" class="tab">
+<h2>Failed tests</h2>
+<div class="test">
+<a name="Parse application.xml from String"></a>
+<h3 class="failures">Parse application.xml from String</h3>
+<span class="code">
+<pre>Condition not satisfied:
+
+expected.trim() == output.trim() || expected8.trim() == output.trim()
+|        |      |  |      |      |  |         |      |  |      |
+|        |      |  |      |      |  |         |      |  |      application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |  |         |      |  |          actions {
+|        |      |  |      |      |  |         |      |  |              action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |  |         |      |  |          }
+|        |      |  |      |      |  |         |      |  |          gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |  |         |      |  |          textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |  |         |      |  |          textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |  |         |      |  |          button(action: clickAction)
+|        |      |  |      |      |  |         |      |  |      }
+|        |      |  |      |      |  |         |      |  application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |  |         |      |      actions {
+|        |      |  |      |      |  |         |      |          action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |  |         |      |      }
+|        |      |  |      |      |  |         |      |      gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |  |         |      |      textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |  |         |      |      textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |  |         |      |      button(action: clickAction)
+|        |      |  |      |      |  |         |      |  }
+|        |      |  |      |      |  |         |      false
+|        |      |  |      |      |  |         |      620 differences (38% similarity)
+|        |      |  |      |      |  |         |      (/*\n * Copyright 2008-2015 the origin)a(l author or authors.\n *\n * Licensed under the A)p(ache License, Version 2.0 (the &quot;License&quot;);\n * you may not use this file exce)p(t in comp)li(an)c(e with the License.\n * You m)a(y ob)t(a)i(n a c)o(py of the Lice)n(se at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\napplication)(title: app.config.application.title, pack: true) {\n    actions {\n        action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })\n    }\n    gridLayout(rows: 3, cols: 1)\n    textField(columns: 20, text: bind('value', target: model), id: 'input')\n    textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')\n    button(action: clickAction)\n}
+|        |      |  |      |      |  |         |      (---~---------------------------------)a(---------------------~---~-----------------------)p(-------------------------------------------~---------------------------------)p(---------)li(--)c(--------------------~--------)a(----)t(-)i(-----)o(--------------)n(------~---~--------------------------------------------------~---~-----------------------------------------------------------------------~---------------------------------------------------------------------~----------------------------------------------------------------------------~-----------------------------------------------------------------------~----------------------------------~----~-----------)(title: app.config.application.title, pack: true) {\n    actions {\n        action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })\n    }\n    gridLayout(rows: 3, cols: 1)\n    textField(columns: 20, text: bind('value', target: model), id: 'input')\n    textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')\n    button(action: clickAction)\n}
+|        |      |  |      |      |  |         /*
+|        |      |  |      |      |  |          * Copyright 2008-2015 the original author or authors.
+|        |      |  |      |      |  |          *
+|        |      |  |      |      |  |          * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+|        |      |  |      |      |  |          * you may not use this file except in compliance with the License.
+|        |      |  |      |      |  |          * You may obtain a copy of the License at
+|        |      |  |      |      |  |          *
+|        |      |  |      |      |  |          *     http://www.apache.org/licenses/LICENSE-2.0
+|        |      |  |      |      |  |          *
+|        |      |  |      |      |  |          * Unless required by applicable law or agreed to in writing, software
+|        |      |  |      |      |  |          * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+|        |      |  |      |      |  |          * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+|        |      |  |      |      |  |          * See the License for the specific language governing permissions and
+|        |      |  |      |      |  |          * limitations under the License.
+|        |      |  |      |      |  |          */
+|        |      |  |      |      |  |         application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |  |             actions {
+|        |      |  |      |      |  |                 action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |  |             }
+|        |      |  |      |      |  |             gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |  |             textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |  |             textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |  |             button(action: clickAction)
+|        |      |  |      |      |  |         }
+|        |      |  |      |      |  /*
+|        |      |  |      |      |   * Copyright 2008-2015 the original author or authors.
+|        |      |  |      |      |   *
+|        |      |  |      |      |   * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+|        |      |  |      |      |   * you may not use this file except in compliance with the License.
+|        |      |  |      |      |   * You may obtain a copy of the License at
+|        |      |  |      |      |   *
+|        |      |  |      |      |   *     http://www.apache.org/licenses/LICENSE-2.0
+|        |      |  |      |      |   *
+|        |      |  |      |      |   * Unless required by applicable law or agreed to in writing, software
+|        |      |  |      |      |   * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+|        |      |  |      |      |   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+|        |      |  |      |      |   * See the License for the specific language governing permissions and
+|        |      |  |      |      |   * limitations under the License.
+|        |      |  |      |      |   */
+|        |      |  |      |      |  application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |      actions {
+|        |      |  |      |      |          action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |      }
+|        |      |  |      |      |      gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |      textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |      textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |      button(action: clickAction)
+|        |      |  |      |      |  }
+|        |      |  |      |      false
+|        |      |  |      application(title: app.config.application.title, pack: true) {
+|        |      |  |          actions {
+|        |      |  |              action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |          }
+|        |      |  |          gridLayout(rows: 3, cols: 1)
+|        |      |  |          textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |          textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |          button(action: clickAction)
+|        |      |  |      }
+|        |      |  application(title: app.config.application.title, pack: true) {
+|        |      |      actions {
+|        |      |          action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |      }
+|        |      |      gridLayout(rows: 3, cols: 1)
+|        |      |      textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |      textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |      button(action: clickAction)
+|        |      |  }
+|        |      false
+|        |      718 differences (29% similarity)
+|        |      (/*\n * Copyright 2008-2015 the origin)a(l author or authors.\n *\n * Licensed under the A)p(ache License, Version 2.0 (the &quot;License&quot;);\n * you may not use this file exce)p(t in comp)li(an)c(e with the License.\n * You m)a(y ob)t(a)i(n a c)o(py of the Lice)n(se at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\napplication)(title: app.config.application.title, pack: true) {\n    actions {\n        action((id--): '(c)lick(Action)', (name): '(C)lick(------)', closure: { controller.click(it) })\n    }\n    gridLayout((c)o(l)s: (1), (r)o(w)s: (3))\n    textField((id: 'i)n(put'-), text: bind('value', target: model), (colum-)n(s: 20))\n    textField((i)d(------): ('-------)o(-)u(tput'--), text: bind { model.value }, (columns): (20, edi)t(able: false))\n    button(action: clickAction)\n}
+|        |      (---~---------------------------------)a(---------------------~---~-----------------------)p(-------------------------------------------~---------------------------------)p(---------)li(--)c(--------------------~--------)a(----)t(-)i(-----)o(--------------)n(------~---~--------------------------------------------------~---~-----------------------------------------------------------------------~---------------------------------------------------------------------~----------------------------------------------------------------------------~-----------------------------------------------------------------------~----------------------------------~----~-----------)(title: app.config.application.title, pack: true) {\n    actions {\n        action((name): '(C)lick(------)', (id--): '(c)lick(Action)', closure: { controller.click(it) })\n    }\n    gridLayout((r)o(w)s: (3), (c)o(l)s: (1))\n    textField((colum-)n(s: 20), text: bind('value', target: model), (id: 'i)n(put'-))\n    textField((e)d(itable): (false, c)o(l)u(mns: 20), text: bind { model.value }, (id-----): ('outpu-)t('----------))\n    button(action: clickAction)\n}
+|        /*
+|         * Copyright 2008-2015 the original author or authors.
+|         *
+|         * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+|         * you may not use this file except in compliance with the License.
+|         * You may obtain a copy of the License at
+|         *
+|         *     http://www.apache.org/licenses/LICENSE-2.0
+|         *
+|         * Unless required by applicable law or agreed to in writing, software
+|         * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+|         * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+|         * See the License for the specific language governing permissions and
+|         * limitations under the License.
+|         */
+|        application(title: app.config.application.title, pack: true) {
+|            actions {
+|                action(id: 'clickAction', name: 'Click', closure: { controller.click(it) })
+|            }
+|            gridLayout(cols: 1, rows: 3)
+|            textField(id: 'input', text: bind('value', target: model), columns: 20)
+|            textField(id: 'output', text: bind { model.value }, columns: 20, editable: false)
+|            button(action: clickAction)
+|        }
+/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+application(title: app.config.application.title, pack: true) {
+    actions {
+        action(id: 'clickAction', name: 'Click', closure: { controller.click(it) })
+    }
+    gridLayout(cols: 1, rows: 3)
+    textField(id: 'input', text: bind('value', target: model), columns: 20)
+    textField(id: 'output', text: bind { model.value }, columns: 20, editable: false)
+    button(action: clickAction)
+}
+
+	at griffon.util.Xml2GroovySpec.Parse application.xml from String(Xml2GroovySpec.groovy:54)
+</pre>
+</span>
+</div>
+<div class="test">
+<a name="Parse application.xml from file"></a>
+<h3 class="failures">Parse application.xml from file</h3>
+<span class="code">
+<pre>Condition not satisfied:
+
+expected.trim() == output.trim() || expected8.trim() == output.trim()
+|        |      |  |      |      |  |         |      |  |      |
+|        |      |  |      |      |  |         |      |  |      application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |  |         |      |  |          actions {
+|        |      |  |      |      |  |         |      |  |              action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |  |         |      |  |          }
+|        |      |  |      |      |  |         |      |  |          gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |  |         |      |  |          textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |  |         |      |  |          textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |  |         |      |  |          button(action: clickAction)
+|        |      |  |      |      |  |         |      |  |      }
+|        |      |  |      |      |  |         |      |  application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |  |         |      |      actions {
+|        |      |  |      |      |  |         |      |          action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |  |         |      |      }
+|        |      |  |      |      |  |         |      |      gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |  |         |      |      textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |  |         |      |      textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |  |         |      |      button(action: clickAction)
+|        |      |  |      |      |  |         |      |  }
+|        |      |  |      |      |  |         |      false
+|        |      |  |      |      |  |         |      620 differences (38% similarity)
+|        |      |  |      |      |  |         |      (/*\n * Copyright 2008-2015 the origin)a(l author or authors.\n *\n * Licensed under the A)p(ache License, Version 2.0 (the &quot;License&quot;);\n * you may not use this file exce)p(t in comp)li(an)c(e with the License.\n * You m)a(y ob)t(a)i(n a c)o(py of the Lice)n(se at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\napplication)(title: app.config.application.title, pack: true) {\n    actions {\n        action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })\n    }\n    gridLayout(rows: 3, cols: 1)\n    textField(columns: 20, text: bind('value', target: model), id: 'input')\n    textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')\n    button(action: clickAction)\n}
+|        |      |  |      |      |  |         |      (---~---------------------------------)a(---------------------~---~-----------------------)p(-------------------------------------------~---------------------------------)p(---------)li(--)c(--------------------~--------)a(----)t(-)i(-----)o(--------------)n(------~---~--------------------------------------------------~---~-----------------------------------------------------------------------~---------------------------------------------------------------------~----------------------------------------------------------------------------~-----------------------------------------------------------------------~----------------------------------~----~-----------)(title: app.config.application.title, pack: true) {\n    actions {\n        action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })\n    }\n    gridLayout(rows: 3, cols: 1)\n    textField(columns: 20, text: bind('value', target: model), id: 'input')\n    textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')\n    button(action: clickAction)\n}
+|        |      |  |      |      |  |         /*
+|        |      |  |      |      |  |          * Copyright 2008-2015 the original author or authors.
+|        |      |  |      |      |  |          *
+|        |      |  |      |      |  |          * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+|        |      |  |      |      |  |          * you may not use this file except in compliance with the License.
+|        |      |  |      |      |  |          * You may obtain a copy of the License at
+|        |      |  |      |      |  |          *
+|        |      |  |      |      |  |          *     http://www.apache.org/licenses/LICENSE-2.0
+|        |      |  |      |      |  |          *
+|        |      |  |      |      |  |          * Unless required by applicable law or agreed to in writing, software
+|        |      |  |      |      |  |          * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+|        |      |  |      |      |  |          * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+|        |      |  |      |      |  |          * See the License for the specific language governing permissions and
+|        |      |  |      |      |  |          * limitations under the License.
+|        |      |  |      |      |  |          */
+|        |      |  |      |      |  |         application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |  |             actions {
+|        |      |  |      |      |  |                 action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |  |             }
+|        |      |  |      |      |  |             gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |  |             textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |  |             textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |  |             button(action: clickAction)
+|        |      |  |      |      |  |         }
+|        |      |  |      |      |  /*
+|        |      |  |      |      |   * Copyright 2008-2015 the original author or authors.
+|        |      |  |      |      |   *
+|        |      |  |      |      |   * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+|        |      |  |      |      |   * you may not use this file except in compliance with the License.
+|        |      |  |      |      |   * You may obtain a copy of the License at
+|        |      |  |      |      |   *
+|        |      |  |      |      |   *     http://www.apache.org/licenses/LICENSE-2.0
+|        |      |  |      |      |   *
+|        |      |  |      |      |   * Unless required by applicable law or agreed to in writing, software
+|        |      |  |      |      |   * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+|        |      |  |      |      |   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+|        |      |  |      |      |   * See the License for the specific language governing permissions and
+|        |      |  |      |      |   * limitations under the License.
+|        |      |  |      |      |   */
+|        |      |  |      |      |  application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |      actions {
+|        |      |  |      |      |          action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |      }
+|        |      |  |      |      |      gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |      textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |      textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |      button(action: clickAction)
+|        |      |  |      |      |  }
+|        |      |  |      |      false
+|        |      |  |      application(title: app.config.application.title, pack: true) {
+|        |      |  |          actions {
+|        |      |  |              action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |          }
+|        |      |  |          gridLayout(rows: 3, cols: 1)
+|        |      |  |          textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |          textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |          button(action: clickAction)
+|        |      |  |      }
+|        |      |  application(title: app.config.application.title, pack: true) {
+|        |      |      actions {
+|        |      |          action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |      }
+|        |      |      gridLayout(rows: 3, cols: 1)
+|        |      |      textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |      textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |      button(action: clickAction)
+|        |      |  }
+|        |      false
+|        |      718 differences (29% similarity)
+|        |      (/*\n * Copyright 2008-2015 the origin)a(l author or authors.\n *\n * Licensed under the A)p(ache License, Version 2.0 (the &quot;License&quot;);\n * you may not use this file exce)p(t in comp)li(an)c(e with the License.\n * You m)a(y ob)t(a)i(n a c)o(py of the Lice)n(se at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\napplication)(title: app.config.application.title, pack: true) {\n    actions {\n        action((id--): '(c)lick(Action)', (name): '(C)lick(------)', closure: { controller.click(it) })\n    }\n    gridLayout((c)o(l)s: (1), (r)o(w)s: (3))\n    textField((id: 'i)n(put'-), text: bind('value', target: model), (colum-)n(s: 20))\n    textField((i)d(------): ('-------)o(-)u(tput'--), text: bind { model.value }, (columns): (20, edi)t(able: false))\n    button(action: clickAction)\n}
+|        |      (---~---------------------------------)a(---------------------~---~-----------------------)p(-------------------------------------------~---------------------------------)p(---------)li(--)c(--------------------~--------)a(----)t(-)i(-----)o(--------------)n(------~---~--------------------------------------------------~---~-----------------------------------------------------------------------~---------------------------------------------------------------------~----------------------------------------------------------------------------~-----------------------------------------------------------------------~----------------------------------~----~-----------)(title: app.config.application.title, pack: true) {\n    actions {\n        action((name): '(C)lick(------)', (id--): '(c)lick(Action)', closure: { controller.click(it) })\n    }\n    gridLayout((r)o(w)s: (3), (c)o(l)s: (1))\n    textField((colum-)n(s: 20), text: bind('value', target: model), (id: 'i)n(put'-))\n    textField((e)d(itable): (false, c)o(l)u(mns: 20), text: bind { model.value }, (id-----): ('outpu-)t('----------))\n    button(action: clickAction)\n}
+|        /*
+|         * Copyright 2008-2015 the original author or authors.
+|         *
+|         * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+|         * you may not use this file except in compliance with the License.
+|         * You may obtain a copy of the License at
+|         *
+|         *     http://www.apache.org/licenses/LICENSE-2.0
+|         *
+|         * Unless required by applicable law or agreed to in writing, software
+|         * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+|         * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+|         * See the License for the specific language governing permissions and
+|         * limitations under the License.
+|         */
+|        application(title: app.config.application.title, pack: true) {
+|            actions {
+|                action(id: 'clickAction', name: 'Click', closure: { controller.click(it) })
+|            }
+|            gridLayout(cols: 1, rows: 3)
+|            textField(id: 'input', text: bind('value', target: model), columns: 20)
+|            textField(id: 'output', text: bind { model.value }, columns: 20, editable: false)
+|            button(action: clickAction)
+|        }
+/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+application(title: app.config.application.title, pack: true) {
+    actions {
+        action(id: 'clickAction', name: 'Click', closure: { controller.click(it) })
+    }
+    gridLayout(cols: 1, rows: 3)
+    textField(id: 'input', text: bind('value', target: model), columns: 20)
+    textField(id: 'output', text: bind { model.value }, columns: 20, editable: false)
+    button(action: clickAction)
+}
+
+	at griffon.util.Xml2GroovySpec.Parse application.xml from #type(Xml2GroovySpec.groovy:38)
+</pre>
+</span>
+</div>
+<div class="test">
+<a name="Parse application.xml from gpathResult"></a>
+<h3 class="failures">Parse application.xml from gpathResult</h3>
+<span class="code">
+<pre>Condition not satisfied:
+
+expected.trim() == output.trim() || expected8.trim() == output.trim()
+|        |      |  |      |      |  |         |      |  |      |
+|        |      |  |      |      |  |         |      |  |      application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |  |         |      |  |          actions {
+|        |      |  |      |      |  |         |      |  |              action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |  |         |      |  |          }
+|        |      |  |      |      |  |         |      |  |          gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |  |         |      |  |          textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |  |         |      |  |          textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |  |         |      |  |          button(action: clickAction)
+|        |      |  |      |      |  |         |      |  |      }
+|        |      |  |      |      |  |         |      |  application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |  |         |      |      actions {
+|        |      |  |      |      |  |         |      |          action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |  |         |      |      }
+|        |      |  |      |      |  |         |      |      gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |  |         |      |      textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |  |         |      |      textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |  |         |      |      button(action: clickAction)
+|        |      |  |      |      |  |         |      |  }
+|        |      |  |      |      |  |         |      false
+|        |      |  |      |      |  |         |      620 differences (38% similarity)
+|        |      |  |      |      |  |         |      (/*\n * Copyright 2008-2015 the origin)a(l author or authors.\n *\n * Licensed under the A)p(ache License, Version 2.0 (the &quot;License&quot;);\n * you may not use this file exce)p(t in comp)li(an)c(e with the License.\n * You m)a(y ob)t(a)i(n a c)o(py of the Lice)n(se at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\napplication)(title: app.config.application.title, pack: true) {\n    actions {\n        action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })\n    }\n    gridLayout(rows: 3, cols: 1)\n    textField(columns: 20, text: bind('value', target: model), id: 'input')\n    textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')\n    button(action: clickAction)\n}
+|        |      |  |      |      |  |         |      (---~---------------------------------)a(---------------------~---~-----------------------)p(-------------------------------------------~---------------------------------)p(---------)li(--)c(--------------------~--------)a(----)t(-)i(-----)o(--------------)n(------~---~--------------------------------------------------~---~-----------------------------------------------------------------------~---------------------------------------------------------------------~----------------------------------------------------------------------------~-----------------------------------------------------------------------~----------------------------------~----~-----------)(title: app.config.application.title, pack: true) {\n    actions {\n        action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })\n    }\n    gridLayout(rows: 3, cols: 1)\n    textField(columns: 20, text: bind('value', target: model), id: 'input')\n    textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')\n    button(action: clickAction)\n}
+|        |      |  |      |      |  |         /*
+|        |      |  |      |      |  |          * Copyright 2008-2015 the original author or authors.
+|        |      |  |      |      |  |          *
+|        |      |  |      |      |  |          * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+|        |      |  |      |      |  |          * you may not use this file except in compliance with the License.
+|        |      |  |      |      |  |          * You may obtain a copy of the License at
+|        |      |  |      |      |  |          *
+|        |      |  |      |      |  |          *     http://www.apache.org/licenses/LICENSE-2.0
+|        |      |  |      |      |  |          *
+|        |      |  |      |      |  |          * Unless required by applicable law or agreed to in writing, software
+|        |      |  |      |      |  |          * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+|        |      |  |      |      |  |          * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+|        |      |  |      |      |  |          * See the License for the specific language governing permissions and
+|        |      |  |      |      |  |          * limitations under the License.
+|        |      |  |      |      |  |          */
+|        |      |  |      |      |  |         application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |  |             actions {
+|        |      |  |      |      |  |                 action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |  |             }
+|        |      |  |      |      |  |             gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |  |             textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |  |             textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |  |             button(action: clickAction)
+|        |      |  |      |      |  |         }
+|        |      |  |      |      |  /*
+|        |      |  |      |      |   * Copyright 2008-2015 the original author or authors.
+|        |      |  |      |      |   *
+|        |      |  |      |      |   * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+|        |      |  |      |      |   * you may not use this file except in compliance with the License.
+|        |      |  |      |      |   * You may obtain a copy of the License at
+|        |      |  |      |      |   *
+|        |      |  |      |      |   *     http://www.apache.org/licenses/LICENSE-2.0
+|        |      |  |      |      |   *
+|        |      |  |      |      |   * Unless required by applicable law or agreed to in writing, software
+|        |      |  |      |      |   * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+|        |      |  |      |      |   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+|        |      |  |      |      |   * See the License for the specific language governing permissions and
+|        |      |  |      |      |   * limitations under the License.
+|        |      |  |      |      |   */
+|        |      |  |      |      |  application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |      actions {
+|        |      |  |      |      |          action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |      }
+|        |      |  |      |      |      gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |      textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |      textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |      button(action: clickAction)
+|        |      |  |      |      |  }
+|        |      |  |      |      false
+|        |      |  |      application(title: app.config.application.title, pack: true) {
+|        |      |  |          actions {
+|        |      |  |              action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |          }
+|        |      |  |          gridLayout(rows: 3, cols: 1)
+|        |      |  |          textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |          textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |          button(action: clickAction)
+|        |      |  |      }
+|        |      |  application(title: app.config.application.title, pack: true) {
+|        |      |      actions {
+|        |      |          action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |      }
+|        |      |      gridLayout(rows: 3, cols: 1)
+|        |      |      textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |      textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |      button(action: clickAction)
+|        |      |  }
+|        |      false
+|        |      718 differences (29% similarity)
+|        |      (/*\n * Copyright 2008-2015 the origin)a(l author or authors.\n *\n * Licensed under the A)p(ache License, Version 2.0 (the &quot;License&quot;);\n * you may not use this file exce)p(t in comp)li(an)c(e with the License.\n * You m)a(y ob)t(a)i(n a c)o(py of the Lice)n(se at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\napplication)(title: app.config.application.title, pack: true) {\n    actions {\n        action((id--): '(c)lick(Action)', (name): '(C)lick(------)', closure: { controller.click(it) })\n    }\n    gridLayout((c)o(l)s: (1), (r)o(w)s: (3))\n    textField((id: 'i)n(put'-), text: bind('value', target: model), (colum-)n(s: 20))\n    textField((i)d(------): ('-------)o(-)u(tput'--), text: bind { model.value }, (columns): (20, edi)t(able: false))\n    button(action: clickAction)\n}
+|        |      (---~---------------------------------)a(---------------------~---~-----------------------)p(-------------------------------------------~---------------------------------)p(---------)li(--)c(--------------------~--------)a(----)t(-)i(-----)o(--------------)n(------~---~--------------------------------------------------~---~-----------------------------------------------------------------------~---------------------------------------------------------------------~----------------------------------------------------------------------------~-----------------------------------------------------------------------~----------------------------------~----~-----------)(title: app.config.application.title, pack: true) {\n    actions {\n        action((name): '(C)lick(------)', (id--): '(c)lick(Action)', closure: { controller.click(it) })\n    }\n    gridLayout((r)o(w)s: (3), (c)o(l)s: (1))\n    textField((colum-)n(s: 20), text: bind('value', target: model), (id: 'i)n(put'-))\n    textField((e)d(itable): (false, c)o(l)u(mns: 20), text: bind { model.value }, (id-----): ('outpu-)t('----------))\n    button(action: clickAction)\n}
+|        /*
+|         * Copyright 2008-2015 the original author or authors.
+|         *
+|         * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+|         * you may not use this file except in compliance with the License.
+|         * You may obtain a copy of the License at
+|         *
+|         *     http://www.apache.org/licenses/LICENSE-2.0
+|         *
+|         * Unless required by applicable law or agreed to in writing, software
+|         * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+|         * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+|         * See the License for the specific language governing permissions and
+|         * limitations under the License.
+|         */
+|        application(title: app.config.application.title, pack: true) {
+|            actions {
+|                action(id: 'clickAction', name: 'Click', closure: { controller.click(it) })
+|            }
+|            gridLayout(cols: 1, rows: 3)
+|            textField(id: 'input', text: bind('value', target: model), columns: 20)
+|            textField(id: 'output', text: bind { model.value }, columns: 20, editable: false)
+|            button(action: clickAction)
+|        }
+/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+application(title: app.config.application.title, pack: true) {
+    actions {
+        action(id: 'clickAction', name: 'Click', closure: { controller.click(it) })
+    }
+    gridLayout(cols: 1, rows: 3)
+    textField(id: 'input', text: bind('value', target: model), columns: 20)
+    textField(id: 'output', text: bind { model.value }, columns: 20, editable: false)
+    button(action: clickAction)
+}
+
+	at griffon.util.Xml2GroovySpec.Parse application.xml from #type(Xml2GroovySpec.groovy:38)
+</pre>
+</span>
+</div>
+<div class="test">
+<a name="Parse application.xml from inputStream"></a>
+<h3 class="failures">Parse application.xml from inputStream</h3>
+<span class="code">
+<pre>Condition not satisfied:
+
+expected.trim() == output.trim() || expected8.trim() == output.trim()
+|        |      |  |      |      |  |         |      |  |      |
+|        |      |  |      |      |  |         |      |  |      application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |  |         |      |  |          actions {
+|        |      |  |      |      |  |         |      |  |              action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |  |         |      |  |          }
+|        |      |  |      |      |  |         |      |  |          gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |  |         |      |  |          textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |  |         |      |  |          textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |  |         |      |  |          button(action: clickAction)
+|        |      |  |      |      |  |         |      |  |      }
+|        |      |  |      |      |  |         |      |  application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |  |         |      |      actions {
+|        |      |  |      |      |  |         |      |          action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |  |         |      |      }
+|        |      |  |      |      |  |         |      |      gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |  |         |      |      textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |  |         |      |      textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |  |         |      |      button(action: clickAction)
+|        |      |  |      |      |  |         |      |  }
+|        |      |  |      |      |  |         |      false
+|        |      |  |      |      |  |         |      620 differences (38% similarity)
+|        |      |  |      |      |  |         |      (/*\n * Copyright 2008-2015 the origin)a(l author or authors.\n *\n * Licensed under the A)p(ache License, Version 2.0 (the &quot;License&quot;);\n * you may not use this file exce)p(t in comp)li(an)c(e with the License.\n * You m)a(y ob)t(a)i(n a c)o(py of the Lice)n(se at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\napplication)(title: app.config.application.title, pack: true) {\n    actions {\n        action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })\n    }\n    gridLayout(rows: 3, cols: 1)\n    textField(columns: 20, text: bind('value', target: model), id: 'input')\n    textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')\n    button(action: clickAction)\n}
+|        |      |  |      |      |  |         |      (---~---------------------------------)a(---------------------~---~-----------------------)p(-------------------------------------------~---------------------------------)p(---------)li(--)c(--------------------~--------)a(----)t(-)i(-----)o(--------------)n(------~---~--------------------------------------------------~---~-----------------------------------------------------------------------~---------------------------------------------------------------------~----------------------------------------------------------------------------~-----------------------------------------------------------------------~----------------------------------~----~-----------)(title: app.config.application.title, pack: true) {\n    actions {\n        action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })\n    }\n    gridLayout(rows: 3, cols: 1)\n    textField(columns: 20, text: bind('value', target: model), id: 'input')\n    textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')\n    button(action: clickAction)\n}
+|        |      |  |      |      |  |         /*
+|        |      |  |      |      |  |          * Copyright 2008-2015 the original author or authors.
+|        |      |  |      |      |  |          *
+|        |      |  |      |      |  |          * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+|        |      |  |      |      |  |          * you may not use this file except in compliance with the License.
+|        |      |  |      |      |  |          * You may obtain a copy of the License at
+|        |      |  |      |      |  |          *
+|        |      |  |      |      |  |          *     http://www.apache.org/licenses/LICENSE-2.0
+|        |      |  |      |      |  |          *
+|        |      |  |      |      |  |          * Unless required by applicable law or agreed to in writing, software
+|        |      |  |      |      |  |          * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+|        |      |  |      |      |  |          * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+|        |      |  |      |      |  |          * See the License for the specific language governing permissions and
+|        |      |  |      |      |  |          * limitations under the License.
+|        |      |  |      |      |  |          */
+|        |      |  |      |      |  |         application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |  |             actions {
+|        |      |  |      |      |  |                 action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |  |             }
+|        |      |  |      |      |  |             gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |  |             textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |  |             textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |  |             button(action: clickAction)
+|        |      |  |      |      |  |         }
+|        |      |  |      |      |  /*
+|        |      |  |      |      |   * Copyright 2008-2015 the original author or authors.
+|        |      |  |      |      |   *
+|        |      |  |      |      |   * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+|        |      |  |      |      |   * you may not use this file except in compliance with the License.
+|        |      |  |      |      |   * You may obtain a copy of the License at
+|        |      |  |      |      |   *
+|        |      |  |      |      |   *     http://www.apache.org/licenses/LICENSE-2.0
+|        |      |  |      |      |   *
+|        |      |  |      |      |   * Unless required by applicable law or agreed to in writing, software
+|        |      |  |      |      |   * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+|        |      |  |      |      |   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+|        |      |  |      |      |   * See the License for the specific language governing permissions and
+|        |      |  |      |      |   * limitations under the License.
+|        |      |  |      |      |   */
+|        |      |  |      |      |  application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |      actions {
+|        |      |  |      |      |          action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |      }
+|        |      |  |      |      |      gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |      textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |      textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |      button(action: clickAction)
+|        |      |  |      |      |  }
+|        |      |  |      |      false
+|        |      |  |      application(title: app.config.application.title, pack: true) {
+|        |      |  |          actions {
+|        |      |  |              action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |          }
+|        |      |  |          gridLayout(rows: 3, cols: 1)
+|        |      |  |          textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |          textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |          button(action: clickAction)
+|        |      |  |      }
+|        |      |  application(title: app.config.application.title, pack: true) {
+|        |      |      actions {
+|        |      |          action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |      }
+|        |      |      gridLayout(rows: 3, cols: 1)
+|        |      |      textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |      textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |      button(action: clickAction)
+|        |      |  }
+|        |      false
+|        |      718 differences (29% similarity)
+|        |      (/*\n * Copyright 2008-2015 the origin)a(l author or authors.\n *\n * Licensed under the A)p(ache License, Version 2.0 (the &quot;License&quot;);\n * you may not use this file exce)p(t in comp)li(an)c(e with the License.\n * You m)a(y ob)t(a)i(n a c)o(py of the Lice)n(se at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\napplication)(title: app.config.application.title, pack: true) {\n    actions {\n        action((id--): '(c)lick(Action)', (name): '(C)lick(------)', closure: { controller.click(it) })\n    }\n    gridLayout((c)o(l)s: (1), (r)o(w)s: (3))\n    textField((id: 'i)n(put'-), text: bind('value', target: model), (colum-)n(s: 20))\n    textField((i)d(------): ('-------)o(-)u(tput'--), text: bind { model.value }, (columns): (20, edi)t(able: false))\n    button(action: clickAction)\n}
+|        |      (---~---------------------------------)a(---------------------~---~-----------------------)p(-------------------------------------------~---------------------------------)p(---------)li(--)c(--------------------~--------)a(----)t(-)i(-----)o(--------------)n(------~---~--------------------------------------------------~---~-----------------------------------------------------------------------~---------------------------------------------------------------------~----------------------------------------------------------------------------~-----------------------------------------------------------------------~----------------------------------~----~-----------)(title: app.config.application.title, pack: true) {\n    actions {\n        action((name): '(C)lick(------)', (id--): '(c)lick(Action)', closure: { controller.click(it) })\n    }\n    gridLayout((r)o(w)s: (3), (c)o(l)s: (1))\n    textField((colum-)n(s: 20), text: bind('value', target: model), (id: 'i)n(put'-))\n    textField((e)d(itable): (false, c)o(l)u(mns: 20), text: bind { model.value }, (id-----): ('outpu-)t('----------))\n    button(action: clickAction)\n}
+|        /*
+|         * Copyright 2008-2015 the original author or authors.
+|         *
+|         * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+|         * you may not use this file except in compliance with the License.
+|         * You may obtain a copy of the License at
+|         *
+|         *     http://www.apache.org/licenses/LICENSE-2.0
+|         *
+|         * Unless required by applicable law or agreed to in writing, software
+|         * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+|         * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+|         * See the License for the specific language governing permissions and
+|         * limitations under the License.
+|         */
+|        application(title: app.config.application.title, pack: true) {
+|            actions {
+|                action(id: 'clickAction', name: 'Click', closure: { controller.click(it) })
+|            }
+|            gridLayout(cols: 1, rows: 3)
+|            textField(id: 'input', text: bind('value', target: model), columns: 20)
+|            textField(id: 'output', text: bind { model.value }, columns: 20, editable: false)
+|            button(action: clickAction)
+|        }
+/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+application(title: app.config.application.title, pack: true) {
+    actions {
+        action(id: 'clickAction', name: 'Click', closure: { controller.click(it) })
+    }
+    gridLayout(cols: 1, rows: 3)
+    textField(id: 'input', text: bind('value', target: model), columns: 20)
+    textField(id: 'output', text: bind { model.value }, columns: 20, editable: false)
+    button(action: clickAction)
+}
+
+	at griffon.util.Xml2GroovySpec.Parse application.xml from #type(Xml2GroovySpec.groovy:38)
+</pre>
+</span>
+</div>
+<div class="test">
+<a name="Parse application.xml from reader"></a>
+<h3 class="failures">Parse application.xml from reader</h3>
+<span class="code">
+<pre>Condition not satisfied:
+
+expected.trim() == output.trim() || expected8.trim() == output.trim()
+|        |      |  |      |      |  |         |      |  |      |
+|        |      |  |      |      |  |         |      |  |      application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |  |         |      |  |          actions {
+|        |      |  |      |      |  |         |      |  |              action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |  |         |      |  |          }
+|        |      |  |      |      |  |         |      |  |          gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |  |         |      |  |          textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |  |         |      |  |          textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |  |         |      |  |          button(action: clickAction)
+|        |      |  |      |      |  |         |      |  |      }
+|        |      |  |      |      |  |         |      |  application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |  |         |      |      actions {
+|        |      |  |      |      |  |         |      |          action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |  |         |      |      }
+|        |      |  |      |      |  |         |      |      gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |  |         |      |      textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |  |         |      |      textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |  |         |      |      button(action: clickAction)
+|        |      |  |      |      |  |         |      |  }
+|        |      |  |      |      |  |         |      false
+|        |      |  |      |      |  |         |      620 differences (38% similarity)
+|        |      |  |      |      |  |         |      (/*\n * Copyright 2008-2015 the origin)a(l author or authors.\n *\n * Licensed under the A)p(ache License, Version 2.0 (the &quot;License&quot;);\n * you may not use this file exce)p(t in comp)li(an)c(e with the License.\n * You m)a(y ob)t(a)i(n a c)o(py of the Lice)n(se at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\napplication)(title: app.config.application.title, pack: true) {\n    actions {\n        action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })\n    }\n    gridLayout(rows: 3, cols: 1)\n    textField(columns: 20, text: bind('value', target: model), id: 'input')\n    textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')\n    button(action: clickAction)\n}
+|        |      |  |      |      |  |         |      (---~---------------------------------)a(---------------------~---~-----------------------)p(-------------------------------------------~---------------------------------)p(---------)li(--)c(--------------------~--------)a(----)t(-)i(-----)o(--------------)n(------~---~--------------------------------------------------~---~-----------------------------------------------------------------------~---------------------------------------------------------------------~----------------------------------------------------------------------------~-----------------------------------------------------------------------~----------------------------------~----~-----------)(title: app.config.application.title, pack: true) {\n    actions {\n        action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })\n    }\n    gridLayout(rows: 3, cols: 1)\n    textField(columns: 20, text: bind('value', target: model), id: 'input')\n    textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')\n    button(action: clickAction)\n}
+|        |      |  |      |      |  |         /*
+|        |      |  |      |      |  |          * Copyright 2008-2015 the original author or authors.
+|        |      |  |      |      |  |          *
+|        |      |  |      |      |  |          * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+|        |      |  |      |      |  |          * you may not use this file except in compliance with the License.
+|        |      |  |      |      |  |          * You may obtain a copy of the License at
+|        |      |  |      |      |  |          *
+|        |      |  |      |      |  |          *     http://www.apache.org/licenses/LICENSE-2.0
+|        |      |  |      |      |  |          *
+|        |      |  |      |      |  |          * Unless required by applicable law or agreed to in writing, software
+|        |      |  |      |      |  |          * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+|        |      |  |      |      |  |          * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+|        |      |  |      |      |  |          * See the License for the specific language governing permissions and
+|        |      |  |      |      |  |          * limitations under the License.
+|        |      |  |      |      |  |          */
+|        |      |  |      |      |  |         application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |  |             actions {
+|        |      |  |      |      |  |                 action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |  |             }
+|        |      |  |      |      |  |             gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |  |             textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |  |             textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |  |             button(action: clickAction)
+|        |      |  |      |      |  |         }
+|        |      |  |      |      |  /*
+|        |      |  |      |      |   * Copyright 2008-2015 the original author or authors.
+|        |      |  |      |      |   *
+|        |      |  |      |      |   * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+|        |      |  |      |      |   * you may not use this file except in compliance with the License.
+|        |      |  |      |      |   * You may obtain a copy of the License at
+|        |      |  |      |      |   *
+|        |      |  |      |      |   *     http://www.apache.org/licenses/LICENSE-2.0
+|        |      |  |      |      |   *
+|        |      |  |      |      |   * Unless required by applicable law or agreed to in writing, software
+|        |      |  |      |      |   * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+|        |      |  |      |      |   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+|        |      |  |      |      |   * See the License for the specific language governing permissions and
+|        |      |  |      |      |   * limitations under the License.
+|        |      |  |      |      |   */
+|        |      |  |      |      |  application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |      actions {
+|        |      |  |      |      |          action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |      }
+|        |      |  |      |      |      gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |      textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |      textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |      button(action: clickAction)
+|        |      |  |      |      |  }
+|        |      |  |      |      false
+|        |      |  |      application(title: app.config.application.title, pack: true) {
+|        |      |  |          actions {
+|        |      |  |              action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |          }
+|        |      |  |          gridLayout(rows: 3, cols: 1)
+|        |      |  |          textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |          textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |          button(action: clickAction)
+|        |      |  |      }
+|        |      |  application(title: app.config.application.title, pack: true) {
+|        |      |      actions {
+|        |      |          action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |      }
+|        |      |      gridLayout(rows: 3, cols: 1)
+|        |      |      textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |      textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |      button(action: clickAction)
+|        |      |  }
+|        |      false
+|        |      718 differences (29% similarity)
+|        |      (/*\n * Copyright 2008-2015 the origin)a(l author or authors.\n *\n * Licensed under the A)p(ache License, Version 2.0 (the &quot;License&quot;);\n * you may not use this file exce)p(t in comp)li(an)c(e with the License.\n * You m)a(y ob)t(a)i(n a c)o(py of the Lice)n(se at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\napplication)(title: app.config.application.title, pack: true) {\n    actions {\n        action((id--): '(c)lick(Action)', (name): '(C)lick(------)', closure: { controller.click(it) })\n    }\n    gridLayout((c)o(l)s: (1), (r)o(w)s: (3))\n    textField((id: 'i)n(put'-), text: bind('value', target: model), (colum-)n(s: 20))\n    textField((i)d(------): ('-------)o(-)u(tput'--), text: bind { model.value }, (columns): (20, edi)t(able: false))\n    button(action: clickAction)\n}
+|        |      (---~---------------------------------)a(---------------------~---~-----------------------)p(-------------------------------------------~---------------------------------)p(---------)li(--)c(--------------------~--------)a(----)t(-)i(-----)o(--------------)n(------~---~--------------------------------------------------~---~-----------------------------------------------------------------------~---------------------------------------------------------------------~----------------------------------------------------------------------------~-----------------------------------------------------------------------~----------------------------------~----~-----------)(title: app.config.application.title, pack: true) {\n    actions {\n        action((name): '(C)lick(------)', (id--): '(c)lick(Action)', closure: { controller.click(it) })\n    }\n    gridLayout((r)o(w)s: (3), (c)o(l)s: (1))\n    textField((colum-)n(s: 20), text: bind('value', target: model), (id: 'i)n(put'-))\n    textField((e)d(itable): (false, c)o(l)u(mns: 20), text: bind { model.value }, (id-----): ('outpu-)t('----------))\n    button(action: clickAction)\n}
+|        /*
+|         * Copyright 2008-2015 the original author or authors.
+|         *
+|         * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+|         * you may not use this file except in compliance with the License.
+|         * You may obtain a copy of the License at
+|         *
+|         *     http://www.apache.org/licenses/LICENSE-2.0
+|         *
+|         * Unless required by applicable law or agreed to in writing, software
+|         * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+|         * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+|         * See the License for the specific language governing permissions and
+|         * limitations under the License.
+|         */
+|        application(title: app.config.application.title, pack: true) {
+|            actions {
+|                action(id: 'clickAction', name: 'Click', closure: { controller.click(it) })
+|            }
+|            gridLayout(cols: 1, rows: 3)
+|            textField(id: 'input', text: bind('value', target: model), columns: 20)
+|            textField(id: 'output', text: bind { model.value }, columns: 20, editable: false)
+|            button(action: clickAction)
+|        }
+/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+application(title: app.config.application.title, pack: true) {
+    actions {
+        action(id: 'clickAction', name: 'Click', closure: { controller.click(it) })
+    }
+    gridLayout(cols: 1, rows: 3)
+    textField(id: 'input', text: bind('value', target: model), columns: 20)
+    textField(id: 'output', text: bind { model.value }, columns: 20, editable: false)
+    button(action: clickAction)
+}
+
+	at griffon.util.Xml2GroovySpec.Parse application.xml from #type(Xml2GroovySpec.groovy:38)
+</pre>
+</span>
+</div>
+<div class="test">
+<a name="Parse application.xml from uri"></a>
+<h3 class="failures">Parse application.xml from uri</h3>
+<span class="code">
+<pre>Condition not satisfied:
+
+expected.trim() == output.trim() || expected8.trim() == output.trim()
+|        |      |  |      |      |  |         |      |  |      |
+|        |      |  |      |      |  |         |      |  |      application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |  |         |      |  |          actions {
+|        |      |  |      |      |  |         |      |  |              action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |  |         |      |  |          }
+|        |      |  |      |      |  |         |      |  |          gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |  |         |      |  |          textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |  |         |      |  |          textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |  |         |      |  |          button(action: clickAction)
+|        |      |  |      |      |  |         |      |  |      }
+|        |      |  |      |      |  |         |      |  application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |  |         |      |      actions {
+|        |      |  |      |      |  |         |      |          action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |  |         |      |      }
+|        |      |  |      |      |  |         |      |      gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |  |         |      |      textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |  |         |      |      textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |  |         |      |      button(action: clickAction)
+|        |      |  |      |      |  |         |      |  }
+|        |      |  |      |      |  |         |      false
+|        |      |  |      |      |  |         |      620 differences (38% similarity)
+|        |      |  |      |      |  |         |      (/*\n * Copyright 2008-2015 the origin)a(l author or authors.\n *\n * Licensed under the A)p(ache License, Version 2.0 (the &quot;License&quot;);\n * you may not use this file exce)p(t in comp)li(an)c(e with the License.\n * You m)a(y ob)t(a)i(n a c)o(py of the Lice)n(se at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\napplication)(title: app.config.application.title, pack: true) {\n    actions {\n        action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })\n    }\n    gridLayout(rows: 3, cols: 1)\n    textField(columns: 20, text: bind('value', target: model), id: 'input')\n    textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')\n    button(action: clickAction)\n}
+|        |      |  |      |      |  |         |      (---~---------------------------------)a(---------------------~---~-----------------------)p(-------------------------------------------~---------------------------------)p(---------)li(--)c(--------------------~--------)a(----)t(-)i(-----)o(--------------)n(------~---~--------------------------------------------------~---~-----------------------------------------------------------------------~---------------------------------------------------------------------~----------------------------------------------------------------------------~-----------------------------------------------------------------------~----------------------------------~----~-----------)(title: app.config.application.title, pack: true) {\n    actions {\n        action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })\n    }\n    gridLayout(rows: 3, cols: 1)\n    textField(columns: 20, text: bind('value', target: model), id: 'input')\n    textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')\n    button(action: clickAction)\n}
+|        |      |  |      |      |  |         /*
+|        |      |  |      |      |  |          * Copyright 2008-2015 the original author or authors.
+|        |      |  |      |      |  |          *
+|        |      |  |      |      |  |          * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+|        |      |  |      |      |  |          * you may not use this file except in compliance with the License.
+|        |      |  |      |      |  |          * You may obtain a copy of the License at
+|        |      |  |      |      |  |          *
+|        |      |  |      |      |  |          *     http://www.apache.org/licenses/LICENSE-2.0
+|        |      |  |      |      |  |          *
+|        |      |  |      |      |  |          * Unless required by applicable law or agreed to in writing, software
+|        |      |  |      |      |  |          * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+|        |      |  |      |      |  |          * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+|        |      |  |      |      |  |          * See the License for the specific language governing permissions and
+|        |      |  |      |      |  |          * limitations under the License.
+|        |      |  |      |      |  |          */
+|        |      |  |      |      |  |         application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |  |             actions {
+|        |      |  |      |      |  |                 action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |  |             }
+|        |      |  |      |      |  |             gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |  |             textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |  |             textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |  |             button(action: clickAction)
+|        |      |  |      |      |  |         }
+|        |      |  |      |      |  /*
+|        |      |  |      |      |   * Copyright 2008-2015 the original author or authors.
+|        |      |  |      |      |   *
+|        |      |  |      |      |   * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+|        |      |  |      |      |   * you may not use this file except in compliance with the License.
+|        |      |  |      |      |   * You may obtain a copy of the License at
+|        |      |  |      |      |   *
+|        |      |  |      |      |   *     http://www.apache.org/licenses/LICENSE-2.0
+|        |      |  |      |      |   *
+|        |      |  |      |      |   * Unless required by applicable law or agreed to in writing, software
+|        |      |  |      |      |   * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+|        |      |  |      |      |   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+|        |      |  |      |      |   * See the License for the specific language governing permissions and
+|        |      |  |      |      |   * limitations under the License.
+|        |      |  |      |      |   */
+|        |      |  |      |      |  application(title: app.config.application.title, pack: true) {
+|        |      |  |      |      |      actions {
+|        |      |  |      |      |          action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |      |      |      }
+|        |      |  |      |      |      gridLayout(rows: 3, cols: 1)
+|        |      |  |      |      |      textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |      |      |      textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |      |      |      button(action: clickAction)
+|        |      |  |      |      |  }
+|        |      |  |      |      false
+|        |      |  |      application(title: app.config.application.title, pack: true) {
+|        |      |  |          actions {
+|        |      |  |              action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |  |          }
+|        |      |  |          gridLayout(rows: 3, cols: 1)
+|        |      |  |          textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |  |          textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |  |          button(action: clickAction)
+|        |      |  |      }
+|        |      |  application(title: app.config.application.title, pack: true) {
+|        |      |      actions {
+|        |      |          action(name: 'Click', id: 'clickAction', closure: { controller.click(it) })
+|        |      |      }
+|        |      |      gridLayout(rows: 3, cols: 1)
+|        |      |      textField(columns: 20, text: bind('value', target: model), id: 'input')
+|        |      |      textField(editable: false, columns: 20, text: bind { model.value }, id: 'output')
+|        |      |      button(action: clickAction)
+|        |      |  }
+|        |      false
+|        |      718 differences (29% similarity)
+|        |      (/*\n * Copyright 2008-2015 the origin)a(l author or authors.\n *\n * Licensed under the A)p(ache License, Version 2.0 (the &quot;License&quot;);\n * you may not use this file exce)p(t in comp)li(an)c(e with the License.\n * You m)a(y ob)t(a)i(n a c)o(py of the Lice)n(se at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\napplication)(title: app.config.application.title, pack: true) {\n    actions {\n        action((id--): '(c)lick(Action)', (name): '(C)lick(------)', closure: { controller.click(it) })\n    }\n    gridLayout((c)o(l)s: (1), (r)o(w)s: (3))\n    textField((id: 'i)n(put'-), text: bind('value', target: model), (colum-)n(s: 20))\n    textField((i)d(------): ('-------)o(-)u(tput'--), text: bind { model.value }, (columns): (20, edi)t(able: false))\n    button(action: clickAction)\n}
+|        |      (---~---------------------------------)a(---------------------~---~-----------------------)p(-------------------------------------------~---------------------------------)p(---------)li(--)c(--------------------~--------)a(----)t(-)i(-----)o(--------------)n(------~---~--------------------------------------------------~---~-----------------------------------------------------------------------~---------------------------------------------------------------------~----------------------------------------------------------------------------~-----------------------------------------------------------------------~----------------------------------~----~-----------)(title: app.config.application.title, pack: true) {\n    actions {\n        action((name): '(C)lick(------)', (id--): '(c)lick(Action)', closure: { controller.click(it) })\n    }\n    gridLayout((r)o(w)s: (3), (c)o(l)s: (1))\n    textField((colum-)n(s: 20), text: bind('value', target: model), (id: 'i)n(put'-))\n    textField((e)d(itable): (false, c)o(l)u(mns: 20), text: bind { model.value }, (id-----): ('outpu-)t('----------))\n    button(action: clickAction)\n}
+|        /*
+|         * Copyright 2008-2015 the original author or authors.
+|         *
+|         * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+|         * you may not use this file except in compliance with the License.
+|         * You may obtain a copy of the License at
+|         *
+|         *     http://www.apache.org/licenses/LICENSE-2.0
+|         *
+|         * Unless required by applicable law or agreed to in writing, software
+|         * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+|         * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+|         * See the License for the specific language governing permissions and
+|         * limitations under the License.
+|         */
+|        application(title: app.config.application.title, pack: true) {
+|            actions {
+|                action(id: 'clickAction', name: 'Click', closure: { controller.click(it) })
+|            }
+|            gridLayout(cols: 1, rows: 3)
+|            textField(id: 'input', text: bind('value', target: model), columns: 20)
+|            textField(id: 'output', text: bind { model.value }, columns: 20, editable: false)
+|            button(action: clickAction)
+|        }
+/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+application(title: app.config.application.title, pack: true) {
+    actions {
+        action(id: 'clickAction', name: 'Click', closure: { controller.click(it) })
+    }
+    gridLayout(cols: 1, rows: 3)
+    textField(id: 'input', text: bind('value', target: model), columns: 20)
+    textField(id: 'output', text: bind { model.value }, columns: 20, editable: false)
+    button(action: clickAction)
+}
+
+	at griffon.util.Xml2GroovySpec.Parse application.xml from #type(Xml2GroovySpec.groovy:38)
+</pre>
+</span>
+</div>
+</div>
+<div id="tab1" class="tab">
 <h2>Tests</h2>
 <table>
 <thead>
@@ -79,7 +1009,7 @@
 </thead>
 <tr>
 <td class="success">Bad application.xml from file results in error</td>
-<td>0.017s</td>
+<td>0.016s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -94,61 +1024,61 @@
 </tr>
 <tr>
 <td class="success">Bad application.xml from string results in error</td>
-<td>0.005s</td>
+<td>0.008s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Bad application.xml from uri results in error</td>
-<td>0.005s</td>
+<td>0.006s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Parse application.xml from String</td>
+<td class="failures">Parse application.xml from String</td>
+<td>0.018s</td>
+<td class="failures">failed</td>
+</tr>
+<tr>
+<td class="failures">Parse application.xml from file</td>
+<td>0.047s</td>
+<td class="failures">failed</td>
+</tr>
+<tr>
+<td class="failures">Parse application.xml from gpathResult</td>
+<td>0.004s</td>
+<td class="failures">failed</td>
+</tr>
+<tr>
+<td class="failures">Parse application.xml from inputStream</td>
 <td>0.011s</td>
-<td class="success">passed</td>
+<td class="failures">failed</td>
 </tr>
 <tr>
-<td class="success">Parse application.xml from file</td>
-<td>0.024s</td>
-<td class="success">passed</td>
+<td class="failures">Parse application.xml from reader</td>
+<td>0.012s</td>
+<td class="failures">failed</td>
 </tr>
 <tr>
-<td class="success">Parse application.xml from gpathResult</td>
-<td>0.003s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Parse application.xml from inputStream</td>
-<td>0.022s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Parse application.xml from reader</td>
-<td>0.009s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Parse application.xml from uri</td>
-<td>0.010s</td>
-<td class="success">passed</td>
+<td class="failures">Parse application.xml from uri</td>
+<td>0.011s</td>
+<td class="failures">failed</td>
 </tr>
 </table>
 </div>
-<div id="tab1" class="tab">
+<div id="tab2" class="tab">
 <h2>Standard error</h2>
 <span class="code">
-<pre>[Fatal Error] bad_application.xml:13:35: XML document structures must start and end within the same entity.
-[Fatal Error] :13:35: XML document structures must start and end within the same entity.
-[Fatal Error] :13:35: XML document structures must start and end within the same entity.
-[Fatal Error] bad_application.xml:13:35: XML document structures must start and end within the same entity.
-[Fatal Error] :13:35: XML document structures must start and end within the same entity.
+<pre>[Fatal Error] bad_application.xml:30:35: XML document structures must start and end within the same entity.
+[Fatal Error] :30:35: XML document structures must start and end within the same entity.
+[Fatal Error] :30:35: XML document structures must start and end within the same entity.
+[Fatal Error] bad_application.xml:30:35: XML document structures must start and end within the same entity.
+[Fatal Error] :30:35: XML document structures must start and end within the same entity.
 </pre>
 </span>
 </div>
 </div>
 <div id="footer">
 <p>Generated by 
-<a href="http://www.gradle.org">Gradle 2.1</a> at Dec 19, 2014 3:45:00 AM</p>
+<a href="http://www.gradle.org">Gradle 2.1</a> at Dec 24, 2014 9:44:51 PM</p>
 </div>
 </div>
 </body>
