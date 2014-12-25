@@ -1,63 +1,25 @@
-# Notes:
-#   - Minimal appveyor.yml file is an empty file. All sections are optional.
-#   - Indent each level of configuration with 2 spaces. Do not use tabs!
-#   - All section names are case-sensitive.
-#   - Section names should be unique on each level.
-
-#---------------------------------#
-#      general configuration      #
-#---------------------------------#
-
-# version format
-version: 2.1.0.{build}
-
-# branches to build
+version: '{build}'
 branches:
-  # whitelist
   only:
     - master
     - development
-
-  # blacklist
   except:
     - gh-pages
-
-#---------------------------------#
-#    environment configuration    #
-#---------------------------------#
-
+skip_tags: true
+clone_depth: 10
 environment:
+  TERM: dumb
   JAVA_HOME: C:\Program Files\Java\jdk1.8.0
-
-# this is how to allow failing jobs in the matrix
 matrix:
-  fast_finish: true     # set this flag to immediately finish build once one of the jobs fails.
-
-# scripts that run after cloning repository
+  fast_finish: true
 install:
-  - gradlew --version
-
-#---------------------------------#
-#       build configuration       #
-#---------------------------------#
-
-# to run your custom scripts instead of automatic MSBuild
+  - gradlew.bat --version
 build_script:
-  - gradlew clean test integrationTest -x :sample-javafx-groovy:jfxJar -x :sample-javafx-groovy:jfxDeploy -x :sample-javafx-java:jfxJar -x :sample-javafx-java:jfxDeploy --stacktrace
+  - gradlew.bat -u -i clean assemble
+test_script:
+  - gradlew.bat -u -i -S test integrationTest -x :sample-javafx-groovy:jfxJar -x :sample-javafx-groovy:jfxDeploy -x :sample-javafx-java:jfxJar -x :sample-javafx-java:jfxDeploy
 cache:
   - .gradle
   - C:\Users\appveyor\.gradle
-
-#---------------------------------#
-#       tests configuration       #
-#---------------------------------#
-
-test: off
-
-#---------------------------------#
-#        global handlers          #
-#---------------------------------#
-
-# on build failure
 on_failure:
   - echo Somebody setup us the bomb
