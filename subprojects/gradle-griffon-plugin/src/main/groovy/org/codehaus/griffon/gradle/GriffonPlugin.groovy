@@ -38,6 +38,8 @@ class GriffonPlugin implements Plugin<Project> {
 
         // enable jcenter by default
         project.repositories.jcenter()
+        // enable griffon-plugins @ bintray
+        project.repositories.maven { url 'http://dl.bintray.com/griffon/griffon-plugins'}
 
         applyDefaultDependencies(project)
 
