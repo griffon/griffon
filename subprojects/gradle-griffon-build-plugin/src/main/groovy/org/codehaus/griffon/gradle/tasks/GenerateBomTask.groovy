@@ -45,9 +45,9 @@ class GenerateBomTask extends DefaultTask {
         outputDir.mkdirs()
 
         // force evaluation of 'publishJars' property
-        List includedProjects = project.subprojects.grep {
+        Set includedProjects = project.subprojects.grep {
             "${it.publishJars}" == 'true'
-        }.name
+        }
 
         MarkupBuilder pom = new MarkupBuilder(new FileWriter(getOutputFile()))
         pom.mkp.xmlDeclaration(version: '1.0', encoding: 'UTF-8')
@@ -61,8 +61,10 @@ class GenerateBomTask extends DefaultTask {
             packaging('pom')
             dependencyManagement {
                 dependencies {
-                    includedProjects.each { String projectName ->
+                    includedProjects.each { prj ->
+                        String projectName = prj.name
                         String scopeName = 'compile'
+                        boolean opt = prj.hasProperty('optional') ? prj.optional : false
                         if (projectName.endsWith('-compile')) scopeName = 'provided'
                         if (projectName.endsWith('-test')) scopeName = 'test'
 
@@ -71,6 +73,7 @@ class GenerateBomTask extends DefaultTask {
                             artifactId(projectName)
                             version('${project.version}')
                             scope(scopeName)
+                            if (opt) optional(true)
                         }
                     }
                     additionalDependencies.each { String dep ->

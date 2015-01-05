@@ -91,6 +91,10 @@ class GriffonPluginResolutionStrategy {
                     def bom = new XmlSlurper().parse(bomFile)
 
                     bom.dependencyManagement.dependencies.dependency.each { importedDependency ->
+                        if (Boolean.parseBoolean(importedDependency.optional?.text() ?: 'false')) {
+                            return
+                        }
+
                         String groupId = importedDependency.groupId.text()
                         String artifactId = importedDependency.artifactId.text()
                         String version = importedDependency.version.text()

@@ -114,6 +114,13 @@ class GriffonPlugin implements Plugin<Project> {
         ]
     }
 
+    private static String resolveApplicationName(Project project) {
+        if (project.hasProperty('applicationName')) {
+            return project.applicationName
+        }
+        return project.name
+    }
+
     private void processMainResources(Project project, GriffonExtension extension) {
         project.processResources {
             from(project.sourceSets.main.resources.srcDirs) {
@@ -126,7 +133,7 @@ class GriffonPlugin implements Plugin<Project> {
                 include '**/*.groovy'
                 include '**/*.xml'
                 filter(ReplaceTokens, tokens: [
-                    'application.name'   : project.applicationName,
+                    'application.name'   : resolveApplicationName(project),
                     'application.version': project.version,
                     'griffon.version'    : extension.version
                 ])
@@ -150,7 +157,7 @@ class GriffonPlugin implements Plugin<Project> {
                 include '**/*.xml'
                 include '**/*.txt'
                 filter(ReplaceTokens, tokens: [
-                    'application.name'   : project.applicationName,
+                    'application.name'   : resolveApplicationName(project),
                     'application.version': project.version,
                     'griffon.version'    : extension.version
                 ])
@@ -174,7 +181,7 @@ class GriffonPlugin implements Plugin<Project> {
         if (MACOSX) {
             List jvmArgs = project.applicationDefaultJvmArgs
             if (!(jvmArgs.find { it.startsWith('-Xdock:name=') })) {
-                jvmArgs << "-Xdock:name=${project.applicationName}"
+                jvmArgs << "-Xdock:name=${resolveApplicationName(project)}"
             }
             if (!(jvmArgs.find { it.startsWith('-Xdock:icon=') })) {
                 jvmArgs << ('-Xdock:icon=$APP_HOME/resources/' + extension.applicationIconName)
@@ -183,7 +190,7 @@ class GriffonPlugin implements Plugin<Project> {
             Task runTask = project.tasks.findByName('run')
             jvmArgs = (project.applicationDefaultJvmArgs + runTask.jvmArgs).unique()
             if (!(jvmArgs.find { it.startsWith('-Xdock:name=') })) {
-                jvmArgs << "-Xdock:name=${project.applicationName}"
+                jvmArgs << "-Xdock:name=${resolveApplicationName(project)}"
             }
 
             String iconElem = jvmArgs.find { it.startsWith('-Xdock:icon=$APP_HOME/resources') }
