@@ -112,12 +112,12 @@ class GriffonNameUtilsTest extends GroovyTestCase {
     }
 
     void testIsBlank() {
-        assert "'null' value should count as blank.", GriffonNameUtils.isBlank(null)
-        assert "Empty string should count as blank.", GriffonNameUtils.isBlank("")
-        assert "Spaces should count as blank.", GriffonNameUtils.isBlank("  ")
-        assert "A tab should count as blank.", GriffonNameUtils.isBlank("\t")
-        assert "String with whitespace and non-whitespace should not count as blank.", !GriffonNameUtils.isBlank("\t  h")
-        assert "String should not count as blank.", !GriffonNameUtils.isBlank("test")
+        assert GriffonNameUtils.isBlank(null), "'null' value should count as blank."
+        assert GriffonNameUtils.isBlank(""), "Empty string should count as blank."
+        assert GriffonNameUtils.isBlank("  "), "Spaces should count as blank."
+        assert GriffonNameUtils.isBlank("\t"), "A tab should count as blank."
+        assert !GriffonNameUtils.isBlank("\t  h"), "String with whitespace and non-whitespace should not count as blank."
+        assert !GriffonNameUtils.isBlank("test"), "String should not count as blank."
     }
 
     void testQuote() {
@@ -152,4 +152,5 @@ class GriffonNameUtilsTest extends GroovyTestCase {
     }
 }
 
+@SuppressWarnings('EmptyClass')
 class Foo {}

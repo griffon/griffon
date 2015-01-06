@@ -21,6 +21,7 @@ import spock.lang.Specification
 import javax.inject.Named
 
 class QualifierSpec extends Specification {
+    @SuppressWarnings('ComparisonWithSelf')
     def "Test Qualified settings"() {
         setup:
         Object o1 = new Object()
