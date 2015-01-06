@@ -15,14 +15,22 @@
  */
 package org.codehaus.griffon.runtime.injection;
 
-import com.google.inject.*;
+import com.google.inject.AbstractModule;
+import com.google.inject.Key;
 import com.google.inject.Module;
+import com.google.inject.ProvisionException;
+import com.google.inject.Scopes;
+import com.google.inject.TypeLiteral;
 import com.google.inject.binder.AnnotatedBindingBuilder;
 import com.google.inject.binder.LinkedBindingBuilder;
 import com.google.inject.binder.ScopedBindingBuilder;
 import griffon.core.injection.Binding;
 import griffon.core.injection.Injector;
-import griffon.core.injection.*;
+import griffon.core.injection.InstanceBinding;
+import griffon.core.injection.ProviderBinding;
+import griffon.core.injection.ProviderTypeBinding;
+import griffon.core.injection.Qualified;
+import griffon.core.injection.TargetBinding;
 import griffon.exceptions.ClosedInjectorException;
 import griffon.exceptions.InstanceNotFoundException;
 import griffon.exceptions.MembersInjectionException;

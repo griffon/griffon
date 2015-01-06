@@ -20,7 +20,11 @@ import griffon.core.i18n.NoSuchMessageException;
 import griffon.util.CompositeResourceBundle;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import static griffon.util.GriffonClassUtils.requireState;
 import static griffon.util.GriffonNameUtils.requireNonBlank;

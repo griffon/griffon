@@ -15,7 +15,14 @@
  */
 package org.codehaus.griffon.compile.core;
 
-import static org.codehaus.griffon.compile.core.MethodDescriptor.*;
+import static org.codehaus.griffon.compile.core.MethodDescriptor.annotatedType;
+import static org.codehaus.griffon.compile.core.MethodDescriptor.annotations;
+import static org.codehaus.griffon.compile.core.MethodDescriptor.args;
+import static org.codehaus.griffon.compile.core.MethodDescriptor.method;
+import static org.codehaus.griffon.compile.core.MethodDescriptor.type;
+import static org.codehaus.griffon.compile.core.MethodDescriptor.typeParam;
+import static org.codehaus.griffon.compile.core.MethodDescriptor.typeParams;
+import static org.codehaus.griffon.compile.core.MethodDescriptor.typeWithParams;
 
 /**
  * @author Andres Almiray

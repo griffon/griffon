@@ -23,7 +23,11 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 

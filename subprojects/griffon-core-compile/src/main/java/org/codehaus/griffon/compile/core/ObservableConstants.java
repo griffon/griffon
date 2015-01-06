@@ -17,7 +17,12 @@ package org.codehaus.griffon.compile.core;
 
 import java.lang.reflect.Modifier;
 
-import static org.codehaus.griffon.compile.core.MethodDescriptor.*;
+import static org.codehaus.griffon.compile.core.MethodDescriptor.annotatedMethod;
+import static org.codehaus.griffon.compile.core.MethodDescriptor.annotatedType;
+import static org.codehaus.griffon.compile.core.MethodDescriptor.annotations;
+import static org.codehaus.griffon.compile.core.MethodDescriptor.args;
+import static org.codehaus.griffon.compile.core.MethodDescriptor.method;
+import static org.codehaus.griffon.compile.core.MethodDescriptor.type;
 
 /**
  * @author Andres Almiray

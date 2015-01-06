@@ -18,14 +18,23 @@ package org.codehaus.griffon.runtime.core;
 import griffon.core.ApplicationBootstrapper;
 import griffon.core.ApplicationClassLoader;
 import griffon.core.GriffonApplication;
-import griffon.core.injection.*;
+import griffon.core.injection.Binding;
+import griffon.core.injection.InstanceBinding;
+import griffon.core.injection.Module;
+import griffon.core.injection.ProviderBinding;
+import griffon.core.injection.ProviderTypeBinding;
+import griffon.core.injection.TargetBinding;
 import org.junit.Test;
 
 import javax.annotation.Nonnull;
 import javax.inject.Named;
 import javax.inject.Provider;
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

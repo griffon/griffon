@@ -30,7 +30,17 @@ import javax.inject.Inject;
 import static java.lang.reflect.Modifier.FINAL;
 import static java.lang.reflect.Modifier.PRIVATE;
 import static java.lang.reflect.Modifier.PUBLIC;
-import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.*;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_ARGS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_EXCEPTIONS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_PARAMS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.THIS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.args;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.call;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.constx;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.field;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectField;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectMethod;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.returns;
 
 /**
  * @author Andres Almiray

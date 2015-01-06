@@ -26,7 +26,12 @@ import org.codehaus.griffon.runtime.core.injection.LinkedBindingBuilder;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import static griffon.util.AnnotationUtils.typed;
 import static griffon.util.GriffonNameUtils.requireNonBlank;

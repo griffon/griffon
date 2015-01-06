@@ -23,7 +23,9 @@ import java.awt.Color
 import java.awt.LinearGradientPaint
 import java.beans.PropertyEditor
 
-import static java.awt.Color.*
+import static java.awt.Color.BLACK
+import static java.awt.Color.RED
+import static java.awt.Color.WHITE
 import static java.awt.MultipleGradientPaint.CycleMethod.NO_CYCLE
 import static java.awt.MultipleGradientPaint.CycleMethod.REPEAT
 

@@ -27,7 +27,16 @@ import javax.inject.Named;
 import javax.inject.Qualifier;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static griffon.util.GriffonNameUtils.getLogicalPropertyName;
 import static griffon.util.GriffonNameUtils.getPropertyName;

@@ -15,7 +15,11 @@
  */
 package org.codehaus.griffon.runtime.core.injection;
 
-import griffon.core.injection.*;
+import griffon.core.injection.Binding;
+import griffon.core.injection.InstanceBinding;
+import griffon.core.injection.ProviderBinding;
+import griffon.core.injection.ProviderTypeBinding;
+import griffon.core.injection.TargetBinding;
 import griffon.util.AnnotationUtils;
 
 import javax.annotation.Nonnull;

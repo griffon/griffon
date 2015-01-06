@@ -17,7 +17,12 @@ package griffon.util;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
 
 import static griffon.util.ConfigUtils.collectKeys;
 import static griffon.util.GriffonNameUtils.requireNonBlank;

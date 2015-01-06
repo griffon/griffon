@@ -21,7 +21,11 @@ import spock.lang.Unroll
 
 import java.lang.reflect.Modifier
 
-import static org.codehaus.griffon.compile.core.MethodDescriptor.*
+import static org.codehaus.griffon.compile.core.MethodDescriptor.Wildcard
+import static org.codehaus.griffon.compile.core.MethodDescriptor.throwing
+import static org.codehaus.griffon.compile.core.MethodDescriptor.type
+import static org.codehaus.griffon.compile.core.MethodDescriptor.typeParams
+import static org.codehaus.griffon.compile.core.MethodDescriptor.types
 
 @Unroll
 class MethodDescriptorSpec extends Specification implements BaseConstants {

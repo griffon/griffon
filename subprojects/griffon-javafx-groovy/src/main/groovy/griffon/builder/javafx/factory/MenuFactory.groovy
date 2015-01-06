@@ -17,7 +17,12 @@ package griffon.builder.javafx.factory
 
 import griffon.javafx.support.JavaFXAction
 import groovyx.javafx.factory.AbstractNodeFactory
-import javafx.scene.control.*
+import javafx.scene.control.ButtonBase
+import javafx.scene.control.Menu
+import javafx.scene.control.MenuBar
+import javafx.scene.control.MenuButton
+import javafx.scene.control.MenuItem
+import javafx.scene.control.SplitMenuButton
 
 import static griffon.builder.javafx.factory.ActionFactory.applyAction
 import static griffon.builder.javafx.factory.ActionFactory.extractActionParams

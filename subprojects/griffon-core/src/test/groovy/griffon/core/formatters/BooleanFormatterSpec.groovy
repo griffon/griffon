@@ -18,7 +18,11 @@ package griffon.core.formatters
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static griffon.core.formatters.BooleanFormatter.*
+import static griffon.core.formatters.BooleanFormatter.PATTERN_BOOL
+import static griffon.core.formatters.BooleanFormatter.PATTERN_QUERY
+import static griffon.core.formatters.BooleanFormatter.PATTERN_SWITCH
+import static griffon.core.formatters.BooleanFormatter.getInstance
+import static griffon.core.formatters.BooleanFormatter.parseBoolean
 
 @Unroll
 class BooleanFormatterSpec extends Specification {

@@ -15,7 +15,11 @@
  */
 package org.codehaus.griffon.runtime.core.inject
 
-import griffon.core.injection.*
+import griffon.core.injection.InstanceBinding
+import griffon.core.injection.Module
+import griffon.core.injection.ProviderBinding
+import griffon.core.injection.ProviderTypeBinding
+import griffon.core.injection.TargetBinding
 import org.codehaus.griffon.runtime.core.injection.AbstractModule
 import spock.lang.Specification
 

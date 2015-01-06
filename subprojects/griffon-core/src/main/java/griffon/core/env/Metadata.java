@@ -15,11 +15,20 @@
  */
 package griffon.core.env;
 
-import java.io.*;
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.net.URL;
-import java.util.*;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Vector;
 import java.util.regex.Pattern;
 
 /**

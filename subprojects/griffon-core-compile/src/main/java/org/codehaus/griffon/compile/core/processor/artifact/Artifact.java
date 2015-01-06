@@ -18,7 +18,11 @@ package org.codehaus.griffon.compile.core.processor.artifact;
 import org.kordamp.jipsy.processor.LogLocation;
 import org.kordamp.jipsy.processor.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Andres Almiray

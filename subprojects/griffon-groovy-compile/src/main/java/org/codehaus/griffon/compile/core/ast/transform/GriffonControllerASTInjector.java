@@ -21,7 +21,15 @@ import org.codehaus.groovy.ast.MethodNode;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Modifier;
 
-import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.*;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_EXCEPTIONS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.THIS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.args;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.call;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectMethod;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.param;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.params;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.stmnt;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.var;
 import static org.codehaus.groovy.ast.ClassHelper.STRING_TYPE;
 import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
 

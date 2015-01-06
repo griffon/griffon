@@ -21,7 +21,13 @@ import org.codehaus.griffon.compile.core.AnnotationHandler;
 import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
 import org.codehaus.griffon.compile.core.EventPublisherConstants;
 import org.codehaus.griffon.runtime.core.event.DefaultEventPublisher;
-import org.codehaus.groovy.ast.*;
+import org.codehaus.groovy.ast.ASTNode;
+import org.codehaus.groovy.ast.AnnotatedNode;
+import org.codehaus.groovy.ast.AnnotationNode;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.FieldNode;
+import org.codehaus.groovy.ast.MethodNode;
+import org.codehaus.groovy.ast.Parameter;
 import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
@@ -34,7 +40,17 @@ import javax.annotation.Nullable;
 
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.lang.reflect.Modifier.PRIVATE;
-import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.*;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_EXCEPTIONS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.args;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.call;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.field;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectField;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectInterface;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectMethod;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.param;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.params;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.stmnt;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.var;
 import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
 
 /**

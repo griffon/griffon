@@ -19,7 +19,6 @@ import griffon.core.ApplicationBootstrapper
 import griffon.core.GriffonApplication
 import griffon.core.env.ApplicationPhase
 import griffon.core.mvc.MVCGroup
-import groovy.transform.CompileStatic
 import org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper
 import spock.lang.Shared
 import spock.lang.Specification

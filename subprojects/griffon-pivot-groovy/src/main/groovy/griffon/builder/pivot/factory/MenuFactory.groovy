@@ -15,7 +15,11 @@
  */
 package griffon.builder.pivot.factory
 
-import org.apache.pivot.wtk.*
+import org.apache.pivot.wtk.Frame
+import org.apache.pivot.wtk.Menu
+import org.apache.pivot.wtk.MenuBar
+import org.apache.pivot.wtk.MenuButton
+import org.apache.pivot.wtk.MenuPopup
 
 /**
  * @author Andres Almiray

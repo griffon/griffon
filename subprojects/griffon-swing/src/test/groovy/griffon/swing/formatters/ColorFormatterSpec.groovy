@@ -21,7 +21,10 @@ import spock.lang.Unroll
 
 import java.awt.Color
 
-import static griffon.swing.formatters.ColorFormatter.*
+import static griffon.swing.formatters.ColorFormatter.PATTERN_LONG
+import static griffon.swing.formatters.ColorFormatter.PATTERN_LONG_WITH_ALPHA
+import static griffon.swing.formatters.ColorFormatter.PATTERN_SHORT
+import static griffon.swing.formatters.ColorFormatter.PATTERN_SHORT_WITH_ALPHA
 
 @Unroll
 class ColorFormatterSpec extends Specification {

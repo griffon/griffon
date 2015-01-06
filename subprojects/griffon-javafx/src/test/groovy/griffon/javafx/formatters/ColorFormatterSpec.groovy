@@ -20,7 +20,10 @@ import javafx.scene.paint.Color
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static griffon.javafx.formatters.ColorFormatter.*
+import static griffon.javafx.formatters.ColorFormatter.PATTERN_LONG
+import static griffon.javafx.formatters.ColorFormatter.PATTERN_LONG_WITH_ALPHA
+import static griffon.javafx.formatters.ColorFormatter.PATTERN_SHORT
+import static griffon.javafx.formatters.ColorFormatter.PATTERN_SHORT_WITH_ALPHA
 
 @Unroll
 class ColorFormatterSpec extends Specification {

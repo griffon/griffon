@@ -16,13 +16,22 @@
 package org.codehaus.griffon.compile.core.processor.editor;
 
 import griffon.metadata.PropertyEditorFor;
-import org.kordamp.jipsy.processor.*;
+import org.kordamp.jipsy.processor.AbstractSpiProcessor;
+import org.kordamp.jipsy.processor.CheckResult;
+import org.kordamp.jipsy.processor.LogLocation;
+import org.kordamp.jipsy.processor.Options;
+import org.kordamp.jipsy.processor.Persistence;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedOptions;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.*;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import java.beans.PropertyEditor;
 import java.io.IOException;
