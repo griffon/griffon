@@ -16,6 +16,7 @@
 package griffon.core.threading;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -59,4 +60,18 @@ public interface ThreadingHandler {
      */
     @Nonnull
     <R> Future<R> runFuture(@Nonnull Callable<R> callable);
+
+    /**
+     * Executes a code block synchronously on the UI thread.
+     * @since 2.2.0
+     */
+    @Nullable
+    <R> R runInsideUISync(@Nonnull Callable<R> callable);
+
+    /**
+     * Executes a code block outside of the UI thread.
+     * @since 2.2.0
+     */
+    @Nullable
+    <R> R runOutsideUI(@Nonnull Callable<R> callable);
 }

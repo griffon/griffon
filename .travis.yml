@@ -1,6 +1,5 @@
 language: java
 install: true
-script: ./gradlew check test integrationTest cobertura -x :sample-javafx-groovy:jfxJar -x :sample-javafx-groovy:jfxDeploy -x :sample-javafx-java:jfxJar -x :sample-javafx-java:jfxDeploy --stacktrace
 jdk: oraclejdk8
 env:
   matrix:
@@ -12,8 +11,9 @@ before_install:
   - sh -e /etc/init.d/xvfb start
   - sudo apt-get update -qq
   - sudo apt-get install oracle-java8-installer
-after_install:
+before_script:
   - ./gradle --version
+script: ./gradlew check test integrationTest cobertura -x :sample-javafx-groovy:jfxJar -x :sample-javafx-groovy:jfxDeploy -x :sample-javafx-java:jfxJar -x :sample-javafx-java:jfxDeploy --stacktrace
 after_success:
   - ./update-gh-pages.sh
   - ./gradlew projectCoberturaMerge projectCoberturaReport coveralls

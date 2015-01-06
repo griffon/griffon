@@ -19,6 +19,7 @@ import griffon.core.threading.ThreadingHandler;
 import griffon.core.threading.UIThreadManager;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -33,9 +34,6 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public abstract class AbstractThreadingHandler implements ThreadingHandler {
-    private static final String ERROR_RUNNABLE_NULL = "Argument 'runnable' must not be bull";
-    private static final String ERROR_CALLABLE_NULL = "Argument 'callable' must not be null";
-
     private UIThreadManager uiThreadManager;
 
     @Inject
@@ -48,29 +46,36 @@ public abstract class AbstractThreadingHandler implements ThreadingHandler {
     }
 
     public void runInsideUIAsync(@Nonnull Runnable runnable) {
-        requireNonNull(runnable, ERROR_RUNNABLE_NULL);
         uiThreadManager.runInsideUIAsync(runnable);
     }
 
     public void runInsideUISync(@Nonnull Runnable runnable) {
-        requireNonNull(runnable, ERROR_RUNNABLE_NULL);
         uiThreadManager.runInsideUISync(runnable);
     }
 
     public void runOutsideUI(@Nonnull Runnable runnable) {
-        requireNonNull(runnable, ERROR_RUNNABLE_NULL);
         uiThreadManager.runOutsideUI(runnable);
     }
 
     @Nonnull
     public <R> Future<R> runFuture(@Nonnull ExecutorService executorService, @Nonnull Callable<R> callable) {
-        requireNonNull(callable, ERROR_CALLABLE_NULL);
         return uiThreadManager.runFuture(executorService, callable);
     }
 
     @Nonnull
     public <R> Future<R> runFuture(@Nonnull Callable<R> callable) {
-        requireNonNull(callable, ERROR_CALLABLE_NULL);
         return uiThreadManager.runFuture(callable);
+    }
+
+    @Nullable
+    @Override
+    public <R> R runInsideUISync(@Nonnull Callable<R> callable) {
+        return uiThreadManager.runInsideUISync(callable);
+    }
+
+    @Nullable
+    @Override
+    public <R> R runOutsideUI(@Nonnull Callable<R> callable) {
+        return uiThreadManager.runOutsideUI(callable);
     }
 }

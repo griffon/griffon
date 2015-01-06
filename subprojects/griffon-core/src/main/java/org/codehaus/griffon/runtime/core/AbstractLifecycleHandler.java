@@ -19,6 +19,7 @@ import griffon.core.GriffonApplication;
 import griffon.core.LifecycleHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -75,5 +76,17 @@ public abstract class AbstractLifecycleHandler implements LifecycleHandler {
     @Override
     public void runOutsideUI(@Nonnull Runnable runnable) {
         application.getUIThreadManager().runOutsideUI(runnable);
+    }
+
+    @Nullable
+    @Override
+    public <R> R runInsideUISync(@Nonnull Callable<R> callable) {
+        return application.getUIThreadManager().runInsideUISync(callable);
+    }
+
+    @Nullable
+    @Override
+    public <R> R runOutsideUI(@Nonnull Callable<R> callable) {
+        return application.getUIThreadManager().runOutsideUI(callable);
     }
 }

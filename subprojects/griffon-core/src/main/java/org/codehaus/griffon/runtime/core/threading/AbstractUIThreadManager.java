@@ -18,13 +18,17 @@ package org.codehaus.griffon.runtime.core.threading;
 import griffon.core.ExecutorServiceManager;
 import griffon.core.GriffonExceptionHandler;
 import griffon.core.threading.UIThreadManager;
+import griffon.exceptions.GriffonException;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 import static java.util.Objects.requireNonNull;
 
@@ -92,6 +96,32 @@ public abstract class AbstractUIThreadManager implements UIThreadManager {
                     }
                 }
             });
+        }
+    }
+
+    @Nullable
+    @Override
+    public <R> R runInsideUISync(@Nonnull Callable<R> callable) {
+        requireNonNull(callable, ERROR_CALLABLE_NULL);
+        FutureTask<R> ft = new FutureTask<>(callable);
+        runInsideUISync(ft);
+        try {
+            return ft.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new GriffonException("An error occurred while executing a task inside the UI thread", e);
+        }
+    }
+
+    @Nullable
+    @Override
+    public <R> R runOutsideUI(@Nonnull Callable<R> callable) {
+        requireNonNull(callable, ERROR_CALLABLE_NULL);
+        FutureTask<R> ft = new FutureTask<>(callable);
+        runOutsideUI(ft);
+        try {
+            return ft.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new GriffonException("An error occurred while executing a task outside the UI thread", e);
         }
     }
 }

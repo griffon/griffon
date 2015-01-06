@@ -33,8 +33,10 @@ import java.lang.annotation.Target;
  * <li><code>public void runInsideUIAsync(Runnable runnable)</code></li>
  * <li><code>public void runInsideUISync(Runnable runnable)</code></li>
  * <li><code>public void runOutsideUI(Runnable runnable)</code></li>
- * <li><code>public Future runFuture(ExecutorService executorService, Callable callable)</code></li>
- * <li><code>public Future runFuture(Callable callable)</code></li>
+ * <li><code>public &lt;R&gt; Future&lt;R&gt; runFuture(ExecutorService executorService, Callable&lt;R&gt; callable)</code></li>
+ * <li><code>public &lt;R&gt; Future&lt;R&gt; runFuture(Callable&lt;R&gt; callable)</code></li>
+ * <li><code>public &lt;R&gt; R runInsideUISync(Callable&lt;R&gt; callable)</code></li>
+ * <li><code>public &lt;R&gt; R runOutsideUI(Callable&lt;R&gt; callable)</code></li>
  * </ul>
  *
  * @author Andres Almiray

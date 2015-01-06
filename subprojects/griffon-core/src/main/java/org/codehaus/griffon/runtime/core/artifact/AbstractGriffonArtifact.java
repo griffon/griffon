@@ -130,6 +130,18 @@ public abstract class AbstractGriffonArtifact implements GriffonArtifact {
         application.getUIThreadManager().runInsideUIAsync(runnable);
     }
 
+    @Nullable
+    @Override
+    public <R> R runInsideUISync(@Nonnull Callable<R> callable) {
+        return application.getUIThreadManager().runInsideUISync(callable);
+    }
+
+    @Nullable
+    @Override
+    public <R> R runOutsideUI(@Nonnull Callable<R> callable) {
+        return application.getUIThreadManager().runOutsideUI(callable);
+    }
+
     @Nonnull
     @Override
     public ClassLoader classloader() {
