@@ -52,91 +52,99 @@
 <tr>  <td class="numLine">&nbsp;17</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;18</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> java.lang.annotation.*;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> java.lang.annotation.Documented;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;19</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> java.lang.annotation.ElementType;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;20</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment">/**</span></pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> java.lang.annotation.Retention;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;21</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;p&gt;Annotates a class.&lt;/p&gt;</span></pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> java.lang.annotation.RetentionPolicy;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;22</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;p/&gt;</span></pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">import</span> java.lang.annotation.Target;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;23</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;p&gt;When annotating a class it indicates that it will be able to resolve</span></pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;24</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * messages using Griffon's {@code ResourceResolver} mechanism.&lt;/p&gt;</span></pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="comment">/**</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;25</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;p/&gt;</span></pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;p&gt;Annotates a class.&lt;/p&gt;</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;26</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * The following methods will be added to classes annotated with &amp;#064;ResourceResolverAware</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;27</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;ul&gt;</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;28</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResourceValue(java.lang.String, java.util.Locale)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;29</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;30</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.util.Locale)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;31</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.lang.Object[])&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;32</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.lang.Object[], java.util.Locale)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;33</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.util.List)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;34</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.util.List, java.util.Locale)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;35</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.util.Map)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;36</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.util.Map, java.util.Locale)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;37</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.lang.Object)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;38</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.lang.Object, java.util.Locale)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;39</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.lang.Object[], java.lang.Object)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;40</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.lang.Object[], java.lang.Object, java.util.Locale)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;41</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.util.List, java.lang.Object)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;42</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.util.List, java.lang.Object, java.util.Locale)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;43</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.util.Map, java.lang.Object)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;44</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.util.Map, java.lang.Object, java.util.Locale)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;45</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public String formatResource(java.lang.String, java.lang.Object[])&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;46</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public String formatResource(java.lang.String, java.util.List)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;47</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public String formatResource(java.lang.String, java.util.Map)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
-<tr>  <td class="numLine">&nbsp;48</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;p/&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;27</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;p&gt;When annotating a class it indicates that it will be able to resolve</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;28</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * messages using Griffon's {@code ResourceResolver} mechanism.&lt;/p&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;29</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;p/&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;30</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * The following methods will be added to classes annotated with &amp;#064;ResourceResolverAware</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;31</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;ul&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;32</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResourceValue(java.lang.String, java.util.Locale)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;33</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;34</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.util.Locale)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;35</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.lang.Object[])&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;36</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.lang.Object[], java.util.Locale)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;37</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.util.List)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;38</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.util.List, java.util.Locale)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;39</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.util.Map)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;40</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.util.Map, java.util.Locale)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;41</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.lang.Object)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;42</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.lang.Object, java.util.Locale)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;43</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.lang.Object[], java.lang.Object)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;44</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.lang.Object[], java.lang.Object, java.util.Locale)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;45</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.util.List, java.lang.Object)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;46</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.util.List, java.lang.Object, java.util.Locale)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;47</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.util.Map, java.lang.Object)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
+<tr>  <td class="numLine">&nbsp;48</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public Object resolveResource(java.lang.String, java.util.Map, java.lang.Object, java.util.Locale)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;49</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;/ul&gt;</span></pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public String formatResource(java.lang.String, java.lang.Object[])&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;50</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> *</span></pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public String formatResource(java.lang.String, java.util.List)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;51</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * @author Andres Almiray</span></pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;li&gt;&lt;code&gt;public String formatResource(java.lang.String, java.util.Map)&lt;/code&gt;&lt;/li&gt;</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;52</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> * @see griffon.core.resources.ResourceResolver</span></pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;p/&gt;</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;53</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="comment"> */</span></pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * &lt;/ul&gt;</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;54</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;@Documented</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> *</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;55</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;@Retention(RetentionPolicy.SOURCE)</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * @author Andres Almiray</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;56</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;@Target(ElementType.TYPE)</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> * @see griffon.core.resources.ResourceResolver</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;57</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;<span class="keyword">public</span> @<span class="keyword">interface</span> ResourceResolverAware {</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;<span class="comment"> */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;58</td>  <td class="nbHits">&nbsp;</td>
-  <td class="src"><pre class="src">&nbsp;    String value() <span class="keyword">default</span> <span class="string">""</span>;</pre></td></tr>
+  <td class="src"><pre class="src">&nbsp;@Documented</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;59</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;@Retention(RetentionPolicy.SOURCE)</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;60</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;@Target(ElementType.TYPE)</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;61</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;<span class="keyword">public</span> @<span class="keyword">interface</span> ResourceResolverAware {</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;62</td>  <td class="nbHits">&nbsp;</td>
+  <td class="src"><pre class="src">&nbsp;    String value() <span class="keyword">default</span> <span class="string">""</span>;</pre></td></tr>
+<tr>  <td class="numLine">&nbsp;63</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 12/25/14 11:27 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 1/6/15 2:34 PM.</div>
 </body>
 </html>
