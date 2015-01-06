@@ -12,6 +12,8 @@ before_install:
   - sh -e /etc/init.d/xvfb start
   - sudo apt-get update -qq
   - sudo apt-get install oracle-java8-installer
+after_install:
+  - ./gradle --version
 after_success:
   - ./update-gh-pages.sh
   - ./gradlew projectCoberturaMerge projectCoberturaReport coveralls

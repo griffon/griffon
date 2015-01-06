@@ -53,6 +53,7 @@ import org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager;
 import org.codehaus.griffon.runtime.core.resources.DefaultApplicationResourceInjector;
 import org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler;
 import org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider;
+import org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider;
 import org.codehaus.griffon.runtime.core.threading.DefaultUIThreadManager;
 import org.codehaus.griffon.runtime.core.view.NoopWindowManager;
 import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder;
@@ -60,6 +61,7 @@ import org.codehaus.griffon.runtime.util.ResourceBundleProvider;
 
 import javax.inject.Named;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
 
 import static griffon.util.AnnotationUtils.named;
 
@@ -127,6 +129,11 @@ public class DefaultApplicationModule extends AbstractModule {
         bind(ResourceInjector.class)
             .withClassifier(named("applicationResourceInjector"))
             .to(DefaultApplicationResourceInjector.class)
+            .asSingleton();
+
+        bind(ExecutorService.class)
+            .withClassifier(named("defaultExecutorService"))
+            .toProvider(DefaultExecutorServiceProvider.class)
             .asSingleton();
 
         bind(UIThreadManager.class)

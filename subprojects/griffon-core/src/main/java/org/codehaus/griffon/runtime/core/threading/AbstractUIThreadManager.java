@@ -21,9 +21,9 @@ import griffon.core.threading.UIThreadManager;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import static java.util.Objects.requireNonNull;
@@ -35,20 +35,21 @@ import static java.util.Objects.requireNonNull;
 public abstract class AbstractUIThreadManager implements UIThreadManager {
     protected static final String ERROR_RUNNABLE_NULL = "Argument 'runnable' must not be bull";
     protected static final String ERROR_CALLABLE_NULL = "Argument 'callable' must not be null";
-
-    private final ExecutorService defaultExecutorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private static final Thread.UncaughtExceptionHandler UNCAUGHT_EXCEPTION_HANDLER = new GriffonExceptionHandler();
 
     private ExecutorServiceManager executorServiceManager;
+
+    @Inject @Named("defaultExecutorService")
+    private ExecutorService executorService;
 
     @Inject
     public void setExecutorServiceManager(@Nonnull ExecutorServiceManager executorServiceManager) {
         requireNonNull(executorServiceManager, "Argument 'executorServiceManager' must not be bull");
         if (this.executorServiceManager != null) {
-            this.executorServiceManager.remove(defaultExecutorService);
+            this.executorServiceManager.remove(executorService);
         }
         this.executorServiceManager = executorServiceManager;
-        this.executorServiceManager.add(defaultExecutorService);
+        this.executorServiceManager.add(executorService);
     }
 
     /**
@@ -60,7 +61,7 @@ public abstract class AbstractUIThreadManager implements UIThreadManager {
     @Nonnull
     public <R> Future<R> runFuture(@Nonnull Callable<R> callable) {
         requireNonNull(callable, ERROR_CALLABLE_NULL);
-        return runFuture(defaultExecutorService, callable);
+        return runFuture(executorService, callable);
     }
 
     /**
@@ -82,7 +83,7 @@ public abstract class AbstractUIThreadManager implements UIThreadManager {
         if (!isUIThread()) {
             runnable.run();
         } else {
-            defaultExecutorService.submit(new Runnable() {
+            executorService.submit(new Runnable() {
                 public void run() {
                     try {
                         runnable.run();

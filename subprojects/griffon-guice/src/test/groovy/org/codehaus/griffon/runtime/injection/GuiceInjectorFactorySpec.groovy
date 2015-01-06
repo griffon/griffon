@@ -29,13 +29,19 @@ import griffon.exceptions.MembersInjectionException
 import org.codehaus.griffon.runtime.core.DefaultExecutorServiceManager
 import org.codehaus.griffon.runtime.core.event.DefaultEventRouter
 import org.codehaus.griffon.runtime.core.injection.AbstractModule
+import org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider
 import org.codehaus.griffon.runtime.core.threading.DefaultUIThreadManager
 import spock.lang.Specification
 
 import javax.annotation.Nonnull
 import javax.inject.Provider
 import javax.inject.Qualifier
-import java.lang.annotation.*
+import java.lang.annotation.Annotation
+import java.lang.annotation.ElementType
+import java.lang.annotation.Retention
+import java.lang.annotation.RetentionPolicy
+import java.lang.annotation.Target
+import java.util.concurrent.ExecutorService
 
 import static griffon.util.AnnotationUtils.named
 import static java.util.Collections.unmodifiableCollection
@@ -227,6 +233,11 @@ class GuiceInjectorFactorySpec extends Specification {
 
                 bind(UIThreadManager)
                     .to(DefaultUIThreadManager)
+                    .asSingleton()
+
+                bind(ExecutorService)
+                    .withClassifier(named('defaultExecutorService'))
+                    .toProvider(DefaultExecutorServiceProvider)
                     .asSingleton()
 
                 bind(Animal).to(Dog).asSingleton()

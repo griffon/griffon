@@ -21,13 +21,16 @@ import com.google.inject.AbstractModule
 import griffon.core.ExecutorServiceManager
 import griffon.core.threading.ThreadingHandler
 import griffon.core.threading.UIThreadManager
+import griffon.util.AnnotationUtils
 import org.codehaus.griffon.runtime.core.threading.AbstractThreadingHandler
+import org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider
 import org.codehaus.griffon.runtime.core.threading.UIThreadManagerTestSupport
 import org.junit.Rule
 import spock.lang.Specification
 
 import javax.inject.Inject
 import javax.inject.Singleton
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 
@@ -112,6 +115,7 @@ class AbstractUIThreadHandlerSpec extends Specification {
             bind(ExecutorServiceManager).to(DefaultExecutorServiceManager).in(Singleton)
             bind(UIThreadManager).to(UIThreadManagerTestSupport).in(Singleton)
             bind(ThreadingHandler).to(TestThreadingHandler).in(Singleton)
+            bind(ExecutorService).annotatedWith(AnnotationUtils.named('defaultExecutorService')).toProvider(DefaultExecutorServiceProvider).in(Singleton)
         }
     }
 

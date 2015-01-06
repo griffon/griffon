@@ -23,7 +23,9 @@ import griffon.core.ExecutorServiceManager
 import griffon.core.event.Event
 import griffon.core.event.EventRouter
 import griffon.core.threading.UIThreadManager
+import griffon.util.AnnotationUtils
 import org.codehaus.griffon.runtime.core.DefaultExecutorServiceManager
+import org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider
 import org.codehaus.griffon.runtime.core.threading.UIThreadManagerTestSupport
 import org.junit.Rule
 import spock.lang.Specification
@@ -31,6 +33,7 @@ import spock.lang.Specification
 import javax.annotation.Nullable
 import javax.inject.Inject
 import javax.inject.Singleton
+import java.util.concurrent.ExecutorService
 
 class DefaultEventRouterSpec extends Specification {
     @Rule
@@ -428,6 +431,7 @@ class DefaultEventRouterSpec extends Specification {
             bind(ExecutorServiceManager).to(DefaultExecutorServiceManager).in(Singleton)
             bind(UIThreadManager).to(UIThreadManagerTestSupport).in(Singleton)
             bind(EventRouter).to(DefaultEventRouter).in(Singleton)
+            bind(ExecutorService).annotatedWith(AnnotationUtils.named('defaultExecutorService')).toProvider(DefaultExecutorServiceProvider).in(Singleton)
         }
     }
 
