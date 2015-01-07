@@ -83,10 +83,4 @@ public abstract class AbstractLifecycleHandler implements LifecycleHandler {
     public <R> R runInsideUISync(@Nonnull Callable<R> callable) {
         return application.getUIThreadManager().runInsideUISync(callable);
     }
-
-    @Nullable
-    @Override
-    public <R> R runOutsideUI(@Nonnull Callable<R> callable) {
-        return application.getUIThreadManager().runOutsideUI(callable);
-    }
 }

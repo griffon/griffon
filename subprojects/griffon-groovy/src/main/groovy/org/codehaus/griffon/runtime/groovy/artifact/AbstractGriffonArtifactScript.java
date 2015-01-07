@@ -45,11 +45,11 @@ import java.util.concurrent.Future;
  */
 public abstract class AbstractGriffonArtifactScript extends Script implements GriffonArtifact {
     private final Logger log;
+    private final Object lock = new Object[0];
     @Inject
     protected GriffonApplication application;
     @GuardedBy("lock")
     private GriffonClass griffonClass;
-    private final Object lock = new Object[0];
 
     public AbstractGriffonArtifactScript() {
         log = LoggerFactory.getLogger("griffon.app." + getArtifactType() + "." + getClass().getName());
@@ -111,12 +111,6 @@ public abstract class AbstractGriffonArtifactScript extends Script implements Gr
     @Override
     public <R> R runInsideUISync(@Nonnull Callable<R> callable) {
         return application.getUIThreadManager().runInsideUISync(callable);
-    }
-
-    @Nullable
-    @Override
-    public <R> R runOutsideUI(@Nonnull Callable<R> callable) {
-        return application.getUIThreadManager().runOutsideUI(callable);
     }
 
     @Nonnull

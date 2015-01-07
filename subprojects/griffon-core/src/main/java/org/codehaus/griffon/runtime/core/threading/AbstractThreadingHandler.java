@@ -72,10 +72,4 @@ public abstract class AbstractThreadingHandler implements ThreadingHandler {
     public <R> R runInsideUISync(@Nonnull Callable<R> callable) {
         return uiThreadManager.runInsideUISync(callable);
     }
-
-    @Nullable
-    @Override
-    public <R> R runOutsideUI(@Nonnull Callable<R> callable) {
-        return uiThreadManager.runOutsideUI(callable);
-    }
 }

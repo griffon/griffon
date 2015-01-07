@@ -111,17 +111,4 @@ public abstract class AbstractUIThreadManager implements UIThreadManager {
             throw new GriffonException("An error occurred while executing a task inside the UI thread", e);
         }
     }
-
-    @Nullable
-    @Override
-    public <R> R runOutsideUI(@Nonnull Callable<R> callable) {
-        requireNonNull(callable, ERROR_CALLABLE_NULL);
-        FutureTask<R> ft = new FutureTask<>(callable);
-        runOutsideUI(ft);
-        try {
-            return ft.get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new GriffonException("An error occurred while executing a task outside the UI thread", e);
-        }
-    }
 }

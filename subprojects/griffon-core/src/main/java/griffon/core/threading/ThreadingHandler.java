@@ -67,11 +67,4 @@ public interface ThreadingHandler {
      */
     @Nullable
     <R> R runInsideUISync(@Nonnull Callable<R> callable);
-
-    /**
-     * Executes a code block outside of the UI thread.
-     * @since 2.2.0
-     */
-    @Nullable
-    <R> R runOutsideUI(@Nonnull Callable<R> callable);
 }

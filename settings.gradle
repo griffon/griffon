@@ -1,8 +1,6 @@
-boolean fullBuild = true
-boolean travis = (System.env['TRAVIS'] ?: false) as boolean
+boolean travis   = (System.env['TRAVIS'] ?: false) as boolean
 boolean appveyor = (System.env['APPVEYOR'] ?: false) as boolean
-boolean circleci = (System.env['CIRCLECI'] ?: false) as boolean
-fullBuild = !travis && !appveyor && !circleci
+boolean fullBuild = !travis && !appveyor
 
 include 'subprojects/griffon-core'
 include 'subprojects/griffon-core-compile'

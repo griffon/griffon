@@ -83,13 +83,6 @@ public interface ThreadingAwareConstants extends BaseConstants {
             METHOD_RUN_INSIDE_UI_SYNC,
             args(
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_CONCURRENT_CALLABLE, R))
-        ),
-        annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
-            type(R),
-            typeParams(R),
-            METHOD_RUN_OUTSIDE_UI,
-            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_CONCURRENT_CALLABLE, R))
         )
     };
 }
