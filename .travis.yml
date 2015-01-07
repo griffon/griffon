@@ -12,7 +12,7 @@ before_install:
   - sudo apt-get update -qq
   - sudo apt-get install oracle-java8-installer
 before_script:
-  - ./gradle --version
+  - ./gradlew --version
 script: ./gradlew check test integrationTest cobertura -x :sample-javafx-groovy:jfxJar -x :sample-javafx-groovy:jfxDeploy -x :sample-javafx-java:jfxJar -x :sample-javafx-java:jfxDeploy --stacktrace
 after_success:
   - ./update-gh-pages.sh
