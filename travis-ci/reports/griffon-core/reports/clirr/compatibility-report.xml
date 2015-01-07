@@ -2,9 +2,9 @@
   <header>
     <project>griffon-core-2.2.0-SNAPSHOT</project>
     <summary>
-      <info>14</info>
+      <info>18</info>
       <warnings>0</warnings>
-      <error>10</error>
+      <error>11</error>
     </summary>
   </header>
   <differences>
@@ -45,6 +45,12 @@
       <message>In method 'public griffon.core.mvc.MVCGroup newMVCGroup(griffon.core.mvc.MVCGroupConfiguration, java.lang.String, java.util.Map)' the number of arguments has changed</message>
     </difference>
     <difference>
+      <classname>griffon.core.threading.ThreadingHandler</classname>
+      <severity>error</severity>
+      <identifier>7012</identifier>
+      <message>Method 'public java.lang.Object runInsideUISync(java.util.concurrent.Callable)' has been added to an interface</message>
+    </difference>
+    <difference>
       <classname>griffon.inject.Contextual</classname>
       <severity>info</severity>
       <identifier>8000</identifier>
@@ -63,10 +69,22 @@
       <message>Method 'public griffon.core.Context getContext()' has been added</message>
     </difference>
     <difference>
+      <classname>org.codehaus.griffon.runtime.core.AbstractLifecycleHandler</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public java.lang.Object runInsideUISync(java.util.concurrent.Callable)' has been added</message>
+    </difference>
+    <difference>
       <classname>org.codehaus.griffon.runtime.core.DefaultContext</classname>
       <severity>info</severity>
       <identifier>8000</identifier>
       <message>Class org.codehaus.griffon.runtime.core.DefaultContext added</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.artifact.AbstractGriffonArtifact</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public java.lang.Object runInsideUISync(java.util.concurrent.Callable)' has been added</message>
     </difference>
     <difference>
       <classname>org.codehaus.griffon.runtime.core.controller.ActionDecorator</classname>
@@ -121,6 +139,18 @@
       <severity>error</severity>
       <identifier>7004</identifier>
       <message>In method 'public griffon.core.mvc.MVCGroup newMVCGroup(griffon.core.mvc.MVCGroupConfiguration, java.lang.String, java.util.Map)' the number of arguments has changed</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.threading.AbstractThreadingHandler</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public java.lang.Object runInsideUISync(java.util.concurrent.Callable)' has been added</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.threading.AbstractUIThreadManager</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public java.lang.Object runInsideUISync(java.util.concurrent.Callable)' has been added</message>
     </difference>
     <difference>
       <classname>org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider</classname>

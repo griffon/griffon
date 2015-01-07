@@ -714,13 +714,13 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;396</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isBlank(String str) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;397</td>  <td class="nbHitsCovered"><a title="Line 397: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">&nbsp;1707</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 397: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">        <span class="keyword">if</span> (str == <span class="keyword">null</span> || str.length() == 0) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;397</td>  <td class="nbHitsCovered"><a title="Line 397: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">&nbsp;1714</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 397: Conditional coverage 100% (4/4) [each condition: 100%, 100%].">        <span class="keyword">if</span> (str == <span class="keyword">null</span> || str.length() == 0) {</a></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;398</td>  <td class="nbHitsCovered">&nbsp;11</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">true</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;399</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;400</td>  <td class="nbHitsUncovered"><a title="Line 400: Conditional coverage 50% (1/2).">&nbsp;1696</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 400: Conditional coverage 50% (1/2).">        <span class="keyword">for</span> (<span class="keyword">char</span> c : str.toCharArray()) {</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;401</td>  <td class="nbHitsUncovered"><a title="Line 401: Conditional coverage 50% (1/2).">&nbsp;1696</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 401: Conditional coverage 50% (1/2).">            <span class="keyword">if</span> (!Character.isWhitespace(c)) {</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;402</td>  <td class="nbHitsCovered">&nbsp;1696</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">return</span> <span class="keyword">false</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;400</td>  <td class="nbHitsUncovered"><a title="Line 400: Conditional coverage 50% (1/2).">&nbsp;1703</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 400: Conditional coverage 50% (1/2).">        <span class="keyword">for</span> (<span class="keyword">char</span> c : str.toCharArray()) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;401</td>  <td class="nbHitsUncovered"><a title="Line 401: Conditional coverage 50% (1/2).">&nbsp;1703</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 401: Conditional coverage 50% (1/2).">            <span class="keyword">if</span> (!Character.isWhitespace(c)) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;402</td>  <td class="nbHitsCovered">&nbsp;1703</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">return</span> <span class="keyword">false</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;403</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;404</td>  <td class="nbHits">&nbsp;</td>
@@ -807,11 +807,11 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;447</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> String requireNonBlank(String str, String message) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;448</td>  <td class="nbHitsUncovered"><a title="Line 448: Conditional coverage 50% (1/2).">&nbsp;1205</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 448: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (isBlank(str)) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;448</td>  <td class="nbHitsUncovered"><a title="Line 448: Conditional coverage 50% (1/2).">&nbsp;1212</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 448: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (isBlank(str)) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;449</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(message);</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;450</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;451</td>  <td class="nbHitsCovered">&nbsp;1205</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> str;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;451</td>  <td class="nbHitsCovered">&nbsp;1212</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> str;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;452</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;453</td>  <td class="nbHits">&nbsp;</td>
@@ -1067,6 +1067,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 1/6/15 2:34 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.0.3 on 1/7/15 8:48 AM.</div>
 </body>
 </html>
