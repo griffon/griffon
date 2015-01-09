@@ -70,6 +70,36 @@ public class PropertyListenerASTTransformation extends AbstractASTTransformation
         return false;
     }
 
+    public static void addListenerToProperty(SourceUnit source, AnnotationNode annotation, ClassNode declaringClass, FieldNode field) {
+        for (Map.Entry<String, Expression> member : annotation.getMembers().entrySet()) {
+            Expression value = member.getValue();
+            if ((value instanceof ListExpression)) {
+                for (Expression expr : ((ListExpression) value).getExpressions()) {
+                    processExpression(declaringClass, field.getName(), expr);
+                }
+                member.setValue(new ConstantExpression(EMPTY_STRING));
+            } else {
+                processExpression(declaringClass, field.getName(), value);
+                member.setValue(new ConstantExpression(EMPTY_STRING));
+            }
+        }
+    }
+
+    public static void addListenerToClass(SourceUnit source, AnnotationNode annotation, ClassNode classNode) {
+        for (Map.Entry<String, Expression> member : annotation.getMembers().entrySet()) {
+            Expression value = member.getValue();
+            if ((value instanceof ListExpression)) {
+                for (Expression expr : ((ListExpression) value).getExpressions()) {
+                    processExpression(classNode, null, expr);
+                }
+                member.setValue(new ConstantExpression(EMPTY_STRING));
+            } else {
+                processExpression(classNode, null, value);
+                member.setValue(new ConstantExpression(EMPTY_STRING));
+            }
+        }
+    }
+
     /**
      * Handles the bulk of the processing, mostly delegating to other methods.
      *
@@ -78,7 +108,7 @@ public class PropertyListenerASTTransformation extends AbstractASTTransformation
      */
     public void visit(ASTNode[] nodes, SourceUnit source) {
         if (!(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof AnnotatedNode)) {
-            throw new RuntimeException("Internal error: wrong types: "+ nodes[0].getClass() +" / "+ nodes[1].getClass());
+            throw new RuntimeException("Internal error: wrong types: " + nodes[0].getClass() + " / " + nodes[1].getClass());
         }
 
         AnnotationNode annotation = (AnnotationNode) nodes[0];
@@ -92,57 +122,38 @@ public class PropertyListenerASTTransformation extends AbstractASTTransformation
         }
     }
 
-    public static void addListenerToProperty(SourceUnit source, AnnotationNode annotation, ClassNode declaringClass, FieldNode field) {
-        for(Map.Entry<String, Expression> member : annotation.getMembers().entrySet()) {
-            Expression value = member.getValue();
-            if((value instanceof ListExpression)) {
-                for(Expression expr : ((ListExpression) value).getExpressions()) {
-                    processExpression(declaringClass, field.getName(), expr);
-                }
-                member.setValue(new ConstantExpression(EMPTY_STRING));
-            } else {
-                processExpression(declaringClass, field.getName(), value);
-                member.setValue(new ConstantExpression(EMPTY_STRING));
-            }
-        }
-    }
-
-    public static void addListenerToClass(SourceUnit source, AnnotationNode annotation, ClassNode classNode)  {
-        for(Map.Entry<String, Expression> member : annotation.getMembers().entrySet()) {
-            Expression value = member.getValue();
-            if((value instanceof ListExpression)) {
-                for(Expression expr : ((ListExpression) value).getExpressions()) {
-                    processExpression(classNode, null, expr);
-                }
-                member.setValue(new ConstantExpression(EMPTY_STRING));
-            } else {
-                processExpression(classNode, null, value);
-                member.setValue(new ConstantExpression(EMPTY_STRING));
-            }
-        }
-    }
-
     private static void processExpression(ClassNode classNode, String propertyName, Expression expression) {
-        if(expression instanceof ClosureExpression) {
+        if (expression instanceof ClosureExpression) {
             addPropertyChangeListener(classNode, propertyName, (ClosureExpression) expression);
-        } else if(expression instanceof VariableExpression) {
+        } else if (expression instanceof VariableExpression) {
             addPropertyChangeListener(classNode, propertyName, (VariableExpression) expression);
+        } else if (expression instanceof ConstantExpression) {
+            addPropertyChangeListener(classNode, propertyName, (ConstantExpression) expression);
         } else {
-            throw new RuntimeException("Internal error: wrong expression type. "+expression);
+            throw new RuntimeException("Internal error: wrong expression type. " + expression);
         }
-    } 
+    }
 
     private static void addPropertyChangeListener(ClassNode classNode, String propertyName, ClosureExpression closure) {
         ArgumentListExpression args = new ArgumentListExpression();
-        if(propertyName != null) args.addExpression(new ConstantExpression(propertyName));
+        if (propertyName != null) args.addExpression(new ConstantExpression(propertyName));
         args.addExpression(CastExpression.asExpression(PROPERTY_CHANGE_LISTENER_CLASS, closure));
 
         addListenerStatement(classNode, args);
     }
-    
+
     private static void addPropertyChangeListener(ClassNode classNode, String propertyName, VariableExpression variable) {
         ArgumentListExpression args = new ArgumentListExpression();
-        if(propertyName != null) args.addExpression(new ConstantExpression(propertyName));
+        if (propertyName != null) args.addExpression(new ConstantExpression(propertyName));
+        args.addExpression(CastExpression.asExpression(PROPERTY_CHANGE_LISTENER_CLASS, variable));
+
+        addListenerStatement(classNode, args);
+    }
+
+    private static void addPropertyChangeListener(ClassNode classNode, String propertyName, ConstantExpression reference) {
+        ArgumentListExpression args = new ArgumentListExpression();
+        if (propertyName != null) args.addExpression(new ConstantExpression(propertyName));
+        VariableExpression variable = new VariableExpression(reference.getText());
         args.addExpression(CastExpression.asExpression(PROPERTY_CHANGE_LISTENER_CLASS, variable));
 
         addListenerStatement(classNode, args);

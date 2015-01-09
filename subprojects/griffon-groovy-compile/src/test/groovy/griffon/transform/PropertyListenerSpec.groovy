@@ -18,12 +18,59 @@ package griffon.transform
 import spock.lang.Specification
 
 class PropertyListenerSpec extends Specification {
-    void "PropertyListener AST transformation attaches a listener"() {
+    void "PropertyListener AST transformation attaches a closure reference as listener"() {
         given:
         String script = '''
         class Bean {
             @griffon.transform.Observable
             @griffon.transform.PropertyListener(snoop)
+            String name
+
+            int count = 0
+
+            private snoop = { ++count }
+        }
+        new Bean()
+        '''
+
+        when:
+        def bean = new GroovyShell().evaluate(script)
+        bean.name = 'griffon'
+        bean.name = 'groovy'
+
+        then:
+        bean.count == 2
+    }
+
+    void "PropertyListener AST transformation attaches a closure as listener"() {
+        given:
+        String script = '''
+        class Bean {
+            @griffon.transform.Observable
+            @griffon.transform.PropertyListener({ ++count })
+            String name
+
+            int count = 0
+        }
+        new Bean()
+        '''
+
+        when:
+        def bean = new GroovyShell().evaluate(script)
+        bean.name = 'griffon'
+        bean.name = 'groovy'
+
+        then:
+        bean.count == 2
+    }
+
+
+    void "PropertyListener AST transformation attaches a closure reference literal as listener"() {
+        given:
+        String script = '''
+        class Bean {
+            @griffon.transform.Observable
+            @griffon.transform.PropertyListener("snoop")
             String name
 
             int count = 0
