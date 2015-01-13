@@ -76,6 +76,11 @@ subprojects { subproj ->
             targetCompatibility = '1.7'
         }
 
+        subproj.tasks.withType(GroovyCompile) {
+            sourceCompatibility = '1.7'
+            targetCompatibility = '1.7'
+        }
+
         dependencies {
             testCompile 'junit:junit:4.12'
             testCompile 'com.google.guiceberry:guiceberry:3.3.1'
