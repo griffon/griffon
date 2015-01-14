@@ -14,15 +14,7 @@
  * limitations under the License.
  */
 
-apply plugin: 'net.saliman.cobertura'
 apply plugin: 'jacoco'
-
-cobertura {
-    coverageFormats = ['html', 'xml']
-    if (project.plugins.hasPlugin('groovy')) {
-      coverageSourceDirs = sourceSets.main.java.srcDirs + sourceSets.main.groovy.srcDirs
-    }
-}
 
 jacoco {
     toolVersion = jacocoVersion
@@ -31,9 +23,20 @@ jacoco {
 jacocoTestReport {
     group = "Reporting"
     description = "Generate Jacoco coverage reports after running tests."
-    additionalSourceDirs = project.files(sourceSets.main.allSource.srcDirs)
-    sourceDirectories = project.files(sourceSets.main.allSource.srcDirs)
-    classDirectories =  project.files(sourceSets.main.output)
+
+    List cd = []
+    Set csd = [] as Set
+    project.depProjects.each { String projectName ->
+        cd << project(projectName).sourceSets.main.output.classesDir.path
+        csd << project(projectName).sourceSets.main.allSource.srcDirs
+    }
+    cd << sourceSets.main.output.classesDir.path
+    csd << sourceSets.main.allSource.srcDirs
+
+    additionalSourceDirs = project.files(csd)
+    sourceDirectories = project.files(csd)
+    classDirectories =  project.files(cd)
+
     reports {
         xml.enabled = true
         csv.enabled = false

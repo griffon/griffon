@@ -16,7 +16,6 @@
 
 apply plugin: 'java'
 apply plugin: 'application'
-apply from: rootProject.file('gradle/coverage.gradle')
 
 mainClassName = 'sample.lanterna.java.Launcher'
 
@@ -28,6 +27,7 @@ ext.depProjects = [
 ]
 
 ext.depProjects.each { evaluationDependsOn it }
+apply from: rootProject.file('gradle/coverage.gradle')
 
 dependencies {
     compileOnly project(':griffon-core-compile')
@@ -66,19 +66,4 @@ sourceSets {
 gradle.taskGraph.whenReady {
     sourceSets.main.java.srcDirs.each { it.mkdirs() }
     sourceSets.main.resources.srcDirs.each { it.mkdirs() }
-}
-
-cobertura {
-    coverageFormats = ['html', 'xml']
-    List cd = []
-    Set csd = [] as Set
-    project.depProjects.each { String projectName ->
-        cd << project(projectName).sourceSets.main.output.classesDir.path
-        csd << project(projectName).sourceSets.main.allSource.srcDirs
-    }
-    cd << sourceSets.main.output.classesDir.path
-    csd << sourceSets.main.allSource.srcDirs
-
-    coverageDirs = cd
-    coverageSourceDirs = csd
 }
