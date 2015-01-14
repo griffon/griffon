@@ -6,5 +6,200 @@ Binding in Griffon is achieved by leveraging Java Beans' `java.beans.PropertyCha
 and their related classes, thus binding will work with any class that fires this type of
 event, regardless of its usage of `{link_observable_ast}` or not.
 
-TBD
+== Groovy Bindings
 
+The following options are available for writing bindings using the `bind` node when Groovy is the source language
+
+.Long
+The most complete of all three, you must specify both ends of the binding explicitly. The following snippet sets an
+unidirectional binding from `bean1.prop1` to `bean2.prop2`
+
+[source,groovy,options="nowrap"]
+----
+bind(source: bean1, sourceProperty: 'prop1',
+     target: bean2, targetProperty: 'prop2')
+----
+
+.Contextual
+This type of binding can assume either the sources or the targets depending on the context. The following snippets
+set an unidirectional binding from `bean1.prop1` to `bean2.prop2`
+
+[source,groovy,options="nowrap"]
+.Implicit Source
+----
+bean(bean1, prop1: bind(target: bean2, targetProperty: 'prop2'))
+----
+
+[source,groovy,options="nowrap"]
+.Implicit Target
+----
+bean(bean2, prop2: bind(source: bean1, sourceProperty: 'prop1'))
+----
+
+When used in this way, either `sourceProperty:` or `targetProperty:` can be omitted; the bind node's value will become
+the property name, in other words
+
+[source,groovy,options="nowrap"]
+----
+bean(bean1, prop1: bind('prop2', target: bean2))
+----
+
+.Short
+This type of binding is only useful for setting implicit targets. It expects a closure as the definition of the binding value
+
+[source,groovy,options="nowrap"]
+----
+bean(bean2, prop2: bind{ bean1.prop1 })
+----
+
+The following properties can be used with either the *long* or *contextual* binding syntax
+
+.mutual
+Bindings are usually setup in one direction. If this property is specified with a value of `true` then a bidirectional
+binding will be created instead.
+
+[source,groovy,linenums,options="nowrap"]
+----
+import griffon.transform.Observable
+import groovy.swing.SwingBuilder
+
+class MyModel {
+    @Observable String value
+}
+
+def model = new MyModel()
+def swing  = new SwingBuilder()
+swing.edt {
+    frame(title: 'Binding', pack: true, visible: true) {
+        gridLayout(cols: 2, rows: 3)
+        label 'Normal'
+        textField(columns: 20, text: bind('value', target: model))
+        label 'Bidirectional'
+        textField(columns: 20, text: bind('value', target: model, mutual: true))
+        label 'Model'
+        textField(columns: 20, text: bind('value', source: model))
+    }
+}
+----
+
+Typing text on textfield #2 pushes the value to model, which in turns updates textfield #2 and #3, demonstrating that
+textfield #2 listens top model updates. Typing text on textfield #2 pushes the value to textfield #3 but not #1,
+emonstrating that textfield #1 is not a bidirectional binding.
+
+.converter
+Transforms the value before it is sent to event listeners.
+
+[source,groovy,linenums,options="nowrap"]
+----
+import griffon.transform.Observable
+import groovy.swing.SwingBuilder
+
+class MyModel {
+    @Observable String value
+}
+
+def convertValue = { val ->
+    '*' * val?.size()
+}
+
+def model = new MyModel()
+def swing  = new SwingBuilder()
+swing.edt {
+    frame(title: 'Binding', pack: true, visible: true) {
+        gridLayout(cols: 2, rows: 3)
+        label 'Normal'
+        textField(columns: 20, text: bind('value', target: model))
+        label 'Converter'
+        textField(columns: 20, text: bind('value', target: model, converter: convertValue))
+        label 'Model'
+        textField(columns: 20, text:  bind('value', source: model))
+    }
+}
+----
+
+Typing text on textfield #1 pushes the value to the model as expected, which you can inspect by looking at textfield #3.
+Typing text on textfield #2 however transform's every keystroke into an '*' character.
+
+.reverseConverter
+Transforms the value from the target to the source.
+
+.validator
+Guards the trigger. Prevents the event from being sent if the return value is `false` or `null`.
+
+[source,groovy,linenums,options="nowrap"]
+----
+import griffon.transform.Observable
+import groovy.swing.SwingBuilder
+
+class MyModel {
+    @Observable String value
+}
+
+def isNumber = { val ->
+    if(!val) return true
+    try {
+        Double.parseDouble(val)
+    } catch(NumberFormatException e) {
+        false
+    }
+}
+
+def model = new MyModel()
+def swing  = new SwingBuilder()
+swing.edt {
+    frame(title: 'Binding', pack: true, visible: true) {
+        gridLayout(cols: 2, rows: 3)
+        label 'Normal'
+        textField(columns: 20, text: bind('value', target: model))
+        label 'Converter'
+        textField(columns: 20, text: bind('value', target: model, validator: isNumber))
+        label 'Model'
+        textField(columns: 20, text:  bind('value', source: model))
+    }
+}
+----
+
+You can type any characters on textfield #1 and see the result in textfield #3. You can only type numbers on
+textfield #2 and see the result in textfield #3
+
+{note}
+This type of validation is not suitable for semantic validation (a.k.a. constraints in domain classes).
+{note}
+
+.sourceEvent
+Maps a different event type, instead of `PropertyChangeEvent`.
+
+.sourceValue
+Specify a value that may come from a different source. Usually found in partnership with `sourceEvent`.
+
+[source,groovy,linenums,options="nowrap"]
+----
+import griffon.transform.Observable
+import groovy.swing.SwingBuilder
+
+class MyModel {
+    @Observable String value
+}
+
+def model = new MyModel()
+def swing  = new SwingBuilder()
+swing.edt {
+    frame(title: 'Binding', pack: true, visible: true) {
+        gridLayout(cols: 2, rows: 3)
+        label 'Text'
+        textField(columns: 20, id: 'tf1')
+        label 'Trigger'
+        button('Copy Text', id: 'bt1')
+        bind(source: bt1,
+             sourceEvent: 'actionPerformed',
+             sourceValue: {tf1.text},
+             target: model,
+             targetProperty: 'value')
+        label 'Model'
+        textField(columns: 20, text:  bind('value', source: model))
+    }
+}
+----
+
+A contrived way to copy text from one textfield to another. The copy is performed by listening to `ActionEvent`s
+pumped by the button.
