@@ -1,0 +1,87 @@
+
+[[_models_fxobservable_transformation]]
+= The @FXObservable AST Transformation
+
+The `{link_fxobservable_ast}` transformation modifies a class in such a way that plain fields become
+JavaFX bindable properties. Each field generates mutators and accessors that accept the plain type
+and the JavaFX property type. For example
+
+[source,groovy,linenums,options="nowrap"]
+.griffon-app/models/org/example/SampleModel.groovy
+----
+package org.example
+
+import griffon.core.artifact.GriffonModel
+import griffon.metadata.ArtifactProviderFor
+import griffon.transform.FXObservable
+
+@ArtifactProviderFor(GriffonModel)
+class SampleModel {
+    @FXObservable String input = 'foo'
+}
+----
+
+Is functionally equivalent to
+
+[source,groovy,linenums,options="nowrap"]
+.griffon-app/models/org/example/SampleModel.groovy
+----
+package org.example
+
+import griffon.core.artifact.GriffonModel
+import griffon.metadata.ArtifactProviderFor
+import javafx.beans.property.SimpleStringProperty
+import javafx.beans.property.StringProperty
+
+@ArtifactProviderFor(GriffonModel)
+class SampleModel {
+    private StringProperty input
+
+    final StringProperty getInputProperty() {
+        inputProperty()
+    }
+
+    final StringProperty inputProperty() {
+        if (input == null) {
+            input = new SimpleStringProperty(this, 'foo')
+        }
+        input
+    }
+
+    void setInput(String input) {
+        inputProperty().set(input)
+    }
+
+    String getInput() {
+        return input == null ? null : inputProperty().get()
+    }
+}
+----
+
+The following is a list of field types that `{link_fxobservable_ast}` can transform
+
+[cols="2*",options="header"]
+|===
+
+| Type          | JavaFX Property
+| Boolean.class | javafx.beans.property.BooleanProperty
+| Boolean.TYPE  | javafx.beans.property.BooleanProperty
+| Double.class  | javafx.beans.property. DoubleProperty
+| Double.TYPE   | javafx.beans.property.DoubleProperty
+| Float.class   | javafx.beans.property.FloatProperty
+| Float.TYPE    | javafx.beans.property.FloatProperty
+| Integer.class | javafx.beans.property.IntProperty
+| Integer.TYPE  | javafx.beans.property.IntProperty
+| Long.class    | javafx.beans.property.LongProperty
+| Long.TYPE     | javafx.beans.property.LongProperty
+| Short.class   | javafx.beans.property.IntProperty
+| Short.TYPE    | javafx.beans.property.IntProperty
+| Byte.class    | javafx.beans.property.IntProperty
+| Byte.TYPE     | javafx.beans.property.IntProperty
+| String.class  | javafx.beans.property.StringProperty
+| List.class    | javafx.beans.property.ListProperty
+| Map.class     | javafx.beans.property.MapProperty
+| Set.class     | javafx.beans.property.SetProperty
+
+|===
+
