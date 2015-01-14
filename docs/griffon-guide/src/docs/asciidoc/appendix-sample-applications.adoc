@@ -35,11 +35,13 @@ image::sample-pivot-java.png[JavaFX, 50%, 50%]
 The goal of these applications is to showcase the similarities and differences of each
 one of them given their implementation language and UI toolkit.
 
+[[_sample_swing]]
 == Swing
 
 Let's begin with Swing, as it's probably the most well known Java UI toolkit. First
 we'll show the Java version of an artifact, then we'll show it's Groovy counterpart.
 
+[[_sample_swing_model]]
 === Model
 
 Instances of `{link_griffon_model}` implement the `{link_observable}` interface which
@@ -77,6 +79,7 @@ Properties become observable by simply annotating them with @Observable. The Gro
 will generate the required boilerplate code, which so happens to be functionally equivalent
 to what we showed in the Java version.
 
+[[_sample_swing_controller]]
 === Controller
 
 Controllers provide actions that are used to fill up the application's interaction.
@@ -113,6 +116,7 @@ The Groovy version of the Controller is much terser of course however there's a 
 feature available to Groovy Swing: Model properties bound to UI components are _always_
 updated inside the UI thread.
 
+[[_sample_swing_service]]
 === Service
 
 Services are tasked to work with raw data and I/O, they should *_never_* interact with
@@ -134,6 +138,7 @@ include::{sample-swing-java}/griffon-app/services/sample/swing/java/SampleServic
 include::{sample-swing-groovy}/griffon-app/services/sample/swing/groovy/SampleService.groovy[lines=16..-1]
 ----
 
+[[_sample_swing_view]]
 === View
 
 We come to the final piece of the puzzle: the View. Components are arranged in a
@@ -169,6 +174,7 @@ The controller action is also transformed into an UI toolkit specific action how
 this time it's easier to grab: by convention all controller actions are exposed as variables
 to the corresponding `builder`.
 
+[[_sample_swing_resources]]
 === Resources
 
 The last file we'll touch is the one that holds de i18n-able content. Griffon supports
@@ -180,6 +186,7 @@ several formats. Here we're showing the standard one as found in many Java proje
 include::{sample-swing-java}/griffon-app/i18n/messages.properties[lines=17..-1]
 ----
 
+[[_sample_swing_statistics]]
 === Statistics
 
 The following statistics show the amount tof lines per artifact required by both applications
@@ -196,6 +203,7 @@ include::{sample-swing-java}/build/reports/stats/sample-swing-java.txt[indent=0]
 include::{sample-swing-groovy}/build/reports/stats/sample-swing-groovy.txt[indent=0]
 ----
 
+[[_sample_javafx]]
 == JavaFX
 
 JavaFx is a next generation UI toolkit and will eventually replace Swing, so it's a good
@@ -206,6 +214,7 @@ idea to get started with it now. Among the several features found in JavaFX you'
  - FXML: a declarative format for defining UIs
  - and more!
 
+[[_sample_javafx_model]]
 === Model
 
 .sample-javafx-java/griffon-app/models/sample/javafx/java/SampleModel.java
@@ -234,6 +243,7 @@ Similarly to `@Observable` we find that Groovy based JavaFX models can use anoth
 transformation named `@FXObservable`. This transformation generates equivalent byte code
 to the Java based Model we saw earlier.
 
+[[_sample_javafx_controller]]
 === Controller
 
 Have a look at the controller for this application. See if you can spot the differences
@@ -269,6 +279,7 @@ updating model properties. This is because the `bind` node for JavaFX components
 aware of the same rules than the `bind` node for Swing components. Nevertheless the
 code remains short and to the point.
 
+[[_sample_javafx_service]]
 === Service
 
 Given that the service operates with raw data and has no ties to the toolkit in use we'd
@@ -286,6 +297,7 @@ include::{sample-javafx-java}/griffon-app/services/sample/javafx/java/SampleServ
 include::{sample-javafx-groovy}/griffon-app/services/sample/javafx/groovy/SampleService.groovy[lines=16..-1]
 ----
 
+[[_sample_javafx_view]]
 === View
 
 Views are the artifacts that are most impacted by the choice of UI toolkit. You may
@@ -338,6 +350,7 @@ include::{sample-javafx-groovy}/griffon-app/views/sample/javafx/groovy/SampleVie
 The Groovy version of the View uses the GroovyFX DSL instead of FXML. You'll find that
 this DSL is very similar to SwingBuilder.
 
+[[_sample_javafx_resources]]
 === Resources
 
 Finally the resources for this application are identical to the Swing version.
@@ -348,6 +361,7 @@ Finally the resources for this application are identical to the Swing version.
 include::{sample-javafx-java}/griffon-app/i18n/messages.properties[lines=17..-1]
 ----
 
+[[_sample_javafx_statistics]]
 === Statistics
 
 The following statistics show the amount tof lines per artifact required by both applications
@@ -364,6 +378,7 @@ include::{sample-javafx-java}/build/reports/stats/sample-javafx-java.txt[indent=
 include::{sample-javafx-groovy}/build/reports/stats/sample-javafx-groovy.txt[indent=0]
 ----
 
+[[_sample_lanterna]]
 == Lanterna
 
 http://code.google.com/p/lanterna/[Lanterna] is a Java library allowing you to write
@@ -373,6 +388,7 @@ and terminal emulators such as konsole, gnome-terminal, putty, xterm and many mo
 One of the main benefits of lanterna is that it's not dependent on any native library
 but runs 100% in pure Java.
 
+[[_sample_lanterna_model]]
 === Model
 
 Even though Lanterna UI components do not expose observable properties in any way
@@ -399,6 +415,7 @@ the application's configuration to find out how
 include::{sample-lanterna-groovy}/griffon-app/conf/sample/lanterna/groovy/Config.groovy[lines=16..-1]
 ----
 
+[[_sample_lanterna_controller]]
 === Controller
 
 We find that for the Java version the Controler it's identical to the <<_swing,Swing>>
@@ -428,6 +445,7 @@ include::{sample-lanterna-groovy}/griffon-app/controllers/sample/lanterna/groovy
 <3> Automatically run off the UI thread
 <4> Get back inside the UI thread
 
+[[_sample_lanterna_service]]
 === Service
 
 Again, services should not be affected by the choice of UI tookit so the following
@@ -445,6 +463,7 @@ include::{sample-lanterna-java}/griffon-app/services/sample/lanterna/java/Sample
 include::{sample-lanterna-groovy}/griffon-app/services/sample/lanterna/groovy/SampleService.groovy[lines=16..-1]
 ----
 
+[[_sample_lanterna_view]]
 === View
 
 We'd expect the View to follow the same pattern we've seen in the previous examples,
@@ -479,6 +498,7 @@ include::{sample-lanterna-groovy}/griffon-app/views/sample/lanterna/groovy/Sampl
 Here we can certify there's no binding code in the View, hence why the Controller has
 to access UI components directly.
 
+[[_sample_lanterna_resources]]
 === Resources
 
 The resources file is identical to the ones found in the other applications. There's
@@ -490,6 +510,7 @@ in fact no changes brought by the choice of UI toolkit here.
 include::{sample-lanterna-java}/griffon-app/i18n/messages.properties[lines=17..-1]
 ----
 
+[[_sample_lanterna_statistics]]
 === Statistics
 
 The following statistics show the amount tof lines per artifact required by both applications
@@ -506,6 +527,7 @@ include::{sample-lanterna-java}/build/reports/stats/sample-lanterna-java.txt[ind
 include::{sample-lanterna-groovy}/build/reports/stats/sample-lanterna-groovy.txt[indent=0]
 ----
 
+[[_sample_pivot]]
 == Pivot
 
 http://pivot.apache.org[Apache Pivot] is an open-source platform for building installable
@@ -516,6 +538,7 @@ We decided to implement this application in the same fashion as the <<_lanterna,
 application because of the same reason: Pivot UI components are not observable. You'll
 notice that the Java Model is identical and there's no Groovy Model
 
+[[_sample_pivot_model]]
 === Model
 
 .sample-pivot-java/griffon-app/models/sample/pivot/java/SampleModel.java
@@ -527,6 +550,7 @@ include::{sample-pivot-java}/griffon-app/models/sample/pivot/java/SampleModel.ja
 <2> Property accessor
 <3> Property mutator must fire a `PropertyChangeEvent`
 
+[[_sample_pivot_controller]]
 === Controller
 
 The Pivot Controllers follow the same rules than the Lanterna ones, and as such you'll
@@ -552,6 +576,7 @@ include::{sample-pivot-groovy}/griffon-app/controllers/sample/pivot/groovy/Sampl
 <3> Automatically run off the UI thread
 <4> Get back inside the UI thread
 
+[[_sample_pivot_service]]
 === Service
 
 Services remain constant again, what a surprise, right?
@@ -568,6 +593,7 @@ include::{sample-pivot-java}/griffon-app/services/sample/pivot/java/SampleServic
 include::{sample-pivot-groovy}/griffon-app/services/sample/pivot/groovy/SampleService.groovy[lines=16..-1]
 ----
 
+[[_sample_pivot_view]]
 === View
 
 If you squint your eyes you'll see that the View is almost identical to the <<_swing,Swing>>
@@ -594,6 +620,7 @@ include::{sample-pivot-groovy}/griffon-app/views/sample/pivot/groovy/SampleView.
 <2> Create window and attach it to `{link_window_manager}`
 <3> Hook actions by convention
 
+[[_sample_pivot_resources]]
 === Resources
 
 The resource file, left untouched once more.
@@ -604,6 +631,7 @@ The resource file, left untouched once more.
 include::{sample-pivot-java}/griffon-app/i18n/messages.properties[lines=17..-1]
 ----
 
+[[_sample_pivot_statistics]]
 === Statistics
 
 The following statistics show the amount tof lines per artifact required by both applications
