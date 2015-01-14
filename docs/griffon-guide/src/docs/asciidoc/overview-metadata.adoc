@@ -136,13 +136,18 @@ recognizes the following aliases
  * `dev` - short for `development`.
  * `prod` - short for `production`.
 
+You have the following options to change the environment value if using <<_buildtools_gradle,Gradle>> as build tool
+
+ * specify the value as a project property named `griffonEnv`.
+ * specify the value in the `jvmArgs` property of the `run` task.
+
 [[_overview_metadata_griffon_environment]]
 == Griffon Environment
 
 The `{link_griffon_environment}` gives you access to the following values
 
  * Griffon version
- * Griffon build date & time
+ * Griffon build date & time (link:https://en.wikipedia.org/wiki/ISO_8601[ISO 8601, window="blank"])
  * JVM version
  * OS version
 

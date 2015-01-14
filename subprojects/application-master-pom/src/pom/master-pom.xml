@@ -764,6 +764,7 @@
                             <assembleDirectory>${project.build.directory}/binary</assembleDirectory>
                             <repositoryLayout>flat</repositoryLayout>
                             <repositoryName>lib</repositoryName>
+                            <extraJvmArguments>-Dgriffon.env=prod</extraJvmArguments>
                             <programs>
                                 <program>
                                     <mainClass>${application.main.class}</mainClass>
@@ -867,6 +868,12 @@
                         <inherited>true</inherited>
                         <configuration>
                             <mainClass>${application.main.class}</mainClass>
+                            <systemProperties>
+                                <systemProperty>
+                                    <key>griffon.env</key>
+                                    <value>dev</value>
+                                </systemProperty>
+                            </systemProperties>
                         </configuration>
                         <executions>
                             <execution>

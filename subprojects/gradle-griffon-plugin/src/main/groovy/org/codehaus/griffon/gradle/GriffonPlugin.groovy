@@ -39,7 +39,7 @@ class GriffonPlugin implements Plugin<Project> {
         // enable jcenter by default
         project.repositories.jcenter()
         // enable griffon-plugins @ bintray
-        project.repositories.maven { url 'http://dl.bintray.com/griffon/griffon-plugins'}
+        project.repositories.maven { url 'http://dl.bintray.com/griffon/griffon-plugins' }
 
         applyDefaultDependencies(project)
 
@@ -267,6 +267,25 @@ class GriffonPlugin implements Plugin<Project> {
                         config    : [name: 'Configuration', path: 'griffon-app/conf'],
                         lifecycle : [name: 'Lifecycle', path: 'griffon-app/lifecycle']
                     ]
+                }
+
+                // update Griffon environment settings
+                project.gradle.taskGraph.whenReady {
+                    if (project.gradle.taskGraph.hasTask(':startScripts')) {
+                        if (project.hasProperty('griffonEnv')) {
+                            project.applicationDefaultJvmArgs << "-Dgriffon.env=${project.griffonEnv}"
+                        } else {
+                            project.applicationDefaultJvmArgs << '-Dgriffon.env=prod'
+                        }
+                    } else {
+                        Task runTask = project.tasks.findByName('run')
+                        if (project.hasProperty('griffonEnv')) {
+                            project.applicationDefaultJvmArgs << "-Dgriffon.env=${project.griffonEnv}"
+                            runTask.jvmArgs << "-Dgriffon.env=${project.griffonEnv}"
+                        } else {
+                            runTask.jvmArgs << '-Dgriffon.env=dev'
+                        }
+                    }
                 }
             }
 
