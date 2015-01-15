@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TablePaneFactory.groovy</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.builder.pivot.factory</a> &gt; <span class="el_source">TablePaneFactory.groovy</span></div><h1>TablePaneFactory.groovy</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.builder.pivot.factory
+
+import org.apache.pivot.wtk.Component
+import org.apache.pivot.wtk.TablePane
+
+/**
+ * @author Andres Almiray
+ */
+class TablePaneFactory extends ComponentFactory {
+    public static final String DELEGATE_PROPERTY_COLUMN_SPAN = &quot;_delegateProperty:columnSpan&quot;
+    public static final String DEFAULT_DELEGATE_PROPERTY_COLUMN_SPAN = &quot;columnSpan&quot;
+    public static final String DELEGATE_PROPERTY_ROW_SPAN = &quot;_delegateProperty:rowSpan&quot;
+    public static final String DEFAULT_DELEGATE_PROPERTY_ROW_SPAN = &quot;rowSpan&quot;
+    public static final String CONTEXT_DATA_KEY = &quot;TablePaneFactoryData&quot;
+
+    TablePaneFactory() {
+<span class="fc" id="L32">        super(TablePane)</span>
+    }
+
+/*
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+        def newChild = super.newInstance(builder, name, value, attributes)
+        builder.context.tablePaneFactoryClosure = { FactoryBuilderSupport cBuilder, Object cNode, Map cAttributes -&gt;
+            if (builder.current == newChild) inspectChild(cBuilder, cNode, cAttributes)
+        }
+        builder.addAttributeDelegate(builder.context.tablePaneFactoryClosure)
+        builder.context[DELEGATE_PROPERTY_COLUMN_SPAN] = attributes.remove(&quot;columnSpan&quot;) ?: DEFAULT_DELEGATE_PROPERTY_COLUMN_SPAN
+        builder.context[DELEGATE_PROPERTY_ROW_SPAN] = attributes.remove(&quot;rowSpan&quot;) ?: DEFAULT_DELEGATE_PROPERTY_ROW_SPAN
+
+        return newChild
+    }
+
+
+    static void inspectChild(FactoryBuilderSupport builder, Object node, Map attributes) {
+        if(!(node instanceof Component)) return
+        def columnSpan = attributes.remove(builder?.parentContext?.getAt(DELEGATE_PROPERTY_COLUMN_SPAN) ?: DEFAULT_DELEGATE_PROPERTY_COLUMN_SPAN)
+        def rowSpan = attributes.remove(builder?.parentContext?.getAt(DELEGATE_PROPERTY_ROW_SPAN) ?: DEFAULT_DELEGATE_PROPERTY_ROW_SPAN)
+        def tablePaneContext = builder.context.get(CONTEXT_DATA_KEY) ?: [:]
+        if (tablePaneContext.isEmpty()) {
+            builder.context.put(CONTEXT_DATA_KEY, tablePaneContext)
+        }
+        tablePaneContext.put(node, [columnSpan, rowSpan])
+    }
+
+    void setChild(FactoryBuilderSupport builder, Object parent, Object child) {
+        if(child instanceof Component) {
+            def settings = builder.context[CONTEXT_DATA_KEY]?.get(child) ?: [null, null]
+            parent.panels.add(child)
+            if(settings[0] != null) TablePane.setColumnSpan(child, settings[0])
+            if(settings[1] != null) TablePane.setRowSpan(child, settings[1])
+        } else {
+            super.setChild(builder, parent, child)
+        }
+    }
+
+    public void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
+        super.onNodeCompleted(builder, parent, node)
+        builder.removeAttributeDelegate(builder.context.tablePaneFactoryClosure)
+    }
+*/
+
+    void setChild(FactoryBuilderSupport builder, Object parent, Object child) {
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        if (child instanceof TablePane.Column) parent.columns.add(child)</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        if (child instanceof TablePane.Row) parent.rows.add(child)</span>
+    }
+}
+
+/**
+ * @author Andres Almiray
+ */
+class TablePaneColumnFactory extends ComponentFactory {
+    TablePaneColumnFactory() {
+<span class="fc" id="L88">        super(TablePane.Column)</span>
+    }
+
+    void setChild(FactoryBuilderSupport builder, Object parent, Object child) {
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        if (child instanceof Component) parent.add(child)</span>
+    }
+}
+
+/**
+ * @author Andres Almiray
+ */
+class TablePaneRowFactory extends ComponentFactory {
+    TablePaneRowFactory() {
+<span class="fc" id="L101">        super(TablePane.Row)</span>
+    }
+
+    void setChild(FactoryBuilderSupport builder, Object parent, Object child) {
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        if (child instanceof Component) parent.add(child)</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

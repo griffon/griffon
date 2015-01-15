@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractObjectFactory.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-java</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core.storage</a> &gt; <span class="el_source">AbstractObjectFactory.java</span></div><h1>AbstractObjectFactory.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core.storage;
+
+
+import griffon.core.Configuration;
+import griffon.core.GriffonApplication;
+import griffon.core.storage.ObjectFactory;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import static griffon.util.ConfigUtils.getConfigValue;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public abstract class AbstractObjectFactory&lt;T&gt; implements ObjectFactory&lt;T&gt; {
+    private final Configuration configuration;
+    private final GriffonApplication application;
+
+    @Inject
+<span class="nc" id="L42">    public AbstractObjectFactory(@Nonnull Configuration configuration, @Nonnull GriffonApplication application) {</span>
+<span class="nc" id="L43">        this.configuration = requireNonNull(configuration, &quot;Argument 'configuration' must not be null&quot;);</span>
+<span class="nc" id="L44">        this.application = requireNonNull(application, &quot;Argument 'application' must not be null&quot;);</span>
+<span class="nc" id="L45">    }</span>
+
+    @Nonnull
+    public Configuration getConfiguration() {
+<span class="nc" id="L49">        return configuration;</span>
+    }
+
+    @Nonnull
+    public GriffonApplication getApplication() {
+<span class="nc" id="L54">        return application;</span>
+    }
+
+    @Nonnull
+    protected abstract String getSingleKey();
+
+    @Nonnull
+    protected abstract String getPluralKey();
+
+    protected void event(@Nonnull String eventName, @Nonnull List&lt;?&gt; args) {
+<span class="nc" id="L64">        application.getEventRouter().publishEvent(eventName, args);</span>
+<span class="nc" id="L65">    }</span>
+
+    @Nonnull
+    @SuppressWarnings({&quot;unchecked&quot;, &quot;ConstantConditions&quot;})
+    protected Map&lt;String, Object&gt; narrowConfig(@Nonnull String name) {
+<span class="nc" id="L70">        requireNonBlank(name, &quot;Argument 'name' must not be blank&quot;);</span>
+<span class="nc bnc" id="L71" title="All 4 branches missed.">        if (KEY_DEFAULT.equals(name) &amp;&amp; configuration.containsKey(getSingleKey())) {</span>
+<span class="nc" id="L72">            return (Map&lt;String, Object&gt;) configuration.get(getSingleKey());</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        } else if (configuration.containsKey(getPluralKey())) {</span>
+<span class="nc" id="L74">            Map&lt;String, Object&gt; elements = (Map&lt;String, Object&gt;) configuration.get(getPluralKey());</span>
+<span class="nc" id="L75">            return getConfigValue(elements, name, Collections.&lt;String, Object&gt;emptyMap());</span>
+        }
+<span class="nc" id="L77">        return Collections.emptyMap();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

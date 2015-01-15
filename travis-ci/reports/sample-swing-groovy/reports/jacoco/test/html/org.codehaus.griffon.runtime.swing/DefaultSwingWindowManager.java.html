@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DefaultSwingWindowManager.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-groovy</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.swing</a> &gt; <span class="el_source">DefaultSwingWindowManager.java</span></div><h1>DefaultSwingWindowManager.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.swing;
+
+import griffon.core.ApplicationEvent;
+import griffon.core.GriffonApplication;
+import griffon.core.env.ApplicationPhase;
+import griffon.swing.SwingWindowDisplayHandler;
+import griffon.swing.SwingWindowManager;
+import griffon.util.GriffonNameUtils;
+import org.codehaus.griffon.runtime.core.view.AbstractWindowManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.swing.JInternalFrame;
+import javax.swing.WindowConstants;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
+import java.awt.Window;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableCollection;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public class DefaultSwingWindowManager extends AbstractWindowManager&lt;Window&gt; implements SwingWindowManager {
+<span class="fc" id="L55">    private static final Logger LOG = LoggerFactory.getLogger(DefaultSwingWindowManager.class);</span>
+<span class="fc" id="L56">    private final WindowHelper windowHelper = new WindowHelper();</span>
+<span class="fc" id="L57">    private final ComponentHelper componentHelper = new ComponentHelper();</span>
+<span class="fc" id="L58">    private final InternalFrameHelper internalFrameHelper = new InternalFrameHelper();</span>
+<span class="fc" id="L59">    private final Map&lt;String, JInternalFrame&gt; internalFrames = Collections.synchronizedMap(new LinkedHashMap&lt;String, JInternalFrame&gt;());</span>
+<span class="fc" id="L60">    private boolean hideBeforeHandler = false;</span>
+
+    @Inject
+    @Nonnull
+    public DefaultSwingWindowManager(@Nonnull GriffonApplication application, @Nonnull @Named(&quot;windowDisplayHandler&quot;) SwingWindowDisplayHandler windowDisplayHandler) {
+<span class="fc" id="L65">        super(application, windowDisplayHandler);</span>
+<span class="fc" id="L66">        requireNonNull(application.getEventRouter(), &quot;Argument 'application.eventRouter' must not be null&quot;);</span>
+<span class="fc" id="L67">    }</span>
+
+    /**
+     * Finds a JInternalFrame by name.
+     *
+     * @param name the value of the name: property
+     * @return a JInternalFrame if a match is found, null otherwise.
+     * @since 2.0.0
+     */
+    public JInternalFrame findInternalFrame(String name) {
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        if (!GriffonNameUtils.isBlank(name)) {</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">            for (JInternalFrame internalFrame : internalFrames.values()) {</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">                if (name.equals(internalFrame.getName())) return internalFrame;</span>
+<span class="nc" id="L80">            }</span>
+        }
+<span class="nc" id="L82">        return null;</span>
+    }
+
+    /**
+     * Returns the list of internal frames managed by this manager.
+     *
+     * @return a List of currently managed internal frames
+     * @since 2.0.0
+     */
+    public Collection&lt;JInternalFrame&gt; getInternalFrames() {
+<span class="nc" id="L92">        return unmodifiableCollection(internalFrames.values());</span>
+    }
+
+    /**
+     * Registers an internal frame on this manager if an only if the internal frame is not null
+     * and it's not registered already.
+     *
+     * @param name          the value of the of the Window's name
+     * @param internalFrame the internal frame to be added to the list of managed internal frames
+     * @since 2.0.0
+     */
+    public void attach(@Nonnull String name, @Nonnull JInternalFrame internalFrame) {
+<span class="nc" id="L104">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc" id="L105">        requireNonNull(internalFrame, ERROR_WINDOW_NULL);</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">        if (internalFrames.containsKey(name)) {</span>
+<span class="nc" id="L107">            JInternalFrame window2 = internalFrames.get(name);</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">            if (window2 != internalFrame) {</span>
+<span class="nc" id="L109">                detach(name);</span>
+            }
+        }
+
+<span class="nc" id="L113">        doAttach(internalFrame);</span>
+
+<span class="nc bnc" id="L115" title="All 2 branches missed.">        if (LOG.isDebugEnabled()) {</span>
+<span class="nc" id="L116">            LOG.debug(&quot;Attaching internal frame with name: '&quot; + name + &quot;' at index &quot; + internalFrames.size() + &quot; &quot; + internalFrame);</span>
+        }
+<span class="nc" id="L118">        internalFrames.put(name, internalFrame);</span>
+<span class="nc" id="L119">        event(ApplicationEvent.WINDOW_ATTACHED, asList(name, internalFrame));</span>
+<span class="nc" id="L120">    }</span>
+
+    protected void doAttach(@Nonnull JInternalFrame internalFrame) {
+<span class="nc" id="L123">        internalFrame.addInternalFrameListener(internalFrameHelper);</span>
+<span class="nc" id="L124">        internalFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);</span>
+<span class="nc" id="L125">    }</span>
+
+    /**
+     * Removes the internal frame from the list of manages internal frames if and only if it
+     * is registered with this manager.
+     *
+     * @param name the value of the of the Window's name
+     * @since 2.0.0
+     */
+    public void detach(@Nonnull String name) {
+<span class="nc" id="L135">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">        if (internalFrames.containsKey(name)) {</span>
+<span class="nc" id="L137">            JInternalFrame window = internalFrames.get(name);</span>
+
+<span class="nc" id="L139">            doDetach(window);</span>
+
+<span class="nc bnc" id="L141" title="All 2 branches missed.">            if (LOG.isDebugEnabled()) {</span>
+<span class="nc" id="L142">                LOG.debug(&quot;Detaching internalFrame with name: '&quot; + name + &quot;' &quot; + window);</span>
+            }
+<span class="nc" id="L144">            internalFrames.remove(name);</span>
+<span class="nc" id="L145">            event(ApplicationEvent.WINDOW_DETACHED, asList(name, window));</span>
+        }
+<span class="nc" id="L147">    }</span>
+
+    protected void doDetach(@Nonnull JInternalFrame internalFrame) {
+<span class="nc" id="L150">        internalFrame.removeInternalFrameListener(internalFrameHelper);</span>
+<span class="nc" id="L151">    }</span>
+
+    /**
+     * Shows the internal frame.&lt;p&gt;
+     * This method is executed &lt;b&gt;SYNCHRONOUSLY&lt;/b&gt; in the UI thread.
+     *
+     * @param internalFrame the internal frame to show
+     * @since 2.0.0
+     */
+    public void show(@Nonnull final JInternalFrame internalFrame) {
+<span class="nc" id="L161">        requireNonNull(internalFrame, ERROR_WINDOW_NULL);</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">        if (!internalFrames.containsValue(internalFrame)) {</span>
+<span class="nc" id="L163">            return;</span>
+        }
+
+<span class="nc" id="L166">        String windowName = null;</span>
+<span class="nc" id="L167">        int windowIndex = -1;</span>
+<span class="nc" id="L168">        synchronized (internalFrames) {</span>
+<span class="nc" id="L169">            int i = 0;</span>
+<span class="nc bnc" id="L170" title="All 2 branches missed.">            for (Map.Entry&lt;String, JInternalFrame&gt; entry : internalFrames.entrySet()) {</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">                if (entry.getValue() == internalFrame) {</span>
+<span class="nc" id="L172">                    windowName = entry.getKey();</span>
+<span class="nc" id="L173">                    windowIndex = i;</span>
+<span class="nc" id="L174">                    break;</span>
+                }
+<span class="nc" id="L176">                i++;</span>
+<span class="nc" id="L177">            }</span>
+<span class="nc" id="L178">        }</span>
+
+<span class="nc" id="L180">        final String name = windowName;</span>
+<span class="nc" id="L181">        final int index = windowIndex;</span>
+
+<span class="nc" id="L183">        getApplication().getUIThreadManager().runInsideUIAsync(new Runnable() {</span>
+            public void run() {
+<span class="nc bnc" id="L185" title="All 2 branches missed.">                if (LOG.isDebugEnabled()) {</span>
+<span class="nc" id="L186">                    LOG.debug(&quot;Showing window with name: '&quot; + name + &quot;' at index &quot; + index + &quot; &quot; + internalFrame);</span>
+                }
+                //noinspection ConstantConditions
+<span class="nc" id="L189">                resolveSwingWindowDisplayHandler().show(name, internalFrame);</span>
+<span class="nc" id="L190">            }</span>
+        });
+<span class="nc" id="L192">    }</span>
+
+    /**
+     * Hides the internal frame.&lt;p&gt;
+     * This method is executed &lt;b&gt;SYNCHRONOUSLY&lt;/b&gt; in the UI thread.
+     *
+     * @param internalFrame the internal frame to hide
+     * @since 2.0.0
+     */
+    public void hide(@Nonnull final JInternalFrame internalFrame) {
+<span class="nc" id="L202">        requireNonNull(internalFrame, ERROR_WINDOW_NULL);</span>
+<span class="nc bnc" id="L203" title="All 2 branches missed.">        if (!internalFrames.containsValue(internalFrame)) {</span>
+<span class="nc" id="L204">            return;</span>
+        }
+
+<span class="nc" id="L207">        String windowName = null;</span>
+<span class="nc" id="L208">        int windowIndex = -1;</span>
+<span class="nc" id="L209">        synchronized (internalFrames) {</span>
+<span class="nc" id="L210">            int i = 0;</span>
+<span class="nc bnc" id="L211" title="All 2 branches missed.">            for (Map.Entry&lt;String, JInternalFrame&gt; entry : internalFrames.entrySet()) {</span>
+<span class="nc bnc" id="L212" title="All 2 branches missed.">                if (entry.getValue() == internalFrame) {</span>
+<span class="nc" id="L213">                    windowName = entry.getKey();</span>
+<span class="nc" id="L214">                    windowIndex = i;</span>
+<span class="nc" id="L215">                    break;</span>
+                }
+<span class="nc" id="L217">                i++;</span>
+<span class="nc" id="L218">            }</span>
+<span class="nc" id="L219">        }</span>
+
+<span class="nc" id="L221">        final String name = windowName;</span>
+<span class="nc" id="L222">        final int index = windowIndex;</span>
+
+<span class="nc" id="L224">        getApplication().getUIThreadManager().runInsideUIAsync(new Runnable() {</span>
+            public void run() {
+<span class="nc bnc" id="L226" title="All 2 branches missed.">                if (LOG.isDebugEnabled()) {</span>
+<span class="nc" id="L227">                    LOG.debug(&quot;Hiding window with name: '&quot; + name + &quot;' at index &quot; + index + &quot; &quot; + internalFrame);</span>
+                }
+                //noinspection ConstantConditions
+<span class="nc" id="L230">                resolveSwingWindowDisplayHandler().hide(name, internalFrame);</span>
+<span class="nc" id="L231">            }</span>
+        });
+<span class="nc" id="L233">    }</span>
+
+    /**
+     * Should the window be hidden before all ShutdownHandlers be called ?
+     *
+     * @return current value
+     */
+    public boolean isHideBeforeHandler() {
+<span class="nc" id="L241">        return hideBeforeHandler;</span>
+    }
+
+    /**
+     * Set if the window should be hidden before all ShutdownHandler be called.
+     *
+     * @param hideBeforeHandler new value
+     */
+    public void setHideBeforeHandler(boolean hideBeforeHandler) {
+<span class="nc" id="L250">        this.hideBeforeHandler = hideBeforeHandler;</span>
+<span class="nc" id="L251">    }</span>
+
+    @Nonnull
+    protected SwingWindowDisplayHandler resolveSwingWindowDisplayHandler() {
+<span class="nc" id="L255">        return (SwingWindowDisplayHandler) resolveWindowDisplayHandler();</span>
+    }
+
+    @Override
+    protected void doAttach(@Nonnull Window window) {
+<span class="nc" id="L260">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="nc" id="L261">        window.addWindowListener(windowHelper);</span>
+<span class="nc" id="L262">        window.addComponentListener(componentHelper);</span>
+<span class="nc" id="L263">    }</span>
+
+    @Override
+    protected void doDetach(@Nonnull Window window) {
+<span class="nc" id="L267">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="nc" id="L268">        window.removeWindowListener(windowHelper);</span>
+<span class="nc" id="L269">        window.removeComponentListener(componentHelper);</span>
+<span class="nc" id="L270">    }</span>
+
+    @Override
+    protected boolean isWindowVisible(@Nonnull Window window) {
+<span class="nc" id="L274">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="nc" id="L275">        return window.isVisible();</span>
+    }
+
+    /**
+     * WindowAdapter that optionally invokes hide() when the window is about to be closed.
+     *
+     * @author Andres Almiray
+     */
+<span class="fc" id="L283">    private class WindowHelper extends WindowAdapter {</span>
+        public void windowClosing(WindowEvent event) {
+<span class="nc bnc" id="L285" title="All 2 branches missed.">            if (getApplication().getPhase() == ApplicationPhase.SHUTDOWN) {</span>
+<span class="nc" id="L286">                return;</span>
+            }
+<span class="nc" id="L288">            int visibleWindows = countVisibleWindows();</span>
+
+<span class="nc bnc" id="L290" title="All 4 branches missed.">            if (isHideBeforeHandler() || visibleWindows &gt; 0) {</span>
+<span class="nc" id="L291">                hide(event.getWindow());</span>
+            }
+
+<span class="nc bnc" id="L294" title="All 4 branches missed.">            if (visibleWindows &lt;= 1 &amp;&amp; isAutoShutdown()) {</span>
+<span class="nc" id="L295">                LOG.debug(&quot;Attempting to shutdown application&quot;);</span>
+<span class="nc bnc" id="L296" title="All 2 branches missed.">                if (!getApplication().shutdown()) show(event.getWindow());</span>
+            }
+<span class="nc" id="L298">        }</span>
+    }
+
+    /**
+     * ComponentAdapter that triggers application events when a window is shown/hidden.
+     *
+     * @author Andres Almiray
+     */
+<span class="fc" id="L306">    private class ComponentHelper extends ComponentAdapter {</span>
+        /**
+         * Triggers a &lt;tt&gt;WindowShown&lt;/tt&gt; event with the window as sole argument
+         */
+        public void componentShown(ComponentEvent event) {
+<span class="nc" id="L311">            event(ApplicationEvent.WINDOW_SHOWN, asList(event.getSource()));</span>
+<span class="nc" id="L312">        }</span>
+
+        /**
+         * Triggers a &lt;tt&gt;WindowHidden&lt;/tt&gt; event with the window as sole argument
+         */
+        public void componentHidden(ComponentEvent event) {
+<span class="nc" id="L318">            event(ApplicationEvent.WINDOW_HIDDEN, asList(event.getSource()));</span>
+<span class="nc" id="L319">        }</span>
+    }
+
+    /**
+     * InternalFrameAdapter that triggers application events when a window is shown/hidden,
+     * it also invokes hide() when the window is about to be closed.
+     *
+     * @author Andres Almiray
+     */
+<span class="fc" id="L328">    private class InternalFrameHelper extends InternalFrameAdapter {</span>
+        public void internalFrameClosing(InternalFrameEvent event) {
+<span class="nc" id="L330">            hide(event.getInternalFrame());</span>
+<span class="nc" id="L331">        }</span>
+
+        /**
+         * Triggers a &lt;tt&gt;WindowShown&lt;/tt&gt; event with the internal frame as sole argument
+         */
+        public void internalFrameOpened(InternalFrameEvent event) {
+<span class="nc" id="L337">            event(ApplicationEvent.WINDOW_SHOWN, asList(event.getSource()));</span>
+
+<span class="nc" id="L339">        }</span>
+
+        /**
+         * Triggers a &lt;tt&gt;WindowHidden&lt;/tt&gt; event with the internal frame as sole argument
+         */
+        public void internalFrameClosed(InternalFrameEvent event) {
+<span class="nc" id="L345">            event(ApplicationEvent.WINDOW_HIDDEN, asList(event.getSource()));</span>
+<span class="nc" id="L346">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

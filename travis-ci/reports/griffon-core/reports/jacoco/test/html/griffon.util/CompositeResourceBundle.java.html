@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>CompositeResourceBundle.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-core</a> &gt; <a href="index.source.html" class="el_package">griffon.util</a> &gt; <span class="el_source">CompositeResourceBundle.java</span></div><h1>CompositeResourceBundle.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.util;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import static griffon.util.ExpandableResourceBundle.wrapResourceBundle;
+import static griffon.util.GriffonClassUtils.requireState;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public class CompositeResourceBundle extends ResourceBundle {
+<span class="fc" id="L40">    private static final Logger LOG = LoggerFactory.getLogger(CompositeResourceBundle.class);</span>
+    private final ResourceBundle[] bundles;
+<span class="fc" id="L42">    private final List&lt;String&gt; keys = new ArrayList&lt;&gt;();</span>
+
+    public CompositeResourceBundle(@Nonnull Collection&lt;ResourceBundle&gt; bundles) {
+<span class="fc" id="L45">        this(toResourceBundleArray(bundles));</span>
+<span class="fc" id="L46">    }</span>
+
+<span class="fc" id="L48">    public CompositeResourceBundle(@Nonnull ResourceBundle[] bundles) {</span>
+<span class="fc" id="L49">        requireNonNull(bundles, &quot;Argument 'bundles' must not be null&quot;);</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        requireState(bundles.length &gt; 0, &quot;Argument 'bundles' must not be empty&quot;);</span>
+<span class="fc" id="L51">        this.bundles = new ResourceBundle[bundles.length];</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        for (int i = 0; i &lt; bundles.length; i++) {</span>
+<span class="fc" id="L53">            this.bundles[i] = wrapResourceBundle(bundles[i]);</span>
+        }
+
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        for (ResourceBundle bundle : this.bundles) {</span>
+<span class="fc" id="L57">            Enumeration&lt;String&gt; ks = bundle.getKeys();</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">            while (ks.hasMoreElements()) {</span>
+<span class="fc" id="L59">                String key = ks.nextElement();</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">                if (!keys.contains(key)) {</span>
+<span class="fc" id="L61">                    keys.add(key);</span>
+                }
+<span class="fc" id="L63">            }</span>
+        }
+<span class="fc" id="L65">    }</span>
+
+    @Nullable
+    protected Object handleGetObject(@Nonnull String key) {
+<span class="fc" id="L69">        requireNonBlank(key, &quot;Arguments 'key' must not be blank&quot;);</span>
+
+<span class="fc" id="L71">        LOG.trace(&quot;Searching key={}&quot;, key);</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        for (ResourceBundle bundle : bundles) {</span>
+            try {
+<span class="fc" id="L74">                Object value = bundle.getObject(key);</span>
+<span class="fc" id="L75">                LOG.trace(&quot;Bundle {}; key={}; value='{}'&quot;, bundle, key, value);</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">                if (value != null) {</span>
+<span class="fc" id="L77">                    return value;</span>
+                }
+<span class="fc" id="L79">            } catch (Exception e) {</span>
+                // ignore
+<span class="nc" id="L81">            }</span>
+        }
+<span class="fc" id="L83">        return null;</span>
+    }
+
+    @Nonnull
+    @Override
+    public Enumeration&lt;String&gt; getKeys() {
+<span class="fc" id="L89">        return new IteratorAsEnumeration&lt;&gt;(keys.iterator());</span>
+    }
+
+    private static class IteratorAsEnumeration&lt;E&gt; implements Enumeration&lt;E&gt; {
+        private final Iterator&lt;E&gt; iterator;
+
+<span class="fc" id="L95">        public IteratorAsEnumeration(Iterator&lt;E&gt; iterator) {</span>
+<span class="fc" id="L96">            this.iterator = iterator;</span>
+<span class="fc" id="L97">        }</span>
+
+        public boolean hasMoreElements() {
+<span class="fc" id="L100">            return iterator.hasNext();</span>
+        }
+
+        public E nextElement() {
+<span class="fc" id="L104">            return iterator.next();</span>
+        }
+    }
+
+    @Nonnull
+    private static ResourceBundle[] toResourceBundleArray(@Nonnull Collection&lt;ResourceBundle&gt; bundles) {
+<span class="fc" id="L110">        requireNonNull(bundles, &quot;Argument 'bundles' must not be null&quot;);</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        if (bundles.isEmpty()) {</span>
+<span class="fc" id="L112">            return new ResourceBundle[0];</span>
+        }
+<span class="fc" id="L114">        return bundles.toArray(new ResourceBundle[bundles.size()]);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

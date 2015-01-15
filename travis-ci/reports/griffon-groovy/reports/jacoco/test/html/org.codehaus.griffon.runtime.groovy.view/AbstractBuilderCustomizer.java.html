@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractBuilderCustomizer.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-groovy</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.groovy.view</a> &gt; <span class="el_source">AbstractBuilderCustomizer.java</span></div><h1>AbstractBuilderCustomizer.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.groovy.view;
+
+import griffon.util.BuilderCustomizer;
+import groovy.lang.Closure;
+import groovy.util.Factory;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableMap;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+@SuppressWarnings(&quot;rawtypes&quot;)
+<span class="fc" id="L38">public class AbstractBuilderCustomizer implements BuilderCustomizer {</span>
+<span class="fc" id="L39">    private final Map&lt;String, Object&gt; variables = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L40">    private final Map&lt;String, Factory&gt; factories = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L41">    private final Map&lt;String, Closure&gt; methods = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L42">    private final Map&lt;String, Closure[]&gt; props = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L43">    private final List&lt;Closure&gt; attributeDelegates = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L44">    private final List&lt;Closure&gt; preInstantiateDelegates = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L45">    private final List&lt;Closure&gt; postInstantiateDelegates = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L46">    private final List&lt;Closure&gt; postNodeCompletionDelegates = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L47">    private final List&lt;Closure&gt; disposalClosures = new ArrayList&lt;&gt;();</span>
+    private Closure methodMissingDelegate;
+    private Closure propertyMissingDelegate;
+
+    @Nonnull
+    public Map&lt;String, Object&gt; getVariables() {
+<span class="fc" id="L53">        return unmodifiableMap(variables);</span>
+    }
+
+    public void setVariables(@Nonnull Map&lt;String, Object&gt; variables) {
+<span class="nc" id="L57">        requireNonNull(variables, &quot;Argument 'variables' must not be null&quot;);</span>
+<span class="nc" id="L58">        this.variables.clear();</span>
+<span class="nc" id="L59">        this.variables.putAll(variables);</span>
+<span class="nc" id="L60">    }</span>
+
+    @Nonnull
+    public Map&lt;String, Factory&gt; getFactories() {
+<span class="fc" id="L64">        return unmodifiableMap(factories);</span>
+    }
+
+    public void setFactories(@Nonnull Map&lt;String, Factory&gt; factories) {
+<span class="fc" id="L68">        requireNonNull(factories, &quot;Argument 'factories' must not be null&quot;);</span>
+<span class="fc" id="L69">        this.factories.clear();</span>
+<span class="fc" id="L70">        this.factories.putAll(factories);</span>
+<span class="fc" id="L71">    }</span>
+
+    @Nonnull
+    public Map&lt;String, Closure&gt; getMethods() {
+<span class="fc" id="L75">        return unmodifiableMap(methods);</span>
+    }
+
+    public void setMethods(@Nonnull Map&lt;String, Closure&gt; methods) {
+<span class="fc" id="L79">        requireNonNull(methods, &quot;Argument 'methods' must not be null&quot;);</span>
+<span class="fc" id="L80">        this.methods.clear();</span>
+<span class="fc" id="L81">        this.methods.putAll(methods);</span>
+<span class="fc" id="L82">    }</span>
+
+    @Nonnull
+    public Map&lt;String, Closure[]&gt; getProps() {
+<span class="fc" id="L86">        return unmodifiableMap(props);</span>
+    }
+
+    public void setProps(@Nonnull Map&lt;String, Closure[]&gt; props) {
+<span class="fc" id="L90">        requireNonNull(props, &quot;Argument 'props' must not be null&quot;);</span>
+<span class="fc" id="L91">        this.props.clear();</span>
+<span class="fc" id="L92">        this.props.putAll(props);</span>
+<span class="fc" id="L93">    }</span>
+
+    @Nonnull
+    public List&lt;Closure&gt; getAttributeDelegates() {
+<span class="fc" id="L97">        return unmodifiableList(attributeDelegates);</span>
+    }
+
+    public void setAttributeDelegates(@Nonnull List&lt;Closure&gt; attributeDelegates) {
+<span class="fc" id="L101">        requireNonNull(attributeDelegates, &quot;Argument 'attributeDelegates' must not be null&quot;);</span>
+<span class="fc" id="L102">        this.attributeDelegates.clear();</span>
+<span class="fc" id="L103">        this.attributeDelegates.addAll(attributeDelegates);</span>
+<span class="fc" id="L104">    }</span>
+
+    @Nonnull
+    public List&lt;Closure&gt; getPostInstantiateDelegates() {
+<span class="fc" id="L108">        return unmodifiableList(postInstantiateDelegates);</span>
+    }
+
+    public void setPostInstantiateDelegates(@Nonnull List&lt;Closure&gt; postInstantiateDelegates) {
+<span class="fc" id="L112">        requireNonNull(postInstantiateDelegates, &quot;Argument 'postInstantiateDelegates' must not be null&quot;);</span>
+<span class="fc" id="L113">        this.postInstantiateDelegates.clear();</span>
+<span class="fc" id="L114">        this.postInstantiateDelegates.addAll(postInstantiateDelegates);</span>
+<span class="fc" id="L115">    }</span>
+
+    @Nonnull
+    public List&lt;Closure&gt; getPostNodeCompletionDelegates() {
+<span class="fc" id="L119">        return unmodifiableList(postNodeCompletionDelegates);</span>
+    }
+
+    public void setPostNodeCompletionDelegates(@Nonnull List&lt;Closure&gt; postNodeCompletionDelegates) {
+<span class="fc" id="L123">        requireNonNull(postNodeCompletionDelegates, &quot;Argument 'postNodeCompletionDelegates' must not be null&quot;);</span>
+<span class="fc" id="L124">        this.postNodeCompletionDelegates.clear();</span>
+<span class="fc" id="L125">        this.postNodeCompletionDelegates.addAll(postNodeCompletionDelegates);</span>
+<span class="fc" id="L126">    }</span>
+
+    @Nonnull
+    public List&lt;Closure&gt; getPreInstantiateDelegates() {
+<span class="fc" id="L130">        return unmodifiableList(preInstantiateDelegates);</span>
+    }
+
+    public void setPreInstantiateDelegates(@Nonnull List&lt;Closure&gt; preInstantiateDelegates) {
+<span class="fc" id="L134">        requireNonNull(preInstantiateDelegates, &quot;Argument 'preInstantiateDelegates' must not be null&quot;);</span>
+<span class="fc" id="L135">        this.preInstantiateDelegates.clear();</span>
+<span class="fc" id="L136">        this.preInstantiateDelegates.addAll(preInstantiateDelegates);</span>
+<span class="fc" id="L137">    }</span>
+
+    @Nonnull
+    public List&lt;Closure&gt; getDisposalClosures() {
+<span class="fc" id="L141">        return unmodifiableList(disposalClosures);</span>
+    }
+
+    public void setDisposalClosures(@Nonnull List&lt;Closure&gt; disposalClosures) {
+<span class="nc" id="L145">        requireNonNull(disposalClosures, &quot;Argument 'disposalClosures' must not be null&quot;);</span>
+<span class="nc" id="L146">        this.disposalClosures.clear();</span>
+<span class="nc" id="L147">        this.disposalClosures.addAll(disposalClosures);</span>
+<span class="nc" id="L148">    }</span>
+
+    @Nullable
+    public Closure getMethodMissingDelegate() {
+<span class="fc" id="L152">        return methodMissingDelegate;</span>
+    }
+
+    public void setMethodMissingDelegate(@Nullable Closure methodMissingDelegate) {
+<span class="fc" id="L156">        this.methodMissingDelegate = methodMissingDelegate;</span>
+<span class="fc" id="L157">    }</span>
+
+    @Nullable
+    public Closure getPropertyMissingDelegate() {
+<span class="fc" id="L161">        return propertyMissingDelegate;</span>
+    }
+
+    public void setPropertyMissingDelegate(@Nullable Closure propertyMissingDelegate) {
+<span class="nc" id="L165">        this.propertyMissingDelegate = propertyMissingDelegate;</span>
+<span class="nc" id="L166">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

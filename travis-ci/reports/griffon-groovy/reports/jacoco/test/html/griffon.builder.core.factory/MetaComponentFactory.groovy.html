@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>MetaComponentFactory.groovy</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.builder.core.factory</a> &gt; <span class="el_source">MetaComponentFactory.groovy</span></div><h1>MetaComponentFactory.groovy</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.builder.core.factory
+
+import griffon.core.ApplicationEvent
+import griffon.core.mvc.MVCGroup
+
+/**
+ * Enables MVC groups to be used as component nodes
+ *
+ * @author Andres Almiray
+ * @author Alexander Klein
+ */
+@SuppressWarnings(&quot;rawtypes&quot;)
+class MetaComponentFactory extends AbstractFactory {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
+<span class="nc" id="L30">        String mvcType = ''</span>
+<span class="nc bnc" id="L31" title="All 6 branches missed.">        if (value != null &amp;&amp; value instanceof CharSequence) {</span>
+<span class="nc" id="L32">            mvcType = value.toString()</span>
+        } else {
+<span class="nc" id="L34">            throw new IllegalArgumentException(&quot;In $name value must be an MVC group type&quot;)</span>
+        }
+
+<span class="nc" id="L37">        String mvcId = attributes.remove('mvcId')</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">        mvcId = attributes.containsKey('mvcId') ? attributes.remove('mvcId') : mvcId</span>
+
+<span class="nc" id="L40">        MVCGroup mvcGroup = builder.application.createMVCGroup(mvcType, mvcId, attributes)</span>
+<span class="nc" id="L41">        def root = mvcGroup.getScriptResult('view')</span>
+
+<span class="nc" id="L43">        Closure destroyEventHandler</span>
+<span class="nc" id="L44">        destroyEventHandler = { String parentId, MVCGroup childGroup, MVCGroup destroyedGroup -&gt;</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">            if (destroyedGroup.mvcId == parentId) {</span>
+<span class="nc" id="L46">                childGroup.destroy()</span>
+<span class="nc" id="L47">                builder.application.removeApplicationEventListener(ApplicationEvent.DESTROY_MVC_GROUP.name, destroyEventHandler)</span>
+            }
+        }.curry(mvcId, mvcGroup)
+<span class="nc" id="L50">        builder.application.addApplicationEventListener(ApplicationEvent.DESTROY_MVC_GROUP.name, destroyEventHandler)</span>
+
+<span class="nc" id="L52">        builder.context.root = root</span>
+<span class="nc" id="L53">        builder.context.mvcGroup = mvcGroup</span>
+<span class="nc" id="L54">        root</span>
+    }
+
+    boolean onHandleNodeAttributes(FactoryBuilderSupport builder, Object node, Map attributes) {
+        try {
+<span class="nc" id="L59">            return builder.context.mvcGroup.controller.metaClass.invokeMethod(builder.context.mvcGroup.controller, 'onHandleNodeAttributes', builder, node, attributes)</span>
+        } catch (MissingMethodException e) {
+<span class="nc" id="L61">            return false</span>
+        }
+    }
+
+    boolean onNodeChildren(FactoryBuilderSupport builder, Object node, Closure childContent) {
+<span class="nc" id="L66">        def root = builder.context.root</span>
+<span class="nc" id="L67">        builder = builder.context.mvcGroup.builder</span>
+<span class="nc" id="L68">        Closure handleChildContent = builder.getVariables().get('handleChildContent')</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        if (handleChildContent != null) {</span>
+<span class="nc" id="L70">            handleChildContent(childContent)</span>
+        } else {
+<span class="nc" id="L72">            builder.container(root, childContent)</span>
+        }
+<span class="nc" id="L74">        false</span>
+    }
+
+    boolean isHandlesNodeChildren() {
+<span class="nc" id="L78">        false</span>
+    }
+
+    @Override
+    void setChild(FactoryBuilderSupport builder, Object parent, Object child) {
+<span class="nc" id="L83">        safeInvoke(builder.parentContext.mvcGroup.builder, 'setChild', builder, parent, child)</span>
+    }
+
+    @Override
+    void setParent(FactoryBuilderSupport builder, Object parent, Object child) {
+<span class="nc" id="L88">        safeInvoke(builder.context.mvcGroup.builder, 'setParent', builder, parent, child)</span>
+    }
+
+    @Override
+    void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
+<span class="nc" id="L93">        safeInvoke(builder.context.mvcGroup.builder, 'onNodeCompleted', builder, parent, node)</span>
+    }
+
+    static protected def safeInvoke(Object obj, String method, Object... args) {
+        try {
+<span class="nc" id="L98">            return obj.metaClass.invokeMethod(obj, method, args)</span>
+        } catch (MissingMethodException e) {
+<span class="nc" id="L100">            return null</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

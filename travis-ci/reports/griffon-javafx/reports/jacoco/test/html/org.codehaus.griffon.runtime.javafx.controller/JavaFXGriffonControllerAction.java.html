@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>JavaFXGriffonControllerAction.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-javafx</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.javafx.controller</a> &gt; <span class="el_source">JavaFXGriffonControllerAction.java</span></div><h1>JavaFXGriffonControllerAction.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.javafx.controller;
+
+import griffon.core.artifact.GriffonController;
+import griffon.core.controller.ActionManager;
+import griffon.core.threading.UIThreadManager;
+import griffon.javafx.support.JavaFXAction;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import org.codehaus.griffon.runtime.core.controller.AbstractAction;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.TypeUtils.castToBoolean;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ */
+public class JavaFXGriffonControllerAction extends AbstractAction {
+    public static final String KEY_DESCRIPTION = &quot;description&quot;;
+    public static final String KEY_ICON = &quot;icon&quot;;
+    public static final String KEY_SELECTED = &quot;selected&quot;;
+    public static final String KEY_ACCELERATOR = &quot;accelerator&quot;;
+
+    private String description;
+    private String icon;
+    private String accelerator;
+    private boolean selected;
+
+    private final JavaFXAction toolkitAction;
+
+    public JavaFXGriffonControllerAction(final @Nonnull UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
+<span class="nc" id="L52">        super(actionManager, controller, actionName);</span>
+<span class="nc" id="L53">        requireNonNull(uiThreadManager, &quot;Argument 'uiThreadManager' must not be null&quot;);</span>
+
+<span class="nc" id="L55">        toolkitAction = new JavaFXAction();</span>
+<span class="nc" id="L56">        toolkitAction.setOnAction(new EventHandler&lt;ActionEvent&gt;() {</span>
+            public void handle(ActionEvent actionEvent) {
+<span class="nc" id="L58">                actionManager.invokeAction(controller, actionName, actionEvent);</span>
+<span class="nc" id="L59">            }</span>
+        });
+<span class="nc" id="L61">        addPropertyChangeListener(new PropertyChangeListener() {</span>
+            public void propertyChange(final PropertyChangeEvent evt) {
+<span class="nc" id="L63">                uiThreadManager.runInsideUIAsync(new Runnable() {</span>
+                    public void run() {
+<span class="nc bnc" id="L65" title="All 2 branches missed.">                        if (KEY_NAME.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L66">                            toolkitAction.setName(String.valueOf(evt.getNewValue()));</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">                        } else if (KEY_DESCRIPTION.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L68">                            toolkitAction.setDescription(String.valueOf(evt.getNewValue()));</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">                        } else if (KEY_ENABLED.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L70">                            toolkitAction.setEnabled(castToBoolean(evt.getNewValue()));</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">                        } else if (KEY_SELECTED.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L72">                            toolkitAction.setSelected(castToBoolean(evt.getNewValue()));</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">                        } else if (KEY_ACCELERATOR.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L74">                            String accelerator = (String) evt.getNewValue();</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">                            if (!isBlank(accelerator))</span>
+<span class="nc" id="L76">                                toolkitAction.setAccelerator(accelerator);</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">                        } else if (KEY_ICON.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L78">                            final String icon = (String) evt.getNewValue();</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">                            if (!isBlank(icon)) toolkitAction.setIcon(icon);</span>
+                        }
+<span class="nc" id="L81">                    }</span>
+                });
+<span class="nc" id="L83">            }</span>
+        });
+<span class="nc" id="L85">    }</span>
+
+    @Nullable
+    public String getAccelerator() {
+<span class="nc" id="L89">        return accelerator;</span>
+    }
+
+    public void setAccelerator(@Nullable String accelerator) {
+<span class="nc" id="L93">        firePropertyChange(KEY_ACCELERATOR, this.accelerator, this.accelerator = accelerator);</span>
+<span class="nc" id="L94">    }</span>
+
+    public boolean isSelected() {
+<span class="nc" id="L97">        return selected;</span>
+    }
+
+    public void setSelected(boolean selected) {
+<span class="nc" id="L101">        firePropertyChange(KEY_SELECTED, this.selected, this.selected = selected);</span>
+<span class="nc" id="L102">    }</span>
+
+    @Nullable
+    public String getDescription() {
+<span class="nc" id="L106">        return description;</span>
+    }
+
+    public void setDescription(@Nullable String description) {
+<span class="nc" id="L110">        firePropertyChange(KEY_DESCRIPTION, this.description, this.description = description);</span>
+<span class="nc" id="L111">    }</span>
+
+    @Nullable
+    public String getIcon() {
+<span class="nc" id="L115">        return icon;</span>
+    }
+
+    public void setIcon(@Nullable String icon) {
+<span class="nc" id="L119">        firePropertyChange(KEY_ICON, this.icon, this.icon = icon);</span>
+<span class="nc" id="L120">    }</span>
+
+    @Nonnull
+    public Object getToolkitAction() {
+<span class="nc" id="L124">        return toolkitAction;</span>
+    }
+
+    protected void doExecute(Object... args) {
+<span class="nc" id="L128">        ActionEvent event = null;</span>
+<span class="nc bnc" id="L129" title="All 6 branches missed.">        if (args != null &amp;&amp; args.length == 1 &amp;&amp; args[0] instanceof ActionEvent) {</span>
+<span class="nc" id="L130">            event = (ActionEvent) args[0];</span>
+        }
+<span class="nc" id="L132">        toolkitAction.onActionProperty().get().handle(event);</span>
+<span class="nc" id="L133">    }</span>
+
+    @Override
+    protected void doInitialize() {
+<span class="nc" id="L137">        toolkitAction.setName(getName());</span>
+<span class="nc" id="L138">        toolkitAction.setDescription(getDescription());</span>
+<span class="nc" id="L139">        toolkitAction.setEnabled(isEnabled());</span>
+<span class="nc" id="L140">        toolkitAction.setSelected(isSelected());</span>
+<span class="nc" id="L141">        String accelerator = getAccelerator();</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        if (!isBlank(accelerator)) toolkitAction.setAccelerator(accelerator);</span>
+<span class="nc" id="L143">        String icon = getIcon();</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        if (!isBlank(icon)) toolkitAction.setIcon(icon);</span>
+<span class="nc" id="L145">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

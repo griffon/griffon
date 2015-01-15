@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>SwingAction.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.swing.support</a> &gt; <span class="el_source">SwingAction.java</span></div><h1>SwingAction.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.swing.support;
+
+import griffon.core.CallableWithArgs;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.KeyStroke;
+import java.awt.event.ActionEvent;
+
+import static griffon.util.GriffonNameUtils.isBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * An action implementation that relies on a closure to handle events.
+ *
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public class SwingAction extends AbstractAction {
+    private static final long serialVersionUID = 4598888514827528435L;
+    private static final String ERROR_CALLABLE_NULL = &quot;Argument 'callable' must not be null&quot;;
+    private final CallableWithArgs&lt;?&gt; callable;
+
+<span class="fc" id="L42">    public SwingAction(@Nonnull CallableWithArgs&lt;?&gt; callable) {</span>
+<span class="fc" id="L43">        this.callable = requireNonNull(callable, ERROR_CALLABLE_NULL);</span>
+<span class="fc" id="L44">    }</span>
+
+    public final void actionPerformed(ActionEvent evt) {
+<span class="fc" id="L47">        callable.call(evt);</span>
+<span class="fc" id="L48">    }</span>
+
+    @Nonnull
+    public static ActionBuilder action() {
+<span class="nc" id="L52">        return new ActionBuilder();</span>
+    }
+
+    @Nonnull
+    public static ActionBuilder action(@Nullable Action action) {
+<span class="nc" id="L57">        return new ActionBuilder(action);</span>
+    }
+
+    @Nonnull
+    public static ActionBuilder action(@Nullable String name) {
+<span class="nc" id="L62">        return new ActionBuilder().withName(name);</span>
+    }
+
+    /**
+     * A builder for actions.
+     *
+     * @author Andres Almiray
+     * @since 2.0.0
+     */
+    public static class ActionBuilder {
+        private String name;
+        private int mnemonic;
+        private KeyStroke accelerator;
+        private String shortDescription;
+        private String longDescription;
+        private String command;
+        private Icon smallIcon;
+        private Icon largeIcon;
+        private CallableWithArgs&lt;?&gt; callable;
+<span class="nc" id="L81">        private boolean enabled = true;</span>
+<span class="nc" id="L82">        private boolean selected = false;</span>
+
+        private Action action;
+<span class="nc" id="L85">        private boolean mnemonicSet = false;</span>
+<span class="nc" id="L86">        private boolean enabledSet = false;</span>
+<span class="nc" id="L87">        private boolean selectedSet = false;</span>
+
+        public ActionBuilder() {
+<span class="nc" id="L90">            this(null);</span>
+<span class="nc" id="L91">        }</span>
+
+        @Nonnull
+<span class="nc" id="L94">        public ActionBuilder(@Nullable Action action) {</span>
+<span class="nc" id="L95">            this.action = action;</span>
+<span class="nc" id="L96">        }</span>
+
+        @Nonnull
+        public ActionBuilder withName(@Nullable String name) {
+<span class="nc" id="L100">            this.name = name;</span>
+<span class="nc" id="L101">            return this;</span>
+        }
+
+        @Nonnull
+        public ActionBuilder withShortDescription(@Nullable String shortDescription) {
+<span class="nc" id="L106">            this.shortDescription = shortDescription;</span>
+<span class="nc" id="L107">            return this;</span>
+        }
+
+        @Nonnull
+        public ActionBuilder withLongDescription(@Nullable String longDescription) {
+<span class="nc" id="L112">            this.longDescription = longDescription;</span>
+<span class="nc" id="L113">            return this;</span>
+        }
+
+        @Nonnull
+        public ActionBuilder withCommand(@Nullable String command) {
+<span class="nc" id="L118">            this.command = command;</span>
+<span class="nc" id="L119">            return this;</span>
+        }
+
+        @Nonnull
+        public ActionBuilder withMnemonic(@Nullable String mnemonic) {
+<span class="nc bnc" id="L124" title="All 2 branches missed.">            if (!isBlank(mnemonic)) {</span>
+<span class="nc" id="L125">                this.mnemonic = KeyStroke.getKeyStroke(mnemonic).getKeyCode();</span>
+            }
+<span class="nc" id="L127">            mnemonicSet = true;</span>
+<span class="nc" id="L128">            return this;</span>
+        }
+
+        @Nonnull
+        public ActionBuilder withMnemonic(int mnemonic) {
+<span class="nc" id="L133">            this.mnemonic = mnemonic;</span>
+<span class="nc" id="L134">            mnemonicSet = true;</span>
+<span class="nc" id="L135">            return this;</span>
+        }
+
+        @Nonnull
+        public ActionBuilder withAccelerator(@Nullable String accelerator) {
+<span class="nc bnc" id="L140" title="All 2 branches missed.">            if (!isBlank(accelerator)) {</span>
+<span class="nc" id="L141">                this.accelerator = KeyStroke.getKeyStroke(accelerator);</span>
+            }
+<span class="nc" id="L143">            return this;</span>
+        }
+
+        @Nonnull
+        public ActionBuilder withAccelerator(@Nullable KeyStroke accelerator) {
+<span class="nc" id="L148">            this.accelerator = accelerator;</span>
+<span class="nc" id="L149">            return this;</span>
+        }
+
+        @Nonnull
+        public ActionBuilder withSmallIcon(@Nullable Icon smallIcon) {
+<span class="nc" id="L154">            this.smallIcon = smallIcon;</span>
+<span class="nc" id="L155">            return this;</span>
+        }
+
+        @Nonnull
+        public ActionBuilder withLargeIcon(@Nullable Icon largeIcon) {
+<span class="nc" id="L160">            this.largeIcon = largeIcon;</span>
+<span class="nc" id="L161">            return this;</span>
+        }
+
+        @Nonnull
+        public ActionBuilder withRunnable(@Nullable CallableWithArgs&lt;?&gt; callable) {
+<span class="nc" id="L166">            this.callable = callable;</span>
+<span class="nc" id="L167">            return this;</span>
+        }
+
+        @Nonnull
+        public ActionBuilder withEnabled(boolean enabled) {
+<span class="nc" id="L172">            this.enabled = enabled;</span>
+<span class="nc" id="L173">            this.enabledSet = true;</span>
+<span class="nc" id="L174">            return this;</span>
+        }
+
+        @Nonnull
+        public ActionBuilder withSelected(boolean selected) {
+<span class="nc" id="L179">            this.selected = selected;</span>
+<span class="nc" id="L180">            this.enabledSet = true;</span>
+<span class="nc" id="L181">            return this;</span>
+        }
+
+        @Nonnull
+        public Action build() {
+<span class="nc bnc" id="L186" title="All 4 branches missed.">            if (callable == null &amp;&amp; action == null) {</span>
+<span class="nc" id="L187">                throw new IllegalArgumentException(&quot;Either closure: or action: must have a value.&quot;);</span>
+            }
+<span class="nc bnc" id="L189" title="All 2 branches missed.">            if (action == null) {</span>
+<span class="nc" id="L190">                action = new SwingAction(callable);</span>
+            }
+<span class="nc bnc" id="L192" title="All 2 branches missed.">            if (!isBlank(command)) {</span>
+<span class="nc" id="L193">                action.putValue(Action.ACTION_COMMAND_KEY, command);</span>
+            }
+<span class="nc bnc" id="L195" title="All 2 branches missed.">            if (!isBlank(name)) {</span>
+<span class="nc" id="L196">                action.putValue(Action.NAME, name);</span>
+            }
+<span class="nc bnc" id="L198" title="All 2 branches missed.">            if (mnemonicSet) {</span>
+<span class="nc" id="L199">                action.putValue(Action.MNEMONIC_KEY, mnemonic);</span>
+            }
+<span class="nc bnc" id="L201" title="All 2 branches missed.">            if (accelerator != null) {</span>
+<span class="nc" id="L202">                action.putValue(Action.ACCELERATOR_KEY, accelerator);</span>
+            }
+<span class="nc bnc" id="L204" title="All 2 branches missed.">            if (largeIcon != null) {</span>
+<span class="nc" id="L205">                action.putValue(Action.LARGE_ICON_KEY, largeIcon);</span>
+            }
+<span class="nc bnc" id="L207" title="All 2 branches missed.">            if (smallIcon != null) {</span>
+<span class="nc" id="L208">                action.putValue(Action.SMALL_ICON, smallIcon);</span>
+            }
+<span class="nc bnc" id="L210" title="All 2 branches missed.">            if (!isBlank(longDescription)) {</span>
+<span class="nc" id="L211">                action.putValue(Action.LONG_DESCRIPTION, longDescription);</span>
+            }
+<span class="nc bnc" id="L213" title="All 2 branches missed.">            if (!isBlank(shortDescription)) {</span>
+<span class="nc" id="L214">                action.putValue(Action.SHORT_DESCRIPTION, shortDescription);</span>
+            }
+<span class="nc bnc" id="L216" title="All 2 branches missed.">            if (enabledSet) {</span>
+<span class="nc" id="L217">                action.setEnabled(enabled);</span>
+            }
+<span class="nc bnc" id="L219" title="All 2 branches missed.">            if (selectedSet) {</span>
+<span class="nc" id="L220">                action.putValue(Action.SELECTED_KEY, selected);</span>
+            }
+<span class="nc" id="L222">            return action;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

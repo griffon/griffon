@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PointPropertyEditor.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.swing.editors</a> &gt; <span class="el_source">PointPropertyEditor.java</span></div><h1>PointPropertyEditor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.swing.editors;
+
+import griffon.core.editors.AbstractPropertyEditor;
+import griffon.metadata.PropertyEditorFor;
+
+import java.awt.Point;
+import java.util.List;
+import java.util.Map;
+
+import static griffon.util.GriffonNameUtils.isBlank;
+
+/**
+ * @author Andres Almiray
+ * @author Alexander Klein
+ * @since 2.0.0
+ */
+@PropertyEditorFor(Point.class)
+<span class="fc" id="L33">public class PointPropertyEditor extends AbstractPropertyEditor {</span>
+    public String getAsText() {
+<span class="nc bnc" id="L35" title="All 2 branches missed.">        if (null == getValue()) return null;</span>
+<span class="nc" id="L36">        Point p = (Point) getValue();</span>
+<span class="nc" id="L37">        return p.getX() + &quot;, &quot; + p.getY();</span>
+    }
+
+    protected void setValueInternal(Object value) {
+<span class="nc bnc" id="L41" title="All 2 branches missed.">        if (null == value) {</span>
+<span class="nc" id="L42">            super.setValueInternal(null);</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        } else if (value instanceof CharSequence) {</span>
+<span class="nc" id="L44">            handleAsString(String.valueOf(value));</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">        } else if (value instanceof List) {</span>
+<span class="nc" id="L46">            handleAsList((List) value);</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        } else if (value instanceof Map) {</span>
+<span class="nc" id="L48">            handleAsMap((Map) value);</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        } else if (value instanceof Number) {</span>
+<span class="nc" id="L50">            handleAsNumber((Number) value);</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        } else if (value instanceof Point) {</span>
+<span class="nc" id="L52">            super.setValueInternal(value);</span>
+        } else {
+<span class="nc" id="L54">            throw illegalValue(value, Point.class);</span>
+        }
+<span class="nc" id="L56">    }</span>
+
+    private void handleAsString(String str) {
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        if (isBlank(str)) {</span>
+<span class="nc" id="L60">            super.setValueInternal(null);</span>
+<span class="nc" id="L61">            return;</span>
+        }
+
+<span class="nc" id="L64">        String[] parts = str.split(&quot;,&quot;);</span>
+<span class="nc bnc" id="L65" title="All 3 branches missed.">        switch (parts.length) {</span>
+            case 1:
+<span class="nc" id="L67">                int s = parseValue(parts[0]);</span>
+<span class="nc" id="L68">                super.setValueInternal(new Point(s, s));</span>
+<span class="nc" id="L69">                break;</span>
+            case 2:
+<span class="nc" id="L71">                int x = parseValue(parts[0]);</span>
+<span class="nc" id="L72">                int y = parseValue(parts[1]);</span>
+<span class="nc" id="L73">                super.setValueInternal(new Point(x, y));</span>
+<span class="nc" id="L74">                break;</span>
+            default:
+<span class="nc" id="L76">                throw illegalValue(str, Point.class);</span>
+        }
+<span class="nc" id="L78">    }</span>
+
+    private void handleAsList(List&lt;?&gt; list) {
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        if(list.isEmpty()) {</span>
+<span class="nc" id="L82">            super.setValueInternal(null);</span>
+<span class="nc" id="L83">            return;</span>
+        }
+
+<span class="nc bnc" id="L86" title="All 3 branches missed.">        switch (list.size()) {</span>
+            case 1:
+<span class="nc" id="L88">                int s = parseValue(list.get(0));</span>
+<span class="nc" id="L89">                super.setValueInternal(new Point(s, s));</span>
+<span class="nc" id="L90">                break;</span>
+            case 2:
+<span class="nc" id="L92">                int x = parseValue(list.get(0));</span>
+<span class="nc" id="L93">                int y = parseValue(list.get(1));</span>
+<span class="nc" id="L94">                super.setValueInternal(new Point(x, y));</span>
+<span class="nc" id="L95">                break;</span>
+            default:
+<span class="nc" id="L97">                throw illegalValue(list, Point.class);</span>
+        }
+<span class="nc" id="L99">    }</span>
+
+    private void handleAsMap(Map&lt;?, ?&gt; map) {
+<span class="nc bnc" id="L102" title="All 2 branches missed.">        if(map.isEmpty()) {</span>
+<span class="nc" id="L103">            super.setValueInternal(null);</span>
+<span class="nc" id="L104">            return;</span>
+        }
+
+<span class="nc" id="L107">        int x = getMapValue(map, &quot;x&quot;, 0);</span>
+<span class="nc" id="L108">        int y = getMapValue(map, &quot;y&quot;, 0);</span>
+<span class="nc" id="L109">        super.setValueInternal(new Point(x, y));</span>
+<span class="nc" id="L110">    }</span>
+
+    private int parseValue(Object value) {
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        if (value instanceof CharSequence) {</span>
+<span class="nc" id="L114">            return parse(String.valueOf(value));</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">        } else if (value instanceof Number) {</span>
+<span class="nc" id="L116">            return parse((Number) value);</span>
+        }
+<span class="nc" id="L118">        throw illegalValue(value, Point.class);</span>
+    }
+
+    private int parse(String val) {
+        try {
+<span class="nc" id="L123">            return Integer.parseInt(val.trim());</span>
+<span class="nc" id="L124">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L125">            throw illegalValue(val, Point.class, e);</span>
+        }
+    }
+
+    private int parse(Number val) {
+<span class="nc" id="L130">        return val.intValue();</span>
+    }
+
+    private int getMapValue(Map&lt;?, ?&gt; map, String key, int defaultValue) {
+<span class="nc" id="L134">        Object val = map.get(key);</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">        if (null == val) {</span>
+<span class="nc" id="L136">            return defaultValue;</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">        } else if (val instanceof CharSequence) {</span>
+<span class="nc" id="L138">            return parse(String.valueOf(val));</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">        } else if (val instanceof Number) {</span>
+<span class="nc" id="L140">            return parse((Number) val);</span>
+        }
+<span class="nc" id="L142">        throw illegalValue(map, Point.class);</span>
+    }
+
+    private void handleAsNumber(Number value) {
+<span class="nc" id="L146">        int s = parse(value);</span>
+<span class="nc" id="L147">        super.setValueInternal(new Point(s, s));</span>
+<span class="nc" id="L148">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

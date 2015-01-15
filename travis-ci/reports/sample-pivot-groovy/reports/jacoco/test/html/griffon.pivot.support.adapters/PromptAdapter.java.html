@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PromptAdapter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.support.adapters</a> &gt; <span class="el_source">PromptAdapter.java</span></div><h1>PromptAdapter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.support.adapters;
+
+import griffon.core.CallableWithArgs;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="nc" id="L24">public class PromptAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.PromptListener {</span>
+    private CallableWithArgs&lt;Void&gt; messageTypeChanged;
+    private CallableWithArgs&lt;Void&gt; messageChanged;
+    private CallableWithArgs&lt;Void&gt; bodyChanged;
+    private CallableWithArgs&lt;Void&gt; optionInserted;
+    private CallableWithArgs&lt;Void&gt; optionsRemoved;
+    private CallableWithArgs&lt;Void&gt; selectedOptionChanged;
+
+    public CallableWithArgs&lt;Void&gt; getMessageTypeChanged() {
+<span class="nc" id="L33">        return this.messageTypeChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getMessageChanged() {
+<span class="nc" id="L37">        return this.messageChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getBodyChanged() {
+<span class="nc" id="L41">        return this.bodyChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getOptionInserted() {
+<span class="nc" id="L45">        return this.optionInserted;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getOptionsRemoved() {
+<span class="nc" id="L49">        return this.optionsRemoved;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getSelectedOptionChanged() {
+<span class="nc" id="L53">        return this.selectedOptionChanged;</span>
+    }
+
+
+    public void setMessageTypeChanged(CallableWithArgs&lt;Void&gt; messageTypeChanged) {
+<span class="nc" id="L58">        this.messageTypeChanged = messageTypeChanged;</span>
+<span class="nc" id="L59">    }</span>
+
+    public void setMessageChanged(CallableWithArgs&lt;Void&gt; messageChanged) {
+<span class="nc" id="L62">        this.messageChanged = messageChanged;</span>
+<span class="nc" id="L63">    }</span>
+
+    public void setBodyChanged(CallableWithArgs&lt;Void&gt; bodyChanged) {
+<span class="nc" id="L66">        this.bodyChanged = bodyChanged;</span>
+<span class="nc" id="L67">    }</span>
+
+    public void setOptionInserted(CallableWithArgs&lt;Void&gt; optionInserted) {
+<span class="nc" id="L70">        this.optionInserted = optionInserted;</span>
+<span class="nc" id="L71">    }</span>
+
+    public void setOptionsRemoved(CallableWithArgs&lt;Void&gt; optionsRemoved) {
+<span class="nc" id="L74">        this.optionsRemoved = optionsRemoved;</span>
+<span class="nc" id="L75">    }</span>
+
+    public void setSelectedOptionChanged(CallableWithArgs&lt;Void&gt; selectedOptionChanged) {
+<span class="nc" id="L78">        this.selectedOptionChanged = selectedOptionChanged;</span>
+<span class="nc" id="L79">    }</span>
+
+
+    public void messageTypeChanged(org.apache.pivot.wtk.Prompt arg0, org.apache.pivot.wtk.MessageType arg1) {
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (messageTypeChanged != null) {</span>
+<span class="nc" id="L84">            messageTypeChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L86">    }</span>
+
+    public void messageChanged(org.apache.pivot.wtk.Prompt arg0, java.lang.String arg1) {
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        if (messageChanged != null) {</span>
+<span class="nc" id="L90">            messageChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L92">    }</span>
+
+    public void bodyChanged(org.apache.pivot.wtk.Prompt arg0, org.apache.pivot.wtk.Component arg1) {
+<span class="nc bnc" id="L95" title="All 2 branches missed.">        if (bodyChanged != null) {</span>
+<span class="nc" id="L96">            bodyChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L98">    }</span>
+
+    public void optionInserted(org.apache.pivot.wtk.Prompt arg0, int arg1) {
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        if (optionInserted != null) {</span>
+<span class="nc" id="L102">            optionInserted.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L104">    }</span>
+
+    public void optionsRemoved(org.apache.pivot.wtk.Prompt arg0, int arg1, org.apache.pivot.collections.Sequence&lt;?&gt; arg2) {
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        if (optionsRemoved != null) {</span>
+<span class="nc" id="L108">            optionsRemoved.call(arg0, arg1, arg2);</span>
+        }
+<span class="nc" id="L110">    }</span>
+
+    public void selectedOptionChanged(org.apache.pivot.wtk.Prompt arg0, int arg1) {
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        if (selectedOptionChanged != null) {</span>
+<span class="nc" id="L114">            selectedOptionChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L116">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

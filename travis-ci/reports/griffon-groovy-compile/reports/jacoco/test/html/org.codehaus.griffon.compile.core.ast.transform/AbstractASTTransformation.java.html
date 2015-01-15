@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractASTTransformation.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-groovy-compile</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.compile.core.ast.transform</a> &gt; <span class="el_source">AbstractASTTransformation.java</span></div><h1>AbstractASTTransformation.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.compile.core.ast.transform;
+
+import griffon.core.GriffonApplication;
+import org.codehaus.griffon.compile.core.MethodDescriptor;
+import org.codehaus.griffon.compile.core.ast.GriffonASTUtils;
+import org.codehaus.groovy.ast.ASTNode;
+import org.codehaus.groovy.ast.AnnotationNode;
+import org.codehaus.groovy.ast.ClassHelper;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.FieldNode;
+import org.codehaus.groovy.ast.GenericsType;
+import org.codehaus.groovy.ast.MethodNode;
+import org.codehaus.groovy.ast.Parameter;
+import org.codehaus.groovy.ast.expr.ConstantExpression;
+import org.codehaus.groovy.ast.expr.Expression;
+import org.codehaus.groovy.ast.expr.FieldExpression;
+import org.codehaus.groovy.ast.expr.StaticMethodCallExpression;
+import org.codehaus.groovy.control.SourceUnit;
+import org.codehaus.groovy.control.messages.SimpleMessage;
+import org.codehaus.groovy.control.messages.SyntaxErrorMessage;
+import org.codehaus.groovy.syntax.SyntaxException;
+import org.codehaus.groovy.transform.ASTTransformation;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static griffon.util.GriffonNameUtils.getGetterName;
+import static griffon.util.GriffonNameUtils.isBlank;
+import static java.lang.reflect.Modifier.PRIVATE;
+import static java.lang.reflect.Modifier.PUBLIC;
+import static java.lang.reflect.Modifier.isPrivate;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_ARGS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_EXCEPTIONS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_PARAMS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.THIS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.args;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.call;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.field;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectField;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectMethod;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.returns;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.stmnt;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.var;
+
+/**
+ * Base class for all of Griffon's ASTTransformation implementations.
+ *
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="fc" id="L72">public abstract class AbstractASTTransformation implements ASTTransformation {</span>
+<span class="fc" id="L73">    public static final ClassNode COLLECTIONS_CLASS = makeClassSafe(Collections.class);</span>
+<span class="fc" id="L74">    public static final ClassNode GRIFFON_APPLICATION_TYPE = makeClassSafe(GriffonApplication.class);</span>
+<span class="fc" id="L75">    public static final ClassNode INJECT_TYPE = makeClassSafe(Inject.class);</span>
+<span class="fc" id="L76">    public static final ClassNode NAMED_TYPE = makeClassSafe(Named.class);</span>
+    private static final String PROPERTY_APPLICATION = &quot;application&quot;;
+    private static final String METHOD_GET_APPLICATION = &quot;getApplication&quot;;
+
+    public static Expression emptyMap() {
+<span class="nc" id="L81">        return new StaticMethodCallExpression</span>
+            (COLLECTIONS_CLASS, &quot;emptyMap&quot;, NO_ARGS);
+    }
+
+    @Nonnull
+    public static Expression applicationExpression(@Nonnull ClassNode classNode) {
+<span class="fc" id="L87">        FieldNode field = classNode.getDeclaredField(PROPERTY_APPLICATION);</span>
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">        if (field != null) {</span>
+<span class="fc" id="L89">            return new FieldExpression(field);</span>
+        }
+<span class="nc" id="L91">        field = classNode.getField(PROPERTY_APPLICATION);</span>
+<span class="nc bnc" id="L92" title="All 4 branches missed.">        if (field != null &amp;&amp; !isPrivate(field.getModifiers())) {</span>
+<span class="nc" id="L93">            return new FieldExpression(field);</span>
+        }
+
+<span class="nc" id="L96">        MethodNode method = classNode.getDeclaredMethod(METHOD_GET_APPLICATION, NO_PARAMS);</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">        if (method != null) {</span>
+<span class="nc" id="L98">            return call(THIS, METHOD_GET_APPLICATION, NO_ARGS);</span>
+        }
+<span class="nc" id="L100">        method = classNode.getMethod(METHOD_GET_APPLICATION, NO_PARAMS);</span>
+<span class="nc bnc" id="L101" title="All 4 branches missed.">        if (method != null &amp;&amp; !isPrivate(method.getModifiers())) {</span>
+<span class="nc" id="L102">            return call(THIS, METHOD_GET_APPLICATION, NO_ARGS);</span>
+        }
+<span class="nc" id="L104">        throw new IllegalStateException(&quot;Cannot resolve application field nor getApplication() method on class &quot; + classNode.getName());</span>
+    }
+
+    @Nonnull
+    public static Expression applicationProperty(@Nonnull ClassNode classNode, @Nonnull String property) {
+<span class="nc" id="L109">        return call(applicationExpression(classNode), getGetterName(property), NO_ARGS);</span>
+    }
+
+    public static void injectApplication(@Nonnull ClassNode classNode) {
+        try {
+<span class="fc" id="L114">            applicationExpression(classNode);</span>
+<span class="nc" id="L115">        } catch (IllegalStateException iae) {</span>
+<span class="nc" id="L116">            FieldNode field = injectField(classNode, PROPERTY_APPLICATION, PRIVATE, GRIFFON_APPLICATION_TYPE, null, false);</span>
+<span class="nc" id="L117">            field.addAnnotation(new AnnotationNode(INJECT_TYPE));</span>
+<span class="fc" id="L118">        }</span>
+
+<span class="fc" id="L120">        MethodNode method = classNode.getDeclaredMethod(METHOD_GET_APPLICATION, NO_PARAMS);</span>
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">        if (method == null) {</span>
+<span class="fc" id="L122">            injectMethod(classNode, new MethodNode(</span>
+                METHOD_GET_APPLICATION,
+                PUBLIC,
+                GRIFFON_APPLICATION_TYPE,
+                NO_PARAMS,
+                NO_EXCEPTIONS,
+<span class="fc" id="L128">                returns(field(classNode, PROPERTY_APPLICATION))</span>
+            ));
+        }
+<span class="fc" id="L131">        method = classNode.getMethod(METHOD_GET_APPLICATION, NO_PARAMS);</span>
+<span class="pc bpc" id="L132" title="3 of 4 branches missed.">        if (method == null &amp;&amp; !isPrivate(method.getModifiers())) {</span>
+<span class="nc" id="L133">            injectMethod(classNode, new MethodNode(</span>
+                METHOD_GET_APPLICATION,
+                PUBLIC,
+                GRIFFON_APPLICATION_TYPE,
+                NO_PARAMS,
+                NO_EXCEPTIONS,
+<span class="nc" id="L139">                returns(field(classNode, PROPERTY_APPLICATION))</span>
+            ));
+        }
+<span class="fc" id="L142">    }</span>
+
+    public static FieldExpression injectedField(@Nonnull ClassNode owner, @Nonnull ClassNode type, @Nonnull String name) {
+<span class="nc" id="L145">        return injectedField(owner, type, name, null);</span>
+    }
+
+    public static FieldExpression injectedField(@Nonnull ClassNode owner, @Nonnull ClassNode type, @Nonnull String name, @Nullable String qualifierName) {
+<span class="fc" id="L149">        FieldNode fieldNode = GriffonASTUtils.injectField(owner, name, Modifier.PRIVATE, type, null, false);</span>
+<span class="fc" id="L150">        fieldNode.addAnnotation(new AnnotationNode(INJECT_TYPE));</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">        if (!isBlank(qualifierName)) {</span>
+<span class="fc" id="L152">            AnnotationNode namedAnnotation = new AnnotationNode(NAMED_TYPE);</span>
+<span class="fc" id="L153">            namedAnnotation.addMember(&quot;value&quot;, new ConstantExpression(qualifierName));</span>
+<span class="fc" id="L154">            fieldNode.addAnnotation(namedAnnotation);</span>
+        }
+<span class="fc" id="L156">        return new FieldExpression(fieldNode);</span>
+    }
+
+    protected static ClassNode newClass(ClassNode classNode) {
+<span class="fc" id="L160">        return classNode.getPlainNodeReference();</span>
+    }
+
+    public static ClassNode makeClassSafe(String className) {
+<span class="nc" id="L164">        return makeClassSafeWithGenerics(className);</span>
+    }
+
+    public static ClassNode makeClassSafe(Class&lt;?&gt; klass) {
+<span class="fc" id="L168">        return makeClassSafeWithGenerics(klass);</span>
+    }
+
+    public static ClassNode makeClassSafe(ClassNode classNode) {
+<span class="fc" id="L172">        return makeClassSafeWithGenerics(classNode);</span>
+    }
+
+    public static ClassNode makeClassSafeWithGenerics(String className, String... genericTypes) {
+<span class="nc" id="L176">        GenericsType[] gtypes = new GenericsType[0];</span>
+<span class="nc bnc" id="L177" title="All 2 branches missed.">        if (genericTypes != null) {</span>
+<span class="nc" id="L178">            gtypes = new GenericsType[genericTypes.length];</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">            for (int i = 0; i &lt; gtypes.length; i++) {</span>
+<span class="nc" id="L180">                gtypes[i] = new GenericsType(makeClassSafe(genericTypes[i]));</span>
+            }
+        }
+<span class="nc" id="L183">        return makeClassSafe0(ClassHelper.make(className), gtypes);</span>
+    }
+
+    public static ClassNode makeClassSafeWithGenerics(Class&lt;?&gt; klass, Class&lt;?&gt;... genericTypes) {
+<span class="fc" id="L187">        GenericsType[] gtypes = new GenericsType[0];</span>
+<span class="pc bpc" id="L188" title="1 of 2 branches missed.">        if (genericTypes != null) {</span>
+<span class="fc" id="L189">            gtypes = new GenericsType[genericTypes.length];</span>
+<span class="pc bpc" id="L190" title="1 of 2 branches missed.">            for (int i = 0; i &lt; gtypes.length; i++) {</span>
+<span class="nc" id="L191">                gtypes[i] = new GenericsType(makeClassSafe(genericTypes[i]));</span>
+            }
+        }
+<span class="fc" id="L194">        return makeClassSafe0(ClassHelper.make(klass), gtypes);</span>
+    }
+
+    public static ClassNode makeClassSafeWithGenerics(ClassNode classNode, ClassNode... genericTypes) {
+<span class="fc" id="L198">        GenericsType[] gtypes = new GenericsType[0];</span>
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">        if (genericTypes != null) {</span>
+<span class="fc" id="L200">            gtypes = new GenericsType[genericTypes.length];</span>
+<span class="pc bpc" id="L201" title="1 of 2 branches missed.">            for (int i = 0; i &lt; gtypes.length; i++) {</span>
+<span class="nc" id="L202">                gtypes[i] = new GenericsType(newClass(genericTypes[i]));</span>
+            }
+        }
+<span class="fc" id="L205">        return makeClassSafe0(classNode, gtypes);</span>
+    }
+
+    public static GenericsType makeGenericsType(String className, String[] upperBounds, String lowerBound, boolean placeHolder) {
+<span class="nc" id="L209">        ClassNode[] up = new ClassNode[0];</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">        if (upperBounds != null) {</span>
+<span class="nc" id="L211">            up = new ClassNode[upperBounds.length];</span>
+<span class="nc bnc" id="L212" title="All 2 branches missed.">            for (int i = 0; i &lt; up.length; i++) {</span>
+<span class="nc" id="L213">                up[i] = makeClassSafe(upperBounds[i]);</span>
+            }
+        }
+<span class="nc" id="L216">        return makeGenericsType(makeClassSafe(className), up, makeClassSafe(lowerBound), placeHolder);</span>
+    }
+
+    public static GenericsType makeGenericsType(Class&lt;?&gt; klass, Class&lt;?&gt;[] upperBounds, Class&lt;?&gt; lowerBound, boolean placeHolder) {
+<span class="nc" id="L220">        ClassNode[] up = new ClassNode[0];</span>
+<span class="nc bnc" id="L221" title="All 2 branches missed.">        if (upperBounds != null) {</span>
+<span class="nc" id="L222">            up = new ClassNode[upperBounds.length];</span>
+<span class="nc bnc" id="L223" title="All 2 branches missed.">            for (int i = 0; i &lt; up.length; i++) {</span>
+<span class="nc" id="L224">                up[i] = makeClassSafe(upperBounds[i]);</span>
+            }
+        }
+<span class="nc" id="L227">        return makeGenericsType(makeClassSafe(klass), up, makeClassSafe(lowerBound), placeHolder);</span>
+    }
+
+    public static GenericsType makeGenericsType(ClassNode classNode, ClassNode[] upperBounds, ClassNode lowerBound, boolean placeHolder) {
+<span class="nc" id="L231">        classNode = newClass(classNode);</span>
+<span class="nc" id="L232">        classNode.setGenericsPlaceHolder(placeHolder);</span>
+<span class="nc" id="L233">        return new GenericsType(classNode, upperBounds, lowerBound);</span>
+    }
+
+    public static ClassNode makeClassSafe0(ClassNode classNode, GenericsType... genericTypes) {
+<span class="fc" id="L237">        ClassNode plainNodeReference = newClass(classNode);</span>
+<span class="pc bpc" id="L238" title="2 of 4 branches missed.">        if (genericTypes != null &amp;&amp; genericTypes.length &gt; 0) {</span>
+<span class="nc" id="L239">            plainNodeReference.setGenericsTypes(genericTypes);</span>
+        }
+<span class="fc" id="L241">        return plainNodeReference;</span>
+    }
+
+    public static boolean needsDelegate(@Nonnull ClassNode classNode, @Nonnull SourceUnit sourceUnit,
+                                        @Nonnull MethodDescriptor[] methods, @Nonnull String annotationType,
+                                        @Nonnull String delegateType) {
+<span class="fc" id="L247">        boolean implemented = false;</span>
+<span class="fc" id="L248">        int implementedCount = 0;</span>
+<span class="fc" id="L249">        ClassNode consideredClass = classNode;</span>
+<span class="fc bfc" id="L250" title="All 2 branches covered.">        while (consideredClass != null) {</span>
+<span class="fc bfc" id="L251" title="All 2 branches covered.">            for (MethodNode method : consideredClass.getMethods()) {</span>
+<span class="fc bfc" id="L252" title="All 2 branches covered.">                for (MethodDescriptor md : methods) {</span>
+<span class="fc bfc" id="L253" title="All 4 branches covered.">                    if (method.getName().equals(md.methodName) &amp;&amp; method.getParameters().length == md.arguments.length) {</span>
+<span class="fc" id="L254">                        implemented |= true;</span>
+<span class="fc" id="L255">                        implementedCount++;</span>
+                    }
+<span class="fc bfc" id="L257" title="All 2 branches covered.">                    if (implementedCount == methods.length) {</span>
+<span class="fc" id="L258">                        return false;</span>
+                    }
+                }
+<span class="fc" id="L261">            }</span>
+
+<span class="fc" id="L263">            consideredClass = consideredClass.getSuperClass();</span>
+        }
+<span class="pc bpc" id="L265" title="1 of 2 branches missed.">        if (implemented) {</span>
+<span class="nc" id="L266">            sourceUnit.getErrorCollector().addErrorAndContinue(</span>
+                new SimpleMessage(&quot;@&quot; + annotationType + &quot; cannot be processed on &quot;
+<span class="nc" id="L268">                    + classNode.getName()</span>
+                    + &quot; because some but not all methods from &quot;
+                    + delegateType
+                    + &quot; were declared in the current class or super classes.&quot;,
+                    sourceUnit)
+            );
+<span class="nc" id="L274">            return false;</span>
+        }
+<span class="fc" id="L276">        return true;</span>
+    }
+
+    public static void addDelegateMethods(@Nonnull ClassNode classNode, @Nonnull ClassNode delegateType, @Nonnull Expression delegate) {
+<span class="fc bfc" id="L280" title="All 2 branches covered.">        for (MethodNode method : delegateType.getMethods()) {</span>
+<span class="fc" id="L281">            List&lt;Expression&gt; variables = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L282">            Parameter[] parameters = new Parameter[method.getParameters().length];</span>
+<span class="fc" id="L283">            ClassNode[] exceptions = new ClassNode[method.getExceptions().length];</span>
+<span class="fc bfc" id="L284" title="All 2 branches covered.">            for (int i = 0; i &lt; method.getParameters().length; i++) {</span>
+<span class="fc" id="L285">                Parameter p = method.getParameters()[i];</span>
+<span class="fc" id="L286">                parameters[i] = new Parameter(makeClassSafe(p.getType()), p.getName());</span>
+<span class="fc" id="L287">                parameters[i].getType().setGenericsTypes(p.getType().getGenericsTypes());</span>
+<span class="fc" id="L288">                parameters[i].addAnnotations(p.getAnnotations());</span>
+<span class="fc" id="L289">                variables.add(var(p.getName()));</span>
+            }
+<span class="fc bfc" id="L291" title="All 2 branches covered.">            for (int i = 0; i &lt; method.getExceptions().length; i++) {</span>
+<span class="fc" id="L292">                ClassNode ex = method.getExceptions()[i];</span>
+<span class="fc" id="L293">                exceptions[i] = makeClassSafe(ex);</span>
+            }
+<span class="fc" id="L295">            ClassNode returnType = makeClassSafe(method.getReturnType());</span>
+<span class="fc" id="L296">            returnType.addAnnotations(method.getReturnType().getAnnotations());</span>
+<span class="fc" id="L297">            returnType.setGenericsTypes(method.getReturnType().getGenericsTypes());</span>
+<span class="fc" id="L298">            returnType.setGenericsPlaceHolder(method.getReturnType().isGenericsPlaceHolder());</span>
+
+<span class="fc" id="L300">            boolean isVoid = ClassHelper.VOID_TYPE.equals(method.getReturnType());</span>
+<span class="fc" id="L301">            Expression delegateExpression = call(</span>
+                delegate,
+<span class="fc" id="L303">                method.getName(),</span>
+<span class="fc" id="L304">                args(variables));</span>
+<span class="fc" id="L305">            MethodNode newMethod = new MethodNode(</span>
+<span class="fc" id="L306">                method.getName(),</span>
+<span class="fc bfc" id="L307" title="All 2 branches covered.">                method.getModifiers() - Modifier.ABSTRACT,</span>
+                returnType,
+                parameters,
+                exceptions,
+<span class="fc" id="L311">                isVoid ? stmnt(delegateExpression) : returns(delegateExpression)</span>
+            );
+<span class="fc" id="L313">            newMethod.setGenericsTypes(method.getGenericsTypes());</span>
+<span class="fc" id="L314">            injectMethod(classNode, newMethod);</span>
+<span class="fc" id="L315">        }</span>
+<span class="fc" id="L316">    }</span>
+
+    public void addError(String msg, ASTNode expr, SourceUnit source) {
+<span class="nc" id="L319">        int line = expr.getLineNumber();</span>
+<span class="nc" id="L320">        int col = expr.getColumnNumber();</span>
+<span class="nc" id="L321">        source.getErrorCollector().addErrorAndContinue(</span>
+            new SyntaxErrorMessage(new SyntaxException(msg + '\n', line, col), source)
+        );
+<span class="nc" id="L324">    }</span>
+
+    protected void checkNodesForAnnotationAndType(ASTNode node1, ASTNode node2) {
+<span class="pc bpc" id="L327" title="2 of 4 branches missed.">        if (!(node1 instanceof AnnotationNode) || !(node2 instanceof ClassNode)) {</span>
+<span class="nc" id="L328">            throw new IllegalArgumentException(&quot;Internal error: wrong types: &quot; + node1.getClass() + &quot; / &quot; + node2.getClass());</span>
+        }
+<span class="fc" id="L330">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

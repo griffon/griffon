@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GriffonEnvironment.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.core.env</a> &gt; <span class="el_source">GriffonEnvironment.java</span></div><h1>GriffonEnvironment.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.core.env;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.URL;
+import java.util.Properties;
+
+import static griffon.util.GriffonNameUtils.isBlank;
+
+/**
+ * @author Andres Almiray
+ */
+public class GriffonEnvironment {
+<span class="fc" id="L30">    private static final Logger LOG = LoggerFactory.getLogger(GriffonEnvironment.class);</span>
+
+    private static final String GRIFFON_IMPLEMENTATION_TITLE = &quot;griffon-core&quot;;
+    private static final String BUILD_DATE;
+    private static final String BUILD_TIME;
+    private static final String GRIFFON_VERSION;
+
+    static {
+<span class="fc" id="L38">        String buildDate = null;</span>
+<span class="fc" id="L39">        String buildTime = null;</span>
+<span class="fc" id="L40">        String version = null;</span>
+
+        try {
+<span class="fc" id="L43">            Properties griffonProperties = new Properties();</span>
+<span class="fc" id="L44">            URL griffonPropertiesResource = GriffonEnvironment.class.getClassLoader().getResource(&quot;META-INF/griffon-core.properties&quot;);</span>
+
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">            if (griffonPropertiesResource != null) {</span>
+<span class="fc" id="L47">                griffonProperties.load(griffonPropertiesResource.openStream());</span>
+<span class="fc" id="L48">                buildDate = griffonProperties.getProperty(&quot;build.date&quot;);</span>
+<span class="fc" id="L49">                buildTime = griffonProperties.getProperty(&quot;build.time&quot;);</span>
+<span class="fc" id="L50">                version = griffonProperties.getProperty(&quot;griffon.version&quot;);</span>
+            }
+
+<span class="pc bpc" id="L53" title="3 of 6 branches missed.">            if (isBlank(buildDate) || isBlank(buildTime) || isBlank(version)) {</span>
+<span class="nc" id="L54">                LOG.error(&quot;Unable to read Griffon version from META-INF/griffon-core.properties. Are you sure the griffon-core jar is in the classpath?&quot;);</span>
+<span class="nc" id="L55">                buildDate = buildTime = version = &quot;&quot;;</span>
+            }
+<span class="nc" id="L57">        } catch (Exception e) {</span>
+<span class="nc" id="L58">            LOG.error(&quot;Unable to read Griffon version from META-INF/griffon-core.properties. Are you sure the griffon-core jar is in the classpath? &quot; + e.getMessage(), e);</span>
+<span class="nc" id="L59">            buildDate = buildTime = version = &quot;&quot;;</span>
+<span class="fc" id="L60">        }</span>
+
+<span class="fc" id="L62">        BUILD_DATE = buildDate;</span>
+<span class="fc" id="L63">        BUILD_TIME = buildTime;</span>
+<span class="fc" id="L64">        GRIFFON_VERSION = version;</span>
+<span class="fc" id="L65">    }</span>
+
+<span class="nc" id="L67">    private GriffonEnvironment() {</span>
+        // disable instantiation
+<span class="nc" id="L69">    }</span>
+
+    public static String getGriffonVersion() {
+<span class="fc" id="L72">        return GRIFFON_VERSION;</span>
+    }
+
+    public static String getJvmVersion() {
+<span class="fc" id="L76">        StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L77">        sb.append(System.getProperty(&quot;java.version&quot;))</span>
+<span class="fc" id="L78">            .append(&quot; (&quot;)</span>
+<span class="fc" id="L79">            .append(System.getProperty(&quot;java.vendor&quot;))</span>
+<span class="fc" id="L80">            .append(&quot; &quot;)</span>
+<span class="fc" id="L81">            .append(System.getProperty(&quot;java.vm.version&quot;))</span>
+<span class="fc" id="L82">            .append(&quot;)&quot;);</span>
+<span class="fc" id="L83">        return sb.toString();</span>
+    }
+
+    public static String getOsVersion() {
+<span class="fc" id="L87">        StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L88">        sb.append(System.getProperty(&quot;os.name&quot;))</span>
+<span class="fc" id="L89">            .append(&quot; &quot;)</span>
+<span class="fc" id="L90">            .append(System.getProperty(&quot;os.version&quot;))</span>
+<span class="fc" id="L91">            .append(&quot; &quot;)</span>
+<span class="fc" id="L92">            .append(System.getProperty(&quot;os.arch&quot;));</span>
+<span class="fc" id="L93">        return sb.toString();</span>
+    }
+
+    public static String getBuildDateTime() {
+<span class="fc" id="L97">        return BUILD_DATE + &quot;T&quot; + BUILD_TIME;</span>
+    }
+
+    public static String getBuildDate() {
+<span class="nc" id="L101">        return BUILD_DATE;</span>
+    }
+
+    public static String getBuildTime() {
+<span class="nc" id="L105">        return BUILD_TIME;</span>
+    }
+
+    public static String prettyPrint() {
+<span class="nc" id="L109">        padLeft(&quot;Griffon&quot;, 8, &quot; &quot;);</span>
+
+<span class="nc" id="L111">        final StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L112">        sb.append(&quot;\n------------------------------------------------------------\n&quot;)</span>
+<span class="nc" id="L113">            .append(padLeft(&quot;Griffon&quot;, 9, &quot; &quot;))</span>
+<span class="nc" id="L114">            .append(&quot; &quot;)</span>
+<span class="nc" id="L115">            .append(getGriffonVersion())</span>
+<span class="nc" id="L116">            .append(&quot;\n------------------------------------------------------------\n\n&quot;);</span>
+<span class="nc" id="L117">        entry(&quot;Build&quot;, getBuildDateTime(), sb);</span>
+<span class="nc" id="L118">        entry(&quot;JVM&quot;, getJvmVersion(), sb);</span>
+<span class="nc" id="L119">        entry(&quot;OS&quot;, getOsVersion(), sb);</span>
+<span class="nc" id="L120">        return sb.toString();</span>
+    }
+
+    private static void entry(String label, String version, StringBuilder sb) {
+<span class="nc" id="L124">        sb.append(padLeft(label, 8, &quot; &quot;))</span>
+<span class="nc" id="L125">            .append(&quot;: &quot;)</span>
+<span class="nc" id="L126">            .append(version)</span>
+<span class="nc" id="L127">            .append(&quot;\n&quot;);</span>
+<span class="nc" id="L128">    }</span>
+
+    private static String padLeft(String self, Number numberOfChars, String padding) {
+<span class="nc" id="L131">        int numChars = numberOfChars.intValue();</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">        if (numChars &lt;= self.length()) {</span>
+<span class="nc" id="L133">            return self;</span>
+        } else {
+<span class="nc" id="L135">            return getPadding(padding, numChars - self.length()) + self;</span>
+        }
+    }
+
+    private static String getPadding(String padding, int length) {
+<span class="nc bnc" id="L140" title="All 2 branches missed.">        if (padding.length() &lt; length) {</span>
+<span class="nc" id="L141">            return multiply(padding, length / padding.length() + 1).substring(0, length);</span>
+        } else {
+<span class="nc" id="L143">            return padding.substring(0, length);</span>
+        }
+    }
+
+    private static String multiply(String self, Number factor) {
+<span class="nc" id="L148">        int size = factor.intValue();</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">        if (size == 0)</span>
+<span class="nc" id="L150">            return &quot;&quot;;</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">        else if (size &lt; 0) {</span>
+<span class="nc" id="L152">            throw new IllegalArgumentException(&quot;multiply() should be called with a number of 0 or greater not: &quot; + size);</span>
+        }
+<span class="nc" id="L154">        StringBuilder answer = new StringBuilder(self);</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">        for (int i = 1; i &lt; size; i++) {</span>
+<span class="nc" id="L156">            answer.append(self);</span>
+        }
+<span class="nc" id="L158">        return answer.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

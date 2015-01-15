@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>MethodDescriptor.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-core-compile</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.compile.core</a> &gt; <span class="el_source">MethodDescriptor.java</span></div><h1>MethodDescriptor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.compile.core;
+
+import java.lang.reflect.Modifier;
+
+/**
+ * @author Andres Almiray
+ */
+public class MethodDescriptor {
+<span class="fc" id="L24">    private static final TypeParam[] EMPTY_PARAMETERS = new TypeParam[0];</span>
+<span class="fc" id="L25">    private static final Type[] EMPTY_TYPES = new Type[0];</span>
+<span class="fc" id="L26">    private static final Type NO_BOUND = new Type(&quot;_&quot;);</span>
+
+    public static class Type {
+        public final String type;
+        public final Type[] parameters;
+        public final Type[] annotations;
+        public final int dimensions;
+        public String signature;
+
+        public Type(String type) {
+<span class="fc" id="L36">            this(EMPTY_TYPES, type, 0, EMPTY_TYPES);</span>
+<span class="fc" id="L37">        }</span>
+
+        public Type(String type, int dimensions) {
+<span class="fc" id="L40">            this(EMPTY_TYPES, type, dimensions, EMPTY_TYPES);</span>
+<span class="fc" id="L41">        }</span>
+
+        public Type(String type, Type[] parameters) {
+<span class="fc" id="L44">            this(EMPTY_TYPES, type, 0, parameters);</span>
+<span class="fc" id="L45">        }</span>
+
+        public Type(String type, int dimensions, Type[] parameters) {
+<span class="fc" id="L48">            this(EMPTY_TYPES, type, dimensions, parameters);</span>
+<span class="fc" id="L49">        }</span>
+
+        public Type(Type[] annotations, String type) {
+<span class="fc" id="L52">            this(annotations, type, 0, EMPTY_TYPES);</span>
+<span class="fc" id="L53">        }</span>
+
+        public Type(Type[] annotations, String type, int dimensions) {
+<span class="fc" id="L56">            this(annotations, type, dimensions, EMPTY_TYPES);</span>
+<span class="fc" id="L57">        }</span>
+
+        public Type(Type[] annotations, String type, Type[] parameters) {
+<span class="fc" id="L60">            this(annotations, type, 0, parameters);</span>
+<span class="fc" id="L61">        }</span>
+
+<span class="fc" id="L63">        public Type(Type[] annotations, String type, int dimensions, Type[] parameters) {</span>
+<span class="fc" id="L64">            this.type = type;</span>
+<span class="fc" id="L65">            this.dimensions = dimensions;</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">            this.parameters = parameters != null ? parameters : EMPTY_TYPES;</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">            this.annotations = annotations != null ? annotations : EMPTY_TYPES;</span>
+<span class="fc" id="L68">        }</span>
+
+        public String signature() {
+<span class="fc bfc" id="L71" title="All 2 branches covered.">            if (signature == null) {</span>
+<span class="fc" id="L72">                signature = createTypeSignature();</span>
+            }
+<span class="fc" id="L74">            return signature;</span>
+        }
+
+        protected String createTypeSignature() {
+<span class="fc" id="L78">            StringBuilder b = new StringBuilder(&quot;&quot;);</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">            for (Type annotation : annotations) {</span>
+<span class="fc" id="L80">                b.append(&quot;@&quot;)</span>
+<span class="fc" id="L81">                    .append(annotation.signature())</span>
+<span class="fc" id="L82">                    .append(&quot; &quot;);</span>
+            }
+<span class="fc" id="L84">            b.append(type);</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">            if (parameters.length &gt; 0) {</span>
+<span class="fc" id="L86">                b.append(&quot;&lt;&quot;);</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">                for (int i = 0; i &lt; parameters.length; i++) {</span>
+<span class="fc" id="L88">                    b.append(parameters[i].signature());</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">                    if (i &lt; parameters.length - 1) b.append(&quot;, &quot;);</span>
+                }
+<span class="fc" id="L91">                b.append(&quot;&gt;&quot;);</span>
+            }
+<span class="fc bfc" id="L93" title="All 2 branches covered.">            for (int d = 0; d &lt; dimensions; d++) {</span>
+<span class="fc" id="L94">                b.append(&quot;[]&quot;);</span>
+            }
+<span class="fc" id="L96">            return b.toString();</span>
+        }
+
+        public String toString() {
+<span class="fc" id="L100">            return signature();</span>
+        }
+    }
+
+    public static class Wildcard extends Type {
+        public static final String EXTENDS = &quot;extends&quot;;
+        public static final String SUPER = &quot;super&quot;;
+        public static final String NONE = &quot;_&quot;;
+
+        public final String bound;
+
+        public Wildcard() {
+<span class="fc" id="L112">            this(NONE, EMPTY_TYPES);</span>
+<span class="fc" id="L113">        }</span>
+
+        public Wildcard(Type[] parameters) {
+<span class="fc" id="L116">            this(EXTENDS, parameters);</span>
+<span class="fc" id="L117">        }</span>
+
+        public Wildcard(String bound, Type[] parameters) {
+<span class="fc" id="L120">            super(&quot;?&quot;, parameters);</span>
+<span class="fc" id="L121">            this.bound = bound;</span>
+<span class="fc" id="L122">        }</span>
+
+        public boolean isExtends() {
+<span class="fc" id="L125">            return EXTENDS.equals(bound);</span>
+        }
+
+        public boolean isSuper() {
+<span class="fc" id="L129">            return SUPER.equals(bound);</span>
+        }
+
+        protected String createTypeSignature() {
+<span class="fc" id="L133">            StringBuilder b = new StringBuilder(type);</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">            if (parameters.length &gt; 0) {</span>
+<span class="fc" id="L135">                b.append(&quot; &quot;).append(bound).append(&quot; &quot;);</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">                for (int i = 0; i &lt; parameters.length; i++) {</span>
+<span class="fc" id="L137">                    b.append(parameters[i].signature());</span>
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">                    if (i &lt; parameters.length - 1) b.append(&quot;, &quot;);</span>
+                }
+            }
+<span class="fc" id="L141">            return b.toString();</span>
+        }
+    }
+
+    public static class TypeParam {
+        public final String type;
+        public final Type bound;
+        public final String signature;
+
+        public TypeParam(String type) {
+<span class="fc" id="L151">            this(type, NO_BOUND);</span>
+<span class="fc" id="L152">        }</span>
+
+<span class="fc" id="L154">        public TypeParam(String type, Type bound) {</span>
+<span class="fc" id="L155">            this.type = type;</span>
+<span class="pc bpc" id="L156" title="1 of 2 branches missed.">            this.bound = bound != null ? bound : NO_BOUND;</span>
+<span class="fc" id="L157">            this.signature = createTypeParamSignature();</span>
+<span class="fc" id="L158">        }</span>
+
+        public boolean isBound() {
+<span class="nc bnc" id="L161" title="All 2 branches missed.">            return bound != NO_BOUND;</span>
+        }
+
+        private String createTypeParamSignature() {
+<span class="fc" id="L165">            StringBuilder b = new StringBuilder(type);</span>
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">            if (bound != NO_BOUND) {</span>
+<span class="nc" id="L167">                b.append(&quot; extends &quot;).append(bound.signature());</span>
+            }
+<span class="fc" id="L169">            return b.toString();</span>
+        }
+
+        public String toString() {
+<span class="fc" id="L173">            return signature;</span>
+        }
+    }
+
+    public final int modifiers;
+    public final String methodName;
+    public final Type returnType;
+    public final TypeParam[] typeParameters;
+    public final Type[] annotations;
+    public final Type[] exceptions;
+    public final Type[] arguments;
+    public final String signature;
+
+    public MethodDescriptor(Type returnType, TypeParam[] typeParameters, String methodName, Type[] arguments, Type[] exceptions) {
+<span class="fc" id="L187">        this(Modifier.PUBLIC, returnType, typeParameters, methodName, arguments, exceptions, EMPTY_TYPES);</span>
+<span class="fc" id="L188">    }</span>
+
+    public MethodDescriptor(Type returnType, TypeParam[] typeParameters, String methodName, Type[] arguments, Type[] exceptions, Type[] annotations) {
+<span class="fc" id="L191">        this(Modifier.PUBLIC, returnType, typeParameters, methodName, arguments, exceptions, annotations);</span>
+<span class="fc" id="L192">    }</span>
+
+    public MethodDescriptor(int modifiers, Type returnType, TypeParam[] typeParameters, String methodName, Type[] arguments, Type[] exceptions) {
+<span class="fc" id="L195">        this(modifiers, returnType, typeParameters, methodName, arguments, exceptions, EMPTY_TYPES);</span>
+<span class="fc" id="L196">    }</span>
+
+<span class="fc" id="L198">    public MethodDescriptor(int modifiers, Type returnType, TypeParam[] typeParameters, String methodName, Type[] arguments, Type[] exceptions, Type[] annotations) {</span>
+<span class="fc" id="L199">        this.modifiers = modifiers;</span>
+<span class="fc" id="L200">        this.returnType = returnType;</span>
+<span class="fc" id="L201">        this.methodName = methodName;</span>
+<span class="pc bpc" id="L202" title="1 of 2 branches missed.">        this.typeParameters = typeParameters != null ? typeParameters : EMPTY_PARAMETERS;</span>
+<span class="pc bpc" id="L203" title="1 of 2 branches missed.">        this.arguments = arguments != null ? arguments : EMPTY_TYPES;</span>
+<span class="pc bpc" id="L204" title="1 of 2 branches missed.">        this.exceptions = exceptions != null ? exceptions : EMPTY_TYPES;</span>
+<span class="pc bpc" id="L205" title="1 of 2 branches missed.">        this.annotations = annotations != null ? annotations : EMPTY_TYPES;</span>
+<span class="fc" id="L206">        this.signature = createMethodSignature();</span>
+<span class="fc" id="L207">    }</span>
+
+    public String toString() {
+<span class="nc" id="L210">        return signature;</span>
+    }
+
+    private String createMethodSignature() {
+<span class="fc" id="L214">        StringBuilder b = new StringBuilder();</span>
+<span class="fc bfc" id="L215" title="All 2 branches covered.">        for (Type annotation : annotations) {</span>
+<span class="fc" id="L216">            b.append(&quot;@&quot;)</span>
+<span class="fc" id="L217">                .append(annotation.signature())</span>
+<span class="fc" id="L218">                .append(&quot; &quot;);</span>
+        }
+<span class="fc" id="L220">        b.append(Modifier.toString(modifiers)).append(&quot; &quot;);</span>
+<span class="fc bfc" id="L221" title="All 2 branches covered.">        if (typeParameters.length &gt; 0) {</span>
+<span class="fc" id="L222">            b.append(&quot;&lt;&quot;);</span>
+<span class="fc bfc" id="L223" title="All 2 branches covered.">            for (int i = 0; i &lt; typeParameters.length; i++) {</span>
+<span class="fc" id="L224">                b.append(typeParameters[i].signature);</span>
+<span class="pc bpc" id="L225" title="1 of 2 branches missed.">                if (i &lt; typeParameters.length - 1) b.append(&quot;, &quot;);</span>
+            }
+<span class="fc" id="L227">            b.append(&quot;&gt; &quot;);</span>
+        }
+<span class="fc" id="L229">        b.append(returnType.signature())</span>
+<span class="fc" id="L230">            .append(&quot; &quot;)</span>
+<span class="fc" id="L231">            .append(methodName)</span>
+<span class="fc" id="L232">            .append(&quot;(&quot;);</span>
+<span class="fc bfc" id="L233" title="All 2 branches covered.">        if (arguments.length &gt; 0) {</span>
+<span class="fc bfc" id="L234" title="All 2 branches covered.">            for (int i = 0; i &lt; arguments.length; i++) {</span>
+<span class="fc" id="L235">                b.append(arguments[i].signature())</span>
+<span class="fc" id="L236">                    .append(&quot; arg&quot;)</span>
+<span class="fc" id="L237">                    .append(i);</span>
+<span class="pc bpc" id="L238" title="1 of 2 branches missed.">                if (i &lt; arguments.length - 1) b.append(&quot;, &quot;);</span>
+            }
+        }
+<span class="fc" id="L241">        b.append(&quot;)&quot;);</span>
+<span class="fc bfc" id="L242" title="All 2 branches covered.">        if (exceptions.length &gt; 0) {</span>
+<span class="fc" id="L243">            b.append(&quot; throws &quot;);</span>
+<span class="fc bfc" id="L244" title="All 2 branches covered.">            for (int i = 0; i &lt; exceptions.length; i++) {</span>
+<span class="fc" id="L245">                b.append(exceptions[i].signature());</span>
+<span class="pc bpc" id="L246" title="1 of 2 branches missed.">                if (i &lt; exceptions.length - 1) b.append(&quot;, &quot;);</span>
+            }
+        }
+<span class="fc" id="L249">        return b.toString();</span>
+    }
+
+    public static Wildcard wildcard(String... types) {
+<span class="nc" id="L253">        return new Wildcard(types(types));</span>
+    }
+
+    public static Wildcard wildcardWithParams(Type... types) {
+<span class="nc" id="L257">        return new Wildcard(types);</span>
+    }
+
+    public static Type annotation(String type) {
+<span class="nc" id="L261">        return new Type(type);</span>
+    }
+
+    public static Type[] annotations(String... types) {
+<span class="nc" id="L265">        Type[] annotations = new Type[types.length];</span>
+<span class="nc bnc" id="L266" title="All 2 branches missed.">        for (int i = 0; i &lt; types.length; i++) {</span>
+<span class="nc" id="L267">            annotations[i] = annotation(types[i]);</span>
+        }
+<span class="nc" id="L269">        return annotations;</span>
+    }
+
+    public static Type type(String type, String... types) {
+<span class="fc" id="L273">        return new Type(type, types(types));</span>
+    }
+
+    public static Type type(String type, int dimensions, String... types) {
+<span class="nc" id="L277">        return new Type(type, dimensions, types(types));</span>
+    }
+
+    public static Type annotatedType(Type[] annotations, String type, String... types) {
+<span class="nc" id="L281">        return new Type(annotations, type, types(types));</span>
+    }
+
+    public static Type annotatedType(Type[] annotations, String type, int dimensions, String... types) {
+<span class="nc" id="L285">        return new Type(annotations, type, dimensions, types(types));</span>
+    }
+
+    public static Type typeWithParams(String type, Type... types) {
+<span class="nc" id="L289">        return new Type(type, types);</span>
+    }
+
+    public static Type typeWithParams(String type, int dimensions, Type... types) {
+<span class="nc" id="L293">        return new Type(type, dimensions, types);</span>
+    }
+
+    public static Type typeWithParams(Type[] annotations, String type, Type... types) {
+<span class="nc" id="L297">        return new Type(annotations, type, types);</span>
+    }
+
+    public static Type typeWithParams(Type[] annotations, String type, int dimensions, Type... types) {
+<span class="nc" id="L301">        return new Type(annotations, type, dimensions, types);</span>
+    }
+
+    public static TypeParam[] typeParams(String... typeParameters) {
+<span class="fc" id="L305">        TypeParam[] params = new TypeParam[typeParameters.length];</span>
+<span class="fc bfc" id="L306" title="All 2 branches covered.">        for (int i = 0; i &lt; typeParameters.length; i++) {</span>
+<span class="fc" id="L307">            params[i] = new TypeParam(typeParameters[i]);</span>
+        }
+<span class="fc" id="L309">        return params;</span>
+    }
+
+    public static TypeParam[] typeParams(TypeParam... typeParameters) {
+<span class="nc" id="L313">        return typeParameters;</span>
+    }
+
+    public static TypeParam typeParam(String type) {
+<span class="nc" id="L317">        return new TypeParam(type);</span>
+    }
+
+    public static TypeParam typeParam(String type, String bound) {
+<span class="nc" id="L321">        return new TypeParam(type, type(bound));</span>
+    }
+
+    public static TypeParam typeParam(String type, Type bound) {
+<span class="nc" id="L325">        return new TypeParam(type, bound);</span>
+    }
+
+    public static Type[] types(String... types) {
+<span class="fc" id="L329">        Type[] t = new Type[types.length];</span>
+<span class="fc bfc" id="L330" title="All 2 branches covered.">        for (int i = 0; i &lt; types.length; i++) {</span>
+<span class="fc" id="L331">            t[i] = type(types[i]);</span>
+        }
+<span class="fc" id="L333">        return t;</span>
+    }
+
+    public static Type[] types(Type... types) {
+<span class="fc" id="L337">        return types;</span>
+    }
+
+    public static Type[] args(Type... types) {
+<span class="nc" id="L341">        return types;</span>
+    }
+
+    public static Type[] throwing(Type... types) {
+<span class="fc" id="L345">        return types;</span>
+    }
+
+    public static MethodDescriptor method(Type type, TypeParam[] typeParameters, String methodName, Type[] args) {
+<span class="fc" id="L349">        return new MethodDescriptor(type, typeParameters, methodName, args, EMPTY_TYPES);</span>
+    }
+
+    public static MethodDescriptor method(Type type, TypeParam[] typeParameters, String methodName) {
+<span class="fc" id="L353">        return new MethodDescriptor(type, typeParameters, methodName, EMPTY_TYPES, EMPTY_TYPES);</span>
+    }
+
+    public static MethodDescriptor method(Type type, String methodName, Type[] args) {
+<span class="fc" id="L357">        return new MethodDescriptor(type, EMPTY_PARAMETERS, methodName, args, EMPTY_TYPES);</span>
+    }
+
+    public static MethodDescriptor method(Type type, String methodName) {
+<span class="fc" id="L361">        return new MethodDescriptor(type, EMPTY_PARAMETERS, methodName, EMPTY_TYPES, EMPTY_TYPES);</span>
+    }
+
+    public static MethodDescriptor method(Type type, TypeParam[] typeParameters, String methodName, Type[] args, Type[] exceptions) {
+<span class="fc" id="L365">        return new MethodDescriptor(type, typeParameters, methodName, args, exceptions);</span>
+    }
+
+    public static MethodDescriptor method(Type type, String methodName, Type[] args, Type[] exceptions) {
+<span class="fc" id="L369">        return new MethodDescriptor(type, EMPTY_PARAMETERS, methodName, args, exceptions);</span>
+    }
+
+    public static MethodDescriptor method(int modifiers, Type type, TypeParam[] typeParameters, String methodName, Type[] args) {
+<span class="fc" id="L373">        return new MethodDescriptor(modifiers, type, typeParameters, methodName, args, EMPTY_TYPES);</span>
+    }
+
+    public static MethodDescriptor method(int modifiers, Type type, TypeParam[] typeParameters, String methodName) {
+<span class="fc" id="L377">        return new MethodDescriptor(modifiers, type, typeParameters, methodName, EMPTY_TYPES, EMPTY_TYPES);</span>
+    }
+
+    public static MethodDescriptor method(int modifiers, Type type, String methodName, Type[] args) {
+<span class="fc" id="L381">        return new MethodDescriptor(modifiers, type, EMPTY_PARAMETERS, methodName, args, EMPTY_TYPES);</span>
+    }
+
+    public static MethodDescriptor method(int modifiers, Type type, String methodName) {
+<span class="fc" id="L385">        return new MethodDescriptor(modifiers, type, EMPTY_PARAMETERS, methodName, EMPTY_TYPES, EMPTY_TYPES);</span>
+    }
+
+    public static MethodDescriptor method(int modifiers, Type type, TypeParam[] typeParameters, String methodName, Type[] args, Type[] exceptions) {
+<span class="fc" id="L389">        return new MethodDescriptor(modifiers, type, typeParameters, methodName, args, exceptions);</span>
+    }
+
+    public static MethodDescriptor method(int modifiers, Type type, String methodName, Type[] args, Type[] exceptions) {
+<span class="fc" id="L393">        return new MethodDescriptor(modifiers, type, EMPTY_PARAMETERS, methodName, args, exceptions);</span>
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, Type type, TypeParam[] typeParameters, String methodName, Type[] args) {
+<span class="fc" id="L397">        return new MethodDescriptor(type, typeParameters, methodName, args, EMPTY_TYPES, annotations);</span>
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, Type type, TypeParam[] typeParameters, String methodName) {
+<span class="fc" id="L401">        return new MethodDescriptor(type, typeParameters, methodName, EMPTY_TYPES, EMPTY_TYPES, annotations);</span>
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, Type type, String methodName, Type[] args) {
+<span class="fc" id="L405">        return new MethodDescriptor(type, EMPTY_PARAMETERS, methodName, args, EMPTY_TYPES, annotations);</span>
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, Type type, String methodName) {
+<span class="fc" id="L409">        return new MethodDescriptor(type, EMPTY_PARAMETERS, methodName, EMPTY_TYPES, EMPTY_TYPES, annotations);</span>
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, Type type, TypeParam[] typeParameters, String methodName, Type[] args, Type[] exceptions) {
+<span class="fc" id="L413">        return new MethodDescriptor(type, typeParameters, methodName, args, exceptions, annotations);</span>
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, Type type, String methodName, Type[] args, Type[] exceptions) {
+<span class="fc" id="L417">        return new MethodDescriptor(type, EMPTY_PARAMETERS, methodName, args, exceptions, annotations);</span>
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, int modifiers, Type type, TypeParam[] typeParameters, String methodName, Type[] args) {
+<span class="fc" id="L421">        return new MethodDescriptor(modifiers, type, typeParameters, methodName, args, EMPTY_TYPES, annotations);</span>
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, int modifiers, Type type, TypeParam[] typeParameters, String methodName) {
+<span class="fc" id="L425">        return new MethodDescriptor(modifiers, type, typeParameters, methodName, EMPTY_TYPES, EMPTY_TYPES, annotations);</span>
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, int modifiers, Type type, String methodName, Type[] args) {
+<span class="fc" id="L429">        return new MethodDescriptor(modifiers, type, EMPTY_PARAMETERS, methodName, args, EMPTY_TYPES, annotations);</span>
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, int modifiers, Type type, String methodName) {
+<span class="fc" id="L433">        return new MethodDescriptor(modifiers, type, EMPTY_PARAMETERS, methodName, EMPTY_TYPES, EMPTY_TYPES, annotations);</span>
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, int modifiers, Type type, TypeParam[] typeParameters, String methodName, Type[] args, Type[] exceptions) {
+<span class="fc" id="L437">        return new MethodDescriptor(modifiers, type, typeParameters, methodName, args, exceptions, annotations);</span>
+    }
+
+    public static MethodDescriptor annotatedMethod(Type[] annotations, int modifiers, Type type, String methodName, Type[] args, Type[] exceptions) {
+<span class="fc" id="L441">        return new MethodDescriptor(modifiers, type, EMPTY_PARAMETERS, methodName, args, exceptions, annotations);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

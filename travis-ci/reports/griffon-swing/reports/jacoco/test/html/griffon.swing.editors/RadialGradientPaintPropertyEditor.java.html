@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>RadialGradientPaintPropertyEditor.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-swing</a> &gt; <a href="index.source.html" class="el_package">griffon.swing.editors</a> &gt; <span class="el_source">RadialGradientPaintPropertyEditor.java</span></div><h1>RadialGradientPaintPropertyEditor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.swing.editors;
+
+import griffon.core.editors.AbstractPropertyEditor;
+import griffon.metadata.PropertyEditorFor;
+
+import java.awt.Color;
+import java.awt.MultipleGradientPaint;
+import java.awt.RadialGradientPaint;
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Map;
+
+import static griffon.util.GriffonNameUtils.isBlank;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+@PropertyEditorFor(RadialGradientPaint.class)
+<span class="fc" id="L35">public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {</span>
+    public String getAsText() {
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        if (null == getValue()) return null;</span>
+<span class="fc" id="L38">        RadialGradientPaint p = (RadialGradientPaint) getValue();</span>
+<span class="fc" id="L39">        return new StringBuilder()</span>
+<span class="fc" id="L40">            .append(p.getCenterPoint().getX())</span>
+<span class="fc" id="L41">            .append(&quot;, &quot;)</span>
+<span class="fc" id="L42">            .append(p.getCenterPoint().getY())</span>
+<span class="fc" id="L43">            .append(&quot;, &quot;)</span>
+<span class="fc" id="L44">            .append(p.getRadius())</span>
+<span class="fc" id="L45">            .append(&quot;, &quot;)</span>
+<span class="fc" id="L46">            .append(p.getFocusPoint().getX())</span>
+<span class="fc" id="L47">            .append(&quot;, &quot;)</span>
+<span class="fc" id="L48">            .append(p.getFocusPoint().getY())</span>
+<span class="fc" id="L49">            .append(&quot;, &quot;)</span>
+<span class="fc" id="L50">            .append(formatFractions(p.getFractions()))</span>
+<span class="fc" id="L51">            .append(&quot;, &quot;)</span>
+<span class="fc" id="L52">            .append(formatColors(p.getColors()))</span>
+<span class="fc" id="L53">            .append(&quot;, &quot;)</span>
+<span class="fc" id="L54">            .append(p.getCycleMethod().name())</span>
+<span class="fc" id="L55">            .toString();</span>
+    }
+
+    private String formatFractions(float[] fractions) {
+<span class="fc" id="L59">        StringBuilder b = new StringBuilder(&quot;[&quot;);</span>
+<span class="fc" id="L60">        boolean first = true;</span>
+
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        for (float f : fractions) {</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">            if (first) {</span>
+<span class="fc" id="L64">                first = false;</span>
+            } else {
+<span class="fc" id="L66">                b.append(&quot;:&quot;);</span>
+            }
+<span class="fc" id="L68">            b.append(f);</span>
+        }
+<span class="fc" id="L70">        return b.append(&quot;]&quot;).toString();</span>
+    }
+
+    private String formatColors(Color[] colors) {
+<span class="fc" id="L74">        StringBuilder b = new StringBuilder(&quot;[&quot;);</span>
+<span class="fc" id="L75">        boolean first = true;</span>
+
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        for (Color c : colors) {</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">            if (first) {</span>
+<span class="fc" id="L79">                first = false;</span>
+            } else {
+<span class="fc" id="L81">                b.append(&quot;:&quot;);</span>
+            }
+<span class="fc" id="L83">            b.append(ColorPropertyEditor.format(c));</span>
+        }
+<span class="fc" id="L85">        return b.append(&quot;]&quot;).toString();</span>
+    }
+
+    protected void setValueInternal(Object value) {
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (null == value) {</span>
+<span class="fc" id="L90">            super.setValueInternal(null);</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        } else if (value instanceof CharSequence) {</span>
+<span class="fc" id="L92">            handleAsString(String.valueOf(value));</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        } else if (value instanceof List) {</span>
+<span class="fc" id="L94">            handleAsList((List) value);</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        } else if (value instanceof Map) {</span>
+<span class="fc" id="L96">            handleAsMap((Map) value);</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">        } else if (value instanceof RadialGradientPaint) {</span>
+<span class="fc" id="L98">            super.setValueInternal(value);</span>
+        } else {
+<span class="nc" id="L100">            throw illegalValue(value, RadialGradientPaint.class);</span>
+        }
+<span class="fc" id="L102">    }</span>
+
+    private void handleAsString(String str) {
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        if (isBlank(str)) {</span>
+<span class="fc" id="L106">            super.setValueInternal(null);</span>
+<span class="fc" id="L107">            return;</span>
+        }
+
+<span class="fc" id="L110">        float cx = 0;</span>
+<span class="fc" id="L111">        float cy = 0;</span>
+<span class="fc" id="L112">        float radius = 0;</span>
+<span class="fc" id="L113">        float fx = 0;</span>
+<span class="fc" id="L114">        float fy = 0;</span>
+<span class="fc" id="L115">        float[] fractions = null;</span>
+<span class="fc" id="L116">        Color[] colors = null;</span>
+<span class="fc" id="L117">        MultipleGradientPaint.CycleMethod cyclicMethod = MultipleGradientPaint.CycleMethod.NO_CYCLE;</span>
+<span class="fc" id="L118">        String[] parts = str.split(&quot;,&quot;);</span>
+<span class="pc bpc" id="L119" title="1 of 3 branches missed.">        switch (parts.length) {</span>
+            case 8:
+<span class="fc" id="L121">                cyclicMethod = parseCyclicMethod(str, parts[7]);</span>
+            case 7:
+<span class="fc" id="L123">                cx = parseValue(parts[0]);</span>
+<span class="fc" id="L124">                cy = parseValue(parts[1]);</span>
+<span class="fc" id="L125">                radius = parseValue(parts[2]);</span>
+<span class="fc" id="L126">                fx = parseValue(parts[3]);</span>
+<span class="fc" id="L127">                fy = parseValue(parts[4]);</span>
+<span class="fc" id="L128">                fractions = parseFractions(str, parts[5].trim());</span>
+<span class="fc" id="L129">                colors = parseColors(str, parts[6].trim());</span>
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">                if (fractions.length != colors.length) {</span>
+<span class="nc" id="L131">                    throw illegalValue(str, RadialGradientPaint.class);</span>
+                }
+<span class="fc" id="L133">                super.setValueInternal(new RadialGradientPaint(cx, cy, radius, fx, fy, fractions, colors, cyclicMethod));</span>
+<span class="fc" id="L134">                break;</span>
+            default:
+<span class="nc" id="L136">                throw illegalValue(str, RadialGradientPaint.class);</span>
+        }
+<span class="fc" id="L138">    }</span>
+
+    private void handleAsList(List&lt;?&gt; list) {
+<span class="fc bfc" id="L141" title="All 2 branches covered.">        if(list.isEmpty()) {</span>
+<span class="fc" id="L142">            super.setValueInternal(null);</span>
+<span class="fc" id="L143">            return;</span>
+        }
+
+<span class="fc" id="L146">        float cx = 0;</span>
+<span class="fc" id="L147">        float cy = 0;</span>
+<span class="fc" id="L148">        float radius = 0;</span>
+<span class="fc" id="L149">        float fx = 0;</span>
+<span class="fc" id="L150">        float fy = 0;</span>
+<span class="fc" id="L151">        float[] fractions = null;</span>
+<span class="fc" id="L152">        Color[] colors = null;</span>
+<span class="fc" id="L153">        MultipleGradientPaint.CycleMethod cyclicMethod = MultipleGradientPaint.CycleMethod.NO_CYCLE;</span>
+<span class="pc bpc" id="L154" title="1 of 3 branches missed.">        switch (list.size()) {</span>
+            case 8:
+<span class="fc" id="L156">                cyclicMethod = parseCyclicMethod(list, String.valueOf(list.get(7)).trim());</span>
+            case 7:
+<span class="fc" id="L158">                cx = parseValue(list.get(0));</span>
+<span class="fc" id="L159">                cy = parseValue(list.get(1));</span>
+<span class="fc" id="L160">                radius = parseValue(list.get(2));</span>
+<span class="fc" id="L161">                fx = parseValue(list.get(3));</span>
+<span class="fc" id="L162">                fy = parseValue(list.get(4));</span>
+<span class="fc" id="L163">                fractions = parseFractions(list, list.get(5));</span>
+<span class="fc" id="L164">                colors = parseColors(list, list.get(6));</span>
+<span class="pc bpc" id="L165" title="1 of 2 branches missed.">                if (fractions.length != colors.length) {</span>
+<span class="nc" id="L166">                    throw illegalValue(list, RadialGradientPaint.class);</span>
+                }
+<span class="fc" id="L168">                super.setValueInternal(new RadialGradientPaint(cx, cy, radius, fx, fy, fractions, colors, cyclicMethod));</span>
+<span class="fc" id="L169">                break;</span>
+            default:
+<span class="nc" id="L171">                throw illegalValue(list, RadialGradientPaint.class);</span>
+        }
+<span class="fc" id="L173">    }</span>
+
+    private void handleAsMap(Map&lt;?, ?&gt; map) {
+<span class="fc bfc" id="L176" title="All 2 branches covered.">        if(map.isEmpty()) {</span>
+<span class="fc" id="L177">            super.setValueInternal(null);</span>
+<span class="fc" id="L178">            return;</span>
+        }
+
+<span class="fc" id="L181">        float cx = (Float) getMapValue(map, &quot;cx&quot;, 0f);</span>
+<span class="fc" id="L182">        float cy = (Float) getMapValue(map, &quot;cy&quot;, 0f);</span>
+<span class="fc" id="L183">        float radius = (Float) getMapValue(map, &quot;radius&quot;, 0f);</span>
+<span class="fc" id="L184">        float fx = (Float) getMapValue(map, &quot;fx&quot;, 0f);</span>
+<span class="fc" id="L185">        float fy = (Float) getMapValue(map, &quot;fy&quot;, 0f);</span>
+<span class="fc" id="L186">        MultipleGradientPaint.CycleMethod cyclicMethod = MultipleGradientPaint.CycleMethod.NO_CYCLE;</span>
+
+<span class="fc" id="L188">        float[] fractions = parseFractions(map, map.get(&quot;fractions&quot;));</span>
+<span class="fc" id="L189">        Color[] colors = parseColors(map, map.get(&quot;colors&quot;));</span>
+<span class="pc bpc" id="L190" title="1 of 2 branches missed.">        if (fractions.length != colors.length) {</span>
+<span class="nc" id="L191">            throw illegalValue(map, RadialGradientPaint.class);</span>
+        }
+<span class="fc" id="L193">        Object cyclicValue = map.get(&quot;cycle&quot;);</span>
+<span class="fc bfc" id="L194" title="All 2 branches covered.">        if (null != cyclicValue) {</span>
+<span class="fc" id="L195">            cyclicMethod = parseCyclicMethod(map, String.valueOf(cyclicValue));</span>
+        }
+
+<span class="fc" id="L198">        super.setValueInternal(new RadialGradientPaint(cx, cy, radius, fx, fy, fractions, colors, cyclicMethod));</span>
+<span class="fc" id="L199">    }</span>
+
+    private float[] parseFractions(Object source, Object obj) {
+<span class="pc bpc" id="L202" title="1 of 2 branches missed.">        if (obj instanceof CharSequence) {</span>
+<span class="nc" id="L203">            return parseFractions(source, String.valueOf(obj).trim());</span>
+<span class="pc bpc" id="L204" title="1 of 2 branches missed.">        } else if (obj instanceof List) {</span>
+<span class="fc" id="L205">            return parseFractions(source, (List) obj);</span>
+        }
+<span class="nc" id="L207">        throw illegalValue(source, RadialGradientPaint.class);</span>
+    }
+
+    private float[] parseFractions(Object source, String str) {
+<span class="pc bpc" id="L211" title="1 of 4 branches missed.">        if (!str.startsWith(&quot;[&quot;) || !str.endsWith(&quot;]&quot;)) {</span>
+<span class="nc" id="L212">            throw illegalValue(source, RadialGradientPaint.class);</span>
+        }
+
+<span class="fc" id="L215">        String[] strs = str.substring(1, str.length() - 1).split(&quot;:&quot;);</span>
+<span class="fc" id="L216">        float[] fractions = new float[strs.length];</span>
+<span class="fc bfc" id="L217" title="All 2 branches covered.">        for (int i = 0; i &lt; strs.length; i++) {</span>
+<span class="fc" id="L218">            fractions[i] = parseValue(strs[i]);</span>
+        }
+
+<span class="fc" id="L221">        return fractions;</span>
+    }
+
+    private float[] parseFractions(Object source, List&lt;?&gt; list) {
+<span class="fc" id="L225">        float[] fractions = new float[list.size()];</span>
+<span class="fc bfc" id="L226" title="All 2 branches covered.">        for (int i = 0; i &lt; list.size(); i++) {</span>
+<span class="fc" id="L227">            fractions[i] = parseValue(list.get(i));</span>
+        }
+
+<span class="fc" id="L230">        return fractions;</span>
+    }
+
+    private Color[] parseColors(Object source, Object obj) {
+<span class="pc bpc" id="L234" title="1 of 2 branches missed.">        if (obj instanceof CharSequence) {</span>
+<span class="nc" id="L235">            return parseColors(source, String.valueOf(obj).trim());</span>
+<span class="pc bpc" id="L236" title="1 of 2 branches missed.">        } else if (obj instanceof List) {</span>
+<span class="fc" id="L237">            return parseColors(source, (List) obj);</span>
+        }
+<span class="nc" id="L239">        throw illegalValue(source, RadialGradientPaint.class);</span>
+    }
+
+    private Color[] parseColors(Object source, String str) {
+<span class="pc bpc" id="L243" title="1 of 4 branches missed.">        if (!str.startsWith(&quot;[&quot;) || !str.endsWith(&quot;]&quot;)) {</span>
+<span class="nc" id="L244">            throw illegalValue(source, RadialGradientPaint.class);</span>
+        }
+
+<span class="fc" id="L247">        String[] strs = str.substring(1, str.length() - 1).split(&quot;:&quot;);</span>
+<span class="fc" id="L248">        Color[] colors = new Color[strs.length];</span>
+<span class="fc" id="L249">        ColorPropertyEditor colorEditor = new ColorPropertyEditor();</span>
+<span class="fc bfc" id="L250" title="All 2 branches covered.">        for (int i = 0; i &lt; strs.length; i++) {</span>
+            try {
+<span class="fc" id="L252">                colorEditor.setValueInternal(strs[i]);</span>
+<span class="fc" id="L253">                colors[i] = (Color) colorEditor.getValue();</span>
+<span class="nc" id="L254">            } catch (Exception e) {</span>
+<span class="nc" id="L255">                throw illegalValue(strs[i], RadialGradientPaint.class);</span>
+<span class="fc" id="L256">            }</span>
+        }
+
+<span class="fc" id="L259">        return colors;</span>
+    }
+
+    private Color[] parseColors(Object source, List&lt;?&gt; list) {
+<span class="fc" id="L263">        Color[] colors = new Color[list.size()];</span>
+<span class="fc" id="L264">        ColorPropertyEditor colorEditor = new ColorPropertyEditor();</span>
+<span class="fc bfc" id="L265" title="All 2 branches covered.">        for (int i = 0; i &lt; list.size(); i++) {</span>
+            try {
+<span class="fc" id="L267">                colorEditor.setValueInternal(list.get(i));</span>
+<span class="fc" id="L268">                colors[i] = (Color) colorEditor.getValue();</span>
+<span class="nc" id="L269">            } catch (Exception e) {</span>
+<span class="nc" id="L270">                throw illegalValue(list.get(i), RadialGradientPaint.class, e);</span>
+<span class="fc" id="L271">            }</span>
+        }
+
+<span class="fc" id="L274">        return colors;</span>
+    }
+
+    private MultipleGradientPaint.CycleMethod parseCyclicMethod(Object source, String str) {
+        try {
+<span class="fc" id="L279">            Field cyclicMethodField = MultipleGradientPaint.CycleMethod.class.getDeclaredField(str.toUpperCase().trim());</span>
+<span class="fc" id="L280">            return (MultipleGradientPaint.CycleMethod) cyclicMethodField.get(null);</span>
+<span class="nc" id="L281">        } catch (NoSuchFieldException | IllegalAccessException e) {</span>
+<span class="nc" id="L282">            throw illegalValue(source, RadialGradientPaint.class, e);</span>
+        }
+    }
+
+    private float parse(String val) {
+        try {
+<span class="fc" id="L288">            return Float.parseFloat(val.trim());</span>
+<span class="nc" id="L289">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L290">            throw illegalValue(val, RadialGradientPaint.class, e);</span>
+        }
+    }
+
+    private float parseValue(Object value) {
+<span class="fc bfc" id="L295" title="All 2 branches covered.">        if (value instanceof CharSequence) {</span>
+<span class="fc" id="L296">            return parse(String.valueOf(value));</span>
+<span class="pc bpc" id="L297" title="1 of 2 branches missed.">        } else if (value instanceof Number) {</span>
+<span class="fc" id="L298">            return parse((Number) value);</span>
+        }
+<span class="nc" id="L300">        throw illegalValue(value, RadialGradientPaint.class);</span>
+    }
+
+    private float parse(Number val) {
+<span class="fc" id="L304">        return val.floatValue();</span>
+    }
+
+    private Object getMapValue(Map&lt;?, ?&gt; map, String key, Object defaultValue) {
+<span class="fc" id="L308">        Object val = map.get(key);</span>
+<span class="fc bfc" id="L309" title="All 2 branches covered.">        if (null == val) {</span>
+<span class="fc" id="L310">            return defaultValue;</span>
+<span class="fc bfc" id="L311" title="All 2 branches covered.">        } else if (val instanceof CharSequence) {</span>
+<span class="fc" id="L312">            return parse(String.valueOf(val));</span>
+<span class="pc bpc" id="L313" title="1 of 2 branches missed.">        } else if (val instanceof Number) {</span>
+<span class="fc" id="L314">            return parse((Number) val);</span>
+        }
+<span class="nc" id="L316">        throw illegalValue(map, RadialGradientPaint.class);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

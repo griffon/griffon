@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractArtifactHandler.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-java</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core.artifact</a> &gt; <span class="el_source">AbstractArtifactHandler.java</span></div><h1>AbstractArtifactHandler.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core.artifact;
+
+import griffon.core.GriffonApplication;
+import griffon.core.artifact.ArtifactHandler;
+import griffon.core.artifact.GriffonArtifact;
+import griffon.core.artifact.GriffonClass;
+import griffon.core.injection.Binding;
+import org.codehaus.griffon.runtime.core.injection.Bindings;
+import org.codehaus.griffon.runtime.core.injection.LinkedBindingBuilder;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import static griffon.util.AnnotationUtils.typed;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * Base implementation of the ArtifactHandler interface.
+ *
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public abstract class AbstractArtifactHandler&lt;A extends GriffonArtifact&gt; implements ArtifactHandler&lt;A&gt; {
+    protected static final String ERROR_CLASS_NULL = &quot;Argument 'class' must not be null&quot;;
+    private final Class&lt;A&gt; artifactType;
+    private final String type;
+    private final String trailing;
+    private final GriffonApplication application;
+
+<span class="fc" id="L53">    private GriffonClass[] griffonClasses = new GriffonClass[0];</span>
+<span class="fc" id="L54">    private final Map&lt;String, GriffonClass&gt; classesByName = new TreeMap&lt;&gt;();</span>
+
+    @Inject
+<span class="fc" id="L57">    public AbstractArtifactHandler(@Nonnull GriffonApplication application, @Nonnull Class&lt;A&gt; artifactType, @Nonnull String type, @Nonnull String trailing) {</span>
+<span class="fc" id="L58">        this.application = requireNonNull(application, &quot;Argument 'application' must not be null&quot;);</span>
+<span class="fc" id="L59">        this.artifactType = requireNonNull(artifactType, &quot;Argument 'artifactType' must not be null&quot;);</span>
+<span class="fc" id="L60">        this.type = requireNonBlank(type, &quot;Argument 'type' must not be blank&quot;);</span>
+<span class="fc" id="L61">        this.trailing = requireNonNull(trailing, &quot;Argument 'trailing' must not be null&quot;);</span>
+<span class="fc" id="L62">    }</span>
+
+    @Nonnull
+    public Class&lt;A&gt; getArtifactType() {
+<span class="nc" id="L66">        return artifactType;</span>
+    }
+
+    @Nonnull
+    public String getType() {
+<span class="fc" id="L71">        return type;</span>
+    }
+
+    @Nonnull
+    public String getTrailing() {
+<span class="nc" id="L76">        return trailing;</span>
+    }
+
+    @Nonnull
+    public Collection&lt;Binding&lt;?&gt;&gt; initialize(@Nonnull Class&lt;A&gt;[] classes) {
+<span class="fc" id="L81">        griffonClasses = new GriffonClass[classes.length];</span>
+<span class="fc" id="L82">        List&lt;Binding&lt;?&gt;&gt; bindings = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        for (int i = 0; i &lt; classes.length; i++) {</span>
+<span class="fc" id="L84">            Class&lt;A&gt; klass = classes[i];</span>
+<span class="fc" id="L85">            GriffonClass griffonClass = newGriffonClassInstance(klass);</span>
+<span class="fc" id="L86">            griffonClasses[i] = griffonClass;</span>
+<span class="fc" id="L87">            classesByName.put(klass.getName(), griffonClass);</span>
+<span class="fc" id="L88">            createBindings(bindings, klass, griffonClass);</span>
+        }
+<span class="fc" id="L90">        return bindings;</span>
+    }
+
+    protected void createBindings(@Nonnull List&lt;Binding&lt;?&gt;&gt; bindings, @Nonnull Class&lt;A&gt; clazz, @Nonnull GriffonClass griffonClass) {
+<span class="fc" id="L94">        LinkedBindingBuilder&lt;GriffonClass&gt; builder = Bindings.bind(GriffonClass.class)</span>
+<span class="fc" id="L95">            .withClassifier(typed(clazz));</span>
+<span class="fc" id="L96">        builder.toInstance(griffonClass);</span>
+<span class="fc" id="L97">        bindings.add(builder.getBinding());</span>
+<span class="fc" id="L98">        bindings.add(Bindings.bind(clazz).getBinding());</span>
+<span class="fc" id="L99">    }</span>
+
+    @Nonnull
+    public Map&lt;String, GriffonClass&gt; getClassesByName() {
+<span class="nc" id="L103">        return Collections.unmodifiableMap(classesByName);</span>
+    }
+
+    /**
+     * Returns true if the target Class is a class artifact
+     * handled by this object.&lt;p&gt;
+     * This implementation performs an equality check on class.name
+     */
+    public boolean isArtifact(@Nonnull Class&lt;A&gt; clazz) {
+<span class="nc" id="L112">        requireNonNull(clazz, ERROR_CLASS_NULL);</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        return classesByName.get(clazz.getName()) != null;</span>
+    }
+
+    public boolean isArtifact(@Nonnull GriffonClass clazz) {
+<span class="nc" id="L117">        requireNonNull(clazz, ERROR_CLASS_NULL);</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">        for (GriffonClass griffonClass : griffonClasses) {</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">            if (griffonClass.equals(clazz)) return true;</span>
+        }
+<span class="nc" id="L121">        return false;</span>
+    }
+
+    @Nonnull
+    public GriffonClass[] getClasses() {
+<span class="nc" id="L126">        return griffonClasses;</span>
+    }
+
+    @Nullable
+    public GriffonClass getClassFor(@Nonnull Class&lt;A&gt; clazz) {
+<span class="fc" id="L131">        requireNonNull(clazz, ERROR_CLASS_NULL);</span>
+<span class="fc" id="L132">        return getClassFor(clazz.getName());</span>
+    }
+
+    @Nullable
+    public GriffonClass getClassFor(@Nonnull String fqnClassName) {
+<span class="fc" id="L137">        requireNonBlank(fqnClassName, &quot;Argument 'fqnClassName' must not be blank&quot;);</span>
+<span class="fc" id="L138">        return classesByName.get(fqnClassName);</span>
+    }
+
+    @Nullable
+    public GriffonClass findClassFor(@Nonnull String propertyName) {
+<span class="nc" id="L143">        requireNonBlank(propertyName, &quot;Argument 'propertyName' must not be blank&quot;);</span>
+
+<span class="nc" id="L145">        String simpleName = propertyName;</span>
+
+<span class="nc" id="L147">        int lastDot = propertyName.lastIndexOf(&quot;.&quot;);</span>
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        if (lastDot &gt; -1) {</span>
+<span class="nc" id="L149">            simpleName = simpleName.substring(lastDot + 1);</span>
+        }
+
+<span class="nc bnc" id="L152" title="All 2 branches missed.">        if (simpleName.length() == 1) {</span>
+<span class="nc" id="L153">            simpleName = simpleName.toUpperCase();</span>
+        } else {
+<span class="nc" id="L155">            simpleName = simpleName.substring(0, 1).toUpperCase() + simpleName.substring(1);</span>
+        }
+
+<span class="nc bnc" id="L158" title="All 2 branches missed.">        if (!simpleName.endsWith(trailing)) {</span>
+<span class="nc" id="L159">            simpleName += trailing;</span>
+        }
+
+<span class="nc bnc" id="L162" title="All 2 branches missed.">        for (GriffonClass griffonClass : griffonClasses) {</span>
+<span class="nc bnc" id="L163" title="All 2 branches missed.">            if (griffonClass.getClazz().getSimpleName().equals(simpleName)) {</span>
+<span class="nc" id="L164">                return griffonClass;</span>
+            }
+        }
+
+<span class="nc" id="L168">        return null;</span>
+    }
+
+    @Nonnull
+    protected GriffonApplication getApplication() {
+<span class="fc" id="L173">        return application;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

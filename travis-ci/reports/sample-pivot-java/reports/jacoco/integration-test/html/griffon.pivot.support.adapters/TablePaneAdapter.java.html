@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TablePaneAdapter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-java</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.support.adapters</a> &gt; <span class="el_source">TablePaneAdapter.java</span></div><h1>TablePaneAdapter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.support.adapters;
+
+import griffon.core.CallableWithArgs;
+import org.apache.pivot.wtk.Component;
+import org.apache.pivot.wtk.TablePane;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="nc" id="L26">public class TablePaneAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TablePaneListener {</span>
+    private CallableWithArgs&lt;Void&gt; cellInserted;
+    private CallableWithArgs&lt;Void&gt; cellsRemoved;
+    private CallableWithArgs&lt;Void&gt; cellUpdated;
+    private CallableWithArgs&lt;Void&gt; rowHeightChanged;
+    private CallableWithArgs&lt;Void&gt; rowHighlightedChanged;
+    private CallableWithArgs&lt;Void&gt; columnInserted;
+    private CallableWithArgs&lt;Void&gt; columnsRemoved;
+    private CallableWithArgs&lt;Void&gt; columnWidthChanged;
+    private CallableWithArgs&lt;Void&gt; columnHighlightedChanged;
+    private CallableWithArgs&lt;Void&gt; rowsRemoved;
+    private CallableWithArgs&lt;Void&gt; rowInserted;
+
+    public CallableWithArgs&lt;Void&gt; getCellInserted() {
+<span class="nc" id="L40">        return this.cellInserted;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getCellsRemoved() {
+<span class="nc" id="L44">        return this.cellsRemoved;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getCellUpdated() {
+<span class="nc" id="L48">        return this.cellUpdated;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getRowHeightChanged() {
+<span class="nc" id="L52">        return this.rowHeightChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getRowHighlightedChanged() {
+<span class="nc" id="L56">        return this.rowHighlightedChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getColumnInserted() {
+<span class="nc" id="L60">        return this.columnInserted;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getColumnsRemoved() {
+<span class="nc" id="L64">        return this.columnsRemoved;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getColumnWidthChanged() {
+<span class="nc" id="L68">        return this.columnWidthChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getColumnHighlightedChanged() {
+<span class="nc" id="L72">        return this.columnHighlightedChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getRowsRemoved() {
+<span class="nc" id="L76">        return this.rowsRemoved;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getRowInserted() {
+<span class="nc" id="L80">        return this.rowInserted;</span>
+    }
+
+
+    public void setCellInserted(CallableWithArgs&lt;Void&gt; cellInserted) {
+<span class="nc" id="L85">        this.cellInserted = cellInserted;</span>
+<span class="nc" id="L86">    }</span>
+
+    public void setCellsRemoved(CallableWithArgs&lt;Void&gt; cellsRemoved) {
+<span class="nc" id="L89">        this.cellsRemoved = cellsRemoved;</span>
+<span class="nc" id="L90">    }</span>
+
+    public void setCellUpdated(CallableWithArgs&lt;Void&gt; cellUpdated) {
+<span class="nc" id="L93">        this.cellUpdated = cellUpdated;</span>
+<span class="nc" id="L94">    }</span>
+
+    public void setRowHeightChanged(CallableWithArgs&lt;Void&gt; rowHeightChanged) {
+<span class="nc" id="L97">        this.rowHeightChanged = rowHeightChanged;</span>
+<span class="nc" id="L98">    }</span>
+
+    public void setRowHighlightedChanged(CallableWithArgs&lt;Void&gt; rowHighlightedChanged) {
+<span class="nc" id="L101">        this.rowHighlightedChanged = rowHighlightedChanged;</span>
+<span class="nc" id="L102">    }</span>
+
+    public void setColumnInserted(CallableWithArgs&lt;Void&gt; columnInserted) {
+<span class="nc" id="L105">        this.columnInserted = columnInserted;</span>
+<span class="nc" id="L106">    }</span>
+
+    public void setColumnsRemoved(CallableWithArgs&lt;Void&gt; columnsRemoved) {
+<span class="nc" id="L109">        this.columnsRemoved = columnsRemoved;</span>
+<span class="nc" id="L110">    }</span>
+
+    public void setColumnWidthChanged(CallableWithArgs&lt;Void&gt; columnWidthChanged) {
+<span class="nc" id="L113">        this.columnWidthChanged = columnWidthChanged;</span>
+<span class="nc" id="L114">    }</span>
+
+    public void setColumnHighlightedChanged(CallableWithArgs&lt;Void&gt; columnHighlightedChanged) {
+<span class="nc" id="L117">        this.columnHighlightedChanged = columnHighlightedChanged;</span>
+<span class="nc" id="L118">    }</span>
+
+    public void setRowsRemoved(CallableWithArgs&lt;Void&gt; rowsRemoved) {
+<span class="nc" id="L121">        this.rowsRemoved = rowsRemoved;</span>
+<span class="nc" id="L122">    }</span>
+
+    public void setRowInserted(CallableWithArgs&lt;Void&gt; rowInserted) {
+<span class="nc" id="L125">        this.rowInserted = rowInserted;</span>
+<span class="nc" id="L126">    }</span>
+
+
+    public void cellInserted(org.apache.pivot.wtk.TablePane.Row arg0, int arg1) {
+<span class="nc bnc" id="L130" title="All 2 branches missed.">        if (cellInserted != null) {</span>
+<span class="nc" id="L131">            cellInserted.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L133">    }</span>
+
+    public void cellsRemoved(org.apache.pivot.wtk.TablePane.Row arg0, int arg1, org.apache.pivot.collections.Sequence&lt;Component&gt; arg2) {
+<span class="nc bnc" id="L136" title="All 2 branches missed.">        if (cellsRemoved != null) {</span>
+<span class="nc" id="L137">            cellsRemoved.call(arg0, arg1, arg2);</span>
+        }
+<span class="nc" id="L139">    }</span>
+
+    public void cellUpdated(org.apache.pivot.wtk.TablePane.Row arg0, int arg1, org.apache.pivot.wtk.Component arg2) {
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        if (cellUpdated != null) {</span>
+<span class="nc" id="L143">            cellUpdated.call(arg0, arg1, arg2);</span>
+        }
+<span class="nc" id="L145">    }</span>
+
+    public void rowHeightChanged(org.apache.pivot.wtk.TablePane.Row arg0, int arg1, boolean arg2) {
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        if (rowHeightChanged != null) {</span>
+<span class="nc" id="L149">            rowHeightChanged.call(arg0, arg1, arg2);</span>
+        }
+<span class="nc" id="L151">    }</span>
+
+    public void rowHighlightedChanged(org.apache.pivot.wtk.TablePane.Row arg0) {
+<span class="nc bnc" id="L154" title="All 2 branches missed.">        if (rowHighlightedChanged != null) {</span>
+<span class="nc" id="L155">            rowHighlightedChanged.call(arg0);</span>
+        }
+<span class="nc" id="L157">    }</span>
+
+    public void columnInserted(org.apache.pivot.wtk.TablePane arg0, int arg1) {
+<span class="nc bnc" id="L160" title="All 2 branches missed.">        if (columnInserted != null) {</span>
+<span class="nc" id="L161">            columnInserted.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L163">    }</span>
+
+    public void columnsRemoved(org.apache.pivot.wtk.TablePane arg0, int arg1, org.apache.pivot.collections.Sequence&lt;TablePane.Column&gt; arg2) {
+<span class="nc bnc" id="L166" title="All 2 branches missed.">        if (columnsRemoved != null) {</span>
+<span class="nc" id="L167">            columnsRemoved.call(arg0, arg1, arg2);</span>
+        }
+<span class="nc" id="L169">    }</span>
+
+    public void columnWidthChanged(org.apache.pivot.wtk.TablePane.Column arg0, int arg1, boolean arg2) {
+<span class="nc bnc" id="L172" title="All 2 branches missed.">        if (columnWidthChanged != null) {</span>
+<span class="nc" id="L173">            columnWidthChanged.call(arg0, arg1, arg2);</span>
+        }
+<span class="nc" id="L175">    }</span>
+
+    public void columnHighlightedChanged(org.apache.pivot.wtk.TablePane.Column arg0) {
+<span class="nc bnc" id="L178" title="All 2 branches missed.">        if (columnHighlightedChanged != null) {</span>
+<span class="nc" id="L179">            columnHighlightedChanged.call(arg0);</span>
+        }
+<span class="nc" id="L181">    }</span>
+
+    public void rowsRemoved(org.apache.pivot.wtk.TablePane arg0, int arg1, org.apache.pivot.collections.Sequence&lt;TablePane.Row&gt; arg2) {
+<span class="nc bnc" id="L184" title="All 2 branches missed.">        if (rowsRemoved != null) {</span>
+<span class="nc" id="L185">            rowsRemoved.call(arg0, arg1, arg2);</span>
+        }
+<span class="nc" id="L187">    }</span>
+
+    public void rowInserted(org.apache.pivot.wtk.TablePane arg0, int arg1) {
+<span class="nc bnc" id="L190" title="All 2 branches missed.">        if (rowInserted != null) {</span>
+<span class="nc" id="L191">            rowInserted.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L193">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

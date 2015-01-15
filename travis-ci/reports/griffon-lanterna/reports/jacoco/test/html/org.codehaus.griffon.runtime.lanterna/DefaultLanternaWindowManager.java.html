@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DefaultLanternaWindowManager.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-lanterna</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.lanterna</a> &gt; <span class="el_source">DefaultLanternaWindowManager.java</span></div><h1>DefaultLanternaWindowManager.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.lanterna;
+
+import com.googlecode.lanterna.gui.Window;
+import com.googlecode.lanterna.gui.listener.WindowAdapter;
+import griffon.core.ApplicationEvent;
+import griffon.core.GriffonApplication;
+import griffon.core.env.ApplicationPhase;
+import griffon.lanterna.LanternaWindowDisplayHandler;
+import griffon.lanterna.LanternaWindowManager;
+import org.codehaus.griffon.runtime.core.view.AbstractWindowManager;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import static java.util.Arrays.asList;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public class DefaultLanternaWindowManager extends AbstractWindowManager&lt;Window&gt; implements LanternaWindowManager {
+<span class="nc" id="L39">    private final WindowHelper windowHelper = new WindowHelper();</span>
+
+    @Inject
+    @Nonnull
+    public DefaultLanternaWindowManager(@Nonnull GriffonApplication application, @Nonnull @Named(&quot;windowDisplayHandler&quot;) LanternaWindowDisplayHandler windowDisplayHandler) {
+<span class="nc" id="L44">        super(application, windowDisplayHandler);</span>
+<span class="nc" id="L45">        requireNonNull(application.getEventRouter(), &quot;Argument 'application.eventRouter' must not be null&quot;);</span>
+<span class="nc" id="L46">    }</span>
+
+    @Override
+    protected void doAttach(@Nonnull Window window) {
+<span class="nc" id="L50">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="nc" id="L51">        window.addWindowListener(windowHelper);</span>
+<span class="nc" id="L52">    }</span>
+
+    @Override
+    protected void doDetach(@Nonnull Window window) {
+<span class="nc" id="L56">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="nc" id="L57">    }</span>
+
+    @Override
+    protected boolean isWindowVisible(@Nonnull Window window) {
+<span class="nc" id="L61">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="nc" id="L62">        return true;</span>
+    }
+
+    public void handleClose(@Nonnull Window widget) {
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        if (getApplication().getPhase() == ApplicationPhase.SHUTDOWN) {</span>
+<span class="nc" id="L67">            return;</span>
+        }
+
+<span class="nc" id="L70">        int visibleWindows = getWindows().size();</span>
+<span class="nc bnc" id="L71" title="All 4 branches missed.">        if (visibleWindows &lt;= 1 &amp;&amp; isAutoShutdown()) {</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">            if (!getApplication().shutdown())</span>
+<span class="nc" id="L73">                show(widget);</span>
+        }
+<span class="nc" id="L75">    }</span>
+
+    /**
+     * WindowAdapter that optionally invokes hide() when the window is about to be closed.
+     *
+     * @author Andres Almiray
+     */
+<span class="nc" id="L82">    private class WindowHelper extends WindowAdapter {</span>
+        @Override
+        public void onWindowClosed(@Nonnull Window window) {
+<span class="nc" id="L85">            super.onWindowClosed(window);</span>
+<span class="nc" id="L86">            event(ApplicationEvent.WINDOW_HIDDEN, asList(window));</span>
+<span class="nc" id="L87">            handleClose(window);</span>
+<span class="nc" id="L88">        }</span>
+
+        @Override
+        public void onWindowShown(Window window) {
+<span class="nc" id="L92">            super.onWindowShown(window);</span>
+<span class="nc" id="L93">            event(ApplicationEvent.WINDOW_SHOWN, asList(window));</span>
+<span class="nc" id="L94">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

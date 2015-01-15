@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>LanternaGriffonControllerAction.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-lanterna-groovy</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.lanterna.controller</a> &gt; <span class="el_source">LanternaGriffonControllerAction.java</span></div><h1>LanternaGriffonControllerAction.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.lanterna.controller;
+
+import griffon.core.artifact.GriffonController;
+import griffon.core.controller.ActionManager;
+import griffon.core.threading.UIThreadManager;
+import griffon.lanterna.support.LanternaAction;
+import org.codehaus.griffon.runtime.core.controller.AbstractAction;
+
+import javax.annotation.Nonnull;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ */
+public class LanternaGriffonControllerAction extends AbstractAction {
+    private final LanternaAction toolkitAction;
+
+    public LanternaGriffonControllerAction(final @Nonnull UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
+<span class="fc" id="L37">        super(actionManager, controller, actionName);</span>
+<span class="fc" id="L38">        requireNonNull(uiThreadManager, &quot;Argument 'uiThreadManager' must not be null&quot;);</span>
+
+<span class="fc" id="L40">        toolkitAction = new LanternaAction(new Runnable() {</span>
+            @Override
+            public void run() {
+<span class="nc" id="L43">                actionManager.invokeAction(controller, actionName);</span>
+<span class="nc" id="L44">            }</span>
+        });
+<span class="fc" id="L46">        addPropertyChangeListener(new PropertyChangeListener() {</span>
+            public void propertyChange(final PropertyChangeEvent evt) {
+<span class="fc" id="L48">                uiThreadManager.runInsideUIAsync(new Runnable() {</span>
+                    public void run() {
+<span class="fc" id="L50">                        toolkitAction.setName(String.valueOf(evt.getNewValue()));</span>
+<span class="fc" id="L51">                    }</span>
+                });
+<span class="fc" id="L53">            }</span>
+        });
+<span class="fc" id="L55">    }</span>
+
+    @Nonnull
+    public Object getToolkitAction() {
+<span class="nc" id="L59">        return toolkitAction;</span>
+    }
+
+    protected void doExecute(Object... args) {
+<span class="nc" id="L63">        toolkitAction.doAction();</span>
+<span class="nc" id="L64">    }</span>
+
+    @Override
+    protected void doInitialize() {
+<span class="fc" id="L68">        toolkitAction.setName(getName());</span>
+<span class="fc" id="L69">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

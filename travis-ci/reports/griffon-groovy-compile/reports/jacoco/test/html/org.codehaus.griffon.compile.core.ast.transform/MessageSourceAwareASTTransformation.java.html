@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>MessageSourceAwareASTTransformation.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-groovy-compile</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.compile.core.ast.transform</a> &gt; <span class="el_source">MessageSourceAwareASTTransformation.java</span></div><h1>MessageSourceAwareASTTransformation.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.compile.core.ast.transform;
+
+import griffon.core.i18n.MessageSource;
+import griffon.transform.MessageSourceAware;
+import org.codehaus.griffon.compile.core.AnnotationHandler;
+import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
+import org.codehaus.griffon.compile.core.MessageSourceAwareConstants;
+import org.codehaus.groovy.ast.ASTNode;
+import org.codehaus.groovy.ast.AnnotatedNode;
+import org.codehaus.groovy.ast.AnnotationNode;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.expr.ConstantExpression;
+import org.codehaus.groovy.ast.expr.Expression;
+import org.codehaus.groovy.control.CompilePhase;
+import org.codehaus.groovy.control.SourceUnit;
+import org.codehaus.groovy.transform.GroovyASTTransformation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+
+import static griffon.util.GriffonNameUtils.isBlank;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectInterface;
+
+/**
+ * Handles generation of code for the {@code @MessageSourceAware} annotation.
+ *
+ * @author Andres Almiray
+ */
+@AnnotationHandlerFor(MessageSourceAware.class)
+@GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
+<span class="fc" id="L47">public class MessageSourceAwareASTTransformation extends AbstractASTTransformation implements MessageSourceAwareConstants, AnnotationHandler {</span>
+<span class="fc" id="L48">    private static final Logger LOG = LoggerFactory.getLogger(MessageSourceAwareASTTransformation.class);</span>
+<span class="fc" id="L49">    private static final ClassNode MESSAGE_SOURCE_CNODE = makeClassSafe(MessageSource.class);</span>
+<span class="fc" id="L50">    private static final ClassNode MESSAGE_SOURCE_AWARE_CNODE = makeClassSafe(MessageSourceAware.class);</span>
+
+    /**
+     * Convenience method to see if an annotated node is {@code @MessageSourceAware}.
+     *
+     * @param node the node to check
+     * @return true if the node is an event publisher
+     */
+    public static boolean hasMessageSourceAwareAnnotation(AnnotatedNode node) {
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        for (AnnotationNode annotation : node.getAnnotations()) {</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">            if (MESSAGE_SOURCE_AWARE_CNODE.equals(annotation.getClassNode())) {</span>
+<span class="nc" id="L61">                return true;</span>
+            }
+<span class="nc" id="L63">        }</span>
+<span class="nc" id="L64">        return false;</span>
+    }
+
+    /**
+     * Handles the bulk of the processing, mostly delegating to other methods.
+     *
+     * @param nodes  the ast nodes
+     * @param source the source unit for the nodes
+     */
+    public void visit(ASTNode[] nodes, SourceUnit source) {
+<span class="fc" id="L74">        checkNodesForAnnotationAndType(nodes[0], nodes[1]);</span>
+<span class="fc" id="L75">        addMessageSourceIfNeeded(source, (AnnotationNode) nodes[0], (ClassNode) nodes[1]);</span>
+<span class="fc" id="L76">    }</span>
+
+    public static void addMessageSourceIfNeeded(SourceUnit source, AnnotationNode annotationNode, ClassNode classNode) {
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">        if (needsDelegate(classNode, source, METHODS, &quot;MessageSourceAware&quot;, MESSAGE_SOURCE_TYPE)) {</span>
+<span class="fc" id="L80">            LOG.debug(&quot;Injecting {} into {}&quot;, MESSAGE_SOURCE_TYPE, classNode.getName());</span>
+<span class="fc" id="L81">            ConstantExpression value = (ConstantExpression) annotationNode.getMember(&quot;value&quot;);</span>
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">            String beanName = value != null ? value.getText() : null;</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">            beanName = isBlank(beanName) ? &quot;applicationMessageSource&quot; : beanName;</span>
+<span class="fc" id="L84">            apply(classNode, beanName);</span>
+        }
+<span class="fc" id="L86">    }</span>
+
+    /**
+     * Adds the necessary field and methods to support resource locating.
+     *
+     * @param declaringClass the class to which we add the support field and methods
+     */
+    public static void apply(@Nonnull ClassNode declaringClass, @Nonnull String beanName) {
+<span class="fc" id="L94">        injectInterface(declaringClass, MESSAGE_SOURCE_CNODE);</span>
+<span class="fc" id="L95">        Expression messageSource = injectedField(declaringClass, MESSAGE_SOURCE_CNODE, &quot;this$&quot; + MESSAGE_SOURCE_PROPERTY, beanName);</span>
+<span class="fc" id="L96">        addDelegateMethods(declaringClass, MESSAGE_SOURCE_CNODE, messageSource);</span>
+<span class="fc" id="L97">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

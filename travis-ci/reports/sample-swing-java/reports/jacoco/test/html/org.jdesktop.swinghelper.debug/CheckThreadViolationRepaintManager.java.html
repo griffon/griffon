@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>CheckThreadViolationRepaintManager.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-java</a> &gt; <a href="index.source.html" class="el_package">org.jdesktop.swinghelper.debug</a> &gt; <span class="el_source">CheckThreadViolationRepaintManager.java</span></div><h1>CheckThreadViolationRepaintManager.java</h1><pre class="source lang-java linenums">/*
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+package org.jdesktop.swinghelper.debug;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.JComponent;
+import javax.swing.RepaintManager;
+import javax.swing.SwingUtilities;
+import java.applet.Applet;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.Window;
+import java.lang.ref.WeakReference;
+
+import static griffon.core.GriffonExceptionHandler.sanitize;
+
+
+/**
+ * &lt;p&gt;This class is used to detect Event Dispatch Thread rule violations&lt;br&gt;
+ * See &lt;a href=&quot;http://java.sun.com/docs/books/tutorial/uiswing/misc/threads.html&quot;&gt;How to Use Threads&lt;/a&gt;
+ * for more info&lt;/p&gt;
+ * &lt;p/&gt;
+ * &lt;p&gt;This is a modification of original idea of Scott Delap&lt;br&gt;
+ * Initial version of ThreadCheckingRepaintManager can be found here&lt;br&gt;
+ * &lt;a href=&quot;http://www.clientjava.com/blog/2004/08/20/1093059428000.html&quot;&gt;Easily Find Swing Threading Mistakes&lt;/a&gt;
+ * &lt;/p&gt;
+ * &lt;p/&gt;
+ * &lt;p&gt;Links&lt;/ul&gt;
+ * &lt;li&gt;https://swinghelper.dev.java.net&lt;/li&gt;
+ * &lt;li&gt;http://weblogs.java.net/blog/alexfromsun/archive/2006/02/debugging_swing.html&lt;/li&gt;
+ * &lt;/ul&gt;&lt;/p&gt;
+ *
+ * @author Scott Delap
+ * @author Alexander Potochkin
+ * @author Andres Almiray
+ */
+public class CheckThreadViolationRepaintManager extends RepaintManager {
+<span class="nc" id="L56">    private static final Logger LOG = LoggerFactory.getLogger(CheckThreadViolationRepaintManager.class);</span>
+    // it is recommended to pass the complete check  
+<span class="nc" id="L58">    private boolean completeCheck = true;</span>
+    private WeakReference&lt;JComponent&gt; lastComponent;
+    private final RepaintManager delegate;
+
+    public CheckThreadViolationRepaintManager() {
+<span class="nc" id="L63">        this(new RepaintManager());</span>
+<span class="nc" id="L64">    }</span>
+
+<span class="nc" id="L66">    public CheckThreadViolationRepaintManager(RepaintManager delegate) {</span>
+<span class="nc bnc" id="L67" title="All 4 branches missed.">        if (delegate == null || delegate instanceof CheckThreadViolationRepaintManager) {</span>
+<span class="nc" id="L68">            throw new IllegalArgumentException();</span>
+        }
+<span class="nc" id="L70">        this.delegate = delegate;</span>
+<span class="nc" id="L71">    }</span>
+
+    public boolean isCompleteCheck() {
+<span class="nc" id="L74">        return completeCheck;</span>
+    }
+
+    public void setCompleteCheck(boolean completeCheck) {
+<span class="nc" id="L78">        this.completeCheck = completeCheck;</span>
+<span class="nc" id="L79">    }</span>
+
+    public synchronized void addInvalidComponent(JComponent component) {
+<span class="nc" id="L82">        checkThreadViolations(component);</span>
+<span class="nc" id="L83">        delegate.addInvalidComponent(component);</span>
+<span class="nc" id="L84">    }</span>
+
+    public void addDirtyRegion(JComponent component, int x, int y, int w, int h) {
+<span class="nc" id="L87">        checkThreadViolations(component);</span>
+<span class="nc" id="L88">        delegate.addDirtyRegion(component, x, y, w, h);</span>
+<span class="nc" id="L89">    }</span>
+
+    private void checkThreadViolations(JComponent c) {
+<span class="nc bnc" id="L92" title="All 6 branches missed.">        if (!SwingUtilities.isEventDispatchThread() &amp;&amp; (completeCheck || c.isShowing())) {</span>
+<span class="nc" id="L93">            boolean repaint = false;</span>
+<span class="nc" id="L94">            boolean fromSwing = false;</span>
+<span class="nc" id="L95">            boolean imageUpdate = false;</span>
+<span class="nc" id="L96">            StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">            for (StackTraceElement st : stackTrace) {</span>
+<span class="nc bnc" id="L98" title="All 4 branches missed.">                if (repaint &amp;&amp; st.getClassName().startsWith(&quot;javax.swing.&quot;) &amp;&amp;</span>
+                    // for details see
+                    // https://swinghelper.dev.java.net/issues/show_bug.cgi?id=1
+<span class="nc bnc" id="L101" title="All 2 branches missed.">                    !st.getClassName().startsWith(&quot;javax.swing.SwingWorker&quot;)) {</span>
+<span class="nc" id="L102">                    fromSwing = true;</span>
+                }
+<span class="nc bnc" id="L104" title="All 4 branches missed.">                if (repaint &amp;&amp; &quot;imageUpdate&quot;.equals(st.getMethodName())) {</span>
+<span class="nc" id="L105">                    imageUpdate = true;</span>
+                }
+<span class="nc bnc" id="L107" title="All 2 branches missed.">                if (&quot;repaint&quot;.equals(st.getMethodName())) {</span>
+<span class="nc" id="L108">                    repaint = true;</span>
+<span class="nc" id="L109">                    fromSwing = false;</span>
+                }
+            }
+<span class="nc bnc" id="L112" title="All 2 branches missed.">            if (imageUpdate) {</span>
+                //assuming it is java.awt.image.ImageObserver.imageUpdate(...)
+                //image was asynchronously updated, that's ok
+<span class="nc" id="L115">                return;</span>
+            }
+<span class="nc bnc" id="L117" title="All 4 branches missed.">            if (repaint &amp;&amp; !fromSwing) {</span>
+                //no problems here, since repaint() is thread safe
+<span class="nc" id="L119">                return;</span>
+            }
+            //ignore the last processed component
+<span class="nc bnc" id="L122" title="All 4 branches missed.">            if (lastComponent != null &amp;&amp; c == lastComponent.get()) {</span>
+<span class="nc" id="L123">                return;</span>
+            }
+<span class="nc" id="L125">            lastComponent = new WeakReference&lt;&gt;(c);</span>
+<span class="nc" id="L126">            violationFound(c, stackTrace);</span>
+        }
+<span class="nc" id="L128">    }</span>
+
+    protected void violationFound(JComponent c, StackTraceElement[] stackTrace) {
+<span class="nc" id="L131">        stackTrace = sanitize(stackTrace);</span>
+<span class="nc" id="L132">        StringBuilder sb = new StringBuilder(&quot;EDT violation detected&quot;).append('\n');</span>
+<span class="nc" id="L133">        sb.append(c).append('\n');</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">        for (StackTraceElement st : stackTrace) {</span>
+<span class="nc" id="L135">            sb.append(&quot;\tat &quot;).append(st).append('\n');</span>
+        }
+<span class="nc bnc" id="L137" title="All 2 branches missed.">        if (LOG.isWarnEnabled()) {</span>
+<span class="nc" id="L138">            LOG.warn(sb.toString());</span>
+        }
+<span class="nc" id="L140">    }</span>
+
+
+    // -- delegate methods
+
+    public static RepaintManager currentManager(Component component) {
+<span class="nc" id="L146">        return RepaintManager.currentManager(component);</span>
+    }
+
+    public static RepaintManager currentManager(JComponent jComponent) {
+<span class="nc" id="L150">        return RepaintManager.currentManager(jComponent);</span>
+    }
+
+    @Override
+    public Rectangle getDirtyRegion(JComponent jComponent) {
+<span class="nc" id="L155">        return delegate.getDirtyRegion(jComponent);</span>
+    }
+
+    @Override
+    public Dimension getDoubleBufferMaximumSize() {
+<span class="nc" id="L160">        return delegate.getDoubleBufferMaximumSize();</span>
+    }
+
+    @Override
+    public Image getOffscreenBuffer(Component component, int i, int i1) {
+<span class="nc" id="L165">        return delegate.getOffscreenBuffer(component, i, i1);</span>
+    }
+
+    @Override
+    public Image getVolatileOffscreenBuffer(Component component, int i, int i1) {
+<span class="nc" id="L170">        return delegate.getVolatileOffscreenBuffer(component, i, i1);</span>
+    }
+
+    @Override
+    public boolean isCompletelyDirty(JComponent jComponent) {
+<span class="nc" id="L175">        return delegate.isCompletelyDirty(jComponent);</span>
+    }
+
+    @Override
+    public boolean isDoubleBufferingEnabled() {
+<span class="nc" id="L180">        return delegate.isDoubleBufferingEnabled();</span>
+    }
+
+    @Override
+    public void markCompletelyClean(JComponent jComponent) {
+<span class="nc" id="L185">        delegate.markCompletelyClean(jComponent);</span>
+<span class="nc" id="L186">    }</span>
+
+    @Override
+    public void markCompletelyDirty(JComponent jComponent) {
+<span class="nc" id="L190">        delegate.markCompletelyDirty(jComponent);</span>
+<span class="nc" id="L191">    }</span>
+
+    @Override
+    public void paintDirtyRegions() {
+<span class="nc" id="L195">        delegate.paintDirtyRegions();</span>
+<span class="nc" id="L196">    }</span>
+
+    @Override
+    public void removeInvalidComponent(JComponent jComponent) {
+<span class="nc" id="L200">        delegate.removeInvalidComponent(jComponent);</span>
+<span class="nc" id="L201">    }</span>
+
+    public static void setCurrentManager(RepaintManager repaintManager) {
+<span class="nc" id="L204">        RepaintManager.setCurrentManager(repaintManager);</span>
+<span class="nc" id="L205">    }</span>
+
+    @Override
+    public void setDoubleBufferingEnabled(boolean b) {
+<span class="nc" id="L209">        delegate.setDoubleBufferingEnabled(b);</span>
+<span class="nc" id="L210">    }</span>
+
+    @Override
+    public void setDoubleBufferMaximumSize(Dimension dimension) {
+<span class="nc" id="L214">        delegate.setDoubleBufferMaximumSize(dimension);</span>
+<span class="nc" id="L215">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L219">        return delegate.toString();</span>
+    }
+
+    @Override
+    public void validateInvalidComponents() {
+<span class="nc" id="L224">        delegate.validateInvalidComponents();</span>
+<span class="nc" id="L225">    }</span>
+
+    @Override
+    public void addDirtyRegion(Window window, int i, int i1, int i2, int i3) {
+<span class="nc" id="L229">        delegate.addDirtyRegion(window, i, i1, i2, i3);</span>
+<span class="nc" id="L230">    }</span>
+
+    @Override
+    public void addDirtyRegion(Applet applet, int i, int i1, int i2, int i3) {
+<span class="nc" id="L234">        delegate.addDirtyRegion(applet, i, i1, i2, i3);</span>
+<span class="nc" id="L235">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

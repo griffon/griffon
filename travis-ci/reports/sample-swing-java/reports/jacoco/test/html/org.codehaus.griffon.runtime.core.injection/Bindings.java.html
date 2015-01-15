@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Bindings.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-java</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core.injection</a> &gt; <span class="el_source">Bindings.java</span></div><h1>Bindings.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core.injection;
+
+import griffon.core.injection.Binding;
+import griffon.core.injection.InstanceBinding;
+import griffon.core.injection.ProviderBinding;
+import griffon.core.injection.ProviderTypeBinding;
+import griffon.core.injection.TargetBinding;
+import griffon.util.AnnotationUtils;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Provider;
+import javax.inject.Qualifier;
+import java.lang.annotation.Annotation;
+import java.util.List;
+
+import static griffon.util.AnnotationUtils.harvestQualifiers;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="nc" id="L39">public class Bindings {</span>
+    public static &lt;T&gt; AnnotatedBindingBuilder&lt;T&gt; bind(@Nonnull Class&lt;T&gt; clazz) {
+<span class="fc" id="L41">        requireNonNull(clazz, &quot;Argument 'class' must not be null&quot;);</span>
+<span class="fc" id="L42">        return new AnnotatedBindingBuilderImpl&lt;&gt;(clazz);</span>
+    }
+
+<span class="fc" id="L45">    private static abstract class SingletonBindingBuilderImpl&lt;T&gt; implements SingletonBindingBuilder&lt;T&gt; {</span>
+        protected boolean singleton;
+
+        @Override
+        public void asSingleton() {
+<span class="fc" id="L50">            singleton = true;</span>
+<span class="fc" id="L51">        }</span>
+    }
+
+<span class="fc" id="L54">    private abstract static class LinkedBindingBuilderImpl&lt;T&gt; extends SingletonBindingBuilderImpl&lt;T&gt; implements LinkedBindingBuilder&lt;T&gt; {</span>
+        protected Class&lt;? extends T&gt; target;
+        protected T instance;
+        protected Provider&lt;T&gt; provider;
+        protected Class&lt;? extends Provider&lt;T&gt;&gt; providerType;
+
+        @Nonnull
+        @Override
+        public SingletonBindingBuilder&lt;T&gt; to(@Nonnull Class&lt;? extends T&gt; target) {
+<span class="fc" id="L63">            this.target = requireNonNull(target, &quot;Argument 'target' must not be null&quot;);</span>
+<span class="fc" id="L64">            return this;</span>
+        }
+
+        @Override
+        public void toInstance(@Nonnull T instance) {
+<span class="fc" id="L69">            this.instance = requireNonNull(instance, &quot;Argument 'instance' must not be null&quot;);</span>
+<span class="fc" id="L70">        }</span>
+
+        @Nonnull
+        @Override
+        public SingletonBindingBuilder&lt;T&gt; toProvider(@Nonnull Provider&lt;T&gt; provider) {
+<span class="fc" id="L75">            this.provider = requireNonNull(provider, &quot;Argument 'provider' must not be null&quot;);</span>
+<span class="fc" id="L76">            return this;</span>
+        }
+
+        @Nonnull
+        @Override
+        public SingletonBindingBuilder&lt;T&gt; toProvider(@Nonnull Class&lt;? extends Provider&lt;T&gt;&gt; providerType) {
+<span class="fc" id="L82">            this.providerType = requireNonNull(providerType, &quot;Argument 'providerType' must not be null&quot;);</span>
+<span class="fc" id="L83">            return this;</span>
+        }
+    }
+
+    private static class AnnotatedBindingBuilderImpl&lt;T&gt; extends LinkedBindingBuilderImpl&lt;T&gt; implements AnnotatedBindingBuilder&lt;T&gt; {
+        private final Class&lt;T&gt; source;
+        private Annotation classifier;
+        private Class&lt;? extends Annotation&gt; classifierType;
+
+<span class="fc" id="L92">        private AnnotatedBindingBuilderImpl(@Nonnull Class&lt;T&gt; source) {</span>
+<span class="fc" id="L93">            this.source = requireNonNull(source, &quot;Argument 'source' must not be null&quot;);</span>
+<span class="fc" id="L94">        }</span>
+
+        @Nonnull
+        @Override
+        public Binding&lt;T&gt; getBinding() {
+<span class="fc bfc" id="L99" title="All 2 branches covered.">            if (instance != null) {</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">                return classifier != null ? new InstanceBindingImpl&lt;&gt;(source, classifier, instance) : new InstanceBindingImpl&lt;&gt;(source, classifierType, instance);</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">            } else if (providerType != null) {</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">                return classifier != null ? new ProviderTypeBindingImpl&lt;&gt;(source, providerType, classifier, singleton) : new ProviderTypeBindingImpl&lt;&gt;(source, providerType, classifierType, singleton);</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">            } else if (provider != null) {</span>
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">                return classifier != null ? new ProviderBindingImpl&lt;&gt;(source, provider, classifier, singleton) : new ProviderBindingImpl&lt;&gt;(source, provider, classifierType, singleton);</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">            } else if (target != null) {</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">                return classifier != null ? new TargetBindingImpl&lt;&gt;(source, target, classifier, singleton) : new TargetBindingImpl&lt;&gt;(source, target, classifierType, singleton);</span>
+            }
+
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">            return classifier != null ? new TargetBindingImpl&lt;&gt;(source, source, classifier, singleton) : new TargetBindingImpl&lt;&gt;(source, source, classifierType, singleton);</span>
+        }
+
+        @Nonnull
+        @Override
+        public LinkedBindingBuilder&lt;T&gt; withClassifier(@Nonnull Class&lt;? extends Annotation&gt; annotationType) {
+<span class="fc" id="L115">            requireNonNull(annotationType, &quot;Argument 'annotationType' must not be null&quot;);</span>
+<span class="fc" id="L116">            AnnotationUtils.requireAnnotation(annotationType, Qualifier.class);</span>
+<span class="fc" id="L117">            this.classifierType = annotationType;</span>
+<span class="fc" id="L118">            return this;</span>
+        }
+
+        @Nonnull
+        @Override
+        public LinkedBindingBuilder&lt;T&gt; withClassifier(@Nonnull Annotation annotation) {
+<span class="fc" id="L124">            requireNonNull(annotation, &quot;Argument 'annotation' must not be null&quot;);</span>
+<span class="fc" id="L125">            this.classifier = annotation;</span>
+<span class="fc" id="L126">            withClassifier(annotation.getClass());</span>
+<span class="fc" id="L127">            return this;</span>
+        }
+    }
+
+    private static abstract class AbstractBindingImpl&lt;T&gt; implements Binding&lt;T&gt; {
+        protected final Class&lt;T&gt; source;
+        protected final boolean singleton;
+        protected Annotation classifier;
+        protected Class&lt;? extends Annotation&gt; classifierType;
+
+<span class="fc" id="L137">        protected AbstractBindingImpl(@Nonnull Class&lt;T&gt; source, @Nonnull Annotation classifier, boolean singleton) {</span>
+<span class="fc" id="L138">            this.source = source;</span>
+<span class="fc" id="L139">            this.singleton = singleton;</span>
+<span class="fc" id="L140">            this.classifier = classifier;</span>
+<span class="fc" id="L141">            this.classifierType = classifier.getClass();</span>
+<span class="fc" id="L142">        }</span>
+
+<span class="fc" id="L144">        protected AbstractBindingImpl(@Nonnull Class&lt;T&gt; source, @Nonnull Class&lt;? extends Annotation&gt; classifierType, boolean singleton) {</span>
+<span class="fc" id="L145">            this.source = source;</span>
+<span class="fc" id="L146">            this.singleton = singleton;</span>
+<span class="fc" id="L147">            this.classifierType = classifierType;</span>
+<span class="fc" id="L148">        }</span>
+
+        @Nonnull
+        @Override
+        public Class&lt;T&gt; getSource() {
+<span class="fc" id="L153">            return source;</span>
+        }
+
+        @Nullable
+        @Override
+        public Class&lt;? extends Annotation&gt; getClassifierType() {
+<span class="fc" id="L159">            return classifierType;</span>
+        }
+
+        @Nullable
+        @Override
+        public Annotation getClassifier() {
+<span class="fc" id="L165">            return classifier;</span>
+        }
+
+        @Override
+        public boolean isSingleton() {
+<span class="fc" id="L170">            return singleton;</span>
+        }
+
+        protected void updateClassifier(Class&lt;?&gt; klass) {
+<span class="pc bpc" id="L174" title="1 of 2 branches missed.">            if (this.classifier == null) {</span>
+<span class="nc" id="L175">                List&lt;Annotation&gt; qualifiers = harvestQualifiers(klass);</span>
+<span class="nc bnc" id="L176" title="All 2 branches missed.">                if (!qualifiers.isEmpty()) {</span>
+<span class="nc" id="L177">                    this.classifier = qualifiers.get(0);</span>
+                }
+            }
+<span class="fc" id="L180">        }</span>
+
+        protected void updateClassifierType(Class&lt;?&gt; klass) {
+<span class="pc bpc" id="L183" title="1 of 2 branches missed.">            if (this.classifierType == null) {</span>
+<span class="fc" id="L184">                List&lt;Annotation&gt; qualifiers = harvestQualifiers(klass);</span>
+<span class="fc bfc" id="L185" title="All 2 branches covered.">                if (!qualifiers.isEmpty()) {</span>
+<span class="fc" id="L186">                    this.classifier = qualifiers.get(0);</span>
+                }
+            }
+<span class="fc" id="L189">        }</span>
+    }
+
+    private static class TargetBindingImpl&lt;T&gt; extends AbstractBindingImpl&lt;T&gt; implements TargetBinding&lt;T&gt; {
+        private final Class&lt;? extends T&gt; target;
+
+        private TargetBindingImpl(@Nonnull Class&lt;T&gt; source, @Nonnull Class&lt;? extends T&gt; target, @Nonnull Annotation classifier, boolean singleton) {
+<span class="fc" id="L196">            super(source, classifier, singleton);</span>
+<span class="fc" id="L197">            this.target = target;</span>
+<span class="fc" id="L198">            updateClassifier(target);</span>
+<span class="fc" id="L199">        }</span>
+
+        private TargetBindingImpl(@Nonnull Class&lt;T&gt; source, @Nonnull Class&lt;? extends T&gt; target, @Nonnull Class&lt;? extends Annotation&gt; classifierType, boolean singleton) {
+<span class="fc" id="L202">            super(source, classifierType, singleton);</span>
+<span class="fc" id="L203">            this.target = target;</span>
+<span class="fc" id="L204">            updateClassifierType(target);</span>
+<span class="fc" id="L205">        }</span>
+
+        @Nonnull
+        @Override
+        public Class&lt;? extends T&gt; getTarget() {
+<span class="fc" id="L210">            return target;</span>
+        }
+
+        @Override
+        public String toString() {
+<span class="fc" id="L215">            final StringBuilder sb = new StringBuilder(&quot;TargetBinding[&quot;);</span>
+<span class="fc" id="L216">            sb.append(&quot;source=&quot;).append(source.getName());</span>
+<span class="fc bfc" id="L217" title="All 2 branches covered.">            if (classifier != null) {</span>
+<span class="fc" id="L218">                sb.append(&quot;, classifier=&quot;).append(classifier);</span>
+<span class="pc bpc" id="L219" title="1 of 2 branches missed.">            } else if (classifierType != null) {</span>
+<span class="nc" id="L220">                sb.append(&quot;, classifierType=&quot;).append(classifierType.getName());</span>
+            }
+<span class="fc" id="L222">            sb.append(&quot;, target=&quot;).append(target.getName());</span>
+<span class="fc" id="L223">            sb.append(&quot;, singleton=&quot;).append(singleton);</span>
+<span class="fc" id="L224">            sb.append(']');</span>
+<span class="fc" id="L225">            return sb.toString();</span>
+        }
+    }
+
+    private static class InstanceBindingImpl&lt;T&gt; extends AbstractBindingImpl&lt;T&gt; implements InstanceBinding&lt;T&gt; {
+        private final T instance;
+
+        protected InstanceBindingImpl(@Nonnull Class&lt;T&gt; source, @Nonnull Annotation classifier, @Nonnull T instance) {
+<span class="fc" id="L233">            super(source, classifier, true);</span>
+<span class="fc" id="L234">            this.instance = instance;</span>
+<span class="fc" id="L235">            updateClassifier(instance.getClass());</span>
+<span class="fc" id="L236">        }</span>
+
+        protected InstanceBindingImpl(@Nonnull Class&lt;T&gt; source, @Nonnull Class&lt;? extends Annotation&gt; classifierType, @Nonnull T instance) {
+<span class="fc" id="L239">            super(source, classifierType, true);</span>
+<span class="fc" id="L240">            this.instance = instance;</span>
+<span class="fc" id="L241">            updateClassifierType(instance.getClass());</span>
+<span class="fc" id="L242">        }</span>
+
+        @Nonnull
+        @Override
+        public T getInstance() {
+<span class="fc" id="L247">            return instance;</span>
+        }
+
+        @Override
+        public String toString() {
+<span class="fc" id="L252">            final StringBuilder sb = new StringBuilder(&quot;InstanceBinding[&quot;);</span>
+<span class="fc" id="L253">            sb.append(&quot;source=&quot;).append(source.getName());</span>
+<span class="fc bfc" id="L254" title="All 2 branches covered.">            if (classifier != null) {</span>
+<span class="fc" id="L255">                sb.append(&quot;, classifier=&quot;).append(classifier);</span>
+<span class="pc bpc" id="L256" title="1 of 2 branches missed.">            } else if (classifierType != null) {</span>
+<span class="nc" id="L257">                sb.append(&quot;, classifierType=&quot;).append(classifierType.getName());</span>
+            }
+<span class="fc" id="L259">            sb.append(&quot;, instance=&quot;).append(instance);</span>
+<span class="fc" id="L260">            sb.append(&quot;, singleton=&quot;).append(singleton);</span>
+<span class="fc" id="L261">            sb.append(']');</span>
+<span class="fc" id="L262">            return sb.toString();</span>
+        }
+    }
+
+    private static class ProviderBindingImpl&lt;T&gt; extends AbstractBindingImpl&lt;T&gt; implements ProviderBinding&lt;T&gt; {
+        private final Provider&lt;T&gt; provider;
+
+        private ProviderBindingImpl(@Nonnull Class&lt;T&gt; source, @Nonnull Provider&lt;T&gt; provider, @Nonnull Annotation classifier, boolean singleton) {
+<span class="fc" id="L270">            super(source, classifier, singleton);</span>
+<span class="fc" id="L271">            this.provider = provider;</span>
+<span class="fc" id="L272">            updateClassifier(provider.getClass());</span>
+<span class="fc" id="L273">        }</span>
+
+
+        private ProviderBindingImpl(@Nonnull Class&lt;T&gt; source, @Nonnull Provider&lt;T&gt; provider, @Nonnull Class&lt;? extends Annotation&gt; classifierType, boolean singleton) {
+<span class="nc" id="L277">            super(source, classifierType, singleton);</span>
+<span class="nc" id="L278">            this.provider = provider;</span>
+<span class="nc" id="L279">            updateClassifierType(provider.getClass());</span>
+<span class="nc" id="L280">        }</span>
+
+        @Nonnull
+        @Override
+        public Provider&lt;T&gt; getProvider() {
+<span class="fc" id="L285">            return provider;</span>
+        }
+
+        @Override
+        public String toString() {
+<span class="fc" id="L290">            final StringBuilder sb = new StringBuilder(&quot;ProviderBinding[&quot;);</span>
+<span class="fc" id="L291">            sb.append(&quot;source=&quot;).append(source.getName());</span>
+<span class="pc bpc" id="L292" title="1 of 2 branches missed.">            if (classifier != null) {</span>
+<span class="fc" id="L293">                sb.append(&quot;, classifier=&quot;).append(classifier);</span>
+<span class="nc bnc" id="L294" title="All 2 branches missed.">            } else if (classifierType != null) {</span>
+<span class="nc" id="L295">                sb.append(&quot;, classifierType=&quot;).append(classifierType.getName());</span>
+            }
+<span class="fc" id="L297">            sb.append(&quot;, provider=&quot;).append(provider);</span>
+<span class="fc" id="L298">            sb.append(&quot;, singleton=&quot;).append(singleton);</span>
+<span class="fc" id="L299">            sb.append(']');</span>
+<span class="fc" id="L300">            return sb.toString();</span>
+        }
+    }
+
+<span class="nc" id="L304">    private static class ProviderTypeBindingImpl&lt;T&gt; extends AbstractBindingImpl&lt;T&gt; implements ProviderTypeBinding&lt;T&gt; {</span>
+        private final Class&lt;? extends Provider&lt;T&gt;&gt; providerType;
+
+        private ProviderTypeBindingImpl(@Nonnull Class&lt;T&gt; source, @Nonnull Class&lt;? extends Provider&lt;T&gt;&gt; providerType, @Nonnull Annotation classifier, boolean singleton) {
+<span class="fc" id="L308">            super(source, classifier, singleton);</span>
+<span class="fc" id="L309">            this.providerType = providerType;</span>
+<span class="fc" id="L310">            updateClassifier(providerType);</span>
+<span class="fc" id="L311">        }</span>
+
+
+        private ProviderTypeBindingImpl(@Nonnull Class&lt;T&gt; source, @Nonnull Class&lt;? extends Provider&lt;T&gt;&gt; providerType, @Nonnull Class&lt;? extends Annotation&gt; classifierType, boolean singleton) {
+<span class="fc" id="L315">            super(source, classifierType, singleton);</span>
+<span class="fc" id="L316">            this.providerType = providerType;</span>
+<span class="fc" id="L317">            updateClassifierType(providerType);</span>
+<span class="fc" id="L318">        }</span>
+
+        @Nonnull
+        @Override
+        public Class&lt;? extends Provider&lt;T&gt;&gt; getProviderType() {
+<span class="fc" id="L323">            return providerType;</span>
+        }
+
+        @Override
+        public String toString() {
+<span class="fc" id="L328">            final StringBuilder sb = new StringBuilder(&quot;ProviderTypeBinding[&quot;);</span>
+<span class="fc" id="L329">            sb.append(&quot;source=&quot;).append(source.getName());</span>
+<span class="fc bfc" id="L330" title="All 2 branches covered.">            if (classifier != null) {</span>
+<span class="fc" id="L331">                sb.append(&quot;, classifier=&quot;).append(classifier);</span>
+<span class="pc bpc" id="L332" title="1 of 2 branches missed.">            } else if (classifierType != null) {</span>
+<span class="nc" id="L333">                sb.append(&quot;, classifierType=&quot;).append(classifierType.getName());</span>
+            }
+<span class="fc" id="L335">            sb.append(&quot;, providerType=&quot;).append(providerType);</span>
+<span class="fc" id="L336">            sb.append(&quot;, singleton=&quot;).append(singleton);</span>
+<span class="fc" id="L337">            sb.append(']');</span>
+<span class="fc" id="L338">            return sb.toString();</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

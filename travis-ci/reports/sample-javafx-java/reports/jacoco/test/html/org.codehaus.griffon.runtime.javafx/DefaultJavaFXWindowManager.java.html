@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DefaultJavaFXWindowManager.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-java</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.javafx</a> &gt; <span class="el_source">DefaultJavaFXWindowManager.java</span></div><h1>DefaultJavaFXWindowManager.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.javafx;
+
+import griffon.core.ApplicationEvent;
+import griffon.core.GriffonApplication;
+import griffon.core.env.ApplicationPhase;
+import griffon.javafx.JavaFXWindowDisplayHandler;
+import griffon.javafx.JavaFXWindowManager;
+import javafx.event.EventHandler;
+import javafx.stage.Window;
+import javafx.stage.WindowEvent;
+import org.codehaus.griffon.runtime.core.view.AbstractWindowManager;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import static java.util.Arrays.asList;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public class DefaultJavaFXWindowManager extends AbstractWindowManager&lt;Window&gt; implements JavaFXWindowManager {
+<span class="fc" id="L40">    private final OnWindowHidingHelper onWindowHiding = new OnWindowHidingHelper();</span>
+<span class="fc" id="L41">    private final OnWindowShownHelper onWindowShown = new OnWindowShownHelper();</span>
+<span class="fc" id="L42">    private final OnWindowHiddenHelper onWindowHidden = new OnWindowHiddenHelper();</span>
+
+    @Inject
+    @Nonnull
+    public DefaultJavaFXWindowManager(@Nonnull GriffonApplication application, @Nonnull @Named(&quot;windowDisplayHandler&quot;) JavaFXWindowDisplayHandler windowDisplayHandler) {
+<span class="fc" id="L47">        super(application, windowDisplayHandler);</span>
+<span class="fc" id="L48">        requireNonNull(application.getEventRouter(), &quot;Argument 'application.eventRouter' must not be null&quot;);</span>
+<span class="fc" id="L49">    }</span>
+
+    @Override
+    protected void doAttach(@Nonnull Window window) {
+<span class="nc" id="L53">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="nc" id="L54">        window.setOnHiding(onWindowHiding);</span>
+<span class="nc" id="L55">        window.setOnShown(onWindowShown);</span>
+<span class="nc" id="L56">        window.setOnHidden(onWindowHidden);</span>
+<span class="nc" id="L57">    }</span>
+
+    @Override
+    protected void doDetach(@Nonnull Window window) {
+<span class="nc" id="L61">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="nc" id="L62">        window.setOnHiding(null);</span>
+<span class="nc" id="L63">        window.setOnShown(null);</span>
+<span class="nc" id="L64">        window.setOnHidden(null);</span>
+<span class="nc" id="L65">    }</span>
+
+    @Override
+    protected boolean isWindowVisible(@Nonnull Window window) {
+<span class="nc" id="L69">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="nc" id="L70">        return window.isShowing();</span>
+    }
+
+    public void handleClose(@Nonnull Window widget) {
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (getApplication().getPhase() == ApplicationPhase.SHUTDOWN) {</span>
+<span class="nc" id="L75">            return;</span>
+        }
+<span class="nc" id="L77">        int visibleWindows = 0;</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        for (Window window : getWindows()) {</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">            if (window.isShowing()) {</span>
+<span class="nc" id="L80">                visibleWindows++;</span>
+            }
+<span class="nc" id="L82">        }</span>
+
+<span class="nc bnc" id="L84" title="All 4 branches missed.">        if (visibleWindows &lt;= 1 &amp;&amp; isAutoShutdown()) {</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">            if (!getApplication().shutdown())</span>
+<span class="nc" id="L86">                show(widget);</span>
+        }
+<span class="nc" id="L88">    }</span>
+
+    /**
+     * WindowAdapter that invokes hide() when the window is about to be closed.
+     *
+     * @author Andres Almiray
+     */
+<span class="fc" id="L95">    private class OnWindowHidingHelper implements EventHandler&lt;WindowEvent&gt; {</span>
+        public void handle(WindowEvent event) {
+<span class="nc" id="L97">            hide((Window) event.getSource());</span>
+<span class="nc" id="L98">            handleClose((Window) event.getSource());</span>
+<span class="nc" id="L99">        }</span>
+    }
+
+    /**
+     * Listener that triggers application events when a window is shown.
+     *
+     * @author Andres Almiray
+     */
+<span class="fc" id="L107">    private class OnWindowShownHelper implements EventHandler&lt;WindowEvent&gt; {</span>
+        /**
+         * Triggers a &lt;tt&gt;WindowShown&lt;/tt&gt; event with the window as sole argument
+         */
+        public void handle(WindowEvent windowEvent) {
+<span class="nc" id="L112">            event(ApplicationEvent.WINDOW_SHOWN, asList(windowEvent.getSource()));</span>
+<span class="nc" id="L113">        }</span>
+    }
+
+    /**
+     * Listener that triggers application events when a window is hidden.
+     *
+     * @author Andres Almiray
+     */
+<span class="fc" id="L121">    private class OnWindowHiddenHelper implements EventHandler&lt;WindowEvent&gt; {</span>
+        /**
+         * Triggers a &lt;tt&gt;WindowHidden&lt;/tt&gt; event with the window as sole argument
+         */
+        public void handle(WindowEvent windowEvent) {
+<span class="nc" id="L126">            event(ApplicationEvent.WINDOW_HIDDEN, asList(windowEvent.getSource()));</span>
+<span class="nc" id="L127">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

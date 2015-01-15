@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PivotUtils.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.support</a> &gt; <span class="el_source">PivotUtils.java</span></div><h1>PivotUtils.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.support;
+
+import griffon.exceptions.InstanceMethodInvocationException;
+import org.apache.pivot.wtk.Component;
+import org.apache.pivot.wtk.Container;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import static griffon.util.GriffonClassUtils.invokeExactInstanceMethod;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="nc" id="L33">public class PivotUtils {</span>
+    /**
+     * Searches a component by name in a particular component hierarchy.&lt;p&gt;
+     * A component must have a value for its &lt;tt&gt;name&lt;/tt&gt; property if it's
+     * to be found with this method.&lt;br/&gt;
+     * This method performs a depth-first search.
+     *
+     * @param name the value of the component's &lt;tt&gt;name&lt;/tt&gt; property
+     * @param root the root of the component hierarchy from where searching
+     *             searching should start
+     * @return the component reference if found, null otherwise
+     */
+    @Nullable
+    public static Component findComponentByName(@Nonnull String name, @Nonnull Container root) {
+<span class="fc" id="L47">        requireNonNull(root, &quot;Argument 'root' must not be null&quot;);</span>
+<span class="fc" id="L48">        requireNonBlank(name, &quot;Argument 'name' must not be blank&quot;);</span>
+<span class="pc bpc" id="L49" title="1 of 2 branches missed.">        if (name.equals(root.getName())) {</span>
+<span class="nc" id="L50">            return root;</span>
+        }
+
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        for (Component comp : root) {</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">            if (name.equals(comp.getName())) {</span>
+<span class="fc" id="L55">                return comp;</span>
+            }
+<span class="fc bfc" id="L57" title="All 2 branches covered.">            if (comp instanceof Container) {</span>
+<span class="fc" id="L58">                Component found = findComponentByName(name, (Container) comp);</span>
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">                if (found != null) {</span>
+<span class="fc" id="L60">                    return found;</span>
+                }
+            }
+<span class="fc" id="L63">        }</span>
+
+        // finally attempt calling getContent()
+        try {
+<span class="nc" id="L67">            Component component = (Component) invokeExactInstanceMethod(root, &quot;getContent&quot;);</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">            if (component != null) {</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">                if (name.equals(component.getName())) {</span>
+<span class="nc" id="L70">                    return component;</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">                } else if (component instanceof Container) {</span>
+<span class="nc" id="L72">                    return findComponentByName(name, (Container) component);</span>
+                }
+            }
+<span class="nc" id="L75">        } catch (InstanceMethodInvocationException imie) {</span>
+            // ignore
+<span class="nc" id="L77">        }</span>
+
+<span class="nc" id="L79">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

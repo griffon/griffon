@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>CompositeMessageSource.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-core</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core.i18n</a> &gt; <span class="el_source">CompositeMessageSource.java</span></div><h1>CompositeMessageSource.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core.i18n;
+
+import griffon.core.i18n.MessageSource;
+import griffon.core.i18n.NoSuchMessageException;
+import griffon.util.CompositeResourceBundle;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import static griffon.util.GriffonClassUtils.requireState;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public class CompositeMessageSource extends AbstractMessageSource {
+    private final MessageSource[] messageSources;
+
+    public CompositeMessageSource(@Nonnull Collection&lt;MessageSource&gt; messageSources) {
+<span class="fc" id="L41">        this(toMessageSourceArray(messageSources));</span>
+<span class="fc" id="L42">    }</span>
+
+<span class="fc" id="L44">    public CompositeMessageSource(@Nonnull MessageSource[] messageSources) {</span>
+<span class="fc" id="L45">        this.messageSources = requireNonNull(messageSources, &quot;Argument 'messageSources' must not be null&quot;);</span>
+<span class="fc" id="L46">    }</span>
+
+    private static MessageSource[] toMessageSourceArray(@Nonnull Collection&lt;MessageSource&gt; messageSources) {
+<span class="fc" id="L49">        requireNonNull(messageSources, &quot;Argument 'messageSources' must not be null&quot;);</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        requireState(!messageSources.isEmpty(), &quot;Argument 'messageSources' must not be empty&quot;);</span>
+<span class="fc" id="L51">        return messageSources.toArray(new MessageSource[messageSources.size()]);</span>
+    }
+
+    @Nonnull
+    @Override
+    protected Object doResolveMessageValue(@Nonnull String key, @Nonnull Locale locale) throws NoSuchMessageException {
+<span class="fc" id="L57">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="fc" id="L58">        requireNonNull(locale, ERROR_LOCALE_NULL);</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        for (MessageSource messageSource : messageSources) {</span>
+            try {
+<span class="fc" id="L61">                return messageSource.getMessage(key, locale);</span>
+<span class="fc" id="L62">            } catch (NoSuchMessageException nsme) {</span>
+                // ignore
+            }
+        }
+<span class="fc" id="L66">        throw new NoSuchMessageException(key, locale);</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceBundle asResourceBundle() {
+<span class="fc" id="L72">        List&lt;ResourceBundle&gt; bundles = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        for (MessageSource messageSource : messageSources) {</span>
+<span class="fc" id="L74">            bundles.add(messageSource.asResourceBundle());</span>
+        }
+<span class="fc" id="L76">        return new CompositeResourceBundle(bundles);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

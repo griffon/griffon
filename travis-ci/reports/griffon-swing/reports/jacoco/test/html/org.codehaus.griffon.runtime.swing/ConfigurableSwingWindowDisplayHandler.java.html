@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ConfigurableSwingWindowDisplayHandler.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-swing</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.swing</a> &gt; <span class="el_source">ConfigurableSwingWindowDisplayHandler.java</span></div><h1>ConfigurableSwingWindowDisplayHandler.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.swing;
+
+import griffon.core.CallableWithArgs;
+import griffon.core.GriffonApplication;
+import griffon.core.view.WindowDisplayHandler;
+import griffon.exceptions.InstanceNotFoundException;
+import griffon.swing.SwingWindowDisplayHandler;
+import org.codehaus.griffon.runtime.core.view.ConfigurableWindowDisplayHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.swing.JInternalFrame;
+import java.awt.Window;
+import java.util.Map;
+
+import static griffon.util.AnnotationUtils.named;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public class ConfigurableSwingWindowDisplayHandler extends ConfigurableWindowDisplayHandler&lt;Window&gt; implements SwingWindowDisplayHandler {
+<span class="nc" id="L43">    private static final Logger LOG = LoggerFactory.getLogger(ConfigurableSwingWindowDisplayHandler.class);</span>
+
+    @Inject
+    public ConfigurableSwingWindowDisplayHandler(@Nonnull GriffonApplication application, @Nonnull @Named(&quot;defaultWindowDisplayHandler&quot;) SwingWindowDisplayHandler delegateWindowsDisplayHandler) {
+<span class="nc" id="L47">        super(application, delegateWindowsDisplayHandler);</span>
+<span class="nc" id="L48">    }</span>
+
+    public void show(@Nonnull String name, @Nonnull JInternalFrame window) {
+<span class="nc" id="L51">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc" id="L52">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+
+<span class="nc" id="L54">        Map&lt;String, Object&gt; options = windowBlock(name);</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        if (!options.isEmpty()) {</span>
+<span class="nc" id="L56">            Object handler = options.get(&quot;show&quot;);</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">            if (canBeRun(handler)) {</span>
+<span class="nc" id="L58">                LOG.trace(&quot;Showing {} with show: handler&quot;, name);</span>
+<span class="nc" id="L59">                run(handler, name, window);</span>
+<span class="nc" id="L60">                return;</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">            } else if (options.get(&quot;handler&quot;) instanceof SwingWindowDisplayHandler) {</span>
+<span class="nc" id="L62">                LOG.trace(&quot;Showing {} with handler: handler&quot;, name);</span>
+<span class="nc" id="L63">                ((SwingWindowDisplayHandler) options.get(&quot;handler&quot;)).show(name, window);</span>
+<span class="nc" id="L64">                return;</span>
+            }
+        }
+
+<span class="nc" id="L68">        SwingWindowDisplayHandler handler = resolveSwingWindowDisplayHandler(name);</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        if (handler != null) {</span>
+<span class="nc" id="L70">            LOG.trace(&quot;Showing {} with injected handler&quot;, name);</span>
+<span class="nc" id="L71">            handler.show(name, window);</span>
+<span class="nc" id="L72">            return;</span>
+        }
+
+<span class="nc" id="L75">        options = windowManagerBlock();</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        if (!options.isEmpty()) {</span>
+<span class="nc" id="L77">            Object defaultShow = options.get(&quot;defaultShow&quot;);</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">            if (canBeRun(defaultShow)) {</span>
+<span class="nc" id="L79">                LOG.trace(&quot;Showing {} with defaultShow: handler&quot;, name);</span>
+<span class="nc" id="L80">                run(defaultShow, name, window);</span>
+<span class="nc" id="L81">                return;</span>
+            }
+        }
+
+<span class="nc" id="L85">        LOG.trace(&quot;Showing {} with default handler&quot;, name);</span>
+<span class="nc" id="L86">        fetchDefaultWindowDisplayHandler().show(name, window);</span>
+<span class="nc" id="L87">    }</span>
+
+    public void hide(@Nonnull String name, @Nonnull JInternalFrame window) {
+<span class="nc" id="L90">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc" id="L91">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+
+<span class="nc" id="L93">        Map&lt;String, Object&gt; options = windowBlock(name);</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (!options.isEmpty()) {</span>
+<span class="nc" id="L95">            Object handler = options.get(&quot;hide&quot;);</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">            if (canBeRun(handler)) {</span>
+<span class="nc" id="L97">                LOG.trace(&quot;Hiding {} with hide: handler&quot;, name);</span>
+<span class="nc" id="L98">                run(handler, name, window);</span>
+<span class="nc" id="L99">                return;</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">            } else if (options.get(&quot;handler&quot;) instanceof SwingWindowDisplayHandler) {</span>
+<span class="nc" id="L101">                LOG.trace(&quot;Hiding {} with handler: handler&quot;, name);</span>
+<span class="nc" id="L102">                ((SwingWindowDisplayHandler) options.get(&quot;handler&quot;)).hide(name, window);</span>
+<span class="nc" id="L103">                return;</span>
+            }
+        }
+
+<span class="nc" id="L107">        SwingWindowDisplayHandler handler = resolveSwingWindowDisplayHandler(name);</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        if (handler != null) {</span>
+<span class="nc" id="L109">            LOG.trace(&quot;Hiding {} with injected handler&quot;, name);</span>
+<span class="nc" id="L110">            handler.hide(name, window);</span>
+<span class="nc" id="L111">            return;</span>
+        }
+
+<span class="nc" id="L114">        options = windowManagerBlock();</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">        if (!options.isEmpty()) {</span>
+<span class="nc" id="L116">            Object defaultHide = options.get(&quot;defaultHide&quot;);</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">            if (canBeRun(defaultHide)) {</span>
+<span class="nc" id="L118">                LOG.trace(&quot;Hiding {} with defaultHide: handler&quot;, name);</span>
+<span class="nc" id="L119">                run(defaultHide, name, window);</span>
+<span class="nc" id="L120">                return;</span>
+            }
+        }
+
+<span class="nc" id="L124">        LOG.trace(&quot;Hiding {} with default handler&quot;, name);</span>
+<span class="nc" id="L125">        fetchDefaultWindowDisplayHandler().hide(name, window);</span>
+<span class="nc" id="L126">    }</span>
+
+    protected void run(@Nonnull Object handler, @Nonnull String name, @Nonnull JInternalFrame window) {
+<span class="nc bnc" id="L129" title="All 2 branches missed.">        if (handler instanceof CallableWithArgs) {</span>
+<span class="nc" id="L130">            ((CallableWithArgs&lt;?&gt;) handler).call(name, window);</span>
+        }
+<span class="nc" id="L132">    }</span>
+
+    @Nonnull
+    protected SwingWindowDisplayHandler fetchDefaultWindowDisplayHandler() {
+<span class="nc" id="L136">        Object handler = windowManagerBlock().get(&quot;defaultHandler&quot;);</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">        return (SwingWindowDisplayHandler) (handler instanceof SwingWindowDisplayHandler ? handler : getDelegateWindowsDisplayHandler());</span>
+    }
+
+    @Override
+    protected boolean handleShowByInjectedHandler(@Nonnull String name, @Nonnull Window window) {
+        try {
+<span class="nc" id="L143">            SwingWindowDisplayHandler handler = getApplication().getInjector()</span>
+<span class="nc" id="L144">                .getInstance(SwingWindowDisplayHandler.class, named(name));</span>
+<span class="nc" id="L145">            LOG.trace(&quot;Showing {} with injected handler&quot;, name);</span>
+<span class="nc" id="L146">            handler.show(name, window);</span>
+<span class="nc" id="L147">            return true;</span>
+<span class="nc" id="L148">        } catch (InstanceNotFoundException infe) {</span>
+<span class="nc" id="L149">            return super.handleShowByInjectedHandler(name, window);</span>
+        }
+    }
+
+    @Override
+    protected boolean handleHideByInjectedHandler(@Nonnull String name, @Nonnull Window window) {
+        try {
+<span class="nc" id="L156">            SwingWindowDisplayHandler handler = getApplication().getInjector()</span>
+<span class="nc" id="L157">                .getInstance(SwingWindowDisplayHandler.class, named(name));</span>
+<span class="nc" id="L158">            LOG.trace(&quot;Hiding {} with injected handler&quot;, name);</span>
+<span class="nc" id="L159">            handler.hide(name, window);</span>
+<span class="nc" id="L160">            return true;</span>
+<span class="nc" id="L161">        } catch (InstanceNotFoundException infe) {</span>
+<span class="nc" id="L162">            return super.handleHideByInjectedHandler(name, window);</span>
+        }
+    }
+
+    protected SwingWindowDisplayHandler resolveSwingWindowDisplayHandler(@Nonnull String name) {
+        try {
+<span class="nc" id="L168">            return getApplication().getInjector()</span>
+<span class="nc" id="L169">                .getInstance(SwingWindowDisplayHandler.class, named(name));</span>
+<span class="nc" id="L170">        } catch (InstanceNotFoundException infe1) {</span>
+            try {
+<span class="nc" id="L172">                WindowDisplayHandler handler = getApplication().getInjector()</span>
+<span class="nc" id="L173">                    .getInstance(WindowDisplayHandler.class, named(name));</span>
+<span class="nc bnc" id="L174" title="All 2 branches missed.">                if (handler instanceof SwingWindowDisplayHandler) {</span>
+<span class="nc" id="L175">                    return ((SwingWindowDisplayHandler) handler);</span>
+                }
+<span class="nc" id="L177">            } catch (InstanceNotFoundException infe2) {</span>
+                // ignore
+<span class="nc" id="L179">            }</span>
+        }
+
+<span class="nc" id="L182">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

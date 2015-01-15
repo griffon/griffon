@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ConfigReader.groovy</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.util</a> &gt; <span class="el_source">ConfigReader.groovy</span></div><h1>ConfigReader.groovy</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.util
+
+import griffon.core.ApplicationClassLoader
+import griffon.core.env.Environment
+import griffon.core.env.GriffonEnvironment
+import griffon.core.env.Metadata
+import org.codehaus.groovy.runtime.InvokerHelper
+
+import javax.annotation.Nonnull
+import javax.inject.Inject
+
+import static griffon.util.GriffonNameUtils.isBlank
+
+/**
+ * Updated version of {@code groovy.util.ConfigSlurper}.&lt;br/&gt;
+ * New features include:
+ * &lt;ul&gt;
+ *     &lt;li&gt;Ability to specify multiple conditional blocks, not just &quot;environments&quot;.&lt;/li&gt;
+ * &lt;/ul&gt;
+ *
+ * @author Graeme Rocher (Groovy 1.5)
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+@SuppressWarnings(&quot;rawtypes&quot;)
+class ConfigReader {
+    private static final ENVIRONMENTS_METHOD = 'environments'
+    GroovyClassLoader classLoader
+    private Map bindingVars = [:]
+
+<span class="fc" id="L46">    private Stack&lt;String&gt; currentConditionalBlock = new Stack&lt;String&gt;()</span>
+    private final Map&lt;String, String&gt; conditionValues = [:]
+<span class="fc" id="L48">    private final Stack&lt;Map&lt;String, ConfigObject&gt;&gt; conditionalBlocks = new Stack&lt;Map&lt;String, ConfigObject&gt;&gt;()</span>
+
+    static class Provider implements javax.inject.Provider&lt;ConfigReader&gt; {
+        @Inject ApplicationClassLoader applicationClassLoader
+
+        @Override
+        ConfigReader get() {
+<span class="fc" id="L55">            ConfigReader configReader = new ConfigReader(applicationClassLoader)</span>
+<span class="fc" id="L56">            configReader.setBinding(CollectionUtils.map()</span>
+<span class="fc" id="L57">                .e(&quot;userHome&quot;, System.getProperty(&quot;user.home&quot;))</span>
+<span class="fc" id="L58">                .e(&quot;appName&quot;, Metadata.getCurrent().getApplicationName())</span>
+<span class="fc" id="L59">                .e(&quot;appVersion&quot;, Metadata.getCurrent().getApplicationVersion())</span>
+<span class="fc" id="L60">                .e(&quot;griffonVersion&quot;, GriffonEnvironment.getGriffonVersion()));</span>
+<span class="fc" id="L61">            configReader.registerConditionalBlock(&quot;environments&quot;, Environment.getCurrent().getName())</span>
+<span class="fc" id="L62">            configReader.registerConditionalBlock(&quot;projects&quot;, Metadata.getCurrent().getApplicationName())</span>
+<span class="fc" id="L63">            configReader.registerConditionalBlock(&quot;platforms&quot;, GriffonApplicationUtils.getPlatform())</span>
+<span class="pc" id="L64">            configReader</span>
+        }
+    }
+
+    @Inject
+    ConfigReader(@Nonnull ApplicationClassLoader applicationClassLoader) {
+<span class="fc" id="L70">        classLoader = new GroovyClassLoader(applicationClassLoader.get())</span>
+    }
+
+    void registerConditionalBlock(String blockName, String blockValue) {
+<span class="pc bpc" id="L74" title="2 of 4 branches missed.">        if (!isBlank(blockName)) {</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">            if (isBlank(blockValue)) {</span>
+<span class="nc" id="L76">                conditionValues.remove(blockName)</span>
+            } else {
+<span class="fc" id="L78">                conditionValues[blockName] = blockValue</span>
+            }
+        }
+    }
+
+    Map&lt;String, String&gt; getConditionalBlockValues() {
+<span class="nc" id="L84">        Collections.unmodifiableMap(conditionValues)</span>
+    }
+
+    String getEnvironment() {
+<span class="nc" id="L88">        return conditionValues[ENVIRONMENTS_METHOD]</span>
+    }
+
+    void setEnvironment(String environment) {
+<span class="fc" id="L92">        conditionValues[ENVIRONMENTS_METHOD] = environment</span>
+    }
+
+    void setBinding(Map vars) {
+<span class="fc" id="L96">        this.bindingVars = vars</span>
+    }
+
+    /**
+     * Parses a ConfigObject instances from an instance of java.util.Properties
+     * @param The java.util.Properties instance
+     */
+    ConfigObject parse(Properties properties) {
+<span class="fc" id="L104">        ConfigObject config = new ConfigObject()</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        for (key in properties.keySet()) {</span>
+<span class="fc" id="L106">            def tokens = key.split(/\./)</span>
+
+<span class="fc" id="L108">            def current = config</span>
+<span class="fc" id="L109">            def last</span>
+<span class="fc" id="L110">            def lastToken</span>
+<span class="fc" id="L111">            def foundBase = false</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">            for (token in tokens) {</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">                if (foundBase) {</span>
+                    // handle not properly nested tokens by ignoring
+                    // hierarchy below this point
+<span class="fc" id="L116">                    lastToken += &quot;.&quot; + token</span>
+<span class="fc" id="L117">                    current = last</span>
+                } else {
+<span class="fc" id="L119">                    last = current</span>
+<span class="fc" id="L120">                    lastToken = token</span>
+<span class="fc" id="L121">                    current = current.&quot;${token}&quot;</span>
+<span class="fc bfc" id="L122" title="All 4 branches covered.">                    if (!(current instanceof ConfigObject)) foundBase = true</span>
+                }
+            }
+
+<span class="pc bpc" id="L126" title="1 of 2 branches missed.">            if (current instanceof ConfigObject) {</span>
+<span class="fc bfc" id="L127" title="All 2 branches covered.">                if (last[lastToken]) {</span>
+<span class="fc" id="L128">                    def flattened = last.flatten()</span>
+<span class="fc" id="L129">                    last.clear()</span>
+<span class="pc" id="L130">                    flattened.each { k2, v2 -&gt; last[k2] = v2 }</span>
+<span class="fc" id="L131">                    last[lastToken] = properties.get(key)</span>
+                } else {
+<span class="fc" id="L133">                    last[lastToken] = properties.get(key)</span>
+                }
+            }
+<span class="fc" id="L136">            current = config</span>
+        }
+<span class="pc" id="L138">        return config</span>
+    }
+    /**
+     * Parse the given script as a string and return the configuration object
+     *
+     * @see ConfigReader#parse(groovy.lang.Script)
+     */
+    ConfigObject parse(String script) {
+<span class="pc" id="L146">        return parse(classLoader.parseClass(script))</span>
+    }
+
+    /**
+     * Create a new instance of the given script class and parse a configuration object from it
+     *
+     * @see ConfigReader#parse(groovy.lang.Script)
+     */
+    ConfigObject parse(Class&lt;? extends Script&gt; scriptClass) {
+<span class="pc" id="L155">        return parse(scriptClass.newInstance())</span>
+    }
+
+    /**
+     * Parse the given script into a configuration object (a Map)
+     * @param script The script to parse
+     * @return A Map of maps that can be navigating with dot de-referencing syntax to obtain configuration entries
+     */
+    ConfigObject parse(Script script) {
+<span class="pc" id="L164">        return parse(script, null)</span>
+    }
+
+    /**
+     * Parses a Script represented by the given URL into a ConfigObject
+     *
+     * @param scriptLocation The location of the script to parse
+     * @return The ConfigObject instance
+     */
+    ConfigObject parse(URL scriptLocation) {
+<span class="pc" id="L174">        return parse(classLoader.parseClass(scriptLocation.text).newInstance(), scriptLocation)</span>
+    }
+
+    /**
+     * Parses the passed groovy.lang.Script instance using the second argument to allow the ConfigObject
+     * to retain an reference to the original location other Groovy script
+     *
+     * @param script The groovy.lang.Script instance
+     * @param location The original location of the Script as a URL
+     * @return The ConfigObject instance
+     */
+    ConfigObject parse(Script script, URL location) {
+<span class="fc bfc" id="L186" title="All 2 branches covered.">        def config = location ? new ConfigObject(location) : new ConfigObject()</span>
+<span class="fc" id="L187">        GroovySystem.metaClassRegistry.removeMetaClass(script.class)</span>
+<span class="fc" id="L188">        def mc = script.class.metaClass</span>
+<span class="fc" id="L189">        def prefix = &quot;&quot;</span>
+<span class="fc" id="L190">        LinkedList stack = new LinkedList()</span>
+<span class="fc" id="L191">        stack &lt;&lt; [config: config, scope: [:]]</span>
+<span class="fc" id="L192">        def pushStack = { co -&gt;</span>
+<span class="pc" id="L193">            stack &lt;&lt; [config: co, scope: stack.last.scope.clone()]</span>
+        }
+<span class="fc" id="L195">        def assignName = { name, co -&gt;</span>
+<span class="fc" id="L196">            def current = stack.last</span>
+            /*
+            def cfg = current.config
+            if (cfg instanceof ConfigObject) {
+                String[] keys = name.split(/\./)
+                for (int i = 0; i &lt; keys.length - 1; i++) {
+                    String key = keys[i]
+                    if (!cfg.containsKey(key)) {
+                        cfg[key] = new ConfigObject()
+                    }
+                    cfg = cfg.get(key)
+                }
+                name = keys[keys.length - 1]
+            }
+            cfg[name] = co
+            */
+<span class="fc" id="L212">            current.config[name] = co</span>
+<span class="pc" id="L213">            current.scope[name] = co</span>
+        }
+<span class="fc" id="L215">        mc.getProperty = { String name -&gt;</span>
+<span class="fc" id="L216">            def current = stack.last</span>
+<span class="fc" id="L217">            def result</span>
+<span class="fc bfc" id="L218" title="All 2 branches covered.">            if (current.config.get(name)) {</span>
+<span class="fc" id="L219">                result = current.config.get(name)</span>
+<span class="fc bfc" id="L220" title="All 2 branches covered.">            } else if (current.scope[name]) {</span>
+<span class="fc" id="L221">                result = current.scope[name]</span>
+            } else {
+                try {
+<span class="pc" id="L224">                    result = InvokerHelper.getProperty(this, name)</span>
+                } catch (GroovyRuntimeException e) {
+<span class="fc" id="L226">                    result = new ConfigObject()</span>
+<span class="pc" id="L227">                    assignName.call(name, result)</span>
+                }
+            }
+<span class="pc" id="L230">            result</span>
+        }
+
+<span class="fc" id="L233">        ConfigObject overrides = new ConfigObject()</span>
+<span class="fc" id="L234">        mc.invokeMethod = { String name, args -&gt;</span>
+<span class="fc" id="L235">            def result</span>
+<span class="pc bpc" id="L236" title="1 of 6 branches missed.">            if (args.length == 1 &amp;&amp; args[0] instanceof Closure) {</span>
+<span class="fc bfc" id="L237" title="All 2 branches covered.">                if (name in conditionValues.keySet()) {</span>
+                    try {
+<span class="fc" id="L239">                        currentConditionalBlock.push(name)</span>
+<span class="fc" id="L240">                        conditionalBlocks.push([:])</span>
+<span class="fc" id="L241">                        args[0].call()</span>
+                    } finally {
+<span class="pc" id="L243">                        currentConditionalBlock.pop()</span>
+<span class="pc bpc" id="L244" title="2 of 4 branches missed.">                        for (entry in conditionalBlocks.pop().entrySet()) {</span>
+<span class="pc" id="L245">                            def c = stack.last.config</span>
+<span class="pc bpc" id="L246" title="2 of 4 branches missed.">                            (c != config ? c : overrides).merge(entry.value)</span>
+                        }
+                    }
+<span class="fc bfc" id="L249" title="All 2 branches covered.">                } else if (currentConditionalBlock.size() &gt; 0) {</span>
+<span class="fc" id="L250">                    String conditionalBlockKey = currentConditionalBlock.peek()</span>
+<span class="fc bfc" id="L251" title="All 2 branches covered.">                    if (name == conditionValues[conditionalBlockKey]) {</span>
+<span class="fc" id="L252">                        def co = new ConfigObject()</span>
+<span class="fc" id="L253">                        conditionalBlocks.peek()[conditionalBlockKey] = co</span>
+
+<span class="fc" id="L255">                        pushStack.call(co)</span>
+                        try {
+<span class="fc" id="L257">                            currentConditionalBlock.pop()</span>
+<span class="fc" id="L258">                            args[0].call()</span>
+                        } finally {
+<span class="pc" id="L260">                            currentConditionalBlock.push(conditionalBlockKey)</span>
+                        }
+<span class="fc" id="L262">                        stack.pop()</span>
+                    }
+                } else {
+<span class="fc" id="L265">                    def co</span>
+<span class="fc bfc" id="L266" title="All 2 branches covered.">                    if (stack.last.config.get(name) instanceof ConfigObject) {</span>
+<span class="fc" id="L267">                        co = stack.last.config.get(name)</span>
+                    } else {
+<span class="fc" id="L269">                        co = new ConfigObject()</span>
+                    }
+
+<span class="fc" id="L272">                    assignName.call(name, co)</span>
+<span class="fc" id="L273">                    pushStack.call(co)</span>
+<span class="fc" id="L274">                    args[0].call()</span>
+<span class="fc" id="L275">                    stack.pop()</span>
+                }
+<span class="pc bpc" id="L277" title="1 of 6 branches missed.">            } else if (args.length == 2 &amp;&amp; args[1] instanceof Closure) {</span>
+                try {
+<span class="fc" id="L279">                    prefix = name + '.'</span>
+<span class="fc" id="L280">                    assignName.call(name, args[0])</span>
+<span class="fc" id="L281">                    args[1].call()</span>
+<span class="pc" id="L282">                } finally { prefix = &quot;&quot; }</span>
+            } else {
+<span class="fc" id="L284">                MetaMethod mm = mc.getMetaMethod(name, args)</span>
+<span class="pc bpc" id="L285" title="1 of 2 branches missed.">                if (mm) {</span>
+<span class="fc" id="L286">                    result = mm.invoke(delegate, args)</span>
+                } else {
+<span class="nc" id="L288">                    throw new MissingMethodException(name, getClass(), args)</span>
+                }
+            }
+<span class="pc" id="L291">            result</span>
+        }
+<span class="fc" id="L293">        script.metaClass = mc</span>
+
+<span class="fc" id="L295">        def setProperty = { String name, value -&gt;</span>
+<span class="pc" id="L296">            assignName.call(prefix + name, value)</span>
+        }
+<span class="fc" id="L298">        def binding = new ConfigBinding(setProperty)</span>
+<span class="fc bfc" id="L299" title="All 2 branches covered.">        if (this.bindingVars) {</span>
+<span class="fc" id="L300">            binding.getVariables().putAll(this.bindingVars)</span>
+        }
+<span class="fc" id="L302">        script.binding = binding</span>
+
+<span class="fc" id="L304">        script.run()</span>
+
+<span class="fc" id="L306">        config.merge(overrides)</span>
+
+<span class="pc" id="L308">        return config</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

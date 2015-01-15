@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>MenuFactory.groovy</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.builder.pivot.factory</a> &gt; <span class="el_source">MenuFactory.groovy</span></div><h1>MenuFactory.groovy</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.builder.pivot.factory
+
+import org.apache.pivot.wtk.Frame
+import org.apache.pivot.wtk.Menu
+import org.apache.pivot.wtk.MenuBar
+import org.apache.pivot.wtk.MenuButton
+import org.apache.pivot.wtk.MenuPopup
+
+/**
+ * @author Andres Almiray
+ */
+class MenuFactory extends ComponentFactory {
+    MenuFactory() {
+<span class="fc" id="L29">        super(Menu)</span>
+    }
+
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+<span class="nc bnc" id="L33" title="All 2 branches missed.">        if (value instanceof GString) value = value as String</span>
+<span class="nc bnc" id="L34" title="All 2 branches missed.">        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, beanClass)) {</span>
+<span class="nc" id="L35">            return value</span>
+        }
+<span class="nc bnc" id="L37" title="All 8 branches missed.">        if (value &amp;&amp; !attributes.containsKey('section')) attributes.section = value</span>
+<span class="nc bnc" id="L38" title="All 4 branches missed.">        if (!attributes.section) attributes.section = &quot;Menu&quot; + System.currentTimeMillis()</span>
+<span class="nc" id="L39">        builder.context.sectionName = attributes.section</span>
+<span class="nc" id="L40">        beanClass.newInstance()</span>
+    }
+
+    boolean onHandleNodeAttributes(FactoryBuilderSupport builder, Object node, Map attributes) {
+<span class="nc" id="L44">        def section = new Menu.Section()</span>
+<span class="nc" id="L45">        section.name = builder.context.section</span>
+<span class="nc" id="L46">        node.sections.add(section)</span>
+<span class="nc" id="L47">        return super.onHandleNodeAttributes(builder, node, attributes)</span>
+    }
+
+    void setParent(FactoryBuilderSupport builder, Object parent, Object node) {
+<span class="nc" id="L51">        switch (parent?.getClass()) {</span>
+<span class="nc bnc" id="L52" title="All 6 branches missed.">            case MenuButton:</span>
+            case MenuPopup:
+            case MenuBar.Item:
+<span class="nc" id="L55">                parent.setMenu(node)</span>
+<span class="nc" id="L56">                break</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">            case Menu:</span>
+<span class="nc" id="L58">                parent.sections.add(node.sections.remove(node.getSection(builder.context.sectionName)))</span>
+<span class="nc" id="L59">                break</span>
+        }
+    }
+}
+
+/**
+ * @author Andres Almiray
+ */
+class MenuItemFactory extends ComponentFactory {
+    MenuItemFactory() {
+<span class="fc" id="L69">        super(Menu.Item, false)</span>
+    }
+
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        if (value instanceof GString) value = value as String</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, beanClass)) {</span>
+<span class="nc" id="L75">            return value</span>
+        }
+<span class="nc bnc" id="L77" title="All 8 branches missed.">        if (value &amp;&amp; !attributes.containsKey('buttonData')) attributes.buttonData = value</span>
+<span class="nc" id="L78">        beanClass.newInstance()</span>
+    }
+
+    boolean onHandleNodeAttributes(FactoryBuilderSupport builder, Object node, Map attributes) {
+<span class="nc" id="L82">        def section = new Menu.Section()</span>
+<span class="nc" id="L83">        section.name = builder.context.section</span>
+<span class="nc" id="L84">        node.sections.add(section)</span>
+<span class="nc" id="L85">        return super.onHandleNodeAttributes(builder, node, attributes)</span>
+    }
+
+    void setParent(FactoryBuilderSupport builder, Object parent, Object node) {
+<span class="nc bnc" id="L89" title="All 4 branches missed.">        if (!(parent instanceof Menu)) return</span>
+<span class="nc" id="L90">        parent.sections[parent.sections.length - 1].add(node)</span>
+    }
+}
+
+/**
+ * @author Andres Almiray
+ */
+class MenuBarFactory extends ComponentFactory {
+    MenuBarFactory() {
+<span class="fc" id="L99">        super(MenuBar, false)</span>
+    }
+
+    void setParent(FactoryBuilderSupport builder, Object parent, Object node) {
+<span class="nc bnc" id="L103" title="All 4 branches missed.">        if (!(parent instanceof Frame)) return</span>
+<span class="nc" id="L104">        parent.setMenuBar(node)</span>
+    }
+}
+
+/**
+ * @author Andres Almiray
+ */
+class MenuBarItemFactory extends ComponentFactory {
+    MenuBarItemFactory() {
+<span class="fc" id="L113">        super(MenuBar.Item, false)</span>
+    }
+
+    void setParent(FactoryBuilderSupport builder, Object parent, Object node) {
+<span class="nc bnc" id="L117" title="All 4 branches missed.">        if (!(parent instanceof MenuBar)) return</span>
+<span class="nc" id="L118">        parent.items.add(node)</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

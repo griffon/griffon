@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GriffonASTUtils.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-groovy-compile</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.compile.core.ast</a> &gt; <span class="el_source">GriffonASTUtils.java</span></div><h1>GriffonASTUtils.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.compile.core.ast;
+
+import org.codehaus.groovy.ast.ClassHelper;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.FieldNode;
+import org.codehaus.groovy.ast.MethodNode;
+import org.codehaus.groovy.ast.Parameter;
+import org.codehaus.groovy.ast.PropertyNode;
+import org.codehaus.groovy.ast.expr.ArgumentListExpression;
+import org.codehaus.groovy.ast.expr.BinaryExpression;
+import org.codehaus.groovy.ast.expr.BooleanExpression;
+import org.codehaus.groovy.ast.expr.ClassExpression;
+import org.codehaus.groovy.ast.expr.ConstantExpression;
+import org.codehaus.groovy.ast.expr.ConstructorCallExpression;
+import org.codehaus.groovy.ast.expr.DeclarationExpression;
+import org.codehaus.groovy.ast.expr.Expression;
+import org.codehaus.groovy.ast.expr.FieldExpression;
+import org.codehaus.groovy.ast.expr.ListExpression;
+import org.codehaus.groovy.ast.expr.MapEntryExpression;
+import org.codehaus.groovy.ast.expr.MapExpression;
+import org.codehaus.groovy.ast.expr.MethodCallExpression;
+import org.codehaus.groovy.ast.expr.NotExpression;
+import org.codehaus.groovy.ast.expr.PropertyExpression;
+import org.codehaus.groovy.ast.expr.StaticMethodCallExpression;
+import org.codehaus.groovy.ast.expr.VariableExpression;
+import org.codehaus.groovy.ast.stmt.BlockStatement;
+import org.codehaus.groovy.ast.stmt.EmptyStatement;
+import org.codehaus.groovy.ast.stmt.ExpressionStatement;
+import org.codehaus.groovy.ast.stmt.IfStatement;
+import org.codehaus.groovy.ast.stmt.ReturnStatement;
+import org.codehaus.groovy.ast.stmt.Statement;
+import org.codehaus.groovy.runtime.MetaClassHelper;
+import org.codehaus.groovy.syntax.Token;
+import org.codehaus.groovy.syntax.Types;
+
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static griffon.util.GriffonNameUtils.getGetterName;
+import static griffon.util.GriffonNameUtils.isBlank;
+
+/**
+ * Helper methods for working with Groovy AST trees.
+ *
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="nc" id="L65">public class GriffonASTUtils {</span>
+<span class="fc" id="L66">    private static final String JAVA_LANG_OBJECT = Object.class.getName();</span>
+
+    /**
+     * Returns whether a classNode has the specified property or not
+     *
+     * @param classNode    The ClassNode
+     * @param propertyName The name of the property
+     * @return True if the property exists in the ClassNode
+     */
+    public static boolean hasProperty(ClassNode classNode, String propertyName) {
+<span class="pc bpc" id="L76" title="2 of 4 branches missed.">        if (classNode == null || isBlank(propertyName)) {</span>
+<span class="nc" id="L77">            return false;</span>
+        }
+
+<span class="fc" id="L80">        final MethodNode method = classNode.getMethod(getGetterName(propertyName), new Parameter[0]);</span>
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">        if (method != null) return true;</span>
+
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        for (PropertyNode pn : classNode.getProperties()) {</span>
+<span class="pc bpc" id="L84" title="2 of 4 branches missed.">            if (pn.getName().equals(propertyName) &amp;&amp; !pn.isPrivate()) {</span>
+<span class="fc" id="L85">                return true;</span>
+            }
+<span class="nc" id="L87">        }</span>
+
+<span class="fc" id="L89">        return false;</span>
+    }
+
+    public static boolean hasOrInheritsProperty(ClassNode classNode, String propertyName) {
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        if (hasProperty(classNode, propertyName)) {</span>
+<span class="fc" id="L94">            return true;</span>
+        }
+
+<span class="fc" id="L97">        ClassNode parent = classNode.getSuperClass();</span>
+<span class="pc bpc" id="L98" title="1 of 4 branches missed.">        while (parent != null &amp;&amp; !getFullName(parent).equals(JAVA_LANG_OBJECT)) {</span>
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">            if (hasProperty(parent, propertyName)) {</span>
+<span class="nc" id="L100">                return true;</span>
+            }
+<span class="fc" id="L102">            parent = parent.getSuperClass();</span>
+        }
+
+<span class="fc" id="L105">        return false;</span>
+    }
+
+    /**
+     * Tests whether the ClasNode implements the specified method name.
+     *
+     * @param classNode  The ClassNode
+     * @param methodName The method name
+     * @return True if it does implement the method
+     */
+    public static boolean implementsZeroArgMethod(ClassNode classNode, String methodName) {
+<span class="nc" id="L116">        MethodNode method = classNode.getDeclaredMethod(methodName, new Parameter[]{});</span>
+<span class="nc bnc" id="L117" title="All 8 branches missed.">        return method != null &amp;&amp; (method.isPublic() || method.isProtected()) &amp;&amp; !method.isAbstract();</span>
+    }
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public static boolean implementsOrInheritsZeroArgMethod(ClassNode classNode, String methodName, List&lt;?&gt; ignoreClasses) {
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        if (implementsZeroArgMethod(classNode, methodName)) {</span>
+<span class="nc" id="L123">            return true;</span>
+        }
+
+<span class="nc" id="L126">        ClassNode parent = classNode.getSuperClass();</span>
+<span class="nc bnc" id="L127" title="All 4 branches missed.">        while (parent != null &amp;&amp; !getFullName(parent).equals(JAVA_LANG_OBJECT)) {</span>
+<span class="nc bnc" id="L128" title="All 4 branches missed.">            if (!ignoreClasses.contains(parent) &amp;&amp; implementsZeroArgMethod(parent, methodName)) {</span>
+<span class="nc" id="L129">                return true;</span>
+            }
+<span class="nc" id="L131">            parent = parent.getSuperClass();</span>
+        }
+<span class="nc" id="L133">        return false;</span>
+    }
+
+    public static boolean implementsMethod(ClassNode classNode, MethodNode methodNode) {
+<span class="fc" id="L137">        MethodNode method = classNode.getDeclaredMethod(methodNode.getName(), methodNode.getParameters());</span>
+<span class="pc bpc" id="L138" title="1 of 4 branches missed.">        return method != null &amp;&amp; method.getModifiers() == methodNode.getModifiers();</span>
+    }
+
+    public static boolean implementsOrInheritsMethod(ClassNode classNode, MethodNode methodNode) {
+<span class="fc bfc" id="L142" title="All 2 branches covered.">        if (implementsMethod(classNode, methodNode)) {</span>
+<span class="fc" id="L143">            return true;</span>
+        }
+
+<span class="fc" id="L146">        ClassNode parent = classNode.getSuperClass();</span>
+<span class="pc bpc" id="L147" title="1 of 4 branches missed.">        while (parent != null &amp;&amp; !getFullName(parent).equals(JAVA_LANG_OBJECT)) {</span>
+<span class="pc bpc" id="L148" title="1 of 2 branches missed.">            if (implementsMethod(parent, methodNode)) {</span>
+<span class="nc" id="L149">                return true;</span>
+            }
+<span class="fc" id="L151">            parent = parent.getSuperClass();</span>
+        }
+<span class="fc" id="L153">        return false;</span>
+    }
+
+    public static void injectMethod(ClassNode classNode, MethodNode methodNode) {
+<span class="fc" id="L157">        injectMethod(classNode, methodNode, true);</span>
+<span class="fc" id="L158">    }</span>
+
+    public static void injectMethod(ClassNode classNode, MethodNode methodNode, boolean deep) {
+<span class="pc bpc" id="L161" title="1 of 2 branches missed.">        if (deep) {</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">            if (!implementsOrInheritsMethod(classNode, methodNode)) {</span>
+<span class="fc" id="L163">                getFurthestParent(classNode).addMethod(methodNode);</span>
+            }
+        } else {
+<span class="nc bnc" id="L166" title="All 2 branches missed.">            if (!implementsMethod(classNode, methodNode)) {</span>
+<span class="nc" id="L167">                classNode.addMethod(methodNode);</span>
+            }
+        }
+<span class="fc" id="L170">    }</span>
+
+    public static boolean hasField(ClassNode classNode, String name, int modifiers, ClassNode type) {
+<span class="fc" id="L173">        FieldNode fieldNode = classNode.getDeclaredField(name);</span>
+<span class="pc bpc" id="L174" title="1 of 4 branches missed.">        return fieldNode != null &amp;&amp; fieldNode.getModifiers() == modifiers &amp;&amp;</span>
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">            fieldNode.getType().equals(type);</span>
+    }
+
+    public static boolean hasOrInheritsField(ClassNode classNode, String name, int modifiers, ClassNode type) {
+<span class="fc bfc" id="L179" title="All 2 branches covered.">        if (hasField(classNode, name, modifiers, type)) {</span>
+<span class="fc" id="L180">            return true;</span>
+        }
+
+<span class="fc" id="L183">        ClassNode parent = classNode.getSuperClass();</span>
+<span class="pc bpc" id="L184" title="1 of 4 branches missed.">        while (parent != null &amp;&amp; !getFullName(parent).equals(JAVA_LANG_OBJECT)) {</span>
+<span class="pc bpc" id="L185" title="1 of 2 branches missed.">            if (hasField(parent, name, modifiers, type)) {</span>
+<span class="nc" id="L186">                return true;</span>
+            }
+<span class="fc" id="L188">            parent = parent.getSuperClass();</span>
+        }
+<span class="fc" id="L190">        return false;</span>
+    }
+
+    public static FieldNode injectField(ClassNode classNode, String name, int modifiers, ClassNode type, Object value) {
+<span class="nc" id="L194">        return injectField(classNode, name, modifiers, type, value, true);</span>
+    }
+
+    public static FieldNode injectField(ClassNode classNode, String name, int modifiers, ClassNode type, Object value, boolean deep) {
+<span class="nc" id="L198">        Expression initialExpression = null;</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">        if (value != null) initialExpression = new ConstantExpression(value);</span>
+<span class="nc" id="L200">        return injectField(classNode, name, modifiers, type, initialExpression, deep);</span>
+    }
+
+    public static FieldNode injectField(ClassNode classNode, String name, int modifiers, ClassNode type, Expression initialExpression) {
+<span class="fc" id="L204">        return injectField(classNode, name, modifiers, type, initialExpression, true);</span>
+    }
+
+    public static FieldNode injectField(ClassNode classNode, String name, int modifiers, ClassNode type, Expression initialExpression, boolean deep) {
+<span class="fc bfc" id="L208" title="All 2 branches covered.">        if (deep) {</span>
+<span class="fc bfc" id="L209" title="All 2 branches covered.">            if (!hasOrInheritsField(classNode, name, modifiers, type)) {</span>
+<span class="fc" id="L210">                return getFurthestParent(classNode).addField(name, modifiers, type, initialExpression);</span>
+            } else {
+<span class="fc" id="L212">                getFieldDeep(classNode, name, modifiers, type);</span>
+            }
+        } else {
+<span class="fc bfc" id="L215" title="All 2 branches covered.">            if (!hasField(classNode, name, modifiers, type)) {</span>
+<span class="fc" id="L216">                return classNode.addField(name, modifiers, type, initialExpression);</span>
+            } else {
+<span class="fc" id="L218">                return getField(classNode, name, modifiers, type);</span>
+            }
+        }
+<span class="fc" id="L221">        return null;</span>
+    }
+
+    public static FieldNode getField(ClassNode classNode, String name, int modifiers, ClassNode type) {
+<span class="fc" id="L225">        FieldNode fieldNode = classNode.getDeclaredField(name);</span>
+<span class="pc bpc" id="L226" title="2 of 4 branches missed.">        return fieldNode != null &amp;&amp; fieldNode.getModifiers() == modifiers &amp;&amp;</span>
+<span class="pc bpc" id="L227" title="1 of 2 branches missed.">            fieldNode.getType().equals(type) ? fieldNode : null;</span>
+    }
+
+    public static FieldNode getFieldDeep(ClassNode classNode, String name, int modifiers, ClassNode type) {
+<span class="fc" id="L231">        FieldNode fieldNode = getField(classNode, name, modifiers, type);</span>
+<span class="pc bpc" id="L232" title="1 of 2 branches missed.">        if (fieldNode != null) {</span>
+<span class="fc" id="L233">            return fieldNode;</span>
+        }
+
+<span class="nc" id="L236">        ClassNode parent = classNode.getSuperClass();</span>
+<span class="nc bnc" id="L237" title="All 4 branches missed.">        while (parent != null &amp;&amp; !getFullName(parent).equals(JAVA_LANG_OBJECT)) {</span>
+<span class="nc" id="L238">            fieldNode = getField(parent, name, modifiers, type);</span>
+<span class="nc bnc" id="L239" title="All 2 branches missed.">            if (fieldNode != null) {</span>
+<span class="nc" id="L240">                return fieldNode;</span>
+            }
+<span class="nc" id="L242">            parent = parent.getSuperClass();</span>
+        }
+<span class="nc" id="L244">        return null;</span>
+    }
+
+    public static void injectInterface(ClassNode classNode, ClassNode type) {
+<span class="fc" id="L248">        injectInterface(classNode, type, true);</span>
+<span class="fc" id="L249">    }</span>
+
+    public static void injectInterface(ClassNode classNode, ClassNode type, boolean deep) {
+<span class="fc bfc" id="L252" title="All 2 branches covered.">        if (classNode.implementsInterface(type)) return;</span>
+<span class="pc bpc" id="L253" title="1 of 2 branches missed.">        if (deep) {</span>
+<span class="fc" id="L254">            getFurthestParent(classNode).addInterface(type);</span>
+        } else {
+<span class="nc" id="L256">            classNode.addInterface(type);</span>
+        }
+<span class="fc" id="L258">    }</span>
+
+    /**
+     * Gets the full name of a ClassNode.
+     *
+     * @param classNode The class node
+     * @return The full name
+     */
+    public static String getFullName(ClassNode classNode) {
+<span class="fc" id="L267">        return classNode.getName();</span>
+    }
+
+    public static ClassNode getFurthestParent(ClassNode classNode) {
+<span class="fc" id="L271">        ClassNode parent = classNode.getSuperClass();</span>
+<span class="pc bpc" id="L272" title="1 of 4 branches missed.">        while (parent != null &amp;&amp; !getFullName(parent).equals(JAVA_LANG_OBJECT)) {</span>
+<span class="pc bpc" id="L273" title="1 of 2 branches missed.">            if (SourceUnitCollector.getInstance().getSourceUnit(parent) == null)</span>
+<span class="fc" id="L274">                break;</span>
+<span class="nc" id="L275">            classNode = parent;</span>
+<span class="nc" id="L276">            parent = parent.getSuperClass();</span>
+        }
+<span class="fc" id="L278">        return classNode;</span>
+    }
+
+    public static boolean isEnum(ClassNode classNode) {
+<span class="nc" id="L282">        ClassNode parent = classNode.getSuperClass();</span>
+<span class="nc bnc" id="L283" title="All 2 branches missed.">        while (parent != null) {</span>
+<span class="nc bnc" id="L284" title="All 2 branches missed.">            if (parent.getName().equals(&quot;java.lang.Enum&quot;)) return true;</span>
+<span class="nc" id="L285">            parent = parent.getSuperClass();</span>
+        }
+<span class="nc" id="L287">        return false;</span>
+    }
+
+    public static boolean addMethod(ClassNode classNode, MethodNode methodNode) {
+<span class="nc" id="L291">        return addMethod(classNode, methodNode, false);</span>
+    }
+
+    public static boolean addMethod(ClassNode classNode, MethodNode methodNode, boolean replace) {
+<span class="nc" id="L295">        MethodNode oldMethod = classNode.getMethod(methodNode.getName(), methodNode.getParameters());</span>
+<span class="nc bnc" id="L296" title="All 2 branches missed.">        if (oldMethod == null) {</span>
+<span class="nc" id="L297">            classNode.addMethod(methodNode);</span>
+<span class="nc" id="L298">            return true;</span>
+<span class="nc bnc" id="L299" title="All 2 branches missed.">        } else if (replace) {</span>
+<span class="nc" id="L300">            classNode.getMethods().remove(oldMethod);</span>
+<span class="nc" id="L301">            classNode.addMethod(methodNode);</span>
+<span class="nc" id="L302">            return true;</span>
+        }
+<span class="nc" id="L304">        return false;</span>
+    }
+
+    /**
+     * @return true if the two arrays are of the same size and have the same contents
+     */
+    public static boolean parametersEqual(Parameter[] a, Parameter[] b) {
+<span class="nc bnc" id="L311" title="All 2 branches missed.">        if (a.length == b.length) {</span>
+<span class="nc" id="L312">            boolean answer = true;</span>
+<span class="nc bnc" id="L313" title="All 2 branches missed.">            for (int i = 0; i &lt; a.length; i++) {</span>
+<span class="nc bnc" id="L314" title="All 2 branches missed.">                if (!a[i].getType().equals(b[i].getType())) {</span>
+<span class="nc" id="L315">                    answer = false;</span>
+<span class="nc" id="L316">                    break;</span>
+                }
+            }
+<span class="nc" id="L319">            return answer;</span>
+        }
+<span class="nc" id="L321">        return false;</span>
+    }
+
+    public static void injectProperty(ClassNode classNode, String propertyName, Class&lt;?&gt; propertyClass) {
+<span class="nc" id="L325">        injectProperty(classNode, propertyName, Modifier.PUBLIC, new ClassNode(propertyClass), null);</span>
+<span class="nc" id="L326">    }</span>
+
+    public static void injectProperty(ClassNode classNode, String propertyName, Class&lt;?&gt; propertyClass, Object value) {
+<span class="nc" id="L329">        injectProperty(classNode, propertyName, Modifier.PUBLIC, new ClassNode(propertyClass), value);</span>
+<span class="nc" id="L330">    }</span>
+
+    public static void injectProperty(ClassNode classNode, String propertyName, int modifiers, Class&lt;?&gt; propertyClass) {
+<span class="nc" id="L333">        injectProperty(classNode, propertyName, modifiers, new ClassNode(propertyClass), null);</span>
+<span class="nc" id="L334">    }</span>
+
+    public static void injectProperty(ClassNode classNode, String propertyName, int modifiers, Class&lt;?&gt; propertyClass, Object value) {
+<span class="nc" id="L337">        injectProperty(classNode, propertyName, modifiers, new ClassNode(propertyClass), value);</span>
+<span class="nc" id="L338">    }</span>
+
+    public static void injectProperty(ClassNode classNode, String propertyName, ClassNode propertyClass) {
+<span class="fc" id="L341">        injectProperty(classNode, propertyName, Modifier.PUBLIC, propertyClass, null);</span>
+<span class="fc" id="L342">    }</span>
+
+    public static void injectProperty(ClassNode classNode, String propertyName, int modifiers, ClassNode propertyClass) {
+<span class="nc" id="L345">        injectProperty(classNode, propertyName, modifiers, propertyClass, null);</span>
+<span class="nc" id="L346">    }</span>
+
+    public static void injectProperty(ClassNode classNode, String propertyName, int modifiers, ClassNode propertyClass, Object value) {
+<span class="fc bfc" id="L349" title="All 2 branches covered.">        if (!hasOrInheritsProperty(classNode, propertyName)) {</span>
+            // inject into furthest relative
+<span class="fc" id="L351">            ClassNode parent = getFurthestParent(classNode);</span>
+<span class="pc bpc" id="L352" title="1 of 2 branches missed.">            Expression initialExpression = value instanceof Expression ? (Expression) value : null;</span>
+<span class="pc bpc" id="L353" title="3 of 4 branches missed.">            if (value != null &amp;&amp; initialExpression == null)</span>
+<span class="nc" id="L354">                initialExpression = new ConstantExpression(value);</span>
+<span class="fc" id="L355">            parent.addProperty(propertyName, modifiers, propertyClass, initialExpression, null, null);</span>
+        }
+<span class="fc" id="L357">    }</span>
+
+    public static void injectConstant(ClassNode classNode, String propertyName, Class&lt;?&gt; propertyClass, Object value) {
+<span class="nc" id="L360">        final boolean hasProperty = hasOrInheritsProperty(classNode, propertyName);</span>
+
+<span class="nc bnc" id="L362" title="All 2 branches missed.">        if (!hasProperty) {</span>
+            // inject into furthest relative
+            // ClassNode parent = getFurthestParent(classNode);
+<span class="nc" id="L365">            Expression initialExpression = new ConstantExpression(value);</span>
+<span class="nc" id="L366">            classNode.addProperty(propertyName, Modifier.PUBLIC | Modifier.FINAL, new ClassNode(propertyClass), initialExpression, null, null);</span>
+        }
+<span class="nc" id="L368">    }</span>
+
+    public static void addReadOnlyProperty(ClassNode classNode, String propertyName, ClassNode propertyClass, Object value) {
+<span class="nc" id="L371">        final boolean hasProperty = hasOrInheritsProperty(classNode, propertyName);</span>
+
+<span class="nc bnc" id="L373" title="All 2 branches missed.">        if (!hasProperty) {</span>
+<span class="nc" id="L374">            int visibility = Modifier.PRIVATE | Modifier.FINAL;</span>
+<span class="nc bnc" id="L375" title="All 4 branches missed.">            Expression initialValue = value != null &amp;&amp; !(value instanceof Expression) ? new ConstantExpression(value) : (Expression) value;</span>
+<span class="nc" id="L376">            classNode.addField(propertyName, visibility, propertyClass, initialValue);</span>
+<span class="nc" id="L377">            addMethod(classNode, new MethodNode(</span>
+<span class="nc" id="L378">                &quot;get&quot; + MetaClassHelper.capitalize(propertyName),</span>
+                Modifier.PUBLIC,
+                propertyClass,
+                Parameter.EMPTY_ARRAY,
+                ClassNode.EMPTY_ARRAY,
+                new ReturnStatement(
+                    new ExpressionStatement(
+<span class="nc" id="L385">                        new FieldExpression(classNode.getField(propertyName))))));</span>
+        }
+<span class="nc" id="L387">    }</span>
+
+<span class="fc" id="L389">    public static final ClassNode[] NO_EXCEPTIONS = ClassNode.EMPTY_ARRAY;</span>
+<span class="fc" id="L390">    public static final Parameter[] NO_PARAMS = Parameter.EMPTY_ARRAY;</span>
+<span class="fc" id="L391">    public static final Expression THIS = VariableExpression.THIS_EXPRESSION;</span>
+<span class="fc" id="L392">    public static final Expression SUPER = VariableExpression.SUPER_EXPRESSION;</span>
+<span class="fc" id="L393">    public static final ArgumentListExpression NO_ARGS = ArgumentListExpression.EMPTY_ARGUMENTS;</span>
+<span class="fc" id="L394">    public static final Token ASSIGN = Token.newSymbol(Types.ASSIGN, -1, -1);</span>
+<span class="fc" id="L395">    public static final Token EQ = Token.newSymbol(Types.COMPARE_EQUAL, -1, -1);</span>
+<span class="fc" id="L396">    public static final Token NE = Token.newSymbol(Types.COMPARE_NOT_EQUAL, -1, -1);</span>
+<span class="fc" id="L397">    public static final Token AND = Token.newSymbol(Types.LOGICAL_AND, -1, -1);</span>
+<span class="fc" id="L398">    public static final Token OR = Token.newSymbol(Types.LOGICAL_OR, -1, -1);</span>
+<span class="fc" id="L399">    public static final Token CMP = Token.newSymbol(Types.COMPARE_TO, -1, -1);</span>
+<span class="fc" id="L400">    public static final Token INSTANCEOF = Token.newSymbol(Types.KEYWORD_INSTANCEOF, -1, -1);</span>
+
+    public static Statement returns(Expression expr) {
+<span class="fc" id="L403">        return new ReturnStatement(new ExpressionStatement(expr));</span>
+    }
+
+    public static ArgumentListExpression vars(String... names) {
+<span class="nc" id="L407">        List&lt;Expression&gt; vars = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L408" title="All 2 branches missed.">        for (String name : names) {</span>
+<span class="nc" id="L409">            vars.add(var(name));</span>
+        }
+<span class="nc" id="L411">        return new ArgumentListExpression(vars);</span>
+    }
+
+    public static ArgumentListExpression args(Expression... expressions) {
+<span class="fc" id="L415">        List&lt;Expression&gt; args = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L416">        Collections.addAll(args, expressions);</span>
+<span class="fc" id="L417">        return new ArgumentListExpression(args);</span>
+    }
+
+    public static ArgumentListExpression args(List&lt;Expression&gt; expressions) {
+<span class="fc" id="L421">        return new ArgumentListExpression(expressions);</span>
+    }
+
+    public static VariableExpression var(String name) {
+<span class="fc" id="L425">        return new VariableExpression(name);</span>
+    }
+
+    public static VariableExpression var(String name, ClassNode type) {
+<span class="nc" id="L429">        return new VariableExpression(name, type);</span>
+    }
+
+    public static Parameter param(ClassNode type, String name) {
+<span class="fc" id="L433">        return param(type, name, null);</span>
+    }
+
+    public static Parameter param(ClassNode type, String name, Expression initialExpression) {
+<span class="fc" id="L437">        Parameter param = new Parameter(type, name);</span>
+<span class="pc bpc" id="L438" title="1 of 2 branches missed.">        if (initialExpression != null) {</span>
+<span class="nc" id="L439">            param.setInitialExpression(initialExpression);</span>
+        }
+<span class="fc" id="L441">        return param;</span>
+    }
+
+    public static ClassNode[] throwing(ClassNode... exceptions) {
+<span class="nc" id="L445">        return exceptions;</span>
+    }
+
+    public static Parameter[] params(Parameter... params) {
+<span class="pc bpc" id="L449" title="1 of 2 branches missed.">        return params != null ? params : Parameter.EMPTY_ARRAY;</span>
+    }
+
+    public static NotExpression not(Expression expr) {
+<span class="nc" id="L453">        return new NotExpression(expr);</span>
+    }
+
+    public static ConstantExpression constx(Object val) {
+<span class="fc" id="L457">        return new ConstantExpression(val);</span>
+    }
+
+    public static ClassExpression classx(ClassNode clazz) {
+<span class="nc" id="L461">        return new ClassExpression(clazz);</span>
+    }
+
+    public static ClassExpression classx(Class&lt;?&gt; clazz) {
+<span class="nc" id="L465">        return classx(ClassHelper.make(clazz).getPlainNodeReference());</span>
+    }
+
+    public static BlockStatement block(Statement... stms) {
+<span class="nc" id="L469">        BlockStatement block = new BlockStatement();</span>
+<span class="nc bnc" id="L470" title="All 2 branches missed.">        for (Statement stm : stms) block.addStatement(stm);</span>
+<span class="nc" id="L471">        return block;</span>
+    }
+
+    public static Statement ifs(Expression cond, Expression trueExpr) {
+<span class="nc bnc" id="L475" title="All 2 branches missed.">        return new IfStatement(</span>
+            cond instanceof BooleanExpression ? (BooleanExpression) cond : new BooleanExpression(cond),
+            new ReturnStatement(trueExpr),
+            new EmptyStatement()
+        );
+    }
+
+    public static Statement ifs(Expression cond, Expression trueExpr, Expression falseExpr) {
+<span class="nc bnc" id="L483" title="All 2 branches missed.">        return new IfStatement(</span>
+            cond instanceof BooleanExpression ? (BooleanExpression) cond : new BooleanExpression(cond),
+            new ReturnStatement(trueExpr),
+            new ReturnStatement(falseExpr)
+        );
+    }
+
+    public static Statement ifs_no_return(Expression cond, Expression trueExpr) {
+<span class="nc bnc" id="L491" title="All 2 branches missed.">        return new IfStatement(</span>
+            cond instanceof BooleanExpression ? (BooleanExpression) cond : new BooleanExpression(cond),
+            new ExpressionStatement(trueExpr),
+            new EmptyStatement()
+        );
+    }
+
+    public static Statement ifs_no_return(Expression cond, Expression trueExpr, Expression falseExpr) {
+<span class="nc bnc" id="L499" title="All 2 branches missed.">        return new IfStatement(</span>
+            cond instanceof BooleanExpression ? (BooleanExpression) cond : new BooleanExpression(cond),
+            new ExpressionStatement(trueExpr),
+            new ExpressionStatement(falseExpr)
+        );
+    }
+
+    public static Statement ifs_no_return(Expression cond, Statement trueStmnt) {
+<span class="nc bnc" id="L507" title="All 2 branches missed.">        return new IfStatement(</span>
+            cond instanceof BooleanExpression ? (BooleanExpression) cond : new BooleanExpression(cond),
+            trueStmnt,
+            new EmptyStatement()
+        );
+    }
+
+    public static Statement ifs_no_return(Expression cond, Statement trueStmnt, Statement falseStmnt) {
+<span class="nc bnc" id="L515" title="All 2 branches missed.">        return new IfStatement(</span>
+            cond instanceof BooleanExpression ? (BooleanExpression) cond : new BooleanExpression(cond),
+            trueStmnt,
+            falseStmnt
+        );
+    }
+
+    public static Statement decls(Expression lhv, Expression rhv) {
+<span class="nc" id="L523">        return new ExpressionStatement(new DeclarationExpression(lhv, ASSIGN, rhv));</span>
+    }
+
+    public static Statement assigns(Expression expression, Expression value) {
+<span class="nc" id="L527">        return new ExpressionStatement(assign(expression, value));</span>
+    }
+
+    public static BinaryExpression assign(Expression lhv, Expression rhv) {
+<span class="fc" id="L531">        return new BinaryExpression(lhv, ASSIGN, rhv);</span>
+    }
+
+    public static BinaryExpression eq(Expression lhv, Expression rhv) {
+<span class="nc" id="L535">        return new BinaryExpression(lhv, EQ, rhv);</span>
+    }
+
+    public static BinaryExpression ne(Expression lhv, Expression rhv) {
+<span class="nc" id="L539">        return new BinaryExpression(lhv, NE, rhv);</span>
+    }
+
+    public static BinaryExpression and(Expression lhv, Expression rhv) {
+<span class="nc" id="L543">        return new BinaryExpression(lhv, AND, rhv);</span>
+    }
+
+    public static BinaryExpression or(Expression lhv, Expression rhv) {
+<span class="nc" id="L547">        return new BinaryExpression(lhv, OR, rhv);</span>
+    }
+
+    public static BinaryExpression cmp(Expression lhv, Expression rhv) {
+<span class="nc" id="L551">        return new BinaryExpression(lhv, CMP, rhv);</span>
+    }
+
+    public static BinaryExpression iof(Expression lhv, Expression rhv) {
+<span class="nc" id="L555">        return new BinaryExpression(lhv, INSTANCEOF, rhv);</span>
+    }
+
+    public static BinaryExpression iof(Expression lhv, ClassNode rhv) {
+<span class="nc" id="L559">        return new BinaryExpression(lhv, INSTANCEOF, new ClassExpression(rhv));</span>
+    }
+
+    public static Expression prop(Expression owner, String property) {
+<span class="nc" id="L563">        return new PropertyExpression(owner, property);</span>
+    }
+
+    public static Expression prop(Expression owner, Expression property) {
+<span class="nc" id="L567">        return new PropertyExpression(owner, property);</span>
+    }
+
+    public static MethodCallExpression call(Expression receiver, String methodName, ArgumentListExpression args) {
+<span class="fc" id="L571">        return new MethodCallExpression(receiver, methodName, args);</span>
+    }
+
+    public static StaticMethodCallExpression call(ClassNode receiver, String methodName, ArgumentListExpression args) {
+<span class="fc" id="L575">        return new StaticMethodCallExpression(receiver, methodName, args);</span>
+    }
+
+    public static ExpressionStatement stmnt(Expression expression) {
+<span class="fc" id="L579">        return new ExpressionStatement(expression);</span>
+    }
+
+    public static FieldExpression field(FieldNode fieldNode) {
+<span class="fc" id="L583">        return new FieldExpression(fieldNode);</span>
+    }
+
+    public static FieldExpression field(ClassNode owner, String fieldName) {
+<span class="fc" id="L587">        return new FieldExpression(owner.getField(fieldName));</span>
+    }
+
+    public static ConstructorCallExpression ctor(ClassNode type, Expression args) {
+<span class="fc" id="L591">        return new ConstructorCallExpression(type, args);</span>
+    }
+
+    public static ListExpression listx(Expression... expressions) {
+<span class="nc" id="L595">        ListExpression list = new ListExpression();</span>
+<span class="nc bnc" id="L596" title="All 2 branches missed.">        for (Expression expression : expressions) {</span>
+<span class="nc" id="L597">            list.addExpression(expression);</span>
+        }
+<span class="nc" id="L599">        return list;</span>
+    }
+
+    public static MapEntryExpression mapEntryx(Expression key, Expression value) {
+<span class="nc" id="L603">        return new MapEntryExpression(key, value);</span>
+    }
+
+    public static MapExpression mapx(MapEntryExpression... entries) {
+<span class="nc" id="L607">        MapExpression map = new MapExpression();</span>
+<span class="nc bnc" id="L608" title="All 2 branches missed.">        for (MapEntryExpression entry : entries) {</span>
+<span class="nc" id="L609">            map.addMapEntryExpression(entry);</span>
+        }
+<span class="nc" id="L611">        return map;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

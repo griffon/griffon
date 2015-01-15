@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>LabelBindingAdapter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.support.adapters</a> &gt; <span class="el_source">LabelBindingAdapter.java</span></div><h1>LabelBindingAdapter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.support.adapters;
+
+import griffon.core.CallableWithArgs;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="nc" id="L24">public class LabelBindingAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.LabelBindingListener {</span>
+    private CallableWithArgs&lt;Void&gt; textKeyChanged;
+    private CallableWithArgs&lt;Void&gt; textBindTypeChanged;
+    private CallableWithArgs&lt;Void&gt; textBindMappingChanged;
+
+    public CallableWithArgs&lt;Void&gt; getTextKeyChanged() {
+<span class="nc" id="L30">        return this.textKeyChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getTextBindTypeChanged() {
+<span class="nc" id="L34">        return this.textBindTypeChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getTextBindMappingChanged() {
+<span class="nc" id="L38">        return this.textBindMappingChanged;</span>
+    }
+
+
+    public void setTextKeyChanged(CallableWithArgs&lt;Void&gt; textKeyChanged) {
+<span class="nc" id="L43">        this.textKeyChanged = textKeyChanged;</span>
+<span class="nc" id="L44">    }</span>
+
+    public void setTextBindTypeChanged(CallableWithArgs&lt;Void&gt; textBindTypeChanged) {
+<span class="nc" id="L47">        this.textBindTypeChanged = textBindTypeChanged;</span>
+<span class="nc" id="L48">    }</span>
+
+    public void setTextBindMappingChanged(CallableWithArgs&lt;Void&gt; textBindMappingChanged) {
+<span class="nc" id="L51">        this.textBindMappingChanged = textBindMappingChanged;</span>
+<span class="nc" id="L52">    }</span>
+
+
+    public void textKeyChanged(org.apache.pivot.wtk.Label arg0, java.lang.String arg1) {
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (textKeyChanged != null) {</span>
+<span class="nc" id="L57">            textKeyChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L59">    }</span>
+
+    public void textBindTypeChanged(org.apache.pivot.wtk.Label arg0, org.apache.pivot.wtk.BindType arg1) {
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (textBindTypeChanged != null) {</span>
+<span class="nc" id="L63">            textBindTypeChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L65">    }</span>
+
+    public void textBindMappingChanged(org.apache.pivot.wtk.Label arg0, org.apache.pivot.wtk.Label.TextBindMapping arg1) {
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (textBindMappingChanged != null) {</span>
+<span class="nc" id="L69">            textBindMappingChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L71">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

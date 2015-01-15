@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractAddonManager.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-lanterna-java</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core.addon</a> &gt; <span class="el_source">AbstractAddonManager.java</span></div><h1>AbstractAddonManager.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core.addon;
+
+import griffon.core.ApplicationEvent;
+import griffon.core.GriffonApplication;
+import griffon.core.addon.AddonManager;
+import griffon.core.addon.GriffonAddon;
+import griffon.core.mvc.MVCGroupConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+import javax.inject.Inject;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import static griffon.util.AnnotationUtils.sortByDependencies;
+import static griffon.util.CollectionUtils.reverse;
+import static griffon.util.GriffonNameUtils.getPropertyName;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Arrays.asList;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * Base implementation of the {@code AddonManager} interface.
+ *
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public abstract class AbstractAddonManager implements AddonManager {
+<span class="fc" id="L50">    private static final Logger LOG = LoggerFactory.getLogger(AbstractAddonManager.class);</span>
+
+    private static final String ERROR_NAME_BLANK = &quot;Argument 'name' must not be blank&quot;;
+<span class="fc" id="L53">    private final Map&lt;String, GriffonAddon&gt; addons = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L54">    private final Object lock = new Object[0];</span>
+    @GuardedBy(&quot;lock&quot;)
+    private boolean initialized;
+
+    private final GriffonApplication application;
+
+    @Inject
+<span class="fc" id="L61">    public AbstractAddonManager(@Nonnull GriffonApplication application) {</span>
+<span class="fc" id="L62">        this.application = requireNonNull(application, &quot;Argument 'application' must not be null&quot;);</span>
+<span class="fc" id="L63">    }</span>
+
+    @Nonnull
+    public GriffonApplication getApplication() {
+<span class="fc" id="L67">        return application;</span>
+    }
+
+    @Nonnull
+    public Map&lt;String, GriffonAddon&gt; getAddons() {
+<span class="nc" id="L72">        return Collections.unmodifiableMap(addons);</span>
+    }
+
+    @Nullable
+    public GriffonAddon findAddon(@Nonnull String name) {
+<span class="nc" id="L77">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        if (name.endsWith(GriffonAddon.SUFFIX)) {</span>
+<span class="nc" id="L79">            name = name.substring(0, name.length() - 12);</span>
+        }
+<span class="nc" id="L81">        return addons.get(getPropertyName(name));</span>
+    }
+
+    public final void initialize() {
+<span class="fc" id="L85">        synchronized (lock) {</span>
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">            if (!initialized) {</span>
+<span class="fc" id="L87">                doInitialize();</span>
+<span class="fc" id="L88">                initialized = true;</span>
+            }
+<span class="pc" id="L90">        }</span>
+<span class="fc" id="L91">    }</span>
+
+    protected void doInitialize() {
+<span class="fc" id="L94">        LOG.debug(&quot;Loading addons [START]&quot;);</span>
+
+<span class="fc" id="L96">        Map&lt;String, GriffonAddon&gt; addons = preloadAddons();</span>
+<span class="fc" id="L97">        event(ApplicationEvent.LOAD_ADDONS_START);</span>
+
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">        for (Map.Entry&lt;String, GriffonAddon&gt; entry : addons.entrySet()) {</span>
+<span class="nc" id="L100">            String name = entry.getKey();</span>
+<span class="nc" id="L101">            GriffonAddon addon = entry.getValue();</span>
+<span class="nc" id="L102">            LOG.debug(&quot;Loading addon {} with class {}&quot;, name, addon.getClass().getName());</span>
+<span class="nc" id="L103">            event(ApplicationEvent.LOAD_ADDON_START, asList(getApplication(), name, addon));</span>
+
+<span class="nc" id="L105">            getApplication().getEventRouter().addEventListener(addon);</span>
+<span class="nc" id="L106">            addMVCGroups(addon);</span>
+<span class="nc" id="L107">            addon.init(getApplication());</span>
+
+<span class="nc" id="L109">            this.addons.put(name, addon);</span>
+<span class="nc" id="L110">            event(ApplicationEvent.LOAD_ADDON_END, asList(getApplication(), name, addon));</span>
+<span class="nc" id="L111">            LOG.debug(&quot;Loaded addon {}&quot;, name);</span>
+<span class="nc" id="L112">        }</span>
+
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">        for (GriffonAddon addon : reverse(addons.values())) {</span>
+<span class="nc" id="L115">            getApplication().addShutdownHandler(addon);</span>
+<span class="nc" id="L116">        }</span>
+
+<span class="fc" id="L118">        LOG.debug(&quot;Loading addons [END]&quot;);</span>
+<span class="fc" id="L119">        event(ApplicationEvent.LOAD_ADDONS_END);</span>
+<span class="fc" id="L120">    }</span>
+
+    @Nonnull
+    protected Map&lt;String, GriffonAddon&gt; preloadAddons() {
+<span class="fc" id="L124">        Collection&lt;GriffonAddon&gt; addonInstances = getApplication().getInjector().getInstances(GriffonAddon.class);</span>
+<span class="fc" id="L125">        return sortByDependencies(addonInstances, GriffonAddon.SUFFIX, &quot;addon&quot;);</span>
+    }
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    protected void addMVCGroups(@Nonnull GriffonAddon addon) {
+<span class="nc bnc" id="L130" title="All 2 branches missed.">        for (Map.Entry&lt;String, Map&lt;String, Object&gt;&gt; groupEntry : addon.getMvcGroups().entrySet()) {</span>
+<span class="nc" id="L131">            String type = groupEntry.getKey();</span>
+<span class="nc" id="L132">            LOG.debug(&quot;Adding MVC group {}&quot;, type);</span>
+<span class="nc" id="L133">            Map&lt;String, Object&gt; members = groupEntry.getValue();</span>
+<span class="nc" id="L134">            Map&lt;String, Object&gt; configMap = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L135">            Map&lt;String, String&gt; membersCopy = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">            for (Map.Entry&lt;String, Object&gt; entry : members.entrySet()) {</span>
+<span class="nc" id="L137">                String key = String.valueOf(entry.getKey());</span>
+<span class="nc bnc" id="L138" title="All 4 branches missed.">                if (&quot;config&quot;.equals(key) &amp;&amp; entry.getValue() instanceof Map) {</span>
+<span class="nc" id="L139">                    configMap = (Map&lt;String, Object&gt;) entry.getValue();</span>
+                } else {
+<span class="nc" id="L141">                    membersCopy.put(key, String.valueOf(entry.getValue()));</span>
+                }
+<span class="nc" id="L143">            }</span>
+<span class="nc" id="L144">            MVCGroupConfiguration configuration = getApplication().getMvcGroupManager().newMVCGroupConfiguration(type, membersCopy, configMap);</span>
+<span class="nc" id="L145">            getApplication().getMvcGroupManager().addConfiguration(configuration);</span>
+<span class="nc" id="L146">        }</span>
+<span class="nc" id="L147">    }</span>
+
+    @Nonnull
+    protected Map&lt;String, GriffonAddon&gt; getAddonsInternal() {
+<span class="nc" id="L151">        return addons;</span>
+    }
+
+    protected void event(@Nonnull ApplicationEvent evt) {
+<span class="fc" id="L155">        event(evt, asList(getApplication()));</span>
+<span class="fc" id="L156">    }</span>
+
+    protected void event(@Nonnull ApplicationEvent evt, @Nonnull List&lt;?&gt; args) {
+<span class="fc" id="L159">        getApplication().getEventRouter().publishEvent(evt.getName(), args);</span>
+<span class="fc" id="L160">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

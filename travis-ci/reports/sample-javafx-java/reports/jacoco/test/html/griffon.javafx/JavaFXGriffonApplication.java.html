@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>JavaFXGriffonApplication.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-java</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx</a> &gt; <span class="el_source">JavaFXGriffonApplication.java</span></div><h1>JavaFXGriffonApplication.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx;
+
+import griffon.core.ApplicationBootstrapper;
+import javafx.application.Application;
+import javafx.stage.Stage;
+import org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper;
+
+import javax.annotation.Nonnull;
+import java.util.Map;
+
+import static griffon.core.GriffonExceptionHandler.registerExceptionHandler;
+
+/**
+ * @author Dean Iverson
+ * @author Andres Almiray
+ */
+public class JavaFXGriffonApplication extends AbstractJavaFXGriffonApplication {
+<span class="nc" id="L33">    private boolean primaryStageDispensed = false;</span>
+    protected Stage primaryStage;
+
+    public JavaFXGriffonApplication() {
+<span class="nc" id="L37">        this(EMPTY_ARGS);</span>
+<span class="nc" id="L38">    }</span>
+
+    public JavaFXGriffonApplication(@Nonnull String[] args) {
+<span class="nc" id="L41">        super(args);</span>
+<span class="nc" id="L42">    }</span>
+
+    @Nonnull
+    @Override
+    public Object createApplicationContainer(@Nonnull Map&lt;String, Object&gt; attributes) {
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        if (primaryStageDispensed) {</span>
+<span class="nc" id="L48">            return new Stage();</span>
+        } else {
+<span class="nc" id="L50">            primaryStageDispensed = true;</span>
+<span class="nc" id="L51">            return primaryStage;</span>
+        }
+    }
+
+    @Override
+    public void init() throws Exception {
+<span class="nc" id="L57">        ApplicationBootstrapper bootstrapper = createApplicationBootstrapper();</span>
+<span class="nc" id="L58">        bootstrapper.bootstrap();</span>
+<span class="nc" id="L59">        afterInit();</span>
+<span class="nc" id="L60">    }</span>
+
+    protected void afterInit() {
+<span class="nc" id="L63">        initialize();</span>
+<span class="nc" id="L64">    }</span>
+
+    @Nonnull
+    protected ApplicationBootstrapper createApplicationBootstrapper() {
+<span class="nc" id="L68">        return new DefaultApplicationBootstrapper(this);</span>
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+<span class="nc" id="L73">        super.start(stage);</span>
+<span class="nc" id="L74">        primaryStage = stage;</span>
+
+<span class="nc" id="L76">        getUIThreadManager().runOutsideUI(new Runnable() {</span>
+            @Override
+            public void run() {
+<span class="nc" id="L79">                startup();</span>
+<span class="nc" id="L80">                ready();</span>
+<span class="nc" id="L81">                afterReady();</span>
+<span class="nc" id="L82">            }</span>
+        });
+<span class="nc" id="L84">    }</span>
+
+    protected void afterReady() {
+        // empty
+<span class="nc" id="L88">    }</span>
+
+    public boolean shutdown() {
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        if (super.shutdown()) {</span>
+<span class="nc" id="L92">            exit();</span>
+        }
+<span class="nc" id="L94">        return false;</span>
+    }
+
+    public void exit() {
+<span class="nc" id="L98">        System.exit(0);</span>
+<span class="nc" id="L99">    }</span>
+
+    public static void run(Class&lt;? extends Application&gt; applicationClass, String[] args) {
+<span class="nc" id="L102">        registerExceptionHandler();</span>
+<span class="nc" id="L103">        Application.launch(applicationClass, args);</span>
+<span class="nc" id="L104">    }</span>
+
+    public static void main(String[] args) {
+<span class="nc" id="L107">        run(JavaFXGriffonApplication.class, args);</span>
+<span class="nc" id="L108">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

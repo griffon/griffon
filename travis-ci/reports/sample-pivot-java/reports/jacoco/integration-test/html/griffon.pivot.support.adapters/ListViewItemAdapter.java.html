@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ListViewItemAdapter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-java</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.support.adapters</a> &gt; <span class="el_source">ListViewItemAdapter.java</span></div><h1>ListViewItemAdapter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.support.adapters;
+
+import griffon.core.CallableWithArgs;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="nc" id="L24">public class ListViewItemAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ListViewItemListener {</span>
+    private CallableWithArgs&lt;Void&gt; itemsCleared;
+    private CallableWithArgs&lt;Void&gt; itemsSorted;
+    private CallableWithArgs&lt;Void&gt; itemInserted;
+    private CallableWithArgs&lt;Void&gt; itemUpdated;
+    private CallableWithArgs&lt;Void&gt; itemsRemoved;
+
+    public CallableWithArgs&lt;Void&gt; getItemsCleared() {
+<span class="nc" id="L32">        return this.itemsCleared;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getItemsSorted() {
+<span class="nc" id="L36">        return this.itemsSorted;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getItemInserted() {
+<span class="nc" id="L40">        return this.itemInserted;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getItemUpdated() {
+<span class="nc" id="L44">        return this.itemUpdated;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getItemsRemoved() {
+<span class="nc" id="L48">        return this.itemsRemoved;</span>
+    }
+
+
+    public void setItemsCleared(CallableWithArgs&lt;Void&gt; itemsCleared) {
+<span class="nc" id="L53">        this.itemsCleared = itemsCleared;</span>
+<span class="nc" id="L54">    }</span>
+
+    public void setItemsSorted(CallableWithArgs&lt;Void&gt; itemsSorted) {
+<span class="nc" id="L57">        this.itemsSorted = itemsSorted;</span>
+<span class="nc" id="L58">    }</span>
+
+    public void setItemInserted(CallableWithArgs&lt;Void&gt; itemInserted) {
+<span class="nc" id="L61">        this.itemInserted = itemInserted;</span>
+<span class="nc" id="L62">    }</span>
+
+    public void setItemUpdated(CallableWithArgs&lt;Void&gt; itemUpdated) {
+<span class="nc" id="L65">        this.itemUpdated = itemUpdated;</span>
+<span class="nc" id="L66">    }</span>
+
+    public void setItemsRemoved(CallableWithArgs&lt;Void&gt; itemsRemoved) {
+<span class="nc" id="L69">        this.itemsRemoved = itemsRemoved;</span>
+<span class="nc" id="L70">    }</span>
+
+
+    public void itemsCleared(org.apache.pivot.wtk.ListView arg0) {
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (itemsCleared != null) {</span>
+<span class="nc" id="L75">            itemsCleared.call(arg0);</span>
+        }
+<span class="nc" id="L77">    }</span>
+
+    public void itemsSorted(org.apache.pivot.wtk.ListView arg0) {
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        if (itemsSorted != null) {</span>
+<span class="nc" id="L81">            itemsSorted.call(arg0);</span>
+        }
+<span class="nc" id="L83">    }</span>
+
+    public void itemInserted(org.apache.pivot.wtk.ListView arg0, int arg1) {
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        if (itemInserted != null) {</span>
+<span class="nc" id="L87">            itemInserted.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L89">    }</span>
+
+    public void itemUpdated(org.apache.pivot.wtk.ListView arg0, int arg1) {
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        if (itemUpdated != null) {</span>
+<span class="nc" id="L93">            itemUpdated.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L95">    }</span>
+
+    public void itemsRemoved(org.apache.pivot.wtk.ListView arg0, int arg1, int arg2) {
+<span class="nc bnc" id="L98" title="All 2 branches missed.">        if (itemsRemoved != null) {</span>
+<span class="nc" id="L99">            itemsRemoved.call(arg0, arg1, arg2);</span>
+        }
+<span class="nc" id="L101">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

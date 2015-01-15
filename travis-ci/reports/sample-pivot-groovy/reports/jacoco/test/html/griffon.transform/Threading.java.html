@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Threading.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.transform</a> &gt; <span class="el_source">Threading.java</span></div><h1>Threading.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.transform;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * &lt;p&gt;Annotates a calls or method.&lt;/p&gt;
+ * &lt;p/&gt;
+ * Annotated elements must follow these rules
+ * &lt;ul&gt;
+ * &lt;li&gt;must be a public method&lt;/li&gt;
+ * &lt;li&gt;name does not match an event handler&lt;/li&gt;
+ * &lt;li&gt;must pass {@code griffon.util.GriffonClassUtils.isPlainMethod()} if it's a method&lt;/li&gt;
+ * &lt;/ul&gt;
+ * &lt;p/&gt;
+ * This annotation takes {@code griffon.util.Threading.Policy} as value, with {@code Threading.Policy.OUTSIDE_UITHREAD} being
+ * the default value.&lt;p&gt;
+ * &lt;p/&gt;
+ * &lt;p&gt;The following snippet exemplifies the compactness of code when the annotation is applied &lt;/p&gt;
+ * &lt;pre&gt;
+ * import griffon.transform.Threading
+ *
+ * class Sample {
+ *     &amp;#064;Threading
+ *     void doSomethingOutside(String arg) {
+ *         println &quot;Outside $arg&quot;
+ *     }
+ *     &amp;#064;Threading(Threading.Policy.INSIDE_UITHREAD_SYNC)
+ *     void doSomethingInside(String arg) {
+ *         println &quot;Inside $arg&quot;
+ *     }
+ * }
+ * &lt;/pre&gt;
+ * &lt;p/&gt;
+ * &lt;p&gt;The equivalent, non-annotated code is&lt;/p&gt;
+ * &lt;pre&gt;
+ * import griffon.core.threading.UIThreadManager
+ *
+ * class Sample {
+ *     void doSomethingOutside(String arg) {
+ *         UIThreadManager.instance.executeOutside {
+ *             println &quot;Outside $arg&quot;
+ *         }
+ *     }
+ *     void doSomethingInside(String arg) {
+ *         UIThreadManager.instance.executeSync {
+ *             println &quot;Inside $arg&quot;
+ *         }
+ *     }
+ * }
+ * &lt;/pre&gt;
+ *
+ * @author Andres Almiray
+ * @see Threading.Policy
+ * @since 2.0.0
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD})
+public @interface Threading {
+    Policy value() default Policy.OUTSIDE_UITHREAD;
+
+    /**
+     * Indicates the type of threading management for a method or property.&lt;/p&gt;
+     * The following values apply
+     * &lt;ul&gt;
+     * &lt;li&gt;{@code SKIP} - no threading management will be performed.&lt;/li&gt;
+     * &lt;li&gt;{@code OUTSIDE_UITHREAD} - code should be invoked outside of the UI thread.&lt;/li&gt;
+     * &lt;li&gt;{@code INSIDE_UITHREAD_SYNC} - code should be invoked inside the UI thread using a synchronous call.&lt;/li&gt;
+     * &lt;li&gt;{@code INSIDE_UITHREAD_ASYNC} - code should be invoked inside the UI thread using an asynchronous call.&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @author Andres Almiray
+     * @see Threading
+     * @since 2.0.0
+     */
+<span class="pc" id="L93">    public enum Policy {</span>
+        /**
+         * Skip threading injection
+         */
+<span class="fc" id="L97">        SKIP,</span>
+        /**
+         * Inject execOutside wrapper
+         */
+<span class="fc" id="L101">        OUTSIDE_UITHREAD,</span>
+        /**
+         * Inject execSync wrapper
+         */
+<span class="fc" id="L105">        INSIDE_UITHREAD_SYNC,</span>
+        /**
+         * Inject execAsync wrapper
+         */
+<span class="fc" id="L109">        INSIDE_UITHREAD_ASYNC</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

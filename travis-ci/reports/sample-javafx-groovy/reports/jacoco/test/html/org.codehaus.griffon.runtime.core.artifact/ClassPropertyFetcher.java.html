@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ClassPropertyFetcher.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-groovy</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core.artifact</a> &gt; <span class="el_source">ClassPropertyFetcher.java</span></div><h1>ClassPropertyFetcher.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core.artifact;
+
+import griffon.util.GriffonClassUtils;
+import griffon.util.GriffonNameUtils;
+
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * Accesses class &quot;properties&quot;: static fields, static getters, instance fields
+ * or instance getters
+ * &lt;p/&gt;
+ * Method and Field instances are cached for fast access
+ *
+ * @author Lari Hotari, Sagire Software Oy (Grails)
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public class ClassPropertyFetcher {
+    private final Class&lt;?&gt; clazz;
+<span class="fc" id="L46">    final Map&lt;String, PropertyFetcher&gt; staticFetchers = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L47">    final Map&lt;String, PropertyFetcher&gt; instanceFetchers = new LinkedHashMap&lt;&gt;();</span>
+    private final ReferenceInstanceCallback callback;
+    private PropertyDescriptor[] propertyDescriptors;
+    private String[] propertiesWithFields;
+
+<span class="fc" id="L52">    private static final Map&lt;Class&lt;?&gt;, ClassPropertyFetcher&gt; CACHED_CLASS_PROPERTY_FETCHERS = new ConcurrentHashMap&lt;&gt;();</span>
+
+    public static void clearClassPropertyFetcherCache() {
+<span class="nc" id="L55">        CACHED_CLASS_PROPERTY_FETCHERS.clear();</span>
+<span class="nc" id="L56">    }</span>
+
+    public static ClassPropertyFetcher forClass(Class&lt;?&gt; c) {
+<span class="fc" id="L59">        return forClass(c, null);</span>
+    }
+
+    public static ClassPropertyFetcher forClass(final Class&lt;?&gt; c, ReferenceInstanceCallback callback) {
+<span class="fc" id="L63">        ClassPropertyFetcher cpf = CACHED_CLASS_PROPERTY_FETCHERS.get(c);</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (cpf == null) {</span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">            if (callback == null) {</span>
+<span class="fc" id="L66">                callback = new ReferenceInstanceCallback() {</span>
+                    private Object o;
+
+                    public Object getReferenceInstance() {
+<span class="nc bnc" id="L70" title="All 2 branches missed.">                        if (o == null) {</span>
+<span class="nc" id="L71">                            o = GriffonClassUtils.instantiateClass(c);</span>
+                        }
+<span class="nc" id="L73">                        return o;</span>
+                    }
+                };
+            }
+<span class="fc" id="L77">            cpf = new ClassPropertyFetcher(c, callback);</span>
+<span class="fc" id="L78">            CACHED_CLASS_PROPERTY_FETCHERS.put(c, cpf);</span>
+        }
+<span class="fc" id="L80">        return cpf;</span>
+    }
+
+<span class="fc" id="L83">    ClassPropertyFetcher(Class&lt;?&gt; clazz, ReferenceInstanceCallback callback) {</span>
+<span class="fc" id="L84">        this.clazz = clazz;</span>
+<span class="fc" id="L85">        this.callback = callback;</span>
+<span class="fc" id="L86">        init();</span>
+<span class="fc" id="L87">    }</span>
+
+    public Object getReference() {
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        if (callback != null) {</span>
+<span class="nc" id="L91">            return callback.getReferenceInstance();</span>
+        }
+<span class="nc" id="L93">        return null;</span>
+    }
+
+    public PropertyDescriptor[] getPropertyDescriptors() {
+<span class="nc" id="L97">        return propertyDescriptors;</span>
+    }
+
+    public boolean isReadableProperty(String name) {
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        return staticFetchers.containsKey(name)</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">            || instanceFetchers.containsKey(name);</span>
+    }
+
+    public String[] getPropertiesWithFields() {
+<span class="nc" id="L106">        return propertiesWithFields;</span>
+    }
+
+    private void init() {
+<span class="fc" id="L110">        FieldCallback fieldCallback = new FieldCallback() {</span>
+            public void doWith(Field field) {
+<span class="fc bfc" id="L112" title="All 2 branches covered.">                if (field.isSynthetic())</span>
+<span class="fc" id="L113">                    return;</span>
+<span class="fc" id="L114">                final int modifiers = field.getModifiers();</span>
+<span class="pc bpc" id="L115" title="1 of 2 branches missed.">                if (!Modifier.isPublic(modifiers))</span>
+<span class="fc" id="L116">                    return;</span>
+
+<span class="nc" id="L118">                final String name = field.getName();</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">                if (name.indexOf('$') == -1) {</span>
+<span class="nc" id="L120">                    boolean staticField = Modifier.isStatic(modifiers);</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">                    if (staticField) {</span>
+<span class="nc" id="L122">                        staticFetchers.put(name, new FieldReaderFetcher(field,</span>
+                            staticField));
+                    } else {
+<span class="nc" id="L125">                        instanceFetchers.put(name, new FieldReaderFetcher(</span>
+                            field, staticField));
+                    }
+                }
+<span class="nc" id="L129">            }</span>
+        };
+
+<span class="fc" id="L132">        MethodCallback methodCallback = new MethodCallback() {</span>
+            public void doWith(Method method) throws IllegalArgumentException,
+                IllegalAccessException {
+<span class="fc bfc" id="L135" title="All 2 branches covered.">                if (method.isSynthetic())</span>
+<span class="fc" id="L136">                    return;</span>
+<span class="fc bfc" id="L137" title="All 2 branches covered.">                if (!Modifier.isPublic(method.getModifiers()))</span>
+<span class="fc" id="L138">                    return;</span>
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">                if (Modifier.isStatic(method.getModifiers())</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">                    &amp;&amp; method.getReturnType() != Void.class) {</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">                    if (method.getParameterTypes().length == 0) {</span>
+<span class="nc" id="L142">                        String name = method.getName();</span>
+<span class="nc bnc" id="L143" title="All 2 branches missed.">                        if (name.indexOf('$') == -1) {</span>
+<span class="nc bnc" id="L144" title="All 4 branches missed.">                            if (name.length() &gt; 3 &amp;&amp; name.startsWith(&quot;get&quot;)</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">                                &amp;&amp; Character.isUpperCase(name.charAt(3))) {</span>
+<span class="nc" id="L146">                                name = name.substring(3);</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">                            } else if (name.length() &gt; 2</span>
+<span class="nc bnc" id="L148" title="All 2 branches missed.">                                &amp;&amp; name.startsWith(&quot;is&quot;)</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">                                &amp;&amp; Character.isUpperCase(name.charAt(2))</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">                                &amp;&amp; (method.getReturnType() == Boolean.class || method</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">                                .getReturnType() == boolean.class)) {</span>
+<span class="nc" id="L152">                                name = name.substring(2);</span>
+                            }
+<span class="nc" id="L154">                            PropertyFetcher fetcher = new GetterPropertyFetcher(</span>
+                                method, true);
+<span class="nc" id="L156">                            staticFetchers.put(name, fetcher);</span>
+<span class="nc" id="L157">                            staticFetchers.put(GriffonNameUtils.uncapitalize(name), fetcher);</span>
+                        }
+                    }
+                }
+<span class="fc" id="L161">            }</span>
+        };
+
+<span class="fc" id="L164">        List&lt;Class&lt;?&gt;&gt; allClasses = resolveAllClasses(clazz);</span>
+<span class="fc bfc" id="L165" title="All 2 branches covered.">        for (Class&lt;?&gt; c : allClasses) {</span>
+<span class="fc" id="L166">            Field[] fields = c.getDeclaredFields();</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">            for (Field field : fields) {</span>
+                try {
+<span class="fc" id="L169">                    fieldCallback.doWith(field);</span>
+<span class="nc" id="L170">                } catch (IllegalAccessException ex) {</span>
+<span class="nc" id="L171">                    throw new IllegalStateException(</span>
+                        &quot;Shouldn't be illegal to access field '&quot;
+<span class="nc" id="L173">                            + field.getName() + &quot;': &quot; + ex);</span>
+<span class="fc" id="L174">                }</span>
+            }
+<span class="fc" id="L176">            Method[] methods = c.getDeclaredMethods();</span>
+<span class="fc bfc" id="L177" title="All 2 branches covered.">            for (Method method : methods) {</span>
+                try {
+<span class="fc" id="L179">                    methodCallback.doWith(method);</span>
+<span class="nc" id="L180">                } catch (IllegalAccessException ex) {</span>
+<span class="nc" id="L181">                    throw new IllegalStateException(</span>
+                        &quot;Shouldn't be illegal to access method '&quot;
+<span class="nc" id="L183">                            + method.getName() + &quot;': &quot; + ex);</span>
+<span class="fc" id="L184">                }</span>
+            }
+<span class="fc" id="L186">        }</span>
+
+<span class="fc" id="L188">        propertyDescriptors = GriffonClassUtils.getPropertyDescriptors(clazz);</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">        for (PropertyDescriptor desc : propertyDescriptors) {</span>
+<span class="fc" id="L190">            Method readMethod = desc.getReadMethod();</span>
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">            if (readMethod != null) {</span>
+<span class="fc" id="L192">                boolean staticReadMethod = Modifier.isStatic(readMethod</span>
+<span class="fc" id="L193">                    .getModifiers());</span>
+<span class="pc bpc" id="L194" title="1 of 2 branches missed.">                if (staticReadMethod) {</span>
+<span class="nc" id="L195">                    staticFetchers.put(desc.getName(),</span>
+                        new GetterPropertyFetcher(readMethod,
+                            staticReadMethod));
+                } else {
+<span class="fc" id="L199">                    instanceFetchers.put(desc.getName(),</span>
+                        new GetterPropertyFetcher(readMethod,
+                            staticReadMethod));
+                }
+            }
+        }
+
+<span class="fc" id="L206">        final List&lt;String&gt; properties = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L207" title="All 2 branches covered.">        for (Class&lt;?&gt; c : allClasses) {</span>
+<span class="fc" id="L208">            final List&lt;String&gt; props = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L209" title="All 2 branches covered.">            for (PropertyDescriptor p : GriffonClassUtils.getPropertyDescriptors(clazz)) {</span>
+<span class="fc" id="L210">                props.add(p.getName());</span>
+            }
+<span class="fc bfc" id="L212" title="All 2 branches covered.">            for (Field field : c.getDeclaredFields()) {</span>
+<span class="fc bfc" id="L213" title="All 2 branches covered.">                if (field.isSynthetic()) continue;</span>
+<span class="fc" id="L214">                final int modifiers = field.getModifiers();</span>
+<span class="fc bfc" id="L215" title="All 4 branches covered.">                if (!Modifier.isPrivate(modifiers) || Modifier.isStatic(modifiers))</span>
+<span class="fc" id="L216">                    continue;</span>
+<span class="fc" id="L217">                final String fieldName = field.getName();</span>
+<span class="pc bpc" id="L218" title="2 of 4 branches missed.">                if (&quot;class&quot;.equals(fieldName) || &quot;metaClass&quot;.equals(fieldName))</span>
+<span class="nc" id="L219">                    continue;</span>
+<span class="pc bpc" id="L220" title="1 of 4 branches missed.">                if (fieldName.indexOf('$') == -1 &amp;&amp; props.contains(fieldName))</span>
+<span class="fc" id="L221">                    properties.add(fieldName);</span>
+            }
+<span class="fc" id="L223">        }</span>
+<span class="fc" id="L224">        propertiesWithFields = properties.toArray(new String[properties.size()]);</span>
+<span class="fc" id="L225">    }</span>
+
+    private List&lt;Class&lt;?&gt;&gt; resolveAllClasses(Class&lt;?&gt; c) {
+<span class="fc" id="L228">        List&lt;Class&lt;?&gt;&gt; list = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L229">        Class&lt;?&gt; currentClass = c;</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">        while (currentClass != null) {</span>
+<span class="fc" id="L231">            list.add(currentClass);</span>
+<span class="fc" id="L232">            currentClass = currentClass.getSuperclass();</span>
+        }
+<span class="fc" id="L234">        Collections.reverse(list);</span>
+<span class="fc" id="L235">        return list;</span>
+    }
+
+    public Object getPropertyValue(String name) {
+<span class="nc" id="L239">        return getPropertyValue(name, false);</span>
+    }
+
+    public Object getPropertyValue(String name, boolean onlyInstanceProperties) {
+<span class="nc" id="L243">        PropertyFetcher fetcher = resolveFetcher(name, onlyInstanceProperties);</span>
+<span class="nc" id="L244">        return getPropertyValueWithFetcher(name, fetcher);</span>
+    }
+
+    private Object getPropertyValueWithFetcher(String name, PropertyFetcher fetcher) {
+<span class="nc bnc" id="L248" title="All 2 branches missed.">        if (fetcher != null) {</span>
+            try {
+<span class="nc" id="L250">                return fetcher.get(callback);</span>
+<span class="nc" id="L251">            } catch (Exception e) {</span>
+                // ignore ?
+                // log.warn(&quot;Error fetching property's &quot; + name + &quot; value from class &quot; + clazz.getName(), e);
+            }
+        }
+<span class="nc" id="L256">        return null;</span>
+    }
+
+    public &lt;T&gt; T getStaticPropertyValue(String name, Class&lt;T&gt; c) {
+<span class="nc" id="L260">        PropertyFetcher fetcher = staticFetchers.get(name);</span>
+<span class="nc bnc" id="L261" title="All 2 branches missed.">        if (fetcher != null) {</span>
+<span class="nc" id="L262">            Object v = getPropertyValueWithFetcher(name, fetcher);</span>
+<span class="nc" id="L263">            return returnOnlyIfInstanceOf(v, c);</span>
+        }
+<span class="nc" id="L265">        return null;</span>
+    }
+
+    public &lt;T&gt; T getPropertyValue(String name, Class&lt;T&gt; c) {
+<span class="nc" id="L269">        return returnOnlyIfInstanceOf(getPropertyValue(name, false), c);</span>
+    }
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public &lt;T&gt; T returnOnlyIfInstanceOf(Object value, Class&lt;T&gt; type) {
+<span class="nc bnc" id="L274" title="All 6 branches missed.">        if ((value != null) &amp;&amp; (type == Object.class || type.isAssignableFrom(value.getClass()))) {</span>
+<span class="nc" id="L275">            return (T) value;</span>
+        }
+
+<span class="nc" id="L278">        return null;</span>
+    }
+
+    private PropertyFetcher resolveFetcher(String name, boolean onlyInstanceProperties) {
+<span class="nc" id="L282">        PropertyFetcher fetcher = null;</span>
+<span class="nc bnc" id="L283" title="All 2 branches missed.">        if (!onlyInstanceProperties) {</span>
+<span class="nc" id="L284">            fetcher = staticFetchers.get(name);</span>
+        }
+<span class="nc bnc" id="L286" title="All 2 branches missed.">        if (fetcher == null) {</span>
+<span class="nc" id="L287">            fetcher = instanceFetchers.get(name);</span>
+        }
+<span class="nc" id="L289">        return fetcher;</span>
+    }
+
+    public Class&lt;?&gt; getPropertyType(String name) {
+<span class="nc" id="L293">        return getPropertyType(name, false);</span>
+    }
+
+    public Class&lt;?&gt; getPropertyType(String name, boolean onlyInstanceProperties) {
+<span class="nc" id="L297">        PropertyFetcher fetcher = resolveFetcher(name, onlyInstanceProperties);</span>
+<span class="nc bnc" id="L298" title="All 2 branches missed.">        if (fetcher != null) {</span>
+<span class="nc" id="L299">            return fetcher.getPropertyType(name);</span>
+        }
+<span class="nc" id="L301">        return null;</span>
+    }
+
+    public static interface ReferenceInstanceCallback {
+        public Object getReferenceInstance();
+    }
+
+    static interface PropertyFetcher {
+        public Object get(ReferenceInstanceCallback callback)
+            throws IllegalArgumentException, IllegalAccessException, InvocationTargetException;
+
+        public Class&lt;?&gt; getPropertyType(String name);
+    }
+
+    static class GetterPropertyFetcher implements PropertyFetcher {
+        private final Method readMethod;
+        private final boolean staticMethod;
+
+<span class="fc" id="L319">        GetterPropertyFetcher(Method readMethod, boolean staticMethod) {</span>
+<span class="fc" id="L320">            this.readMethod = readMethod;</span>
+<span class="fc" id="L321">            this.staticMethod = staticMethod;</span>
+<span class="fc" id="L322">            makeAccessible(readMethod);</span>
+<span class="fc" id="L323">        }</span>
+
+        public Object get(ReferenceInstanceCallback callback)
+            throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+<span class="nc bnc" id="L327" title="All 2 branches missed.">            if (staticMethod) {</span>
+<span class="nc" id="L328">                return readMethod.invoke(null);</span>
+            }
+
+<span class="nc bnc" id="L331" title="All 2 branches missed.">            if (callback != null) {</span>
+<span class="nc" id="L332">                return readMethod.invoke(callback.getReferenceInstance());</span>
+            }
+
+<span class="nc" id="L335">            return null;</span>
+        }
+
+        public Class&lt;?&gt; getPropertyType(String name) {
+<span class="nc" id="L339">            return readMethod.getReturnType();</span>
+        }
+    }
+
+    static class FieldReaderFetcher implements PropertyFetcher {
+        private final Field field;
+        private final boolean staticField;
+
+<span class="nc" id="L347">        public FieldReaderFetcher(Field field, boolean staticField) {</span>
+<span class="nc" id="L348">            this.field = field;</span>
+<span class="nc" id="L349">            this.staticField = staticField;</span>
+<span class="nc" id="L350">            makeAccessible(field);</span>
+<span class="nc" id="L351">        }</span>
+
+        public Object get(ReferenceInstanceCallback callback)
+            throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+<span class="nc bnc" id="L355" title="All 2 branches missed.">            if (staticField) {</span>
+<span class="nc" id="L356">                return field.get(null);</span>
+            }
+
+<span class="nc bnc" id="L359" title="All 2 branches missed.">            if (callback != null) {</span>
+<span class="nc" id="L360">                return field.get(callback.getReferenceInstance());</span>
+            }
+
+<span class="nc" id="L363">            return null;</span>
+        }
+
+        public Class&lt;?&gt; getPropertyType(String name) {
+<span class="nc" id="L367">            return field.getType();</span>
+        }
+    }
+
+    private static void makeAccessible(AccessibleObject obj) {
+<span class="fc bfc" id="L372" title="All 2 branches covered.">        if (!obj.isAccessible()) {</span>
+            try {
+<span class="fc" id="L374">                obj.setAccessible(true);</span>
+<span class="nc" id="L375">            } catch (SecurityException e) {</span>
+                // skip
+<span class="fc" id="L377">            }</span>
+        }
+<span class="fc" id="L379">    }</span>
+
+    static interface FieldCallback {
+        void doWith(Field field) throws IllegalArgumentException, IllegalAccessException;
+    }
+
+    static interface MethodCallback {
+        void doWith(Method method) throws IllegalArgumentException, IllegalAccessException;
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TableViewSortAdapter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-java</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.support.adapters</a> &gt; <span class="el_source">TableViewSortAdapter.java</span></div><h1>TableViewSortAdapter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.support.adapters;
+
+import griffon.core.CallableWithArgs;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="nc" id="L24">public class TableViewSortAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TableViewSortListener {</span>
+    private CallableWithArgs&lt;Void&gt; sortChanged;
+    private CallableWithArgs&lt;Void&gt; sortAdded;
+    private CallableWithArgs&lt;Void&gt; sortUpdated;
+    private CallableWithArgs&lt;Void&gt; sortRemoved;
+
+    public CallableWithArgs&lt;Void&gt; getSortChanged() {
+<span class="nc" id="L31">        return this.sortChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getSortAdded() {
+<span class="nc" id="L35">        return this.sortAdded;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getSortUpdated() {
+<span class="nc" id="L39">        return this.sortUpdated;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getSortRemoved() {
+<span class="nc" id="L43">        return this.sortRemoved;</span>
+    }
+
+
+    public void setSortChanged(CallableWithArgs&lt;Void&gt; sortChanged) {
+<span class="nc" id="L48">        this.sortChanged = sortChanged;</span>
+<span class="nc" id="L49">    }</span>
+
+    public void setSortAdded(CallableWithArgs&lt;Void&gt; sortAdded) {
+<span class="nc" id="L52">        this.sortAdded = sortAdded;</span>
+<span class="nc" id="L53">    }</span>
+
+    public void setSortUpdated(CallableWithArgs&lt;Void&gt; sortUpdated) {
+<span class="nc" id="L56">        this.sortUpdated = sortUpdated;</span>
+<span class="nc" id="L57">    }</span>
+
+    public void setSortRemoved(CallableWithArgs&lt;Void&gt; sortRemoved) {
+<span class="nc" id="L60">        this.sortRemoved = sortRemoved;</span>
+<span class="nc" id="L61">    }</span>
+
+
+    public void sortChanged(org.apache.pivot.wtk.TableView arg0) {
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        if (sortChanged != null) {</span>
+<span class="nc" id="L66">            sortChanged.call(arg0);</span>
+        }
+<span class="nc" id="L68">    }</span>
+
+    public void sortAdded(org.apache.pivot.wtk.TableView arg0, java.lang.String arg1) {
+<span class="nc bnc" id="L71" title="All 2 branches missed.">        if (sortAdded != null) {</span>
+<span class="nc" id="L72">            sortAdded.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L74">    }</span>
+
+    public void sortUpdated(org.apache.pivot.wtk.TableView arg0, java.lang.String arg1, org.apache.pivot.wtk.SortDirection arg2) {
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        if (sortUpdated != null) {</span>
+<span class="nc" id="L78">            sortUpdated.call(arg0, arg1, arg2);</span>
+        }
+<span class="nc" id="L80">    }</span>
+
+    public void sortRemoved(org.apache.pivot.wtk.TableView arg0, java.lang.String arg1, org.apache.pivot.wtk.SortDirection arg2) {
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (sortRemoved != null) {</span>
+<span class="nc" id="L84">            sortRemoved.call(arg0, arg1, arg2);</span>
+        }
+<span class="nc" id="L86">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

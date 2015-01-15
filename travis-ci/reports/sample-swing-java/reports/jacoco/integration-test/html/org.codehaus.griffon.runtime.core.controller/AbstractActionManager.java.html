@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractActionManager.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-java</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core.controller</a> &gt; <span class="el_source">AbstractActionManager.java</span></div><h1>AbstractActionManager.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core.controller;
+
+import griffon.core.Configuration;
+import griffon.core.Context;
+import griffon.core.GriffonApplication;
+import griffon.core.artifact.GriffonController;
+import griffon.core.artifact.GriffonControllerClass;
+import griffon.core.controller.AbortActionExecution;
+import griffon.core.controller.Action;
+import griffon.core.controller.ActionExecutionStatus;
+import griffon.core.controller.ActionHandler;
+import griffon.core.controller.ActionInterceptor;
+import griffon.core.controller.ActionManager;
+import griffon.core.i18n.MessageSource;
+import griffon.core.i18n.NoSuchMessageException;
+import griffon.core.mvc.MVCGroup;
+import griffon.core.threading.UIThreadManager;
+import griffon.exceptions.GriffonException;
+import griffon.exceptions.InstanceMethodInvocationException;
+import griffon.inject.Contextual;
+import griffon.transform.Threading;
+import griffon.util.AnnotationUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.lang.annotation.Annotation;
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.EventObject;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import static griffon.core.GriffonExceptionHandler.sanitize;
+import static griffon.util.CollectionUtils.reverse;
+import static griffon.util.GriffonClassUtils.EMPTY_ARGS;
+import static griffon.util.GriffonClassUtils.invokeExactInstanceMethod;
+import static griffon.util.GriffonClassUtils.invokeInstanceMethod;
+import static griffon.util.GriffonNameUtils.capitalize;
+import static griffon.util.GriffonNameUtils.getNaturalName;
+import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.GriffonNameUtils.uncapitalize;
+import static griffon.util.TypeUtils.castToBoolean;
+import static java.lang.reflect.Modifier.isPublic;
+import static java.lang.reflect.Modifier.isStatic;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public abstract class AbstractActionManager implements ActionManager {
+<span class="fc" id="L78">    private static final Logger LOG = LoggerFactory.getLogger(AbstractActionManager.class);</span>
+
+    private static final String KEY_THREADING = &quot;controller.threading&quot;;
+    private static final String KEY_THREADING_DEFAULT = &quot;controller.threading.default&quot;;
+    private static final String KEY_DISABLE_THREADING_INJECTION = &quot;griffon.disable.threading.injection&quot;;
+    private static final String ERROR_CONTROLLER_NULL = &quot;Argument 'controller' must not be null&quot;;
+    private static final String ERROR_ACTION_NAME_BLANK = &quot;Argument 'actionName' must not be blank&quot;;
+    private static final String ERROR_ACTION_HANDLER_NULL = &quot;Argument 'actionHandler' must not be null&quot;;
+    private static final String ERROR_ACTION_NULL = &quot;Argument 'action' must not be null&quot;;
+<span class="fc" id="L87">    private final ActionCache actionCache = new ActionCache();</span>
+<span class="fc" id="L88">    private final Map&lt;String, Threading.Policy&gt; threadingPolicies = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L89">    private final List&lt;ActionHandler&gt; handlers = new CopyOnWriteArrayList&lt;&gt;();</span>
+
+    private final GriffonApplication application;
+
+    @Inject
+<span class="fc" id="L94">    public AbstractActionManager(@Nonnull GriffonApplication application) {</span>
+<span class="fc" id="L95">        this.application = requireNonNull(application, &quot;Argument 'application' must not be null&quot;);</span>
+<span class="fc" id="L96">    }</span>
+
+    @Nullable
+    private static Method findActionAsMethod(@Nonnull GriffonController controller, @Nonnull String actionName) {
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">        for (Method method : controller.getClass().getMethods()) {</span>
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">            if (actionName.equals(method.getName()) &amp;&amp;</span>
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">                isPublic(method.getModifiers()) &amp;&amp;</span>
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">                !isStatic(method.getModifiers()) &amp;&amp;</span>
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">                method.getReturnType() == Void.TYPE) {</span>
+<span class="fc" id="L105">                return method;</span>
+            }
+        }
+<span class="nc" id="L108">        return null;</span>
+    }
+
+    @Nonnull
+    protected Configuration getConfiguration() {
+<span class="fc" id="L113">        return application.getConfiguration();</span>
+    }
+
+    @Nonnull
+    protected MessageSource getMessageSource() {
+<span class="fc" id="L118">        return application.getMessageSource();</span>
+    }
+
+    @Nonnull
+    protected UIThreadManager getUiThreadManager() {
+<span class="fc" id="L123">        return application.getUIThreadManager();</span>
+    }
+
+    @Nonnull
+    protected Map&lt;String, Threading.Policy&gt; getThreadingPolicies() {
+<span class="nc" id="L128">        return threadingPolicies;</span>
+    }
+
+    @Nonnull
+    public Map&lt;String, Action&gt; actionsFor(@Nonnull GriffonController controller) {
+<span class="nc" id="L133">        requireNonNull(controller, ERROR_CONTROLLER_NULL);</span>
+<span class="nc" id="L134">        Map&lt;String, ActionWrapper&gt; actions = actionCache.get(controller);</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">        if (actions.isEmpty()) {</span>
+<span class="nc" id="L136">            LOG.trace(&quot;No actions defined for controller {}&quot;, controller);</span>
+        }
+<span class="nc" id="L138">        return Collections.&lt;String, Action&gt;unmodifiableMap(actions);</span>
+    }
+
+    @Nullable
+    public Action actionFor(@Nonnull GriffonController controller, @Nonnull String actionName) {
+<span class="fc" id="L143">        requireNonNull(controller, ERROR_CONTROLLER_NULL);</span>
+<span class="fc" id="L144">        requireNonBlank(actionName, ERROR_ACTION_NAME_BLANK);</span>
+<span class="fc" id="L145">        return actionCache.get(controller).get(normalizeName(actionName));</span>
+    }
+
+    public void createActions(@Nonnull GriffonController controller) {
+<span class="fc" id="L149">        GriffonControllerClass griffonClass = (GriffonControllerClass) controller.getGriffonClass();</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">        for (String actionName : griffonClass.getActionNames()) {</span>
+<span class="fc" id="L151">            Method method = findActionAsMethod(controller, actionName);</span>
+<span class="pc bpc" id="L152" title="1 of 2 branches missed.">            if (method == null) {</span>
+<span class="nc" id="L153">                throw new GriffonException(controller.getClass().getCanonicalName() + &quot; does not define an action named &quot; + actionName);</span>
+            }
+
+<span class="fc" id="L156">            ActionWrapper action = wrapAction(createAndConfigureAction(controller, actionName), method);</span>
+
+<span class="fc" id="L158">            final String qualifiedActionName = action.getFullyQualifiedName();</span>
+<span class="pc bpc" id="L159" title="1 of 2 branches missed.">            for (ActionHandler handler : handlers) {</span>
+<span class="nc" id="L160">                LOG.debug(&quot;Configuring action {} with {}&quot;, qualifiedActionName, handler);</span>
+<span class="nc" id="L161">                handler.configure(action, method);</span>
+<span class="nc" id="L162">            }</span>
+
+<span class="fc" id="L164">            Map&lt;String, ActionWrapper&gt; actions = actionCache.get(controller);</span>
+<span class="pc bpc" id="L165" title="1 of 2 branches missed.">            if (actions.isEmpty()) {</span>
+<span class="fc" id="L166">                actions = new TreeMap&lt;&gt;();</span>
+<span class="fc" id="L167">                actionCache.set(controller, actions);</span>
+            }
+<span class="fc" id="L169">            String actionKey = normalizeName(actionName);</span>
+<span class="fc" id="L170">            LOG.trace(&quot;Action for {} stored as {}&quot;, qualifiedActionName, actionKey);</span>
+<span class="fc" id="L171">            actions.put(actionKey, action);</span>
+        }
+<span class="fc" id="L173">    }</span>
+
+    @Nonnull
+    private ActionWrapper wrapAction(@Nonnull Action action, @Nonnull Method method) {
+<span class="fc" id="L177">        return new ActionWrapper(action, method);</span>
+    }
+
+    @Override
+    public void updateActions() {
+<span class="nc bnc" id="L182" title="All 2 branches missed.">        for (Action action : actionCache.allActions()) {</span>
+<span class="nc" id="L183">            updateAction(action);</span>
+<span class="nc" id="L184">        }</span>
+<span class="nc" id="L185">    }</span>
+
+    @Override
+    public void updateActions(@Nonnull GriffonController controller) {
+<span class="nc bnc" id="L189" title="All 2 branches missed.">        for (Action action : actionsFor(controller).values()) {</span>
+<span class="nc" id="L190">            updateAction(action);</span>
+<span class="nc" id="L191">        }</span>
+<span class="nc" id="L192">    }</span>
+
+    @Override
+    public void updateAction(@Nonnull Action action) {
+<span class="nc" id="L196">        requireNonNull(action, ERROR_ACTION_NULL);</span>
+
+<span class="nc" id="L198">        final String qualifiedActionName = action.getFullyQualifiedName();</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">        for (ActionHandler handler : handlers) {</span>
+<span class="nc" id="L200">            LOG.trace(&quot;Calling {}.update() on {}&quot;, handler, qualifiedActionName);</span>
+<span class="nc" id="L201">            handler.update(action);</span>
+<span class="nc" id="L202">        }</span>
+<span class="nc" id="L203">    }</span>
+
+    @Override
+    public void updateAction(@Nonnull GriffonController controller, @Nonnull String actionName) {
+<span class="nc" id="L207">        requireNonNull(controller, ERROR_CONTROLLER_NULL);</span>
+<span class="nc" id="L208">        requireNonBlank(actionName, ERROR_ACTION_NAME_BLANK);</span>
+<span class="nc" id="L209">        updateAction(actionFor(controller, actionName));</span>
+<span class="nc" id="L210">    }</span>
+
+    @Override
+    public void invokeAction(@Nonnull final Action action, @Nonnull final Object... args) {
+<span class="fc" id="L214">        requireNonNull(action, ERROR_ACTION_NULL);</span>
+<span class="fc" id="L215">        final GriffonController controller = action.getController();</span>
+<span class="fc" id="L216">        final String actionName = action.getActionName();</span>
+<span class="fc" id="L217">        Runnable runnable = new Runnable() {</span>
+            @SuppressWarnings(&quot;ThrowableResultOfMethodCallIgnored&quot;)
+            public void run() {
+<span class="fc" id="L220">                Object[] updatedArgs = args;</span>
+<span class="fc" id="L221">                List&lt;ActionHandler&gt; copy = new ArrayList&lt;&gt;(handlers);</span>
+<span class="fc" id="L222">                List&lt;ActionHandler&gt; invokedHandlers = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L224">                updatedArgs = injectFromContext(action, updatedArgs);</span>
+
+<span class="fc" id="L226">                final String qualifiedActionName = action.getFullyQualifiedName();</span>
+<span class="fc" id="L227">                ActionExecutionStatus status = ActionExecutionStatus.OK;</span>
+
+<span class="pc bpc" id="L229" title="1 of 2 branches missed.">                if (LOG.isDebugEnabled()) {</span>
+<span class="fc" id="L230">                    int size = copy.size();</span>
+<span class="pc bpc" id="L231" title="1 of 2 branches missed.">                    LOG.debug(&quot;Executing &quot; + size + &quot; handler&quot; + (size != 1 ? &quot;s&quot; : &quot;&quot;) + &quot; for &quot; + qualifiedActionName);</span>
+                }
+
+<span class="pc bpc" id="L234" title="1 of 2 branches missed.">                for (ActionHandler handler : copy) {</span>
+<span class="nc" id="L235">                    invokedHandlers.add(handler);</span>
+                    try {
+<span class="nc" id="L237">                        LOG.trace(&quot;Calling {}.before() on {}&quot;, handler, qualifiedActionName);</span>
+<span class="nc" id="L238">                        updatedArgs = handler.before(action, updatedArgs);</span>
+<span class="nc" id="L239">                    } catch (AbortActionExecution aae) {</span>
+<span class="nc" id="L240">                        status = ActionExecutionStatus.ABORTED;</span>
+<span class="nc" id="L241">                        LOG.debug(&quot;Execution of {} was aborted by {}&quot;, qualifiedActionName, handler);</span>
+<span class="nc" id="L242">                        break;</span>
+<span class="nc" id="L243">                    }</span>
+<span class="nc" id="L244">                }</span>
+
+<span class="fc" id="L246">                LOG.trace(&quot;Status before execution of {} is {}&quot;, qualifiedActionName, status);</span>
+<span class="fc" id="L247">                RuntimeException exception = null;</span>
+<span class="fc" id="L248">                boolean exceptionWasHandled = false;</span>
+<span class="pc bpc" id="L249" title="1 of 2 branches missed.">                if (status == ActionExecutionStatus.OK) {</span>
+                    try {
+<span class="fc" id="L251">                        doInvokeAction(controller, actionName, updatedArgs);</span>
+<span class="nc" id="L252">                    } catch (RuntimeException e) {</span>
+<span class="nc" id="L253">                        status = ActionExecutionStatus.EXCEPTION;</span>
+<span class="nc" id="L254">                        exception = (RuntimeException) sanitize(e);</span>
+<span class="nc" id="L255">                        LOG.warn(&quot;An exception occurred when executing {}&quot;, qualifiedActionName, exception);</span>
+<span class="fc" id="L256">                    }</span>
+<span class="fc" id="L257">                    LOG.trace(&quot;Status after execution of {} is {}&quot;, qualifiedActionName, status);</span>
+
+<span class="pc bpc" id="L259" title="1 of 2 branches missed.">                    if (exception != null) {</span>
+<span class="nc bnc" id="L260" title="All 2 branches missed.">                        for (ActionHandler handler : reverse(invokedHandlers)) {</span>
+<span class="nc" id="L261">                            LOG.trace(&quot;Calling {}.exception() on {}&quot;, handler, qualifiedActionName);</span>
+<span class="nc" id="L262">                            exceptionWasHandled = handler.exception(exception, action, updatedArgs);</span>
+<span class="nc" id="L263">                        }</span>
+                    }
+                }
+
+<span class="pc bpc" id="L267" title="1 of 2 branches missed.">                for (ActionHandler handler : reverse(invokedHandlers)) {</span>
+<span class="nc" id="L268">                    LOG.trace(&quot;Calling {}.after() on {}&quot;, handler, qualifiedActionName);</span>
+<span class="nc" id="L269">                    handler.after(status, action, updatedArgs);</span>
+<span class="nc" id="L270">                }</span>
+
+<span class="pc bpc" id="L272" title="3 of 4 branches missed.">                if (exception != null &amp;&amp; !exceptionWasHandled) {</span>
+                    // throw it again
+<span class="nc" id="L274">                    throw exception;</span>
+                }
+<span class="fc" id="L276">            }</span>
+        };
+<span class="fc" id="L278">        invokeAction(controller, actionName, runnable);</span>
+<span class="fc" id="L279">    }</span>
+
+    @Nonnull
+    private Object[] injectFromContext(@Nonnull Action action, @Nonnull Object[] args) {
+<span class="fc" id="L283">        ActionWrapper wrappedAction = null;</span>
+<span class="pc bpc" id="L284" title="1 of 2 branches missed.">        if (action instanceof ActionWrapper) {</span>
+<span class="fc" id="L285">            wrappedAction = (ActionWrapper) action;</span>
+        } else {
+<span class="nc" id="L287">            wrappedAction = wrapAction(action, findActionAsMethod(action.getController(), action.getActionName()));</span>
+        }
+
+<span class="fc" id="L290">        MVCGroup group = action.getController().getMvcGroup();</span>
+<span class="pc bpc" id="L291" title="1 of 2 branches missed.">        if (group == null) {</span>
+            // This case only occurs during testing, when an artifact is
+            // instantiated without a group
+<span class="nc" id="L294">            return args;</span>
+        }
+
+<span class="fc" id="L297">        Context context = group.getContext();</span>
+<span class="fc" id="L298">        List&lt;String&gt; namedArgs = wrappedAction.namedArgs;</span>
+
+<span class="pc bpc" id="L300" title="1 of 2 branches missed.">        if (wrappedAction.hasContextualArgs) {</span>
+<span class="nc" id="L301">            args = new Object[namedArgs.size()];</span>
+<span class="nc bnc" id="L302" title="All 2 branches missed.">            for (int i = 0; i &lt; namedArgs.size(); i++) {</span>
+<span class="nc" id="L303">                args[i] = context.get(wrappedAction.namedArgs.get(i));</span>
+            }
+        }
+
+<span class="fc" id="L307">        return args;</span>
+    }
+
+    public void invokeAction(@Nonnull final GriffonController controller, @Nonnull final String actionName, @Nonnull final Object... args) {
+<span class="fc" id="L311">        requireNonNull(controller, ERROR_CONTROLLER_NULL);</span>
+<span class="fc" id="L312">        requireNonBlank(actionName, ERROR_ACTION_NAME_BLANK);</span>
+<span class="fc" id="L313">        invokeAction(actionFor(controller, actionName), args);</span>
+<span class="fc" id="L314">    }</span>
+
+    protected void doInvokeAction(@Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Object[] updatedArgs) {
+        try {
+<span class="nc" id="L318">            invokeInstanceMethod(controller, actionName, updatedArgs);</span>
+<span class="fc" id="L319">        } catch (InstanceMethodInvocationException imie) {</span>
+<span class="pc bpc" id="L320" title="1 of 2 branches missed.">            if (imie.getCause() instanceof NoSuchMethodException) {</span>
+                // try again but this time remove the 1st arg if it's
+                // descendant of java.util.EventObject
+<span class="pc bpc" id="L323" title="3 of 6 branches missed.">                if (updatedArgs.length == 1 &amp;&amp; updatedArgs[0] != null &amp;&amp; EventObject.class.isAssignableFrom(updatedArgs[0].getClass())) {</span>
+<span class="fc" id="L324">                    invokeExactInstanceMethod(controller, actionName, EMPTY_ARGS);</span>
+                } else {
+<span class="nc" id="L326">                    throw imie;</span>
+                }
+            } else {
+<span class="nc" id="L329">                throw imie;</span>
+            }
+<span class="nc" id="L331">        }</span>
+<span class="fc" id="L332">    }</span>
+
+    private void invokeAction(@Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Runnable runnable) {
+<span class="fc" id="L335">        String fullQualifiedActionName = controller.getClass().getName() + &quot;.&quot; + actionName;</span>
+<span class="fc" id="L336">        Threading.Policy policy = threadingPolicies.get(fullQualifiedActionName);</span>
+<span class="pc bpc" id="L337" title="1 of 2 branches missed.">        if (policy == null) {</span>
+<span class="pc bpc" id="L338" title="1 of 2 branches missed.">            if (isThreadingDisabled(fullQualifiedActionName)) {</span>
+<span class="nc" id="L339">                policy = Threading.Policy.SKIP;</span>
+            } else {
+<span class="fc" id="L341">                policy = resolveThreadingPolicy(controller, actionName);</span>
+            }
+<span class="fc" id="L343">            threadingPolicies.put(fullQualifiedActionName, policy);</span>
+        }
+
+<span class="fc" id="L346">        LOG.debug(&quot;Executing {} with policy {}&quot;, fullQualifiedActionName, policy);</span>
+
+<span class="pc bpc" id="L348" title="3 of 4 branches missed.">        switch (policy) {</span>
+            case OUTSIDE_UITHREAD:
+<span class="fc" id="L350">                getUiThreadManager().runOutsideUI(runnable);</span>
+<span class="fc" id="L351">                break;</span>
+            case INSIDE_UITHREAD_SYNC:
+<span class="nc" id="L353">                getUiThreadManager().runInsideUISync(runnable);</span>
+<span class="nc" id="L354">                break;</span>
+            case INSIDE_UITHREAD_ASYNC:
+<span class="nc" id="L356">                getUiThreadManager().runInsideUIAsync(runnable);</span>
+<span class="nc" id="L357">                break;</span>
+            case SKIP:
+            default:
+<span class="nc" id="L360">                runnable.run();</span>
+        }
+<span class="fc" id="L362">    }</span>
+
+    @Nonnull
+    private Threading.Policy resolveThreadingPolicy(@Nonnull GriffonController controller, @Nonnull String actionName) {
+<span class="fc" id="L366">        Method method = findActionAsMethod(controller, actionName);</span>
+<span class="pc bpc" id="L367" title="1 of 2 branches missed.">        if (method != null) {</span>
+<span class="fc" id="L368">            Threading annotation = method.getAnnotation(Threading.class);</span>
+<span class="pc bpc" id="L369" title="1 of 2 branches missed.">            return annotation == null ? resolveThreadingPolicy(controller) : annotation.value();</span>
+        }
+
+<span class="nc" id="L372">        return Threading.Policy.OUTSIDE_UITHREAD;</span>
+    }
+
+    @Nonnull
+    private Threading.Policy resolveThreadingPolicy(@Nonnull GriffonController controller) {
+<span class="fc" id="L377">        Threading annotation = AnnotationUtils.findAnnotation(controller.getClass(), Threading.class);</span>
+<span class="pc bpc" id="L378" title="1 of 2 branches missed.">        return annotation == null ? resolveThreadingPolicy() : annotation.value();</span>
+    }
+
+    @Nonnull
+    private Threading.Policy resolveThreadingPolicy() {
+<span class="fc" id="L383">        Object value = getConfiguration().get(KEY_THREADING_DEFAULT);</span>
+<span class="pc bpc" id="L384" title="1 of 2 branches missed.">        if (value == null) {</span>
+<span class="fc" id="L385">            return Threading.Policy.OUTSIDE_UITHREAD;</span>
+        }
+
+<span class="nc bnc" id="L388" title="All 2 branches missed.">        if (value instanceof Threading.Policy) {</span>
+<span class="nc" id="L389">            return (Threading.Policy) value;</span>
+        }
+
+<span class="nc" id="L392">        String policy = String.valueOf(value).toLowerCase();</span>
+<span class="nc bnc" id="L393" title="All 42 branches missed.">        switch (policy) {</span>
+            case &quot;sync&quot;:
+            case &quot;inside sync&quot;:
+            case &quot;inside uithread sync&quot;:
+            case &quot;inside_uithread_sync&quot;:
+<span class="nc" id="L398">                return Threading.Policy.INSIDE_UITHREAD_SYNC;</span>
+            case &quot;async&quot;:
+            case &quot;inside async&quot;:
+            case &quot;inside uithread async&quot;:
+            case &quot;inside_uithread_async&quot;:
+<span class="nc" id="L403">                return Threading.Policy.INSIDE_UITHREAD_ASYNC;</span>
+            case &quot;outside&quot;:
+            case &quot;outside uithread&quot;:
+            case &quot;outside_uithread&quot;:
+<span class="nc" id="L407">                return Threading.Policy.OUTSIDE_UITHREAD;</span>
+            case &quot;skip&quot;:
+<span class="nc" id="L409">                return Threading.Policy.SKIP;</span>
+            default:
+<span class="nc" id="L411">                throw new IllegalArgumentException(&quot;Value '&quot; + policy + &quot;' cannot be translated into &quot; + Threading.Policy.class.getName());</span>
+        }
+    }
+
+    private boolean isThreadingDisabled(@Nonnull String actionName) {
+<span class="pc bpc" id="L416" title="1 of 2 branches missed.">        if (getConfiguration().getAsBoolean(KEY_DISABLE_THREADING_INJECTION, false)) {</span>
+<span class="nc" id="L417">            return true;</span>
+        }
+
+<span class="fc" id="L420">        Map&lt;String, Object&gt; settings = getConfiguration().asFlatMap();</span>
+
+<span class="fc" id="L422">        String keyName = KEY_THREADING + &quot;.&quot; + actionName;</span>
+<span class="fc bfc" id="L423" title="All 2 branches covered.">        while (!KEY_THREADING.equals(keyName)) {</span>
+<span class="fc" id="L424">            Object value = settings.get(keyName);</span>
+<span class="fc" id="L425">            keyName = keyName.substring(0, keyName.lastIndexOf(&quot;.&quot;));</span>
+<span class="pc bpc" id="L426" title="3 of 4 branches missed.">            if (value != null &amp;&amp; !castToBoolean(value)) return true;</span>
+<span class="fc" id="L427">        }</span>
+
+<span class="fc" id="L429">        return false;</span>
+    }
+
+    public void addActionHandler(@Nonnull ActionHandler actionHandler) {
+<span class="nc" id="L433">        requireNonNull(actionHandler, ERROR_ACTION_HANDLER_NULL);</span>
+<span class="nc bnc" id="L434" title="All 2 branches missed.">        if (handlers.contains(actionHandler)) {</span>
+<span class="nc" id="L435">            return;</span>
+        }
+<span class="nc" id="L437">        handlers.add(actionHandler);</span>
+<span class="nc" id="L438">    }</span>
+
+    public void addActionInterceptor(@Nonnull ActionInterceptor actionInterceptor) {
+<span class="nc" id="L441">        throw new UnsupportedOperationException(ActionInterceptor.class.getName() + &quot; have been deprecated and are no longer supported&quot;);</span>
+    }
+
+    @Nonnull
+    protected Action createAndConfigureAction(@Nonnull GriffonController controller, @Nonnull String actionName) {
+<span class="fc" id="L446">        requireNonNull(controller, ERROR_CONTROLLER_NULL);</span>
+<span class="fc" id="L447">        requireNonBlank(actionName, ERROR_ACTION_NAME_BLANK);</span>
+<span class="fc" id="L448">        Action action = createControllerAction(controller, actionName);</span>
+
+<span class="fc" id="L450">        String normalizeNamed = capitalize(normalizeName(actionName));</span>
+<span class="fc" id="L451">        String keyPrefix = controller.getClass().getName() + &quot;.action.&quot;;</span>
+
+<span class="fc" id="L453">        String rsActionName = msg(keyPrefix, normalizeNamed, &quot;name&quot;, getNaturalName(normalizeNamed));</span>
+<span class="pc bpc" id="L454" title="1 of 2 branches missed.">        if (!isBlank(rsActionName)) {</span>
+<span class="fc" id="L455">            LOG.trace(&quot;{}{}.name = {}&quot;, keyPrefix, normalizeNamed, rsActionName);</span>
+<span class="fc" id="L456">            action.setName(rsActionName);</span>
+        }
+
+<span class="fc" id="L459">        doConfigureAction(action, controller, normalizeNamed, keyPrefix);</span>
+
+<span class="fc" id="L461">        action.initialize();</span>
+
+<span class="fc" id="L463">        return action;</span>
+    }
+
+    protected abstract void doConfigureAction(@Nonnull Action action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix);
+
+    @Nonnull
+    protected abstract Action createControllerAction(@Nonnull GriffonController controller, @Nonnull String actionName);
+
+    @Nonnull
+    public String normalizeName(@Nonnull String actionName) {
+<span class="fc" id="L473">        requireNonBlank(actionName, ERROR_ACTION_NAME_BLANK);</span>
+<span class="pc bpc" id="L474" title="1 of 2 branches missed.">        if (actionName.endsWith(ACTION)) {</span>
+<span class="nc" id="L475">            actionName = actionName.substring(0, actionName.length() - ACTION.length());</span>
+        }
+<span class="fc" id="L477">        return uncapitalize(actionName);</span>
+    }
+
+    @Nullable
+    protected String msg(@Nonnull String key, @Nonnull String actionName, @Nonnull String subkey, @Nullable String defaultValue) {
+        try {
+<span class="nc" id="L483">            return getMessageSource().getMessage(key + actionName + &quot;.&quot; + subkey);</span>
+<span class="fc" id="L484">        } catch (NoSuchMessageException nsme) {</span>
+<span class="fc" id="L485">            return getMessageSource().getMessage(&quot;application.action.&quot; + actionName + &quot;.&quot; + subkey, defaultValue);</span>
+        }
+    }
+
+    private static class ActionWrapper extends ActionDecorator {
+<span class="fc" id="L490">        private final List&lt;String&gt; namedArgs = new ArrayList&lt;&gt;();</span>
+        private boolean hasContextualArgs;
+
+        public ActionWrapper(@Nonnull Action delegate, @Nonnull Method method) {
+<span class="fc" id="L494">            super(delegate);</span>
+
+<span class="fc" id="L496">            Class&lt;?&gt;[] parameterTypes = method.getParameterTypes();</span>
+<span class="fc" id="L497">            Annotation[][] parameterAnnotations = method.getParameterAnnotations();</span>
+<span class="pc bpc" id="L498" title="1 of 2 branches missed.">            hasContextualArgs = method.getAnnotation(Contextual.class) != null;</span>
+<span class="pc bpc" id="L499" title="1 of 2 branches missed.">            for (int i = 0; i &lt; parameterTypes.length; i++) {</span>
+<span class="nc" id="L500">                Class&lt;?&gt; type = parameterTypes[i];</span>
+
+<span class="nc" id="L502">                Annotation[] annotations = parameterAnnotations[i];</span>
+<span class="nc" id="L503">                String name = type.getCanonicalName();</span>
+<span class="nc bnc" id="L504" title="All 2 branches missed.">                if (annotations != null) {</span>
+<span class="nc bnc" id="L505" title="All 2 branches missed.">                    for (Annotation annotation : annotations) {</span>
+<span class="nc bnc" id="L506" title="All 2 branches missed.">                        if (Contextual.class.isAssignableFrom(annotation.annotationType())) {</span>
+<span class="nc" id="L507">                            hasContextualArgs = true;</span>
+                        }
+<span class="nc bnc" id="L509" title="All 2 branches missed.">                        if (Named.class.isAssignableFrom(annotation.annotationType())) {</span>
+<span class="nc" id="L510">                            Named named = (Named) annotation;</span>
+<span class="nc bnc" id="L511" title="All 2 branches missed.">                            if (!isBlank(named.value())) {</span>
+<span class="nc" id="L512">                                name = named.value();</span>
+                            }
+                        }
+                    }
+                }
+<span class="nc" id="L517">                namedArgs.add(name);</span>
+            }
+<span class="fc" id="L519">        }</span>
+    }
+
+<span class="fc" id="L522">    private static class ActionCache {</span>
+<span class="fc" id="L523">        private final Map&lt;WeakReference&lt;GriffonController&gt;, Map&lt;String, ActionWrapper&gt;&gt; cache = new ConcurrentHashMap&lt;&gt;();</span>
+
+        @Nonnull
+        public Map&lt;String, ActionWrapper&gt; get(@Nonnull GriffonController controller) {
+<span class="fc" id="L527">            synchronized (cache) {</span>
+<span class="fc bfc" id="L528" title="All 2 branches covered.">                for (Map.Entry&lt;WeakReference&lt;GriffonController&gt;, Map&lt;String, ActionWrapper&gt;&gt; entry : cache.entrySet()) {</span>
+<span class="fc" id="L529">                    GriffonController test = entry.getKey().get();</span>
+<span class="pc bpc" id="L530" title="1 of 2 branches missed.">                    if (test == controller) {</span>
+<span class="fc" id="L531">                        return entry.getValue();</span>
+                    }
+<span class="nc" id="L533">                }</span>
+<span class="pc" id="L534">            }</span>
+<span class="fc" id="L535">            return Collections.emptyMap();</span>
+        }
+
+        public void set(@Nonnull GriffonController controller, @Nonnull Map&lt;String, ActionWrapper&gt; actions) {
+<span class="fc" id="L539">            WeakReference&lt;GriffonController&gt; existingController = null;</span>
+<span class="fc" id="L540">            synchronized (cache) {</span>
+<span class="pc bpc" id="L541" title="1 of 2 branches missed.">                for (WeakReference&lt;GriffonController&gt; key : cache.keySet()) {</span>
+<span class="nc bnc" id="L542" title="All 2 branches missed.">                    if (key.get() == controller) {</span>
+<span class="nc" id="L543">                        existingController = key;</span>
+<span class="nc" id="L544">                        break;</span>
+                    }
+<span class="nc" id="L546">                }</span>
+<span class="pc" id="L547">            }</span>
+
+<span class="pc bpc" id="L549" title="1 of 2 branches missed.">            if (null != existingController) {</span>
+<span class="nc" id="L550">                cache.remove(existingController);</span>
+            }
+
+<span class="fc" id="L553">            cache.put(new WeakReference&lt;&gt;(controller), actions);</span>
+<span class="fc" id="L554">        }</span>
+
+        public Collection&lt;Action&gt; allActions() {
+            // create a copy to avoid CME
+<span class="nc" id="L558">            List&lt;Action&gt; actions = new ArrayList&lt;&gt;();</span>
+
+<span class="nc" id="L560">            synchronized (cache) {</span>
+<span class="nc bnc" id="L561" title="All 2 branches missed.">                for (Map&lt;String, ActionWrapper&gt; map : cache.values()) {</span>
+<span class="nc" id="L562">                    actions.addAll(map.values());</span>
+<span class="nc" id="L563">                }</span>
+<span class="nc" id="L564">            }</span>
+
+<span class="nc" id="L566">            return actions;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

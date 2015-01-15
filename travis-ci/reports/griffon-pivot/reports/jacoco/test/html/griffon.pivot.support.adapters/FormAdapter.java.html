@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>FormAdapter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-pivot</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.support.adapters</a> &gt; <span class="el_source">FormAdapter.java</span></div><h1>FormAdapter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.support.adapters;
+
+import griffon.core.CallableWithArgs;
+import org.apache.pivot.wtk.Component;
+import org.apache.pivot.wtk.Form;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="fc" id="L26">public class FormAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.FormListener {</span>
+    private CallableWithArgs&lt;Void&gt; sectionInserted;
+    private CallableWithArgs&lt;Void&gt; sectionsRemoved;
+    private CallableWithArgs&lt;Void&gt; sectionHeadingChanged;
+    private CallableWithArgs&lt;Void&gt; fieldInserted;
+    private CallableWithArgs&lt;Void&gt; fieldsRemoved;
+
+    public CallableWithArgs&lt;Void&gt; getSectionInserted() {
+<span class="fc" id="L34">        return this.sectionInserted;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getSectionsRemoved() {
+<span class="fc" id="L38">        return this.sectionsRemoved;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getSectionHeadingChanged() {
+<span class="fc" id="L42">        return this.sectionHeadingChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getFieldInserted() {
+<span class="fc" id="L46">        return this.fieldInserted;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getFieldsRemoved() {
+<span class="fc" id="L50">        return this.fieldsRemoved;</span>
+    }
+
+
+    public void setSectionInserted(CallableWithArgs&lt;Void&gt; sectionInserted) {
+<span class="fc" id="L55">        this.sectionInserted = sectionInserted;</span>
+<span class="fc" id="L56">    }</span>
+
+    public void setSectionsRemoved(CallableWithArgs&lt;Void&gt; sectionsRemoved) {
+<span class="fc" id="L59">        this.sectionsRemoved = sectionsRemoved;</span>
+<span class="fc" id="L60">    }</span>
+
+    public void setSectionHeadingChanged(CallableWithArgs&lt;Void&gt; sectionHeadingChanged) {
+<span class="fc" id="L63">        this.sectionHeadingChanged = sectionHeadingChanged;</span>
+<span class="fc" id="L64">    }</span>
+
+    public void setFieldInserted(CallableWithArgs&lt;Void&gt; fieldInserted) {
+<span class="fc" id="L67">        this.fieldInserted = fieldInserted;</span>
+<span class="fc" id="L68">    }</span>
+
+    public void setFieldsRemoved(CallableWithArgs&lt;Void&gt; fieldsRemoved) {
+<span class="fc" id="L71">        this.fieldsRemoved = fieldsRemoved;</span>
+<span class="fc" id="L72">    }</span>
+
+
+    public void sectionInserted(org.apache.pivot.wtk.Form arg0, int arg1) {
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        if (sectionInserted != null) {</span>
+<span class="fc" id="L77">            sectionInserted.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L79">    }</span>
+
+    public void sectionsRemoved(org.apache.pivot.wtk.Form arg0, int arg1, org.apache.pivot.collections.Sequence&lt;Form.Section&gt; arg2) {
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        if (sectionsRemoved != null) {</span>
+<span class="fc" id="L83">            sectionsRemoved.call(arg0, arg1, arg2);</span>
+        }
+<span class="fc" id="L85">    }</span>
+
+    public void sectionHeadingChanged(org.apache.pivot.wtk.Form.Section arg0) {
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (sectionHeadingChanged != null) {</span>
+<span class="fc" id="L89">            sectionHeadingChanged.call(arg0);</span>
+        }
+<span class="fc" id="L91">    }</span>
+
+    public void fieldInserted(org.apache.pivot.wtk.Form.Section arg0, int arg1) {
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (fieldInserted != null) {</span>
+<span class="fc" id="L95">            fieldInserted.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L97">    }</span>
+
+    public void fieldsRemoved(org.apache.pivot.wtk.Form.Section arg0, int arg1, org.apache.pivot.collections.Sequence&lt;Component&gt; arg2) {
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        if (fieldsRemoved != null) {</span>
+<span class="fc" id="L101">            fieldsRemoved.call(arg0, arg1, arg2);</span>
+        }
+<span class="fc" id="L103">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

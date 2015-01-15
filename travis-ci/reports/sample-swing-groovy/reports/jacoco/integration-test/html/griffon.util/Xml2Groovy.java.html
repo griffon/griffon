@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Xml2Groovy.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.util</a> &gt; <span class="el_source">Xml2Groovy.java</span></div><h1>Xml2Groovy.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.util;
+
+import groovy.util.IndentPrinter;
+import groovy.util.XmlSlurper;
+import groovy.util.slurpersupport.GPathResult;
+import groovy.util.slurpersupport.Node;
+import groovy.util.slurpersupport.NodeChild;
+import org.codehaus.groovy.runtime.DefaultGroovyMethods;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Translates an XML file into a Groovy script that is suitable for a Groovy builder.
+ * String literals must be escaped either using single or double quotes. &lt;p&gt;
+ * This helper class is useful for translating an XML View definition into a Groovy
+ * script that can be handled by an UberBuilder, for example this View
+ *
+ * &lt;xmp&gt;
+    &lt;application title=&quot;app.config.application.title&quot;
+                 pack=&quot;true&quot;&gt;
+        &lt;actions&gt;
+            &lt;action id=&quot;'clickAction'&quot;
+                    name=&quot;'Click'&quot;
+                    closure=&quot;{controller.click(it)}&quot;/&gt;
+        &lt;/actions&gt;
+    
+        &lt;gridLayout cols=&quot;1&quot; rows=&quot;3&quot;/&gt;
+        &lt;textField id=&quot;'input'&quot; columns=&quot;20&quot;
+            text=&quot;bind('value', target: model)&quot;/&gt;
+        &lt;textField id=&quot;'output'&quot; columns=&quot;20&quot;
+            text=&quot;bind{model.value}&quot; editable=&quot;false&quot;/&gt;
+        &lt;button action=&quot;clickAction&quot;/&gt;
+    &lt;/application&gt;
+ * &lt;/xmp&gt;
+ *
+ * results in the following script
+ *
+ * &lt;pre&gt;
+application(title: app.config.application.title, pack: true) {
+  actions {
+    action(id: 'clickAction', name: 'Click', closure: {controller.click(it)})
+  }
+  gridLayout(cols: 1, rows: 3)
+  textField(id: 'input', text: bind('value', target: model), columns: 20)
+  textField(id: 'output', text: bind{model.value}, columns: 20, editable: false)
+  button(action: clickAction)
+}
+ * &lt;/pre&gt;
+ *
+ * @author Andres Almiray
+ */
+public final class Xml2Groovy {
+    private static final Xml2Groovy INSTANCE;
+
+    static {
+<span class="nc" id="L85">        INSTANCE = new Xml2Groovy();</span>
+<span class="nc" id="L86">    }</span>
+
+    public static Xml2Groovy getInstance() {
+<span class="nc" id="L89">        return INSTANCE;</span>
+    }
+
+<span class="nc" id="L92">    private Xml2Groovy() {</span>
+
+<span class="nc" id="L94">    }</span>
+
+    public String parse(File file) {
+        try {
+<span class="nc" id="L98">            return translate(newXmlSlurper().parse(file));</span>
+<span class="nc" id="L99">        } catch (IOException | SAXException e) {</span>
+<span class="nc" id="L100">            throw new IllegalArgumentException(e);</span>
+        }
+    }
+
+    public String parse(InputSource source) {
+        try {
+<span class="nc" id="L106">            return translate(newXmlSlurper().parse(source));</span>
+<span class="nc" id="L107">        } catch (IOException | SAXException e) {</span>
+<span class="nc" id="L108">            throw new IllegalArgumentException(e);</span>
+        }
+    }
+
+    public String parse(InputStream stream) {
+        try {
+<span class="nc" id="L114">            return translate(newXmlSlurper().parse(stream));</span>
+<span class="nc" id="L115">        } catch (IOException | SAXException e) {</span>
+<span class="nc" id="L116">            throw new IllegalArgumentException(e);</span>
+        }
+    }
+
+    public String parse(Reader reader) {
+        try {
+<span class="nc" id="L122">            return translate(newXmlSlurper().parse(reader));</span>
+<span class="nc" id="L123">        } catch (IOException | SAXException e) {</span>
+<span class="nc" id="L124">            throw new IllegalArgumentException(e);</span>
+        }
+    }
+
+    public String parse(String uri) {
+        try {
+<span class="nc" id="L130">            return translate(newXmlSlurper().parse(uri));</span>
+<span class="nc" id="L131">        } catch (IOException | SAXException e) {</span>
+<span class="nc" id="L132">            throw new IllegalArgumentException(e);</span>
+        }
+    }
+
+    public String parse(GPathResult root) {
+<span class="nc" id="L137">        return translate(root);</span>
+    }
+
+    public String parseText(String text) {
+        try {
+<span class="nc" id="L142">            return translate(newXmlSlurper().parseText(text));</span>
+<span class="nc" id="L143">        } catch (IOException | SAXException e) {</span>
+<span class="nc" id="L144">            throw new IllegalArgumentException(e);</span>
+        }
+    }
+
+    private XmlSlurper newXmlSlurper() {
+        try {
+<span class="nc" id="L150">            return new XmlSlurper();</span>
+<span class="nc" id="L151">        } catch (ParserConfigurationException | SAXException e) {</span>
+<span class="nc" id="L152">            throw new IllegalArgumentException(e);</span>
+        }
+    }
+
+    private String translate(GPathResult root) {
+<span class="nc" id="L157">        ByteArrayOutputStream baos = new ByteArrayOutputStream();</span>
+<span class="nc" id="L158">        IndentPrinter printer = createIndentPrinter(baos);</span>
+<span class="nc" id="L159">        walkXml(printer, (NodeChild) root);</span>
+<span class="nc" id="L160">        printer.flush();</span>
+
+<span class="nc" id="L162">        return baos.toString();</span>
+    }
+
+    private IndentPrinter createIndentPrinter(OutputStream os) {
+<span class="nc" id="L166">        PrintWriter pw = new PrintWriter(new OutputStreamWriter(os));</span>
+<span class="nc" id="L167">        return new IndentPrinter(pw, &quot;    &quot;);</span>
+    }
+
+    private void walkXml(IndentPrinter printer, NodeChild node) {
+<span class="nc" id="L171">        printer.printIndent();</span>
+<span class="nc" id="L172">        printer.print(node.name());</span>
+<span class="nc bnc" id="L173" title="All 2 branches missed.">        if (!node.attributes().isEmpty()) {</span>
+<span class="nc" id="L174">            printer.print(&quot;(&quot;);</span>
+<span class="nc" id="L175">            List&lt;String&gt; attrs = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L176" title="All 2 branches missed.">            for (Object o : node.attributes().entrySet()) {</span>
+<span class="nc" id="L177">                Map.Entry&lt;?, ?&gt; entry = (Map.Entry&lt;?, ?&gt;) o;</span>
+<span class="nc" id="L178">                attrs.add(entry.getKey() + &quot;: &quot; + entry.getValue());</span>
+<span class="nc" id="L179">            }</span>
+<span class="nc" id="L180">            printer.print(DefaultGroovyMethods.join((Iterable) attrs, &quot;, &quot;));</span>
+<span class="nc" id="L181">            printer.print(&quot;)&quot;);</span>
+        }
+
+<span class="nc bnc" id="L184" title="All 2 branches missed.">        if (node.children().size() &gt; 0) {</span>
+<span class="nc" id="L185">            printer.println(&quot; {&quot;);</span>
+<span class="nc" id="L186">            printer.incrementIndent();</span>
+<span class="nc bnc" id="L187" title="All 2 branches missed.">            for (Iterator&lt;?&gt; iter = node.childNodes(); iter.hasNext(); ) {</span>
+<span class="nc" id="L188">                Object child = iter.next();</span>
+<span class="nc bnc" id="L189" title="All 2 branches missed.">                if (child instanceof NodeChild) {</span>
+<span class="nc" id="L190">                    walkXml(printer, (NodeChild) child);</span>
+<span class="nc bnc" id="L191" title="All 2 branches missed.">                } else if (child instanceof Node) {</span>
+<span class="nc" id="L192">                    walkXml(printer, (Node) child);</span>
+                }
+<span class="nc" id="L194">            }</span>
+<span class="nc" id="L195">            printer.decrementIndent();</span>
+<span class="nc" id="L196">            printer.printIndent();</span>
+<span class="nc" id="L197">            printer.println(&quot;}&quot;);</span>
+<span class="nc bnc" id="L198" title="All 2 branches missed.">        } else if (!node.attributes().isEmpty()) {</span>
+<span class="nc" id="L199">            printer.println(&quot;&quot;);</span>
+        } else {
+<span class="nc" id="L201">            printer.println(&quot;()&quot;);</span>
+        }
+<span class="nc" id="L203">    }</span>
+
+    private void walkXml(IndentPrinter printer, Node node) {
+<span class="nc" id="L206">        printer.printIndent();</span>
+<span class="nc" id="L207">        printer.print(node.name());</span>
+<span class="nc bnc" id="L208" title="All 2 branches missed.">        if (!node.attributes().isEmpty()) {</span>
+<span class="nc" id="L209">            printer.print(&quot;(&quot;);</span>
+<span class="nc" id="L210">            List&lt;String&gt; attrs = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L211" title="All 2 branches missed.">            for (Object o : node.attributes().entrySet()) {</span>
+<span class="nc" id="L212">                Map.Entry&lt;?, ?&gt; entry = (Map.Entry&lt;?, ?&gt;) o;</span>
+<span class="nc" id="L213">                attrs.add(entry.getKey() + &quot;: &quot; + entry.getValue());</span>
+<span class="nc" id="L214">            }</span>
+<span class="nc" id="L215">            printer.print(DefaultGroovyMethods.join((Iterable) attrs, &quot;, &quot;));</span>
+<span class="nc" id="L216">            printer.print(&quot;)&quot;);</span>
+        }
+
+<span class="nc bnc" id="L219" title="All 2 branches missed.">        if (node.children().size() &gt; 0) {</span>
+<span class="nc" id="L220">            printer.println(&quot; {&quot;);</span>
+<span class="nc" id="L221">            printer.incrementIndent();</span>
+<span class="nc bnc" id="L222" title="All 2 branches missed.">            for (Iterator&lt;?&gt; iter = node.childNodes(); iter.hasNext(); ) {</span>
+<span class="nc" id="L223">                Object child = iter.next();</span>
+<span class="nc bnc" id="L224" title="All 2 branches missed.">                if (child instanceof NodeChild) {</span>
+<span class="nc" id="L225">                    walkXml(printer, (NodeChild) child);</span>
+<span class="nc bnc" id="L226" title="All 2 branches missed.">                } else if (child instanceof Node) {</span>
+<span class="nc" id="L227">                    walkXml(printer, (Node) child);</span>
+                }
+<span class="nc" id="L229">            }</span>
+<span class="nc" id="L230">            printer.decrementIndent();</span>
+<span class="nc" id="L231">            printer.printIndent();</span>
+<span class="nc" id="L232">            printer.println(&quot;}&quot;);</span>
+<span class="nc bnc" id="L233" title="All 2 branches missed.">        } else if (!node.attributes().isEmpty()) {</span>
+<span class="nc" id="L234">            printer.println(&quot;&quot;);</span>
+        } else {
+<span class="nc" id="L236">            printer.println(&quot;()&quot;);</span>
+        }
+<span class="nc" id="L238">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

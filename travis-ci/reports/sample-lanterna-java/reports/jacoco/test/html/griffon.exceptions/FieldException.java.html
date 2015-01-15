@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>FieldException.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-lanterna-java</a> &gt; <a href="index.source.html" class="el_package">griffon.exceptions</a> &gt; <span class="el_source">FieldException.java</span></div><h1>FieldException.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.exceptions;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+/**
+ * @author Andres Almiray
+ * @since 2.1.0
+ */
+public class FieldException extends GriffonException {
+    private static final long serialVersionUID = 4319304904847269368L;
+
+    public FieldException(@Nonnull Object bean, @Nonnull String fieldName, @Nullable Object value) {
+<span class="nc" id="L29">        super(formatArgs(bean, fieldName, value));</span>
+<span class="nc" id="L30">    }</span>
+
+    public FieldException(@Nonnull Object bean, @Nonnull String fieldName, @Nullable Object value, @Nonnull Throwable cause) {
+<span class="nc" id="L33">        super(formatArgs(bean, fieldName, value), checkNonNull(cause, &quot;cause&quot;));</span>
+<span class="nc" id="L34">    }</span>
+
+    public FieldException(@Nonnull Object bean, @Nonnull String fieldName) {
+<span class="nc" id="L37">        super(formatArgs(bean, fieldName));</span>
+<span class="nc" id="L38">    }</span>
+
+    public FieldException(@Nonnull Object bean, @Nonnull String fieldName, @Nonnull Throwable cause) {
+<span class="nc" id="L41">        super(formatArgs(bean, fieldName), checkNonNull(cause, &quot;cause&quot;));</span>
+<span class="nc" id="L42">    }</span>
+
+    public FieldException(@Nonnull Class&lt;?&gt; klass, @Nonnull String fieldName) {
+<span class="nc" id="L45">        super(formatArgs(klass, fieldName));</span>
+<span class="nc" id="L46">    }</span>
+
+    public FieldException(@Nonnull Class&lt;?&gt; klass, @Nonnull String fieldName, @Nonnull Throwable cause) {
+<span class="nc" id="L49">        super(formatArgs(klass, fieldName), checkNonNull(cause, &quot;cause&quot;));</span>
+<span class="nc" id="L50">    }</span>
+
+    @Nonnull
+    private static String formatArgs(@Nonnull Object bean, @Nonnull String fieldName, @Nullable Object value) {
+<span class="nc" id="L54">        checkNonNull(bean, &quot;bean&quot;);</span>
+<span class="nc" id="L55">        checkNonBlank(fieldName, &quot;fieldName&quot;);</span>
+<span class="nc" id="L56">        return &quot;Cannot set field &quot; + fieldName + &quot; with value &quot; + value + &quot; on &quot; + bean;</span>
+    }
+
+    @Nonnull
+    private static String formatArgs(@Nonnull Object bean, @Nonnull String fieldName) {
+<span class="nc" id="L61">        checkNonNull(bean, &quot;bean&quot;);</span>
+<span class="nc" id="L62">        checkNonBlank(fieldName, &quot;fieldName&quot;);</span>
+<span class="nc" id="L63">        return &quot;Cannot get field &quot; + fieldName + &quot; from &quot; + bean;</span>
+    }
+
+    @Nonnull
+    private static String formatArgs(@Nonnull Class&lt;?&gt; klass, @Nonnull String fieldName) {
+<span class="nc" id="L68">        checkNonNull(klass, &quot;klass&quot;);</span>
+<span class="nc" id="L69">        checkNonBlank(fieldName, &quot;fieldName&quot;);</span>
+<span class="nc" id="L70">        return klass + &quot; does not have a field named &quot; + fieldName;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

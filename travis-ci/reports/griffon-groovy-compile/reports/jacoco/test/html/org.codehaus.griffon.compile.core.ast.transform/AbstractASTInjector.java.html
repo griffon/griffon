@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractASTInjector.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-groovy-compile</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.compile.core.ast.transform</a> &gt; <span class="el_source">AbstractASTInjector.java</span></div><h1>AbstractASTInjector.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.compile.core.ast.transform;
+
+import griffon.core.GriffonApplication;
+import org.codehaus.griffon.compile.core.ast.GriffonASTUtils;
+import org.codehaus.groovy.ast.AnnotationNode;
+import org.codehaus.groovy.ast.ClassHelper;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.FieldNode;
+import org.codehaus.groovy.ast.MethodNode;
+import org.codehaus.groovy.ast.expr.ConstantExpression;
+import org.codehaus.groovy.ast.expr.Expression;
+import org.codehaus.groovy.ast.expr.FieldExpression;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.lang.reflect.Modifier;
+
+import static griffon.util.GriffonNameUtils.getGetterName;
+import static griffon.util.GriffonNameUtils.isBlank;
+import static java.lang.reflect.Modifier.isPrivate;
+import static java.util.Objects.requireNonNull;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_ARGS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_PARAMS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.THIS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.call;
+import static org.codehaus.groovy.ast.expr.VariableExpression.THIS_EXPRESSION;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="fc" id="L49">public abstract class AbstractASTInjector implements ASTInjector {</span>
+<span class="fc" id="L50">    public static final ClassNode NAMED_TYPE = makeClassSafe(Named.class);</span>
+<span class="fc" id="L51">    private static final ClassNode THREAD_TYPE = ClassHelper.make(Thread.class).getPlainNodeReference();</span>
+<span class="fc" id="L52">    private static final ClassNode GRIFFON_APPLICATION_TYPE = makeClassSafe(GriffonApplication.class);</span>
+<span class="fc" id="L53">    private static final ClassNode INJECT_TYPE = makeClassSafe(Inject.class);</span>
+    private static final String PROPERTY_APPLICATION = &quot;application&quot;;
+    private static final String METHOD_GET_APPLICATION = &quot;getApplication&quot;;
+
+    @Nonnull
+    public static ClassNode makeClassSafe(@Nonnull ClassNode classNode) {
+<span class="fc" id="L59">        requireNonNull(classNode, &quot;Argument 'classNode' must not be null&quot;);</span>
+<span class="fc" id="L60">        return classNode.getPlainNodeReference();</span>
+    }
+
+    @Nonnull
+    public static ClassNode makeClassSafe(@Nonnull Class&lt;?&gt; klass) {
+<span class="fc" id="L65">        requireNonNull(klass, &quot;Argument 'klass' must not be null&quot;);</span>
+<span class="fc" id="L66">        return makeClassSafe(ClassHelper.make(klass));</span>
+    }
+
+    @Nonnull
+    public static Expression currentThread() {
+<span class="nc" id="L71">        return call(THREAD_TYPE, &quot;currentThread&quot;, NO_ARGS);</span>
+    }
+
+    @Nonnull
+    public static Expression myClass() {
+<span class="nc" id="L76">        return call(THIS_EXPRESSION, &quot;getClass&quot;, NO_ARGS);</span>
+    }
+
+    @Nonnull
+    public static Expression myClassLoader() {
+<span class="nc" id="L81">        return call(myClass(), &quot;getClassLoader&quot;, NO_ARGS);</span>
+    }
+
+    @Nonnull
+    public static Expression applicationExpression(@Nonnull ClassNode classNode) {
+<span class="fc" id="L86">        FieldNode field = classNode.getDeclaredField(PROPERTY_APPLICATION);</span>
+<span class="pc bpc" id="L87" title="1 of 2 branches missed.">        if (field != null) {</span>
+<span class="fc" id="L88">            return new FieldExpression(field);</span>
+        }
+<span class="nc" id="L90">        field = classNode.getField(PROPERTY_APPLICATION);</span>
+<span class="nc bnc" id="L91" title="All 4 branches missed.">        if (field != null &amp;&amp; !isPrivate(field.getModifiers())) {</span>
+<span class="nc" id="L92">            return new FieldExpression(field);</span>
+        }
+
+<span class="nc" id="L95">        MethodNode method = classNode.getDeclaredMethod(METHOD_GET_APPLICATION, NO_PARAMS);</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        if (method != null) {</span>
+<span class="nc" id="L97">            return call(THIS, METHOD_GET_APPLICATION, NO_ARGS);</span>
+        }
+<span class="nc" id="L99">        method = classNode.getMethod(METHOD_GET_APPLICATION, NO_PARAMS);</span>
+<span class="nc bnc" id="L100" title="All 4 branches missed.">        if (method != null &amp;&amp; !isPrivate(method.getModifiers())) {</span>
+<span class="nc" id="L101">            return call(THIS, METHOD_GET_APPLICATION, NO_ARGS);</span>
+        }
+<span class="nc" id="L103">        throw new IllegalStateException(&quot;Cannot resolve application field nor getApplication() method on class &quot; + classNode.getName());</span>
+    }
+
+    @Nonnull
+    public static Expression applicationProperty(@Nonnull ClassNode classNode, @Nonnull String property) {
+<span class="fc" id="L108">        return call(applicationExpression(classNode), getGetterName(property), NO_ARGS);</span>
+    }
+
+    @Nonnull
+    public static FieldExpression injectedField(@Nonnull ClassNode owner, @Nonnull ClassNode type, @Nonnull String name) {
+<span class="fc" id="L113">        return injectedField(owner, type, name, null);</span>
+    }
+
+    @Nonnull
+    public static FieldExpression injectedField(@Nonnull ClassNode owner, @Nonnull ClassNode type, @Nonnull String name, @Nullable String qualifierName) {
+<span class="fc" id="L118">        FieldNode fieldNode = GriffonASTUtils.injectField(owner, name, Modifier.PRIVATE, type, null, false);</span>
+<span class="pc bpc" id="L119" title="1 of 2 branches missed.">        if (fieldNode.getAnnotations(INJECT_TYPE) == null) {</span>
+<span class="nc" id="L120">            fieldNode.addAnnotation(new AnnotationNode(INJECT_TYPE));</span>
+        }
+<span class="pc bpc" id="L122" title="3 of 4 branches missed.">        if (!isBlank(qualifierName) &amp;&amp; fieldNode.getAnnotations(NAMED_TYPE) == null) {</span>
+<span class="nc" id="L123">            AnnotationNode namedAnnotation = new AnnotationNode(NAMED_TYPE);</span>
+<span class="nc" id="L124">            namedAnnotation.addMember(&quot;value&quot;, new ConstantExpression(qualifierName));</span>
+<span class="nc" id="L125">            fieldNode.addAnnotation(namedAnnotation);</span>
+        }
+<span class="fc" id="L127">        return new FieldExpression(fieldNode);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>IconPropertyEditor.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-java</a> &gt; <a href="index.source.html" class="el_package">griffon.swing.editors</a> &gt; <span class="el_source">IconPropertyEditor.java</span></div><h1>IconPropertyEditor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.swing.editors;
+
+import griffon.core.editors.AbstractPropertyEditor;
+import griffon.metadata.PropertyEditorFor;
+
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+
+import static griffon.util.GriffonNameUtils.isBlank;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+@PropertyEditorFor(Icon.class)
+<span class="fc" id="L40">public class IconPropertyEditor extends AbstractPropertyEditor {</span>
+    protected void setValueInternal(Object value) {
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        if (null == value) {</span>
+<span class="nc" id="L43">            super.setValueInternal(null);</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">        } else if (value instanceof CharSequence) {</span>
+<span class="nc" id="L45">            handleAsString(String.valueOf(value));</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">        } else if (value instanceof File) {</span>
+<span class="nc" id="L47">            handleAsFile((File) value);</span>
+<span class="nc bnc" id="L48" title="All 2 branches missed.">        } else if (value instanceof URL) {</span>
+<span class="nc" id="L49">            handleAsURL((URL) value);</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        } else if (value instanceof URI) {</span>
+<span class="nc" id="L51">            handleAsURI((URI) value);</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        } else if (value instanceof InputStream) {</span>
+<span class="nc" id="L53">            handleAsInputStream((InputStream) value);</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        } else if (value instanceof ImageInputStream) {</span>
+<span class="nc" id="L55">            handleAsImageInputStream((ImageInputStream) value);</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        } else if (value instanceof byte[]) {</span>
+<span class="nc" id="L57">            handleAsByteArray((byte[]) value);</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        } else if (value instanceof Image) {</span>
+<span class="nc" id="L59">            handleAsImage((Image) value);</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        } else if (value instanceof Icon) {</span>
+<span class="nc" id="L61">            super.setValueInternal(value);</span>
+        } else {
+<span class="nc" id="L63">            throw illegalValue(value, Icon.class);</span>
+        }
+<span class="nc" id="L65">    }</span>
+
+    private void handleAsString(String str) {
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (isBlank(str)) {</span>
+<span class="nc" id="L69">            super.setValueInternal(null);</span>
+<span class="nc" id="L70">            return;</span>
+        }
+<span class="nc" id="L72">        handleAsURL(getClass().getClassLoader().getResource(str));</span>
+<span class="nc" id="L73">    }</span>
+
+    private void handleAsFile(File file) {
+        try {
+<span class="nc" id="L77">            handleAsImage(ImageIO.read(file));</span>
+<span class="nc" id="L78">        } catch (IOException e) {</span>
+<span class="nc" id="L79">            throw illegalValue(file, Icon.class, e);</span>
+<span class="nc" id="L80">        }</span>
+<span class="nc" id="L81">    }</span>
+
+    private void handleAsURL(URL url) {
+        try {
+<span class="nc" id="L85">            handleAsImage(ImageIO.read(url));</span>
+<span class="nc" id="L86">        } catch (IOException e) {</span>
+<span class="nc" id="L87">            throw illegalValue(url, Icon.class, e);</span>
+<span class="nc" id="L88">        }</span>
+<span class="nc" id="L89">    }</span>
+
+    private void handleAsURI(URI uri) {
+        try {
+<span class="nc" id="L93">            handleAsURL(uri.toURL());</span>
+<span class="nc" id="L94">        } catch (MalformedURLException e) {</span>
+<span class="nc" id="L95">            throw illegalValue(uri, Icon.class, e);</span>
+<span class="nc" id="L96">        }</span>
+<span class="nc" id="L97">    }</span>
+
+    private void handleAsInputStream(InputStream stream) {
+        try {
+<span class="nc" id="L101">            handleAsImage(ImageIO.read(stream));</span>
+<span class="nc" id="L102">        } catch (IOException e) {</span>
+<span class="nc" id="L103">            throw illegalValue(stream, Icon.class, e);</span>
+<span class="nc" id="L104">        }</span>
+<span class="nc" id="L105">    }</span>
+
+    private void handleAsImageInputStream(ImageInputStream stream) {
+        try {
+<span class="nc" id="L109">            handleAsImage(ImageIO.read(stream));</span>
+<span class="nc" id="L110">        } catch (IOException e) {</span>
+<span class="nc" id="L111">            throw illegalValue(stream, Icon.class, e);</span>
+<span class="nc" id="L112">        }</span>
+<span class="nc" id="L113">    }</span>
+
+    private void handleAsByteArray(byte[] bytes) {
+<span class="nc" id="L116">        super.setValueInternal(new ImageIcon(bytes));</span>
+<span class="nc" id="L117">    }</span>
+
+    private void handleAsImage(Image img) {
+<span class="nc" id="L120">        super.setValueInternal(new ImageIcon(img));</span>
+<span class="nc" id="L121">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

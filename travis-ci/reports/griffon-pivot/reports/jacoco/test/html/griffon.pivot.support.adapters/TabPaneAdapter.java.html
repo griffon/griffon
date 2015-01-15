@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TabPaneAdapter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-pivot</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.support.adapters</a> &gt; <span class="el_source">TabPaneAdapter.java</span></div><h1>TabPaneAdapter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.support.adapters;
+
+import griffon.core.CallableWithArgs;
+import org.apache.pivot.util.Vote;
+import org.apache.pivot.wtk.Component;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="fc" id="L26">public class TabPaneAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TabPaneListener {</span>
+    private CallableWithArgs&lt;Void&gt; tabInserted;
+    private CallableWithArgs&lt;Vote&gt; previewRemoveTabs;
+    private CallableWithArgs&lt;Void&gt; removeTabsVetoed;
+    private CallableWithArgs&lt;Void&gt; tabsRemoved;
+    private CallableWithArgs&lt;Void&gt; tabDataRendererChanged;
+    private CallableWithArgs&lt;Void&gt; closeableChanged;
+    private CallableWithArgs&lt;Void&gt; collapsibleChanged;
+    private CallableWithArgs&lt;Void&gt; cornerChanged;
+
+    public CallableWithArgs&lt;Void&gt; getTabInserted() {
+<span class="fc" id="L37">        return this.tabInserted;</span>
+    }
+
+    public CallableWithArgs&lt;Vote&gt; getPreviewRemoveTabs() {
+<span class="fc" id="L41">        return this.previewRemoveTabs;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getRemoveTabsVetoed() {
+<span class="fc" id="L45">        return this.removeTabsVetoed;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getTabsRemoved() {
+<span class="fc" id="L49">        return this.tabsRemoved;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getTabDataRendererChanged() {
+<span class="fc" id="L53">        return this.tabDataRendererChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getCloseableChanged() {
+<span class="fc" id="L57">        return this.closeableChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getCollapsibleChanged() {
+<span class="fc" id="L61">        return this.collapsibleChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getCornerChanged() {
+<span class="fc" id="L65">        return this.cornerChanged;</span>
+    }
+
+
+    public void setTabInserted(CallableWithArgs&lt;Void&gt; tabInserted) {
+<span class="fc" id="L70">        this.tabInserted = tabInserted;</span>
+<span class="fc" id="L71">    }</span>
+
+    public void setPreviewRemoveTabs(CallableWithArgs&lt;Vote&gt; previewRemoveTabs) {
+<span class="fc" id="L74">        this.previewRemoveTabs = previewRemoveTabs;</span>
+<span class="fc" id="L75">    }</span>
+
+    public void setRemoveTabsVetoed(CallableWithArgs&lt;Void&gt; removeTabsVetoed) {
+<span class="fc" id="L78">        this.removeTabsVetoed = removeTabsVetoed;</span>
+<span class="fc" id="L79">    }</span>
+
+    public void setTabsRemoved(CallableWithArgs&lt;Void&gt; tabsRemoved) {
+<span class="fc" id="L82">        this.tabsRemoved = tabsRemoved;</span>
+<span class="fc" id="L83">    }</span>
+
+    public void setTabDataRendererChanged(CallableWithArgs&lt;Void&gt; tabDataRendererChanged) {
+<span class="fc" id="L86">        this.tabDataRendererChanged = tabDataRendererChanged;</span>
+<span class="fc" id="L87">    }</span>
+
+    public void setCloseableChanged(CallableWithArgs&lt;Void&gt; closeableChanged) {
+<span class="fc" id="L90">        this.closeableChanged = closeableChanged;</span>
+<span class="fc" id="L91">    }</span>
+
+    public void setCollapsibleChanged(CallableWithArgs&lt;Void&gt; collapsibleChanged) {
+<span class="fc" id="L94">        this.collapsibleChanged = collapsibleChanged;</span>
+<span class="fc" id="L95">    }</span>
+
+    public void setCornerChanged(CallableWithArgs&lt;Void&gt; cornerChanged) {
+<span class="fc" id="L98">        this.cornerChanged = cornerChanged;</span>
+<span class="fc" id="L99">    }</span>
+
+
+    public void tabInserted(org.apache.pivot.wtk.TabPane arg0, int arg1) {
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        if (tabInserted != null) {</span>
+<span class="fc" id="L104">            tabInserted.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L106">    }</span>
+
+    public org.apache.pivot.util.Vote previewRemoveTabs(org.apache.pivot.wtk.TabPane arg0, int arg1, int arg2) {
+<span class="fc bfc" id="L109" title="All 2 branches covered.">        if (previewRemoveTabs != null) {</span>
+<span class="fc" id="L110">            return previewRemoveTabs.call(arg0, arg1, arg2);</span>
+        }
+<span class="fc" id="L112">        return Vote.APPROVE;</span>
+    }
+
+    public void removeTabsVetoed(org.apache.pivot.wtk.TabPane arg0, org.apache.pivot.util.Vote arg1) {
+<span class="fc bfc" id="L116" title="All 2 branches covered.">        if (removeTabsVetoed != null) {</span>
+<span class="fc" id="L117">            removeTabsVetoed.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L119">    }</span>
+
+    public void tabsRemoved(org.apache.pivot.wtk.TabPane arg0, int arg1, org.apache.pivot.collections.Sequence&lt;Component&gt; arg2) {
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        if (tabsRemoved != null) {</span>
+<span class="fc" id="L123">            tabsRemoved.call(arg0, arg1, arg2);</span>
+        }
+<span class="fc" id="L125">    }</span>
+
+    public void tabDataRendererChanged(org.apache.pivot.wtk.TabPane arg0, org.apache.pivot.wtk.Button.DataRenderer arg1) {
+<span class="fc bfc" id="L128" title="All 2 branches covered.">        if (tabDataRendererChanged != null) {</span>
+<span class="fc" id="L129">            tabDataRendererChanged.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L131">    }</span>
+
+    public void closeableChanged(org.apache.pivot.wtk.TabPane arg0) {
+<span class="fc bfc" id="L134" title="All 2 branches covered.">        if (closeableChanged != null) {</span>
+<span class="fc" id="L135">            closeableChanged.call(arg0);</span>
+        }
+<span class="fc" id="L137">    }</span>
+
+    public void collapsibleChanged(org.apache.pivot.wtk.TabPane arg0) {
+<span class="fc bfc" id="L140" title="All 2 branches covered.">        if (collapsibleChanged != null) {</span>
+<span class="fc" id="L141">            collapsibleChanged.call(arg0);</span>
+        }
+<span class="fc" id="L143">    }</span>
+
+    public void cornerChanged(org.apache.pivot.wtk.TabPane arg0, org.apache.pivot.wtk.Component arg1) {
+<span class="fc bfc" id="L146" title="All 2 branches covered.">        if (cornerChanged != null) {</span>
+<span class="fc" id="L147">            cornerChanged.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L149">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

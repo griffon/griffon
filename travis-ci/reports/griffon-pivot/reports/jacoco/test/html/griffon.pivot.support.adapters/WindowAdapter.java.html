@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>WindowAdapter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-pivot</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.support.adapters</a> &gt; <span class="el_source">WindowAdapter.java</span></div><h1>WindowAdapter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.support.adapters;
+
+import griffon.core.CallableWithArgs;
+import org.apache.pivot.wtk.media.Image;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="fc" id="L25">public class WindowAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.WindowListener {</span>
+    private CallableWithArgs&lt;Void&gt; iconAdded;
+    private CallableWithArgs&lt;Void&gt; iconInserted;
+    private CallableWithArgs&lt;Void&gt; iconsRemoved;
+    private CallableWithArgs&lt;Void&gt; titleChanged;
+    private CallableWithArgs&lt;Void&gt; contentChanged;
+    private CallableWithArgs&lt;Void&gt; activeChanged;
+    private CallableWithArgs&lt;Void&gt; maximizedChanged;
+
+    public CallableWithArgs&lt;Void&gt; getIconAdded() {
+<span class="fc" id="L35">        return this.iconAdded;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getIconInserted() {
+<span class="fc" id="L39">        return this.iconInserted;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getIconsRemoved() {
+<span class="fc" id="L43">        return this.iconsRemoved;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getTitleChanged() {
+<span class="fc" id="L47">        return this.titleChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getContentChanged() {
+<span class="fc" id="L51">        return this.contentChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getActiveChanged() {
+<span class="fc" id="L55">        return this.activeChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getMaximizedChanged() {
+<span class="fc" id="L59">        return this.maximizedChanged;</span>
+    }
+
+
+    public void setIconAdded(CallableWithArgs&lt;Void&gt; iconAdded) {
+<span class="fc" id="L64">        this.iconAdded = iconAdded;</span>
+<span class="fc" id="L65">    }</span>
+
+    public void setIconInserted(CallableWithArgs&lt;Void&gt; iconInserted) {
+<span class="fc" id="L68">        this.iconInserted = iconInserted;</span>
+<span class="fc" id="L69">    }</span>
+
+    public void setIconsRemoved(CallableWithArgs&lt;Void&gt; iconsRemoved) {
+<span class="fc" id="L72">        this.iconsRemoved = iconsRemoved;</span>
+<span class="fc" id="L73">    }</span>
+
+    public void setTitleChanged(CallableWithArgs&lt;Void&gt; titleChanged) {
+<span class="fc" id="L76">        this.titleChanged = titleChanged;</span>
+<span class="fc" id="L77">    }</span>
+
+    public void setContentChanged(CallableWithArgs&lt;Void&gt; contentChanged) {
+<span class="fc" id="L80">        this.contentChanged = contentChanged;</span>
+<span class="fc" id="L81">    }</span>
+
+    public void setActiveChanged(CallableWithArgs&lt;Void&gt; activeChanged) {
+<span class="fc" id="L84">        this.activeChanged = activeChanged;</span>
+<span class="fc" id="L85">    }</span>
+
+    public void setMaximizedChanged(CallableWithArgs&lt;Void&gt; maximizedChanged) {
+<span class="fc" id="L88">        this.maximizedChanged = maximizedChanged;</span>
+<span class="fc" id="L89">    }</span>
+
+
+    public void iconAdded(org.apache.pivot.wtk.Window arg0, org.apache.pivot.wtk.media.Image arg1) {
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        if (iconAdded != null) {</span>
+<span class="fc" id="L94">            iconAdded.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L96">    }</span>
+
+    public void iconInserted(org.apache.pivot.wtk.Window arg0, org.apache.pivot.wtk.media.Image arg1, int arg2) {
+<span class="fc bfc" id="L99" title="All 2 branches covered.">        if (iconInserted != null) {</span>
+<span class="fc" id="L100">            iconInserted.call(arg0, arg1, arg2);</span>
+        }
+<span class="fc" id="L102">    }</span>
+
+    public void iconsRemoved(org.apache.pivot.wtk.Window arg0, int arg1, org.apache.pivot.collections.Sequence&lt;Image&gt; arg2) {
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        if (iconsRemoved != null) {</span>
+<span class="fc" id="L106">            iconsRemoved.call(arg0, arg1, arg2);</span>
+        }
+<span class="fc" id="L108">    }</span>
+
+    public void titleChanged(org.apache.pivot.wtk.Window arg0, java.lang.String arg1) {
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        if (titleChanged != null) {</span>
+<span class="fc" id="L112">            titleChanged.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L114">    }</span>
+
+    public void contentChanged(org.apache.pivot.wtk.Window arg0, org.apache.pivot.wtk.Component arg1) {
+<span class="fc bfc" id="L117" title="All 2 branches covered.">        if (contentChanged != null) {</span>
+<span class="fc" id="L118">            contentChanged.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L120">    }</span>
+
+    public void activeChanged(org.apache.pivot.wtk.Window arg0, org.apache.pivot.wtk.Window arg1) {
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        if (activeChanged != null) {</span>
+<span class="fc" id="L124">            activeChanged.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L126">    }</span>
+
+    public void maximizedChanged(org.apache.pivot.wtk.Window arg0) {
+<span class="fc bfc" id="L129" title="All 2 branches covered.">        if (maximizedChanged != null) {</span>
+<span class="fc" id="L130">            maximizedChanged.call(arg0);</span>
+        }
+<span class="fc" id="L132">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

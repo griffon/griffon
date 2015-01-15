@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>EventListenerFactory.groovy</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.builder.pivot.factory</a> &gt; <span class="el_source">EventListenerFactory.groovy</span></div><h1>EventListenerFactory.groovy</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.builder.pivot.factory
+
+/**
+ * @author Andres Almiray
+ */
+class EventListenerFactory extends AbstractFactory {
+<span class="nc" id="L22">    private static final Class[] PARAMS = [FactoryBuilderSupport] as Class[]</span>
+    final Class adapterClass
+<span class="nc" id="L24">    final List&lt;Class&gt; parents = []</span>
+    final String getListenersMethod
+
+    EventListenerFactory(Class adapterClass, List&lt;Class&gt; parents, String listenersMethod) {
+<span class="nc" id="L28">        this.adapterClass = adapterClass</span>
+<span class="nc" id="L29">        this.parents.addAll(parents)</span>
+<span class="nc" id="L30">        this.getListenersMethod = listenersMethod</span>
+    }
+
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
+    throws InstantiationException, IllegalAccessException {
+<span class="nc bnc" id="L35" title="All 6 branches missed.">        if (value &amp;&amp; adapterClass.isAssignableFrom(value.getClass())) return value</span>
+<span class="nc" id="L36">        adapterClass.getDeclaredConstructor(PARAMS).newInstance([builder] as Object[])</span>
+    }
+
+    boolean isHandlesNodeChildren() {
+<span class="nc" id="L40">        return true</span>
+    }
+
+    boolean onNodeChildren(FactoryBuilderSupport builder, Object node, Closure childContent) {
+<span class="nc" id="L44">        node.delegate = childContent.delegate</span>
+<span class="nc" id="L45">        childContent.delegate = node</span>
+<span class="nc" id="L46">        childContent()</span>
+<span class="nc" id="L47">        return false</span>
+    }
+
+    void setParent(FactoryBuilderSupport builder, Object parent, Object node) {
+<span class="nc bnc" id="L51" title="All 4 branches missed.">        if (!parent) return</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        for (candidate in parents) {</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">            if (candidate.isAssignableFrom(parent.getClass())) {</span>
+<span class="nc" id="L54">                parent.&quot;$getListenersMethod&quot;().add(node)</span>
+<span class="nc" id="L55">                break</span>
+            }
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

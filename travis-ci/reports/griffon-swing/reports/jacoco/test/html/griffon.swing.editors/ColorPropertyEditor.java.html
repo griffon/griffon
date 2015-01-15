@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ColorPropertyEditor.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-swing</a> &gt; <a href="index.source.html" class="el_package">griffon.swing.editors</a> &gt; <span class="el_source">ColorPropertyEditor.java</span></div><h1>ColorPropertyEditor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.swing.editors;
+
+import griffon.core.editors.AbstractPropertyEditor;
+import griffon.core.formatters.Formatter;
+import griffon.core.formatters.ParseException;
+import griffon.metadata.PropertyEditorFor;
+import griffon.swing.formatters.ColorFormatter;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static griffon.util.GriffonNameUtils.isBlank;
+
+
+/**
+ * @author Andres Almiray
+ * @author Alexander Klein
+ * @since 2.0.0
+ */
+@PropertyEditorFor(Color.class)
+<span class="fc" id="L38">public class ColorPropertyEditor extends AbstractPropertyEditor {</span>
+    public static String format(Color color) {
+<span class="fc" id="L40">        return ColorFormatter.LONG.format(color);</span>
+    }
+
+    @Override
+    public String getAsText() {
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        if (null == getValue()) return null;</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        return isBlank(getFormat()) ? format((Color) getValueInternal()) : getFormattedValue();</span>
+    }
+
+    protected void setValueInternal(Object value) {
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        if (null == value) {</span>
+<span class="fc" id="L51">            super.setValueInternal(null);</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        } else if (value instanceof CharSequence) {</span>
+<span class="fc" id="L53">            handleAsString(String.valueOf(value).trim());</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        } else if (value instanceof List) {</span>
+<span class="fc" id="L55">            handleAsList((List) value);</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        } else if (value instanceof Map) {</span>
+<span class="fc" id="L57">            handleAsMap((Map) value);</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        } else if (value instanceof Number) {</span>
+<span class="fc" id="L59">            handleAsNumber((Number) value);</span>
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">        } else if (value instanceof Color) {</span>
+<span class="fc" id="L61">            super.setValueInternal(value);</span>
+        } else {
+<span class="nc" id="L63">            throw illegalValue(value, Color.class);</span>
+        }
+<span class="fc" id="L65">    }</span>
+
+    @Override
+    protected Formatter&lt;Color&gt; resolveFormatter() {
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        return !isBlank(getFormat()) ? ColorFormatter.getInstance(getFormat()) : null;</span>
+    }
+
+    private void handleAsString(String str) {
+        try {
+<span class="fc bfc" id="L74" title="All 2 branches covered.">            if (isBlank(str)) {</span>
+<span class="fc" id="L75">                super.setValueInternal(null);</span>
+            } else {
+<span class="fc" id="L77">                super.setValueInternal(ColorFormatter.parseColor(str));</span>
+            }
+<span class="nc" id="L79">        } catch (ParseException e) {</span>
+<span class="nc" id="L80">            throw illegalValue(str, Color.class, e);</span>
+<span class="fc" id="L81">        }</span>
+<span class="fc" id="L82">    }</span>
+
+    private void handleAsList(List&lt;?&gt; list) {
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        if(list.isEmpty()) {</span>
+<span class="fc" id="L86">            super.setValueInternal(null);</span>
+<span class="fc" id="L87">            return;</span>
+        }
+
+<span class="fc" id="L90">        List&lt;Object&gt; values = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L91">        values.addAll(list);</span>
+<span class="pc bpc" id="L92" title="1 of 3 branches missed.">        switch (list.size()) {</span>
+            case 3:
+<span class="fc" id="L94">                values.add(255);</span>
+<span class="fc" id="L95">                break;</span>
+            case 4:
+                // ok
+<span class="fc" id="L98">                break;</span>
+            default:
+<span class="nc" id="L100">                throw illegalValue(list, Color.class);</span>
+        }
+<span class="fc bfc" id="L102" title="All 2 branches covered.">        for (int i = 0, valuesSize = values.size(); i &lt; valuesSize; i++) {</span>
+<span class="fc" id="L103">            Object val = values.get(i);</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">            if (val instanceof Number) {</span>
+<span class="fc" id="L105">                values.set(i, parse((Number) val));</span>
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">            } else if (val instanceof CharSequence) {</span>
+<span class="fc" id="L107">                values.set(i, parse(String.valueOf(val)));</span>
+            } else {
+<span class="nc" id="L109">                throw illegalValue(list, Color.class);</span>
+            }
+        }
+<span class="fc" id="L112">        super.setValueInternal(</span>
+            new Color(
+<span class="fc" id="L114">                (Integer) values.get(0),</span>
+<span class="fc" id="L115">                (Integer) values.get(1),</span>
+<span class="fc" id="L116">                (Integer) values.get(2),</span>
+<span class="fc" id="L117">                (Integer) values.get(3)</span>
+            )
+        );
+<span class="fc" id="L120">    }</span>
+
+    private void handleAsMap(Map&lt;?, ?&gt; map) {
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        if(map.isEmpty()) {</span>
+<span class="fc" id="L124">            super.setValueInternal(null);</span>
+<span class="fc" id="L125">            return;</span>
+        }
+
+<span class="fc" id="L128">        int r = getMapValue(map, &quot;red&quot;, 0);</span>
+<span class="fc" id="L129">        int g = getMapValue(map, &quot;green&quot;, 0);</span>
+<span class="fc" id="L130">        int b = getMapValue(map, &quot;blue&quot;, 0);</span>
+<span class="fc" id="L131">        int a = getMapValue(map, &quot;alpha&quot;, 255);</span>
+<span class="fc" id="L132">        super.setValueInternal(new Color(r, g, b, a));</span>
+<span class="fc" id="L133">    }</span>
+
+    private int parse(String val) {
+        try {
+<span class="fc" id="L137">            return Integer.parseInt(String.valueOf(val).trim(), 16) &amp; 0xFF;</span>
+<span class="nc" id="L138">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L139">            throw illegalValue(val, Color.class, e);</span>
+        }
+    }
+
+    private int parse(Number val) {
+<span class="fc" id="L144">        return val.intValue() &amp; 0xFF;</span>
+    }
+
+    private int getMapValue(Map&lt;?, ?&gt; map, String key, int defaultValue) {
+<span class="fc" id="L148">        Object val = map.get(key);</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        if (null == val) val = map.get(String.valueOf(key.charAt(0)));</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">        if (null == val) {</span>
+<span class="fc" id="L151">            return defaultValue;</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">        } else if (val instanceof CharSequence) {</span>
+<span class="fc" id="L153">            return parse(String.valueOf(val));</span>
+<span class="pc bpc" id="L154" title="1 of 2 branches missed.">        } else if (val instanceof Number) {</span>
+<span class="fc" id="L155">            return parse((Number) val);</span>
+        }
+<span class="nc" id="L157">        throw illegalValue(map, Color.class);</span>
+    }
+
+    private void handleAsNumber(Number value) {
+<span class="fc" id="L161">        int c = parse(value);</span>
+<span class="fc" id="L162">        super.setValueInternal(new Color(c, c, c, 255));</span>
+<span class="fc" id="L163">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

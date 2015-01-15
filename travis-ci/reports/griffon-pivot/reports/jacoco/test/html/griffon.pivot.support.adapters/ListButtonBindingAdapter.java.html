@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ListButtonBindingAdapter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-pivot</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.support.adapters</a> &gt; <span class="el_source">ListButtonBindingAdapter.java</span></div><h1>ListButtonBindingAdapter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.support.adapters;
+
+import griffon.core.CallableWithArgs;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="fc" id="L24">public class ListButtonBindingAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ListButtonBindingListener {</span>
+    private CallableWithArgs&lt;Void&gt; listDataKeyChanged;
+    private CallableWithArgs&lt;Void&gt; listDataBindTypeChanged;
+    private CallableWithArgs&lt;Void&gt; listDataBindMappingChanged;
+    private CallableWithArgs&lt;Void&gt; selectedItemKeyChanged;
+    private CallableWithArgs&lt;Void&gt; selectedItemBindTypeChanged;
+    private CallableWithArgs&lt;Void&gt; selectedItemBindMappingChanged;
+
+    public CallableWithArgs&lt;Void&gt; getListDataKeyChanged() {
+<span class="fc" id="L33">        return this.listDataKeyChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getListDataBindTypeChanged() {
+<span class="fc" id="L37">        return this.listDataBindTypeChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getListDataBindMappingChanged() {
+<span class="fc" id="L41">        return this.listDataBindMappingChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getSelectedItemKeyChanged() {
+<span class="fc" id="L45">        return this.selectedItemKeyChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getSelectedItemBindTypeChanged() {
+<span class="fc" id="L49">        return this.selectedItemBindTypeChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getSelectedItemBindMappingChanged() {
+<span class="fc" id="L53">        return this.selectedItemBindMappingChanged;</span>
+    }
+
+
+    public void setListDataKeyChanged(CallableWithArgs&lt;Void&gt; listDataKeyChanged) {
+<span class="fc" id="L58">        this.listDataKeyChanged = listDataKeyChanged;</span>
+<span class="fc" id="L59">    }</span>
+
+    public void setListDataBindTypeChanged(CallableWithArgs&lt;Void&gt; listDataBindTypeChanged) {
+<span class="fc" id="L62">        this.listDataBindTypeChanged = listDataBindTypeChanged;</span>
+<span class="fc" id="L63">    }</span>
+
+    public void setListDataBindMappingChanged(CallableWithArgs&lt;Void&gt; listDataBindMappingChanged) {
+<span class="fc" id="L66">        this.listDataBindMappingChanged = listDataBindMappingChanged;</span>
+<span class="fc" id="L67">    }</span>
+
+    public void setSelectedItemKeyChanged(CallableWithArgs&lt;Void&gt; selectedItemKeyChanged) {
+<span class="fc" id="L70">        this.selectedItemKeyChanged = selectedItemKeyChanged;</span>
+<span class="fc" id="L71">    }</span>
+
+    public void setSelectedItemBindTypeChanged(CallableWithArgs&lt;Void&gt; selectedItemBindTypeChanged) {
+<span class="fc" id="L74">        this.selectedItemBindTypeChanged = selectedItemBindTypeChanged;</span>
+<span class="fc" id="L75">    }</span>
+
+    public void setSelectedItemBindMappingChanged(CallableWithArgs&lt;Void&gt; selectedItemBindMappingChanged) {
+<span class="fc" id="L78">        this.selectedItemBindMappingChanged = selectedItemBindMappingChanged;</span>
+<span class="fc" id="L79">    }</span>
+
+
+    public void listDataKeyChanged(org.apache.pivot.wtk.ListButton arg0, java.lang.String arg1) {
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        if (listDataKeyChanged != null) {</span>
+<span class="fc" id="L84">            listDataKeyChanged.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L86">    }</span>
+
+    public void listDataBindTypeChanged(org.apache.pivot.wtk.ListButton arg0, org.apache.pivot.wtk.BindType arg1) {
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (listDataBindTypeChanged != null) {</span>
+<span class="fc" id="L90">            listDataBindTypeChanged.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L92">    }</span>
+
+    public void listDataBindMappingChanged(org.apache.pivot.wtk.ListButton arg0, org.apache.pivot.wtk.ListView.ListDataBindMapping arg1) {
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        if (listDataBindMappingChanged != null) {</span>
+<span class="fc" id="L96">            listDataBindMappingChanged.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L98">    }</span>
+
+    public void selectedItemKeyChanged(org.apache.pivot.wtk.ListButton arg0, java.lang.String arg1) {
+<span class="fc bfc" id="L101" title="All 2 branches covered.">        if (selectedItemKeyChanged != null) {</span>
+<span class="fc" id="L102">            selectedItemKeyChanged.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L104">    }</span>
+
+    public void selectedItemBindTypeChanged(org.apache.pivot.wtk.ListButton arg0, org.apache.pivot.wtk.BindType arg1) {
+<span class="fc bfc" id="L107" title="All 2 branches covered.">        if (selectedItemBindTypeChanged != null) {</span>
+<span class="fc" id="L108">            selectedItemBindTypeChanged.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L110">    }</span>
+
+    public void selectedItemBindMappingChanged(org.apache.pivot.wtk.ListButton arg0, org.apache.pivot.wtk.ListView.ItemBindMapping arg1) {
+<span class="fc bfc" id="L113" title="All 2 branches covered.">        if (selectedItemBindMappingChanged != null) {</span>
+<span class="fc" id="L114">            selectedItemBindMappingChanged.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L116">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ThreadingAwareConstants.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-core-compile</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.compile.core</a> &gt; <span class="el_source">ThreadingAwareConstants.java</span></div><h1>ThreadingAwareConstants.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.compile.core;
+
+import static org.codehaus.griffon.compile.core.MethodDescriptor.annotatedMethod;
+import static org.codehaus.griffon.compile.core.MethodDescriptor.annotatedType;
+import static org.codehaus.griffon.compile.core.MethodDescriptor.annotations;
+import static org.codehaus.griffon.compile.core.MethodDescriptor.args;
+import static org.codehaus.griffon.compile.core.MethodDescriptor.method;
+import static org.codehaus.griffon.compile.core.MethodDescriptor.type;
+import static org.codehaus.griffon.compile.core.MethodDescriptor.typeParams;
+
+/**
+ * @author Andres Almiray
+ */
+public interface ThreadingAwareConstants extends BaseConstants {
+    String THREADING_HANDLER_TYPE = &quot;griffon.core.threading.ThreadingHandler&quot;;
+    String UITHREAD_MANAGER_PROPERTY = &quot;uiThreadManager&quot;;
+
+    String METHOD_IS_UITHREAD = &quot;isUIThread&quot;;
+    String METHOD_RUN_INSIDE_UI_ASYNC = &quot;runInsideUIAsync&quot;;
+    String METHOD_RUN_INSIDE_UI_SYNC = &quot;runInsideUISync&quot;;
+    String METHOD_RUN_OUTSIDE_UI = &quot;runOutsideUI&quot;;
+    String METHOD_RUN_FUTURE = &quot;runFuture&quot;;
+
+    String JAVA_UTIL_CONCURRENT_FUTURE = &quot;java.util.concurrent.Future&quot;;
+    String JAVA_UTIL_CONCURRENT_CALLABLE = &quot;java.util.concurrent.Callable&quot;;
+    String JAVA_UTIL_CONCURRENT_EXECUTOR_SERVICE = &quot;java.util.concurrent.ExecutorService&quot;;
+
+<span class="nc" id="L43">    MethodDescriptor[] METHODS = new MethodDescriptor[]{</span>
+<span class="nc" id="L44">        method(</span>
+<span class="nc" id="L45">            type(BOOLEAN),</span>
+            METHOD_IS_UITHREAD
+        ),
+<span class="nc" id="L48">        method(</span>
+<span class="nc" id="L49">            type(VOID),</span>
+            METHOD_RUN_INSIDE_UI_ASYNC,
+<span class="nc" id="L51">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_RUNNABLE))</span>
+        ),
+<span class="nc" id="L53">        method(</span>
+<span class="nc" id="L54">            type(VOID),</span>
+            METHOD_RUN_INSIDE_UI_SYNC,
+<span class="nc" id="L56">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_RUNNABLE))</span>
+        ),
+<span class="nc" id="L58">        method(</span>
+<span class="nc" id="L59">            type(VOID),</span>
+            METHOD_RUN_OUTSIDE_UI,
+<span class="nc" id="L61">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_RUNNABLE))</span>
+        ),
+<span class="nc" id="L63">        annotatedMethod(</span>
+<span class="nc" id="L64">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="nc" id="L65">            type(JAVA_UTIL_CONCURRENT_FUTURE, R),</span>
+<span class="nc" id="L66">            typeParams(R),</span>
+            METHOD_RUN_FUTURE,
+<span class="nc" id="L68">            args(</span>
+<span class="nc" id="L69">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_CONCURRENT_EXECUTOR_SERVICE),</span>
+<span class="nc" id="L70">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_CONCURRENT_CALLABLE, R))</span>
+        ),
+<span class="nc" id="L72">        annotatedMethod(</span>
+<span class="nc" id="L73">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="nc" id="L74">            type(JAVA_UTIL_CONCURRENT_FUTURE, R),</span>
+<span class="nc" id="L75">            typeParams(R),</span>
+            METHOD_RUN_FUTURE,
+<span class="nc" id="L77">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_CONCURRENT_CALLABLE, R))</span>
+        ),
+<span class="nc" id="L79">        annotatedMethod(</span>
+<span class="nc" id="L80">            annotations(JAVAX_ANNOTATION_NULLABLE),</span>
+<span class="nc" id="L81">            type(R),</span>
+<span class="nc" id="L82">            typeParams(R),</span>
+            METHOD_RUN_INSIDE_UI_SYNC,
+<span class="nc" id="L84">            args(</span>
+<span class="nc" id="L85">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_CONCURRENT_CALLABLE, R))</span>
+        )
+    };
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>MovieAdapter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.support.adapters</a> &gt; <span class="el_source">MovieAdapter.java</span></div><h1>MovieAdapter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.support.adapters;
+
+import griffon.core.CallableWithArgs;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="nc" id="L24">public class MovieAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.media.MovieListener {</span>
+    private CallableWithArgs&lt;Void&gt; regionUpdated;
+    private CallableWithArgs&lt;Void&gt; baselineChanged;
+    private CallableWithArgs&lt;Void&gt; sizeChanged;
+    private CallableWithArgs&lt;Void&gt; currentFrameChanged;
+    private CallableWithArgs&lt;Void&gt; loopingChanged;
+    private CallableWithArgs&lt;Void&gt; movieStarted;
+    private CallableWithArgs&lt;Void&gt; movieStopped;
+
+    public CallableWithArgs&lt;Void&gt; getRegionUpdated() {
+<span class="nc" id="L34">        return this.regionUpdated;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getBaselineChanged() {
+<span class="nc" id="L38">        return this.baselineChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getSizeChanged() {
+<span class="nc" id="L42">        return this.sizeChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getCurrentFrameChanged() {
+<span class="nc" id="L46">        return this.currentFrameChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getLoopingChanged() {
+<span class="nc" id="L50">        return this.loopingChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getMovieStarted() {
+<span class="nc" id="L54">        return this.movieStarted;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getMovieStopped() {
+<span class="nc" id="L58">        return this.movieStopped;</span>
+    }
+
+
+    public void setRegionUpdated(CallableWithArgs&lt;Void&gt; regionUpdated) {
+<span class="nc" id="L63">        this.regionUpdated = regionUpdated;</span>
+<span class="nc" id="L64">    }</span>
+
+    public void setBaselineChanged(CallableWithArgs&lt;Void&gt; baselineChanged) {
+<span class="nc" id="L67">        this.baselineChanged = baselineChanged;</span>
+<span class="nc" id="L68">    }</span>
+
+    public void setSizeChanged(CallableWithArgs&lt;Void&gt; sizeChanged) {
+<span class="nc" id="L71">        this.sizeChanged = sizeChanged;</span>
+<span class="nc" id="L72">    }</span>
+
+    public void setCurrentFrameChanged(CallableWithArgs&lt;Void&gt; currentFrameChanged) {
+<span class="nc" id="L75">        this.currentFrameChanged = currentFrameChanged;</span>
+<span class="nc" id="L76">    }</span>
+
+    public void setLoopingChanged(CallableWithArgs&lt;Void&gt; loopingChanged) {
+<span class="nc" id="L79">        this.loopingChanged = loopingChanged;</span>
+<span class="nc" id="L80">    }</span>
+
+    public void setMovieStarted(CallableWithArgs&lt;Void&gt; movieStarted) {
+<span class="nc" id="L83">        this.movieStarted = movieStarted;</span>
+<span class="nc" id="L84">    }</span>
+
+    public void setMovieStopped(CallableWithArgs&lt;Void&gt; movieStopped) {
+<span class="nc" id="L87">        this.movieStopped = movieStopped;</span>
+<span class="nc" id="L88">    }</span>
+
+
+    public void regionUpdated(org.apache.pivot.wtk.media.Movie arg0, int arg1, int arg2, int arg3, int arg4) {
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        if (regionUpdated != null) {</span>
+<span class="nc" id="L93">            regionUpdated.call(arg0, arg1, arg2, arg3, arg4);</span>
+        }
+<span class="nc" id="L95">    }</span>
+
+    public void baselineChanged(org.apache.pivot.wtk.media.Movie arg0, int arg1) {
+<span class="nc bnc" id="L98" title="All 2 branches missed.">        if (baselineChanged != null) {</span>
+<span class="nc" id="L99">            baselineChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L101">    }</span>
+
+    public void sizeChanged(org.apache.pivot.wtk.media.Movie arg0, int arg1, int arg2) {
+<span class="nc bnc" id="L104" title="All 2 branches missed.">        if (sizeChanged != null) {</span>
+<span class="nc" id="L105">            sizeChanged.call(arg0, arg1, arg2);</span>
+        }
+<span class="nc" id="L107">    }</span>
+
+    public void currentFrameChanged(org.apache.pivot.wtk.media.Movie arg0, int arg1) {
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (currentFrameChanged != null) {</span>
+<span class="nc" id="L111">            currentFrameChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L113">    }</span>
+
+    public void loopingChanged(org.apache.pivot.wtk.media.Movie arg0) {
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        if (loopingChanged != null) {</span>
+<span class="nc" id="L117">            loopingChanged.call(arg0);</span>
+        }
+<span class="nc" id="L119">    }</span>
+
+    public void movieStarted(org.apache.pivot.wtk.media.Movie arg0) {
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        if (movieStarted != null) {</span>
+<span class="nc" id="L123">            movieStarted.call(arg0);</span>
+        }
+<span class="nc" id="L125">    }</span>
+
+    public void movieStopped(org.apache.pivot.wtk.media.Movie arg0) {
+<span class="nc bnc" id="L128" title="All 2 branches missed.">        if (movieStopped != null) {</span>
+<span class="nc" id="L129">            movieStopped.call(arg0);</span>
+        }
+<span class="nc" id="L131">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

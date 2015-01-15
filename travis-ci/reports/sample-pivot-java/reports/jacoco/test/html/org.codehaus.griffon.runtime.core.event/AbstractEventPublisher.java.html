@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractEventPublisher.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-java</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core.event</a> &gt; <span class="el_source">AbstractEventPublisher.java</span></div><h1>AbstractEventPublisher.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core.event;
+
+import griffon.core.CallableWithArgs;
+import griffon.core.event.Event;
+import griffon.core.event.EventPublisher;
+import griffon.core.event.EventRouter;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import java.util.List;
+import java.util.Map;
+
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="nc" id="L36">public abstract class AbstractEventPublisher implements EventPublisher {</span>
+    private static final String ERROR_EVENT_NAME_BLANK = &quot;Argument 'eventName' must not be blank&quot;;
+    private static final String ERROR_LISTENER_NULL = &quot;Argument 'listener' must not be null&quot;;
+    private static final String ERROR_EVENT_CLASS_NULL = &quot;Argument 'eventClass' must not be null&quot;;
+    private static final String ERROR_EVENT_NULL = &quot;Argument 'event' must not be null&quot;;
+
+    private EventRouter eventRouter;
+
+    @Inject
+    public void setEventRouter(@Nonnull EventRouter eventRouter) {
+<span class="nc" id="L46">        this.eventRouter = requireNonNull(eventRouter, &quot;Argument 'eventRouter' must not be null&quot;);</span>
+<span class="nc" id="L47">    }</span>
+
+    public boolean isEventPublishingEnabled() {
+<span class="nc" id="L50">        return eventRouter.isEventPublishingEnabled();</span>
+    }
+
+    public &lt;E extends Event&gt; void removeEventListener(@Nonnull Class&lt;E&gt; eventClass, @Nonnull CallableWithArgs&lt;?&gt; listener) {
+<span class="nc" id="L54">        requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);</span>
+<span class="nc" id="L55">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="nc" id="L56">        eventRouter.removeEventListener(eventClass, listener);</span>
+<span class="nc" id="L57">    }</span>
+
+    public void addEventListener(@Nonnull Object listener) {
+<span class="nc" id="L60">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="nc" id="L61">        eventRouter.addEventListener(listener);</span>
+<span class="nc" id="L62">    }</span>
+
+    public void addEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs&lt;?&gt; listener) {
+<span class="nc" id="L65">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
+<span class="nc" id="L66">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="nc" id="L67">        eventRouter.addEventListener(eventName, listener);</span>
+<span class="nc" id="L68">    }</span>
+
+    public void publishEvent(@Nonnull String eventName) {
+<span class="nc" id="L71">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
+<span class="nc" id="L72">        eventRouter.publishEvent(eventName);</span>
+<span class="nc" id="L73">    }</span>
+
+    public void publishEventOutsideUI(@Nonnull Event event) {
+<span class="nc" id="L76">        requireNonNull(event, ERROR_EVENT_NULL);</span>
+<span class="nc" id="L77">        eventRouter.publishEventOutsideUI(event);</span>
+<span class="nc" id="L78">    }</span>
+
+    public void removeEventListener(@Nonnull Map&lt;String, CallableWithArgs&lt;?&gt;&gt; listener) {
+<span class="nc" id="L81">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="nc" id="L82">        eventRouter.removeEventListener(listener);</span>
+<span class="nc" id="L83">    }</span>
+
+    public &lt;E extends Event&gt; void addEventListener(@Nonnull Class&lt;E&gt; eventClass, @Nonnull CallableWithArgs&lt;?&gt; listener) {
+<span class="nc" id="L86">        requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);</span>
+<span class="nc" id="L87">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="nc" id="L88">        eventRouter.addEventListener(eventClass, listener);</span>
+<span class="nc" id="L89">    }</span>
+
+    public void publishEventOutsideUI(@Nonnull String eventName) {
+<span class="nc" id="L92">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
+<span class="nc" id="L93">        eventRouter.publishEventOutsideUI(eventName);</span>
+<span class="nc" id="L94">    }</span>
+
+    public void publishEventOutsideUI(@Nonnull String eventName, @Nullable List&lt;?&gt; params) {
+<span class="nc" id="L97">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
+<span class="nc" id="L98">        eventRouter.publishEventOutsideUI(eventName, params);</span>
+<span class="nc" id="L99">    }</span>
+
+    public void publishEvent(@Nonnull String eventName, @Nullable List&lt;?&gt; params) {
+<span class="nc" id="L102">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
+<span class="nc" id="L103">        eventRouter.publishEvent(eventName, params);</span>
+<span class="nc" id="L104">    }</span>
+
+    public void publishEventAsync(@Nonnull String eventName, @Nullable List&lt;?&gt; params) {
+<span class="nc" id="L107">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
+<span class="nc" id="L108">        eventRouter.publishEventAsync(eventName, params);</span>
+<span class="nc" id="L109">    }</span>
+
+    public void removeEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs&lt;?&gt; listener) {
+<span class="nc" id="L112">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
+<span class="nc" id="L113">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="nc" id="L114">        eventRouter.removeEventListener(eventName, listener);</span>
+<span class="nc" id="L115">    }</span>
+
+    public void removeEventListener(@Nonnull Object listener) {
+<span class="nc" id="L118">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="nc" id="L119">        eventRouter.removeEventListener(listener);</span>
+<span class="nc" id="L120">    }</span>
+
+    public void addEventListener(@Nonnull Map&lt;String, CallableWithArgs&lt;?&gt;&gt; listener) {
+<span class="nc" id="L123">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="nc" id="L124">        eventRouter.addEventListener(listener);</span>
+<span class="nc" id="L125">    }</span>
+
+    public void setEventPublishingEnabled(boolean enabled) {
+<span class="nc" id="L128">        eventRouter.setEventPublishingEnabled(enabled);</span>
+<span class="nc" id="L129">    }</span>
+
+    public void publishEvent(@Nonnull Event event) {
+<span class="nc" id="L132">        requireNonNull(event, ERROR_EVENT_NULL);</span>
+<span class="nc" id="L133">        eventRouter.publishEvent(event);</span>
+<span class="nc" id="L134">    }</span>
+
+    public void publishEventAsync(@Nonnull String eventName) {
+<span class="nc" id="L137">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
+<span class="nc" id="L138">        eventRouter.publishEventAsync(eventName);</span>
+<span class="nc" id="L139">    }</span>
+
+    public void publishEventAsync(@Nonnull Event event) {
+<span class="nc" id="L142">        requireNonNull(event, ERROR_EVENT_NULL);</span>
+<span class="nc" id="L143">        eventRouter.publishEventAsync(event);</span>
+<span class="nc" id="L144">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

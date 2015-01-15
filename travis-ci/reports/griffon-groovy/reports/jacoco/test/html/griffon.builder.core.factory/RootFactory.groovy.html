@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>RootFactory.groovy</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.builder.core.factory</a> &gt; <span class="el_source">RootFactory.groovy</span></div><h1>RootFactory.groovy</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.builder.core.factory
+
+/**
+ * Identifies the top level node of a script
+ *
+ * @author Andres Almiray
+ */
+@SuppressWarnings(&quot;rawtypes&quot;)
+class RootFactory extends AbstractFactory {
+    final boolean leaf = true
+
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
+<span class="fc bfc" id="L28" title="All 2 branches covered.">        String rootName = attributes.remove('name') ?: 'root'</span>
+<span class="fc" id="L29">        attributes.clear()</span>
+<span class="fc bfc" id="L30" title="All 2 branches covered.">        if (null == value) {</span>
+<span class="fc" id="L31">            String scriptName = builder.variables[FactoryBuilderSupport.SCRIPT_CLASS_NAME]</span>
+<span class="pc bpc" id="L32" title="2 of 4 branches missed.">            if (!scriptName) return null</span>
+<span class="fc" id="L33">            String varName = scriptName + '-' + rootName</span>
+<span class="fc" id="L34">            value = builder.variables[varName]</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">        } else if (value instanceof CharSequence) {</span>
+<span class="fc" id="L36">            String scriptName = builder.variables[FactoryBuilderSupport.SCRIPT_CLASS_NAME]</span>
+<span class="pc bpc" id="L37" title="2 of 4 branches missed.">            if (!scriptName) return null</span>
+<span class="fc" id="L38">            String varName = scriptName + '-' + value.toString()</span>
+<span class="fc" id="L39">            value = builder.variables[varName]</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">        } else if (value instanceof Class) {</span>
+<span class="fc" id="L41">            String varName = value.name + '-' + rootName</span>
+<span class="pc" id="L42">            return builder.variables[varName]</span>
+        } else {
+<span class="fc" id="L44">            String scriptName = builder.variables[FactoryBuilderSupport.SCRIPT_CLASS_NAME]</span>
+<span class="pc bpc" id="L45" title="2 of 4 branches missed.">            if (!scriptName) return null</span>
+<span class="fc" id="L46">            String varName = scriptName + '-' + rootName</span>
+<span class="fc" id="L47">            builder.variables[varName] = value</span>
+<span class="fc" id="L48">            builder.variables[scriptName + '-root'] = value</span>
+        }
+<span class="pc" id="L50">        value</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

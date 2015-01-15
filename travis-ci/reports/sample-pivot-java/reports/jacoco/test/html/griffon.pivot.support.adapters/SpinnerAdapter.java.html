@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>SpinnerAdapter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-java</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.support.adapters</a> &gt; <span class="el_source">SpinnerAdapter.java</span></div><h1>SpinnerAdapter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.support.adapters;
+
+import griffon.core.CallableWithArgs;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="nc" id="L24">public class SpinnerAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.SpinnerListener {</span>
+    private CallableWithArgs&lt;Void&gt; itemRendererChanged;
+    private CallableWithArgs&lt;Void&gt; spinnerDataChanged;
+    private CallableWithArgs&lt;Void&gt; circularChanged;
+
+    public CallableWithArgs&lt;Void&gt; getItemRendererChanged() {
+<span class="nc" id="L30">        return this.itemRendererChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getSpinnerDataChanged() {
+<span class="nc" id="L34">        return this.spinnerDataChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getCircularChanged() {
+<span class="nc" id="L38">        return this.circularChanged;</span>
+    }
+
+
+    public void setItemRendererChanged(CallableWithArgs&lt;Void&gt; itemRendererChanged) {
+<span class="nc" id="L43">        this.itemRendererChanged = itemRendererChanged;</span>
+<span class="nc" id="L44">    }</span>
+
+    public void setSpinnerDataChanged(CallableWithArgs&lt;Void&gt; spinnerDataChanged) {
+<span class="nc" id="L47">        this.spinnerDataChanged = spinnerDataChanged;</span>
+<span class="nc" id="L48">    }</span>
+
+    public void setCircularChanged(CallableWithArgs&lt;Void&gt; circularChanged) {
+<span class="nc" id="L51">        this.circularChanged = circularChanged;</span>
+<span class="nc" id="L52">    }</span>
+
+
+    public void itemRendererChanged(org.apache.pivot.wtk.Spinner arg0, org.apache.pivot.wtk.Spinner.ItemRenderer arg1) {
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (itemRendererChanged != null) {</span>
+<span class="nc" id="L57">            itemRendererChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L59">    }</span>
+
+    public void spinnerDataChanged(org.apache.pivot.wtk.Spinner arg0, org.apache.pivot.collections.List&lt;?&gt; arg1) {
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (spinnerDataChanged != null) {</span>
+<span class="nc" id="L63">            spinnerDataChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L65">    }</span>
+
+    public void circularChanged(org.apache.pivot.wtk.Spinner arg0) {
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (circularChanged != null) {</span>
+<span class="nc" id="L69">            circularChanged.call(arg0);</span>
+        }
+<span class="nc" id="L71">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

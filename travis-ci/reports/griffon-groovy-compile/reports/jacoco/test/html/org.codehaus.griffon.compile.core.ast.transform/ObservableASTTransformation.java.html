@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ObservableASTTransformation.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-groovy-compile</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.compile.core.ast.transform</a> &gt; <span class="el_source">ObservableASTTransformation.java</span></div><h1>ObservableASTTransformation.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.compile.core.ast.transform;
+
+import griffon.core.Observable;
+import org.codehaus.griffon.compile.core.AnnotationHandler;
+import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
+import org.codehaus.griffon.compile.core.ObservableConstants;
+import org.codehaus.griffon.compile.core.ast.GriffonASTUtils;
+import org.codehaus.groovy.ast.ASTNode;
+import org.codehaus.groovy.ast.AnnotatedNode;
+import org.codehaus.groovy.ast.AnnotationNode;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.FieldNode;
+import org.codehaus.groovy.ast.MethodNode;
+import org.codehaus.groovy.ast.PropertyNode;
+import org.codehaus.groovy.ast.expr.Expression;
+import org.codehaus.groovy.ast.expr.FieldExpression;
+import org.codehaus.groovy.ast.expr.VariableExpression;
+import org.codehaus.groovy.ast.stmt.BlockStatement;
+import org.codehaus.groovy.ast.stmt.Statement;
+import org.codehaus.groovy.control.CompilePhase;
+import org.codehaus.groovy.control.SourceUnit;
+import org.codehaus.groovy.control.messages.SyntaxErrorMessage;
+import org.codehaus.groovy.syntax.SyntaxException;
+import org.codehaus.groovy.transform.GroovyASTTransformation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeSupport;
+import java.lang.reflect.Modifier;
+
+import static griffon.util.GriffonNameUtils.getGetterName;
+import static griffon.util.GriffonNameUtils.getSetterName;
+import static java.lang.reflect.Modifier.FINAL;
+import static java.lang.reflect.Modifier.PROTECTED;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_ARGS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_EXCEPTIONS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.THIS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.args;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.assign;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.call;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.constx;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.ctor;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.decls;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.field;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectField;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectInterface;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectMethod;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.param;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.params;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.stmnt;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.var;
+import static org.codehaus.griffon.compile.core.ast.transform.VetoableASTTransformation.hasVetoableAnnotation;
+import static org.codehaus.groovy.ast.ClassHelper.OBJECT_TYPE;
+import static org.codehaus.groovy.ast.ClassHelper.STRING_TYPE;
+import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
+
+/**
+ * Handles generation of code for the {@code @Observable} annotation.
+ *
+ * @author Andres Almiray
+ */
+@AnnotationHandlerFor(griffon.transform.Observable.class)
+@GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
+<span class="fc" id="L80">public class ObservableASTTransformation extends AbstractASTTransformation implements ObservableConstants, AnnotationHandler {</span>
+<span class="fc" id="L81">    private static final Logger LOG = LoggerFactory.getLogger(ObservableASTTransformation.class);</span>
+<span class="fc" id="L82">    private static final ClassNode OBSERVABLE_CNODE = makeClassSafe(Observable.class);</span>
+<span class="fc" id="L83">    private static final ClassNode OBSERVABLE_ANNOTATION_CNODE = makeClassSafe(griffon.transform.Observable.class);</span>
+
+    /**
+     * Convenience method to see if an annotated node is {@code @Observable}.
+     *
+     * @param node the node to check
+     * @return true if the node is an event publisher
+     */
+    public static boolean hasObservableAnnotation(AnnotatedNode node) {
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        for (AnnotationNode annotation : node.getAnnotations()) {</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">            if (OBSERVABLE_ANNOTATION_CNODE.equals(annotation.getClassNode())) {</span>
+<span class="nc" id="L94">                return true;</span>
+            }
+<span class="fc" id="L96">        }</span>
+<span class="fc" id="L97">        return false;</span>
+    }
+
+    /**
+     * Handles the bulk of the processing, mostly delegating to other methods.
+     *
+     * @param nodes  the ast nodes
+     * @param source the source unit for the nodes
+     */
+    public void visit(ASTNode[] nodes, SourceUnit source) {
+<span class="pc bpc" id="L107" title="2 of 4 branches missed.">        if (!(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof AnnotatedNode)) {</span>
+<span class="nc" id="L108">            throw new IllegalArgumentException(&quot;Internal error: wrong types: &quot;</span>
+<span class="nc" id="L109">                + nodes[0].getClass().getName() + &quot; / &quot; + nodes[1].getClass().getName());</span>
+        }
+<span class="fc" id="L111">        AnnotationNode node = (AnnotationNode) nodes[0];</span>
+<span class="fc" id="L112">        AnnotatedNode parent = (AnnotatedNode) nodes[1];</span>
+
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">        if (hasVetoableAnnotation(parent)) {</span>
+            // VetoableASTTransformation will handle both @Observable and @Vetoable
+<span class="nc" id="L116">            return;</span>
+        }
+
+<span class="fc" id="L119">        ClassNode declaringClass = parent.getDeclaringClass();</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        if (parent instanceof FieldNode) {</span>
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">            if ((((FieldNode) parent).getModifiers() &amp; Modifier.FINAL) != 0) {</span>
+<span class="nc" id="L122">                source.getErrorCollector().addErrorAndContinue(new SyntaxErrorMessage(</span>
+                    new SyntaxException(&quot;@griffon.transform.Observable cannot annotate a final property.&quot;,
+<span class="nc" id="L124">                        node.getLineNumber(), node.getColumnNumber(), node.getLastLineNumber(), node.getLastColumnNumber()),</span>
+                    source));
+            }
+
+<span class="pc bpc" id="L128" title="1 of 2 branches missed.">            if (hasVetoableAnnotation(parent.getDeclaringClass())) {</span>
+                // VetoableASTTransformation will handle both @Observable and @Vetoable
+<span class="nc" id="L130">                return;</span>
+            }
+<span class="fc" id="L132">            addObservableIfNeeded(source, node, declaringClass, (FieldNode) parent);</span>
+<span class="pc bpc" id="L133" title="1 of 2 branches missed.">        } else if (parent instanceof ClassNode) {</span>
+<span class="fc" id="L134">            addObservableIfNeeded(source, (ClassNode) parent);</span>
+        }
+<span class="fc" id="L136">    }</span>
+
+    public static boolean needsObservableSupport(ClassNode classNode, SourceUnit source) {
+<span class="fc" id="L139">        return needsDelegate(classNode, source, OBSERVABLE_METHODS, &quot;Observable&quot;, OBSERVABLE_TYPE);</span>
+    }
+
+    public static void addObservableIfNeeded(SourceUnit source, ClassNode classNode) {
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">        if (needsObservableSupport(classNode, source)) {</span>
+<span class="fc" id="L144">            LOG.debug(&quot;Injecting {} into {}&quot;, OBSERVABLE_TYPE, classNode.getName());</span>
+<span class="fc" id="L145">            apply(classNode);</span>
+        }
+
+<span class="pc bpc" id="L148" title="1 of 2 branches missed.">        for (PropertyNode propertyNode : classNode.getProperties()) {</span>
+<span class="nc" id="L149">            FieldNode field = propertyNode.getField();</span>
+            // look to see if per-field handlers will catch this one...
+<span class="nc bnc" id="L151" title="All 2 branches missed.">            if (hasObservableAnnotation(field)</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">                || ((field.getModifiers() &amp; Modifier.FINAL) != 0)</span>
+<span class="nc bnc" id="L153" title="All 2 branches missed.">                || field.isStatic()</span>
+<span class="nc bnc" id="L154" title="All 2 branches missed.">                || hasVetoableAnnotation(field)) {</span>
+                // explicitly labeled properties are already handled,
+                // don't transform final properties
+                // don't transform static properties
+                // VetoableASTTransformation will handle both @Observable and @Vetoable
+<span class="nc" id="L159">                continue;</span>
+            }
+<span class="nc" id="L161">            createListenerSetter(classNode, propertyNode);</span>
+<span class="nc" id="L162">        }</span>
+<span class="fc" id="L163">    }</span>
+
+    public static void addObservableIfNeeded(SourceUnit source, AnnotationNode annotationNode, ClassNode classNode, FieldNode field) {
+<span class="fc" id="L166">        String fieldName = field.getName();</span>
+<span class="pc bpc" id="L167" title="1 of 2 branches missed.">        for (PropertyNode propertyNode : classNode.getProperties()) {</span>
+<span class="pc bpc" id="L168" title="1 of 2 branches missed.">            if (propertyNode.getName().equals(fieldName)) {</span>
+<span class="pc bpc" id="L169" title="1 of 2 branches missed.">                if (field.isStatic()) {</span>
+                    //noinspection ThrowableInstanceNeverThrown
+<span class="nc" id="L171">                    source.getErrorCollector().addErrorAndContinue(new SyntaxErrorMessage(</span>
+                        new SyntaxException(&quot;@griffon.transform.Observable cannot annotate a static property.&quot;,
+<span class="nc" id="L173">                            annotationNode.getLineNumber(), annotationNode.getColumnNumber(), annotationNode.getLastLineNumber(), annotationNode.getLastColumnNumber()),</span>
+                        source));
+                } else {
+<span class="pc bpc" id="L176" title="1 of 2 branches missed.">                    if (needsObservableSupport(classNode, source)) {</span>
+<span class="fc" id="L177">                        LOG.debug(&quot;Injecting {} into {}&quot;, OBSERVABLE_TYPE, classNode.getName());</span>
+<span class="fc" id="L178">                        apply(classNode);</span>
+                    }
+<span class="fc" id="L180">                    createListenerSetter(classNode, propertyNode);</span>
+                }
+<span class="fc" id="L182">                return;</span>
+            }
+<span class="nc" id="L184">        }</span>
+        //noinspection ThrowableInstanceNeverThrown
+<span class="nc" id="L186">        source.getErrorCollector().addErrorAndContinue(new SyntaxErrorMessage(</span>
+            new SyntaxException(&quot;@griffon.transform.Observable must be on a property, not a field. Try removing the private, protected, or public modifier.&quot;,
+<span class="nc" id="L188">                annotationNode.getLineNumber(), annotationNode.getColumnNumber(), annotationNode.getLastLineNumber(), annotationNode.getLastColumnNumber()),</span>
+            source));
+<span class="nc" id="L190">    }</span>
+
+    private static void createListenerSetter(ClassNode classNode, PropertyNode propertyNode) {
+<span class="fc" id="L193">        String setterName = getSetterName(propertyNode.getName());</span>
+<span class="pc bpc" id="L194" title="1 of 2 branches missed.">        if (classNode.getMethods(setterName).isEmpty()) {</span>
+<span class="fc" id="L195">            Expression fieldExpression = new FieldExpression(propertyNode.getField());</span>
+<span class="fc" id="L196">            Statement setterBlock = createBindableStatement(propertyNode, fieldExpression);</span>
+
+            // create method void &lt;setter&gt;(&lt;type&gt; fieldName)
+<span class="fc" id="L199">            createSetterMethod(classNode, propertyNode, setterName, setterBlock);</span>
+<span class="fc" id="L200">        } else {</span>
+<span class="nc" id="L201">            wrapSetterMethod(classNode, propertyNode.getName());</span>
+        }
+<span class="fc" id="L203">    }</span>
+
+    private static Statement createBindableStatement(PropertyNode propertyNode, Expression fieldExpression) {
+        // create statementBody
+<span class="fc" id="L207">        return stmnt(call(</span>
+            THIS,
+            METHOD_FIRE_PROPERTY_CHANGE,
+<span class="fc" id="L210">            args(</span>
+<span class="fc" id="L211">                constx(propertyNode.getName()),</span>
+                fieldExpression,
+<span class="fc" id="L213">                assign(fieldExpression, var(VALUE)))));</span>
+    }
+
+    private static void createSetterMethod(ClassNode declaringClass, PropertyNode propertyNode, String setterName, Statement setterBlock) {
+<span class="fc" id="L217">        MethodNode setter = new MethodNode(</span>
+            setterName,
+<span class="fc" id="L219">            propertyNode.getModifiers(),</span>
+            VOID_TYPE,
+<span class="fc" id="L221">            params(param(propertyNode.getType(), VALUE)),</span>
+            NO_EXCEPTIONS,
+            setterBlock);
+<span class="fc" id="L224">        setter.setSynthetic(true);</span>
+        // add it to the class
+<span class="fc" id="L226">        declaringClass.addMethod(setter);</span>
+<span class="fc" id="L227">    }</span>
+
+    private static void wrapSetterMethod(ClassNode classNode, String propertyName) {
+<span class="nc" id="L230">        String getterName = getGetterName(propertyName);</span>
+<span class="nc" id="L231">        MethodNode setter = classNode.getSetterMethod(getSetterName(propertyName));</span>
+
+<span class="nc bnc" id="L233" title="All 2 branches missed.">        if (setter != null) {</span>
+            // Get the existing code block
+<span class="nc" id="L235">            Statement code = setter.getCode();</span>
+
+<span class="nc" id="L237">            VariableExpression oldValue = new VariableExpression(&quot;$oldValue&quot;);</span>
+<span class="nc" id="L238">            VariableExpression newValue = new VariableExpression(&quot;$newValue&quot;);</span>
+<span class="nc" id="L239">            BlockStatement block = new BlockStatement();</span>
+
+            // create a local variable to hold the old value from the getter
+<span class="nc" id="L242">            block.addStatement(decls(oldValue, call(THIS, getterName, NO_ARGS)));</span>
+
+            // call the existing block, which will presumably set the value properly
+<span class="nc" id="L245">            block.addStatement(code);</span>
+
+            // get the new value to emit in the event
+<span class="nc" id="L248">            block.addStatement(decls(newValue, call(THIS, getterName, NO_ARGS)));</span>
+
+            // add the firePropertyChange method call
+<span class="nc" id="L251">            block.addStatement(stmnt(call(</span>
+                THIS,
+                METHOD_FIRE_PROPERTY_CHANGE,
+<span class="nc" id="L254">                args(constx(propertyName), oldValue, newValue))));</span>
+
+            // replace the existing code block with our new one
+<span class="nc" id="L257">            setter.setCode(block);</span>
+        }
+<span class="nc" id="L259">    }</span>
+
+    /**
+     * Adds the necessary field and methods to support resource locating.
+     *
+     * @param classNode the class to which we add the support field and methods
+     */
+    public static void apply(ClassNode classNode) {
+<span class="fc" id="L267">        injectInterface(classNode, OBSERVABLE_CNODE);</span>
+
+<span class="fc" id="L269">        ClassNode pcsClassNode = makeClassSafe(PropertyChangeSupport.class);</span>
+<span class="fc" id="L270">        ClassNode pceClassNode = makeClassSafe(PropertyChangeEvent.class);</span>
+
+        // add field:
+        // protected final PropertyChangeSupport this$propertyChangeSupport = new java.beans.PropertyChangeSupport(this)
+<span class="fc" id="L274">        FieldNode pcsField = injectField(classNode,</span>
+            PROPERTY_CHANGE_SUPPORT_FIELD_NAME,
+            FINAL | PROTECTED,
+            pcsClassNode,
+<span class="fc" id="L278">            ctor(pcsClassNode, args(GriffonASTUtils.THIS)));</span>
+
+<span class="fc" id="L280">        addDelegateMethods(classNode, OBSERVABLE_CNODE, new FieldExpression(pcsField));</span>
+
+        // add method:
+        // void firePropertyChange(String name, Object oldValue, Object newValue) {
+        //     this$propertyChangeSupport.firePropertyChange(name, oldValue, newValue)
+        //  }
+<span class="fc" id="L286">        injectMethod(classNode,</span>
+            new MethodNode(
+                METHOD_FIRE_PROPERTY_CHANGE,
+                PROTECTED,
+                VOID_TYPE,
+<span class="fc" id="L291">                params(</span>
+<span class="fc" id="L292">                    param(STRING_TYPE, NAME),</span>
+<span class="fc" id="L293">                    param(makeClassSafe(OBJECT_TYPE), OLD_VALUE),</span>
+<span class="fc" id="L294">                    param(OBJECT_TYPE, NEW_VALUE)),</span>
+                NO_EXCEPTIONS,
+<span class="fc" id="L296">                stmnt(call(</span>
+<span class="fc" id="L297">                    field(pcsField),</span>
+                    METHOD_FIRE_PROPERTY_CHANGE,
+<span class="fc" id="L299">                    args(var(NAME), var(OLD_VALUE), var(NEW_VALUE))))));</span>
+
+        // add method:
+        // void firePropertyChange(PropertyChangeEvent event) {
+        //     this$propertyChangeSupport.firePropertyChange(event)
+        //  }
+<span class="fc" id="L305">        injectMethod(classNode,</span>
+            new MethodNode(
+                METHOD_FIRE_PROPERTY_CHANGE,
+                PROTECTED,
+                VOID_TYPE,
+<span class="fc" id="L310">                params(param(pceClassNode, EVENT)),</span>
+                NO_EXCEPTIONS,
+<span class="fc" id="L312">                stmnt(call(</span>
+<span class="fc" id="L313">                    field(pcsField),</span>
+                    METHOD_FIRE_PROPERTY_CHANGE,
+<span class="fc" id="L315">                    args(var(EVENT))))));</span>
+<span class="fc" id="L316">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

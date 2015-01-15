@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>JavafxBuilderCustomizer.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-javafx-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.builder.javafx</a> &gt; <span class="el_source">JavafxBuilderCustomizer.java</span></div><h1>JavafxBuilderCustomizer.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.builder.javafx;
+
+import griffon.builder.javafx.factory.ActionFactory;
+import griffon.builder.javafx.factory.ApplicationFactory;
+import griffon.builder.javafx.factory.LabeledFactory;
+import griffon.builder.javafx.factory.MenuFactory;
+import griffon.builder.javafx.factory.MenuItemFactory;
+import griffon.inject.DependsOn;
+import groovy.util.Factory;
+import groovyx.javafx.SceneGraphBuilder;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.CustomMenuItem;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.SplitMenuButton;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Tooltip;
+import org.codehaus.griffon.runtime.groovy.view.AbstractBuilderCustomizer;
+
+import javax.inject.Named;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+/**
+ * @author Andres Almiray
+ */
+@Named(&quot;javafx&quot;)
+@DependsOn({&quot;core&quot;})
+@SuppressWarnings(&quot;rawtypes&quot;)
+public class JavafxBuilderCustomizer extends AbstractBuilderCustomizer {
+    @SuppressWarnings(&quot;unchecked&quot;)
+<span class="fc" id="L58">    public JavafxBuilderCustomizer() {</span>
+<span class="fc" id="L59">        SceneGraphBuilder builder = new SceneGraphBuilder();</span>
+
+<span class="fc" id="L61">        Map&lt;String, Factory&gt; factories = new LinkedHashMap&lt;&gt;(builder.getFactories());</span>
+<span class="fc" id="L62">        factories.put(&quot;application&quot;, new ApplicationFactory());</span>
+<span class="fc" id="L63">        factories.remove(&quot;fxaction&quot;);</span>
+<span class="fc" id="L64">        factories.put(&quot;action&quot;, new ActionFactory());</span>
+
+<span class="fc" id="L66">        factories.put(&quot;menuBar&quot;, new MenuFactory(MenuBar.class));</span>
+<span class="fc" id="L67">        factories.put(&quot;contextMenu&quot;, new MenuFactory(ContextMenu.class));</span>
+<span class="fc" id="L68">        factories.put(&quot;menuButton&quot;, new MenuFactory(MenuButton.class));</span>
+<span class="fc" id="L69">        factories.put(&quot;splitMenuButton&quot;, new MenuFactory(SplitMenuButton.class));</span>
+
+<span class="fc" id="L71">        factories.put(&quot;menu&quot;, new MenuItemFactory(Menu.class));</span>
+<span class="fc" id="L72">        factories.put(&quot;menuItem&quot;, new MenuItemFactory(MenuItem.class));</span>
+<span class="fc" id="L73">        factories.put(&quot;checkMenuItem&quot;, new MenuItemFactory(CheckMenuItem.class));</span>
+<span class="fc" id="L74">        factories.put(&quot;customMenuItem&quot;, new MenuItemFactory(CustomMenuItem.class));</span>
+<span class="fc" id="L75">        factories.put(&quot;separatorMenuItem&quot;, new MenuItemFactory(SeparatorMenuItem.class));</span>
+<span class="fc" id="L76">        factories.put(&quot;radioMenuItem&quot;, new MenuItemFactory(RadioMenuItem.class));</span>
+
+<span class="fc" id="L78">        factories.put(&quot;button&quot;, new LabeledFactory(Button.class));</span>
+<span class="fc" id="L79">        factories.put(&quot;checkBox&quot;, new LabeledFactory(CheckBox.class));</span>
+<span class="fc" id="L80">        factories.put(&quot;label&quot;, new LabeledFactory(Label.class));</span>
+<span class="fc" id="L81">        factories.put(&quot;choiceBox&quot;, new LabeledFactory(ChoiceBox.class));</span>
+<span class="fc" id="L82">        factories.put(&quot;hyperlink&quot;, new LabeledFactory(Hyperlink.class));</span>
+<span class="fc" id="L83">        factories.put(&quot;tooltip&quot;, new LabeledFactory(Tooltip.class));</span>
+<span class="fc" id="L84">        factories.put(&quot;radioButton&quot;, new LabeledFactory(RadioButton.class));</span>
+<span class="fc" id="L85">        factories.put(&quot;toggleButton&quot;, new LabeledFactory(ToggleButton.class));</span>
+
+<span class="fc" id="L87">        setFactories(factories);</span>
+<span class="fc" id="L88">        setVariables(builder.getVariables());</span>
+<span class="fc" id="L89">        setMethods(builder.getExplicitMethods());</span>
+<span class="fc" id="L90">        setProps(builder.getExplicitProperties());</span>
+<span class="fc" id="L91">        setAttributeDelegates(builder.getAttributeDelegates());</span>
+<span class="fc" id="L92">        setPreInstantiateDelegates(builder.getPreInstantiateDelegates());</span>
+<span class="fc" id="L93">        setPostInstantiateDelegates(builder.getPostInstantiateDelegates());</span>
+<span class="fc" id="L94">        setPostNodeCompletionDelegates(builder.getPostNodeCompletionDelegates());</span>
+<span class="fc" id="L95">        setDisposalClosures(builder.getDisposalClosures());</span>
+<span class="fc" id="L96">        setMethodMissingDelegate(builder.getMethodMissingDelegate());</span>
+<span class="fc" id="L97">        setPropertyMissingDelegate(builder.getPropertyMissingDelegate());</span>
+<span class="fc" id="L98">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

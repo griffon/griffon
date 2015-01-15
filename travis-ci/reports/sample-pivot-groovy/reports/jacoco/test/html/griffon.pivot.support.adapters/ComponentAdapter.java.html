@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ComponentAdapter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.support.adapters</a> &gt; <span class="el_source">ComponentAdapter.java</span></div><h1>ComponentAdapter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.support.adapters;
+
+import griffon.core.CallableWithArgs;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="nc" id="L24">public class ComponentAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ComponentListener {</span>
+    private CallableWithArgs&lt;Void&gt; tooltipTextChanged;
+    private CallableWithArgs&lt;Void&gt; parentChanged;
+    private CallableWithArgs&lt;Void&gt; sizeChanged;
+    private CallableWithArgs&lt;Void&gt; preferredSizeChanged;
+    private CallableWithArgs&lt;Void&gt; widthLimitsChanged;
+    private CallableWithArgs&lt;Void&gt; heightLimitsChanged;
+    private CallableWithArgs&lt;Void&gt; locationChanged;
+    private CallableWithArgs&lt;Void&gt; visibleChanged;
+    private CallableWithArgs&lt;Void&gt; cursorChanged;
+    private CallableWithArgs&lt;Void&gt; tooltipDelayChanged;
+    private CallableWithArgs&lt;Void&gt; dragSourceChanged;
+    private CallableWithArgs&lt;Void&gt; dropTargetChanged;
+    private CallableWithArgs&lt;Void&gt; menuHandlerChanged;
+    private CallableWithArgs&lt;Void&gt; nameChanged;
+
+    public CallableWithArgs&lt;Void&gt; getTooltipTextChanged() {
+<span class="nc" id="L41">        return this.tooltipTextChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getParentChanged() {
+<span class="nc" id="L45">        return this.parentChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getSizeChanged() {
+<span class="nc" id="L49">        return this.sizeChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getPreferredSizeChanged() {
+<span class="nc" id="L53">        return this.preferredSizeChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getWidthLimitsChanged() {
+<span class="nc" id="L57">        return this.widthLimitsChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getHeightLimitsChanged() {
+<span class="nc" id="L61">        return this.heightLimitsChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getLocationChanged() {
+<span class="nc" id="L65">        return this.locationChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getVisibleChanged() {
+<span class="nc" id="L69">        return this.visibleChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getCursorChanged() {
+<span class="nc" id="L73">        return this.cursorChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getTooltipDelayChanged() {
+<span class="nc" id="L77">        return this.tooltipDelayChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getDragSourceChanged() {
+<span class="nc" id="L81">        return this.dragSourceChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getDropTargetChanged() {
+<span class="nc" id="L85">        return this.dropTargetChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getMenuHandlerChanged() {
+<span class="nc" id="L89">        return this.menuHandlerChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getNameChanged() {
+<span class="nc" id="L93">        return this.nameChanged;</span>
+    }
+
+
+    public void setTooltipTextChanged(CallableWithArgs&lt;Void&gt; tooltipTextChanged) {
+<span class="nc" id="L98">        this.tooltipTextChanged = tooltipTextChanged;</span>
+<span class="nc" id="L99">    }</span>
+
+    public void setParentChanged(CallableWithArgs&lt;Void&gt; parentChanged) {
+<span class="nc" id="L102">        this.parentChanged = parentChanged;</span>
+<span class="nc" id="L103">    }</span>
+
+    public void setSizeChanged(CallableWithArgs&lt;Void&gt; sizeChanged) {
+<span class="nc" id="L106">        this.sizeChanged = sizeChanged;</span>
+<span class="nc" id="L107">    }</span>
+
+    public void setPreferredSizeChanged(CallableWithArgs&lt;Void&gt; preferredSizeChanged) {
+<span class="nc" id="L110">        this.preferredSizeChanged = preferredSizeChanged;</span>
+<span class="nc" id="L111">    }</span>
+
+    public void setWidthLimitsChanged(CallableWithArgs&lt;Void&gt; widthLimitsChanged) {
+<span class="nc" id="L114">        this.widthLimitsChanged = widthLimitsChanged;</span>
+<span class="nc" id="L115">    }</span>
+
+    public void setHeightLimitsChanged(CallableWithArgs&lt;Void&gt; heightLimitsChanged) {
+<span class="nc" id="L118">        this.heightLimitsChanged = heightLimitsChanged;</span>
+<span class="nc" id="L119">    }</span>
+
+    public void setLocationChanged(CallableWithArgs&lt;Void&gt; locationChanged) {
+<span class="nc" id="L122">        this.locationChanged = locationChanged;</span>
+<span class="nc" id="L123">    }</span>
+
+    public void setVisibleChanged(CallableWithArgs&lt;Void&gt; visibleChanged) {
+<span class="nc" id="L126">        this.visibleChanged = visibleChanged;</span>
+<span class="nc" id="L127">    }</span>
+
+    public void setCursorChanged(CallableWithArgs&lt;Void&gt; cursorChanged) {
+<span class="nc" id="L130">        this.cursorChanged = cursorChanged;</span>
+<span class="nc" id="L131">    }</span>
+
+    public void setTooltipDelayChanged(CallableWithArgs&lt;Void&gt; tooltipDelayChanged) {
+<span class="nc" id="L134">        this.tooltipDelayChanged = tooltipDelayChanged;</span>
+<span class="nc" id="L135">    }</span>
+
+    public void setDragSourceChanged(CallableWithArgs&lt;Void&gt; dragSourceChanged) {
+<span class="nc" id="L138">        this.dragSourceChanged = dragSourceChanged;</span>
+<span class="nc" id="L139">    }</span>
+
+    public void setDropTargetChanged(CallableWithArgs&lt;Void&gt; dropTargetChanged) {
+<span class="nc" id="L142">        this.dropTargetChanged = dropTargetChanged;</span>
+<span class="nc" id="L143">    }</span>
+
+    public void setMenuHandlerChanged(CallableWithArgs&lt;Void&gt; menuHandlerChanged) {
+<span class="nc" id="L146">        this.menuHandlerChanged = menuHandlerChanged;</span>
+<span class="nc" id="L147">    }</span>
+
+    public void setNameChanged(CallableWithArgs&lt;Void&gt; nameChanged) {
+<span class="nc" id="L150">        this.nameChanged = nameChanged;</span>
+<span class="nc" id="L151">    }</span>
+
+
+    public void tooltipTextChanged(org.apache.pivot.wtk.Component arg0, java.lang.String arg1) {
+<span class="nc bnc" id="L155" title="All 2 branches missed.">        if (tooltipTextChanged != null) {</span>
+<span class="nc" id="L156">            tooltipTextChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L158">    }</span>
+
+    public void parentChanged(org.apache.pivot.wtk.Component arg0, org.apache.pivot.wtk.Container arg1) {
+<span class="nc bnc" id="L161" title="All 2 branches missed.">        if (parentChanged != null) {</span>
+<span class="nc" id="L162">            parentChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L164">    }</span>
+
+    public void sizeChanged(org.apache.pivot.wtk.Component arg0, int arg1, int arg2) {
+<span class="nc bnc" id="L167" title="All 2 branches missed.">        if (sizeChanged != null) {</span>
+<span class="nc" id="L168">            sizeChanged.call(arg0, arg1, arg2);</span>
+        }
+<span class="nc" id="L170">    }</span>
+
+    public void preferredSizeChanged(org.apache.pivot.wtk.Component arg0, int arg1, int arg2) {
+<span class="nc bnc" id="L173" title="All 2 branches missed.">        if (preferredSizeChanged != null) {</span>
+<span class="nc" id="L174">            preferredSizeChanged.call(arg0, arg1, arg2);</span>
+        }
+<span class="nc" id="L176">    }</span>
+
+    public void widthLimitsChanged(org.apache.pivot.wtk.Component arg0, int arg1, int arg2) {
+<span class="nc bnc" id="L179" title="All 2 branches missed.">        if (widthLimitsChanged != null) {</span>
+<span class="nc" id="L180">            widthLimitsChanged.call(arg0, arg1, arg2);</span>
+        }
+<span class="nc" id="L182">    }</span>
+
+    public void heightLimitsChanged(org.apache.pivot.wtk.Component arg0, int arg1, int arg2) {
+<span class="nc bnc" id="L185" title="All 2 branches missed.">        if (heightLimitsChanged != null) {</span>
+<span class="nc" id="L186">            heightLimitsChanged.call(arg0, arg1, arg2);</span>
+        }
+<span class="nc" id="L188">    }</span>
+
+    public void locationChanged(org.apache.pivot.wtk.Component arg0, int arg1, int arg2) {
+<span class="nc bnc" id="L191" title="All 2 branches missed.">        if (locationChanged != null) {</span>
+<span class="nc" id="L192">            locationChanged.call(arg0, arg1, arg2);</span>
+        }
+<span class="nc" id="L194">    }</span>
+
+    public void visibleChanged(org.apache.pivot.wtk.Component arg0) {
+<span class="nc bnc" id="L197" title="All 2 branches missed.">        if (visibleChanged != null) {</span>
+<span class="nc" id="L198">            visibleChanged.call(arg0);</span>
+        }
+<span class="nc" id="L200">    }</span>
+
+    public void cursorChanged(org.apache.pivot.wtk.Component arg0, org.apache.pivot.wtk.Cursor arg1) {
+<span class="nc bnc" id="L203" title="All 2 branches missed.">        if (cursorChanged != null) {</span>
+<span class="nc" id="L204">            cursorChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L206">    }</span>
+
+    public void tooltipDelayChanged(org.apache.pivot.wtk.Component arg0, int arg1) {
+<span class="nc bnc" id="L209" title="All 2 branches missed.">        if (tooltipDelayChanged != null) {</span>
+<span class="nc" id="L210">            tooltipDelayChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L212">    }</span>
+
+    public void dragSourceChanged(org.apache.pivot.wtk.Component arg0, org.apache.pivot.wtk.DragSource arg1) {
+<span class="nc bnc" id="L215" title="All 2 branches missed.">        if (dragSourceChanged != null) {</span>
+<span class="nc" id="L216">            dragSourceChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L218">    }</span>
+
+    public void dropTargetChanged(org.apache.pivot.wtk.Component arg0, org.apache.pivot.wtk.DropTarget arg1) {
+<span class="nc bnc" id="L221" title="All 2 branches missed.">        if (dropTargetChanged != null) {</span>
+<span class="nc" id="L222">            dropTargetChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L224">    }</span>
+
+    public void menuHandlerChanged(org.apache.pivot.wtk.Component arg0, org.apache.pivot.wtk.MenuHandler arg1) {
+<span class="nc bnc" id="L227" title="All 2 branches missed.">        if (menuHandlerChanged != null) {</span>
+<span class="nc" id="L228">            menuHandlerChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L230">    }</span>
+
+    public void nameChanged(org.apache.pivot.wtk.Component arg0, java.lang.String arg1) {
+<span class="nc bnc" id="L233" title="All 2 branches missed.">        if (nameChanged != null) {</span>
+<span class="nc" id="L234">            nameChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L236">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

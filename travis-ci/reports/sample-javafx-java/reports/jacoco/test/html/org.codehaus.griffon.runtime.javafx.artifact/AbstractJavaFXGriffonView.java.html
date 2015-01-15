@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractJavaFXGriffonView.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-java</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.javafx.artifact</a> &gt; <span class="el_source">AbstractJavaFXGriffonView.java</span></div><h1>AbstractJavaFXGriffonView.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.javafx.artifact;
+
+import griffon.core.GriffonApplication;
+import griffon.core.artifact.GriffonClass;
+import griffon.core.artifact.GriffonController;
+import griffon.core.controller.Action;
+import griffon.core.controller.ActionManager;
+import griffon.exceptions.GriffonException;
+import griffon.javafx.support.JavaFXAction;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.JavaFXBuilderFactory;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.util.Callback;
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Map;
+
+import static griffon.javafx.support.JavaFXUtils.findNode;
+import static griffon.util.ConfigUtils.stripFilenameExtension;
+import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * JavaFX-friendly implementation of the GriffonView interface.
+ *
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
+    private static final String ACTION_TARGET_SUFFIX = &quot;ActionTarget&quot;;
+    private static final String FXML_SUFFIX = &quot;.fxml&quot;;
+
+<span class="nc" id="L56">    public AbstractJavaFXGriffonView() {</span>
+
+<span class="nc" id="L58">    }</span>
+
+    /**
+     * Creates a new instance of this class.
+     *
+     * @param application the GriffonApplication that holds this artifact.
+     * @deprecated Griffon prefers field injection over constructor injector for artifacts as of 2.1.0
+     */
+    @Inject
+    @Deprecated
+    public AbstractJavaFXGriffonView(@Nonnull GriffonApplication application) {
+<span class="nc" id="L69">        super(application);</span>
+<span class="nc" id="L70">    }</span>
+
+    @Nullable
+    protected Node loadFromFXML() {
+<span class="nc" id="L74">        return loadFromFXML(resolveBasename());</span>
+    }
+
+    @Nullable
+    protected Node loadFromFXML(@Nonnull String baseName) {
+<span class="nc" id="L79">        requireNonBlank(baseName, &quot;Argument 'baseName' cannot be blank&quot;);</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        if (baseName.endsWith(FXML_SUFFIX)) {</span>
+<span class="nc" id="L81">            baseName = stripFilenameExtension(baseName);</span>
+        }
+<span class="nc" id="L83">        baseName = baseName.replace('.', '/');</span>
+<span class="nc" id="L84">        String viewName = baseName + FXML_SUFFIX;</span>
+<span class="nc" id="L85">        String styleName = baseName + &quot;.css&quot;;</span>
+
+<span class="nc" id="L87">        URL viewResource = getResourceAsURL(viewName);</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        if (viewResource == null) {</span>
+<span class="nc" id="L89">            return null;</span>
+        }
+
+<span class="nc" id="L92">        FXMLLoader fxmlLoader = new FXMLLoader(viewResource);</span>
+<span class="nc" id="L93">        fxmlLoader.setResources(getApplication().getMessageSource().asResourceBundle());</span>
+<span class="nc" id="L94">        fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory(getApplication().getApplicationClassLoader().get()));</span>
+<span class="nc" id="L95">        fxmlLoader.setClassLoader(getApplication().getApplicationClassLoader().get());</span>
+<span class="nc" id="L96">        fxmlLoader.setControllerFactory(new Callback&lt;Class&lt;?&gt;, Object&gt;() {</span>
+            @Override
+            public Object call(Class&lt;?&gt; aClass) {
+<span class="nc" id="L99">                return getMvcGroup().getView();</span>
+            }
+        });
+
+        try {
+<span class="nc" id="L104">            fxmlLoader.load();</span>
+<span class="nc" id="L105">        } catch (IOException e) {</span>
+<span class="nc" id="L106">            throw new GriffonException(e);</span>
+<span class="nc" id="L107">        }</span>
+
+<span class="nc" id="L109">        Parent node = fxmlLoader.getRoot();</span>
+
+<span class="nc" id="L111">        URL cssResource = getResourceAsURL(styleName);</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">        if (cssResource != null) {</span>
+<span class="nc" id="L113">            String uriToCss = cssResource.toExternalForm();</span>
+<span class="nc" id="L114">            node.getStylesheets().add(uriToCss);</span>
+        }
+
+<span class="nc" id="L117">        return node;</span>
+    }
+
+    protected String resolveBasename() {
+<span class="nc" id="L121">        GriffonClass griffonClass = getGriffonClass();</span>
+<span class="nc" id="L122">        String packageName = griffonClass.getPackageName();</span>
+<span class="nc" id="L123">        String baseName = griffonClass.getLogicalPropertyName();</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">        if (!isBlank(packageName)) {</span>
+<span class="nc" id="L125">            baseName = packageName + &quot;.&quot; + baseName;</span>
+        }
+<span class="nc" id="L127">        return baseName;</span>
+    }
+
+    protected void connectActions(@Nonnull Node node, @Nonnull GriffonController controller) {
+<span class="nc" id="L131">        requireNonNull(node, &quot;Argument 'node' cannot be null&quot;);</span>
+<span class="nc" id="L132">        requireNonNull(controller, &quot;Argument 'controller' cannot be null&quot;);</span>
+<span class="nc" id="L133">        ActionManager actionManager = getApplication().getActionManager();</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">        for (Map.Entry&lt;String, Action&gt; e : actionManager.actionsFor(controller).entrySet()) {</span>
+<span class="nc" id="L135">            String actionTargetName = actionManager.normalizeName(e.getKey()) + ACTION_TARGET_SUFFIX;</span>
+<span class="nc" id="L136">            Node control = findNode(node, actionTargetName);</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">            if (control == null) continue;</span>
+<span class="nc" id="L138">            JavaFXAction action = (JavaFXAction) e.getValue().getToolkitAction();</span>
+<span class="nc" id="L139">            control.addEventHandler(ActionEvent.ACTION, action.getOnAction());</span>
+<span class="nc" id="L140">        }</span>
+<span class="nc" id="L141">    }</span>
+
+    @Nullable
+    protected JavaFXAction toolkitActionFor(@Nonnull GriffonController controller, @Nonnull String actionName) {
+<span class="nc" id="L145">        Action action = actionFor(controller, actionName);</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">        return action != null ? (JavaFXAction) action.getToolkitAction() : null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

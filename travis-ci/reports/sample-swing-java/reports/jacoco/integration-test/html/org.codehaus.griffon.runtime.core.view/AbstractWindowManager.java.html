@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractWindowManager.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-java</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core.view</a> &gt; <span class="el_source">AbstractWindowManager.java</span></div><h1>AbstractWindowManager.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core.view;
+
+import griffon.core.ApplicationEvent;
+import griffon.core.GriffonApplication;
+import griffon.core.env.ApplicationPhase;
+import griffon.core.event.EventRouter;
+import griffon.core.view.WindowDisplayHandler;
+import griffon.core.view.WindowManager;
+import griffon.exceptions.InstanceNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableCollection;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public abstract class AbstractWindowManager&lt;W&gt; implements WindowManager&lt;W&gt; {
+    protected static final String ERROR_NAME_BLANK = &quot;Argument 'name' must not be blank&quot;;
+    protected static final String ERROR_WINDOW_NULL = &quot;Argument 'window' must not be null&quot;;
+<span class="fc" id="L49">    private static final Logger LOG = LoggerFactory.getLogger(AbstractWindowManager.class);</span>
+<span class="fc" id="L50">    private final Map&lt;String, W&gt; windows = Collections.synchronizedMap(new LinkedHashMap&lt;String, W&gt;());</span>
+
+    private final GriffonApplication application;
+    private final WindowDisplayHandler&lt;W&gt; windowDisplayHandler;
+
+    @Inject
+<span class="fc" id="L56">    public AbstractWindowManager(@Nonnull GriffonApplication application, @Nonnull WindowDisplayHandler&lt;W&gt; windowDisplayHandler) {</span>
+<span class="fc" id="L57">        this.application = requireNonNull(application, &quot;Argument 'application' must not be null&quot;);</span>
+<span class="fc" id="L58">        requireNonNull(application.getConfiguration(), &quot;Argument 'application.configuration' must not be null&quot;);</span>
+<span class="fc" id="L59">        requireNonNull(application.getUIThreadManager(), &quot;Argument 'application.uiThreadManager' must not be null&quot;);</span>
+<span class="fc" id="L60">        this.windowDisplayHandler = requireNonNull(windowDisplayHandler, &quot;Argument 'windowDisplayHandler' must not be null&quot;);</span>
+<span class="fc" id="L61">    }</span>
+
+    protected GriffonApplication getApplication() {
+<span class="fc" id="L64">        return application;</span>
+    }
+
+    @Override
+    @Nullable
+    public W findWindow(@Nonnull String name) {
+<span class="nc" id="L70">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc" id="L71">        return windows.get(name);</span>
+    }
+
+    @Override
+    @Nullable
+    public W getAt(int index) {
+<span class="fc" id="L77">        synchronized (windows) {</span>
+<span class="fc" id="L78">            int size = windows.size();</span>
+<span class="pc bpc" id="L79" title="2 of 4 branches missed.">            if (index &lt; 0 || index &gt;= size) {</span>
+<span class="nc" id="L80">                throw new ArrayIndexOutOfBoundsException(index);</span>
+            }
+
+<span class="fc" id="L83">            int i = 0;</span>
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">            for (W window : windows.values()) {</span>
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">                if (index == i++) {</span>
+<span class="fc" id="L86">                    return window;</span>
+                }
+<span class="nc" id="L88">            }</span>
+<span class="nc" id="L89">        }</span>
+<span class="nc" id="L90">        throw new ArrayIndexOutOfBoundsException(index);</span>
+    }
+
+    @Override
+    @Nullable
+    public W getStartingWindow() {
+        W window;
+<span class="fc" id="L97">        Object value = resolveStartingWindowFromConfiguration();</span>
+<span class="fc" id="L98">        LOG.debug(&quot;windowManager.startingWindow configured to {}&quot;, value);</span>
+
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">        if (value instanceof String) {</span>
+<span class="nc" id="L101">            String windowName = (String) value;</span>
+<span class="nc" id="L102">            LOG.debug(&quot;Selecting window {} as starting window&quot;, windowName);</span>
+<span class="nc" id="L103">            window = findWindow(windowName);</span>
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">        } else if (value instanceof Number) {</span>
+<span class="nc" id="L105">            int index = ((Number) value).intValue();</span>
+<span class="nc" id="L106">            LOG.debug(&quot;Selecting window at index {} as starting window&quot;, index);</span>
+<span class="nc" id="L107">            window = getAt(index);</span>
+<span class="nc" id="L108">        } else {</span>
+<span class="fc" id="L109">            LOG.debug(&quot;No startingWindow configured, selecting the first one from the windows list&quot;);</span>
+<span class="fc" id="L110">            window = getAt(0);</span>
+        }
+
+<span class="fc" id="L113">        LOG.debug(&quot;Starting Window is {}&quot;, window);</span>
+
+<span class="fc" id="L115">        return window;</span>
+    }
+
+    @Nullable
+    protected Object resolveStartingWindowFromConfiguration() {
+<span class="fc" id="L120">        return application.getConfiguration().get(&quot;windowManager.startingWindow&quot;, null);</span>
+    }
+
+    @Override
+    @Nonnull
+    public Collection&lt;W&gt; getWindows() {
+<span class="nc" id="L126">        return unmodifiableCollection(windows.values());</span>
+    }
+
+    @Override
+    public void attach(@Nonnull String name, @Nonnull W window) {
+<span class="fc" id="L131">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="fc" id="L132">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="pc bpc" id="L133" title="1 of 2 branches missed.">        if (windows.containsKey(name)) {</span>
+<span class="nc" id="L134">            W window2 = windows.get(name);</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">            if (window2 != window) {</span>
+<span class="nc" id="L136">                detach(name);</span>
+            }
+        }
+
+<span class="fc" id="L140">        doAttach(window);</span>
+
+<span class="fc" id="L142">        LOG.debug(&quot;Attaching window with name: '{}' at index {} {}&quot;, name, windows.size(), window);</span>
+<span class="fc" id="L143">        windows.put(name, window);</span>
+<span class="fc" id="L144">        event(ApplicationEvent.WINDOW_ATTACHED, asList(name, window));</span>
+<span class="fc" id="L145">    }</span>
+
+    protected abstract void doAttach(@Nonnull W window);
+
+    @Override
+    public void detach(@Nonnull String name) {
+<span class="nc" id="L151">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">        if (windows.containsKey(name)) {</span>
+<span class="nc" id="L153">            W window = windows.get(name);</span>
+
+<span class="nc" id="L155">            doDetach(window);</span>
+
+<span class="nc" id="L157">            LOG.debug(&quot;Detaching window with name: '{}' {}&quot;, name, window);</span>
+<span class="nc" id="L158">            windows.remove(name);</span>
+<span class="nc" id="L159">            event(ApplicationEvent.WINDOW_DETACHED, asList(name, window));</span>
+        }
+<span class="nc" id="L161">    }</span>
+
+    protected abstract void doDetach(@Nonnull W window);
+
+    @Override
+    public void show(@Nonnull final W window) {
+<span class="nc" id="L167">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">        if (!windows.containsValue(window)) {</span>
+<span class="nc" id="L169">            return;</span>
+        }
+
+<span class="nc" id="L172">        String windowName = null;</span>
+<span class="nc" id="L173">        int windowIndex = -1;</span>
+<span class="nc" id="L174">        synchronized (windows) {</span>
+<span class="nc" id="L175">            int i = 0;</span>
+<span class="nc bnc" id="L176" title="All 2 branches missed.">            for (Map.Entry&lt;String, W&gt; entry : windows.entrySet()) {</span>
+<span class="nc bnc" id="L177" title="All 2 branches missed.">                if (entry.getValue() == window) {</span>
+<span class="nc" id="L178">                    windowName = entry.getKey();</span>
+<span class="nc" id="L179">                    windowIndex = i;</span>
+<span class="nc" id="L180">                    break;</span>
+                }
+<span class="nc" id="L182">                i++;</span>
+<span class="nc" id="L183">            }</span>
+<span class="nc" id="L184">        }</span>
+
+<span class="nc" id="L186">        final String name = windowName;</span>
+<span class="nc" id="L187">        final int index = windowIndex;</span>
+
+<span class="nc" id="L189">        application.getUIThreadManager().runInsideUIAsync(new Runnable() {</span>
+            public void run() {
+<span class="nc" id="L191">                LOG.debug(&quot;Showing window with name: '{}' at index {} {}&quot;, name, index, window);</span>
+                //noinspection ConstantConditions
+<span class="nc" id="L193">                resolveWindowDisplayHandler().show(name, window);</span>
+<span class="nc" id="L194">            }</span>
+        });
+<span class="nc" id="L196">    }</span>
+
+    @Override
+    public void show(@Nonnull String name) {
+<span class="nc" id="L200">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc" id="L201">        W window = findWindow(name);</span>
+<span class="nc bnc" id="L202" title="All 2 branches missed.">        if (window != null) {</span>
+<span class="nc" id="L203">            show(window);</span>
+        }
+<span class="nc" id="L205">    }</span>
+
+    @Override
+    public void hide(@Nonnull final W window) {
+<span class="nc" id="L209">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">        if (!windows.containsValue(window)) {</span>
+<span class="nc" id="L211">            return;</span>
+        }
+
+<span class="nc" id="L214">        String windowName = null;</span>
+<span class="nc" id="L215">        int windowIndex = -1;</span>
+<span class="nc" id="L216">        synchronized (windows) {</span>
+<span class="nc" id="L217">            int i = 0;</span>
+<span class="nc bnc" id="L218" title="All 2 branches missed.">            for (Map.Entry&lt;String, W&gt; entry : windows.entrySet()) {</span>
+<span class="nc bnc" id="L219" title="All 2 branches missed.">                if (entry.getValue() == window) {</span>
+<span class="nc" id="L220">                    windowName = entry.getKey();</span>
+<span class="nc" id="L221">                    windowIndex = i;</span>
+<span class="nc" id="L222">                    break;</span>
+                }
+<span class="nc" id="L224">                i++;</span>
+<span class="nc" id="L225">            }</span>
+<span class="nc" id="L226">        }</span>
+
+<span class="nc" id="L228">        final String name = windowName;</span>
+<span class="nc" id="L229">        final int index = windowIndex;</span>
+
+<span class="nc" id="L231">        application.getUIThreadManager().runInsideUIAsync(new Runnable() {</span>
+            public void run() {
+<span class="nc" id="L233">                LOG.debug(&quot;Hiding window with name: '{}' at index {} {}&quot;, name, index, window);</span>
+                //noinspection ConstantConditions
+<span class="nc" id="L235">                resolveWindowDisplayHandler().hide(name, window);</span>
+<span class="nc" id="L236">            }</span>
+        });
+<span class="nc" id="L238">    }</span>
+
+    @Nonnull
+    protected WindowDisplayHandler&lt;W&gt; resolveWindowDisplayHandler() {
+<span class="nc" id="L242">        return windowDisplayHandler;</span>
+    }
+
+    @Override
+    public void hide(@Nonnull String name) {
+<span class="nc" id="L247">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc" id="L248">        W window = findWindow(name);</span>
+<span class="nc bnc" id="L249" title="All 2 branches missed.">        if (window != null) {</span>
+<span class="nc" id="L250">            hide(window);</span>
+        }
+<span class="nc" id="L252">    }</span>
+
+    @Override
+    public boolean canShutdown(@Nonnull GriffonApplication app) {
+<span class="fc" id="L256">        return true;</span>
+    }
+
+    @Override
+    public void onShutdown(@Nonnull GriffonApplication app) {
+<span class="fc bfc" id="L261" title="All 2 branches covered.">        for (W window : windows.values()) {</span>
+<span class="pc bpc" id="L262" title="1 of 2 branches missed.">            if (isWindowVisible(window)) hide(window);</span>
+<span class="fc" id="L263">        }</span>
+<span class="fc" id="L264">    }</span>
+
+    protected abstract boolean isWindowVisible(@Nonnull W window);
+
+    @Override
+    public int countVisibleWindows() {
+<span class="nc" id="L270">        int visibleWindows = 0;</span>
+<span class="nc bnc" id="L271" title="All 2 branches missed.">        for (W window : windows.values()) {</span>
+<span class="nc bnc" id="L272" title="All 2 branches missed.">            if (isWindowVisible(window)) {</span>
+<span class="nc" id="L273">                visibleWindows++;</span>
+            }
+<span class="nc" id="L275">        }</span>
+<span class="nc" id="L276">        return visibleWindows;</span>
+    }
+
+    @Override
+    public boolean isAutoShutdown() {
+<span class="nc" id="L281">        return application.getConfiguration().getAsBoolean(&quot;application.autoShutdown&quot;, true);</span>
+    }
+
+    protected void event(@Nonnull ApplicationEvent evt, @Nonnull List&lt;?&gt; args) {
+<span class="fc" id="L285">        event(evt.getName(), args);</span>
+<span class="fc" id="L286">    }</span>
+
+    protected void event(@Nonnull String evt, @Nonnull List&lt;?&gt; args) {
+        try {
+<span class="fc" id="L290">            EventRouter eventRouter = getApplication().getEventRouter();</span>
+<span class="fc" id="L291">            eventRouter.publishEvent(evt, args);</span>
+<span class="nc" id="L292">        } catch (InstanceNotFoundException infe) {</span>
+<span class="nc bnc" id="L293" title="All 2 branches missed.">            if (getApplication().getPhase() != ApplicationPhase.SHUTDOWN) {</span>
+<span class="nc" id="L294">                throw infe;</span>
+            }
+<span class="fc" id="L296">        }</span>
+<span class="fc" id="L297">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

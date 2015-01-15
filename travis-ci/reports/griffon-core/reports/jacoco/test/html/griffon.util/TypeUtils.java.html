@@ -1,0 +1,684 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TypeUtils.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-core</a> &gt; <a href="index.source.html" class="el_package">griffon.util</a> &gt; <span class="el_source">TypeUtils.java</span></div><h1>TypeUtils.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.util;
+
+import griffon.core.editors.ExtendedPropertyEditor;
+import griffon.core.editors.PropertyEditorResolver;
+import griffon.exceptions.GriffonException;
+import griffon.exceptions.TypeConversionException;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.beans.PropertyEditor;
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static griffon.util.GriffonNameUtils.isBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * Utility class for dealing with type conversions.
+ *
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public final class TypeUtils {
+
+    private static final String ERROR_VALUE_NULL = &quot;Argument 'value' must not be null&quot;;
+
+<span class="nc" id="L50">    private TypeUtils() {</span>
+        // prevent instantiation
+<span class="nc" id="L52">    }</span>
+
+    public static boolean castToBoolean(@Nonnull Object value) {
+<span class="fc" id="L55">        requireNonNull(value, ERROR_VALUE_NULL);</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        if (value instanceof Boolean) {</span>
+<span class="fc" id="L57">            return (Boolean) value;</span>
+        }
+<span class="fc" id="L59">        return &quot;true&quot;.equalsIgnoreCase(String.valueOf(value));</span>
+    }
+
+    public static char castToChar(@Nonnull Object value) {
+<span class="fc" id="L63">        requireNonNull(value, ERROR_VALUE_NULL);</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (value instanceof Character) {</span>
+<span class="fc" id="L65">            return (Character) value;</span>
+        }
+<span class="fc" id="L67">        return String.valueOf(value).charAt(0);</span>
+    }
+
+    public static byte castToByte(@Nonnull Object value) {
+<span class="fc" id="L71">        requireNonNull(value, ERROR_VALUE_NULL);</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (value instanceof Number) {</span>
+<span class="fc" id="L73">            return ((Number) value).byteValue();</span>
+        }
+<span class="fc" id="L75">        return Byte.valueOf(String.valueOf(value));</span>
+    }
+
+    public static short castToShort(@Nonnull Object value) {
+<span class="fc" id="L79">        requireNonNull(value, ERROR_VALUE_NULL);</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        if (value instanceof Number) {</span>
+<span class="fc" id="L81">            return ((Number) value).shortValue();</span>
+        }
+<span class="fc" id="L83">        return Short.valueOf(String.valueOf(value));</span>
+    }
+
+    public static int castToInt(@Nonnull Object value) {
+<span class="fc" id="L87">        requireNonNull(value, ERROR_VALUE_NULL);</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (value instanceof Number) {</span>
+<span class="fc" id="L89">            return ((Number) value).intValue();</span>
+        }
+<span class="fc" id="L91">        return Integer.valueOf(String.valueOf(value));</span>
+    }
+
+    public static long castToLong(@Nonnull Object value) {
+<span class="fc" id="L95">        requireNonNull(value, ERROR_VALUE_NULL);</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        if (value instanceof Number) {</span>
+<span class="fc" id="L97">            return ((Number) value).longValue();</span>
+        }
+<span class="fc" id="L99">        return Long.valueOf(String.valueOf(value));</span>
+    }
+
+    public static float castToFloat(@Nonnull Object value) {
+<span class="fc" id="L103">        requireNonNull(value, ERROR_VALUE_NULL);</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        if (value instanceof Number) {</span>
+<span class="fc" id="L105">            return ((Number) value).floatValue();</span>
+        }
+<span class="fc" id="L107">        return Float.valueOf(String.valueOf(value));</span>
+    }
+
+    public static double castToDouble(@Nonnull Object value) {
+<span class="fc" id="L111">        requireNonNull(value, ERROR_VALUE_NULL);</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        if (value instanceof Number) {</span>
+<span class="fc" id="L113">            return ((Number) value).doubleValue();</span>
+        }
+<span class="fc" id="L115">        return Double.valueOf(String.valueOf(value));</span>
+    }
+
+    public static BigInteger castToBigInteger(@Nonnull Object value) {
+<span class="fc" id="L119">        requireNonNull(value, ERROR_VALUE_NULL);</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        if (value instanceof BigInteger) {</span>
+<span class="fc" id="L121">            return (BigInteger) value;</span>
+        }
+<span class="fc" id="L123">        return new BigInteger(String.valueOf(value));</span>
+    }
+
+    public static BigDecimal castToBigDecimal(@Nonnull Object value) {
+<span class="fc" id="L127">        requireNonNull(value, ERROR_VALUE_NULL);</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">        if (value instanceof BigDecimal) {</span>
+<span class="fc" id="L129">            return (BigDecimal) value;</span>
+        }
+<span class="fc" id="L131">        return new BigDecimal(String.valueOf(value));</span>
+    }
+
+    @Nullable
+    public static Number castToNumber(@Nonnull Object value) {
+<span class="fc" id="L136">        requireNonNull(value, ERROR_VALUE_NULL);</span>
+<span class="fc bfc" id="L137" title="All 2 branches covered.">        if (value instanceof Number) {</span>
+<span class="fc" id="L138">            return (Number) value;</span>
+        }
+<span class="fc" id="L140">        throw new IllegalArgumentException(&quot;Don't know how to cast '&quot; + value + &quot;' to &quot; + Number.class.getName());</span>
+    }
+
+    public static boolean castToBoolean(@Nullable Object value, boolean defaultValue) {
+<span class="fc bfc" id="L144" title="All 2 branches covered.">        return value == null ? defaultValue : castToBoolean(value);</span>
+    }
+
+    public static char castToChar(@Nullable Object value, char defaultValue) {
+<span class="fc bfc" id="L148" title="All 2 branches covered.">        return value == null ? defaultValue : castToChar(value);</span>
+    }
+
+    public static byte castToByte(@Nullable Object value, byte defaultValue) {
+<span class="fc bfc" id="L152" title="All 2 branches covered.">        return value == null ? defaultValue : castToByte(value);</span>
+    }
+
+    public static short castToShort(@Nullable Object value, short defaultValue) {
+<span class="fc bfc" id="L156" title="All 2 branches covered.">        return value == null ? defaultValue : castToShort(value);</span>
+    }
+
+    public static int castToInt(@Nullable Object value, int defaultValue) {
+<span class="fc bfc" id="L160" title="All 2 branches covered.">        return value == null ? defaultValue : castToInt(value);</span>
+    }
+
+    public static long castToLong(@Nullable Object value, long defaultValue) {
+<span class="fc bfc" id="L164" title="All 2 branches covered.">        return value == null ? defaultValue : castToLong(value);</span>
+    }
+
+    public static float castToFloat(@Nullable Object value, float defaultValue) {
+<span class="fc bfc" id="L168" title="All 2 branches covered.">        return value == null ? defaultValue : castToFloat(value);</span>
+    }
+
+    public static double castToDouble(@Nullable Object value, double defaultValue) {
+<span class="fc bfc" id="L172" title="All 2 branches covered.">        return value == null ? defaultValue : castToDouble(value);</span>
+    }
+
+    @Nullable
+    public static Number castToNumber(@Nullable Object value, @Nullable Number defaultValue) {
+<span class="pc bpc" id="L177" title="1 of 2 branches missed.">        return value == null ? defaultValue : castToNumber(value);</span>
+    }
+
+    @Nullable
+    public static BigInteger castToBigInteger(@Nullable Object value, @Nullable BigInteger defaultValue) {
+<span class="fc bfc" id="L182" title="All 2 branches covered.">        return value == null ? defaultValue : castToBigInteger(value);</span>
+    }
+
+    @Nullable
+    public static BigDecimal castToBigDecimal(@Nullable Object value, @Nullable BigDecimal defaultValue) {
+<span class="fc bfc" id="L187" title="All 2 branches covered.">        return value == null ? defaultValue : castToBigDecimal(value);</span>
+    }
+
+    @Nonnull
+    public static &lt;T&gt; T convertValue(@Nonnull Class&lt;T&gt; targetType, @Nonnull Object value) {
+<span class="fc" id="L192">        return convertValue(targetType, value, null);</span>
+    }
+
+    @Nonnull
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public static &lt;T&gt; T convertValue(@Nonnull Class&lt;T&gt; targetType, @Nonnull Object value, @Nullable String format) {
+<span class="fc" id="L198">        requireNonNull(targetType, &quot;Argument 'targetType' must not be null&quot;);</span>
+<span class="fc" id="L199">        requireNonNull(value, ERROR_VALUE_NULL);</span>
+<span class="fc bfc" id="L200" title="All 2 branches covered.">        if (targetType.isAssignableFrom(value.getClass())) {</span>
+<span class="fc" id="L201">            return (T) value;</span>
+        }
+
+<span class="pc bpc" id="L204" title="1 of 2 branches missed.">        if (null == format) {</span>
+<span class="pc bpc" id="L205" title="1 of 4 branches missed.">            if (isBoolean(targetType) &amp;&amp; isBoolean(value.getClass())) {</span>
+<span class="fc" id="L206">                return (T) value;</span>
+<span class="pc bpc" id="L207" title="1 of 4 branches missed.">            } else if (isCharacter(targetType) &amp;&amp; isCharacter(value.getClass())) {</span>
+<span class="fc" id="L208">                return (T) value;</span>
+<span class="pc bpc" id="L209" title="1 of 4 branches missed.">            } else if (isNumber(targetType) &amp;&amp; isNumber(value.getClass())) {</span>
+<span class="fc bfc" id="L210" title="All 2 branches covered.">                if (isByte(targetType)) {</span>
+<span class="fc" id="L211">                    return (T) ((Byte) castToByte(value));</span>
+<span class="fc bfc" id="L212" title="All 2 branches covered.">                } else if (isShort(targetType)) {</span>
+<span class="fc" id="L213">                    return (T) ((Short) castToShort(value));</span>
+<span class="fc bfc" id="L214" title="All 2 branches covered.">                } else if (isInteger(targetType)) {</span>
+<span class="fc" id="L215">                    return (T) ((Integer) castToInt(value));</span>
+<span class="fc bfc" id="L216" title="All 2 branches covered.">                } else if (isLong(targetType)) {</span>
+<span class="fc" id="L217">                    return (T) ((Long) castToLong(value));</span>
+<span class="fc bfc" id="L218" title="All 2 branches covered.">                } else if (isFloat(targetType)) {</span>
+<span class="fc" id="L219">                    return (T) ((Float) castToFloat(value));</span>
+<span class="fc bfc" id="L220" title="All 2 branches covered.">                } else if (isDouble(targetType)) {</span>
+<span class="fc" id="L221">                    return (T) ((Double) castToDouble(value));</span>
+<span class="fc bfc" id="L222" title="All 2 branches covered.">                } else if (isBigInteger(targetType)) {</span>
+<span class="fc" id="L223">                    return targetType.cast(BigInteger.valueOf(((Number) value).longValue()));</span>
+<span class="pc bpc" id="L224" title="1 of 2 branches missed.">                } else if (isBigDecimal(targetType)) {</span>
+<span class="fc" id="L225">                    return targetType.cast(BigDecimal.valueOf(((Number) value).doubleValue()));</span>
+                }
+            }
+        }
+
+<span class="fc" id="L230">        PropertyEditor targetEditor = resolveTargetPropertyEditor(targetType, format);</span>
+<span class="pc bpc" id="L231" title="1 of 2 branches missed.">        if (targetEditor != null) {</span>
+<span class="fc" id="L232">            targetEditor.setValue(value);</span>
+<span class="fc" id="L233">            return (T) targetEditor.getValue();</span>
+        }
+
+<span class="nc" id="L236">        throw new TypeConversionException(value, targetType);</span>
+    }
+
+    @Nullable
+    private static &lt;T&gt; PropertyEditor resolveTargetPropertyEditor(@Nonnull Class&lt;T&gt; targetType, @Nullable String format) {
+<span class="fc" id="L241">        PropertyEditor editor = doResolveTargetPropertyEditor(targetType);</span>
+<span class="pc bpc" id="L242" title="3 of 4 branches missed.">        if (editor instanceof ExtendedPropertyEditor &amp;&amp; !isBlank(format)) {</span>
+<span class="nc" id="L243">            ((ExtendedPropertyEditor) editor).setFormat(format);</span>
+        }
+<span class="fc" id="L245">        return editor;</span>
+    }
+
+    @Nullable
+    private static &lt;T&gt; PropertyEditor doResolveTargetPropertyEditor(@Nonnull Class&lt;T&gt; targetType) {
+<span class="fc" id="L250">        return PropertyEditorResolver.findEditor(targetType);</span>
+    }
+
+    public static boolean isBoolean(@Nonnull Class&lt;?&gt; type) {
+<span class="fc bfc" id="L254" title="All 4 branches covered.">        return Boolean.class == type || Boolean.TYPE == type;</span>
+    }
+
+    public static boolean isCharacter(@Nonnull Class&lt;?&gt; type) {
+<span class="fc bfc" id="L258" title="All 4 branches covered.">        return Character.class == type || Character.TYPE == type;</span>
+    }
+
+    public static boolean isByte(@Nonnull Class&lt;?&gt; type) {
+<span class="fc bfc" id="L262" title="All 4 branches covered.">        return Byte.class == type || Byte.TYPE == type;</span>
+    }
+
+    public static boolean isShort(@Nonnull Class&lt;?&gt; type) {
+<span class="fc bfc" id="L266" title="All 4 branches covered.">        return Short.class == type || Short.TYPE == type;</span>
+    }
+
+    public static boolean isInteger(@Nonnull Class&lt;?&gt; type) {
+<span class="fc bfc" id="L270" title="All 4 branches covered.">        return Integer.class == type || Integer.TYPE == type;</span>
+    }
+
+    public static boolean isLong(@Nonnull Class&lt;?&gt; type) {
+<span class="fc bfc" id="L274" title="All 4 branches covered.">        return Long.class == type || Long.TYPE == type;</span>
+    }
+
+    public static boolean isFloat(@Nonnull Class&lt;?&gt; type) {
+<span class="fc bfc" id="L278" title="All 4 branches covered.">        return Float.class == type || Float.TYPE == type;</span>
+    }
+
+    public static boolean isDouble(@Nonnull Class&lt;?&gt; type) {
+<span class="fc bfc" id="L282" title="All 4 branches covered.">        return Double.class == type || Double.TYPE == type;</span>
+    }
+
+    public static boolean isBigInteger(@Nonnull Class&lt;?&gt; type) {
+<span class="fc bfc" id="L286" title="All 2 branches covered.">        return BigInteger.class == type;</span>
+    }
+
+    public static boolean isBigDecimal(@Nonnull Class&lt;?&gt; type) {
+<span class="fc bfc" id="L290" title="All 2 branches covered.">        return BigDecimal.class == type;</span>
+    }
+
+    public static boolean isNumber(@Nonnull Class&lt;?&gt; type) {
+<span class="pc bpc" id="L294" title="1 of 2 branches missed.">        return Number.class == type ||</span>
+<span class="fc bfc" id="L295" title="All 2 branches covered.">            isByte(type) ||</span>
+<span class="fc bfc" id="L296" title="All 2 branches covered.">            isShort(type) ||</span>
+<span class="fc bfc" id="L297" title="All 2 branches covered.">            isInteger(type) ||</span>
+<span class="fc bfc" id="L298" title="All 2 branches covered.">            isLong(type) ||</span>
+<span class="fc bfc" id="L299" title="All 2 branches covered.">            isFloat(type) ||</span>
+<span class="fc bfc" id="L300" title="All 2 branches covered.">            isDouble(type) ||</span>
+<span class="fc bfc" id="L301" title="All 2 branches covered.">            isBigInteger(type) ||</span>
+<span class="fc bfc" id="L302" title="All 2 branches covered.">            isBigDecimal(type);</span>
+    }
+
+    // == The following methods taken from
+    // org.codehaus.groovy.runtime.DefaultGroovyMethods
+    // org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation
+
+    public static boolean equals(@Nullable Object left, @Nullable Object right) {
+<span class="fc bfc" id="L310" title="All 2 branches covered.">        if (left == right) return true;</span>
+<span class="fc bfc" id="L311" title="All 4 branches covered.">        if (left == null || right == null) return false;</span>
+
+        // handle arrays on both sides as special case for efficiency
+<span class="fc" id="L314">        Class&lt;?&gt; leftClass = left.getClass();</span>
+<span class="fc" id="L315">        Class&lt;?&gt; rightClass = right.getClass();</span>
+<span class="fc bfc" id="L316" title="All 4 branches covered.">        if (leftClass.isArray() &amp;&amp; rightClass.isArray()) {</span>
+<span class="fc" id="L317">            return arrayEqual(left, right);</span>
+        }
+<span class="fc bfc" id="L319" title="All 4 branches covered.">        if (leftClass.isArray() &amp;&amp; leftClass.getComponentType().isPrimitive()) {</span>
+<span class="fc" id="L320">            left = primitiveArrayToList(left);</span>
+        }
+<span class="fc bfc" id="L322" title="All 4 branches covered.">        if (rightClass.isArray() &amp;&amp; rightClass.getComponentType().isPrimitive()) {</span>
+<span class="fc" id="L323">            right = primitiveArrayToList(right);</span>
+        }
+<span class="pc bpc" id="L325" title="1 of 4 branches missed.">        if (left instanceof Object[] &amp;&amp; right instanceof List) {</span>
+<span class="fc" id="L326">            return equals((Object[]) left, (List) right);</span>
+        }
+<span class="fc bfc" id="L328" title="All 4 branches covered.">        if (left instanceof List &amp;&amp; right instanceof Object[]) {</span>
+<span class="fc" id="L329">            return equals((List) left, (Object[]) right);</span>
+        }
+<span class="pc bpc" id="L331" title="1 of 4 branches missed.">        if (left instanceof List &amp;&amp; right instanceof List) {</span>
+<span class="fc" id="L332">            return equals((List) left, (List) right);</span>
+        }
+<span class="pc bpc" id="L334" title="3 of 4 branches missed.">        if (left instanceof Map.Entry &amp;&amp; right instanceof Map.Entry) {</span>
+<span class="nc" id="L335">            Object k1 = ((Map.Entry) left).getKey();</span>
+<span class="nc" id="L336">            Object k2 = ((Map.Entry) right).getKey();</span>
+<span class="nc bnc" id="L337" title="All 6 branches missed.">            if (k1 == k2 || (k1 != null &amp;&amp; k1.equals(k2))) {</span>
+<span class="nc" id="L338">                Object v1 = ((Map.Entry) left).getValue();</span>
+<span class="nc" id="L339">                Object v2 = ((Map.Entry) right).getValue();</span>
+<span class="nc bnc" id="L340" title="All 6 branches missed.">                if (v1 == v2 || (v1 != null &amp;&amp; equals(v1, v2)))</span>
+<span class="nc" id="L341">                    return true;</span>
+            }
+<span class="nc" id="L343">            return false;</span>
+        }
+
+<span class="fc" id="L346">        return left.equals(right);</span>
+    }
+
+    public static boolean arrayEqual(@Nullable Object left, @Nullable Object right) {
+<span class="fc bfc" id="L350" title="All 2 branches covered.">        if (left == null) {</span>
+<span class="fc bfc" id="L351" title="All 2 branches covered.">            return right == null;</span>
+        }
+<span class="fc bfc" id="L353" title="All 2 branches covered.">        if (right == null) {</span>
+<span class="fc" id="L354">            return false;</span>
+        }
+<span class="fc bfc" id="L356" title="All 2 branches covered.">        if (Array.getLength(left) != Array.getLength(right)) {</span>
+<span class="fc" id="L357">            return false;</span>
+        }
+<span class="fc bfc" id="L359" title="All 2 branches covered.">        for (int i = 0; i &lt; Array.getLength(left); i++) {</span>
+<span class="fc" id="L360">            Object l = Array.get(left, i);</span>
+<span class="fc" id="L361">            Object r = Array.get(right, i);</span>
+<span class="fc bfc" id="L362" title="All 2 branches covered.">            if (!equals(l, r)) return false;</span>
+        }
+<span class="fc" id="L364">        return true;</span>
+    }
+
+    /**
+     * Compare the contents of this array to the contents of the given array.
+     *
+     * @param left  an int array
+     * @param right the array being compared
+     * @return true if the contents of both arrays are equal.
+     */
+    public static boolean equals(int[] left, int[] right) {
+<span class="pc bpc" id="L375" title="1 of 2 branches missed.">        if (left == null) {</span>
+<span class="nc bnc" id="L376" title="All 2 branches missed.">            return right == null;</span>
+        }
+<span class="pc bpc" id="L378" title="1 of 2 branches missed.">        if (right == null) {</span>
+<span class="nc" id="L379">            return false;</span>
+        }
+<span class="pc bpc" id="L381" title="1 of 2 branches missed.">        if (left == right) {</span>
+<span class="fc" id="L382">            return true;</span>
+        }
+<span class="nc bnc" id="L384" title="All 2 branches missed.">        if (left.length != right.length) {</span>
+<span class="nc" id="L385">            return false;</span>
+        }
+<span class="nc bnc" id="L387" title="All 2 branches missed.">        for (int i = 0; i &lt; left.length; i++) {</span>
+<span class="nc bnc" id="L388" title="All 2 branches missed.">            if (left[i] != right[i]) return false;</span>
+        }
+<span class="nc" id="L390">        return true;</span>
+    }
+
+    /**
+     * Determines if the contents of this array are equal to the
+     * contents of the given list, in the same order.  This returns
+     * &lt;code&gt;false&lt;/code&gt; if either collection is &lt;code&gt;null&lt;/code&gt;.
+     *
+     * @param left  an array
+     * @param right the List being compared
+     * @return true if the contents of both collections are equal
+     */
+    public static boolean equals(Object[] left, List right) {
+<span class="fc" id="L403">        return doEquals(left, right);</span>
+    }
+
+    /**
+     * Determines if the contents of this list are equal to the
+     * contents of the given array in the same order.  This returns
+     * &lt;code&gt;false&lt;/code&gt; if either collection is &lt;code&gt;null&lt;/code&gt;.
+     *
+     * @param left  a List
+     * @param right the Object[] being compared to
+     * @return true if the contents of both collections are equal
+     */
+    public static boolean equals(List left, Object[] right) {
+<span class="fc" id="L416">        return doEquals(right, left);</span>
+    }
+
+    private static boolean doEquals(Object[] left, List&lt;?&gt; right) {
+<span class="pc bpc" id="L420" title="1 of 2 branches missed.">        if (left == null) {</span>
+<span class="nc bnc" id="L421" title="All 2 branches missed.">            return right == null;</span>
+        }
+<span class="pc bpc" id="L423" title="1 of 2 branches missed.">        if (right == null) {</span>
+<span class="nc" id="L424">            return false;</span>
+        }
+<span class="pc bpc" id="L426" title="1 of 2 branches missed.">        if (left.length != right.size()) {</span>
+<span class="nc" id="L427">            return false;</span>
+        }
+<span class="fc bfc" id="L429" title="All 2 branches covered.">        for (int i = left.length - 1; i &gt;= 0; i--) {</span>
+<span class="fc" id="L430">            final Object o1 = left[i];</span>
+<span class="fc" id="L431">            final Object o2 = right.get(i);</span>
+<span class="pc bpc" id="L432" title="1 of 2 branches missed.">            if (o1 == null) {</span>
+<span class="nc bnc" id="L433" title="All 2 branches missed.">                if (o2 != null) return false;</span>
+<span class="pc bpc" id="L434" title="1 of 2 branches missed.">            } else if (!equals(o1, o2)) {</span>
+<span class="nc" id="L435">                return false;</span>
+            }
+        }
+<span class="fc" id="L438">        return true;</span>
+    }
+
+    /**
+     * Compare the contents of two Lists.  Order matters.
+     * If numbers exist in the Lists, then they are compared as numbers,
+     * for example 2 == 2L. If both lists are &lt;code&gt;null&lt;/code&gt;, the result
+     * is true; rightwise if either list is &lt;code&gt;null&lt;/code&gt;, the result
+     * is &lt;code&gt;false&lt;/code&gt;.
+     *
+     * @param left  a List
+     * @param right the List being compared to
+     * @return boolean   &lt;code&gt;true&lt;/code&gt; if the contents of both lists are identical,
+     * &lt;code&gt;false&lt;/code&gt; rightwise.
+     */
+    public static &lt;T&gt; boolean equals(List&lt;T&gt; left, List&lt;T&gt; right) {
+<span class="fc bfc" id="L454" title="All 2 branches covered.">        if (left == null) {</span>
+<span class="fc bfc" id="L455" title="All 2 branches covered.">            return right == null;</span>
+        }
+<span class="fc bfc" id="L457" title="All 2 branches covered.">        if (right == null) {</span>
+<span class="fc" id="L458">            return false;</span>
+        }
+<span class="pc bpc" id="L460" title="1 of 2 branches missed.">        if (left == right) {</span>
+<span class="nc" id="L461">            return true;</span>
+        }
+<span class="fc bfc" id="L463" title="All 2 branches covered.">        if (left.size() != right.size()) {</span>
+<span class="fc" id="L464">            return false;</span>
+        }
+<span class="fc" id="L466">        final Iterator&lt;T&gt; it1 = left.iterator(), it2 = right.iterator();</span>
+<span class="fc bfc" id="L467" title="All 2 branches covered.">        while (it1.hasNext()) {</span>
+<span class="fc" id="L468">            final T o1 = it1.next();</span>
+<span class="fc" id="L469">            final T o2 = it2.next();</span>
+<span class="pc bpc" id="L470" title="1 of 2 branches missed.">            if (o1 == null) {</span>
+<span class="nc bnc" id="L471" title="All 2 branches missed.">                if (o2 != null) return false;</span>
+<span class="fc bfc" id="L472" title="All 2 branches covered.">            } else if (!equals(o1, o2)) {</span>
+<span class="fc" id="L473">                return false;</span>
+            }
+<span class="fc" id="L475">        }</span>
+<span class="fc" id="L476">        return true;</span>
+    }
+
+    /**
+     * Compare the contents of two Sets for equality using Groovy's coercion rules.
+     * &lt;p/&gt;
+     * Returns &lt;tt&gt;true&lt;/tt&gt; if the two sets have the same size, and every member
+     * of the specified set is contained in this set (or equivalently, every member
+     * of this set is contained in the specified set).
+     * If numbers exist in the sets, then they are compared as numbers,
+     * for example 2 == 2L.  If both sets are &lt;code&gt;null&lt;/code&gt;, the result
+     * is true; rightwise if either set is &lt;code&gt;null&lt;/code&gt;, the result
+     * is &lt;code&gt;false&lt;/code&gt;.
+     *
+     * @param left  a Set
+     * @param right the Set being compared to
+     * @return &lt;tt&gt;true&lt;/tt&gt; if the contents of both sets are identical
+     * @since 1.8.0
+     */
+    public static &lt;T&gt; boolean equals(Set&lt;T&gt; left, Set&lt;T&gt; right) {
+<span class="fc bfc" id="L496" title="All 2 branches covered.">        if (left == null) {</span>
+<span class="fc bfc" id="L497" title="All 2 branches covered.">            return right == null;</span>
+        }
+<span class="pc bpc" id="L499" title="1 of 2 branches missed.">        if (right == null) {</span>
+<span class="fc" id="L500">            return false;</span>
+        }
+<span class="nc bnc" id="L502" title="All 2 branches missed.">        if (left == right) {</span>
+<span class="nc" id="L503">            return true;</span>
+        }
+<span class="nc bnc" id="L505" title="All 2 branches missed.">        if (left.size() != right.size()) {</span>
+<span class="nc" id="L506">            return false;</span>
+        }
+<span class="nc" id="L508">        final Iterator&lt;T&gt; it1 = left.iterator();</span>
+<span class="nc" id="L509">        Collection&lt;T&gt; rightItems = new HashSet&lt;T&gt;(right);</span>
+<span class="nc bnc" id="L510" title="All 2 branches missed.">        while (it1.hasNext()) {</span>
+<span class="nc" id="L511">            final Object o1 = it1.next();</span>
+<span class="nc" id="L512">            final Iterator&lt;T&gt; it2 = rightItems.iterator();</span>
+<span class="nc" id="L513">            T foundItem = null;</span>
+<span class="nc" id="L514">            boolean found = false;</span>
+<span class="nc bnc" id="L515" title="All 4 branches missed.">            while (it2.hasNext() &amp;&amp; foundItem == null) {</span>
+<span class="nc" id="L516">                final T o2 = it2.next();</span>
+<span class="nc bnc" id="L517" title="All 2 branches missed.">                if (equals(o1, o2)) {</span>
+<span class="nc" id="L518">                    foundItem = o2;</span>
+<span class="nc" id="L519">                    found = true;</span>
+                }
+<span class="nc" id="L521">            }</span>
+<span class="nc bnc" id="L522" title="All 2 branches missed.">            if (!found) return false;</span>
+<span class="nc" id="L523">            rightItems.remove(foundItem);</span>
+<span class="nc" id="L524">        }</span>
+<span class="nc bnc" id="L525" title="All 2 branches missed.">        return rightItems.size() == 0;</span>
+    }
+
+
+    /**
+     * Compares two Maps treating coerced numerical values as identical.
+     * &lt;p/&gt;
+     *
+     * @param left  this Map
+     * @param right the Map being compared to
+     * @return &lt;tt&gt;true&lt;/tt&gt; if the contents of both maps are identical
+     */
+    public static &lt;K, V&gt; boolean equals(Map&lt;K, V&gt; left, Map&lt;K, V&gt; right) {
+<span class="fc bfc" id="L538" title="All 2 branches covered.">        if (left == null) {</span>
+<span class="fc bfc" id="L539" title="All 2 branches covered.">            return right == null;</span>
+        }
+<span class="fc bfc" id="L541" title="All 2 branches covered.">        if (right == null) {</span>
+<span class="fc" id="L542">            return false;</span>
+        }
+<span class="fc bfc" id="L544" title="All 2 branches covered.">        if (left == right) {</span>
+<span class="fc" id="L545">            return true;</span>
+        }
+<span class="fc bfc" id="L547" title="All 2 branches covered.">        if (left.size() != right.size()) {</span>
+<span class="fc" id="L548">            return false;</span>
+        }
+<span class="fc bfc" id="L550" title="All 2 branches covered.">        if (!left.keySet().equals(right.keySet())) {</span>
+<span class="fc" id="L551">            return false;</span>
+        }
+<span class="fc bfc" id="L553" title="All 2 branches covered.">        for (K key : left.keySet()) {</span>
+<span class="pc bpc" id="L554" title="1 of 2 branches missed.">            if (!equals(left.get(key), right.get(key))) {</span>
+<span class="nc" id="L555">                return false;</span>
+            }
+<span class="fc" id="L557">        }</span>
+<span class="fc" id="L558">        return true;</span>
+    }
+
+    /**
+     * Allows conversion of arrays into a mutable List
+     *
+     * @param array an array
+     * @return the array as a List
+     */
+    public static List primitiveArrayToList(Object array) {
+<span class="fc" id="L568">        int size = Array.getLength(array);</span>
+<span class="fc" id="L569">        List list = new ArrayList(size);</span>
+<span class="fc bfc" id="L570" title="All 2 branches covered.">        for (int i = 0; i &lt; size; i++) {</span>
+<span class="fc" id="L571">            Object item = Array.get(array, i);</span>
+<span class="pc bpc" id="L572" title="4 of 6 branches missed.">            if (item != null &amp;&amp; item.getClass().isArray() &amp;&amp; item.getClass().getComponentType().isPrimitive()) {</span>
+<span class="nc" id="L573">                item = primitiveArrayToList(item);</span>
+            }
+<span class="fc" id="L575">            list.add(item);</span>
+        }
+<span class="fc" id="L577">        return list;</span>
+    }
+
+    private static boolean isValidCharacterString(Object value) {
+<span class="nc bnc" id="L581" title="All 2 branches missed.">        if (value instanceof String) {</span>
+<span class="nc" id="L582">            String s = (String) value;</span>
+<span class="nc bnc" id="L583" title="All 2 branches missed.">            if (s.length() == 1) {</span>
+<span class="nc" id="L584">                return true;</span>
+            }
+        }
+<span class="nc" id="L587">        return false;</span>
+    }
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public static int compareTo(Object left, Object right) {
+<span class="nc bnc" id="L592" title="All 2 branches missed.">        if (left == right) {</span>
+<span class="nc" id="L593">            return 0;</span>
+        }
+<span class="nc bnc" id="L595" title="All 2 branches missed.">        if (left == null) {</span>
+<span class="nc" id="L596">            return -1;</span>
+<span class="nc bnc" id="L597" title="All 2 branches missed.">        } else if (right == null) {</span>
+<span class="nc" id="L598">            return 1;</span>
+        }
+<span class="nc bnc" id="L600" title="All 2 branches missed.">        if (left instanceof Comparable) {</span>
+<span class="nc bnc" id="L601" title="All 2 branches missed.">            if (left instanceof Number) {</span>
+<span class="nc bnc" id="L602" title="All 2 branches missed.">                if (isValidCharacterString(right)) {</span>
+<span class="nc" id="L603">                    return compareTo((Number) left, (Character) castToChar(right));</span>
+                }
+<span class="nc bnc" id="L605" title="All 4 branches missed.">                if (right instanceof Character || right instanceof Number) {</span>
+<span class="nc" id="L606">                    return compareTo((Number) left, castToNumber(right));</span>
+                }
+<span class="nc bnc" id="L608" title="All 2 branches missed.">            } else if (left instanceof Character) {</span>
+<span class="nc bnc" id="L609" title="All 2 branches missed.">                if (isValidCharacterString(right)) {</span>
+<span class="nc" id="L610">                    return compareTo((Character) left, (Character) castToChar(right));</span>
+                }
+<span class="nc bnc" id="L612" title="All 2 branches missed.">                if (right instanceof Number) {</span>
+<span class="nc" id="L613">                    return compareTo((Character) left, (Number) right);</span>
+                }
+<span class="nc bnc" id="L615" title="All 2 branches missed.">            } else if (right instanceof Number) {</span>
+<span class="nc bnc" id="L616" title="All 2 branches missed.">                if (isValidCharacterString(left)) {</span>
+<span class="nc" id="L617">                    return compareTo((Character) castToChar(left), (Number) right);</span>
+                }
+<span class="nc bnc" id="L619" title="All 4 branches missed.">            } else if (left instanceof String &amp;&amp; right instanceof Character) {</span>
+<span class="nc" id="L620">                return ((String) left).compareTo(right.toString());</span>
+<span class="nc bnc" id="L621" title="All 4 branches missed.">            } else if (left instanceof CharSequence &amp;&amp; right instanceof CharSequence) {</span>
+<span class="nc" id="L622">                return String.valueOf(left).compareTo(String.valueOf(right));</span>
+            }
+<span class="nc bnc" id="L624" title="All 2 branches missed.">            if (left.getClass().isAssignableFrom(right.getClass())</span>
+<span class="nc bnc" id="L625" title="All 8 branches missed.">                || (right.getClass() != Object.class &amp;&amp; right.getClass().isAssignableFrom(left.getClass())) //GROOVY-4046</span>
+                || (left instanceof CharSequence &amp;&amp; right instanceof CharSequence)) {
+<span class="nc" id="L627">                Comparable comparable = (Comparable) left;</span>
+<span class="nc" id="L628">                return comparable.compareTo(right);</span>
+            }
+        }
+
+<span class="nc" id="L632">        throw new GriffonException(&quot;Cannot compare &quot; + left.getClass().getName() + &quot; with value '&quot; +</span>
+<span class="nc" id="L633">            left + &quot;' and &quot; + right.getClass().getName() + &quot; with value '&quot; + right + &quot;'&quot;);</span>
+    }
+
+    public static int compareTo(Character left, Number right) {
+<span class="nc" id="L637">        return compareTo(Integer.valueOf(left), right);</span>
+    }
+
+    public static int compareTo(Number left, Character right) {
+<span class="nc" id="L641">        return compareTo(left, Integer.valueOf(right));</span>
+    }
+
+    public static int compareTo(Character left, Character right) {
+<span class="nc" id="L645">        return compareTo(Integer.valueOf(left), right);</span>
+    }
+
+    public static int compareTo(Number left, Number right) {
+<span class="nc bnc" id="L649" title="All 4 branches missed.">        if (isFloatingPoint(left) || isFloatingPoint(right)) {</span>
+<span class="nc" id="L650">            return Double.compare(left.doubleValue(), right.doubleValue());</span>
+        }
+<span class="nc bnc" id="L652" title="All 4 branches missed.">        if (isBigDecimal(left) || isBigDecimal(right)) {</span>
+<span class="nc" id="L653">            return castToBigDecimal(left).compareTo(castToBigDecimal(right));</span>
+        }
+<span class="nc bnc" id="L655" title="All 4 branches missed.">        if (isBigInteger(left) || isBigInteger(right)) {</span>
+<span class="nc" id="L656">            return castToBigInteger(left).compareTo(castToBigInteger(right));</span>
+        }
+<span class="nc bnc" id="L658" title="All 4 branches missed.">        if (isLong(left) || isLong(right)) {</span>
+<span class="nc" id="L659">            return Long.compare(left.longValue(), right.longValue());</span>
+        }
+<span class="nc" id="L661">        return Integer.compare(left.intValue(), right.intValue());</span>
+    }
+
+    public static boolean isFloatingPoint(Number number) {
+<span class="nc bnc" id="L665" title="All 4 branches missed.">        return number instanceof Double || number instanceof Float;</span>
+    }
+
+    public static boolean isInteger(Number number) {
+<span class="nc" id="L669">        return number instanceof Integer;</span>
+    }
+
+    public static boolean isLong(Number number) {
+<span class="nc" id="L673">        return number instanceof Long;</span>
+    }
+
+    public static boolean isBigDecimal(Number number) {
+<span class="nc" id="L677">        return number instanceof BigDecimal;</span>
+    }
+
+    public static boolean isBigInteger(Number number) {
+<span class="nc" id="L681">        return number instanceof BigInteger;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

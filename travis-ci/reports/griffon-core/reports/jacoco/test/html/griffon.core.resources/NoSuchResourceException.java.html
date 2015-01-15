@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>NoSuchResourceException.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-core</a> &gt; <a href="index.source.html" class="el_package">griffon.core.resources</a> &gt; <span class="el_source">NoSuchResourceException.java</span></div><h1>NoSuchResourceException.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.core.resources;
+
+import javax.annotation.Nonnull;
+import java.util.Locale;
+
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @author Alexander Klein
+ * @since 2.0.0
+ */
+public class NoSuchResourceException extends RuntimeException {
+    private static final long serialVersionUID = -8457840608859745331L;
+
+    private final String key;
+    private final Locale locale;
+
+    /**
+     * Create a new exception.
+     *
+     * @param key    message that could not be resolved for given locale
+     * @param locale locale that was used to search for the code within
+     */
+    public NoSuchResourceException(@Nonnull String key, @Nonnull Locale locale) {
+<span class="fc" id="L42">        super(&quot;No resource found under key '&quot; + requireNonBlank(key, &quot;key&quot;) + &quot;' for locale '&quot; + requireNonNull(locale, &quot;locale&quot;) + &quot;'.&quot;);</span>
+<span class="fc" id="L43">        this.key = key;</span>
+<span class="fc" id="L44">        this.locale = locale;</span>
+<span class="fc" id="L45">    }</span>
+
+    /**
+     * Create a new exception.
+     *
+     * @param key key that could not be resolved for given locale
+     */
+    public NoSuchResourceException(@Nonnull String key) {
+<span class="nc" id="L53">        this(key, Locale.getDefault());</span>
+<span class="nc" id="L54">    }</span>
+
+    /**
+     * Get the key without a valid value
+     *
+     * @return The key
+     */
+    @Nonnull
+    public String getKey() {
+<span class="nc" id="L63">        return key;</span>
+    }
+
+    /**
+     * Get the locale without a valid value
+     *
+     * @return The locale
+     */
+    @Nonnull
+    public Locale getLocale() {
+<span class="nc" id="L73">        return locale;</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

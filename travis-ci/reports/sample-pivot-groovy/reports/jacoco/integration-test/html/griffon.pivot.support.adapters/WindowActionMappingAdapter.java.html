@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>WindowActionMappingAdapter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.support.adapters</a> &gt; <span class="el_source">WindowActionMappingAdapter.java</span></div><h1>WindowActionMappingAdapter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.support.adapters;
+
+import griffon.core.CallableWithArgs;
+import org.apache.pivot.wtk.Window;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="nc" id="L25">public class WindowActionMappingAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.WindowActionMappingListener {</span>
+    private CallableWithArgs&lt;Void&gt; actionMappingAdded;
+    private CallableWithArgs&lt;Void&gt; actionMappingsRemoved;
+    private CallableWithArgs&lt;Void&gt; keyStrokeChanged;
+    private CallableWithArgs&lt;Void&gt; actionChanged;
+
+    public CallableWithArgs&lt;Void&gt; getActionMappingAdded() {
+<span class="nc" id="L32">        return this.actionMappingAdded;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getActionMappingsRemoved() {
+<span class="nc" id="L36">        return this.actionMappingsRemoved;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getKeyStrokeChanged() {
+<span class="nc" id="L40">        return this.keyStrokeChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getActionChanged() {
+<span class="nc" id="L44">        return this.actionChanged;</span>
+    }
+
+
+    public void setActionMappingAdded(CallableWithArgs&lt;Void&gt; actionMappingAdded) {
+<span class="nc" id="L49">        this.actionMappingAdded = actionMappingAdded;</span>
+<span class="nc" id="L50">    }</span>
+
+    public void setActionMappingsRemoved(CallableWithArgs&lt;Void&gt; actionMappingsRemoved) {
+<span class="nc" id="L53">        this.actionMappingsRemoved = actionMappingsRemoved;</span>
+<span class="nc" id="L54">    }</span>
+
+    public void setKeyStrokeChanged(CallableWithArgs&lt;Void&gt; keyStrokeChanged) {
+<span class="nc" id="L57">        this.keyStrokeChanged = keyStrokeChanged;</span>
+<span class="nc" id="L58">    }</span>
+
+    public void setActionChanged(CallableWithArgs&lt;Void&gt; actionChanged) {
+<span class="nc" id="L61">        this.actionChanged = actionChanged;</span>
+<span class="nc" id="L62">    }</span>
+
+
+    public void actionMappingAdded(org.apache.pivot.wtk.Window arg0) {
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        if (actionMappingAdded != null) {</span>
+<span class="nc" id="L67">            actionMappingAdded.call(arg0);</span>
+        }
+<span class="nc" id="L69">    }</span>
+
+    public void actionMappingsRemoved(org.apache.pivot.wtk.Window arg0, int arg1, org.apache.pivot.collections.Sequence&lt;Window.ActionMapping&gt; arg2) {
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        if (actionMappingsRemoved != null) {</span>
+<span class="nc" id="L73">            actionMappingsRemoved.call(arg0, arg1, arg2);</span>
+        }
+<span class="nc" id="L75">    }</span>
+
+    public void keyStrokeChanged(org.apache.pivot.wtk.Window.ActionMapping arg0, org.apache.pivot.wtk.Keyboard.KeyStroke arg1) {
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        if (keyStrokeChanged != null) {</span>
+<span class="nc" id="L79">            keyStrokeChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L81">    }</span>
+
+    public void actionChanged(org.apache.pivot.wtk.Window.ActionMapping arg0, org.apache.pivot.wtk.Action arg1) {
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        if (actionChanged != null) {</span>
+<span class="nc" id="L85">            actionChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L87">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

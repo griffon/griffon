@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TextInputAdapter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-java</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.support.adapters</a> &gt; <span class="el_source">TextInputAdapter.java</span></div><h1>TextInputAdapter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.support.adapters;
+
+import griffon.core.CallableWithArgs;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="nc" id="L24">public class TextInputAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TextInputListener {</span>
+    private CallableWithArgs&lt;Void&gt; textValidChanged;
+    private CallableWithArgs&lt;Void&gt; textSizeChanged;
+    private CallableWithArgs&lt;Void&gt; maximumLengthChanged;
+    private CallableWithArgs&lt;Void&gt; passwordChanged;
+    private CallableWithArgs&lt;Void&gt; promptChanged;
+    private CallableWithArgs&lt;Void&gt; textValidatorChanged;
+    private CallableWithArgs&lt;Void&gt; strictValidationChanged;
+    private CallableWithArgs&lt;Void&gt; editableChanged;
+
+    public CallableWithArgs&lt;Void&gt; getTextValidChanged() {
+<span class="nc" id="L35">        return this.textValidChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getTextSizeChanged() {
+<span class="nc" id="L39">        return this.textSizeChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getMaximumLengthChanged() {
+<span class="nc" id="L43">        return this.maximumLengthChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getPasswordChanged() {
+<span class="nc" id="L47">        return this.passwordChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getPromptChanged() {
+<span class="nc" id="L51">        return this.promptChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getTextValidatorChanged() {
+<span class="nc" id="L55">        return this.textValidatorChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getStrictValidationChanged() {
+<span class="nc" id="L59">        return this.strictValidationChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getEditableChanged() {
+<span class="nc" id="L63">        return this.editableChanged;</span>
+    }
+
+
+    public void setTextValidChanged(CallableWithArgs&lt;Void&gt; textValidChanged) {
+<span class="nc" id="L68">        this.textValidChanged = textValidChanged;</span>
+<span class="nc" id="L69">    }</span>
+
+    public void setTextSizeChanged(CallableWithArgs&lt;Void&gt; textSizeChanged) {
+<span class="nc" id="L72">        this.textSizeChanged = textSizeChanged;</span>
+<span class="nc" id="L73">    }</span>
+
+    public void setMaximumLengthChanged(CallableWithArgs&lt;Void&gt; maximumLengthChanged) {
+<span class="nc" id="L76">        this.maximumLengthChanged = maximumLengthChanged;</span>
+<span class="nc" id="L77">    }</span>
+
+    public void setPasswordChanged(CallableWithArgs&lt;Void&gt; passwordChanged) {
+<span class="nc" id="L80">        this.passwordChanged = passwordChanged;</span>
+<span class="nc" id="L81">    }</span>
+
+    public void setPromptChanged(CallableWithArgs&lt;Void&gt; promptChanged) {
+<span class="nc" id="L84">        this.promptChanged = promptChanged;</span>
+<span class="nc" id="L85">    }</span>
+
+    public void setTextValidatorChanged(CallableWithArgs&lt;Void&gt; textValidatorChanged) {
+<span class="nc" id="L88">        this.textValidatorChanged = textValidatorChanged;</span>
+<span class="nc" id="L89">    }</span>
+
+    public void setStrictValidationChanged(CallableWithArgs&lt;Void&gt; strictValidationChanged) {
+<span class="nc" id="L92">        this.strictValidationChanged = strictValidationChanged;</span>
+<span class="nc" id="L93">    }</span>
+
+    public void setEditableChanged(CallableWithArgs&lt;Void&gt; editableChanged) {
+<span class="nc" id="L96">        this.editableChanged = editableChanged;</span>
+<span class="nc" id="L97">    }</span>
+
+
+    public void textValidChanged(org.apache.pivot.wtk.TextInput arg0) {
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        if (textValidChanged != null) {</span>
+<span class="nc" id="L102">            textValidChanged.call(arg0);</span>
+        }
+<span class="nc" id="L104">    }</span>
+
+    public void textSizeChanged(org.apache.pivot.wtk.TextInput arg0, int arg1) {
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        if (textSizeChanged != null) {</span>
+<span class="nc" id="L108">            textSizeChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L110">    }</span>
+
+    public void maximumLengthChanged(org.apache.pivot.wtk.TextInput arg0, int arg1) {
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        if (maximumLengthChanged != null) {</span>
+<span class="nc" id="L114">            maximumLengthChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L116">    }</span>
+
+    public void passwordChanged(org.apache.pivot.wtk.TextInput arg0) {
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        if (passwordChanged != null) {</span>
+<span class="nc" id="L120">            passwordChanged.call(arg0);</span>
+        }
+<span class="nc" id="L122">    }</span>
+
+    public void promptChanged(org.apache.pivot.wtk.TextInput arg0, java.lang.String arg1) {
+<span class="nc bnc" id="L125" title="All 2 branches missed.">        if (promptChanged != null) {</span>
+<span class="nc" id="L126">            promptChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L128">    }</span>
+
+    public void textValidatorChanged(org.apache.pivot.wtk.TextInput arg0, org.apache.pivot.wtk.validation.Validator arg1) {
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        if (textValidatorChanged != null) {</span>
+<span class="nc" id="L132">            textValidatorChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L134">    }</span>
+
+    public void strictValidationChanged(org.apache.pivot.wtk.TextInput arg0) {
+<span class="nc bnc" id="L137" title="All 2 branches missed.">        if (strictValidationChanged != null) {</span>
+<span class="nc" id="L138">            strictValidationChanged.call(arg0);</span>
+        }
+<span class="nc" id="L140">    }</span>
+
+    public void editableChanged(org.apache.pivot.wtk.TextInput arg0) {
+<span class="nc bnc" id="L143" title="All 2 branches missed.">        if (editableChanged != null) {</span>
+<span class="nc" id="L144">            editableChanged.call(arg0);</span>
+        }
+<span class="nc" id="L146">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

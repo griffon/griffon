@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>FontPropertyEditor.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-java</a> &gt; <a href="index.source.html" class="el_package">griffon.swing.editors</a> &gt; <span class="el_source">FontPropertyEditor.java</span></div><h1>FontPropertyEditor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.swing.editors;
+
+import griffon.core.editors.AbstractPropertyEditor;
+import griffon.metadata.PropertyEditorFor;
+
+import java.awt.Font;
+import java.util.List;
+import java.util.Map;
+
+import static griffon.util.GriffonNameUtils.isBlank;
+
+/**
+ * @author Andres Almiray
+ */
+@PropertyEditorFor(Font.class)
+<span class="fc" id="L31">public class FontPropertyEditor extends AbstractPropertyEditor {</span>
+    public String getAsText() {
+<span class="nc bnc" id="L33" title="All 2 branches missed.">        if (null == getValue()) return null;</span>
+<span class="nc" id="L34">        Font font = (Font) getValue();</span>
+<span class="nc" id="L35">        return font.getFamily() + &quot;-&quot; + formatStyle(font) + &quot;-&quot; + font.getSize();</span>
+    }
+
+    private String formatStyle(Font font) {
+<span class="nc bnc" id="L39" title="All 4 branches missed.">        if (font.isBold() &amp;&amp; font.isItalic()) {</span>
+<span class="nc" id="L40">            return &quot;BOLDITALIC&quot;;</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">        } else if (font.isBold()) {</span>
+<span class="nc" id="L42">            return &quot;BOLD&quot;;</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        } else if (font.isItalic()) {</span>
+<span class="nc" id="L44">            return &quot;ITALIC&quot;;</span>
+        }
+<span class="nc" id="L46">        return &quot;PLAIN&quot;;</span>
+    }
+
+    protected void setValueInternal(Object value) {
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if (null == value) {</span>
+<span class="nc" id="L51">            super.setValueInternal(null);</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        } else if (value instanceof CharSequence) {</span>
+<span class="nc" id="L53">            handleAsString(String.valueOf(value));</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        } else if (value instanceof List) {</span>
+<span class="nc" id="L55">            handleAsList((List) value);</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        } else if (value instanceof Map) {</span>
+<span class="nc" id="L57">            handleAsMap((Map) value);</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        } else if (value instanceof Font) {</span>
+<span class="nc" id="L59">            super.setValueInternal(value);</span>
+        } else {
+<span class="nc" id="L61">            throw illegalValue(value, Font.class);</span>
+        }
+<span class="nc" id="L63">    }</span>
+
+    private void handleAsString(String str) {
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        if (isBlank(str)) {</span>
+<span class="nc" id="L67">            super.setValueInternal(null);</span>
+<span class="nc" id="L68">            return;</span>
+        }
+<span class="nc" id="L70">        String[] parts = str.split(&quot;-&quot;);</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">        if (parts.length != 3) {</span>
+<span class="nc" id="L72">            throw illegalValue(str, Font.class);</span>
+        }
+
+<span class="nc" id="L75">        String family = parts[0];</span>
+<span class="nc" id="L76">        int style = resolveStyle(str, parts[1]);</span>
+<span class="nc" id="L77">        int size = parseSize(str, parts[2]);</span>
+
+<span class="nc" id="L79">        super.setValueInternal(new Font(family, style, size));</span>
+<span class="nc" id="L80">    }</span>
+
+    private void handleAsList(List&lt;?&gt; list) {
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if(list.isEmpty()) {</span>
+<span class="nc" id="L84">            super.setValueInternal(null);</span>
+<span class="nc" id="L85">            return;</span>
+        }
+
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        if (list.size() != 3) {</span>
+<span class="nc" id="L89">            throw illegalValue(list, Font.class);</span>
+        }
+
+<span class="nc" id="L92">        String family = String.valueOf(list.get(0));</span>
+<span class="nc" id="L93">        int style = resolveStyle(list, String.valueOf(list.get(1)));</span>
+<span class="nc" id="L94">        int size = parseSize(list, String.valueOf(list.get(2)));</span>
+
+<span class="nc" id="L96">        super.setValueInternal(new Font(family, style, size));</span>
+<span class="nc" id="L97">    }</span>
+
+    private void handleAsMap(Map&lt;?, ?&gt; map) {
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        if(map.isEmpty()) {</span>
+<span class="nc" id="L101">            super.setValueInternal(null);</span>
+<span class="nc" id="L102">            return;</span>
+        }
+
+<span class="nc" id="L105">        String family = getMapValue(map, &quot;family&quot;, &quot;&quot;);</span>
+<span class="nc" id="L106">        String style = getMapValue(map, &quot;style&quot;, &quot;&quot;);</span>
+<span class="nc" id="L107">        String size = getMapValue(map, &quot;size&quot;, &quot;&quot;);</span>
+<span class="nc" id="L108">        super.setValueInternal(new Font(family, resolveStyle(map, style), parseSize(map, size)));</span>
+<span class="nc" id="L109">    }</span>
+
+    private String getMapValue(Map&lt;?, ?&gt; map, String key, String defaultValue) {
+<span class="nc" id="L112">        Object val = map.get(key);</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        if (null == val) val = map.get(String.valueOf(key.charAt(0)));</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">        if (null == val) {</span>
+<span class="nc" id="L115">            return defaultValue;</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        } else if (val instanceof CharSequence) {</span>
+<span class="nc" id="L117">            return String.valueOf(val).trim();</span>
+        }
+<span class="nc" id="L119">        throw illegalValue(map, Font.class);</span>
+    }
+
+    private int parseSize(Object source, String str) {
+        int size;
+        try {
+<span class="nc" id="L125">            size = Integer.parseInt(str);</span>
+<span class="nc" id="L126">        } catch (NumberFormatException nfe) {</span>
+<span class="nc" id="L127">            throw illegalValue(source, Font.class);</span>
+<span class="nc" id="L128">        }</span>
+<span class="nc" id="L129">        return size;</span>
+    }
+
+    private int resolveStyle(Object source, String str) {
+<span class="nc bnc" id="L133" title="All 2 branches missed.">        if (&quot;PLAIN&quot;.equals(str.toUpperCase())) {</span>
+<span class="nc" id="L134">            return Font.PLAIN;</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">        } else if (&quot;BOLD&quot;.equals(str.toUpperCase())) {</span>
+<span class="nc" id="L136">            return Font.BOLD;</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">        } else if (&quot;ITALIC&quot;.equals(str.toUpperCase())) {</span>
+<span class="nc" id="L138">            return Font.ITALIC;</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">        } else if (&quot;BOLDITALIC&quot;.equals(str.toUpperCase())) {</span>
+<span class="nc" id="L140">            return Font.BOLD | Font.ITALIC;</span>
+        }
+<span class="nc" id="L142">        throw illegalValue(source, Font.class);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

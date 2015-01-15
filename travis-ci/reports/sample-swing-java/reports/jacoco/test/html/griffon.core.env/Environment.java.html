@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Environment.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-java</a> &gt; <a href="index.source.html" class="el_package">griffon.core.env</a> &gt; <span class="el_source">Environment.java</span></div><h1>Environment.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.core.env;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import static griffon.util.GriffonNameUtils.isBlank;
+
+/**
+ * An enum that represents the current environment
+ *
+ * @author Graeme Rocher (Grails 1.1)
+ */
+<span class="pc" id="L31">public enum Environment {</span>
+    /**
+     * The development environment
+     */
+<span class="fc" id="L35">    DEVELOPMENT,</span>
+
+    /**
+     * The production environment
+     */
+<span class="fc" id="L40">    PRODUCTION,</span>
+
+    /**
+     * The test environment
+     */
+<span class="fc" id="L45">    TEST,</span>
+
+    /**
+     * A custom environment
+     */
+<span class="fc" id="L50">    CUSTOM;</span>
+
+    /**
+     * Constant used to resolve the environment via System.getProperty(Environment.KEY)
+     */
+    public static final String KEY = &quot;griffon.env&quot;;
+
+    /**
+     * Constants that indicates whether this GriffonApplication is running in the default environment
+     */
+    public static final String DEFAULT = &quot;griffon.env.default&quot;;
+    private static final String PRODUCTION_ENV_SHORT_NAME = &quot;prod&quot;;
+    private static final String DEVELOPMENT_ENVIRONMENT_SHORT_NAME = &quot;dev&quot;;
+    private static final String TEST_ENVIRONMENT_SHORT_NAME = &quot;test&quot;;
+
+<span class="fc" id="L65">    private static final Map&lt;String, String&gt; ENV_NAME_MAPPINGS = new LinkedHashMap&lt;String, String&gt;() {{</span>
+<span class="fc" id="L66">        put(DEVELOPMENT_ENVIRONMENT_SHORT_NAME, Environment.DEVELOPMENT.getName());</span>
+<span class="fc" id="L67">        put(PRODUCTION_ENV_SHORT_NAME, Environment.PRODUCTION.getName());</span>
+<span class="fc" id="L68">        put(TEST_ENVIRONMENT_SHORT_NAME, Environment.TEST.getName());</span>
+<span class="fc" id="L69">    }</span>
+
+        private static final long serialVersionUID = -8447299990856630300L;
+    };
+
+    /**
+     * Returns the current environment which is typically either DEVELOPMENT, PRODUCTION or TEST.
+     * For custom environments CUSTOM type is returned.
+     *
+     * @return The current environment.
+     */
+    @Nonnull
+    public static Environment getCurrent() {
+<span class="nc" id="L82">        String envName = System.getProperty(Environment.KEY);</span>
+<span class="nc" id="L83">        Metadata metadata = Metadata.getCurrent();</span>
+<span class="nc bnc" id="L84" title="All 4 branches missed.">        if (metadata != null &amp;&amp; isBlank(envName)) {</span>
+<span class="nc" id="L85">            envName = metadata.getEnvironment();</span>
+        }
+
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        if (isBlank(envName)) {</span>
+<span class="nc" id="L89">            return DEVELOPMENT;</span>
+        }
+
+<span class="nc" id="L92">        Environment env = getEnvironment(envName);</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        if (env == null) {</span>
+            try {
+<span class="nc" id="L95">                env = Environment.valueOf(envName.toUpperCase());</span>
+<span class="nc" id="L96">            } catch (IllegalArgumentException e) {</span>
+                // ignore
+<span class="nc" id="L98">            }</span>
+        }
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        if (env == null) {</span>
+<span class="nc" id="L101">            env = Environment.CUSTOM;</span>
+<span class="nc" id="L102">            env.setName(envName);</span>
+        }
+<span class="nc" id="L104">        return env;</span>
+    }
+
+    /**
+     * @return Return true if the environment has been set as a System property
+     */
+    public static boolean isSystemSet() {
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        return System.getProperty(KEY) != null;</span>
+    }
+
+    /**
+     * Returns the environment for the given short name
+     *
+     * @param shortName The short name
+     * @return The Environment or null if not known
+     */
+    @Nullable
+    public static Environment getEnvironment(@Nullable String shortName) {
+<span class="nc" id="L122">        final String envName = ENV_NAME_MAPPINGS.get(shortName);</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        if (envName != null) {</span>
+<span class="nc" id="L124">            return Environment.valueOf(envName.toUpperCase());</span>
+        }
+<span class="nc" id="L126">        return null;</span>
+    }
+
+    private String name;
+
+    /**
+     * @return The name of the environment
+     */
+    @Nonnull
+    public String getName() {
+<span class="pc bpc" id="L136" title="1 of 2 branches missed.">        if (name == null) {</span>
+<span class="fc" id="L137">            return this.toString().toLowerCase(Locale.getDefault());</span>
+        }
+<span class="nc" id="L139">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="nc" id="L143">        this.name = name;</span>
+<span class="nc" id="L144">    }</span>
+
+    @Nonnull
+    public static String getEnvironmentShortName() {
+<span class="nc bnc" id="L148" title="All 4 branches missed.">        switch(Environment.getCurrent()) {</span>
+<span class="nc" id="L149">            case DEVELOPMENT: return &quot;dev&quot;;</span>
+<span class="nc" id="L150">            case TEST:        return &quot;test&quot;;</span>
+<span class="nc" id="L151">            case PRODUCTION:  return &quot;prod&quot;;</span>
+<span class="pc" id="L152">            default: return Environment.getCurrent().getName();</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

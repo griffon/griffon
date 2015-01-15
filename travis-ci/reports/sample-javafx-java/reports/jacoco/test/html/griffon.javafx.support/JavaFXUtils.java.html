@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>JavaFXUtils.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-java</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.support</a> &gt; <span class="el_source">JavaFXUtils.java</span></div><h1>JavaFXUtils.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.support;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.control.ButtonBase;
+import javafx.scene.control.Control;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.net.URL;
+
+import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ */
+public final class JavaFXUtils {
+    private static final String ERROR_CONTROL_NULL = &quot;Argument 'control' must not be null&quot;;
+
+<span class="nc" id="L44">    private JavaFXUtils() {</span>
+
+<span class="nc" id="L46">    }</span>
+
+    public static void configure(final @Nonnull ButtonBase control, final @Nonnull JavaFXAction action) {
+<span class="nc" id="L49">        requireNonNull(control, &quot;Argument 'control' must not be null&quot;);</span>
+<span class="nc" id="L50">        requireNonNull(action, &quot;Argument 'action' must not be null&quot;);</span>
+
+<span class="nc" id="L52">        action.onActionProperty().addListener(new ChangeListener&lt;EventHandler&lt;ActionEvent&gt;&gt;() {</span>
+            @Override
+            public void changed(ObservableValue&lt;? extends EventHandler&lt;ActionEvent&gt;&gt; observableValue, EventHandler&lt;ActionEvent&gt; oldValue, EventHandler&lt;ActionEvent&gt; newValue) {
+<span class="nc" id="L55">                control.onActionProperty().set(newValue);</span>
+<span class="nc" id="L56">            }</span>
+        });
+<span class="nc" id="L58">        control.onActionProperty().set(action.getOnAction());</span>
+
+<span class="nc" id="L60">        action.nameProperty().addListener(new ChangeListener&lt;String&gt;() {</span>
+            @Override
+            public void changed(ObservableValue&lt;? extends String&gt; observableValue, String oldValue, String newValue) {
+<span class="nc" id="L63">                control.textProperty().set(newValue);</span>
+<span class="nc" id="L64">            }</span>
+        });
+<span class="nc" id="L66">        control.textProperty().set(action.getName());</span>
+
+<span class="nc" id="L68">        action.descriptionProperty().addListener(new ChangeListener&lt;String&gt;() {</span>
+            @Override
+            public void changed(ObservableValue&lt;? extends String&gt; observableValue, String oldValue, String newValue) {
+<span class="nc" id="L71">                setTooltip(control, newValue);</span>
+<span class="nc" id="L72">            }</span>
+        });
+<span class="nc" id="L74">        setTooltip(control, action.getDescription());</span>
+
+<span class="nc" id="L76">        action.iconProperty().addListener(new ChangeListener&lt;String&gt;() {</span>
+            @Override
+            public void changed(ObservableValue&lt;? extends String&gt; observableValue, String oldValue, String newValue) {
+<span class="nc" id="L79">                setIcon(control, newValue);</span>
+<span class="nc" id="L80">            }</span>
+        });
+<span class="nc bnc" id="L82" title="All 2 branches missed.">        if (!isBlank(action.getIcon())) {</span>
+<span class="nc" id="L83">            setIcon(control, action.getIcon());</span>
+        }
+
+<span class="nc" id="L86">        action.enabledProperty().addListener(new ChangeListener&lt;Boolean&gt;() {</span>
+            @Override
+            public void changed(ObservableValue&lt;? extends Boolean&gt; observableValue, Boolean oldValue, Boolean newValue) {
+<span class="nc bnc" id="L89" title="All 2 branches missed.">                control.setDisable(!newValue);</span>
+<span class="nc" id="L90">            }</span>
+        });
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        control.setDisable(!action.getEnabled());</span>
+<span class="nc" id="L93">    }</span>
+
+    public static void setTooltip(@Nonnull Control control, @Nullable String text) {
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        if (isBlank(text)) {</span>
+<span class="nc" id="L97">            return;</span>
+        }
+<span class="nc" id="L99">        requireNonNull(control, ERROR_CONTROL_NULL);</span>
+
+<span class="nc" id="L101">        Tooltip tooltip = control.tooltipProperty().get();</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">        if (tooltip == null) {</span>
+<span class="nc" id="L103">            tooltip = new Tooltip();</span>
+<span class="nc" id="L104">            control.tooltipProperty().set(tooltip);</span>
+        }
+<span class="nc" id="L106">        tooltip.setText(text);</span>
+<span class="nc" id="L107">    }</span>
+
+    public static void setIcon(@Nonnull ButtonBase control, @Nonnull String iconUrl) {
+<span class="nc" id="L110">        requireNonNull(control, ERROR_CONTROL_NULL);</span>
+<span class="nc" id="L111">        requireNonBlank(iconUrl, &quot;Argument 'iconUrl' must not be blank&quot;);</span>
+
+<span class="nc" id="L113">        URL resource = Thread.currentThread().getContextClassLoader().getResource(iconUrl);</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">        if (resource != null) {</span>
+<span class="nc" id="L115">            Image image = new Image(resource.toString());</span>
+<span class="nc" id="L116">            control.graphicProperty().set(new ImageView(image));</span>
+        }
+<span class="nc" id="L118">    }</span>
+
+    @Nullable
+    public static Node findNode(@Nonnull Node root, @Nonnull String id) {
+<span class="nc" id="L122">        requireNonNull(root, &quot;Argument 'root' must not be null&quot;);</span>
+<span class="nc" id="L123">        requireNonBlank(id, &quot;Argument 'id' must not be blank&quot;);</span>
+
+<span class="nc bnc" id="L125" title="All 2 branches missed.">        if (id.equals(root.getId())) return root;</span>
+
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        if (root instanceof Parent) {</span>
+<span class="nc" id="L128">            Parent parent = (Parent) root;</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">            for (Node child : parent.getChildrenUnmodifiable()) {</span>
+<span class="nc" id="L130">                Node found = findNode(child, id);</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">                if (found != null) return found;</span>
+<span class="nc" id="L132">            }</span>
+        }
+
+<span class="nc" id="L135">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

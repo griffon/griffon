@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GriffonControllerASTInjector.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-groovy-compile</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.compile.core.ast.transform</a> &gt; <span class="el_source">GriffonControllerASTInjector.java</span></div><h1>GriffonControllerASTInjector.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.compile.core.ast.transform;
+
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.MethodNode;
+
+import javax.annotation.Nonnull;
+import java.lang.reflect.Modifier;
+
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_EXCEPTIONS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.THIS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.args;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.call;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectMethod;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.param;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.params;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.stmnt;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.var;
+import static org.codehaus.groovy.ast.ClassHelper.STRING_TYPE;
+import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="fc" id="L40">public class GriffonControllerASTInjector extends GriffonMvcArtifactASTInjector {</span>
+<span class="fc" id="L41">    private static final ClassNode OBJECT_ARRAY_TYPE = makeClassSafe(Object[].class);</span>
+    private static final String INVOKE_ACTION = &quot;invokeAction&quot;;
+    private static final String ACTION_NAME = &quot;actionName&quot;;
+    private static final String ARGS = &quot;args&quot;;
+
+    public void inject(@Nonnull ClassNode classNode, @Nonnull String artifactType) {
+<span class="fc" id="L47">        super.inject(classNode, artifactType);</span>
+
+        // void invokeAction(String actionName, Object... args)
+<span class="fc" id="L50">        injectMethod(classNode, new MethodNode(</span>
+            INVOKE_ACTION,
+            Modifier.PUBLIC,
+            VOID_TYPE,
+<span class="fc" id="L54">            params(</span>
+<span class="fc" id="L55">                param(STRING_TYPE, ACTION_NAME),</span>
+<span class="fc" id="L56">                param(OBJECT_ARRAY_TYPE, ARGS)),</span>
+            NO_EXCEPTIONS,
+<span class="fc" id="L58">            stmnt(call(</span>
+<span class="fc" id="L59">                applicationProperty(classNode, &quot;actionManager&quot;),</span>
+                INVOKE_ACTION,
+<span class="fc" id="L61">                args(THIS, var(ACTION_NAME), var(ARGS))))</span>
+        ));
+<span class="fc" id="L63">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

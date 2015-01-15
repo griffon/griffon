@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractConfiguration.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-groovy</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core</a> &gt; <span class="el_source">AbstractConfiguration.java</span></div><h1>AbstractConfiguration.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core;
+
+import griffon.core.Configuration;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Properties;
+
+import static griffon.util.CollectionUtils.toProperties;
+import static griffon.util.TypeUtils.castToBoolean;
+import static griffon.util.TypeUtils.castToDouble;
+import static griffon.util.TypeUtils.castToFloat;
+import static griffon.util.TypeUtils.castToInt;
+import static griffon.util.TypeUtils.castToLong;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="fc" id="L35">public abstract class AbstractConfiguration implements Configuration {</span>
+    @Nullable
+    @Override
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public &lt;T&gt; T get(@Nonnull String key, @Nullable T defaultValue) {
+<span class="fc" id="L40">        T value = (T) get(key);</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        return value != null ? value : defaultValue;</span>
+    }
+
+    @Nullable
+    @Override
+    public Object getAt(@Nonnull String key) {
+<span class="fc" id="L47">        return get(key);</span>
+    }
+
+    @Nullable
+    @Override
+    public &lt;T&gt; T getAt(@Nonnull String key, @Nullable T defaultValue) {
+<span class="nc" id="L53">        return get(key, defaultValue);</span>
+    }
+
+    @Override
+    public boolean getAsBoolean(@Nonnull String key) {
+<span class="nc" id="L58">        return getAsBoolean(key, false);</span>
+    }
+
+    @Override
+    public boolean getAsBoolean(@Nonnull String key, boolean defaultValue) {
+<span class="fc" id="L63">        return castToBoolean(get(key), defaultValue);</span>
+    }
+
+    @Override
+    public int getAsInt(@Nonnull String key) {
+<span class="nc" id="L68">        return getAsInt(key, 0);</span>
+    }
+
+    @Override
+    public int getAsInt(@Nonnull String key, int defaultValue) {
+<span class="nc" id="L73">        return castToInt(get(key), defaultValue);</span>
+    }
+
+    @Override
+    public long getAsLong(@Nonnull String key) {
+<span class="nc" id="L78">        return getAsLong(key, 0L);</span>
+    }
+
+    @Override
+    public long getAsLong(@Nonnull String key, long defaultValue) {
+<span class="nc" id="L83">        return castToLong(get(key), defaultValue);</span>
+    }
+
+    @Override
+    public float getAsFloat(@Nonnull String key) {
+<span class="nc" id="L88">        return getAsFloat(key, 0f);</span>
+    }
+
+    @Override
+    public float getAsFloat(@Nonnull String key, float defaultValue) {
+<span class="nc" id="L93">        return castToFloat(get(key), defaultValue);</span>
+    }
+
+    @Override
+    public double getAsDouble(@Nonnull String key) {
+<span class="nc" id="L98">        return getAsDouble(key, 0d);</span>
+    }
+
+    @Override
+    public double getAsDouble(@Nonnull String key, double defaultValue) {
+<span class="nc" id="L103">        return castToDouble(get(key), defaultValue);</span>
+    }
+
+    @Nullable
+    @Override
+    public String getAsString(@Nonnull String key) {
+<span class="nc" id="L109">        return getAsString(key, null);</span>
+    }
+
+    @Nullable
+    @Override
+    public String getAsString(@Nonnull String key, @Nullable String defaultValue) {
+<span class="fc" id="L115">        Object value = get(key);</span>
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">        return value != null ? String.valueOf(value) : defaultValue;</span>
+    }
+
+    @Nonnull
+    @Override
+    public Properties asProperties() {
+<span class="nc" id="L122">        return toProperties(asFlatMap());</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>MethodDescriptor.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.util</a> &gt; <span class="el_source">MethodDescriptor.java</span></div><h1>MethodDescriptor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.util;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ */
+public class MethodDescriptor implements Comparable&lt;MethodDescriptor&gt; {
+    private final String methodName;
+    private final String[] paramTypes;
+    private final int hashCode;
+    private final int modifiers;
+
+<span class="fc" id="L36">    private static final String[] EMPTY_CLASS_PARAMETERS = new String[0];</span>
+
+    @Nonnull
+    public static MethodDescriptor forMethod(@Nonnull Method method) {
+<span class="fc" id="L40">        return forMethod(method, false);</span>
+    }
+
+    @Nonnull
+    public static MethodDescriptor forMethod(@Nonnull Method method, boolean removeAbstractModifier) {
+<span class="fc" id="L45">        requireNonNull(method, &quot;Argument 'method' must not be null&quot;);</span>
+<span class="fc" id="L46">        int modifiers = method.getModifiers();</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        if (removeAbstractModifier) {</span>
+<span class="fc" id="L48">            modifiers -= Modifier.ABSTRACT;</span>
+        }
+<span class="fc" id="L50">        return new MethodDescriptor(method.getName(), method.getParameterTypes(), modifiers);</span>
+    }
+
+    private static boolean areParametersCompatible(String[] params1, String[] params2) {
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        if (params1.length != params2.length) {</span>
+<span class="nc" id="L55">            return false;</span>
+        }
+
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        for (int i = 0; i &lt; params1.length; i++) {</span>
+<span class="nc" id="L59">            String p1 = params1[i];</span>
+<span class="nc" id="L60">            String p2 = params2[i];</span>
+<span class="nc bnc" id="L61" title="All 4 branches missed.">            if (!p1.equals(p2) &amp;&amp; !GriffonClassUtils.isMatchBetweenPrimitiveAndWrapperTypes(p1, p2)) {</span>
+<span class="nc" id="L62">                return false;</span>
+            }
+        }
+
+<span class="nc" id="L66">        return true;</span>
+    }
+
+    public MethodDescriptor(@Nonnull String methodName) {
+<span class="fc" id="L70">        this(methodName, EMPTY_CLASS_PARAMETERS, Modifier.PUBLIC);</span>
+<span class="fc" id="L71">    }</span>
+
+    public MethodDescriptor(@Nonnull String methodName, int modifiers) {
+<span class="nc" id="L74">        this(methodName, EMPTY_CLASS_PARAMETERS, modifiers);</span>
+<span class="nc" id="L75">    }</span>
+
+    public MethodDescriptor(@Nonnull String methodName, @Nonnull Class&lt;?&gt;[] paramTypes) {
+<span class="fc" id="L78">        this(methodName, paramTypes, Modifier.PUBLIC);</span>
+<span class="fc" id="L79">    }</span>
+
+    public MethodDescriptor(@Nonnull String methodName, @Nonnull String[] paramTypes) {
+<span class="nc" id="L82">        this(methodName, paramTypes, Modifier.PUBLIC);</span>
+<span class="nc" id="L83">    }</span>
+
+<span class="fc" id="L85">    public MethodDescriptor(@Nonnull String methodName, @Nonnull Class&lt;?&gt;[] paramTypes, int modifiers) {</span>
+<span class="fc" id="L86">        this.methodName = requireNonBlank(methodName, &quot;Argment 'methodName' must not be blank&quot;);</span>
+<span class="fc" id="L87">        requireNonNull(paramTypes, &quot;Argument 'paramTypes' must not be null&quot;);</span>
+
+<span class="fc" id="L89">        this.paramTypes = new String[paramTypes.length];</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        for (int i = 0; i &lt; paramTypes.length; i++) {</span>
+<span class="fc" id="L91">            this.paramTypes[i] = paramTypes[i].getName();</span>
+        }
+
+<span class="fc" id="L94">        this.modifiers = modifiers;</span>
+<span class="fc" id="L95">        this.hashCode = 31 * methodName.hashCode() + modifiers;</span>
+<span class="fc" id="L96">    }</span>
+
+<span class="fc" id="L98">    public MethodDescriptor(@Nonnull String methodName, @Nonnull String[] paramTypes, int modifiers) {</span>
+<span class="fc" id="L99">        this.methodName = requireNonBlank(methodName, &quot;Argment 'methodName' must not be blank&quot;);</span>
+<span class="fc" id="L100">        requireNonNull(paramTypes, &quot;Argument 'paramTypes' must not be null&quot;);</span>
+
+<span class="fc" id="L102">        this.paramTypes = Arrays.copyOf(paramTypes, paramTypes.length);</span>
+
+<span class="fc" id="L104">        this.modifiers = modifiers;</span>
+<span class="fc" id="L105">        this.hashCode = 31 * methodName.hashCode() + modifiers;</span>
+<span class="fc" id="L106">    }</span>
+
+    @Nonnull
+    public String getName() {
+<span class="fc" id="L110">        return methodName;</span>
+    }
+
+    @Nonnull
+    public String[] getParameterTypes() {
+<span class="nc" id="L115">        return paramTypes;</span>
+    }
+
+    public int getModifiers() {
+<span class="fc" id="L119">        return modifiers;</span>
+    }
+
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        if (!(obj instanceof MethodDescriptor)) {</span>
+<span class="nc" id="L124">            return false;</span>
+        }
+<span class="nc" id="L126">        MethodDescriptor md = (MethodDescriptor) obj;</span>
+
+<span class="nc bnc" id="L128" title="All 4 branches missed.">        return methodName.equals(md.methodName) &amp;&amp;</span>
+            modifiers == md.modifiers &amp;&amp;
+<span class="nc bnc" id="L130" title="All 2 branches missed.">            areParametersCompatible(paramTypes, md.paramTypes);</span>
+    }
+
+    public int hashCode() {
+<span class="nc" id="L134">        return hashCode;</span>
+    }
+
+    public String toString() {
+<span class="nc" id="L138">        StringBuilder b = new StringBuilder();</span>
+<span class="nc" id="L139">        b.append(Modifier.toString(modifiers)).append(&quot; &quot;);</span>
+<span class="nc" id="L140">        b.append(methodName).append(&quot;(&quot;);</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">        for (int i = 0; i &lt; paramTypes.length; i++) {</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">            if (i != 0) b.append(&quot;, &quot;);</span>
+<span class="nc" id="L143">            b.append(paramTypes[i]);</span>
+        }
+<span class="nc" id="L145">        b.append(&quot;)&quot;);</span>
+<span class="nc" id="L146">        return b.toString();</span>
+    }
+
+    public int compareTo(MethodDescriptor md) {
+<span class="fc" id="L150">        int c = methodName.compareTo(md.methodName);</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">        if (c != 0) return c;</span>
+<span class="fc" id="L152">        c = modifiers - md.modifiers;</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">        if (c != 0) return c;</span>
+<span class="fc" id="L154">        c = paramTypes.length - md.paramTypes.length;</span>
+<span class="fc bfc" id="L155" title="All 2 branches covered.">        if (c != 0) return c;</span>
+<span class="fc bfc" id="L156" title="All 2 branches covered.">        for (int i = 0; i &lt; paramTypes.length; i++) {</span>
+<span class="fc" id="L157">            c = paramTypes[i].compareTo(md.paramTypes[i]);</span>
+<span class="fc bfc" id="L158" title="All 2 branches covered.">            if (c != 0) return c;</span>
+        }
+
+<span class="fc" id="L161">        return 0;</span>
+    }
+
+    public boolean matches(@Nonnull MethodDescriptor md) {
+<span class="nc" id="L165">        requireNonNull(md, &quot;Argument 'methodDescriptor' must not be null&quot;);</span>
+<span class="nc bnc" id="L166" title="All 6 branches missed.">        if (!methodName.equals(md.methodName) ||</span>
+            modifiers != md.modifiers ||
+            paramTypes.length != md.paramTypes.length) {
+<span class="nc" id="L169">            return false;</span>
+        }
+
+<span class="nc bnc" id="L172" title="All 2 branches missed.">        for (int i = 0; i &lt; paramTypes.length; i++) {</span>
+<span class="nc" id="L173">            Class&lt;?&gt; param1 = loadClass(paramTypes[i]);</span>
+<span class="nc" id="L174">            Class&lt;?&gt; param2 = loadClass(md.paramTypes[i]);</span>
+<span class="nc bnc" id="L175" title="All 6 branches missed.">            if (param1 != null &amp;&amp; param2 != null &amp;&amp; !GriffonClassUtils.isAssignableOrConvertibleFrom(param1, param2)) {</span>
+<span class="nc" id="L176">                return false;</span>
+            }
+        }
+
+<span class="nc" id="L180">        return true;</span>
+    }
+
+    @Nullable
+    private Class&lt;?&gt; loadClass(@Nonnull String classname) {
+        try {
+<span class="nc" id="L186">            return Class.forName(classname, true, getClass().getClassLoader());</span>
+<span class="nc" id="L187">        } catch (ClassNotFoundException e) {</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">            if (GriffonClassUtils.PRIMITIVE_TYPE_COMPATIBLE_TYPES.containsKey(classname)) {</span>
+                try {
+<span class="nc" id="L190">                    classname = GriffonClassUtils.PRIMITIVE_TYPE_COMPATIBLE_TYPES.get(classname);</span>
+<span class="nc" id="L191">                    return Class.forName(classname, true, getClass().getClassLoader());</span>
+<span class="nc" id="L192">                } catch (ClassNotFoundException e1) {</span>
+<span class="nc" id="L193">                    return null;</span>
+                }
+            } else {
+<span class="nc" id="L196">                return null;</span>
+            }
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

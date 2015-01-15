@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ExpandableResourceBundle.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-java</a> &gt; <a href="index.source.html" class="el_package">griffon.util</a> &gt; <span class="el_source">ExpandableResourceBundle.java</span></div><h1>ExpandableResourceBundle.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.util;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+import static griffon.util.ConfigUtils.getConfigValue;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public class ExpandableResourceBundle extends ResourceBundle {
+<span class="fc" id="L35">    private final Map&lt;String, Object&gt; entries = new LinkedHashMap&lt;&gt;();</span>
+
+    @Nonnull
+    public static ResourceBundle wrapResourceBundle(@Nonnull ResourceBundle resourceBundle) {
+<span class="fc" id="L39">        requireNonNull(resourceBundle, &quot;Argument 'resourceBundle' must not be null&quot;);</span>
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">        if (!(resourceBundle instanceof ExpandableResourceBundle)) {</span>
+<span class="fc" id="L41">            return new ExpandableResourceBundle(resourceBundle);</span>
+        }
+<span class="nc" id="L43">        return resourceBundle;</span>
+    }
+
+<span class="fc" id="L46">    public ExpandableResourceBundle(@Nonnull ResourceBundle delegate) {</span>
+<span class="fc" id="L47">        requireNonNull(delegate, &quot;Argument 'delegate' must not be null&quot;);</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        for (String key : delegate.keySet()) {</span>
+<span class="fc" id="L49">            Object value = getConfigValue(delegate, key);</span>
+<span class="fc" id="L50">            processKey(key, entries, value);</span>
+<span class="fc" id="L51">            entries.put(key, value);</span>
+<span class="fc" id="L52">        }</span>
+<span class="fc" id="L53">    }</span>
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    private void processKey(@Nonnull String key, @Nonnull Map&lt;String, Object&gt; map, @Nullable Object value) {
+<span class="fc" id="L57">        String[] keys = split(key);</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (keys[1] == null) {</span>
+<span class="fc" id="L59">            map.put(keys[0], value);</span>
+        } else {
+<span class="fc" id="L61">            Map&lt;String, Object&gt; m = (Map&lt;String, Object&gt;) map.get(keys[0]);</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">            if (m == null) {</span>
+<span class="fc" id="L63">                m = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L64">                map.put(keys[0], m);</span>
+            }
+<span class="fc" id="L66">            processKey(keys[1], m, value);</span>
+        }
+<span class="fc" id="L68">    }</span>
+
+    @Nonnull
+    private String[] split(@Nonnull String input) {
+<span class="fc" id="L72">        int split = input.indexOf(&quot;.&quot;);</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        String head = split &lt; 0 ? input : input.substring(0, split);</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        String tail = split &gt; 0 ? input.substring(split + 1) : null;</span>
+<span class="fc" id="L75">        return new String[]{head, tail};</span>
+    }
+
+    @Nullable
+    @Override
+    protected final Object handleGetObject(@Nonnull String key) {
+<span class="fc" id="L81">        return entries.get(requireNonBlank(key, &quot;Argument 'key' must not be blank&quot;));</span>
+    }
+
+    @Nonnull
+    @Override
+    public final Enumeration&lt;String&gt; getKeys() {
+<span class="fc" id="L87">        return new IteratorAsEnumeration&lt;&gt;(entries.keySet().iterator());</span>
+    }
+
+    private static class IteratorAsEnumeration&lt;E&gt; implements Enumeration&lt;E&gt; {
+        private final Iterator&lt;E&gt; iterator;
+
+<span class="fc" id="L93">        public IteratorAsEnumeration(Iterator&lt;E&gt; iterator) {</span>
+<span class="fc" id="L94">            this.iterator = iterator;</span>
+<span class="fc" id="L95">        }</span>
+
+        public boolean hasMoreElements() {
+<span class="fc" id="L98">            return iterator.hasNext();</span>
+        }
+
+        public E nextElement() {
+<span class="fc" id="L102">            return iterator.next();</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

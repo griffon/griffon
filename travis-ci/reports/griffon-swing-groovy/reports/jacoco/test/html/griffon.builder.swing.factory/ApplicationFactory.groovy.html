@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ApplicationFactory.groovy</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-swing-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.builder.swing.factory</a> &gt; <span class="el_source">ApplicationFactory.groovy</span></div><h1>ApplicationFactory.groovy</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.builder.swing.factory
+
+import org.codehaus.groovy.runtime.InvokerHelper
+
+import javax.swing.JApplet
+import javax.swing.JButton
+import javax.swing.JMenuBar
+import javax.swing.JToolBar
+import javax.swing.SwingUtilities
+import java.awt.Component
+import java.awt.Window
+
+/**
+ * Created by IntelliJ IDEA.
+ * @author Danno.Ferrin
+ * Date: Sep 4, 2008
+ * Time: 8:52:40 PM
+ */
+@SuppressWarnings(&quot;rawtypes&quot;)
+class ApplicationFactory extends AbstractFactory {
+    static final String DELEGATE_PROPERTY_DEFAULT_BUTTON = &quot;_delegateProperty:defaultButton&quot;;
+    static final String DEFAULT_DELEGATE_PROPERTY_DEFAULT_BUTTON = &quot;defaultButton&quot;;
+
+    static final String DELEGATE_PROPERTY_CANCEL_BUTTON = &quot;_delegateProperty:cancelButton&quot;;
+    static final String DEFAULT_DELEGATE_PROPERTY_CANCEL_BUTTON = &quot;cancelButton&quot;;
+
+    static boolean swingXPresent
+    static Class&lt;?&gt; jxStatusBarClass
+    static {
+        try {
+<span class="nc" id="L46">            ClassLoader cl = getClass().getClassLoader();</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">            if (cl) {</span>
+<span class="nc" id="L48">                jxStatusBarClass = cl.loadClass('org.jdesktop.swingx.JXStatusBar')</span>
+            } else {
+<span class="nc" id="L50">                jxStatusBarClass = Class.forName('org.jdesktop.swingx.JXStatusBar')</span>
+            }
+<span class="pc" id="L52">            swingXPresent = true</span>
+        } catch (Throwable t) {
+<span class="pc" id="L54">            swingXPresent = false</span>
+        }
+    }
+
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
+<span class="nc" id="L59">        def applicationWindow = builder.application.createApplicationContainer([:])</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        if (applicationWindow instanceof Window) {</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">            if (attributes.id) applicationWindow.name = attributes.id</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">            if (attributes.name) applicationWindow.name = attributes.name</span>
+<span class="nc" id="L63">            builder.application.windowManager.attach(applicationWindow.name, applicationWindow)</span>
+        }
+<span class="nc" id="L65">        def window = getContainingWindow(applicationWindow)</span>
+
+<span class="nc bnc" id="L67" title="All 6 branches missed.">        if (applicationWindow instanceof JApplet &amp;&amp; swingXPresent) {</span>
+            // bake in some JXFrame stuff if present
+<span class="nc" id="L69">            applicationWindow.rootPane = getClass().getClassLoader().loadClass('org.jdesktop.swingx.JXRootPane').newInstance()</span>
+        }
+
+<span class="nc bnc" id="L72" title="All 4 branches missed.">        if (!window) return applicationWindow</span>
+
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (swingXPresent) {</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">            builder.context[DELEGATE_PROPERTY_CANCEL_BUTTON] = attributes.remove(&quot;cancelButtonProperty&quot;) ?: DEFAULT_DELEGATE_PROPERTY_CANCEL_BUTTON</span>
+
+            builder.context.cancelButtonDelegate =
+<span class="nc" id="L78">                builder.addAttributeDelegate { myBuilder, node, myAttributes -&gt;</span>
+<span class="nc bnc" id="L79" title="All 6 branches missed.">                    if (myAttributes.cancelButton &amp;&amp; (node instanceof JButton)) {</span>
+<span class="nc" id="L80">                        applicationWindow.rootPaneExt.cancelButton = node</span>
+<span class="nc" id="L81">                        myAttributes.remove('cancelButton')</span>
+                    }
+                }
+        }
+
+<span class="nc" id="L86">        builder.context.pack = attributes.remove('pack')</span>
+<span class="nc" id="L87">        builder.context.show = attributes.remove('show')</span>
+<span class="nc" id="L88">        builder.addDisposalClosure(applicationWindow.&amp;dispose)</span>
+<span class="nc" id="L89">        builder.containingWindows.add(window)</span>
+
+        /*
+       if(attributes.containsKey('hideBeforeHandler') &amp;&amp; builder.app instanceof SwingGriffonApplication) {
+           builder.applicationWindow.windowManager.hideBeforeHandler = attributes.remove('hideBeforeHandler')
+       }
+       */
+
+<span class="nc bnc" id="L97" title="All 2 branches missed.">        builder.context[DELEGATE_PROPERTY_DEFAULT_BUTTON] = attributes.remove(&quot;defaultButtonProperty&quot;) ?: DEFAULT_DELEGATE_PROPERTY_DEFAULT_BUTTON</span>
+        builder.context.defaultButtonDelegate =
+<span class="nc" id="L99">            builder.addAttributeDelegate { myBuilder, node, myAttributes -&gt;</span>
+<span class="nc bnc" id="L100" title="All 6 branches missed.">                if ((node instanceof JButton) &amp;&amp; (builder.containingWindows[-1] == window)) {</span>
+                    // in Java 6 use descending iterator
+<span class="nc" id="L102">                    ListIterator li = builder.contexts.listIterator();</span>
+<span class="nc" id="L103">                    Map context</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">                    while (li.hasNext()) context = li.next()</span>
+<span class="nc bnc" id="L105" title="All 6 branches missed.">                    while (context &amp;&amp; context[FactoryBuilderSupport.CURRENT_NODE] != window) {</span>
+<span class="nc" id="L106">                        context = li.previous()</span>
+                    }
+<span class="nc bnc" id="L108" title="All 2 branches missed.">                    def defaultButtonProperty = context[DELEGATE_PROPERTY_DEFAULT_BUTTON] ?: DEFAULT_DELEGATE_PROPERTY_DEFAULT_BUTTON</span>
+<span class="nc" id="L109">                    def defaultButton = myAttributes.remove(defaultButtonProperty)</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">                    if (defaultButton) {</span>
+<span class="nc" id="L111">                        applicationWindow.rootPane.defaultButton = node</span>
+                    }
+                }
+            }
+
+<span class="nc" id="L116">        return applicationWindow</span>
+    }
+
+    boolean onHandleNodeAttributes(FactoryBuilderSupport builder, Object node, Map attributes) {
+<span class="nc bnc" id="L120" title="All 2 branches missed.">        for (Map.Entry entry : (Set&lt;Map.Entry&gt;) attributes.entrySet()) {</span>
+<span class="nc" id="L121">            String property = entry.getKey().toString();</span>
+<span class="nc" id="L122">            Object value = entry.getValue();</span>
+            // be forgiving on attributes, so an applet can set an icon without punishment, etc
+            try {
+<span class="nc" id="L125">                InvokerHelper.setProperty(node, property, value);</span>
+            } catch (MissingPropertyException mpe) {
+<span class="nc bnc" id="L127" title="All 2 branches missed.">                if (mpe.property != property) throw mpe</span>
+            }
+        }
+<span class="nc" id="L130">        return false</span>
+    }
+
+    void handleRootPaneExtTasks(FactoryBuilderSupport builder, Window container, Map attributes) {
+<span class="nc" id="L134">        container.rootPaneExt.cancelButton = null</span>
+<span class="nc" id="L135">        container.rootPaneExt.defaultButton = null</span>
+        builder.context.cancelButtonDelegate =
+<span class="nc" id="L137">            builder.addAttributeDelegate { myBuilder, node, myAttributes -&gt;</span>
+<span class="nc bnc" id="L138" title="All 6 branches missed.">                if (myAttributes.cancelButton &amp;&amp; (node instanceof JButton)) {</span>
+<span class="nc" id="L139">                    container.rootPaneExt.cancelButton = node</span>
+<span class="nc" id="L140">                    myAttributes.remove('cancelButton')</span>
+                }
+            }
+
+<span class="nc" id="L144">        super.handleRootPaneTasks(builder, container, attributes)</span>
+    }
+
+    void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
+<span class="nc" id="L148">        def window = getContainingWindow(node)</span>
+<span class="nc" id="L149">        builder.removeAttributeDelegate(builder.context.cancelButtonDelegate)</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        if (window instanceof Window) {</span>
+<span class="nc" id="L151">            def containingWindows = builder.containingWindows</span>
+<span class="nc bnc" id="L152" title="All 8 branches missed.">            if (!containingWindows.empty &amp;&amp; containingWindows.last == window) {</span>
+<span class="nc" id="L153">                containingWindows.removeLast()</span>
+            }
+
+            // can't pack or show an applet...
+
+<span class="nc bnc" id="L158" title="All 2 branches missed.">            if (builder.context.pack) {</span>
+<span class="nc" id="L159">                window.pack()</span>
+            }
+<span class="nc bnc" id="L161" title="All 2 branches missed.">            if (builder.context.show) {</span>
+<span class="nc" id="L162">                window.visible = true</span>
+            }
+        }
+
+<span class="nc" id="L166">        builder.removeAttributeDelegate(builder.context.defaultButtonDelegate)</span>
+    }
+
+    private getContainingWindow(node) {
+<span class="nc bnc" id="L170" title="All 6 branches missed.">        if (node instanceof JApplet || node instanceof Window) {</span>
+<span class="nc" id="L171">            return node</span>
+<span class="nc bnc" id="L172" title="All 2 branches missed.">        } else if (node instanceof Component) {</span>
+<span class="nc" id="L173">            return SwingUtilities.getWindowAncestor(node)</span>
+        }
+<span class="nc" id="L175">        return null</span>
+    }
+
+    void setChild(FactoryBuilderSupport builder, Object parent, Object child) {
+<span class="nc bnc" id="L179" title="All 8 branches missed.">        if (!(child instanceof Component) || (child instanceof Window)) {</span>
+<span class="nc" id="L180">            return;</span>
+        }
+<span class="nc bnc" id="L182" title="All 2 branches missed.">        if (child instanceof JMenuBar) {</span>
+<span class="nc" id="L183">            parent.JMenuBar = child</span>
+<span class="nc bnc" id="L184" title="All 6 branches missed.">        } else if (swingXPresent &amp;&amp; (child instanceof JToolBar)) {</span>
+<span class="nc" id="L185">            parent.rootPane.toolBar = child</span>
+<span class="nc bnc" id="L186" title="All 6 branches missed.">        } else if (swingXPresent &amp;&amp; (jxStatusBarClass.isAssignableFrom(child.getClass()))) {</span>
+<span class="nc" id="L187">            parent.rootPane.statusBar = child</span>
+        } else {
+            try {
+<span class="nc" id="L190">                def constraints = builder.context.constraints</span>
+<span class="nc bnc" id="L191" title="All 2 branches missed.">                if (constraints != null) {</span>
+<span class="nc" id="L192">                    parent.contentPane.add(child, constraints)</span>
+                } else {
+<span class="nc" id="L194">                    parent.contentPane.add(child)</span>
+                }
+            } catch (MissingPropertyException mpe) {
+<span class="nc" id="L197">                parent.contentPane.add(child)</span>
+            }
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

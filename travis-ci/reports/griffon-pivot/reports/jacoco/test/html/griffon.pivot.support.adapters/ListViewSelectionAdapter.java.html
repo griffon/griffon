@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ListViewSelectionAdapter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-pivot</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.support.adapters</a> &gt; <span class="el_source">ListViewSelectionAdapter.java</span></div><h1>ListViewSelectionAdapter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.support.adapters;
+
+import griffon.core.CallableWithArgs;
+import org.apache.pivot.wtk.Span;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="fc" id="L25">public class ListViewSelectionAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ListViewSelectionListener {</span>
+    private CallableWithArgs&lt;Void&gt; selectedRangesChanged;
+    private CallableWithArgs&lt;Void&gt; selectedRangeAdded;
+    private CallableWithArgs&lt;Void&gt; selectedRangeRemoved;
+    private CallableWithArgs&lt;Void&gt; selectedItemChanged;
+
+    public CallableWithArgs&lt;Void&gt; getSelectedRangesChanged() {
+<span class="fc" id="L32">        return this.selectedRangesChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getSelectedRangeAdded() {
+<span class="fc" id="L36">        return this.selectedRangeAdded;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getSelectedRangeRemoved() {
+<span class="fc" id="L40">        return this.selectedRangeRemoved;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getSelectedItemChanged() {
+<span class="fc" id="L44">        return this.selectedItemChanged;</span>
+    }
+
+
+    public void setSelectedRangesChanged(CallableWithArgs&lt;Void&gt; selectedRangesChanged) {
+<span class="fc" id="L49">        this.selectedRangesChanged = selectedRangesChanged;</span>
+<span class="fc" id="L50">    }</span>
+
+    public void setSelectedRangeAdded(CallableWithArgs&lt;Void&gt; selectedRangeAdded) {
+<span class="fc" id="L53">        this.selectedRangeAdded = selectedRangeAdded;</span>
+<span class="fc" id="L54">    }</span>
+
+    public void setSelectedRangeRemoved(CallableWithArgs&lt;Void&gt; selectedRangeRemoved) {
+<span class="fc" id="L57">        this.selectedRangeRemoved = selectedRangeRemoved;</span>
+<span class="fc" id="L58">    }</span>
+
+    public void setSelectedItemChanged(CallableWithArgs&lt;Void&gt; selectedItemChanged) {
+<span class="fc" id="L61">        this.selectedItemChanged = selectedItemChanged;</span>
+<span class="fc" id="L62">    }</span>
+
+
+    public void selectedRangesChanged(org.apache.pivot.wtk.ListView arg0, org.apache.pivot.collections.Sequence&lt;Span&gt; arg1) {
+<span class="fc bfc" id="L66" title="All 2 branches covered.">        if (selectedRangesChanged != null) {</span>
+<span class="fc" id="L67">            selectedRangesChanged.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L69">    }</span>
+
+    public void selectedRangeAdded(org.apache.pivot.wtk.ListView arg0, int arg1, int arg2) {
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (selectedRangeAdded != null) {</span>
+<span class="fc" id="L73">            selectedRangeAdded.call(arg0, arg1, arg2);</span>
+        }
+<span class="fc" id="L75">    }</span>
+
+    public void selectedRangeRemoved(org.apache.pivot.wtk.ListView arg0, int arg1, int arg2) {
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        if (selectedRangeRemoved != null) {</span>
+<span class="fc" id="L79">            selectedRangeRemoved.call(arg0, arg1, arg2);</span>
+        }
+<span class="fc" id="L81">    }</span>
+
+    public void selectedItemChanged(org.apache.pivot.wtk.ListView arg0, java.lang.Object arg1) {
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        if (selectedItemChanged != null) {</span>
+<span class="fc" id="L85">            selectedItemChanged.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L87">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

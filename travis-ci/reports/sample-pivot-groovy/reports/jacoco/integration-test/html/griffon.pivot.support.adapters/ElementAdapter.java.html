@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ElementAdapter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.support.adapters</a> &gt; <span class="el_source">ElementAdapter.java</span></div><h1>ElementAdapter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.support.adapters;
+
+import griffon.core.CallableWithArgs;
+import org.apache.pivot.wtk.text.Node;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="nc" id="L25">public class ElementAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.text.ElementListener {</span>
+    private CallableWithArgs&lt;Void&gt; nodeInserted;
+    private CallableWithArgs&lt;Void&gt; nodesRemoved;
+    private CallableWithArgs&lt;Void&gt; fontChanged;
+    private CallableWithArgs&lt;Void&gt; foregroundColorChanged;
+    private CallableWithArgs&lt;Void&gt; backgroundColorChanged;
+    private CallableWithArgs&lt;Void&gt; underlineChanged;
+    private CallableWithArgs&lt;Void&gt; strikethroughChanged;
+
+    public CallableWithArgs&lt;Void&gt; getNodeInserted() {
+<span class="nc" id="L35">        return this.nodeInserted;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getNodesRemoved() {
+<span class="nc" id="L39">        return this.nodesRemoved;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getFontChanged() {
+<span class="nc" id="L43">        return this.fontChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getForegroundColorChanged() {
+<span class="nc" id="L47">        return this.foregroundColorChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getBackgroundColorChanged() {
+<span class="nc" id="L51">        return this.backgroundColorChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getUnderlineChanged() {
+<span class="nc" id="L55">        return this.underlineChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getStrikethroughChanged() {
+<span class="nc" id="L59">        return this.strikethroughChanged;</span>
+    }
+
+
+    public void setNodeInserted(CallableWithArgs&lt;Void&gt; nodeInserted) {
+<span class="nc" id="L64">        this.nodeInserted = nodeInserted;</span>
+<span class="nc" id="L65">    }</span>
+
+    public void setNodesRemoved(CallableWithArgs&lt;Void&gt; nodesRemoved) {
+<span class="nc" id="L68">        this.nodesRemoved = nodesRemoved;</span>
+<span class="nc" id="L69">    }</span>
+
+    public void setFontChanged(CallableWithArgs&lt;Void&gt; fontChanged) {
+<span class="nc" id="L72">        this.fontChanged = fontChanged;</span>
+<span class="nc" id="L73">    }</span>
+
+    public void setForegroundColorChanged(CallableWithArgs&lt;Void&gt; foregroundColorChanged) {
+<span class="nc" id="L76">        this.foregroundColorChanged = foregroundColorChanged;</span>
+<span class="nc" id="L77">    }</span>
+
+    public void setBackgroundColorChanged(CallableWithArgs&lt;Void&gt; backgroundColorChanged) {
+<span class="nc" id="L80">        this.backgroundColorChanged = backgroundColorChanged;</span>
+<span class="nc" id="L81">    }</span>
+
+    public void setUnderlineChanged(CallableWithArgs&lt;Void&gt; underlineChanged) {
+<span class="nc" id="L84">        this.underlineChanged = underlineChanged;</span>
+<span class="nc" id="L85">    }</span>
+
+    public void setStrikethroughChanged(CallableWithArgs&lt;Void&gt; strikethroughChanged) {
+<span class="nc" id="L88">        this.strikethroughChanged = strikethroughChanged;</span>
+<span class="nc" id="L89">    }</span>
+
+
+    public void nodeInserted(org.apache.pivot.wtk.text.Element arg0, int arg1) {
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        if (nodeInserted != null) {</span>
+<span class="nc" id="L94">            nodeInserted.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L96">    }</span>
+
+    public void nodesRemoved(org.apache.pivot.wtk.text.Element arg0, int arg1, org.apache.pivot.collections.Sequence&lt;Node&gt; arg2) {
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        if (nodesRemoved != null) {</span>
+<span class="nc" id="L100">            nodesRemoved.call(arg0, arg1, arg2);</span>
+        }
+<span class="nc" id="L102">    }</span>
+
+    public void fontChanged(org.apache.pivot.wtk.text.Element arg0, java.awt.Font arg1) {
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        if (fontChanged != null) {</span>
+<span class="nc" id="L106">            fontChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L108">    }</span>
+
+    public void foregroundColorChanged(org.apache.pivot.wtk.text.Element arg0, java.awt.Color arg1) {
+<span class="nc bnc" id="L111" title="All 2 branches missed.">        if (foregroundColorChanged != null) {</span>
+<span class="nc" id="L112">            foregroundColorChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L114">    }</span>
+
+    public void backgroundColorChanged(org.apache.pivot.wtk.text.Element arg0, java.awt.Color arg1) {
+<span class="nc bnc" id="L117" title="All 2 branches missed.">        if (backgroundColorChanged != null) {</span>
+<span class="nc" id="L118">            backgroundColorChanged.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L120">    }</span>
+
+    public void underlineChanged(org.apache.pivot.wtk.text.Element arg0) {
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        if (underlineChanged != null) {</span>
+<span class="nc" id="L124">            underlineChanged.call(arg0);</span>
+        }
+<span class="nc" id="L126">    }</span>
+
+    public void strikethroughChanged(org.apache.pivot.wtk.text.Element arg0) {
+<span class="nc bnc" id="L129" title="All 2 branches missed.">        if (strikethroughChanged != null) {</span>
+<span class="nc" id="L130">            strikethroughChanged.call(arg0);</span>
+        }
+<span class="nc" id="L132">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

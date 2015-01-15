@@ -1,0 +1,675 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>FXObservableASTTransformation.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-groovy-compile</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.compile.core.ast.transform</a> &gt; <span class="el_source">FXObservableASTTransformation.java</span></div><h1>FXObservableASTTransformation.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.compile.core.ast.transform;
+
+import griffon.transform.FXObservable;
+import griffon.util.GriffonNameUtils;
+import groovyjarjarasm.asm.Opcodes;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
+import javafx.collections.ObservableSet;
+import org.codehaus.griffon.compile.core.AnnotationHandler;
+import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
+import org.codehaus.groovy.ast.ASTNode;
+import org.codehaus.groovy.ast.AnnotatedNode;
+import org.codehaus.groovy.ast.AnnotationNode;
+import org.codehaus.groovy.ast.ClassHelper;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.FieldNode;
+import org.codehaus.groovy.ast.GenericsType;
+import org.codehaus.groovy.ast.MethodNode;
+import org.codehaus.groovy.ast.Parameter;
+import org.codehaus.groovy.ast.PropertyNode;
+import org.codehaus.groovy.ast.expr.ArgumentListExpression;
+import org.codehaus.groovy.ast.expr.BinaryExpression;
+import org.codehaus.groovy.ast.expr.BooleanExpression;
+import org.codehaus.groovy.ast.expr.CastExpression;
+import org.codehaus.groovy.ast.expr.ClassExpression;
+import org.codehaus.groovy.ast.expr.ConstantExpression;
+import org.codehaus.groovy.ast.expr.ConstructorCallExpression;
+import org.codehaus.groovy.ast.expr.Expression;
+import org.codehaus.groovy.ast.expr.FieldExpression;
+import org.codehaus.groovy.ast.expr.ListExpression;
+import org.codehaus.groovy.ast.expr.MapExpression;
+import org.codehaus.groovy.ast.expr.MethodCallExpression;
+import org.codehaus.groovy.ast.expr.VariableExpression;
+import org.codehaus.groovy.ast.stmt.BlockStatement;
+import org.codehaus.groovy.ast.stmt.EmptyStatement;
+import org.codehaus.groovy.ast.stmt.ExpressionStatement;
+import org.codehaus.groovy.ast.stmt.IfStatement;
+import org.codehaus.groovy.ast.stmt.ReturnStatement;
+import org.codehaus.groovy.ast.stmt.Statement;
+import org.codehaus.groovy.control.CompilePhase;
+import org.codehaus.groovy.control.SourceUnit;
+import org.codehaus.groovy.control.messages.SyntaxErrorMessage;
+import org.codehaus.groovy.runtime.MetaClassHelper;
+import org.codehaus.groovy.syntax.SyntaxException;
+import org.codehaus.groovy.syntax.Token;
+import org.codehaus.groovy.syntax.Types;
+import org.codehaus.groovy.transform.GroovyASTTransformation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static org.codehaus.groovy.ast.ClassHelper.LIST_TYPE;
+import static org.codehaus.groovy.ast.ClassHelper.MAP_TYPE;
+
+
+/**
+ * Handles generation of code for the {@code @FXObservable}
+ * &lt;p/&gt;
+ * Generally, it adds (if needed) a javafx.beans.property.Property type
+ * &lt;p/&gt;
+ * It also generates the setter and getter and wires the them through the
+ * javafx.beans.property.Property.
+ *
+ * @author Andres Almiray
+ */
+@AnnotationHandlerFor(FXObservable.class)
+@GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
+<span class="nc" id="L91">public class FXObservableASTTransformation extends AbstractASTTransformation implements AnnotationHandler {</span>
+<span class="nc" id="L92">    private static final ClassNode FXOBSERVABLE_CNODE = makeClassSafe(FXObservable.class);</span>
+
+<span class="nc" id="L94">    private static final ClassNode OBJECT_PROPERTY_CNODE = makeClassSafe(ObjectProperty.class);</span>
+<span class="nc" id="L95">    private static final ClassNode BOOLEAN_PROPERTY_CNODE = makeClassSafe(BooleanProperty.class);</span>
+<span class="nc" id="L96">    private static final ClassNode DOUBLE_PROPERTY_CNODE = makeClassSafe(DoubleProperty.class);</span>
+<span class="nc" id="L97">    private static final ClassNode FLOAT_PROPERTY_CNODE = makeClassSafe(FloatProperty.class);</span>
+<span class="nc" id="L98">    private static final ClassNode INT_PROPERTY_CNODE = makeClassSafe(IntegerProperty.class);</span>
+<span class="nc" id="L99">    private static final ClassNode LONG_PROPERTY_CNODE = makeClassSafe(LongProperty.class);</span>
+<span class="nc" id="L100">    private static final ClassNode STRING_PROPERTY_CNODE = makeClassSafe(StringProperty.class);</span>
+<span class="nc" id="L101">    private static final ClassNode LIST_PROPERTY_CNODE = makeClassSafe(ListProperty.class);</span>
+<span class="nc" id="L102">    private static final ClassNode MAP_PROPERTY_CNODE = makeClassSafe(MapProperty.class);</span>
+<span class="nc" id="L103">    private static final ClassNode SET_PROPERTY_CNODE = makeClassSafe(SetProperty.class);</span>
+
+<span class="nc" id="L105">    private static final ClassNode SIMPLE_BOOLEAN_PROPERTY_CNODE = makeClassSafe(SimpleBooleanProperty.class);</span>
+<span class="nc" id="L106">    private static final ClassNode SIMPLE_DOUBLE_PROPERTY_CNODE = makeClassSafe(SimpleDoubleProperty.class);</span>
+<span class="nc" id="L107">    private static final ClassNode SIMPLE_FLOAT_PROPERTY_CNODE = makeClassSafe(SimpleFloatProperty.class);</span>
+<span class="nc" id="L108">    private static final ClassNode SIMPLE_INT_PROPERTY_CNODE = makeClassSafe(SimpleIntegerProperty.class);</span>
+<span class="nc" id="L109">    private static final ClassNode SIMPLE_LONG_PROPERTY_CNODE = makeClassSafe(SimpleLongProperty.class);</span>
+<span class="nc" id="L110">    private static final ClassNode SIMPLE_STRING_PROPERTY_CNODE = makeClassSafe(SimpleStringProperty.class);</span>
+<span class="nc" id="L111">    private static final ClassNode SIMPLE_LIST_PROPERTY_CNODE = makeClassSafe(SimpleListProperty.class);</span>
+<span class="nc" id="L112">    private static final ClassNode SIMPLE_MAP_PROPERTY_CNODE = makeClassSafe(SimpleMapProperty.class);</span>
+<span class="nc" id="L113">    private static final ClassNode SIMPLE_SET_PROPERTY_CNODE = makeClassSafe(SimpleSetProperty.class);</span>
+<span class="nc" id="L114">    private static final ClassNode SIMPLE_OBJECT_PROPERTY_CNODE = makeClassSafe(SimpleObjectProperty.class);</span>
+
+<span class="nc" id="L116">    private static final ClassNode OBSERVABLE_LIST_CNODE = makeClassSafe(ObservableList.class);</span>
+<span class="nc" id="L117">    private static final ClassNode OBSERVABLE_MAP_CNODE = makeClassSafe(ObservableMap.class);</span>
+<span class="nc" id="L118">    private static final ClassNode OBSERVABLE_SET_CNODE = makeClassSafe(ObservableSet.class);</span>
+<span class="nc" id="L119">    private static final ClassNode FXCOLLECTIONS_CNODE = makeClassSafe(FXCollections.class);</span>
+<span class="nc" id="L120">    private static final ClassNode SET_TYPE = makeClassSafe(Set.class);</span>
+
+<span class="nc" id="L122">    private static final Map&lt;ClassNode, ClassNode&gt; PROPERTY_TYPE_MAP = new HashMap&lt;&gt;();</span>
+
+    static {
+<span class="nc" id="L125">        PROPERTY_TYPE_MAP.put(ClassHelper.STRING_TYPE, STRING_PROPERTY_CNODE);</span>
+<span class="nc" id="L126">        PROPERTY_TYPE_MAP.put(ClassHelper.boolean_TYPE, BOOLEAN_PROPERTY_CNODE);</span>
+<span class="nc" id="L127">        PROPERTY_TYPE_MAP.put(ClassHelper.Boolean_TYPE, BOOLEAN_PROPERTY_CNODE);</span>
+<span class="nc" id="L128">        PROPERTY_TYPE_MAP.put(ClassHelper.double_TYPE, DOUBLE_PROPERTY_CNODE);</span>
+<span class="nc" id="L129">        PROPERTY_TYPE_MAP.put(ClassHelper.Double_TYPE, DOUBLE_PROPERTY_CNODE);</span>
+<span class="nc" id="L130">        PROPERTY_TYPE_MAP.put(ClassHelper.float_TYPE, FLOAT_PROPERTY_CNODE);</span>
+<span class="nc" id="L131">        PROPERTY_TYPE_MAP.put(ClassHelper.Float_TYPE, FLOAT_PROPERTY_CNODE);</span>
+<span class="nc" id="L132">        PROPERTY_TYPE_MAP.put(ClassHelper.int_TYPE, INT_PROPERTY_CNODE);</span>
+<span class="nc" id="L133">        PROPERTY_TYPE_MAP.put(ClassHelper.Integer_TYPE, INT_PROPERTY_CNODE);</span>
+<span class="nc" id="L134">        PROPERTY_TYPE_MAP.put(ClassHelper.long_TYPE, LONG_PROPERTY_CNODE);</span>
+<span class="nc" id="L135">        PROPERTY_TYPE_MAP.put(ClassHelper.Long_TYPE, LONG_PROPERTY_CNODE);</span>
+<span class="nc" id="L136">        PROPERTY_TYPE_MAP.put(ClassHelper.short_TYPE, INT_PROPERTY_CNODE);</span>
+<span class="nc" id="L137">        PROPERTY_TYPE_MAP.put(ClassHelper.Short_TYPE, INT_PROPERTY_CNODE);</span>
+<span class="nc" id="L138">        PROPERTY_TYPE_MAP.put(ClassHelper.byte_TYPE, INT_PROPERTY_CNODE);</span>
+<span class="nc" id="L139">        PROPERTY_TYPE_MAP.put(ClassHelper.Byte_TYPE, INT_PROPERTY_CNODE);</span>
+        //PROPERTY_TYPE_MAP.put(ClassHelper.char_TYPE, INT_PROPERTY_CNODE);
+        //PROPERTY_TYPE_MAP.put(ClassHelper.Character_TYPE, INT_PROPERTY_CNODE);
+    }
+
+<span class="nc" id="L144">    private static final Map&lt;ClassNode, ClassNode&gt; PROPERTY_IMPL_MAP = new HashMap&lt;ClassNode, ClassNode&gt;();</span>
+
+    static {
+<span class="nc" id="L147">        PROPERTY_IMPL_MAP.put(BOOLEAN_PROPERTY_CNODE, SIMPLE_BOOLEAN_PROPERTY_CNODE);</span>
+<span class="nc" id="L148">        PROPERTY_IMPL_MAP.put(DOUBLE_PROPERTY_CNODE, SIMPLE_DOUBLE_PROPERTY_CNODE);</span>
+<span class="nc" id="L149">        PROPERTY_IMPL_MAP.put(FLOAT_PROPERTY_CNODE, SIMPLE_FLOAT_PROPERTY_CNODE);</span>
+<span class="nc" id="L150">        PROPERTY_IMPL_MAP.put(INT_PROPERTY_CNODE, SIMPLE_INT_PROPERTY_CNODE);</span>
+<span class="nc" id="L151">        PROPERTY_IMPL_MAP.put(LONG_PROPERTY_CNODE, SIMPLE_LONG_PROPERTY_CNODE);</span>
+<span class="nc" id="L152">        PROPERTY_IMPL_MAP.put(STRING_PROPERTY_CNODE, SIMPLE_STRING_PROPERTY_CNODE);</span>
+<span class="nc" id="L153">        PROPERTY_IMPL_MAP.put(LIST_PROPERTY_CNODE, SIMPLE_LIST_PROPERTY_CNODE);</span>
+<span class="nc" id="L154">        PROPERTY_IMPL_MAP.put(MAP_PROPERTY_CNODE, SIMPLE_MAP_PROPERTY_CNODE);</span>
+<span class="nc" id="L155">        PROPERTY_IMPL_MAP.put(SET_PROPERTY_CNODE, SIMPLE_SET_PROPERTY_CNODE);</span>
+        //PROPERTY_IMPL_MAP.put(OBJECT_PROPERTY_CNODE, SIMPLE_OBJECT_PROPERTY_CNODE);
+<span class="nc" id="L157">    }</span>
+
+    /**
+     * Convenience method to see if an annotated node is {@code @FXObservable}.
+     *
+     * @param node the node to check
+     * @return true if the node is bindable
+     */
+    public static boolean hasFXObservableAnnotation(AnnotatedNode node) {
+<span class="nc bnc" id="L166" title="All 2 branches missed.">        for (AnnotationNode annotation : node.getAnnotations()) {</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">            if (FXOBSERVABLE_CNODE.equals(annotation.getClassNode())) {</span>
+<span class="nc" id="L168">                return true;</span>
+            }
+<span class="nc" id="L170">        }</span>
+<span class="nc" id="L171">        return false;</span>
+    }
+
+    /**
+     * This ASTTransformation method is called when the compiler encounters our annotation.
+     *
+     * @param nodes      An array of nodes.  Index 0 is the annotation that triggered the call, index 1
+     *                   is the annotated node.
+     * @param sourceUnit The SourceUnit describing the source code in which the annotation was placed.
+     */
+    @Override
+    public void visit(ASTNode[] nodes, SourceUnit sourceUnit) {
+<span class="nc bnc" id="L183" title="All 4 branches missed.">        if (!(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof AnnotatedNode)) {</span>
+<span class="nc" id="L184">            throw new IllegalArgumentException(&quot;Internal error: wrong types: &quot;</span>
+<span class="nc" id="L185">                + nodes[0].getClass().getName() + &quot; / &quot; + nodes[1].getClass().getName());</span>
+        }
+
+<span class="nc" id="L188">        AnnotationNode node = (AnnotationNode) nodes[0];</span>
+<span class="nc" id="L189">        AnnotatedNode parent = (AnnotatedNode) nodes[1];</span>
+<span class="nc" id="L190">        ClassNode declaringClass = parent.getDeclaringClass();</span>
+
+<span class="nc bnc" id="L192" title="All 2 branches missed.">        if (parent instanceof FieldNode) {</span>
+<span class="nc" id="L193">            int modifiers = ((FieldNode) parent).getModifiers();</span>
+<span class="nc bnc" id="L194" title="All 2 branches missed.">            if ((modifiers &amp; Modifier.FINAL) != 0) {</span>
+<span class="nc" id="L195">                String msg = &quot;@griffon.transform.FXObservable cannot annotate a final property.&quot;;</span>
+<span class="nc" id="L196">                generateSyntaxErrorMessage(sourceUnit, node, msg);</span>
+            }
+<span class="nc" id="L198">            addJavaFXProperty(sourceUnit, node, declaringClass, (FieldNode) parent);</span>
+<span class="nc" id="L199">        } else {</span>
+<span class="nc" id="L200">            addJavaFXPropertyToClass(sourceUnit, node, (ClassNode) parent);</span>
+        }
+<span class="nc" id="L202">    }</span>
+
+    /**
+     * Adds a JavaFX property to the class in place of the original Groovy property.  A pair of synthetic
+     * getter/setter methods is generated to provide pseudo-access to the original property.
+     *
+     * @param source         The SourceUnit in which the annotation was found
+     * @param node           The node that was annotated
+     * @param declaringClass The class in which the annotation was found
+     * @param field          The field upon which the annotation was placed
+     */
+    private void addJavaFXProperty(SourceUnit source, AnnotationNode node, ClassNode declaringClass, FieldNode field) {
+<span class="nc" id="L214">        String fieldName = field.getName();</span>
+<span class="nc bnc" id="L215" title="All 2 branches missed.">        for (PropertyNode propertyNode : declaringClass.getProperties()) {</span>
+<span class="nc bnc" id="L216" title="All 2 branches missed.">            if (propertyNode.getName().equals(fieldName)) {</span>
+<span class="nc bnc" id="L217" title="All 2 branches missed.">                if (field.isStatic()) {</span>
+<span class="nc" id="L218">                    String message = &quot;@griffon.transform.FXObservable cannot annotate a static property.&quot;;</span>
+<span class="nc" id="L219">                    generateSyntaxErrorMessage(source, node, message);</span>
+<span class="nc" id="L220">                } else {</span>
+<span class="nc" id="L221">                    createPropertyGetterSetter(declaringClass, propertyNode);</span>
+                }
+<span class="nc" id="L223">                return;</span>
+            }
+<span class="nc" id="L225">        }</span>
+
+<span class="nc" id="L227">        String message = &quot;@griffon.transform.FXObservable must be on a property, not a field. Try removing the private, &quot; +</span>
+            &quot;protected, or public modifier.&quot;;
+<span class="nc" id="L229">        generateSyntaxErrorMessage(source, node, message);</span>
+<span class="nc" id="L230">    }</span>
+
+    /**
+     * Iterate through the properties of the class and convert each eligible property to a JavaFX property.
+     *
+     * @param source    The SourceUnit
+     * @param node      The AnnotationNode
+     * @param classNode The declaring class
+     */
+    private void addJavaFXPropertyToClass(SourceUnit source, AnnotationNode node, ClassNode classNode) {
+<span class="nc bnc" id="L240" title="All 2 branches missed.">        for (PropertyNode propertyNode : classNode.getProperties()) {</span>
+<span class="nc" id="L241">            FieldNode field = propertyNode.getField();</span>
+            // look to see if per-field handlers will catch this one...
+<span class="nc bnc" id="L243" title="All 2 branches missed.">            if (hasFXObservableAnnotation(field)</span>
+<span class="nc bnc" id="L244" title="All 2 branches missed.">                || ((field.getModifiers() &amp; Modifier.FINAL) != 0)</span>
+<span class="nc bnc" id="L245" title="All 2 branches missed.">                || field.isStatic()) {</span>
+                // explicitly labeled properties are already handled,
+                // don't transform final properties
+                // don't transform static properties
+<span class="nc" id="L249">                continue;</span>
+            }
+<span class="nc" id="L251">            createPropertyGetterSetter(classNode, propertyNode);</span>
+<span class="nc" id="L252">        }</span>
+<span class="nc" id="L253">    }</span>
+
+    /**
+     * Creates the JavaFX property and three methods for accessing the property and a pair of
+     * getter/setter methods for accessing the original (now synthetic) Groovy property.  For
+     * example, if the original property was &quot;String firstName&quot; then these three methods would
+     * be generated:
+     * &lt;p/&gt;
+     * public String getFirstName()
+     * public void setFirstName(String value)
+     * public StringProperty firstNameProperty()
+     *
+     * @param classNode    The declaring class in which the property will appear
+     * @param originalProp The original Groovy property
+     */
+    private void createPropertyGetterSetter(ClassNode classNode, PropertyNode originalProp) {
+<span class="nc" id="L269">        Expression initExp = originalProp.getInitialExpression();</span>
+<span class="nc" id="L270">        originalProp.getField().setInitialValueExpression(null);</span>
+
+<span class="nc" id="L272">        PropertyNode fxProperty = createFXProperty(originalProp);</span>
+
+<span class="nc" id="L274">        List&lt;AnnotationNode&gt; methodAnnotations = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L275">        List&lt;AnnotationNode&gt; fieldAnnotations = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L276" title="All 2 branches missed.">        for (AnnotationNode annotation : originalProp.getField().getAnnotations()) {</span>
+<span class="nc bnc" id="L277" title="All 2 branches missed.">            if (FXOBSERVABLE_CNODE.equals(annotation.getClassNode())) continue;</span>
+<span class="nc" id="L278">            Class annotationClass = annotation.getClassNode().getTypeClass();</span>
+<span class="nc" id="L279">            Target target = (Target) annotationClass.getAnnotation(Target.class);</span>
+<span class="nc bnc" id="L280" title="All 2 branches missed.">            if (isTargetAllowed(target, ElementType.METHOD)) {</span>
+<span class="nc" id="L281">                methodAnnotations.add(annotation);</span>
+<span class="nc bnc" id="L282" title="All 2 branches missed.">            } else if (isTargetAllowed(target, ElementType.FIELD)) {</span>
+<span class="nc" id="L283">                fieldAnnotations.add(annotation);</span>
+            }
+<span class="nc" id="L285">        }</span>
+
+<span class="nc" id="L287">        String getterName = &quot;get&quot; + MetaClassHelper.capitalize(originalProp.getName());</span>
+<span class="nc bnc" id="L288" title="All 2 branches missed.">        if (classNode.getMethods(getterName).isEmpty()) {</span>
+<span class="nc" id="L289">            Statement getterBlock = createGetterStatement(createFXProperty(originalProp));</span>
+<span class="nc" id="L290">            createGetterMethod(classNode, originalProp, getterName, getterBlock, methodAnnotations);</span>
+<span class="nc" id="L291">            methodAnnotations = null;</span>
+<span class="nc" id="L292">        } else {</span>
+<span class="nc" id="L293">            wrapGetterMethod(classNode, originalProp.getName(), methodAnnotations);</span>
+<span class="nc" id="L294">            methodAnnotations = null;</span>
+        }
+
+<span class="nc" id="L297">        String setterName = &quot;set&quot; + MetaClassHelper.capitalize(originalProp.getName());</span>
+<span class="nc bnc" id="L298" title="All 2 branches missed.">        if (classNode.getMethods(setterName).isEmpty()) {</span>
+<span class="nc" id="L299">            Statement setterBlock = createSetterStatement(createFXProperty(originalProp));</span>
+<span class="nc" id="L300">            createSetterMethod(classNode, originalProp, setterName, setterBlock, methodAnnotations);</span>
+<span class="nc" id="L301">        } else {</span>
+<span class="nc" id="L302">            wrapSetterMethod(classNode, originalProp.getName(), methodAnnotations);</span>
+        }
+
+        // We want the actual name of the field to be different from the getter (Prop vs Property) so
+        // that the getter takes precedence when we say this.somethingProperty.
+<span class="nc" id="L307">        FieldNode fxFieldShortName = createFieldNodeCopy(originalProp.getName() + &quot;Prop&quot;, null, fxProperty.getField());</span>
+<span class="nc" id="L308">        createPropertyAccessor(classNode, createFXProperty(originalProp), fxFieldShortName, initExp);</span>
+
+<span class="nc" id="L310">        classNode.removeField(originalProp.getName());</span>
+<span class="nc" id="L311">        classNode.addField(fxFieldShortName);</span>
+<span class="nc" id="L312">        fxFieldShortName.addAnnotations(fieldAnnotations);</span>
+<span class="nc" id="L313">    }</span>
+
+    private boolean isTargetAllowed(Target target, ElementType elementType) {
+<span class="nc bnc" id="L316" title="All 2 branches missed.">        if (target == null) {</span>
+<span class="nc" id="L317">            return false;</span>
+        }
+<span class="nc bnc" id="L319" title="All 2 branches missed.">        for (ElementType et : target.value()) {</span>
+<span class="nc bnc" id="L320" title="All 2 branches missed.">            if (et == elementType) {</span>
+<span class="nc" id="L321">                return true;</span>
+            }
+        }
+<span class="nc" id="L324">        return false;</span>
+    }
+
+    /**
+     * Creates a new PropertyNode for the JavaFX property based on the original property.  The new property
+     * will have &quot;Property&quot; appended to its name and its type will be one of the *Property types in JavaFX.
+     *
+     * @param orig The original property
+     * @return A new PropertyNode for the JavaFX property
+     */
+    private PropertyNode createFXProperty(PropertyNode orig) {
+<span class="nc" id="L335">        ClassNode origType = orig.getType();</span>
+<span class="nc" id="L336">        ClassNode newType = PROPERTY_TYPE_MAP.get(origType);</span>
+
+        // For the ObjectProperty, we need to add the generic type to it.
+<span class="nc bnc" id="L339" title="All 2 branches missed.">        if (newType == null) {</span>
+<span class="nc bnc" id="L340" title="All 4 branches missed.">            if (origType.equals(OBSERVABLE_LIST_CNODE) || origType.declaresInterface(OBSERVABLE_LIST_CNODE)) {</span>
+<span class="nc" id="L341">                newType = makeClassSafe(SIMPLE_LIST_PROPERTY_CNODE);</span>
+<span class="nc" id="L342">                GenericsType[] genericTypes = origType.getGenericsTypes();</span>
+<span class="nc" id="L343">                newType.setGenericsTypes(genericTypes);</span>
+<span class="nc bnc" id="L344" title="All 4 branches missed.">            } else if (origType.equals(OBSERVABLE_MAP_CNODE) || origType.declaresInterface(OBSERVABLE_MAP_CNODE)) {</span>
+<span class="nc" id="L345">                newType = makeClassSafe(SIMPLE_MAP_PROPERTY_CNODE);</span>
+<span class="nc" id="L346">                GenericsType[] genericTypes = origType.getGenericsTypes();</span>
+<span class="nc" id="L347">                newType.setGenericsTypes(genericTypes);</span>
+<span class="nc bnc" id="L348" title="All 4 branches missed.">            } else if (origType.equals(OBSERVABLE_SET_CNODE) || origType.declaresInterface(OBSERVABLE_SET_CNODE)) {</span>
+<span class="nc" id="L349">                newType = makeClassSafe(SIMPLE_SET_PROPERTY_CNODE);</span>
+<span class="nc" id="L350">                GenericsType[] genericTypes = origType.getGenericsTypes();</span>
+<span class="nc" id="L351">                newType.setGenericsTypes(genericTypes);</span>
+<span class="nc" id="L352">            } else { // Object Type</span>
+<span class="nc" id="L353">                newType = makeClassSafe(OBJECT_PROPERTY_CNODE);</span>
+<span class="nc" id="L354">                ClassNode genericType = origType;</span>
+<span class="nc bnc" id="L355" title="All 2 branches missed.">                if (genericType.isPrimaryClassNode()) {</span>
+<span class="nc" id="L356">                    genericType = ClassHelper.getWrapper(genericType);</span>
+                }
+<span class="nc" id="L358">                newType.setGenericsTypes(new GenericsType[]{new GenericsType(genericType)});</span>
+            }
+        }
+
+<span class="nc" id="L362">        FieldNode fieldNode = createFieldNodeCopy(orig.getName() + &quot;Property&quot;, newType, orig.getField());</span>
+<span class="nc" id="L363">        return new PropertyNode(fieldNode, orig.getModifiers(), orig.getGetterBlock(), orig.getSetterBlock());</span>
+    }
+
+    /**
+     * Creates a setter method and adds it to the declaring class.  The setter has the form:
+     * &lt;p/&gt;
+     * void &lt;setter&gt;(&lt;type&gt; fieldName)
+     *
+     * @param declaringClass The class to which the method is added
+     * @param propertyNode   The property node being accessed by this setter
+     * @param setterName     The name of the setter method
+     * @param setterBlock    The code body of the method
+     */
+    protected void createSetterMethod(ClassNode declaringClass, PropertyNode propertyNode, String setterName,
+                                      Statement setterBlock, List&lt;AnnotationNode&gt; annotations) {
+<span class="nc" id="L378">        Parameter[] setterParameterTypes = {new Parameter(propertyNode.getType(), &quot;value&quot;)};</span>
+<span class="nc" id="L379">        int mod = propertyNode.getModifiers() | Opcodes.ACC_FINAL;</span>
+
+<span class="nc" id="L381">        MethodNode setter = new MethodNode(setterName, mod, ClassHelper.VOID_TYPE, setterParameterTypes,</span>
+            ClassNode.EMPTY_ARRAY, setterBlock);
+<span class="nc bnc" id="L383" title="All 2 branches missed.">        if (annotations != null) setter.addAnnotations(annotations);</span>
+<span class="nc" id="L384">        setter.setSynthetic(true);</span>
+<span class="nc" id="L385">        declaringClass.addMethod(setter);</span>
+<span class="nc" id="L386">    }</span>
+
+
+    /**
+     * If the setter already exists, this method should wrap it with our code and then a call to the original
+     * setter.
+     * &lt;p/&gt;
+     * TODO: Not implemented yet
+     *
+     * @param classNode    The declaring class to which the method will be added
+     * @param propertyName The name of the original Groovy property
+     */
+    private void wrapSetterMethod(ClassNode classNode, String propertyName, List&lt;AnnotationNode&gt; annotations) {
+<span class="nc" id="L399">        System.out.println(</span>
+<span class="nc" id="L400">            String.format(&quot;wrapSetterMethod for '%s', property '%s' not yet implemented&quot;,</span>
+<span class="nc" id="L401">                classNode.getName(), propertyName));</span>
+<span class="nc" id="L402">    }</span>
+
+    /**
+     * Creates a getter method and adds it to the declaring class.
+     *
+     * @param declaringClass The class to which the method is added
+     * @param propertyNode   The property node being accessed by this getter
+     * @param getterName     The name of the getter method
+     * @param getterBlock    The code body of the method
+     */
+    protected void createGetterMethod(ClassNode declaringClass, PropertyNode propertyNode, String getterName,
+                                      Statement getterBlock, List&lt;AnnotationNode&gt; annotations) {
+<span class="nc" id="L414">        int mod = propertyNode.getModifiers() | Opcodes.ACC_FINAL;</span>
+<span class="nc" id="L415">        MethodNode getter = new MethodNode(getterName, mod, propertyNode.getType(), Parameter.EMPTY_ARRAY,</span>
+            ClassNode.EMPTY_ARRAY, getterBlock);
+<span class="nc bnc" id="L417" title="All 2 branches missed.">        if (annotations != null) getter.addAnnotations(annotations);</span>
+<span class="nc" id="L418">        getter.setSynthetic(true);</span>
+<span class="nc" id="L419">        declaringClass.addMethod(getter);</span>
+<span class="nc" id="L420">    }</span>
+
+    /**
+     * If the getter already exists, this method should wrap it with our code.
+     * &lt;p/&gt;
+     * TODO: Not implemented yet -- what to do with the returned value from the original getter?
+     *
+     * @param classNode    The declaring class to which the method will be added
+     * @param propertyName The name of the original Groovy property
+     */
+    private void wrapGetterMethod(ClassNode classNode, String propertyName, List&lt;AnnotationNode&gt; annotations) {
+<span class="nc" id="L431">        System.out.println(</span>
+<span class="nc" id="L432">            String.format(&quot;wrapGetterMethod for '%s', property '%s' not yet implemented&quot;,</span>
+<span class="nc" id="L433">                classNode.getName(), propertyName));</span>
+<span class="nc" id="L434">    }</span>
+
+
+    /**
+     * Creates the body of a property access method that returns the JavaFX *Property instance.  If
+     * the original property was &quot;String firstName&quot; then the generated code would be:
+     * &lt;p/&gt;
+     * if (firstNameProperty == null) {
+     * firstNameProperty = new javafx.beans.property.StringProperty()
+     * }
+     * return firstNameProperty
+     *
+     * @param classNode        The declaring class to which the JavaFX property will be added
+     * @param fxProperty       The new JavaFX property
+     * @param fxFieldShortName
+     * @param initExp          The initializer expression from the original Groovy property declaration
+     */
+    private void createPropertyAccessor(ClassNode classNode, PropertyNode fxProperty, FieldNode fxFieldShortName,
+                                        Expression initExp) {
+<span class="nc" id="L453">        FieldExpression fieldExpression = new FieldExpression(fxFieldShortName);</span>
+
+<span class="nc bnc" id="L455" title="All 2 branches missed.">        ArgumentListExpression ctorArgs = initExp == null ?</span>
+            ArgumentListExpression.EMPTY_ARGUMENTS :
+            new ArgumentListExpression(initExp);
+
+<span class="nc" id="L459">        BlockStatement block = new BlockStatement();</span>
+<span class="nc" id="L460">        ClassNode fxType = fxProperty.getType();</span>
+<span class="nc" id="L461">        ClassNode implNode = PROPERTY_IMPL_MAP.get(fxType);</span>
+<span class="nc bnc" id="L462" title="All 2 branches missed.">        if (implNode == null) {</span>
+<span class="nc bnc" id="L463" title="All 2 branches missed.">            if (fxType.getTypeClass() == SIMPLE_LIST_PROPERTY_CNODE.getTypeClass()) {</span>
+<span class="nc bnc" id="L464" title="All 2 branches missed.">                if (initExp != null) {</span>
+<span class="nc bnc" id="L465" title="All 4 branches missed.">                    if (initExp instanceof ListExpression ||</span>
+                        (initExp instanceof CastExpression &amp;&amp;
+<span class="nc bnc" id="L467" title="All 2 branches missed.">                            (((CastExpression) initExp).getType().equals(LIST_TYPE) ||</span>
+<span class="nc bnc" id="L468" title="All 4 branches missed.">                                ((CastExpression) initExp).getType().declaresInterface(LIST_TYPE))) ||</span>
+                        (initExp instanceof ConstructorCallExpression &amp;&amp;
+<span class="nc bnc" id="L470" title="All 2 branches missed.">                            (((ConstructorCallExpression) initExp).getType().equals(LIST_TYPE) ||</span>
+<span class="nc bnc" id="L471" title="All 2 branches missed.">                                ((ConstructorCallExpression) initExp).getType().declaresInterface(LIST_TYPE)))</span>
+                        ) {
+<span class="nc" id="L473">                        ctorArgs = new ArgumentListExpression(</span>
+                            new MethodCallExpression(
+                                new ClassExpression(FXCOLLECTIONS_CNODE),
+                                &quot;observableList&quot;,
+                                ctorArgs)
+                        );
+                    }
+                }
+<span class="nc" id="L481">                implNode = fxType;</span>
+<span class="nc bnc" id="L482" title="All 2 branches missed.">            } else if (fxType.getTypeClass() == SIMPLE_MAP_PROPERTY_CNODE.getTypeClass()) {</span>
+<span class="nc bnc" id="L483" title="All 2 branches missed.">                if (initExp != null) {</span>
+<span class="nc bnc" id="L484" title="All 4 branches missed.">                    if (initExp instanceof MapExpression ||</span>
+                        (initExp instanceof CastExpression &amp;&amp;
+<span class="nc bnc" id="L486" title="All 2 branches missed.">                            (((CastExpression) initExp).getType().equals(MAP_TYPE) ||</span>
+<span class="nc bnc" id="L487" title="All 4 branches missed.">                                ((CastExpression) initExp).getType().declaresInterface(MAP_TYPE))) ||</span>
+                        (initExp instanceof ConstructorCallExpression &amp;&amp;
+<span class="nc bnc" id="L489" title="All 2 branches missed.">                            (((ConstructorCallExpression) initExp).getType().equals(MAP_TYPE) ||</span>
+<span class="nc bnc" id="L490" title="All 2 branches missed.">                                ((ConstructorCallExpression) initExp).getType().declaresInterface(MAP_TYPE)))</span>
+                        ) {
+<span class="nc" id="L492">                        ctorArgs = new ArgumentListExpression(</span>
+                            new MethodCallExpression(
+                                new ClassExpression(FXCOLLECTIONS_CNODE),
+                                &quot;observableMap&quot;,
+                                ctorArgs)
+                        );
+                    }
+                }
+<span class="nc" id="L500">                implNode = fxType;</span>
+<span class="nc bnc" id="L501" title="All 2 branches missed.">            } else if (fxType.getTypeClass() == SIMPLE_SET_PROPERTY_CNODE.getTypeClass()) {</span>
+<span class="nc bnc" id="L502" title="All 2 branches missed.">                if (initExp != null) {</span>
+<span class="nc bnc" id="L503" title="All 2 branches missed.">                    if ((initExp instanceof CastExpression &amp;&amp;</span>
+<span class="nc bnc" id="L504" title="All 2 branches missed.">                        (((CastExpression) initExp).getType().equals(SET_TYPE) ||</span>
+<span class="nc bnc" id="L505" title="All 4 branches missed.">                            ((CastExpression) initExp).getType().declaresInterface(SET_TYPE))) ||</span>
+                        (initExp instanceof ConstructorCallExpression &amp;&amp;
+<span class="nc bnc" id="L507" title="All 2 branches missed.">                            (((ConstructorCallExpression) initExp).getType().equals(SET_TYPE) ||</span>
+<span class="nc bnc" id="L508" title="All 2 branches missed.">                                ((ConstructorCallExpression) initExp).getType().declaresInterface(SET_TYPE)))</span>
+                        ) {
+<span class="nc" id="L510">                        ctorArgs = new ArgumentListExpression(</span>
+                            new MethodCallExpression(
+                                new ClassExpression(FXCOLLECTIONS_CNODE),
+                                &quot;observableSet&quot;,
+                                ctorArgs)
+                        );
+                    }
+                }
+<span class="nc" id="L518">                implNode = fxType;</span>
+            } else {
+<span class="nc" id="L520">                implNode = makeClassSafe(SIMPLE_OBJECT_PROPERTY_CNODE);</span>
+<span class="nc" id="L521">                GenericsType[] origGenerics = fxProperty.getType().getGenericsTypes();</span>
+                //List&lt;GenericsType&gt; copyGenericTypes = new ArrayList&lt;GenericsType&gt;();
+                //for()
+<span class="nc" id="L524">                implNode.setGenericsTypes(origGenerics);</span>
+            }
+        }
+<span class="nc" id="L527">        Expression initExpression = new ConstructorCallExpression(implNode, ctorArgs);</span>
+
+<span class="nc" id="L529">        IfStatement ifStmt = new IfStatement(</span>
+            new BooleanExpression(
+                new BinaryExpression(
+                    fieldExpression,
+<span class="nc" id="L533">                    Token.newSymbol(Types.COMPARE_EQUAL, 0, 0),</span>
+                    ConstantExpression.NULL
+                )
+            ),
+            new ExpressionStatement(
+                new BinaryExpression(
+                    fieldExpression,
+<span class="nc" id="L540">                    Token.newSymbol(Types.EQUAL, 0, 0),</span>
+                    initExpression
+                )
+            ),
+            EmptyStatement.INSTANCE
+        );
+<span class="nc" id="L546">        block.addStatement(ifStmt);</span>
+<span class="nc" id="L547">        block.addStatement(new ReturnStatement(fieldExpression));</span>
+
+<span class="nc" id="L549">        String getterName = getFXPropertyGetterName(fxProperty);</span>
+<span class="nc" id="L550">        MethodNode accessor = new MethodNode(getterName, fxProperty.getModifiers(), fxProperty.getType(),</span>
+            Parameter.EMPTY_ARRAY, ClassNode.EMPTY_ARRAY, block);
+<span class="nc" id="L552">        accessor.setSynthetic(true);</span>
+<span class="nc" id="L553">        classNode.addMethod(accessor);</span>
+
+        // Create the xxxxProperty() method that merely calls getXxxxProperty()
+<span class="nc" id="L556">        block = new BlockStatement();</span>
+
+<span class="nc" id="L558">        VariableExpression thisExpression = VariableExpression.THIS_EXPRESSION;</span>
+<span class="nc" id="L559">        ArgumentListExpression emptyArguments = ArgumentListExpression.EMPTY_ARGUMENTS;</span>
+
+<span class="nc" id="L561">        MethodCallExpression getProperty = new MethodCallExpression(thisExpression, getterName, emptyArguments);</span>
+<span class="nc" id="L562">        block.addStatement(new ReturnStatement(getProperty));</span>
+
+<span class="nc" id="L564">        String javaFXPropertyFunction = fxProperty.getName();</span>
+
+<span class="nc" id="L566">        accessor = new MethodNode(javaFXPropertyFunction, fxProperty.getModifiers(), fxProperty.getType(),</span>
+            Parameter.EMPTY_ARRAY, ClassNode.EMPTY_ARRAY, block);
+<span class="nc" id="L568">        accessor.setSynthetic(true);</span>
+<span class="nc" id="L569">        classNode.addMethod(accessor);</span>
+
+        // Create the xxxx() method that merely calls getXxxxProperty()
+<span class="nc" id="L572">        block = new BlockStatement();</span>
+
+<span class="nc" id="L574">        thisExpression = VariableExpression.THIS_EXPRESSION;</span>
+<span class="nc" id="L575">        emptyArguments = ArgumentListExpression.EMPTY_ARGUMENTS;</span>
+
+<span class="nc" id="L577">        getProperty = new MethodCallExpression(thisExpression, getterName, emptyArguments);</span>
+<span class="nc" id="L578">        block.addStatement(new ReturnStatement(getProperty));</span>
+<span class="nc" id="L579">        javaFXPropertyFunction = fxProperty.getName().replace(&quot;Property&quot;, &quot;&quot;);</span>
+
+<span class="nc" id="L581">        accessor = new MethodNode(javaFXPropertyFunction, fxProperty.getModifiers(), fxProperty.getType(),</span>
+            Parameter.EMPTY_ARRAY, ClassNode.EMPTY_ARRAY, block);
+<span class="nc" id="L583">        accessor.setSynthetic(true);</span>
+<span class="nc" id="L584">        classNode.addMethod(accessor);</span>
+<span class="nc" id="L585">    }</span>
+
+    /**
+     * Creates the body of a setter method for the original property that is actually backed by a
+     * JavaFX *Property instance:
+     * &lt;p/&gt;
+     * Object $property = this.someProperty()
+     * $property.setValue(value)
+     *
+     * @param fxProperty The original Groovy property that we're creating a setter for.
+     * @return A Statement that is the body of the new setter.
+     */
+    protected Statement createSetterStatement(PropertyNode fxProperty) {
+<span class="nc" id="L598">        String fxPropertyGetter = getFXPropertyGetterName(fxProperty);</span>
+<span class="nc" id="L599">        VariableExpression thisExpression = VariableExpression.THIS_EXPRESSION;</span>
+<span class="nc" id="L600">        ArgumentListExpression emptyArgs = ArgumentListExpression.EMPTY_ARGUMENTS;</span>
+
+<span class="nc" id="L602">        MethodCallExpression getProperty = new MethodCallExpression(thisExpression, fxPropertyGetter, emptyArgs);</span>
+
+<span class="nc" id="L604">        ArgumentListExpression valueArg = new ArgumentListExpression(new Expression[]{new VariableExpression(&quot;value&quot;)});</span>
+<span class="nc" id="L605">        MethodCallExpression setValue = new MethodCallExpression(getProperty, &quot;setValue&quot;, valueArg);</span>
+
+<span class="nc" id="L607">        return new ExpressionStatement(setValue);</span>
+    }
+
+    /**
+     * Creates the body of a getter method for the original property that is actually backed by a
+     * JavaFX *Property instance:
+     * &lt;p/&gt;
+     * Object $property = this.someProperty()
+     * return $property.getValue()
+     *
+     * @param fxProperty The new JavaFX property.
+     * @return A Statement that is the body of the new getter.
+     */
+    protected Statement createGetterStatement(PropertyNode fxProperty) {
+<span class="nc" id="L621">        String fxPropertyGetter = getFXPropertyGetterName(fxProperty);</span>
+<span class="nc" id="L622">        VariableExpression thisExpression = VariableExpression.THIS_EXPRESSION;</span>
+<span class="nc" id="L623">        ArgumentListExpression emptyArguments = ArgumentListExpression.EMPTY_ARGUMENTS;</span>
+
+        // We're relying on the *Property() method to provide the return value - is this still needed??
+//        Expression defaultReturn = defaultReturnMap.get(originalProperty.getType());
+//        if (defaultReturn == null)
+//            defaultReturn = ConstantExpression.NULL;
+
+<span class="nc" id="L630">        MethodCallExpression getProperty = new MethodCallExpression(thisExpression, fxPropertyGetter, emptyArguments);</span>
+<span class="nc" id="L631">        MethodCallExpression getValue = new MethodCallExpression(getProperty, &quot;getValue&quot;, emptyArguments);</span>
+
+<span class="nc" id="L633">        return new ReturnStatement(new ExpressionStatement(getValue));</span>
+    }
+
+    /**
+     * Generates a SyntaxErrorMessage based on the current SourceUnit, AnnotationNode, and a specified
+     * error message.
+     *
+     * @param sourceUnit The SourceUnit
+     * @param node       The node that was annotated
+     * @param msg        The error message to display
+     */
+    private void generateSyntaxErrorMessage(SourceUnit sourceUnit, AnnotationNode node, String msg) {
+<span class="nc" id="L645">        SyntaxException error = new SyntaxException(msg, node.getLineNumber(), node.getColumnNumber());</span>
+<span class="nc" id="L646">        sourceUnit.getErrorCollector().addErrorAndContinue(new SyntaxErrorMessage(error, sourceUnit));</span>
+<span class="nc" id="L647">    }</span>
+
+    /**
+     * Creates a copy of a FieldNode with a new name and, optionally, a new type.
+     *
+     * @param newName The name for the new field node.
+     * @param newType The new type of the field.  If null, the old FieldNode's type will be used.
+     * @param f       The FieldNode to copy.
+     * @return The new FieldNode.
+     */
+    private FieldNode createFieldNodeCopy(String newName, ClassNode newType, FieldNode f) {
+<span class="nc bnc" id="L658" title="All 2 branches missed.">        if (newType == null)</span>
+<span class="nc" id="L659">            newType = f.getType();</span>
+<span class="nc" id="L660">        newType = newType.getPlainNodeReference();</span>
+
+<span class="nc" id="L662">        return new FieldNode(newName, f.getModifiers(), newType, f.getOwner(), f.getInitialValueExpression());</span>
+    }
+
+    /**
+     * Generates the correct getter method name for a JavaFX property.
+     *
+     * @param fxProperty The property for which the getter should be generated.
+     * @return The getter name as a String.
+     */
+    private String getFXPropertyGetterName(PropertyNode fxProperty) {
+<span class="nc" id="L672">        return GriffonNameUtils.getGetterName(fxProperty.getName());</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

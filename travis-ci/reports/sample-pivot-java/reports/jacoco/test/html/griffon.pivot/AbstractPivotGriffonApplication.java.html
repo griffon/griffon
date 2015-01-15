@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractPivotGriffonApplication.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-java</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot</a> &gt; <span class="el_source">AbstractPivotGriffonApplication.java</span></div><h1>AbstractPivotGriffonApplication.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot;
+
+import griffon.core.ApplicationBootstrapper;
+import griffon.exceptions.InstanceNotFoundException;
+import org.apache.pivot.wtk.Application;
+import org.apache.pivot.wtk.ApplicationContext;
+import org.apache.pivot.wtk.Display;
+import org.apache.pivot.wtk.Window;
+import org.codehaus.griffon.runtime.core.AbstractGriffonApplication;
+import org.codehaus.griffon.runtime.pivot.PivotApplicationBootstrapper;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Map;
+
+import static griffon.util.GriffonClassUtils.setPropertiesNoException;
+import static java.util.Arrays.asList;
+import static org.apache.pivot.wtk.ApplicationContext.queueCallback;
+import static org.apache.pivot.wtk.ApplicationContext.scheduleCallback;
+import static org.apache.pivot.wtk.ApplicationContext.scheduleRecurringCallback;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public abstract class AbstractPivotGriffonApplication extends AbstractGriffonApplication implements Application {
+    public AbstractPivotGriffonApplication() {
+<span class="nc" id="L43">        this(EMPTY_ARGS);</span>
+<span class="nc" id="L44">    }</span>
+
+    public AbstractPivotGriffonApplication(@Nonnull String[] args) {
+<span class="fc" id="L47">        super(args);</span>
+<span class="fc" id="L48">    }</span>
+
+    @Override
+    public boolean shutdown() {
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">        if (super.shutdown()) {</span>
+<span class="fc" id="L53">            exit();</span>
+        }
+<span class="fc" id="L55">        return false;</span>
+    }
+
+    public void exit() {
+<span class="nc" id="L59">        System.exit(0);</span>
+<span class="nc" id="L60">    }</span>
+
+    @Nonnull
+    @Override
+    public Object createApplicationContainer(@Nonnull Map&lt;String, Object&gt; attributes) {
+<span class="nc" id="L65">        Window window = new Window();</span>
+<span class="nc" id="L66">        setPropertiesNoException(window, attributes);</span>
+<span class="nc" id="L67">        return window;</span>
+    }
+
+    @Override
+    public void startup(Display display, org.apache.pivot.collections.Map&lt;String, String&gt; properties) throws Exception {
+<span class="fc" id="L72">        ApplicationBootstrapper bootstrapper = createApplicationBootstrapper(display);</span>
+<span class="fc" id="L73">        bootstrapper.bootstrap();</span>
+<span class="fc" id="L74">        afterStartup();</span>
+<span class="fc" id="L75">    }</span>
+
+    @Nonnull
+    protected ApplicationBootstrapper createApplicationBootstrapper(@Nonnull Display display) {
+<span class="nc" id="L79">        return new PivotApplicationBootstrapper(this, display);</span>
+    }
+
+    protected void afterStartup() {
+<span class="nc" id="L83">        initialize();</span>
+<span class="nc" id="L84">        startup();</span>
+<span class="nc" id="L85">        ready();</span>
+<span class="nc" id="L86">    }</span>
+
+    @Override
+    public boolean shutdown(boolean optional) throws Exception {
+<span class="nc" id="L90">        shutdown();</span>
+<span class="nc" id="L91">        return false;</span>
+    }
+
+    public void suspend() {
+<span class="nc" id="L95">        event(&quot;AppSuspend&quot;, asList(this));</span>
+<span class="nc" id="L96">    }</span>
+
+    public void resume() {
+<span class="nc" id="L99">        event(&quot;AppResume&quot;, asList(this));</span>
+<span class="nc" id="L100">    }</span>
+
+    public void schedule(long delay, Runnable callback) {
+<span class="nc" id="L103">        scheduleCallback(callback, delay);</span>
+<span class="nc" id="L104">    }</span>
+
+    public void scheduleRecurring(long period, Runnable callback) {
+<span class="nc" id="L107">        scheduleRecurringCallback(callback, period);</span>
+<span class="nc" id="L108">    }</span>
+
+    public void scheduleRecurring(long delay, long period, Runnable callback) {
+<span class="nc" id="L111">        scheduleRecurringCallback(callback, delay, period);</span>
+<span class="nc" id="L112">    }</span>
+
+    public void queue(Runnable callback) {
+<span class="nc" id="L115">        queue(false, callback);</span>
+<span class="nc" id="L116">    }</span>
+
+    public void queue(boolean wait, Runnable callback) {
+<span class="nc" id="L119">        queueCallback(callback, wait);</span>
+<span class="nc" id="L120">    }</span>
+
+    public ApplicationContext.ResourceCacheDictionary getResourceCache() {
+<span class="nc" id="L123">        return ApplicationContext.getResourceCache();</span>
+    }
+
+    private void event(@Nonnull String eventName, @Nonnull List&lt;?&gt; args) {
+        try {
+<span class="nc" id="L128">            getEventRouter().publishEvent(eventName, args);</span>
+<span class="nc" id="L129">        } catch (InstanceNotFoundException infe) {</span>
+            // ignore
+<span class="nc" id="L131">        }</span>
+<span class="nc" id="L132">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

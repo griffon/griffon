@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GradientPaintPropertyEditor.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.swing.editors</a> &gt; <span class="el_source">GradientPaintPropertyEditor.java</span></div><h1>GradientPaintPropertyEditor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.swing.editors;
+
+import griffon.core.editors.AbstractPropertyEditor;
+import griffon.metadata.PropertyEditorFor;
+
+import java.awt.Color;
+import java.awt.GradientPaint;
+import java.util.List;
+import java.util.Map;
+
+import static griffon.util.GriffonNameUtils.isBlank;
+
+/**
+ * @author Andres Almiray
+ * @author Alexander Klein
+ * @since 2.0.0
+ */
+@PropertyEditorFor(GradientPaint.class)
+<span class="fc" id="L34">public class GradientPaintPropertyEditor extends AbstractPropertyEditor {</span>
+    public String getAsText() {
+<span class="nc bnc" id="L36" title="All 2 branches missed.">        if (null == getValue()) return null;</span>
+<span class="nc" id="L37">        GradientPaint p = (GradientPaint) getValue();</span>
+<span class="nc" id="L38">        return new StringBuilder()</span>
+<span class="nc" id="L39">            .append(p.getPoint1().getX())</span>
+<span class="nc" id="L40">            .append(&quot;, &quot;)</span>
+<span class="nc" id="L41">            .append(p.getPoint1().getY())</span>
+<span class="nc" id="L42">            .append(&quot;, &quot;)</span>
+<span class="nc" id="L43">            .append(ColorPropertyEditor.format(p.getColor1()))</span>
+<span class="nc" id="L44">            .append(&quot;, &quot;)</span>
+<span class="nc" id="L45">            .append(p.getPoint2().getX())</span>
+<span class="nc" id="L46">            .append(&quot;, &quot;)</span>
+<span class="nc" id="L47">            .append(p.getPoint2().getY())</span>
+<span class="nc" id="L48">            .append(&quot;, &quot;)</span>
+<span class="nc" id="L49">            .append(ColorPropertyEditor.format(p.getColor2()))</span>
+<span class="nc" id="L50">            .append(&quot;, &quot;)</span>
+<span class="nc" id="L51">            .append(p.isCyclic())</span>
+<span class="nc" id="L52">            .toString();</span>
+    }
+
+    protected void setValueInternal(Object value) {
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (null == value) {</span>
+<span class="nc" id="L57">            super.setValueInternal(null);</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        } else if (value instanceof CharSequence) {</span>
+<span class="nc" id="L59">            handleAsString(String.valueOf(value));</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        } else if (value instanceof List) {</span>
+<span class="nc" id="L61">            handleAsList((List) value);</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        } else if (value instanceof Map) {</span>
+<span class="nc" id="L63">            handleAsMap((Map) value);</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        } else if (value instanceof GradientPaint) {</span>
+<span class="nc" id="L65">            super.setValueInternal(value);</span>
+        } else {
+<span class="nc" id="L67">            throw illegalValue(value, GradientPaint.class);</span>
+        }
+<span class="nc" id="L69">    }</span>
+
+    private void handleAsString(String str) {
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        if (isBlank(str)) {</span>
+<span class="nc" id="L73">            super.setValueInternal(null);</span>
+<span class="nc" id="L74">            return;</span>
+        }
+
+<span class="nc" id="L77">        float x1 = 0;</span>
+<span class="nc" id="L78">        float y1 = 0;</span>
+<span class="nc" id="L79">        float x2 = 0;</span>
+<span class="nc" id="L80">        float y2 = 0;</span>
+<span class="nc" id="L81">        Color c1 = Color.WHITE;</span>
+<span class="nc" id="L82">        Color c2 = Color.BLACK;</span>
+<span class="nc" id="L83">        boolean cyclic = false;</span>
+
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        if (str.contains(&quot;|&quot;)) {</span>
+<span class="nc" id="L86">            String[] parts = str.split(&quot;\\|&quot;);</span>
+<span class="nc bnc" id="L87" title="All 3 branches missed.">            switch (parts.length) {</span>
+                case 4:
+<span class="nc" id="L89">                    cyclic = parseBoolean(parts[3]);</span>
+                case 3:
+<span class="nc" id="L91">                    ColorPropertyEditor colorEditor = new ColorPropertyEditor();</span>
+                    // point1
+<span class="nc" id="L93">                    String[] p1 = parts[0].split(&quot;,&quot;);</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">                    if (p1.length != 2) {</span>
+<span class="nc" id="L95">                        throw illegalValue(str, GradientPaint.class);</span>
+                    }
+<span class="nc" id="L97">                    x1 = parseValue(p1[0]);</span>
+<span class="nc" id="L98">                    y1 = parseValue(p1[1]);</span>
+
+                    // point2
+<span class="nc" id="L101">                    String[] p2 = parts[1].split(&quot;,&quot;);</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">                    if (p2.length != 2) {</span>
+<span class="nc" id="L103">                        throw illegalValue(str, GradientPaint.class);</span>
+                    }
+<span class="nc" id="L105">                    x2 = parseValue(p2[0]);</span>
+<span class="nc" id="L106">                    y2 = parseValue(p2[1]);</span>
+
+<span class="nc" id="L108">                    String[] colors = parts[2].split(&quot;,&quot;);</span>
+                    try {
+<span class="nc" id="L110">                        colorEditor.setAsText(colors[0]);</span>
+<span class="nc" id="L111">                        c1 = (Color) colorEditor.getValue();</span>
+<span class="nc" id="L112">                    } catch (Exception e) {</span>
+<span class="nc" id="L113">                        throw illegalValue(colors[0], GradientPaint.class);</span>
+<span class="nc" id="L114">                    }</span>
+
+                    try {
+<span class="nc" id="L117">                        colorEditor.setAsText(colors[1]);</span>
+<span class="nc" id="L118">                        c2 = (Color) colorEditor.getValue();</span>
+<span class="nc" id="L119">                    } catch (Exception e) {</span>
+<span class="nc" id="L120">                        throw illegalValue(colors[1], GradientPaint.class);</span>
+<span class="nc" id="L121">                    }</span>
+<span class="nc" id="L122">                    super.setValueInternal(new GradientPaint(x1, y1, c1, x2, y2, c2, cyclic));</span>
+<span class="nc" id="L123">                    break;</span>
+                default:
+<span class="nc" id="L125">                    throw illegalValue(str, GradientPaint.class);</span>
+            }
+<span class="nc" id="L127">        } else {</span>
+<span class="nc" id="L128">            String[] parts = str.split(&quot;,&quot;);</span>
+<span class="nc bnc" id="L129" title="All 3 branches missed.">            switch (parts.length) {</span>
+                case 7:
+<span class="nc" id="L131">                    cyclic = parseBoolean(parts[6]);</span>
+                case 6:
+<span class="nc" id="L133">                    ColorPropertyEditor colorEditor = new ColorPropertyEditor();</span>
+<span class="nc" id="L134">                    x1 = parseValue(parts[0]);</span>
+<span class="nc" id="L135">                    y1 = parseValue(parts[1]);</span>
+<span class="nc" id="L136">                    x2 = parseValue(parts[3]);</span>
+<span class="nc" id="L137">                    y2 = parseValue(parts[4]);</span>
+                    try {
+<span class="nc" id="L139">                        colorEditor.setAsText(parts[2]);</span>
+<span class="nc" id="L140">                        c1 = (Color) colorEditor.getValue();</span>
+<span class="nc" id="L141">                    } catch (Exception e) {</span>
+<span class="nc" id="L142">                        throw illegalValue(parts[2], GradientPaint.class);</span>
+<span class="nc" id="L143">                    }</span>
+                    try {
+<span class="nc" id="L145">                        colorEditor.setAsText(parts[5]);</span>
+<span class="nc" id="L146">                        c2 = (Color) colorEditor.getValue();</span>
+<span class="nc" id="L147">                    } catch (Exception e) {</span>
+<span class="nc" id="L148">                        throw illegalValue(parts[5], GradientPaint.class);</span>
+<span class="nc" id="L149">                    }</span>
+<span class="nc" id="L150">                    super.setValueInternal(new GradientPaint(x1, y1, c1, x2, y2, c2, cyclic));</span>
+<span class="nc" id="L151">                    break;</span>
+                default:
+<span class="nc" id="L153">                    throw illegalValue(str, GradientPaint.class);</span>
+            }
+        }
+
+<span class="nc" id="L157">    }</span>
+
+    private void handleAsList(List&lt;?&gt; list) {
+<span class="nc bnc" id="L160" title="All 2 branches missed.">        if(list.isEmpty()) {</span>
+<span class="nc" id="L161">            super.setValueInternal(null);</span>
+<span class="nc" id="L162">            return;</span>
+        }
+
+<span class="nc" id="L165">        float x1 = 0;</span>
+<span class="nc" id="L166">        float y1 = 0;</span>
+<span class="nc" id="L167">        float x2 = 0;</span>
+<span class="nc" id="L168">        float y2 = 0;</span>
+<span class="nc" id="L169">        Color c1 = Color.WHITE;</span>
+<span class="nc" id="L170">        Color c2 = Color.BLACK;</span>
+<span class="nc" id="L171">        boolean cyclic = false;</span>
+<span class="nc bnc" id="L172" title="All 3 branches missed.">        switch (list.size()) {</span>
+            case 7:
+<span class="nc" id="L174">                cyclic = parseBoolean(String.valueOf(list.get(6)));</span>
+            case 6:
+<span class="nc" id="L176">                ColorPropertyEditor colorEditor = new ColorPropertyEditor();</span>
+<span class="nc" id="L177">                x1 = parseValue(list.get(0));</span>
+<span class="nc" id="L178">                y1 = parseValue(list.get(1));</span>
+<span class="nc" id="L179">                x2 = parseValue(list.get(3));</span>
+<span class="nc" id="L180">                y2 = parseValue(list.get(4));</span>
+                try {
+<span class="nc" id="L182">                    colorEditor.setValueInternal(list.get(2));</span>
+<span class="nc" id="L183">                    c1 = (Color) colorEditor.getValue();</span>
+<span class="nc" id="L184">                } catch (Exception e) {</span>
+<span class="nc" id="L185">                    throw illegalValue(list.get(2), GradientPaint.class);</span>
+<span class="nc" id="L186">                }</span>
+                try {
+<span class="nc" id="L188">                    colorEditor.setValueInternal(list.get(5));</span>
+<span class="nc" id="L189">                    c2 = (Color) colorEditor.getValue();</span>
+<span class="nc" id="L190">                } catch (Exception e) {</span>
+<span class="nc" id="L191">                    throw illegalValue(list.get(5), GradientPaint.class);</span>
+<span class="nc" id="L192">                }</span>
+<span class="nc" id="L193">                super.setValueInternal(new GradientPaint(x1, y1, c1, x2, y2, c2, cyclic));</span>
+<span class="nc" id="L194">                break;</span>
+            default:
+<span class="nc" id="L196">                throw illegalValue(list, GradientPaint.class);</span>
+        }
+<span class="nc" id="L198">    }</span>
+
+    private void handleAsMap(Map&lt;?, ?&gt; map) {
+<span class="nc bnc" id="L201" title="All 2 branches missed.">        if(map.isEmpty()) {</span>
+<span class="nc" id="L202">            super.setValueInternal(null);</span>
+<span class="nc" id="L203">            return;</span>
+        }
+
+<span class="nc" id="L206">        float x1 = (Float) getMapValue(map, &quot;x1&quot;, 0f);</span>
+<span class="nc" id="L207">        float y1 = (Float) getMapValue(map, &quot;y1&quot;, 0f);</span>
+<span class="nc" id="L208">        float x2 = (Float) getMapValue(map, &quot;x2&quot;, 0f);</span>
+<span class="nc" id="L209">        float y2 = (Float) getMapValue(map, &quot;y2&quot;, 0f);</span>
+<span class="nc" id="L210">        Color c1 = Color.WHITE;</span>
+<span class="nc" id="L211">        Color c2 = Color.BLACK;</span>
+<span class="nc" id="L212">        boolean cyclic = false;</span>
+
+<span class="nc" id="L214">        ColorPropertyEditor colorEditor = new ColorPropertyEditor();</span>
+<span class="nc" id="L215">        Object colorValue = map.get(&quot;c1&quot;);</span>
+        try {
+<span class="nc bnc" id="L217" title="All 2 branches missed.">            if (null != colorValue) {</span>
+<span class="nc" id="L218">                colorEditor.setValueInternal(colorValue);</span>
+<span class="nc" id="L219">                c1 = (Color) colorEditor.getValue();</span>
+            } else {
+<span class="nc" id="L221">                c1 = Color.WHITE;</span>
+            }
+<span class="nc" id="L223">        } catch (Exception e) {</span>
+<span class="nc" id="L224">            throw illegalValue(colorValue, GradientPaint.class);</span>
+<span class="nc" id="L225">        }</span>
+<span class="nc" id="L226">        colorValue = map.get(&quot;c2&quot;);</span>
+        try {
+<span class="nc bnc" id="L228" title="All 2 branches missed.">            if (null != colorValue) {</span>
+<span class="nc" id="L229">                colorEditor.setValueInternal(colorValue);</span>
+<span class="nc" id="L230">                c2 = (Color) colorEditor.getValue();</span>
+            } else {
+<span class="nc" id="L232">                c2 = Color.BLACK;</span>
+            }
+<span class="nc" id="L234">        } catch (Exception e) {</span>
+<span class="nc" id="L235">            throw illegalValue(colorValue, GradientPaint.class);</span>
+<span class="nc" id="L236">        }</span>
+<span class="nc" id="L237">        Object cyclicValue = map.get(&quot;cyclic&quot;);</span>
+<span class="nc bnc" id="L238" title="All 2 branches missed.">        if (null != cyclicValue) {</span>
+<span class="nc" id="L239">            cyclic = parseBoolean(String.valueOf(cyclicValue));</span>
+        }
+
+<span class="nc" id="L242">        super.setValueInternal(new GradientPaint(x1, y1, c1, x2, y2, c2, cyclic));</span>
+<span class="nc" id="L243">    }</span>
+
+    private float parse(String val) {
+        try {
+<span class="nc" id="L247">            return Float.parseFloat(val.trim());</span>
+<span class="nc" id="L248">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L249">            throw illegalValue(val, GradientPaint.class, e);</span>
+        }
+    }
+
+    private boolean parseBoolean(String val) {
+        try {
+<span class="nc" id="L255">            return Boolean.parseBoolean(val.trim());</span>
+<span class="nc" id="L256">        } catch (Exception e) {</span>
+<span class="nc" id="L257">            throw illegalValue(val, GradientPaint.class, e);</span>
+        }
+    }
+
+    private float parseValue(Object value) {
+<span class="nc bnc" id="L262" title="All 2 branches missed.">        if (value instanceof CharSequence) {</span>
+<span class="nc" id="L263">            return parse(String.valueOf(value));</span>
+<span class="nc bnc" id="L264" title="All 2 branches missed.">        } else if (value instanceof Number) {</span>
+<span class="nc" id="L265">            return parse((Number) value);</span>
+        }
+<span class="nc" id="L267">        throw illegalValue(value, GradientPaint.class);</span>
+    }
+
+    private float parse(Number val) {
+<span class="nc" id="L271">        return val.floatValue();</span>
+    }
+
+    private Object getMapValue(Map&lt;?, ?&gt; map, String key, Object defaultValue) {
+<span class="nc" id="L275">        Object val = map.get(key);</span>
+<span class="nc bnc" id="L276" title="All 2 branches missed.">        if (null == val) {</span>
+<span class="nc" id="L277">            return defaultValue;</span>
+<span class="nc bnc" id="L278" title="All 2 branches missed.">        } else if (val instanceof CharSequence) {</span>
+<span class="nc" id="L279">            return parse(String.valueOf(val));</span>
+<span class="nc bnc" id="L280" title="All 2 branches missed.">        } else if (val instanceof Number) {</span>
+<span class="nc" id="L281">            return parse((Number) val);</span>
+        }
+<span class="nc" id="L283">        throw illegalValue(map, GradientPaint.class);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

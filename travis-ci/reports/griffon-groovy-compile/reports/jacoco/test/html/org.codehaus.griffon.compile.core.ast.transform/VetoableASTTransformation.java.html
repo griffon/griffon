@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>VetoableASTTransformation.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-groovy-compile</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.compile.core.ast.transform</a> &gt; <span class="el_source">VetoableASTTransformation.java</span></div><h1>VetoableASTTransformation.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.compile.core.ast.transform;
+
+import griffon.core.Vetoable;
+import org.codehaus.griffon.compile.core.AnnotationHandler;
+import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
+import org.codehaus.griffon.compile.core.VetoableConstants;
+import org.codehaus.groovy.ast.ASTNode;
+import org.codehaus.groovy.ast.AnnotatedNode;
+import org.codehaus.groovy.ast.AnnotationNode;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.FieldNode;
+import org.codehaus.groovy.ast.MethodNode;
+import org.codehaus.groovy.ast.PropertyNode;
+import org.codehaus.groovy.ast.expr.Expression;
+import org.codehaus.groovy.ast.expr.FieldExpression;
+import org.codehaus.groovy.ast.expr.MethodCallExpression;
+import org.codehaus.groovy.ast.expr.VariableExpression;
+import org.codehaus.groovy.ast.stmt.BlockStatement;
+import org.codehaus.groovy.ast.stmt.ExpressionStatement;
+import org.codehaus.groovy.ast.stmt.Statement;
+import org.codehaus.groovy.control.CompilePhase;
+import org.codehaus.groovy.control.SourceUnit;
+import org.codehaus.groovy.control.messages.SyntaxErrorMessage;
+import org.codehaus.groovy.syntax.SyntaxException;
+import org.codehaus.groovy.transform.GroovyASTTransformation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyVetoException;
+import java.beans.VetoableChangeSupport;
+import java.lang.reflect.Modifier;
+
+import static griffon.util.GriffonNameUtils.getGetterName;
+import static griffon.util.GriffonNameUtils.getSetterName;
+import static java.lang.reflect.Modifier.FINAL;
+import static java.lang.reflect.Modifier.PROTECTED;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_ARGS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_EXCEPTIONS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.THIS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.args;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.assign;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.call;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.constx;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.ctor;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.decls;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.field;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectField;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectInterface;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectMethod;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.param;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.params;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.stmnt;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.var;
+import static org.codehaus.griffon.compile.core.ast.transform.ObservableASTTransformation.hasObservableAnnotation;
+import static org.codehaus.groovy.ast.ClassHelper.OBJECT_TYPE;
+import static org.codehaus.groovy.ast.ClassHelper.STRING_TYPE;
+import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
+
+/**
+ * Handles generation of code for the {@code @Vetoable} annotation.
+ *
+ * @author Andres Almiray
+ */
+@AnnotationHandlerFor(griffon.transform.Vetoable.class)
+@GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
+<span class="fc" id="L82">public class VetoableASTTransformation extends AbstractASTTransformation implements VetoableConstants, AnnotationHandler {</span>
+<span class="fc" id="L83">    private static final Logger LOG = LoggerFactory.getLogger(VetoableASTTransformation.class);</span>
+<span class="fc" id="L84">    private static final ClassNode VETOABLE_CNODE = makeClassSafe(Vetoable.class);</span>
+<span class="fc" id="L85">    private static final ClassNode PROPERTY_VETO_EXCEPTION_CNODE = makeClassSafe(PropertyVetoException.class);</span>
+<span class="fc" id="L86">    private static final ClassNode VETOABLE_ANNOTATION_CNODE = makeClassSafe(griffon.transform.Vetoable.class);</span>
+
+    /**
+     * Convenience method to see if an annotated node is {@code @Vetoable}.
+     *
+     * @param node the node to check
+     * @return true if the node is an event publisher
+     */
+    public static boolean hasVetoableAnnotation(AnnotatedNode node) {
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        for (AnnotationNode annotation : node.getAnnotations()) {</span>
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">            if (VETOABLE_ANNOTATION_CNODE.equals(annotation.getClassNode())) {</span>
+<span class="nc" id="L97">                return true;</span>
+            }
+<span class="fc" id="L99">        }</span>
+<span class="fc" id="L100">        return false;</span>
+    }
+
+    /**
+     * Handles the bulk of the processing, mostly delegating to other methods.
+     *
+     * @param nodes  the ast nodes
+     * @param source the source unit for the nodes
+     */
+    public void visit(ASTNode[] nodes, SourceUnit source) {
+<span class="pc bpc" id="L110" title="2 of 4 branches missed.">        if (!(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof AnnotatedNode)) {</span>
+<span class="nc" id="L111">            throw new RuntimeException(&quot;Internal error: wrong types: $node.class / $parent.class&quot;);</span>
+        }
+<span class="fc" id="L113">        AnnotationNode node = (AnnotationNode) nodes[0];</span>
+
+<span class="pc bpc" id="L115" title="1 of 2 branches missed.">        if (nodes[1] instanceof ClassNode) {</span>
+<span class="fc" id="L116">            addVetoableIfNeeded(source, (ClassNode) nodes[1]);</span>
+        } else {
+<span class="nc bnc" id="L118" title="All 2 branches missed.">            if ((((FieldNode) nodes[1]).getModifiers() &amp; Modifier.FINAL) != 0) {</span>
+<span class="nc" id="L119">                source.getErrorCollector().addErrorAndContinue(new SyntaxErrorMessage(</span>
+                    new SyntaxException(&quot;@griffon.transform.Vetoable cannot annotate a final property.&quot;,
+<span class="nc" id="L121">                        node.getLineNumber(), node.getColumnNumber(), node.getLastLineNumber(), node.getLastColumnNumber()),</span>
+                    source));
+            }
+
+<span class="nc" id="L125">            addVetoableIfNeeded(source, node, (AnnotatedNode) nodes[1]);</span>
+        }
+<span class="fc" id="L127">    }</span>
+
+    public static boolean needsVetoableSupport(ClassNode classNode, SourceUnit source) {
+<span class="fc" id="L130">        return needsDelegate(classNode, source, VETOABLE_METHODS, &quot;Vetoable&quot;, VETOABLE_TYPE);</span>
+    }
+
+    public static void addVetoableIfNeeded(SourceUnit source, ClassNode classNode) {
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">        if (needsVetoableSupport(classNode, source)) {</span>
+<span class="fc" id="L135">            LOG.debug(&quot;Injecting {} into {}&quot;, VETOABLE_TYPE, classNode.getName());</span>
+<span class="fc" id="L136">            apply(classNode);</span>
+        }
+
+<span class="fc" id="L139">        boolean bindable = hasObservableAnnotation(classNode);</span>
+<span class="fc bfc" id="L140" title="All 2 branches covered.">        for (PropertyNode propertyNode : classNode.getProperties()) {</span>
+<span class="pc bpc" id="L141" title="1 of 2 branches missed.">            if (!hasVetoableAnnotation(propertyNode.getField())</span>
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">                &amp;&amp; ((propertyNode.getField().getModifiers() &amp; Modifier.FINAL) == 0)</span>
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">                &amp;&amp; !propertyNode.getField().isStatic()) {</span>
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">                createListenerSetter(source,</span>
+<span class="pc bpc" id="L145" title="1 of 2 branches missed.">                    bindable || hasObservableAnnotation(propertyNode.getField()),</span>
+                    classNode, propertyNode);
+            }
+<span class="fc" id="L148">        }</span>
+<span class="fc" id="L149">    }</span>
+
+    private void addVetoableIfNeeded(SourceUnit source, AnnotationNode node, AnnotatedNode parent) {
+<span class="nc" id="L152">        ClassNode declaringClass = parent.getDeclaringClass();</span>
+<span class="nc" id="L153">        FieldNode field = ((FieldNode) parent);</span>
+<span class="nc" id="L154">        String fieldName = field.getName();</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">        for (PropertyNode propertyNode : declaringClass.getProperties()) {</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">            boolean bindable = hasObservableAnnotation(parent)</span>
+<span class="nc bnc" id="L157" title="All 2 branches missed.">                || hasObservableAnnotation(parent.getDeclaringClass());</span>
+
+<span class="nc bnc" id="L159" title="All 2 branches missed.">            if (propertyNode.getName().equals(fieldName)) {</span>
+<span class="nc bnc" id="L160" title="All 2 branches missed.">                if (field.isStatic()) {</span>
+<span class="nc" id="L161">                    source.getErrorCollector().addErrorAndContinue(new SyntaxErrorMessage(</span>
+                        new SyntaxException(&quot;@griffon.transform.Vetoable cannot annotate a static property.&quot;,
+<span class="nc" id="L163">                            node.getLineNumber(), node.getColumnNumber(), node.getLastLineNumber(), node.getLastColumnNumber()),</span>
+                        source));
+                } else {
+<span class="nc" id="L166">                    createListenerSetter(source, bindable, declaringClass, propertyNode);</span>
+                }
+<span class="nc" id="L168">                return;</span>
+            }
+<span class="nc" id="L170">        }</span>
+<span class="nc" id="L171">        source.getErrorCollector().addErrorAndContinue(new SyntaxErrorMessage(</span>
+            new SyntaxException(&quot;@griffon.transform.Vetoable must be on a property, not a field.  Try removing the private, protected, or public modifier.&quot;,
+<span class="nc" id="L173">                node.getLineNumber(), node.getColumnNumber(), node.getLastLineNumber(), node.getLastColumnNumber()),</span>
+            source));
+<span class="nc" id="L175">    }</span>
+
+    private static void createListenerSetter(SourceUnit source, boolean bindable, ClassNode declaringClass, PropertyNode propertyNode) {
+        //if (bindable || needsObservableSupport(declaringClass, source)) {
+        //    ObservableASTTransformation.apply(declaringClass);
+        //}
+<span class="pc bpc" id="L181" title="1 of 2 branches missed.">        if (needsVetoableSupport(declaringClass, source)) {</span>
+<span class="nc" id="L182">            apply(declaringClass);</span>
+        }
+<span class="fc" id="L184">        String setterName = getSetterName(propertyNode.getName());</span>
+<span class="pc bpc" id="L185" title="1 of 2 branches missed.">        if (declaringClass.getMethods(setterName).isEmpty()) {</span>
+<span class="fc" id="L186">            Expression fieldExpression = new FieldExpression(propertyNode.getField());</span>
+<span class="fc" id="L187">            BlockStatement setterBlock = new BlockStatement();</span>
+<span class="fc" id="L188">            setterBlock.addStatement(createConstrainedStatement(propertyNode, fieldExpression));</span>
+            // if (bindable) {
+<span class="fc" id="L190">            setterBlock.addStatement(createBindableStatement(propertyNode, fieldExpression));</span>
+            // } else {
+            //    setterBlock.addStatement(assigns(fieldExpression, var(VALUE)));
+            // }
+
+            // create method void &lt;setter&gt;(&lt;type&gt; fieldName)
+<span class="fc" id="L196">            createSetterMethod(declaringClass, propertyNode, setterName, setterBlock);</span>
+<span class="fc" id="L197">        } else {</span>
+<span class="nc" id="L198">            wrapSetterMethod(declaringClass, bindable, propertyNode.getName());</span>
+        }
+<span class="fc" id="L200">    }</span>
+
+    private static Statement createConstrainedStatement(PropertyNode propertyNode, Expression fieldExpression) {
+<span class="fc" id="L203">        return stmnt(call(</span>
+            THIS,
+            METHOD_FIRE_VETOABLE_CHANGE,
+<span class="fc" id="L206">            args(constx(propertyNode.getName()), fieldExpression, var(VALUE))));</span>
+    }
+
+    private static Statement createBindableStatement(PropertyNode propertyNode, Expression fieldExpression) {
+        // create statementBody
+<span class="fc" id="L211">        return stmnt(call(</span>
+            THIS,
+            METHOD_FIRE_PROPERTY_CHANGE,
+<span class="fc" id="L214">            args(</span>
+<span class="fc" id="L215">                constx(propertyNode.getName()),</span>
+                fieldExpression,
+<span class="fc" id="L217">                assign(fieldExpression, var(VALUE)))));</span>
+    }
+
+    private static void createSetterMethod(ClassNode declaringClass, PropertyNode propertyNode, String setterName, Statement setterBlock) {
+<span class="fc" id="L221">        MethodNode setter = new MethodNode(</span>
+            setterName,
+<span class="fc" id="L223">            propertyNode.getModifiers(),</span>
+            VOID_TYPE,
+<span class="fc" id="L225">            params(param(propertyNode.getType(), VALUE)),</span>
+            new ClassNode[]{PROPERTY_VETO_EXCEPTION_CNODE},
+            setterBlock);
+<span class="fc" id="L228">        setter.setSynthetic(true);</span>
+        // add it to the class
+<span class="fc" id="L230">        declaringClass.addMethod(setter);</span>
+<span class="fc" id="L231">    }</span>
+
+    private static void wrapSetterMethod(ClassNode classNode, boolean bindable, String propertyName) {
+<span class="nc" id="L234">        String getterName = getGetterName(propertyName);</span>
+<span class="nc" id="L235">        MethodNode setter = classNode.getSetterMethod(getSetterName(propertyName));</span>
+
+<span class="nc bnc" id="L237" title="All 2 branches missed.">        if (setter != null) {</span>
+            // Get the existing code block
+<span class="nc" id="L239">            Statement code = setter.getCode();</span>
+
+<span class="nc" id="L241">            VariableExpression oldValue = new VariableExpression(&quot;$oldValue&quot;);</span>
+<span class="nc" id="L242">            VariableExpression newValue = new VariableExpression(&quot;$newValue&quot;);</span>
+<span class="nc" id="L243">            VariableExpression proposedValue = new VariableExpression(setter.getParameters()[0].getName());</span>
+<span class="nc" id="L244">            BlockStatement block = new BlockStatement();</span>
+
+            // create a local variable to hold the old value from the getter
+<span class="nc" id="L247">            block.addStatement(decls(oldValue, call(THIS, getterName, NO_ARGS)));</span>
+
+            // add the fireVetoableChange method call
+<span class="nc" id="L250">            block.addStatement(new ExpressionStatement(new MethodCallExpression(</span>
+                THIS,
+                METHOD_FIRE_VETOABLE_CHANGE,
+<span class="nc" id="L253">                args(constx(propertyName), oldValue, proposedValue))));</span>
+
+            // call the existing block, which will presumably set the value properly
+<span class="nc" id="L256">            block.addStatement(code);</span>
+
+<span class="nc bnc" id="L258" title="All 2 branches missed.">            if (bindable) {</span>
+                // get the new value to emit in the event
+<span class="nc" id="L260">                block.addStatement(decls(newValue, call(THIS, getterName, NO_ARGS)));</span>
+
+                // add the firePropertyChange method call
+<span class="nc" id="L263">                block.addStatement(new ExpressionStatement(new MethodCallExpression(</span>
+                    THIS,
+                    METHOD_FIRE_PROPERTY_CHANGE,
+<span class="nc" id="L266">                    args(constx(propertyName), oldValue, newValue))));</span>
+            }
+
+            // replace the existing code block with our new one
+<span class="nc" id="L270">            setter.setCode(block);</span>
+        }
+<span class="nc" id="L272">    }</span>
+
+    /**
+     * Adds the necessary field and methods to support resource locating.
+     *
+     * @param classNode the class to which we add the support field and methods
+     */
+    public static void apply(ClassNode classNode) {
+<span class="pc bpc" id="L280" title="1 of 2 branches missed.">        if( ObservableASTTransformation.needsObservableSupport(classNode, classNode.getModule().getContext())) {</span>
+<span class="fc" id="L281">            ObservableASTTransformation.apply(classNode);</span>
+        }
+<span class="fc" id="L283">        injectInterface(classNode, VETOABLE_CNODE);</span>
+
+<span class="fc" id="L285">        ClassNode vcsClassNode = makeClassSafe(VetoableChangeSupport.class);</span>
+<span class="fc" id="L286">        ClassNode pceClassNode = makeClassSafe(PropertyChangeEvent.class);</span>
+
+        // add field:
+        // protected final VetoableChangeSupport this$vetoableChangeSupport = new java.beans.VetoableChangeSupport(this)
+<span class="fc" id="L290">        FieldNode vcsField = injectField(classNode,</span>
+            VETOABLE_CHANGE_SUPPORT_FIELD_NAME,
+            FINAL | PROTECTED,
+            vcsClassNode,
+<span class="fc" id="L294">            ctor(vcsClassNode, args(THIS)));</span>
+
+<span class="fc" id="L296">        addDelegateMethods(classNode, VETOABLE_CNODE, new FieldExpression(vcsField));</span>
+
+        // add method:
+        // void firePropertyChange(String name, Object oldValue, Object newValue) {
+        //     this$vetoableChangeSupport.firePropertyChange(name, oldValue, newValue)
+        //  }
+<span class="fc" id="L302">        injectMethod(classNode,</span>
+            new MethodNode(
+                METHOD_FIRE_VETOABLE_CHANGE,
+                PROTECTED,
+                VOID_TYPE,
+<span class="fc" id="L307">                params(</span>
+<span class="fc" id="L308">                    param(STRING_TYPE, NAME),</span>
+<span class="fc" id="L309">                    param(makeClassSafe(OBJECT_TYPE), OLD_VALUE),</span>
+<span class="fc" id="L310">                    param(OBJECT_TYPE, NEW_VALUE)),</span>
+                NO_EXCEPTIONS,
+<span class="fc" id="L312">                stmnt(call(</span>
+<span class="fc" id="L313">                    field(vcsField),</span>
+                    METHOD_FIRE_VETOABLE_CHANGE,
+<span class="fc" id="L315">                    args(var(NAME), var(OLD_VALUE), var(NEW_VALUE))))));</span>
+
+        // add method:
+        // void firePropertyChange(PropertyChangeEvent event) {
+        //     this$vetoableChangeSupport.firePropertyChange(event)
+        //  }
+<span class="fc" id="L321">        injectMethod(classNode,</span>
+            new MethodNode(
+                METHOD_FIRE_VETOABLE_CHANGE,
+                PROTECTED,
+                VOID_TYPE,
+<span class="fc" id="L326">                params(param(pceClassNode, EVENT)),</span>
+                NO_EXCEPTIONS,
+<span class="fc" id="L328">                stmnt(call(</span>
+<span class="fc" id="L329">                    field(vcsField),</span>
+                    METHOD_FIRE_VETOABLE_CHANGE,
+<span class="fc" id="L331">                    args(var(EVENT))))));</span>
+<span class="fc" id="L332">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

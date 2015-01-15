@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GenerateBomTask.groovy</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">gradle-griffon-build-plugin</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.gradle.tasks</a> &gt; <span class="el_source">GenerateBomTask.groovy</span></div><h1>GenerateBomTask.groovy</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.gradle.tasks
+
+import groovy.xml.MarkupBuilder
+import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.TaskAction
+
+/**
+ * @author Andres Almiray
+ */
+class GenerateBomTask extends DefaultTask {
+    static final TASK_NAME = 'generateBom'
+
+    @OutputDirectory File outputDir
+<span class="fc" id="L32">    @Input List&lt;String&gt; additionalDependencies = []</span>
+
+    GenerateBomTask() {
+<span class="fc" id="L35">        outputDir = project.file(&quot;${project.buildDir.path}/bom&quot;)</span>
+    }
+
+    @OutputFile
+    File getOutputFile() {
+<span class="pc bpc" id="L40" title="2 of 4 branches missed.">        return new File(getOutputDir(), &quot;${project.name}-${project.version}.pom&quot;)</span>
+    }
+
+    @TaskAction
+    void generate() {
+<span class="fc" id="L45">        outputDir.mkdirs()</span>
+
+        // force evaluation of 'publishJars' property
+<span class="fc" id="L48">        Set includedProjects = project.subprojects.grep {</span>
+<span class="pc bpc" id="L49" title="3 of 6 branches missed.">            &quot;${it.publishJars}&quot; == 'true'</span>
+        }
+
+<span class="pc bpc" id="L52" title="2 of 4 branches missed.">        MarkupBuilder pom = new MarkupBuilder(new FileWriter(getOutputFile()))</span>
+<span class="fc" id="L53">        pom.mkp.xmlDeclaration(version: '1.0', encoding: 'UTF-8')</span>
+<span class="fc" id="L54">        pom.project(xmlns: 'http://maven.apache.org/POM/4.0.0',</span>
+            'xsi:schemaLocation': 'http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd',
+            'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance') {
+<span class="fc" id="L57">            modelVersion('4.0.0')</span>
+<span class="fc" id="L58">            groupId(project.group)</span>
+<span class="fc" id="L59">            artifactId(project.name)</span>
+<span class="fc" id="L60">            version(project.version)</span>
+<span class="fc" id="L61">            packaging('pom')</span>
+<span class="pc" id="L62">            dependencyManagement {</span>
+<span class="pc" id="L63">                dependencies {</span>
+<span class="fc" id="L64">                    includedProjects.each { prj -&gt;</span>
+<span class="fc" id="L65">                        String projectName = prj.name</span>
+<span class="fc" id="L66">                        String scopeName = 'compile'</span>
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">                        boolean opt = prj.hasProperty('optional') ? prj.optional : false</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">                        if (projectName.endsWith('-compile')) scopeName = 'provided'</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">                        if (projectName.endsWith('-test')) scopeName = 'test'</span>
+
+<span class="pc" id="L71">                        dependency {</span>
+<span class="fc" id="L72">                            groupId('${project.groupId}')</span>
+<span class="fc" id="L73">                            artifactId(projectName)</span>
+<span class="fc" id="L74">                            version('${project.version}')</span>
+<span class="fc" id="L75">                            scope(scopeName)</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">                            if (opt) optional(true)</span>
+                        }
+                    }
+<span class="pc" id="L79">                    additionalDependencies.each { String dep -&gt;</span>
+<span class="fc" id="L80">                        def (groupName, artifactName, versionNum) = dep.split(':')</span>
+<span class="fc" id="L81">                        String scopeName = 'compile'</span>
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">                        if (artifactName.endsWith('-compile')) scopeName = 'provided'</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">                        if (artifactName.endsWith('-test')) scopeName = 'test'</span>
+
+<span class="pc" id="L85">                        dependency {</span>
+<span class="fc" id="L86">                            groupId(groupName)</span>
+<span class="fc" id="L87">                            artifactId(artifactName)</span>
+<span class="fc" id="L88">                            version(versionNum)</span>
+<span class="pc" id="L89">                            scope(scopeName)</span>
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

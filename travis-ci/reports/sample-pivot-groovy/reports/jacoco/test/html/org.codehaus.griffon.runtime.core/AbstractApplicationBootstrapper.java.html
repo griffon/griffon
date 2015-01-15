@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractApplicationBootstrapper.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-groovy</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core</a> &gt; <span class="el_source">AbstractApplicationBootstrapper.java</span></div><h1>AbstractApplicationBootstrapper.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core;
+
+import griffon.core.ApplicationBootstrapper;
+import griffon.core.GriffonApplication;
+import griffon.core.env.GriffonEnvironment;
+import griffon.core.injection.Binding;
+import griffon.core.injection.Injector;
+import griffon.core.injection.InjectorFactory;
+import griffon.core.injection.Module;
+import griffon.util.GriffonClassUtils;
+import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ServiceLoader;
+
+import static griffon.core.GriffonExceptionHandler.sanitize;
+import static griffon.util.AnnotationUtils.sortByDependencies;
+import static java.util.Collections.unmodifiableCollection;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public abstract class AbstractApplicationBootstrapper implements ApplicationBootstrapper {
+<span class="fc" id="L49">    private static final Logger LOG = LoggerFactory.getLogger(DefaultApplicationBootstrapper.class);</span>
+    private static final String INJECTOR = &quot;injector&quot;;
+    protected final GriffonApplication application;
+
+<span class="fc" id="L53">    public AbstractApplicationBootstrapper(@Nonnull GriffonApplication application) {</span>
+<span class="fc" id="L54">        this.application = requireNonNull(application, &quot;Argument 'application' must not be null&quot;);</span>
+<span class="fc" id="L55">    }</span>
+
+    @Override
+    public void bootstrap() throws Exception {
+        // 1 initialize environment settings
+<span class="fc" id="L60">        LOG.info(&quot;Griffon {}&quot;, GriffonEnvironment.getGriffonVersion());</span>
+<span class="fc" id="L61">        LOG.info(&quot;Build: {}&quot;, GriffonEnvironment.getBuildDateTime());</span>
+<span class="fc" id="L62">        LOG.info(&quot;JVM: {}&quot;, GriffonEnvironment.getJvmVersion());</span>
+<span class="fc" id="L63">        LOG.info(&quot;OS: {}&quot;, GriffonEnvironment.getOsVersion());</span>
+
+        // 2 create bindings
+<span class="fc" id="L66">        LOG.debug(&quot;Creating module bindings&quot;);</span>
+<span class="fc" id="L67">        Iterable&lt;Binding&lt;?&gt;&gt; bindings = createBindings();</span>
+
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">        if (LOG.isTraceEnabled()) {</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">            for (Binding&lt;?&gt; binding : bindings) {</span>
+<span class="fc" id="L71">                LOG.trace(binding.toString());</span>
+<span class="fc" id="L72">            }</span>
+        }
+
+        // 3 create injector
+<span class="fc" id="L76">        LOG.debug(&quot;Creating application injector&quot;);</span>
+<span class="fc" id="L77">        createInjector(bindings);</span>
+<span class="fc" id="L78">    }</span>
+
+    @Override
+    public void run() {
+<span class="nc" id="L82">        application.initialize();</span>
+<span class="nc" id="L83">        application.startup();</span>
+<span class="nc" id="L84">        application.ready();</span>
+<span class="nc" id="L85">    }</span>
+
+    @Nonnull
+    protected Iterable&lt;Binding&lt;?&gt;&gt; createBindings() {
+<span class="fc" id="L89">        Map&lt;Key, Binding&lt;?&gt;&gt; map = new LinkedHashMap&lt;&gt;();</span>
+
+<span class="fc" id="L91">        List&lt;Module&gt; modules = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L92">        createApplicationModule(modules);</span>
+<span class="fc" id="L93">        collectModuleBindings(modules);</span>
+
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        for (Module module : modules) {</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">            for (Binding&lt;?&gt; binding : module.getBindings()) {</span>
+<span class="fc" id="L97">                map.put(Key.of(binding), binding);</span>
+<span class="fc" id="L98">            }</span>
+<span class="fc" id="L99">        }</span>
+
+<span class="fc" id="L101">        return unmodifiableCollection(map.values());</span>
+    }
+
+    protected void createApplicationModule(@Nonnull List&lt;Module&gt; modules) {
+<span class="fc" id="L105">        modules.add(new AbstractModule() {</span>
+            @Override
+            protected void doConfigure() {
+<span class="fc" id="L108">                bind(GriffonApplication.class)</span>
+<span class="fc" id="L109">                    .toInstance(application);</span>
+<span class="fc" id="L110">            }</span>
+        });
+<span class="fc" id="L112">    }</span>
+
+    protected void collectModuleBindings(@Nonnull Collection&lt;Module&gt; modules) {
+<span class="fc" id="L115">        List&lt;Module&gt; moduleInstances = loadModules();</span>
+<span class="fc" id="L116">        moduleInstances.add(0, new DefaultApplicationModule());</span>
+<span class="fc" id="L117">        Map&lt;String, Module&gt; sortedModules = sortModules(moduleInstances);</span>
+<span class="fc bfc" id="L118" title="All 2 branches covered.">        for (Map.Entry&lt;String, Module&gt; entry : sortedModules.entrySet()) {</span>
+<span class="fc" id="L119">            LOG.debug(&quot;Loading module bindings from {}:{}&quot;, entry.getKey(), entry.getValue());</span>
+<span class="fc" id="L120">            modules.add(entry.getValue());</span>
+<span class="fc" id="L121">        }</span>
+<span class="fc" id="L122">    }</span>
+
+    @Nonnull
+    protected Map&lt;String, Module&gt; sortModules(@Nonnull List&lt;Module&gt; moduleInstances) {
+<span class="fc" id="L126">        return sortByDependencies(moduleInstances, &quot;Module&quot;, &quot;module&quot;);</span>
+    }
+
+    @Nonnull
+    protected abstract List&lt;Module&gt; loadModules();
+
+    private void createInjector(@Nonnull Iterable&lt;Binding&lt;?&gt;&gt; bindings) throws Exception {
+<span class="fc" id="L133">        ServiceLoader&lt;InjectorFactory&gt; serviceLoader = ServiceLoader.load(InjectorFactory.class);</span>
+        try {
+<span class="fc" id="L135">            Iterator&lt;InjectorFactory&gt; iterator = serviceLoader.iterator();</span>
+<span class="fc" id="L136">            InjectorFactory injectorFactory = iterator.next();</span>
+<span class="fc" id="L137">            LOG.debug(&quot;Injector will be created by {}&quot;, injectorFactory);</span>
+<span class="fc" id="L138">            Injector&lt;?&gt; injector = injectorFactory.createInjector(application, bindings);</span>
+<span class="fc" id="L139">            GriffonClassUtils.setProperty(application, INJECTOR, injector);</span>
+<span class="nc" id="L140">        } catch (Exception e) {</span>
+<span class="nc" id="L141">            LOG.error(&quot;An error occurred while initializing the injector&quot;, sanitize(e));</span>
+<span class="nc" id="L142">            throw e;</span>
+<span class="fc" id="L143">        }</span>
+<span class="fc" id="L144">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

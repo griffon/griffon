@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractModule.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-java</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core.injection</a> &gt; <span class="el_source">AbstractModule.java</span></div><h1>AbstractModule.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core.injection;
+
+import griffon.core.injection.Binding;
+import griffon.core.injection.Module;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
+
+import static griffon.util.GriffonClassUtils.requireState;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="fc" id="L32">public abstract class AbstractModule implements Module {</span>
+<span class="fc" id="L33">    protected final List&lt;Binding&lt;?&gt;&gt; bindings = new ArrayList&lt;&gt;();</span>
+    protected BindingBuilder&lt;?&gt; currentBinding;
+    protected boolean configured;
+
+    public final void configure() {
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">        requireState(!configured, &quot;Module &quot; + this + &quot; has already been configured&quot;);</span>
+<span class="fc" id="L39">        doConfigure();</span>
+<span class="fc" id="L40">        configured = true;</span>
+<span class="fc" id="L41">    }</span>
+
+    protected abstract void doConfigure();
+
+    @Nonnull
+    @Override
+    public final List&lt;Binding&lt;?&gt;&gt; getBindings() {
+<span class="pc bpc" id="L48" title="1 of 2 branches missed.">        if (!configured) {</span>
+<span class="fc" id="L49">            configure();</span>
+        }
+
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        if (currentBinding != null) {</span>
+<span class="fc" id="L53">            bindings.add(currentBinding.getBinding());</span>
+<span class="fc" id="L54">            currentBinding = null;</span>
+        }
+<span class="fc" id="L56">        return bindings;</span>
+    }
+
+    protected &lt;T&gt; AnnotatedBindingBuilder&lt;T&gt; bind(@Nonnull Class&lt;T&gt; clazz) {
+<span class="fc" id="L60">        requireNonNull(clazz, &quot;Argument 'class' must not be null&quot;);</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        if (currentBinding != null) {</span>
+<span class="fc" id="L62">            bindings.add(currentBinding.getBinding());</span>
+        }
+
+<span class="fc" id="L65">        AnnotatedBindingBuilder&lt;T&gt; builder = Bindings.bind(clazz);</span>
+<span class="fc" id="L66">        currentBinding = builder;</span>
+<span class="fc" id="L67">        return builder;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

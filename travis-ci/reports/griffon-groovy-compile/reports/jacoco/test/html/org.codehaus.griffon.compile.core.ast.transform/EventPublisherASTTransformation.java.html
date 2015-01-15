@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>EventPublisherASTTransformation.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-groovy-compile</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.compile.core.ast.transform</a> &gt; <span class="el_source">EventPublisherASTTransformation.java</span></div><h1>EventPublisherASTTransformation.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.compile.core.ast.transform;
+
+import griffon.core.event.EventPublisher;
+import griffon.core.event.EventRouter;
+import org.codehaus.griffon.compile.core.AnnotationHandler;
+import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
+import org.codehaus.griffon.compile.core.EventPublisherConstants;
+import org.codehaus.griffon.runtime.core.event.DefaultEventPublisher;
+import org.codehaus.groovy.ast.ASTNode;
+import org.codehaus.groovy.ast.AnnotatedNode;
+import org.codehaus.groovy.ast.AnnotationNode;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.FieldNode;
+import org.codehaus.groovy.ast.MethodNode;
+import org.codehaus.groovy.ast.Parameter;
+import org.codehaus.groovy.ast.expr.ConstantExpression;
+import org.codehaus.groovy.control.CompilePhase;
+import org.codehaus.groovy.control.SourceUnit;
+import org.codehaus.groovy.transform.GroovyASTTransformation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import static griffon.util.GriffonNameUtils.isBlank;
+import static java.lang.reflect.Modifier.PRIVATE;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_EXCEPTIONS;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.args;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.call;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.field;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectField;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectInterface;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectMethod;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.param;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.params;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.stmnt;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.var;
+import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
+
+/**
+ * Handles generation of code for the {@code @EventPublisher} annotation.
+ * &lt;p/&gt;
+ * Generally, it adds (if needed) an EventRouter field and
+ * the needed add/removeEventListener methods to support the
+ * listeners.
+ * &lt;p/&gt;
+ *
+ * @author Andres Almiray
+ */
+@AnnotationHandlerFor(griffon.transform.EventPublisher.class)
+@GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
+<span class="fc" id="L68">public class EventPublisherASTTransformation extends AbstractASTTransformation implements EventPublisherConstants, AnnotationHandler {</span>
+<span class="fc" id="L69">    private static final Logger LOG = LoggerFactory.getLogger(EventPublisherASTTransformation.class);</span>
+<span class="fc" id="L70">    private static final ClassNode EVENT_ROUTER_CNODE = makeClassSafe(EventRouter.class);</span>
+<span class="fc" id="L71">    private static final ClassNode EVENT_PUBLISHER_CNODE = makeClassSafe(EventPublisher.class);</span>
+<span class="fc" id="L72">    private static final ClassNode EVENT_PUBLISHER_FIELD_CNODE = makeClassSafe(DefaultEventPublisher.class);</span>
+<span class="fc" id="L73">    private static final ClassNode EVENT_PUBLISHER_ANODE = makeClassSafe(griffon.transform.EventPublisher.class);</span>
+
+    /**
+     * Convenience method to see if an annotated node is {@code @EventPublisher}.
+     *
+     * @param node the node to check
+     * @return true if the node is an event publisher
+     */
+    public static boolean hasEventPublisherAnnotation(AnnotatedNode node) {
+<span class="nc bnc" id="L82" title="All 2 branches missed.">        for (AnnotationNode annotation : node.getAnnotations()) {</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">            if (EVENT_PUBLISHER_ANODE.equals(annotation.getClassNode())) {</span>
+<span class="nc" id="L84">                return true;</span>
+            }
+<span class="nc" id="L86">        }</span>
+<span class="nc" id="L87">        return false;</span>
+    }
+
+    /**
+     * Handles the bulk of the processing, mostly delegating to other methods.
+     *
+     * @param nodes  the ast nodes
+     * @param source the source unit for the nodes
+     */
+    public void visit(ASTNode[] nodes, SourceUnit source) {
+<span class="fc" id="L97">        checkNodesForAnnotationAndType(nodes[0], nodes[1]);</span>
+<span class="fc" id="L98">        addEventPublisherIfNeeded(source, (AnnotationNode) nodes[0], (ClassNode) nodes[1]);</span>
+<span class="fc" id="L99">    }</span>
+
+    public static void addEventPublisherIfNeeded(SourceUnit source, AnnotationNode annotationNode, ClassNode classNode) {
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">        if (needsDelegate(classNode, source, METHODS, &quot;EventPublisher&quot;, EVENT_PUBLISHER_TYPE)) {</span>
+<span class="fc" id="L103">            LOG.debug(&quot;Injecting {} into {}&quot;, EVENT_PUBLISHER_TYPE, classNode.getName());</span>
+<span class="fc" id="L104">            ConstantExpression value = (ConstantExpression) annotationNode.getMember(&quot;value&quot;);</span>
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">            String beanName = value != null ? value.getText() : null;</span>
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">            beanName = isBlank(beanName) ? null : beanName;</span>
+<span class="fc" id="L107">            apply(classNode, beanName);</span>
+        }
+<span class="fc" id="L109">    }</span>
+
+    /**
+     * Adds the necessary field and methods to support resource locating.
+     *
+     * @param declaringClass the class to which we add the support field and methods
+     */
+    public static void apply(@Nonnull ClassNode declaringClass, @Nullable String beanName) {
+<span class="fc" id="L117">        injectInterface(declaringClass, EVENT_PUBLISHER_CNODE);</span>
+
+<span class="fc" id="L119">        FieldNode epField = injectField(declaringClass,</span>
+            EVENT_ROUTER_FIELD_NAME,
+            PRIVATE,
+            EVENT_PUBLISHER_FIELD_CNODE,
+            null);
+
+<span class="fc" id="L125">        Parameter erParam = param(EVENT_ROUTER_CNODE, EVENT_ROUTER_PROPERTY);</span>
+<span class="pc bpc" id="L126" title="1 of 2 branches missed.">        if (!isBlank(beanName)) {</span>
+<span class="nc" id="L127">            AnnotationNode namedAnnotation = new AnnotationNode(NAMED_TYPE);</span>
+<span class="nc" id="L128">            namedAnnotation.addMember(&quot;value&quot;, new ConstantExpression(beanName));</span>
+<span class="nc" id="L129">            erParam.addAnnotation(namedAnnotation);</span>
+        }
+
+<span class="fc" id="L132">        MethodNode setter = new MethodNode(</span>
+            METHOD_SET_EVENT_ROUTER,
+            PRIVATE,
+            VOID_TYPE,
+<span class="fc" id="L136">            params(erParam),</span>
+            NO_EXCEPTIONS,
+<span class="fc" id="L138">            stmnt(call(</span>
+<span class="fc" id="L139">                field(epField),</span>
+                METHOD_SET_EVENT_ROUTER,
+<span class="fc" id="L141">                args(var(EVENT_ROUTER_PROPERTY)))));</span>
+<span class="fc" id="L142">        setter.addAnnotation(new AnnotationNode(INJECT_TYPE));</span>
+<span class="fc" id="L143">        injectMethod(declaringClass, setter);</span>
+
+<span class="fc" id="L145">        addDelegateMethods(declaringClass, EVENT_PUBLISHER_CNODE, field(epField));</span>
+<span class="fc" id="L146">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

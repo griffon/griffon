@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>SwingUtils.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-java</a> &gt; <a href="index.source.html" class="el_package">griffon.swing.support</a> &gt; <span class="el_source">SwingUtils.java</span></div><h1>SwingUtils.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.swing.support;
+
+import griffon.core.GriffonApplication;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.WindowConstants;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.Window;
+import java.awt.image.BufferedImage;
+import java.util.Map;
+
+import static griffon.util.GriffonClassUtils.setPropertiesNoException;
+import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * Additional utilities for Swing based applications.
+ *
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="nc" id="L51">public class SwingUtils {</span>
+    private static final String ERROR_WINDOW_NULL = &quot;Argument 'window' must not be null&quot;;
+
+    /**
+     * Centers a Window on the screen&lt;p&gt;
+     * Sets the window on the top left corner if the window's
+     * dimensions are bigger than the screen's.
+     *
+     * @param window a Window object
+     */
+    public static void centerOnScreen(@Nonnull Window window) {
+<span class="nc" id="L62">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+
+<span class="nc" id="L64">        Point center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();</span>
+<span class="nc" id="L65">        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();</span>
+
+<span class="nc" id="L67">        double w = Math.min(window.getWidth(), screen.width);</span>
+<span class="nc" id="L68">        double h = Math.min(window.getHeight(), screen.height);</span>
+<span class="nc" id="L69">        int x = (int) (center.x - (w / 2));</span>
+<span class="nc" id="L70">        int y = (int) (center.y - (h / 2));</span>
+
+<span class="nc bnc" id="L72" title="All 4 branches missed.">        Point corner = new Point(</span>
+            (x &gt;= 0 ? x : 0),
+            (y &gt;= 0 ? y : 0)
+        );
+
+<span class="nc" id="L77">        window.setLocation(corner);</span>
+<span class="nc" id="L78">    }</span>
+
+    /**
+     * Centers a JInternalFrame on the screen&lt;p&gt;
+     * Sets the internal frame on the top left corner if the frame's
+     * dimensions are bigger than the desktop's.
+     *
+     * @param internalFrame a JInternalFrame object
+     */
+    public static void centerOnScreen(@Nonnull JInternalFrame internalFrame) {
+<span class="nc" id="L88">        requireNonNull(internalFrame, &quot;Argument 'internalFrame' must not be null&quot;);</span>
+
+<span class="nc" id="L90">        JDesktopPane desktop = internalFrame.getDesktopPane();</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        if (desktop == null) return;</span>
+<span class="nc" id="L92">        Dimension screen = desktop.getSize();</span>
+<span class="nc" id="L93">        Point center = new Point(screen.width / 2, screen.height / 2);</span>
+
+<span class="nc" id="L95">        double w = Math.min(internalFrame.getWidth(), screen.width);</span>
+<span class="nc" id="L96">        double h = Math.min(internalFrame.getHeight(), screen.height);</span>
+<span class="nc" id="L97">        int x = (int) (center.x - (w / 2));</span>
+<span class="nc" id="L98">        int y = (int) (center.y - (h / 2));</span>
+
+<span class="nc bnc" id="L100" title="All 4 branches missed.">        Point corner = new Point(</span>
+            (x &gt;= 0 ? x : 0),
+            (y &gt;= 0 ? y : 0)
+        );
+
+<span class="nc" id="L105">        internalFrame.setLocation(corner);</span>
+<span class="nc" id="L106">    }</span>
+
+    /**
+     * Returns the window's current opacity value.
+     *
+     * @param window the window on which the opacity will be queried
+     * @return the window's opacity value
+     */
+    public static float getWindowOpacity(@Nonnull Window window) {
+<span class="nc" id="L115">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="nc" id="L116">        return window.getOpacity();</span>
+    }
+
+    /**
+     * Sets the value for the window's opacity.
+     *
+     * @param window  the window on which the opacity will be set
+     * @param opacity the new opacity value
+     */
+    public static void setWindowOpacity(@Nonnull Window window, float opacity) {
+<span class="nc" id="L126">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="nc" id="L127">        window.setOpacity(opacity);</span>
+<span class="nc" id="L128">    }</span>
+
+    /**
+     * Searches a component by name in a particular component hierarchy.&lt;p&gt;
+     * A component must have a value for its &lt;tt&gt;name&lt;/tt&gt; property if it's
+     * to be found with this method.&lt;br/&gt;
+     * This method performs a depth-first search.
+     *
+     * @param name the value of the component's &lt;tt&gt;name&lt;/tt&gt; property
+     * @param root the root of the component hierarchy from where searching
+     *             searching should start
+     * @return the component reference if found, null otherwise
+     */
+    @Nullable
+    public static Component findComponentByName(@Nonnull String name, @Nonnull Container root) {
+<span class="nc" id="L143">        requireNonNull(root, &quot;Argument 'root' must not be null&quot;);</span>
+<span class="nc" id="L144">        requireNonBlank(name, &quot;Argument 'name' must not be blank&quot;);</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">        if (name.equals(root.getName())) {</span>
+<span class="nc" id="L146">            return root;</span>
+        }
+
+<span class="nc bnc" id="L149" title="All 2 branches missed.">        for (Component comp : root.getComponents()) {</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">            if (name.equals(comp.getName())) {</span>
+<span class="nc" id="L151">                return comp;</span>
+            }
+<span class="nc bnc" id="L153" title="All 2 branches missed.">            if (comp instanceof Container) {</span>
+<span class="nc" id="L154">                Component found = findComponentByName(name, (Container) comp);</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">                if (found != null) {</span>
+<span class="nc" id="L156">                    return found;</span>
+                }
+            }
+        }
+<span class="nc" id="L160">        return null;</span>
+    }
+
+    /**
+     * Takes a snapshot of the target component.
+     *
+     * @param component the component to draw
+     * @return a Graphics compatible image of the component
+     */
+    @Nonnull
+    public static Image takeSnapshot(@Nonnull Component component) {
+<span class="nc" id="L171">        return takeSnapshot(component, false);</span>
+    }
+
+    /**
+     * Takes a snapshot of the target component.
+     *
+     * @param component the component to draw
+     * @param usePrint  whether &lt;tt&gt;print()&lt;/tt&gt; or &lt;tt&gt;paint()&lt;/tt&gt; is used to grab the snapshot
+     * @return a Graphics compatible image of the component
+     */
+    @Nonnull
+    public static Image takeSnapshot(@Nonnull Component component, boolean usePrint) {
+<span class="nc" id="L183">        requireNonNull(component, &quot;Argument 'component' must not be null&quot;);</span>
+
+<span class="nc" id="L185">        BufferedImage image = null;</span>
+<span class="nc" id="L186">        GraphicsEnvironment genv = GraphicsEnvironment.getLocalGraphicsEnvironment();</span>
+<span class="nc" id="L187">        GraphicsDevice gd = genv.getDefaultScreenDevice();</span>
+<span class="nc" id="L188">        GraphicsConfiguration gc = gd.getDefaultConfiguration();</span>
+
+<span class="nc bnc" id="L190" title="All 2 branches missed.">        if (gc.getColorModel().hasAlpha()) {</span>
+<span class="nc" id="L191">            image = gc.createCompatibleImage(</span>
+<span class="nc" id="L192">                (int) component.getSize().getWidth(),</span>
+<span class="nc" id="L193">                (int) component.getSize().getHeight());</span>
+        } else {
+<span class="nc" id="L195">            image = new BufferedImage(</span>
+<span class="nc" id="L196">                (int) component.getSize().getWidth(),</span>
+<span class="nc" id="L197">                (int) component.getSize().getHeight(),</span>
+                BufferedImage.TYPE_INT_ARGB);
+        }
+
+<span class="nc" id="L201">        Graphics g = image.getGraphics();</span>
+<span class="nc bnc" id="L202" title="All 2 branches missed.">        if (usePrint) {</span>
+<span class="nc" id="L203">            component.print(g);</span>
+        } else {
+<span class="nc" id="L205">            component.paint(g);</span>
+        }
+<span class="nc" id="L207">        g.dispose();</span>
+
+<span class="nc" id="L209">        return image;</span>
+    }
+
+    private static Class&lt;?&gt; loadClass(String className) {
+        try {
+<span class="nc" id="L214">            return Class.forName(className);</span>
+<span class="nc" id="L215">        } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L216">            throw new IllegalArgumentException(e);</span>
+        }
+    }
+
+    /**
+     * Creates a Window based on the application's configuration.&lt;p&gt;
+     * Class lookup order is&lt;ol&gt;
+     * &lt;li&gt;value in app.config.application.frameClass&lt;/li&gt;
+     * &lt;li&gt;'org.jdesktop.swingx.JXFrame' if SwingX is in the classpath&lt;/li&gt;
+     * &lt;li&gt;'javax.swing.JFrame'&lt;/li&gt;
+     *
+     *
+     * @param application the current running application
+     * @param attributes window attributes
+     * @return a newly instantiated window according to the application's
+     *         preferences
+     */
+    @Nonnull
+    public static Window createApplicationFrame(@Nonnull GriffonApplication application, @Nonnull Map&lt;String, Object&gt; attributes) {
+<span class="nc" id="L235">        requireNonNull(application, &quot;Argument 'application' must not be null&quot;);</span>
+<span class="nc" id="L236">        JFrame frame = null;</span>
+        // try config specified first
+<span class="nc" id="L238">        String frameClass = application.getConfiguration().getAsString(&quot;application.frameClass&quot;, JFrame.class.getName());</span>
+<span class="nc bnc" id="L239" title="All 2 branches missed.">        if (!isBlank(frameClass)) {</span>
+            try {
+<span class="nc" id="L241">                ClassLoader cl = SwingUtils.class.getClassLoader();</span>
+<span class="nc bnc" id="L242" title="All 2 branches missed.">                if (cl != null) {</span>
+<span class="nc" id="L243">                    frame = (JFrame) cl.loadClass(frameClass).newInstance();</span>
+                } else {
+<span class="nc" id="L245">                    frame = (JFrame) Class.forName(frameClass).newInstance();</span>
+                }
+<span class="nc" id="L247">            } catch (Throwable ignored) {</span>
+                // ignore
+<span class="nc" id="L249">            }</span>
+        }
+<span class="nc bnc" id="L251" title="All 2 branches missed.">        if (frame == null) {</span>
+            // JXFrame, it's nice.  Try it!
+            try {
+<span class="nc" id="L254">                ClassLoader cl = SwingUtils.class.getClassLoader();</span>
+<span class="nc bnc" id="L255" title="All 2 branches missed.">                if (cl != null) {</span>
+<span class="nc" id="L256">                    frame = (JFrame) cl.loadClass(&quot;org.jdesktop.swingx.JXFrame&quot;).newInstance();</span>
+                } else {
+<span class="nc" id="L258">                    frame = (JFrame) Class.forName(&quot;org.jdesktop.swingx.JXFrame&quot;).newInstance();</span>
+                }
+<span class="nc" id="L260">            } catch (Throwable ignored) {</span>
+                // ignore
+<span class="nc" id="L262">            }</span>
+            // this will work for sure
+<span class="nc bnc" id="L264" title="All 2 branches missed.">            if (frame == null) {</span>
+<span class="nc" id="L265">                frame = new JFrame();</span>
+            }
+
+            // do some standard tweaking
+<span class="nc" id="L269">            frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);</span>
+        }
+
+<span class="nc" id="L272">        setPropertiesNoException(frame, attributes);</span>
+
+<span class="nc" id="L274">        return frame;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

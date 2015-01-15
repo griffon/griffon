@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>CompositeBuilder.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.util</a> &gt; <span class="el_source">CompositeBuilder.java</span></div><h1>CompositeBuilder.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.util;
+
+import groovy.lang.Closure;
+import groovy.lang.MissingMethodException;
+import groovy.lang.MissingPropertyException;
+import groovy.util.Factory;
+import groovy.util.FactoryBuilderSupport;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+@SuppressWarnings(&quot;rawtypes&quot;)
+public class CompositeBuilder extends FactoryBuilderSupport {
+    public CompositeBuilder(@Nonnull BuilderCustomizer[] customizers) {
+<span class="fc" id="L38">        super(false);</span>
+<span class="fc" id="L39">        requireNonNull(customizers, &quot;Argument 'customizers' must not be null&quot;);</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">        for (int i = 0; i &lt; customizers.length; i++) {</span>
+<span class="fc" id="L41">            BuilderCustomizer customizer = customizers[customizers.length - 1 - i];</span>
+<span class="fc" id="L42">            doRegisterVariables(customizer);</span>
+<span class="fc" id="L43">            doRegisterFactories(customizer);</span>
+<span class="fc" id="L44">            doRegisterMethods(customizer);</span>
+<span class="fc" id="L45">            doRegisterProps(customizer);</span>
+        }
+
+<span class="fc" id="L48">        final List&lt;Closure&gt; methodMissingDelegates = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L49">        final List&lt;Closure&gt; propertyMissingDelegates = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        for (BuilderCustomizer customizer : customizers) {</span>
+<span class="fc" id="L51">            doRegisterAttributeDelegates(customizer);</span>
+<span class="fc" id="L52">            doRegisterPreInstantiateDelegates(customizer);</span>
+<span class="fc" id="L53">            doRegisterPostInstantiateDelegates(customizer);</span>
+<span class="fc" id="L54">            doRegisterPostNodeCompletionDelegates(customizer);</span>
+<span class="fc" id="L55">            doDisposalClosures(customizer);</span>
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">            if (customizer.getMethodMissingDelegate() != null) {</span>
+<span class="nc" id="L57">                methodMissingDelegates.add(customizer.getMethodMissingDelegate());</span>
+            }
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">            if (customizer.getPropertyMissingDelegate() != null) {</span>
+<span class="nc" id="L60">                propertyMissingDelegates.add(customizer.getPropertyMissingDelegate());</span>
+            }
+        }
+
+<span class="fc" id="L64">        final Closure originalMethodMissingDelegate = getMethodMissingDelegate();</span>
+<span class="fc" id="L65">        setMethodMissingDelegate(new Closure&lt;Object&gt;(this) {</span>
+            private static final long serialVersionUID = -6901410680736336645L;
+
+            protected Object doCall(Object[] args) {
+<span class="nc" id="L69">                String methodName = String.valueOf(args[0]);</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">                for (Closure methodMissingDelegate : methodMissingDelegates) {</span>
+                    try {
+<span class="nc" id="L72">                        return methodMissingDelegate.call(args);</span>
+<span class="nc" id="L73">                    } catch (MissingMethodException mme) {</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">                        if (!methodName.equals(mme.getMethod())) throw mme;</span>
+                    }
+<span class="nc" id="L76">                }</span>
+
+<span class="nc bnc" id="L78" title="All 2 branches missed.">                if (originalMethodMissingDelegate != null) {</span>
+                    try {
+<span class="nc" id="L80">                        return originalMethodMissingDelegate.call(args);</span>
+<span class="nc" id="L81">                    } catch (MissingMethodException mme) {</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">                        if (!methodName.equals(mme.getMethod())) throw mme;</span>
+                    }
+                }
+
+<span class="nc" id="L86">                Object[] argsCopy = new Object[args.length - 1];</span>
+<span class="nc" id="L87">                System.arraycopy(args, 1, argsCopy, 0, argsCopy.length);</span>
+<span class="nc" id="L88">                throw new MissingMethodException(methodName, CompositeBuilder.class, argsCopy);</span>
+            }
+        });
+
+<span class="fc" id="L92">        final Closure originalPropertyMissingDelegate = getMethodMissingDelegate();</span>
+<span class="fc" id="L93">        setPropertyMissingDelegate(new Closure&lt;Object&gt;(this) {</span>
+            private static final long serialVersionUID = 1055591497264374109L;
+
+            protected Object doCall(Object[] args) {
+<span class="nc" id="L97">                String propertyName = String.valueOf(args[0]);</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">                for (Closure propertyMissingDelegate : propertyMissingDelegates) {</span>
+                    try {
+<span class="nc" id="L100">                        return propertyMissingDelegate.call(args);</span>
+<span class="nc" id="L101">                    } catch (MissingMethodException mme) {</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">                        if (!propertyName.equals(mme.getMethod()))</span>
+<span class="nc" id="L103">                            throw mme;</span>
+                    }
+<span class="nc" id="L105">                }</span>
+
+<span class="nc bnc" id="L107" title="All 2 branches missed.">                if (originalPropertyMissingDelegate != null) {</span>
+                    try {
+<span class="nc" id="L109">                        return originalPropertyMissingDelegate.call(args);</span>
+<span class="nc" id="L110">                    } catch (MissingMethodException mme) {</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">                        if (!propertyName.equals(mme.getMethod()))</span>
+<span class="nc" id="L112">                            throw mme;</span>
+                    }
+                }
+
+<span class="nc" id="L116">                throw new MissingPropertyException(propertyName, CompositeBuilder.class);</span>
+            }
+        });
+<span class="fc" id="L119">    }</span>
+
+    private void doRegisterVariables(@Nonnull BuilderCustomizer customizer) {
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        for (Map.Entry&lt;String, Object&gt; entry : customizer.getVariables().entrySet()) {</span>
+<span class="fc" id="L123">            setVariable(entry.getKey(), entry.getValue());</span>
+<span class="fc" id="L124">        }</span>
+<span class="fc" id="L125">    }</span>
+
+    private void doRegisterFactories(@Nonnull BuilderCustomizer customizer) {
+<span class="fc bfc" id="L128" title="All 2 branches covered.">        for (Map.Entry&lt;String, Factory&gt; entry : customizer.getFactories().entrySet()) {</span>
+<span class="fc" id="L129">            registerFactory(entry.getKey(), entry.getValue());</span>
+<span class="fc" id="L130">        }</span>
+<span class="fc" id="L131">    }</span>
+
+    private void doRegisterMethods(@Nonnull BuilderCustomizer customizer) {
+<span class="fc bfc" id="L134" title="All 2 branches covered.">        for (Map.Entry&lt;String, Closure&gt; e : customizer.getMethods().entrySet()) {</span>
+<span class="fc" id="L135">            registerExplicitMethod(e.getKey(), e.getValue());</span>
+<span class="fc" id="L136">        }</span>
+<span class="fc" id="L137">    }</span>
+
+    private void doRegisterProps(@Nonnull BuilderCustomizer customizer) {
+<span class="pc bpc" id="L140" title="1 of 2 branches missed.">        for (Map.Entry&lt;String, Closure[]&gt; entry : customizer.getProps().entrySet()) {</span>
+<span class="nc" id="L141">            Closure[] accessors = entry.getValue();</span>
+<span class="nc" id="L142">            Closure getter = accessors[0];</span>
+<span class="nc" id="L143">            Closure setter = accessors[1];</span>
+<span class="nc" id="L144">            registerExplicitProperty(entry.getKey(), getter, setter);</span>
+<span class="nc" id="L145">        }</span>
+<span class="fc" id="L146">    }</span>
+
+    private void doRegisterAttributeDelegates(@Nonnull BuilderCustomizer customizer) {
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        for (Closure c : customizer.getAttributeDelegates()) {</span>
+<span class="fc" id="L150">            addAttributeDelegate(c);</span>
+<span class="fc" id="L151">        }</span>
+<span class="fc" id="L152">    }</span>
+
+    private void doRegisterPreInstantiateDelegates(@Nonnull BuilderCustomizer customizer) {
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">        for (Closure c : customizer.getPreInstantiateDelegates()) {</span>
+<span class="nc" id="L156">            addPreInstantiateDelegate(c);</span>
+<span class="nc" id="L157">        }</span>
+<span class="fc" id="L158">    }</span>
+
+    private void doRegisterPostInstantiateDelegates(@Nonnull BuilderCustomizer customizer) {
+<span class="pc bpc" id="L161" title="1 of 2 branches missed.">        for (Closure c : customizer.getPostInstantiateDelegates()) {</span>
+<span class="nc" id="L162">            addPostInstantiateDelegate(c);</span>
+<span class="nc" id="L163">        }</span>
+<span class="fc" id="L164">    }</span>
+
+    private void doRegisterPostNodeCompletionDelegates(@Nonnull BuilderCustomizer customizer) {
+<span class="pc bpc" id="L167" title="1 of 2 branches missed.">        for (Closure c : customizer.getPostNodeCompletionDelegates()) {</span>
+<span class="nc" id="L168">            addPostNodeCompletionDelegate(c);</span>
+<span class="nc" id="L169">        }</span>
+<span class="fc" id="L170">    }</span>
+
+    private void doDisposalClosures(@Nonnull BuilderCustomizer customizer) {
+<span class="pc bpc" id="L173" title="1 of 2 branches missed.">        for (Closure c : customizer.getDisposalClosures()) {</span>
+<span class="nc" id="L174">            addDisposalClosure(c);</span>
+<span class="nc" id="L175">        }</span>
+<span class="fc" id="L176">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

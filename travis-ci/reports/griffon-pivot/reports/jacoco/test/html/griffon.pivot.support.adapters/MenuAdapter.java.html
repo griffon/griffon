@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>MenuAdapter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-pivot</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.support.adapters</a> &gt; <span class="el_source">MenuAdapter.java</span></div><h1>MenuAdapter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.support.adapters;
+
+import griffon.core.CallableWithArgs;
+import org.apache.pivot.wtk.Menu;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="fc" id="L25">public class MenuAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.MenuListener {</span>
+    private CallableWithArgs&lt;Void&gt; sectionInserted;
+    private CallableWithArgs&lt;Void&gt; sectionsRemoved;
+    private CallableWithArgs&lt;Void&gt; activeItemChanged;
+
+    public CallableWithArgs&lt;Void&gt; getSectionInserted() {
+<span class="fc" id="L31">        return this.sectionInserted;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getSectionsRemoved() {
+<span class="fc" id="L35">        return this.sectionsRemoved;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getActiveItemChanged() {
+<span class="fc" id="L39">        return this.activeItemChanged;</span>
+    }
+
+
+    public void setSectionInserted(CallableWithArgs&lt;Void&gt; sectionInserted) {
+<span class="fc" id="L44">        this.sectionInserted = sectionInserted;</span>
+<span class="fc" id="L45">    }</span>
+
+    public void setSectionsRemoved(CallableWithArgs&lt;Void&gt; sectionsRemoved) {
+<span class="fc" id="L48">        this.sectionsRemoved = sectionsRemoved;</span>
+<span class="fc" id="L49">    }</span>
+
+    public void setActiveItemChanged(CallableWithArgs&lt;Void&gt; activeItemChanged) {
+<span class="fc" id="L52">        this.activeItemChanged = activeItemChanged;</span>
+<span class="fc" id="L53">    }</span>
+
+
+    public void sectionInserted(org.apache.pivot.wtk.Menu arg0, int arg1) {
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        if (sectionInserted != null) {</span>
+<span class="fc" id="L58">            sectionInserted.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L60">    }</span>
+
+    public void sectionsRemoved(org.apache.pivot.wtk.Menu arg0, int arg1, org.apache.pivot.collections.Sequence&lt;Menu.Section&gt; arg2) {
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        if (sectionsRemoved != null) {</span>
+<span class="fc" id="L64">            sectionsRemoved.call(arg0, arg1, arg2);</span>
+        }
+<span class="fc" id="L66">    }</span>
+
+    public void activeItemChanged(org.apache.pivot.wtk.Menu arg0, org.apache.pivot.wtk.Menu.Item arg1) {
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (activeItemChanged != null) {</span>
+<span class="fc" id="L70">            activeItemChanged.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L72">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

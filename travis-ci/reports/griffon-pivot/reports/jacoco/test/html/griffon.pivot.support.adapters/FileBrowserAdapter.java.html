@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>FileBrowserAdapter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-pivot</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.support.adapters</a> &gt; <span class="el_source">FileBrowserAdapter.java</span></div><h1>FileBrowserAdapter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.support.adapters;
+
+import griffon.core.CallableWithArgs;
+
+import java.io.File;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="fc" id="L26">public class FileBrowserAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.FileBrowserListener {</span>
+    private CallableWithArgs&lt;Void&gt; rootDirectoryChanged;
+    private CallableWithArgs&lt;Void&gt; selectedFileAdded;
+    private CallableWithArgs&lt;Void&gt; selectedFileRemoved;
+    private CallableWithArgs&lt;Void&gt; selectedFilesChanged;
+    private CallableWithArgs&lt;Void&gt; multiSelectChanged;
+    private CallableWithArgs&lt;Void&gt; disabledFileFilterChanged;
+
+    public CallableWithArgs&lt;Void&gt; getRootDirectoryChanged() {
+<span class="fc" id="L35">        return this.rootDirectoryChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getSelectedFileAdded() {
+<span class="fc" id="L39">        return this.selectedFileAdded;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getSelectedFileRemoved() {
+<span class="fc" id="L43">        return this.selectedFileRemoved;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getSelectedFilesChanged() {
+<span class="fc" id="L47">        return this.selectedFilesChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getMultiSelectChanged() {
+<span class="fc" id="L51">        return this.multiSelectChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getDisabledFileFilterChanged() {
+<span class="fc" id="L55">        return this.disabledFileFilterChanged;</span>
+    }
+
+
+    public void setRootDirectoryChanged(CallableWithArgs&lt;Void&gt; rootDirectoryChanged) {
+<span class="fc" id="L60">        this.rootDirectoryChanged = rootDirectoryChanged;</span>
+<span class="fc" id="L61">    }</span>
+
+    public void setSelectedFileAdded(CallableWithArgs&lt;Void&gt; selectedFileAdded) {
+<span class="fc" id="L64">        this.selectedFileAdded = selectedFileAdded;</span>
+<span class="fc" id="L65">    }</span>
+
+    public void setSelectedFileRemoved(CallableWithArgs&lt;Void&gt; selectedFileRemoved) {
+<span class="fc" id="L68">        this.selectedFileRemoved = selectedFileRemoved;</span>
+<span class="fc" id="L69">    }</span>
+
+    public void setSelectedFilesChanged(CallableWithArgs&lt;Void&gt; selectedFilesChanged) {
+<span class="fc" id="L72">        this.selectedFilesChanged = selectedFilesChanged;</span>
+<span class="fc" id="L73">    }</span>
+
+    public void setMultiSelectChanged(CallableWithArgs&lt;Void&gt; multiSelectChanged) {
+<span class="fc" id="L76">        this.multiSelectChanged = multiSelectChanged;</span>
+<span class="fc" id="L77">    }</span>
+
+    public void setDisabledFileFilterChanged(CallableWithArgs&lt;Void&gt; disabledFileFilterChanged) {
+<span class="fc" id="L80">        this.disabledFileFilterChanged = disabledFileFilterChanged;</span>
+<span class="fc" id="L81">    }</span>
+
+
+    public void rootDirectoryChanged(org.apache.pivot.wtk.FileBrowser arg0, java.io.File arg1) {
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        if (rootDirectoryChanged != null) {</span>
+<span class="fc" id="L86">            rootDirectoryChanged.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L88">    }</span>
+
+    public void selectedFileAdded(org.apache.pivot.wtk.FileBrowser arg0, java.io.File arg1) {
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        if (selectedFileAdded != null) {</span>
+<span class="fc" id="L92">            selectedFileAdded.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L94">    }</span>
+
+    public void selectedFileRemoved(org.apache.pivot.wtk.FileBrowser arg0, java.io.File arg1) {
+<span class="fc bfc" id="L97" title="All 2 branches covered.">        if (selectedFileRemoved != null) {</span>
+<span class="fc" id="L98">            selectedFileRemoved.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L100">    }</span>
+
+    public void selectedFilesChanged(org.apache.pivot.wtk.FileBrowser arg0, org.apache.pivot.collections.Sequence&lt;File&gt; arg1) {
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        if (selectedFilesChanged != null) {</span>
+<span class="fc" id="L104">            selectedFilesChanged.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L106">    }</span>
+
+    public void multiSelectChanged(org.apache.pivot.wtk.FileBrowser arg0) {
+<span class="fc bfc" id="L109" title="All 2 branches covered.">        if (multiSelectChanged != null) {</span>
+<span class="fc" id="L110">            multiSelectChanged.call(arg0);</span>
+        }
+<span class="fc" id="L112">    }</span>
+
+    public void disabledFileFilterChanged(org.apache.pivot.wtk.FileBrowser arg0, org.apache.pivot.util.Filter&lt;File&gt; arg1) {
+<span class="fc bfc" id="L115" title="All 2 branches covered.">        if (disabledFileFilterChanged != null) {</span>
+<span class="fc" id="L116">            disabledFileFilterChanged.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L118">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

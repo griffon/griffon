@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ColorFormatter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.formatters</a> &gt; <span class="el_source">ColorFormatter.java</span></div><h1>ColorFormatter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.formatters;
+
+import griffon.core.formatters.AbstractFormatter;
+import griffon.core.formatters.ParseException;
+import javafx.scene.paint.Color;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+
+import static griffon.util.GriffonNameUtils.isBlank;
+import static java.lang.Integer.toHexString;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * &lt;p&gt;A {@code Formatter} that can parse Strings into {@code javafx.scene.paint.Color} and back
+ * using several patterns&lt;/p&gt;
+ * &lt;p/&gt;
+ * &lt;p&gt;
+ * Supported patterns are:
+ * &lt;ul&gt;
+ * &lt;li&gt;{@code #RGB}&lt;/li&gt;
+ * &lt;li&gt;{@code #RGBA}&lt;/li&gt;
+ * &lt;li&gt;{@code #RRGGBB}&lt;/li&gt;
+ * &lt;li&gt;{@code #RRGGBBAA}&lt;/li&gt;
+ * &lt;/ul&gt;
+ * Where each letter stands for a particular color components in hexadecimal
+ * &lt;ul&gt;
+ * &lt;li&gt;{@code R} - red&lt;/li&gt;
+ * &lt;li&gt;{@code G} - green&lt;/li&gt;
+ * &lt;li&gt;{@code B} - blue&lt;/li&gt;
+ * &lt;li&gt;{@code A} - alpha&lt;/li&gt;
+ * &lt;/ul&gt;
+ * &lt;/p&gt;
+ *
+ * @author Andres Almiray
+ * @see griffon.core.formatters.Formatter
+ * @since 2.0.0
+ */
+public class ColorFormatter extends AbstractFormatter&lt;Color&gt; {
+    /**
+     * &quot;#RGB&quot;
+     */
+    public static final String PATTERN_SHORT = &quot;#RGB&quot;;
+
+    /**
+     * &quot;#RGBA&quot;
+     */
+    public static final String PATTERN_SHORT_WITH_ALPHA = &quot;#RGBA&quot;;
+
+    /**
+     * &quot;#RRGGBB&quot;
+     */
+    public static final String PATTERN_LONG = &quot;#RRGGBB&quot;;
+
+    /**
+     * &quot;#RRGGBBAA&quot;
+     */
+    public static final String PATTERN_LONG_WITH_ALPHA = &quot;#RRGGBBAA&quot;;
+
+    /**
+     * &quot;#RRGGBB&quot;
+     */
+    public static final String DEFAULT_PATTERN = PATTERN_LONG;
+
+<span class="nc" id="L82">    private static final String[] PATTERNS = new String[]{</span>
+        PATTERN_LONG,
+        PATTERN_LONG_WITH_ALPHA,
+        PATTERN_SHORT,
+        PATTERN_SHORT_WITH_ALPHA
+    };
+
+    /**
+     * {@code ColorFormatter} that uses the &lt;b&gt;{@code PATTERN_SHORT}&lt;/b&gt; pattern
+     */
+<span class="nc" id="L92">    public static final ColorFormatter SHORT = new ColorFormatter(PATTERN_SHORT);</span>
+
+    /**
+     * {@code ColorFormatter} that uses the &lt;b&gt;{@code PATTERN_SHORT_WITH_ALPHA}&lt;/b&gt; pattern
+     */
+<span class="nc" id="L97">    public static final ColorFormatter SHORT_WITH_ALPHA = new ColorFormatter(PATTERN_SHORT_WITH_ALPHA);</span>
+
+    /**
+     * {@code ColorFormatter} that uses the &lt;b&gt;{@code PATTERN_LONG}&lt;/b&gt; pattern
+     */
+<span class="nc" id="L102">    public static final ColorFormatter LONG = new ColorFormatter(PATTERN_LONG);</span>
+
+    /**
+     * {@code ColorFormatter} that uses the &lt;b&gt;{@code PATTERN_LONG_WITH_ALPHA}&lt;/b&gt; pattern
+     */
+<span class="nc" id="L107">    public static final ColorFormatter LONG_WITH_ALPHA = new ColorFormatter(PATTERN_LONG_WITH_ALPHA);</span>
+
+    /**
+     * &lt;p&gt;Returns a {@code ColorFormatter} given a color pattern.&lt;/p&gt;
+     *
+     * @param pattern the input pattern. Must be one of the 4 supported color patterns.
+     * @return a {@code ColorPattern} instance
+     * @throws IllegalArgumentException if the supplied {@code pattern} is not supported
+     */
+    @Nonnull
+    public static ColorFormatter getInstance(@Nonnull String pattern) {
+<span class="nc" id="L118">        return new ColorFormatter(pattern);</span>
+    }
+
+    private final ColorFormatterDelegate delegate;
+
+<span class="nc" id="L123">    protected ColorFormatter(@Nullable String pattern) {</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">        if (PATTERN_SHORT.equals(pattern)) {</span>
+<span class="nc" id="L125">            delegate = new ShortColorFormatterDelegate();</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        } else if (PATTERN_SHORT_WITH_ALPHA.equals(pattern)) {</span>
+<span class="nc" id="L127">            delegate = new ShortWithAlphaColorFormatterDelegate();</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">        } else if (PATTERN_LONG.equals(pattern)) {</span>
+<span class="nc" id="L129">            delegate = new LongColorFormatterDelegate();</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">        } else if (PATTERN_LONG_WITH_ALPHA.equals(pattern)) {</span>
+<span class="nc" id="L131">            delegate = new LongWithAlphaColorFormatterDelegate();</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">        } else if (isBlank(pattern)) {</span>
+<span class="nc" id="L133">            delegate = new LongColorFormatterDelegate();</span>
+        } else {
+<span class="nc" id="L135">            throw new IllegalArgumentException(&quot;Invalid pattern '&quot; + pattern + &quot;'. Valid patterns are &quot; + Arrays.toString(PATTERNS));</span>
+        }
+<span class="nc" id="L137">    }</span>
+
+    @Nullable
+    public String format(@Nullable Color color) {
+<span class="nc bnc" id="L141" title="All 2 branches missed.">        return color == null ? null : delegate.format(color);</span>
+    }
+
+    @Nullable
+    public Color parse(@Nullable String str) throws ParseException {
+<span class="nc bnc" id="L146" title="All 2 branches missed.">        return isBlank(str) ? null : delegate.parse(str);</span>
+    }
+
+    /**
+     * Returns the pattern used by this {@code ColorFormatter}
+     *
+     * @return the pattern this {@code ColorFormatter} uses for parsing/formatting.
+     */
+    @Nonnull
+    public String getPattern() {
+<span class="nc" id="L156">        return delegate.getPattern();</span>
+    }
+
+    /**
+     * &lt;p&gt;Parses a string into a {@code javafx.scene.paint.Color} instance.&lt;/p&gt;
+     * &lt;p&gt;The parsing pattern is chosen given the length of the input string
+     * &lt;ul&gt;
+     * &lt;li&gt;4 - {@code #RGB}&lt;/li&gt;
+     * &lt;li&gt;5 - {@code #RGBA}&lt;/li&gt;
+     * &lt;li&gt;7 - {@code #RRGGBB}&lt;/li&gt;
+     * &lt;li&gt;9 - {@code #RRGGBBAA}&lt;/li&gt;
+     * &lt;/ul&gt;
+     * &lt;/p&gt;
+     * The input string may also be any of the Color constants identified by
+     * {@code javafx.scene.paint.Color}.
+     *
+     * @param str the string representation of a {@code javafx.scene.paint.Color}
+     * @return a {@code javafx.scene.paint.Color} instance matching the supplied RGBA color components
+     * @throws ParseException if the string cannot be parsed by the chosen pattern
+     * @see javafx.scene.paint.Color
+     */
+    @Nonnull
+    @SuppressWarnings(&quot;ConstantConditions&quot;)
+    public static Color parseColor(@Nonnull String str) throws ParseException {
+<span class="nc bnc" id="L180" title="All 2 branches missed.">        if (str.startsWith(&quot;#&quot;)) {</span>
+<span class="nc bnc" id="L181" title="All 5 branches missed.">            switch (str.length()) {</span>
+                case 4:
+<span class="nc" id="L183">                    return SHORT.parse(str);</span>
+                case 5:
+<span class="nc" id="L185">                    return SHORT_WITH_ALPHA.parse(str);</span>
+                case 7:
+<span class="nc" id="L187">                    return LONG.parse(str);</span>
+                case 9:
+<span class="nc" id="L189">                    return LONG_WITH_ALPHA.parse(str);</span>
+                default:
+<span class="nc" id="L191">                    throw parseError(str, Color.class);</span>
+            }
+        } else {
+            // assume it's a Color constant
+            try {
+<span class="nc" id="L196">                String colorFieldName = str.toUpperCase();</span>
+<span class="nc" id="L197">                Field field = Color.class.getField(colorFieldName);</span>
+<span class="nc" id="L198">                return (Color) field.get(null);</span>
+<span class="nc" id="L199">            } catch (Exception e) {</span>
+<span class="nc" id="L200">                throw parseError(str, Color.class, e);</span>
+            }
+        }
+    }
+
+    private static interface ColorFormatterDelegate {
+        @Nonnull
+        String getPattern();
+
+        @Nonnull
+        String format(@Nonnull Color color);
+
+        @Nonnull
+        Color parse(@Nonnull String str) throws ParseException;
+    }
+
+    private static abstract class AbstractColorFormatterDelegate implements ColorFormatterDelegate {
+        private final String pattern;
+
+<span class="nc" id="L219">        private AbstractColorFormatterDelegate(@Nonnull String pattern) {</span>
+<span class="nc" id="L220">            this.pattern = pattern;</span>
+<span class="nc" id="L221">        }</span>
+
+        @Nonnull
+        public String getPattern() {
+<span class="nc" id="L225">            return pattern;</span>
+        }
+    }
+
+    private static int red(Color color) {
+<span class="nc" id="L230">        return toIntColor(color.getRed());</span>
+    }
+
+    private static int green(Color color) {
+<span class="nc" id="L234">        return toIntColor(color.getGreen());</span>
+    }
+
+    private static int blue(Color color) {
+<span class="nc" id="L238">        return toIntColor(color.getBlue());</span>
+    }
+
+    private static int alpha(Color color) {
+<span class="nc" id="L242">        return toIntColor(color.getOpacity());</span>
+    }
+
+    private static int toIntColor(double c) {
+<span class="nc" id="L246">        return new Double(c * 255).intValue();</span>
+    }
+
+    private static class ShortColorFormatterDelegate extends AbstractColorFormatterDelegate {
+        private ShortColorFormatterDelegate() {
+<span class="nc" id="L251">            super(PATTERN_SHORT);</span>
+<span class="nc" id="L252">        }</span>
+
+        @Nonnull
+        public String format(@Nonnull Color color) {
+<span class="nc" id="L256">            requireNonNull(color, &quot;Cannot format given Color because it's null&quot;);</span>
+
+<span class="nc" id="L258">            return new StringBuilder(&quot;#&quot;)</span>
+<span class="nc" id="L259">                .append(toHexString(red(color)).charAt(0))</span>
+<span class="nc" id="L260">                .append(toHexString(green(color)).charAt(0))</span>
+<span class="nc" id="L261">                .append(toHexString(blue(color)).charAt(0))</span>
+<span class="nc" id="L262">                .toString();</span>
+        }
+
+        @Nonnull
+        public Color parse(@Nonnull String str) throws ParseException {
+<span class="nc bnc" id="L267" title="All 4 branches missed.">            if (!str.startsWith(&quot;#&quot;) || str.length() != 4) {</span>
+<span class="nc" id="L268">                throw parseError(str, Color.class);</span>
+            }
+
+<span class="nc" id="L271">            int r = parseHexInt(new StringBuilder()</span>
+<span class="nc" id="L272">                .append(str.charAt(1))</span>
+<span class="nc" id="L273">                .append(str.charAt(1))</span>
+<span class="nc" id="L274">                .toString().toUpperCase(), Color.class);</span>
+<span class="nc" id="L275">            int g = parseHexInt(new StringBuilder()</span>
+<span class="nc" id="L276">                .append(str.charAt(2))</span>
+<span class="nc" id="L277">                .append(str.charAt(2))</span>
+<span class="nc" id="L278">                .toString().toUpperCase(), Color.class);</span>
+<span class="nc" id="L279">            int b = parseHexInt(new StringBuilder()</span>
+<span class="nc" id="L280">                .append(str.charAt(3))</span>
+<span class="nc" id="L281">                .append(str.charAt(3))</span>
+<span class="nc" id="L282">                .toString().toUpperCase(), Color.class);</span>
+
+<span class="nc" id="L284">            return Color.rgb(r, g, b);</span>
+        }
+    }
+
+    private static class ShortWithAlphaColorFormatterDelegate extends AbstractColorFormatterDelegate {
+        private ShortWithAlphaColorFormatterDelegate() {
+<span class="nc" id="L290">            super(PATTERN_SHORT_WITH_ALPHA);</span>
+<span class="nc" id="L291">        }</span>
+
+        @Nonnull
+        public String format(@Nonnull Color color) {
+<span class="nc" id="L295">            requireNonNull(color, &quot;Cannot format given Color because it's null&quot;);</span>
+
+<span class="nc" id="L297">            return new StringBuilder(&quot;#&quot;)</span>
+<span class="nc" id="L298">                .append(toHexString(red(color)).charAt(0))</span>
+<span class="nc" id="L299">                .append(toHexString(green(color)).charAt(0))</span>
+<span class="nc" id="L300">                .append(toHexString(blue(color)).charAt(0))</span>
+<span class="nc" id="L301">                .append(toHexString(alpha(color)).charAt(0))</span>
+<span class="nc" id="L302">                .toString();</span>
+        }
+
+        @Nonnull
+        public Color parse(@Nonnull String str) throws ParseException {
+<span class="nc bnc" id="L307" title="All 4 branches missed.">            if (!str.startsWith(&quot;#&quot;) || str.length() != 5) {</span>
+<span class="nc" id="L308">                throw parseError(str, Color.class);</span>
+            }
+
+<span class="nc" id="L311">            int r = parseHexInt(new StringBuilder()</span>
+<span class="nc" id="L312">                .append(str.charAt(1))</span>
+<span class="nc" id="L313">                .append(str.charAt(1))</span>
+<span class="nc" id="L314">                .toString().toUpperCase(), Color.class);</span>
+<span class="nc" id="L315">            int g = parseHexInt(new StringBuilder()</span>
+<span class="nc" id="L316">                .append(str.charAt(2))</span>
+<span class="nc" id="L317">                .append(str.charAt(2))</span>
+<span class="nc" id="L318">                .toString().toUpperCase(), Color.class);</span>
+<span class="nc" id="L319">            int b = parseHexInt(new StringBuilder()</span>
+<span class="nc" id="L320">                .append(str.charAt(3))</span>
+<span class="nc" id="L321">                .append(str.charAt(3))</span>
+<span class="nc" id="L322">                .toString().toUpperCase(), Color.class);</span>
+<span class="nc" id="L323">            int a = parseHexInt(new StringBuilder()</span>
+<span class="nc" id="L324">                .append(str.charAt(4))</span>
+<span class="nc" id="L325">                .append(str.charAt(4))</span>
+<span class="nc" id="L326">                .toString().toUpperCase(), Color.class);</span>
+
+<span class="nc" id="L328">            return Color.rgb(r, g, b, a / 255d);</span>
+        }
+    }
+
+    private static class LongColorFormatterDelegate extends AbstractColorFormatterDelegate {
+        private LongColorFormatterDelegate() {
+<span class="nc" id="L334">            super(PATTERN_LONG);</span>
+<span class="nc" id="L335">        }</span>
+
+        @Nonnull
+        public String format(@Nonnull Color color) {
+<span class="nc" id="L339">            requireNonNull(color, &quot;Cannot format given Color because it's null&quot;);</span>
+
+<span class="nc" id="L341">            return new StringBuilder(&quot;#&quot;)</span>
+<span class="nc" id="L342">                .append(padLeft(toHexString(red(color)), &quot;0&quot;))</span>
+<span class="nc" id="L343">                .append(padLeft(toHexString(green(color)), &quot;0&quot;))</span>
+<span class="nc" id="L344">                .append(padLeft(toHexString(blue(color)), &quot;0&quot;))</span>
+<span class="nc" id="L345">                .toString();</span>
+        }
+
+        @Nonnull
+        public Color parse(@Nonnull String str) throws ParseException {
+<span class="nc bnc" id="L350" title="All 4 branches missed.">            if (!str.startsWith(&quot;#&quot;) || str.length() != 7) {</span>
+<span class="nc" id="L351">                throw parseError(str, Color.class);</span>
+            }
+
+<span class="nc" id="L354">            int r = parseHexInt(new StringBuilder()</span>
+<span class="nc" id="L355">                .append(str.charAt(1))</span>
+<span class="nc" id="L356">                .append(str.charAt(2))</span>
+<span class="nc" id="L357">                .toString().toUpperCase(), Color.class);</span>
+<span class="nc" id="L358">            int g = parseHexInt(new StringBuilder()</span>
+<span class="nc" id="L359">                .append(str.charAt(3))</span>
+<span class="nc" id="L360">                .append(str.charAt(4))</span>
+<span class="nc" id="L361">                .toString().toUpperCase(), Color.class);</span>
+<span class="nc" id="L362">            int b = parseHexInt(new StringBuilder()</span>
+<span class="nc" id="L363">                .append(str.charAt(5))</span>
+<span class="nc" id="L364">                .append(str.charAt(6))</span>
+<span class="nc" id="L365">                .toString().toUpperCase(), Color.class);</span>
+
+<span class="nc" id="L367">            return Color.rgb(r, g, b);</span>
+        }
+    }
+
+    private static class LongWithAlphaColorFormatterDelegate extends AbstractColorFormatterDelegate {
+        private LongWithAlphaColorFormatterDelegate() {
+<span class="nc" id="L373">            super(PATTERN_LONG_WITH_ALPHA);</span>
+<span class="nc" id="L374">        }</span>
+
+        @Nonnull
+        public String format(@Nonnull Color color) {
+<span class="nc" id="L378">            requireNonNull(color, &quot;Cannot format given Color because it's null&quot;);</span>
+
+<span class="nc" id="L380">            return new StringBuilder(&quot;#&quot;)</span>
+<span class="nc" id="L381">                .append(padLeft(toHexString(red(color)), &quot;0&quot;))</span>
+<span class="nc" id="L382">                .append(padLeft(toHexString(green(color)), &quot;0&quot;))</span>
+<span class="nc" id="L383">                .append(padLeft(toHexString(blue(color)), &quot;0&quot;))</span>
+<span class="nc" id="L384">                .append(padLeft(toHexString(alpha(color)), &quot;0&quot;))</span>
+<span class="nc" id="L385">                .toString();</span>
+        }
+
+        @Nonnull
+        public Color parse(@Nonnull String str) throws ParseException {
+<span class="nc bnc" id="L390" title="All 4 branches missed.">            if (!str.startsWith(&quot;#&quot;) || str.length() != 9) {</span>
+<span class="nc" id="L391">                throw parseError(str, Color.class);</span>
+            }
+
+<span class="nc" id="L394">            int r = parseHexInt(new StringBuilder()</span>
+<span class="nc" id="L395">                .append(str.charAt(1))</span>
+<span class="nc" id="L396">                .append(str.charAt(2))</span>
+<span class="nc" id="L397">                .toString().toUpperCase(), Color.class);</span>
+<span class="nc" id="L398">            int g = parseHexInt(new StringBuilder()</span>
+<span class="nc" id="L399">                .append(str.charAt(3))</span>
+<span class="nc" id="L400">                .append(str.charAt(4))</span>
+<span class="nc" id="L401">                .toString().toUpperCase(), Color.class);</span>
+<span class="nc" id="L402">            int b = parseHexInt(new StringBuilder()</span>
+<span class="nc" id="L403">                .append(str.charAt(5))</span>
+<span class="nc" id="L404">                .append(str.charAt(6))</span>
+<span class="nc" id="L405">                .toString().toUpperCase(), Color.class);</span>
+<span class="nc" id="L406">            int a = parseHexInt(new StringBuilder()</span>
+<span class="nc" id="L407">                .append(str.charAt(7))</span>
+<span class="nc" id="L408">                .append(str.charAt(8))</span>
+<span class="nc" id="L409">                .toString().toUpperCase(), Color.class);</span>
+
+<span class="nc" id="L411">            return Color.rgb(r, g, b, a / 255d);</span>
+        }
+    }
+
+    private static String padLeft(String self, String padding) {
+<span class="nc bnc" id="L416" title="All 2 branches missed.">        return 2 &lt;= self.length() ? self : padding + self;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>BigIntegerFormatter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.core.formatters</a> &gt; <span class="el_source">BigIntegerFormatter.java</span></div><h1>BigIntegerFormatter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.core.formatters;
+
+import javax.annotation.Nullable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
+import static griffon.util.GriffonNameUtils.isBlank;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public class BigIntegerFormatter extends AbstractFormatter&lt;BigInteger&gt; {
+    public static final String PATTERN_CURRENCY = &quot;currency&quot;;
+    public static final String PATTERN_PERCENT = &quot;percent&quot;;
+
+    private final NumberFormat numberFormat;
+
+    public BigIntegerFormatter() {
+<span class="nc" id="L37">        this(null);</span>
+<span class="nc" id="L38">    }</span>
+
+<span class="nc" id="L40">    public BigIntegerFormatter(@Nullable String pattern) {</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">        if (isBlank(pattern)) {</span>
+<span class="nc" id="L42">            numberFormat = NumberFormat.getIntegerInstance();</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        } else if (PATTERN_CURRENCY.equalsIgnoreCase(pattern)) {</span>
+<span class="nc" id="L44">            numberFormat = NumberFormat.getCurrencyInstance();</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">        } else if (PATTERN_PERCENT.equalsIgnoreCase(pattern)) {</span>
+<span class="nc" id="L46">            numberFormat = NumberFormat.getPercentInstance();</span>
+        } else {
+<span class="nc" id="L48">            numberFormat = new DecimalFormat(pattern);</span>
+<span class="nc" id="L49">            numberFormat.setParseIntegerOnly(true);</span>
+<span class="nc" id="L50">            ((DecimalFormat) numberFormat).setParseBigDecimal(true);</span>
+        }
+<span class="nc" id="L52">    }</span>
+
+    @Nullable
+    public String format(@Nullable BigInteger number) {
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        return number == null ? null : numberFormat.format(number);</span>
+    }
+
+    @Nullable
+    @Override
+    public BigInteger parse(@Nullable String str) throws ParseException {
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (isBlank(str)) return null;</span>
+        try {
+<span class="nc" id="L64">            Number number = numberFormat.parse(str);</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">            if (number instanceof BigDecimal) {</span>
+<span class="nc" id="L66">                return ((BigDecimal) number).toBigInteger();</span>
+            }
+<span class="nc" id="L68">            return BigInteger.valueOf(number.longValue());</span>
+<span class="nc" id="L69">        } catch (java.text.ParseException e) {</span>
+<span class="nc" id="L70">            throw new ParseException(e);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

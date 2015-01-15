@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GriffonPivotFuncRule.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-pivot-test</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.test</a> &gt; <span class="el_source">GriffonPivotFuncRule.java</span></div><h1>GriffonPivotFuncRule.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.test;
+
+import griffon.core.GriffonApplication;
+import griffon.exceptions.GriffonException;
+import org.apache.pivot.wtk.Component;
+import org.apache.pivot.wtk.Window;
+import org.codehaus.griffon.runtime.pivot.TestDesktopPivotApplication;
+
+import javax.annotation.Nonnull;
+import java.awt.EventQueue;
+import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.CountDownLatch;
+
+import static griffon.pivot.support.PivotUtils.findComponentByName;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public class GriffonPivotFuncRule extends GriffonPivotRule {
+    private static final String ERROR_RUNNABLE_NULL = &quot;Argument 'runnable' must not be null&quot;;
+
+    private Window window;
+
+<span class="nc" id="L42">    public GriffonPivotFuncRule() {</span>
+<span class="nc" id="L43">    }</span>
+
+    public GriffonPivotFuncRule(@Nonnull String[] startupArgs) {
+<span class="nc" id="L46">        super(startupArgs);</span>
+<span class="nc" id="L47">    }</span>
+
+    @Override
+    @SuppressWarnings(&quot;ConstantConditions&quot;)
+    protected void before(@Nonnull GriffonApplication application, @Nonnull Object target) throws Throwable {
+<span class="nc" id="L52">        application.startup();</span>
+<span class="nc" id="L53">        application.ready();</span>
+<span class="nc" id="L54">        TestDesktopPivotApplication.getReadyLatch().await();</span>
+
+<span class="nc" id="L56">        window = (Window) application.getWindowManager().getStartingWindow();</span>
+<span class="nc" id="L57">    }</span>
+
+    @Nonnull
+    public Window getWindow() {
+<span class="nc" id="L61">        return window;</span>
+    }
+
+    @Nonnull
+    public &lt;T&gt; T find(@Nonnull String name, Class&lt;T&gt; type) {
+<span class="nc" id="L66">        requireNonBlank(name, &quot;Argument 'name' must not be blank&quot;);</span>
+<span class="nc" id="L67">        requireNonNull(type, &quot;Argument 'type' must not be null&quot;);</span>
+
+<span class="nc" id="L69">        Component component = findComponentByName(name, window);</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        if (component != null) {</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">            if (type.isAssignableFrom(component.getClass())) {</span>
+<span class="nc" id="L72">                return type.cast(component);</span>
+            }
+<span class="nc" id="L74">            throw new IllegalArgumentException(&quot;Could not find a component name '&quot;</span>
+<span class="nc" id="L75">                + name + &quot;' with type &quot; + type.getName()</span>
+<span class="nc" id="L76">                + &quot;; found type &quot; + component.getClass().getName() + &quot; instead&quot;);</span>
+        }
+
+<span class="nc" id="L79">        throw new IllegalArgumentException(&quot;Could not find a component name '&quot; + name + &quot;' with type &quot; + type.getName());</span>
+    }
+
+    public void runInsideUISync(final @Nonnull Runnable runnable) {
+<span class="nc" id="L83">        requireNonNull(runnable, ERROR_RUNNABLE_NULL);</span>
+<span class="nc" id="L84">        Throwable t = null;</span>
+<span class="nc" id="L85">        final CountDownLatch latch = new CountDownLatch(1);</span>
+<span class="nc" id="L86">        final Runnable worker = new Runnable() {</span>
+            @Override
+            public void run() {
+                try {
+<span class="nc" id="L90">                    runnable.run();</span>
+                } finally {
+<span class="nc" id="L92">                    latch.countDown();</span>
+<span class="nc" id="L93">                }</span>
+<span class="nc" id="L94">            }</span>
+        };
+        try {
+<span class="nc" id="L97">            EventQueue.invokeAndWait(worker);</span>
+<span class="nc" id="L98">        } catch (InterruptedException e) {</span>
+<span class="nc" id="L99">            latch.countDown();</span>
+<span class="nc" id="L100">            t = e;</span>
+<span class="nc" id="L101">        } catch (InvocationTargetException e) {</span>
+<span class="nc" id="L102">            latch.countDown();</span>
+<span class="nc" id="L103">            t = e.getTargetException();</span>
+<span class="nc" id="L104">        }</span>
+
+        try {
+<span class="nc" id="L107">            latch.await();</span>
+<span class="nc" id="L108">        } catch (InterruptedException e) {</span>
+<span class="nc" id="L109">            throw new GriffonException(e);</span>
+<span class="nc" id="L110">        }</span>
+
+<span class="nc bnc" id="L112" title="All 2 branches missed.">        if (t != null) {</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">            if (t instanceof AssertionError) {</span>
+<span class="nc" id="L114">                throw (AssertionError) t;</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">            } else if (t instanceof RuntimeException) {</span>
+<span class="nc" id="L116">                throw (RuntimeException) t;</span>
+            } else {
+<span class="nc" id="L118">                throw new GriffonException(t);</span>
+            }
+        }
+<span class="nc" id="L121">    }</span>
+
+    public void runInsideUIAsync(final @Nonnull Runnable runnable) {
+<span class="nc" id="L124">        requireNonNull(runnable, ERROR_RUNNABLE_NULL);</span>
+<span class="nc" id="L125">        final Throwable[] ts = new Throwable[1];</span>
+<span class="nc" id="L126">        final CountDownLatch latch = new CountDownLatch(1);</span>
+<span class="nc" id="L127">        final Runnable worker = new Runnable() {</span>
+            @Override
+            public void run() {
+                try {
+<span class="nc" id="L131">                    runnable.run();</span>
+<span class="nc" id="L132">                } catch (Throwable t) {</span>
+<span class="nc" id="L133">                    ts[0] = t;</span>
+                } finally {
+<span class="nc" id="L135">                    latch.countDown();</span>
+<span class="nc" id="L136">                }</span>
+<span class="nc" id="L137">            }</span>
+        };
+
+<span class="nc" id="L140">        EventQueue.invokeLater(worker);</span>
+
+        try {
+<span class="nc" id="L143">            latch.await();</span>
+<span class="nc" id="L144">        } catch (InterruptedException e) {</span>
+<span class="nc" id="L145">            throw new GriffonException(e);</span>
+<span class="nc" id="L146">        }</span>
+
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        if (ts[0] != null) {</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">            if (ts[0] instanceof AssertionError) {</span>
+<span class="nc" id="L150">                throw (AssertionError) ts[0];</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">            } else if (ts[0] instanceof RuntimeException) {</span>
+<span class="nc" id="L152">                throw (RuntimeException) ts[0];</span>
+            } else {
+<span class="nc" id="L154">                throw new GriffonException(ts[0]);</span>
+            }
+        }
+<span class="nc" id="L157">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

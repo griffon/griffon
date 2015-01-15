@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TabPaneAttributeAdapter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-java</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.support.adapters</a> &gt; <span class="el_source">TabPaneAttributeAdapter.java</span></div><h1>TabPaneAttributeAdapter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.support.adapters;
+
+import griffon.core.CallableWithArgs;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="nc" id="L24">public class TabPaneAttributeAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.TabPaneAttributeListener {</span>
+    private CallableWithArgs&lt;Void&gt; tabDataChanged;
+    private CallableWithArgs&lt;Void&gt; tooltipTextChanged;
+
+    public CallableWithArgs&lt;Void&gt; getTabDataChanged() {
+<span class="nc" id="L29">        return this.tabDataChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getTooltipTextChanged() {
+<span class="nc" id="L33">        return this.tooltipTextChanged;</span>
+    }
+
+
+    public void setTabDataChanged(CallableWithArgs&lt;Void&gt; tabDataChanged) {
+<span class="nc" id="L38">        this.tabDataChanged = tabDataChanged;</span>
+<span class="nc" id="L39">    }</span>
+
+    public void setTooltipTextChanged(CallableWithArgs&lt;Void&gt; tooltipTextChanged) {
+<span class="nc" id="L42">        this.tooltipTextChanged = tooltipTextChanged;</span>
+<span class="nc" id="L43">    }</span>
+
+
+    public void tabDataChanged(org.apache.pivot.wtk.TabPane arg0, org.apache.pivot.wtk.Component arg1, java.lang.Object arg2) {
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        if (tabDataChanged != null) {</span>
+<span class="nc" id="L48">            tabDataChanged.call(arg0, arg1, arg2);</span>
+        }
+<span class="nc" id="L50">    }</span>
+
+    public void tooltipTextChanged(org.apache.pivot.wtk.TabPane arg0, org.apache.pivot.wtk.Component arg1, java.lang.String arg2) {
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        if (tooltipTextChanged != null) {</span>
+<span class="nc" id="L54">            tooltipTextChanged.call(arg0, arg1, arg2);</span>
+        }
+<span class="nc" id="L56">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

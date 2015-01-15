@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractUIThreadManager.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-groovy</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core.threading</a> &gt; <span class="el_source">AbstractUIThreadManager.java</span></div><h1>AbstractUIThreadManager.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core.threading;
+
+import griffon.core.ExecutorServiceManager;
+import griffon.core.GriffonExceptionHandler;
+import griffon.core.threading.UIThreadManager;
+import griffon.exceptions.GriffonException;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="fc" id="L39">public abstract class AbstractUIThreadManager implements UIThreadManager {</span>
+    protected static final String ERROR_RUNNABLE_NULL = &quot;Argument 'runnable' must not be bull&quot;;
+    protected static final String ERROR_CALLABLE_NULL = &quot;Argument 'callable' must not be null&quot;;
+<span class="fc" id="L42">    private static final Thread.UncaughtExceptionHandler UNCAUGHT_EXCEPTION_HANDLER = new GriffonExceptionHandler();</span>
+
+    private ExecutorServiceManager executorServiceManager;
+
+    @Inject @Named(&quot;defaultExecutorService&quot;)
+    private ExecutorService executorService;
+
+    @Inject
+    public void setExecutorServiceManager(@Nonnull ExecutorServiceManager executorServiceManager) {
+<span class="fc" id="L51">        requireNonNull(executorServiceManager, &quot;Argument 'executorServiceManager' must not be bull&quot;);</span>
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">        if (this.executorServiceManager != null) {</span>
+<span class="nc" id="L53">            this.executorServiceManager.remove(executorService);</span>
+        }
+<span class="fc" id="L55">        this.executorServiceManager = executorServiceManager;</span>
+<span class="fc" id="L56">        this.executorServiceManager.add(executorService);</span>
+<span class="fc" id="L57">    }</span>
+
+    /**
+     * Executes a code block as a Future on an ExecutorService.
+     *
+     * @param callable a code block to be executed
+     * @return a Future that contains the result of the execution
+     */
+    @Nonnull
+    public &lt;R&gt; Future&lt;R&gt; runFuture(@Nonnull Callable&lt;R&gt; callable) {
+<span class="nc" id="L67">        requireNonNull(callable, ERROR_CALLABLE_NULL);</span>
+<span class="nc" id="L68">        return runFuture(executorService, callable);</span>
+    }
+
+    /**
+     * Executes a code block as a Future on an ExecutorService.
+     *
+     * @param executorService the ExecutorService to use. Will use the default ExecutorService if null.
+     * @param callable        a code block to be executed
+     * @return a Future that contains the result of the execution
+     */
+    @Nonnull
+    public &lt;R&gt; Future&lt;R&gt; runFuture(@Nonnull ExecutorService executorService, @Nonnull Callable&lt;R&gt; callable) {
+<span class="nc" id="L80">        requireNonNull(executorService, &quot;Argument 'executorService' must not be null&quot;);</span>
+<span class="nc" id="L81">        requireNonNull(callable, ERROR_CALLABLE_NULL);</span>
+<span class="nc" id="L82">        return executorService.submit(callable);</span>
+    }
+
+    public void runOutsideUI(@Nonnull final Runnable runnable) {
+<span class="fc" id="L86">        requireNonNull(runnable, ERROR_RUNNABLE_NULL);</span>
+<span class="pc bpc" id="L87" title="1 of 2 branches missed.">        if (!isUIThread()) {</span>
+<span class="fc" id="L88">            runnable.run();</span>
+        } else {
+<span class="nc" id="L90">            executorService.submit(new Runnable() {</span>
+                public void run() {
+                    try {
+<span class="nc" id="L93">                        runnable.run();</span>
+<span class="nc" id="L94">                    } catch (Throwable throwable) {</span>
+<span class="nc" id="L95">                        UNCAUGHT_EXCEPTION_HANDLER.uncaughtException(Thread.currentThread(), throwable);</span>
+<span class="nc" id="L96">                    }</span>
+<span class="nc" id="L97">                }</span>
+            });
+        }
+<span class="fc" id="L100">    }</span>
+
+    @Nullable
+    @Override
+    public &lt;R&gt; R runInsideUISync(@Nonnull Callable&lt;R&gt; callable) {
+<span class="nc" id="L105">        requireNonNull(callable, ERROR_CALLABLE_NULL);</span>
+<span class="nc" id="L106">        FutureTask&lt;R&gt; ft = new FutureTask&lt;&gt;(callable);</span>
+<span class="nc" id="L107">        runInsideUISync(ft);</span>
+        try {
+<span class="nc" id="L109">            return ft.get();</span>
+<span class="nc" id="L110">        } catch (InterruptedException | ExecutionException e) {</span>
+<span class="nc" id="L111">            throw new GriffonException(&quot;An error occurred while executing a task inside the UI thread&quot;, e);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

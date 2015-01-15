@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TypeProviderProcessor.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-core-compile</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.compile.core.processor.type</a> &gt; <span class="el_source">TypeProviderProcessor.java</span></div><h1>TypeProviderProcessor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.compile.core.processor.type;
+
+import griffon.metadata.TypeProviderFor;
+import org.kordamp.jipsy.processor.AbstractSpiProcessor;
+import org.kordamp.jipsy.processor.CheckResult;
+import org.kordamp.jipsy.processor.LogLocation;
+import org.kordamp.jipsy.processor.Options;
+import org.kordamp.jipsy.processor.Persistence;
+
+import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedOptions;
+import javax.lang.model.SourceVersion;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
+import javax.tools.Diagnostic.Kind;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+
+/**
+ * @author Andres Almiray
+ * @since 2.1.0
+ */
+@SupportedAnnotationTypes(&quot;*&quot;)
+@SupportedOptions({Options.SPI_DIR_OPTION, Options.SPI_LOG_OPTION, Options.SPI_VERBOSE_OPTION, Options.SPI_DISABLED_OPTION})
+<span class="nc" id="L47">public class TypeProviderProcessor extends AbstractSpiProcessor {</span>
+<span class="nc" id="L48">    public static final String NAME = TypeProviderProcessor.class.getName()</span>
+<span class="nc" id="L49">        + &quot; (&quot; + TypeProviderProcessor.class.getPackage().getImplementationVersion() + &quot;)&quot;;</span>
+
+    private static final int MAX_SUPPORTED_VERSION = 8;
+
+    private Persistence persistence;
+    private TypeCollector data;
+
+    @Override
+    protected Class&lt;? extends Annotation&gt; getAnnotationClass() {
+<span class="nc" id="L58">        return TypeProviderFor.class;</span>
+    }
+
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+<span class="nc" id="L63">        SourceVersion[] svs = SourceVersion.values();</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        for (int i = svs.length - 1; i &gt;= 0; i--) {</span>
+<span class="nc" id="L65">            String name = svs[i].name();</span>
+<span class="nc" id="L66">            Matcher m = RELEASE_PATTERN.matcher(name);</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">            if (m.matches()) {</span>
+<span class="nc" id="L68">                int release = Integer.parseInt(m.group(1));</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">                if (release &lt;= MAX_SUPPORTED_VERSION) return svs[i];</span>
+            }
+        }
+
+<span class="nc" id="L73">        return SourceVersion.RELEASE_6;</span>
+    }
+
+    @Override
+    protected void initialize() {
+<span class="nc" id="L78">        super.initialize();</span>
+
+<span class="nc" id="L80">        persistence = new TypePersistence(NAME, options.dir(), processingEnv.getFiler(), logger);</span>
+<span class="nc" id="L81">        data = new TypeCollector(persistence.getInitializer(), logger);</span>
+
+        // Initialize if possible
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        for (String typeName : persistence.tryFind()) {</span>
+<span class="nc" id="L85">            data.getType(typeName);</span>
+<span class="nc" id="L86">        }</span>
+<span class="nc" id="L87">        data.cache();</span>
+<span class="nc" id="L88">    }</span>
+
+    @Override
+    protected void writeData() {
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        if (data.isModified()) {</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">            if (data.types().isEmpty()) {</span>
+<span class="nc" id="L94">                logger.note(LogLocation.LOG_FILE, &quot;Writing output&quot;);</span>
+                try {
+<span class="nc" id="L96">                    persistence.delete();</span>
+<span class="nc" id="L97">                } catch (IOException e) {</span>
+<span class="nc" id="L98">                    logger.warning(LogLocation.LOG_FILE, &quot;An error occurred while deleting data file&quot;);</span>
+<span class="nc" id="L99">                }</span>
+            } else {
+<span class="nc" id="L101">                logger.note(LogLocation.LOG_FILE, &quot;Writing output&quot;);</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">                for (Type type : data.types()) {</span>
+                    try {
+<span class="nc" id="L104">                        persistence.write(type.getName(), type.toProviderNamesList());</span>
+<span class="nc" id="L105">                    } catch (IOException e) {</span>
+<span class="nc" id="L106">                        processingEnv.getMessager().printMessage(Kind.ERROR, e.getMessage());</span>
+<span class="nc" id="L107">                    }</span>
+<span class="nc" id="L108">                }</span>
+<span class="nc" id="L109">                persistence.writeLog();</span>
+            }
+        }
+<span class="nc" id="L112">    }</span>
+
+    @Override
+    protected void removeStaleData(RoundEnvironment roundEnv) {
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        for (Element e : roundEnv.getRootElements()) {</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">            if (e instanceof TypeElement) {</span>
+<span class="nc" id="L118">                TypeElement currentClass = (TypeElement) e;</span>
+<span class="nc" id="L119">                data.removeProvider(createProperQualifiedName(currentClass));</span>
+            }
+<span class="nc" id="L121">        }</span>
+<span class="nc" id="L122">    }</span>
+
+    @Override
+    protected void handleElement(Element e) {
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        if (!(e instanceof TypeElement)) {</span>
+<span class="nc" id="L127">            return;</span>
+        }
+
+<span class="nc" id="L130">        TypeElement currentClass = (TypeElement) e;</span>
+
+<span class="nc" id="L132">        CheckResult checkResult = checkCurrentClass(currentClass);</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">        if (checkResult.isError()) {</span>
+<span class="nc" id="L134">            reportError(currentClass, checkResult);</span>
+<span class="nc" id="L135">            return;</span>
+        }
+
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        for (TypeElement type : findTypes(currentClass)) {</span>
+<span class="nc" id="L139">            CheckResult implementationResult = isImplementation(currentClass, type);</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">            if (implementationResult.isError()) {</span>
+<span class="nc" id="L141">                reportError(currentClass, implementationResult);</span>
+            } else {
+<span class="nc" id="L143">                register(createProperQualifiedName(type), currentClass);</span>
+            }
+<span class="nc" id="L145">        }</span>
+<span class="nc" id="L146">    }</span>
+
+    private CheckResult checkCurrentClass(TypeElement currentClass) {
+<span class="nc bnc" id="L149" title="All 4 branches missed.">        if (currentClass.getKind() != ElementKind.CLASS || currentClass.getKind() != ElementKind.INTERFACE) {</span>
+<span class="nc" id="L150">            return CheckResult.valueOf(&quot;is not a class nor an interface&quot;);</span>
+        }
+
+<span class="nc bnc" id="L153" title="All 2 branches missed.">        if (!currentClass.getModifiers().contains(Modifier.PUBLIC)) {</span>
+<span class="nc" id="L154">            return CheckResult.valueOf(&quot;is not public&quot;);</span>
+        }
+
+<span class="nc" id="L157">        return CheckResult.OK;</span>
+    }
+
+    private List&lt;TypeElement&gt; findTypes(TypeElement classElement) {
+<span class="nc" id="L161">        List&lt;TypeElement&gt; types = new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        for (AnnotationMirror annotation : findAnnotationMirrors(classElement, getAnnotationClass().getName())) {</span>
+<span class="nc" id="L164">            types.add(toElement(findSingleValueMember(annotation, &quot;value&quot;)));</span>
+<span class="nc" id="L165">        }</span>
+
+<span class="nc" id="L167">        return types;</span>
+    }
+
+    private void register(String typeName, TypeElement provider) {
+<span class="nc" id="L171">        data.getType(typeName).addProvider(createProperQualifiedName(provider));</span>
+<span class="nc" id="L172">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

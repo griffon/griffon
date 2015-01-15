@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PropertyEditorASTTransformation.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-groovy-compile</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.compile.core.ast.editor</a> &gt; <span class="el_source">PropertyEditorASTTransformation.java</span></div><h1>PropertyEditorASTTransformation.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.compile.core.ast.editor;
+
+import griffon.metadata.PropertyEditorFor;
+import org.codehaus.griffon.compile.core.processor.editor.PropertyEditorCollector;
+import org.codehaus.groovy.ast.AnnotationNode;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.ModuleNode;
+import org.codehaus.groovy.ast.expr.ClassExpression;
+import org.codehaus.groovy.ast.expr.Expression;
+import org.codehaus.groovy.control.CompilePhase;
+import org.codehaus.groovy.transform.ASTTransformation;
+import org.codehaus.groovy.transform.GroovyASTTransformation;
+import org.kordamp.gipsy.transform.GipsyASTTransformation;
+import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.processor.CheckResult;
+import org.kordamp.jipsy.processor.LogLocation;
+import org.kordamp.jipsy.processor.Persistence;
+
+import java.beans.PropertyEditor;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.lang.reflect.Modifier.isAbstract;
+import static java.lang.reflect.Modifier.isPublic;
+
+/**
+ * @author Andres Almiray
+ */
+@ServiceProviderFor(ASTTransformation.class)
+@GroovyASTTransformation(phase = CompilePhase.CLASS_GENERATION)
+<span class="fc" id="L48">public class PropertyEditorASTTransformation extends GipsyASTTransformation {</span>
+<span class="fc" id="L49">    public static final String NAME = PropertyEditorASTTransformation.class.getName()</span>
+<span class="fc" id="L50">        + &quot; (&quot; + PropertyEditorASTTransformation.class.getPackage().getImplementationVersion() + &quot;)&quot;;</span>
+
+<span class="fc" id="L52">    private static final ClassNode PROPERTY_EDITOR_FOR_TYPE = makeClassSafe(PropertyEditorFor.class);</span>
+<span class="fc" id="L53">    private static final ClassNode PROPERTY_EDITOR_TYPE = makeClassSafe(PropertyEditor.class);</span>
+
+    private Persistence persistence;
+    private PropertyEditorCollector data;
+
+    @Override
+    protected ClassNode getAnnotationClassNode() {
+<span class="fc" id="L60">        return PROPERTY_EDITOR_FOR_TYPE;</span>
+    }
+
+    @Override
+    protected void initialize(ModuleNode moduleNode) {
+<span class="fc" id="L65">        super.initialize(moduleNode);</span>
+
+<span class="fc" id="L67">        File outputDir = moduleNode.getContext().getConfiguration().getTargetDirectory();</span>
+<span class="fc" id="L68">        persistence = new PropertyEditorPersistence(NAME, options.dir(), outputDir, logger);</span>
+<span class="fc" id="L69">        data = new PropertyEditorCollector(persistence.getInitializer(), logger);</span>
+<span class="fc" id="L70">        data.load();</span>
+<span class="fc" id="L71">    }</span>
+
+    @Override
+    protected void removeStaleData(ClassNode classNode, ModuleNode moduleNode) {
+<span class="nc" id="L75">        data.removeEditor(classNode.getName());</span>
+<span class="nc" id="L76">    }</span>
+
+    protected void handleAnnotations(ClassNode classNode, List&lt;AnnotationNode&gt; annotations, ModuleNode moduleNode) {
+<span class="nc" id="L79">        CheckResult checkResult = checkCurrentClass(classNode);</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        if (checkResult.isError()) {</span>
+<span class="nc" id="L81">            addError(checkResult.getMessage(), classNode, moduleNode.getContext());</span>
+<span class="nc" id="L82">            return;</span>
+        }
+
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        for (ClassNode type : findTypes(annotations)) {</span>
+<span class="nc" id="L86">            CheckResult implementationResult = isImplementation(classNode, PROPERTY_EDITOR_TYPE);</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">            if (implementationResult.isError()) {</span>
+<span class="nc" id="L88">                addError(implementationResult.getMessage(), classNode, moduleNode.getContext());</span>
+            } else {
+<span class="nc" id="L90">                register(type.getName(), classNode);</span>
+            }
+<span class="nc" id="L92">        }</span>
+<span class="nc" id="L93">    }</span>
+
+    @Override
+    protected void writeData() {
+        // if (data.isModified()) {
+<span class="nc" id="L98">            String content = data.toList();</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">            if (content.length() &gt; 0) {</span>
+<span class="nc" id="L100">                logger.note(LogLocation.LOG_FILE, &quot;Writing output&quot;);</span>
+                try {
+<span class="nc" id="L102">                    persistence.write(PropertyEditor.class.getName(), content);</span>
+<span class="nc" id="L103">                } catch (IOException ioe) {</span>
+                    // TODO print out error
+<span class="nc" id="L105">                }</span>
+<span class="nc" id="L106">                persistence.writeLog();</span>
+            } else {
+<span class="nc" id="L108">                logger.note(LogLocation.LOG_FILE, &quot;Writing output&quot;);</span>
+                try {
+<span class="nc" id="L110">                    persistence.delete();</span>
+<span class="nc" id="L111">                } catch (IOException e) {</span>
+<span class="nc" id="L112">                    logger.warning(LogLocation.LOG_FILE, &quot;An error occurred while deleting data file&quot;);</span>
+<span class="nc" id="L113">                }</span>
+            }
+        // }
+<span class="nc" id="L116">    }</span>
+
+    private CheckResult checkCurrentClass(ClassNode currentClass) {
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        if (currentClass.isInterface()) {</span>
+<span class="nc" id="L120">            return CheckResult.valueOf(&quot;is not a class&quot;);</span>
+        }
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        if (!isPublic(currentClass.getModifiers())) {</span>
+<span class="nc" id="L123">            return CheckResult.valueOf(&quot;is not a public class&quot;);</span>
+        }
+
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        if (isAbstract(currentClass.getModifiers())) {</span>
+<span class="nc" id="L127">            return CheckResult.valueOf(&quot;is an abstract class&quot;);</span>
+        }
+
+<span class="nc bnc" id="L130" title="All 2 branches missed.">        if (!hasNoArgsConstructor(currentClass)) {</span>
+<span class="nc" id="L131">            return CheckResult.valueOf(&quot;has no public no-args constructor&quot;);</span>
+        }
+
+<span class="nc" id="L134">        return CheckResult.OK;</span>
+    }
+
+    private List&lt;ClassNode&gt; findTypes(List&lt;AnnotationNode&gt; annotations) {
+<span class="nc" id="L138">        List&lt;ClassNode&gt; types = new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L140" title="All 2 branches missed.">        for (AnnotationNode annotation : annotations) {</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">            for (Expression expr : findCollectionValueMember(annotation, &quot;value&quot;)) {</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">                if (expr instanceof ClassExpression) {</span>
+<span class="nc" id="L143">                    types.add(((ClassExpression) expr).getType());</span>
+                }
+<span class="nc" id="L145">            }</span>
+<span class="nc" id="L146">        }</span>
+
+<span class="nc" id="L148">        return types;</span>
+    }
+
+    private void register(String type, ClassNode editor) {
+<span class="nc" id="L152">        data.getPropertyEditor(type, editor.getName());</span>
+<span class="nc" id="L153">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

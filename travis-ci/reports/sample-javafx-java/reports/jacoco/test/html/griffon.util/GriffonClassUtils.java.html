@@ -1,0 +1,2614 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GriffonClassUtils.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-java</a> &gt; <a href="index.source.html" class="el_package">griffon.util</a> &gt; <span class="el_source">GriffonClassUtils.java</span></div><h1>GriffonClassUtils.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.util;
+
+import griffon.core.Observable;
+import griffon.core.Vetoable;
+import griffon.core.artifact.GriffonArtifact;
+import griffon.core.artifact.GriffonMvcArtifact;
+import griffon.core.event.EventPublisher;
+import griffon.core.i18n.MessageSource;
+import griffon.core.mvc.MVCHandler;
+import griffon.core.resources.ResourceHandler;
+import griffon.core.resources.ResourceResolver;
+import griffon.core.threading.ThreadingHandler;
+import griffon.exceptions.BeanInstantiationException;
+import griffon.exceptions.FieldException;
+import griffon.exceptions.InstanceMethodInvocationException;
+import griffon.exceptions.PropertyException;
+import griffon.exceptions.StaticMethodInvocationException;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.regex.Pattern;
+
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.MethodUtils.invokeExactMethod;
+import static griffon.util.MethodUtils.invokeMethod;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * Class containing utility methods for dealing with Griffon class artifacts.&lt;p&gt;
+ * Contains utility methods copied from commons-lang and commons-beanutils in order
+ * to reduce dependencies on external libraries.&lt;p&gt;
+ * &lt;p/&gt;
+ * &lt;b&gt;Contains code copied from commons-beanutils and commons-langs&lt;/b&gt;
+ *
+ * @author Graeme Rocher (Grails 0.1)
+ */
+<span class="nc" id="L70">public class GriffonClassUtils {</span>
+<span class="fc" id="L71">    public static final Class&lt;?&gt;[] EMPTY_CLASS_ARRAY = new Class&lt;?&gt;[0];</span>
+<span class="fc" id="L72">    public static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];</span>
+<span class="fc" id="L73">    public static final Object[] EMPTY_ARGS = EMPTY_OBJECT_ARRAY;</span>
+
+    private static final String PROPERTY_GET_PREFIX = &quot;get&quot;;
+    private static final String PROPERTY_IS_PREFIX = &quot;is&quot;;
+    private static final String PROPERTY_SET_PREFIX = &quot;set&quot;;
+<span class="fc" id="L78">    public static final Map&lt;Class&lt;?&gt;, Class&lt;?&gt;&gt; PRIMITIVE_TYPE_COMPATIBLE_CLASSES = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L79">    public static final Map&lt;String, String&gt; PRIMITIVE_TYPE_COMPATIBLE_TYPES = new LinkedHashMap&lt;&gt;();</span>
+
+<span class="fc" id="L81">    private static final Pattern EVENT_HANDLER_PATTERN = Pattern.compile(&quot;^on[A-Z][\\w]*$&quot;);</span>
+<span class="fc" id="L82">    private static final Pattern CONTRIBUTION_PATTERN = Pattern.compile(&quot;^with[A-Z][a-z0-9_]*[\\w]*$&quot;);</span>
+<span class="fc" id="L83">    private static final Pattern GETTER_PATTERN_1 = Pattern.compile(&quot;^get[A-Z][\\w]*$&quot;);</span>
+<span class="fc" id="L84">    private static final Pattern GETTER_PATTERN_2 = Pattern.compile(&quot;^is[A-Z][\\w]*$&quot;);</span>
+<span class="fc" id="L85">    private static final Pattern SETTER_PATTERN = Pattern.compile(&quot;^set[A-Z][\\w]*$&quot;);</span>
+<span class="fc" id="L86">    private static final Set&lt;MethodDescriptor&gt; BASIC_METHODS = new TreeSet&lt;&gt;();</span>
+<span class="fc" id="L87">    private static final Set&lt;MethodDescriptor&gt; ARTIFACT_METHODS = new TreeSet&lt;&gt;();</span>
+<span class="fc" id="L88">    private static final Set&lt;MethodDescriptor&gt; MVC_METHODS = new TreeSet&lt;&gt;();</span>
+<span class="fc" id="L89">    private static final Set&lt;MethodDescriptor&gt; THREADING_METHODS = new TreeSet&lt;&gt;();</span>
+<span class="fc" id="L90">    private static final Set&lt;MethodDescriptor&gt; EVENT_PUBLISHER_METHODS = new TreeSet&lt;&gt;();</span>
+<span class="fc" id="L91">    private static final Set&lt;MethodDescriptor&gt; OBSERVABLE_METHODS = new TreeSet&lt;&gt;();</span>
+<span class="fc" id="L92">    private static final Set&lt;MethodDescriptor&gt; RESOURCE_HANDLER_METHODS = new TreeSet&lt;&gt;();</span>
+<span class="fc" id="L93">    private static final Set&lt;MethodDescriptor&gt; MESSAGE_SOURCE_METHODS = new TreeSet&lt;&gt;();</span>
+<span class="fc" id="L94">    private static final Set&lt;MethodDescriptor&gt; RESOURCE_RESOLVER_METHODS = new TreeSet&lt;&gt;();</span>
+    private static final String ERROR_TYPE_NULL = &quot;Argument 'type' must not be null&quot;;
+    private static final String ERROR_METHOD_NAME_BLANK = &quot;Argument 'methodName' must not be blank&quot;;
+    private static final String ERROR_OBJECT_NULL = &quot;Argument 'object' must not be null&quot;;
+    private static final String ERROR_CLAZZ_NULL = &quot;Argument 'clazz' must not be null&quot;;
+    private static final String ERROR_DESCRIPTOR_NULL = &quot;Argument 'descriptor' must not be null&quot;;
+    private static final String ERROR_BEAN_NULL = &quot;Argument 'bean' must not be null&quot;;
+    private static final String ERROR_NAME_BLANK = &quot;Argument 'name' must not be blank&quot;;
+    private static final String ERROR_PROPERTIES_NULL = &quot;Argument 'properties' must not be null&quot;;
+    private static final String ERROR_FIELDS_NULL = &quot;Argument 'fields' must not be null&quot;;
+    private static final String ERROR_PROPERTY_NAME_BLANK = &quot;Argument 'propertyName' must not be blank&quot;;
+    private static final String ERROR_METHOD_NULL = &quot;Argument 'method' must not be null&quot;;
+
+    /**
+     * Just add two entries to the class compatibility map
+     *
+     * @param left
+     * @param right
+     */
+    private static void registerPrimitiveClassPair(Class&lt;?&gt; left, Class&lt;?&gt; right) {
+<span class="fc" id="L114">        PRIMITIVE_TYPE_COMPATIBLE_CLASSES.put(left, right);</span>
+<span class="fc" id="L115">        PRIMITIVE_TYPE_COMPATIBLE_CLASSES.put(right, left);</span>
+<span class="fc" id="L116">        PRIMITIVE_TYPE_COMPATIBLE_TYPES.put(left.getName(), right.getName());</span>
+<span class="fc" id="L117">        PRIMITIVE_TYPE_COMPATIBLE_TYPES.put(right.getName(), left.getName());</span>
+<span class="fc" id="L118">    }</span>
+
+    static {
+<span class="fc" id="L121">        registerPrimitiveClassPair(Boolean.class, boolean.class);</span>
+<span class="fc" id="L122">        registerPrimitiveClassPair(Integer.class, int.class);</span>
+<span class="fc" id="L123">        registerPrimitiveClassPair(Short.class, short.class);</span>
+<span class="fc" id="L124">        registerPrimitiveClassPair(Byte.class, byte.class);</span>
+<span class="fc" id="L125">        registerPrimitiveClassPair(Character.class, char.class);</span>
+<span class="fc" id="L126">        registerPrimitiveClassPair(Long.class, long.class);</span>
+<span class="fc" id="L127">        registerPrimitiveClassPair(Float.class, float.class);</span>
+<span class="fc" id="L128">        registerPrimitiveClassPair(Double.class, double.class);</span>
+
+<span class="fc bfc" id="L130" title="All 2 branches covered.">        for (Method method : Object.class.getMethods()) {</span>
+<span class="fc" id="L131">            MethodDescriptor md = MethodDescriptor.forMethod(method);</span>
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">            if (!BASIC_METHODS.contains(md)) {</span>
+<span class="fc" id="L133">                BASIC_METHODS.add(md);</span>
+            }
+        }
+
+        try {
+<span class="fc" id="L138">            Class groovyObjectClass = GriffonClassUtils.class.getClassLoader().loadClass(&quot;groovy.lang.GroovyObject&quot;);</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">            for (Method method : groovyObjectClass.getMethods()) {</span>
+<span class="fc" id="L140">                MethodDescriptor md = MethodDescriptor.forMethod(method, true);</span>
+<span class="pc bpc" id="L141" title="1 of 2 branches missed.">                if (!BASIC_METHODS.contains(md)) {</span>
+<span class="fc" id="L142">                    BASIC_METHODS.add(md);</span>
+                }
+            }
+<span class="nc" id="L145">        } catch (ClassNotFoundException cnfe) {</span>
+            // ignore
+<span class="fc" id="L147">        }</span>
+
+        try {
+<span class="fc" id="L150">            Class groovyObjectClass = GriffonClassUtils.class.getClassLoader().loadClass(&quot;groovy.lang.GroovyObjectSupport&quot;);</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">            for (Method method : groovyObjectClass.getMethods()) {</span>
+<span class="fc" id="L152">                MethodDescriptor md = MethodDescriptor.forMethod(method);</span>
+<span class="pc bpc" id="L153" title="1 of 2 branches missed.">                if (!BASIC_METHODS.contains(md)) {</span>
+<span class="nc" id="L154">                    BASIC_METHODS.add(md);</span>
+                }
+            }
+<span class="nc" id="L157">        } catch (ClassNotFoundException cnfe) {</span>
+            // ignore
+<span class="fc" id="L159">        }</span>
+
+<span class="fc bfc" id="L161" title="All 2 branches covered.">        for (Method method : GriffonArtifact.class.getMethods()) {</span>
+<span class="fc" id="L162">            MethodDescriptor md = MethodDescriptor.forMethod(method, true);</span>
+<span class="pc bpc" id="L163" title="1 of 2 branches missed.">            if (!ARTIFACT_METHODS.contains(md)) {</span>
+<span class="fc" id="L164">                ARTIFACT_METHODS.add(md);</span>
+            }
+        }
+
+        // MVC_METHODS.add(new MethodDescriptor(&quot;getMvcGroup&quot;));
+<span class="fc bfc" id="L169" title="All 2 branches covered.">        for (Method method : MVCHandler.class.getMethods()) {</span>
+<span class="fc" id="L170">            MethodDescriptor md = MethodDescriptor.forMethod(method, true);</span>
+<span class="pc bpc" id="L171" title="1 of 2 branches missed.">            if (!MVC_METHODS.contains(md)) {</span>
+<span class="fc" id="L172">                MVC_METHODS.add(md);</span>
+            }
+        }
+<span class="fc bfc" id="L175" title="All 2 branches covered.">        for (Method method : GriffonMvcArtifact.class.getMethods()) {</span>
+<span class="fc" id="L176">            MethodDescriptor md = MethodDescriptor.forMethod(method, true);</span>
+<span class="fc bfc" id="L177" title="All 2 branches covered.">            if (!MVC_METHODS.contains(md)) {</span>
+<span class="fc" id="L178">                MVC_METHODS.add(md);</span>
+            }
+        }
+
+        // GriffonView
+<span class="fc" id="L183">        MVC_METHODS.add(new MethodDescriptor(&quot;initUI&quot;));</span>
+        // GriffonController
+<span class="fc" id="L185">        MVC_METHODS.add(new MethodDescriptor(&quot;invokeAction&quot;, new Class&lt;?&gt;[]{String.class, Object[].class}));</span>
+<span class="fc" id="L186">        MVC_METHODS.add(new MethodDescriptor(&quot;invokeAction&quot;, new Class&lt;?&gt;[]{String.class, Object[].class}, Modifier.PUBLIC | Modifier.TRANSIENT));</span>
+
+<span class="fc bfc" id="L188" title="All 2 branches covered.">        for (Method method : ThreadingHandler.class.getMethods()) {</span>
+<span class="fc" id="L189">            MethodDescriptor md = MethodDescriptor.forMethod(method, true);</span>
+<span class="pc bpc" id="L190" title="1 of 2 branches missed.">            if (!THREADING_METHODS.contains(md)) {</span>
+<span class="fc" id="L191">                THREADING_METHODS.add(md);</span>
+            }
+        }
+        // Special case due to the usage of varargs
+        //THREADING_METHODS.add(new MethodDescriptor(&quot;runFuture&quot;, new Class&lt;?&gt;[]{Object[].class}));
+
+<span class="fc bfc" id="L197" title="All 2 branches covered.">        for (Method method : EventPublisher.class.getMethods()) {</span>
+<span class="fc" id="L198">            MethodDescriptor md = MethodDescriptor.forMethod(method, true);</span>
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">            if (!EVENT_PUBLISHER_METHODS.contains(md)) {</span>
+<span class="fc" id="L200">                EVENT_PUBLISHER_METHODS.add(md);</span>
+            }
+        }
+
+<span class="fc bfc" id="L204" title="All 2 branches covered.">        for (Method method : Observable.class.getMethods()) {</span>
+<span class="fc" id="L205">            MethodDescriptor md = MethodDescriptor.forMethod(method, true);</span>
+<span class="pc bpc" id="L206" title="1 of 2 branches missed.">            if (!OBSERVABLE_METHODS.contains(md)) {</span>
+<span class="fc" id="L207">                OBSERVABLE_METHODS.add(md);</span>
+            }
+        }
+<span class="fc bfc" id="L210" title="All 2 branches covered.">        for (Method method : Vetoable.class.getMethods()) {</span>
+<span class="fc" id="L211">            MethodDescriptor md = MethodDescriptor.forMethod(method, true);</span>
+<span class="fc bfc" id="L212" title="All 2 branches covered.">            if (!OBSERVABLE_METHODS.contains(md)) {</span>
+<span class="fc" id="L213">                OBSERVABLE_METHODS.add(md);</span>
+            }
+        }
+
+<span class="fc bfc" id="L217" title="All 2 branches covered.">        for (Method method : ResourceHandler.class.getMethods()) {</span>
+<span class="fc" id="L218">            MethodDescriptor md = MethodDescriptor.forMethod(method, true);</span>
+<span class="pc bpc" id="L219" title="1 of 2 branches missed.">            if (!RESOURCE_HANDLER_METHODS.contains(md)) {</span>
+<span class="fc" id="L220">                RESOURCE_HANDLER_METHODS.add(md);</span>
+            }
+        }
+
+<span class="fc bfc" id="L224" title="All 2 branches covered.">        for (Method method : MessageSource.class.getMethods()) {</span>
+<span class="fc" id="L225">            MethodDescriptor md = MethodDescriptor.forMethod(method, true);</span>
+<span class="pc bpc" id="L226" title="1 of 2 branches missed.">            if (!MESSAGE_SOURCE_METHODS.contains(md)) {</span>
+<span class="fc" id="L227">                MESSAGE_SOURCE_METHODS.add(md);</span>
+            }
+        }
+
+<span class="fc bfc" id="L231" title="All 2 branches covered.">        for (Method method : ResourceResolver.class.getMethods()) {</span>
+<span class="fc" id="L232">            MethodDescriptor md = MethodDescriptor.forMethod(method, true);</span>
+<span class="pc bpc" id="L233" title="1 of 2 branches missed.">            if (!RESOURCE_RESOLVER_METHODS.contains(md)) {</span>
+<span class="fc" id="L234">                RESOURCE_RESOLVER_METHODS.add(md);</span>
+            }
+        }
+    }
+
+    /**
+     * Checks that the specified condition is met. This method is designed
+     * primarily for doing parameter validation in methods and constructors,
+     * as demonstrated below:
+     * &lt;blockquote&gt;&lt;pre&gt;
+     * public Foo(int[] array) {
+     *     GriffonClassUtils.requireState(array.length &gt; 0);
+     * }
+     * &lt;/pre&gt;&lt;/blockquote&gt;
+     *
+     * @param condition the condition to check
+     * @throws IllegalStateException if {@code condition} evaluates to false
+     */
+    public static void requireState(boolean condition) {
+<span class="nc bnc" id="L253" title="All 2 branches missed.">        if (!condition) {</span>
+<span class="nc" id="L254">            throw new IllegalStateException();</span>
+        }
+<span class="nc" id="L256">    }</span>
+
+    /**
+     * Checks that the specified condition is met and throws a customized
+     * {@link IllegalStateException} if it is. This method is designed primarily
+     * for doing parameter validation in methods and constructors with multiple
+     * parameters, as demonstrated below:
+     * &lt;blockquote&gt;&lt;pre&gt;
+     * public Foo(int[] array) {
+     *     GriffonClassUtils.requireState(array.length &gt; 0, &quot;array must not be empty&quot;);
+     * }
+     * &lt;/pre&gt;&lt;/blockquote&gt;
+     *
+     * @param condition the condition to check
+     * @param message   detail message to be used in the event that a {@code
+     *                  IllegalStateException} is thrown
+     * @throws IllegalStateException if {@code condition} evaluates to false
+     */
+    public static void requireState(boolean condition, String message) {
+<span class="pc bpc" id="L275" title="1 of 2 branches missed.">        if (!condition) {</span>
+<span class="nc" id="L276">            throw new IllegalStateException(message);</span>
+        }
+<span class="fc" id="L278">    }</span>
+
+    /**
+     * Finds out if the given string represents the name of an
+     * event handler by matching against the following pattern:
+     * &quot;^on[A-Z][\\w]*$&quot;&lt;p&gt;
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * isEventHandler(&quot;onBootstrapEnd&quot;) = true
+     * isEventHandler(&quot;mvcGroupInit&quot;)   = false
+     * isEventHandler(&quot;online&quot;)         = false
+     * &lt;/pre&gt;
+     *
+     * @param name the name of a possible event handler
+     * @return true if the name matches the given event handler
+     * pattern, false otherwise.
+     */
+    public static boolean isEventHandler(@Nonnull String name) {
+<span class="fc" id="L296">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="fc" id="L297">        return EVENT_HANDLER_PATTERN.matcher(name).matches();</span>
+    }
+
+    /**
+     * Finds out if the given Method represents an event handler
+     * by matching its name against the following pattern:
+     * &quot;^on[A-Z][\\w]*$&quot;&lt;p&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate Method reference
+     * isEventHandler(getMethod(&quot;onBootstrapEnd&quot;)) = true
+     * isEventHandler(getMethod(&quot;mvcGroupInit&quot;))   = false
+     * isEventHandler(getMethod(&quot;online&quot;))         = false
+     * &lt;/pre&gt;
+     *
+     * @param method a Method reference
+     * @return true if the method name matches the given event handler
+     * pattern, false otherwise.
+     */
+    public static boolean isEventHandler(@Nonnull Method method) {
+<span class="nc" id="L316">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="nc" id="L317">        return isEventHandler(MethodDescriptor.forMethod(method));</span>
+    }
+
+    /**
+     * Finds out if the given Method represents an event handler
+     * by matching its name against the following pattern:
+     * &quot;^on[A-Z][\\w]*$&quot;&lt;p&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isEventHandler(getMethod(&quot;onBootstrapEnd&quot;)) = true
+     * isEventHandler(getMethod(&quot;mvcGroupInit&quot;))   = false
+     * isEventHandler(getMethod(&quot;online&quot;))         = false
+     * &lt;/pre&gt;
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method name matches the given event handler
+     * pattern, false otherwise.
+     */
+    public static boolean isEventHandler(@Nonnull MethodDescriptor method) {
+<span class="fc" id="L336">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="pc bpc" id="L337" title="1 of 2 branches missed.">        return isInstanceMethod(method) &amp;&amp;</span>
+<span class="pc bpc" id="L338" title="1 of 2 branches missed.">            EVENT_HANDLER_PATTERN.matcher(method.getName()).matches();</span>
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs either to the
+     * {@code Object} class or the {@code GroovyObject} class.&lt;p&gt;
+     *
+     * @param method a Method reference
+     * @return true if the method belongs to {@code Object} or
+     * {@code GroovyObject}, false otherwise.
+     */
+    public static boolean isBasicMethod(@Nonnull Method method) {
+<span class="nc" id="L350">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="nc" id="L351">        return isBasicMethod(MethodDescriptor.forMethod(method));</span>
+    }
+
+    /**
+     * Finds out if the given string represents the name of a
+     * contribution method by matching against the following pattern:
+     * &quot;^with[A-Z][a-z0-9_]*[\w]*$&quot;&lt;p&gt;
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * isContributionMethod(&quot;withRest&quot;)     = true
+     * isContributionMethod(&quot;withMVCGroup&quot;) = false
+     * isContributionMethod(&quot;without&quot;)      = false
+     * &lt;/pre&gt;
+     *
+     * @param name the name of a possible contribution method
+     * @return true if the name matches the given contribution method
+     * pattern, false otherwise.
+     */
+    public static boolean isContributionMethod(@Nonnull String name) {
+<span class="nc" id="L370">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc" id="L371">        return CONTRIBUTION_PATTERN.matcher(name).matches();</span>
+    }
+
+    /**
+     * Finds out if the given Method represents a contribution method
+     * by matching its name against the following pattern:
+     * &quot;^with[A-Z][a-z0-9_]*[\w]*$&quot;&lt;p&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate Method reference
+     * isContributionMethod(getMethod(&quot;withRest&quot;))     = true
+     * isContributionMethod(getMethod(&quot;withMVCGroup&quot;)) = false
+     * isContributionMethod(getMethod(&quot;without&quot;))      = false
+     * &lt;/pre&gt;
+     *
+     * @param method a Method reference
+     * @return true if the method name matches the given contribution method
+     * pattern, false otherwise.
+     */
+    public static boolean isContributionMethod(@Nonnull Method method) {
+<span class="nc" id="L390">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="nc" id="L391">        return isContributionMethod(MethodDescriptor.forMethod(method));</span>
+    }
+
+    /**
+     * Finds out if the given Method represents a contribution method
+     * by matching its name against the following pattern:
+     * &quot;^with[A-Z][a-z0-9_]*[\w]*$&quot;&lt;p&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isContributionMethod(getMethod(&quot;withRest&quot;))     = true
+     * isContributionMethod(getMethod(&quot;withMVCGroup&quot;)) = false
+     * isContributionMethod(getMethod(&quot;without&quot;))      = false
+     * &lt;/pre&gt;
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method name matches the given contribution method
+     * pattern, false otherwise.
+     */
+    public static boolean isContributionMethod(@Nonnull MethodDescriptor method) {
+<span class="fc" id="L410">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="pc bpc" id="L411" title="1 of 2 branches missed.">        return isInstanceMethod(method) &amp;&amp;</span>
+<span class="pc bpc" id="L412" title="1 of 2 branches missed.">            CONTRIBUTION_PATTERN.matcher(method.getName()).matches();</span>
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} belongs either to the
+     * {@code Object} class or the {@code GroovyObject} class.&lt;p&gt;
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method belongs to {@code Object} or
+     * {@code GroovyObject}, false otherwise.
+     */
+    public static boolean isBasicMethod(@Nonnull MethodDescriptor method) {
+<span class="fc" id="L424">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="pc bpc" id="L425" title="1 of 4 branches missed.">        return isInstanceMethod(method) &amp;&amp; BASIC_METHODS.contains(method);</span>
+    }
+
+    /**
+     * Finds out if the given {@code Method} was injected by the Groovy
+     * compiler.&lt;p&gt;
+     * Performs a basic checks against the method's name, returning true
+     * if the name starts with either &quot;super$&quot; or &quot;this$&quot;.
+     *
+     * @param method a Method reference
+     * @return true if the method matches the given criteria, false otherwise.
+     */
+    public static boolean isGroovyInjectedMethod(@Nonnull Method method) {
+<span class="nc" id="L438">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="nc" id="L439">        return isGroovyInjectedMethod(MethodDescriptor.forMethod(method));</span>
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} was injected by the Groovy
+     * compiler.&lt;p&gt;
+     * Performs a basic checks against the method's name, returning true
+     * if the name starts with either &quot;super$&quot; or &quot;this$&quot;.
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method matches the given criteria, false otherwise.
+     */
+    public static boolean isGroovyInjectedMethod(@Nonnull MethodDescriptor method) {
+<span class="fc" id="L452">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="pc bpc" id="L453" title="1 of 2 branches missed.">        return isInstanceMethod(method) &amp;&amp;</span>
+<span class="pc bpc" id="L454" title="2 of 4 branches missed.">            (method.getName().startsWith(&quot;super$&quot;) || method.getName().startsWith(&quot;this$&quot;));</span>
+    }
+
+    /**
+     * Finds out if the given {@code Method} is a getter method.
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate Method reference
+     * isGetterMethod(getMethod(&quot;getFoo&quot;))       = true
+     * isGetterMethod(getMethod(&quot;getfoo&quot;) )      = false
+     * isGetterMethod(getMethod(&quot;mvcGroupInit&quot;)) = false
+     * isGetterMethod(getMethod(&quot;isFoo&quot;))        = true
+     * isGetterMethod(getMethod(&quot;island&quot;))       = false
+     * &lt;/pre&gt;
+     *
+     * @param method a Method reference
+     * @return true if the method is a getter, false otherwise.
+     */
+    public static boolean isGetterMethod(@Nonnull Method method) {
+<span class="nc" id="L473">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="nc" id="L474">        return isGetterMethod(MethodDescriptor.forMethod(method));</span>
+    }
+
+    /**
+     * Finds out if the given {@code MetaMethod} is a getter method.
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isGetterMethod(getMethod(&quot;getFoo&quot;))       = true
+     * isGetterMethod(getMethod(&quot;getfoo&quot;) )      = false
+     * isGetterMethod(getMethod(&quot;mvcGroupInit&quot;)) = false
+     * isGetterMethod(getMethod(&quot;isFoo&quot;))        = true
+     * isGetterMethod(getMethod(&quot;island&quot;))       = false
+     * &lt;/pre&gt;
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method is a getter, false otherwise.
+     */
+    public static boolean isGetterMethod(@Nonnull MethodDescriptor method) {
+<span class="fc" id="L493">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="pc bpc" id="L494" title="1 of 2 branches missed.">        return isInstanceMethod(method) &amp;&amp;</span>
+<span class="pc bpc" id="L495" title="2 of 4 branches missed.">            (GETTER_PATTERN_1.matcher(method.getName()).matches() || GETTER_PATTERN_2.matcher(method.getName()).matches());</span>
+    }
+
+    /**
+     * Finds out if the given {@code Method} is a setter method.
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate Method reference
+     * isGetterMethod(getMethod(&quot;setFoo&quot;))       = true
+     * isGetterMethod(getMethod(&quot;setfoo&quot;))       = false
+     * isGetterMethod(getMethod(&quot;mvcGroupInit&quot;)) = false
+     * &lt;/pre&gt;
+     *
+     * @param method a Method reference
+     * @return true if the method is a setter, false otherwise.
+     */
+    public static boolean isSetterMethod(@Nonnull Method method) {
+<span class="nc" id="L512">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="nc" id="L513">        return isSetterMethod(MethodDescriptor.forMethod(method));</span>
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} is a setter method.
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isGetterMethod(getMethod(&quot;setFoo&quot;))       = true
+     * isGetterMethod(getMethod(&quot;setfoo&quot;))       = false
+     * isGetterMethod(getMethod(&quot;mvcGroupInit&quot;)) = false
+     * &lt;/pre&gt;
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method is a setter, false otherwise.
+     */
+    public static boolean isSetterMethod(@Nonnull MethodDescriptor method) {
+<span class="fc" id="L530">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="pc bpc" id="L531" title="1 of 4 branches missed.">        return isInstanceMethod(method) &amp;&amp; SETTER_PATTERN.matcher(method.getName()).matches();</span>
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined Artifact methods by convention.
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate Method reference
+     * isArtifactMethod(getMethod(&quot;newInstance&quot;))    = true
+     * isArtifactMethod(getMethod(&quot;griffonDestroy&quot;)) = false
+     * isArtifactMethod(getMethod(&quot;foo&quot;))            = false
+     * &lt;/pre&gt;
+     *
+     * @param method a Method reference
+     * @return true if the method is an Artifact method, false otherwise.
+     */
+    public static boolean isArtifactMethod(@Nonnull Method method) {
+<span class="nc" id="L549">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="nc" id="L550">        return isArtifactMethod(MethodDescriptor.forMethod(method));</span>
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} belongs to the set of
+     * predefined Artifact methods by convention.
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isArtifactMethod(getMethod(&quot;newInstance&quot;))    = true
+     * isArtifactMethod(getMethod(&quot;griffonDestroy&quot;)) = false
+     * isArtifactMethod(getMethod(&quot;foo&quot;))            = false
+     * &lt;/pre&gt;
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method is an Artifact method, false otherwise.
+     */
+    public static boolean isArtifactMethod(@Nonnull MethodDescriptor method) {
+<span class="fc" id="L568">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="pc bpc" id="L569" title="1 of 2 branches missed.">        return isInstanceMethod(method) &amp;&amp;</span>
+<span class="fc bfc" id="L570" title="All 2 branches covered.">            ARTIFACT_METHODS.contains(method);</span>
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined MVC methods by convention.
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate Method reference
+     * isMvcMethod(getMethod(&quot;mvcGroupInit&quot;))    = true
+     * isMvcMethod(getMethod(&quot;mvcGroupDestroy&quot;)) = true
+     * isMvcMethod(getMethod(&quot;foo&quot;))             = false
+     * &lt;/pre&gt;
+     *
+     * @param method a Method reference
+     * @return true if the method is an MVC method, false otherwise.
+     */
+    public static boolean isMvcMethod(@Nonnull Method method) {
+<span class="nc" id="L588">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="nc" id="L589">        return isMvcMethod(MethodDescriptor.forMethod(method));</span>
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} belongs to the set of
+     * predefined MVC methods by convention.
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isMvcMethod(getMethod(&quot;mvcGroupInit&quot;))    = true
+     * isMvcMethod(getMethod(&quot;mvcGroupDestroy&quot;)) = true
+     * isMvcMethod(getMethod(&quot;foo&quot;))             = false
+     * &lt;/pre&gt;
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method is an MVC method, false otherwise.
+     */
+    public static boolean isMvcMethod(@Nonnull MethodDescriptor method) {
+<span class="fc" id="L607">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="pc bpc" id="L608" title="1 of 2 branches missed.">        return isInstanceMethod(method) &amp;&amp;</span>
+<span class="fc bfc" id="L609" title="All 2 branches covered.">            MVC_METHODS.contains(method);</span>
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined threading methods by convention.
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate Method reference
+     * isThreadingMethod(getMethod(&quot;execOutsideUI&quot;))    = true
+     * isThreadingMethod(getMethod(&quot;doLater&quot;))          = true
+     * isThreadingMethod(getMethod(&quot;foo&quot;))              = false
+     * &lt;/pre&gt;
+     *
+     * @param method a Method reference
+     * @return true if the method is a threading method, false otherwise.
+     */
+    public static boolean isThreadingMethod(@Nonnull Method method) {
+<span class="nc" id="L627">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="nc" id="L628">        return isThreadingMethod(MethodDescriptor.forMethod(method));</span>
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} belongs to the set of
+     * predefined threading methods by convention.
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isThreadingMethod(getMethod(&quot;execOutsideUI&quot;))    = true
+     * isThreadingMethod(getMethod(&quot;doLater&quot;))          = true
+     * isThreadingMethod(getMethod(&quot;foo&quot;))              = false
+     * &lt;/pre&gt;
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method is a threading method, false otherwise.
+     */
+    public static boolean isThreadingMethod(@Nonnull MethodDescriptor method) {
+<span class="fc" id="L646">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="pc bpc" id="L647" title="1 of 2 branches missed.">        return isInstanceMethod(method) &amp;&amp;</span>
+<span class="fc bfc" id="L648" title="All 2 branches covered.">            THREADING_METHODS.contains(method);</span>
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined event publisher methods by convention.
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate Method reference
+     * isEventPublisherMethod(getMethod(&quot;addEventPublisher&quot;))  = true
+     * isEventPublisherMethod(getMethod(&quot;publishEvent&quot;))       = true
+     * isEventPublisherMethod(getMethod(&quot;foo&quot;))                = false
+     * &lt;/pre&gt;
+     *
+     * @param method a Method reference
+     * @return true if the method is an @EventPublisher method, false otherwise.
+     */
+    public static boolean isEventPublisherMethod(@Nonnull Method method) {
+<span class="nc" id="L666">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="nc" id="L667">        return isEventPublisherMethod(MethodDescriptor.forMethod(method));</span>
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} belongs to the set of
+     * predefined event publisher methods by convention.
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isEventPublisherMethod(getMethod(&quot;addEventPublisher&quot;))  = true
+     * isEventPublisherMethod(getMethod(&quot;publishEvent&quot;))       = true
+     * isEventPublisherMethod(getMethod(&quot;foo&quot;))                = false
+     * &lt;/pre&gt;
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method is an @EventPublisher method, false otherwise.
+     */
+    public static boolean isEventPublisherMethod(@Nonnull MethodDescriptor method) {
+<span class="fc" id="L685">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="pc bpc" id="L686" title="1 of 2 branches missed.">        return isInstanceMethod(method) &amp;&amp;</span>
+<span class="pc bpc" id="L687" title="1 of 2 branches missed.">            EVENT_PUBLISHER_METHODS.contains(method);</span>
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined observable methods by convention.
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate Method reference
+     * isObservableMethod(getMethod(&quot;addPropertyChangeListener&quot;))  = true
+     * isObservableMethod(getMethod(&quot;getPropertyChangeListeners&quot;)) = true
+     * isObservableMethod(getMethod(&quot;foo&quot;))                        = false
+     * &lt;/pre&gt;
+     *
+     * @param method a Method reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isObservableMethod(@Nonnull Method method) {
+<span class="nc" id="L705">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="nc" id="L706">        return isObservableMethod(MethodDescriptor.forMethod(method));</span>
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} belongs to the set of
+     * predefined observable methods by convention.
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isObservableMethod(getMethod(&quot;addPropertyChangeListener&quot;))  = true
+     * isObservableMethod(getMethod(&quot;getPropertyChangeListeners&quot;)) = true
+     * isObservableMethod(getMethod(&quot;foo&quot;))                        = false
+     * &lt;/pre&gt;
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isObservableMethod(@Nonnull MethodDescriptor method) {
+<span class="fc" id="L724">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="pc bpc" id="L725" title="1 of 2 branches missed.">        return isInstanceMethod(method) &amp;&amp;</span>
+<span class="pc bpc" id="L726" title="1 of 2 branches missed.">            OBSERVABLE_METHODS.contains(method);</span>
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined resources methods by convention.
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate Method reference
+     * isResourceHandlerMethod(getMethod(&quot;getResourceAsURL&quot;))    = true
+     * isResourceHandlerMethod(getMethod(&quot;getResourceAsStream&quot;)) = true
+     * isResourceHandlerMethod(getMethod(&quot;foo&quot;))                 = false
+     * &lt;/pre&gt;
+     *
+     * @param method a Method reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isResourceHandlerMethod(@Nonnull Method method) {
+<span class="nc" id="L744">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="nc" id="L745">        return isResourceHandlerMethod(MethodDescriptor.forMethod(method, true));</span>
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} belongs to the set of
+     * predefined resources methods by convention.
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isResourceHandlerMethod(getMethod(&quot;getResourceAsURL&quot;))    = true
+     * isResourceHandlerMethod(getMethod(&quot;getResourceAsStream&quot;)) = true
+     * isResourceHandlerMethod(getMethod(&quot;foo&quot;))                 = false
+     * &lt;/pre&gt;
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isResourceHandlerMethod(@Nonnull MethodDescriptor method) {
+<span class="fc" id="L763">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="pc bpc" id="L764" title="1 of 2 branches missed.">        return isInstanceMethod(method) &amp;&amp;</span>
+<span class="pc bpc" id="L765" title="1 of 2 branches missed.">            RESOURCE_HANDLER_METHODS.contains(method);</span>
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined message source methods by convention.
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate Method reference
+     * isMessageSourceMethod(getMethod(&quot;getMessage&quot;))    = true
+     * isMessageSourceMethod(getMethod(&quot;foo&quot;))           = false
+     * &lt;/pre&gt;
+     *
+     * @param method a Method reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isMessageSourceMethod(@Nonnull Method method) {
+<span class="nc" id="L782">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="nc" id="L783">        return isMessageSourceMethod(MethodDescriptor.forMethod(method));</span>
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} belongs to the set of
+     * predefined message source methods by convention.
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isMessageSourceMethod(getMethod(&quot;getMessage&quot;))    = true
+     * isMessageSourceMethod(getMethod(&quot;foo&quot;))           = false
+     * &lt;/pre&gt;
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isMessageSourceMethod(@Nonnull MethodDescriptor method) {
+<span class="nc" id="L800">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="nc bnc" id="L801" title="All 2 branches missed.">        return isInstanceMethod(method) &amp;&amp;</span>
+<span class="nc bnc" id="L802" title="All 2 branches missed.">            MESSAGE_SOURCE_METHODS.contains(method);</span>
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined resource resolver methods by convention.
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate Method reference
+     * isResourceResolverMethod(getMethod(&quot;resolveResource&quot;)) = true
+     * isResourceResolverMethod(getMethod(&quot;foo&quot;))             = false
+     * &lt;/pre&gt;
+     *
+     * @param method a Method reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isResourceResolverMethod(@Nonnull Method method) {
+<span class="nc" id="L819">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="nc" id="L820">        return isResourceResolverMethod(MethodDescriptor.forMethod(method));</span>
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} belongs to the set of
+     * predefined resource resolver methods by convention.
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * // assuming getMethod() returns an appropriate MethodDescriptor reference
+     * isResourceResolverMethod(getMethod(&quot;resolveResource&quot;)) = true
+     * isResourceResolverMethod(getMethod(&quot;foo&quot;))             = false
+     * &lt;/pre&gt;
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isResourceResolverMethod(@Nonnull MethodDescriptor method) {
+<span class="nc" id="L837">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="nc bnc" id="L838" title="All 2 branches missed.">        return isInstanceMethod(method) &amp;&amp;</span>
+<span class="nc bnc" id="L839" title="All 2 branches missed.">            RESOURCE_RESOLVER_METHODS.contains(method);</span>
+    }
+
+    /**
+     * Finds out if the given {@code Method} is an instance method, i.e,
+     * it is public and non-static.
+     *
+     * @param method a Method reference
+     * @return true if the method is an instance method, false otherwise.
+     */
+    public static boolean isInstanceMethod(@Nonnull Method method) {
+<span class="nc" id="L850">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="nc" id="L851">        return isInstanceMethod(MethodDescriptor.forMethod(method));</span>
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} is an instance method, i.e,
+     * it is public and non-static.
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method is an instance method, false otherwise.
+     */
+    public static boolean isInstanceMethod(@Nonnull MethodDescriptor method) {
+<span class="fc" id="L862">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="fc" id="L863">        int modifiers = method.getModifiers();</span>
+<span class="pc bpc" id="L864" title="1 of 2 branches missed.">        return Modifier.isPublic(modifiers) &amp;&amp;</span>
+<span class="pc bpc" id="L865" title="1 of 2 branches missed.">            !Modifier.isAbstract(modifiers) &amp;&amp;</span>
+<span class="pc bpc" id="L866" title="1 of 2 branches missed.">            !Modifier.isStatic(modifiers);</span>
+    }
+
+    /**
+     * Finds out if the given {@code Method} matches the following criteria:&lt;ul&gt;
+     * &lt;li&gt;isInstanceMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isBasicMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isGroovyInjectedMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isThreadingMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isArtifactMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isMvcMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isServiceMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isEventPublisherMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isObservableMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isResourceHandlerMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isGetterMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isSetterMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isContributionMethod(method)&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param method a Method reference
+     * @return true if the method matches the given criteria, false otherwise.
+     */
+    public static boolean isPlainMethod(@Nonnull Method method) {
+<span class="fc" id="L890">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="fc" id="L891">        return isPlainMethod(MethodDescriptor.forMethod(method));</span>
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} matches the following criteria:&lt;ul&gt;
+     * &lt;li&gt;isInstanceMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isBasicMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isGroovyInjectedMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isThreadingMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isArtifactMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isMvcMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isServiceMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isEventPublisherMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isObservableMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isResourceHandlerMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isGetterMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isSetterMethod(method)&lt;/li&gt;
+     * &lt;li&gt;! isContributionMethod(method)&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method matches the given criteria, false otherwise.
+     */
+    public static boolean isPlainMethod(@Nonnull MethodDescriptor method) {
+<span class="fc" id="L915">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="pc bpc" id="L916" title="1 of 2 branches missed.">        return isInstanceMethod(method) &amp;&amp;</span>
+<span class="fc bfc" id="L917" title="All 2 branches covered.">            !isBasicMethod(method) &amp;&amp;</span>
+<span class="pc bpc" id="L918" title="1 of 2 branches missed.">            !isGroovyInjectedMethod(method) &amp;&amp;</span>
+<span class="fc bfc" id="L919" title="All 2 branches covered.">            !isThreadingMethod(method) &amp;&amp;</span>
+<span class="fc bfc" id="L920" title="All 2 branches covered.">            !isArtifactMethod(method) &amp;&amp;</span>
+<span class="fc bfc" id="L921" title="All 2 branches covered.">            !isMvcMethod(method) &amp;&amp;</span>
+<span class="pc bpc" id="L922" title="1 of 2 branches missed.">            !isEventPublisherMethod(method) &amp;&amp;</span>
+<span class="pc bpc" id="L923" title="1 of 2 branches missed.">            !isObservableMethod(method) &amp;&amp;</span>
+<span class="pc bpc" id="L924" title="1 of 2 branches missed.">            !isResourceHandlerMethod(method) &amp;&amp;</span>
+<span class="pc bpc" id="L925" title="1 of 2 branches missed.">            !isGetterMethod(method) &amp;&amp;</span>
+<span class="fc bfc" id="L926" title="All 2 branches covered.">            !isSetterMethod(method) &amp;&amp;</span>
+<span class="pc bpc" id="L927" title="1 of 2 branches missed.">            !isContributionMethod(method);</span>
+    }
+
+    /**
+     * Returns true if the specified property in the specified class is of the specified type
+     *
+     * @param clazz        The class which contains the property
+     * @param propertyName The property name
+     * @param type         The type to check
+     * @return A boolean value
+     */
+    public static boolean isPropertyOfType(Class&lt;?&gt; clazz, String propertyName, Class&lt;?&gt; type) {
+        try {
+<span class="nc" id="L940">            Class&lt;?&gt; propType = getPropertyType(clazz, propertyName);</span>
+<span class="nc bnc" id="L941" title="All 4 branches missed.">            return propType != null &amp;&amp; propType.equals(type);</span>
+<span class="nc" id="L942">        } catch (Exception e) {</span>
+<span class="nc" id="L943">            return false;</span>
+        }
+    }
+
+    /**
+     * Instantiates a Class, wrapping any exceptions in a RuntimeException.
+     *
+     * @param clazz target Class for which an object will be instantiated
+     * @return the newly instantiated object.
+     * @throws BeanInstantiationException if an error occurs when creating the object
+     */
+    @Nonnull
+    public static Object instantiateClass(@Nonnull Class&lt;?&gt; clazz) {
+<span class="nc" id="L956">        requireNonNull(clazz, ERROR_CLAZZ_NULL);</span>
+        try {
+<span class="nc" id="L958">            return clazz.newInstance();</span>
+<span class="nc" id="L959">        } catch (Exception e) {</span>
+<span class="nc" id="L960">            throw new BeanInstantiationException(&quot;Could not create an instance of &quot; + clazz, e);</span>
+        }
+    }
+
+    @Nonnull
+    public static Object instantiate(@Nonnull Class&lt;?&gt; clazz, @Nullable Object[] args) {
+<span class="nc" id="L966">        requireNonNull(clazz, ERROR_CLAZZ_NULL);</span>
+        try {
+<span class="nc bnc" id="L968" title="All 2 branches missed.">            if (args == null) {</span>
+<span class="nc" id="L969">                args = EMPTY_OBJECT_ARRAY;</span>
+            }
+<span class="nc" id="L971">            int arguments = args.length;</span>
+<span class="nc" id="L972">            Class&lt;?&gt;[] parameterTypes = new Class&lt;?&gt;[arguments];</span>
+<span class="nc bnc" id="L973" title="All 2 branches missed.">            for (int i = 0; i &lt; arguments; i++) {</span>
+<span class="nc" id="L974">                parameterTypes[i] = args[i].getClass();</span>
+            }
+<span class="nc" id="L976">            return clazz.getDeclaredConstructor(parameterTypes).newInstance(args);</span>
+<span class="nc" id="L977">        } catch (Exception e) {</span>
+<span class="nc" id="L978">            throw new BeanInstantiationException(&quot;Could not create an instance of &quot; + clazz, e);</span>
+        }
+    }
+
+    /**
+     * Returns the value of the specified property and type from an instance of the specified Griffon class
+     *
+     * @param clazz        The name of the class which contains the property
+     * @param propertyName The property name
+     * @param propertyType The property type
+     * @return The value of the property or null if none exists
+     */
+    @Nullable
+    public static Object getPropertyValueOfNewInstance(@Nullable Class&lt;?&gt; clazz, @Nullable String propertyName, Class&lt;?&gt; propertyType) {
+        // validate
+<span class="nc bnc" id="L993" title="All 4 branches missed.">        if (clazz == null || GriffonNameUtils.isBlank(propertyName)) {</span>
+<span class="nc" id="L994">            return null;</span>
+        }
+
+        Object instance;
+        try {
+<span class="nc" id="L999">            instance = instantiateClass(clazz);</span>
+<span class="nc" id="L1000">        } catch (BeanInstantiationException e) {</span>
+<span class="nc" id="L1001">            return null;</span>
+<span class="nc" id="L1002">        }</span>
+
+<span class="nc" id="L1004">        return getPropertyOrStaticPropertyOrFieldValue(instance, propertyName);</span>
+    }
+
+    /**
+     * Returns the value of the specified property and type from an instance of the specified Griffon class
+     *
+     * @param clazz        The name of the class which contains the property
+     * @param propertyName The property name
+     * @return The value of the property or null if none exists
+     */
+    public static Object getPropertyValueOfNewInstance(Class&lt;?&gt; clazz, String propertyName) {
+        // validate
+<span class="nc bnc" id="L1016" title="All 4 branches missed.">        if (clazz == null || GriffonNameUtils.isBlank(propertyName)) {</span>
+<span class="nc" id="L1017">            return null;</span>
+        }
+
+        Object instance;
+        try {
+<span class="nc" id="L1022">            instance = instantiateClass(clazz);</span>
+<span class="nc" id="L1023">        } catch (BeanInstantiationException e) {</span>
+<span class="nc" id="L1024">            return null;</span>
+<span class="nc" id="L1025">        }</span>
+
+<span class="nc" id="L1027">        return getPropertyOrStaticPropertyOrFieldValue(instance, propertyName);</span>
+    }
+
+    /**
+     * Retrieves a PropertyDescriptor for the specified instance and property value
+     *
+     * @param instance      The instance
+     * @param propertyValue The value of the property
+     * @return The PropertyDescriptor
+     */
+    public static PropertyDescriptor getPropertyDescriptorForValue(Object instance, Object propertyValue) {
+<span class="nc bnc" id="L1038" title="All 4 branches missed.">        if (instance == null || propertyValue == null)</span>
+<span class="nc" id="L1039">            return null;</span>
+
+<span class="nc" id="L1041">        PropertyDescriptor[] descriptors = getPropertyDescriptors(instance.getClass());</span>
+
+<span class="nc bnc" id="L1043" title="All 2 branches missed.">        for (PropertyDescriptor pd : descriptors) {</span>
+<span class="nc bnc" id="L1044" title="All 2 branches missed.">            if (isAssignableOrConvertibleFrom(pd.getPropertyType(), propertyValue.getClass())) {</span>
+                Object value;
+                try {
+<span class="nc" id="L1047">                    value = getReadMethod(pd).invoke(instance, (Object[]) null);</span>
+<span class="nc" id="L1048">                } catch (Exception e) {</span>
+<span class="nc" id="L1049">                    throw new RuntimeException(&quot;Problem calling readMethod of &quot; + pd, e);</span>
+<span class="nc" id="L1050">                }</span>
+<span class="nc bnc" id="L1051" title="All 2 branches missed.">                if (propertyValue.equals(value))</span>
+<span class="nc" id="L1052">                    return pd;</span>
+            }
+        }
+<span class="nc" id="L1055">        return null;</span>
+    }
+
+    /**
+     * Returns the type of the given property contained within the specified class
+     *
+     * @param clazz        The class which contains the property
+     * @param propertyName The name of the property
+     * @return The property type or null if none exists
+     */
+    @Nullable
+    public static Class&lt;?&gt; getPropertyType(@Nullable Class&lt;?&gt; clazz, @Nullable String propertyName) {
+<span class="nc bnc" id="L1067" title="All 4 branches missed.">        if (clazz == null || GriffonNameUtils.isBlank(propertyName)) {</span>
+<span class="nc" id="L1068">            return null;</span>
+        }
+
+        try {
+<span class="nc" id="L1072">            PropertyDescriptor desc = getPropertyDescriptor(clazz, propertyName);</span>
+<span class="nc bnc" id="L1073" title="All 2 branches missed.">            if (desc != null) {</span>
+<span class="nc" id="L1074">                return desc.getPropertyType();</span>
+            } else {
+<span class="nc" id="L1076">                return null;</span>
+            }
+<span class="nc" id="L1078">        } catch (Exception e) {</span>
+            // if there are any errors in instantiating just return null for the moment
+<span class="nc" id="L1080">            return null;</span>
+        }
+    }
+
+    /**
+     * Retrieves all the properties of the given class for the given type
+     *
+     * @param clazz        The class to retrieve the properties from
+     * @param propertyType The type of the properties you wish to retrieve
+     * @return An array of PropertyDescriptor instances
+     */
+    @Nonnull
+    public static PropertyDescriptor[] getPropertiesOfType(@Nullable Class&lt;?&gt; clazz, @Nullable Class&lt;?&gt; propertyType) {
+<span class="nc bnc" id="L1093" title="All 4 branches missed.">        if (clazz == null || propertyType == null) {</span>
+<span class="nc" id="L1094">            return new PropertyDescriptor[0];</span>
+        }
+
+<span class="nc" id="L1097">        Set&lt;PropertyDescriptor&gt; properties = new HashSet&lt;&gt;();</span>
+        try {
+<span class="nc" id="L1099">            PropertyDescriptor[] descriptors = getPropertyDescriptors(clazz);</span>
+
+<span class="nc bnc" id="L1101" title="All 2 branches missed.">            for (PropertyDescriptor descriptor : descriptors) {</span>
+<span class="nc" id="L1102">                Class&lt;?&gt; currentPropertyType = descriptor.getPropertyType();</span>
+<span class="nc bnc" id="L1103" title="All 2 branches missed.">                if (isTypeInstanceOfPropertyType(propertyType, currentPropertyType)) {</span>
+<span class="nc" id="L1104">                    properties.add(descriptor);</span>
+                }
+            }
+<span class="nc" id="L1107">        } catch (Exception e) {</span>
+            // if there are any errors in instantiating just return null for the moment
+<span class="nc" id="L1109">            return new PropertyDescriptor[0];</span>
+<span class="nc" id="L1110">        }</span>
+<span class="nc" id="L1111">        return properties.toArray(new PropertyDescriptor[properties.size()]);</span>
+    }
+
+    private static boolean isTypeInstanceOfPropertyType(Class&lt;?&gt; type, Class&lt;?&gt; propertyType) {
+<span class="nc bnc" id="L1115" title="All 4 branches missed.">        return propertyType.isAssignableFrom(type) &amp;&amp; !propertyType.equals(Object.class);</span>
+    }
+
+    /**
+     * Retrieves all the properties of the given class which are assignable to the given type
+     *
+     * @param clazz             The class to retrieve the properties from
+     * @param propertySuperType The type of the properties you wish to retrieve
+     * @return An array of PropertyDescriptor instances
+     */
+    public static PropertyDescriptor[] getPropertiesAssignableToType(Class&lt;?&gt; clazz, Class&lt;?&gt; propertySuperType) {
+<span class="nc bnc" id="L1126" title="All 4 branches missed.">        if (clazz == null || propertySuperType == null)</span>
+<span class="nc" id="L1127">            return new PropertyDescriptor[0];</span>
+
+<span class="nc" id="L1129">        Set&lt;PropertyDescriptor&gt; properties = new HashSet&lt;&gt;();</span>
+        try {
+<span class="nc" id="L1131">            PropertyDescriptor[] descriptors = getPropertyDescriptors(clazz);</span>
+
+<span class="nc bnc" id="L1133" title="All 2 branches missed.">            for (PropertyDescriptor descriptor : descriptors) {</span>
+<span class="nc bnc" id="L1134" title="All 2 branches missed.">                if (propertySuperType.isAssignableFrom(descriptor.getPropertyType())) {</span>
+<span class="nc" id="L1135">                    properties.add(descriptor);</span>
+                }
+            }
+<span class="nc" id="L1138">        } catch (Exception e) {</span>
+<span class="nc" id="L1139">            return new PropertyDescriptor[0];</span>
+<span class="nc" id="L1140">        }</span>
+<span class="nc" id="L1141">        return properties.toArray(new PropertyDescriptor[properties.size()]);</span>
+    }
+
+    /**
+     * Retrieves a property of the given class of the specified name and type
+     *
+     * @param clazz        The class to retrieve the property from
+     * @param propertyName The name of the property
+     * @param propertyType The type of the property
+     * @return A PropertyDescriptor instance or null if none exists
+     */
+    public static PropertyDescriptor getProperty(Class&lt;?&gt; clazz, String propertyName, Class&lt;?&gt; propertyType) {
+<span class="nc bnc" id="L1153" title="All 6 branches missed.">        if (clazz == null || propertyName == null || propertyType == null)</span>
+<span class="nc" id="L1154">            return null;</span>
+
+        try {
+<span class="nc" id="L1157">            PropertyDescriptor pd = getPropertyDescriptor(clazz, propertyName);</span>
+<span class="nc bnc" id="L1158" title="All 2 branches missed.">            if (pd.getPropertyType().equals(propertyType)) {</span>
+<span class="nc" id="L1159">                return pd;</span>
+            } else {
+<span class="nc" id="L1161">                return null;</span>
+            }
+<span class="nc" id="L1163">        } catch (Exception e) {</span>
+            // if there are any errors in instantiating just return null for the moment
+<span class="nc" id="L1165">            return null;</span>
+        }
+    }
+
+    /**
+     * Convenience method for converting a collection to an Object[]
+     *
+     * @param c The collection
+     * @return An object array
+     */
+    public static Object[] collectionToObjectArray(Collection&lt;?&gt; c) {
+<span class="nc bnc" id="L1176" title="All 2 branches missed.">        if (c == null) return EMPTY_OBJECT_ARRAY;</span>
+<span class="nc" id="L1177">        return c.toArray(new Object[c.size()]);</span>
+    }
+
+    /**
+     * Detect if left and right types are matching types. In particular,
+     * test if one is a primitive type and the other is the corresponding
+     * Java wrapper type. Primitive and wrapper classes may be passed to
+     * either arguments.
+     *
+     * @param leftType
+     * @param rightType
+     * @return true if one of the classes is a native type and the other the object representation
+     * of the same native type
+     */
+    public static boolean isMatchBetweenPrimitiveAndWrapperTypes(@Nonnull Class&lt;?&gt; leftType, @Nonnull Class&lt;?&gt; rightType) {
+<span class="nc" id="L1192">        requireNonNull(leftType, &quot;Left type is null!&quot;);</span>
+<span class="nc" id="L1193">        requireNonNull(rightType, &quot;Right type is null!&quot;);</span>
+<span class="nc" id="L1194">        return isMatchBetweenPrimitiveAndWrapperTypes(leftType.getName(), rightType.getName());</span>
+    }
+
+    /**
+     * Detect if left and right types are matching types. In particular,
+     * test if one is a primitive type and the other is the corresponding
+     * Java wrapper type. Primitive and wrapper classes may be passed to
+     * either arguments.
+     *
+     * @param leftType
+     * @param rightType
+     * @return true if one of the classes is a native type and the other the object representation
+     * of the same native type
+     */
+    public static boolean isMatchBetweenPrimitiveAndWrapperTypes(@Nonnull String leftType, @Nonnull String rightType) {
+<span class="nc" id="L1209">        requireNonBlank(leftType, &quot;Left type is null!&quot;);</span>
+<span class="nc" id="L1210">        requireNonBlank(rightType, &quot;Right type is null!&quot;);</span>
+<span class="nc" id="L1211">        String r = PRIMITIVE_TYPE_COMPATIBLE_TYPES.get(leftType);</span>
+<span class="nc bnc" id="L1212" title="All 4 branches missed.">        return r != null &amp;&amp; r.equals(rightType);</span>
+    }
+
+    @Nullable
+    @SuppressWarnings(&quot;ConstantConditions&quot;)
+    private static Method findDeclaredMethod(@Nonnull Class&lt;?&gt; clazz, @Nonnull String methodName, Class[] parameterTypes) {
+<span class="nc" id="L1218">        requireNonNull(clazz, ERROR_CLAZZ_NULL);</span>
+<span class="nc" id="L1219">        requireNonBlank(methodName, ERROR_METHOD_NAME_BLANK);</span>
+<span class="nc bnc" id="L1220" title="All 2 branches missed.">        while (clazz != null) {</span>
+            try {
+<span class="nc" id="L1222">                Method method = clazz.getDeclaredMethod(methodName, parameterTypes);</span>
+<span class="nc bnc" id="L1223" title="All 2 branches missed.">                if (method != null) return method;</span>
+<span class="nc" id="L1224">            } catch (NoSuchMethodException | SecurityException e) {</span>
+                // skip
+<span class="nc" id="L1226">            }</span>
+<span class="nc" id="L1227">            clazz = clazz.getSuperclass();</span>
+        }
+
+<span class="nc" id="L1230">        return null;</span>
+    }
+
+    /**
+     * &lt;p&gt;Work out if the specified property is readable and static. Java introspection does not
+     * recognize this concept of static properties but Groovy does. We also consider public static fields
+     * as static properties with no getters/setters&lt;/p&gt;
+     *
+     * @param clazz        The class to check for static property
+     * @param propertyName The property name
+     * @return true if the property with name propertyName has a static getter method
+     */
+    public static boolean isStaticProperty(@Nonnull Class&lt;?&gt; clazz, @Nonnull String propertyName) {
+<span class="nc" id="L1243">        requireNonNull(clazz, ERROR_CLAZZ_NULL);</span>
+<span class="nc" id="L1244">        requireNonBlank(propertyName, ERROR_PROPERTY_NAME_BLANK);</span>
+<span class="nc" id="L1245">        Method getter = findDeclaredMethod(clazz, getGetterName(propertyName), null);</span>
+<span class="nc bnc" id="L1246" title="All 2 branches missed.">        if (getter != null) {</span>
+<span class="nc" id="L1247">            return isPublicStatic(getter);</span>
+        } else {
+            try {
+<span class="nc" id="L1250">                Field f = clazz.getDeclaredField(propertyName);</span>
+<span class="nc bnc" id="L1251" title="All 2 branches missed.">                if (f != null) {</span>
+<span class="nc" id="L1252">                    return isPublicStatic(f);</span>
+                }
+<span class="nc" id="L1254">            } catch (NoSuchFieldException ignore) {</span>
+                //ignore
+<span class="nc" id="L1256">            }</span>
+        }
+
+<span class="nc" id="L1259">        return false;</span>
+    }
+
+    /**
+     * Determine whether the method is declared public static
+     *
+     * @param m the method to be tested
+     * @return True if the method is declared public static
+     */
+    public static boolean isPublicStatic(@Nonnull Method m) {
+<span class="nc" id="L1269">        requireNonNull(m, &quot;Argument 'method' must not be null&quot;);</span>
+<span class="nc" id="L1270">        final int modifiers = m.getModifiers();</span>
+<span class="nc bnc" id="L1271" title="All 4 branches missed.">        return Modifier.isPublic(modifiers) &amp;&amp; Modifier.isStatic(modifiers);</span>
+    }
+
+    /**
+     * Determine whether the field is declared public static
+     *
+     * @param f the field to be tested
+     * @return True if the field is declared public static
+     */
+    public static boolean isPublicStatic(@Nonnull Field f) {
+<span class="nc" id="L1281">        requireNonNull(f, &quot;Argument 'field' must not be null&quot;);</span>
+<span class="nc" id="L1282">        final int modifiers = f.getModifiers();</span>
+<span class="nc bnc" id="L1283" title="All 4 branches missed.">        return Modifier.isPublic(modifiers) &amp;&amp; Modifier.isStatic(modifiers);</span>
+    }
+
+    /**
+     * Calculate the name for a getter method to retrieve the specified property
+     *
+     * @param propertyName the name of the property
+     * @return The name for the getter method for this property, if it were to exist, i.e. getConstraints
+     */
+    @Nonnull
+    public static String getGetterName(@Nonnull String propertyName) {
+<span class="nc" id="L1294">        requireNonBlank(propertyName, ERROR_PROPERTY_NAME_BLANK);</span>
+<span class="nc" id="L1295">        return PROPERTY_GET_PREFIX + Character.toUpperCase(propertyName.charAt(0))</span>
+<span class="nc" id="L1296">            + propertyName.substring(1);</span>
+    }
+
+    /**
+     * &lt;p&gt;Get a static property value, which has a public static getter or is just a public static field.&lt;/p&gt;
+     *
+     * @param clazz The class to check for static property
+     * @param name  The property name
+     * @return The value if there is one, or null if unset OR there is no such property
+     */
+    @Nullable
+    public static Object getStaticPropertyValue(@Nonnull Class&lt;?&gt; clazz, @Nonnull String name) {
+<span class="nc" id="L1308">        requireNonNull(clazz, ERROR_CLAZZ_NULL);</span>
+<span class="nc" id="L1309">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc" id="L1310">        Method getter = findDeclaredMethod(clazz, getGetterName(name), null);</span>
+        try {
+<span class="nc bnc" id="L1312" title="All 2 branches missed.">            if (getter != null) {</span>
+<span class="nc" id="L1313">                return getter.invoke(null, (Object[]) null);</span>
+            } else {
+<span class="nc" id="L1315">                Field f = clazz.getDeclaredField(name);</span>
+<span class="nc bnc" id="L1316" title="All 2 branches missed.">                if (f != null) {</span>
+<span class="nc" id="L1317">                    return f.get(null);</span>
+                }
+            }
+<span class="nc" id="L1320">        } catch (Exception ignore) {</span>
+            //ignore
+<span class="nc" id="L1322">        }</span>
+<span class="nc" id="L1323">        return null;</span>
+    }
+
+    /**
+     * &lt;p&gt;Looks for a property of the reference instance with a given name.&lt;/p&gt;
+     * &lt;p&gt;If found its value is returned. We follow the Java bean conventions with augmentation for groovy support
+     * and static fields/properties. We will therefore match, in this order:
+     * &lt;/p&gt;
+     * &lt;ol&gt;
+     * &lt;li&gt;Standard public bean property (with getter or just public field, using normal introspection)
+     * &lt;li&gt;Public static property with getter method
+     * &lt;li&gt;Public static field
+     * &lt;/ol&gt;
+     *
+     * @return property value or null if no property found
+     */
+    @Nullable
+    public static Object getPropertyOrStaticPropertyOrFieldValue(@Nonnull Object obj, @Nonnull String name) {
+<span class="nc" id="L1341">        requireNonNull(obj, ERROR_OBJECT_NULL);</span>
+<span class="nc" id="L1342">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc bnc" id="L1343" title="All 2 branches missed.">        if (isReadable(obj, name)) {</span>
+            try {
+<span class="nc" id="L1345">                return getProperty(obj, name);</span>
+<span class="nc" id="L1346">            } catch (Exception e) {</span>
+<span class="nc" id="L1347">                throw new PropertyException(obj, name);</span>
+            }
+        } else {
+            // Look for public fields
+<span class="nc bnc" id="L1351" title="All 2 branches missed.">            if (isPublicField(obj, name)) {</span>
+<span class="nc" id="L1352">                return getFieldValue(obj, name);</span>
+            }
+
+            // Look for statics
+<span class="nc" id="L1356">            Class&lt;?&gt; clazz = obj.getClass();</span>
+<span class="nc bnc" id="L1357" title="All 2 branches missed.">            if (isStaticProperty(clazz, name)) {</span>
+<span class="nc" id="L1358">                return getStaticPropertyValue(clazz, name);</span>
+            } else {
+<span class="nc" id="L1360">                return null;</span>
+            }
+        }
+    }
+
+    /**
+     * Get the value of a declared field on an object
+     *
+     * @param obj  the instance that owns the field
+     * @param name the name of the file to lookup
+     * @return The object value or null if there is no such field or access problems
+     */
+    @Nullable
+    public static Object getFieldValue(@Nonnull Object obj, @Nonnull String name) {
+<span class="nc" id="L1374">        requireNonNull(obj, ERROR_OBJECT_NULL);</span>
+<span class="nc" id="L1375">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc" id="L1376">        Class&lt;?&gt; clazz = obj.getClass();</span>
+        Field f;
+        try {
+<span class="nc" id="L1379">            f = clazz.getDeclaredField(name);</span>
+<span class="nc" id="L1380">            return f.get(obj);</span>
+<span class="nc" id="L1381">        } catch (Exception e) {</span>
+<span class="nc" id="L1382">            return null;</span>
+        }
+    }
+
+    /**
+     * Get the a declared field on an object
+     *
+     * @param obj  the instance that owns the field
+     * @param name the name of the file to lookup
+     * @return The field or null if there is no such field or access problems
+     */
+    @Nullable
+    public static Field getField(@Nonnull Object obj, @Nonnull String name) {
+<span class="nc" id="L1395">        requireNonNull(obj, ERROR_OBJECT_NULL);</span>
+<span class="nc" id="L1396">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc" id="L1397">        return getField(obj.getClass(), name);</span>
+    }
+
+    /**
+     * Get the a declared field on a class
+     *
+     * @param clazz the clazz that owns the field
+     * @param name  the name of the file to lookup
+     * @return The field or null if there is no such field or access problems
+     */
+    @Nullable
+    public static Field getField(@Nonnull Class&lt;?&gt; clazz, @Nonnull String name) {
+<span class="nc" id="L1409">        requireNonNull(clazz, ERROR_CLAZZ_NULL);</span>
+<span class="nc" id="L1410">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+        Field f;
+        try {
+<span class="nc" id="L1413">            f = clazz.getDeclaredField(name);</span>
+<span class="nc" id="L1414">            return f;</span>
+<span class="nc" id="L1415">        } catch (Exception e) {</span>
+<span class="nc" id="L1416">            return null;</span>
+        }
+    }
+
+    /**
+     * Work out if the specified object has a public field with the name supplied.
+     *
+     * @param obj  the instance that owns the field
+     * @param name the name of the file to lookup
+     * @return True if a public field with the name exists
+     */
+    public static boolean isPublicField(@Nonnull Object obj, @Nonnull String name) {
+<span class="nc" id="L1428">        requireNonNull(obj, ERROR_OBJECT_NULL);</span>
+<span class="nc" id="L1429">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc" id="L1430">        Class&lt;?&gt; clazz = obj.getClass();</span>
+        Field f;
+        try {
+<span class="nc" id="L1433">            f = clazz.getDeclaredField(name);</span>
+<span class="nc" id="L1434">            return Modifier.isPublic(f.getModifiers());</span>
+<span class="nc" id="L1435">        } catch (NoSuchFieldException e) {</span>
+<span class="nc" id="L1436">            return false;</span>
+        }
+    }
+
+    /**
+     * Checks whether the specified property is inherited from a super class
+     *
+     * @param clz          The class to check
+     * @param propertyName The property name
+     * @return True if the property is inherited
+     */
+    public static boolean isPropertyInherited(@Nullable Class&lt;?&gt; clz, @Nonnull String propertyName) {
+<span class="nc bnc" id="L1448" title="All 2 branches missed.">        if (clz == null) return false;</span>
+<span class="nc" id="L1449">        requireNonBlank(propertyName, ERROR_PROPERTY_NAME_BLANK);</span>
+<span class="nc" id="L1450">        Class&lt;?&gt; superClass = clz.getSuperclass();</span>
+
+        PropertyDescriptor pd;
+        try {
+<span class="nc" id="L1454">            pd = getPropertyDescriptor(superClass, propertyName);</span>
+<span class="nc" id="L1455">        } catch (Exception e) {</span>
+<span class="nc" id="L1456">            throw new PropertyException(superClass, propertyName, e);</span>
+<span class="nc" id="L1457">        }</span>
+<span class="nc bnc" id="L1458" title="All 4 branches missed.">        return pd != null &amp;&amp; pd.getReadMethod() != null;</span>
+    }
+
+    /**
+     * Creates a concrete collection for the supplied interface
+     *
+     * @param interfaceType The interface
+     * @return ArrayList for List, TreeSet for SortedSet, HashSet for Set etc.
+     */
+    @Nonnull
+    public static Collection&lt;?&gt; createConcreteCollection(@Nonnull Class&lt;?&gt; interfaceType) {
+<span class="nc" id="L1469">        requireNonNull(interfaceType, ERROR_TYPE_NULL);</span>
+        Collection&lt;?&gt; elements;
+<span class="nc bnc" id="L1471" title="All 2 branches missed.">        if (interfaceType.equals(List.class)) {</span>
+<span class="nc" id="L1472">            elements = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L1473" title="All 2 branches missed.">        } else if (interfaceType.equals(SortedSet.class)) {</span>
+<span class="nc" id="L1474">            elements = new TreeSet&lt;&gt;();</span>
+        } else {
+<span class="nc" id="L1476">            elements = new HashSet&lt;&gt;();</span>
+        }
+<span class="nc" id="L1478">        return elements;</span>
+    }
+
+    /**
+     * Retrieves the name of a setter for the specified property name
+     *
+     * @param propertyName The property name
+     * @return The setter equivalent
+     */
+    @Nonnull
+    public static String getSetterName(@Nonnull String propertyName) {
+<span class="nc" id="L1489">        requireNonBlank(propertyName, ERROR_PROPERTY_NAME_BLANK);</span>
+<span class="nc" id="L1490">        return PROPERTY_SET_PREFIX + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);</span>
+    }
+
+    /**
+     * Returns true if the name of the method specified and the number of arguments make it a javabean property
+     *
+     * @param name True if its a Javabean property
+     * @param args The arguments
+     * @return True if it is a javabean property method
+     */
+    @SuppressWarnings(&quot;ConstantConditions&quot;)
+    public static boolean isGetter(@Nullable String name, @Nullable Class[] args) {
+<span class="nc bnc" id="L1502" title="All 4 branches missed.">        if (GriffonNameUtils.isBlank(name) || args == null) return false;</span>
+<span class="nc bnc" id="L1503" title="All 2 branches missed.">        if (args.length != 0) return false;</span>
+
+<span class="nc bnc" id="L1505" title="All 2 branches missed.">        if (name.startsWith(PROPERTY_GET_PREFIX)) {</span>
+<span class="nc" id="L1506">            name = name.substring(3);</span>
+<span class="nc bnc" id="L1507" title="All 4 branches missed.">            if (name.length() &gt; 0 &amp;&amp; Character.isUpperCase(name.charAt(0)))</span>
+<span class="nc" id="L1508">                return true;</span>
+<span class="nc bnc" id="L1509" title="All 2 branches missed.">        } else if (name.startsWith(PROPERTY_IS_PREFIX)) {</span>
+<span class="nc" id="L1510">            name = name.substring(2);</span>
+<span class="nc bnc" id="L1511" title="All 4 branches missed.">            if (name.length() &gt; 0 &amp;&amp; Character.isUpperCase(name.charAt(0)))</span>
+<span class="nc" id="L1512">                return true;</span>
+        }
+<span class="nc" id="L1514">        return false;</span>
+    }
+
+    /**
+     * Returns a property name equivalent for the given getter name or null if it is not a getter
+     *
+     * @param getterName The getter name
+     * @return The property name equivalent
+     */
+    @Nullable
+    @SuppressWarnings(&quot;ConstantConditions&quot;)
+    public static String getPropertyForGetter(@Nullable String getterName) {
+<span class="nc bnc" id="L1526" title="All 2 branches missed.">        if (GriffonNameUtils.isBlank(getterName)) return null;</span>
+
+<span class="nc bnc" id="L1528" title="All 2 branches missed.">        if (getterName.startsWith(PROPERTY_GET_PREFIX)) {</span>
+<span class="nc" id="L1529">            String prop = getterName.substring(3);</span>
+<span class="nc" id="L1530">            return convertPropertyName(prop);</span>
+<span class="nc bnc" id="L1531" title="All 2 branches missed.">        } else if (getterName.startsWith(PROPERTY_IS_PREFIX)) {</span>
+<span class="nc" id="L1532">            String prop = getterName.substring(2);</span>
+<span class="nc" id="L1533">            return convertPropertyName(prop);</span>
+        }
+<span class="nc" id="L1535">        return null;</span>
+    }
+
+    @Nonnull
+    private static String convertPropertyName(@Nonnull String prop) {
+<span class="nc bnc" id="L1540" title="All 4 branches missed.">        if (Character.isUpperCase(prop.charAt(0)) &amp;&amp; Character.isUpperCase(prop.charAt(1))) {</span>
+<span class="nc" id="L1541">            return prop;</span>
+<span class="nc bnc" id="L1542" title="All 2 branches missed.">        } else if (Character.isDigit(prop.charAt(0))) {</span>
+<span class="nc" id="L1543">            return prop;</span>
+        } else {
+<span class="nc" id="L1545">            return Character.toLowerCase(prop.charAt(0)) + prop.substring(1);</span>
+        }
+    }
+
+    /**
+     * Returns a property name equivalent for the given setter name or null if it is not a getter
+     *
+     * @param setterName The setter name
+     * @return The property name equivalent
+     */
+    @Nullable
+    @SuppressWarnings(&quot;ConstantConditions&quot;)
+    public static String getPropertyForSetter(@Nullable String setterName) {
+<span class="nc bnc" id="L1558" title="All 2 branches missed.">        if (GriffonNameUtils.isBlank(setterName)) return null;</span>
+
+<span class="nc bnc" id="L1560" title="All 2 branches missed.">        if (setterName.startsWith(PROPERTY_SET_PREFIX)) {</span>
+<span class="nc" id="L1561">            String prop = setterName.substring(3);</span>
+<span class="nc" id="L1562">            return convertPropertyName(prop);</span>
+        }
+<span class="nc" id="L1564">        return null;</span>
+    }
+
+    @SuppressWarnings(&quot;ConstantConditions&quot;)
+    public static boolean isSetter(@Nullable String name, @Nullable Class[] args) {
+<span class="nc bnc" id="L1569" title="All 4 branches missed.">        if (GriffonNameUtils.isBlank(name) || args == null) return false;</span>
+
+<span class="nc bnc" id="L1571" title="All 2 branches missed.">        if (name.startsWith(PROPERTY_SET_PREFIX)) {</span>
+<span class="nc bnc" id="L1572" title="All 2 branches missed.">            if (args.length != 1) return false;</span>
+<span class="nc" id="L1573">            name = name.substring(3);</span>
+<span class="nc bnc" id="L1574" title="All 4 branches missed.">            if (name.length() &gt; 0 &amp;&amp; Character.isUpperCase(name.charAt(0)))</span>
+<span class="nc" id="L1575">                return true;</span>
+        }
+
+<span class="nc" id="L1578">        return false;</span>
+    }
+
+    /**
+     * Returns true if the specified clazz parameter is either the same as, or is a superclass or super interface
+     * of, the specified type parameter. Converts primitive types to compatible class automatically.
+     *
+     * @param clazz
+     * @param type
+     * @return True if the class is a taglib
+     * @see java.lang.Class#isAssignableFrom(Class)
+     */
+    public static boolean isAssignableOrConvertibleFrom(@Nullable Class&lt;?&gt; clazz, @Nullable Class&lt;?&gt; type) {
+<span class="nc bnc" id="L1591" title="All 4 branches missed.">        if (type == null || clazz == null) {</span>
+<span class="nc" id="L1592">            return false;</span>
+<span class="nc bnc" id="L1593" title="All 2 branches missed.">        } else if (type.isPrimitive()) {</span>
+            // convert primitive type to compatible class 
+<span class="nc" id="L1595">            Class&lt;?&gt; primitiveClass = PRIMITIVE_TYPE_COMPATIBLE_CLASSES.get(type);</span>
+<span class="nc bnc" id="L1596" title="All 4 branches missed.">            return primitiveClass != null &amp;&amp; clazz.isAssignableFrom(primitiveClass);</span>
+        } else {
+<span class="nc" id="L1598">            return clazz.isAssignableFrom(type);</span>
+        }
+    }
+
+    /**
+     * Retrieves a boolean value from a Map for the given key
+     *
+     * @param key The key that references the boolean value
+     * @param map The map to look in
+     * @return A boolean value which will be false if the map is null, the map doesn't contain the key or the value is false
+     */
+    public static boolean getBooleanFromMap(@Nullable String key, @Nullable Map&lt;String, Object&gt; map) {
+<span class="nc bnc" id="L1610" title="All 2 branches missed.">        if (map == null) return false;</span>
+<span class="nc bnc" id="L1611" title="All 2 branches missed.">        if (map.containsKey(key)) {</span>
+<span class="nc" id="L1612">            Object o = map.get(key);</span>
+<span class="nc bnc" id="L1613" title="All 2 branches missed.">            if (o == null) return false;</span>
+<span class="nc bnc" id="L1614" title="All 2 branches missed.">            else if (o instanceof Boolean) {</span>
+<span class="nc" id="L1615">                return (Boolean) o;</span>
+            } else {
+<span class="nc" id="L1617">                return Boolean.valueOf(o.toString());</span>
+            }
+        }
+<span class="nc" id="L1620">        return false;</span>
+    }
+
+    /**
+     * Returns whether the specified class is either within one of the specified packages or
+     * within a subpackage of one of the packages
+     *
+     * @param clazz       The class
+     * @param packageList The list of packages
+     * @return True if it is within the list of specified packages
+     */
+    public static boolean isClassBelowPackage(@Nonnull Class&lt;?&gt; clazz, @Nonnull List&lt;?&gt; packageList) {
+<span class="nc" id="L1632">        requireNonNull(clazz, ERROR_CLAZZ_NULL);</span>
+<span class="nc" id="L1633">        requireNonNull(packageList, &quot;Argument 'packageList' must not be null&quot;);</span>
+<span class="nc" id="L1634">        String classPackage = clazz.getPackage().getName();</span>
+<span class="nc bnc" id="L1635" title="All 2 branches missed.">        for (Object packageName : packageList) {</span>
+<span class="nc bnc" id="L1636" title="All 2 branches missed.">            if (packageName != null) {</span>
+<span class="nc bnc" id="L1637" title="All 2 branches missed.">                if (classPackage.startsWith(packageName.toString())) {</span>
+<span class="nc" id="L1638">                    return true;</span>
+                }
+            }
+<span class="nc" id="L1641">        }</span>
+<span class="nc" id="L1642">        return false;</span>
+    }
+
+    /**
+     * Sets or updates an object's properties.
+     * &lt;p/&gt;
+     * This method will attempt setting a property using a matching
+     * {@code PropertyDescriptor}; next it will try direct field
+     * access if the property was not found.
+     *
+     * @param bean       the target object on which properties will be set
+     * @param properties names and values for properties to be set
+     * @throws PropertyException if a property could be found
+     * @since 2.1.0
+     */
+    public static void setPropertiesOrFields(@Nonnull Object bean, @Nonnull Map&lt;String, Object&gt; properties) throws PropertyException {
+<span class="nc" id="L1658">        requireNonNull(bean, ERROR_BEAN_NULL);</span>
+<span class="nc" id="L1659">        requireNonNull(properties, ERROR_PROPERTIES_NULL);</span>
+<span class="nc bnc" id="L1660" title="All 2 branches missed.">        for (Map.Entry&lt;String, Object&gt; entry : properties.entrySet()) {</span>
+<span class="nc" id="L1661">            setPropertyOrFieldValue(bean, entry.getKey(), entry.getValue());</span>
+<span class="nc" id="L1662">        }</span>
+<span class="nc" id="L1663">    }</span>
+
+    /**
+     * Sets or updates an object's properties.
+     * &lt;p/&gt;
+     * This method will attempt setting a property using a matching
+     * {@code PropertyDescriptor}; next it will try direct field
+     * access if the property was not found.
+     *
+     * @param bean       the target object on which properties will be set
+     * @param properties names and values for properties to be set
+     * @since 2.1.0
+     */
+    public static void setPropertiesOrFieldsNoException(@Nonnull Object bean, @Nonnull Map&lt;String, Object&gt; properties) {
+<span class="nc" id="L1677">        requireNonNull(bean, ERROR_BEAN_NULL);</span>
+<span class="nc" id="L1678">        requireNonNull(properties, ERROR_PROPERTIES_NULL);</span>
+<span class="nc bnc" id="L1679" title="All 2 branches missed.">        for (Map.Entry&lt;String, Object&gt; entry : properties.entrySet()) {</span>
+            try {
+<span class="nc" id="L1681">                setPropertyOrFieldValue(bean, entry.getKey(), entry.getValue());</span>
+<span class="nc" id="L1682">            } catch (PropertyException pe) {</span>
+                // ignore
+<span class="nc" id="L1684">            }</span>
+<span class="nc" id="L1685">        }</span>
+<span class="nc" id="L1686">    }</span>
+
+    /**
+     * Sets or updates an object's property.
+     * &lt;p/&gt;
+     * This method will attempt setting a property using a matching
+     * {@code PropertyDescriptor}; next it will try direct field
+     * access if the property was not found.
+     *
+     * @param bean  the target object on which the property will be set
+     * @param name  the name of the property to set
+     * @param value the value to be set
+     * @throws PropertyException if the property could not be found
+     * @since 2.1.0
+     */
+    public static void setPropertyOrFieldValue(@Nonnull Object bean, @Nonnull String name, @Nullable Object value) throws PropertyException {
+        try {
+<span class="nc" id="L1703">            setPropertyValue(bean, name, value);</span>
+<span class="nc" id="L1704">        } catch (PropertyException pe) {</span>
+            try {
+<span class="nc" id="L1706">                setFieldValue(bean, name, value);</span>
+<span class="nc" id="L1707">            } catch (FieldException fe) {</span>
+<span class="nc" id="L1708">                throw pe;</span>
+<span class="nc" id="L1709">            }</span>
+<span class="nc" id="L1710">        }</span>
+<span class="nc" id="L1711">    }</span>
+
+    /**
+     * Sets or updates an object's properties.
+     * &lt;p/&gt;
+     * This method will attempt setting a property using direct field
+     * access; next it will try a {@code PropertyDescriptor} if a
+     * matching field name was not found.
+     *
+     * @param bean       the target object on which properties will be set
+     * @param properties names and values for properties to be set
+     * @throws FieldException if the field could not be found
+     * @since 2.1.0
+     */
+    public static void setFieldsOrProperties(@Nonnull Object bean, @Nonnull Map&lt;String, Object&gt; properties) throws FieldException {
+<span class="nc" id="L1726">        requireNonNull(bean, ERROR_BEAN_NULL);</span>
+<span class="nc" id="L1727">        requireNonNull(properties, ERROR_PROPERTIES_NULL);</span>
+<span class="nc bnc" id="L1728" title="All 2 branches missed.">        for (Map.Entry&lt;String, Object&gt; entry : properties.entrySet()) {</span>
+<span class="nc" id="L1729">            setFieldOrPropertyValue(bean, entry.getKey(), entry.getValue());</span>
+<span class="nc" id="L1730">        }</span>
+<span class="nc" id="L1731">    }</span>
+
+    /**
+     * Sets or updates an object's properties.
+     * &lt;p/&gt;
+     * This method will attempt setting a property using direct field
+     * access; next it will try a {@code PropertyDescriptor} if a
+     * matching field name was not found.
+     *
+     * @param bean       the target object on which properties will be set
+     * @param properties names and values for properties to be set
+     * @since 2.1.0
+     */
+    public static void setFieldsOrPropertiesNoException(@Nonnull Object bean, @Nonnull Map&lt;String, Object&gt; properties) {
+<span class="nc" id="L1745">        requireNonNull(bean, ERROR_BEAN_NULL);</span>
+<span class="nc" id="L1746">        requireNonNull(properties, ERROR_PROPERTIES_NULL);</span>
+<span class="nc bnc" id="L1747" title="All 2 branches missed.">        for (Map.Entry&lt;String, Object&gt; entry : properties.entrySet()) {</span>
+            try {
+<span class="nc" id="L1749">                setFieldOrPropertyValue(bean, entry.getKey(), entry.getValue());</span>
+<span class="nc" id="L1750">            } catch (FieldException pe) {</span>
+                // ignore
+<span class="nc" id="L1752">            }</span>
+<span class="nc" id="L1753">        }</span>
+<span class="nc" id="L1754">    }</span>
+
+    /**
+     * Sets or updates an object's property.
+     * &lt;p/&gt;
+     * This method will attempt setting a property using direct field
+     * access; next it will try a {@code PropertyDescriptor} if a
+     * matching field name was not found.
+     *
+     * @param bean  the target object on which the property will be set
+     * @param name  the name of the property to set
+     * @param value the value to be set
+     * @throws FieldException if the property could not be found
+     * @since 2.1.0
+     */
+    public static void setFieldOrPropertyValue(@Nonnull Object bean, @Nonnull String name, @Nullable Object value) throws FieldException {
+        try {
+<span class="nc" id="L1771">            setFieldValue(bean, name, value);</span>
+<span class="nc" id="L1772">        } catch (FieldException fe) {</span>
+            try {
+<span class="nc" id="L1774">                setPropertyValue(bean, name, value);</span>
+<span class="nc" id="L1775">            } catch (PropertyException pe) {</span>
+<span class="nc" id="L1776">                throw fe;</span>
+<span class="nc" id="L1777">            }</span>
+<span class="nc" id="L1778">        }</span>
+<span class="nc" id="L1779">    }</span>
+
+    /**
+     * Sets or updates field values on an object.
+     *
+     * @param bean   the target object on which field values will be set
+     * @param fields names and values of fields to be set
+     * @throws FieldException if a field could not be found
+     * @since 2.1.0
+     */
+    public static void setFields(@Nonnull Object bean, @Nonnull Map&lt;String, Object&gt; fields) throws FieldException {
+<span class="nc" id="L1790">        requireNonNull(bean, ERROR_BEAN_NULL);</span>
+<span class="nc" id="L1791">        requireNonNull(fields, ERROR_FIELDS_NULL);</span>
+<span class="nc bnc" id="L1792" title="All 2 branches missed.">        for (Map.Entry&lt;String, Object&gt; entry : fields.entrySet()) {</span>
+<span class="nc" id="L1793">            setFieldValue(bean, entry.getKey(), entry.getValue());</span>
+<span class="nc" id="L1794">        }</span>
+<span class="nc" id="L1795">    }</span>
+
+    /**
+     * Sets or updates field values on an object.
+     *
+     * @param bean   the target object on which field values will be set
+     * @param fields names and values of fields to be set
+     * @since 2.1.0
+     */
+    public static void setFieldsNoException(@Nonnull Object bean, @Nonnull Map&lt;String, Object&gt; fields) {
+<span class="nc" id="L1805">        requireNonNull(bean, ERROR_BEAN_NULL);</span>
+<span class="nc" id="L1806">        requireNonNull(fields, ERROR_FIELDS_NULL);</span>
+<span class="nc bnc" id="L1807" title="All 2 branches missed.">        for (Map.Entry&lt;String, Object&gt; entry : fields.entrySet()) {</span>
+            try {
+<span class="nc" id="L1809">                setFieldValue(bean, entry.getKey(), entry.getValue());</span>
+<span class="nc" id="L1810">            } catch (FieldException e) {</span>
+                // ignore
+<span class="nc" id="L1812">            }</span>
+<span class="nc" id="L1813">        }</span>
+<span class="nc" id="L1814">    }</span>
+
+    /**
+     * Sets or updates an object's field.
+     *
+     * @param bean  the target object on which the field will be set
+     * @param name  the name of the field to set
+     * @param value the value to be set
+     * @throws FieldException if the field could not be found
+     * @since 2.1.0
+     */
+    public static void setFieldValue(@Nonnull Object bean, @Nonnull String name, @Nullable Object value) throws FieldException {
+<span class="nc" id="L1826">        requireNonNull(bean, ERROR_BEAN_NULL);</span>
+<span class="nc" id="L1827">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+        try {
+<span class="nc" id="L1829">            setField(bean, name, value);</span>
+<span class="nc" id="L1830">        } catch (IllegalAccessException | NoSuchFieldException e) {</span>
+<span class="nc" id="L1831">            throw new FieldException(bean, name, value, e);</span>
+<span class="nc" id="L1832">        }</span>
+<span class="nc" id="L1833">    }</span>
+
+    /**
+     * Sets or updates properties on an object.
+     *
+     * @param bean       the target object on which properties will be set
+     * @param properties names and values of properties to be set
+     * @throws PropertyException if a property could not be found
+     */
+    public static void setProperties(@Nonnull Object bean, @Nonnull Map&lt;String, Object&gt; properties) throws PropertyException {
+<span class="nc" id="L1843">        requireNonNull(bean, ERROR_BEAN_NULL);</span>
+<span class="nc" id="L1844">        requireNonNull(properties, ERROR_PROPERTIES_NULL);</span>
+<span class="nc bnc" id="L1845" title="All 2 branches missed.">        for (Map.Entry&lt;String, Object&gt; entry : properties.entrySet()) {</span>
+<span class="nc" id="L1846">            setPropertyValue(bean, entry.getKey(), entry.getValue());</span>
+<span class="nc" id="L1847">        }</span>
+<span class="nc" id="L1848">    }</span>
+
+    /**
+     * Sets or updates properties on an object.
+     *
+     * @param bean       the target object on which properties will be set
+     * @param properties names and values of properties to be set
+     */
+    public static void setPropertiesNoException(@Nonnull Object bean, @Nonnull Map&lt;String, Object&gt; properties) {
+<span class="nc" id="L1857">        requireNonNull(bean, ERROR_BEAN_NULL);</span>
+<span class="nc" id="L1858">        requireNonNull(properties, ERROR_PROPERTIES_NULL);</span>
+<span class="nc bnc" id="L1859" title="All 2 branches missed.">        for (Map.Entry&lt;String, Object&gt; entry : properties.entrySet()) {</span>
+            try {
+<span class="nc" id="L1861">                setPropertyValue(bean, entry.getKey(), entry.getValue());</span>
+<span class="nc" id="L1862">            } catch (PropertyException e) {</span>
+                // ignore
+<span class="nc" id="L1864">            }</span>
+<span class="nc" id="L1865">        }</span>
+<span class="nc" id="L1866">    }</span>
+
+    /**
+     * /**
+     * Sets or updates a property on an object.
+     *
+     * @param bean  the target object on which the property will be set
+     * @param name  the name of the property to set
+     * @param value the value to be set
+     * @throws PropertyException if the property could not be found
+     */
+    public static void setPropertyValue(@Nonnull Object bean, @Nonnull String name, @Nullable Object value) throws PropertyException {
+<span class="nc" id="L1878">        requireNonNull(bean, ERROR_BEAN_NULL);</span>
+<span class="nc" id="L1879">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+        try {
+<span class="nc" id="L1881">            setProperty(bean, name, value);</span>
+<span class="nc" id="L1882">        } catch (IllegalAccessException | NoSuchMethodException e) {</span>
+<span class="nc" id="L1883">            throw new PropertyException(bean, name, value, e);</span>
+<span class="nc" id="L1884">        } catch (InvocationTargetException e) {</span>
+<span class="nc" id="L1885">            throw new PropertyException(bean, name, value, e.getTargetException());</span>
+<span class="nc" id="L1886">        }</span>
+<span class="nc" id="L1887">    }</span>
+
+    /**
+     * Returns the value of a property.
+     *
+     * @param bean the owner of the property
+     * @param name the name of the property to retrieve
+     * @return the value read from the matching property
+     * @throws PropertyException if the property could not be found
+     */
+    @Nullable
+    public static Object getPropertyValue(@Nonnull Object bean, @Nonnull String name) throws PropertyException {
+<span class="nc" id="L1899">        requireNonNull(bean, ERROR_BEAN_NULL);</span>
+<span class="nc" id="L1900">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+        try {
+<span class="nc" id="L1902">            return getProperty(bean, name);</span>
+<span class="nc" id="L1903">        } catch (IllegalAccessException | NoSuchMethodException e) {</span>
+<span class="nc" id="L1904">            throw new PropertyException(bean, name, e);</span>
+<span class="nc" id="L1905">        } catch (InvocationTargetException e) {</span>
+<span class="nc" id="L1906">            throw new PropertyException(bean, name, e.getTargetException());</span>
+        }
+    }
+
+    // -- The following methods and properties were copied from commons-beanutils
+
+<span class="fc" id="L1912">    private static final Map&lt;String, PropertyDescriptor[]&gt; descriptorsCache = new LinkedHashMap&lt;&gt;();</span>
+
+    /**
+     * &lt;p&gt;Retrieve the property descriptor for the specified property of the
+     * specified bean, or return &lt;code&gt;null&lt;/code&gt; if there is no such
+     * descriptor.&lt;/p&gt;
+     * This method does not resolve index, nested nor mapped properties.&lt;p&gt;
+     *
+     * @param bean Bean for which a property descriptor is requested
+     * @param name name of the property for which a property descriptor
+     *             is requested
+     * @return the property descriptor or null if the bean does not have
+     * a property that matches the specified name.
+     * @throws IllegalAccessException    if the caller does not have
+     *                                   access to the property accessor method
+     * @throws IllegalArgumentException  if &lt;code&gt;bean&lt;/code&gt; or
+     *                                   &lt;code&gt;name&lt;/code&gt; is null
+     * @throws InvocationTargetException if the property accessor method
+     *                                   throws an exception
+     * @throws NoSuchMethodException     if an accessor method for this
+     *                                   property cannot be found
+     */
+    @Nullable
+    public static PropertyDescriptor getPropertyDescriptor(@Nonnull Object bean,
+                                                           @Nonnull String name)
+        throws IllegalAccessException, InvocationTargetException,
+        NoSuchMethodException {
+<span class="fc" id="L1939">        requireNonNull(bean, ERROR_BEAN_NULL);</span>
+<span class="fc" id="L1940">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+
+<span class="pc bpc" id="L1942" title="1 of 2 branches missed.">        return getPropertyDescriptor(bean instanceof Class ? (Class&lt;?&gt;) bean : bean.getClass(), name);</span>
+    }
+
+    /**
+     * &lt;p&gt;Retrieve the property descriptor for the specified property of the
+     * specified class, or return &lt;code&gt;null&lt;/code&gt; if there is no such
+     * descriptor.&lt;/p&gt;
+     * This method does not resolve index, nested nor mapped properties.&lt;p&gt;
+     *
+     * @param clazz class for which a property descriptor is requested
+     * @param name  name of the property for which a property descriptor
+     *              is requested
+     * @return the property descriptor or null if the bean does not have
+     * a property that matches the specified name.
+     * @throws IllegalAccessException    if the caller does not have
+     *                                   access to the property accessor method
+     * @throws IllegalArgumentException  if &lt;code&gt;bean&lt;/code&gt; or
+     *                                   &lt;code&gt;name&lt;/code&gt; is null
+     * @throws InvocationTargetException if the property accessor method
+     *                                   throws an exception
+     * @throws NoSuchMethodException     if an accessor method for this
+     *                                   property cannot be found
+     */
+    @Nullable
+    public static PropertyDescriptor getPropertyDescriptor(@Nonnull Class&lt;?&gt; clazz,
+                                                           @Nonnull String name)
+        throws IllegalAccessException, InvocationTargetException,
+        NoSuchMethodException {
+<span class="fc" id="L1970">        requireNonNull(clazz, ERROR_CLAZZ_NULL);</span>
+<span class="fc" id="L1971">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+
+<span class="fc" id="L1973">        PropertyDescriptor[] descriptors = getPropertyDescriptors(clazz);</span>
+<span class="pc bpc" id="L1974" title="1 of 2 branches missed.">        for (PropertyDescriptor descriptor : descriptors) {</span>
+<span class="fc bfc" id="L1975" title="All 2 branches covered.">            if (name.equals(descriptor.getName())) {</span>
+<span class="fc" id="L1976">                return (descriptor);</span>
+            }
+        }
+
+<span class="nc" id="L1980">        return null;</span>
+    }
+
+    /**
+     * &lt;p&gt;Retrieve the property descriptors for the specified class,
+     * introspecting and caching them the first time a particular bean class
+     * is encountered.&lt;/p&gt;
+     *
+     * @param beanClass Bean class for which property descriptors are requested
+     * @return the property descriptors
+     * @throws IllegalArgumentException if &lt;code&gt;beanClass&lt;/code&gt; is null
+     */
+    @Nonnull
+    public static PropertyDescriptor[] getPropertyDescriptors(@Nonnull Class&lt;?&gt; beanClass) {
+<span class="fc" id="L1994">        requireNonNull(beanClass, ERROR_CLAZZ_NULL);</span>
+
+        // Look up any cached descriptors for this bean class
+        PropertyDescriptor[] descriptors;
+<span class="fc" id="L1998">        descriptors = descriptorsCache.get(beanClass.getName());</span>
+<span class="fc bfc" id="L1999" title="All 2 branches covered.">        if (descriptors != null) {</span>
+<span class="fc" id="L2000">            return descriptors;</span>
+        }
+
+        // Introspect the bean and cache the generated descriptors
+        BeanInfo beanInfo;
+        try {
+<span class="fc" id="L2006">            beanInfo = Introspector.getBeanInfo(beanClass);</span>
+<span class="nc" id="L2007">        } catch (IntrospectionException e) {</span>
+<span class="nc" id="L2008">            return (new PropertyDescriptor[0]);</span>
+<span class="fc" id="L2009">        }</span>
+<span class="fc" id="L2010">        descriptors = beanInfo.getPropertyDescriptors();</span>
+<span class="pc bpc" id="L2011" title="1 of 2 branches missed.">        if (descriptors == null) {</span>
+<span class="nc" id="L2012">            descriptors = new PropertyDescriptor[0];</span>
+        }
+
+<span class="fc" id="L2015">        descriptorsCache.put(beanClass.getName(), descriptors);</span>
+<span class="fc" id="L2016">        return descriptors;</span>
+    }
+
+    /**
+     * &lt;p&gt;Return an accessible property getter method for this property,
+     * if there is one; otherwise return &lt;code&gt;null&lt;/code&gt;.&lt;/p&gt;
+     *
+     * @param descriptor Property descriptor to return a getter for
+     * @return The read method
+     */
+    @Nullable
+    public static Method getReadMethod(@Nonnull PropertyDescriptor descriptor) {
+<span class="nc" id="L2028">        requireNonNull(descriptor, ERROR_DESCRIPTOR_NULL);</span>
+<span class="nc" id="L2029">        return (MethodUtils.getAccessibleMethod(descriptor.getReadMethod()));</span>
+    }
+
+    /**
+     * &lt;p&gt;Return &lt;code&gt;true&lt;/code&gt; if the specified property name identifies
+     * a readable property on the specified bean; otherwise, return
+     * &lt;code&gt;false&lt;/code&gt;.
+     *
+     * @param bean Bean to be examined
+     * @param name Property name to be evaluated
+     * @return &lt;code&gt;true&lt;/code&gt; if the property is readable,
+     * otherwise &lt;code&gt;false&lt;/code&gt;
+     * @throws IllegalArgumentException if &lt;code&gt;bean&lt;/code&gt;
+     *                                  or &lt;code&gt;name&lt;/code&gt; is &lt;code&gt;null&lt;/code&gt;
+     * @since BeanUtils 1.6
+     */
+    public static boolean isReadable(@Nonnull Object bean, @Nonnull String name) {
+        // Validate method parameters
+<span class="nc" id="L2047">        requireNonNull(bean, ERROR_BEAN_NULL);</span>
+<span class="nc" id="L2048">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+
+        try {
+<span class="nc" id="L2051">            PropertyDescriptor desc = getPropertyDescriptor(bean, name);</span>
+<span class="nc bnc" id="L2052" title="All 2 branches missed.">            if (desc != null) {</span>
+<span class="nc" id="L2053">                Method readMethod = getReadMethod(bean.getClass(), desc);</span>
+<span class="nc bnc" id="L2054" title="All 2 branches missed.">                if (readMethod != null) {</span>
+<span class="nc" id="L2055">                    readMethod = MethodUtils.getAccessibleMethod(bean.getClass(), readMethod);</span>
+                }
+<span class="nc bnc" id="L2057" title="All 2 branches missed.">                return (readMethod != null);</span>
+            } else {
+<span class="nc" id="L2059">                return false;</span>
+            }
+<span class="nc" id="L2061">        } catch (IllegalAccessException e) {</span>
+<span class="nc" id="L2062">            return false;</span>
+<span class="nc" id="L2063">        } catch (InvocationTargetException e) {</span>
+<span class="nc" id="L2064">            return false;</span>
+<span class="nc" id="L2065">        } catch (NoSuchMethodException e) {</span>
+<span class="nc" id="L2066">            return false;</span>
+        }
+    }
+
+    /**
+     * &lt;p&gt;Return an accessible property setter method for this property,
+     * if there is one; otherwise return &lt;code&gt;null&lt;/code&gt;.&lt;/p&gt;
+     *
+     * @param descriptor Property descriptor to return a setter for
+     * @return The write method
+     */
+    @Nullable
+    public static Method getWriteMethod(@Nonnull PropertyDescriptor descriptor) {
+<span class="nc" id="L2079">        requireNonNull(descriptor, ERROR_DESCRIPTOR_NULL);</span>
+<span class="nc" id="L2080">        return (MethodUtils.getAccessibleMethod(descriptor.getWriteMethod()));</span>
+    }
+
+    /**
+     * &lt;p&gt;Return &lt;code&gt;true&lt;/code&gt; if the specified property name identifies
+     * a writable property on the specified bean; otherwise, return
+     * &lt;code&gt;false&lt;/code&gt;.
+     *
+     * @param bean Bean to be examined
+     * @param name Property name to be evaluated
+     * @return &lt;code&gt;true&lt;/code&gt; if the property is writable,
+     * otherwise &lt;code&gt;false&lt;/code&gt;
+     * @throws IllegalArgumentException if &lt;code&gt;bean&lt;/code&gt;
+     *                                  or &lt;code&gt;name&lt;/code&gt; is &lt;code&gt;null&lt;/code&gt;
+     */
+    public static boolean isWritable(@Nonnull Object bean, @Nonnull String name) {
+        // Validate method parameters
+<span class="nc" id="L2097">        requireNonNull(bean, ERROR_BEAN_NULL);</span>
+<span class="nc" id="L2098">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+
+        try {
+<span class="nc" id="L2101">            PropertyDescriptor desc = getPropertyDescriptor(bean, name);</span>
+<span class="nc bnc" id="L2102" title="All 2 branches missed.">            if (desc != null) {</span>
+<span class="nc" id="L2103">                Method writeMethod = getWriteMethod(bean.getClass(), desc);</span>
+<span class="nc bnc" id="L2104" title="All 2 branches missed.">                if (writeMethod != null) {</span>
+<span class="nc" id="L2105">                    writeMethod = MethodUtils.getAccessibleMethod(bean.getClass(), writeMethod);</span>
+                }
+<span class="nc bnc" id="L2107" title="All 2 branches missed.">                return (writeMethod != null);</span>
+            } else {
+<span class="nc" id="L2109">                return false;</span>
+            }
+<span class="nc" id="L2111">        } catch (IllegalAccessException e) {</span>
+<span class="nc" id="L2112">            return false;</span>
+<span class="nc" id="L2113">        } catch (InvocationTargetException e) {</span>
+<span class="nc" id="L2114">            return false;</span>
+<span class="nc" id="L2115">        } catch (NoSuchMethodException e) {</span>
+<span class="nc" id="L2116">            return false;</span>
+        }
+    }
+
+    /**
+     * Sets the value of the specified field of the specified bean.
+     *
+     * @param bean  Bean whose field is to be mutated
+     * @param name  Name of the field to be mutated
+     * @param value The value to be set on the property
+     * @throws IllegalAccessException   if the caller does not have
+     *                                  access to the field
+     * @throws IllegalArgumentException if &lt;code&gt;bean&lt;/code&gt; or
+     *                                  &lt;code&gt;name&lt;/code&gt; is null
+     * @throws NoSuchFieldException     if the named field cannot be found
+     * @throws FieldException           if the field cannot be set
+     * @since 2.1.0
+     */
+    public static void setField(@Nonnull Object bean, @Nonnull String name, @Nullable Object value)
+        throws NoSuchFieldException, IllegalAccessException, FieldException {
+<span class="nc" id="L2136">        requireNonNull(bean, ERROR_BEAN_NULL);</span>
+<span class="nc" id="L2137">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+
+<span class="nc" id="L2139">        Class&lt;?&gt; declaringClass = bean.getClass();</span>
+<span class="nc bnc" id="L2140" title="All 2 branches missed.">        while (declaringClass != null) {</span>
+            try {
+<span class="nc" id="L2142">                Field field = bean.getClass().getDeclaredField(name);</span>
+
+                // type conversion needed?
+<span class="nc" id="L2145">                Class&lt;?&gt; propertyType = field.getType();</span>
+<span class="nc bnc" id="L2146" title="All 4 branches missed.">                if (value != null &amp;&amp; !propertyType.isAssignableFrom(value.getClass())) {</span>
+<span class="nc" id="L2147">                    value = TypeUtils.convertValue(propertyType, value);</span>
+                }
+
+<span class="nc" id="L2150">                field.setAccessible(true);</span>
+                try {
+<span class="nc" id="L2152">                    field.set(bean, value);</span>
+<span class="nc" id="L2153">                    return;</span>
+<span class="nc" id="L2154">                } catch (IllegalArgumentException iae) {</span>
+<span class="nc" id="L2155">                    throw new FieldException(bean, name, value, iae);</span>
+                }
+<span class="nc" id="L2157">            } catch (NoSuchFieldException nsfe) {</span>
+<span class="nc" id="L2158">                declaringClass = declaringClass.getSuperclass();</span>
+<span class="nc" id="L2159">            }</span>
+        }
+<span class="nc" id="L2161">        throw new NoSuchFieldException(name);</span>
+    }
+
+    /**
+     * Sets the value of the specified property of the specified bean.
+     *
+     * @param bean  Bean whose property is to be mutated
+     * @param name  Name of the property to be mutated
+     * @param value The value to be set on the property
+     * @throws IllegalAccessException    if the caller does not have
+     *                                   access to the property accessor method
+     * @throws IllegalArgumentException  if &lt;code&gt;bean&lt;/code&gt; or
+     *                                   &lt;code&gt;name&lt;/code&gt; is null
+     * @throws InvocationTargetException if the property accessor method
+     *                                   throws an exception
+     * @throws NoSuchMethodException     if an accessor method for this
+     *                                   property cannot be found
+     * @throws PropertyException         if the property cannot be set
+     */
+    public static void setProperty(@Nonnull Object bean, @Nonnull String name, @Nullable Object value)
+        throws IllegalAccessException, InvocationTargetException,
+        NoSuchMethodException, PropertyException {
+<span class="fc" id="L2183">        requireNonNull(bean, ERROR_BEAN_NULL);</span>
+<span class="fc" id="L2184">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+
+        // Retrieve the property setter method for the specified property
+<span class="fc" id="L2187">        PropertyDescriptor descriptor = getPropertyDescriptor(bean, name);</span>
+<span class="pc bpc" id="L2188" title="1 of 2 branches missed.">        if (descriptor == null) {</span>
+<span class="nc" id="L2189">            throw new NoSuchMethodException(&quot;Unknown property '&quot; +</span>
+<span class="nc" id="L2190">                name + &quot;' on class '&quot; + bean.getClass() + &quot;'&quot;);</span>
+        }
+<span class="fc" id="L2192">        Method writeMethod = getWriteMethod(bean.getClass(), descriptor);</span>
+<span class="pc bpc" id="L2193" title="1 of 2 branches missed.">        if (writeMethod == null) {</span>
+<span class="nc" id="L2194">            throw new NoSuchMethodException(&quot;Property '&quot; + name +</span>
+<span class="nc" id="L2195">                &quot;' has no setter method in class '&quot; + bean.getClass() + &quot;'&quot;);</span>
+        }
+
+        // type conversion needed?
+<span class="fc" id="L2199">        Class&lt;?&gt; propertyType = descriptor.getPropertyType();</span>
+<span class="pc bpc" id="L2200" title="2 of 4 branches missed.">        if (value != null &amp;&amp; !propertyType.isAssignableFrom(value.getClass())) {</span>
+<span class="nc" id="L2201">            value = TypeUtils.convertValue(propertyType, value);</span>
+        }
+
+        // Call the property setter
+        try {
+<span class="fc" id="L2206">            writeMethod.invoke(bean, value);</span>
+<span class="nc" id="L2207">        } catch (IllegalArgumentException iae) {</span>
+<span class="nc" id="L2208">            throw new PropertyException(bean, name, value, iae);</span>
+<span class="fc" id="L2209">        }</span>
+<span class="fc" id="L2210">    }</span>
+
+    /**
+     * Return the value of the specified property of the specified bean,
+     * no matter which property reference format is used, with no
+     * type conversions.
+     *
+     * @param bean Bean whose property is to be extracted
+     * @param name Possibly indexed and/or nested name of the property
+     *             to be extracted
+     * @return the property value
+     * @throws IllegalAccessException    if the caller does not have
+     *                                   access to the property accessor method
+     * @throws IllegalArgumentException  if &lt;code&gt;bean&lt;/code&gt; or
+     *                                   &lt;code&gt;name&lt;/code&gt; is null
+     * @throws InvocationTargetException if the property accessor method
+     *                                   throws an exception
+     * @throws NoSuchMethodException     if an accessor method for this
+     *                                   property cannot be found
+     */
+    @Nullable
+    public static Object getProperty(@Nonnull Object bean, @Nonnull String name)
+        throws IllegalAccessException, InvocationTargetException,
+        NoSuchMethodException {
+<span class="nc" id="L2234">        requireNonNull(bean, ERROR_BEAN_NULL);</span>
+<span class="nc" id="L2235">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+
+        // Retrieve the property getter method for the specified property
+<span class="nc" id="L2238">        PropertyDescriptor descriptor = getPropertyDescriptor(bean, name);</span>
+<span class="nc bnc" id="L2239" title="All 2 branches missed.">        if (descriptor == null) {</span>
+<span class="nc" id="L2240">            throw new NoSuchMethodException(&quot;Unknown property '&quot; +</span>
+<span class="nc" id="L2241">                name + &quot;' on class '&quot; + bean.getClass() + &quot;'&quot;);</span>
+        }
+<span class="nc" id="L2243">        Method readMethod = getReadMethod(bean.getClass(), descriptor);</span>
+<span class="nc bnc" id="L2244" title="All 2 branches missed.">        if (readMethod == null) {</span>
+<span class="nc" id="L2245">            throw new NoSuchMethodException(&quot;Property '&quot; + name +</span>
+<span class="nc" id="L2246">                &quot;' has no getter method in class '&quot; + bean.getClass() + &quot;'&quot;);</span>
+        }
+
+        // Call the property getter and return the value
+<span class="nc" id="L2250">        return readMethod.invoke(bean, EMPTY_OBJECT_ARRAY);</span>
+    }
+
+    /**
+     * &lt;p&gt;Return an accessible property getter method for this property,
+     * if there is one; otherwise return &lt;code&gt;null&lt;/code&gt;.&lt;/p&gt;
+     *
+     * @param clazz      The class of the read method will be invoked on
+     * @param descriptor Property descriptor to return a getter for
+     * @return The read method
+     */
+    @Nullable
+    public static Method getReadMethod(@Nonnull Class&lt;?&gt; clazz, @Nonnull PropertyDescriptor descriptor) {
+<span class="nc" id="L2263">        requireNonNull(clazz, ERROR_CLAZZ_NULL);</span>
+<span class="nc" id="L2264">        requireNonNull(descriptor, ERROR_DESCRIPTOR_NULL);</span>
+<span class="nc" id="L2265">        return (MethodUtils.getAccessibleMethod(clazz, descriptor.getReadMethod()));</span>
+    }
+
+    /**
+     * &lt;p&gt;Return an accessible property setter method for this property,
+     * if there is one; otherwise return &lt;code&gt;null&lt;/code&gt;.&lt;/p&gt;
+     *
+     * @param clazz      The class of the write method will be invoked on
+     * @param descriptor Property descriptor to return a setter for
+     * @return The write method
+     */
+    @Nullable
+    public static Method getWriteMethod(@Nonnull Class&lt;?&gt; clazz, @Nonnull PropertyDescriptor descriptor) {
+<span class="fc" id="L2278">        requireNonNull(clazz, ERROR_CLAZZ_NULL);</span>
+<span class="fc" id="L2279">        requireNonNull(descriptor, ERROR_DESCRIPTOR_NULL);</span>
+<span class="fc" id="L2280">        return (MethodUtils.getAccessibleMethod(clazz, descriptor.getWriteMethod()));</span>
+    }
+
+    // -- The following methods and properties were copied from commons-lang
+
+    /**
+     * &lt;p&gt;Validate that the argument condition is &lt;code&gt;true&lt;/code&gt;; otherwise
+     * throwing an exception with the specified message. This method is useful when
+     * validating according to an arbitrary boolean expression, such as validating a
+     * primitive number or using your own custom validation expression.&lt;/p&gt;
+     * &lt;p/&gt;
+     * &lt;pre&gt;
+     * isTrue( (i &gt; 0), &quot;The value must be greater than zero&quot;);
+     * isTrue( myObject.isOk(), &quot;The object is not OK&quot;);
+     * &lt;/pre&gt;
+     *
+     * @param expression the boolean expression to check
+     * @param message    the exception message if invalid
+     * @throws IllegalArgumentException if expression is &lt;code&gt;false&lt;/code&gt;
+     */
+    public static void isTrue(boolean expression, String message) {
+<span class="nc bnc" id="L2301" title="All 2 branches missed.">        if (expression) {</span>
+<span class="nc" id="L2302">            throw new IllegalArgumentException(message);</span>
+        }
+<span class="nc" id="L2304">    }</span>
+
+    @Nullable
+    public static Object invokeInstanceMethod(@Nonnull Object object, @Nonnull String methodName) {
+<span class="nc" id="L2308">        return invokeInstanceMethod(object, methodName, EMPTY_ARGS);</span>
+    }
+
+    @Nullable
+    public static Object invokeInstanceMethod(@Nonnull Object object, @Nonnull String methodName, Object arg) {
+<span class="nc" id="L2313">        return invokeInstanceMethod(object, methodName, new Object[]{arg});</span>
+    }
+
+    @Nullable
+    public static Object invokeInstanceMethod(@Nonnull Object object, @Nonnull String methodName, Object... args) {
+<span class="fc" id="L2318">        requireNonNull(object, ERROR_OBJECT_NULL);</span>
+<span class="fc" id="L2319">        requireNonBlank(methodName, ERROR_METHOD_NAME_BLANK);</span>
+        try {
+<span class="fc" id="L2321">            return invokeMethod(object, methodName, args);</span>
+<span class="nc" id="L2322">        } catch (NoSuchMethodException | IllegalAccessException e) {</span>
+<span class="nc" id="L2323">            throw new InstanceMethodInvocationException(object, methodName, args, e);</span>
+<span class="nc" id="L2324">        } catch (InvocationTargetException e) {</span>
+<span class="nc" id="L2325">            throw new InstanceMethodInvocationException(object, methodName, args, e.getTargetException());</span>
+        }
+    }
+
+    @Nullable
+    public static Object invokeExactInstanceMethod(@Nonnull Object object, @Nonnull String methodName) {
+<span class="nc" id="L2331">        return invokeExactInstanceMethod(object, methodName, EMPTY_ARGS);</span>
+    }
+
+    @Nullable
+    public static Object invokeExactInstanceMethod(@Nonnull Object object, @Nonnull String methodName, Object arg) {
+<span class="nc" id="L2336">        return invokeExactInstanceMethod(object, methodName, new Object[]{arg});</span>
+    }
+
+    @Nullable
+    public static Object invokeExactInstanceMethod(@Nonnull Object object, @Nonnull String methodName, Object... args) {
+<span class="nc" id="L2341">        requireNonNull(object, ERROR_OBJECT_NULL);</span>
+<span class="nc" id="L2342">        requireNonBlank(methodName, ERROR_METHOD_NAME_BLANK);</span>
+        try {
+<span class="nc" id="L2344">            return invokeExactMethod(object, methodName, args);</span>
+<span class="nc" id="L2345">        } catch (NoSuchMethodException | IllegalAccessException e) {</span>
+<span class="nc" id="L2346">            throw new InstanceMethodInvocationException(object, methodName, args, e);</span>
+<span class="nc" id="L2347">        } catch (InvocationTargetException e) {</span>
+<span class="nc" id="L2348">            throw new InstanceMethodInvocationException(object, methodName, args, e.getTargetException());</span>
+        }
+    }
+
+    @Nullable
+    public static Object invokeStaticMethod(@Nonnull Class&lt;?&gt; type, @Nonnull String methodName) {
+<span class="nc" id="L2354">        return invokeStaticMethod(type, methodName, EMPTY_ARGS);</span>
+    }
+
+    @Nullable
+    public static Object invokeStaticMethod(@Nonnull Class&lt;?&gt; type, @Nonnull String methodName, Object arg) {
+<span class="nc" id="L2359">        return invokeStaticMethod(type, methodName, new Object[]{arg});</span>
+    }
+
+    @Nullable
+    public static Object invokeStaticMethod(@Nonnull Class&lt;?&gt; type, @Nonnull String methodName, Object... args) {
+<span class="nc" id="L2364">        requireNonNull(type, ERROR_TYPE_NULL);</span>
+<span class="nc" id="L2365">        requireNonBlank(methodName, ERROR_METHOD_NAME_BLANK);</span>
+        try {
+<span class="nc" id="L2367">            return MethodUtils.invokeStaticMethod(type, methodName, args);</span>
+<span class="nc" id="L2368">        } catch (NoSuchMethodException | IllegalAccessException e) {</span>
+<span class="nc" id="L2369">            throw new StaticMethodInvocationException(type, methodName, args, e);</span>
+<span class="nc" id="L2370">        } catch (InvocationTargetException e) {</span>
+<span class="nc" id="L2371">            throw new StaticMethodInvocationException(type, methodName, args, e.getTargetException());</span>
+        }
+    }
+
+    @Nullable
+    public static Object invokeExactStaticMethod(@Nonnull Class&lt;?&gt; type, @Nonnull String methodName) {
+<span class="nc" id="L2377">        return invokeExactStaticMethod(type, methodName, EMPTY_ARGS);</span>
+    }
+
+    @Nullable
+    public static Object invokeExactStaticMethod(@Nonnull Class&lt;?&gt; type, @Nonnull String methodName, Object arg) {
+<span class="nc" id="L2382">        return invokeExactStaticMethod(type, methodName, new Object[]{arg});</span>
+    }
+
+    @Nullable
+    public static Object invokeExactStaticMethod(@Nonnull Class&lt;?&gt; type, @Nonnull String methodName, Object... args) {
+<span class="nc" id="L2387">        requireNonNull(type, ERROR_TYPE_NULL);</span>
+<span class="nc" id="L2388">        requireNonBlank(methodName, ERROR_METHOD_NAME_BLANK);</span>
+        try {
+<span class="nc" id="L2390">            return MethodUtils.invokeExactStaticMethod(type, methodName, args);</span>
+<span class="nc" id="L2391">        } catch (NoSuchMethodException | IllegalAccessException e) {</span>
+<span class="nc" id="L2392">            throw new StaticMethodInvocationException(type, methodName, args, e);</span>
+<span class="nc" id="L2393">        } catch (InvocationTargetException e) {</span>
+<span class="nc" id="L2394">            throw new StaticMethodInvocationException(type, methodName, args, e.getTargetException());</span>
+        }
+    }
+
+    private static final String EMPTY_STRING = &quot;&quot;;
+
+    /**
+     * &lt;p&gt;The package separator character: &lt;code&gt;'&amp;#x2e;' == {@value}&lt;/code&gt;.&lt;/p&gt;
+     */
+    public static final char PACKAGE_SEPARATOR_CHAR = '.';
+
+    /**
+     * &lt;p&gt;The package separator String: &lt;code&gt;&quot;&amp;#x2e;&quot;&lt;/code&gt;.&lt;/p&gt;
+     */
+<span class="fc" id="L2408">    public static final String PACKAGE_SEPARATOR = String.valueOf(PACKAGE_SEPARATOR_CHAR);</span>
+
+    /**
+     * &lt;p&gt;The inner class separator character: &lt;code&gt;'$' == {@value}&lt;/code&gt;.&lt;/p&gt;
+     */
+    public static final char INNER_CLASS_SEPARATOR_CHAR = '$';
+
+    /**
+     * &lt;p&gt;The inner class separator String: &lt;code&gt;&quot;$&quot;&lt;/code&gt;.&lt;/p&gt;
+     */
+<span class="fc" id="L2418">    public static final String INNER_CLASS_SEPARATOR = String.valueOf(INNER_CLASS_SEPARATOR_CHAR);</span>
+
+    /**
+     * Maps a primitive class name to its corresponding abbreviation used in array class names.
+     */
+<span class="fc" id="L2423">    private static final Map&lt;String, String&gt; abbreviationMap = new HashMap&lt;&gt;();</span>
+
+    /**
+     * Maps an abbreviation used in array class names to corresponding primitive class name.
+     */
+<span class="fc" id="L2428">    private static final Map&lt;String, String&gt; reverseAbbreviationMap = new HashMap&lt;&gt;();</span>
+
+    /**
+     * Add primitive type abbreviation to maps of abbreviations.
+     *
+     * @param primitive    Canonical name of primitive type
+     * @param abbreviation Corresponding abbreviation of primitive type
+     */
+    private static void addAbbreviation(String primitive, String abbreviation) {
+<span class="fc" id="L2437">        abbreviationMap.put(primitive, abbreviation);</span>
+<span class="fc" id="L2438">        reverseAbbreviationMap.put(abbreviation, primitive);</span>
+<span class="fc" id="L2439">    }</span>
+
+    /**
+     * Feed abbreviation maps
+     */
+    static {
+<span class="fc" id="L2445">        addAbbreviation(&quot;int&quot;, &quot;I&quot;);</span>
+<span class="fc" id="L2446">        addAbbreviation(&quot;boolean&quot;, &quot;Z&quot;);</span>
+<span class="fc" id="L2447">        addAbbreviation(&quot;float&quot;, &quot;F&quot;);</span>
+<span class="fc" id="L2448">        addAbbreviation(&quot;long&quot;, &quot;J&quot;);</span>
+<span class="fc" id="L2449">        addAbbreviation(&quot;short&quot;, &quot;S&quot;);</span>
+<span class="fc" id="L2450">        addAbbreviation(&quot;byte&quot;, &quot;B&quot;);</span>
+<span class="fc" id="L2451">        addAbbreviation(&quot;double&quot;, &quot;D&quot;);</span>
+<span class="fc" id="L2452">        addAbbreviation(&quot;char&quot;, &quot;C&quot;);</span>
+<span class="fc" id="L2453">    }</span>
+
+    // ----------------------------------------------------------------------
+
+    /**
+     * &lt;p&gt;Gets the class name minus the package name for an &lt;code&gt;Object&lt;/code&gt;.&lt;/p&gt;
+     *
+     * @param object      the class to get the short name for, may be null
+     * @param valueIfNull the value to return if null
+     * @return the class name of the object without the package name, or the null value
+     */
+    @Nonnull
+    public static String getShortClassName(@Nullable Object object, @Nonnull String valueIfNull) {
+<span class="nc bnc" id="L2466" title="All 2 branches missed.">        if (object == null) {</span>
+<span class="nc" id="L2467">            return valueIfNull;</span>
+        }
+<span class="nc" id="L2469">        return getShortClassName(object.getClass());</span>
+    }
+
+    /**
+     * &lt;p&gt;Gets the class name minus the package name from a &lt;code&gt;Class&lt;/code&gt;.&lt;/p&gt;
+     *
+     * @param cls the class to get the short name for.
+     * @return the class name without the package name or an empty string
+     */
+    @Nonnull
+    public static String getShortClassName(@Nullable Class&lt;?&gt; cls) {
+<span class="pc bpc" id="L2480" title="1 of 2 branches missed.">        if (cls == null) {</span>
+<span class="nc" id="L2481">            return EMPTY_STRING;</span>
+        }
+<span class="fc" id="L2483">        return getShortClassName(cls.getName());</span>
+    }
+
+    /**
+     * &lt;p&gt;Gets the class name minus the package name from a String.&lt;/p&gt;
+     * &lt;p/&gt;
+     * &lt;p&gt;The string passed in is assumed to be a class name - it is not checked.&lt;/p&gt;
+     *
+     * @param className the className to get the short name for
+     * @return the class name of the class without the package name or an empty string
+     */
+    @Nonnull
+    public static String getShortClassName(@Nullable String className) {
+<span class="pc bpc" id="L2496" title="1 of 2 branches missed.">        if (className == null) {</span>
+<span class="nc" id="L2497">            return EMPTY_STRING;</span>
+        }
+<span class="pc bpc" id="L2499" title="1 of 2 branches missed.">        if (className.length() == 0) {</span>
+<span class="nc" id="L2500">            return EMPTY_STRING;</span>
+        }
+
+<span class="fc" id="L2503">        StringBuilder arrayPrefix = new StringBuilder();</span>
+
+        // Handle array encoding
+<span class="pc bpc" id="L2506" title="1 of 2 branches missed.">        if (className.startsWith(&quot;[&quot;)) {</span>
+<span class="nc bnc" id="L2507" title="All 2 branches missed.">            while (className.charAt(0) == '[') {</span>
+<span class="nc" id="L2508">                className = className.substring(1);</span>
+<span class="nc" id="L2509">                arrayPrefix.append(&quot;[]&quot;);</span>
+            }
+            // Strip Object type encoding
+<span class="nc bnc" id="L2512" title="All 4 branches missed.">            if (className.charAt(0) == 'L' &amp;&amp; className.charAt(className.length() - 1) == ';') {</span>
+<span class="nc" id="L2513">                className = className.substring(1, className.length() - 1);</span>
+            }
+        }
+
+<span class="pc bpc" id="L2517" title="1 of 2 branches missed.">        if (reverseAbbreviationMap.containsKey(className)) {</span>
+<span class="nc" id="L2518">            className = reverseAbbreviationMap.get(className);</span>
+        }
+
+<span class="fc" id="L2521">        int lastDotIdx = className.lastIndexOf(PACKAGE_SEPARATOR_CHAR);</span>
+<span class="pc bpc" id="L2522" title="1 of 2 branches missed.">        int innerIdx = className.indexOf(</span>
+            INNER_CLASS_SEPARATOR_CHAR, lastDotIdx == -1 ? 0 : lastDotIdx + 1);
+<span class="fc" id="L2524">        String out = className.substring(lastDotIdx + 1);</span>
+<span class="pc bpc" id="L2525" title="1 of 2 branches missed.">        if (innerIdx != -1) {</span>
+<span class="nc" id="L2526">            out = out.replace(INNER_CLASS_SEPARATOR_CHAR, PACKAGE_SEPARATOR_CHAR);</span>
+        }
+<span class="fc" id="L2528">        return out + arrayPrefix;</span>
+    }
+
+    // Package name
+    // ----------------------------------------------------------------------
+
+    /**
+     * &lt;p&gt;Gets the package name of an &lt;code&gt;Object&lt;/code&gt;.&lt;/p&gt;
+     *
+     * @param object      the class to get the package name for, may be null
+     * @param valueIfNull the value to return if null
+     * @return the package name of the object, or the null value
+     */
+    @Nonnull
+    public static String getPackageName(@Nullable Object object, @Nonnull String valueIfNull) {
+<span class="nc bnc" id="L2543" title="All 2 branches missed.">        if (object == null) {</span>
+<span class="nc" id="L2544">            return valueIfNull;</span>
+        }
+<span class="nc" id="L2546">        return getPackageName(object.getClass());</span>
+    }
+
+    /**
+     * &lt;p&gt;Gets the package name of a &lt;code&gt;Class&lt;/code&gt;.&lt;/p&gt;
+     *
+     * @param cls the class to get the package name for, may be &lt;code&gt;null&lt;/code&gt;.
+     * @return the package name or an empty string
+     */
+    @Nonnull
+    public static String getPackageName(@Nullable Class&lt;?&gt; cls) {
+<span class="pc bpc" id="L2557" title="1 of 2 branches missed.">        if (cls == null) {</span>
+<span class="nc" id="L2558">            return EMPTY_STRING;</span>
+        }
+<span class="fc" id="L2560">        return getPackageName(cls.getName());</span>
+    }
+
+    /**
+     * &lt;p&gt;Gets the package name from a &lt;code&gt;String&lt;/code&gt;.&lt;/p&gt;
+     * &lt;p/&gt;
+     * &lt;p&gt;The string passed in is assumed to be a class name - it is not checked.&lt;/p&gt;
+     * &lt;p&gt;If the class is unpackaged, return an empty string.&lt;/p&gt;
+     *
+     * @param className the className to get the package name for, may be &lt;code&gt;null&lt;/code&gt;
+     * @return the package name or an empty string
+     */
+    @Nonnull
+    public static String getPackageName(@Nullable String className) {
+<span class="pc bpc" id="L2574" title="2 of 4 branches missed.">        if (className == null || className.length() == 0) {</span>
+<span class="nc" id="L2575">            return EMPTY_STRING;</span>
+        }
+
+        // Strip array encoding
+<span class="pc bpc" id="L2579" title="1 of 2 branches missed.">        while (className.charAt(0) == '[') {</span>
+<span class="nc" id="L2580">            className = className.substring(1);</span>
+        }
+        // Strip Object type encoding
+<span class="pc bpc" id="L2583" title="3 of 4 branches missed.">        if (className.charAt(0) == 'L' &amp;&amp; className.charAt(className.length() - 1) == ';') {</span>
+<span class="nc" id="L2584">            className = className.substring(1);</span>
+        }
+
+<span class="fc" id="L2587">        int i = className.lastIndexOf(PACKAGE_SEPARATOR_CHAR);</span>
+<span class="pc bpc" id="L2588" title="1 of 2 branches missed.">        if (i == -1) {</span>
+<span class="nc" id="L2589">            return EMPTY_STRING;</span>
+        }
+<span class="fc" id="L2591">        return className.substring(0, i);</span>
+    }
+
+    /**
+     * param instance array to the type array
+     *
+     * @param args the arguments
+     * @return the types of the arguments
+     */
+    @Nullable
+    public static Class&lt;?&gt;[] convertToTypeArray(@Nullable Object[] args) {
+<span class="nc bnc" id="L2602" title="All 2 branches missed.">        if (args == null) {</span>
+<span class="nc" id="L2603">            return null;</span>
+        }
+<span class="nc" id="L2605">        int s = args.length;</span>
+<span class="nc" id="L2606">        Class&lt;?&gt;[] ans = new Class&lt;?&gt;[s];</span>
+<span class="nc bnc" id="L2607" title="All 2 branches missed.">        for (int i = 0; i &lt; s; i++) {</span>
+<span class="nc" id="L2608">            Object o = args[i];</span>
+<span class="nc bnc" id="L2609" title="All 2 branches missed.">            ans[i] = o != null ? o.getClass() : null;</span>
+        }
+<span class="nc" id="L2611">        return ans;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

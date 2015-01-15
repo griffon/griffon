@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>MethodUtils.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-java</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.injection</a> &gt; <span class="el_source">MethodUtils.java</span></div><h1>MethodUtils.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.injection;
+
+import griffon.exceptions.InstanceMethodInvocationException;
+
+import javax.annotation.Nonnull;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.ArrayList;
+import java.util.List;
+
+<span class="nc" id="L29">public final class MethodUtils {</span>
+    public static void invokeAnnotatedMethod(@Nonnull final Object instance, @Nonnull final Class&lt;? extends Annotation&gt; annotation) {
+<span class="fc" id="L31">        List&lt;Method&gt; methods = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L32">        Class&lt;?&gt; klass = instance.getClass();</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">        while (klass != null) {</span>
+<span class="fc" id="L34">            boolean found = false;</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">            for (Method method : klass.getDeclaredMethods()) {</span>
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">                if (method.isAnnotationPresent(annotation) &amp;&amp;</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">                    method.getParameterTypes().length == 0) {</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">                    if (found) {</span>
+<span class="nc" id="L39">                        throw new InstanceMethodInvocationException(instance, method, buildCause(instance.getClass(), method, methods));</span>
+                    }
+<span class="nc" id="L41">                    methods.add(method);</span>
+<span class="nc" id="L42">                    found = true;</span>
+                }
+            }
+
+<span class="fc" id="L46">            klass = klass.getSuperclass();</span>
+<span class="fc" id="L47">        }</span>
+
+<span class="pc bpc" id="L49" title="1 of 2 branches missed.">        for (final Method method : methods) {</span>
+<span class="nc" id="L50">            AccessController.doPrivileged(new PrivilegedAction&lt;Object&gt;() {</span>
+                @Override
+                public Object run() {
+<span class="nc" id="L53">                    boolean wasAccessible = method.isAccessible();</span>
+                    try {
+<span class="nc" id="L55">                        method.setAccessible(true);</span>
+<span class="nc" id="L56">                        return method.invoke(instance);</span>
+<span class="nc" id="L57">                    } catch (IllegalAccessException | IllegalArgumentException e) {</span>
+<span class="nc" id="L58">                        throw new InstanceMethodInvocationException(instance, method.getName(), null, e);</span>
+<span class="nc" id="L59">                    } catch (InvocationTargetException e) {</span>
+<span class="nc" id="L60">                        throw new InstanceMethodInvocationException(instance, method.getName(), null, e.getTargetException());</span>
+                    } finally {
+<span class="nc" id="L62">                        method.setAccessible(wasAccessible);</span>
+                    }
+                }
+            });
+<span class="nc" id="L66">        }</span>
+<span class="fc" id="L67">    }</span>
+
+    @Nonnull
+    private static Throwable buildCause(@Nonnull Class&lt;?&gt; clazz, @Nonnull Method method, @Nonnull List&lt;Method&gt; methods) {
+<span class="nc" id="L71">        StringBuilder b = new StringBuilder(&quot;The following methods were found annotated with @PostConstruct on &quot;)</span>
+<span class="nc" id="L72">            .append(clazz);</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        for (Method m : methods) {</span>
+<span class="nc" id="L74">            b.append(&quot;\n  &quot;).append(m.toGenericString());</span>
+<span class="nc" id="L75">        }</span>
+<span class="nc" id="L76">        b.append(&quot;\n  &quot;).append(method.toGenericString());</span>
+<span class="nc" id="L77">        return new IllegalStateException(b.toString());</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

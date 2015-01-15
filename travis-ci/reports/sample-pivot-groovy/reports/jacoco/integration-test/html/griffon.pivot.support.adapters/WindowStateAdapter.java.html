@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>WindowStateAdapter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.support.adapters</a> &gt; <span class="el_source">WindowStateAdapter.java</span></div><h1>WindowStateAdapter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.support.adapters;
+
+import griffon.core.CallableWithArgs;
+import org.apache.pivot.util.Vote;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="fc" id="L25">public class WindowStateAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.WindowStateListener {</span>
+    private CallableWithArgs&lt;Vote&gt; previewWindowOpen;
+    private CallableWithArgs&lt;Void&gt; windowOpenVetoed;
+    private CallableWithArgs&lt;Vote&gt; previewWindowClose;
+    private CallableWithArgs&lt;Void&gt; windowCloseVetoed;
+    private CallableWithArgs&lt;Void&gt; windowOpened;
+    private CallableWithArgs&lt;Void&gt; windowClosed;
+
+    public CallableWithArgs&lt;Vote&gt; getPreviewWindowOpen() {
+<span class="nc" id="L34">        return this.previewWindowOpen;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getWindowOpenVetoed() {
+<span class="nc" id="L38">        return this.windowOpenVetoed;</span>
+    }
+
+    public CallableWithArgs&lt;Vote&gt; getPreviewWindowClose() {
+<span class="nc" id="L42">        return this.previewWindowClose;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getWindowCloseVetoed() {
+<span class="nc" id="L46">        return this.windowCloseVetoed;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getWindowOpened() {
+<span class="nc" id="L50">        return this.windowOpened;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getWindowClosed() {
+<span class="nc" id="L54">        return this.windowClosed;</span>
+    }
+
+
+    public void setPreviewWindowOpen(CallableWithArgs&lt;Vote&gt; previewWindowOpen) {
+<span class="nc" id="L59">        this.previewWindowOpen = previewWindowOpen;</span>
+<span class="nc" id="L60">    }</span>
+
+    public void setWindowOpenVetoed(CallableWithArgs&lt;Void&gt; windowOpenVetoed) {
+<span class="nc" id="L63">        this.windowOpenVetoed = windowOpenVetoed;</span>
+<span class="nc" id="L64">    }</span>
+
+    public void setPreviewWindowClose(CallableWithArgs&lt;Vote&gt; previewWindowClose) {
+<span class="nc" id="L67">        this.previewWindowClose = previewWindowClose;</span>
+<span class="nc" id="L68">    }</span>
+
+    public void setWindowCloseVetoed(CallableWithArgs&lt;Void&gt; windowCloseVetoed) {
+<span class="nc" id="L71">        this.windowCloseVetoed = windowCloseVetoed;</span>
+<span class="nc" id="L72">    }</span>
+
+    public void setWindowOpened(CallableWithArgs&lt;Void&gt; windowOpened) {
+<span class="nc" id="L75">        this.windowOpened = windowOpened;</span>
+<span class="nc" id="L76">    }</span>
+
+    public void setWindowClosed(CallableWithArgs&lt;Void&gt; windowClosed) {
+<span class="nc" id="L79">        this.windowClosed = windowClosed;</span>
+<span class="nc" id="L80">    }</span>
+
+
+    public org.apache.pivot.util.Vote previewWindowOpen(org.apache.pivot.wtk.Window arg0) {
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        if (previewWindowOpen != null) {</span>
+<span class="nc" id="L85">            return previewWindowOpen.call(arg0);</span>
+        }
+<span class="nc" id="L87">        return Vote.APPROVE;</span>
+    }
+
+    public void windowOpenVetoed(org.apache.pivot.wtk.Window arg0, org.apache.pivot.util.Vote arg1) {
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        if (windowOpenVetoed != null) {</span>
+<span class="nc" id="L92">            windowOpenVetoed.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L94">    }</span>
+
+    public org.apache.pivot.util.Vote previewWindowClose(org.apache.pivot.wtk.Window arg0) {
+<span class="nc bnc" id="L97" title="All 2 branches missed.">        if (previewWindowClose != null) {</span>
+<span class="nc" id="L98">            return previewWindowClose.call(arg0);</span>
+        }
+<span class="nc" id="L100">        return Vote.APPROVE;</span>
+    }
+
+    public void windowCloseVetoed(org.apache.pivot.wtk.Window arg0, org.apache.pivot.util.Vote arg1) {
+<span class="nc bnc" id="L104" title="All 2 branches missed.">        if (windowCloseVetoed != null) {</span>
+<span class="nc" id="L105">            windowCloseVetoed.call(arg0, arg1);</span>
+        }
+<span class="nc" id="L107">    }</span>
+
+    public void windowOpened(org.apache.pivot.wtk.Window arg0) {
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (windowOpened != null) {</span>
+<span class="nc" id="L111">            windowOpened.call(arg0);</span>
+        }
+<span class="nc" id="L113">    }</span>
+
+    public void windowClosed(org.apache.pivot.wtk.Window arg0, org.apache.pivot.wtk.Display arg1, org.apache.pivot.wtk.Window arg2) {
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        if (windowClosed != null) {</span>
+<span class="nc" id="L117">            windowClosed.call(arg0, arg1, arg2);</span>
+        }
+<span class="nc" id="L119">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

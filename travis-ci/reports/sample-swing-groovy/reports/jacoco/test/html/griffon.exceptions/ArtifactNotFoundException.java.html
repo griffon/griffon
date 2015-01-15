@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ArtifactNotFoundException.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.exceptions</a> &gt; <span class="el_source">ArtifactNotFoundException.java</span></div><h1>ArtifactNotFoundException.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.exceptions;
+
+import griffon.core.artifact.GriffonArtifact;
+import griffon.core.artifact.GriffonClass;
+
+import javax.annotation.Nonnull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public class ArtifactNotFoundException extends GriffonException {
+    private static final long serialVersionUID = -7881105306242340254L;
+
+    public ArtifactNotFoundException(@Nonnull Throwable cause) {
+<span class="nc" id="L31">        super(&quot;Could not find artifact&quot;, checkNonNull(cause, &quot;cause&quot;));</span>
+<span class="nc" id="L32">    }</span>
+
+    public ArtifactNotFoundException(@Nonnull Class&lt;?&gt; clazz) {
+<span class="nc" id="L35">        super(format(clazz));</span>
+<span class="nc" id="L36">    }</span>
+
+    public ArtifactNotFoundException(@Nonnull GriffonClass griffonClass, @Nonnull Throwable cause) {
+<span class="nc" id="L39">        super(format(griffonClass), checkNonNull(cause, &quot;cause&quot;));</span>
+<span class="nc" id="L40">    }</span>
+
+    public ArtifactNotFoundException(@Nonnull Class&lt;? extends GriffonArtifact&gt; clazz, @Nonnull String name) {
+<span class="nc" id="L43">        super(format(clazz, name));</span>
+<span class="nc" id="L44">    }</span>
+
+    private static String format(GriffonClass griffonClass) {
+<span class="nc" id="L47">        return &quot;Could not find artifact for &quot; + checkNonNull(griffonClass, &quot;griffonClass&quot;).getPropertyName();</span>
+    }
+
+    private static String format(Class&lt;?&gt; clazz) {
+<span class="nc" id="L51">        return &quot;Could not find artifact for &quot; + checkNonNull(clazz, &quot;clazz&quot;);</span>
+    }
+
+    private static String format(Class&lt;? extends GriffonArtifact&gt; clazz, String name) {
+<span class="nc" id="L55">        return &quot;Could not find artifact of type &quot; + checkNonNull(clazz, &quot;clazz&quot;) + &quot; named &quot; + checkNonBlank(name, &quot;name&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

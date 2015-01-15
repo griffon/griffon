@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ExpanderAdapter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-pivot</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.support.adapters</a> &gt; <span class="el_source">ExpanderAdapter.java</span></div><h1>ExpanderAdapter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.support.adapters;
+
+import griffon.core.CallableWithArgs;
+import org.apache.pivot.util.Vote;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="fc" id="L25">public class ExpanderAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ExpanderListener {</span>
+    private CallableWithArgs&lt;Void&gt; titleChanged;
+    private CallableWithArgs&lt;Void&gt; contentChanged;
+    private CallableWithArgs&lt;Void&gt; collapsibleChanged;
+    private CallableWithArgs&lt;Vote&gt; previewExpandedChange;
+    private CallableWithArgs&lt;Void&gt; expandedChangeVetoed;
+    private CallableWithArgs&lt;Void&gt; expandedChanged;
+
+    public CallableWithArgs&lt;Void&gt; getTitleChanged() {
+<span class="fc" id="L34">        return this.titleChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getContentChanged() {
+<span class="fc" id="L38">        return this.contentChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getCollapsibleChanged() {
+<span class="fc" id="L42">        return this.collapsibleChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Vote&gt; getPreviewExpandedChange() {
+<span class="fc" id="L46">        return this.previewExpandedChange;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getExpandedChangeVetoed() {
+<span class="fc" id="L50">        return this.expandedChangeVetoed;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getExpandedChanged() {
+<span class="fc" id="L54">        return this.expandedChanged;</span>
+    }
+
+
+    public void setTitleChanged(CallableWithArgs&lt;Void&gt; titleChanged) {
+<span class="fc" id="L59">        this.titleChanged = titleChanged;</span>
+<span class="fc" id="L60">    }</span>
+
+    public void setContentChanged(CallableWithArgs&lt;Void&gt; contentChanged) {
+<span class="fc" id="L63">        this.contentChanged = contentChanged;</span>
+<span class="fc" id="L64">    }</span>
+
+    public void setCollapsibleChanged(CallableWithArgs&lt;Void&gt; collapsibleChanged) {
+<span class="fc" id="L67">        this.collapsibleChanged = collapsibleChanged;</span>
+<span class="fc" id="L68">    }</span>
+
+    public void setPreviewExpandedChange(CallableWithArgs&lt;Vote&gt; previewExpandedChange) {
+<span class="fc" id="L71">        this.previewExpandedChange = previewExpandedChange;</span>
+<span class="fc" id="L72">    }</span>
+
+    public void setExpandedChangeVetoed(CallableWithArgs&lt;Void&gt; expandedChangeVetoed) {
+<span class="fc" id="L75">        this.expandedChangeVetoed = expandedChangeVetoed;</span>
+<span class="fc" id="L76">    }</span>
+
+    public void setExpandedChanged(CallableWithArgs&lt;Void&gt; expandedChanged) {
+<span class="fc" id="L79">        this.expandedChanged = expandedChanged;</span>
+<span class="fc" id="L80">    }</span>
+
+
+    public void titleChanged(org.apache.pivot.wtk.Expander arg0, java.lang.String arg1) {
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        if (titleChanged != null) {</span>
+<span class="fc" id="L85">            titleChanged.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L87">    }</span>
+
+    public void contentChanged(org.apache.pivot.wtk.Expander arg0, org.apache.pivot.wtk.Component arg1) {
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        if (contentChanged != null) {</span>
+<span class="fc" id="L91">            contentChanged.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L93">    }</span>
+
+    public void collapsibleChanged(org.apache.pivot.wtk.Expander arg0) {
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        if (collapsibleChanged != null) {</span>
+<span class="fc" id="L97">            collapsibleChanged.call(arg0);</span>
+        }
+<span class="fc" id="L99">    }</span>
+
+    public org.apache.pivot.util.Vote previewExpandedChange(org.apache.pivot.wtk.Expander arg0) {
+<span class="fc bfc" id="L102" title="All 2 branches covered.">        if (previewExpandedChange != null) {</span>
+<span class="fc" id="L103">            return previewExpandedChange.call(arg0);</span>
+        }
+<span class="fc" id="L105">        return Vote.APPROVE;</span>
+    }
+
+    public void expandedChangeVetoed(org.apache.pivot.wtk.Expander arg0, org.apache.pivot.util.Vote arg1) {
+<span class="fc bfc" id="L109" title="All 2 branches covered.">        if (expandedChangeVetoed != null) {</span>
+<span class="fc" id="L110">            expandedChangeVetoed.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L112">    }</span>
+
+    public void expandedChanged(org.apache.pivot.wtk.Expander arg0) {
+<span class="fc bfc" id="L115" title="All 2 branches covered.">        if (expandedChanged != null) {</span>
+<span class="fc" id="L116">            expandedChanged.call(arg0);</span>
+        }
+<span class="fc" id="L118">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ButtonGroupFactory.groovy</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.builder.pivot.factory</a> &gt; <span class="el_source">ButtonGroupFactory.groovy</span></div><h1>ButtonGroupFactory.groovy</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.builder.pivot.factory
+
+import org.apache.pivot.wtk.Button
+import org.apache.pivot.wtk.ButtonGroup
+import org.apache.pivot.wtk.RadioButton
+
+/**
+ * Copied from SwingBuilder to avoid dependency on Swing module.
+ *
+ * @author Danno Ferrin
+ * @author Andres Almiray
+ */
+class ButtonGroupFactory extends BeanFactory {
+    public static final String DELEGATE_PROPERTY_BUTTON_GROUP = &quot;_delegateProperty:buttonGroup&quot;;
+    public static final String DEFAULT_DELEGATE_PROPERTY_BUTTON_GROUP = &quot;buttonGroup&quot;;
+
+    public ButtonGroupFactory() {
+<span class="fc" id="L33">        super(ButtonGroup, false)</span>
+    }
+
+    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
+<span class="nc bnc" id="L37" title="All 2 branches missed.">        builder.context[DELEGATE_PROPERTY_BUTTON_GROUP] = attributes.remove(&quot;buttonGroupProperty&quot;) ?: DEFAULT_DELEGATE_PROPERTY_BUTTON_GROUP</span>
+<span class="nc" id="L38">        return super.newInstance(builder, name, value, attributes)</span>
+    }
+
+    public static buttonGroupAttributeDelegate(FactoryBuilderSupport builder, Object node, Map attributes) {
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        def buttonGroupAttr = builder?.context?.getAt(DELEGATE_PROPERTY_BUTTON_GROUP) ?: DEFAULT_DELEGATE_PROPERTY_BUTTON_GROUP</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        if (attributes.containsKey(buttonGroupAttr)) {</span>
+<span class="nc" id="L44">            def o = attributes.get(buttonGroupAttr)</span>
+<span class="nc bnc" id="L45" title="All 6 branches missed.">            if ((o instanceof ButtonGroup) &amp;&amp; (node instanceof Button)) {</span>
+<span class="nc bnc" id="L46" title="All 4 branches missed.">                if (!(node instanceof RadioButton)) node.toggleButton = true</span>
+<span class="nc" id="L47">                node.buttonGroup = o</span>
+<span class="nc" id="L48">                attributes.remove(buttonGroupAttr)</span>
+            }
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

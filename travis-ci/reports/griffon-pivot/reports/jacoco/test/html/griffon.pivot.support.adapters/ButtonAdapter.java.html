@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ButtonAdapter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-pivot</a> &gt; <a href="index.source.html" class="el_package">griffon.pivot.support.adapters</a> &gt; <span class="el_source">ButtonAdapter.java</span></div><h1>ButtonAdapter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.pivot.support.adapters;
+
+import griffon.core.CallableWithArgs;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="fc" id="L24">public class ButtonAdapter implements GriffonPivotAdapter, org.apache.pivot.wtk.ButtonListener {</span>
+    private CallableWithArgs&lt;Void&gt; buttonDataChanged;
+    private CallableWithArgs&lt;Void&gt; dataRendererChanged;
+    private CallableWithArgs&lt;Void&gt; actionChanged;
+    private CallableWithArgs&lt;Void&gt; toggleButtonChanged;
+    private CallableWithArgs&lt;Void&gt; triStateChanged;
+    private CallableWithArgs&lt;Void&gt; buttonGroupChanged;
+
+    public CallableWithArgs&lt;Void&gt; getButtonDataChanged() {
+<span class="fc" id="L33">        return this.buttonDataChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getDataRendererChanged() {
+<span class="fc" id="L37">        return this.dataRendererChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getActionChanged() {
+<span class="fc" id="L41">        return this.actionChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getToggleButtonChanged() {
+<span class="fc" id="L45">        return this.toggleButtonChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getTriStateChanged() {
+<span class="fc" id="L49">        return this.triStateChanged;</span>
+    }
+
+    public CallableWithArgs&lt;Void&gt; getButtonGroupChanged() {
+<span class="fc" id="L53">        return this.buttonGroupChanged;</span>
+    }
+
+
+    public void setButtonDataChanged(CallableWithArgs&lt;Void&gt; buttonDataChanged) {
+<span class="fc" id="L58">        this.buttonDataChanged = buttonDataChanged;</span>
+<span class="fc" id="L59">    }</span>
+
+    public void setDataRendererChanged(CallableWithArgs&lt;Void&gt; dataRendererChanged) {
+<span class="fc" id="L62">        this.dataRendererChanged = dataRendererChanged;</span>
+<span class="fc" id="L63">    }</span>
+
+    public void setActionChanged(CallableWithArgs&lt;Void&gt; actionChanged) {
+<span class="fc" id="L66">        this.actionChanged = actionChanged;</span>
+<span class="fc" id="L67">    }</span>
+
+    public void setToggleButtonChanged(CallableWithArgs&lt;Void&gt; toggleButtonChanged) {
+<span class="fc" id="L70">        this.toggleButtonChanged = toggleButtonChanged;</span>
+<span class="fc" id="L71">    }</span>
+
+    public void setTriStateChanged(CallableWithArgs&lt;Void&gt; triStateChanged) {
+<span class="fc" id="L74">        this.triStateChanged = triStateChanged;</span>
+<span class="fc" id="L75">    }</span>
+
+    public void setButtonGroupChanged(CallableWithArgs&lt;Void&gt; buttonGroupChanged) {
+<span class="fc" id="L78">        this.buttonGroupChanged = buttonGroupChanged;</span>
+<span class="fc" id="L79">    }</span>
+
+
+    public void buttonDataChanged(org.apache.pivot.wtk.Button arg0, java.lang.Object arg1) {
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        if (buttonDataChanged != null) {</span>
+<span class="fc" id="L84">            buttonDataChanged.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L86">    }</span>
+
+    public void dataRendererChanged(org.apache.pivot.wtk.Button arg0, org.apache.pivot.wtk.Button.DataRenderer arg1) {
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (dataRendererChanged != null) {</span>
+<span class="fc" id="L90">            dataRendererChanged.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L92">    }</span>
+
+    public void actionChanged(org.apache.pivot.wtk.Button arg0, org.apache.pivot.wtk.Action arg1) {
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        if (actionChanged != null) {</span>
+<span class="fc" id="L96">            actionChanged.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L98">    }</span>
+
+    public void toggleButtonChanged(org.apache.pivot.wtk.Button arg0) {
+<span class="fc bfc" id="L101" title="All 2 branches covered.">        if (toggleButtonChanged != null) {</span>
+<span class="fc" id="L102">            toggleButtonChanged.call(arg0);</span>
+        }
+<span class="fc" id="L104">    }</span>
+
+    public void triStateChanged(org.apache.pivot.wtk.Button arg0) {
+<span class="fc bfc" id="L107" title="All 2 branches covered.">        if (triStateChanged != null) {</span>
+<span class="fc" id="L108">            triStateChanged.call(arg0);</span>
+        }
+<span class="fc" id="L110">    }</span>
+
+    public void buttonGroupChanged(org.apache.pivot.wtk.Button arg0, org.apache.pivot.wtk.ButtonGroup arg1) {
+<span class="fc bfc" id="L113" title="All 2 branches covered.">        if (buttonGroupChanged != null) {</span>
+<span class="fc" id="L114">            buttonGroupChanged.call(arg0, arg1);</span>
+        }
+<span class="fc" id="L116">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

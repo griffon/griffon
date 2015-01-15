@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PropertyListenerASTTransformation.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-groovy-compile</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.compile.core.ast.transform</a> &gt; <span class="el_source">PropertyListenerASTTransformation.java</span></div><h1>PropertyListenerASTTransformation.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.compile.core.ast.transform;
+
+import griffon.transform.PropertyListener;
+import org.codehaus.groovy.ast.ASTNode;
+import org.codehaus.groovy.ast.AnnotatedNode;
+import org.codehaus.groovy.ast.AnnotationNode;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.FieldNode;
+import org.codehaus.groovy.ast.expr.ArgumentListExpression;
+import org.codehaus.groovy.ast.expr.CastExpression;
+import org.codehaus.groovy.ast.expr.ClosureExpression;
+import org.codehaus.groovy.ast.expr.ConstantExpression;
+import org.codehaus.groovy.ast.expr.Expression;
+import org.codehaus.groovy.ast.expr.ListExpression;
+import org.codehaus.groovy.ast.expr.MethodCallExpression;
+import org.codehaus.groovy.ast.expr.VariableExpression;
+import org.codehaus.groovy.ast.stmt.BlockStatement;
+import org.codehaus.groovy.ast.stmt.ExpressionStatement;
+import org.codehaus.groovy.control.CompilePhase;
+import org.codehaus.groovy.control.SourceUnit;
+import org.codehaus.groovy.transform.GroovyASTTransformation;
+
+import java.beans.PropertyChangeListener;
+import java.util.Map;
+
+/**
+ * Handles generation of code for the {@code @PropertyListener} annotation.
+ * &lt;p/&gt;
+ * Any closures found as the annotation's value will be either transformed
+ * into inner classes that implement PropertyChangeListener (when the value
+ * is a closue defined in place) or be casted as a proxy of PropertyChangeListener
+ * (when the value is a property reference found in the same class).&lt;p&gt;
+ * List of closures are also supported.
+ *
+ * @author Andres Almiray
+ */
+@GroovyASTTransformation(phase= CompilePhase.CANONICALIZATION)
+<span class="fc" id="L53">public class PropertyListenerASTTransformation extends AbstractASTTransformation {</span>
+<span class="fc" id="L54">    private static final ClassNode PROPERTY_LISTENER_CLASS = makeClassSafe(PropertyListener.class);</span>
+<span class="fc" id="L55">    private static final ClassNode PROPERTY_CHANGE_LISTENER_CLASS = makeClassSafe(PropertyChangeListener.class);</span>
+    private static final String EMPTY_STRING = &quot;&quot;;
+
+    /**
+     * Convenience method to see if an annotated node is {@code @PropertyListener}.
+     *
+     * @param node the node to check
+     * @return true if the node is an event publisher
+     */
+    public static boolean hasListenerAnnotation(AnnotatedNode node) {
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        for (AnnotationNode annotation : node.getAnnotations()) {</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">            if (PROPERTY_LISTENER_CLASS.equals(annotation.getClassNode())) {</span>
+<span class="nc" id="L67">                return true;</span>
+            }
+<span class="nc" id="L69">        }</span>
+<span class="nc" id="L70">        return false;</span>
+    }
+
+    public static void addListenerToProperty(SourceUnit source, AnnotationNode annotation, ClassNode declaringClass, FieldNode field) {
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        for (Map.Entry&lt;String, Expression&gt; member : annotation.getMembers().entrySet()) {</span>
+<span class="fc" id="L75">            Expression value = member.getValue();</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">            if ((value instanceof ListExpression)) {</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">                for (Expression expr : ((ListExpression) value).getExpressions()) {</span>
+<span class="nc" id="L78">                    processExpression(declaringClass, field.getName(), expr);</span>
+<span class="nc" id="L79">                }</span>
+<span class="nc" id="L80">                member.setValue(new ConstantExpression(EMPTY_STRING));</span>
+            } else {
+<span class="fc" id="L82">                processExpression(declaringClass, field.getName(), value);</span>
+<span class="fc" id="L83">                member.setValue(new ConstantExpression(EMPTY_STRING));</span>
+            }
+<span class="fc" id="L85">        }</span>
+<span class="fc" id="L86">    }</span>
+
+    public static void addListenerToClass(SourceUnit source, AnnotationNode annotation, ClassNode classNode) {
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        for (Map.Entry&lt;String, Expression&gt; member : annotation.getMembers().entrySet()) {</span>
+<span class="nc" id="L90">            Expression value = member.getValue();</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">            if ((value instanceof ListExpression)) {</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">                for (Expression expr : ((ListExpression) value).getExpressions()) {</span>
+<span class="nc" id="L93">                    processExpression(classNode, null, expr);</span>
+<span class="nc" id="L94">                }</span>
+<span class="nc" id="L95">                member.setValue(new ConstantExpression(EMPTY_STRING));</span>
+            } else {
+<span class="nc" id="L97">                processExpression(classNode, null, value);</span>
+<span class="nc" id="L98">                member.setValue(new ConstantExpression(EMPTY_STRING));</span>
+            }
+<span class="nc" id="L100">        }</span>
+<span class="nc" id="L101">    }</span>
+
+    /**
+     * Handles the bulk of the processing, mostly delegating to other methods.
+     *
+     * @param nodes   the ast nodes
+     * @param source  the source unit for the nodes
+     */
+    public void visit(ASTNode[] nodes, SourceUnit source) {
+<span class="pc bpc" id="L110" title="2 of 4 branches missed.">        if (!(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof AnnotatedNode)) {</span>
+<span class="nc" id="L111">            throw new RuntimeException(&quot;Internal error: wrong types: &quot; + nodes[0].getClass() + &quot; / &quot; + nodes[1].getClass());</span>
+        }
+
+<span class="fc" id="L114">        AnnotationNode annotation = (AnnotationNode) nodes[0];</span>
+<span class="fc" id="L115">        AnnotatedNode parent = (AnnotatedNode) nodes[1];</span>
+
+<span class="fc" id="L117">        ClassNode declaringClass = parent.getDeclaringClass();</span>
+<span class="pc bpc" id="L118" title="1 of 2 branches missed.">        if (parent instanceof FieldNode) {</span>
+<span class="fc" id="L119">            addListenerToProperty(source, annotation, declaringClass, (FieldNode) parent);</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">        } else if (parent instanceof ClassNode) {</span>
+<span class="nc" id="L121">            addListenerToClass(source, annotation, (ClassNode) parent);</span>
+        }
+<span class="fc" id="L123">    }</span>
+
+    private static void processExpression(ClassNode classNode, String propertyName, Expression expression) {
+<span class="fc bfc" id="L126" title="All 2 branches covered.">        if (expression instanceof ClosureExpression) {</span>
+<span class="fc" id="L127">            addPropertyChangeListener(classNode, propertyName, (ClosureExpression) expression);</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">        } else if (expression instanceof VariableExpression) {</span>
+<span class="fc" id="L129">            addPropertyChangeListener(classNode, propertyName, (VariableExpression) expression);</span>
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">        } else if (expression instanceof ConstantExpression) {</span>
+<span class="fc" id="L131">            addPropertyChangeListener(classNode, propertyName, (ConstantExpression) expression);</span>
+        } else {
+<span class="nc" id="L133">            throw new RuntimeException(&quot;Internal error: wrong expression type. &quot; + expression);</span>
+        }
+<span class="fc" id="L135">    }</span>
+
+    private static void addPropertyChangeListener(ClassNode classNode, String propertyName, ClosureExpression closure) {
+<span class="fc" id="L138">        ArgumentListExpression args = new ArgumentListExpression();</span>
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">        if (propertyName != null) args.addExpression(new ConstantExpression(propertyName));</span>
+<span class="fc" id="L140">        args.addExpression(CastExpression.asExpression(PROPERTY_CHANGE_LISTENER_CLASS, closure));</span>
+
+<span class="fc" id="L142">        addListenerStatement(classNode, args);</span>
+<span class="fc" id="L143">    }</span>
+
+    private static void addPropertyChangeListener(ClassNode classNode, String propertyName, VariableExpression variable) {
+<span class="fc" id="L146">        ArgumentListExpression args = new ArgumentListExpression();</span>
+<span class="pc bpc" id="L147" title="1 of 2 branches missed.">        if (propertyName != null) args.addExpression(new ConstantExpression(propertyName));</span>
+<span class="fc" id="L148">        args.addExpression(CastExpression.asExpression(PROPERTY_CHANGE_LISTENER_CLASS, variable));</span>
+
+<span class="fc" id="L150">        addListenerStatement(classNode, args);</span>
+<span class="fc" id="L151">    }</span>
+
+    private static void addPropertyChangeListener(ClassNode classNode, String propertyName, ConstantExpression reference) {
+<span class="fc" id="L154">        ArgumentListExpression args = new ArgumentListExpression();</span>
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">        if (propertyName != null) args.addExpression(new ConstantExpression(propertyName));</span>
+<span class="fc" id="L156">        VariableExpression variable = new VariableExpression(reference.getText());</span>
+<span class="fc" id="L157">        args.addExpression(CastExpression.asExpression(PROPERTY_CHANGE_LISTENER_CLASS, variable));</span>
+
+<span class="fc" id="L159">        addListenerStatement(classNode, args);</span>
+<span class="fc" id="L160">    }</span>
+
+    private static void addListenerStatement(ClassNode classNode, ArgumentListExpression args) {
+<span class="fc" id="L163">        BlockStatement body = new BlockStatement();</span>
+<span class="fc" id="L164">        body.addStatement(new ExpressionStatement(</span>
+            new MethodCallExpression(
+                VariableExpression.THIS_EXPRESSION,
+                &quot;addPropertyChangeListener&quot;,
+                args
+            )
+        ));
+
+<span class="fc" id="L172">        classNode.addObjectInitializerStatements(body);</span>
+<span class="fc" id="L173">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

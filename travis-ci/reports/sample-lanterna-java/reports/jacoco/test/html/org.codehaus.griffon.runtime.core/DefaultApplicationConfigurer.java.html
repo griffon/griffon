@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DefaultApplicationConfigurer.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-lanterna-java</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core</a> &gt; <span class="el_source">DefaultApplicationConfigurer.java</span></div><h1>DefaultApplicationConfigurer.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core;
+
+import griffon.core.ApplicationClassLoader;
+import griffon.core.ApplicationConfigurer;
+import griffon.core.ApplicationEvent;
+import griffon.core.CallableWithArgs;
+import griffon.core.GriffonApplication;
+import griffon.core.LifecycleHandler;
+import griffon.core.PlatformHandler;
+import griffon.core.artifact.ArtifactHandler;
+import griffon.core.artifact.ArtifactManager;
+import griffon.core.artifact.GriffonController;
+import griffon.core.controller.ActionHandler;
+import griffon.core.controller.ActionInterceptor;
+import griffon.core.env.Lifecycle;
+import griffon.core.event.EventHandler;
+import griffon.core.injection.Injector;
+import griffon.core.mvc.MVCGroupConfiguration;
+import griffon.core.resources.ResourceInjector;
+import griffon.util.ServiceLoaderUtils;
+import org.codehaus.griffon.runtime.core.controller.NoopActionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
+import javax.inject.Inject;
+import java.beans.PropertyEditor;
+import java.beans.PropertyEditorManager;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import static griffon.core.GriffonExceptionHandler.sanitize;
+import static griffon.util.AnnotationUtils.named;
+import static griffon.util.AnnotationUtils.sortByDependencies;
+import static java.util.Arrays.asList;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * Utility class for bootstrapping an application.
+ *
+ * @author Danno Ferrin
+ * @author Andres Almiray
+ */
+public class DefaultApplicationConfigurer implements ApplicationConfigurer {
+<span class="fc" id="L65">    private static final Logger LOG = LoggerFactory.getLogger(DefaultApplicationConfigurer.class);</span>
+
+    private static final String ERROR_APPLICATION_NULL = &quot;Argument 'application' must not be null&quot;;
+    private static final String KEY_APP_LIFECYCLE_HANDLER_DISABLE = &quot;application.lifecycle.handler.disable&quot;;
+    private static final String KEY_GRIFFON_CONTROLLER_ACTION_HANDLER_ORDER = &quot;griffon.controller.action.handler.order&quot;;
+
+<span class="fc" id="L71">    private final Object lock = new Object();</span>
+    @GuardedBy(&quot;lock&quot;)
+    private boolean initialized;
+
+    private final GriffonApplication application;
+
+    @Inject
+<span class="fc" id="L78">    public DefaultApplicationConfigurer(@Nonnull GriffonApplication application) {</span>
+<span class="fc" id="L79">        this.application = requireNonNull(application, ERROR_APPLICATION_NULL);</span>
+<span class="fc" id="L80">    }</span>
+
+    @Override
+    public final void init() {
+<span class="fc" id="L84">        synchronized (lock) {</span>
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">            if (!initialized) {</span>
+<span class="fc" id="L86">                doInitialize();</span>
+<span class="fc" id="L87">                initialized = true;</span>
+            }
+<span class="pc" id="L89">        }</span>
+<span class="fc" id="L90">    }</span>
+
+    @Override
+    public void runLifecycleHandler(@Nonnull Lifecycle lifecycle) {
+<span class="fc" id="L94">        requireNonNull(lifecycle, &quot;Argument 'lifecycle' must not be null&quot;);</span>
+
+<span class="fc" id="L96">        boolean skipHandler = application.getConfiguration().getAsBoolean(KEY_APP_LIFECYCLE_HANDLER_DISABLE, false);</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">        if (skipHandler) {</span>
+<span class="nc" id="L98">            LOG.info(&quot;Lifecycle handler '{}' has been disabled. SKIPPING.&quot;, lifecycle.getName());</span>
+<span class="nc" id="L99">            return;</span>
+        }
+
+        LifecycleHandler handler;
+        try {
+<span class="nc" id="L104">            handler = application.getInjector().getInstance(LifecycleHandler.class, named(lifecycle.getName()));</span>
+<span class="fc" id="L105">        } catch (Exception e) {</span>
+            // the script must not exist, do nothing
+            //LOGME - may be because of chained failures
+<span class="fc" id="L108">            return;</span>
+<span class="nc" id="L109">        }</span>
+
+<span class="nc" id="L111">        handler.execute();</span>
+<span class="nc" id="L112">    }</span>
+
+    protected void doInitialize() {
+<span class="fc" id="L115">        initializeEventHandler();</span>
+
+<span class="fc" id="L117">        event(ApplicationEvent.BOOTSTRAP_START, asList(application));</span>
+
+<span class="fc" id="L119">        initializePropertyEditors();</span>
+<span class="fc" id="L120">        initializeResourcesInjector();</span>
+<span class="fc" id="L121">        runLifecycleHandler(Lifecycle.INITIALIZE);</span>
+<span class="fc" id="L122">        applyPlatformTweaks();</span>
+<span class="fc" id="L123">        initializeAddonManager();</span>
+<span class="fc" id="L124">        initializeMvcManager();</span>
+<span class="fc" id="L125">        initializeActionManager();</span>
+<span class="fc" id="L126">        initializeArtifactManager();</span>
+
+<span class="fc" id="L128">        event(ApplicationEvent.BOOTSTRAP_END, asList(application));</span>
+<span class="fc" id="L129">    }</span>
+
+    protected void initializeEventHandler() {
+<span class="fc" id="L132">        EventHandler eventHandler = application.getInjector().getInstance(EventHandler.class);</span>
+<span class="fc" id="L133">        application.getEventRouter().addEventListener(eventHandler);</span>
+<span class="fc" id="L134">    }</span>
+
+    protected void event(@Nonnull ApplicationEvent event, @Nullable List&lt;?&gt; args) {
+<span class="fc" id="L137">        application.getEventRouter().publishEvent(event.getName(), args);</span>
+<span class="fc" id="L138">    }</span>
+
+    protected void initializePropertyEditors() {
+<span class="fc" id="L141">        ServiceLoaderUtils.load(applicationClassLoader().get(), &quot;META-INF/editors/&quot;, PropertyEditor.class, new ServiceLoaderUtils.LineProcessor() {</span>
+            @Override
+            public void process(@Nonnull ClassLoader classLoader, @Nonnull Class&lt;?&gt; type, @Nonnull String line) {
+                try {
+<span class="fc" id="L145">                    String[] parts = line.trim().split(&quot;=&quot;);</span>
+<span class="fc" id="L146">                    Class&lt;?&gt; targetType = loadClass(parts[0].trim(), classLoader);</span>
+<span class="fc" id="L147">                    Class&lt;?&gt; editorClass = loadClass(parts[1].trim(), classLoader);</span>
+
+                    // Editor must have a no-args constructor
+                    // CCE means the class can not be used
+<span class="fc" id="L151">                    editorClass.newInstance();</span>
+<span class="fc" id="L152">                    PropertyEditorManager.registerEditor(targetType, editorClass);</span>
+<span class="fc" id="L153">                    LOG.debug(&quot;Registering {} as editor for {}&quot;, editorClass.getName(), targetType.getName());</span>
+<span class="nc" id="L154">                } catch (Exception e) {</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">                    if (LOG.isWarnEnabled()) {</span>
+<span class="nc" id="L156">                        LOG.warn(&quot;Could not load &quot; + type.getName() + &quot; with &quot; + line, sanitize(e));</span>
+                    }
+<span class="fc" id="L158">                }</span>
+<span class="fc" id="L159">            }</span>
+        });
+
+<span class="fc" id="L162">        Class&lt;?&gt;[][] pairs = new Class&lt;?&gt;[][]{</span>
+            new Class&lt;?&gt;[]{Boolean.class, Boolean.TYPE},
+            new Class&lt;?&gt;[]{Byte.class, Byte.TYPE},
+            new Class&lt;?&gt;[]{Short.class, Short.TYPE},
+            new Class&lt;?&gt;[]{Integer.class, Integer.TYPE},
+            new Class&lt;?&gt;[]{Long.class, Long.TYPE},
+            new Class&lt;?&gt;[]{Float.class, Float.TYPE},
+            new Class&lt;?&gt;[]{Double.class, Double.TYPE}
+        };
+
+<span class="fc bfc" id="L172" title="All 2 branches covered.">        for (Class&lt;?&gt;[] pair : pairs) {</span>
+<span class="fc" id="L173">            PropertyEditor editor = PropertyEditorManager.findEditor(pair[0]);</span>
+<span class="fc" id="L174">            LOG.debug(&quot;Registering {} as editor for {}&quot;, editor.getClass().getName(), pair[1].getName());</span>
+<span class="fc" id="L175">            PropertyEditorManager.registerEditor(pair[1], editor.getClass());</span>
+        }
+<span class="fc" id="L177">    }</span>
+
+    protected void initializeResourcesInjector() {
+<span class="fc" id="L180">        final ResourceInjector injector = application.getResourceInjector();</span>
+<span class="fc" id="L181">        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), new CallableWithArgs&lt;Void&gt;() {</span>
+            public Void call(@Nonnull Object... args) {
+<span class="fc" id="L183">                Object instance = args[1];</span>
+<span class="fc" id="L184">                injector.injectResources(instance);</span>
+<span class="fc" id="L185">                return null;</span>
+            }
+        });
+<span class="fc" id="L188">    }</span>
+
+    protected void initializeArtifactManager() {
+<span class="fc" id="L191">        Injector&lt;?&gt; injector = application.getInjector();</span>
+<span class="fc" id="L192">        ArtifactManager artifactManager = application.getArtifactManager();</span>
+<span class="fc bfc" id="L193" title="All 2 branches covered.">        for (ArtifactHandler&lt;?&gt; artifactHandler : injector.getInstances(ArtifactHandler.class)) {</span>
+<span class="fc" id="L194">            artifactManager.registerArtifactHandler(artifactHandler);</span>
+<span class="fc" id="L195">        }</span>
+<span class="fc" id="L196">        artifactManager.loadArtifactMetadata(injector);</span>
+<span class="fc" id="L197">        application.addShutdownHandler(artifactManager);</span>
+<span class="fc" id="L198">    }</span>
+
+    protected void applyPlatformTweaks() {
+<span class="fc" id="L201">        PlatformHandler platformHandler = application.getInjector().getInstance(PlatformHandler.class);</span>
+<span class="fc" id="L202">        platformHandler.handle(application);</span>
+<span class="fc" id="L203">    }</span>
+
+    protected void initializeAddonManager() {
+<span class="fc" id="L206">        application.getAddonManager().initialize();</span>
+<span class="fc" id="L207">    }</span>
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    protected void initializeMvcManager() {
+<span class="fc" id="L211">        Map&lt;String, MVCGroupConfiguration&gt; configurations = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L212">        Map&lt;String, Map&lt;String, Object&gt;&gt; mvcGroups = application.getConfiguration().get(&quot;mvcGroups&quot;, Collections.&lt;String, Map&lt;String, Object&gt;&gt;emptyMap());</span>
+<span class="pc bpc" id="L213" title="1 of 2 branches missed.">        if (mvcGroups != null) {</span>
+<span class="fc bfc" id="L214" title="All 2 branches covered.">            for (Map.Entry&lt;String, Map&lt;String, Object&gt;&gt; groupEntry : mvcGroups.entrySet()) {</span>
+<span class="fc" id="L215">                String type = groupEntry.getKey();</span>
+<span class="fc" id="L216">                LOG.debug(&quot;Adding MVC group {}&quot;, type);</span>
+<span class="fc" id="L217">                Map&lt;String, Object&gt; members = groupEntry.getValue();</span>
+<span class="fc" id="L218">                Map&lt;String, Object&gt; configMap = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L219">                Map&lt;String, String&gt; membersCopy = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L220" title="All 2 branches covered.">                for (Map.Entry&lt;String, Object&gt; entry : members.entrySet()) {</span>
+<span class="fc" id="L221">                    String key = String.valueOf(entry.getKey());</span>
+<span class="pc bpc" id="L222" title="3 of 4 branches missed.">                    if (&quot;config&quot;.equals(key) &amp;&amp; entry.getValue() instanceof Map) {</span>
+<span class="nc" id="L223">                        configMap = (Map&lt;String, Object&gt;) entry.getValue();</span>
+                    } else {
+<span class="fc" id="L225">                        membersCopy.put(key, String.valueOf(entry.getValue()));</span>
+                    }
+<span class="fc" id="L227">                }</span>
+<span class="fc" id="L228">                configurations.put(type, application.getMvcGroupManager().newMVCGroupConfiguration(type, membersCopy, configMap));</span>
+<span class="fc" id="L229">            }</span>
+        }
+
+<span class="fc" id="L232">        application.getMvcGroupManager().initialize(configurations);</span>
+<span class="fc" id="L233">    }</span>
+
+    protected void initializeActionManager() {
+<span class="pc bpc" id="L236" title="1 of 2 branches missed.">        if (application.getActionManager() instanceof NoopActionManager) {</span>
+<span class="nc" id="L237">            return;</span>
+        }
+
+<span class="fc" id="L240">        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), new CallableWithArgs&lt;Void&gt;() {</span>
+            @Nullable
+            public Void call(@Nullable Object... args) {
+<span class="fc" id="L243">                Class&lt;?&gt; klass = (Class) args[0];</span>
+<span class="fc bfc" id="L244" title="All 2 branches covered.">                if (GriffonController.class.isAssignableFrom(klass)) {</span>
+<span class="fc" id="L245">                    GriffonController controller = (GriffonController) args[1];</span>
+<span class="fc" id="L246">                    application.getActionManager().createActions(controller);</span>
+                }
+<span class="fc" id="L248">                return null;</span>
+            }
+        });
+
+<span class="fc" id="L252">        Injector&lt;?&gt; injector = application.getInjector();</span>
+<span class="fc" id="L253">        Collection&lt;ActionHandler&gt; handlerInstances = injector.getInstances(ActionHandler.class);</span>
+<span class="fc" id="L254">        List&lt;String&gt; handlerOrder = application.getConfiguration().get(KEY_GRIFFON_CONTROLLER_ACTION_HANDLER_ORDER, Collections.&lt;String&gt;emptyList());</span>
+<span class="fc" id="L255">        Map&lt;String, ActionHandler&gt; sortedHandlers = sortByDependencies(handlerInstances, ActionHandler.SUFFIX, &quot;handler&quot;, handlerOrder);</span>
+
+<span class="pc bpc" id="L257" title="1 of 2 branches missed.">        for (ActionHandler handler : sortedHandlers.values()) {</span>
+<span class="nc" id="L258">            application.getActionManager().addActionHandler(handler);</span>
+<span class="nc" id="L259">        }</span>
+
+<span class="fc" id="L261">        Collection&lt;ActionInterceptor&gt; interceptorInstances = injector.getInstances(ActionInterceptor.class);</span>
+<span class="pc bpc" id="L262" title="1 of 2 branches missed.">        if (!interceptorInstances.isEmpty()) {</span>
+<span class="nc" id="L263">            application.getLog().error(ActionInterceptor.class.getName() + &quot; have been deprecated and is no longer supported&quot;);</span>
+<span class="nc" id="L264">            throw new UnsupportedOperationException(ActionInterceptor.class.getName() + &quot; have been deprecated and is no longer supported&quot;);</span>
+        }
+<span class="fc" id="L266">    }</span>
+
+    protected Class&lt;?&gt; loadClass(@Nonnull String className, @Nonnull ClassLoader classLoader) throws ClassNotFoundException {
+        ClassNotFoundException cnfe;
+
+<span class="fc" id="L271">        ClassLoader cl = DefaultApplicationConfigurer.class.getClassLoader();</span>
+        try {
+<span class="fc" id="L273">            return cl.loadClass(className);</span>
+<span class="nc" id="L274">        } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L275">            cnfe = e;</span>
+        }
+
+<span class="nc" id="L278">        cl = classLoader;</span>
+        try {
+<span class="nc" id="L280">            return cl.loadClass(className);</span>
+<span class="nc" id="L281">        } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L282">            cnfe = e;</span>
+        }
+
+<span class="nc" id="L285">        throw cnfe;</span>
+    }
+
+    private ApplicationClassLoader applicationClassLoader() {
+<span class="fc" id="L289">        return application.getInjector().getInstance(ApplicationClassLoader.class);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
