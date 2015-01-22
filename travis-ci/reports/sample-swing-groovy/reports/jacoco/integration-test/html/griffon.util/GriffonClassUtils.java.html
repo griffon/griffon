@@ -334,7 +334,7 @@ import static java.util.Objects.requireNonNull;
      */
     public static boolean isEventHandler(@Nonnull MethodDescriptor method) {
 <span class="fc" id="L336">        requireNonNull(method, ERROR_METHOD_NULL);</span>
-<span class="fc bfc" id="L337" title="All 2 branches covered.">        return isInstanceMethod(method) &amp;&amp;</span>
+<span class="pc bpc" id="L337" title="1 of 2 branches missed.">        return isInstanceMethod(method) &amp;&amp;</span>
 <span class="fc bfc" id="L338" title="All 2 branches covered.">            EVENT_HANDLER_PATTERN.matcher(method.getName()).matches();</span>
     }
 
@@ -451,7 +451,7 @@ import static java.util.Objects.requireNonNull;
     public static boolean isGroovyInjectedMethod(@Nonnull MethodDescriptor method) {
 <span class="fc" id="L452">        requireNonNull(method, ERROR_METHOD_NULL);</span>
 <span class="pc bpc" id="L453" title="1 of 2 branches missed.">        return isInstanceMethod(method) &amp;&amp;</span>
-<span class="fc bfc" id="L454" title="All 4 branches covered.">            (method.getName().startsWith(&quot;super$&quot;) || method.getName().startsWith(&quot;this$&quot;));</span>
+<span class="pc bpc" id="L454" title="2 of 4 branches missed.">            (method.getName().startsWith(&quot;super$&quot;) || method.getName().startsWith(&quot;this$&quot;));</span>
     }
 
     /**
@@ -863,7 +863,7 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L863">        int modifiers = method.getModifiers();</span>
 <span class="pc bpc" id="L864" title="1 of 2 branches missed.">        return Modifier.isPublic(modifiers) &amp;&amp;</span>
 <span class="pc bpc" id="L865" title="1 of 2 branches missed.">            !Modifier.isAbstract(modifiers) &amp;&amp;</span>
-<span class="fc bfc" id="L866" title="All 2 branches covered.">            !Modifier.isStatic(modifiers);</span>
+<span class="pc bpc" id="L866" title="1 of 2 branches missed.">            !Modifier.isStatic(modifiers);</span>
     }
 
     /**
@@ -913,9 +913,9 @@ import static java.util.Objects.requireNonNull;
      */
     public static boolean isPlainMethod(@Nonnull MethodDescriptor method) {
 <span class="fc" id="L915">        requireNonNull(method, ERROR_METHOD_NULL);</span>
-<span class="fc bfc" id="L916" title="All 2 branches covered.">        return isInstanceMethod(method) &amp;&amp;</span>
+<span class="pc bpc" id="L916" title="1 of 2 branches missed.">        return isInstanceMethod(method) &amp;&amp;</span>
 <span class="fc bfc" id="L917" title="All 2 branches covered.">            !isBasicMethod(method) &amp;&amp;</span>
-<span class="fc bfc" id="L918" title="All 2 branches covered.">            !isGroovyInjectedMethod(method) &amp;&amp;</span>
+<span class="pc bpc" id="L918" title="1 of 2 branches missed.">            !isGroovyInjectedMethod(method) &amp;&amp;</span>
 <span class="fc bfc" id="L919" title="All 2 branches covered.">            !isThreadingMethod(method) &amp;&amp;</span>
 <span class="fc bfc" id="L920" title="All 2 branches covered.">            !isArtifactMethod(method) &amp;&amp;</span>
 <span class="fc bfc" id="L921" title="All 2 branches covered.">            !isMvcMethod(method) &amp;&amp;</span>
