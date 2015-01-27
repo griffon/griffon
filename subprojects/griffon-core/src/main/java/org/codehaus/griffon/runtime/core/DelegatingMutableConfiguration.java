@@ -42,14 +42,14 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  * @since 2.2.0
  */
-public class AbstractMutableConfiguration extends ConfigurationDecorator implements MutableConfiguration {
+public class DelegatingMutableConfiguration extends ConfigurationDecorator implements MutableConfiguration {
     private static final String ERROR_KEY_BLANK = "Argument 'key' must not be blank";
     private static final String ERROR_VALUE_NULL = "Argument 'value' must not be null";
 
     private final Map<String, Object> mutableKeyValues = new LinkedHashMap<>();
     private final Set<String> removedKeys = new LinkedHashSet<>();
 
-    public AbstractMutableConfiguration(@Nonnull Configuration delegate) {
+    public DelegatingMutableConfiguration(@Nonnull Configuration delegate) {
         super(delegate);
     }
 

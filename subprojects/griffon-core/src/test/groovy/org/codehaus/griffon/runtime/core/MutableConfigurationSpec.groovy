@@ -168,7 +168,7 @@ class MutableConfigurationSpec extends Specification {
         'key.foo'            || _
     }
 
-    static class MyMutableConfiguration extends AbstractMutableConfiguration {
+    static class MyMutableConfiguration extends DelegatingMutableConfiguration {
         MyMutableConfiguration() {
             super(new DefaultConfiguration(new MapResourceBundle()))
         }
