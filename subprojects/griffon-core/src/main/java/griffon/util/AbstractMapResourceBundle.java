@@ -32,16 +32,19 @@ import static griffon.util.GriffonNameUtils.requireNonBlank;
  * @since 2.0.0
  */
 public abstract class AbstractMapResourceBundle extends ResourceBundle {
-    private final Map<String, Object> entries = new LinkedHashMap<>();
-    private volatile Set<String> keys;
+    protected final Map<String, Object> entries = new LinkedHashMap<>();
+    protected volatile Set<String> keys;
 
     public AbstractMapResourceBundle() {
         initialize(entries);
+        initializeKeys();
+    }
+    protected abstract void initialize(@Nonnull Map<String, Object> entries);
+
+    protected void initializeKeys() {
         keys = collectKeys(entries);
-        // keys = new HashSet<>(entries.keySet());
     }
 
-    protected abstract void initialize(@Nonnull Map<String, Object> entries);
 
     @Nullable
     @Override
@@ -53,6 +56,11 @@ public abstract class AbstractMapResourceBundle extends ResourceBundle {
     @Override
     public final Enumeration<String> getKeys() {
         return new IteratorAsEnumeration<>(keys.iterator());
+    }
+
+    @Override
+    protected Set<String> handleKeySet() {
+        return keys;
     }
 
     private static class IteratorAsEnumeration<E> implements Enumeration<E> {
@@ -69,10 +77,5 @@ public abstract class AbstractMapResourceBundle extends ResourceBundle {
         public E nextElement() {
             return iterator.next();
         }
-    }
-
-    @Override
-    protected Set<String> handleKeySet() {
-        return keys;
     }
 }

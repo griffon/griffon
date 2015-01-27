@@ -48,7 +48,88 @@ public final class ConfigUtils {
     }
 
     /**
-     * Returns true if there's a on-null value for the specified key.
+     * Returns true if there's a non-null value for the specified key.
+     *
+     * @param config the configuration object to be searched upon
+     * @param key    the key to be searched
+     * @return true if there's a value for the specified key, false otherwise
+     * @since 2.2.0
+     */
+    @SuppressWarnings("unchecked")
+    public static boolean containsKey(@Nonnull Map<String, Object> config, @Nonnull String key) {
+        requireNonNull(config, ERROR_CONFIG_NULL);
+        requireNonBlank(key, ERROR_KEY_BLANK);
+
+        if (config.containsKey(key)) {
+            return true;
+        }
+
+        String[] keys = key.split("\\.");
+        for (int i = 0; i < keys.length - 1; i++) {
+            if (config != null) {
+                Object node = config.get(keys[i]);
+                if (node instanceof Map) {
+                    config = (Map<String, Object>) node;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        return config != null && config.containsKey(keys[keys.length - 1]);
+    }
+
+    /**
+     * Returns true if there's a non-null value for the specified key.
+     *
+     * @param config the configuration object to be searched upon
+     * @param key    the key to be searched
+     * @return true if there's a value for the specified key, false otherwise
+     * @since 2.2.0
+     */
+    @SuppressWarnings("unchecked")
+    public static boolean containsKey(@Nonnull ResourceBundle config, @Nonnull String key) {
+        requireNonNull(config, ERROR_CONFIG_NULL);
+        requireNonBlank(key, ERROR_KEY_BLANK);
+
+        String[] keys = key.split("\\.");
+
+        try {
+            if (config.containsKey(key)) {
+                return true;
+            }
+        } catch (MissingResourceException mre) {
+            // OK
+        }
+
+        if (keys.length == 1) {
+            return config.containsKey(keys[0]);
+        }
+
+        Object node = config.getObject(keys[0]);
+        if (!(node instanceof Map)) {
+            return false;
+        }
+
+        Map<String, Object> map = (Map) node;
+        for (int i = 1; i < keys.length - 1; i++) {
+            if (map != null) {
+                node = map.get(keys[i]);
+                if (node instanceof Map) {
+                    map = (Map) node;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        return map != null && map.containsKey(keys[keys.length - 1]);
+    }
+
+    /**
+     * Returns true if there's a non-null value for the specified key.
      *
      * @param config the configuration object to be searched upon
      * @param key    the key to be searched
@@ -82,7 +163,7 @@ public final class ConfigUtils {
     }
 
     /**
-     * Returns true if there's a on-null value for the specified key.
+     * Returns true if there's a non-null value for the specified key.
      *
      * @param config the configuration object to be searched upon
      * @param key    the key to be searched

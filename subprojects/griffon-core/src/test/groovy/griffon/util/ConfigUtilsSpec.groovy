@@ -97,6 +97,30 @@ class ConfigUtilsSpec extends Specification {
         expandableResourceBundle | 'key'        | true
     }
 
+    def 'Calling containsKey() on #source.getClass() with #key gives #value'() {
+        expect:
+        value == ConfigUtils.containsKey(source, key)
+
+        where:
+        source                   | key          | value
+        map                      | 'single'     | true
+        map                      | 'key.string' | true
+        map                      | 'key.number' | true
+        map                      | 'key'        | false
+        nestingMap               | 'single'     | true
+        nestingMap               | 'key.string' | true
+        nestingMap               | 'key.number' | true
+        nestingMap               | 'key'        | true
+        mapResourceBundle        | 'single'     | true
+        mapResourceBundle        | 'key.string' | true
+        mapResourceBundle        | 'key.number' | true
+        mapResourceBundle        | 'key'        | false
+        expandableResourceBundle | 'single'     | true
+        expandableResourceBundle | 'key.string' | true
+        expandableResourceBundle | 'key.number' | true
+        expandableResourceBundle | 'key'        | true
+    }
+
     def 'Read Java based configuration'() {
         expect:
         value == ConfigUtils.getConfigValue(wrapResourceBundle(source), key)
