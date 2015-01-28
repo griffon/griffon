@@ -143,8 +143,8 @@ import static java.util.Objects.requireNonNull;
      */
     @Nonnull
     public static Properties toProperties(@Nonnull Map&lt;String, Object&gt; map) {
-<span class="nc" id="L146">        requireNonNull(map, &quot;Argument 'map' must not be null&quot;);</span>
-<span class="nc" id="L147">        return new MapToPropertiesAdapter(map);</span>
+<span class="fc" id="L146">        requireNonNull(map, &quot;Argument 'map' must not be null&quot;);</span>
+<span class="fc" id="L147">        return new MapToPropertiesAdapter(map);</span>
     }
 
     public static class MapBuilder&lt;K, V&gt; implements Map&lt;K, V&gt; {
@@ -426,9 +426,9 @@ import static java.util.Objects.requireNonNull;
 <span class="nc" id="L426">    private static class MapToPropertiesAdapter extends Properties {</span>
         private final Map&lt;String, Object&gt; map;
 
-<span class="nc" id="L429">        private MapToPropertiesAdapter(@Nonnull Map&lt;String, Object&gt; map) {</span>
-<span class="nc" id="L430">            this.map = map;</span>
-<span class="nc" id="L431">        }</span>
+<span class="fc" id="L429">        private MapToPropertiesAdapter(@Nonnull Map&lt;String, Object&gt; map) {</span>
+<span class="fc" id="L430">            this.map = map;</span>
+<span class="fc" id="L431">        }</span>
 
         @Override
         public synchronized Object setProperty(String key, String value) {
@@ -437,8 +437,8 @@ import static java.util.Objects.requireNonNull;
 
         @Override
         public String getProperty(String key) {
-<span class="nc" id="L440">            Object value = map.get(key);</span>
-<span class="nc bnc" id="L441" title="All 2 branches missed.">            return value != null ? String.valueOf(value) : null;</span>
+<span class="fc" id="L440">            Object value = map.get(key);</span>
+<span class="pc bpc" id="L441" title="1 of 2 branches missed.">            return value != null ? String.valueOf(value) : null;</span>
         }
 
         @Override

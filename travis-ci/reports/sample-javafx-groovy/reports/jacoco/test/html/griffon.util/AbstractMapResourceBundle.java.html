@@ -32,48 +32,51 @@ import static griffon.util.GriffonNameUtils.requireNonBlank;
  * @since 2.0.0
  */
 public abstract class AbstractMapResourceBundle extends ResourceBundle {
-<span class="nc" id="L35">    private final Map&lt;String, Object&gt; entries = new LinkedHashMap&lt;&gt;();</span>
-    private volatile Set&lt;String&gt; keys;
+<span class="nc" id="L35">    protected final Map&lt;String, Object&gt; entries = new LinkedHashMap&lt;&gt;();</span>
+    protected volatile Set&lt;String&gt; keys;
 
 <span class="nc" id="L38">    public AbstractMapResourceBundle() {</span>
 <span class="nc" id="L39">        initialize(entries);</span>
-<span class="nc" id="L40">        keys = collectKeys(entries);</span>
-        // keys = new HashSet&lt;&gt;(entries.keySet());
-<span class="nc" id="L42">    }</span>
-
+<span class="nc" id="L40">        initializeKeys();</span>
+<span class="nc" id="L41">    }</span>
     protected abstract void initialize(@Nonnull Map&lt;String, Object&gt; entries);
+
+    protected void initializeKeys() {
+<span class="nc" id="L45">        keys = collectKeys(entries);</span>
+<span class="nc" id="L46">    }</span>
+
 
     @Nullable
     @Override
     protected final Object handleGetObject(@Nonnull String key) {
-<span class="nc" id="L49">        return entries.get(requireNonBlank(key, &quot;Argument 'key' must not be blank&quot;));</span>
+<span class="nc" id="L52">        return entries.get(requireNonBlank(key, &quot;Argument 'key' must not be blank&quot;));</span>
     }
 
     @Nonnull
     @Override
     public final Enumeration&lt;String&gt; getKeys() {
-<span class="nc" id="L55">        return new IteratorAsEnumeration&lt;&gt;(keys.iterator());</span>
+<span class="nc" id="L58">        return new IteratorAsEnumeration&lt;&gt;(keys.iterator());</span>
+    }
+
+    @Override
+    protected Set&lt;String&gt; handleKeySet() {
+<span class="nc" id="L63">        return keys;</span>
     }
 
     private static class IteratorAsEnumeration&lt;E&gt; implements Enumeration&lt;E&gt; {
         private final Iterator&lt;E&gt; iterator;
 
-<span class="nc" id="L61">        public IteratorAsEnumeration(Iterator&lt;E&gt; iterator) {</span>
-<span class="nc" id="L62">            this.iterator = iterator;</span>
-<span class="nc" id="L63">        }</span>
+<span class="nc" id="L69">        public IteratorAsEnumeration(Iterator&lt;E&gt; iterator) {</span>
+<span class="nc" id="L70">            this.iterator = iterator;</span>
+<span class="nc" id="L71">        }</span>
 
         public boolean hasMoreElements() {
-<span class="nc" id="L66">            return iterator.hasNext();</span>
+<span class="nc" id="L74">            return iterator.hasNext();</span>
         }
 
         public E nextElement() {
-<span class="nc" id="L70">            return iterator.next();</span>
+<span class="nc" id="L78">            return iterator.next();</span>
         }
-    }
-
-    @Override
-    protected Set&lt;String&gt; handleKeySet() {
-<span class="nc" id="L76">        return keys;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
