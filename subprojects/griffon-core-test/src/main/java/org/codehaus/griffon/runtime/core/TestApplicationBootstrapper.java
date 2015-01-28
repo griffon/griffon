@@ -19,6 +19,7 @@ import griffon.core.GriffonApplication;
 import griffon.core.injection.Module;
 import griffon.core.injection.TestingModule;
 import griffon.core.test.TestCaseAware;
+import griffon.core.test.TestModuleAware;
 import griffon.inject.BindTo;
 import griffon.util.AnnotationUtils;
 import org.codehaus.griffon.runtime.core.injection.AbstractTestingModule;
@@ -104,36 +105,45 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
 
     @SuppressWarnings("unchecked")
     private List<Module> doCollectModulesFromMethod() {
-        Method method = null;
-        try {
-            method = testCase.getClass().getDeclaredMethod(METHOD_MODULES);
-            method.setAccessible(true);
-        } catch (NoSuchMethodException e) {
-            return Collections.emptyList();
-        }
+        if (testCase instanceof TestModuleAware) {
+            return ((TestModuleAware) testCase).modules();
+        } else {
+            Method method = null;
+            try {
+                method = testCase.getClass().getDeclaredMethod(METHOD_MODULES);
+                method.setAccessible(true);
+            } catch (NoSuchMethodException e) {
+                return Collections.emptyList();
+            }
 
-        try {
-            return (List<Module>) method.invoke(testCase);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("An error occurred while initializing modules from " + testCase.getClass().getName() + "." + METHOD_MODULES, e);
+            try {
+                return (List<Module>) method.invoke(testCase);
+            } catch (Exception e) {
+                throw new IllegalArgumentException("An error occurred while initializing modules from " + testCase.getClass().getName() + "." + METHOD_MODULES, e);
+            }
         }
     }
 
     @SuppressWarnings("unchecked")
     private void doCollectOverridingModules(final @Nonnull Collection<Module> modules) {
-        Method method = null;
-        try {
-            method = testCase.getClass().getDeclaredMethod(METHOD_MODULE_OVERRIDES);
-            method.setAccessible(true);
-        } catch (NoSuchMethodException e) {
-            return;
-        }
-
-        try {
-            List<Module> overrides = (List<Module>) method.invoke(testCase);
+        if (testCase instanceof TestModuleAware) {
+            List<Module> overrides = ((TestModuleAware) testCase).moduleOverrides();
             modules.addAll(overrides);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("An error occurred while initializing modules from " + testCase.getClass().getName() + "." + METHOD_MODULE_OVERRIDES, e);
+        } else {
+            Method method = null;
+            try {
+                method = testCase.getClass().getDeclaredMethod(METHOD_MODULE_OVERRIDES);
+                method.setAccessible(true);
+            } catch (NoSuchMethodException e) {
+                return;
+            }
+
+            try {
+                List<Module> overrides = (List<Module>) method.invoke(testCase);
+                modules.addAll(overrides);
+            } catch (Exception e) {
+                throw new IllegalArgumentException("An error occurred while initializing modules from " + testCase.getClass().getName() + "." + METHOD_MODULE_OVERRIDES, e);
+            }
         }
     }
 
