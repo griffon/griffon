@@ -279,11 +279,13 @@ class GriffonPlugin implements Plugin<Project> {
                         }
                     } else {
                         Task runTask = project.tasks.findByName('run')
-                        if (project.hasProperty('griffonEnv')) {
-                            project.applicationDefaultJvmArgs << "-Dgriffon.env=${project.griffonEnv}"
-                            runTask.jvmArgs << "-Dgriffon.env=${project.griffonEnv}"
-                        } else {
-                            runTask.jvmArgs << '-Dgriffon.env=dev'
+                        if( runTask != null) {
+                            if (project.hasProperty('griffonEnv')) {
+                                project.applicationDefaultJvmArgs << "-Dgriffon.env=${project.griffonEnv}"
+                                runTask.jvmArgs << "-Dgriffon.env=${project.griffonEnv}"
+                            } else {
+                                runTask.jvmArgs << '-Dgriffon.env=dev'
+                            }
                         }
                     }
                 }
