@@ -27,11 +27,9 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.MissingResourceException;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import static griffon.util.CollectionUtils.toProperties;
 import static griffon.util.ConfigUtils.getConfigValue;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Arrays.asList;
@@ -76,7 +74,7 @@ public class DelegatingMutableConfiguration extends ConfigurationDecorator imple
     @Nonnull
     @Override
     public Map<String, Object> asFlatMap() {
-        Map<String, Object> flatMap = new LinkedHashMap<>(super.asFlatMap());
+        Map<String, Object> flatMap = new LinkedHashMap<>(delegate.asFlatMap());
         flatMap.putAll(mutableKeyValues);
         for (String removedKey : removedKeys) {
             flatMap.remove(removedKey);
@@ -86,14 +84,8 @@ public class DelegatingMutableConfiguration extends ConfigurationDecorator imple
 
     @Nonnull
     @Override
-    public Properties asProperties() {
-        return toProperties(asFlatMap());
-    }
-
-    @Nonnull
-    @Override
     public ResourceBundle asResourceBundle() {
-        return new CompositeResourceBundle(asList(new PrivateMapResourceBundle(asFlatMap()), super.asResourceBundle()));
+        return new CompositeResourceBundle(asList(new PrivateMapResourceBundle(asFlatMap()), delegate.asResourceBundle()));
     }
 
     @Nullable
@@ -113,7 +105,7 @@ public class DelegatingMutableConfiguration extends ConfigurationDecorator imple
     @Override
     public boolean containsKey(@Nonnull String key) {
         requireNonBlank(key, ERROR_KEY_BLANK);
-        return ConfigUtils.containsKey(mutableKeyValues, key) || (!removedKeys.contains(key) && super.containsKey(key));
+        return ConfigUtils.containsKey(mutableKeyValues, key) || (!removedKeys.contains(key) && delegate.containsKey(key));
     }
 
     private static class PrivateMapResourceBundle extends AbstractMapResourceBundle {

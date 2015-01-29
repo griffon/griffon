@@ -19,10 +19,14 @@ import griffon.core.Configuration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Map;
 import java.util.Properties;
-import java.util.ResourceBundle;
 
+import static griffon.util.CollectionUtils.toProperties;
+import static griffon.util.TypeUtils.castToBoolean;
+import static griffon.util.TypeUtils.castToDouble;
+import static griffon.util.TypeUtils.castToFloat;
+import static griffon.util.TypeUtils.castToInt;
+import static griffon.util.TypeUtils.castToLong;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -37,111 +41,97 @@ public abstract class ConfigurationDecorator implements Configuration {
     }
 
     @Override
-    public boolean containsKey(@Nonnull String key) {
-        return delegate.containsKey(key);
-    }
-
-    @Override
-    @Nonnull
-    public Map<String, Object> asFlatMap() {
-        return delegate.asFlatMap();
-    }
-
-    @Override
-    @Nonnull
-    public ResourceBundle asResourceBundle() {
-        return delegate.asResourceBundle();
-    }
-
-    @Override
-    @Nonnull
-    public Properties asProperties() {
-        return delegate.asProperties();
-    }
-
-    @Override
     @Nullable
     public Object get(@Nonnull String key) {
         return delegate.get(key);
     }
 
-    @Override
     @Nullable
+    @Override
+    @SuppressWarnings("unchecked")
     public <T> T get(@Nonnull String key, @Nullable T defaultValue) {
-        return delegate.get(key, defaultValue);
+        T value = (T) get(key);
+        return value != null ? value : defaultValue;
     }
 
-    @Override
     @Nullable
+    @Override
     public Object getAt(@Nonnull String key) {
-        return delegate.getAt(key);
+        return get(key);
     }
 
-    @Override
     @Nullable
+    @Override
     public <T> T getAt(@Nonnull String key, @Nullable T defaultValue) {
-        return delegate.getAt(key, defaultValue);
+        return get(key, defaultValue);
     }
 
     @Override
     public boolean getAsBoolean(@Nonnull String key) {
-        return delegate.getAsBoolean(key);
+        return getAsBoolean(key, false);
     }
 
     @Override
     public boolean getAsBoolean(@Nonnull String key, boolean defaultValue) {
-        return delegate.getAsBoolean(key, defaultValue);
+        return castToBoolean(get(key), defaultValue);
     }
 
     @Override
     public int getAsInt(@Nonnull String key) {
-        return delegate.getAsInt(key);
+        return getAsInt(key, 0);
     }
 
     @Override
     public int getAsInt(@Nonnull String key, int defaultValue) {
-        return delegate.getAsInt(key, defaultValue);
+        return castToInt(get(key), defaultValue);
     }
 
     @Override
     public long getAsLong(@Nonnull String key) {
-        return delegate.getAsLong(key);
+        return getAsLong(key, 0L);
     }
 
     @Override
     public long getAsLong(@Nonnull String key, long defaultValue) {
-        return delegate.getAsLong(key, defaultValue);
+        return castToLong(get(key), defaultValue);
     }
 
     @Override
     public float getAsFloat(@Nonnull String key) {
-        return delegate.getAsFloat(key);
+        return getAsFloat(key, 0f);
     }
 
     @Override
     public float getAsFloat(@Nonnull String key, float defaultValue) {
-        return delegate.getAsFloat(key, defaultValue);
+        return castToFloat(get(key), defaultValue);
     }
 
     @Override
     public double getAsDouble(@Nonnull String key) {
-        return delegate.getAsDouble(key);
+        return getAsDouble(key, 0d);
     }
 
     @Override
     public double getAsDouble(@Nonnull String key, double defaultValue) {
-        return delegate.getAsDouble(key, defaultValue);
+        return castToDouble(get(key), defaultValue);
     }
 
-    @Override
     @Nullable
+    @Override
     public String getAsString(@Nonnull String key) {
-        return delegate.getAsString(key);
+        return getAsString(key, null);
     }
 
-    @Override
     @Nullable
+    @Override
     public String getAsString(@Nonnull String key, @Nullable String defaultValue) {
-        return delegate.getAsString(key, defaultValue);
+        Object value = get(key);
+        return value != null ? String.valueOf(value) : defaultValue;
+    }
+
+    @Nonnull
+    @Override
+    public Properties asProperties() {
+        return toProperties(asFlatMap());
     }
 }

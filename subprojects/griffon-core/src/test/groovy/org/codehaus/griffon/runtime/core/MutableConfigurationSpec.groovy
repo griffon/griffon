@@ -50,6 +50,34 @@ class MutableConfigurationSpec extends Specification {
         'key.double.string'  || 'foo'
     }
 
+    def 'Calling configuration.set(#key, #value) stores #value (recall with getAsString)'() {
+        given:
+        Configuration configuration = new MyMutableConfiguration()
+
+        expect:
+        configuration.containsKey(key)
+
+        when:
+        configuration.set(key, value)
+
+        then:
+        configuration.getAsString(key) == value
+
+        where:
+        key                  || value
+        'key.string'         || 'foo'
+        'key.boolean.type'   || 'foo'
+        'key.boolean.string' || 'foo'
+        'key.int.type'       || 'foo'
+        'key.int.string'     || 'foo'
+        'key.long.type'      || 'foo'
+        'key.long.string'    || 'foo'
+        'key.float.type'     || 'foo'
+        'key.float.string'   || 'foo'
+        'key.double.type'    || 'foo'
+        'key.double.string'  || 'foo'
+    }
+
     def 'Calling configuration.remove(#key) removes the key'() {
         given:
         MutableConfiguration configuration = new MyMutableConfiguration()
