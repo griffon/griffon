@@ -272,6 +272,9 @@ task clirrRootReport(type: org.kordamp.gradle.clirr.ClirrReportTask) {
     reports = files(projectsWithClirr.tasks.clirr.xmlReport)
     filter = { difference ->
         difference?.message?.text() =~ /field __timeStamp/ ||
-            !(difference?.classname?.text() =~ /griffon/)
+        difference?.message?.text() =~ /super\$/ ||
+        difference?.message?.text() =~ /this\$/ ||
+        difference?.message?.text() =~ /__.swapInit/ ||
+        !(difference?.classname?.text() =~ /griffon/)
     }
 }
