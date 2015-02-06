@@ -13,7 +13,7 @@ The simplest way is to pass in new values as part of the arguments map that
 MVCGroup group = application.mvcGroupManager.createMVCGroup('foo', [key: 'foo'])
 ----
 
-However is you wish to use the special `config` key that every MVC group configuratio
+However is you wish to use the special `config` key that every MVC group configuration
  may have then you must instantiate the group in the following way
 
 [source,groovy,options="nowrap"]
@@ -26,7 +26,7 @@ MVCGroup group = configuration.create()
 Note that you can still send custom arguments to the `create()` method.
 
 [[_mvc_configuring_mvc_groups]]
-== Configuring MVC groups
+== Configuring MVC Groups
 
 The following options are available to all MVC groups as long as you use the `config` key.
 
@@ -145,3 +145,89 @@ You can still manually register a controller as an application event handler at 
 with the caveat that it's now your responsibility to unregister it when the time is
 appropriate, most typically during the group's destroy sequence when `{link_mvc_group_destroy}`
 is invoked.
+
+[[_mvc_mvc_group_relationships]]
+== MVC Group Relationships
+
+Instances of {link_mvc_group} can be created at any time by any other instance. If an {link_mvc_group} instance is
+created explicitly by another {link_mvc_group} instance _or_ by an MVC member (such as a <<_controllers,Controller>>)
+then a special link is established: the newly created {link_mvc_group} will have access to its parent {link_mvc_group}.
+
+Here's an example. Assuming the following {link_mvc_group} configuration is in place
+
+[source,groovy,linenums,options="nowrap"]
+----
+mvcGroups {
+    'app' {
+        model      = 'org.example.AppModel'
+        view       = 'org.example.AppView'
+        controller = 'org.example.AppController'
+    },
+    'tab' {
+        model      = 'org.example.TabModel'
+        view       = 'org.example.TabView'
+        controller = 'org.example.TabController'
+    }
+}
+----
+
+An instance of the `app` {link_mvc_group} can be used to instantiate `tab` in this way
+
+[source,groovy,options="nowrap"]
+----
+MVCGroup appGroup = createMVCGroup('app')
+MVCGroup tabGroup = appGroup.createMVCGroup('tab')
+assert appGroup == tabGroup.parentGroup
+----
+
+Parent-child relationships are established right after MVC members have been instantiated and can be accessed immediately
+inside life-cycle methods such as `{link_mvc_group_init}`; this comes in handy when a child group adds new UI content to
+the parent's, for example
+
+[source,groovy,options="nowrap"]
+----
+class TabView {
+    private JComponent tab
+
+    void initUI() {
+        tab = ... // initialize
+    }
+
+    void mvcGroupInit(Map<String, Object> args) {
+        group.parentGroup.view.tabContainer.addTab(group.mvcId, tab)
+    }
+}
+----
+
+As a shortcut you may specify additional MVC members as properties using a `parent` prefix; when this happens the matching
+parent MVC members will be injected into the child MVC member. The previous example can be rewritten as
+
+[source,groovy,options="nowrap"]
+----
+class TabView {
+    private JComponent tab
+    AppView parentView
+
+    void initUI() {
+        tab = ... // initialize
+    }
+
+    void mvcGroupInit(Map<String, Object> args) {
+        parentView.tabContainer.addTab(group.mvcId, tab)
+    }
+}
+----
+
+NOTE: like with the default `model`, `view` and `controller` MVC properties, the _parent_ prefix can only be combined to
+form `parentModel`, `parentView` and `parentController`.
+
+[[_mvc_mvc_group_context]]
+== MVC Group Context
+
+An `{link_mvc_group}` has its own `{link_context}`. The parent of this context is set to the context of the owner of this
+`{link_mvc_group}`; thus the parent of all startup ``{link_mvc_group}``s is the application's `{link_context}`. In the
+previous examples, the context of the `app` group is set as the parent of the context of the `tab` group.
+
+The `{link_context}` of an `{link_mvc_group}` has the same lifetime of its owning group, that is, once the owning
+`{link_mvc_group}` is destroyed so is the `{link_context}`.
+

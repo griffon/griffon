@@ -226,6 +226,34 @@ class Initialize extends AbstractLifecycleHandler {
 }
 ----
 
+== Renamed Methods
+
+The following tables describe methods that have been renamed in Griffon 2.x
+
+[cols="2*",options="header"]
+.Threading Methods
+|===
+| Griffon 1.x       | Griffon 2.x
+| edt               | runInsideUISync
+| doLater           | runInsideUIAsync
+| doOutside         | runOutsideUI
+| execInsideUISync  | runInsideUISync
+| execInsideUIAsync | runInsideUIAsync
+| execOutsideUI     | runOutsideUI
+|===
+
+[cols="2*",options="header"]
+.Event Publishing Methods
+|===
+| Griffon 1.x      | Griffon 2.x
+| publish          | publishEvent
+| publishAsync     | publishEventAsync
+| publishOutsideUI | publishEventOutsideUI
+| event            | publishEvent
+| eventAsync       | publishEventAsync
+| eventOutsideUI   | publishEventOutsideUI
+|===
+
 == Tests
 
 Griffon 2.x no longer segregates tests between `unit` and `functional`. You must use

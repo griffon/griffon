@@ -1,0 +1,65 @@
+
+[[_controllers_context]]
+= Actions and Contexts
+
+Actions have direct access to their controller's `{link_context}` which means they can retrieve and store information
+at any time. It's also possible to define that the arguments of an action should be matched against keys that may
+exist in a `{link_context}`, this enables `<<_controllers_action_handlers,ActionHandlers>>` to decorate the value
+without directly affecting the `{link_context}` itself.
+
+The following example shows a different implementation of a controller whose login action expects an instance of
+`org.apache.shiro.authc.UsernamePasswordToken`. This instance has been created somewhere else and stored in the group's
+context using the "_credentials_" key.
+
+[source,groovy,linenums,options="nowrap"]
+----
+import griffon.core.artifact.GriffonController
+import griffon.metadata.ArtifactProviderFor
+import griffon.plugins.shiro.annotation.*
+import org.apache.shiro.authc.UsernamePasswordToken
+impprt org.apache.shiro.subject.Subject
+import javax.swing.JOptionPane
+
+import javax.inject.Inject
+import griffon.inject.Contextual
+
+@ArtifactProviderFor(GriffonController)
+class StrutsController {
+    @Inject
+    private Subject subject
+
+    @RequiresGuest
+    void login(@Contextual('credentials') UsernamePasswordToken token) {
+        try {
+            subject.login(token)
+        } catch(Exception e) {
+            JOptionPane.showMessageDialog(
+                app.windowManager.findWindow('mainWindow'),
+                'Invalid username and/or password',
+                'Security Failure', JOptionPane.ERROR_MESSAGE)
+        }
+    }
+
+    @RequiresAuthentication
+    void logout() {
+        subject.logout()
+    }
+}
+----
+
+Because the `org.apache.shiro.authc.UsernamePasswordToken` resides on the context it can now be shared with other
+actions that need it, something that could be done with the previous example because the `LoginCommandObject` existed
+only for the action that declared it as argument.
+
+Another interesting thing is that the instance of `org.apache.shiro.authc.UsernamePasswordToken` could have been added
+by the parent `{link_context}`, or the application's `{link_context}` (remember that contexts are hierarchical), thus
+the value can be shared with more than one controller or with the whole application, as needed.
+
+If the `@Contextual` argument does not have `@Named` qualifier then the fully qualified class name of the argument's
+type will be used as a key. This means that the key "org.apache.shiro.authc.UsernamePasswordToken" would be used to
+search for the argument if `@Named('credentials')` were to be ommitted.
+
+It's worth noting that failure to resolve a `@Contextual` argument does not result in an immediate exception; if the key
+could not be found in the `{link_context}` then a `null` value will be set as the argument's value. It's the action's
+job to check if it received the correct arguments.
+

@@ -1,0 +1,16 @@
+
+[[_overview_context]]
+= Context
+
+A `{link_context}` is like a `Map`, it's a storage for key/value pairs that can be used to keep track of any
+kind of data. However, unlike regular ``Map``s, ``{link_context}``s are hierarchical. Keys found in a child
+`{link_context}` have precedence over keys existing in its parent, e.g, a child `{link_context}` has the ability
+to shadow keys that may be defined up the chain.
+
+The `{link_griffon_application}` has a default `{link_context}` whose parent is set to `null`. This is the only
+case where this property will be null, as the runtime makes sure that a child context will have the right value
+set in its parent property when instantiated.
+
+The `{link_context}` plays an integral role in <<_mvc_mvc_group_context,MVC Groups>> and
+<<_controllers_context,controller actions>>.
+
