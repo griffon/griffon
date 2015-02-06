@@ -279,34 +279,36 @@ class GriffonPlugin implements Plugin&lt;Project&gt; {
                         }
                     } else {
 <span class="nc" id="L281">                        Task runTask = project.tasks.findByName('run')</span>
-<span class="nc bnc" id="L282" title="All 2 branches missed.">                        if (project.hasProperty('griffonEnv')) {</span>
-<span class="nc" id="L283">                            project.applicationDefaultJvmArgs &lt;&lt; &quot;-Dgriffon.env=${project.griffonEnv}&quot;</span>
-<span class="nc" id="L284">                            runTask.jvmArgs &lt;&lt; &quot;-Dgriffon.env=${project.griffonEnv}&quot;</span>
-                        } else {
-<span class="nc" id="L286">                            runTask.jvmArgs &lt;&lt; '-Dgriffon.env=dev'</span>
+<span class="nc bnc" id="L282" title="All 2 branches missed.">                        if( runTask != null) {</span>
+<span class="nc bnc" id="L283" title="All 2 branches missed.">                            if (project.hasProperty('griffonEnv')) {</span>
+<span class="nc" id="L284">                                project.applicationDefaultJvmArgs &lt;&lt; &quot;-Dgriffon.env=${project.griffonEnv}&quot;</span>
+<span class="nc" id="L285">                                runTask.jvmArgs &lt;&lt; &quot;-Dgriffon.env=${project.griffonEnv}&quot;</span>
+                            } else {
+<span class="nc" id="L287">                                runTask.jvmArgs &lt;&lt; '-Dgriffon.env=dev'</span>
+                            }
                         }
                     }
                 }
             }
 
             private boolean maybeIncludeGroovyDependency(boolean groovyDependenciesEnabled, String artifactId) {
-<span class="nc bnc" id="L293" title="All 2 branches missed.">                if (artifactId =~ /groovy/) {</span>
-<span class="nc bnc" id="L294" title="All 2 branches missed.">                    if (groovyDependenciesEnabled) {</span>
-<span class="nc" id="L295">                        appendDependency(artifactId)</span>
+<span class="nc bnc" id="L295" title="All 2 branches missed.">                if (artifactId =~ /groovy/) {</span>
+<span class="nc bnc" id="L296" title="All 2 branches missed.">                    if (groovyDependenciesEnabled) {</span>
+<span class="nc" id="L297">                        appendDependency(artifactId)</span>
                     }
-<span class="nc" id="L297">                    return true</span>
+<span class="nc" id="L299">                    return true</span>
                 }
-<span class="nc" id="L299">                false</span>
+<span class="nc" id="L301">                false</span>
             }
 
             private void appendDependency(String artifactId) {
-<span class="nc bnc" id="L303" title="All 2 branches missed.">                if (artifactId.endsWith('-compile')) {</span>
-<span class="nc" id="L304">                    project.dependencies.add('compileOnly', ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':'))</span>
-<span class="nc" id="L305">                    project.dependencies.add('testCompileOnly', ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':'))</span>
-<span class="nc bnc" id="L306" title="All 2 branches missed.">                } else if (artifactId.endsWith('-test')) {</span>
-<span class="nc" id="L307">                    project.dependencies.add('testCompile', ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':'))</span>
+<span class="nc bnc" id="L305" title="All 2 branches missed.">                if (artifactId.endsWith('-compile')) {</span>
+<span class="nc" id="L306">                    project.dependencies.add('compileOnly', ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':'))</span>
+<span class="nc" id="L307">                    project.dependencies.add('testCompileOnly', ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':'))</span>
+<span class="nc bnc" id="L308" title="All 2 branches missed.">                } else if (artifactId.endsWith('-test')) {</span>
+<span class="nc" id="L309">                    project.dependencies.add('testCompile', ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':'))</span>
                 } else {
-<span class="nc" id="L309">                    project.dependencies.add('compile', ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':'))</span>
+<span class="nc" id="L311">                    project.dependencies.add('compile', ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':'))</span>
                 }
             }
         })

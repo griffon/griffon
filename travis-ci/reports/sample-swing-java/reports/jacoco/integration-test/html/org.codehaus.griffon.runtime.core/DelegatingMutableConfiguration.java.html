@@ -27,11 +27,9 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.MissingResourceException;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import static griffon.util.CollectionUtils.toProperties;
 import static griffon.util.ConfigUtils.getConfigValue;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Arrays.asList;
@@ -46,91 +44,85 @@ public class DelegatingMutableConfiguration extends ConfigurationDecorator imple
     private static final String ERROR_KEY_BLANK = &quot;Argument 'key' must not be blank&quot;;
     private static final String ERROR_VALUE_NULL = &quot;Argument 'value' must not be null&quot;;
 
-<span class="nc" id="L49">    private final Map&lt;String, Object&gt; mutableKeyValues = new LinkedHashMap&lt;&gt;();</span>
-<span class="nc" id="L50">    private final Set&lt;String&gt; removedKeys = new LinkedHashSet&lt;&gt;();</span>
+<span class="nc" id="L47">    private final Map&lt;String, Object&gt; mutableKeyValues = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L48">    private final Set&lt;String&gt; removedKeys = new LinkedHashSet&lt;&gt;();</span>
 
     public DelegatingMutableConfiguration(@Nonnull Configuration delegate) {
-<span class="nc" id="L53">        super(delegate);</span>
-<span class="nc" id="L54">    }</span>
+<span class="nc" id="L51">        super(delegate);</span>
+<span class="nc" id="L52">    }</span>
 
     @Override
     public void set(@Nonnull String key, @Nonnull Object value) {
-<span class="nc" id="L58">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
-<span class="nc" id="L59">        requireNonNull(value, ERROR_VALUE_NULL);</span>
-<span class="nc" id="L60">        mutableKeyValues.put(key, value);</span>
-<span class="nc" id="L61">    }</span>
+<span class="nc" id="L56">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="nc" id="L57">        requireNonNull(value, ERROR_VALUE_NULL);</span>
+<span class="nc" id="L58">        mutableKeyValues.put(key, value);</span>
+<span class="nc" id="L59">    }</span>
 
     @Nullable
     @Override
     public Object remove(@Nonnull String key) {
-<span class="nc" id="L66">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
-<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (mutableKeyValues.containsKey(key)) {</span>
-<span class="nc" id="L68">            return mutableKeyValues.remove(key);</span>
-<span class="nc bnc" id="L69" title="All 2 branches missed.">        } else if (delegate.containsKey(key)) {</span>
-<span class="nc" id="L70">            removedKeys.add(key);</span>
-<span class="nc" id="L71">            return delegate.get(key);</span>
+<span class="nc" id="L64">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        if (mutableKeyValues.containsKey(key)) {</span>
+<span class="nc" id="L66">            return mutableKeyValues.remove(key);</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        } else if (delegate.containsKey(key)) {</span>
+<span class="nc" id="L68">            removedKeys.add(key);</span>
+<span class="nc" id="L69">            return delegate.get(key);</span>
         }
-<span class="nc" id="L73">        return null;</span>
+<span class="nc" id="L71">        return null;</span>
     }
 
     @Nonnull
     @Override
     public Map&lt;String, Object&gt; asFlatMap() {
-<span class="nc" id="L79">        Map&lt;String, Object&gt; flatMap = new LinkedHashMap&lt;&gt;(super.asFlatMap());</span>
-<span class="nc" id="L80">        flatMap.putAll(mutableKeyValues);</span>
-<span class="nc bnc" id="L81" title="All 2 branches missed.">        for (String removedKey : removedKeys) {</span>
-<span class="nc" id="L82">            flatMap.remove(removedKey);</span>
-<span class="nc" id="L83">        }</span>
-<span class="nc" id="L84">        return unmodifiableMap(flatMap);</span>
-    }
-
-    @Nonnull
-    @Override
-    public Properties asProperties() {
-<span class="nc" id="L90">        return toProperties(asFlatMap());</span>
+<span class="nc" id="L77">        Map&lt;String, Object&gt; flatMap = new LinkedHashMap&lt;&gt;(delegate.asFlatMap());</span>
+<span class="nc" id="L78">        flatMap.putAll(mutableKeyValues);</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        for (String removedKey : removedKeys) {</span>
+<span class="nc" id="L80">            flatMap.remove(removedKey);</span>
+<span class="nc" id="L81">        }</span>
+<span class="nc" id="L82">        return unmodifiableMap(flatMap);</span>
     }
 
     @Nonnull
     @Override
     public ResourceBundle asResourceBundle() {
-<span class="nc" id="L96">        return new CompositeResourceBundle(asList(new PrivateMapResourceBundle(asFlatMap()), super.asResourceBundle()));</span>
+<span class="nc" id="L88">        return new CompositeResourceBundle(asList(new PrivateMapResourceBundle(asFlatMap()), delegate.asResourceBundle()));</span>
     }
 
     @Nullable
     @Override
     public Object get(@Nonnull String key) {
-<span class="nc" id="L102">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="nc" id="L94">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
         try {
-<span class="nc" id="L104">            return getConfigValue(mutableKeyValues, key);</span>
-<span class="nc" id="L105">        } catch (MissingResourceException mre) {</span>
-<span class="nc bnc" id="L106" title="All 2 branches missed.">            if (removedKeys.contains(key)) {</span>
-<span class="nc" id="L107">                return null;</span>
+<span class="nc" id="L96">            return getConfigValue(mutableKeyValues, key);</span>
+<span class="nc" id="L97">        } catch (MissingResourceException mre) {</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">            if (removedKeys.contains(key)) {</span>
+<span class="nc" id="L99">                return null;</span>
             }
-<span class="nc" id="L109">            return super.get(key);</span>
+<span class="nc" id="L101">            return super.get(key);</span>
         }
     }
 
     @Override
     public boolean containsKey(@Nonnull String key) {
-<span class="nc" id="L115">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
-<span class="nc bnc" id="L116" title="All 6 branches missed.">        return ConfigUtils.containsKey(mutableKeyValues, key) || (!removedKeys.contains(key) &amp;&amp; super.containsKey(key));</span>
+<span class="nc" id="L107">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="nc bnc" id="L108" title="All 6 branches missed.">        return ConfigUtils.containsKey(mutableKeyValues, key) || (!removedKeys.contains(key) &amp;&amp; delegate.containsKey(key));</span>
     }
 
     private static class PrivateMapResourceBundle extends AbstractMapResourceBundle {
-<span class="nc" id="L120">        private final Map&lt;String, Object&gt; map = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L112">        private final Map&lt;String, Object&gt; map = new LinkedHashMap&lt;&gt;();</span>
 
-<span class="nc" id="L122">        private PrivateMapResourceBundle(Map&lt;String, Object&gt; map) {</span>
-<span class="nc" id="L123">            this.map.putAll(map);</span>
-<span class="nc" id="L124">            initialize(entries);</span>
-<span class="nc" id="L125">            initializeKeys();</span>
-<span class="nc" id="L126">        }</span>
+<span class="nc" id="L114">        private PrivateMapResourceBundle(Map&lt;String, Object&gt; map) {</span>
+<span class="nc" id="L115">            this.map.putAll(map);</span>
+<span class="nc" id="L116">            initialize(entries);</span>
+<span class="nc" id="L117">            initializeKeys();</span>
+<span class="nc" id="L118">        }</span>
 
         @Override
         protected void initialize(@Nonnull Map&lt;String, Object&gt; entries) {
-<span class="nc bnc" id="L130" title="All 4 branches missed.">            if (map != null &amp;&amp; entries != null) {</span>
-<span class="nc" id="L131">                entries.putAll(map);</span>
+<span class="nc bnc" id="L122" title="All 4 branches missed.">            if (map != null &amp;&amp; entries != null) {</span>
+<span class="nc" id="L123">                entries.putAll(map);</span>
             }
-<span class="nc" id="L133">        }</span>
+<span class="nc" id="L125">        }</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
