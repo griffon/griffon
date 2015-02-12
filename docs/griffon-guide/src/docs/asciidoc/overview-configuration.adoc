@@ -14,24 +14,24 @@ except it is pure Groovy hence you can re-use variables and use proper Java type
 
 Here's a typical configuration file
 
-.griffon-app/conf/sample/swing/groovy/Config.groovy
 [source,groovy,linenums,options="nowrap"]
+.griffon-app/conf/sample/swing/groovy/Config.groovy
 ----
 include::{sample-swing-groovy}/griffon-app/conf/sample/swing/groovy/Config.groovy[lines=16..-1]
 ----
 
 You can define this file using Java too
 
-.griffon-app/conf/sample/swing/java/Config.java
 [source,java,linenums,options="nowrap"]
+.griffon-app/conf/sample/swing/java/Config.java
 ----
 include::{sample-swing-java}/griffon-app/conf/sample/swing/java/Config.java[lines=16..-1]
 ----
 
 Or if you prefer properties files then do the following
 
-.griffon-app/resources/Config.properties
 [source,java,linenums,options="nowrap"]
+.griffon-app/resources/Config.properties
 ----
 application.title = Swing + Groovy
 application.startupGroups = sample
@@ -44,7 +44,8 @@ mvcGroups.sample.controller = sample.swing.groovy.SampleController
 Take special note that this file must be placed under `griffon-app/resources` instead.
 
 The application's runtime configuration is available through the `configuration` property
-of the application instance.
+of the application instance. This configuration instance is *read-only*, you can't modify
+its contents in any way.
 
 == Internationalization Support
 
@@ -63,3 +64,72 @@ Locale suffixes are resolved from least to most specific; for a locale with
  * `Config_de_CH_Basel.properties`
 
 The current `java.util.Locale` is used to determine values for language, country and variant.
+
+== Mutable Configuration
+
+As mentioned before, the default application configuration is made *read-only*, however there's a way to make it
+mutable, you simply must wrap the `{link_configuration}` instance with a `{link_mutable_configuration}`. You can accomplish
+this feat using a `javax.inject.Provider`, for example
+
+[source,java,linenums,options="nowrap"]
+.com.acme.MutableApplicationConfigurationProvider.java
+----
+package com.acme;
+
+import javax.inject.Provider;
+import javax.inject.Inject;
+import javax.inject.Named;
+import griffon.core.Configuration;
+import org.codehaus.griffon.runtime.core.DelegatingMutableConfiguration;
+
+public class MutableApplicationConfigurationProvider implements Provider<Configuration> {  //<1>
+    @Inject @Named("applicationConfig-readonly")                                           //<2>
+    private Configuration readOnlyAppConfig;
+
+    public Configuration get() {
+        return new DelegatingMutableConfiguration(readOnlyAppConfig);                      //<3>
+    }
+}
+----
+<1> Must return instances of type `griffon.core.Configuration`
+<2> Link to read-only configuration
+<3> Wrap it with a default implementation of `MutableConfiguration`
+
+You'll have to register this provider with a module, making sure that the original configuration binding is redirected
+another binding, for example
+
+[source,java,linenums,options="nowrap"]
+.com.acme.ApplicationModule.java
+----
+package com.acme
+
+import griffon.core.injection.Module;
+import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.kordamp.jipsy.ServiceProviderFor;
+import griffon.core.Configuration;
+import org.codehaus.griffon.runtime.core.DefaultConfiguration;
+
+import static griffon.util.AnnotationUtils.named;
+
+@ServiceProviderFor(Module.class)
+public class ApplicationModule extends AbstractModule {
+    @Override
+    protected void doConfigure() {
+        bind(Configuration.class)
+            .withClassifier(named("applicationConfig-readonly"))                           //<1>
+            .to(DefaultConfiguration.class)
+            .asSingleton();
+
+        bind(Configuration.class)                                                          //<2>
+            .toProvider(MutableApplicationConfigurationProvider.class)
+            .asSingleton();
+    }
+}
+----
+<1> Provide a binding with a new classifier
+<2> Override original binding with the mutable configuration provider
+
+As a matter of fact you can make any instance of `{link_configuration}` a mutable one if you follow this pattern.
+Remember it's very important that you override the original configuration binding using the exact same source type
+and classifier (if it exists).
+
