@@ -24,38 +24,34 @@ public class FeatureTests extends GroovyTestCase {
 
     void testSystemPropertyHasPrecedenceOverMetadata() {
         // given:
-        Feature feature = new Feature()
-        feature.@metadata = new Metadata(new ByteArrayInputStream('feature.foo=true\nfeature.bar=false\n'.bytes))
         System.setProperty('feature.foobar', 'true')
 
         // expect:
-        assert feature.isFeatureEnabled('feature.foobar')
-        assert feature.isFeatureEnabled('feature.foo')
-        assert !feature.isFeatureEnabled('feature.bar')
+        assert Feature.isFeatureEnabled('feature.foobar')
+        assert !Feature.isFeatureEnabled('feature.bar')
 
         // when:
         System.setProperty('feature.bar', 'true')
 
         // then:
-        assert feature.isFeatureEnabled('feature.bar')
+        assert Feature.isFeatureEnabled('feature.bar')
     }
 
     void testExecuteFeatureBlockIfEnabled() {
         // given:
-        Feature feature = new Feature()
-        feature.setFeatureEnabled('feature.foobar', false)
+        Feature.setFeatureEnabled('feature.foobar', false)
         boolean executed = false
         def block = { executed = true }
 
         // when:
-        feature.withFeature('feature.foobar', block)
+        Feature.withFeature('feature.foobar', block)
 
         // then:
         assert !executed
 
         // when:
-        feature.setFeatureEnabled('feature.foobar', true)
-        feature.withFeature('feature.foobar', block)
+        Feature.setFeatureEnabled('feature.foobar', true)
+        Feature.withFeature('feature.foobar', block)
 
         // then:
         assert executed

@@ -16,11 +16,9 @@
 package griffon.core.env;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
-import static griffon.util.TypeUtils.castToBoolean;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -29,24 +27,17 @@ import static java.util.Objects.requireNonNull;
 public class Feature {
     private static final String ERROR_FEATURE_NAME_BLANK = "Argument 'featureName' cannot be blank";
 
-    @Inject
-    private Metadata metadata;
-
-    public boolean isFeatureEnabled(@Nonnull String featureName) {
+    public static boolean isFeatureEnabled(@Nonnull String featureName) {
         requireNonBlank(featureName, ERROR_FEATURE_NAME_BLANK);
-        if (!isBlank(System.getProperty(featureName))) {
-            return Boolean.getBoolean(featureName);
-        }
-        return !isBlank(metadata.get(featureName)) &&
-            castToBoolean(metadata.get(featureName));
+        return !isBlank(System.getProperty(featureName)) && Boolean.getBoolean(featureName);
     }
 
-    public void setFeatureEnabled(@Nonnull String featureName, boolean enabled) {
+    public static void setFeatureEnabled(@Nonnull String featureName, boolean enabled) {
         requireNonBlank(featureName, ERROR_FEATURE_NAME_BLANK);
         System.setProperty(featureName, String.valueOf(enabled));
     }
 
-    public void withFeature(@Nonnull String featureName, @Nonnull Runnable runnable) {
+    public static void withFeature(@Nonnull String featureName, @Nonnull Runnable runnable) {
         requireNonNull(runnable, "Argument 'runnable' cannot be null");
         if (isFeatureEnabled(featureName)) {
             runnable.run();

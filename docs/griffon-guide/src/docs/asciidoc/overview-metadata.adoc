@@ -50,9 +50,7 @@ There are also a few helpful methods found in `{link_metadata}`
 
 A `{link_feature}` is a boolean flag that determines if a capability is available to
 the application at runtime. ``{link_feature}``s are nothing more than a `System`
-property. They can be written as properties on `{link_metadata}` too. If a feature
-key is found in both `System` properties and `{link_metadata}` then the former
-takes precedence. Here's an example of a module that decides if a specific binding
+property. Here's an example of a module that decides if a specific binding
 should be applied over another
 
 .src/main/groovy/org/opendolphin/demo/DolphinModule.groovy
@@ -68,19 +66,15 @@ import org.opendolphin.core.client.comm.ClientConnector
 import org.opendolphin.demo.injection.HttpClientConnectorProvider
 import org.opendolphin.demo.injection.InMemoryClientConnectorProvider
 
-import javax.inject.Inject
-
 @ServiceProviderFor(Module)
 class DolphinModule extends AbstractModule {
-    @Inject Feature feature
-
     @Override
     protected void doConfigure() {
         bind(ClientConnector)
             .toProvider(InMemoryClientConnectorProvider)
             .asSingleton()
 
-        feature.withFeature('dolphin.remote') {
+        Feature.withFeature('dolphin.remote') {
             bind(ClientConnector)
                 .toProvider(HttpClientConnectorProvider)
                 .asSingleton()
