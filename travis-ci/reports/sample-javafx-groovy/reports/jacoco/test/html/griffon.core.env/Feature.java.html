@@ -19,34 +19,29 @@ import javax.annotation.Nonnull;
 
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
-import static griffon.util.TypeUtils.castToBoolean;
 import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
  */
-<span class="nc" id="L28">public class Feature {</span>
+<span class="nc" id="L27">public class Feature {</span>
     private static final String ERROR_FEATURE_NAME_BLANK = &quot;Argument 'featureName' cannot be blank&quot;;
 
     public static boolean isFeatureEnabled(@Nonnull String featureName) {
-<span class="nc" id="L32">        requireNonBlank(featureName, ERROR_FEATURE_NAME_BLANK);</span>
-<span class="nc bnc" id="L33" title="All 2 branches missed.">        if (!isBlank(System.getProperty(featureName))) {</span>
-<span class="nc" id="L34">            return Boolean.getBoolean(featureName);</span>
-        }
-<span class="nc bnc" id="L36" title="All 2 branches missed.">        return !isBlank(Metadata.getCurrent().getProperty(featureName)) &amp;&amp;</span>
-<span class="nc bnc" id="L37" title="All 2 branches missed.">            castToBoolean(Metadata.getCurrent().getProperty(featureName));</span>
+<span class="nc" id="L31">        requireNonBlank(featureName, ERROR_FEATURE_NAME_BLANK);</span>
+<span class="nc bnc" id="L32" title="All 4 branches missed.">        return !isBlank(System.getProperty(featureName)) &amp;&amp; Boolean.getBoolean(featureName);</span>
     }
 
     public static void setFeatureEnabled(@Nonnull String featureName, boolean enabled) {
-<span class="nc" id="L41">        requireNonBlank(featureName, ERROR_FEATURE_NAME_BLANK);</span>
-<span class="nc" id="L42">        System.setProperty(featureName, String.valueOf(enabled));</span>
-<span class="nc" id="L43">    }</span>
+<span class="nc" id="L36">        requireNonBlank(featureName, ERROR_FEATURE_NAME_BLANK);</span>
+<span class="nc" id="L37">        System.setProperty(featureName, String.valueOf(enabled));</span>
+<span class="nc" id="L38">    }</span>
 
     public static void withFeature(@Nonnull String featureName, @Nonnull Runnable runnable) {
-<span class="nc" id="L46">        requireNonNull(runnable, &quot;Argument 'runnable' cannot be null&quot;);</span>
-<span class="nc bnc" id="L47" title="All 2 branches missed.">        if (isFeatureEnabled(featureName)) {</span>
-<span class="nc" id="L48">            runnable.run();</span>
+<span class="nc" id="L41">        requireNonNull(runnable, &quot;Argument 'runnable' cannot be null&quot;);</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        if (isFeatureEnabled(featureName)) {</span>
+<span class="nc" id="L43">            runnable.run();</span>
         }
-<span class="nc" id="L50">    }</span>
+<span class="nc" id="L45">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

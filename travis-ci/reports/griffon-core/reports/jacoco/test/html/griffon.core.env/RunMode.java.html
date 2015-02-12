@@ -15,6 +15,8 @@
  */
 package griffon.core.env;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -26,63 +28,32 @@ import java.util.Map;
  * @author Andres Almiray
  * @since 2.0.0
  */
-<span class="fc" id="L29">public enum RunMode {</span>
-<span class="fc" id="L30">    STANDALONE, WEBSTART, APPLET, CUSTOM;</span>
+<span class="fc" id="L31">public enum RunMode {</span>
+<span class="fc" id="L32">    STANDALONE, WEBSTART, APPLET, CUSTOM;</span>
     /**
      * Constant used to resolve the runMode via System.getProperty(RunMode.KEY)
      */
     public static final String KEY = &quot;griffon.runmode&quot;;
 
-    /**
-     * Constants that indicates whether this GriffonApplication is running in the default running mode
-     */
-    public static final String DEFAULT = &quot;griffon.runmode.default&quot;;
     private static final String STANDALONE_RUNMODE_SHORT_NAME = &quot;standalone&quot;;
     private static final String WEBSTART_RUNMODE_SHORT_NAME = &quot;webstart&quot;;
     private static final String APPLET_RUNMODE_SHORT_NAME = &quot;applet&quot;;
 
-<span class="fc" id="L44">    private static final Map&lt;String, String&gt; MODE_NAME_MAPPINGS = new LinkedHashMap&lt;String, String&gt;() {{</span>
-<span class="fc" id="L45">        put(STANDALONE_RUNMODE_SHORT_NAME, RunMode.STANDALONE.getName());</span>
-<span class="fc" id="L46">        put(WEBSTART_RUNMODE_SHORT_NAME, RunMode.WEBSTART.getName());</span>
-<span class="fc" id="L47">        put(APPLET_RUNMODE_SHORT_NAME, RunMode.APPLET.getName());</span>
+<span class="fc" id="L42">    private static final Map&lt;String, String&gt; MODE_NAME_MAPPINGS = new LinkedHashMap&lt;&gt;();</span>
+
+    static {
+<span class="fc" id="L45">        MODE_NAME_MAPPINGS.put(STANDALONE_RUNMODE_SHORT_NAME, RunMode.STANDALONE.getName());</span>
+<span class="fc" id="L46">        MODE_NAME_MAPPINGS.put(WEBSTART_RUNMODE_SHORT_NAME, RunMode.WEBSTART.getName());</span>
+<span class="fc" id="L47">        MODE_NAME_MAPPINGS.put(APPLET_RUNMODE_SHORT_NAME, RunMode.APPLET.getName());</span>
 <span class="fc" id="L48">    }</span>
 
-        private static final long serialVersionUID = -1551704296210703535L;
-    };
-
-    /**
-     * Returns the current RunMode which is typically either STANDALONE, WEBSTART or APPLET.
-     * For custom running modes CUSTOM type is returned.
-     *
-     * @return The current runMode.
-     */
-    public static RunMode getCurrent() {
-<span class="fc" id="L60">        String modeName = System.getProperty(RunMode.KEY);</span>
-
-<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (isBlank(modeName)) {</span>
-<span class="fc" id="L63">            return STANDALONE;</span>
-        } else {
-<span class="fc" id="L65">            RunMode mode = getRunMode(modeName);</span>
-<span class="pc bpc" id="L66" title="1 of 2 branches missed.">            if (mode == null) {</span>
-                try {
-<span class="fc" id="L68">                    mode = RunMode.valueOf(modeName.toUpperCase());</span>
-<span class="fc" id="L69">                } catch (IllegalArgumentException e) {</span>
-                    // ignore
-<span class="fc" id="L71">                }</span>
-            }
-<span class="fc bfc" id="L73" title="All 2 branches covered.">            if (mode == null) {</span>
-<span class="fc" id="L74">                mode = RunMode.CUSTOM;</span>
-<span class="fc" id="L75">                mode.setName(modeName);</span>
-            }
-<span class="fc" id="L77">            return mode;</span>
-        }
-    }
+    private String name;
 
     /**
      * @return Return true if the running mode has been set as a System property
      */
     public static boolean isSystemSet() {
-<span class="fc bfc" id="L85" title="All 2 branches covered.">        return System.getProperty(KEY) != null;</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        return System.getProperty(KEY) != null;</span>
     }
 
     /**
@@ -91,32 +62,32 @@ import java.util.Map;
      * @param shortName The short name
      * @return The RunMode or null if not known
      */
-    public static RunMode getRunMode(String shortName) {
-<span class="fc" id="L95">        final String modeName = MODE_NAME_MAPPINGS.get(shortName);</span>
-<span class="fc bfc" id="L96" title="All 2 branches covered.">        if (modeName != null) {</span>
-<span class="fc" id="L97">            return RunMode.valueOf(modeName.toUpperCase());</span>
+    @Nullable
+    public static RunMode resolveRunMode(@Nullable String shortName) {
+<span class="fc" id="L67">        final String modeName = MODE_NAME_MAPPINGS.get(shortName);</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (modeName != null) {</span>
+<span class="fc" id="L69">            return RunMode.valueOf(modeName.toUpperCase());</span>
         }
-<span class="fc" id="L99">        return null;</span>
+<span class="fc" id="L71">        return null;</span>
     }
 
     private static boolean isBlank(String value) {
-<span class="pc bpc" id="L103" title="1 of 4 branches missed.">        return value == null || value.trim().length() == 0;</span>
+<span class="pc bpc" id="L75" title="2 of 4 branches missed.">        return value == null || value.trim().length() == 0;</span>
     }
-
-    private String name;
 
     /**
      * @return The name of the running mode
      */
+    @Nonnull
     public String getName() {
-<span class="fc bfc" id="L112" title="All 2 branches covered.">        if (name == null) {</span>
-<span class="fc" id="L113">            return this.toString().toLowerCase(Locale.getDefault());</span>
+<span class="pc bpc" id="L83" title="1 of 4 branches missed.">        if (this != CUSTOM || isBlank(name)) {</span>
+<span class="fc" id="L84">            return this.toString().toLowerCase(Locale.getDefault());</span>
         }
-<span class="fc" id="L115">        return name;</span>
+<span class="fc" id="L86">        return name;</span>
     }
 
-    public void setName(String name) {
-<span class="fc" id="L119">        this.name = name;</span>
-<span class="fc" id="L120">    }</span>
+    public void setName(@Nullable String name) {
+<span class="fc" id="L90">        this.name = name;</span>
+<span class="fc" id="L91">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

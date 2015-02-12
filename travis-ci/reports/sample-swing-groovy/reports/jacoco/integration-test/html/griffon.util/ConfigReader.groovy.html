@@ -48,52 +48,54 @@ class ConfigReader {
 <span class="fc" id="L48">    private final Stack&lt;Map&lt;String, ConfigObject&gt;&gt; conditionalBlocks = new Stack&lt;Map&lt;String, ConfigObject&gt;&gt;()</span>
 
     static class Provider implements javax.inject.Provider&lt;ConfigReader&gt; {
-        @Inject ApplicationClassLoader applicationClassLoader
+        @Inject private ApplicationClassLoader applicationClassLoader
+        @Inject private Metadata metadata
+        @Inject private Environment environment
 
         @Override
         ConfigReader get() {
-<span class="fc" id="L55">            ConfigReader configReader = new ConfigReader(applicationClassLoader)</span>
-<span class="fc" id="L56">            configReader.setBinding(CollectionUtils.map()</span>
-<span class="fc" id="L57">                .e(&quot;userHome&quot;, System.getProperty(&quot;user.home&quot;))</span>
-<span class="fc" id="L58">                .e(&quot;appName&quot;, Metadata.getCurrent().getApplicationName())</span>
-<span class="fc" id="L59">                .e(&quot;appVersion&quot;, Metadata.getCurrent().getApplicationVersion())</span>
-<span class="fc" id="L60">                .e(&quot;griffonVersion&quot;, GriffonEnvironment.getGriffonVersion()));</span>
-<span class="fc" id="L61">            configReader.registerConditionalBlock(&quot;environments&quot;, Environment.getCurrent().getName())</span>
-<span class="fc" id="L62">            configReader.registerConditionalBlock(&quot;projects&quot;, Metadata.getCurrent().getApplicationName())</span>
-<span class="fc" id="L63">            configReader.registerConditionalBlock(&quot;platforms&quot;, GriffonApplicationUtils.getPlatform())</span>
-<span class="pc" id="L64">            configReader</span>
+<span class="fc" id="L57">            ConfigReader configReader = new ConfigReader(applicationClassLoader)</span>
+<span class="fc" id="L58">            configReader.setBinding(CollectionUtils.map()</span>
+<span class="fc" id="L59">                .e(&quot;userHome&quot;, System.getProperty(&quot;user.home&quot;))</span>
+<span class="fc" id="L60">                .e(&quot;appName&quot;, metadata.getApplicationName())</span>
+<span class="fc" id="L61">                .e(&quot;appVersion&quot;, metadata.getApplicationVersion())</span>
+<span class="fc" id="L62">                .e(&quot;griffonVersion&quot;, GriffonEnvironment.getGriffonVersion()));</span>
+<span class="fc" id="L63">            configReader.registerConditionalBlock(&quot;environments&quot;, environment.getName())</span>
+<span class="fc" id="L64">            configReader.registerConditionalBlock(&quot;projects&quot;, metadata.getApplicationName())</span>
+<span class="fc" id="L65">            configReader.registerConditionalBlock(&quot;platforms&quot;, GriffonApplicationUtils.getPlatform())</span>
+<span class="pc" id="L66">            configReader</span>
         }
     }
 
     @Inject
     ConfigReader(@Nonnull ApplicationClassLoader applicationClassLoader) {
-<span class="fc" id="L70">        classLoader = new GroovyClassLoader(applicationClassLoader.get())</span>
+<span class="fc" id="L72">        classLoader = new GroovyClassLoader(applicationClassLoader.get())</span>
     }
 
     void registerConditionalBlock(String blockName, String blockValue) {
-<span class="pc bpc" id="L74" title="2 of 4 branches missed.">        if (!isBlank(blockName)) {</span>
-<span class="pc bpc" id="L75" title="1 of 2 branches missed.">            if (isBlank(blockValue)) {</span>
-<span class="nc" id="L76">                conditionValues.remove(blockName)</span>
+<span class="pc bpc" id="L76" title="2 of 4 branches missed.">        if (!isBlank(blockName)) {</span>
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">            if (isBlank(blockValue)) {</span>
+<span class="nc" id="L78">                conditionValues.remove(blockName)</span>
             } else {
-<span class="fc" id="L78">                conditionValues[blockName] = blockValue</span>
+<span class="fc" id="L80">                conditionValues[blockName] = blockValue</span>
             }
         }
     }
 
     Map&lt;String, String&gt; getConditionalBlockValues() {
-<span class="nc" id="L84">        Collections.unmodifiableMap(conditionValues)</span>
+<span class="nc" id="L86">        Collections.unmodifiableMap(conditionValues)</span>
     }
 
     String getEnvironment() {
-<span class="nc" id="L88">        return conditionValues[ENVIRONMENTS_METHOD]</span>
+<span class="nc" id="L90">        return conditionValues[ENVIRONMENTS_METHOD]</span>
     }
 
     void setEnvironment(String environment) {
-<span class="nc" id="L92">        conditionValues[ENVIRONMENTS_METHOD] = environment</span>
+<span class="nc" id="L94">        conditionValues[ENVIRONMENTS_METHOD] = environment</span>
     }
 
     void setBinding(Map vars) {
-<span class="fc" id="L96">        this.bindingVars = vars</span>
+<span class="fc" id="L98">        this.bindingVars = vars</span>
     }
 
     /**
@@ -101,41 +103,41 @@ class ConfigReader {
      * @param The java.util.Properties instance
      */
     ConfigObject parse(Properties properties) {
-<span class="nc" id="L104">        ConfigObject config = new ConfigObject()</span>
-<span class="nc bnc" id="L105" title="All 2 branches missed.">        for (key in properties.keySet()) {</span>
-<span class="nc" id="L106">            def tokens = key.split(/\./)</span>
+<span class="nc" id="L106">        ConfigObject config = new ConfigObject()</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        for (key in properties.keySet()) {</span>
+<span class="nc" id="L108">            def tokens = key.split(/\./)</span>
 
-<span class="nc" id="L108">            def current = config</span>
-<span class="nc" id="L109">            def last</span>
-<span class="nc" id="L110">            def lastToken</span>
-<span class="nc" id="L111">            def foundBase = false</span>
-<span class="nc bnc" id="L112" title="All 2 branches missed.">            for (token in tokens) {</span>
-<span class="nc bnc" id="L113" title="All 2 branches missed.">                if (foundBase) {</span>
+<span class="nc" id="L110">            def current = config</span>
+<span class="nc" id="L111">            def last</span>
+<span class="nc" id="L112">            def lastToken</span>
+<span class="nc" id="L113">            def foundBase = false</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">            for (token in tokens) {</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">                if (foundBase) {</span>
                     // handle not properly nested tokens by ignoring
                     // hierarchy below this point
-<span class="nc" id="L116">                    lastToken += &quot;.&quot; + token</span>
-<span class="nc" id="L117">                    current = last</span>
+<span class="nc" id="L118">                    lastToken += &quot;.&quot; + token</span>
+<span class="nc" id="L119">                    current = last</span>
                 } else {
-<span class="nc" id="L119">                    last = current</span>
-<span class="nc" id="L120">                    lastToken = token</span>
-<span class="nc" id="L121">                    current = current.&quot;${token}&quot;</span>
-<span class="nc bnc" id="L122" title="All 4 branches missed.">                    if (!(current instanceof ConfigObject)) foundBase = true</span>
+<span class="nc" id="L121">                    last = current</span>
+<span class="nc" id="L122">                    lastToken = token</span>
+<span class="nc" id="L123">                    current = current.&quot;${token}&quot;</span>
+<span class="nc bnc" id="L124" title="All 4 branches missed.">                    if (!(current instanceof ConfigObject)) foundBase = true</span>
                 }
             }
 
-<span class="nc bnc" id="L126" title="All 2 branches missed.">            if (current instanceof ConfigObject) {</span>
-<span class="nc bnc" id="L127" title="All 2 branches missed.">                if (last[lastToken]) {</span>
-<span class="nc" id="L128">                    def flattened = last.flatten()</span>
-<span class="nc" id="L129">                    last.clear()</span>
-<span class="nc" id="L130">                    flattened.each { k2, v2 -&gt; last[k2] = v2 }</span>
-<span class="nc" id="L131">                    last[lastToken] = properties.get(key)</span>
-                } else {
+<span class="nc bnc" id="L128" title="All 2 branches missed.">            if (current instanceof ConfigObject) {</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">                if (last[lastToken]) {</span>
+<span class="nc" id="L130">                    def flattened = last.flatten()</span>
+<span class="nc" id="L131">                    last.clear()</span>
+<span class="nc" id="L132">                    flattened.each { k2, v2 -&gt; last[k2] = v2 }</span>
 <span class="nc" id="L133">                    last[lastToken] = properties.get(key)</span>
+                } else {
+<span class="nc" id="L135">                    last[lastToken] = properties.get(key)</span>
                 }
             }
-<span class="nc" id="L136">            current = config</span>
+<span class="nc" id="L138">            current = config</span>
         }
-<span class="nc" id="L138">        return config</span>
+<span class="nc" id="L140">        return config</span>
     }
     /**
      * Parse the given script as a string and return the configuration object
@@ -143,7 +145,7 @@ class ConfigReader {
      * @see ConfigReader#parse(groovy.lang.Script)
      */
     ConfigObject parse(String script) {
-<span class="nc" id="L146">        return parse(classLoader.parseClass(script))</span>
+<span class="nc" id="L148">        return parse(classLoader.parseClass(script))</span>
     }
 
     /**
@@ -152,7 +154,7 @@ class ConfigReader {
      * @see ConfigReader#parse(groovy.lang.Script)
      */
     ConfigObject parse(Class&lt;? extends Script&gt; scriptClass) {
-<span class="pc" id="L155">        return parse(scriptClass.newInstance())</span>
+<span class="pc" id="L157">        return parse(scriptClass.newInstance())</span>
     }
 
     /**
@@ -161,7 +163,7 @@ class ConfigReader {
      * @return A Map of maps that can be navigating with dot de-referencing syntax to obtain configuration entries
      */
     ConfigObject parse(Script script) {
-<span class="pc" id="L164">        return parse(script, null)</span>
+<span class="pc" id="L166">        return parse(script, null)</span>
     }
 
     /**
@@ -171,7 +173,7 @@ class ConfigReader {
      * @return The ConfigObject instance
      */
     ConfigObject parse(URL scriptLocation) {
-<span class="nc" id="L174">        return parse(classLoader.parseClass(scriptLocation.text).newInstance(), scriptLocation)</span>
+<span class="nc" id="L176">        return parse(classLoader.parseClass(scriptLocation.text).newInstance(), scriptLocation)</span>
     }
 
     /**
@@ -183,17 +185,17 @@ class ConfigReader {
      * @return The ConfigObject instance
      */
     ConfigObject parse(Script script, URL location) {
-<span class="pc bpc" id="L186" title="1 of 2 branches missed.">        def config = location ? new ConfigObject(location) : new ConfigObject()</span>
-<span class="fc" id="L187">        GroovySystem.metaClassRegistry.removeMetaClass(script.class)</span>
-<span class="fc" id="L188">        def mc = script.class.metaClass</span>
-<span class="fc" id="L189">        def prefix = &quot;&quot;</span>
-<span class="fc" id="L190">        LinkedList stack = new LinkedList()</span>
-<span class="fc" id="L191">        stack &lt;&lt; [config: config, scope: [:]]</span>
-<span class="fc" id="L192">        def pushStack = { co -&gt;</span>
-<span class="pc" id="L193">            stack &lt;&lt; [config: co, scope: stack.last.scope.clone()]</span>
+<span class="pc bpc" id="L188" title="1 of 2 branches missed.">        def config = location ? new ConfigObject(location) : new ConfigObject()</span>
+<span class="fc" id="L189">        GroovySystem.metaClassRegistry.removeMetaClass(script.class)</span>
+<span class="fc" id="L190">        def mc = script.class.metaClass</span>
+<span class="fc" id="L191">        def prefix = &quot;&quot;</span>
+<span class="fc" id="L192">        LinkedList stack = new LinkedList()</span>
+<span class="fc" id="L193">        stack &lt;&lt; [config: config, scope: [:]]</span>
+<span class="fc" id="L194">        def pushStack = { co -&gt;</span>
+<span class="pc" id="L195">            stack &lt;&lt; [config: co, scope: stack.last.scope.clone()]</span>
         }
-<span class="fc" id="L195">        def assignName = { name, co -&gt;</span>
-<span class="fc" id="L196">            def current = stack.last</span>
+<span class="fc" id="L197">        def assignName = { name, co -&gt;</span>
+<span class="fc" id="L198">            def current = stack.last</span>
             /*
             def cfg = current.config
             if (cfg instanceof ConfigObject) {
@@ -209,103 +211,103 @@ class ConfigReader {
             }
             cfg[name] = co
             */
-<span class="fc" id="L212">            current.config[name] = co</span>
-<span class="pc" id="L213">            current.scope[name] = co</span>
+<span class="fc" id="L214">            current.config[name] = co</span>
+<span class="pc" id="L215">            current.scope[name] = co</span>
         }
-<span class="fc" id="L215">        mc.getProperty = { String name -&gt;</span>
-<span class="nc" id="L216">            def current = stack.last</span>
-<span class="nc" id="L217">            def result</span>
-<span class="nc bnc" id="L218" title="All 2 branches missed.">            if (current.config.get(name)) {</span>
-<span class="nc" id="L219">                result = current.config.get(name)</span>
-<span class="nc bnc" id="L220" title="All 2 branches missed.">            } else if (current.scope[name]) {</span>
-<span class="nc" id="L221">                result = current.scope[name]</span>
+<span class="fc" id="L217">        mc.getProperty = { String name -&gt;</span>
+<span class="nc" id="L218">            def current = stack.last</span>
+<span class="nc" id="L219">            def result</span>
+<span class="nc bnc" id="L220" title="All 2 branches missed.">            if (current.config.get(name)) {</span>
+<span class="nc" id="L221">                result = current.config.get(name)</span>
+<span class="nc bnc" id="L222" title="All 2 branches missed.">            } else if (current.scope[name]) {</span>
+<span class="nc" id="L223">                result = current.scope[name]</span>
             } else {
                 try {
-<span class="nc" id="L224">                    result = InvokerHelper.getProperty(this, name)</span>
+<span class="nc" id="L226">                    result = InvokerHelper.getProperty(this, name)</span>
                 } catch (GroovyRuntimeException e) {
-<span class="nc" id="L226">                    result = new ConfigObject()</span>
-<span class="nc" id="L227">                    assignName.call(name, result)</span>
+<span class="nc" id="L228">                    result = new ConfigObject()</span>
+<span class="nc" id="L229">                    assignName.call(name, result)</span>
                 }
             }
-<span class="nc" id="L230">            result</span>
+<span class="nc" id="L232">            result</span>
         }
 
-<span class="fc" id="L233">        ConfigObject overrides = new ConfigObject()</span>
-<span class="fc" id="L234">        mc.invokeMethod = { String name, args -&gt;</span>
-<span class="fc" id="L235">            def result</span>
-<span class="pc bpc" id="L236" title="1 of 6 branches missed.">            if (args.length == 1 &amp;&amp; args[0] instanceof Closure) {</span>
-<span class="pc bpc" id="L237" title="1 of 2 branches missed.">                if (name in conditionValues.keySet()) {</span>
+<span class="fc" id="L235">        ConfigObject overrides = new ConfigObject()</span>
+<span class="fc" id="L236">        mc.invokeMethod = { String name, args -&gt;</span>
+<span class="fc" id="L237">            def result</span>
+<span class="pc bpc" id="L238" title="1 of 6 branches missed.">            if (args.length == 1 &amp;&amp; args[0] instanceof Closure) {</span>
+<span class="pc bpc" id="L239" title="1 of 2 branches missed.">                if (name in conditionValues.keySet()) {</span>
                     try {
-<span class="nc" id="L239">                        currentConditionalBlock.push(name)</span>
-<span class="nc" id="L240">                        conditionalBlocks.push([:])</span>
-<span class="nc" id="L241">                        args[0].call()</span>
+<span class="nc" id="L241">                        currentConditionalBlock.push(name)</span>
+<span class="nc" id="L242">                        conditionalBlocks.push([:])</span>
+<span class="nc" id="L243">                        args[0].call()</span>
                     } finally {
-<span class="nc" id="L243">                        currentConditionalBlock.pop()</span>
-<span class="nc bnc" id="L244" title="All 4 branches missed.">                        for (entry in conditionalBlocks.pop().entrySet()) {</span>
-<span class="nc" id="L245">                            def c = stack.last.config</span>
-<span class="nc bnc" id="L246" title="All 4 branches missed.">                            (c != config ? c : overrides).merge(entry.value)</span>
+<span class="nc" id="L245">                        currentConditionalBlock.pop()</span>
+<span class="nc bnc" id="L246" title="All 4 branches missed.">                        for (entry in conditionalBlocks.pop().entrySet()) {</span>
+<span class="nc" id="L247">                            def c = stack.last.config</span>
+<span class="nc bnc" id="L248" title="All 4 branches missed.">                            (c != config ? c : overrides).merge(entry.value)</span>
                         }
                     }
-<span class="pc bpc" id="L249" title="1 of 2 branches missed.">                } else if (currentConditionalBlock.size() &gt; 0) {</span>
-<span class="nc" id="L250">                    String conditionalBlockKey = currentConditionalBlock.peek()</span>
-<span class="nc bnc" id="L251" title="All 2 branches missed.">                    if (name == conditionValues[conditionalBlockKey]) {</span>
-<span class="nc" id="L252">                        def co = new ConfigObject()</span>
-<span class="nc" id="L253">                        conditionalBlocks.peek()[conditionalBlockKey] = co</span>
+<span class="pc bpc" id="L251" title="1 of 2 branches missed.">                } else if (currentConditionalBlock.size() &gt; 0) {</span>
+<span class="nc" id="L252">                    String conditionalBlockKey = currentConditionalBlock.peek()</span>
+<span class="nc bnc" id="L253" title="All 2 branches missed.">                    if (name == conditionValues[conditionalBlockKey]) {</span>
+<span class="nc" id="L254">                        def co = new ConfigObject()</span>
+<span class="nc" id="L255">                        conditionalBlocks.peek()[conditionalBlockKey] = co</span>
 
-<span class="nc" id="L255">                        pushStack.call(co)</span>
+<span class="nc" id="L257">                        pushStack.call(co)</span>
                         try {
-<span class="nc" id="L257">                            currentConditionalBlock.pop()</span>
-<span class="nc" id="L258">                            args[0].call()</span>
+<span class="nc" id="L259">                            currentConditionalBlock.pop()</span>
+<span class="nc" id="L260">                            args[0].call()</span>
                         } finally {
-<span class="nc" id="L260">                            currentConditionalBlock.push(conditionalBlockKey)</span>
+<span class="nc" id="L262">                            currentConditionalBlock.push(conditionalBlockKey)</span>
                         }
-<span class="nc" id="L262">                        stack.pop()</span>
+<span class="nc" id="L264">                        stack.pop()</span>
                     }
                 } else {
-<span class="fc" id="L265">                    def co</span>
-<span class="pc bpc" id="L266" title="1 of 2 branches missed.">                    if (stack.last.config.get(name) instanceof ConfigObject) {</span>
-<span class="nc" id="L267">                        co = stack.last.config.get(name)</span>
+<span class="fc" id="L267">                    def co</span>
+<span class="pc bpc" id="L268" title="1 of 2 branches missed.">                    if (stack.last.config.get(name) instanceof ConfigObject) {</span>
+<span class="nc" id="L269">                        co = stack.last.config.get(name)</span>
                     } else {
-<span class="fc" id="L269">                        co = new ConfigObject()</span>
+<span class="fc" id="L271">                        co = new ConfigObject()</span>
                     }
 
-<span class="fc" id="L272">                    assignName.call(name, co)</span>
-<span class="fc" id="L273">                    pushStack.call(co)</span>
-<span class="fc" id="L274">                    args[0].call()</span>
-<span class="fc" id="L275">                    stack.pop()</span>
+<span class="fc" id="L274">                    assignName.call(name, co)</span>
+<span class="fc" id="L275">                    pushStack.call(co)</span>
+<span class="fc" id="L276">                    args[0].call()</span>
+<span class="fc" id="L277">                    stack.pop()</span>
                 }
-<span class="pc bpc" id="L277" title="4 of 6 branches missed.">            } else if (args.length == 2 &amp;&amp; args[1] instanceof Closure) {</span>
+<span class="pc bpc" id="L279" title="4 of 6 branches missed.">            } else if (args.length == 2 &amp;&amp; args[1] instanceof Closure) {</span>
                 try {
-<span class="nc" id="L279">                    prefix = name + '.'</span>
-<span class="nc" id="L280">                    assignName.call(name, args[0])</span>
-<span class="nc" id="L281">                    args[1].call()</span>
-<span class="nc" id="L282">                } finally { prefix = &quot;&quot; }</span>
+<span class="nc" id="L281">                    prefix = name + '.'</span>
+<span class="nc" id="L282">                    assignName.call(name, args[0])</span>
+<span class="nc" id="L283">                    args[1].call()</span>
+<span class="nc" id="L284">                } finally { prefix = &quot;&quot; }</span>
             } else {
-<span class="fc" id="L284">                MetaMethod mm = mc.getMetaMethod(name, args)</span>
-<span class="pc bpc" id="L285" title="1 of 2 branches missed.">                if (mm) {</span>
-<span class="fc" id="L286">                    result = mm.invoke(delegate, args)</span>
+<span class="fc" id="L286">                MetaMethod mm = mc.getMetaMethod(name, args)</span>
+<span class="pc bpc" id="L287" title="1 of 2 branches missed.">                if (mm) {</span>
+<span class="fc" id="L288">                    result = mm.invoke(delegate, args)</span>
                 } else {
-<span class="nc" id="L288">                    throw new MissingMethodException(name, getClass(), args)</span>
+<span class="nc" id="L290">                    throw new MissingMethodException(name, getClass(), args)</span>
                 }
             }
-<span class="pc" id="L291">            result</span>
+<span class="pc" id="L293">            result</span>
         }
-<span class="fc" id="L293">        script.metaClass = mc</span>
+<span class="fc" id="L295">        script.metaClass = mc</span>
 
-<span class="fc" id="L295">        def setProperty = { String name, value -&gt;</span>
-<span class="pc" id="L296">            assignName.call(prefix + name, value)</span>
+<span class="fc" id="L297">        def setProperty = { String name, value -&gt;</span>
+<span class="pc" id="L298">            assignName.call(prefix + name, value)</span>
         }
-<span class="fc" id="L298">        def binding = new ConfigBinding(setProperty)</span>
-<span class="pc bpc" id="L299" title="1 of 2 branches missed.">        if (this.bindingVars) {</span>
-<span class="fc" id="L300">            binding.getVariables().putAll(this.bindingVars)</span>
+<span class="fc" id="L300">        def binding = new ConfigBinding(setProperty)</span>
+<span class="pc bpc" id="L301" title="1 of 2 branches missed.">        if (this.bindingVars) {</span>
+<span class="fc" id="L302">            binding.getVariables().putAll(this.bindingVars)</span>
         }
-<span class="fc" id="L302">        script.binding = binding</span>
+<span class="fc" id="L304">        script.binding = binding</span>
 
-<span class="fc" id="L304">        script.run()</span>
+<span class="fc" id="L306">        script.run()</span>
 
-<span class="fc" id="L306">        config.merge(overrides)</span>
+<span class="fc" id="L308">        config.merge(overrides)</span>
 
-<span class="pc" id="L308">        return config</span>
+<span class="pc" id="L310">        return config</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

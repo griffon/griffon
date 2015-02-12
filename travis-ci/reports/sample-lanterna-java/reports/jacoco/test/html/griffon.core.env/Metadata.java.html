@@ -15,330 +15,113 @@
  */
 package griffon.core.env;
 
-import java.io.Closeable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.Reference;
-import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Map;
+import java.util.LinkedHashSet;
 import java.util.Properties;
-import java.util.Vector;
-import java.util.regex.Pattern;
+import java.util.Set;
+
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
 
 /**
- * Represents the application Metadata and loading mechanics
+ * Represents the application Metadata
  *
- * @author Graeme Rocher (Grails 1.1)
+ * @author Andres Almiray
+ * @since 2.0.0
  */
-
-public class Metadata extends Properties {
-
-    public static final String FILE = &quot;application.properties&quot;;
+public class Metadata {
+    public static final String FILENAME = &quot;application.properties&quot;;
     public static final String APPLICATION_VERSION = &quot;application.version&quot;;
     public static final String APPLICATION_NAME = &quot;application.name&quot;;
+<span class="fc" id="L45">    private static final Logger LOG = LoggerFactory.getLogger(Metadata.class);</span>
 
-<span class="nc" id="L46">    private static final Pattern SKIP_PATTERN = Pattern.compile(&quot;^.*/griffon-.*.jar!/application.properties$&quot;);</span>
-<span class="nc" id="L47">    private static Reference&lt;Metadata&gt; metadata = new SoftReference&lt;&gt;(new Metadata());</span>
+<span class="pc" id="L47">    private final Properties properties = new Properties();</span>
 
-    private boolean initialized;
-    private File metadataFile;
-    private boolean dirty;
+<span class="fc" id="L49">    public Metadata(@Nonnull String path) {</span>
+<span class="fc" id="L50">        requireNonBlank(path, &quot;Argument 'path' must not be blank&quot;);</span>
+<span class="fc" id="L51">        loadProperties(path);</span>
+<span class="fc" id="L52">    }</span>
 
-    private Metadata() {
-<span class="nc" id="L54">        super();</span>
-<span class="nc" id="L55">    }</span>
+<span class="nc" id="L54">    public Metadata(@Nonnull File file) {</span>
+<span class="nc" id="L55">        requireNonNull(file, &quot;Argument 'file' must not be null&quot;);</span>
+<span class="nc" id="L56">        loadProperties(file);</span>
+<span class="nc" id="L57">    }</span>
 
-<span class="nc" id="L57">    private Metadata(File f) {</span>
-<span class="nc" id="L58">        this.metadataFile = f;</span>
-<span class="nc" id="L59">    }</span>
-
-    /**
-     * Resets the current state of the Metadata so it is re-read
-     */
-    public static void reset() {
-<span class="nc" id="L65">        Metadata m = metadata.get();</span>
-<span class="nc bnc" id="L66" title="All 2 branches missed.">        if (m != null) {</span>
-<span class="nc" id="L67">            m.clear();</span>
-<span class="nc" id="L68">            m.initialized = false;</span>
-<span class="nc" id="L69">            m.dirty = false;</span>
-        }
-<span class="nc" id="L71">    }</span>
-
-    /**
-     * @return Returns the metadata for the current application
-     */
-    public static Metadata getCurrent() {
-<span class="nc" id="L77">        Metadata m = metadata.get();</span>
-<span class="nc bnc" id="L78" title="All 2 branches missed.">        if (m == null) {</span>
-<span class="nc" id="L79">            metadata = new SoftReference&lt;&gt;(new Metadata());</span>
-<span class="nc" id="L80">            m = metadata.get();</span>
-        }
-<span class="nc bnc" id="L82" title="All 2 branches missed.">        if (!m.initialized) {</span>
-<span class="nc" id="L83">            InputStream input = null;</span>
-            try {
-                // GRIFFON-108 enable reading metadata from a local file IF AND ONLY IF
-                // current environment == 'dev'.
-                // must read environment directly from System.properties to avoid a
-                // circular problem
-                // if(Environment.getEnvironment(System.getProperty(Environment.KEY)) == Environment.DEVELOPMENT) {
-                //     input = new FileInputStream(FILE);
-                // }
-
-                // GRIFFON-255 there may be multiple versions of &quot;application.properties&quot; in the classpath
-                // due to addon packaging. Avoid any URLS that look like plugin dirs or addon jars
-<span class="nc" id="L95">                input = fetchApplicationProperties(Metadata.class.getClassLoader());</span>
-
-<span class="nc bnc" id="L97" title="All 2 branches missed.">                if (input != null) {</span>
-<span class="nc" id="L98">                    m.load(input);</span>
-                }
-<span class="nc" id="L100">            } catch (Exception e) {</span>
-<span class="nc" id="L101">                throw new RuntimeException(&quot;Cannot load application metadata:&quot; + e.getMessage(), e);</span>
-            } finally {
-<span class="nc" id="L103">                closeQuietly(input);</span>
-<span class="nc" id="L104">                m.initialized = true;</span>
-<span class="nc" id="L105">            }</span>
-        }
-
-<span class="nc" id="L108">        return m;</span>
-    }
-
-    /**
-     * Loads a Metadata instance from a Reader
-     *
-     * @param inputStream The InputStream
-     * @return a Metadata instance
-     */
-    public static Metadata getInstance(InputStream inputStream) {
-<span class="nc" id="L118">        Metadata m = new Metadata();</span>
-<span class="nc" id="L119">        metadata = new FinalReference&lt;&gt;(m);</span>
-
+<span class="nc" id="L59">    public Metadata(@Nonnull InputStream in) {</span>
+<span class="nc" id="L60">        requireNonNull(in, &quot;Argument 'in' must not be null&quot;);</span>
         try {
-<span class="nc" id="L122">            m.load(inputStream);</span>
-<span class="nc" id="L123">            m.initialized = true;</span>
-<span class="nc" id="L124">        } catch (IOException e) {</span>
-<span class="nc" id="L125">            throw new RuntimeException(&quot;Cannot load application metadata:&quot; + e.getMessage(), e);</span>
-<span class="nc" id="L126">        }</span>
-<span class="nc" id="L127">        return m;</span>
-    }
+<span class="nc" id="L62">            loadProperties(in);</span>
+<span class="nc" id="L63">        } catch (IOException e) {</span>
+<span class="nc" id="L64">            LOG.warn(&quot;Could not load application metadata from inpustream.&quot;, e);</span>
+<span class="nc" id="L65">        }</span>
+<span class="nc" id="L66">    }</span>
 
-    /**
-     * Loads and returns a new Metadata object for the given File
-     *
-     * @param file The File
-     * @return A Metadata object
-     */
-    public static Metadata getInstance(File file) {
-<span class="nc" id="L137">        Metadata m = new Metadata(file);</span>
-<span class="nc" id="L138">        metadata = new FinalReference&lt;&gt;(m);</span>
-
-<span class="nc bnc" id="L140" title="All 4 branches missed.">        if (file != null &amp;&amp; file.exists()) {</span>
-<span class="nc" id="L141">            FileInputStream input = null;</span>
+    private void loadProperties(String path) {
+<span class="fc" id="L69">        URL url = Metadata.class.getClassLoader().getResource(path);</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">        if (url != null) {</span>
             try {
-<span class="nc" id="L143">                input = new FileInputStream(file);</span>
-<span class="nc" id="L144">                m.load(input);</span>
-<span class="nc" id="L145">                m.initialized = true;</span>
-<span class="nc" id="L146">            } catch (Exception e) {</span>
-<span class="nc" id="L147">                throw new RuntimeException(&quot;Cannot load application metadata:&quot; + e.getMessage(), e);</span>
-            } finally {
-<span class="nc" id="L149">                closeQuietly(input);</span>
-<span class="nc" id="L150">            }</span>
+<span class="fc" id="L72">                loadProperties(url.openStream());</span>
+<span class="nc" id="L73">            } catch (IOException e) {</span>
+<span class="nc" id="L74">                LOG.warn(&quot;Could not load application metadata from &quot; + path, e);</span>
+<span class="fc" id="L75">            }</span>
         }
-<span class="nc" id="L152">        return m;</span>
-    }
+<span class="fc" id="L77">    }</span>
 
-    /**
-     * Reloads the application metadata
-     *
-     * @return The metadata object
-     */
-    public static Metadata reload() {
-<span class="nc" id="L161">        File f = getCurrent().metadataFile;</span>
+    private void loadProperties(File file) {
+        try {
+<span class="nc" id="L81">            loadProperties(new FileInputStream(file));</span>
+<span class="nc" id="L82">        } catch (IOException e) {</span>
+<span class="nc" id="L83">            LOG.warn(&quot;Could not load application metadata from &quot; + file.getAbsolutePath(), e);</span>
+<span class="nc" id="L84">        }</span>
+<span class="nc" id="L85">    }</span>
 
-<span class="nc bnc" id="L163" title="All 2 branches missed.">        if (f != null) {</span>
-<span class="nc" id="L164">            return getInstance(f);</span>
-        }
-<span class="nc" id="L166">        return getCurrent();</span>
-    }
+    private void loadProperties(InputStream in) throws IOException {
+<span class="fc" id="L88">        properties.load(in);</span>
+<span class="fc" id="L89">    }</span>
 
     /**
      * @return The application version
      */
     public String getApplicationVersion() {
-<span class="nc" id="L173">        return (String) get(APPLICATION_VERSION);</span>
+<span class="nc" id="L95">        return get(APPLICATION_VERSION);</span>
     }
 
     /**
      * @return The environment the application expects to run in
      */
     public String getEnvironment() {
-<span class="nc" id="L180">        return (String) get(Environment.KEY);</span>
+<span class="nc" id="L102">        return get(Environment.KEY);</span>
+    }
+
+    public String getRunMode() {
+<span class="fc" id="L106">        return get(RunMode.KEY);</span>
     }
 
     /**
      * @return The application name
      */
     public String getApplicationName() {
-<span class="nc" id="L187">        return (String) get(APPLICATION_NAME);</span>
+<span class="nc" id="L113">        return get(APPLICATION_NAME);</span>
     }
 
-    /**
-     * Saves the current state of the Metadata object
-     */
-    public void persist() {
-<span class="nc bnc" id="L194" title="All 4 branches missed.">        if (dirty &amp;&amp; metadataFile != null) {</span>
-<span class="nc bnc" id="L195" title="All 2 branches missed.">            if (!isFileDirty(metadataFile)) {</span>
-<span class="nc" id="L196">                dirty = false;</span>
-<span class="nc" id="L197">                return;</span>
-            }
-
-<span class="nc" id="L200">            FileOutputStream out = null;</span>
-
-            try {
-<span class="nc" id="L203">                out = new FileOutputStream(metadataFile);</span>
-<span class="nc" id="L204">                store(out, &quot;Griffon Metadata file&quot;);</span>
-<span class="nc" id="L205">                dirty = false;</span>
-<span class="nc" id="L206">            } catch (Exception e) {</span>
-<span class="nc" id="L207">                throw new RuntimeException(&quot;Error persisting metadata to file [&quot; + metadataFile + &quot;]: &quot; + e.getMessage(), e);</span>
-            } finally {
-<span class="nc" id="L209">                closeQuietly(out);</span>
-<span class="nc" id="L210">            }</span>
-        }
-<span class="nc" id="L212">    }</span>
-
-    private boolean isFileDirty(File file) {
-<span class="nc" id="L215">        InputStream in = null;</span>
-
-        try {
-<span class="nc" id="L218">            Properties other = new Properties();</span>
-<span class="nc" id="L219">            in = new FileInputStream(metadataFile);</span>
-<span class="nc" id="L220">            other.load(in);</span>
-
-<span class="nc bnc" id="L222" title="All 2 branches missed.">            for (Map.Entry&lt;Object, Object&gt; entry : other.entrySet()) {</span>
-<span class="nc bnc" id="L223" title="All 4 branches missed.">                if (!containsKey(entry.getKey()) || !get(entry.getKey()).equals(entry.getValue())) {</span>
-<span class="nc" id="L224">                    return true;</span>
-                }
-<span class="nc" id="L226">            }</span>
-
-<span class="nc bnc" id="L228" title="All 2 branches missed.">            for (Map.Entry&lt;Object, Object&gt; entry : entrySet()) {</span>
-<span class="nc bnc" id="L229" title="All 4 branches missed.">                if (!other.containsKey(entry.getKey()) || !other.get(entry.getKey()).equals(entry.getValue())) {</span>
-<span class="nc" id="L230">                    return true;</span>
-                }
-<span class="nc" id="L232">            }</span>
-<span class="nc" id="L233">        } catch (Exception e) {</span>
-<span class="nc" id="L234">            throw new RuntimeException(&quot;Error reading metadata to file [&quot; + file + &quot;]: &quot; + e.getMessage(), e);</span>
-        } finally {
-<span class="nc" id="L236">            closeQuietly(in);</span>
-<span class="nc" id="L237">        }</span>
-<span class="nc" id="L238">        return false;</span>
+    public String get(@Nonnull String key) {
+<span class="fc" id="L117">        return properties.getProperty(requireNonBlank(key, &quot;Argument 'key' must not be blank&quot;));</span>
     }
 
-    /**
-     * @return Returns true if these properties have not changed since they were loaded
-     */
-    public boolean propertiesHaveNotChanged() {
-<span class="nc" id="L245">        return dirty;</span>
-    }
+    @Nonnull
+    public Set&lt;String&gt; keySet() {
+<span class="nc" id="L122">        Set&lt;String&gt; keys = new LinkedHashSet&lt;&gt;();</span>
 
-    @Override
-    public synchronized Object remove(Object o) {
-<span class="nc" id="L250">        boolean hasKey = containsKey(o);</span>
-<span class="nc" id="L251">        Object value = super.remove(o);</span>
-<span class="nc bnc" id="L252" title="All 4 branches missed.">        dirty = dirty || hasKey;</span>
-<span class="nc" id="L253">        return value;</span>
-    }
-
-    @Override
-    public synchronized Object setProperty(String name, String value) {
-<span class="nc" id="L258">        return put(name, value);</span>
-    }
-
-    @Override
-    public synchronized Object put(Object key, Object value) {
-<span class="nc bnc" id="L263" title="All 2 branches missed.">        if (key instanceof CharSequence) key = key.toString();</span>
-<span class="nc bnc" id="L264" title="All 2 branches missed.">        if (value instanceof CharSequence) value = value.toString();</span>
-<span class="nc bnc" id="L265" title="All 2 branches missed.">        if (containsKey(key)) {</span>
-<span class="nc" id="L266">            Object oldValue = get(key);</span>
-<span class="nc bnc" id="L267" title="All 2 branches missed.">            if (oldValue instanceof CharSequence) {</span>
-<span class="nc" id="L268">                oldValue = oldValue.toString();</span>
-            }
-<span class="nc bnc" id="L270" title="All 6 branches missed.">            dirty = dirty || (oldValue != null &amp;&amp; !oldValue.equals(value));</span>
-<span class="nc" id="L271">        } else {</span>
-<span class="nc" id="L272">            dirty = true;</span>
-        }
-<span class="nc" id="L274">        return super.put(key, value);</span>
-    }
-
-    @Override
-    public synchronized void putAll(Map&lt;?, ?&gt; map) {
-<span class="nc bnc" id="L279" title="All 2 branches missed.">        for (Map.Entry&lt;?, ?&gt; entry : map.entrySet()) {</span>
-<span class="nc" id="L280">            put(entry.getKey(), entry.getValue());</span>
-<span class="nc" id="L281">        }</span>
-<span class="nc" id="L282">    }</span>
-
-    /**
-     * Overrides, called by the store method.
-     */
-    @SuppressWarnings(&quot;unchecked&quot;)
-    public synchronized Enumeration keys() {
-<span class="nc" id="L289">        Enumeration keysEnum = super.keys();</span>
-<span class="nc" id="L290">        Vector keyList = new Vector&lt;&gt;();</span>
-<span class="nc bnc" id="L291" title="All 2 branches missed.">        while (keysEnum.hasMoreElements()) {</span>
-<span class="nc" id="L292">            keyList.add(keysEnum.nextElement());</span>
-        }
-<span class="nc" id="L294">        Collections.sort(keyList);</span>
-<span class="nc" id="L295">        return keyList.elements();</span>
-    }
-
-    private static void closeQuietly(Closeable c) {
-<span class="nc bnc" id="L299" title="All 2 branches missed.">        if (c != null) {</span>
-            try {
-<span class="nc" id="L301">                c.close();</span>
-<span class="nc" id="L302">            } catch (Exception ignored) {</span>
-                // ignored
-<span class="nc" id="L304">            }</span>
-        }
-<span class="nc" id="L306">    }</span>
-
-    static class FinalReference&lt;T&gt; extends SoftReference&lt;T&gt; {
-        private T ref;
-
-        public FinalReference(T t) {
-<span class="nc" id="L312">            super(t);</span>
-<span class="nc" id="L313">            this.ref = t;</span>
-<span class="nc" id="L314">        }</span>
-
-        @Override
-        public T get() {
-<span class="nc" id="L318">            return ref;</span>
-        }
-    }
-
-    private static InputStream fetchApplicationProperties(ClassLoader classLoader) {
-        Enumeration&lt;URL&gt; urls;
-
-        try {
-<span class="nc" id="L326">            urls = classLoader.getResources(FILE);</span>
-<span class="nc" id="L327">        } catch (IOException ioe) {</span>
-<span class="nc" id="L328">            throw new RuntimeException(ioe);</span>
-<span class="nc" id="L329">        }</span>
-
-<span class="nc bnc" id="L331" title="All 2 branches missed.">        while (urls.hasMoreElements()) {</span>
-            try {
-<span class="nc" id="L333">                URL url = urls.nextElement();</span>
-<span class="nc bnc" id="L334" title="All 2 branches missed.">                if (SKIP_PATTERN.matcher(url.toString()).matches()) continue;</span>
-<span class="nc" id="L335">                return url.openStream();</span>
-<span class="nc" id="L336">            } catch (IOException ioe) {</span>
-                // skip
-<span class="nc" id="L338">            }</span>
-        }
-
-<span class="nc" id="L341">        return null;</span>
+<span class="nc" id="L124">        return Collections.unmodifiableSet(keys);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
