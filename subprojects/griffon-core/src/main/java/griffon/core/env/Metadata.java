@@ -15,329 +15,112 @@
  */
 package griffon.core.env;
 
-import java.io.Closeable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.Reference;
-import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Map;
+import java.util.LinkedHashSet;
 import java.util.Properties;
-import java.util.Vector;
-import java.util.regex.Pattern;
+import java.util.Set;
+
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
 
 /**
- * Represents the application Metadata and loading mechanics
+ * Represents the application Metadata
  *
- * @author Graeme Rocher (Grails 1.1)
+ * @author Andres Almiray
+ * @since 2.0.0
  */
-
-public class Metadata extends Properties {
-
-    public static final String FILE = "application.properties";
+public class Metadata {
+    public static final String FILENAME = "application.properties";
     public static final String APPLICATION_VERSION = "application.version";
     public static final String APPLICATION_NAME = "application.name";
+    private static final Logger LOG = LoggerFactory.getLogger(Metadata.class);
 
-    private static final Pattern SKIP_PATTERN = Pattern.compile("^.*/griffon-.*.jar!/application.properties$");
-    private static Reference<Metadata> metadata = new SoftReference<>(new Metadata());
+    private final Properties properties = new Properties();
 
-    private boolean initialized;
-    private File metadataFile;
-    private boolean dirty;
-
-    private Metadata() {
-        super();
+    public Metadata(@Nonnull String path) {
+        requireNonBlank(path, "Argument 'path' must not be blank");
+        loadProperties(path);
     }
 
-    private Metadata(File f) {
-        this.metadataFile = f;
+    public Metadata(@Nonnull File file) {
+        requireNonNull(file, "Argument 'file' must not be null");
+        loadProperties(file);
     }
 
-    /**
-     * Resets the current state of the Metadata so it is re-read
-     */
-    public static void reset() {
-        Metadata m = metadata.get();
-        if (m != null) {
-            m.clear();
-            m.initialized = false;
-            m.dirty = false;
-        }
-    }
-
-    /**
-     * @return Returns the metadata for the current application
-     */
-    public static Metadata getCurrent() {
-        Metadata m = metadata.get();
-        if (m == null) {
-            metadata = new SoftReference<>(new Metadata());
-            m = metadata.get();
-        }
-        if (!m.initialized) {
-            InputStream input = null;
-            try {
-                // GRIFFON-108 enable reading metadata from a local file IF AND ONLY IF
-                // current environment == 'dev'.
-                // must read environment directly from System.properties to avoid a
-                // circular problem
-                // if(Environment.getEnvironment(System.getProperty(Environment.KEY)) == Environment.DEVELOPMENT) {
-                //     input = new FileInputStream(FILE);
-                // }
-
-                // GRIFFON-255 there may be multiple versions of "application.properties" in the classpath
-                // due to addon packaging. Avoid any URLS that look like plugin dirs or addon jars
-                input = fetchApplicationProperties(Metadata.class.getClassLoader());
-
-                if (input != null) {
-                    m.load(input);
-                }
-            } catch (Exception e) {
-                throw new RuntimeException("Cannot load application metadata:" + e.getMessage(), e);
-            } finally {
-                closeQuietly(input);
-                m.initialized = true;
-            }
-        }
-
-        return m;
-    }
-
-    /**
-     * Loads a Metadata instance from a Reader
-     *
-     * @param inputStream The InputStream
-     * @return a Metadata instance
-     */
-    public static Metadata getInstance(InputStream inputStream) {
-        Metadata m = new Metadata();
-        metadata = new FinalReference<>(m);
-
+    public Metadata(@Nonnull InputStream in) {
+        requireNonNull(in, "Argument 'in' must not be null");
         try {
-            m.load(inputStream);
-            m.initialized = true;
+            loadProperties(in);
         } catch (IOException e) {
-            throw new RuntimeException("Cannot load application metadata:" + e.getMessage(), e);
+            LOG.warn("Could not load application metadata from inpustream.", e);
         }
-        return m;
     }
 
-    /**
-     * Loads and returns a new Metadata object for the given File
-     *
-     * @param file The File
-     * @return A Metadata object
-     */
-    public static Metadata getInstance(File file) {
-        Metadata m = new Metadata(file);
-        metadata = new FinalReference<>(m);
-
-        if (file != null && file.exists()) {
-            FileInputStream input = null;
+    private void loadProperties(String path) {
+        URL url = Metadata.class.getClassLoader().getResource(path);
+        if (url != null) {
             try {
-                input = new FileInputStream(file);
-                m.load(input);
-                m.initialized = true;
-            } catch (Exception e) {
-                throw new RuntimeException("Cannot load application metadata:" + e.getMessage(), e);
-            } finally {
-                closeQuietly(input);
+                loadProperties(url.openStream());
+            } catch (IOException e) {
+                LOG.warn("Could not load application metadata from " + path, e);
             }
         }
-        return m;
     }
 
-    /**
-     * Reloads the application metadata
-     *
-     * @return The metadata object
-     */
-    public static Metadata reload() {
-        File f = getCurrent().metadataFile;
-
-        if (f != null) {
-            return getInstance(f);
+    private void loadProperties(File file) {
+        try {
+            loadProperties(new FileInputStream(file));
+        } catch (IOException e) {
+            LOG.warn("Could not load application metadata from " + file.getAbsolutePath(), e);
         }
-        return getCurrent();
+    }
+
+    private void loadProperties(InputStream in) throws IOException {
+        properties.load(in);
     }
 
     /**
      * @return The application version
      */
     public String getApplicationVersion() {
-        return (String) get(APPLICATION_VERSION);
+        return get(APPLICATION_VERSION);
     }
 
     /**
      * @return The environment the application expects to run in
      */
     public String getEnvironment() {
-        return (String) get(Environment.KEY);
+        return get(Environment.KEY);
+    }
+
+    public String getRunMode() {
+        return get(RunMode.KEY);
     }
 
     /**
      * @return The application name
      */
     public String getApplicationName() {
-        return (String) get(APPLICATION_NAME);
+        return get(APPLICATION_NAME);
     }
 
-    /**
-     * Saves the current state of the Metadata object
-     */
-    public void persist() {
-        if (dirty && metadataFile != null) {
-            if (!isFileDirty(metadataFile)) {
-                dirty = false;
-                return;
-            }
-
-            FileOutputStream out = null;
-
-            try {
-                out = new FileOutputStream(metadataFile);
-                store(out, "Griffon Metadata file");
-                dirty = false;
-            } catch (Exception e) {
-                throw new RuntimeException("Error persisting metadata to file [" + metadataFile + "]: " + e.getMessage(), e);
-            } finally {
-                closeQuietly(out);
-            }
-        }
+    public String get(@Nonnull String key) {
+        return properties.getProperty(requireNonBlank(key, "Argument 'key' must not be blank"));
     }
 
-    private boolean isFileDirty(File file) {
-        InputStream in = null;
+    @Nonnull
+    public Set<String> keySet() {
+        Set<String> keys = new LinkedHashSet<>();
 
-        try {
-            Properties other = new Properties();
-            in = new FileInputStream(metadataFile);
-            other.load(in);
-
-            for (Map.Entry<Object, Object> entry : other.entrySet()) {
-                if (!containsKey(entry.getKey()) || !get(entry.getKey()).equals(entry.getValue())) {
-                    return true;
-                }
-            }
-
-            for (Map.Entry<Object, Object> entry : entrySet()) {
-                if (!other.containsKey(entry.getKey()) || !other.get(entry.getKey()).equals(entry.getValue())) {
-                    return true;
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Error reading metadata to file [" + file + "]: " + e.getMessage(), e);
-        } finally {
-            closeQuietly(in);
-        }
-        return false;
-    }
-
-    /**
-     * @return Returns true if these properties have not changed since they were loaded
-     */
-    public boolean propertiesHaveNotChanged() {
-        return dirty;
-    }
-
-    @Override
-    public synchronized Object remove(Object o) {
-        boolean hasKey = containsKey(o);
-        Object value = super.remove(o);
-        dirty = dirty || hasKey;
-        return value;
-    }
-
-    @Override
-    public synchronized Object setProperty(String name, String value) {
-        return put(name, value);
-    }
-
-    @Override
-    public synchronized Object put(Object key, Object value) {
-        if (key instanceof CharSequence) key = key.toString();
-        if (value instanceof CharSequence) value = value.toString();
-        if (containsKey(key)) {
-            Object oldValue = get(key);
-            if (oldValue instanceof CharSequence) {
-                oldValue = oldValue.toString();
-            }
-            dirty = dirty || (oldValue != null && !oldValue.equals(value));
-        } else {
-            dirty = true;
-        }
-        return super.put(key, value);
-    }
-
-    @Override
-    public synchronized void putAll(Map<?, ?> map) {
-        for (Map.Entry<?, ?> entry : map.entrySet()) {
-            put(entry.getKey(), entry.getValue());
-        }
-    }
-
-    /**
-     * Overrides, called by the store method.
-     */
-    @SuppressWarnings("unchecked")
-    public synchronized Enumeration keys() {
-        Enumeration keysEnum = super.keys();
-        Vector keyList = new Vector<>();
-        while (keysEnum.hasMoreElements()) {
-            keyList.add(keysEnum.nextElement());
-        }
-        Collections.sort(keyList);
-        return keyList.elements();
-    }
-
-    private static void closeQuietly(Closeable c) {
-        if (c != null) {
-            try {
-                c.close();
-            } catch (Exception ignored) {
-                // ignored
-            }
-        }
-    }
-
-    static class FinalReference<T> extends SoftReference<T> {
-        private T ref;
-
-        public FinalReference(T t) {
-            super(t);
-            this.ref = t;
-        }
-
-        @Override
-        public T get() {
-            return ref;
-        }
-    }
-
-    private static InputStream fetchApplicationProperties(ClassLoader classLoader) {
-        Enumeration<URL> urls;
-
-        try {
-            urls = classLoader.getResources(FILE);
-        } catch (IOException ioe) {
-            throw new RuntimeException(ioe);
-        }
-
-        while (urls.hasMoreElements()) {
-            try {
-                URL url = urls.nextElement();
-                if (SKIP_PATTERN.matcher(url.toString()).matches()) continue;
-                return url.openStream();
-            } catch (IOException ioe) {
-                // skip
-            }
-        }
-
-        return null;
+        return Collections.unmodifiableSet(keys);
     }
 }

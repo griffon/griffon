@@ -15,6 +15,8 @@
  */
 package griffon.core.env
 
+import org.codehaus.griffon.runtime.core.env.RunModeProvider
+
 class RunModeTests extends GroovyTestCase {
     protected void setUp() {
         System.clearProperty(RunMode.KEY)
@@ -31,26 +33,30 @@ class RunModeTests extends GroovyTestCase {
     }
 
     void testGetCurrent() {
-        assert RunMode.current == RunMode.STANDALONE
+        assert getCurrentRunMode() == RunMode.STANDALONE
 
         System.setProperty(RunMode.KEY, 'STANDALONE')
-        assert RunMode.current == RunMode.STANDALONE
+        assert getCurrentRunMode() == RunMode.STANDALONE
 
         System.setProperty(RunMode.KEY, 'WEBSTART')
-        assert RunMode.current == RunMode.WEBSTART
+        assert getCurrentRunMode() == RunMode.WEBSTART
 
         System.setProperty(RunMode.KEY, 'APPLET')
-        assert RunMode.current == RunMode.APPLET
+        assert getCurrentRunMode() == RunMode.APPLET
 
         System.setProperty(RunMode.KEY, 'TEST RUN MODE')
-        assert RunMode.current == RunMode.CUSTOM
-        assert RunMode.current.name == 'TEST RUN MODE'
+        assert getCurrentRunMode() == RunMode.CUSTOM
+        assert getCurrentRunMode().name == 'TEST RUN MODE'
     }
 
     void testGetRunMode() {
-        assert RunMode.STANDALONE == RunMode.getRunMode('standalone')
-        assert RunMode.WEBSTART == RunMode.getRunMode('webstart')
-        assert RunMode.APPLET == RunMode.getRunMode('applet')
-        assert !RunMode.getRunMode('custom')
+        assert RunMode.STANDALONE == RunMode.resolveRunMode('standalone')
+        assert RunMode.WEBSTART == RunMode.resolveRunMode('webstart')
+        assert RunMode.APPLET == RunMode.resolveRunMode('applet')
+        assert !RunMode.resolveRunMode('custom')
+    }
+
+    private static RunMode getCurrentRunMode() {
+        return new RunModeProvider().get()
     }
 }

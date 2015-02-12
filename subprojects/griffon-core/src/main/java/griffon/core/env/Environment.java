@@ -21,12 +21,13 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import static griffon.util.GriffonNameUtils.isBlank;
+import static java.util.Objects.requireNonNull;
 
 /**
  * An enum that represents the current environment
  *
- * @author Graeme Rocher (Grails 1.1)
+ * @author Andres Almiray
+ * @since 2.0.0
  */
 public enum Environment {
     /**
@@ -54,55 +55,19 @@ public enum Environment {
      */
     public static final String KEY = "griffon.env";
 
-    /**
-     * Constants that indicates whether this GriffonApplication is running in the default environment
-     */
-    public static final String DEFAULT = "griffon.env.default";
     private static final String PRODUCTION_ENV_SHORT_NAME = "prod";
     private static final String DEVELOPMENT_ENVIRONMENT_SHORT_NAME = "dev";
     private static final String TEST_ENVIRONMENT_SHORT_NAME = "test";
 
-    private static final Map<String, String> ENV_NAME_MAPPINGS = new LinkedHashMap<String, String>() {{
-        put(DEVELOPMENT_ENVIRONMENT_SHORT_NAME, Environment.DEVELOPMENT.getName());
-        put(PRODUCTION_ENV_SHORT_NAME, Environment.PRODUCTION.getName());
-        put(TEST_ENVIRONMENT_SHORT_NAME, Environment.TEST.getName());
+    private static final Map<String, String> ENV_NAME_MAPPINGS = new LinkedHashMap<>();
+
+    static {
+        ENV_NAME_MAPPINGS.put(DEVELOPMENT_ENVIRONMENT_SHORT_NAME, Environment.DEVELOPMENT.getName());
+        ENV_NAME_MAPPINGS.put(PRODUCTION_ENV_SHORT_NAME, Environment.PRODUCTION.getName());
+        ENV_NAME_MAPPINGS.put(TEST_ENVIRONMENT_SHORT_NAME, Environment.TEST.getName());
     }
 
-        private static final long serialVersionUID = -8447299990856630300L;
-    };
-
-    /**
-     * Returns the current environment which is typically either DEVELOPMENT, PRODUCTION or TEST.
-     * For custom environments CUSTOM type is returned.
-     *
-     * @return The current environment.
-     */
-    @Nonnull
-    public static Environment getCurrent() {
-        String envName = System.getProperty(Environment.KEY);
-        Metadata metadata = Metadata.getCurrent();
-        if (metadata != null && isBlank(envName)) {
-            envName = metadata.getEnvironment();
-        }
-
-        if (isBlank(envName)) {
-            return DEVELOPMENT;
-        }
-
-        Environment env = getEnvironment(envName);
-        if (env == null) {
-            try {
-                env = Environment.valueOf(envName.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                // ignore
-            }
-        }
-        if (env == null) {
-            env = Environment.CUSTOM;
-            env.setName(envName);
-        }
-        return env;
-    }
+    private String name;
 
     /**
      * @return Return true if the environment has been set as a System property
@@ -118,7 +83,7 @@ public enum Environment {
      * @return The Environment or null if not known
      */
     @Nullable
-    public static Environment getEnvironment(@Nullable String shortName) {
+    public static Environment resolveEnvironment(@Nullable String shortName) {
         final String envName = ENV_NAME_MAPPINGS.get(shortName);
         if (envName != null) {
             return Environment.valueOf(envName.toUpperCase());
@@ -126,30 +91,33 @@ public enum Environment {
         return null;
     }
 
-    private String name;
+    @Nonnull
+    public static String getEnvironmentShortName(@Nonnull Environment env) {
+        requireNonNull(env, "Argument 'env' must not be null");
+        switch (env) {
+            case DEVELOPMENT:
+                return "dev";
+            case TEST:
+                return "test";
+            case PRODUCTION:
+                return "prod";
+            default:
+                return env.getName();
+        }
+    }
 
     /**
      * @return The name of the environment
      */
     @Nonnull
     public String getName() {
-        if (name == null) {
+        if (this != CUSTOM || name == null) {
             return this.toString().toLowerCase(Locale.getDefault());
         }
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(@Nullable String name) {
         this.name = name;
-    }
-
-    @Nonnull
-    public static String getEnvironmentShortName() {
-        switch(Environment.getCurrent()) {
-            case DEVELOPMENT: return "dev";
-            case TEST:        return "test";
-            case PRODUCTION:  return "prod";
-            default: return Environment.getCurrent().getName();
-        }
     }
 }

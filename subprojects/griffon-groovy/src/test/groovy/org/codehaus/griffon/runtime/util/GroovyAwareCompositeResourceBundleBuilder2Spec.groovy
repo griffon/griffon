@@ -20,10 +20,13 @@ import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
 import griffon.core.ApplicationClassLoader
 import griffon.core.env.Environment
+import griffon.core.env.Metadata
 import griffon.core.resources.ResourceHandler
 import griffon.util.CompositeResourceBundleBuilder
 import griffon.util.ConfigReader
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
+import org.codehaus.griffon.runtime.core.env.EnvironmentProvider
+import org.codehaus.griffon.runtime.core.env.MetadataProvider
 import org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler
 import org.codehaus.griffon.runtime.groovy.util.GroovyAwareCompositeResourceBundleBuilder
 import org.junit.Rule
@@ -51,7 +54,6 @@ class GroovyAwareCompositeResourceBundleBuilder2Spec extends Specification {
 
     def "Load Groovy and properties bundles"() {
         given:
-        println Environment.current
         ResourceBundle bundle = bundleBuilder.create('org.codehaus.griffon.runtime.util.GroovyBundle')
 
         expect:
@@ -70,6 +72,8 @@ class GroovyAwareCompositeResourceBundleBuilder2Spec extends Specification {
             bind(ApplicationClassLoader).to(DefaultApplicationClassLoader).in(Singleton)
             bind(ResourceHandler).to(DefaultResourceHandler).in(Singleton)
             bind(ConfigReader).toProvider(guicify(new ConfigReader.Provider()))
+            bind(Metadata).toProvider(guicify(new MetadataProvider()))
+            bind(Environment).toProvider(guicify(new EnvironmentProvider()))
             bind(CompositeResourceBundleBuilder).to(GroovyAwareCompositeResourceBundleBuilder).in(Singleton)
         }
     }

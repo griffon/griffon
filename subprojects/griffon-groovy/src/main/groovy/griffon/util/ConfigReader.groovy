@@ -48,18 +48,20 @@ class ConfigReader {
     private final Stack<Map<String, ConfigObject>> conditionalBlocks = new Stack<Map<String, ConfigObject>>()
 
     static class Provider implements javax.inject.Provider<ConfigReader> {
-        @Inject ApplicationClassLoader applicationClassLoader
+        @Inject private ApplicationClassLoader applicationClassLoader
+        @Inject private Metadata metadata
+        @Inject private Environment environment
 
         @Override
         ConfigReader get() {
             ConfigReader configReader = new ConfigReader(applicationClassLoader)
             configReader.setBinding(CollectionUtils.map()
                 .e("userHome", System.getProperty("user.home"))
-                .e("appName", Metadata.getCurrent().getApplicationName())
-                .e("appVersion", Metadata.getCurrent().getApplicationVersion())
+                .e("appName", metadata.getApplicationName())
+                .e("appVersion", metadata.getApplicationVersion())
                 .e("griffonVersion", GriffonEnvironment.getGriffonVersion()));
-            configReader.registerConditionalBlock("environments", Environment.getCurrent().getName())
-            configReader.registerConditionalBlock("projects", Metadata.getCurrent().getApplicationName())
+            configReader.registerConditionalBlock("environments", environment.getName())
+            configReader.registerConditionalBlock("projects", metadata.getApplicationName())
             configReader.registerConditionalBlock("platforms", GriffonApplicationUtils.getPlatform())
             configReader
         }

@@ -27,7 +27,10 @@ import griffon.core.addon.AddonManager;
 import griffon.core.artifact.ArtifactHandler;
 import griffon.core.artifact.ArtifactManager;
 import griffon.core.controller.ActionManager;
+import griffon.core.env.Environment;
 import griffon.core.env.Lifecycle;
+import griffon.core.env.Metadata;
+import griffon.core.env.RunMode;
 import griffon.core.event.EventHandler;
 import griffon.core.event.EventRouter;
 import griffon.core.i18n.MessageSource;
@@ -45,6 +48,9 @@ import org.codehaus.griffon.runtime.core.artifact.ModelArtifactHandler;
 import org.codehaus.griffon.runtime.core.artifact.ServiceArtifactHandler;
 import org.codehaus.griffon.runtime.core.artifact.ViewArtifactHandler;
 import org.codehaus.griffon.runtime.core.controller.DefaultActionManager;
+import org.codehaus.griffon.runtime.core.env.EnvironmentProvider;
+import org.codehaus.griffon.runtime.core.env.MetadataProvider;
+import org.codehaus.griffon.runtime.core.env.RunModeProvider;
 import org.codehaus.griffon.runtime.core.event.DefaultEventHandler;
 import org.codehaus.griffon.runtime.core.event.DefaultEventRouter;
 import org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider;
@@ -76,6 +82,18 @@ public class DefaultApplicationModule extends AbstractModule {
         // tag::bindings[]
         bind(ApplicationClassLoader.class)
             .to(DefaultApplicationClassLoader.class)
+            .asSingleton();
+
+        bind(Metadata.class)
+            .toProvider(MetadataProvider.class)
+            .asSingleton();
+
+        bind(RunMode.class)
+            .toProvider(RunModeProvider.class)
+            .asSingleton();
+
+        bind(Environment.class)
+            .toProvider(EnvironmentProvider.class)
             .asSingleton();
 
         bind(Context.class)

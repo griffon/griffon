@@ -21,16 +21,19 @@ import griffon.core.artifact.GriffonView
 import griffon.core.env.Metadata
 import griffon.metadata.ArtifactProviderFor
 
+import javax.inject.Inject
+
 @ArtifactProviderFor(GriffonView)
 class SampleView {
     FactoryBuilderSupport builder
 
+    @Inject Metadata metadata
+
     void initUI() {
-        Metadata meta = Metadata.current
         builder.with {
             application(pack: true,
                 title: application.configuration['application.title']) {
-                label "Hello, I'm ${meta['application.name']}-${meta['application.version']}"
+                label "Hello, I'm ${metadata['application.name']}-${metadata['application.version']}"
             }
         }
     }
@@ -65,15 +68,19 @@ import org.opendolphin.core.client.comm.ClientConnector
 import org.opendolphin.demo.injection.HttpClientConnectorProvider
 import org.opendolphin.demo.injection.InMemoryClientConnectorProvider
 
+import javax.inject.Inject
+
 @ServiceProviderFor(Module)
 class DolphinModule extends AbstractModule {
+    @Inject Feature feature
+
     @Override
     protected void doConfigure() {
         bind(ClientConnector)
             .toProvider(InMemoryClientConnectorProvider)
             .asSingleton()
 
-        Feature.withFeature('dolphin.remote') {
+        feature.withFeature('dolphin.remote') {
             bind(ClientConnector)
                 .toProvider(HttpClientConnectorProvider)
                 .asSingleton()
@@ -111,18 +118,22 @@ import griffon.core.env.Metadata
 import griffon.core.env.Environment
 import griffon.metadata.ArtifactProviderFor
 
+import javax.inject.Inject
+
 @ArtifactProviderFor(GriffonView)
 class SampleView {
     FactoryBuilderSupport builder
 
+    @Inject Metadata metadata
+    @Inject Environment environment
+
     void initUI() {
-        Metadata meta = Metadata.current
         builder.with {
             application(pack: true,
                 title: application.configuration['application.title']) {
                 gridLayout cols: 1, rows: 2
-                label "Hello, I'm ${meta['application.name']}-${meta['application.version']}"
-                label "Current environment is ${Environment.current}"
+                label "Hello, I'm ${metadata['application.name']}-${metadata['application.version']}"
+                label "Current environment is ${environment}"
             }
         }
     }
@@ -164,18 +175,22 @@ import griffon.core.env.Environment
 import griffon.metadata.ArtifactProviderFor
 import static griffon.core.env.GriffonEnvironment.*
 
+import javax.inject.Inject
+
 @ArtifactProviderFor(GriffonView)
 class SampleView {
     FactoryBuilderSupport builder
 
+    @Inject Metadata metadata
+    @Inject Environment environment
+
     void initUI() {
-        Metadata meta = Metadata.current
         builder.with {
             application(pack: true,
                 title: application.configuration['application.title']) {
                 gridLayout cols: 1, rows: 6
-                label "Hello, I'm ${meta['application.name']}-${meta['application.version']}"
-                label "Current environment is ${Environment.current}"
+                label "Hello, I'm ${metadata['application.name']}-${metadata['application.version']}"
+                label "Current environment is ${environment}"
                 label "Griffon version is ${getGriffonVersion()}"
                 label "Build date/time is ${getBuildDateTime()}"
                 label "JVM version is ${getJvmVersion()}"

@@ -15,6 +15,8 @@
  */
 package griffon.core.env;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -33,50 +35,19 @@ public enum RunMode {
      */
     public static final String KEY = "griffon.runmode";
 
-    /**
-     * Constants that indicates whether this GriffonApplication is running in the default running mode
-     */
-    public static final String DEFAULT = "griffon.runmode.default";
     private static final String STANDALONE_RUNMODE_SHORT_NAME = "standalone";
     private static final String WEBSTART_RUNMODE_SHORT_NAME = "webstart";
     private static final String APPLET_RUNMODE_SHORT_NAME = "applet";
 
-    private static final Map<String, String> MODE_NAME_MAPPINGS = new LinkedHashMap<String, String>() {{
-        put(STANDALONE_RUNMODE_SHORT_NAME, RunMode.STANDALONE.getName());
-        put(WEBSTART_RUNMODE_SHORT_NAME, RunMode.WEBSTART.getName());
-        put(APPLET_RUNMODE_SHORT_NAME, RunMode.APPLET.getName());
+    private static final Map<String, String> MODE_NAME_MAPPINGS = new LinkedHashMap<>();
+
+    static {
+        MODE_NAME_MAPPINGS.put(STANDALONE_RUNMODE_SHORT_NAME, RunMode.STANDALONE.getName());
+        MODE_NAME_MAPPINGS.put(WEBSTART_RUNMODE_SHORT_NAME, RunMode.WEBSTART.getName());
+        MODE_NAME_MAPPINGS.put(APPLET_RUNMODE_SHORT_NAME, RunMode.APPLET.getName());
     }
 
-        private static final long serialVersionUID = -1551704296210703535L;
-    };
-
-    /**
-     * Returns the current RunMode which is typically either STANDALONE, WEBSTART or APPLET.
-     * For custom running modes CUSTOM type is returned.
-     *
-     * @return The current runMode.
-     */
-    public static RunMode getCurrent() {
-        String modeName = System.getProperty(RunMode.KEY);
-
-        if (isBlank(modeName)) {
-            return STANDALONE;
-        } else {
-            RunMode mode = getRunMode(modeName);
-            if (mode == null) {
-                try {
-                    mode = RunMode.valueOf(modeName.toUpperCase());
-                } catch (IllegalArgumentException e) {
-                    // ignore
-                }
-            }
-            if (mode == null) {
-                mode = RunMode.CUSTOM;
-                mode.setName(modeName);
-            }
-            return mode;
-        }
-    }
+    private String name;
 
     /**
      * @return Return true if the running mode has been set as a System property
@@ -91,7 +62,8 @@ public enum RunMode {
      * @param shortName The short name
      * @return The RunMode or null if not known
      */
-    public static RunMode getRunMode(String shortName) {
+    @Nullable
+    public static RunMode resolveRunMode(@Nullable String shortName) {
         final String modeName = MODE_NAME_MAPPINGS.get(shortName);
         if (modeName != null) {
             return RunMode.valueOf(modeName.toUpperCase());
@@ -103,19 +75,18 @@ public enum RunMode {
         return value == null || value.trim().length() == 0;
     }
 
-    private String name;
-
     /**
      * @return The name of the running mode
      */
+    @Nonnull
     public String getName() {
-        if (name == null) {
+        if (this != CUSTOM || isBlank(name)) {
             return this.toString().toLowerCase(Locale.getDefault());
         }
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(@Nullable String name) {
         this.name = name;
     }
 }

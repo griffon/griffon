@@ -15,51 +15,56 @@
  */
 package griffon.core.env
 
-public class EnvironmentTests extends GroovyTestCase {
+import org.codehaus.griffon.runtime.core.env.EnvironmentProvider
 
+public class EnvironmentTests extends GroovyTestCase {
     protected void tearDown() {
         System.setProperty(Environment.KEY, '')
-
-        Metadata.getCurrent().clear()
     }
 
     void testGetCurrent() {
         System.setProperty('griffon.env', 'prod')
 
-        assert Environment.PRODUCTION == Environment.getCurrent()
+        assert Environment.PRODUCTION == getCurrentEnvironment(null)
 
         System.setProperty('griffon.env', 'dev')
 
-        assert Environment.DEVELOPMENT == Environment.getCurrent()
+        assert Environment.DEVELOPMENT == getCurrentEnvironment(null)
 
         System.setProperty('griffon.env', 'soe')
 
-        assert Environment.CUSTOM == Environment.getCurrent()
+        assert Environment.CUSTOM == getCurrentEnvironment(null)
 
     }
 
     void testGetEnvironment() {
-        assert Environment.DEVELOPMENT == Environment.getEnvironment('dev')
-        assert Environment.TEST == Environment.getEnvironment('test')
-        assert Environment.PRODUCTION == Environment.getEnvironment('prod')
-        assert !Environment.getEnvironment('doesntexist')
+        assert Environment.DEVELOPMENT == Environment.resolveEnvironment('dev')
+        assert Environment.TEST == Environment.resolveEnvironment('test')
+        assert Environment.PRODUCTION == Environment.resolveEnvironment('prod')
+        assert !Environment.resolveEnvironment('doesntexist')
     }
 
     void testSystemPropertyOverridesMetadata() {
-        Metadata.getInstance(new ByteArrayInputStream('griffon.env=production'.bytes))
+        Metadata metadata = new Metadata(new ByteArrayInputStream('griffon.env=production'.bytes))
 
-        assert Environment.PRODUCTION == Environment.getCurrent()
+        assert Environment.PRODUCTION == getCurrentEnvironment(metadata)
 
         System.setProperty('griffon.env', 'dev')
 
-        assert Environment.DEVELOPMENT == Environment.getCurrent()
+        assert Environment.DEVELOPMENT == getCurrentEnvironment(metadata)
 
         System.setProperty('griffon.env', '')
 
-        assert Environment.PRODUCTION == Environment.getCurrent()
+        assert Environment.PRODUCTION == getCurrentEnvironment(metadata)
 
-        Metadata.getInstance(new ByteArrayInputStream(''.bytes))
+        metadata = new Metadata(new ByteArrayInputStream(''.bytes))
 
-        assert Environment.DEVELOPMENT == Environment.getCurrent()
+        assert Environment.DEVELOPMENT == getCurrentEnvironment(metadata)
+    }
+
+    private static Environment getCurrentEnvironment(Metadata metadata) {
+        EnvironmentProvider provider = new EnvironmentProvider()
+        provider.@metadata = metadata
+        return provider.get()
     }
 }
