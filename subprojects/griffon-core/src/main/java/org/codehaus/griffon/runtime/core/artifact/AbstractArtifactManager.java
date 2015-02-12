@@ -34,6 +34,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
@@ -54,12 +55,11 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
     private static final String ERROR_CLASS_NULL = "Argument 'clazz' must not be null";
     private static final String ERROR_ARTIFACT_NULL = "Argument 'artifact' must not be null";
     private static final String ERROR_FULLY_QUALIFIED_CLASSNAME_BLANK = "Argument 'fqClassName' must not be blank";
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractArtifactManager.class);
     private final Map<String, Class<? extends GriffonArtifact>[]> artifacts = new ConcurrentHashMap<>();
     private final Map<String, ArtifactHandler> artifactHandlers = new ConcurrentHashMap<>();
     private final Object lock = new Object[0];
     private Injector<?> artifactInjector;
-
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractArtifactManager.class);
 
     @Nonnull
     protected Map<String, ArtifactHandler> getArtifactHandlers() {
@@ -93,6 +93,12 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
         }
 
         artifactInjector = injector.createNestedInjector("artifactInjector", bindings);
+    }
+
+    @Nonnull
+    @Override
+    public Set<String> getAllTypes() {
+        return Collections.unmodifiableSet(artifactHandlers.keySet());
     }
 
     @Override

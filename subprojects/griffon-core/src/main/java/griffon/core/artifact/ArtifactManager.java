@@ -22,11 +22,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Helper class capable of dealing with artifacts and their handlers.
  *
  * @author Andres Almiray
+ * @since 2.0.0
  */
 @SuppressWarnings("rawtypes")
 public interface ArtifactManager extends ShutdownHandler {
@@ -121,6 +123,15 @@ public interface ArtifactManager extends ShutdownHandler {
      */
     @Nonnull
     List<GriffonClass> getClassesOfType(@Nonnull String type);
+
+    /**
+     * Finds all supported artifact types.<p>
+     *
+     * @return a Set of all available artifact types. Never returns null.
+     * @since 2.2.0
+     */
+    @Nonnull
+    Set<String> getAllTypes();
 
     /**
      * Finds all artifact classes.<p>
