@@ -14,10 +14,13 @@ The Griffon team is happy to announce the release of Griffon 2.2.0!
 
 The following list summarizes the changes brought by this release:
 
- * An application wide link:/guide/latest/api/griffon/core/Context.html[context, , window="_blank"] that can be used to
+ * An application wide link:/guide/latest/api/griffon/core/Context.html[context, window="_blank"] that can be used to
    store key/value pairs.
  * MVCGroups can have their own contexts too.
  * MVCGroups now expose their parent group (if not null).
+ * `Configuration` instances can be made writable by wrapping them with `MutableConfiguration`.
+ * *breaking change!* Metadata, Environment and RunMode are no longer magic singletons.
+   Instances of these classes can now be injected using `javax.inject.Inject`.
 
 A more detailed description of the changes and compatibility issues can be found at the link:/releasenotes/griffon_2.2.0.html[release notes, window="_blank"].
 

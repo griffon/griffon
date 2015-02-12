@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 /**
- * Event publishing implementation <strong>[INTERNAL USE]</strong>.
+ * Enviroment &amp; metadata providers <strong>[INTERNAL USE]</strong>.
  *
- * @since 2.0.0
+ * @since 2.2.0
  */
 
 package org.codehaus.griffon.runtime.core.env;

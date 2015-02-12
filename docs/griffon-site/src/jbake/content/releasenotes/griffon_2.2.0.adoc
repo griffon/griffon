@@ -21,11 +21,21 @@ The following dependencies have been upgraded
 
 ==== Application
 
+Applications now have the capability to store key/value pairs inside a link:/guide/latest/api/griffon/core/Context.html[Context, window="_blank"].
+Contexts are hierarchical, meaning a child context may shadow keys available in a parent context. Values of shadowed keys
+are not modified; you can grab the original value by asking the owning context for it.
+
 ==== MVC
 
-=== Buildtime
+MVCGroups now have a link:/guide/latest/api/griffon/core/Context.html[Context, window="_blank"] of their own.
+This is useful for storing group only data that can be shared between MVC members of just controller actions.
+It's also possible to automatically inject context values as action arguments as long as said arguments are annotated
+with link:/guide/latest/api/griffon/inject/Contextual.html[@griffon.inject.Contextual, window="_blank"].
 
-==== Running Configuration
+=== Configuration
+
+Configuration objects are made *read-only* by default. Now you can make them writable if wrapped with
+link:/guide/latest/api/griffon/core/MutableConfiguration.html[MutableConfiguration, window="_blank"].
 
 === Compatibility
 
