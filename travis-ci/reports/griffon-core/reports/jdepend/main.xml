@@ -2312,6 +2312,7 @@
 
     <Cycles>
         <Package Name="griffon.core">
+            <Package>griffon.core.env</Package>
             <Package>griffon.util</Package>
             <Package>griffon.core.editors</Package>
             <Package>griffon.util</Package>
@@ -2319,24 +2320,27 @@
 
         <Package Name="griffon.core.addon">
             <Package>griffon.core</Package>
+            <Package>griffon.core.env</Package>
             <Package>griffon.util</Package>
             <Package>griffon.core.editors</Package>
             <Package>griffon.util</Package>
         </Package>
 
         <Package Name="griffon.core.artifact">
-            <Package>griffon.core.mvc</Package>
-            <Package>griffon.exceptions</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.exceptions</Package>
+            <Package>griffon.core</Package>
+            <Package>griffon.core.env</Package>
+            <Package>griffon.util</Package>
+            <Package>griffon.core.editors</Package>
+            <Package>griffon.util</Package>
         </Package>
 
         <Package Name="griffon.core.controller">
             <Package>griffon.core.artifact</Package>
-            <Package>griffon.core.mvc</Package>
-            <Package>griffon.exceptions</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.exceptions</Package>
+            <Package>griffon.core</Package>
+            <Package>griffon.core.env</Package>
+            <Package>griffon.util</Package>
+            <Package>griffon.core.editors</Package>
+            <Package>griffon.util</Package>
         </Package>
 
         <Package Name="griffon.core.editors">
@@ -2352,6 +2356,7 @@
 
         <Package Name="griffon.core.event">
             <Package>griffon.core</Package>
+            <Package>griffon.core.env</Package>
             <Package>griffon.util</Package>
             <Package>griffon.core.editors</Package>
             <Package>griffon.util</Package>
@@ -2370,14 +2375,20 @@
         </Package>
 
         <Package Name="griffon.core.injection">
-            <Package>griffon.exceptions</Package>
-            <Package>griffon.core.injection</Package>
+            <Package>griffon.core</Package>
+            <Package>griffon.core.env</Package>
+            <Package>griffon.util</Package>
+            <Package>griffon.core.editors</Package>
+            <Package>griffon.util</Package>
         </Package>
 
         <Package Name="griffon.core.mvc">
-            <Package>griffon.exceptions</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.exceptions</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core</Package>
+            <Package>griffon.core.env</Package>
+            <Package>griffon.util</Package>
+            <Package>griffon.core.editors</Package>
+            <Package>griffon.util</Package>
         </Package>
 
         <Package Name="griffon.core.resources">
@@ -2388,14 +2399,19 @@
 
         <Package Name="griffon.core.view">
             <Package>griffon.core</Package>
+            <Package>griffon.core.env</Package>
             <Package>griffon.util</Package>
             <Package>griffon.core.editors</Package>
             <Package>griffon.util</Package>
         </Package>
 
         <Package Name="griffon.exceptions">
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.exceptions</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core</Package>
+            <Package>griffon.core.env</Package>
+            <Package>griffon.util</Package>
+            <Package>griffon.core.editors</Package>
+            <Package>griffon.util</Package>
         </Package>
 
         <Package Name="griffon.util">
@@ -2404,6 +2420,9 @@
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core">
+            <Package>griffon.core.injection</Package>
+            <Package>griffon.core</Package>
+            <Package>griffon.core.env</Package>
             <Package>griffon.util</Package>
             <Package>griffon.core.editors</Package>
             <Package>griffon.util</Package>
@@ -2412,12 +2431,17 @@
         <Package Name="org.codehaus.griffon.runtime.core.addon">
             <Package>griffon.core.addon</Package>
             <Package>griffon.core</Package>
+            <Package>griffon.core.env</Package>
             <Package>griffon.util</Package>
             <Package>griffon.core.editors</Package>
             <Package>griffon.util</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.artifact">
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core</Package>
+            <Package>griffon.core.env</Package>
             <Package>griffon.util</Package>
             <Package>griffon.core.editors</Package>
             <Package>griffon.util</Package>
@@ -2426,10 +2450,11 @@
         <Package Name="org.codehaus.griffon.runtime.core.controller">
             <Package>griffon.core.controller</Package>
             <Package>griffon.core.artifact</Package>
-            <Package>griffon.core.mvc</Package>
-            <Package>griffon.exceptions</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.exceptions</Package>
+            <Package>griffon.core</Package>
+            <Package>griffon.core.env</Package>
+            <Package>griffon.util</Package>
+            <Package>griffon.core.editors</Package>
+            <Package>griffon.util</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.env">
@@ -2454,19 +2479,24 @@
 
         <Package Name="org.codehaus.griffon.runtime.core.injection">
             <Package>griffon.core.injection</Package>
-            <Package>griffon.exceptions</Package>
-            <Package>griffon.core.injection</Package>
+            <Package>griffon.core</Package>
+            <Package>griffon.core.env</Package>
+            <Package>griffon.util</Package>
+            <Package>griffon.core.editors</Package>
+            <Package>griffon.util</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.mvc">
             <Package>griffon.core.mvc</Package>
-            <Package>griffon.exceptions</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.exceptions</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core</Package>
+            <Package>griffon.core.env</Package>
+            <Package>griffon.util</Package>
+            <Package>griffon.core.editors</Package>
+            <Package>griffon.util</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.resources">
-            <Package>griffon.core.resources</Package>
             <Package>griffon.util</Package>
             <Package>griffon.core.editors</Package>
             <Package>griffon.util</Package>
@@ -2480,13 +2510,18 @@
 
         <Package Name="org.codehaus.griffon.runtime.core.threading">
             <Package>griffon.exceptions</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.exceptions</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core</Package>
+            <Package>griffon.core.env</Package>
+            <Package>griffon.util</Package>
+            <Package>griffon.core.editors</Package>
+            <Package>griffon.util</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.view">
             <Package>griffon.core.view</Package>
             <Package>griffon.core</Package>
+            <Package>griffon.core.env</Package>
             <Package>griffon.util</Package>
             <Package>griffon.core.editors</Package>
             <Package>griffon.util</Package>
