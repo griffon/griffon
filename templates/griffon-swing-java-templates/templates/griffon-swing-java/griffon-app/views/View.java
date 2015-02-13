@@ -5,8 +5,6 @@ import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
