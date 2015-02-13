@@ -15,6 +15,8 @@
  */
 package griffon.core.test;
 
+import griffon.core.artifact.GriffonArtifact;
+
 import javax.inject.Qualifier;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -29,5 +31,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 public @interface TestFor {
-    Class<?> value();
+    Class<? extends GriffonArtifact> value();
 }
