@@ -44,6 +44,6 @@ class EditorController {
         // remove tab
         builder.tabGroup.remove builder.tab
         // cleanup
-        destroyMVCGroup model.mvcIdentifier
+        destroyMVCGroup mvcGroup.mvcId
     }
 }

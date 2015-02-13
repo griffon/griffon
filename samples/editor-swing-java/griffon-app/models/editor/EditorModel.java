@@ -21,16 +21,7 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class EditorModel extends AbstractGriffonModel {
-    private String mvcIdentifier;
     private Document document;
-
-    public String getMvcIdentifier() {
-        return mvcIdentifier;
-    }
-
-    public void setMvcIdentifier(String mvcIdentifier) {
-        this.mvcIdentifier = mvcIdentifier;
-    }
 
     public Document getDocument() {
         return document;

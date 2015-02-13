@@ -45,7 +45,7 @@ public class EditorView extends AbstractSwingGriffonView {
         model.getDocument().addPropertyChangeListener("contents", (e) -> editor.setText((String) e.getNewValue()));
 
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.putClientProperty("mvcIdentifier", model.getMvcIdentifier());
+        scrollPane.putClientProperty("mvcIdentifier", getMvcGroup().getMvcId());
         scrollPane.setViewportView(editor);
 
         editor.getDocument().addDocumentListener(new DocumentListener() {

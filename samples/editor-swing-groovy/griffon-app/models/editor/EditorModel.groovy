@@ -21,7 +21,5 @@ import griffon.transform.Observable
 
 @ArtifactProviderFor(GriffonModel)
 class EditorModel {
-    String mvcIdentifier
-
     @Observable Document document
 }

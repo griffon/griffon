@@ -26,11 +26,12 @@ import javax.swing.event.ChangeListener;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class ContainerModel extends AbstractGriffonModel implements ChangeListener {
+    private static final String MVC_IDENTIFIER = "mvcIdentifier";
     private final DocumentModel documentModel = new DocumentModel();
     private String mvcIdentifier;
 
     public ContainerModel() {
-        addPropertyChangeListener("mvcIdentifier", (e) -> {
+        addPropertyChangeListener(MVC_IDENTIFIER, (e) -> {
             Document document = null;
             if (e.getNewValue() != null) {
                 EditorModel model = getApplication().getMvcGroupManager().getModel(mvcIdentifier, EditorModel.class);
@@ -47,7 +48,7 @@ public class ContainerModel extends AbstractGriffonModel implements ChangeListen
     }
 
     public void setMvcIdentifier(String mvcIdentifier) {
-        firePropertyChange("mvcIdentifier", this.mvcIdentifier, this.mvcIdentifier = mvcIdentifier);
+        firePropertyChange(MVC_IDENTIFIER, this.mvcIdentifier, this.mvcIdentifier = mvcIdentifier);
     }
 
     public DocumentModel getDocumentModel() {
@@ -62,7 +63,7 @@ public class ContainerModel extends AbstractGriffonModel implements ChangeListen
             setMvcIdentifier(null);
         } else {
             JComponent tab = (JComponent) tabbedPane.getComponentAt(selectedIndex);
-            setMvcIdentifier((String) tab.getClientProperty("mvcIdentifier"));
+            setMvcIdentifier((String) tab.getClientProperty(MVC_IDENTIFIER));
         }
     }
 }

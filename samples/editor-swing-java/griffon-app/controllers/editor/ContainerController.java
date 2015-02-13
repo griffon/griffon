@@ -36,8 +36,7 @@ public class ContainerController extends AbstractGriffonController {
             String mvcIdentifier = file.getName() + "-" + System.currentTimeMillis();
             createMVC("editor", mvcIdentifier, CollectionUtils.<String, Object>map()
                 .e("document", new Document(file, file.getName()))
-                .e("tabName", file.getName())
-                .e("mvcIdentifier", mvcIdentifier));
+                .e("tabName", file.getName()));
         }
     }
 

@@ -31,8 +31,6 @@ public class EditorController extends AbstractGriffonController {
     private EditorModel model;
     private EditorView view;
 
-    private static final String EOL = System.getProperty("line.separator");
-
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         model.setDocument((Document) args.get("document"));
@@ -56,6 +54,6 @@ public class EditorController extends AbstractGriffonController {
     }
 
     public void closeFile() {
-        destroyMVCGroup(model.getMvcIdentifier());
+        destroyMVCGroup(getMvcGroup().getMvcId());
     }
 }

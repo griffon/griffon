@@ -26,7 +26,7 @@ class EditorView {
     void initUI() {
         builder.with {
             tabbedPane(tabGroup, selectedIndex: tabGroup.tabCount) {
-                scrollPane(title: tabName, id: 'tab', clientProperties: [mvcIdentifier: mvcIdentifier]) {
+                scrollPane(title: tabName, id: 'tab', clientProperties: [mvcIdentifier: mvcId]) {
                     textArea(id: 'editor', text: bind { model.document.contents })
                 }
             }

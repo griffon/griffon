@@ -35,8 +35,7 @@ class ContainerController {
             createMVC('editor', mvcIdentifier, [
                 document: new Document(file: file, title: file.name),
                 tabGroup: builder.tabGroup,
-                tabName: file.name,
-                mvcIdentifier: mvcIdentifier])
+                tabName: file.name])
         }
     }
 
