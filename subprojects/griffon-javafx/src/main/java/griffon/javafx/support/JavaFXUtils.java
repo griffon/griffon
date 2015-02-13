@@ -23,14 +23,21 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.Control;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCombination;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.net.URL;
 
+import static griffon.util.GriffonClassUtils.getPropertyValue;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
@@ -40,14 +47,15 @@ import static java.util.Objects.requireNonNull;
  */
 public final class JavaFXUtils {
     private static final String ERROR_CONTROL_NULL = "Argument 'control' must not be null";
+    private static final String ERROR_ACTION_NULL = "Argument 'action' must not be null";
 
     private JavaFXUtils() {
 
     }
 
     public static void configure(final @Nonnull ButtonBase control, final @Nonnull JavaFXAction action) {
-        requireNonNull(control, "Argument 'control' must not be null");
-        requireNonNull(action, "Argument 'action' must not be null");
+        requireNonNull(control, ERROR_CONTROL_NULL);
+        requireNonNull(action, ERROR_ACTION_NULL);
 
         action.onActionProperty().addListener(new ChangeListener<EventHandler<ActionEvent>>() {
             @Override
@@ -92,6 +100,53 @@ public final class JavaFXUtils {
         control.setDisable(!action.getEnabled());
     }
 
+    public static void configure(final @Nonnull MenuItem control, final @Nonnull JavaFXAction action) {
+        requireNonNull(control, ERROR_CONTROL_NULL);
+        requireNonNull(action, ERROR_ACTION_NULL);
+
+        action.onActionProperty().addListener(new ChangeListener<EventHandler<ActionEvent>>() {
+            @Override
+            public void changed(ObservableValue<? extends EventHandler<ActionEvent>> observableValue, EventHandler<ActionEvent> oldValue, EventHandler<ActionEvent> newValue) {
+                control.onActionProperty().set(newValue);
+            }
+        });
+        control.onActionProperty().set(action.getOnAction());
+
+        action.nameProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
+                control.textProperty().set(newValue);
+            }
+        });
+        control.textProperty().set(action.getName());
+
+        action.iconProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
+                setIcon(control, newValue);
+            }
+        });
+        if (!isBlank(action.getIcon())) {
+            setIcon(control, action.getIcon());
+        }
+
+        action.enabledProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
+                control.setDisable(!newValue);
+            }
+        });
+        control.setDisable(!action.getEnabled());
+
+        action.acceleratorProperty().addListener(new ChangeListener<KeyCombination>() {
+            @Override
+            public void changed(ObservableValue<? extends KeyCombination> observable, KeyCombination oldValue, KeyCombination newValue) {
+                control.setAccelerator(newValue);
+            }
+        });
+        control.setAccelerator(action.getAccelerator());
+    }
+
     public static void setTooltip(@Nonnull Control control, @Nullable String text) {
         if (isBlank(text)) {
             return;
@@ -117,6 +172,17 @@ public final class JavaFXUtils {
         }
     }
 
+    public static void setIcon(@Nonnull MenuItem control, @Nonnull String iconUrl) {
+        requireNonNull(control, ERROR_CONTROL_NULL);
+        requireNonBlank(iconUrl, "Argument 'iconUrl' must not be blank");
+
+        URL resource = Thread.currentThread().getContextClassLoader().getResource(iconUrl);
+        if (resource != null) {
+            Image image = new Image(resource.toString());
+            control.graphicProperty().set(new ImageView(image));
+        }
+    }
+
     @Nullable
     public static Node findNode(@Nonnull Node root, @Nonnull String id) {
         requireNonNull(root, "Argument 'root' must not be null");
@@ -128,6 +194,42 @@ public final class JavaFXUtils {
             Parent parent = (Parent) root;
             for (Node child : parent.getChildrenUnmodifiable()) {
                 Node found = findNode(child, id);
+                if (found != null) return found;
+            }
+        }
+
+        return null;
+    }
+
+    @Nullable
+    public static Object findElement(@Nonnull Object root, @Nonnull String id) {
+        requireNonNull(root, "Argument 'root' must not be null");
+        requireNonBlank(id, "Argument 'id' must not be blank");
+
+        if (id.equals(getPropertyValue(root, "id"))) return root;
+
+        if (root instanceof MenuBar) {
+            MenuBar menuBar = (MenuBar) root;
+            for (Menu child : menuBar.getMenus()) {
+                Object found = findElement(child, id);
+                if (found != null) return found;
+            }
+        } else if (root instanceof Menu) {
+            Menu menu = (Menu) root;
+            for (MenuItem child : menu.getItems()) {
+                Object found = findElement(child, id);
+                if (found != null) return found;
+            }
+        } else if (root instanceof TabPane) {
+            TabPane tabPane = (TabPane) root;
+            for (Tab child : tabPane.getTabs()) {
+                Object found = findElement(child, id);
+                if (found != null) return found;
+            }
+        } else if (root instanceof Parent) {
+            Parent parent = (Parent) root;
+            for (Node child : parent.getChildrenUnmodifiable()) {
+                Object found = findElement(child, id);
                 if (found != null) return found;
             }
         }
