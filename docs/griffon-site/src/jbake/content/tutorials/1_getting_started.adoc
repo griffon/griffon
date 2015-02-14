@@ -1,0 +1,304 @@
+= Tutorial 1::Getting Started
+Andres Almiray
+:jbake-type: page
+:jbake-status: published
+:icons: font
+:linkattrs:
+
+[[_tutorial_1_toc]]
+==  Agenda
+
+This tutorial describes how a Griffon 2 application can be created and run.
+IDE configurations are discussed too.
+
+. <<_tutorial_1_1,Getting the ToolChain>>
+. <<_tutorial_1_2,Creating an Application>>
+. <<_tutorial_1_3,Running the Application>>
+. <<_tutorial_1_4,Setting up the IDE>>
+
+:numbered:
+
+[[_tutorial_1_1]]
+== Getting the ToolChain
+
+The first step is to get the tools needed to create an application. While it's possible to create a
+Griffon 2 application from scratch it's also true that the power of conventions allows you to get
+faster development cycles. We need the following tools:
+
+ . link:http://gvmtool.net/[GVM, window="_blank"]: tool manager.
+ . link:https://github.com/pledbrook/lazybones[Lazybones, window="_blank"]: template based project generator.
+ . link:http://maven.apache.org/[Maven, window="_blank"] or link:http://gradle.org/[Gradle, window="_blank"]: build tool.
+ . link:https://www.jetbrains.com/idea/download/[IntelliJ IDEA, window="_blank"] or
+   link:https://netbeans.org/downloads/[NetBeans, window="_blank"] or
+   link:https://www.eclipse.org/downloads/[Eclipse, window="_blank"]: IDE.
+
+.GVM
+
+GVM is a tool for managing parallel Versions of multiple Software Development Kits on most Unix based systems.
+It provides a convenient command line interface for installing, switching, removing and listing Candidates.
+The candidates we're interested in are _Lazybones_ and _Gradle_.
+
+NOTE: You can run GVM on Windows as long as you have a POSIX environment. We recommend you to give
+link:http://babun.github.io/[Babun Shell, window="_blank"] a try first. There's also a
+link:https://github.com/flofreud/posh-gvm[PowerShell, window="_blank"] friendly version of GVM.
+
+Installing GVM is as easy as executing the following command
+
+[source]
+----
+$ curl -s get.gvmtool.net | bash
+----
+
+This will download the required files and configure your environment. After this the `gvm` command should be available.
+You can verify your setup by executing this command
+
+[source]
+----
+$ gvm help
+----
+
+.Lazybones
+
+Lazybones is a command-line based tool for creating basic software projects from templates. It's similar in
+spirit to Maven Archetypes, however Lazybones templates can do much more than that, for example, new files
+can be created from scratch, even long after the project was created.
+
+Execute the following command to install Lazybones on your system
+
+[source]
+----
+$ gvm install lazybones
+----
+
+Verify your setup by invoking the following command
+
+[source]
+----
+$ lazybones help
+----
+
+As mentioned before, Lazybones relies on templates in order to create a project. There are a handful of templates
+available at the default Lazybones location. The Griffon based templates reside at a different location, so they
+must be configured in order to be found. Lazybones uses a simple configuration scheme for defining repositories,
+as up to version *0.8* this configuration is kept in a Groovy script whose standard location is
+`$USER_HOME/.lazybones/config.groovy`.
+
+TIP: Windows users should use the `%USER_HOME%\.lazybones\config.groovy` path.
+
+Griffon project templates are hosted at a link:https://bintray.com/griffon/griffon-lazybones-templates[Bintray, window="_blank"]
+repository, similarly as the standard Lazybones templates. Create the `config.groovy` file at the specified location if
+it doesn't exist, place the following content on it
+
+[source,groovy]
+----
+bintrayRepositories = [
+    'griffon/griffon-lazybones-templates',
+    'pledbrook/lazybones-templates'
+]
+----
+
+The Griffon project templates should ve available now. You can verify this step by executing the following command
+
+[source]
+----
+$ lazybones list
+Available templates in griffon/griffon-lazybones-templates
+
+    griffon-javafx-groovy
+    griffon-javafx-java
+    griffon-lanterna-groovy
+    griffon-lanterna-java
+    griffon-pivot-groovy
+    griffon-pivot-java
+    griffon-plugin
+    griffon-swing-groovy
+    griffon-swing-java
+----
+
+.Gradle
+
+Gradle is an open source build automation system. Gradle can automate the building, testing, publishing,
+deployment and more of software packages or other types of projects such as generated static websites,
+generated documentation or indeed anything else.
+
+You can download and install Gradle manually, however we recommend using GVM for this task too, as it greatly
+simplifies handling different versions and keeping binary distributions up to date. You can install Gradle via
+GVM by executing this command
+
+[source]
+----
+$ gvm install gradle
+----
+
+Once installed you can verify that's working by invoking this command
+
+[source]
+----
+$ gradle --version
+------------------------------------------------------------
+Gradle 2.2
+------------------------------------------------------------
+
+Build time:   2014-11-10 13:31:44 UTC
+Build number: none
+Revision:     aab8521f1fd9a3484cac18123a72bcfdeb7006ec
+
+Groovy:       2.3.6
+Ant:          Apache Ant(TM) version 1.9.3 compiled on December 23 2013
+JVM:          1.8.0_25 (Oracle Corporation 25.25-b02)
+OS:           Mac OS X 10.9.5 x86_64
+----
+
+Gradle 2 is the minimum supported version.
+
+.Maven
+
+Maven is a software project management and comprehension tool. Based on the concept of a project object model
+(POM), Maven can manage a project's build, reporting and documentation from a central piece of information.
+Maven is a well known build tool, unfortunately there's no support for it to be found in GVM, you must follow
+the link:http://maven.apache.org/download.cgi#Installation[download and install, window="_blank"] instructions.
+
+You can verify this tool by executing this command
+
+. IDE
+
+All major IDEs can be used to build Griffon applications. Considering that the Griffon tool chain is comprised
+of tools that can be invoked from the command line you may want to use a text editor (such as
+link:http://www.vim.org/[VIM, window="_blank"]) instead.
+
+[source]
+----
+$ mvn -v
+Apache Maven 3.0.4 (r1232337; 2012-01-17 09:44:56+0100)
+Maven home: /usr/local/maven
+Java version: 1.8.0_25, vendor: Oracle Corporation
+Java home: /Library/Java/JavaVirtualMachines/jdk1.8.0_25.jdk/Contents/Home/jre
+Default locale: en_US, platform encoding: UTF-8
+OS name: "mac os x", version: "10.9.5", arch: "x86_64", family: "mac"
+----
+
+Maven 3 is the minimum supported version.
+
+icon:arrow-up[link="#_tutorial_1_toc"] <<_tutorial_1_toc,Top>>
+
+[[_tutorial_1_2]]
+== Creating an Application
+
+With the tool chain ready we can now create an application. The Griffon templates provide a starting point depending
+on a particular UI toolkit / programming language combination. Currently supported UI toolkits are
+
+ * Swing
+ * JavaFX
+ * Pivot
+ * Lanterna
+
+While the currently supported programming languages are
+
+ * Java
+ * Groovy
+
+In this tutorial we'll go for the most basic combination: Swing and Java. Execute the `create` Lazybones command
+using the `griffon-swing-java`  template as the starting point. Note that the template uses sensible defaults
+for most of its options, however ou can change them to suit your needs. Here's how a creation session looks
+
+[source]
+[subs="attributes"]
+----
+$ lazybones create griffon-swing-java sample
+Creating project from template griffon-swing-java (latest) in 'sample'
+Define value for 'group' [org.example]:
+Define value for 'artifactId' [sample]:
+Define value for 'version' [0.1.0-SNAPSHOT]:
+Define value for 'griffonVersion' [{jbake-griffon_version_current}]:
+Define value for 'package' [org.example]:
+Define value for 'className' [Sample]:
+
+...
+Project created in sample!
+----
+
+Change into the `sample` directory and inspect its contents. You'll see it contains a `build.gradle` file that
+can be used to build the project with Gradle. There's also a `pom.xml` if you prefer Maven. The standard structure
+of a Griffon application looks like this
+
+[source]
+----
+.
+├── build.gradle
+├── griffon-app
+│   ├── conf
+│   ├── controllers
+│   ├── i18n
+│   ├── lifecycle
+│   ├── models
+│   ├── resources
+│   ├── services
+│   └── views
+├── pom.xml
+└── src
+    ├── integration-test
+    │   └── java
+    ├── main
+    │   ├── java
+    │   └── resources
+    └── test
+        ├── java
+        └── resources
+----
+
+icon:arrow-up[link="#_tutorial_1_toc"] <<_tutorial_1_toc,Top>>
+
+[[_tutorial_1_3]]
+== Running the Application
+
+The application is fully functional at this point. You just have to select your build tool of choice and invoke
+the right command for it. In the case of Gradle this is a simple as executing
+
+[source]
+----
+$ gradle run
+----
+
+Project dependencies get downloaded, classes are compiled and a small window pops up after a few seconds. Maven
+has a similar workflow, the Griffon master application pom has simplified building tasks by providing a lot of
+plugins and profiles that follow the conventions. Running the application with Maven is as easy as executing
+
+[source]
+----
+$ mvn -Prun
+----
+
+The master pom uses a profile to make sure that classes and resources are properly handled before the application's
+main class is run inside a JVM process.
+
+icon:arrow-up[link="#_tutorial_1_toc"] <<_tutorial_1_toc,Top>>
+
+[[_tutorial_1_4]]
+== Setting up the IDE
+
+Configuring IDEs is not that difficult considering that Griffon 2 projects can be imported either as Gradle
+or Maven projects, in other words, there's no need for a special IDE plugin to build and run a Griffon 2 application.
+
+WARNING: Both IntelliJ IDEA and NetBeans have a Griffon plugin (IDEA has it installed by default). These plugins
+were designed to work with Griffon 1 and are *incompatible* with Griffon 2. Do *not* use these plugins to work
+with Griffon 2 projects!
+
+.IntelliJ IDEA
+
+You can import a project either using the Gradle or Maven import. Once you do you'll be able to invoke build
+goals using the respective build tool view.
+
+NOTE: Mac OSX users must run IntelliJ IDEA using JDK7 (the default is JDK6) otherwise the Gradle plugin will not
+be able to import the project and will fail with a cryptic error.
+
+.NetBeans
+NetBeans can import Maven projects without additional plugins. You must install the Gradle plugin first if you
+want to build Gradle based projects. The Gradle plugin is directly accessible from the default plugin location
+as configured in the Plugins preference panel.
+
+.Eclipse
+Unfortunately Eclipse is the odd member of the three IDEs. You must locate and install the m2e (Maven) and
+gradle plugins that are compatible with your current Eclipse installation. Once you do, you will be able to
+import the project directly into your workspace.
+
+icon:arrow-up[link="#_tutorial_1_toc"] <<_tutorial_1_toc,Top>>
