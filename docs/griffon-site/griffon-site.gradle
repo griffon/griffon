@@ -79,6 +79,7 @@ jbake {
     configuration['griffon.version.current'] = project.version
     configuration['griffon.version.previous'] = rootProject.previousVersion
     configuration['project-build-dir'] = project.buildDir.absolutePath
+    configuration['project-rootdir'] = rootProject.projectDir.absolutePath
 }
 
 task(guide, dependsOn: [':griffon-guide:guide']) {

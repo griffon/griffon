@@ -1,0 +1,332 @@
+= Tutorial 2::MVC Groups
+Andres Almiray
+:jbake-type: page
+:jbake-status: published
+:icons: font
+:linkattrs:
+:editor-swing-java: {jbake-project-rootdir}/samples/editor-swing-java
+
+[[_tutorial_2_toc]]
+==  Agenda
+
+This tutorial touches the following subjects:
+
+ * Creating new MVC group artifacts
+ * Instantiating MVC groups
+ * MVC Group parent-child relationships
+ * MVC Group lifecycle
+
+The goal of the Editor application shown here is to be provide basic editing capabilities fo text files. Each
+file will be handled by its own tab; tabs will be located inside a tab container.
+
+. <<_tutorial_2_1,Creating an Editor application>>
+. <<_tutorial_2_2,Setting up the main MVC group>>
+. <<_tutorial_2_3,Generating an Editor MVC group>>
+. <<_tutorial_2_4,Setting up the Editor MVC group>>
+. <<_tutorial_2_5,Instantiating the Editor MVC group>>
+. <<_tutorial_2_6,Finishing up the main MVC group>>
+
+:numbered:
+
+[[_tutorial_2_1]]
+== Creating an Editor application
+
+We'll follow similar steps as explained in link:1_getting_started.adoc[Tutorial 1::Getting Started, window="_blank"] to
+create a brand new Griffon 2 application. Assuming you've got GVM, Lazybones and Gradle already installed on your system,
+execute the following command on a console prompt, paying attention to the selections we've made
+
+[source]
+----
+$ lazybones create griffon-swing-java editor
+Creating project from template griffon-swing-java (latest) in 'editor'
+Define value for 'group' [org.example]: editor
+Define value for 'artifactId' [editor]:
+Define value for 'version' [0.1.0-SNAPSHOT]:
+Define value for 'griffonVersion' [2.1.0]:
+Define value for 'package' [editor]:
+Define value for 'className' [Editor]: container
+----
+
+There should be a new directory named `editor` with the freshly created application inside. At this point you can import
+the project in your favourite IDE. We'll continue with Gradle on the command line to keep things simple.
+Verifying that the application is working shold be our next step. Execute the following command
+
+[source]
+----
+$ gradle run
+----
+
+A window should pop up after a few seconds. Quit the application, we're ready to begin customizing the application.
+
+icon:arrow-up[link="#_tutorial_2_toc"] <<_tutorial_2_toc,Top>>
+
+[[_tutorial_2_2]]
+== Setting up the main MVC group
+
+Each file we open requires a bit of metadata to be handled by the editor application, for example its title and contents.
+We'll create a simple observable POJO that represents a `Document`.
+
+[source,java,options="nowrap"]
+.src/main/java/editor/Document.java
+----
+include::{editor-swing-java}/src/main/java/editor/Document.java[lines=16..-1]
+----
+
+The _title_ and _contents_ properties should be self explanatory. We'll use the _dirty_ property to keep track of
+changes. The final property, _file_, points to the `File` object that was used to load the document; we'll use this
+value to save back edited changes.
+
+Now imagine what happens when you have multiple tabs open in an editor; the `save` and `close` actions are context
+sensitive, that is, they operate on the currently selected editor/tab. We need to replicate this behavior, in order
+to do so we'll use a presentation model for the `Document` class, aptly named `DocumentModel`.
+
+[source,java,options="nowrap"]
+.src/main/java/editor/DocumentModel.java
+----
+include::{editor-swing-java}/src/main/java/editor/DocumentModel.java[lines=16..-1]
+----
+
+The `DocumentModel` class extends from `Document` just as a convenience, it inherits all properties from `Document` in
+this way. It also defines a new property _document_ which will hold the selected `Document`.
+
+Alright, we can move on to the `ContainerModel` member of the `container` MVC group (our main group). Here we'll
+see how the previous presentation model is put to good use.
+
+[source,java,options="nowrap"]
+.griffon-app/models/editor/ContainerModel.java
+----
+include::{editor-swing-java}/griffon-app/models/editor/ContainerModel.java[lines=16..-1]
+----
+
+This model keeps track of two items:
+
+ . the identifier of the selected tab, represented by _mvcIdentifier_.
+ . the document presentation model, represented by _documentModel_.
+
+Notice that the _documentModel_ property is declared as final; this means it will always have the same value, thus we
+can use it to create stable bindings. This is the reason for making `DocumentModel` a subclass of `Document`. As you
+can see the former listens to changes on the latter and copying the values over. This happens very time the application
+changes the value of _documentModel.document_ due to the ``PropertyChangeListener``s that were put into place.
+
+The final remark on this model class is that it implements the `javax.swing.event.ChangeListener` interface. In this
+way the model instance can listen to tab selection changes and update the _documentModel_ property.
+
+Let's mode to the View. Open up `ContainerView.java` and paste the following into it
+
+[source,java,options="nowrap"]
+.griffon-app/views/editor/ContainerView.java
+----
+include::{editor-swing-java}/griffon-app/views/editor/ContainerView.java[lines=16..-1]
+----
+
+Here we find a `Window` object containing a `JMenuBar` and a the tab container (a `JTabbedPane`) dubbed _tabGroup_.
+This tab container is exposed to the outside world via a getter method; we'll see why it's done this way when the
+second MVC group comes into play. The View is also responsible for managing a `JFileChooser` that will be used to
+select files for reading. Notice the conditional enabling of the `save` action given the state of the `dirty` property
+coming from `model.documentModel`. Also, the `model` is registered as a change listener with the _tabGroup_ field.
+
+We can define a few of the action properties using a resource bundle, from the example the mnemonic and accelerator
+properties. Paste the following into `messages.properties`.
+
+[source,java,options="nowrap"]
+.griffon-app/i18n/messages.properties
+----
+include::{editor-swing-java}/griffon-app/i18n/messages.properties[lines=17..-1]
+----
+
+We're almost done with the `container` MVC group, what remains to be done is update the `ContainerController`.
+
+[source,java,options="nowrap"]
+.griffon-app/controllers/editor/ContainerController.java
+----
+package editor;
+
+import griffon.core.artifact.GriffonController;
+import griffon.metadata.ArtifactProviderFor;
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+
+@ArtifactProviderFor(GriffonController.class)
+public class ContainerController extends AbstractGriffonController {
+    private ContainerModel model;
+    private ContainerView view;
+
+    public void open() {
+
+    }
+
+    public void save() {
+
+    }
+
+    public void close() {
+
+    }
+
+    public void quit() {
+        getApplication().shutdown();
+    }
+}
+----
+
+We've got 4 actions (`open`, `save`, `close` and `quit`) and nothing more for the time being. You can run the application
+once again to verify that the code compiles and runs.
+
+icon:arrow-up[link="#_tutorial_2_toc"] <<_tutorial_2_toc,Top>>
+
+[[_tutorial_2_3]]
+== Generating an Editor MVC group
+
+You can create new artifact files by hand, just by copying existing one. But you can also let Lazybones generate these
+files for you. Lazybones ability to generate additional files well after the project's creation is what sets it apart
+from Maven's archetype solution. Lazybones has a feature called _subtemplates_ or _generators_; these are regular
+template files with the added distinction that they have been hidden inside the project's sources (actually inside
+`.lazybones`, local to the project). Unfortunately as of version 0.8 Lazybones does not have a command that can list
+existing subtemplates, however Griffon only exposes one by defualt, its name is _artifact_.
+
+Armed with this information we can generate new artifacts by invoking the following command
+
+[source]
+----
+$ lazybones generate artifact
+
+The following artifact templates are available
+
+  controller
+  integrationspec
+  integrationtest
+  model
+  service
+  spec
+  test
+  view
+  mvcgroup
+
+Which type of artifact do you want to generate? mvcgroup
+Define value for 'package' [editor]:
+Define value for 'class' name: editor
+Created new artifact griffon-app/models/editor/EditorModel.java
+Created new artifact griffon-app/views/editor/EditorView.java
+Created new artifact griffon-app/controllers/editor/EditorController.java
+Created new artifact src/test/java/editor/EditorControllerTest.java
+Created new artifact src/integration-test/java/editor/EditorIntegrationTest.java
+Do not forget to add the group 'editor' to griffon-app/conf/Config.java
+----
+
+We select the `mvcgroup` option. Notice that Lazybones remembered the default package we used when we created the
+application. We select `editor` as the name of the new MVC group. There are 5 new files generated using the
+default templates. Take special care of the last message; the files were created but this doesn't mean the application
+will be able to instantiate the MVC group at runtime. The final piece of the puzzle is letting the application know
+that about this new MVC group, this is done by editing `Config.java`
+
+[source,java,options="nowrap"]
+.griffon-app/conf/Config.java
+----
+include::{editor-swing-java}/griffon-app/conf/Config.java[lines=16..-1]
+----
+
+Great, we have the basics for this new MVC group ready. Now let's make it work.
+
+icon:arrow-up[link="#_tutorial_2_toc"] <<_tutorial_2_toc,Top>>
+
+[[_tutorial_2_4]]
+== Setting up the Editor MVC group
+
+We'll begin by looking at the Model again. This time the model will hold the actual `Document` that this group will
+edit.
+
+[source,java,options="nowrap"]
+.griffon-app/models/editor/EditorModel.java
+----
+include::{editor-swing-java}/griffon-app/models/editor/EditorModel.java[lines=16..-1]
+----
+
+Just a basic observable model with a single _document_ property. Things get interesting once we move to the View,
+as is its responsibility to display the file's contents. One thing that must happen at some point is the new tab
+being added to the tab container. We can make this happen at the point where an instance of the `editor` MVC group
+is created; this requires the `EditorView` to expose its tab somehow. Or we can keep this behavior local to this
+group and make sure that this View handles adding and removing the tab. This is the reason why we exposed the _tabCount_
+field in `ContainerView`. Let's look at the `EditorView`, shall we?
+
+[source,java,options="nowrap"]
+.griffon-app/views/editor/EditorView.java
+----
+include::{editor-swing-java}/griffon-app/views/editor/EditorView.java[lines=16..-1]
+----
+
+Besides the convoluted binding on the ``textArea``'s text property (unfortunately text is not a bound property) the other
+special pieces of code found in this class are the usages of the _parentView_ field. Notice the that the type is set to
+`ContainerView`, this means this View is aware that it's not a top level MVC group, that is, there will be another
+MVC group that will be responsible for instantiating `editor`, in this case is the `container` MVC group. A parent/child
+relationship is established between the two MVC group instances when this happens. More information about this
+relationship can be found at the link:/guide/latest/index.html#_mvc_mvc_group_relationships[guide, window="_blank"].
+
+Because this View is responsible for attaching the tab when ready it should also be responsible for detaching said tab
+when the group is no longer in use. We'll use the `mvcGroupDestroy()` lifecycle method to achieve this goal. Also,
+the tab component saves the group's identifier into a client property. This is the link that the `ContainerModel` uses
+to switch between active tabs.
+
+Last but not least, we update the `EditorController` to take care of loading the document, saving any changes and
+closing the tab.
+
+[source,java,options="nowrap"]
+.griffon-app/controllers/editor/EditorController.java
+----
+include::{editor-swing-java}/griffon-app/controllers/editor/EditorController.java[lines=16..-1]
+----
+
+Invoking the `closeFile()` action triggers the destruction of this MVC group, which in turns calls the
+`mvcGroupDestroy()` lifecycle method on all MVC instances, such as the View; this will automatically remove the tab
+from the tab container as expected.
+
+icon:arrow-up[link="#_tutorial_2_toc"] <<_tutorial_2_toc,Top>>
+
+[[_tutorial_2_5]]
+== Instantiating the Editor MVC group
+
+We go back to the `ContainerController` to add some more behavior to it. Now that we know the `EditorView` expects a
+`ContainerView` as parent it makes sense for the `ContainerController` to instantiate the `editor` group. We'll do
+this in the `open` action.
+
+[source,java,options="nowrap"]
+.griffon-app/controllers/editor/ContainerController.java
+----
+public void open() {
+    File file = view.selectFile();
+    if (file != null) {
+        String mvcIdentifier = file.getName() + "-" + System.currentTimeMillis();
+        createMVC("editor", mvcIdentifier, CollectionUtils.<String, Object>map()
+            .e("document", new Document(file, file.getName()))
+            .e("tabName", file.getName()));
+    }
+}
+----
+
+Now the pieces start to fall into their rightful place. Because the `editor` MVC group takes care of attaching and
+detaching itself the code in the `container` controller is much simpler, it just needs to create a new instance of
+the `editor` group and that's it!
+
+icon:arrow-up[link="#_tutorial_2_toc"] <<_tutorial_2_toc,Top>>
+
+[[_tutorial_2_6]]
+== Finishing up the main MVC group
+
+We're ready to make the final adjustments to this application, by adding the missing behavior to the
+`ContainerController`, that is, the code for `save` and `close` actions.
+
+[source,java,options="nowrap"]
+.griffon-app/controllers/editor/ContainerController.java
+----
+include::{editor-swing-java}/griffon-app/controllers/editor/ContainerController.java[lines=16..-1]
+----
+
+Here we see another interesting feature of the Griffon runtime. Every instance of an MVC group is tracked by the
+`MVCGroupManager`, this means we can search for a group as long as we know its id. This is why we store the selected
+_mvcIdentifier_ in `ContainerModel`. The `save` and `close` actions are _global_, they are defined by the `container`
+group, but they must act upon a special context, the selected tab handled by an instance of the `editor` group.
+We accomplish this task by remembering the group id associated with a tab whenever its selected; this id is used to
+find the correct `editor` group instance and perform actions on it.
+
+The full code for this application can be found
+link:https://github.com/griffon/griffon/tree/development/samples/editor-swing-java[here, window="_blank"].
+
+icon:arrow-up[link="#_tutorial_2_toc"] <<_tutorial_2_toc,Top>>

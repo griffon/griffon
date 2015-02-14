@@ -33,7 +33,7 @@ public class EditorView extends AbstractSwingGriffonView {
     private ContainerView parentView;
     private String tabName;
 
-    private JComponent tab;
+    private JScrollPane tab;
     private JTextArea editor;
 
     @Override
@@ -44,9 +44,9 @@ public class EditorView extends AbstractSwingGriffonView {
 
         model.getDocument().addPropertyChangeListener("contents", (e) -> editor.setText((String) e.getNewValue()));
 
-        JScrollPane scrollPane = new JScrollPane();
-        scrollPane.putClientProperty("mvcIdentifier", getMvcGroup().getMvcId());
-        scrollPane.setViewportView(editor);
+        tab = new JScrollPane();
+        tab.putClientProperty("mvcIdentifier", getMvcGroup().getMvcId());
+        tab.setViewportView(editor);
 
         editor.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -70,9 +70,8 @@ public class EditorView extends AbstractSwingGriffonView {
         });
 
         JTabbedPane tabGroup = parentView.getTabGroup();
-        tabGroup.addTab(tabName, scrollPane);
+        tabGroup.addTab(tabName, tab);
         tabGroup.setSelectedIndex(tabGroup.getTabCount() - 1);
-        tab = scrollPane;
     }
 
     public JTextArea getEditor() {
