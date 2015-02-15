@@ -18,6 +18,7 @@ package org.codehaus.griffon.runtime.swing.controller;
 import griffon.core.CallableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
+import griffon.core.editors.PropertyEditorResolver;
 import griffon.core.threading.UIThreadManager;
 import griffon.swing.support.SwingAction;
 import org.codehaus.griffon.runtime.core.controller.AbstractAction;
@@ -25,11 +26,12 @@ import org.codehaus.griffon.runtime.core.controller.AbstractAction;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.Action;
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 import javax.swing.KeyStroke;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyEditor;
 
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Objects.requireNonNull;
@@ -47,7 +49,7 @@ public class SwingGriffonControllerAction extends AbstractAction {
     public static final String KEY_ACCELERATOR = &quot;accelerator&quot;;
     public static final String KEY_MNEMONIC = &quot;mnemonic&quot;;
     public static final String KEY_COMMAND = &quot;command&quot;;
-
+    private final SwingAction toolkitAction;
     private String shortDescription;
     private String longDescription;
     private String smallIcon;
@@ -56,170 +58,165 @@ public class SwingGriffonControllerAction extends AbstractAction {
     private String mnemonic;
     private String command;
     private boolean selected;
-    private final SwingAction toolkitAction;
 
     public SwingGriffonControllerAction(final @Nonnull UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
-<span class="fc" id="L62">        super(actionManager, controller, actionName);</span>
-<span class="fc" id="L63">        requireNonNull(uiThreadManager, &quot;Argument 'uiThreadManager' must not be null&quot;);</span>
+<span class="fc" id="L63">        super(actionManager, controller, actionName);</span>
+<span class="fc" id="L64">        requireNonNull(uiThreadManager, &quot;Argument 'uiThreadManager' must not be null&quot;);</span>
 
-<span class="fc" id="L65">        toolkitAction = new SwingAction(new CallableWithArgs&lt;Void&gt;() {</span>
+<span class="fc" id="L66">        toolkitAction = new SwingAction(new CallableWithArgs&lt;Void&gt;() {</span>
             @Nullable
             public Void call(@Nullable Object... args) {
-<span class="fc" id="L68">                actionManager.invokeAction(controller, actionName, args);</span>
-<span class="fc" id="L69">                return null;</span>
+<span class="fc" id="L69">                actionManager.invokeAction(controller, actionName, args);</span>
+<span class="fc" id="L70">                return null;</span>
             }
         });
 
-<span class="fc" id="L73">        addPropertyChangeListener(new PropertyChangeListener() {</span>
+<span class="fc" id="L74">        addPropertyChangeListener(new PropertyChangeListener() {</span>
             public void propertyChange(final PropertyChangeEvent evt) {
-<span class="fc" id="L75">                uiThreadManager.runInsideUIAsync(new Runnable() {</span>
+<span class="fc" id="L76">                uiThreadManager.runInsideUIAsync(new Runnable() {</span>
                     public void run() {
-<span class="pc bpc" id="L77" title="1 of 2 branches missed.">                        if (KEY_NAME.equals(evt.getPropertyName())) {</span>
-<span class="fc" id="L78">                            toolkitAction.putValue(Action.NAME, evt.getNewValue());</span>
-<span class="nc bnc" id="L79" title="All 2 branches missed.">                        } else if (KEY_COMMAND.equals(evt.getPropertyName())) {</span>
-<span class="nc" id="L80">                            toolkitAction.putValue(Action.ACTION_COMMAND_KEY, evt.getNewValue());</span>
-<span class="nc bnc" id="L81" title="All 2 branches missed.">                        } else if (KEY_SHORT_DESCRIPTION.equals(evt.getPropertyName())) {</span>
-<span class="nc" id="L82">                            toolkitAction.putValue(Action.SHORT_DESCRIPTION, evt.getNewValue());</span>
-<span class="nc bnc" id="L83" title="All 2 branches missed.">                        } else if (KEY_LONG_DESCRIPTION.equals(evt.getPropertyName())) {</span>
-<span class="nc" id="L84">                            toolkitAction.putValue(Action.LONG_DESCRIPTION, evt.getNewValue());</span>
-<span class="nc bnc" id="L85" title="All 2 branches missed.">                        } else if (KEY_ENABLED.equals(evt.getPropertyName())) {</span>
-<span class="nc" id="L86">                            toolkitAction.setEnabled((Boolean) evt.getNewValue());</span>
-<span class="nc bnc" id="L87" title="All 2 branches missed.">                        } else if (KEY_SELECTED.equals(evt.getPropertyName())) {</span>
-<span class="nc" id="L88">                            toolkitAction.putValue(Action.SELECTED_KEY, evt.getNewValue());</span>
-<span class="nc bnc" id="L89" title="All 2 branches missed.">                        } else if (KEY_MNEMONIC.equals(evt.getPropertyName())) {</span>
-<span class="nc" id="L90">                            String mnemonic = (String) evt.getNewValue();</span>
-<span class="nc bnc" id="L91" title="All 2 branches missed.">                            if (!isBlank(mnemonic)) {</span>
-<span class="nc" id="L92">                                toolkitAction.putValue(Action.MNEMONIC_KEY, KeyStroke.getKeyStroke(mnemonic).getKeyCode());</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">                        if (KEY_NAME.equals(evt.getPropertyName())) {</span>
+<span class="fc" id="L79">                            toolkitAction.putValue(Action.NAME, evt.getNewValue());</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">                        } else if (KEY_COMMAND.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L81">                            toolkitAction.putValue(Action.ACTION_COMMAND_KEY, evt.getNewValue());</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">                        } else if (KEY_SHORT_DESCRIPTION.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L83">                            toolkitAction.putValue(Action.SHORT_DESCRIPTION, evt.getNewValue());</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">                        } else if (KEY_LONG_DESCRIPTION.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L85">                            toolkitAction.putValue(Action.LONG_DESCRIPTION, evt.getNewValue());</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">                        } else if (KEY_ENABLED.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L87">                            toolkitAction.setEnabled((Boolean) evt.getNewValue());</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">                        } else if (KEY_SELECTED.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L89">                            toolkitAction.putValue(Action.SELECTED_KEY, evt.getNewValue());</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">                        } else if (KEY_MNEMONIC.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L91">                            String mnemonic = (String) evt.getNewValue();</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">                            if (!isBlank(mnemonic)) {</span>
+<span class="nc" id="L93">                                toolkitAction.putValue(Action.MNEMONIC_KEY, KeyStroke.getKeyStroke(mnemonic).getKeyCode());</span>
                             }
-<span class="nc bnc" id="L94" title="All 2 branches missed.">                        } else if (KEY_ACCELERATOR.equals(evt.getPropertyName())) {</span>
-<span class="nc" id="L95">                            String accelerator = (String) evt.getNewValue();</span>
-<span class="nc bnc" id="L96" title="All 2 branches missed.">                            if (!isBlank(accelerator)) {</span>
-<span class="nc" id="L97">                                toolkitAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(accelerator));</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">                        } else if (KEY_ACCELERATOR.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L96">                            String accelerator = (String) evt.getNewValue();</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">                            if (!isBlank(accelerator)) {</span>
+<span class="nc" id="L98">                                toolkitAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(accelerator));</span>
                             }
-<span class="nc bnc" id="L99" title="All 2 branches missed.">                        } else if (KEY_SMALL_ICON.equals(evt.getPropertyName())) {</span>
-<span class="nc" id="L100">                            String smallIcon = (String) evt.getNewValue();</span>
-<span class="nc bnc" id="L101" title="All 2 branches missed.">                            if (!isBlank(smallIcon)) {</span>
-<span class="nc" id="L102">                                toolkitAction.putValue(Action.SMALL_ICON, new ImageIcon(smallIcon));</span>
-                            }
-<span class="nc bnc" id="L104" title="All 2 branches missed.">                        } else if (KEY_LARGE_ICON.equals(evt.getPropertyName())) {</span>
-<span class="nc" id="L105">                            String largeIcon = (String) evt.getNewValue();</span>
-<span class="nc bnc" id="L106" title="All 2 branches missed.">                            if (!isBlank(largeIcon)) {</span>
-<span class="nc" id="L107">                                toolkitAction.putValue(Action.LARGE_ICON_KEY, new ImageIcon(largeIcon));</span>
-                            }
+<span class="nc bnc" id="L100" title="All 2 branches missed.">                        } else if (KEY_SMALL_ICON.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L101">                            handleIcon(evt.getNewValue(), Action.SMALL_ICON);</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">                        } else if (KEY_LARGE_ICON.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L103">                            handleIcon(evt.getNewValue(), Action.LARGE_ICON_KEY);</span>
                         }
-<span class="fc" id="L110">                    }</span>
+<span class="fc" id="L105">                    }</span>
                 });
-<span class="fc" id="L112">            }</span>
+<span class="fc" id="L107">            }</span>
         });
-<span class="fc" id="L114">    }</span>
+<span class="fc" id="L109">    }</span>
+
+    protected void handleIcon(@Nullable Object value, @Nonnull String key) {
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">        if (value != null) {</span>
+<span class="nc" id="L113">            PropertyEditor editor = PropertyEditorResolver.findEditor(Icon.class);</span>
+<span class="nc" id="L114">            editor.setValue(value);</span>
+<span class="nc" id="L115">            toolkitAction.putValue(key, editor.getValue());</span>
+        }
+<span class="fc" id="L117">    }</span>
 
     protected void doInitialize() {
-<span class="fc" id="L117">        toolkitAction.putValue(Action.NAME, getName());</span>
-<span class="fc" id="L118">        toolkitAction.putValue(Action.ACTION_COMMAND_KEY, getCommand());</span>
-<span class="fc" id="L119">        toolkitAction.putValue(Action.SHORT_DESCRIPTION, getShortDescription());</span>
-<span class="fc" id="L120">        toolkitAction.putValue(Action.LONG_DESCRIPTION, getLongDescription());</span>
-<span class="fc" id="L121">        toolkitAction.setEnabled(isEnabled());</span>
-<span class="fc" id="L122">        toolkitAction.putValue(Action.SELECTED_KEY, isSelected());</span>
-<span class="fc" id="L123">        String mnemonic = getMnemonic();</span>
-<span class="pc bpc" id="L124" title="1 of 2 branches missed.">        if (!isBlank(mnemonic)) {</span>
-<span class="nc" id="L125">            toolkitAction.putValue(Action.MNEMONIC_KEY, KeyStroke.getKeyStroke(mnemonic).getKeyCode());</span>
+<span class="fc" id="L120">        toolkitAction.putValue(Action.NAME, getName());</span>
+<span class="fc" id="L121">        toolkitAction.putValue(Action.ACTION_COMMAND_KEY, getCommand());</span>
+<span class="fc" id="L122">        toolkitAction.putValue(Action.SHORT_DESCRIPTION, getShortDescription());</span>
+<span class="fc" id="L123">        toolkitAction.putValue(Action.LONG_DESCRIPTION, getLongDescription());</span>
+<span class="fc" id="L124">        toolkitAction.setEnabled(isEnabled());</span>
+<span class="fc" id="L125">        toolkitAction.putValue(Action.SELECTED_KEY, isSelected());</span>
+<span class="fc" id="L126">        String mnemonic = getMnemonic();</span>
+<span class="pc bpc" id="L127" title="1 of 2 branches missed.">        if (!isBlank(mnemonic)) {</span>
+<span class="nc" id="L128">            toolkitAction.putValue(Action.MNEMONIC_KEY, KeyStroke.getKeyStroke(mnemonic).getKeyCode());</span>
         }
-<span class="fc" id="L127">        String accelerator = getAccelerator();</span>
-<span class="pc bpc" id="L128" title="1 of 2 branches missed.">        if (!isBlank(accelerator)) {</span>
-<span class="nc" id="L129">            toolkitAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(accelerator));</span>
+<span class="fc" id="L130">        String accelerator = getAccelerator();</span>
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">        if (!isBlank(accelerator)) {</span>
+<span class="nc" id="L132">            toolkitAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(accelerator));</span>
         }
-<span class="fc" id="L131">        String smallIcon = getSmallIcon();</span>
-<span class="pc bpc" id="L132" title="1 of 2 branches missed.">        if (!isBlank(smallIcon)) {</span>
-<span class="nc" id="L133">            toolkitAction.putValue(Action.SMALL_ICON, new ImageIcon(smallIcon));</span>
-        }
-<span class="fc" id="L135">        String largeIcon = getLargeIcon();</span>
-<span class="pc bpc" id="L136" title="1 of 2 branches missed.">        if (!isBlank(largeIcon)) {</span>
-<span class="nc" id="L137">            toolkitAction.putValue(Action.LARGE_ICON_KEY, new ImageIcon(largeIcon));</span>
-        }
-<span class="fc" id="L139">    }</span>
+<span class="fc" id="L134">        handleIcon(getSmallIcon(), Action.SMALL_ICON);</span>
+<span class="fc" id="L135">        handleIcon(getLargeIcon(), Action.LARGE_ICON_KEY);</span>
+<span class="fc" id="L136">    }</span>
 
     @Nullable
     public String getAccelerator() {
-<span class="fc" id="L143">        return accelerator;</span>
+<span class="fc" id="L140">        return accelerator;</span>
     }
 
     public void setAccelerator(@Nullable String accelerator) {
-<span class="nc" id="L147">        firePropertyChange(KEY_ACCELERATOR, this.accelerator, this.accelerator = accelerator);</span>
-<span class="nc" id="L148">    }</span>
+<span class="nc" id="L144">        firePropertyChange(KEY_ACCELERATOR, this.accelerator, this.accelerator = accelerator);</span>
+<span class="nc" id="L145">    }</span>
 
     @Nullable
     public String getLargeIcon() {
-<span class="fc" id="L152">        return largeIcon;</span>
+<span class="fc" id="L149">        return largeIcon;</span>
     }
 
     public void setLargeIcon(@Nullable String largeIcon) {
-<span class="nc" id="L156">        firePropertyChange(KEY_LARGE_ICON, this.largeIcon, this.largeIcon = largeIcon);</span>
-<span class="nc" id="L157">    }</span>
+<span class="nc" id="L153">        firePropertyChange(KEY_LARGE_ICON, this.largeIcon, this.largeIcon = largeIcon);</span>
+<span class="nc" id="L154">    }</span>
 
     @Nullable
     public String getLongDescription() {
-<span class="fc" id="L161">        return longDescription;</span>
+<span class="fc" id="L158">        return longDescription;</span>
     }
 
     public void setLongDescription(@Nullable String longDescription) {
-<span class="nc" id="L165">        firePropertyChange(KEY_LONG_DESCRIPTION, this.longDescription, this.longDescription = longDescription);</span>
-<span class="nc" id="L166">    }</span>
+<span class="nc" id="L162">        firePropertyChange(KEY_LONG_DESCRIPTION, this.longDescription, this.longDescription = longDescription);</span>
+<span class="nc" id="L163">    }</span>
 
     @Nullable
     public String getMnemonic() {
-<span class="fc" id="L170">        return mnemonic;</span>
+<span class="fc" id="L167">        return mnemonic;</span>
     }
 
     public void setMnemonic(@Nullable String mnemonic) {
-<span class="nc" id="L174">        firePropertyChange(KEY_MNEMONIC, this.mnemonic, this.mnemonic = mnemonic);</span>
-<span class="nc" id="L175">    }</span>
+<span class="nc" id="L171">        firePropertyChange(KEY_MNEMONIC, this.mnemonic, this.mnemonic = mnemonic);</span>
+<span class="nc" id="L172">    }</span>
 
     public boolean isSelected() {
-<span class="fc" id="L178">        return selected;</span>
+<span class="fc" id="L175">        return selected;</span>
     }
 
     public void setSelected(boolean selected) {
-<span class="fc" id="L182">        firePropertyChange(KEY_SELECTED, this.selected, this.selected = selected);</span>
-<span class="fc" id="L183">    }</span>
+<span class="fc" id="L179">        firePropertyChange(KEY_SELECTED, this.selected, this.selected = selected);</span>
+<span class="fc" id="L180">    }</span>
 
     @Nullable
     public String getShortDescription() {
-<span class="fc" id="L187">        return shortDescription;</span>
+<span class="fc" id="L184">        return shortDescription;</span>
     }
 
     public void setShortDescription(@Nullable String shortDescription) {
-<span class="nc" id="L191">        firePropertyChange(KEY_SHORT_DESCRIPTION, this.shortDescription, this.shortDescription = shortDescription);</span>
-<span class="nc" id="L192">    }</span>
+<span class="nc" id="L188">        firePropertyChange(KEY_SHORT_DESCRIPTION, this.shortDescription, this.shortDescription = shortDescription);</span>
+<span class="nc" id="L189">    }</span>
 
     @Nullable
     public String getSmallIcon() {
-<span class="fc" id="L196">        return smallIcon;</span>
+<span class="fc" id="L193">        return smallIcon;</span>
     }
 
     public void setSmallIcon(@Nullable String smallIcon) {
-<span class="nc" id="L200">        firePropertyChange(KEY_SMALL_ICON, this.smallIcon, this.smallIcon = smallIcon);</span>
-<span class="nc" id="L201">    }</span>
+<span class="nc" id="L197">        firePropertyChange(KEY_SMALL_ICON, this.smallIcon, this.smallIcon = smallIcon);</span>
+<span class="nc" id="L198">    }</span>
 
     @Nullable
     public String getCommand() {
-<span class="fc" id="L205">        return command;</span>
+<span class="fc" id="L202">        return command;</span>
     }
 
     public void setCommand(@Nullable String command) {
-<span class="nc" id="L209">        firePropertyChange(KEY_SMALL_ICON, this.command, this.command = command);</span>
-<span class="nc" id="L210">    }</span>
+<span class="nc" id="L206">        firePropertyChange(KEY_SMALL_ICON, this.command, this.command = command);</span>
+<span class="nc" id="L207">    }</span>
 
     @Nonnull
     public Object getToolkitAction() {
-<span class="fc" id="L214">        return toolkitAction;</span>
+<span class="fc" id="L211">        return toolkitAction;</span>
     }
 
     protected void doExecute(Object... args) {
-<span class="nc" id="L218">        ActionEvent event = null;</span>
-<span class="nc bnc" id="L219" title="All 6 branches missed.">        if (args != null &amp;&amp; args.length == 1 &amp;&amp; args[0] instanceof ActionEvent) {</span>
-<span class="nc" id="L220">            event = (ActionEvent) args[0];</span>
+<span class="nc" id="L215">        ActionEvent event = null;</span>
+<span class="nc bnc" id="L216" title="All 6 branches missed.">        if (args != null &amp;&amp; args.length == 1 &amp;&amp; args[0] instanceof ActionEvent) {</span>
+<span class="nc" id="L217">            event = (ActionEvent) args[0];</span>
         }
-<span class="nc" id="L222">        toolkitAction.actionPerformed(event);</span>
-<span class="nc" id="L223">    }</span>
+<span class="nc" id="L219">        toolkitAction.actionPerformed(event);</span>
+<span class="nc" id="L220">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

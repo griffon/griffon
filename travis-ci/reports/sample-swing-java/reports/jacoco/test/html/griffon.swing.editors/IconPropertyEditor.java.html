@@ -26,6 +26,8 @@ import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -37,87 +39,120 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @since 2.0.0
  */
 @PropertyEditorFor(Icon.class)
-<span class="fc" id="L40">public class IconPropertyEditor extends AbstractPropertyEditor {</span>
+<span class="fc" id="L42">public class IconPropertyEditor extends AbstractPropertyEditor {</span>
     protected void setValueInternal(Object value) {
-<span class="nc bnc" id="L42" title="All 2 branches missed.">        if (null == value) {</span>
-<span class="nc" id="L43">            super.setValueInternal(null);</span>
-<span class="nc bnc" id="L44" title="All 2 branches missed.">        } else if (value instanceof CharSequence) {</span>
-<span class="nc" id="L45">            handleAsString(String.valueOf(value));</span>
-<span class="nc bnc" id="L46" title="All 2 branches missed.">        } else if (value instanceof File) {</span>
-<span class="nc" id="L47">            handleAsFile((File) value);</span>
-<span class="nc bnc" id="L48" title="All 2 branches missed.">        } else if (value instanceof URL) {</span>
-<span class="nc" id="L49">            handleAsURL((URL) value);</span>
-<span class="nc bnc" id="L50" title="All 2 branches missed.">        } else if (value instanceof URI) {</span>
-<span class="nc" id="L51">            handleAsURI((URI) value);</span>
-<span class="nc bnc" id="L52" title="All 2 branches missed.">        } else if (value instanceof InputStream) {</span>
-<span class="nc" id="L53">            handleAsInputStream((InputStream) value);</span>
-<span class="nc bnc" id="L54" title="All 2 branches missed.">        } else if (value instanceof ImageInputStream) {</span>
-<span class="nc" id="L55">            handleAsImageInputStream((ImageInputStream) value);</span>
-<span class="nc bnc" id="L56" title="All 2 branches missed.">        } else if (value instanceof byte[]) {</span>
-<span class="nc" id="L57">            handleAsByteArray((byte[]) value);</span>
-<span class="nc bnc" id="L58" title="All 2 branches missed.">        } else if (value instanceof Image) {</span>
-<span class="nc" id="L59">            handleAsImage((Image) value);</span>
-<span class="nc bnc" id="L60" title="All 2 branches missed.">        } else if (value instanceof Icon) {</span>
-<span class="nc" id="L61">            super.setValueInternal(value);</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">        if (null == value) {</span>
+<span class="nc" id="L45">            super.setValueInternal(null);</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">        } else if (value instanceof CharSequence) {</span>
+<span class="nc" id="L47">            handleAsString(String.valueOf(value));</span>
+<span class="nc bnc" id="L48" title="All 2 branches missed.">        } else if (value instanceof File) {</span>
+<span class="nc" id="L49">            handleAsFile((File) value);</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        } else if (value instanceof URL) {</span>
+<span class="nc" id="L51">            handleAsURL((URL) value);</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        } else if (value instanceof URI) {</span>
+<span class="nc" id="L53">            handleAsURI((URI) value);</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        } else if (value instanceof InputStream) {</span>
+<span class="nc" id="L55">            handleAsInputStream((InputStream) value);</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        } else if (value instanceof ImageInputStream) {</span>
+<span class="nc" id="L57">            handleAsImageInputStream((ImageInputStream) value);</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        } else if (value instanceof byte[]) {</span>
+<span class="nc" id="L59">            handleAsByteArray((byte[]) value);</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        } else if (value instanceof Image) {</span>
+<span class="nc" id="L61">            handleAsImage((Image) value);</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        } else if (value instanceof Icon) {</span>
+<span class="nc" id="L63">            super.setValueInternal(value);</span>
         } else {
-<span class="nc" id="L63">            throw illegalValue(value, Icon.class);</span>
+<span class="nc" id="L65">            throw illegalValue(value, Icon.class);</span>
         }
-<span class="nc" id="L65">    }</span>
+<span class="nc" id="L67">    }</span>
 
     private void handleAsString(String str) {
-<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (isBlank(str)) {</span>
-<span class="nc" id="L69">            super.setValueInternal(null);</span>
-<span class="nc" id="L70">            return;</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        if (isBlank(str)) {</span>
+<span class="nc" id="L71">            super.setValueInternal(null);</span>
+<span class="nc" id="L72">            return;</span>
         }
-<span class="nc" id="L72">        handleAsURL(getClass().getClassLoader().getResource(str));</span>
-<span class="nc" id="L73">    }</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (str.contains(&quot;|&quot;)) {</span>
+            // assume classname|arg format
+<span class="nc" id="L76">            handleAsClassWithArg(str);</span>
+        } else {
+<span class="nc" id="L78">            handleAsURL(getClass().getClassLoader().getResource(str));</span>
+        }
+<span class="nc" id="L80">    }</span>
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    private void handleAsClassWithArg(String str) {
+<span class="nc" id="L84">        String[] args = str.split(&quot;\\|&quot;);</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        if (args.length == 2) {</span>
+<span class="nc" id="L86">            Class&lt;? extends Icon&gt; iconClass = null;</span>
+            try {
+<span class="nc" id="L88">                iconClass = (Class&lt;? extends Icon&gt;) IconPropertyEditor.class.getClassLoader().loadClass(args[0]);</span>
+<span class="nc" id="L89">            } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L90">                throw illegalValue(str, Icon.class, e);</span>
+<span class="nc" id="L91">            }</span>
+
+<span class="nc" id="L93">            Constructor&lt;? extends Icon&gt; constructor = null;</span>
+            try {
+<span class="nc" id="L95">                constructor = iconClass.getConstructor(String.class);</span>
+<span class="nc" id="L96">            } catch (NoSuchMethodException e) {</span>
+<span class="nc" id="L97">                throw illegalValue(str, Icon.class, e);</span>
+<span class="nc" id="L98">            }</span>
+
+            try {
+<span class="nc" id="L101">                super.setValueInternal(constructor.newInstance(args[1]));</span>
+<span class="nc" id="L102">            } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {</span>
+<span class="nc" id="L103">                throw illegalValue(str, Icon.class, e);</span>
+<span class="nc" id="L104">            }</span>
+<span class="nc" id="L105">        } else {</span>
+<span class="nc" id="L106">            throw illegalValue(str, Icon.class);</span>
+        }
+<span class="nc" id="L108">    }</span>
 
     private void handleAsFile(File file) {
         try {
-<span class="nc" id="L77">            handleAsImage(ImageIO.read(file));</span>
-<span class="nc" id="L78">        } catch (IOException e) {</span>
-<span class="nc" id="L79">            throw illegalValue(file, Icon.class, e);</span>
-<span class="nc" id="L80">        }</span>
-<span class="nc" id="L81">    }</span>
+<span class="nc" id="L112">            handleAsImage(ImageIO.read(file));</span>
+<span class="nc" id="L113">        } catch (IOException e) {</span>
+<span class="nc" id="L114">            throw illegalValue(file, Icon.class, e);</span>
+<span class="nc" id="L115">        }</span>
+<span class="nc" id="L116">    }</span>
 
     private void handleAsURL(URL url) {
         try {
-<span class="nc" id="L85">            handleAsImage(ImageIO.read(url));</span>
-<span class="nc" id="L86">        } catch (IOException e) {</span>
-<span class="nc" id="L87">            throw illegalValue(url, Icon.class, e);</span>
-<span class="nc" id="L88">        }</span>
-<span class="nc" id="L89">    }</span>
+<span class="nc" id="L120">            handleAsImage(ImageIO.read(url));</span>
+<span class="nc" id="L121">        } catch (IOException e) {</span>
+<span class="nc" id="L122">            throw illegalValue(url, Icon.class, e);</span>
+<span class="nc" id="L123">        }</span>
+<span class="nc" id="L124">    }</span>
 
     private void handleAsURI(URI uri) {
         try {
-<span class="nc" id="L93">            handleAsURL(uri.toURL());</span>
-<span class="nc" id="L94">        } catch (MalformedURLException e) {</span>
-<span class="nc" id="L95">            throw illegalValue(uri, Icon.class, e);</span>
-<span class="nc" id="L96">        }</span>
-<span class="nc" id="L97">    }</span>
+<span class="nc" id="L128">            handleAsURL(uri.toURL());</span>
+<span class="nc" id="L129">        } catch (MalformedURLException e) {</span>
+<span class="nc" id="L130">            throw illegalValue(uri, Icon.class, e);</span>
+<span class="nc" id="L131">        }</span>
+<span class="nc" id="L132">    }</span>
 
     private void handleAsInputStream(InputStream stream) {
         try {
-<span class="nc" id="L101">            handleAsImage(ImageIO.read(stream));</span>
-<span class="nc" id="L102">        } catch (IOException e) {</span>
-<span class="nc" id="L103">            throw illegalValue(stream, Icon.class, e);</span>
-<span class="nc" id="L104">        }</span>
-<span class="nc" id="L105">    }</span>
+<span class="nc" id="L136">            handleAsImage(ImageIO.read(stream));</span>
+<span class="nc" id="L137">        } catch (IOException e) {</span>
+<span class="nc" id="L138">            throw illegalValue(stream, Icon.class, e);</span>
+<span class="nc" id="L139">        }</span>
+<span class="nc" id="L140">    }</span>
 
     private void handleAsImageInputStream(ImageInputStream stream) {
         try {
-<span class="nc" id="L109">            handleAsImage(ImageIO.read(stream));</span>
-<span class="nc" id="L110">        } catch (IOException e) {</span>
-<span class="nc" id="L111">            throw illegalValue(stream, Icon.class, e);</span>
-<span class="nc" id="L112">        }</span>
-<span class="nc" id="L113">    }</span>
+<span class="nc" id="L144">            handleAsImage(ImageIO.read(stream));</span>
+<span class="nc" id="L145">        } catch (IOException e) {</span>
+<span class="nc" id="L146">            throw illegalValue(stream, Icon.class, e);</span>
+<span class="nc" id="L147">        }</span>
+<span class="nc" id="L148">    }</span>
 
     private void handleAsByteArray(byte[] bytes) {
-<span class="nc" id="L116">        super.setValueInternal(new ImageIcon(bytes));</span>
-<span class="nc" id="L117">    }</span>
+<span class="nc" id="L151">        super.setValueInternal(new ImageIcon(bytes));</span>
+<span class="nc" id="L152">    }</span>
 
     private void handleAsImage(Image img) {
-<span class="nc" id="L120">        super.setValueInternal(new ImageIcon(img));</span>
-<span class="nc" id="L121">    }</span>
+<span class="nc" id="L155">        super.setValueInternal(new ImageIcon(img));</span>
+<span class="nc" id="L156">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
