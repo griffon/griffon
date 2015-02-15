@@ -18,6 +18,7 @@ package org.codehaus.griffon.runtime.swing.controller;
 import griffon.core.CallableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
+import griffon.core.editors.PropertyEditorResolver;
 import griffon.core.threading.UIThreadManager;
 import griffon.swing.support.SwingAction;
 import org.codehaus.griffon.runtime.core.controller.AbstractAction;
@@ -25,11 +26,12 @@ import org.codehaus.griffon.runtime.core.controller.AbstractAction;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.Action;
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 import javax.swing.KeyStroke;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyEditor;
 
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Objects.requireNonNull;
@@ -47,7 +49,7 @@ public class SwingGriffonControllerAction extends AbstractAction {
     public static final String KEY_ACCELERATOR = "accelerator";
     public static final String KEY_MNEMONIC = "mnemonic";
     public static final String KEY_COMMAND = "command";
-
+    private final SwingAction toolkitAction;
     private String shortDescription;
     private String longDescription;
     private String smallIcon;
@@ -56,7 +58,6 @@ public class SwingGriffonControllerAction extends AbstractAction {
     private String mnemonic;
     private String command;
     private boolean selected;
-    private final SwingAction toolkitAction;
 
     public SwingGriffonControllerAction(final @Nonnull UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
         super(actionManager, controller, actionName);
@@ -97,20 +98,22 @@ public class SwingGriffonControllerAction extends AbstractAction {
                                 toolkitAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(accelerator));
                             }
                         } else if (KEY_SMALL_ICON.equals(evt.getPropertyName())) {
-                            String smallIcon = (String) evt.getNewValue();
-                            if (!isBlank(smallIcon)) {
-                                toolkitAction.putValue(Action.SMALL_ICON, new ImageIcon(smallIcon));
-                            }
+                            handleIcon(evt.getNewValue(), Action.SMALL_ICON);
                         } else if (KEY_LARGE_ICON.equals(evt.getPropertyName())) {
-                            String largeIcon = (String) evt.getNewValue();
-                            if (!isBlank(largeIcon)) {
-                                toolkitAction.putValue(Action.LARGE_ICON_KEY, new ImageIcon(largeIcon));
-                            }
+                            handleIcon(evt.getNewValue(), Action.LARGE_ICON_KEY);
                         }
                     }
                 });
             }
         });
+    }
+
+    protected void handleIcon(@Nullable Object value, @Nonnull String key) {
+        if (value != null) {
+            PropertyEditor editor = PropertyEditorResolver.findEditor(Icon.class);
+            editor.setValue(value);
+            toolkitAction.putValue(key, editor.getValue());
+        }
     }
 
     protected void doInitialize() {
@@ -128,14 +131,8 @@ public class SwingGriffonControllerAction extends AbstractAction {
         if (!isBlank(accelerator)) {
             toolkitAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(accelerator));
         }
-        String smallIcon = getSmallIcon();
-        if (!isBlank(smallIcon)) {
-            toolkitAction.putValue(Action.SMALL_ICON, new ImageIcon(smallIcon));
-        }
-        String largeIcon = getLargeIcon();
-        if (!isBlank(largeIcon)) {
-            toolkitAction.putValue(Action.LARGE_ICON_KEY, new ImageIcon(largeIcon));
-        }
+        handleIcon(getSmallIcon(), Action.SMALL_ICON);
+        handleIcon(getLargeIcon(), Action.LARGE_ICON_KEY);
     }
 
     @Nullable

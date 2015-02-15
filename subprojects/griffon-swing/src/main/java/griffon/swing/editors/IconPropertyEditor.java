@@ -26,6 +26,8 @@ import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -69,7 +71,40 @@ public class IconPropertyEditor extends AbstractPropertyEditor {
             super.setValueInternal(null);
             return;
         }
-        handleAsURL(getClass().getClassLoader().getResource(str));
+        if (str.contains("|")) {
+            // assume classname|arg format
+            handleAsClassWithArg(str);
+        } else {
+            handleAsURL(getClass().getClassLoader().getResource(str));
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void handleAsClassWithArg(String str) {
+        String[] args = str.split("\\|");
+        if (args.length == 2) {
+            Class<? extends Icon> iconClass = null;
+            try {
+                iconClass = (Class<? extends Icon>) IconPropertyEditor.class.getClassLoader().loadClass(args[0]);
+            } catch (ClassNotFoundException e) {
+                throw illegalValue(str, Icon.class, e);
+            }
+
+            Constructor<? extends Icon> constructor = null;
+            try {
+                constructor = iconClass.getConstructor(String.class);
+            } catch (NoSuchMethodException e) {
+                throw illegalValue(str, Icon.class, e);
+            }
+
+            try {
+                super.setValueInternal(constructor.newInstance(args[1]));
+            } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
+                throw illegalValue(str, Icon.class, e);
+            }
+        } else {
+            throw illegalValue(str, Icon.class);
+        }
     }
 
     private void handleAsFile(File file) {

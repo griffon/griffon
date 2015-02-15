@@ -15,6 +15,7 @@
  */
 package griffon.javafx.support;
 
+import griffon.core.editors.ValueConversionException;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -35,6 +36,8 @@ import javafx.scene.input.KeyCombination;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import static griffon.util.GriffonClassUtils.getPropertyValue;
@@ -48,6 +51,9 @@ import static java.util.Objects.requireNonNull;
 public final class JavaFXUtils {
     private static final String ERROR_CONTROL_NULL = "Argument 'control' must not be null";
     private static final String ERROR_ACTION_NULL = "Argument 'action' must not be null";
+    private static final String ERROR_ICON_BLANK = "Argument 'iconUrl' must not be blank";
+    private static final String ERROR_ID_BLANK = "Argument 'id' must not be blank";
+    private static final String ERROR_ROOT_NULL = "Argument 'root' must not be null";
 
     private JavaFXUtils() {
 
@@ -163,30 +169,70 @@ public final class JavaFXUtils {
 
     public static void setIcon(@Nonnull ButtonBase control, @Nonnull String iconUrl) {
         requireNonNull(control, ERROR_CONTROL_NULL);
-        requireNonBlank(iconUrl, "Argument 'iconUrl' must not be blank");
+        requireNonBlank(iconUrl, ERROR_ICON_BLANK);
 
-        URL resource = Thread.currentThread().getContextClassLoader().getResource(iconUrl);
-        if (resource != null) {
-            Image image = new Image(resource.toString());
-            control.graphicProperty().set(new ImageView(image));
+        Node graphicNode = resolveIcon(iconUrl);
+        if (graphicNode != null) {
+            control.graphicProperty().set(graphicNode);
         }
     }
 
     public static void setIcon(@Nonnull MenuItem control, @Nonnull String iconUrl) {
         requireNonNull(control, ERROR_CONTROL_NULL);
-        requireNonBlank(iconUrl, "Argument 'iconUrl' must not be blank");
+        requireNonBlank(iconUrl, ERROR_ICON_BLANK);
 
-        URL resource = Thread.currentThread().getContextClassLoader().getResource(iconUrl);
-        if (resource != null) {
-            Image image = new Image(resource.toString());
-            control.graphicProperty().set(new ImageView(image));
+        Node graphicNode = resolveIcon(iconUrl);
+        if (graphicNode != null) {
+            control.graphicProperty().set(graphicNode);
+        }
+    }
+
+    @Nullable
+    private static Node resolveIcon(String iconUrl) {
+        if (iconUrl.contains("|")) {
+            // assume classname|arg format
+            return handleAsClassWithArg(iconUrl);
+        } else {
+            URL resource = Thread.currentThread().getContextClassLoader().getResource(iconUrl);
+            if (resource != null) {
+                return new ImageView(new Image(resource.toString()));
+            }
+        }
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Node handleAsClassWithArg(String str) {
+        String[] args = str.split("\\|");
+        if (args.length == 2) {
+            Class<? extends Node> iconClass = null;
+            try {
+                iconClass = (Class<? extends Node>) JavaFXUtils.class.getClassLoader().loadClass(args[0]);
+            } catch (ClassNotFoundException e) {
+                throw illegalValue(str, Node.class, e);
+            }
+
+            Constructor<? extends Node> constructor = null;
+            try {
+                constructor = iconClass.getConstructor(String.class);
+            } catch (NoSuchMethodException e) {
+                throw illegalValue(str, Node.class, e);
+            }
+
+            try {
+                return constructor.newInstance(args[1]);
+            } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
+                throw illegalValue(str, Node.class, e);
+            }
+        } else {
+            throw illegalValue(str, Node.class);
         }
     }
 
     @Nullable
     public static Node findNode(@Nonnull Node root, @Nonnull String id) {
-        requireNonNull(root, "Argument 'root' must not be null");
-        requireNonBlank(id, "Argument 'id' must not be blank");
+        requireNonNull(root, ERROR_ROOT_NULL);
+        requireNonBlank(id, ERROR_ID_BLANK);
 
         if (id.equals(root.getId())) return root;
 
@@ -203,8 +249,8 @@ public final class JavaFXUtils {
 
     @Nullable
     public static Object findElement(@Nonnull Object root, @Nonnull String id) {
-        requireNonNull(root, "Argument 'root' must not be null");
-        requireNonBlank(id, "Argument 'id' must not be blank");
+        requireNonNull(root, ERROR_ROOT_NULL);
+        requireNonBlank(id, ERROR_ID_BLANK);
 
         if (id.equals(getPropertyValue(root, "id"))) return root;
 
@@ -235,5 +281,13 @@ public final class JavaFXUtils {
         }
 
         return null;
+    }
+
+    private static ValueConversionException illegalValue(Object value, Class<?> klass) {
+        throw new ValueConversionException(value, klass);
+    }
+
+    private static ValueConversionException illegalValue(Object value, Class<?> klass, Exception e) {
+        throw new ValueConversionException(value, klass, e);
     }
 }

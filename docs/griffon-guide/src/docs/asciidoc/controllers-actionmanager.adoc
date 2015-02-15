@@ -40,8 +40,7 @@ properties specifically per Controller or application wide. Available keys are
 | long_description  | String  | undefined
 | short_description | String  | undefined
 | mnemonic          | String  | undefined
-| small_icon        | String  | undefined
-| large_icon        | String  | undefined
+| icon              | String  | undefined
 | enabled           | boolean | true
 | selected          | boolean | false
 |===
@@ -62,7 +61,19 @@ properties specifically per Controller or application wide. Available keys are
 | name              | String  | Natural name minus the `Action` suffix
 |===
 
-Icon keys should point to an URL available in the classpath.
+Icon keys should point to an URL available in the classpath or they may use the following notation
+
+[source]
+----
+iconClassName|constructorArg
+----
+
+Here's an example using the link:https://github.com/griffon-plugins/griffon-fontawesome-plugin[griffon-fontawesome-plugin, window="_blank"]
+
+[source,java]
+----
+org.example.AppController.action.Preferences.icon=griffon.swing.support.fontawesome.FontAwesomeIcon|fa-gear
+----
 
 Values must be placed in resources files following the <<_resources,internationalization>> guidelines.
 

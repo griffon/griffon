@@ -40,13 +40,11 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
     public static final String KEY_ICON = "icon";
     public static final String KEY_SELECTED = "selected";
     public static final String KEY_ACCELERATOR = "accelerator";
-
+    private final JavaFXAction toolkitAction;
     private String description;
     private String icon;
     private String accelerator;
     private boolean selected;
-
-    private final JavaFXAction toolkitAction;
 
     public JavaFXGriffonControllerAction(final @Nonnull UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
         super(actionManager, controller, actionName);
