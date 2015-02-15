@@ -123,7 +123,7 @@ public class GriffonUnitRule implements MethodRule {
     private void handleTestForAnnotation(@Nonnull GriffonApplication application, @Nonnull Object target) throws Exception {
 <span class="fc" id="L124">        TestFor testFor = target.getClass().getAnnotation(TestFor.class);</span>
 <span class="pc bpc" id="L125" title="1 of 2 branches missed.">        if (testFor != null) {</span>
-<span class="fc" id="L126">            Class artifactClass = testFor.value();</span>
+<span class="fc" id="L126">            Class&lt;? extends GriffonArtifact&gt; artifactClass = testFor.value();</span>
 <span class="fc" id="L127">            GriffonArtifact artifact = application.getArtifactManager().newInstance(artifactClass);</span>
 <span class="fc" id="L128">            GriffonClass griffonClass = artifact.getGriffonClass();</span>
 <span class="fc" id="L129">            Field artifactField = target.getClass().getDeclaredField(griffonClass.getArtifactType());</span>
