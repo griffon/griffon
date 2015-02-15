@@ -1,0 +1,75 @@
+package org.example.calculator;
+
+import griffon.core.artifact.GriffonView;
+import griffon.metadata.ArtifactProviderFor;
+import griffon.util.CollectionUtils;
+import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.TextField;
+import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+import org.opendolphin.core.client.ClientDolphin;
+import org.opendolphin.core.client.ClientPresentationModel;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+
+import static org.example.calculator.CalculatorPM.ATTR_ERROR;
+import static org.example.calculator.CalculatorPM.ATTR_OP1;
+import static org.example.calculator.CalculatorPM.ATTR_OP2;
+import static org.example.calculator.CalculatorPM.ATTR_RESULT;
+import static org.example.calculator.CalculatorPM.PM_CALCULATION;
+import static org.opendolphin.binding.JFXBinder.bind;
+
+@ArtifactProviderFor(GriffonView.class)
+public class CalculatorView extends AbstractJavaFXGriffonView {
+    private static final String TEXT = "text";
+
+    private CalculatorController controller;
+
+    public void setController(CalculatorController controller) {
+        this.controller = controller;
+    }
+
+    @FXML
+    private TextField op1Field;
+
+    @FXML
+    private TextField op2Field;
+
+    @FXML
+    private TextField resultField;
+
+    @Inject
+    private ClientDolphin clientDolphin;
+
+    private Node calculatorNode;
+
+    @Nonnull
+    public Node getCalculatorNode() {
+        return calculatorNode;
+    }
+
+    @Override
+    public void initUI() {
+        calculatorNode = loadFromFXML();
+        connectActions(calculatorNode, controller);
+        bindPresentationModel();
+    }
+
+    private void bindPresentationModel() {
+        ClientPresentationModel pm = clientDolphin.presentationModel(PM_CALCULATION, CollectionUtils.<String, Object>map()
+            .e(ATTR_OP1, 0L)
+            .e(ATTR_OP2, 0L)
+            .e(ATTR_RESULT, 0L)
+            .e(ATTR_ERROR, ""));
+
+        // from PM attributes to UI widgets
+        bind(ATTR_OP1).of(pm).to(TEXT).of(op1Field);
+        bind(ATTR_OP2).of(pm).to(TEXT).of(op2Field);
+        bind(ATTR_RESULT).of(pm).to(TEXT).of(resultField);
+
+        // from UI widgets to PM attributes
+        bind(TEXT).of(op1Field).to(ATTR_OP1).of(pm);
+        bind(TEXT).of(op2Field).to(ATTR_OP2).of(pm);
+    }
+}

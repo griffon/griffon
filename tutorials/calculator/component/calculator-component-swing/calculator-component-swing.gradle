@@ -1,0 +1,35 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.1.0'
+    }
+}
+
+apply plugin: 'groovy'
+apply plugin: 'org.codehaus.griffon.griffon'
+
+griffon {
+    disableDependencyResolution = false
+    includeGroovyDependencies = false
+    version = griffonVersion
+    toolkit = 'swing'
+}
+
+mainClassName = 'org.example.calculator.Launcher'
+
+apply from: rootProject.file('client/calculator-client-common/gradle/publishing.gradle')
+apply from: rootProject.file('client/calculator-client-common/gradle/code-quality.gradle')
+apply from: rootProject.file('client/calculator-client-common/gradle/docs.gradle')
+
+dependencies {
+    griffon 'org.codehaus.griffon.plugins:griffon-miglayout-plugin:1.0.0'
+
+    compile project(':calculator-pm')
+    compile "org.open-dolphin:dolphin-client:${dolphinVersion}"
+    compile "org.open-dolphin:dolphin-client-javafx:${dolphinVersion}"
+}
+
+compileGroovy.enabled = false

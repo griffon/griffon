@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import griffon.javafx.scene.layout.MigLayoutPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<MigLayoutPane xmlns:fx="http://javafx.com/fxml"
+               fx:controller="org.example.calculator.CalculatorView"
+               layout="fill"
+               cols="[label, pref!][grow, 100!][pref!]"
+               rows="">
+    <Label text="Operand 1:" MigLayoutPane.cc="left"/>
+    <TextField fx:id="op1Field" MigLayoutPane.cc="grow"
+               alignment="CENTER_RIGHT"/>
+    <Button fx:id="sumActionTarget"
+            mnemonicParsing="false"
+            prefWidth="50.0"
+            text="+"
+            MigLayoutPane.cc="right, wrap"/>
+
+    <Label text="Operand 2:" MigLayoutPane.cc="left"/>
+    <TextField fx:id="op2Field" MigLayoutPane.cc="grow"
+               alignment="CENTER_RIGHT"/>
+    <Button fx:id="subActionTarget"
+            mnemonicParsing="false"
+            prefWidth="50.0"
+            text="-"
+            MigLayoutPane.cc="right, wrap"/>
+
+    <Label text="Result:" MigLayoutPane.cc="left"/>
+    <TextField fx:id="resultField" MigLayoutPane.cc="grow"
+               alignment="CENTER_RIGHT"
+               editable="false"/>
+    <Button fx:id="mulActionTarget"
+            mnemonicParsing="false"
+            prefWidth="50.0"
+            text="*"
+            MigLayoutPane.cc="right, wrap"/>
+
+    <Label MigLayoutPane.cc="left"/>
+    <Label MigLayoutPane.cc="left"/>
+    <Button fx:id="divActionTarget"
+            mnemonicParsing="false"
+            prefWidth="50.0"
+            text="/"
+            MigLayoutPane.cc="right, wrap"/>
+</MigLayoutPane>

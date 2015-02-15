@@ -1,0 +1,45 @@
+apply plugin: 'groovy'
+apply from: rootProject.file('gradle/code-coverage.gradle')
+
+dependencies {
+    compile project(':calculator-pm')
+    compile 'javax.inject:javax.inject:1'
+    compile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
+    compile "org.slf4j:slf4j-api:$slf4jVersion"
+    compile "org.open-dolphin:dolphin-server:${dolphinVersion}"
+    compile 'org.kordamp.jipsy:jipsy:0.4.0'
+
+    // -------------------------------------------------------
+
+    // API
+    testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.codehaus.groovy:groovy-all:2.3.7'
+    testCompile('org.spockframework:spock-core:0.7-groovy-2.0') {
+        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+    }
+    testCompile 'cglib:cglib-nodep:3.1'
+
+    // DI
+    testCompile('com.google.inject:guice:3.0') {
+        exclude group: 'org.sonatype.sisu.inject', module: 'cglib'
+    }
+    testCompile 'com.google.guiceberry:guiceberry:3.3.1'
+
+    // REST
+    testCompile "org.eclipse.jetty:jetty-server:${jettyVersion}"
+    testCompile "org.eclipse.jetty:jetty-servlet:${jettyVersion}"
+    testCompile "org.glassfish.jersey.containers:jersey-container-servlet:${jerseyVersion}"
+    testCompile "org.glassfish.jersey.containers:jersey-container-jetty-http:${jerseyVersion}"
+    testCompile "org.glassfish.jersey.media:jersey-media-json-jackson:${jerseyVersion}"
+    testCompile 'com.squarespace.jersey2-guice:jersey2-guice:0.5'
+    testCompile 'com.jayway.restassured:rest-assured:2.4.0'
+    testCompile 'com.jayway.restassured:json-path:2.4.0'
+    testCompile 'com.jayway.awaitility:awaitility:1.6.3'
+    testCompile 'com.jayway.awaitility:awaitility-groovy:1.6.3'
+
+    // PM
+    testCompile "org.open-dolphin:dolphin-client:${dolphinVersion}"
+}
+
+compileGroovy.enabled = false

@@ -1,0 +1,27 @@
+configurations {
+    compileOnly
+}
+
+dependencies {
+    compile project(':calculator-pm')
+    compile "org.codehaus.griffon:griffon-core:${griffonVersion}"
+    compile "org.open-dolphin:dolphin-client:${dolphinVersion}"
+
+    compileOnly "org.codehaus.griffon:griffon-core-compile:${griffonVersion}"
+}
+
+sourceSets {
+    main {
+        compileClasspath += [configurations.compileOnly]
+    }
+}
+
+javadoc {
+    classpath += [configurations.compileOnly]
+}
+
+idea {
+    module {
+        scopes.PROVIDED.plus += [configurations.compileOnly]
+    }
+}
