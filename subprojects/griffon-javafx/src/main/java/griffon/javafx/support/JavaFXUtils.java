@@ -205,14 +205,14 @@ public final class JavaFXUtils {
     private static Node handleAsClassWithArg(String str) {
         String[] args = str.split("\\|");
         if (args.length == 2) {
-            Class<? extends Node> iconClass = null;
+            Class<?> iconClass = null;
             try {
-                iconClass = (Class<? extends Node>) JavaFXUtils.class.getClassLoader().loadClass(args[0]);
+                iconClass = (Class<?>) JavaFXUtils.class.getClassLoader().loadClass(args[0]);
             } catch (ClassNotFoundException e) {
                 throw illegalValue(str, Node.class, e);
             }
 
-            Constructor<? extends Node> constructor = null;
+            Constructor<?> constructor = null;
             try {
                 constructor = iconClass.getConstructor(String.class);
             } catch (NoSuchMethodException e) {
@@ -220,7 +220,14 @@ public final class JavaFXUtils {
             }
 
             try {
-                return constructor.newInstance(args[1]);
+                Object o = constructor.newInstance(args[1]);
+                if (o instanceof Node) {
+                    return (Node) o;
+                } else if (o instanceof Image) {
+                    return new ImageView((Image) o);
+                } else {
+                    throw illegalValue(str, Node.class);
+                }
             } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
                 throw illegalValue(str, Node.class, e);
             }
