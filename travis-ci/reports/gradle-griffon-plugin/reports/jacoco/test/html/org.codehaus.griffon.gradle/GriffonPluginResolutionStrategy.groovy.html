@@ -75,13 +75,13 @@ class GriffonPluginResolutionStrategy {
 <span class="nc" id="L75">            project.logger.debug(&quot;UI toolkit for project {} is {}&quot;, project.name, toolkit)</span>
 <span class="nc" id="L76">            String toolkitRegex = (GriffonExtension.TOOLKIT_NAMES - toolkit).join('|')</span>
 
-<span class="nc bnc" id="L78" title="All 10 branches missed.">            boolean groovyDependenciesEnabled = griffonExtension.includeGroovyDependencies?.toBoolean() ||</span>
-<span class="nc bnc" id="L79" title="All 12 branches missed.">                (project.plugins.hasPlugin('groovy') &amp;&amp; griffonExtension.includeGroovyDependencies == null)</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">            boolean groovyDependenciesEnabled = griffonExtension.includeGroovyDependencies?.toBoolean() ||</span>
+<span class="nc bnc" id="L79" title="All 6 branches missed.">                (project.plugins.hasPlugin('groovy') &amp;&amp; griffonExtension.includeGroovyDependencies == null)</span>
 <span class="nc bnc" id="L80" title="All 2 branches missed.">            project.logger.debug(&quot;Groovy dependencies are {}enabled in project {}&quot;, (groovyDependenciesEnabled ? '' : 'NOT '), project.name)</span>
 
 <span class="nc" id="L82">            resolvableDependencies.dependencies.each { Dependency dependency -&gt;</span>
 <span class="nc" id="L83">                String pluginName = dependency.name</span>
-<span class="nc bnc" id="L84" title="All 18 branches missed.">                if (pluginName.startsWith(PLUGIN_PREFIX) &amp;&amp; pluginName.endsWith(PLUGIN_SUFFIX)) {</span>
+<span class="nc bnc" id="L84" title="All 6 branches missed.">                if (pluginName.startsWith(PLUGIN_PREFIX) &amp;&amp; pluginName.endsWith(PLUGIN_SUFFIX)) {</span>
 <span class="nc" id="L85">                    String bomDependency = &quot;${dependency.group}:${dependency.name}:${dependency.version}@pom&quot;</span>
 
 <span class="nc" id="L87">                    project.logger.debug(&quot;Resolving {}&quot;, bomDependency)</span>
@@ -100,8 +100,8 @@ class GriffonPluginResolutionStrategy {
 <span class="nc" id="L100">                        String version = importedDependency.version.text()</span>
 <span class="nc bnc" id="L101" title="All 2 branches missed.">                        String scope = importedDependency.scope?.text() ?: 'compile'</span>
 
-<span class="nc bnc" id="L103" title="All 10 branches missed.">                        groupId = groupId == '${project.groupId}' ? dependency.group : groupId</span>
-<span class="nc bnc" id="L104" title="All 10 branches missed.">                        version = version == '${project.version}' ? dependency.version : version</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">                        groupId = groupId == '${project.groupId}' ? dependency.group : groupId</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">                        version = version == '${project.version}' ? dependency.version : version</span>
 
 <span class="nc" id="L106">                        String dependencyCoordinates = [groupId, artifactId, version].join(':')</span>
 <span class="nc" id="L107">                        project.logger.debug(&quot;Processing {} in scope {}&quot;, dependencyCoordinates, scope)</span>
@@ -140,12 +140,12 @@ class GriffonPluginResolutionStrategy {
         }
 
         private void appendDependency(String artifactId, String scope, String dependencyCoordinates) {
-<span class="nc bnc" id="L143" title="All 10 branches missed.">            if (artifactId.endsWith('-compile')) {</span>
+<span class="nc bnc" id="L143" title="All 2 branches missed.">            if (artifactId.endsWith('-compile')) {</span>
 <span class="nc" id="L144">                project.logger.debug(&quot;Adding {} to 'compileOnly' configuration&quot;, dependencyCoordinates)</span>
 <span class="nc" id="L145">                dependencyMap.get('compileOnly', []) &lt;&lt; dependencyCoordinates</span>
 <span class="nc" id="L146">                project.logger.debug(&quot;Adding {} to 'testCompileOnly' configuration&quot;, dependencyCoordinates)</span>
 <span class="nc" id="L147">                dependencyMap.get('testCompileOnly', []) &lt;&lt; dependencyCoordinates</span>
-<span class="nc bnc" id="L148" title="All 12 branches missed.">            } else if (scope == 'test' &amp;&amp; artifactId.endsWith('-test')) {</span>
+<span class="nc bnc" id="L148" title="All 6 branches missed.">            } else if (scope == 'test' &amp;&amp; artifactId.endsWith('-test')) {</span>
 <span class="nc" id="L149">                project.logger.debug(&quot;Adding {} to 'testCompile' configuration&quot;, dependencyCoordinates)</span>
 <span class="nc" id="L150">                dependencyMap.get('testCompile', []) &lt;&lt; dependencyCoordinates</span>
             } else {

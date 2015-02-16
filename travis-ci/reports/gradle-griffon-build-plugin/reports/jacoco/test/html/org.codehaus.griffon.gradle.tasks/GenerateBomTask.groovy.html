@@ -46,7 +46,7 @@ class GenerateBomTask extends DefaultTask {
 
         // force evaluation of 'publishJars' property
 <span class="fc" id="L48">        Set includedProjects = project.subprojects.grep {</span>
-<span class="pc bpc" id="L49" title="3 of 6 branches missed.">            &quot;${it.publishJars}&quot; == 'true'</span>
+<span class="pc" id="L49">            &quot;${it.publishJars}&quot; == 'true'</span>
         }
 
 <span class="pc bpc" id="L52" title="2 of 4 branches missed.">        MarkupBuilder pom = new MarkupBuilder(new FileWriter(getOutputFile()))</span>

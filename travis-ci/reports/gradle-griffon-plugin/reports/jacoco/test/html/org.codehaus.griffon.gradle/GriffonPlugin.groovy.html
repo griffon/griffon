@@ -46,11 +46,11 @@ class GriffonPlugin implements Plugin&lt;Project&gt; {
 <span class="pc bpc" id="L46" title="1 of 2 branches missed.">        String sourceSetName = project.plugins.hasPlugin('groovy') ? 'groovy' : 'java'</span>
 
 <span class="fc" id="L48">        configureDefaultSourceSets(project, 'java')</span>
-<span class="pc bpc" id="L49" title="6 of 10 branches missed.">        if (sourceSetName != 'java') configureDefaultSourceSets(project, sourceSetName)</span>
+<span class="pc bpc" id="L49" title="1 of 2 branches missed.">        if (sourceSetName != 'java') configureDefaultSourceSets(project, sourceSetName)</span>
 <span class="fc" id="L50">        adjustJavadocClasspath(project, sourceSetName)</span>
 <span class="fc" id="L51">        adjustIdeClasspaths(project)</span>
 <span class="fc" id="L52">        createDefaultDirectoryStructure(project, 'java')</span>
-<span class="pc bpc" id="L53" title="6 of 10 branches missed.">        if (sourceSetName != 'java') createDefaultDirectoryStructure(project, sourceSetName)</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        if (sourceSetName != 'java') createDefaultDirectoryStructure(project, sourceSetName)</span>
 
 <span class="fc" id="L55">        registerBuildListener(project, extension)</span>
     }
@@ -78,7 +78,7 @@ class GriffonPlugin implements Plugin&lt;Project&gt; {
 
     private void adjustJavadocClasspath(Project project, String sourceSetName) {
 <span class="fc" id="L80">        project.javadoc.classpath += [project.configurations.compileOnly]</span>
-<span class="pc bpc" id="L81" title="6 of 10 branches missed.">        if (sourceSetName == 'groovy') {</span>
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">        if (sourceSetName == 'groovy') {</span>
 <span class="pc" id="L82">            project.groovydoc.classpath += [project.configurations.compileOnly]</span>
         }
     }
