@@ -7,6 +7,8 @@ Andres Almiray
 :idprefix:
 :linkattrs:
 :path-griffon-core: /guide/2.2.0/api/griffon/core
+:link-menuitem: link:http://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/MenuItem.html[MenuItem, window="_blank"]
+:link_fontawesome-plugin: link:https://github.com/griffon-plugins/griffon-fontawesome-plugin[griffon-fontawesome-plugin, window="_blank"]
 
 == Griffon 2.2.0 Release Notes
 
@@ -36,6 +38,45 @@ with link:/guide/latest/api/griffon/inject/Contextual.html[@griffon.inject.Conte
 
 Configuration objects are made *read-only* by default. Now you can make them writable if wrapped with
 link:/guide/latest/api/griffon/core/MutableConfiguration.html[MutableConfiguration, window="_blank"].
+
+=== Swing
+
+Icon resources support a new format (processed by link:/guide/latest/api/griffon/swing/editors/IconPropertyEditor.html[IconPropertyEditor, window="_blank"]).
+The format is as follows
+
+[source]
+----
+iconClassName|constructorArg
+----
+
+Where `constructorArg` is assumed to be a `String`. Here's an example using the {link_fontawesome-plugin}
+
+[source,java]
+----
+org.example.AppController.action.Preferences.icon=griffon.swing.support.fontawesome.FontAwesomeIcon|fa-gear
+----
+
+=== JavaFX
+
+Icon resources support a new format (processed by link:/guide/latest/api/griffon/javafx/support/JavaFXUtils.html[JavaFXUtils, window="_blank"]).
+The format is as follows
+
+[source]
+----
+iconClassName|constructorArg
+----
+
+Where `constructorArg` is assumed to be a `String`. Here's an example using the {link_fontawesome-plugin}
+
+[source,java]
+----
+org.example.AppController.action.Preferences.icon=griffon.javafx.support.fontawesome.FontAwesomeIcon|fa-gear
+----
+
+Additionally link:/guide/latest/api/griffon/javafx/support/JavaFXUtils.html[JavaFXUtils, window="_blank"] has the following functionality
+
+ * configure a {link-menuitem} using a `link:/guide/latest/api/griffon/javafx/support/JavaFXAction.html[JavaFXAction, window="_blank"]`.
+ * set an icon on a {link-menuitem}.
 
 === Compatibility
 
