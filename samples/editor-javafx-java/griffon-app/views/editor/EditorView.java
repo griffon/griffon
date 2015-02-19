@@ -17,8 +17,6 @@ package editor;
 
 import griffon.core.artifact.GriffonView;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
@@ -46,13 +44,8 @@ public class EditorView extends AbstractJavaFXGriffonView {
 
         model.getDocument().addPropertyChangeListener("contents", (e) -> editor.setText((String) e.getNewValue()));
 
-
-        editor.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                model.getDocument().setDirty(!Objects.equals(editor.getText(), model.getDocument().getContents()));
-            }
-        });
+        editor.textProperty().addListener((observable, oldValue, newValue) ->
+            model.getDocument().setDirty(!Objects.equals(editor.getText(), model.getDocument().getContents())));
     }
 
     public TextArea getEditor() {

@@ -1,4 +1,4 @@
-= Tutorial 2::MVC Groups
+= Tutorial 2::MVC Groups (Swing)
 Andres Almiray
 :jbake-type: page
 :jbake-status: published
@@ -31,7 +31,7 @@ file will be handled by its own tab; tabs will be located inside a tab container
 [[_tutorial_2_1]]
 == Creating an Editor application
 
-We'll follow similar steps as explained in link:1_getting_started.adoc[Tutorial 1::Getting Started, window="_blank"] to
+We'll follow similar steps as explained in link:1_getting_started.html[Tutorial 1::Getting Started, window="_blank"] to
 create a brand new Griffon 2 application. Assuming you've got GVM, Lazybones and Gradle already installed on your system,
 execute the following command on a console prompt, paying attention to the selections we've made
 
@@ -42,14 +42,14 @@ Creating project from template griffon-swing-java (latest) in 'editor'
 Define value for 'group' [org.example]: editor
 Define value for 'artifactId' [editor]:
 Define value for 'version' [0.1.0-SNAPSHOT]:
-Define value for 'griffonVersion' [2.1.0]:
+Define value for 'griffonVersion' [{jbake-griffon_version_current}]:
 Define value for 'package' [editor]:
 Define value for 'className' [Editor]: container
 ----
 
 There should be a new directory named `editor` with the freshly created application inside. At this point you can import
 the project in your favourite IDE. We'll continue with Gradle on the command line to keep things simple.
-Verifying that the application is working shold be our next step. Execute the following command
+Verifying that the application is working should be our next step. Execute the following command
 
 [source]
 ----
@@ -181,7 +181,7 @@ files for you. Lazybones ability to generate additional files well after the pro
 from Maven's archetype solution. Lazybones has a feature called _subtemplates_ or _generators_; these are regular
 template files with the added distinction that they have been hidden inside the project's sources (actually inside
 `.lazybones`, local to the project). Unfortunately as of version 0.8 Lazybones does not have a command that can list
-existing subtemplates, however Griffon only exposes one by defualt, its name is _artifact_.
+existing subtemplates, however Griffon only exposes one by default, its name is _artifact_.
 
 Armed with this information we can generate new artifacts by invoking the following command
 
@@ -334,6 +334,6 @@ We accomplish this task by remembering the group id associated with a tab whenev
 find the correct `editor` group instance and perform actions on it.
 
 The full code for this application can be found
-link:https://github.com/griffon/griffon/tree/development/samples/editor-swing-java[here, window="_blank"].
+link:https://github.com/griffon/griffon/tree/master/samples/editor-swing-java[here, window="_blank"].
 
 icon:arrow-up[link="#_tutorial_2_toc"] <<_tutorial_2_toc,Top>>

@@ -17,6 +17,7 @@ package editor;
 
 import griffon.core.artifact.GriffonController;
 import griffon.metadata.ArtifactProviderFor;
+import griffon.transform.Threading;
 import griffon.util.CollectionUtils;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
@@ -30,6 +31,7 @@ public class ContainerController extends AbstractGriffonController {
     private ContainerModel model;
     private ContainerView view;
 
+    @Threading(Threading.Policy.SKIP)
     public void open() {
         File file = view.selectFile();
         if (file != null) {

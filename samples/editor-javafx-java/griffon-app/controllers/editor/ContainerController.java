@@ -63,7 +63,8 @@ public class ContainerController extends AbstractGriffonController {
     @Nullable
     private EditorController resolveEditorController() {
         if (!isBlank(model.getMvcIdentifier())) {
-            return getApplication().getMvcGroupManager().findController(model.getMvcIdentifier(), EditorController.class);
+            return getApplication().getMvcGroupManager()
+                .findController(model.getMvcIdentifier(), EditorController.class);
         }
         return null;
     }
