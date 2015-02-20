@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         jcenter()
+        mavenLocal()
     }
 
     dependencies {
@@ -59,6 +60,16 @@ dependencies {
 }
 
 compileGroovy.enabled = false
+
+tasks.withType(JavaCompile) {
+    sourceCompatibility = project.sourceCompatibility
+    targetCompatibility = project.targetCompatibility
+}
+
+tasks.withType(GroovyCompile) {
+    sourceCompatibility = project.sourceCompatibility
+    targetCompatibility = project.targetCompatibility
+}
 
 import com.github.jengelman.gradle.plugins.shadow.transformers.*
 shadowJar {

@@ -20,6 +20,5 @@ following file structure
             └── src
                 ├── asciidoc
                 ├── javadoc
-                │   └── resources
                 └── resources
 

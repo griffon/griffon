@@ -3,12 +3,12 @@ import java.text.SimpleDateFormat
 buildscript {
     repositories {
         jcenter()
+        mavenLocal()
     }
 
     dependencies {
         classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.2.0-SNAPSHOT'
         classpath 'org.codehaus.griffon:gradle-griffon-build-plugin:2.2.0-SNAPSHOT'
-        classpath 'net.saliman:gradle-cobertura-plugin:2.2.6'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.3.1'
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.1'
@@ -40,6 +40,7 @@ allprojects {
 
     repositories {
         jcenter()
+        mavenLocal()
     }
 
     if (JavaVersion.current().isJava8Compatible()) {
@@ -49,11 +50,29 @@ allprojects {
     }
 }
 
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = jacocoVersion
+}
+
+ext.jacocoProjects = []
+
 subprojects { subproj ->
     plugins.withType(JavaPlugin) {
         configurations {
             compileOnly
             testCompileOnly
+        }
+
+        subproj.tasks.withType(JavaCompile) {
+            sourceCompatibility = subproj.sourceCompatibility
+            targetCompatibility = subproj.targetCompatibility
+        }
+
+        subproj.tasks.withType(GroovyCompile) {
+            sourceCompatibility = subproj.sourceCompatibility
+            targetCompatibility = subproj.targetCompatibility
         }
 
         sourceSets {
@@ -79,7 +98,7 @@ subprojects { subproj ->
         dependencies {
             testCompile 'junit:junit:4.12'
             testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
-            testCompile 'org.slf4j:slf4j-simple:1.7.7'
+            testCompile 'org.slf4j:slf4j-simple:1.7.10'
         }
 
         task sourceJar(type: Jar) {
@@ -124,3 +143,22 @@ githubPages {
 }
 
 publishGhPages.dependsOn(project(":${pluginBaseName}-guide").guide)
+
+coveralls {
+    sourceDirs = files(jacocoProjects.sourceSets.main.allSource.srcDirs).files.absolutePath
+}
+
+task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
+    dependsOn = jacocoProjects.test
+    additionalSourceDirs = files(jacocoProjects.sourceSets.main.allSource.srcDirs)
+    sourceDirectories = files(jacocoProjects.sourceSets.main.allSource.srcDirs)
+    classDirectories =  files(jacocoProjects.sourceSets.main.output)
+    executionData = files(jacocoProjects.jacocoTestReport.executionData)
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        csv.enabled = false
+        html.destination = "${buildDir}/reports/jacoco/test/html"
+        xml.destination = "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+    }
+}

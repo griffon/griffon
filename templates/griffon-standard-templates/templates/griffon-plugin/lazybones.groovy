@@ -65,9 +65,9 @@ mainSources.eachFile { File file ->
 
 File pluginDir = new File(projectDir, 'subprojects/plugin')
 File guideDir = new File(projectDir, 'subprojects/guide')
-renameFile(new File(pluginDir, 'plugin.gradle'), pluginDir.absolutePath + '/griffon-' + pluginName + '.gradle')
+renameFile(new File(pluginDir, 'plugin.gradle'), pluginDir.absolutePath + '/griffon-' + pluginName + '-core.gradle')
 renameFile(new File(guideDir, 'guide.gradle'), guideDir.absolutePath + '/griffon-' + pluginName + '-guide.gradle')
-FileUtils.moveDirectory(pluginDir, new File(projectDir.absolutePath + '/subprojects/griffon-' + pluginName))
+FileUtils.moveDirectory(pluginDir, new File(projectDir.absolutePath + '/subprojects/griffon-' + pluginName + '-core'))
 FileUtils.moveDirectory(guideDir, new File(projectDir.absolutePath + '/subprojects/griffon-' + pluginName + '-guide'))
 
 renameFile(projectDir, projectName)

@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         jcenter()
+        mavenLocal()
     }
 
     dependencies {
@@ -57,6 +58,16 @@ dependencies {
     testCompile "org.codehaus.griffon:griffon-pivot-test:\${griffon.version}"
     testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
     testCompile 'com.jayway.awaitility:awaitility-groovy:1.6.3'
+}
+
+tasks.withType(JavaCompile) {
+    sourceCompatibility = project.sourceCompatibility
+    targetCompatibility = project.targetCompatibility
+}
+
+tasks.withType(GroovyCompile) {
+    sourceCompatibility = project.sourceCompatibility
+    targetCompatibility = project.targetCompatibility
 }
 
 import com.github.jengelman.gradle.plugins.shadow.transformers.*
