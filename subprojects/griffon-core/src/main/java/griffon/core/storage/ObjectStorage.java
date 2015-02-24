@@ -17,6 +17,7 @@ package griffon.core.storage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 
 /**
  * @author Andres Almiray
@@ -25,6 +26,9 @@ import javax.annotation.Nullable;
 public interface ObjectStorage<T> {
     @Nonnull
     String[] getKeys();
+
+    @Nonnull
+    Collection<T> getValues();
 
     @Nullable
     T get(@Nonnull String key);

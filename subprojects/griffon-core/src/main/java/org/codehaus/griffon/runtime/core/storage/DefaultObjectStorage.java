@@ -19,11 +19,14 @@ import griffon.core.storage.ObjectStorage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static griffon.util.GriffonNameUtils.isBlank;
+import static java.util.Collections.unmodifiableSet;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -31,14 +34,22 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class DefaultObjectStorage<T> implements ObjectStorage<T> {
-    private final Map<String, T> instances = new ConcurrentHashMap<>();
     private static final String DEFAULT_KEY = "default";
+    private final Map<String, T> instances = new ConcurrentHashMap<>();
 
     @Nonnull
     @Override
     public String[] getKeys() {
         Set<String> keys = instances.keySet();
         return keys.toArray(new String[keys.size()]);
+    }
+
+    @Nonnull
+    @Override
+    public Collection<T> getValues() {
+        Set<T> values = new LinkedHashSet<>();
+        values.addAll(instances.values());
+        return unmodifiableSet(values);
     }
 
     @Nullable
