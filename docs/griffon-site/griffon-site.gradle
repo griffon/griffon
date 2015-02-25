@@ -44,7 +44,7 @@ dependencies {
 task pluginList << {
 
     URL url = 'https://api.github.com/users/griffon-plugins/repos?sort=full_name'.toURL()
-    def json = new JsonSlurper().setType(JsonParserType.CHARACTER_SOURCE).parse(url)
+    def json = new JsonSlurper().setType(JsonParserType.LAX).parse(url)
 
     String content = '''
         :linkattrs:
@@ -75,7 +75,7 @@ task pluginList << {
 }
 
 jbake {
-    dependsOn pluginList
+    // dependsOn pluginList
     configuration['asciidoctor.attributes.export'] = true
     configuration['asciidoctor.attributes.export.prefix'] = 'jbake-'
     configuration['griffon.version.current'] = project.version

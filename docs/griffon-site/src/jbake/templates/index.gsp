@@ -43,7 +43,7 @@
     </p>
 
     <div class="sect1">
-    <h2 id="_quick_start">Quick Start</h2>
+    <h2 id="_quick_start"><i class="fa fa-bolt"></i> Quick Start</h2>
     <div class="sectionbody">
 <div class="paragraph">
 <p>The recommended way to get started with a <code>Griffon</code> project is to use a
