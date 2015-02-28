@@ -245,7 +245,7 @@ public final class EventDispatchThreadHangMonitor extends EventQueue {
         } finally {
 <span class="pc" id="L246">            postDispatchEvent();</span>
 <span class="pc bpc" id="L247" title="4 of 8 branches missed.">            if (!haveShownSomeComponent &amp;&amp;</span>
-<span class="pc bpc" id="L248" title="2 of 4 branches missed.">                event instanceof WindowEvent &amp;&amp; event.getID() == WindowEvent.WINDOW_OPENED) {</span>
+<span class="pc bpc" id="L248" title="3 of 4 branches missed.">                event instanceof WindowEvent &amp;&amp; event.getID() == WindowEvent.WINDOW_OPENED) {</span>
 <span class="pc" id="L249">                haveShownSomeComponent = true;</span>
             }
         }
@@ -323,4 +323,4 @@ public final class EventDispatchThreadHangMonitor extends EventQueue {
 <span class="nc" id="L323">        return ++hangCount;</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>

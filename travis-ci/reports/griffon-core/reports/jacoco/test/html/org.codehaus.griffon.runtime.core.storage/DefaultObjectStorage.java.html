@@ -19,53 +19,64 @@ import griffon.core.storage.ObjectStorage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static griffon.util.GriffonNameUtils.isBlank;
+import static java.util.Collections.unmodifiableSet;
 import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
-<span class="fc" id="L33">public class DefaultObjectStorage&lt;T&gt; implements ObjectStorage&lt;T&gt; {</span>
-<span class="fc" id="L34">    private final Map&lt;String, T&gt; instances = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L36">public class DefaultObjectStorage&lt;T&gt; implements ObjectStorage&lt;T&gt; {</span>
     private static final String DEFAULT_KEY = &quot;default&quot;;
+<span class="fc" id="L38">    private final Map&lt;String, T&gt; instances = new ConcurrentHashMap&lt;&gt;();</span>
 
     @Nonnull
     @Override
     public String[] getKeys() {
-<span class="fc" id="L40">        Set&lt;String&gt; keys = instances.keySet();</span>
-<span class="fc" id="L41">        return keys.toArray(new String[keys.size()]);</span>
+<span class="fc" id="L43">        Set&lt;String&gt; keys = instances.keySet();</span>
+<span class="fc" id="L44">        return keys.toArray(new String[keys.size()]);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Collection&lt;T&gt; getValues() {
+<span class="nc" id="L50">        Set&lt;T&gt; values = new LinkedHashSet&lt;&gt;();</span>
+<span class="nc" id="L51">        values.addAll(instances.values());</span>
+<span class="nc" id="L52">        return unmodifiableSet(values);</span>
     }
 
     @Nullable
     @Override
     public T get(@Nonnull String key) {
-<span class="fc" id="L47">        return instances.get(resolveKey(key));</span>
+<span class="fc" id="L58">        return instances.get(resolveKey(key));</span>
     }
 
     @Nullable
     @Override
     public T remove(@Nonnull String key) {
-<span class="fc" id="L53">        return instances.remove(resolveKey(key));</span>
+<span class="fc" id="L64">        return instances.remove(resolveKey(key));</span>
     }
 
     @Override
     public void set(@Nonnull String key, @Nonnull T instance) {
-<span class="fc" id="L58">        instances.put(resolveKey(key), requireNonNull(instance, &quot;Argument 'instance' must not be null&quot;));</span>
-<span class="fc" id="L59">    }</span>
+<span class="fc" id="L69">        instances.put(resolveKey(key), requireNonNull(instance, &quot;Argument 'instance' must not be null&quot;));</span>
+<span class="fc" id="L70">    }</span>
 
     @Override
     public boolean contains(@Nonnull String key) {
-<span class="fc" id="L63">        return instances.containsKey(resolveKey(key));</span>
+<span class="fc" id="L74">        return instances.containsKey(resolveKey(key));</span>
     }
 
     @Nonnull
     private String resolveKey(@Nonnull String key) {
-<span class="fc bfc" id="L68" title="All 2 branches covered.">        return isBlank(key) ? DEFAULT_KEY : key.trim();</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        return isBlank(key) ? DEFAULT_KEY : key.trim();</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>
