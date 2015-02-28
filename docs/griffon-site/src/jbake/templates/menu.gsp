@@ -18,6 +18,7 @@
             <li><a href="<%if (content.rootpath) {%>${content.rootpath}<% } else { %><% }%>news/">News</a></li>
             <li><a href="<%if (content.rootpath) {%>${content.rootpath}<% } else { %><% }%>documentation.html">Documentation</a></li>
             <li><a href="<%if (content.rootpath) {%>${content.rootpath}<% } else { %><% }%>tutorials/">Tutorials</a></li>
+            <li><a href="<%if (content.rootpath) {%>${content.rootpath}<% } else { %><% }%>plugins.html">Plugins</a></li>
             <li><a href="<%if (content.rootpath) {%>${content.rootpath}<% } else { %><% }%>development.html">Development</a></li>
             <li><a href="<%if (content.rootpath) {%>${content.rootpath}<% } else { %><% }%>about.html">About</a></li>
           </ul>
