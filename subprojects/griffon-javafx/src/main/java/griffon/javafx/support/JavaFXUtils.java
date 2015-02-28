@@ -21,9 +21,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.ButtonBase;
-import javafx.scene.control.Control;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -124,6 +122,29 @@ public final class JavaFXUtils {
 
         if (id.equals(root.getId())) return root;
 
+        if (root instanceof TabPane) {
+            TabPane parent = (TabPane) root;
+            for (Tab child : parent.getTabs()) {
+                Node found = findNode(child.getContent(), id);
+                if (found != null) return found;
+            }
+        } else if (root instanceof TitledPane) {
+            TitledPane parent = (TitledPane)root;
+            Node found = findNode(parent.getContent(), id);
+            if (found != null) return found;
+        } else if (root instanceof Accordion) {
+            Accordion parent = (Accordion)root;
+            for (TitledPane child : parent.getPanes()) {
+                Node found = findNode(child, id);
+                if (found != null) return found;
+            }
+        } else if (root instanceof SplitPane) {
+            SplitPane parent = (SplitPane)root;
+            for (Node child : parent.getItems()) {
+                Node found = findNode(child, id);
+                if (found != null) return found;
+            }
+        }
         if (root instanceof Parent) {
             Parent parent = (Parent) root;
             for (Node child : parent.getChildrenUnmodifiable()) {
