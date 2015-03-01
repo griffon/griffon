@@ -343,7 +343,7 @@ public class AnnotationUtils {
 <span class="fc" id="L343">        }</span>
 
         public Class&lt;?&gt; value() {
-<span class="fc" id="L346">            return this.value;</span>
+<span class="nc" id="L346">            return this.value;</span>
         }
 
         public int hashCode() {
@@ -352,12 +352,12 @@ public class AnnotationUtils {
         }
 
         public boolean equals(Object o) {
-<span class="fc bfc" id="L355" title="All 2 branches covered.">            if (!(o instanceof Typed)) {</span>
+<span class="pc bpc" id="L355" title="1 of 2 branches missed.">            if (!(o instanceof Typed)) {</span>
 <span class="fc" id="L356">                return false;</span>
             }
 
-<span class="fc" id="L359">            Typed other = (Typed) o;</span>
-<span class="fc" id="L360">            return value.equals(other.value());</span>
+<span class="nc" id="L359">            Typed other = (Typed) o;</span>
+<span class="nc" id="L360">            return value.equals(other.value());</span>
         }
 
         public String toString() {
