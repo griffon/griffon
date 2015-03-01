@@ -22,13 +22,16 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.Control;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -250,17 +253,17 @@ public final class JavaFXUtils {
                 if (found != null) return found;
             }
         } else if (root instanceof TitledPane) {
-            TitledPane parent = (TitledPane)root;
+            TitledPane parent = (TitledPane) root;
             Node found = findNode(parent.getContent(), id);
             if (found != null) return found;
         } else if (root instanceof Accordion) {
-            Accordion parent = (Accordion)root;
+            Accordion parent = (Accordion) root;
             for (TitledPane child : parent.getPanes()) {
                 Node found = findNode(child, id);
                 if (found != null) return found;
             }
         } else if (root instanceof SplitPane) {
-            SplitPane parent = (SplitPane)root;
+            SplitPane parent = (SplitPane) root;
             for (Node child : parent.getItems()) {
                 Node found = findNode(child, id);
                 if (found != null) return found;
@@ -299,6 +302,22 @@ public final class JavaFXUtils {
         } else if (root instanceof TabPane) {
             TabPane tabPane = (TabPane) root;
             for (Tab child : tabPane.getTabs()) {
+                Object found = findElement(child, id);
+                if (found != null) return found;
+            }
+        } else if (root instanceof TitledPane) {
+            TitledPane parent = (TitledPane) root;
+            Object found = findElement(parent.getContent(), id);
+            if (found != null) return found;
+        } else if (root instanceof Accordion) {
+            Accordion parent = (Accordion) root;
+            for (TitledPane child : parent.getPanes()) {
+                Object found = findElement(child, id);
+                if (found != null) return found;
+            }
+        } else if (root instanceof SplitPane) {
+            SplitPane parent = (SplitPane) root;
+            for (Node child : parent.getItems()) {
                 Object found = findElement(child, id);
                 if (found != null) return found;
             }
