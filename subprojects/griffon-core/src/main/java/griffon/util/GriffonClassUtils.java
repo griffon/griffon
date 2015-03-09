@@ -278,6 +278,99 @@ public class GriffonClassUtils {
     }
 
     /**
+     * Checks that the specified array is not empty, throwing a
+     * {@link IllegalStateException} if it is.
+     *
+     * @param array the array to check
+     * @throws NullPointerException  if {@code array} is null
+     * @throws IllegalStateException if {@code array} is empty
+     */
+    public static <E> E[] requireNonEmpty(@Nonnull E[] array) {
+        requireNonNull(array);
+        requireState(array.length != 0);
+        return array;
+    }
+
+    /**
+     * Checks that the specified array is not empty, throwing a customized
+     * {@link IllegalStateException} if it is.
+     *
+     * @param array the array to check
+     * @param message    detail message to be used in the event that a {@code
+     *                   IllegalStateException} is thrown
+     * @throws NullPointerException     if {@code array} is null
+     * @throws IllegalArgumentException if {@code message} is {@code blank}
+     * @throws IllegalStateException    if {@code array} is empty
+     */
+    public static <E> E[] requireNonEmpty(@Nonnull E[] array, @Nonnull String message) {
+        requireNonNull(array);
+        requireState(array.length != 0, requireNonBlank(message, "message"));
+        return array;
+    }
+
+    /**
+     * Checks that the specified collection is not empty, throwing a
+     * {@link IllegalStateException} if it is.
+     *
+     * @param collection the collection to check
+     * @throws NullPointerException  if {@code collection} is null
+     * @throws IllegalStateException if {@code collection} is empty
+     */
+    public static Collection<?> requireNonEmpty(@Nonnull Collection<?> collection) {
+        requireNonNull(collection);
+        requireState(!collection.isEmpty());
+        return collection;
+    }
+
+    /**
+     * Checks that the specified collection is not empty, throwing a customized
+     * {@link IllegalStateException} if it is.
+     *
+     * @param collection the collection to check
+     * @param message    detail message to be used in the event that a {@code
+     *                   IllegalStateException} is thrown
+     * @throws NullPointerException     if {@code collection} is null
+     * @throws IllegalArgumentException if {@code message} is {@code blank}
+     * @throws IllegalStateException    if {@code collection} is empty
+     */
+    public static Collection<?> requireNonEmpty(@Nonnull Collection<?> collection, @Nonnull String message) {
+        requireNonNull(collection);
+        requireState(!collection.isEmpty(), requireNonBlank(message, "message"));
+        return collection;
+    }
+
+    /**
+     * Checks that the specified map is not empty, throwing a
+     * {@link IllegalStateException} if it is.
+     *
+     * @param map the map to check
+     * @throws NullPointerException  if {@code map} is null
+     * @throws IllegalStateException if {@code map} is empty
+     */
+    public static Map<?, ?> requireNonEmpty(@Nonnull Map<?, ?> map) {
+        requireNonNull(map);
+        requireState(!map.isEmpty());
+        return map;
+    }
+
+    /**
+     * Checks that the specified map is not empty, throwing a customized
+     * {@link IllegalStateException} if it is.
+     *
+     * @param map     the map to check
+     * @param message detail message to be used in the event that a {@code
+     *                IllegalStateException} is thrown
+     * @throws NullPointerException     if {@code map} is null
+     * @throws IllegalArgumentException if {@code message} is {@code blank}
+     * @throws IllegalStateException    if {@code map} is empty
+     */
+    public static Map<?, ?> requireNonEmpty(@Nonnull Map<?, ?> map, @Nonnull String message) {
+        requireNonNull(map);
+        requireState(!map.isEmpty(), requireNonBlank(message, "message"));
+        return map;
+    }
+
+    /**
      * Finds out if the given string represents the name of an
      * event handler by matching against the following pattern:
      * "^on[A-Z][\\w]*$"<p>
