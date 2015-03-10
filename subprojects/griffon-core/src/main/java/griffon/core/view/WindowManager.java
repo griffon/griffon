@@ -21,6 +21,7 @@ import griffon.core.ShutdownHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * Controls a set of windows that belong to the application.<p>
@@ -68,12 +69,40 @@ public interface WindowManager<W> extends ShutdownHandler {
     W getStartingWindow();
 
     /**
-     * Returns the list of windows managed by this manager.
+     * Returns the collection of windows managed by this manager.
      *
-     * @return a List of currently managed windows
+     * @return a Collection of currently managed windows
      */
     @Nonnull
     Collection<W> getWindows();
+
+    /**
+     * Returns a set of names related to all windows managed by this manager.
+     *
+     * @return a Set of managed window names
+     * @since 2.3.0
+     */
+    @Nonnull
+    Set<String> getWindowNames();
+
+    /**
+     * Lookups a name related to a Window.
+     *
+     * @param window the window to be looked up
+     * @return the name of the window if it's managed by this manager, <tt>null</tt> otherwise.
+     * @since 2.3.0
+     */
+    @Nullable
+    String findWindowName(@Nonnull W window);
+
+    /**
+     * Lookups the index related to a Window.
+     *
+     * @param window the window to be looked up
+     * @return the index of the window if it's managed by this manager, <tt>-1</tt> otherwise.
+     * @since 2.3.0
+     */
+    int indexOf(@Nonnull W window);
 
     /**
      * Registers a window on this manager if an only if the window is not null

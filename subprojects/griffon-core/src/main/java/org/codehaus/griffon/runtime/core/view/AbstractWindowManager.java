@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Arrays.asList;
@@ -47,7 +48,7 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
     protected static final String ERROR_NAME_BLANK = "Argument 'name' must not be blank";
     protected static final String ERROR_WINDOW_NULL = "Argument 'window' must not be null";
     private static final Logger LOG = LoggerFactory.getLogger(AbstractWindowManager.class);
-    private final Map<String, W> windows = Collections.synchronizedMap(new LinkedHashMap<String, W>());
+    private final Map<String, W> windows = Collections.<String, W>synchronizedMap(new LinkedHashMap<String, W>());
 
     private final GriffonApplication application;
     private final WindowDisplayHandler<W> windowDisplayHandler;
@@ -62,6 +63,41 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
 
     protected GriffonApplication getApplication() {
         return application;
+    }
+
+    @Nonnull
+    @Override
+    public Set<String> getWindowNames() {
+        return Collections.unmodifiableSet(windows.keySet());
+    }
+
+    @Nullable
+    @Override
+    public String findWindowName(@Nonnull W window) {
+        requireNonNull(window, ERROR_WINDOW_NULL);
+        synchronized (windows) {
+            for (Map.Entry<String, W> e : windows.entrySet()) {
+                if (e.getValue().equals(window)) {
+                    return e.getKey();
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public int indexOf(@Nonnull W window) {
+        requireNonNull(window, ERROR_WINDOW_NULL);
+        synchronized (windows) {
+            int index = 0;
+            for (W w : windows.values()) {
+                if (window.equals(w)) {
+                    return index;
+                }
+                index++;
+            }
+        }
+        return -1;
     }
 
     @Override

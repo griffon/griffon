@@ -23,6 +23,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
@@ -60,6 +61,23 @@ public final class NoopWindowManager implements WindowManager<Object> {
     @Override
     public Collection<Object> getWindows() {
         return Collections.emptyList();
+    }
+
+    @Nonnull
+    @Override
+    public Set<String> getWindowNames() {
+        return Collections.emptySet();
+    }
+
+    @Nullable
+    @Override
+    public String findWindowName(@Nonnull Object window) {
+        return null;
+    }
+
+    @Override
+    public int indexOf(@Nonnull Object window) {
+        return -1;
     }
 
     @Override
