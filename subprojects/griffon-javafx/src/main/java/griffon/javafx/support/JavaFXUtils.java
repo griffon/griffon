@@ -22,6 +22,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.Control;
@@ -36,6 +37,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
+import javafx.stage.Window;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -52,6 +54,7 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  */
 public final class JavaFXUtils {
+    private static final String ERROR_NODE_NULL = "Argument 'node' must not be null";
     private static final String ERROR_CONTROL_NULL = "Argument 'control' must not be null";
     private static final String ERROR_ACTION_NULL = "Argument 'action' must not be null";
     private static final String ERROR_ICON_BLANK = "Argument 'iconUrl' must not be blank";
@@ -326,6 +329,29 @@ public final class JavaFXUtils {
             for (Node child : parent.getChildrenUnmodifiable()) {
                 Object found = findElement(child, id);
                 if (found != null) return found;
+            }
+        }
+
+        return null;
+    }
+
+    @Nullable
+    public static Window getWindowAncestor(@Nonnull Object node) {
+        requireNonNull(node, ERROR_NODE_NULL);
+
+        if (node instanceof Window) {
+            return (Window) node;
+        } else if (node instanceof Scene) {
+            return ((Scene) node).getWindow();
+        } else if (node instanceof Node) {
+            Scene scene = ((Node) node).getScene();
+            if (scene != null) {
+                return scene.getWindow();
+            }
+        } else if (node instanceof Tab) {
+            TabPane tabPane = ((Tab) node).getTabPane();
+            if (tabPane != null) {
+                return getWindowAncestor(tabPane);
             }
         }
 
