@@ -25,6 +25,9 @@ dependencies {
     compile 'net.sourceforge.cobertura:cobertura:2.1.1'
 
     testCompile 'xmlunit:xmlunit:1.6'
+    testCompile('org.spockframework:spock-core:0.7-groovy-2.0') {
+        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+    }
 }
 
 bintray {

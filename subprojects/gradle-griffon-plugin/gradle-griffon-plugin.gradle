@@ -22,7 +22,9 @@ targetCompatibility = '1.7'
 
 dependencies {
     compile gradleApi()
-    testCompile 'cglib:cglib-nodep:3.1'
+    testCompile('org.spockframework:spock-core:0.7-groovy-2.0') {
+        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+    }
 }
 
 bintray {

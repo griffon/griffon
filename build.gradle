@@ -97,9 +97,9 @@ subprojects { subproj ->
             }
             if (!subproj.name.startsWith('gradle-')) {
                 testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
-            }
-            testCompile('org.spockframework:spock-core:0.7-groovy-2.0') {
-                exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+                testCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
+                    exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+                }
             }
             testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
             testCompile 'cglib:cglib-nodep:3.1'
@@ -136,9 +136,9 @@ subprojects { subproj ->
                 include '**/*.groovy'
                 include '**/*.xml'
                 filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
-                    'application.name': project.name,
+                    'application.name'   : project.name,
                     'application.version': project.version,
-                    'griffon.version': project.version
+                    'griffon.version'    : project.version
                 ])
             }
         }
@@ -154,9 +154,9 @@ subprojects { subproj ->
                 include '**/*.groovy'
                 include '**/*.xml'
                 filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
-                    'application.name': project.name,
+                    'application.name'   : project.name,
                     'application.version': project.version,
-                    'griffon.version': project.version
+                    'griffon.version'    : project.version
                 ])
             }
         }
