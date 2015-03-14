@@ -19,18 +19,13 @@ import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonClass;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
-import griffon.core.controller.ActionManager;
 import griffon.exceptions.GriffonException;
-import griffon.exceptions.InstanceMethodInvocationException;
 import griffon.javafx.support.JavaFXAction;
 import griffon.javafx.support.JavaFXUtils;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.ButtonBase;
-import javafx.scene.control.MenuItem;
 import javafx.util.Callback;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
 
@@ -39,14 +34,10 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Map;
 
-import static griffon.javafx.support.JavaFXUtils.findElement;
 import static griffon.util.ConfigUtils.stripFilenameExtension;
-import static griffon.util.GriffonClassUtils.invokeInstanceMethod;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
-import static java.util.Objects.requireNonNull;
 
 /**
  * JavaFX-friendly implementation of the GriffonView interface.
@@ -55,7 +46,6 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
-    private static final String ACTION_TARGET_SUFFIX = "ActionTarget";
     private static final String FXML_SUFFIX = ".fxml";
 
     public AbstractJavaFXGriffonView() {
@@ -122,6 +112,7 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
         return node;
     }
 
+    @Nonnull
     protected String resolveBasename() {
         GriffonClass griffonClass = getGriffonClass();
         String packageName = griffonClass.getPackageName();
@@ -133,30 +124,7 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
     }
 
     protected void connectActions(@Nonnull Node node, @Nonnull GriffonController controller) {
-        requireNonNull(node, "Argument 'node' must not be null");
-        requireNonNull(controller, "Argument 'controller' must not be null");
-        ActionManager actionManager = getApplication().getActionManager();
-        for (Map.Entry<String, Action> e : actionManager.actionsFor(controller).entrySet()) {
-            String actionTargetName = actionManager.normalizeName(e.getKey()) + ACTION_TARGET_SUFFIX;
-            Object control = findElement(node, actionTargetName);
-            if (control == null) continue;
-            JavaFXAction action = (JavaFXAction) e.getValue().getToolkitAction();
-
-            if (control instanceof ButtonBase) {
-                JavaFXUtils.configure(((ButtonBase) control), action);
-            } else if (control instanceof MenuItem) {
-                JavaFXUtils.configure(((MenuItem) control), action);
-            } else if (control instanceof Node) {
-                ((Node) control).addEventHandler(ActionEvent.ACTION, action.getOnAction());
-            } else {
-                // does it support the onAction property?
-                try {
-                    invokeInstanceMethod(control, "setOnAction", action.getOnAction());
-                } catch (InstanceMethodInvocationException imie) {
-                    // ignore
-                }
-            }
-        }
+        JavaFXUtils.connectActions(node, controller);
     }
 
     @Nullable

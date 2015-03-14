@@ -15,7 +15,11 @@
  */
 package griffon.javafx.support;
 
+import griffon.core.artifact.GriffonController;
+import griffon.core.controller.Action;
+import griffon.core.controller.ActionManager;
 import griffon.core.editors.ValueConversionException;
+import griffon.exceptions.InstanceMethodInvocationException;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -44,8 +48,10 @@ import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.Map;
 
 import static griffon.util.GriffonClassUtils.getPropertyValue;
+import static griffon.util.GriffonClassUtils.invokeInstanceMethod;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
@@ -60,9 +66,38 @@ public final class JavaFXUtils {
     private static final String ERROR_ICON_BLANK = "Argument 'iconUrl' must not be blank";
     private static final String ERROR_ID_BLANK = "Argument 'id' must not be blank";
     private static final String ERROR_ROOT_NULL = "Argument 'root' must not be null";
+    private static final String ERROR_CONTROLLER_NULL = "Argument 'controller' must not be null";
+    private static final String ACTION_TARGET_SUFFIX = "ActionTarget";
 
     private JavaFXUtils() {
 
+    }
+
+    public static void connectActions(@Nonnull Node node, @Nonnull GriffonController controller) {
+        requireNonNull(node, ERROR_NODE_NULL);
+        requireNonNull(controller, ERROR_CONTROLLER_NULL);
+        ActionManager actionManager = controller.getApplication().getActionManager();
+        for (Map.Entry<String, Action> e : actionManager.actionsFor(controller).entrySet()) {
+            String actionTargetName = actionManager.normalizeName(e.getKey()) + ACTION_TARGET_SUFFIX;
+            Object control = findElement(node, actionTargetName);
+            if (control == null) continue;
+            JavaFXAction action = (JavaFXAction) e.getValue().getToolkitAction();
+
+            if (control instanceof ButtonBase) {
+                configure(((ButtonBase) control), action);
+            } else if (control instanceof MenuItem) {
+                JavaFXUtils.configure(((MenuItem) control), action);
+            } else if (control instanceof Node) {
+                ((Node) control).addEventHandler(ActionEvent.ACTION, action.getOnAction());
+            } else {
+                // does it support the onAction property?
+                try {
+                    invokeInstanceMethod(control, "setOnAction", action.getOnAction());
+                } catch (InstanceMethodInvocationException imie) {
+                    // ignore
+                }
+            }
+        }
     }
 
     public static void configure(final @Nonnull ButtonBase control, final @Nonnull JavaFXAction action) {
