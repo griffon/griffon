@@ -30,8 +30,8 @@ import static griffon.core.GriffonExceptionHandler.registerExceptionHandler;
  * @author Andres Almiray
  */
 public class JavaFXGriffonApplication extends AbstractJavaFXGriffonApplication {
-    private boolean primaryStageDispensed = false;
     protected Stage primaryStage;
+    private boolean primaryStageDispensed = false;
 
     public JavaFXGriffonApplication() {
         this(EMPTY_ARGS);
@@ -39,6 +39,15 @@ public class JavaFXGriffonApplication extends AbstractJavaFXGriffonApplication {
 
     public JavaFXGriffonApplication(@Nonnull String[] args) {
         super(args);
+    }
+
+    public static void run(Class<? extends Application> applicationClass, String[] args) {
+        registerExceptionHandler();
+        Application.launch(applicationClass, args);
+    }
+
+    public static void main(String[] args) {
+        run(JavaFXGriffonApplication.class, args);
     }
 
     @Nonnull
@@ -73,6 +82,10 @@ public class JavaFXGriffonApplication extends AbstractJavaFXGriffonApplication {
         super.start(stage);
         primaryStage = stage;
 
+        afterStart();
+    }
+
+    protected void afterStart() {
         getUIThreadManager().runOutsideUI(new Runnable() {
             @Override
             public void run() {
@@ -96,14 +109,5 @@ public class JavaFXGriffonApplication extends AbstractJavaFXGriffonApplication {
 
     public void exit() {
         System.exit(0);
-    }
-
-    public static void run(Class<? extends Application> applicationClass, String[] args) {
-        registerExceptionHandler();
-        Application.launch(applicationClass, args);
-    }
-
-    public static void main(String[] args) {
-        run(JavaFXGriffonApplication.class, args);
     }
 }
