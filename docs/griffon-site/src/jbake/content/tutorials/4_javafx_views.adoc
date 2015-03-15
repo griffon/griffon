@@ -1,0 +1,333 @@
+= Tutorial 4::JavaFX Views
+Andres Almiray
+:jbake-type: page
+:jbake-status: published
+:icons: font
+:linkattrs:
+:javafx-app: {jbake-project-rootdir}/tutorials/javafx-app
+
+[[_tutorial_4_toc]]
+==  Agenda
+
+This tutorial describes how to create JavaFX views using different techniques:
+
+ * JavaFX API.
+ * FXML.
+ * GroovyFX.
+ * GroovyFX and FXML.
+
+The goal of the application is to build the same MVCGroup using different techniques for each View. Each MVCGroup
+defines a `Tab` that the main View will host. The application looks like the following the following picture
+
+.JavaFX Views
+image::/img/javafx-app.png[]
+
+. <<_tutorial_4_1,Creating the Application>>
+. <<_tutorial_4_2,Customizing the Application>>
+. <<_tutorial_4_3,Tab1: JavaFX API>>
+. <<_tutorial_4_4,Tab2: FXML>>
+. <<_tutorial_4_5,Tab3: GroovyFX>>
+. <<_tutorial_4_6,Tab4: GroovyFX and FXML>>
+
+:numbered:
+
+[[_tutorial_4_1]]
+== Creating the Application
+
+We'll follow similar steps as explained in link:1_getting_started.html[Tutorial 1::Getting Started, window="_blank"] to
+create a brand new Griffon 2 application. Assuming you've got GVM, Lazybones and Gradle already installed on your system,
+execute the following command on a console prompt, paying attention to the selections we've made
+
+[source]
+----
+$ lazybones create griffon-javafx-java app
+Creating project from template griffon-javafx-java (latest) in 'app'
+Define value for 'group' [org.example]:
+Define value for 'artifactId' [app]:
+Define value for 'version' [0.1.0-SNAPSHOT]:
+Define value for 'griffonVersion' [{jbake-griffon_version_current}]:
+Define value for 'package' [org.example]:
+Define value for 'className' [App]:
+----
+
+There should be a new directory named `app` with the freshly created application inside. At this point you can import
+the project in your favourite IDE. We'll continue with Gradle on the command line to keep things simple.
+Verifying that the application is working should be our next step. Execute the following command
+
+[source]
+----
+$ gradle run
+----
+
+A window should pop up after a few seconds. Quit the application, we're ready to begin customizing the application.
+
+icon:arrow-up[link="#_tutorial_4_toc"] <<_tutorial_4_toc,Top>>
+
+[[_tutorial_4_2]]
+== Customizing the Application
+
+Because we'll be making use of GroovyFX we have to tweak the build file a little bit. Follow these steps to enable
+compilation of Groovy sources in this application:
+
+ . Open `build.gradle` on an editor.
+ . Locate the `griffon` configuration block and enable the inclusion of Groovy dependencies, like so
+
+[source,groovy]
+[subs="attributes"]
+.build.gradle
+----
+griffon {
+    disableDependencyResolution = false
+    includeGroovyDependencies = true
+    version = '{jbake-griffon_version_current}'
+    toolkit = 'javafx'
+}
+----
+
+[arabic, start=3]
+ . Remove `compileGroovy.enabled = false`.
+ . Add a dependency for `griffon-fontawesome-plugin`
+
+[source,groovy]
+[subs="attributes"]
+.build.gradle
+----
+dependencies {
+    griffon 'org.codehaus.griffon.plugins:griffon-fontawesome-plugin:1.2.0'
+}
+----
+
+Next, we'll setup the main MVC group (`app`). We only need the _View_, which means we can delete the following files
+
+ * griffon-app/controllers/org/example/AppController.java
+ * griffon-app/models/org/example/AppModel.java
+ * griffon-app/resources/org/example/app.fxml
+ * src/test/java/org/example/AppControllerTest.java
+
+With these files gone we have to update the application's configuration so that the MVCGroup does not refer to them.
+Open up `Config.java` and make sure that the configuration of the `app` group looks like this:
+
+[source,java]
+.griffon-app/conf/Config.java
+----
+.e("app", map()
+    .e("view", "org.example.AppView")
+)
+----
+
+Finally edit `AppView.java`; place the following content on it
+
+[source,java,options="nowrap"]
+.griffon-app/views/org/example/AppView.java
+----
+include::{javafx-app}/griffon-app/views/org/example/AppView.java[]
+----
+
+The main view creates a `TabPane` that will hold each one of the tabs. It also creates 4 MVCGroups during its
+initialization. We'll setup each one of these groups, but before we forget we'll setup their configuration in
+`Config.java`
+
+[source,java]
+.griffon-app/conf/Config.java
+----
+.e("tab1", map()
+    .e("model", "org.example.SampleModel")
+    .e("view", "org.example.Tab1View")
+    .e("controller", "org.example.SampleController")
+)
+.e("tab2", map()
+    .e("model", "org.example.SampleModel")
+    .e("view", "org.example.Tab2View")
+    .e("controller", "org.example.SampleController")
+)
+.e("tab3", map()
+    .e("model", "org.example.SampleModel")
+    .e("view", "org.example.Tab3View")
+    .e("controller", "org.example.SampleController")
+)
+.e("tab4", map()
+    .e("model", "org.example.SampleModel")
+    .e("view", "org.example.Tab4View")
+    .e("controller", "org.example.SampleController")
+)
+----
+
+Notice that every group uses the same model and controller configuration. This is possible because we only need to change
+the view for each tab; the behavior remains exactly the same. We'll setup these classes with the first tab.
+
+icon:arrow-up[link="#_tutorial_4_toc"] <<_tutorial_4_toc,Top>>
+
+[[_tutorial_4_3]]
+== Tab1: JavaFX API
+
+Let's generate the first MVCGroup by leveraging the Lazybones templates included in the application
+
+[source]
+----
+$ lazybones generate artifact::mvcgroup
+Define value for 'package' [org.example]:
+Define value for 'class' name: sample
+Created new artifact griffon-app/models/org/example/SampleModel.java
+Created new artifact griffon-app/views/org/example/SampleView.java
+Created new artifact griffon-app/controllers/org/example/SampleController.java
+Created new artifact src/test/java/org/example/SampleControllerTest.java
+Do not forget to add the group 'sample' to griffon-app/conf/Config.java
+----
+
+Alright, good thing we updated the MVC configurations in `Config.java` already. The behavior of each tab is to process
+an input value whenever the "Say Hello" button is clicked. This behavior is identical to the one described at the
+link:/guide/latest/index.html#_sample_javafx[JavaFX, window="_blank"] section of the sample applications appendix found
+at the link:/guide/latest/index.html[Griffon Guide, window="_blank"]. We'll reuse the Model, Controller, Service and
+resources described in that section; so the application should have the following contents
+
+.griffon-app/models/org/example/SampleModel.java
+[source,java,options="nowrap"]
+----
+include::{javafx-app}/griffon-app/models/org/example/SampleModel.java[]
+----
+
+.griffon-app/controllers/org/example/SampleController.java
+[source,java,options="nowrap"]
+----
+include::{javafx-app}/griffon-app/controllers/org/example/SampleController.java[]
+----
+
+You can manually create `SampleService.java` or use Lazybones again
+
+[source]
+----
+$ lazybones generate artifact::service
+Define value for 'package' [org.example]:
+Define value for 'class' name: sample
+Created new artifact griffon-app/services/org/example/SampleService.java
+Created new artifact src/test/java/org/example/SampleServiceTest.java
+----
+
+.griffon-app/services/org/example/SampleService.java
+[source,java,options="nowrap"]
+----
+include::{javafx-app}/griffon-app/services/org/example/SampleService.java[]
+----
+
+.griffon-app/i18n/messages.properties
+[source,java]
+----
+include::{javafx-app}/griffon-app/i18n/messages.properties[]
+----
+
+The final piece is to update the View. We'll make direct use of the JavaFX API. Of course the code will look a bit
+verbose however the important thing to remember here is that you can use the JavaFX API at any time, that is, you're
+not forced to build the UI using FXML only.
+
+.griffon-app/views/org/example/Tab1View.java
+[source,java,options="nowrap"]
+----
+include::{javafx-app}/griffon-app/views/org/example/Tab1View.java[]
+----
+
+Of particular note, apart from the standard JavaFX API usage is the configuration of the button's properties using a
+`JavaFXGriffonAction`. Actions define a container for both behavior and visual clues that buttons and other action
+enabled widgets may use to configure themselves. This view also uses the same trick we saw earlier at the
+link:3_mvcgroups_javafx.html[Tutorial 3::MVC Groups (JavaFX), window="_blank"] tutorial, that is, a reference to the
+`parentView` allows the tab to be attached at the right location and time. We'll use the same mechanism for the other tabs.
+
+We're ready to move to the next tab: FXML.
+
+icon:arrow-up[link="#_tutorial_4_toc"] <<_tutorial_4_toc,Top>>
+
+[[_tutorial_4_4]]
+== Tab2: FXML
+
+FXML is an XML format used to describe a JavaFX UI declaratively. You may use SceneBuilder or write the file by hand,
+at the end it doesn't matter as long as you follow some naming conventions. The first is the name and location of the
+FXML file. If the view is named `org/example/Tab2View.java` then the FXML file should be named `org/example/tab2.fxml`.
+You may place this file anywhere on your sources as long as it ends in the application's classpath. We recommend you
+use the `griffon-app/resources` directory though. Here's how the `tab2.fxml` should look like:
+
+.griffon-app/resources/org/example/tab2.fxml
+[source,xml]
+[subs="verbatim"]
+----
+include::{javafx-app}/griffon-app/resources/org/example/tab2.fxml[]
+----
+
+It looks like any other FXML file except that the button's id follows a naming convention. Notice that the controller
+attribute is set to `org.example.SampleController`. This is the class that defines an action named `sayHello`. Now look
+at the button's id, it's `sayHelloActionTarget`. The Griffon runtime is able to match an action to a corresponding UI
+node by using this naming convention. The `Tab2View.java` file defines the second half of this view
+
+.griffon-app/views/org/example/Tab2View.java
+[source,java,options="nowrap"]
+----
+include::{javafx-app}/griffon-app/views/org/example/Tab2View.java[]
+----
+
+The code is much simpler as we rely on the FXML file to define the UI; this file only needs to be concerned to finish
+up the bindings and setup the `tab`, in a similar fashion as it was done with the first tab.
+
+icon:arrow-up[link="#_tutorial_4_toc"] <<_tutorial_4_toc,Top>>
+
+[[_tutorial_4_5]]
+== Tab3: GroovyFX
+
+In a few words, link:http://groovyfx.org/[GroovyFX, window="_blank"] can be seen as a Groovy DSL for writing JavaFX UIs.
+Instead of XML you use Groovy. This allows you to leverage a real programming language instead of just markup. We can
+make use of Groovy support in a straight Java application such as this because Java and Groovy can be mixed without
+any problems, as opposed to other popular JVM languages. This is also the reason why we updated the build file back at
+<<_tutorial_4_2,step 2>>. The DSL resembles a lot the now defunct JavaFX Script language.
+
+.griffon-app/views/org/example/Tab3View.groovy
+[source,groovy,options="nowrap"]
+----
+include::{javafx-app}/griffon-app/views/org/example/Tab3View.groovy[]
+----
+
+GroovyFX provides a a builder class that can be used to instantiate nodes using the DSL capabilities delivered by
+the Groovy syntax. In this particular view, the builder is used to recreate the same layout found in the other tabs. The
+code looks like a cross between FXML (defining nodes and their layout properties) and the direct JavaFX API (defining
+bindings right on the spot). The code for setting up the tab is exactly the same, albeit it looks a bit different,
+actually, more streamlined, due to Groovy's property access feature.
+
+icon:arrow-up[link="#_tutorial_4_toc"] <<_tutorial_4_toc,Top>>
+
+[[_tutorial_4_6]]
+== Tab4: GroovyFX and FXML
+
+The last tab deals with the use case of reusing existing FXML assets. If you already have an FXML file but you'd also
+want to use Groovy to setup bindings and do additional work, you may use the `fxml()` node from GroovyFX to load the
+FXML file. Then you can further enhance the view by using the GroovyFX DSL. Let's see the FXL file first
+
+.griffon-app/resources/org/example/tab4.fxml
+[source,xml]
+[subs="verbatim"]
+----
+include::{javafx-app}/griffon-app/resources/org/example/tab4.fxml[]
+----
+
+This file does nto define a controller nor makes use of `ResourceBundle` resources, the reason being is that the `fxml()`
+node is quite spartan at the moment: it does not aware of the Griffon conventions nor does it setup a `ResourceBundle`,
+thus i18n resources can not be resolved properly. We'll rely on the Groovy view to fix these shortcomings.
+
+.griffon-app/views/org/example/Tab4View.groovy
+[source,groovy,options="nowrap"]
+----
+include::{javafx-app}/griffon-app/views/org/example/Tab4View.groovy[]
+----
+
+Notice that all widgets with a proper `id` attribute can be accessed directly inside the block associated with the
+`fxml()` node. These happen to be the widgets we're interested in, thus bindings can be set accordingly.
+Another change sen in `Tab4View` is that this class extends directly from `AbstractJavaFXGriffonView`, allowing this
+view to invoke the `connectActions()` method. Finally the `tab` is setup in exactly the same way as we've seen before.
+
+This is the final tab that we need to setup in order for the application to work. You can run the application once more
+by invoking the following command:
+
+[source]
+----
+$ gradle run
+----
+
+The full code for this application can be found
+link:https://github.com/griffon/griffon/tree/master/tutorials/javafx-app[here, window="_blank"].
+
+icon:arrow-up[link="#_tutorial_4_toc"] <<_tutorial_4_toc,Top>>

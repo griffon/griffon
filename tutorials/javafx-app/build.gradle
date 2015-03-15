@@ -1,0 +1,91 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenLocal()
+    }
+
+    dependencies {
+        classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.2.0'
+        classpath 'net.saliman:gradle-cobertura-plugin:2.2.6'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.3.1'
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
+        classpath 'org.gradle.api.plugins:gradle-izpack-plugin:0.2.3'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.1'
+        classpath 'edu.sc.seis.gradle:macappbundle:2.0.0'
+        classpath 'org.kordamp.gradle:stats-gradle-plugin:0.1.3'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.8'
+        classpath 'de.gliderpilot.gradle.jnlp:gradle-jnlp-plugin:0.0.6'
+    }
+}
+
+apply plugin: 'groovy'
+apply plugin: 'org.codehaus.griffon.griffon'
+
+griffon {
+    disableDependencyResolution = false
+    includeGroovyDependencies = true
+    version = '2.2.0'
+    toolkit = 'javafx'
+}
+
+ext {
+    macosx = System.getProperty('os.name').contains('Mac OS')
+}
+
+mainClassName = 'org.example.Launcher'
+
+apply from: 'gradle/publishing.gradle'
+apply from: 'gradle/code-coverage.gradle'
+apply from: 'gradle/code-quality.gradle'
+apply from: 'gradle/javafx-plugin.gradle'
+apply from: 'gradle/package.gradle'
+apply from: 'gradle/docs.gradle'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'org.kordamp.gradle.stats'
+apply plugin: 'com.github.ben-manes.versions'
+apply plugin: 'com.github.kt3k.coveralls'
+
+javafx {
+    mainClass = mainClassName
+}
+
+dependencies {
+    griffon 'org.codehaus.griffon.plugins:griffon-fontawesome-plugin:1.2.0'
+    compile "org.codehaus.griffon:griffon-guice:${griffon.version}"
+
+    runtime('log4j:log4j:1.2.17') {
+        exclude group: 'ant',         module: 'ant-nodeps'
+        exclude group: 'ant',         module: 'ant-junit'
+        exclude group: 'ant-contrib', module: 'ant-contrib'
+    }
+    runtime 'org.slf4j:slf4j-log4j12:1.7.10'
+
+    testCompile 'org.codehaus.groovy:groovy-all:2.4.1'
+    testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+}
+
+tasks.withType(JavaCompile) {
+    sourceCompatibility = project.sourceCompatibility
+    targetCompatibility = project.targetCompatibility
+}
+
+tasks.withType(GroovyCompile) {
+    sourceCompatibility = project.sourceCompatibility
+    targetCompatibility = project.targetCompatibility
+}
+
+import com.github.jengelman.gradle.plugins.shadow.transformers.*
+shadowJar {
+    transform(ServiceFileTransformer)
+    transform(ServiceFileTransformer) {
+        path = 'META-INF/griffon'
+    }
+    transform(ServiceFileTransformer) {
+        path = 'META-INF/types'
+    }
+    transform(PropertiesFileTransformer) {
+        paths = [
+            'META-INF/editors/java.beans.PropertyEditor'
+        ]
+    }
+}
