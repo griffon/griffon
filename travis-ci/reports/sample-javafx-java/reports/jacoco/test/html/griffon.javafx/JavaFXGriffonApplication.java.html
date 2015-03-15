@@ -30,8 +30,8 @@ import static griffon.core.GriffonExceptionHandler.registerExceptionHandler;
  * @author Andres Almiray
  */
 public class JavaFXGriffonApplication extends AbstractJavaFXGriffonApplication {
-<span class="nc" id="L33">    private boolean primaryStageDispensed = false;</span>
     protected Stage primaryStage;
+<span class="nc" id="L34">    private boolean primaryStageDispensed = false;</span>
 
     public JavaFXGriffonApplication() {
 <span class="nc" id="L37">        this(EMPTY_ARGS);</span>
@@ -41,70 +41,74 @@ public class JavaFXGriffonApplication extends AbstractJavaFXGriffonApplication {
 <span class="nc" id="L41">        super(args);</span>
 <span class="nc" id="L42">    }</span>
 
+    public static void run(Class&lt;? extends Application&gt; applicationClass, String[] args) {
+<span class="nc" id="L45">        registerExceptionHandler();</span>
+<span class="nc" id="L46">        Application.launch(applicationClass, args);</span>
+<span class="nc" id="L47">    }</span>
+
+    public static void main(String[] args) {
+<span class="nc" id="L50">        run(JavaFXGriffonApplication.class, args);</span>
+<span class="nc" id="L51">    }</span>
+
     @Nonnull
     @Override
     public Object createApplicationContainer(@Nonnull Map&lt;String, Object&gt; attributes) {
-<span class="nc bnc" id="L47" title="All 2 branches missed.">        if (primaryStageDispensed) {</span>
-<span class="nc" id="L48">            return new Stage();</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (primaryStageDispensed) {</span>
+<span class="nc" id="L57">            return new Stage();</span>
         } else {
-<span class="nc" id="L50">            primaryStageDispensed = true;</span>
-<span class="nc" id="L51">            return primaryStage;</span>
+<span class="nc" id="L59">            primaryStageDispensed = true;</span>
+<span class="nc" id="L60">            return primaryStage;</span>
         }
     }
 
     @Override
     public void init() throws Exception {
-<span class="nc" id="L57">        ApplicationBootstrapper bootstrapper = createApplicationBootstrapper();</span>
-<span class="nc" id="L58">        bootstrapper.bootstrap();</span>
-<span class="nc" id="L59">        afterInit();</span>
-<span class="nc" id="L60">    }</span>
+<span class="nc" id="L66">        ApplicationBootstrapper bootstrapper = createApplicationBootstrapper();</span>
+<span class="nc" id="L67">        bootstrapper.bootstrap();</span>
+<span class="nc" id="L68">        afterInit();</span>
+<span class="nc" id="L69">    }</span>
 
     protected void afterInit() {
-<span class="nc" id="L63">        initialize();</span>
-<span class="nc" id="L64">    }</span>
+<span class="nc" id="L72">        initialize();</span>
+<span class="nc" id="L73">    }</span>
 
     @Nonnull
     protected ApplicationBootstrapper createApplicationBootstrapper() {
-<span class="nc" id="L68">        return new DefaultApplicationBootstrapper(this);</span>
+<span class="nc" id="L77">        return new DefaultApplicationBootstrapper(this);</span>
     }
 
     @Override
     public void start(Stage stage) throws Exception {
-<span class="nc" id="L73">        super.start(stage);</span>
-<span class="nc" id="L74">        primaryStage = stage;</span>
+<span class="nc" id="L82">        super.start(stage);</span>
+<span class="nc" id="L83">        primaryStage = stage;</span>
 
-<span class="nc" id="L76">        getUIThreadManager().runOutsideUI(new Runnable() {</span>
+<span class="nc" id="L85">        afterStart();</span>
+<span class="nc" id="L86">    }</span>
+
+    protected void afterStart() {
+<span class="nc" id="L89">        getUIThreadManager().runOutsideUI(new Runnable() {</span>
             @Override
             public void run() {
-<span class="nc" id="L79">                startup();</span>
-<span class="nc" id="L80">                ready();</span>
-<span class="nc" id="L81">                afterReady();</span>
-<span class="nc" id="L82">            }</span>
+<span class="nc" id="L92">                startup();</span>
+<span class="nc" id="L93">                ready();</span>
+<span class="nc" id="L94">                afterReady();</span>
+<span class="nc" id="L95">            }</span>
         });
-<span class="nc" id="L84">    }</span>
+<span class="nc" id="L97">    }</span>
 
     protected void afterReady() {
         // empty
-<span class="nc" id="L88">    }</span>
+<span class="nc" id="L101">    }</span>
 
     public boolean shutdown() {
-<span class="nc bnc" id="L91" title="All 2 branches missed.">        if (super.shutdown()) {</span>
-<span class="nc" id="L92">            exit();</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">        if (super.shutdown()) {</span>
+<span class="nc" id="L105">            exit();</span>
         }
-<span class="nc" id="L94">        return false;</span>
+<span class="nc" id="L107">        return false;</span>
     }
 
     public void exit() {
-<span class="nc" id="L98">        System.exit(0);</span>
-<span class="nc" id="L99">    }</span>
-
-    public static void run(Class&lt;? extends Application&gt; applicationClass, String[] args) {
-<span class="nc" id="L102">        registerExceptionHandler();</span>
-<span class="nc" id="L103">        Application.launch(applicationClass, args);</span>
-<span class="nc" id="L104">    }</span>
-
-    public static void main(String[] args) {
-<span class="nc" id="L107">        run(JavaFXGriffonApplication.class, args);</span>
-<span class="nc" id="L108">    }</span>
+<span class="nc" id="L111">        System.exit(0);</span>
+<span class="nc" id="L112">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>

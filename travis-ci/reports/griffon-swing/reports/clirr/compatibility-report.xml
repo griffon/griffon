@@ -1,510 +1,102 @@
 <?xml version="1.0"?><diffreport>
   <header>
-    <project>griffon-swing-2.2.0</project>
+    <project>griffon-swing-2.3.0-SNAPSHOT</project>
     <summary>
-      <info>44</info>
+      <info>12</info>
       <warnings>0</warnings>
-      <error>39</error>
+      <error>3</error>
     </summary>
   </header>
   <differences>
     <difference>
-      <classname>griffon.core.Context</classname>
-      <severity>info</severity>
-      <identifier>8000</identifier>
-      <message>Class griffon.core.Context added</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.GriffonApplication</classname>
+      <classname>griffon.core.view.WindowManager</classname>
       <severity>error</severity>
       <identifier>7012</identifier>
-      <message>Method 'public griffon.core.Context getContext()' has been added to an interface</message>
+      <message>Method 'public java.lang.String findWindowName(java.lang.Object)' has been added to an interface</message>
     </difference>
     <difference>
-      <classname>griffon.core.MutableConfiguration</classname>
-      <severity>info</severity>
-      <identifier>8000</identifier>
-      <message>Class griffon.core.MutableConfiguration added</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.artifact.ArtifactManager</classname>
+      <classname>griffon.core.view.WindowManager</classname>
       <severity>error</severity>
       <identifier>7012</identifier>
-      <message>Method 'public java.util.Set getAllTypes()' has been added to an interface</message>
+      <message>Method 'public java.util.Set getWindowNames()' has been added to an interface</message>
     </difference>
     <difference>
-      <classname>griffon.core.env.Environment</classname>
-      <severity>error</severity>
-      <identifier>6011</identifier>
-      <message>Field DEFAULT has been removed, but it was previously a constant</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Environment</classname>
-      <severity>error</severity>
-      <identifier>7002</identifier>
-      <message>Method 'public griffon.core.env.Environment getCurrent()' has been removed</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Environment</classname>
-      <severity>error</severity>
-      <identifier>7002</identifier>
-      <message>Method 'public griffon.core.env.Environment getEnvironment(java.lang.String)' has been removed</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Environment</classname>
-      <severity>error</severity>
-      <identifier>7004</identifier>
-      <message>In method 'public java.lang.String getEnvironmentShortName()' the number of arguments has changed</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Environment</classname>
-      <severity>info</severity>
-      <identifier>7011</identifier>
-      <message>Method 'public griffon.core.env.Environment resolveEnvironment(java.lang.String)' has been added</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>error</severity>
-      <identifier>4001</identifier>
-      <message>Removed java.io.Serializable from the set of implemented interfaces</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>error</severity>
-      <identifier>4001</identifier>
-      <message>Removed java.lang.Cloneable from the set of implemented interfaces</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>error</severity>
-      <identifier>4001</identifier>
-      <message>Removed java.util.Map from the set of implemented interfaces</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>error</severity>
-      <identifier>5001</identifier>
-      <message>Removed java.util.Dictionary from the list of superclasses</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>error</severity>
-      <identifier>5001</identifier>
-      <message>Removed java.util.Hashtable from the list of superclasses</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>error</severity>
-      <identifier>5001</identifier>
-      <message>Removed java.util.Properties from the list of superclasses</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>error</severity>
-      <identifier>6011</identifier>
-      <message>Field FILE has been removed, but it was previously a constant</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>info</severity>
-      <identifier>6000</identifier>
-      <message>Added public field FILENAME</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>info</severity>
-      <identifier>7010</identifier>
-      <message>Accessibility of method 'private Metadata(java.io.File)' has been increased from private to public</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>info</severity>
-      <identifier>7004</identifier>
-      <message>In method 'private Metadata()' the number of arguments has changed</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>info</severity>
-      <identifier>7010</identifier>
-      <message>Accessibility of method 'private Metadata()' has been increased from private to public</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>info</severity>
-      <identifier>7011</identifier>
-      <message>Method 'public Metadata(java.io.InputStream)' has been added</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>info</severity>
-      <identifier>7011</identifier>
-      <message>Method 'public java.lang.String get(java.lang.String)' has been added</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>error</severity>
-      <identifier>7002</identifier>
-      <message>Method 'public griffon.core.env.Metadata getCurrent()' has been removed</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>error</severity>
-      <identifier>7002</identifier>
-      <message>Method 'public griffon.core.env.Metadata getInstance(java.io.InputStream)' has been removed</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>error</severity>
-      <identifier>7002</identifier>
-      <message>Method 'public griffon.core.env.Metadata getInstance(java.io.File)' has been removed</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>info</severity>
-      <identifier>7011</identifier>
-      <message>Method 'public java.lang.String getRunMode()' has been added</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>info</severity>
-      <identifier>7011</identifier>
-      <message>Method 'public java.util.Set keySet()' has been added</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>error</severity>
-      <identifier>7002</identifier>
-      <message>Method 'public java.util.Enumeration keys()' has been removed</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>error</severity>
-      <identifier>7002</identifier>
-      <message>Method 'public void persist()' has been removed</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>error</severity>
-      <identifier>7002</identifier>
-      <message>Method 'public boolean propertiesHaveNotChanged()' has been removed</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>error</severity>
-      <identifier>7002</identifier>
-      <message>Method 'public java.lang.Object put(java.lang.Object, java.lang.Object)' has been removed</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>error</severity>
-      <identifier>7002</identifier>
-      <message>Method 'public void putAll(java.util.Map)' has been removed</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>error</severity>
-      <identifier>7002</identifier>
-      <message>Method 'public griffon.core.env.Metadata reload()' has been removed</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>error</severity>
-      <identifier>7002</identifier>
-      <message>Method 'public java.lang.Object remove(java.lang.Object)' has been removed</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>error</severity>
-      <identifier>7002</identifier>
-      <message>Method 'public void reset()' has been removed</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.Metadata</classname>
-      <severity>error</severity>
-      <identifier>7002</identifier>
-      <message>Method 'public java.lang.Object setProperty(java.lang.String, java.lang.String)' has been removed</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.RunMode</classname>
-      <severity>error</severity>
-      <identifier>6011</identifier>
-      <message>Field DEFAULT has been removed, but it was previously a constant</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.RunMode</classname>
-      <severity>error</severity>
-      <identifier>7002</identifier>
-      <message>Method 'public griffon.core.env.RunMode getCurrent()' has been removed</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.RunMode</classname>
-      <severity>error</severity>
-      <identifier>7002</identifier>
-      <message>Method 'public griffon.core.env.RunMode getRunMode(java.lang.String)' has been removed</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.env.RunMode</classname>
-      <severity>info</severity>
-      <identifier>7011</identifier>
-      <message>Method 'public griffon.core.env.RunMode resolveRunMode(java.lang.String)' has been added</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.mvc.MVCGroup</classname>
+      <classname>griffon.core.view.WindowManager</classname>
       <severity>error</severity>
       <identifier>7012</identifier>
-      <message>Method 'public griffon.core.Context getContext()' has been added to an interface</message>
+      <message>Method 'public int indexOf(java.lang.Object)' has been added to an interface</message>
     </difference>
     <difference>
-      <classname>griffon.core.mvc.MVCGroup</classname>
-      <severity>error</severity>
-      <identifier>7012</identifier>
-      <message>Method 'public griffon.core.mvc.MVCGroup getParentGroup()' has been added to an interface</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.mvc.MVCGroupManager</classname>
-      <severity>error</severity>
-      <identifier>7012</identifier>
-      <message>Method 'public griffon.core.Context newContext(griffon.core.mvc.MVCGroup)' has been added to an interface</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.mvc.MVCGroupManager</classname>
-      <severity>error</severity>
-      <identifier>7004</identifier>
-      <message>In method 'public griffon.core.mvc.MVCGroup newMVCGroup(griffon.core.mvc.MVCGroupConfiguration, java.lang.String, java.util.Map)' the number of arguments has changed</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.storage.ObjectStorage</classname>
-      <severity>error</severity>
-      <identifier>7012</identifier>
-      <message>Method 'public java.util.Collection getValues()' has been added to an interface</message>
-    </difference>
-    <difference>
-      <classname>griffon.core.threading.ThreadingHandler</classname>
-      <severity>error</severity>
-      <identifier>7012</identifier>
-      <message>Method 'public java.lang.Object runInsideUISync(java.util.concurrent.Callable)' has been added to an interface</message>
-    </difference>
-    <difference>
-      <classname>griffon.inject.Contextual</classname>
-      <severity>info</severity>
-      <identifier>8000</identifier>
-      <message>Class griffon.inject.Contextual added</message>
-    </difference>
-    <difference>
-      <classname>griffon.swing.AbstractGriffonApplet</classname>
+      <classname>griffon.util.GriffonClassUtils</classname>
       <severity>info</severity>
       <identifier>7011</identifier>
-      <message>Method 'public griffon.core.Context getContext()' has been added</message>
+      <message>Method 'public java.lang.Object[] requireNonEmpty(java.lang.Object[])' has been added</message>
     </difference>
     <difference>
-      <classname>griffon.util.AbstractMapResourceBundle</classname>
-      <severity>info</severity>
-      <identifier>6009</identifier>
-      <message>Accessibility of field entries has been increased from private to protected</message>
-    </difference>
-    <difference>
-      <classname>griffon.util.AbstractMapResourceBundle</classname>
-      <severity>info</severity>
-      <identifier>6009</identifier>
-      <message>Accessibility of field keys has been increased from private to protected</message>
-    </difference>
-    <difference>
-      <classname>griffon.util.AbstractMapResourceBundle</classname>
+      <classname>griffon.util.GriffonClassUtils</classname>
       <severity>info</severity>
       <identifier>7011</identifier>
-      <message>Method 'protected void initializeKeys()' has been added</message>
+      <message>Method 'public java.lang.Object[] requireNonEmpty(java.lang.Object[], java.lang.String)' has been added</message>
     </difference>
     <difference>
-      <classname>griffon.util.ConfigUtils</classname>
+      <classname>griffon.util.GriffonClassUtils</classname>
       <severity>info</severity>
       <identifier>7011</identifier>
-      <message>Method 'public boolean containsKey(java.util.Map, java.lang.String)' has been added</message>
+      <message>Method 'public java.util.Collection requireNonEmpty(java.util.Collection)' has been added</message>
     </difference>
     <difference>
-      <classname>griffon.util.ConfigUtils</classname>
+      <classname>griffon.util.GriffonClassUtils</classname>
       <severity>info</severity>
       <identifier>7011</identifier>
-      <message>Method 'public boolean containsKey(java.util.ResourceBundle, java.lang.String)' has been added</message>
+      <message>Method 'public java.util.Collection requireNonEmpty(java.util.Collection, java.lang.String)' has been added</message>
     </difference>
     <difference>
-      <classname>org.codehaus.griffon.runtime.core.AbstractContext</classname>
-      <severity>info</severity>
-      <identifier>8000</identifier>
-      <message>Class org.codehaus.griffon.runtime.core.AbstractContext added</message>
-    </difference>
-    <difference>
-      <classname>org.codehaus.griffon.runtime.core.AbstractGriffonApplication</classname>
+      <classname>griffon.util.GriffonClassUtils</classname>
       <severity>info</severity>
       <identifier>7011</identifier>
-      <message>Method 'public griffon.core.Context getContext()' has been added</message>
+      <message>Method 'public java.util.Map requireNonEmpty(java.util.Map)' has been added</message>
     </difference>
     <difference>
-      <classname>org.codehaus.griffon.runtime.core.AbstractLifecycleHandler</classname>
+      <classname>griffon.util.GriffonClassUtils</classname>
       <severity>info</severity>
       <identifier>7011</identifier>
-      <message>Method 'public java.lang.Object runInsideUISync(java.util.concurrent.Callable)' has been added</message>
+      <message>Method 'public java.util.Map requireNonEmpty(java.util.Map, java.lang.String)' has been added</message>
     </difference>
     <difference>
-      <classname>org.codehaus.griffon.runtime.core.ConfigurationDecorator</classname>
-      <severity>info</severity>
-      <identifier>8000</identifier>
-      <message>Class org.codehaus.griffon.runtime.core.ConfigurationDecorator added</message>
-    </difference>
-    <difference>
-      <classname>org.codehaus.griffon.runtime.core.DefaultContext</classname>
-      <severity>info</severity>
-      <identifier>8000</identifier>
-      <message>Class org.codehaus.griffon.runtime.core.DefaultContext added</message>
-    </difference>
-    <difference>
-      <classname>org.codehaus.griffon.runtime.core.DelegatingMutableConfiguration</classname>
-      <severity>info</severity>
-      <identifier>8000</identifier>
-      <message>Class org.codehaus.griffon.runtime.core.DelegatingMutableConfiguration added</message>
-    </difference>
-    <difference>
-      <classname>org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager</classname>
+      <classname>org.codehaus.griffon.runtime.core.view.AbstractWindowManager</classname>
       <severity>info</severity>
       <identifier>7011</identifier>
-      <message>Method 'public java.util.Set getAllTypes()' has been added</message>
+      <message>Method 'public java.lang.String findWindowName(java.lang.Object)' has been added</message>
     </difference>
     <difference>
-      <classname>org.codehaus.griffon.runtime.core.artifact.AbstractGriffonArtifact</classname>
+      <classname>org.codehaus.griffon.runtime.core.view.AbstractWindowManager</classname>
       <severity>info</severity>
       <identifier>7011</identifier>
-      <message>Method 'public java.lang.Object runInsideUISync(java.util.concurrent.Callable)' has been added</message>
+      <message>Method 'public java.util.Set getWindowNames()' has been added</message>
     </difference>
     <difference>
-      <classname>org.codehaus.griffon.runtime.core.controller.ActionDecorator</classname>
-      <severity>info</severity>
-      <identifier>8000</identifier>
-      <message>Class org.codehaus.griffon.runtime.core.controller.ActionDecorator added</message>
-    </difference>
-    <difference>
-      <classname>org.codehaus.griffon.runtime.core.env.EnvironmentProvider</classname>
-      <severity>info</severity>
-      <identifier>8000</identifier>
-      <message>Class org.codehaus.griffon.runtime.core.env.EnvironmentProvider added</message>
-    </difference>
-    <difference>
-      <classname>org.codehaus.griffon.runtime.core.env.MetadataProvider</classname>
-      <severity>info</severity>
-      <identifier>8000</identifier>
-      <message>Class org.codehaus.griffon.runtime.core.env.MetadataProvider added</message>
-    </difference>
-    <difference>
-      <classname>org.codehaus.griffon.runtime.core.env.RunModeProvider</classname>
-      <severity>info</severity>
-      <identifier>8000</identifier>
-      <message>Class org.codehaus.griffon.runtime.core.env.RunModeProvider added</message>
-    </difference>
-    <difference>
-      <classname>org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroup</classname>
-      <severity>info</severity>
-      <identifier>6000</identifier>
-      <message>Added protected field context</message>
-    </difference>
-    <difference>
-      <classname>org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroup</classname>
-      <severity>info</severity>
-      <identifier>6000</identifier>
-      <message>Added protected field parentGroup</message>
-    </difference>
-    <difference>
-      <classname>org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroup</classname>
-      <severity>error</severity>
-      <identifier>7004</identifier>
-      <message>In method 'public AbstractMVCGroup(griffon.core.mvc.MVCGroupManager, griffon.core.mvc.MVCGroupConfiguration, java.lang.String, java.util.Map)' the number of arguments has changed</message>
-    </difference>
-    <difference>
-      <classname>org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroup</classname>
+      <classname>org.codehaus.griffon.runtime.core.view.AbstractWindowManager</classname>
       <severity>info</severity>
       <identifier>7011</identifier>
-      <message>Method 'public griffon.core.Context getContext()' has been added</message>
+      <message>Method 'public int indexOf(java.lang.Object)' has been added</message>
     </difference>
     <difference>
-      <classname>org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroup</classname>
+      <classname>org.codehaus.griffon.runtime.core.view.NoopWindowManager</classname>
       <severity>info</severity>
       <identifier>7011</identifier>
-      <message>Method 'public griffon.core.mvc.MVCGroup getParentGroup()' has been added</message>
+      <message>Method 'public java.lang.String findWindowName(java.lang.Object)' has been added</message>
     </difference>
     <difference>
-      <classname>org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup</classname>
-      <severity>error</severity>
-      <identifier>7004</identifier>
-      <message>In method 'public DefaultMVCGroup(griffon.core.mvc.MVCGroupManager, griffon.core.mvc.MVCGroupConfiguration, java.lang.String, java.util.Map)' the number of arguments has changed</message>
-    </difference>
-    <difference>
-      <classname>org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager</classname>
+      <classname>org.codehaus.griffon.runtime.core.view.NoopWindowManager</classname>
       <severity>info</severity>
       <identifier>7011</identifier>
-      <message>Method 'public griffon.core.Context newContext(griffon.core.mvc.MVCGroup)' has been added</message>
+      <message>Method 'public java.util.Set getWindowNames()' has been added</message>
     </difference>
     <difference>
-      <classname>org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager</classname>
-      <severity>error</severity>
-      <identifier>7004</identifier>
-      <message>In method 'public griffon.core.mvc.MVCGroup newMVCGroup(griffon.core.mvc.MVCGroupConfiguration, java.lang.String, java.util.Map)' the number of arguments has changed</message>
-    </difference>
-    <difference>
-      <classname>org.codehaus.griffon.runtime.core.storage.DefaultObjectStorage</classname>
+      <classname>org.codehaus.griffon.runtime.core.view.NoopWindowManager</classname>
       <severity>info</severity>
       <identifier>7011</identifier>
-      <message>Method 'public java.util.Collection getValues()' has been added</message>
-    </difference>
-    <difference>
-      <classname>org.codehaus.griffon.runtime.core.threading.AbstractThreadingHandler</classname>
-      <severity>info</severity>
-      <identifier>7011</identifier>
-      <message>Method 'public java.lang.Object runInsideUISync(java.util.concurrent.Callable)' has been added</message>
-    </difference>
-    <difference>
-      <classname>org.codehaus.griffon.runtime.core.threading.AbstractUIThreadManager</classname>
-      <severity>info</severity>
-      <identifier>7011</identifier>
-      <message>Method 'public java.lang.Object runInsideUISync(java.util.concurrent.Callable)' has been added</message>
-    </difference>
-    <difference>
-      <classname>org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider</classname>
-      <severity>info</severity>
-      <identifier>8000</identifier>
-      <message>Class org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider added</message>
-    </difference>
-    <difference>
-      <classname>org.codehaus.griffon.runtime.swing.controller.SwingGriffonControllerAction</classname>
-      <severity>info</severity>
-      <identifier>7011</identifier>
-      <message>Method 'protected void handleIcon(java.lang.Object, java.lang.String)' has been added</message>
-    </difference>
-    <difference>
-      <classname>org.slf4j.MDC</classname>
-      <severity>info</severity>
-      <identifier>7011</identifier>
-      <message>Method 'public org.slf4j.MDC$MDCCloseable putCloseable(java.lang.String, java.lang.String)' has been added</message>
-    </difference>
-    <difference>
-      <classname>org.slf4j.MDC$MDCCloseable</classname>
-      <severity>info</severity>
-      <identifier>8000</identifier>
-      <message>Class org.slf4j.MDC$MDCCloseable added</message>
-    </difference>
-    <difference>
-      <classname>org.slf4j.helpers.Util</classname>
-      <severity>error</severity>
-      <identifier>3003</identifier>
-      <message>Added final modifier to class</message>
-    </difference>
-    <difference>
-      <classname>org.slf4j.helpers.Util</classname>
-      <severity>error</severity>
-      <identifier>7009</identifier>
-      <message>Accessibility of method 'public Util()' has been decreased from public to private</message>
-    </difference>
-    <difference>
-      <classname>org.slf4j.helpers.Util</classname>
-      <severity>info</severity>
-      <identifier>7011</identifier>
-      <message>Method 'public java.lang.Class getCallingClass()' has been added</message>
+      <message>Method 'public int indexOf(java.lang.Object)' has been added</message>
     </difference>
   </differences>
 </diffreport>

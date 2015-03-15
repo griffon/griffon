@@ -1,6 +1,6 @@
 <!DOCTYPE html><html>
   <head>
-    <title>Binary Compatibility Report - griffon-lanterna-2.2.0</title>
+    <title>Binary Compatibility Report - griffon-lanterna-2.3.0-SNAPSHOT</title>
     <style>
                         body{margin:0;padding:0;font-family:sans-serif;font-size:12pt;}
                         body,a,a:visited{color:#303030;}
@@ -35,13 +35,13 @@
   </head>
   <body>
     <div id='content'>
-      <h1>Binary Compatibility Report - griffon-lanterna-2.2.0</h1>
+      <h1>Binary Compatibility Report - griffon-lanterna-2.3.0-SNAPSHOT</h1>
       <div id='summary'>
         <table>
           <tr>
             <td>
               <p class='error'>ERROR</p>
-              <div>39</div>
+              <div>3</div>
             </td>
             <td>
               <p class='warning'>WARNING</p>
@@ -49,7 +49,7 @@
             </td>
             <td>
               <p class='info'>INFO</p>
-              <div>42</div>
+              <div>12</div>
             </td>
           </tr>
         </table>
@@ -63,496 +63,74 @@
         </thead>
         <tbody>
           <tr>
-            <td>griffon.core.Context</td>
+            <td>griffon.core.view.WindowManager</td>
             <td>
               <ul>
                 <li>
-                  <span class='info'>INFO(8000): </span>Class griffon.core.Context added
+                  <span class='error'>ERROR(7012): </span>Method 'public java.lang.String findWindowName(java.lang.Object)' has been added to an interface
+                </li>
+                <li>
+                  <span class='error'>ERROR(7012): </span>Method 'public java.util.Set getWindowNames()' has been added to an interface
+                </li>
+                <li>
+                  <span class='error'>ERROR(7012): </span>Method 'public int indexOf(java.lang.Object)' has been added to an interface
                 </li>
               </ul>
             </td>
           </tr>
           <tr>
-            <td>griffon.core.GriffonApplication</td>
+            <td>griffon.util.GriffonClassUtils</td>
             <td>
               <ul>
                 <li>
-                  <span class='error'>ERROR(7012): </span>Method 'public griffon.core.Context getContext()' has been added to an interface
+                  <span class='info'>INFO(7011): </span>Method 'public java.lang.Object[] requireNonEmpty(java.lang.Object[])' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public java.lang.Object[] requireNonEmpty(java.lang.Object[], java.lang.String)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public java.util.Collection requireNonEmpty(java.util.Collection)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public java.util.Collection requireNonEmpty(java.util.Collection, java.lang.String)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public java.util.Map requireNonEmpty(java.util.Map)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public java.util.Map requireNonEmpty(java.util.Map, java.lang.String)' has been added
                 </li>
               </ul>
             </td>
           </tr>
           <tr>
-            <td>griffon.core.MutableConfiguration</td>
+            <td>org.codehaus.griffon.runtime.core.view.AbstractWindowManager</td>
             <td>
               <ul>
                 <li>
-                  <span class='info'>INFO(8000): </span>Class griffon.core.MutableConfiguration added
+                  <span class='info'>INFO(7011): </span>Method 'public java.lang.String findWindowName(java.lang.Object)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public java.util.Set getWindowNames()' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public int indexOf(java.lang.Object)' has been added
                 </li>
               </ul>
             </td>
           </tr>
           <tr>
-            <td>griffon.core.artifact.ArtifactManager</td>
+            <td>org.codehaus.griffon.runtime.core.view.NoopWindowManager</td>
             <td>
               <ul>
                 <li>
-                  <span class='error'>ERROR(7012): </span>Method 'public java.util.Set getAllTypes()' has been added to an interface
+                  <span class='info'>INFO(7011): </span>Method 'public java.lang.String findWindowName(java.lang.Object)' has been added
                 </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>griffon.core.env.Environment</td>
-            <td>
-              <ul>
                 <li>
-                  <span class='error'>ERROR(6011): </span>Field DEFAULT has been removed, but it was previously a constant
+                  <span class='info'>INFO(7011): </span>Method 'public java.util.Set getWindowNames()' has been added
                 </li>
                 <li>
-                  <span class='error'>ERROR(7002): </span>Method 'public griffon.core.env.Environment getCurrent()' has been removed
-                </li>
-                <li>
-                  <span class='error'>ERROR(7002): </span>Method 'public griffon.core.env.Environment getEnvironment(java.lang.String)' has been removed
-                </li>
-                <li>
-                  <span class='error'>ERROR(7004): </span>In method 'public java.lang.String getEnvironmentShortName()' the number of arguments has changed
-                </li>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public griffon.core.env.Environment resolveEnvironment(java.lang.String)' has been added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>griffon.core.env.Metadata</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='error'>ERROR(4001): </span>Removed java.io.Serializable from the set of implemented interfaces
-                </li>
-                <li>
-                  <span class='error'>ERROR(4001): </span>Removed java.lang.Cloneable from the set of implemented interfaces
-                </li>
-                <li>
-                  <span class='error'>ERROR(4001): </span>Removed java.util.Map from the set of implemented interfaces
-                </li>
-                <li>
-                  <span class='error'>ERROR(5001): </span>Removed java.util.Dictionary from the list of superclasses
-                </li>
-                <li>
-                  <span class='error'>ERROR(5001): </span>Removed java.util.Hashtable from the list of superclasses
-                </li>
-                <li>
-                  <span class='error'>ERROR(5001): </span>Removed java.util.Properties from the list of superclasses
-                </li>
-                <li>
-                  <span class='error'>ERROR(6011): </span>Field FILE has been removed, but it was previously a constant
-                </li>
-                <li>
-                  <span class='info'>INFO(6000): </span>Added public field FILENAME
-                </li>
-                <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private Metadata(java.io.File)' has been increased from private to public
-                </li>
-                <li>
-                  <span class='info'>INFO(7004): </span>In method 'private Metadata()' the number of arguments has changed
-                </li>
-                <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private Metadata()' has been increased from private to public
-                </li>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public Metadata(java.io.InputStream)' has been added
-                </li>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public java.lang.String get(java.lang.String)' has been added
-                </li>
-                <li>
-                  <span class='error'>ERROR(7002): </span>Method 'public griffon.core.env.Metadata getCurrent()' has been removed
-                </li>
-                <li>
-                  <span class='error'>ERROR(7002): </span>Method 'public griffon.core.env.Metadata getInstance(java.io.InputStream)' has been removed
-                </li>
-                <li>
-                  <span class='error'>ERROR(7002): </span>Method 'public griffon.core.env.Metadata getInstance(java.io.File)' has been removed
-                </li>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public java.lang.String getRunMode()' has been added
-                </li>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public java.util.Set keySet()' has been added
-                </li>
-                <li>
-                  <span class='error'>ERROR(7002): </span>Method 'public java.util.Enumeration keys()' has been removed
-                </li>
-                <li>
-                  <span class='error'>ERROR(7002): </span>Method 'public void persist()' has been removed
-                </li>
-                <li>
-                  <span class='error'>ERROR(7002): </span>Method 'public boolean propertiesHaveNotChanged()' has been removed
-                </li>
-                <li>
-                  <span class='error'>ERROR(7002): </span>Method 'public java.lang.Object put(java.lang.Object, java.lang.Object)' has been removed
-                </li>
-                <li>
-                  <span class='error'>ERROR(7002): </span>Method 'public void putAll(java.util.Map)' has been removed
-                </li>
-                <li>
-                  <span class='error'>ERROR(7002): </span>Method 'public griffon.core.env.Metadata reload()' has been removed
-                </li>
-                <li>
-                  <span class='error'>ERROR(7002): </span>Method 'public java.lang.Object remove(java.lang.Object)' has been removed
-                </li>
-                <li>
-                  <span class='error'>ERROR(7002): </span>Method 'public void reset()' has been removed
-                </li>
-                <li>
-                  <span class='error'>ERROR(7002): </span>Method 'public java.lang.Object setProperty(java.lang.String, java.lang.String)' has been removed
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>griffon.core.env.RunMode</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='error'>ERROR(6011): </span>Field DEFAULT has been removed, but it was previously a constant
-                </li>
-                <li>
-                  <span class='error'>ERROR(7002): </span>Method 'public griffon.core.env.RunMode getCurrent()' has been removed
-                </li>
-                <li>
-                  <span class='error'>ERROR(7002): </span>Method 'public griffon.core.env.RunMode getRunMode(java.lang.String)' has been removed
-                </li>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public griffon.core.env.RunMode resolveRunMode(java.lang.String)' has been added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>griffon.core.mvc.MVCGroup</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='error'>ERROR(7012): </span>Method 'public griffon.core.Context getContext()' has been added to an interface
-                </li>
-                <li>
-                  <span class='error'>ERROR(7012): </span>Method 'public griffon.core.mvc.MVCGroup getParentGroup()' has been added to an interface
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>griffon.core.mvc.MVCGroupManager</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='error'>ERROR(7012): </span>Method 'public griffon.core.Context newContext(griffon.core.mvc.MVCGroup)' has been added to an interface
-                </li>
-                <li>
-                  <span class='error'>ERROR(7004): </span>In method 'public griffon.core.mvc.MVCGroup newMVCGroup(griffon.core.mvc.MVCGroupConfiguration, java.lang.String, java.util.Map)' the number of arguments has changed
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>griffon.core.storage.ObjectStorage</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='error'>ERROR(7012): </span>Method 'public java.util.Collection getValues()' has been added to an interface
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>griffon.core.threading.ThreadingHandler</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='error'>ERROR(7012): </span>Method 'public java.lang.Object runInsideUISync(java.util.concurrent.Callable)' has been added to an interface
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>griffon.inject.Contextual</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(8000): </span>Class griffon.inject.Contextual added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>griffon.util.AbstractMapResourceBundle</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(6009): </span>Accessibility of field entries has been increased from private to protected
-                </li>
-                <li>
-                  <span class='info'>INFO(6009): </span>Accessibility of field keys has been increased from private to protected
-                </li>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'protected void initializeKeys()' has been added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>griffon.util.ConfigUtils</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public boolean containsKey(java.util.Map, java.lang.String)' has been added
-                </li>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public boolean containsKey(java.util.ResourceBundle, java.lang.String)' has been added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>org.codehaus.griffon.runtime.core.AbstractContext</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(8000): </span>Class org.codehaus.griffon.runtime.core.AbstractContext added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>org.codehaus.griffon.runtime.core.AbstractGriffonApplication</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public griffon.core.Context getContext()' has been added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>org.codehaus.griffon.runtime.core.AbstractLifecycleHandler</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public java.lang.Object runInsideUISync(java.util.concurrent.Callable)' has been added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>org.codehaus.griffon.runtime.core.ConfigurationDecorator</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(8000): </span>Class org.codehaus.griffon.runtime.core.ConfigurationDecorator added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>org.codehaus.griffon.runtime.core.DefaultContext</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(8000): </span>Class org.codehaus.griffon.runtime.core.DefaultContext added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>org.codehaus.griffon.runtime.core.DelegatingMutableConfiguration</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(8000): </span>Class org.codehaus.griffon.runtime.core.DelegatingMutableConfiguration added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public java.util.Set getAllTypes()' has been added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>org.codehaus.griffon.runtime.core.artifact.AbstractGriffonArtifact</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public java.lang.Object runInsideUISync(java.util.concurrent.Callable)' has been added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>org.codehaus.griffon.runtime.core.controller.ActionDecorator</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(8000): </span>Class org.codehaus.griffon.runtime.core.controller.ActionDecorator added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>org.codehaus.griffon.runtime.core.env.EnvironmentProvider</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(8000): </span>Class org.codehaus.griffon.runtime.core.env.EnvironmentProvider added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>org.codehaus.griffon.runtime.core.env.MetadataProvider</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(8000): </span>Class org.codehaus.griffon.runtime.core.env.MetadataProvider added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>org.codehaus.griffon.runtime.core.env.RunModeProvider</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(8000): </span>Class org.codehaus.griffon.runtime.core.env.RunModeProvider added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroup</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(6000): </span>Added protected field context
-                </li>
-                <li>
-                  <span class='info'>INFO(6000): </span>Added protected field parentGroup
-                </li>
-                <li>
-                  <span class='error'>ERROR(7004): </span>In method 'public AbstractMVCGroup(griffon.core.mvc.MVCGroupManager, griffon.core.mvc.MVCGroupConfiguration, java.lang.String, java.util.Map)' the number of arguments has changed
-                </li>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public griffon.core.Context getContext()' has been added
-                </li>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public griffon.core.mvc.MVCGroup getParentGroup()' has been added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='error'>ERROR(7004): </span>In method 'public DefaultMVCGroup(griffon.core.mvc.MVCGroupManager, griffon.core.mvc.MVCGroupConfiguration, java.lang.String, java.util.Map)' the number of arguments has changed
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public griffon.core.Context newContext(griffon.core.mvc.MVCGroup)' has been added
-                </li>
-                <li>
-                  <span class='error'>ERROR(7004): </span>In method 'public griffon.core.mvc.MVCGroup newMVCGroup(griffon.core.mvc.MVCGroupConfiguration, java.lang.String, java.util.Map)' the number of arguments has changed
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>org.codehaus.griffon.runtime.core.storage.DefaultObjectStorage</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public java.util.Collection getValues()' has been added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>org.codehaus.griffon.runtime.core.threading.AbstractThreadingHandler</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public java.lang.Object runInsideUISync(java.util.concurrent.Callable)' has been added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>org.codehaus.griffon.runtime.core.threading.AbstractUIThreadManager</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public java.lang.Object runInsideUISync(java.util.concurrent.Callable)' has been added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(8000): </span>Class org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>org.slf4j.MDC</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public org.slf4j.MDC$MDCCloseable putCloseable(java.lang.String, java.lang.String)' has been added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>org.slf4j.MDC$MDCCloseable</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(8000): </span>Class org.slf4j.MDC$MDCCloseable added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>org.slf4j.helpers.Util</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='error'>ERROR(3003): </span>Added final modifier to class
-                </li>
-                <li>
-                  <span class='error'>ERROR(7009): </span>Accessibility of method 'public Util()' has been decreased from public to private
-                </li>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public java.lang.Class getCallingClass()' has been added
+                  <span class='info'>INFO(7011): </span>Method 'public int indexOf(java.lang.Object)' has been added
                 </li>
               </ul>
             </td>
