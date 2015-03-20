@@ -23,6 +23,8 @@ import javafx.scene.control.Tooltip
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 
+import static griffon.javafx.support.JavaFXUtils.resolveIcon
+
 /**
  *
  * @author Andres Almiray
@@ -116,8 +118,7 @@ class ActionFactory extends AbstractFXBeanFactory {
     }
 
     static void setIcon(node, String iconUrl) {
-        Image image = new Image(Thread.currentThread().getContextClassLoader().getResource(iconUrl).toString())
-        node.graphicProperty().set(new ImageView(image: image))
+        node.graphicProperty().set(resolveIcon(iconUrl))
     }
 
     static void setTooltip(node, String text) {

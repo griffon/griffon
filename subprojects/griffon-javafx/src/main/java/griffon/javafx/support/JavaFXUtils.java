@@ -65,6 +65,7 @@ public final class JavaFXUtils {
     private static final String ERROR_ACTION_NULL = "Argument 'action' must not be null";
     private static final String ERROR_ICON_BLANK = "Argument 'iconUrl' must not be blank";
     private static final String ERROR_ID_BLANK = "Argument 'id' must not be blank";
+    private static final String ERROR_URL_BLANK = "Argument 'url' must not be blank";
     private static final String ERROR_ROOT_NULL = "Argument 'root' must not be null";
     private static final String ERROR_CONTROLLER_NULL = "Argument 'controller' must not be null";
     private static final String ACTION_TARGET_SUFFIX = "ActionTarget";
@@ -229,7 +230,9 @@ public final class JavaFXUtils {
     }
 
     @Nullable
-    private static Node resolveIcon(String iconUrl) {
+    public static Node resolveIcon(@Nonnull String iconUrl) {
+        requireNonBlank(iconUrl, ERROR_URL_BLANK);
+
         if (iconUrl.contains("|")) {
             // assume classname|arg format
             return handleAsClassWithArg(iconUrl);
