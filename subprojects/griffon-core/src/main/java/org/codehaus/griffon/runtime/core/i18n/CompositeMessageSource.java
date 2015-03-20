@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static griffon.util.GriffonClassUtils.requireState;
+import static griffon.util.GriffonClassUtils.requireNonEmpty;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
@@ -47,7 +47,7 @@ public class CompositeMessageSource extends AbstractMessageSource {
 
     private static MessageSource[] toMessageSourceArray(@Nonnull Collection<MessageSource> messageSources) {
         requireNonNull(messageSources, "Argument 'messageSources' must not be null");
-        requireState(!messageSources.isEmpty(), "Argument 'messageSources' must not be empty");
+        requireNonEmpty(messageSources, "Argument 'messageSources' must not be empty");
         return messageSources.toArray(new MessageSource[messageSources.size()]);
     }
 

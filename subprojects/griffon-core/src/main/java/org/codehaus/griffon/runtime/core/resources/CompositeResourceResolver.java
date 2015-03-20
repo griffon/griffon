@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Locale;
 
-import static griffon.util.GriffonClassUtils.requireState;
+import static griffon.util.GriffonClassUtils.requireNonEmpty;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
@@ -43,7 +43,7 @@ public class CompositeResourceResolver extends AbstractResourceResolver {
 
     private static ResourceResolver[] toResourceResolverArray(@Nonnull Collection<ResourceResolver> resourceResolvers) {
         requireNonNull(resourceResolvers, "Argument 'resourceResolvers' must not be null");
-        requireState(!resourceResolvers.isEmpty(), "Argument 'resourceResolvers' must not be empty");
+        requireNonEmpty(resourceResolvers, "Argument 'resourceResolvers' must not be empty");
         return resourceResolvers.toArray(new ResourceResolver[resourceResolvers.size()]);
     }
 

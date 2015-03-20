@@ -197,6 +197,7 @@ class DefaultMessageSourceTests {
     }
 
     static final class CustomMessageSource extends AbstractMessageSource {
+        @Nonnull
         @Override
         protected Object doResolveMessageValue(
             @Nonnull String key,
