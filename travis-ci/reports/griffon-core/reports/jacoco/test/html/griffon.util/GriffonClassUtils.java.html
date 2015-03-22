@@ -334,9 +334,9 @@ import static java.util.Objects.requireNonNull;
      * @throws IllegalStateException    if {@code collection} is empty
      */
     public static Collection&lt;?&gt; requireNonEmpty(@Nonnull Collection&lt;?&gt; collection, @Nonnull String message) {
-<span class="nc" id="L337">        requireNonNull(collection);</span>
-<span class="nc bnc" id="L338" title="All 2 branches missed.">        requireState(!collection.isEmpty(), requireNonBlank(message, &quot;message&quot;));</span>
-<span class="nc" id="L339">        return collection;</span>
+<span class="fc" id="L337">        requireNonNull(collection);</span>
+<span class="fc bfc" id="L338" title="All 2 branches covered.">        requireState(!collection.isEmpty(), requireNonBlank(message, &quot;message&quot;));</span>
+<span class="fc" id="L339">        return collection;</span>
     }
 
     /**

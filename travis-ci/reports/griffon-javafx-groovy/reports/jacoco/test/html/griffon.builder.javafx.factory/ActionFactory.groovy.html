@@ -23,110 +23,111 @@ import javafx.scene.control.Tooltip
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 
+import static griffon.javafx.support.JavaFXUtils.resolveIcon
+
 /**
  *
  * @author Andres Almiray
  */
 class ActionFactory extends AbstractFXBeanFactory {
     ActionFactory() {
-<span class="fc" id="L32">        super(JavaFXAction, false)</span>
+<span class="fc" id="L34">        super(JavaFXAction, false)</span>
     }
 
     @Override
     boolean onHandleNodeAttributes(FactoryBuilderSupport builder, Object node, Map attributes) {
-<span class="fc" id="L37">        attributes.remove('id')</span>
-<span class="pc" id="L38">        return super.onHandleNodeAttributes(builder, node, attributes)</span>
+<span class="fc" id="L39">        attributes.remove('id')</span>
+<span class="pc" id="L40">        return super.onHandleNodeAttributes(builder, node, attributes)</span>
     }
 
     static Map extractActionParams(Map attributes) {
-<span class="fc" id="L42">        Map actionParams = [:]</span>
+<span class="fc" id="L44">        Map actionParams = [:]</span>
 
-<span class="fc" id="L44">        actionParams.skipOnAction = attributes.remove('skipOnAction')</span>
-<span class="fc" id="L45">        actionParams.skipName = attributes.remove('skipName')</span>
-<span class="fc" id="L46">        actionParams.skipDescription = attributes.remove('skipDescription')</span>
-<span class="fc" id="L47">        actionParams.skipAccelerator = attributes.remove('skipAccelerator')</span>
-<span class="fc" id="L48">        actionParams.skipIcon = attributes.remove('skipIcon')</span>
-<span class="fc" id="L49">        actionParams.skipSelected = attributes.remove('skipSelected')</span>
-<span class="fc" id="L50">        actionParams.skipEnabled = attributes.remove('skipEnabled')</span>
+<span class="fc" id="L46">        actionParams.skipOnAction = attributes.remove('skipOnAction')</span>
+<span class="fc" id="L47">        actionParams.skipName = attributes.remove('skipName')</span>
+<span class="fc" id="L48">        actionParams.skipDescription = attributes.remove('skipDescription')</span>
+<span class="fc" id="L49">        actionParams.skipAccelerator = attributes.remove('skipAccelerator')</span>
+<span class="fc" id="L50">        actionParams.skipIcon = attributes.remove('skipIcon')</span>
+<span class="fc" id="L51">        actionParams.skipSelected = attributes.remove('skipSelected')</span>
+<span class="fc" id="L52">        actionParams.skipEnabled = attributes.remove('skipEnabled')</span>
 
-<span class="pc" id="L52">        actionParams</span>
+<span class="pc" id="L54">        actionParams</span>
     }
 
     static void applyAction(control, JavaFXAction action, Map actionParams) {
-<span class="fc" id="L56">        MetaClass mc = control.metaClass</span>
+<span class="fc" id="L58">        MetaClass mc = control.metaClass</span>
 
-<span class="pc bpc" id="L58" title="4 of 8 branches missed.">        if (!actionParams.skipOnAction &amp;&amp; mc.respondsTo(control, &quot;onActionProperty&quot;)) {</span>
-<span class="fc" id="L59">            action.onActionProperty().addListener(new ChangeListener() {</span>
+<span class="pc bpc" id="L60" title="4 of 8 branches missed.">        if (!actionParams.skipOnAction &amp;&amp; mc.respondsTo(control, &quot;onActionProperty&quot;)) {</span>
+<span class="fc" id="L61">            action.onActionProperty().addListener(new ChangeListener() {</span>
                 void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
-<span class="nc" id="L61">                    control.onActionProperty().set(newValue)</span>
+<span class="nc" id="L63">                    control.onActionProperty().set(newValue)</span>
                 }
             })
-<span class="fc" id="L64">            control.onActionProperty().set(action.onAction)</span>
+<span class="fc" id="L66">            control.onActionProperty().set(action.onAction)</span>
         }
-<span class="pc bpc" id="L66" title="4 of 8 branches missed.">        if (!actionParams.skipName &amp;&amp; mc.respondsTo(control, &quot;textProperty&quot;)) {</span>
-<span class="fc" id="L67">            action.nameProperty().addListener(new ChangeListener() {</span>
+<span class="pc bpc" id="L68" title="4 of 8 branches missed.">        if (!actionParams.skipName &amp;&amp; mc.respondsTo(control, &quot;textProperty&quot;)) {</span>
+<span class="fc" id="L69">            action.nameProperty().addListener(new ChangeListener() {</span>
                 void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
-<span class="nc" id="L69">                    control.textProperty().set(newValue)</span>
+<span class="nc" id="L71">                    control.textProperty().set(newValue)</span>
                 }
             })
-<span class="fc" id="L72">            control.textProperty().set(action.name)</span>
+<span class="fc" id="L74">            control.textProperty().set(action.name)</span>
         }
-<span class="pc bpc" id="L74" title="4 of 8 branches missed.">        if (!actionParams.skipDescription &amp;&amp; mc.respondsTo(control, &quot;tooltipProperty&quot;)) {</span>
-<span class="fc" id="L75">            action.descriptionProperty().addListener(new ChangeListener() {</span>
+<span class="pc bpc" id="L76" title="4 of 8 branches missed.">        if (!actionParams.skipDescription &amp;&amp; mc.respondsTo(control, &quot;tooltipProperty&quot;)) {</span>
+<span class="fc" id="L77">            action.descriptionProperty().addListener(new ChangeListener() {</span>
                 void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
-<span class="nc" id="L77">                    setTooltip(control, newValue)</span>
+<span class="nc" id="L79">                    setTooltip(control, newValue)</span>
                 }
             })
-<span class="pc bpc" id="L80" title="1 of 2 branches missed.">            if (action.description) setTooltip(control, action.description)</span>
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">            if (action.description) setTooltip(control, action.description)</span>
         }
-<span class="pc bpc" id="L82" title="4 of 8 branches missed.">        if (!actionParams.skipAccelerator &amp;&amp; mc.respondsTo(control, &quot;acceleratorProperty&quot;)) {</span>
-<span class="nc" id="L83">            action.acceleratorProperty().addListener(new ChangeListener() {</span>
+<span class="pc bpc" id="L84" title="4 of 8 branches missed.">        if (!actionParams.skipAccelerator &amp;&amp; mc.respondsTo(control, &quot;acceleratorProperty&quot;)) {</span>
+<span class="nc" id="L85">            action.acceleratorProperty().addListener(new ChangeListener() {</span>
                 void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
-<span class="nc" id="L85">                    control.acceleratorProperty().set(newValue)</span>
+<span class="nc" id="L87">                    control.acceleratorProperty().set(newValue)</span>
                 }
             })
-<span class="nc bnc" id="L88" title="All 2 branches missed.">            if (action.accelerator != null) control.acceleratorProperty().set(action.accelerator)</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">            if (action.accelerator != null) control.acceleratorProperty().set(action.accelerator)</span>
         }
-<span class="pc bpc" id="L90" title="1 of 2 branches missed.">        if (mc.respondsTo(control, &quot;graphicProperty&quot;)) {</span>
-<span class="pc bpc" id="L91" title="2 of 4 branches missed.">            if (!actionParams.skipIcon) {</span>
-<span class="fc" id="L92">                action.iconProperty().addListener(new ChangeListener() {</span>
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">        if (mc.respondsTo(control, &quot;graphicProperty&quot;)) {</span>
+<span class="pc bpc" id="L93" title="2 of 4 branches missed.">            if (!actionParams.skipIcon) {</span>
+<span class="fc" id="L94">                action.iconProperty().addListener(new ChangeListener() {</span>
                     void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
-<span class="nc" id="L94">                        setIcon(control, newValue)</span>
+<span class="nc" id="L96">                        setIcon(control, newValue)</span>
                     }
                 })
-<span class="pc bpc" id="L97" title="1 of 2 branches missed.">                if (action.icon) setIcon(control, action.icon)</span>
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">                if (action.icon) setIcon(control, action.icon)</span>
             }
         }
-<span class="pc bpc" id="L100" title="4 of 8 branches missed.">        if (!actionParams.skipSelected &amp;&amp; mc.respondsTo(control, &quot;selectedProperty&quot;)) {</span>
-<span class="nc" id="L101">            action.selectedProperty().addListener(new ChangeListener() {</span>
+<span class="pc bpc" id="L102" title="4 of 8 branches missed.">        if (!actionParams.skipSelected &amp;&amp; mc.respondsTo(control, &quot;selectedProperty&quot;)) {</span>
+<span class="nc" id="L103">            action.selectedProperty().addListener(new ChangeListener() {</span>
                 void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
-<span class="nc" id="L103">                    control.selectedProperty().set(newValue)</span>
+<span class="nc" id="L105">                    control.selectedProperty().set(newValue)</span>
                 }
             })
-<span class="nc" id="L106">            control.selectedProperty().set(action.selected)</span>
+<span class="nc" id="L108">            control.selectedProperty().set(action.selected)</span>
         }
-<span class="pc bpc" id="L108" title="4 of 8 branches missed.">        if (!actionParams.skipEnabled &amp;&amp; mc.respondsTo(control, &quot;disableProperty&quot;)) {</span>
-<span class="fc" id="L109">            action.enabledProperty().addListener(new ChangeListener() {</span>
+<span class="pc bpc" id="L110" title="4 of 8 branches missed.">        if (!actionParams.skipEnabled &amp;&amp; mc.respondsTo(control, &quot;disableProperty&quot;)) {</span>
+<span class="fc" id="L111">            action.enabledProperty().addListener(new ChangeListener() {</span>
                 void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
-<span class="nc bnc" id="L111" title="All 2 branches missed.">                    control.disableProperty().set(!newValue)</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">                    control.disableProperty().set(!newValue)</span>
                 }
             })
-<span class="pc bpc" id="L114" title="1 of 2 branches missed.">            control.disableProperty().set(!action.enabled)</span>
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">            control.disableProperty().set(!action.enabled)</span>
         }
     }
 
     static void setIcon(node, String iconUrl) {
-<span class="nc" id="L119">        Image image = new Image(Thread.currentThread().getContextClassLoader().getResource(iconUrl).toString())</span>
-<span class="nc" id="L120">        node.graphicProperty().set(new ImageView(image: image))</span>
+<span class="nc" id="L121">        node.graphicProperty().set(resolveIcon(iconUrl))</span>
     }
 
     static void setTooltip(node, String text) {
-<span class="nc" id="L124">        Tooltip tooltip = node.tooltipProperty().get()</span>
-<span class="nc bnc" id="L125" title="All 4 branches missed.">        if (!tooltip) {</span>
-<span class="nc" id="L126">            tooltip = new Tooltip()</span>
-<span class="nc" id="L127">            node.tooltipProperty().set(tooltip)</span>
+<span class="nc" id="L125">        Tooltip tooltip = node.tooltipProperty().get()</span>
+<span class="nc bnc" id="L126" title="All 4 branches missed.">        if (!tooltip) {</span>
+<span class="nc" id="L127">            tooltip = new Tooltip()</span>
+<span class="nc" id="L128">            node.tooltipProperty().set(tooltip)</span>
         }
-<span class="nc" id="L129">        tooltip.text = text</span>
+<span class="nc" id="L130">        tooltip.text = text</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>

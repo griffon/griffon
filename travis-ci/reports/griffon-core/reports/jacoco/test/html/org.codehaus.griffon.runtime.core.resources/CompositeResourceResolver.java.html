@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Locale;
 
-import static griffon.util.GriffonClassUtils.requireState;
+import static griffon.util.GriffonClassUtils.requireNonEmpty;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
@@ -43,7 +43,7 @@ public class CompositeResourceResolver extends AbstractResourceResolver {
 
     private static ResourceResolver[] toResourceResolverArray(@Nonnull Collection&lt;ResourceResolver&gt; resourceResolvers) {
 <span class="fc" id="L45">        requireNonNull(resourceResolvers, &quot;Argument 'resourceResolvers' must not be null&quot;);</span>
-<span class="pc bpc" id="L46" title="1 of 2 branches missed.">        requireState(!resourceResolvers.isEmpty(), &quot;Argument 'resourceResolvers' must not be empty&quot;);</span>
+<span class="fc" id="L46">        requireNonEmpty(resourceResolvers, &quot;Argument 'resourceResolvers' must not be empty&quot;);</span>
 <span class="fc" id="L47">        return resourceResolvers.toArray(new ResourceResolver[resourceResolvers.size()]);</span>
     }
 
