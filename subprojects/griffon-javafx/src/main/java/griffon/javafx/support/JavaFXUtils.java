@@ -20,6 +20,7 @@ import griffon.core.controller.Action;
 import griffon.core.controller.ActionManager;
 import griffon.core.editors.ValueConversionException;
 import griffon.exceptions.InstanceMethodInvocationException;
+import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -50,7 +51,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Map;
 
+import static griffon.util.GriffonClassUtils.getGetterName;
 import static griffon.util.GriffonClassUtils.getPropertyValue;
+import static griffon.util.GriffonClassUtils.invokeExactInstanceMethod;
 import static griffon.util.GriffonClassUtils.invokeInstanceMethod;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
@@ -69,9 +72,36 @@ public final class JavaFXUtils {
     private static final String ERROR_ROOT_NULL = "Argument 'root' must not be null";
     private static final String ERROR_CONTROLLER_NULL = "Argument 'controller' must not be null";
     private static final String ACTION_TARGET_SUFFIX = "ActionTarget";
+    private static final String PROPERTY_SUFFIX = "Property";
 
     private JavaFXUtils() {
 
+    }
+
+    @Nonnull
+    @SuppressWarnings("ConstantConditions")
+    public static <B> Property<?> extractProperty(@Nonnull B bean, @Nonnull String propertyName) {
+        requireNonNull(bean, "Argument 'bean' must not be null");
+        requireNonBlank(propertyName, "Argument 'propertyName' must not be null");
+
+        if (!propertyName.endsWith(PROPERTY_SUFFIX)) {
+            propertyName += PROPERTY_SUFFIX;
+        }
+
+        InstanceMethodInvocationException imie;
+        try {
+            // 1. try <columnName>Property() first
+            return (Property<?>) invokeExactInstanceMethod(bean, propertyName);
+        } catch (InstanceMethodInvocationException e) {
+            imie = e;
+        }
+
+        // 2. fallback to get<columnName>Property()
+        try {
+            return (Property<?>) invokeExactInstanceMethod(bean, getGetterName(propertyName));
+        } catch (InstanceMethodInvocationException e) {
+            throw imie;
+        }
     }
 
     public static void connectActions(@Nonnull Node node, @Nonnull GriffonController controller) {
