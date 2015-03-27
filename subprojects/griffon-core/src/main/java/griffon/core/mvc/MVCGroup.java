@@ -117,9 +117,20 @@ public interface MVCGroup extends MVCHandler {
      */
     boolean isAlive();
 
+    /**
+     * Returns the context belonging to this group.
+     *
+     * @since 2.2.0
+     */
     @Nonnull
     Context getContext();
 
+    /**
+     * Returns the parent {@code MVCGroup} of this group.
+     * <p>The parent may be null if this is a top level MVC group.</p>
+     *
+     * @since 2.2.0
+     */
     @Nullable
     MVCGroup getParentGroup();
 }
