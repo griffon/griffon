@@ -21,6 +21,7 @@ String packagePath = props.project_package.replace('.' as char, '/' as char)
 
 processTemplates 'pom.xml', props
 processTemplates 'build.gradle', props
+processTemplates 'settings.gradle', props
 processTemplates 'gradle.properties', props
 processTemplates 'src/main/java/*.java', props
 processTemplates 'src/test/java/*.java', props

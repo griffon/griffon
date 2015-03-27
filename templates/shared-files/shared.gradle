@@ -36,6 +36,7 @@ tasks.withType(Zip) { task ->
                 from(rootProject.file('templates/shared-files/sources')) {
                     exclude 'src'
                     exclude 'maven'
+                    exclude 'settings.gradle'
                     exclude 'gradle/package.gradle'
                     filter(org.apache.tools.ant.filters.ReplaceTokens,
                         tokens: ['griffon.version': project.version])
