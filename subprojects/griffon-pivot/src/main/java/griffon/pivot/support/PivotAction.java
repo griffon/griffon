@@ -16,8 +16,12 @@
 package griffon.pivot.support;
 
 import griffon.core.CallableWithArgs;
+import griffon.core.RunnableWithArgs;
 import org.apache.pivot.wtk.Action;
 import org.apache.pivot.wtk.Component;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static java.util.Objects.requireNonNull;
 
@@ -25,16 +29,23 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  */
 public class PivotAction extends Action {
+    private static final String ERROR_CALLABLE_NULL = "Argument 'callable' must not be null";
+    private static final String ERROR_RUNNABLE_NULL = "Argument 'runnable' must not be null";
     private String name;
     private String description;
-    private CallableWithArgs<Void> callable;
+    private RunnableWithArgs runnable;
 
     public PivotAction() {
-        this(null);
+
     }
 
-    public PivotAction(CallableWithArgs<Void> callable) {
-        this.callable = callable;
+    public PivotAction(@Nonnull RunnableWithArgs runnable) {
+        this.runnable = requireNonNull(runnable, ERROR_RUNNABLE_NULL);
+    }
+
+    @Deprecated
+    public PivotAction(@Nonnull CallableWithArgs<Void> callable) {
+        setCallable(callable);
     }
 
     public String getName() {
@@ -53,12 +64,23 @@ public class PivotAction extends Action {
         this.description = description;
     }
 
-    public CallableWithArgs<Void> getCallable() {
-        return callable;
+    @Deprecated
+    public void setCallable(final @Nonnull CallableWithArgs<Void> callable) {
+        requireNonNull(callable, ERROR_CALLABLE_NULL);
+        this.runnable = new RunnableWithArgs() {
+            @Override
+            public void run(@Nullable Object... args) {
+                callable.call(args);
+            }
+        };
     }
 
-    public void setCallable(CallableWithArgs<Void> callable) {
-        this.callable = callable;
+    public RunnableWithArgs getRunnable() {
+        return runnable;
+    }
+
+    public void setRunnable(RunnableWithArgs runnable) {
+        this.runnable = runnable;
     }
 
     public String toString() {
@@ -67,7 +89,7 @@ public class PivotAction extends Action {
 
     @Override
     public void perform(Component component) {
-        requireNonNull(callable, "Argument 'callable' must not be null for " + this);
-        callable.call(component);
+        requireNonNull(runnable, "Argument 'runnable' must not be null for " + this);
+        runnable.run(component);
     }
 }

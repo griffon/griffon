@@ -16,6 +16,7 @@
 package org.codehaus.griffon.runtime.core.event;
 
 import griffon.core.CallableWithArgs;
+import griffon.core.RunnableWithArgs;
 import griffon.core.event.Event;
 import griffon.core.event.EventPublisher;
 import griffon.core.event.EventRouter;
@@ -50,7 +51,17 @@ public abstract class AbstractEventPublisher implements EventPublisher {
         return eventRouter.isEventPublishingEnabled();
     }
 
+    public void setEventPublishingEnabled(boolean enabled) {
+        eventRouter.setEventPublishingEnabled(enabled);
+    }
+
     public <E extends Event> void removeEventListener(@Nonnull Class<E> eventClass, @Nonnull CallableWithArgs<?> listener) {
+        requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);
+        requireNonNull(listener, ERROR_LISTENER_NULL);
+        eventRouter.removeEventListener(eventClass, listener);
+    }
+
+    public <E extends Event> void removeEventListener(@Nonnull Class<E> eventClass, @Nonnull RunnableWithArgs listener) {
         requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);
         requireNonNull(listener, ERROR_LISTENER_NULL);
         eventRouter.removeEventListener(eventClass, listener);
@@ -67,6 +78,12 @@ public abstract class AbstractEventPublisher implements EventPublisher {
         eventRouter.addEventListener(eventName, listener);
     }
 
+    public void addEventListener(@Nonnull String eventName, @Nonnull RunnableWithArgs listener) {
+        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
+        requireNonNull(listener, ERROR_LISTENER_NULL);
+        eventRouter.addEventListener(eventName, listener);
+    }
+
     public void publishEvent(@Nonnull String eventName) {
         requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
         eventRouter.publishEvent(eventName);
@@ -77,12 +94,18 @@ public abstract class AbstractEventPublisher implements EventPublisher {
         eventRouter.publishEventOutsideUI(event);
     }
 
-    public void removeEventListener(@Nonnull Map<String, CallableWithArgs<?>> listener) {
+    public void removeEventListener(@Nonnull Map<String, Object> listener) {
         requireNonNull(listener, ERROR_LISTENER_NULL);
         eventRouter.removeEventListener(listener);
     }
 
     public <E extends Event> void addEventListener(@Nonnull Class<E> eventClass, @Nonnull CallableWithArgs<?> listener) {
+        requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);
+        requireNonNull(listener, ERROR_LISTENER_NULL);
+        eventRouter.addEventListener(eventClass, listener);
+    }
+
+    public <E extends Event> void addEventListener(@Nonnull Class<E> eventClass, @Nonnull RunnableWithArgs listener) {
         requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);
         requireNonNull(listener, ERROR_LISTENER_NULL);
         eventRouter.addEventListener(eventClass, listener);
@@ -114,18 +137,20 @@ public abstract class AbstractEventPublisher implements EventPublisher {
         eventRouter.removeEventListener(eventName, listener);
     }
 
+    public void removeEventListener(@Nonnull String eventName, @Nonnull RunnableWithArgs listener) {
+        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
+        requireNonNull(listener, ERROR_LISTENER_NULL);
+        eventRouter.removeEventListener(eventName, listener);
+    }
+
     public void removeEventListener(@Nonnull Object listener) {
         requireNonNull(listener, ERROR_LISTENER_NULL);
         eventRouter.removeEventListener(listener);
     }
 
-    public void addEventListener(@Nonnull Map<String, CallableWithArgs<?>> listener) {
+    public void addEventListener(@Nonnull Map<String, Object> listener) {
         requireNonNull(listener, ERROR_LISTENER_NULL);
         eventRouter.addEventListener(listener);
-    }
-
-    public void setEventPublishingEnabled(boolean enabled) {
-        eventRouter.setEventPublishingEnabled(enabled);
     }
 
     public void publishEvent(@Nonnull Event event) {

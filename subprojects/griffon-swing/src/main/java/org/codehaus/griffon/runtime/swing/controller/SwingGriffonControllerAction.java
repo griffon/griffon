@@ -15,7 +15,7 @@
  */
 package org.codehaus.griffon.runtime.swing.controller;
 
-import griffon.core.CallableWithArgs;
+import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
 import griffon.core.editors.PropertyEditorResolver;
@@ -63,11 +63,9 @@ public class SwingGriffonControllerAction extends AbstractAction {
         super(actionManager, controller, actionName);
         requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be null");
 
-        toolkitAction = new SwingAction(new CallableWithArgs<Void>() {
-            @Nullable
-            public Void call(@Nullable Object... args) {
+        toolkitAction = new SwingAction(new RunnableWithArgs() {
+            public void run(@Nullable Object... args) {
                 actionManager.invokeAction(controller, actionName, args);
-                return null;
             }
         });
 

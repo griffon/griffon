@@ -30,6 +30,7 @@ public interface BaseConstants {
     String JAVA_LANG_STRING = "java.lang.String";
     String JAVA_LANG_CLASS = "java.lang.Class";
     String GRIFFON_CORE_CALLABLEWITHARGS = "griffon.core.CallableWithArgs";
+    String GRIFFON_CORE_RUNNABLEWITHARGS = "griffon.core.RunnableWithArgs";
     String JAVA_UTIL_MAP = "java.util.Map";
     String JAVA_UTIL_LIST = "java.util.List";
     String JAVA_UTIL_COLLECTION = "java.util.Collection";

@@ -16,6 +16,7 @@
 package griffon.core.event;
 
 import griffon.core.CallableWithArgs;
+import griffon.core.RunnableWithArgs;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,31 +44,54 @@ public interface EventPublisher {
      *
      * @param eventName the name of the event
      * @param listener  an event listener
+     * @since 2.3.0
      */
+    void addEventListener(@Nonnull String eventName, @Nonnull RunnableWithArgs listener);
+
+    /**
+     * Adds a callable as an event listener.<p>
+     *
+     * @param eventName the name of the event
+     * @param listener  an event listener
+     * @deprecated use the {@code RunnableWithArgs} variant instead.
+     */
+    @Deprecated
     void addEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs<?> listener);
 
     /**
      * Adds a Map containing event listeners.<p>
-     * <p/>
-     * An event listener may be a<ul>
+     * <p>
+     * An event listener may be<ul>
+     * <li>a <tt>RunnableWithArgs</tt></li>
      * <li>a <tt>CallableWithArgs</tt></li>
      * </ul>
-     * <p/>
+     * <p>
      * Maps require handlers to be named as eventName only.<p>
      * Some examples of eventHandler names are: StartupStart, MyCoolEvent.
      * Event names must follow the camelCase naming convention.<p>
      *
      * @param listener an event listener of type Map
      */
-    void addEventListener(@Nonnull Map<String, CallableWithArgs<?>> listener);
+    void addEventListener(@Nonnull Map<String, Object> listener);
 
     /**
      * Adds a callable as an event listener.<p>
      *
      * @param eventClass the type of the event
      * @param listener   an event listener
+     * @deprecated use the {@code RunnableWithArgs} variant instead.
      */
+    @Deprecated
     <E extends Event> void addEventListener(@Nonnull Class<E> eventClass, @Nonnull CallableWithArgs<?> listener);
+
+    /**
+     * Adds a callable as an event listener.<p>
+     *
+     * @param eventClass the type of the event
+     * @param listener   an event listener
+     * @since 2.3.0
+     */
+    <E extends Event> void addEventListener(@Nonnull Class<E> eventClass, @Nonnull RunnableWithArgs listener);
 
     /**
      * Removes an event listener.<p>
@@ -82,30 +106,53 @@ public interface EventPublisher {
      *
      * @param eventName the name of the event
      * @param listener  an event listener
+     * @since 2.3.0
      */
+    void removeEventListener(@Nonnull String eventName, @Nonnull RunnableWithArgs listener);
+
+    /**
+     * Removes a callable as an event listener.<p>
+     *
+     * @param eventName the name of the event
+     * @param listener  an event listener
+     * @deprecated use the {@code RunnableWithArgs} variant instead.
+     */
+    @Deprecated
     void removeEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs<?> listener);
 
     /**
      * Removes a Map containing event listeners.<p>
-     * <p/>
-     * An event listener may be a<ul>
+     * <p>
+     * An event listener may be<ul>
+     * <li>a <tt>RunnableWithArgs</tt></li>
      * <li>a <tt>CallableWithArgs</tt></li>
      * </ul>
-     * <p/>
+     * <p>
      * Maps require handlers to be named as eventName only.<p>
      * Some examples of eventHandler names are: StartupStart, MyCoolEvent.
      * Event names must follow the camelCase naming convention.<p>
      *
      * @param listener an event listener of type Map
      */
-    void removeEventListener(@Nonnull Map<String, CallableWithArgs<?>> listener);
+    void removeEventListener(@Nonnull Map<String, Object> listener);
 
     /**
      * Removes a callable as an event listener.<p>
      *
      * @param eventClass the type of the event
      * @param listener   an event listener
+     * @since 2.3.0
      */
+    <E extends Event> void removeEventListener(@Nonnull Class<E> eventClass, @Nonnull RunnableWithArgs listener);
+
+    /**
+     * Removes a callable as an event listener.<p>
+     *
+     * @param eventClass the type of the event
+     * @param listener   an event listener
+     * @deprecated use the {@code RunnableWithArgs} variant instead.
+     */
+    @Deprecated
     <E extends Event> void removeEventListener(@Nonnull Class<E> eventClass, @Nonnull CallableWithArgs<?> listener);
 
     /**

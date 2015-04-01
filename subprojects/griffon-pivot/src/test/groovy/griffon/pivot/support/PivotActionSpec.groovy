@@ -15,7 +15,7 @@
  */
 package griffon.pivot.support
 
-import griffon.core.CallableWithArgs
+import griffon.core.RunnableWithArgs
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -24,9 +24,9 @@ class PivotActionSpec extends Specification {
     void 'Create and execute an action'() {
         given:
         boolean invoked = false
-        CallableWithArgs callable = { invoked = true }
+        RunnableWithArgs runnable = { invoked = true }
         PivotAction action = new PivotAction()
-        action.callable = callable
+        action.runnable = runnable
 
         when:
         action.name = 'action'
@@ -37,7 +37,7 @@ class PivotActionSpec extends Specification {
         invoked
         action.name == 'action'
         action.description == 'random description'
-        action.callable == callable
+        action.runnable == runnable
         action.toString() == 'Action[action, random description]'
     }
 }

@@ -15,8 +15,8 @@
  */
 package org.codehaus.griffon.runtime.core;
 
-import griffon.core.CallableWithArgs;
 import griffon.core.GriffonApplication;
+import griffon.core.RunnableWithArgs;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,12 +27,8 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  * @since 2.0.0
  */
-public final class MVCGroupExceptionHandler implements CallableWithArgs<Void> {
+public final class MVCGroupExceptionHandler implements RunnableWithArgs {
     private final GriffonApplication application;
-
-    public static void registerWith(@Nonnull GriffonApplication application) {
-        new MVCGroupExceptionHandler(application);
-    }
 
     private MVCGroupExceptionHandler(@Nonnull GriffonApplication application) {
         this.application = requireNonNull(application, "Argument 'application' must not be null");
@@ -41,12 +37,14 @@ public final class MVCGroupExceptionHandler implements CallableWithArgs<Void> {
         application.getEventRouter().addEventListener("UncaughtMVCGroupInstantiationException", this);
     }
 
-    @Nullable
-    public Void call(@Nullable Object... args) {
+    public static void registerWith(@Nonnull GriffonApplication application) {
+        new MVCGroupExceptionHandler(application);
+    }
+
+    public void run(@Nullable Object... args) {
         Exception exception = (Exception) args[0];
         application.getLog().error("Unrecoverable error", exception);
         // exception.printStackTrace();
         System.exit(1);
-        return null;
     }
 }

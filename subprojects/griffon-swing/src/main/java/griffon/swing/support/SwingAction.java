@@ -16,6 +16,7 @@
 package griffon.swing.support;
 
 import griffon.core.CallableWithArgs;
+import griffon.core.RunnableWithArgs;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,16 +36,24 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class SwingAction extends AbstractAction {
-    private static final long serialVersionUID = 4598888514827528435L;
+    private static final long serialVersionUID = 4493562556110760713L;
     private static final String ERROR_CALLABLE_NULL = "Argument 'callable' must not be null";
-    private final CallableWithArgs<?> callable;
+    private static final String ERROR_RUNNABLE_NULL = "Argument 'runnable' must not be null";
+    private RunnableWithArgs runnable;
 
-    public SwingAction(@Nonnull CallableWithArgs<?> callable) {
-        this.callable = requireNonNull(callable, ERROR_CALLABLE_NULL);
+    @Deprecated
+    public SwingAction(final @Nonnull CallableWithArgs<?> callable) {
+        requireNonNull(callable, ERROR_CALLABLE_NULL);
+        this.runnable = new RunnableWithArgs() {
+            @Override
+            public void run(@Nullable Object... args) {
+                callable.call(args);
+            }
+        };
     }
 
-    public final void actionPerformed(ActionEvent evt) {
-        callable.call(evt);
+    public SwingAction(@Nonnull RunnableWithArgs runnable) {
+        this.runnable = requireNonNull(runnable, ERROR_RUNNABLE_NULL);
     }
 
     @Nonnull
@@ -62,6 +71,10 @@ public class SwingAction extends AbstractAction {
         return new ActionBuilder().withName(name);
     }
 
+    public final void actionPerformed(ActionEvent evt) {
+        runnable.run(evt);
+    }
+
     /**
      * A builder for actions.
      *
@@ -77,7 +90,7 @@ public class SwingAction extends AbstractAction {
         private String command;
         private Icon smallIcon;
         private Icon largeIcon;
-        private CallableWithArgs<?> callable;
+        private RunnableWithArgs runnable;
         private boolean enabled = true;
         private boolean selected = false;
 
@@ -162,8 +175,21 @@ public class SwingAction extends AbstractAction {
         }
 
         @Nonnull
-        public ActionBuilder withRunnable(@Nullable CallableWithArgs<?> callable) {
-            this.callable = callable;
+        @Deprecated
+        public ActionBuilder withRunnable(final @Nullable CallableWithArgs<?> callable) {
+            requireNonNull(callable, ERROR_CALLABLE_NULL);
+            this.runnable = new RunnableWithArgs() {
+                @Override
+                public void run(@Nullable Object... args) {
+                    callable.call(args);
+                }
+            };
+            return this;
+        }
+
+        @Nonnull
+        public ActionBuilder withRunnable(@Nullable RunnableWithArgs runnable) {
+            this.runnable = runnable;
             return this;
         }
 
@@ -183,11 +209,11 @@ public class SwingAction extends AbstractAction {
 
         @Nonnull
         public Action build() {
-            if (callable == null && action == null) {
-                throw new IllegalArgumentException("Either closure: or action: must have a value.");
+            if (runnable == null && action == null) {
+                throw new IllegalArgumentException("Either runnable, callable, or action must have a value.");
             }
             if (action == null) {
-                action = new SwingAction(callable);
+                action = new SwingAction(runnable);
             }
             if (!isBlank(command)) {
                 action.putValue(Action.ACTION_COMMAND_KEY, command);

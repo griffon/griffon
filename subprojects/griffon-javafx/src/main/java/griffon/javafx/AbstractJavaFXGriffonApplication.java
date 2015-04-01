@@ -18,11 +18,11 @@ package griffon.javafx;
 import griffon.core.ApplicationClassLoader;
 import griffon.core.ApplicationConfigurer;
 import griffon.core.ApplicationEvent;
-import griffon.core.CallableWithArgs;
 import griffon.core.Configuration;
 import griffon.core.Context;
 import griffon.core.ExecutorServiceManager;
 import griffon.core.GriffonApplication;
+import griffon.core.RunnableWithArgs;
 import griffon.core.ShutdownHandler;
 import griffon.core.addon.AddonManager;
 import griffon.core.addon.GriffonAddon;
@@ -371,12 +371,10 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
         log.debug("Shutdown stage 1: notify all event listeners");
         if (getEventRouter().isEventPublishingEnabled()) {
             final CountDownLatch latch = new CountDownLatch(getUIThreadManager().isUIThread() ? 1 : 0);
-            getEventRouter().addEventListener(ApplicationEvent.SHUTDOWN_START.getName(), new CallableWithArgs<Void>() {
+            getEventRouter().addEventListener(ApplicationEvent.SHUTDOWN_START.getName(), new RunnableWithArgs() {
                 @Override
-                @Nullable
-                public Void call(@Nullable Object... args) {
+                public void run(@Nullable Object... args) {
                     latch.countDown();
-                    return null;
                 }
             });
             event(ApplicationEvent.SHUTDOWN_START, asList(this));

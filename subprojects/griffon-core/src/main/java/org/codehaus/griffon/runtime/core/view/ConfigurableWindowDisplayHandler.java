@@ -17,6 +17,7 @@ package org.codehaus.griffon.runtime.core.view;
 
 import griffon.core.CallableWithArgs;
 import griffon.core.GriffonApplication;
+import griffon.core.RunnableWithArgs;
 import griffon.core.view.WindowDisplayHandler;
 import griffon.exceptions.InstanceNotFoundException;
 import org.slf4j.Logger;
@@ -49,7 +50,7 @@ import static java.util.Objects.requireNonNull;
  *         ]
  *     }
  * </pre>
- * <p/>
+ * <p>
  * For these settings to work you must specify a <code>name:</code> property on the Window/Frame instance. This
  * {@code WindowDisplayHandler} is smart enough to use the default show/hide behavior should any or both are not specified
  * or if a window name does not have a matching configuration. The default behavior will also be used if the Window/Frame
@@ -66,7 +67,7 @@ import static java.util.Objects.requireNonNull;
  *         ]
  *     }
  * </pre>
- * <p/>
+ * <p>
  * Lastly, a global handler can be specified for all windows that have not been configured. If specified, this handler will
  * override the usage of the default one. It can be configured as follows<p>
  * <pre>
@@ -77,10 +78,10 @@ import static java.util.Objects.requireNonNull;
  *         ]
  *     }
  * </pre>
- * <p/>
+ * <p>
  * Fine grained control for default <code>show</code> and <code>hide</code> is also possible, by specifying <code>defaultShow</code>
  * and/or <code>defaultHide</code> properties at the global level. These properties take precedence over <code>defaultHandler</code> .
- * <p/>
+ * <p>
  * <pre>
  *     windowManager {
  *         defaultHide = {name, window -> ... }
@@ -89,18 +90,16 @@ import static java.util.Objects.requireNonNull;
  *         ]
  *     }
  * </pre>
- * <p/>
+ * <p>
  * <strong>Note:</strong> the value for <code>show</code> and <code>hide</code> can be either a Closure or a {@code RunnableWithArgs}.
  *
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler<W> {
-    private static final Logger LOG = LoggerFactory.getLogger(ConfigurableWindowDisplayHandler.class);
-
     protected static final String ERROR_NAME_BLANK = "Argument 'name' must not be blank";
     protected static final String ERROR_WINDOW_NULL = "Argument 'window' must not be null";
-
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigurableWindowDisplayHandler.class);
     private final GriffonApplication application;
     private final WindowDisplayHandler<W> delegateWindowsDisplayHandler;
 
@@ -217,11 +216,13 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
     }
 
     protected boolean canBeRun(@Nullable Object obj) {
-        return obj instanceof CallableWithArgs;
+        return obj instanceof RunnableWithArgs || obj instanceof CallableWithArgs;
     }
 
     protected void run(@Nonnull Object handler, @Nonnull String name, @Nonnull W window) {
-        if (handler instanceof CallableWithArgs) {
+        if (handler instanceof RunnableWithArgs) {
+            ((RunnableWithArgs) handler).run(name, window);
+        } else if (handler instanceof CallableWithArgs) {
             ((CallableWithArgs<?>) handler).call(name, window);
         }
     }

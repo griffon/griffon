@@ -15,7 +15,7 @@
  */
 package org.codehaus.griffon.runtime.pivot.controller;
 
-import griffon.core.CallableWithArgs;
+import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
 import griffon.core.threading.UIThreadManager;
@@ -36,19 +36,16 @@ import static java.util.Objects.requireNonNull;
  */
 public class PivotGriffonControllerAction extends AbstractAction {
     public static final String KEY_DESCRIPTION = "description";
-
-    private String description;
     private final PivotAction toolkitAction;
+    private String description;
 
     public PivotGriffonControllerAction(final @Nonnull UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
         super(actionManager, controller, actionName);
         requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be null");
 
-        toolkitAction = new PivotAction(new CallableWithArgs<Void>() {
-            @Nullable
-            public Void call(@Nullable Object... args) {
+        toolkitAction = new PivotAction(new RunnableWithArgs() {
+            public void run(@Nullable Object... args) {
                 actionManager.invokeAction(controller, actionName, args);
-                return null;
             }
         });
 

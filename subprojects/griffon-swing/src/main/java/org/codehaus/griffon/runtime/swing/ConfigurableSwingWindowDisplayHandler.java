@@ -17,6 +17,7 @@ package org.codehaus.griffon.runtime.swing;
 
 import griffon.core.CallableWithArgs;
 import griffon.core.GriffonApplication;
+import griffon.core.RunnableWithArgs;
 import griffon.core.view.WindowDisplayHandler;
 import griffon.exceptions.InstanceNotFoundException;
 import griffon.swing.SwingWindowDisplayHandler;
@@ -126,7 +127,9 @@ public class ConfigurableSwingWindowDisplayHandler extends ConfigurableWindowDis
     }
 
     protected void run(@Nonnull Object handler, @Nonnull String name, @Nonnull JInternalFrame window) {
-        if (handler instanceof CallableWithArgs) {
+        if (handler instanceof RunnableWithArgs) {
+            ((RunnableWithArgs) handler).run(name, window);
+        } else if (handler instanceof CallableWithArgs) {
             ((CallableWithArgs<?>) handler).call(name, window);
         }
     }
