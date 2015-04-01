@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.swing.JInternalFrame;
@@ -41,6 +42,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Arrays.asList;
@@ -80,6 +82,41 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
             }
         }
         return null;
+    }
+
+    @Nonnull
+    @Override
+    public Set<String> getInternalWindowNames() {
+        return Collections.unmodifiableSet(internalFrames.keySet());
+    }
+
+    @Nullable
+    @Override
+    public String findInternalWindowName(@Nonnull JInternalFrame window) {
+        requireNonNull(window, ERROR_WINDOW_NULL);
+        synchronized (internalFrames) {
+            for (Map.Entry<String, JInternalFrame> e : internalFrames.entrySet()) {
+                if (e.getValue().equals(window)) {
+                    return e.getKey();
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public int indexOfInternal(@Nonnull JInternalFrame window) {
+        requireNonNull(window, ERROR_WINDOW_NULL);
+        synchronized (internalFrames) {
+            int index = 0;
+            for (JInternalFrame w : internalFrames.values()) {
+                if (window.equals(w)) {
+                    return index;
+                }
+                index++;
+            }
+        }
+        return -1;
     }
 
     /**
