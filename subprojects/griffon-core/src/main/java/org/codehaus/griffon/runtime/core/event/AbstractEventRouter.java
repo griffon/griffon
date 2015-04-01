@@ -195,7 +195,15 @@ public abstract class AbstractEventRouter implements EventRouter {
     @SuppressWarnings("unchecked")
     public void addEventListener(@Nonnull Object listener) {
         requireNonNull(listener, ERROR_LISTENER_NULL);
-        if (listener instanceof RunnableWithArgs || listener instanceof CallableWithArgs) return;
+        if (listener instanceof RunnableWithArgs) {
+            throw new IllegalArgumentException("Cannot add an event listener of type " + RunnableWithArgs.class.getName() +
+                " because the target event name is missing. " + listener);
+        }
+        if (listener instanceof CallableWithArgs) {
+            throw new IllegalArgumentException("Cannot add an event listener of type " + CallableWithArgs.class.getName() +
+                " because the target event name is missing. " + listener);
+        }
+
         if (listener instanceof Map) {
             addEventListener((Map) listener);
             return;
@@ -235,7 +243,15 @@ public abstract class AbstractEventRouter implements EventRouter {
     @SuppressWarnings("unchecked")
     public void removeEventListener(@Nonnull Object listener) {
         requireNonNull(listener, ERROR_LISTENER_NULL);
-        if (listener instanceof RunnableWithArgs || listener instanceof CallableWithArgs) return;
+        if (listener instanceof RunnableWithArgs) {
+            throw new IllegalArgumentException("Cannot remove an event listener of type " + RunnableWithArgs.class.getName() +
+                " because the target event name is missing. " + listener);
+        }
+        if (listener instanceof CallableWithArgs) {
+            throw new IllegalArgumentException("Cannot remove an event listener of type " + CallableWithArgs.class.getName() +
+                " because the target event name is missing. " + listener);
+        }
+
         if (listener instanceof Map) {
             removeEventListener((Map) listener);
             return;
