@@ -109,7 +109,8 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> im
          * Triggers a <tt>WindowShown</tt> event with the window as sole argument
          */
         public void handle(WindowEvent windowEvent) {
-            event(ApplicationEvent.WINDOW_SHOWN, asList(windowEvent.getSource()));
+            Window window = (Window) windowEvent.getSource();
+            event(ApplicationEvent.WINDOW_SHOWN, asList(findWindowName(window), window));
         }
     }
 
@@ -123,7 +124,8 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> im
          * Triggers a <tt>WindowHidden</tt> event with the window as sole argument
          */
         public void handle(WindowEvent windowEvent) {
-            event(ApplicationEvent.WINDOW_HIDDEN, asList(windowEvent.getSource()));
+            Window window = (Window) windowEvent.getSource();
+            event(ApplicationEvent.WINDOW_HIDDEN, asList(findWindowName(window), window));
         }
     }
 }

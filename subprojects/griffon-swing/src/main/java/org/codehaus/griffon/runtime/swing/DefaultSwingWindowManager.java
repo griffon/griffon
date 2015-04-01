@@ -345,14 +345,16 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
          * Triggers a <tt>WindowShown</tt> event with the window as sole argument
          */
         public void componentShown(ComponentEvent event) {
-            event(ApplicationEvent.WINDOW_SHOWN, asList(event.getSource()));
+            Window window = (Window) event.getSource();
+            event(ApplicationEvent.WINDOW_SHOWN, asList(findWindowName(window), window));
         }
 
         /**
          * Triggers a <tt>WindowHidden</tt> event with the window as sole argument
          */
         public void componentHidden(ComponentEvent event) {
-            event(ApplicationEvent.WINDOW_HIDDEN, asList(event.getSource()));
+            Window window = (Window) event.getSource();
+            event(ApplicationEvent.WINDOW_HIDDEN, asList(findWindowName(window), window));
         }
     }
 
@@ -371,7 +373,8 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
          * Triggers a <tt>WindowShown</tt> event with the internal frame as sole argument
          */
         public void internalFrameOpened(InternalFrameEvent event) {
-            event(ApplicationEvent.WINDOW_SHOWN, asList(event.getSource()));
+            JInternalFrame window = (JInternalFrame) event.getSource();
+            event(ApplicationEvent.WINDOW_SHOWN, asList(findInternalWindowName(window), window));
 
         }
 
@@ -379,7 +382,8 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
          * Triggers a <tt>WindowHidden</tt> event with the internal frame as sole argument
          */
         public void internalFrameClosed(InternalFrameEvent event) {
-            event(ApplicationEvent.WINDOW_HIDDEN, asList(event.getSource()));
+            JInternalFrame window = (JInternalFrame) event.getSource();
+            event(ApplicationEvent.WINDOW_HIDDEN, asList(findInternalWindowName(window), window));
         }
     }
 }
