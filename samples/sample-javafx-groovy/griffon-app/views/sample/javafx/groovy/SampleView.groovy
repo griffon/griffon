@@ -25,16 +25,16 @@ class SampleView {
 
     void initUI() {
         builder.application(title: application.configuration['application.title'],
-            sizeToScene: true, centerOnScreen: true) {                                         //<2>
+            name: 'mainWindow', sizeToScene: true, centerOnScreen: true) {                     //<2>
             scene(fill: WHITE, width: 400, height: 120) {
                 anchorPane {
                     label(leftAnchor: 14, topAnchor: 11,
                           text: application.messageSource.getMessage('name.label'))
-                    textField(leftAnchor: 172, topAnchor: 11, prefWidth: 200,
+                    textField(leftAnchor: 172, topAnchor: 11, prefWidth: 200, id: 'input',
                               text: bind(model.inputProperty()))                               //<3>
                     button(leftAnchor: 172, topAnchor: 45, prefWidth: 200,
-                           sayHelloAction)                                                     //<4>
-                    label(leftAnchor: 14, topAnchor: 80, prefWidth: 200,
+                           id: 'sayHelloActionTarget', sayHelloAction)                         //<4>
+                    label(leftAnchor: 14, topAnchor: 80, prefWidth: 200, id: 'output',
                         text: bind(model.outputProperty()))                                    //<3>
                 }
             }

@@ -16,7 +16,7 @@ class ${project_class_name}View {
                     label(id: 'clickLabel', row: 0, column: 0,
                           text: bind(model.clickCountProperty()))
                     button(row: 1, column: 0, prefWidth: 200,
-                           clickAction)
+                           id: 'clickActionTarget', clickAction)
                 }
             }
         }

@@ -69,6 +69,7 @@ if (artifactBaseName == 'mvcgroup') {
     processArtifact(className, 'View', 'view', 'griffon-app/views')
     processArtifact(className, 'Controller', 'controller', 'griffon-app/controllers')
     processArtifact(className + 'Controller', 'Test', 'controller', 'src/test/groovy')
+    processArtifact(className, 'IntegrationTest', 'view', 'src/integration-test/groovy')
     println "Do not forget to add the group '$groupName' to griffon-app/conf/Config.groovy"
 } else if (artifactBaseName == 'test') {
     String artifactType = ''
@@ -78,6 +79,8 @@ if (artifactBaseName == 'mvcgroup') {
         }
     }
     processArtifact(className, 'Test', artifactType, 'src/test/groovy')
+} else if (artifactBaseName == 'integrationtest') {
+    processArtifact(className, 'IntegrationTest', 'view', 'src/integration-test/groovy')
 } else if (artifactBaseName == 'spec') {
     String artifactType = ''
     ['Controller', 'Model', 'Service'].each { s ->
@@ -86,9 +89,13 @@ if (artifactBaseName == 'mvcgroup') {
         }
     }
     processArtifact(className, 'Spec', artifactType, 'src/test/groovy')
+} else if (artifactBaseName == 'integrationspec') {
+    processArtifact(className, 'IntegrationSpec', 'view', 'src/integration-test/groovy')
 } else {
     processArtifact(className, artifactBaseName.capitalize(), artifactBaseName, 'griffon-app/' + artifactBaseName + 's')
     if (artifactBaseName != 'view') {
         processArtifact(className + artifactBaseName.capitalize(), 'Test', artifactBaseName, 'src/test/groovy')
+    } else {
+        processArtifact(className, 'IntegrationTest', 'view', 'src/integration-test/groovy')
     }
 }

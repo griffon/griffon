@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import spock.lang.Specification
+package griffon.javafx.test;
 
-class DummySpec extends Specification {
-    void 'Dummy spec'() {
-        // placeholder for enabling aggregate JaCoCo reports
+import org.testfx.api.FxRobot;
 
-        expect:
-        true
-    }
+/**
+ * @author Andres Almiray
+ * @since 2.3.0
+ */
+public class TestFX extends FxRobot {
+
 }

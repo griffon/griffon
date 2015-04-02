@@ -80,13 +80,13 @@ subprojects { subproj ->
         }
 
         subproj.tasks.withType(JavaCompile) {
-            sourceCompatibility = '1.7'
-            targetCompatibility = '1.7'
+            sourceCompatibility = subproj.sourceCompatibility
+            targetCompatibility = subproj.targetCompatibility
         }
 
         subproj.tasks.withType(GroovyCompile) {
-            sourceCompatibility = '1.7'
-            targetCompatibility = '1.7'
+            sourceCompatibility = subproj.sourceCompatibility
+            targetCompatibility = subproj.targetCompatibility
         }
 
         dependencies {
