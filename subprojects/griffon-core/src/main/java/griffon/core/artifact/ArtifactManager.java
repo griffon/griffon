@@ -15,9 +15,6 @@
  */
 package griffon.core.artifact;
 
-import griffon.core.ShutdownHandler;
-import griffon.core.injection.Injector;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -31,7 +28,7 @@ import java.util.Set;
  * @since 2.0.0
  */
 @SuppressWarnings("rawtypes")
-public interface ArtifactManager extends ShutdownHandler {
+public interface ArtifactManager {
     List<GriffonClass> EMPTY_GRIFFON_CLASS_LIST = Collections.emptyList();
 
     /**
@@ -54,7 +51,7 @@ public interface ArtifactManager extends ShutdownHandler {
      * Should call initialize() on artifact handlers if there are any
      * registered already.
      */
-    void loadArtifactMetadata(@Nonnull Injector<?> injector);
+    void loadArtifactMetadata();
 
     /**
      * Finds an artifact by name and type.<p>
@@ -151,10 +148,9 @@ public interface ArtifactManager extends ShutdownHandler {
      *
      * @param griffonClass the GriffonClass for which an instance must be created
      * @return a newly instantiated object of type <tt>clazz</tt>. Implementations must be sure
-     *         to trigger an event of type ApplicationEvent.NEW_INSTANCE.
-     * @throws griffon.exceptions.ArtifactNotFoundException
-     *          if there's no artifact configured
-     *          matching the given criteria
+     * to trigger an event of type ApplicationEvent.NEW_INSTANCE.
+     * @throws griffon.exceptions.ArtifactNotFoundException if there's no artifact configured
+     *                                                      matching the given criteria
      */
     @Nonnull
     <A extends GriffonArtifact> A newInstance(@Nonnull GriffonClass griffonClass);
@@ -169,10 +165,9 @@ public interface ArtifactManager extends ShutdownHandler {
      *
      * @param clazz the Class for which an instance must be created
      * @return a newly instantiated object of type <tt>clazz</tt>. Implementations must be sure
-     *         to trigger an event of type ApplicationEvent.NEW_INSTANCE.
-     * @throws griffon.exceptions.ArtifactNotFoundException
-     *          if there's no artifact configured
-     *          matching the given criteria
+     * to trigger an event of type ApplicationEvent.NEW_INSTANCE.
+     * @throws griffon.exceptions.ArtifactNotFoundException if there's no artifact configured
+     *                                                      matching the given criteria
      */
     @Nonnull
     <A extends GriffonArtifact> A newInstance(@Nonnull Class<A> clazz);

@@ -19,21 +19,14 @@ import griffon.core.GriffonApplication;
 import griffon.core.artifact.ArtifactHandler;
 import griffon.core.artifact.GriffonArtifact;
 import griffon.core.artifact.GriffonClass;
-import griffon.core.injection.Binding;
-import org.codehaus.griffon.runtime.core.injection.Bindings;
-import org.codehaus.griffon.runtime.core.injection.LinkedBindingBuilder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static griffon.util.AnnotationUtils.typed;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
@@ -49,9 +42,8 @@ public abstract class AbstractArtifactHandler<A extends GriffonArtifact> impleme
     private final String type;
     private final String trailing;
     private final GriffonApplication application;
-
-    private GriffonClass[] griffonClasses = new GriffonClass[0];
     private final Map<String, GriffonClass> classesByName = new TreeMap<>();
+    private GriffonClass[] griffonClasses = new GriffonClass[0];
 
     @Inject
     public AbstractArtifactHandler(@Nonnull GriffonApplication application, @Nonnull Class<A> artifactType, @Nonnull String type, @Nonnull String trailing) {
@@ -76,26 +68,14 @@ public abstract class AbstractArtifactHandler<A extends GriffonArtifact> impleme
         return trailing;
     }
 
-    @Nonnull
-    public Collection<Binding<?>> initialize(@Nonnull Class<A>[] classes) {
+    public void initialize(@Nonnull Class<A>[] classes) {
         griffonClasses = new GriffonClass[classes.length];
-        List<Binding<?>> bindings = new ArrayList<>();
         for (int i = 0; i < classes.length; i++) {
             Class<A> klass = classes[i];
             GriffonClass griffonClass = newGriffonClassInstance(klass);
             griffonClasses[i] = griffonClass;
             classesByName.put(klass.getName(), griffonClass);
-            createBindings(bindings, klass, griffonClass);
         }
-        return bindings;
-    }
-
-    protected void createBindings(@Nonnull List<Binding<?>> bindings, @Nonnull Class<A> clazz, @Nonnull GriffonClass griffonClass) {
-        LinkedBindingBuilder<GriffonClass> builder = Bindings.bind(GriffonClass.class)
-            .withClassifier(typed(clazz));
-        builder.toInstance(griffonClass);
-        bindings.add(builder.getBinding());
-        bindings.add(Bindings.bind(clazz).getBinding());
     }
 
     @Nonnull

@@ -44,11 +44,5 @@ public interface Injector<I> {
     @Nonnull
     I getDelegateInjector();
 
-    @Nonnull
-    Injector<I> createNestedInjector(@Nonnull Iterable<Binding<?>> bindings);
-
-    @Nonnull
-    Injector<I> createNestedInjector(@Nonnull String name, @Nonnull Iterable<Binding<?>> bindings);
-
     void close();
 }

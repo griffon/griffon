@@ -19,17 +19,11 @@ import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonClass;
 import griffon.core.artifact.GriffonService;
 import griffon.core.artifact.GriffonServiceClass;
-import griffon.core.injection.Binding;
 import griffon.inject.Typed;
-import org.codehaus.griffon.runtime.core.injection.AnnotatedBindingBuilder;
-import org.codehaus.griffon.runtime.core.injection.Bindings;
-import org.codehaus.griffon.runtime.core.injection.LinkedBindingBuilder;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.List;
 
-import static griffon.util.AnnotationUtils.typed;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -48,16 +42,5 @@ public class ServiceArtifactHandler extends AbstractArtifactHandler<GriffonServi
     public GriffonClass newGriffonClassInstance(@Nonnull Class<GriffonService> clazz) {
         requireNonNull(clazz, ERROR_CLASS_NULL);
         return new DefaultGriffonServiceClass(getApplication(), clazz);
-    }
-
-    @Override
-    protected void createBindings(@Nonnull List<Binding<?>> bindings, @Nonnull Class<GriffonService> clazz, @Nonnull GriffonClass griffonClass) {
-        LinkedBindingBuilder<GriffonClass> builder1 = Bindings.bind(GriffonClass.class)
-            .withClassifier(typed(clazz));
-        builder1.toInstance(griffonClass);
-        bindings.add(builder1.getBinding());
-        AnnotatedBindingBuilder<GriffonService> builder2 = Bindings.bind(clazz);
-        builder2.asSingleton();
-        bindings.add(builder2.getBinding());
     }
 }

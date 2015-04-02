@@ -15,12 +15,10 @@
  */
 package org.codehaus.griffon.runtime.core.artifact;
 
-import griffon.core.GriffonApplication;
 import griffon.core.artifact.ArtifactHandler;
 import griffon.core.artifact.ArtifactManager;
 import griffon.core.artifact.GriffonArtifact;
 import griffon.core.artifact.GriffonClass;
-import griffon.core.injection.Binding;
 import griffon.core.injection.Injector;
 import griffon.exceptions.ArtifactHandlerNotFoundException;
 import griffon.exceptions.ArtifactNotFoundException;
@@ -29,8 +27,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +58,9 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
     private final Map<String, Class<? extends GriffonArtifact>[]> artifacts = new ConcurrentHashMap<>();
     private final Map<String, ArtifactHandler> artifactHandlers = new ConcurrentHashMap<>();
     private final Object lock = new Object[0];
-    private Injector<?> artifactInjector;
+
+    @Inject
+    private Provider<Injector> injectorProvider;
 
     @Nonnull
     protected Map<String, ArtifactHandler> getArtifactHandlers() {
@@ -67,11 +68,9 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
     }
 
     @SuppressWarnings("unchecked")
-    public final void loadArtifactMetadata(@Nonnull Injector<?> injector) {
-        requireNonNull(injector, "Argument 'injector' must not be null");
+    public final void loadArtifactMetadata() {
         Map<String, List<Class<? extends GriffonArtifact>>> loadedArtifacts = doLoadArtifactMetadata();
 
-        Collection<Binding<?>> bindings = new ArrayList<>();
         synchronized (lock) {
             for (Map.Entry<String, List<Class<? extends GriffonArtifact>>> artifactsEntry : loadedArtifacts.entrySet()) {
                 String type = artifactsEntry.getKey();
@@ -81,18 +80,8 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
                 }
                 List<Class<? extends GriffonArtifact>> list = artifactsEntry.getValue();
                 artifacts.put(type, list.toArray(new Class[list.size()]));
-                //noinspection unchecked
-                bindings.addAll(handler.initialize(artifacts.get(type)));
             }
         }
-
-        if (LOG.isTraceEnabled()) {
-            for (Binding<?> binding : bindings) {
-                LOG.trace(binding.toString());
-            }
-        }
-
-        artifactInjector = injector.createNestedInjector("artifactInjector", bindings);
     }
 
     @Nonnull
@@ -122,7 +111,10 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
             throw new ArtifactNotFoundException(clazz);
         }
 
-        return artifactInjector.getInstance(clazz);
+        Injector injector = injectorProvider.get();
+        A artifact = (A) injector.getInstance(clazz);
+        injector.injectMembers(artifact);
+        return artifact;
     }
 
     @Nonnull
@@ -175,7 +167,6 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
     @Nullable
     public <A extends GriffonArtifact> GriffonClass findGriffonClass(@Nonnull A artifact) {
         requireNonNull(artifact, ERROR_ARTIFACT_NULL);
-        LOG.debug("Searching for griffonClass of {}", artifact);
         synchronized (lock) {
             return findGriffonClass(artifact.getClass());
         }
@@ -228,16 +219,6 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
             }
         }
         return Collections.unmodifiableList(all);
-    }
-
-    @Override
-    public boolean canShutdown(@Nonnull GriffonApplication application) {
-        return true;
-    }
-
-    @Override
-    public void onShutdown(@Nonnull GriffonApplication application) {
-        artifactInjector.close();
     }
 
     protected <A extends GriffonArtifact> boolean isClassOfType(@Nonnull String type, @Nonnull Class<A> clazz) {

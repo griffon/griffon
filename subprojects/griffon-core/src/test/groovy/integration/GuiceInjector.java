@@ -33,7 +33,6 @@ import griffon.exceptions.ClosedInjectorException;
 import griffon.exceptions.InstanceNotFoundException;
 import griffon.exceptions.MembersInjectionException;
 import griffon.util.AnnotationUtils;
-import org.codehaus.griffon.runtime.core.injection.InjectorProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,8 +44,6 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.google.inject.util.Providers.guicify;
-import static griffon.util.AnnotationUtils.named;
-import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 public class GuiceInjector implements Injector<com.google.inject.Injector> {
@@ -55,9 +52,74 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
     @GuardedBy("lock")
     private boolean closed;
 
-
     public GuiceInjector(@Nonnull com.google.inject.Injector delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
+    }
+
+    static Module moduleFromBindings(final @Nonnull Iterable<Binding<?>> bindings) {
+        return new AbstractModule() {
+            @Override
+            protected void configure() {
+                for (Binding<?> binding : bindings) {
+                    if (binding instanceof TargetBinding) {
+                        handleTargetBinding((TargetBinding) binding);
+                    } else if (binding instanceof InstanceBinding) {
+                        handleInstanceBinding((InstanceBinding) binding);
+                    } else if (binding instanceof ProviderTypeBinding) {
+                        handleProviderTypeBinding((ProviderTypeBinding) binding);
+                    } else if (binding instanceof ProviderBinding) {
+                        handleProviderBinding((ProviderBinding) binding);
+                    } else {
+                        throw new IllegalArgumentException("Don't know how to handle " + binding);
+                    }
+                }
+            }
+
+            @Nonnull
+            private LinkedBindingBuilder handleBinding(@Nonnull Binding<?> binding) {
+                AnnotatedBindingBuilder<?> builder = bind(binding.getSource());
+                if (binding.getClassifier() != null) {
+                    return builder.annotatedWith(binding.getClassifier());
+                } else if (binding.getClassifierType() != null) {
+                    return builder.annotatedWith(binding.getClassifierType());
+                }
+                return builder;
+            }
+
+            @SuppressWarnings("unchecked")
+            private void handleTargetBinding(@Nonnull TargetBinding<?> binding) {
+                LinkedBindingBuilder lbuilder = handleBinding(binding);
+                if (binding.getSource() != binding.getTarget()) {
+                    ScopedBindingBuilder sbuilder = lbuilder.to(binding.getTarget());
+                    if (binding.isSingleton()) {
+                        sbuilder.in(Singleton.class);
+                    }
+                } else if (binding.isSingleton()) {
+                    lbuilder.in(Singleton.class);
+                }
+            }
+
+            @SuppressWarnings("unchecked")
+            private void handleInstanceBinding(@Nonnull InstanceBinding<?> binding) {
+                handleBinding(binding).toInstance(binding.getInstance());
+            }
+
+            @SuppressWarnings("unchecked")
+            private void handleProviderTypeBinding(@Nonnull ProviderTypeBinding<?> binding) {
+                ScopedBindingBuilder builder = handleBinding(binding).toProvider(binding.getProviderType());
+                if (binding.isSingleton()) {
+                    builder.in(Singleton.class);
+                }
+            }
+
+            @SuppressWarnings("unchecked")
+            private void handleProviderBinding(@Nonnull ProviderBinding<?> binding) {
+                ScopedBindingBuilder builder = handleBinding(binding).toProvider(guicify(binding.getProvider()));
+                if (binding.isSingleton()) {
+                    builder.in(Singleton.class);
+                }
+            }
+        };
     }
 
     @Nonnull
@@ -188,41 +250,6 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
         return delegate;
     }
 
-    @Nonnull
-    @Override
-    public Injector<com.google.inject.Injector> createNestedInjector(@Nonnull Iterable<Binding<?>> bindings) {
-        requireNonNull(bindings, "Argument 'bindings' must not be null");
-
-        if (isClosed()) {
-            throw new ClosedInjectorException(this);
-        }
-
-        return new GuiceInjector(delegate.createChildInjector(moduleFromBindings(bindings)));
-    }
-
-    @Nonnull
-    @Override
-    public Injector<com.google.inject.Injector> createNestedInjector(final @Nonnull String name, @Nonnull Iterable<Binding<?>> bindings) {
-        requireNonBlank(name, "Argument 'name' must not be blank");
-        requireNonNull(bindings, "Argument 'bindings' must not be null");
-
-        if (isClosed()) {
-            throw new ClosedInjectorException(this);
-        }
-
-        final InjectorProvider injectorProvider = new InjectorProvider();
-        GuiceInjector injector = new GuiceInjector(delegate.createChildInjector(moduleFromBindings(bindings), new AbstractModule() {
-            @Override
-            protected void configure() {
-                bind(Injector.class)
-                    .annotatedWith(named(name))
-                    .toProvider(guicify(injectorProvider));
-            }
-        }));
-        injectorProvider.setInjector(injector);
-        return injector;
-    }
-
     @Override
     public void close() {
         if (isClosed()) {
@@ -238,71 +265,5 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
         synchronized (lock) {
             return closed;
         }
-    }
-
-    static Module moduleFromBindings(final @Nonnull Iterable<Binding<?>> bindings) {
-        return new AbstractModule() {
-            @Override
-            protected void configure() {
-                for (Binding<?> binding : bindings) {
-                    if (binding instanceof TargetBinding) {
-                        handleTargetBinding((TargetBinding) binding);
-                    } else if (binding instanceof InstanceBinding) {
-                        handleInstanceBinding((InstanceBinding) binding);
-                    } else if (binding instanceof ProviderTypeBinding) {
-                        handleProviderTypeBinding((ProviderTypeBinding) binding);
-                    } else if (binding instanceof ProviderBinding) {
-                        handleProviderBinding((ProviderBinding) binding);
-                    } else {
-                        throw new IllegalArgumentException("Don't know how to handle " + binding);
-                    }
-                }
-            }
-
-            @Nonnull
-            private LinkedBindingBuilder handleBinding(@Nonnull Binding<?> binding) {
-                AnnotatedBindingBuilder<?> builder = bind(binding.getSource());
-                if (binding.getClassifier() != null) {
-                    return builder.annotatedWith(binding.getClassifier());
-                } else if (binding.getClassifierType() != null) {
-                    return builder.annotatedWith(binding.getClassifierType());
-                }
-                return builder;
-            }
-
-            @SuppressWarnings("unchecked")
-            private void handleTargetBinding(@Nonnull TargetBinding<?> binding) {
-                LinkedBindingBuilder lbuilder = handleBinding(binding);
-                if (binding.getSource() != binding.getTarget()) {
-                    ScopedBindingBuilder sbuilder = lbuilder.to(binding.getTarget());
-                    if (binding.isSingleton()) {
-                        sbuilder.in(Singleton.class);
-                    }
-                } else if (binding.isSingleton()) {
-                    lbuilder.in(Singleton.class);
-                }
-            }
-
-            @SuppressWarnings("unchecked")
-            private void handleInstanceBinding(@Nonnull InstanceBinding<?> binding) {
-                handleBinding(binding).toInstance(binding.getInstance());
-            }
-
-            @SuppressWarnings("unchecked")
-            private void handleProviderTypeBinding(@Nonnull ProviderTypeBinding<?> binding) {
-                ScopedBindingBuilder builder = handleBinding(binding).toProvider(binding.getProviderType());
-                if (binding.isSingleton()) {
-                    builder.in(Singleton.class);
-                }
-            }
-
-            @SuppressWarnings("unchecked")
-            private void handleProviderBinding(@Nonnull ProviderBinding<?> binding) {
-                ScopedBindingBuilder builder = handleBinding(binding).toProvider(guicify(binding.getProvider()));
-                if (binding.isSingleton()) {
-                    builder.in(Singleton.class);
-                }
-            }
-        };
     }
 }

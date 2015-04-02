@@ -191,8 +191,7 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
         for (ArtifactHandler<?> artifactHandler : injector.getInstances(ArtifactHandler.class)) {
             artifactManager.registerArtifactHandler(artifactHandler);
         }
-        artifactManager.loadArtifactMetadata(injector);
-        application.addShutdownHandler(artifactManager);
+        artifactManager.loadArtifactMetadata();
     }
 
     protected void applyPlatformTweaks() {

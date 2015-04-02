@@ -15,11 +15,8 @@
  */
 package griffon.core.artifact;
 
-import griffon.core.injection.Binding;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -76,8 +73,7 @@ public interface ArtifactHandler<A extends GriffonArtifact> {
      *
      * @param classes an array of all classes this handler should manage
      */
-    @Nonnull
-    Collection<Binding<?>> initialize(@Nonnull Class<A>[] classes);
+    void initialize(@Nonnull Class<A>[] classes);
 
     /**
      * Returns the set of all artifact classes this handler manages.
@@ -91,7 +87,7 @@ public interface ArtifactHandler<A extends GriffonArtifact> {
      * Finds an artifact by its property name.<p>
      * Examples: findClassfor("fooService") returns an artifact class
      * that can handle FooService.<p>
-     * <p/>
+     * <p>
      * Should {@code propertyName} contain any dots then the portion
      * after the last dot will be considered only.
      *

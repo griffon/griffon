@@ -184,20 +184,6 @@ class GuiceInjectorFactorySpec extends Specification {
         ex.cause instanceof ClosedInjectorException
     }
 
-    void 'Closed injector throws exception (6)'() {
-        given:
-        GuiceInjectorFactory factory = new GuiceInjectorFactory()
-        GriffonApplication application = new TestGriffonApplication()
-
-        when:
-        GuiceInjector injector = factory.createInjector(application, createBindings(application))
-        injector.close()
-        injector.createNestedInjector([])
-
-        then:
-        thrown(ClosedInjectorException)
-    }
-
     @Nonnull
     private
     static Iterable<Binding<?>> createBindings(GriffonApplication application, boolean withFailure = false) {
