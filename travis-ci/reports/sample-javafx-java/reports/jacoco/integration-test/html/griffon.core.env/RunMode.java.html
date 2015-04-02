@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>RunMode.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-java</a> &gt; <a href="index.source.html" class="el_package">griffon.core.env</a> &gt; <span class="el_source">RunMode.java</span></div><h1>RunMode.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.core.env;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
+
+
+/**
+ * An enum that represents the current running mode.
+ *
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="pc" id="L31">public enum RunMode {</span>
+<span class="fc" id="L32">    STANDALONE, WEBSTART, APPLET, CUSTOM;</span>
+    /**
+     * Constant used to resolve the runMode via System.getProperty(RunMode.KEY)
+     */
+    public static final String KEY = &quot;griffon.runmode&quot;;
+
+    private static final String STANDALONE_RUNMODE_SHORT_NAME = &quot;standalone&quot;;
+    private static final String WEBSTART_RUNMODE_SHORT_NAME = &quot;webstart&quot;;
+    private static final String APPLET_RUNMODE_SHORT_NAME = &quot;applet&quot;;
+
+<span class="fc" id="L42">    private static final Map&lt;String, String&gt; MODE_NAME_MAPPINGS = new LinkedHashMap&lt;&gt;();</span>
+
+    static {
+<span class="fc" id="L45">        MODE_NAME_MAPPINGS.put(STANDALONE_RUNMODE_SHORT_NAME, RunMode.STANDALONE.getName());</span>
+<span class="fc" id="L46">        MODE_NAME_MAPPINGS.put(WEBSTART_RUNMODE_SHORT_NAME, RunMode.WEBSTART.getName());</span>
+<span class="fc" id="L47">        MODE_NAME_MAPPINGS.put(APPLET_RUNMODE_SHORT_NAME, RunMode.APPLET.getName());</span>
+<span class="fc" id="L48">    }</span>
+
+    private String name;
+
+    /**
+     * @return Return true if the running mode has been set as a System property
+     */
+    public static boolean isSystemSet() {
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        return System.getProperty(KEY) != null;</span>
+    }
+
+    /**
+     * Returns the running mode for the given short name
+     *
+     * @param shortName The short name
+     * @return The RunMode or null if not known
+     */
+    @Nullable
+    public static RunMode resolveRunMode(@Nullable String shortName) {
+<span class="nc" id="L67">        final String modeName = MODE_NAME_MAPPINGS.get(shortName);</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (modeName != null) {</span>
+<span class="nc" id="L69">            return RunMode.valueOf(modeName.toUpperCase());</span>
+        }
+<span class="nc" id="L71">        return null;</span>
+    }
+
+    private static boolean isBlank(String value) {
+<span class="nc bnc" id="L75" title="All 4 branches missed.">        return value == null || value.trim().length() == 0;</span>
+    }
+
+    /**
+     * @return The name of the running mode
+     */
+    @Nonnull
+    public String getName() {
+<span class="pc bpc" id="L83" title="3 of 4 branches missed.">        if (this != CUSTOM || isBlank(name)) {</span>
+<span class="fc" id="L84">            return this.toString().toLowerCase(Locale.getDefault());</span>
+        }
+<span class="nc" id="L86">        return name;</span>
+    }
+
+    public void setName(@Nullable String name) {
+<span class="nc" id="L90">        this.name = name;</span>
+<span class="nc" id="L91">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>

@@ -102,15 +102,15 @@ public class DefaultPivotWindowManager extends AbstractWindowManager&lt;Window&g
         /**
          * Triggers a &lt;tt&gt;WindowShown&lt;/tt&gt; event with the window as sole argument
          */
-        public void windowOpened(Window arg0) {
-<span class="nc" id="L106">            event(ApplicationEvent.WINDOW_SHOWN, asList(arg0));</span>
+        public void windowOpened(Window window) {
+<span class="nc" id="L106">            event(ApplicationEvent.WINDOW_SHOWN, asList(findWindowName(window), window));</span>
 <span class="nc" id="L107">        }</span>
 
         /**
          * Triggers a &lt;tt&gt;WindowHidden&lt;/tt&gt; event with the window as sole argument
          */
-        public void windowClosed(Window arg0, Display arg1, Window arg2) {
-<span class="nc" id="L113">            event(ApplicationEvent.WINDOW_HIDDEN, asList(arg0));</span>
+        public void windowClosed(Window window, Display arg1, Window arg2) {
+<span class="nc" id="L113">            event(ApplicationEvent.WINDOW_HIDDEN, asList(findWindowName(window), window));</span>
 <span class="nc" id="L114">        }</span>
     }
 }

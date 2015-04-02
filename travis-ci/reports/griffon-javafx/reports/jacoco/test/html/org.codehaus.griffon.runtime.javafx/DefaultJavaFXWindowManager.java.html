@@ -109,8 +109,9 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager&lt;Window&
          * Triggers a &lt;tt&gt;WindowShown&lt;/tt&gt; event with the window as sole argument
          */
         public void handle(WindowEvent windowEvent) {
-<span class="nc" id="L112">            event(ApplicationEvent.WINDOW_SHOWN, asList(windowEvent.getSource()));</span>
-<span class="nc" id="L113">        }</span>
+<span class="nc" id="L112">            Window window = (Window) windowEvent.getSource();</span>
+<span class="nc" id="L113">            event(ApplicationEvent.WINDOW_SHOWN, asList(findWindowName(window), window));</span>
+<span class="nc" id="L114">        }</span>
     }
 
     /**
@@ -118,13 +119,14 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager&lt;Window&
      *
      * @author Andres Almiray
      */
-<span class="nc" id="L121">    private class OnWindowHiddenHelper implements EventHandler&lt;WindowEvent&gt; {</span>
+<span class="nc" id="L122">    private class OnWindowHiddenHelper implements EventHandler&lt;WindowEvent&gt; {</span>
         /**
          * Triggers a &lt;tt&gt;WindowHidden&lt;/tt&gt; event with the window as sole argument
          */
         public void handle(WindowEvent windowEvent) {
-<span class="nc" id="L126">            event(ApplicationEvent.WINDOW_HIDDEN, asList(windowEvent.getSource()));</span>
-<span class="nc" id="L127">        }</span>
+<span class="nc" id="L127">            Window window = (Window) windowEvent.getSource();</span>
+<span class="nc" id="L128">            event(ApplicationEvent.WINDOW_HIDDEN, asList(findWindowName(window), window));</span>
+<span class="nc" id="L129">        }</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>

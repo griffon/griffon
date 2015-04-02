@@ -2,12 +2,66 @@
   <header>
     <project>griffon-core-compile-2.3.0-SNAPSHOT</project>
     <summary>
-      <info>12</info>
+      <info>31</info>
       <warnings>0</warnings>
-      <error>3</error>
+      <error>13</error>
     </summary>
   </header>
   <differences>
+    <difference>
+      <classname>griffon.core.RunnableWithArgs</classname>
+      <severity>info</severity>
+      <identifier>8000</identifier>
+      <message>Class griffon.core.RunnableWithArgs added</message>
+    </difference>
+    <difference>
+      <classname>griffon.core.event.EventPublisher</classname>
+      <severity>info</severity>
+      <identifier>7007</identifier>
+      <message>Method 'public void addEventListener(java.lang.String, griffon.core.CallableWithArgs)' has been deprecated</message>
+    </difference>
+    <difference>
+      <classname>griffon.core.event.EventPublisher</classname>
+      <severity>info</severity>
+      <identifier>7007</identifier>
+      <message>Method 'public void addEventListener(java.lang.Class, griffon.core.CallableWithArgs)' has been deprecated</message>
+    </difference>
+    <difference>
+      <classname>griffon.core.event.EventPublisher</classname>
+      <severity>error</severity>
+      <identifier>7012</identifier>
+      <message>Method 'public void addEventListener(java.lang.String, griffon.core.RunnableWithArgs)' has been added to an interface</message>
+    </difference>
+    <difference>
+      <classname>griffon.core.event.EventPublisher</classname>
+      <severity>error</severity>
+      <identifier>7012</identifier>
+      <message>Method 'public void addEventListener(java.lang.Class, griffon.core.RunnableWithArgs)' has been added to an interface</message>
+    </difference>
+    <difference>
+      <classname>griffon.core.event.EventPublisher</classname>
+      <severity>info</severity>
+      <identifier>7007</identifier>
+      <message>Method 'public void removeEventListener(java.lang.String, griffon.core.CallableWithArgs)' has been deprecated</message>
+    </difference>
+    <difference>
+      <classname>griffon.core.event.EventPublisher</classname>
+      <severity>info</severity>
+      <identifier>7007</identifier>
+      <message>Method 'public void removeEventListener(java.lang.Class, griffon.core.CallableWithArgs)' has been deprecated</message>
+    </difference>
+    <difference>
+      <classname>griffon.core.event.EventPublisher</classname>
+      <severity>error</severity>
+      <identifier>7012</identifier>
+      <message>Method 'public void removeEventListener(java.lang.String, griffon.core.RunnableWithArgs)' has been added to an interface</message>
+    </difference>
+    <difference>
+      <classname>griffon.core.event.EventPublisher</classname>
+      <severity>error</severity>
+      <identifier>7012</identifier>
+      <message>Method 'public void removeEventListener(java.lang.Class, griffon.core.RunnableWithArgs)' has been added to an interface</message>
+    </difference>
     <difference>
       <classname>griffon.core.view.WindowManager</classname>
       <severity>error</severity>
@@ -61,6 +115,126 @@
       <severity>info</severity>
       <identifier>7011</identifier>
       <message>Method 'public java.util.Map requireNonEmpty(java.util.Map, java.lang.String)' has been added</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.compile.core.BaseConstants</classname>
+      <severity>info</severity>
+      <identifier>6000</identifier>
+      <message>Added public field GRIFFON_CORE_RUNNABLEWITHARGS</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler</classname>
+      <severity>error</severity>
+      <identifier>4001</identifier>
+      <message>Removed griffon.core.CallableWithArgs from the set of implemented interfaces</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler</classname>
+      <severity>info</severity>
+      <identifier>4000</identifier>
+      <message>Added griffon.core.RunnableWithArgs to the set of implemented interfaces</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler</classname>
+      <severity>error</severity>
+      <identifier>7002</identifier>
+      <message>Method 'public java.lang.Void call(java.lang.Object[])' has been removed</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler</classname>
+      <severity>error</severity>
+      <identifier>7002</identifier>
+      <message>Method 'public java.lang.Object call(java.lang.Object[])' has been removed</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public void run(java.lang.Object[])' has been added</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.event.AbstractEventPublisher</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public void addEventListener(java.lang.String, griffon.core.RunnableWithArgs)' has been added</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.event.AbstractEventPublisher</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public void addEventListener(java.lang.Class, griffon.core.RunnableWithArgs)' has been added</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.event.AbstractEventPublisher</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public void removeEventListener(java.lang.Class, griffon.core.RunnableWithArgs)' has been added</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.event.AbstractEventPublisher</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public void removeEventListener(java.lang.String, griffon.core.RunnableWithArgs)' has been added</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.event.AbstractEventRouter</classname>
+      <severity>error</severity>
+      <identifier>6001</identifier>
+      <message>Removed field callableListeners</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.event.AbstractEventRouter</classname>
+      <severity>info</severity>
+      <identifier>6000</identifier>
+      <message>Added protected field functionalListeners</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.event.AbstractEventRouter</classname>
+      <severity>info</severity>
+      <identifier>6000</identifier>
+      <message>Added protected field instanceListeners</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.event.AbstractEventRouter</classname>
+      <severity>error</severity>
+      <identifier>6001</identifier>
+      <message>Removed field listeners</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.event.AbstractEventRouter</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public void addEventListener(java.lang.Class, griffon.core.RunnableWithArgs)' has been added</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.event.AbstractEventRouter</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public void addEventListener(java.lang.String, griffon.core.RunnableWithArgs)' has been added</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.event.AbstractEventRouter</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'protected void fireEvent(griffon.core.RunnableWithArgs, java.util.List)' has been added</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.event.AbstractEventRouter</classname>
+      <severity>error</severity>
+      <identifier>7005</identifier>
+      <message>Parameter 1 of 'protected boolean isNestedListener(griffon.core.CallableWithArgs, java.lang.Object)' has changed its type to java.lang.Object</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.event.AbstractEventRouter</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public void removeEventListener(java.lang.Class, griffon.core.RunnableWithArgs)' has been added</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.event.AbstractEventRouter</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public void removeEventListener(java.lang.String, griffon.core.RunnableWithArgs)' has been added</message>
     </difference>
     <difference>
       <classname>org.codehaus.griffon.runtime.core.view.AbstractWindowManager</classname>

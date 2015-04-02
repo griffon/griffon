@@ -25,16 +25,16 @@ class SampleView {
 
     void initUI() {
 <span class="nc" id="L27">        builder.application(title: application.configuration['application.title'],</span>
-            sizeToScene: true, centerOnScreen: true) {                                         //&lt;2&gt;
+            name: 'mainWindow', sizeToScene: true, centerOnScreen: true) {                     //&lt;2&gt;
 <span class="nc" id="L29">            scene(fill: WHITE, width: 400, height: 120) {</span>
 <span class="nc" id="L30">                anchorPane {</span>
 <span class="nc" id="L31">                    label(leftAnchor: 14, topAnchor: 11,</span>
 <span class="nc" id="L32">                          text: application.messageSource.getMessage('name.label'))</span>
-<span class="nc" id="L33">                    textField(leftAnchor: 172, topAnchor: 11, prefWidth: 200,</span>
+<span class="nc" id="L33">                    textField(leftAnchor: 172, topAnchor: 11, prefWidth: 200, id: 'input',</span>
 <span class="nc" id="L34">                              text: bind(model.inputProperty()))                               //&lt;3&gt;</span>
 <span class="nc" id="L35">                    button(leftAnchor: 172, topAnchor: 45, prefWidth: 200,</span>
-                           sayHelloAction)                                                     //&lt;4&gt;
-<span class="nc" id="L37">                    label(leftAnchor: 14, topAnchor: 80, prefWidth: 200,</span>
+                           id: 'sayHelloActionTarget', sayHelloAction)                         //&lt;4&gt;
+<span class="nc" id="L37">                    label(leftAnchor: 14, topAnchor: 80, prefWidth: 200, id: 'output',</span>
 <span class="nc" id="L38">                        text: bind(model.outputProperty()))                                    //&lt;3&gt;</span>
                 }
             }

@@ -16,6 +16,7 @@
 package griffon.swing.support;
 
 import griffon.core.CallableWithArgs;
+import griffon.core.RunnableWithArgs;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,32 +36,44 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class SwingAction extends AbstractAction {
-    private static final long serialVersionUID = 4598888514827528435L;
+    private static final long serialVersionUID = 4493562556110760713L;
     private static final String ERROR_CALLABLE_NULL = &quot;Argument 'callable' must not be null&quot;;
-    private final CallableWithArgs&lt;?&gt; callable;
+    private static final String ERROR_RUNNABLE_NULL = &quot;Argument 'runnable' must not be null&quot;;
+    private RunnableWithArgs runnable;
 
-<span class="fc" id="L42">    public SwingAction(@Nonnull CallableWithArgs&lt;?&gt; callable) {</span>
-<span class="fc" id="L43">        this.callable = requireNonNull(callable, ERROR_CALLABLE_NULL);</span>
-<span class="fc" id="L44">    }</span>
+    @Deprecated
+<span class="nc" id="L45">    public SwingAction(final @Nonnull CallableWithArgs&lt;?&gt; callable) {</span>
+<span class="nc" id="L46">        requireNonNull(callable, ERROR_CALLABLE_NULL);</span>
+<span class="nc" id="L47">        this.runnable = new RunnableWithArgs() {</span>
+            @Override
+            public void run(@Nullable Object... args) {
+<span class="nc" id="L50">                callable.call(args);</span>
+<span class="nc" id="L51">            }</span>
+        };
+<span class="nc" id="L53">    }</span>
 
-    public final void actionPerformed(ActionEvent evt) {
-<span class="fc" id="L47">        callable.call(evt);</span>
-<span class="fc" id="L48">    }</span>
+<span class="fc" id="L55">    public SwingAction(@Nonnull RunnableWithArgs runnable) {</span>
+<span class="fc" id="L56">        this.runnable = requireNonNull(runnable, ERROR_RUNNABLE_NULL);</span>
+<span class="fc" id="L57">    }</span>
 
     @Nonnull
     public static ActionBuilder action() {
-<span class="nc" id="L52">        return new ActionBuilder();</span>
+<span class="nc" id="L61">        return new ActionBuilder();</span>
     }
 
     @Nonnull
     public static ActionBuilder action(@Nullable Action action) {
-<span class="nc" id="L57">        return new ActionBuilder(action);</span>
+<span class="nc" id="L66">        return new ActionBuilder(action);</span>
     }
 
     @Nonnull
     public static ActionBuilder action(@Nullable String name) {
-<span class="nc" id="L62">        return new ActionBuilder().withName(name);</span>
+<span class="nc" id="L71">        return new ActionBuilder().withName(name);</span>
     }
+
+    public final void actionPerformed(ActionEvent evt) {
+<span class="fc" id="L75">        runnable.run(evt);</span>
+<span class="fc" id="L76">    }</span>
 
     /**
      * A builder for actions.
@@ -77,149 +90,162 @@ public class SwingAction extends AbstractAction {
         private String command;
         private Icon smallIcon;
         private Icon largeIcon;
-        private CallableWithArgs&lt;?&gt; callable;
-<span class="nc" id="L81">        private boolean enabled = true;</span>
-<span class="nc" id="L82">        private boolean selected = false;</span>
+        private RunnableWithArgs runnable;
+<span class="nc" id="L94">        private boolean enabled = true;</span>
+<span class="nc" id="L95">        private boolean selected = false;</span>
 
         private Action action;
-<span class="nc" id="L85">        private boolean mnemonicSet = false;</span>
-<span class="nc" id="L86">        private boolean enabledSet = false;</span>
-<span class="nc" id="L87">        private boolean selectedSet = false;</span>
+<span class="nc" id="L98">        private boolean mnemonicSet = false;</span>
+<span class="nc" id="L99">        private boolean enabledSet = false;</span>
+<span class="nc" id="L100">        private boolean selectedSet = false;</span>
 
         public ActionBuilder() {
-<span class="nc" id="L90">            this(null);</span>
-<span class="nc" id="L91">        }</span>
+<span class="nc" id="L103">            this(null);</span>
+<span class="nc" id="L104">        }</span>
 
         @Nonnull
-<span class="nc" id="L94">        public ActionBuilder(@Nullable Action action) {</span>
-<span class="nc" id="L95">            this.action = action;</span>
-<span class="nc" id="L96">        }</span>
+<span class="nc" id="L107">        public ActionBuilder(@Nullable Action action) {</span>
+<span class="nc" id="L108">            this.action = action;</span>
+<span class="nc" id="L109">        }</span>
 
         @Nonnull
         public ActionBuilder withName(@Nullable String name) {
-<span class="nc" id="L100">            this.name = name;</span>
-<span class="nc" id="L101">            return this;</span>
+<span class="nc" id="L113">            this.name = name;</span>
+<span class="nc" id="L114">            return this;</span>
         }
 
         @Nonnull
         public ActionBuilder withShortDescription(@Nullable String shortDescription) {
-<span class="nc" id="L106">            this.shortDescription = shortDescription;</span>
-<span class="nc" id="L107">            return this;</span>
+<span class="nc" id="L119">            this.shortDescription = shortDescription;</span>
+<span class="nc" id="L120">            return this;</span>
         }
 
         @Nonnull
         public ActionBuilder withLongDescription(@Nullable String longDescription) {
-<span class="nc" id="L112">            this.longDescription = longDescription;</span>
-<span class="nc" id="L113">            return this;</span>
+<span class="nc" id="L125">            this.longDescription = longDescription;</span>
+<span class="nc" id="L126">            return this;</span>
         }
 
         @Nonnull
         public ActionBuilder withCommand(@Nullable String command) {
-<span class="nc" id="L118">            this.command = command;</span>
-<span class="nc" id="L119">            return this;</span>
+<span class="nc" id="L131">            this.command = command;</span>
+<span class="nc" id="L132">            return this;</span>
         }
 
         @Nonnull
         public ActionBuilder withMnemonic(@Nullable String mnemonic) {
-<span class="nc bnc" id="L124" title="All 2 branches missed.">            if (!isBlank(mnemonic)) {</span>
-<span class="nc" id="L125">                this.mnemonic = KeyStroke.getKeyStroke(mnemonic).getKeyCode();</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">            if (!isBlank(mnemonic)) {</span>
+<span class="nc" id="L138">                this.mnemonic = KeyStroke.getKeyStroke(mnemonic).getKeyCode();</span>
             }
-<span class="nc" id="L127">            mnemonicSet = true;</span>
-<span class="nc" id="L128">            return this;</span>
+<span class="nc" id="L140">            mnemonicSet = true;</span>
+<span class="nc" id="L141">            return this;</span>
         }
 
         @Nonnull
         public ActionBuilder withMnemonic(int mnemonic) {
-<span class="nc" id="L133">            this.mnemonic = mnemonic;</span>
-<span class="nc" id="L134">            mnemonicSet = true;</span>
-<span class="nc" id="L135">            return this;</span>
+<span class="nc" id="L146">            this.mnemonic = mnemonic;</span>
+<span class="nc" id="L147">            mnemonicSet = true;</span>
+<span class="nc" id="L148">            return this;</span>
         }
 
         @Nonnull
         public ActionBuilder withAccelerator(@Nullable String accelerator) {
-<span class="nc bnc" id="L140" title="All 2 branches missed.">            if (!isBlank(accelerator)) {</span>
-<span class="nc" id="L141">                this.accelerator = KeyStroke.getKeyStroke(accelerator);</span>
+<span class="nc bnc" id="L153" title="All 2 branches missed.">            if (!isBlank(accelerator)) {</span>
+<span class="nc" id="L154">                this.accelerator = KeyStroke.getKeyStroke(accelerator);</span>
             }
-<span class="nc" id="L143">            return this;</span>
+<span class="nc" id="L156">            return this;</span>
         }
 
         @Nonnull
         public ActionBuilder withAccelerator(@Nullable KeyStroke accelerator) {
-<span class="nc" id="L148">            this.accelerator = accelerator;</span>
-<span class="nc" id="L149">            return this;</span>
+<span class="nc" id="L161">            this.accelerator = accelerator;</span>
+<span class="nc" id="L162">            return this;</span>
         }
 
         @Nonnull
         public ActionBuilder withSmallIcon(@Nullable Icon smallIcon) {
-<span class="nc" id="L154">            this.smallIcon = smallIcon;</span>
-<span class="nc" id="L155">            return this;</span>
+<span class="nc" id="L167">            this.smallIcon = smallIcon;</span>
+<span class="nc" id="L168">            return this;</span>
         }
 
         @Nonnull
         public ActionBuilder withLargeIcon(@Nullable Icon largeIcon) {
-<span class="nc" id="L160">            this.largeIcon = largeIcon;</span>
-<span class="nc" id="L161">            return this;</span>
-        }
-
-        @Nonnull
-        public ActionBuilder withRunnable(@Nullable CallableWithArgs&lt;?&gt; callable) {
-<span class="nc" id="L166">            this.callable = callable;</span>
-<span class="nc" id="L167">            return this;</span>
-        }
-
-        @Nonnull
-        public ActionBuilder withEnabled(boolean enabled) {
-<span class="nc" id="L172">            this.enabled = enabled;</span>
-<span class="nc" id="L173">            this.enabledSet = true;</span>
+<span class="nc" id="L173">            this.largeIcon = largeIcon;</span>
 <span class="nc" id="L174">            return this;</span>
         }
 
         @Nonnull
+        @Deprecated
+        public ActionBuilder withRunnable(final @Nullable CallableWithArgs&lt;?&gt; callable) {
+<span class="nc" id="L180">            requireNonNull(callable, ERROR_CALLABLE_NULL);</span>
+<span class="nc" id="L181">            this.runnable = new RunnableWithArgs() {</span>
+                @Override
+                public void run(@Nullable Object... args) {
+<span class="nc" id="L184">                    callable.call(args);</span>
+<span class="nc" id="L185">                }</span>
+            };
+<span class="nc" id="L187">            return this;</span>
+        }
+
+        @Nonnull
+        public ActionBuilder withRunnable(@Nullable RunnableWithArgs runnable) {
+<span class="nc" id="L192">            this.runnable = runnable;</span>
+<span class="nc" id="L193">            return this;</span>
+        }
+
+        @Nonnull
+        public ActionBuilder withEnabled(boolean enabled) {
+<span class="nc" id="L198">            this.enabled = enabled;</span>
+<span class="nc" id="L199">            this.enabledSet = true;</span>
+<span class="nc" id="L200">            return this;</span>
+        }
+
+        @Nonnull
         public ActionBuilder withSelected(boolean selected) {
-<span class="nc" id="L179">            this.selected = selected;</span>
-<span class="nc" id="L180">            this.enabledSet = true;</span>
-<span class="nc" id="L181">            return this;</span>
+<span class="nc" id="L205">            this.selected = selected;</span>
+<span class="nc" id="L206">            this.enabledSet = true;</span>
+<span class="nc" id="L207">            return this;</span>
         }
 
         @Nonnull
         public Action build() {
-<span class="nc bnc" id="L186" title="All 4 branches missed.">            if (callable == null &amp;&amp; action == null) {</span>
-<span class="nc" id="L187">                throw new IllegalArgumentException(&quot;Either closure: or action: must have a value.&quot;);</span>
+<span class="nc bnc" id="L212" title="All 4 branches missed.">            if (runnable == null &amp;&amp; action == null) {</span>
+<span class="nc" id="L213">                throw new IllegalArgumentException(&quot;Either runnable, callable, or action must have a value.&quot;);</span>
             }
-<span class="nc bnc" id="L189" title="All 2 branches missed.">            if (action == null) {</span>
-<span class="nc" id="L190">                action = new SwingAction(callable);</span>
+<span class="nc bnc" id="L215" title="All 2 branches missed.">            if (action == null) {</span>
+<span class="nc" id="L216">                action = new SwingAction(runnable);</span>
             }
-<span class="nc bnc" id="L192" title="All 2 branches missed.">            if (!isBlank(command)) {</span>
-<span class="nc" id="L193">                action.putValue(Action.ACTION_COMMAND_KEY, command);</span>
+<span class="nc bnc" id="L218" title="All 2 branches missed.">            if (!isBlank(command)) {</span>
+<span class="nc" id="L219">                action.putValue(Action.ACTION_COMMAND_KEY, command);</span>
             }
-<span class="nc bnc" id="L195" title="All 2 branches missed.">            if (!isBlank(name)) {</span>
-<span class="nc" id="L196">                action.putValue(Action.NAME, name);</span>
+<span class="nc bnc" id="L221" title="All 2 branches missed.">            if (!isBlank(name)) {</span>
+<span class="nc" id="L222">                action.putValue(Action.NAME, name);</span>
             }
-<span class="nc bnc" id="L198" title="All 2 branches missed.">            if (mnemonicSet) {</span>
-<span class="nc" id="L199">                action.putValue(Action.MNEMONIC_KEY, mnemonic);</span>
+<span class="nc bnc" id="L224" title="All 2 branches missed.">            if (mnemonicSet) {</span>
+<span class="nc" id="L225">                action.putValue(Action.MNEMONIC_KEY, mnemonic);</span>
             }
-<span class="nc bnc" id="L201" title="All 2 branches missed.">            if (accelerator != null) {</span>
-<span class="nc" id="L202">                action.putValue(Action.ACCELERATOR_KEY, accelerator);</span>
+<span class="nc bnc" id="L227" title="All 2 branches missed.">            if (accelerator != null) {</span>
+<span class="nc" id="L228">                action.putValue(Action.ACCELERATOR_KEY, accelerator);</span>
             }
-<span class="nc bnc" id="L204" title="All 2 branches missed.">            if (largeIcon != null) {</span>
-<span class="nc" id="L205">                action.putValue(Action.LARGE_ICON_KEY, largeIcon);</span>
+<span class="nc bnc" id="L230" title="All 2 branches missed.">            if (largeIcon != null) {</span>
+<span class="nc" id="L231">                action.putValue(Action.LARGE_ICON_KEY, largeIcon);</span>
             }
-<span class="nc bnc" id="L207" title="All 2 branches missed.">            if (smallIcon != null) {</span>
-<span class="nc" id="L208">                action.putValue(Action.SMALL_ICON, smallIcon);</span>
+<span class="nc bnc" id="L233" title="All 2 branches missed.">            if (smallIcon != null) {</span>
+<span class="nc" id="L234">                action.putValue(Action.SMALL_ICON, smallIcon);</span>
             }
-<span class="nc bnc" id="L210" title="All 2 branches missed.">            if (!isBlank(longDescription)) {</span>
-<span class="nc" id="L211">                action.putValue(Action.LONG_DESCRIPTION, longDescription);</span>
+<span class="nc bnc" id="L236" title="All 2 branches missed.">            if (!isBlank(longDescription)) {</span>
+<span class="nc" id="L237">                action.putValue(Action.LONG_DESCRIPTION, longDescription);</span>
             }
-<span class="nc bnc" id="L213" title="All 2 branches missed.">            if (!isBlank(shortDescription)) {</span>
-<span class="nc" id="L214">                action.putValue(Action.SHORT_DESCRIPTION, shortDescription);</span>
+<span class="nc bnc" id="L239" title="All 2 branches missed.">            if (!isBlank(shortDescription)) {</span>
+<span class="nc" id="L240">                action.putValue(Action.SHORT_DESCRIPTION, shortDescription);</span>
             }
-<span class="nc bnc" id="L216" title="All 2 branches missed.">            if (enabledSet) {</span>
-<span class="nc" id="L217">                action.setEnabled(enabled);</span>
+<span class="nc bnc" id="L242" title="All 2 branches missed.">            if (enabledSet) {</span>
+<span class="nc" id="L243">                action.setEnabled(enabled);</span>
             }
-<span class="nc bnc" id="L219" title="All 2 branches missed.">            if (selectedSet) {</span>
-<span class="nc" id="L220">                action.putValue(Action.SELECTED_KEY, selected);</span>
+<span class="nc bnc" id="L245" title="All 2 branches missed.">            if (selectedSet) {</span>
+<span class="nc" id="L246">                action.putValue(Action.SELECTED_KEY, selected);</span>
             }
-<span class="nc" id="L222">            return action;</span>
+<span class="nc" id="L248">            return action;</span>
         }
     }
 }

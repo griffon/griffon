@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>BooleanFormatter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.core.formatters</a> &gt; <span class="el_source">BooleanFormatter.java</span></div><h1>BooleanFormatter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.core.formatters;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Arrays;
+
+import static griffon.util.GriffonNameUtils.isBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public class BooleanFormatter extends AbstractFormatter&lt;Boolean&gt; {
+    public static final String PATTERN_BOOL = &quot;boolean&quot;;
+    public static final String PATTERN_QUERY = &quot;query&quot;;
+    public static final String PATTERN_SWITCH = &quot;switch&quot;;
+    public static final String DEFAULT_PATTERN = PATTERN_BOOL;
+
+<span class="nc" id="L35">    private static final String[] PATTERNS = new String[]{</span>
+        PATTERN_BOOL,
+        PATTERN_QUERY,
+        PATTERN_SWITCH
+    };
+
+<span class="nc" id="L41">    public static final BooleanFormatter BOOL = new BooleanFormatter(PATTERN_BOOL);</span>
+<span class="nc" id="L42">    public static final BooleanFormatter QUERY = new BooleanFormatter(PATTERN_QUERY);</span>
+<span class="nc" id="L43">    public static final BooleanFormatter SWITCH = new BooleanFormatter(PATTERN_SWITCH);</span>
+
+<span class="nc" id="L45">    private static final BooleanFormatter[] FORMATTERS = new BooleanFormatter[]{</span>
+        BOOL,
+        QUERY,
+        SWITCH
+    };
+
+    @Nonnull
+    public static BooleanFormatter getInstance(@Nullable String pattern) {
+<span class="nc" id="L53">        return new BooleanFormatter(pattern);</span>
+    }
+
+    private final BooleanFormatterDelegate delegate;
+
+    public BooleanFormatter() {
+<span class="nc" id="L59">        this(DEFAULT_PATTERN);</span>
+<span class="nc" id="L60">    }</span>
+
+<span class="nc" id="L62">    protected BooleanFormatter(@Nullable String pattern) {</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (PATTERN_BOOL.equals(pattern)) {</span>
+<span class="nc" id="L64">            delegate = new BoolBooleanFormatterDelegate();</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        } else if (PATTERN_QUERY.equals(pattern)) {</span>
+<span class="nc" id="L66">            delegate = new QueryBooleanFormatterDelegate();</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        } else if (PATTERN_SWITCH.equals(pattern)) {</span>
+<span class="nc" id="L68">            delegate = new SwitchBooleanFormatterDelegate();</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        } else if (isBlank(pattern)) {</span>
+<span class="nc" id="L70">            delegate = new BoolBooleanFormatterDelegate();</span>
+        } else {
+<span class="nc" id="L72">            throw new IllegalArgumentException(&quot;Invalid pattern '&quot; + pattern + &quot;'. Valid patterns are &quot; + Arrays.toString(PATTERNS));</span>
+        }
+<span class="nc" id="L74">    }</span>
+
+    @Nonnull
+    public String getPattern() {
+<span class="nc" id="L78">        return delegate.getPattern();</span>
+    }
+
+    @Nullable
+    public static Boolean parseBoolean(@Nullable String str) throws ParseException {
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (isBlank(str)) return null;</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        for (BooleanFormatter formatter : FORMATTERS) {</span>
+            try {
+<span class="nc" id="L86">                return formatter.parse(str);</span>
+<span class="nc" id="L87">            } catch (ParseException e) {</span>
+                // ignore
+            }
+        }
+<span class="nc" id="L91">        throw parseError(str, Boolean.class);</span>
+    }
+
+    @Nullable
+    @Override
+    public String format(@Nullable Boolean value) {
+<span class="nc bnc" id="L97" title="All 2 branches missed.">        return value == null ? null : delegate.format(value);</span>
+    }
+
+    @Nullable
+    @Override
+    @SuppressWarnings(&quot;ConstantConditions&quot;)
+    public Boolean parse(@Nullable String str) throws ParseException {
+<span class="nc bnc" id="L104" title="All 2 branches missed.">        return isBlank(str) ? null : delegate.parse(str);</span>
+    }
+
+    private static interface BooleanFormatterDelegate {
+        @Nonnull
+        String getPattern();
+
+        @Nonnull
+        String format(@Nonnull Boolean value);
+
+        @Nonnull
+        Boolean parse(@Nonnull String str) throws ParseException;
+    }
+
+    private static abstract class AbstractBooleanFormatterDelegate implements BooleanFormatterDelegate {
+        private final String pattern;
+        private final String[] tokens;
+
+<span class="nc" id="L122">        private AbstractBooleanFormatterDelegate(String pattern, String[] tokens) {</span>
+<span class="nc" id="L123">            this.pattern = pattern;</span>
+<span class="nc" id="L124">            this.tokens = tokens;</span>
+<span class="nc" id="L125">        }</span>
+
+        @Nonnull
+        public String getPattern() {
+<span class="nc" id="L129">            return pattern;</span>
+        }
+
+        @Nonnull
+        public String format(@Nonnull Boolean bool) {
+<span class="nc" id="L134">            requireNonNull(bool, &quot;Can't format given Boolean because it's null&quot;);</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">            return bool ? tokens[1] : tokens[0];</span>
+        }
+
+        @Nonnull
+        public Boolean parse(@Nonnull String str) throws ParseException {
+<span class="nc bnc" id="L140" title="All 2 branches missed.">            if (tokens[0].equalsIgnoreCase(str)) {</span>
+<span class="nc" id="L141">                return Boolean.FALSE;</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">            } else if (tokens[1].equalsIgnoreCase(str)) {</span>
+<span class="nc" id="L143">                return Boolean.TRUE;</span>
+            }
+<span class="nc" id="L145">            throw parseError(str, Boolean.class);</span>
+        }
+    }
+
+    private static class BoolBooleanFormatterDelegate extends AbstractBooleanFormatterDelegate {
+        private BoolBooleanFormatterDelegate() {
+<span class="nc" id="L151">            super(PATTERN_BOOL, new String[]{&quot;false&quot;, &quot;true&quot;});</span>
+<span class="nc" id="L152">        }</span>
+    }
+
+    private static class QueryBooleanFormatterDelegate extends AbstractBooleanFormatterDelegate {
+        private QueryBooleanFormatterDelegate() {
+<span class="nc" id="L157">            super(PATTERN_QUERY, new String[]{&quot;no&quot;, &quot;yes&quot;});</span>
+<span class="nc" id="L158">        }</span>
+    }
+
+    private static class SwitchBooleanFormatterDelegate extends AbstractBooleanFormatterDelegate {
+        private SwitchBooleanFormatterDelegate() {
+<span class="nc" id="L163">            super(PATTERN_SWITCH, new String[]{&quot;off&quot;, &quot;on&quot;});</span>
+<span class="nc" id="L164">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>

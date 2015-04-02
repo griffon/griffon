@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DefaultApplicationModule.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-groovy</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core</a> &gt; <span class="el_source">DefaultApplicationModule.java</span></div><h1>DefaultApplicationModule.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core;
+
+import griffon.core.ApplicationClassLoader;
+import griffon.core.ApplicationConfigurer;
+import griffon.core.Configuration;
+import griffon.core.Context;
+import griffon.core.ExecutorServiceManager;
+import griffon.core.GriffonExceptionHandler;
+import griffon.core.LifecycleHandler;
+import griffon.core.PlatformHandler;
+import griffon.core.addon.AddonManager;
+import griffon.core.artifact.ArtifactHandler;
+import griffon.core.artifact.ArtifactManager;
+import griffon.core.controller.ActionManager;
+import griffon.core.env.Environment;
+import griffon.core.env.Lifecycle;
+import griffon.core.env.Metadata;
+import griffon.core.env.RunMode;
+import griffon.core.event.EventHandler;
+import griffon.core.event.EventRouter;
+import griffon.core.i18n.MessageSource;
+import griffon.core.mvc.MVCGroupManager;
+import griffon.core.resources.ResourceHandler;
+import griffon.core.resources.ResourceInjector;
+import griffon.core.resources.ResourceResolver;
+import griffon.core.threading.UIThreadManager;
+import griffon.core.view.WindowManager;
+import griffon.util.CompositeResourceBundleBuilder;
+import org.codehaus.griffon.runtime.core.addon.DefaultAddonManager;
+import org.codehaus.griffon.runtime.core.artifact.ControllerArtifactHandler;
+import org.codehaus.griffon.runtime.core.artifact.DefaultArtifactManager;
+import org.codehaus.griffon.runtime.core.artifact.ModelArtifactHandler;
+import org.codehaus.griffon.runtime.core.artifact.ServiceArtifactHandler;
+import org.codehaus.griffon.runtime.core.artifact.ViewArtifactHandler;
+import org.codehaus.griffon.runtime.core.controller.DefaultActionManager;
+import org.codehaus.griffon.runtime.core.env.EnvironmentProvider;
+import org.codehaus.griffon.runtime.core.env.MetadataProvider;
+import org.codehaus.griffon.runtime.core.env.RunModeProvider;
+import org.codehaus.griffon.runtime.core.event.DefaultEventHandler;
+import org.codehaus.griffon.runtime.core.event.DefaultEventRouter;
+import org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider;
+import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager;
+import org.codehaus.griffon.runtime.core.resources.DefaultApplicationResourceInjector;
+import org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler;
+import org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider;
+import org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider;
+import org.codehaus.griffon.runtime.core.threading.DefaultUIThreadManager;
+import org.codehaus.griffon.runtime.core.view.NoopWindowManager;
+import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder;
+import org.codehaus.griffon.runtime.util.ResourceBundleProvider;
+
+import javax.inject.Named;
+import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+
+import static griffon.util.AnnotationUtils.named;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+@Named(&quot;core&quot;)
+<span class="fc" id="L79">public class DefaultApplicationModule extends AbstractModule {</span>
+    @Override
+    protected void doConfigure() {
+        // tag::bindings[]
+<span class="fc" id="L83">        bind(ApplicationClassLoader.class)</span>
+<span class="fc" id="L84">            .to(DefaultApplicationClassLoader.class)</span>
+<span class="fc" id="L85">            .asSingleton();</span>
+
+<span class="fc" id="L87">        bind(Metadata.class)</span>
+<span class="fc" id="L88">            .toProvider(MetadataProvider.class)</span>
+<span class="fc" id="L89">            .asSingleton();</span>
+
+<span class="fc" id="L91">        bind(RunMode.class)</span>
+<span class="fc" id="L92">            .toProvider(RunModeProvider.class)</span>
+<span class="fc" id="L93">            .asSingleton();</span>
+
+<span class="fc" id="L95">        bind(Environment.class)</span>
+<span class="fc" id="L96">            .toProvider(EnvironmentProvider.class)</span>
+<span class="fc" id="L97">            .asSingleton();</span>
+
+<span class="fc" id="L99">        bind(Context.class)</span>
+<span class="fc" id="L100">            .withClassifier(named(&quot;applicationContext&quot;))</span>
+<span class="fc" id="L101">            .to(DefaultContext.class)</span>
+<span class="fc" id="L102">            .asSingleton();</span>
+
+<span class="fc" id="L104">        bind(ApplicationConfigurer.class)</span>
+<span class="fc" id="L105">            .to(DefaultApplicationConfigurer.class)</span>
+<span class="fc" id="L106">            .asSingleton();</span>
+
+<span class="fc" id="L108">        bind(ResourceHandler.class)</span>
+<span class="fc" id="L109">            .to(DefaultResourceHandler.class)</span>
+<span class="fc" id="L110">            .asSingleton();</span>
+
+<span class="fc" id="L112">        bind(CompositeResourceBundleBuilder.class)</span>
+<span class="fc" id="L113">            .to(DefaultCompositeResourceBundleBuilder.class)</span>
+<span class="fc" id="L114">            .asSingleton();</span>
+
+<span class="fc" id="L116">        bind(ResourceBundle.class)</span>
+<span class="fc" id="L117">            .withClassifier(named(&quot;applicationResourceBundle&quot;))</span>
+<span class="fc" id="L118">            .toProvider(new ResourceBundleProvider(&quot;Config&quot;))</span>
+<span class="fc" id="L119">            .asSingleton();</span>
+
+<span class="fc" id="L121">        bind(Configuration.class)</span>
+<span class="fc" id="L122">            .to(DefaultConfiguration.class)</span>
+<span class="fc" id="L123">            .asSingleton();</span>
+
+<span class="fc" id="L125">        bind(ExecutorServiceManager.class)</span>
+<span class="fc" id="L126">            .to(DefaultExecutorServiceManager.class)</span>
+<span class="fc" id="L127">            .asSingleton();</span>
+
+<span class="fc" id="L129">        bind(EventRouter.class)</span>
+<span class="fc" id="L130">            .withClassifier(named(&quot;applicationEventRouter&quot;))</span>
+<span class="fc" id="L131">            .to(DefaultEventRouter.class)</span>
+<span class="fc" id="L132">            .asSingleton();</span>
+
+<span class="fc" id="L134">        bind(EventRouter.class)</span>
+<span class="fc" id="L135">            .to(DefaultEventRouter.class);</span>
+
+<span class="fc" id="L137">        bind(ResourceResolver.class)</span>
+<span class="fc" id="L138">            .withClassifier(named(&quot;applicationResourceResolver&quot;))</span>
+<span class="fc" id="L139">            .toProvider(new ResourceResolverProvider(&quot;resources&quot;))</span>
+<span class="fc" id="L140">            .asSingleton();</span>
+
+<span class="fc" id="L142">        bind(MessageSource.class)</span>
+<span class="fc" id="L143">            .withClassifier(named(&quot;applicationMessageSource&quot;))</span>
+<span class="fc" id="L144">            .toProvider(new MessageSourceProvider(&quot;messages&quot;))</span>
+<span class="fc" id="L145">            .asSingleton();</span>
+
+<span class="fc" id="L147">        bind(ResourceInjector.class)</span>
+<span class="fc" id="L148">            .withClassifier(named(&quot;applicationResourceInjector&quot;))</span>
+<span class="fc" id="L149">            .to(DefaultApplicationResourceInjector.class)</span>
+<span class="fc" id="L150">            .asSingleton();</span>
+
+<span class="fc" id="L152">        bind(ExecutorService.class)</span>
+<span class="fc" id="L153">            .withClassifier(named(&quot;defaultExecutorService&quot;))</span>
+<span class="fc" id="L154">            .toProvider(DefaultExecutorServiceProvider.class)</span>
+<span class="fc" id="L155">            .asSingleton();</span>
+
+<span class="fc" id="L157">        bind(UIThreadManager.class)</span>
+<span class="fc" id="L158">            .to(DefaultUIThreadManager.class)</span>
+<span class="fc" id="L159">            .asSingleton();</span>
+
+<span class="fc" id="L161">        bind(MVCGroupManager.class)</span>
+<span class="fc" id="L162">            .to(DefaultMVCGroupManager.class)</span>
+<span class="fc" id="L163">            .asSingleton();</span>
+
+<span class="fc bfc" id="L165" title="All 2 branches covered.">        for (Lifecycle lifecycle : Lifecycle.values()) {</span>
+<span class="fc" id="L166">            bind(LifecycleHandler.class)</span>
+<span class="fc" id="L167">                .withClassifier(named(lifecycle.getName()))</span>
+<span class="fc" id="L168">                .toProvider(new LifecycleHandlerProvider(lifecycle.getName()))</span>
+<span class="fc" id="L169">                .asSingleton();</span>
+        }
+
+<span class="fc" id="L172">        bind(WindowManager.class)</span>
+<span class="fc" id="L173">            .to(NoopWindowManager.class)</span>
+<span class="fc" id="L174">            .asSingleton();</span>
+
+<span class="fc" id="L176">        bind(ActionManager.class)</span>
+<span class="fc" id="L177">            .to(DefaultActionManager.class)</span>
+<span class="fc" id="L178">            .asSingleton();</span>
+
+<span class="fc" id="L180">        bind(ArtifactManager.class)</span>
+<span class="fc" id="L181">            .to(DefaultArtifactManager.class)</span>
+<span class="fc" id="L182">            .asSingleton();</span>
+
+<span class="fc" id="L184">        bind(ArtifactHandler.class)</span>
+<span class="fc" id="L185">            .to(ModelArtifactHandler.class)</span>
+<span class="fc" id="L186">            .asSingleton();</span>
+
+<span class="fc" id="L188">        bind(ArtifactHandler.class)</span>
+<span class="fc" id="L189">            .to(ViewArtifactHandler.class)</span>
+<span class="fc" id="L190">            .asSingleton();</span>
+
+<span class="fc" id="L192">        bind(ArtifactHandler.class)</span>
+<span class="fc" id="L193">            .to(ControllerArtifactHandler.class)</span>
+<span class="fc" id="L194">            .asSingleton();</span>
+
+<span class="fc" id="L196">        bind(ArtifactHandler.class)</span>
+<span class="fc" id="L197">            .to(ServiceArtifactHandler.class)</span>
+<span class="fc" id="L198">            .asSingleton();</span>
+
+<span class="fc" id="L200">        bind(PlatformHandler.class)</span>
+<span class="fc" id="L201">            .toProvider(PlatformHandlerProvider.class)</span>
+<span class="fc" id="L202">            .asSingleton();</span>
+
+<span class="fc" id="L204">        bind(AddonManager.class)</span>
+<span class="fc" id="L205">            .to(DefaultAddonManager.class)</span>
+<span class="fc" id="L206">            .asSingleton();</span>
+
+<span class="fc" id="L208">        bind(EventHandler.class)</span>
+<span class="fc" id="L209">            .to(DefaultEventHandler.class)</span>
+<span class="fc" id="L210">            .asSingleton();</span>
+
+<span class="fc" id="L212">        bind(GriffonExceptionHandler.class)</span>
+<span class="fc" id="L213">            .asSingleton();</span>
+        // end::bindings[]
+<span class="fc" id="L215">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>

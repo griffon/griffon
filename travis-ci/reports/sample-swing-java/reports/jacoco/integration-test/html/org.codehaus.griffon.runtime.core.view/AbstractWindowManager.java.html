@@ -74,11 +74,11 @@ public abstract class AbstractWindowManager&lt;W&gt; implements WindowManager&lt
     @Nullable
     @Override
     public String findWindowName(@Nonnull W window) {
-<span class="nc" id="L77">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
-<span class="nc" id="L78">        synchronized (windows) {</span>
-<span class="nc bnc" id="L79" title="All 2 branches missed.">            for (Map.Entry&lt;String, W&gt; e : windows.entrySet()) {</span>
-<span class="nc bnc" id="L80" title="All 2 branches missed.">                if (e.getValue().equals(window)) {</span>
-<span class="nc" id="L81">                    return e.getKey();</span>
+<span class="fc" id="L77">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="fc" id="L78">        synchronized (windows) {</span>
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">            for (Map.Entry&lt;String, W&gt; e : windows.entrySet()) {</span>
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">                if (e.getValue().equals(window)) {</span>
+<span class="fc" id="L81">                    return e.getKey();</span>
                 }
 <span class="nc" id="L83">            }</span>
 <span class="nc" id="L84">        }</span>

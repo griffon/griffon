@@ -83,14 +83,14 @@ public class DefaultLanternaWindowManager extends AbstractWindowManager&lt;Windo
         @Override
         public void onWindowClosed(@Nonnull Window window) {
 <span class="nc" id="L85">            super.onWindowClosed(window);</span>
-<span class="nc" id="L86">            event(ApplicationEvent.WINDOW_HIDDEN, asList(window));</span>
+<span class="nc" id="L86">            event(ApplicationEvent.WINDOW_HIDDEN, asList(findWindowName(window), window));</span>
 <span class="nc" id="L87">            handleClose(window);</span>
 <span class="nc" id="L88">        }</span>
 
         @Override
         public void onWindowShown(Window window) {
 <span class="nc" id="L92">            super.onWindowShown(window);</span>
-<span class="nc" id="L93">            event(ApplicationEvent.WINDOW_SHOWN, asList(window));</span>
+<span class="nc" id="L93">            event(ApplicationEvent.WINDOW_SHOWN, asList(findWindowName(window), window));</span>
 <span class="nc" id="L94">        }</span>
     }
 }

@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractResourceInjector.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-groovy</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core.resources</a> &gt; <span class="el_source">AbstractResourceInjector.java</span></div><h1>AbstractResourceInjector.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core.resources;
+
+import griffon.core.editors.ExtendedPropertyEditor;
+import griffon.core.resources.InjectedResource;
+import griffon.core.resources.ResourceInjector;
+import griffon.exceptions.InstanceMethodInvocationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.beans.PropertyDescriptor;
+import java.beans.PropertyEditor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static griffon.core.GriffonExceptionHandler.sanitize;
+import static griffon.core.editors.PropertyEditorResolver.findEditor;
+import static griffon.util.GriffonClassUtils.getPropertyDescriptors;
+import static griffon.util.GriffonClassUtils.invokeExactInstanceMethod;
+import static griffon.util.GriffonNameUtils.getSetterName;
+import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.lang.reflect.Modifier.isStatic;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="fc" id="L50">public abstract class AbstractResourceInjector implements ResourceInjector {</span>
+<span class="fc" id="L51">    private static final Logger LOG = LoggerFactory.getLogger(AbstractResourceInjector.class);</span>
+
+    protected static final String ERROR_INSTANCE_NULL = &quot;Argument 'instance' must not be null&quot;;
+    protected static final String ERROR_METHOD_NULL = &quot;Argument 'method' must not be null&quot;;
+    protected static final String ERROR_FIELD_NULL = &quot;Argument 'field' must not be null&quot;;
+    protected static final String ERROR_CLASS_NULL = &quot;Argument 'klass' must not be null&quot;;
+    protected static final String ERROR_TYPE_NULL = &quot;Argument 'type' must not be null&quot;;
+    protected static final String ERROR_VALUE_NULL = &quot;Argument 'value' must not be null&quot;;
+    protected static final String ERROR_FULLY_QUALIFIED_NAME_BLANK = &quot;Argument 'fqName' must not be blank&quot;;
+    protected static final String ERROR_FULLY_QUALIFIED_FIELD_NAME_BLANK = &quot;Argument 'fqFieldName' must not be blank&quot;;
+
+    @Override
+    public void injectResources(@Nonnull Object instance) {
+<span class="fc" id="L64">        requireNonNull(instance, ERROR_INSTANCE_NULL);</span>
+<span class="fc" id="L65">        Class&lt;?&gt; klass = instance.getClass();</span>
+        do {
+<span class="fc" id="L67">            doResourceInjection(klass, instance);</span>
+<span class="fc" id="L68">            klass = klass.getSuperclass();</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        } while (null != klass);</span>
+<span class="fc" id="L70">    }</span>
+
+    protected boolean doResourceInjection(@Nonnull Class&lt;?&gt; klass, @Nonnull Object instance) {
+<span class="fc" id="L73">        requireNonNull(klass, ERROR_CLASS_NULL);</span>
+<span class="fc" id="L74">        requireNonNull(instance, ERROR_INSTANCE_NULL);</span>
+
+<span class="fc" id="L76">        boolean injected = false;</span>
+<span class="fc" id="L77">        List&lt;String&gt; names = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L79">        PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(klass);</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        for (PropertyDescriptor pd : propertyDescriptors) {</span>
+<span class="fc" id="L81">            Method method = pd.getWriteMethod();</span>
+<span class="pc bpc" id="L82" title="1 of 4 branches missed.">            if (null == method || isStatic(method.getModifiers())) {</span>
+<span class="nc" id="L83">                continue;</span>
+            }
+
+<span class="fc" id="L86">            final InjectedResource annotation = method.getAnnotation(InjectedResource.class);</span>
+<span class="pc bpc" id="L87" title="1 of 2 branches missed.">            if (null == annotation) continue;</span>
+
+<span class="nc" id="L89">            String propertyName = pd.getName();</span>
+<span class="nc" id="L90">            String fqName = method.getDeclaringClass().getName().replace('$', '.') + &quot;.&quot; + propertyName;</span>
+<span class="nc" id="L91">            String key = annotation.key();</span>
+<span class="nc" id="L92">            String[] args = annotation.args();</span>
+<span class="nc" id="L93">            String defaultValue = annotation.defaultValue();</span>
+<span class="nc" id="L94">            String format = annotation.format();</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">            if (isBlank(key)) key = fqName;</span>
+
+<span class="nc bnc" id="L97" title="All 2 branches missed.">            if (LOG.isDebugEnabled()) {</span>
+<span class="nc" id="L98">                LOG.debug(&quot;Property &quot; + propertyName +</span>
+                    &quot; of instance &quot; + instance +
+                    &quot; [key='&quot; + key +
+<span class="nc" id="L101">                    &quot;', args='&quot; + Arrays.toString(args) +</span>
+                    &quot;', defaultValue='&quot; + defaultValue +
+                    &quot;', format='&quot; + format +
+                    &quot;'] is marked for resource injection.&quot;);
+            }
+
+            Object value;
+<span class="nc bnc" id="L108" title="All 2 branches missed.">            if (isBlank(defaultValue)) {</span>
+<span class="nc" id="L109">                value = resolveResource(key, args);</span>
+            } else {
+<span class="nc" id="L111">                value = resolveResource(key, args, defaultValue);</span>
+            }
+
+<span class="nc bnc" id="L114" title="All 2 branches missed.">            if (null != value) {</span>
+<span class="nc" id="L115">                Class&lt;?&gt; propertyType = method.getParameterTypes()[0];</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">                if (!propertyType.isAssignableFrom(value.getClass())) {</span>
+<span class="nc" id="L117">                    value = convertValue(propertyType, value, format);</span>
+                }
+<span class="nc" id="L119">                setPropertyValue(instance, method, value, fqName);</span>
+            }
+<span class="nc" id="L121">            names.add(propertyName);</span>
+<span class="nc" id="L122">            injected = true;</span>
+        }
+
+<span class="fc bfc" id="L125" title="All 2 branches covered.">        for (Field field : klass.getDeclaredFields()) {</span>
+<span class="pc bpc" id="L126" title="1 of 4 branches missed.">            if (field.isSynthetic() || names.contains(field.getName())) {</span>
+<span class="nc" id="L127">                continue;</span>
+            }
+<span class="fc" id="L129">            final InjectedResource annotation = field.getAnnotation(InjectedResource.class);</span>
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">            if (null == annotation) continue;</span>
+
+<span class="nc" id="L132">            String fqName = field.getDeclaringClass().getName().replace('$', '.') + &quot;.&quot; + field.getName();</span>
+<span class="nc" id="L133">            String key = annotation.key();</span>
+<span class="nc" id="L134">            String[] args = annotation.args();</span>
+<span class="nc" id="L135">            String defaultValue = annotation.defaultValue();</span>
+<span class="nc" id="L136">            String format = annotation.format();</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">            if (isBlank(key)) key = fqName;</span>
+
+<span class="nc bnc" id="L139" title="All 2 branches missed.">            if (LOG.isDebugEnabled()) {</span>
+<span class="nc" id="L140">                LOG.debug(&quot;Field &quot; + fqName +</span>
+                    &quot; of instance &quot; + instance +
+                    &quot; [key='&quot; + key +
+<span class="nc" id="L143">                    &quot;', args='&quot; + Arrays.toString(args) +</span>
+                    &quot;', defaultValue='&quot; + defaultValue +
+                    &quot;', format='&quot; + format +
+                    &quot;'] is marked for resource injection.&quot;);
+            }
+
+            Object value;
+<span class="nc bnc" id="L150" title="All 2 branches missed.">            if (isBlank(defaultValue)) {</span>
+<span class="nc" id="L151">                value = resolveResource(key, args);</span>
+            } else {
+<span class="nc" id="L153">                value = resolveResource(key, args, defaultValue);</span>
+            }
+
+<span class="nc bnc" id="L156" title="All 2 branches missed.">            if (null != value) {</span>
+<span class="nc bnc" id="L157" title="All 2 branches missed.">                if (!field.getType().isAssignableFrom(value.getClass())) {</span>
+<span class="nc" id="L158">                    value = convertValue(field.getType(), value, format);</span>
+                }
+<span class="nc" id="L160">                setFieldValue(instance, field, value, fqName);</span>
+            }
+<span class="nc" id="L162">            injected = true;</span>
+        }
+<span class="fc" id="L164">        return injected;</span>
+    }
+
+    @Nullable
+    protected abstract Object resolveResource(@Nonnull String key, @Nonnull String[] args);
+
+    @Nullable
+    protected abstract Object resolveResource(@Nonnull String key, @Nonnull String[] args, @Nonnull String defaultValue);
+
+    @Nonnull
+    protected Object convertValue(@Nonnull Class&lt;?&gt; type, @Nonnull Object value, @Nullable String format) {
+<span class="nc" id="L175">        requireNonNull(type, ERROR_TYPE_NULL);</span>
+<span class="nc" id="L176">        requireNonNull(value, ERROR_VALUE_NULL);</span>
+<span class="nc" id="L177">        PropertyEditor propertyEditor = resolvePropertyEditor(type, format);</span>
+<span class="nc bnc" id="L178" title="All 2 branches missed.">        if (null == propertyEditor) return value;</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">        if (value instanceof CharSequence) {</span>
+<span class="nc" id="L180">            propertyEditor.setAsText(String.valueOf(value));</span>
+        } else {
+<span class="nc" id="L182">            propertyEditor.setValue(value);</span>
+        }
+<span class="nc" id="L184">        return propertyEditor.getValue();</span>
+    }
+
+    @Nullable
+    protected PropertyEditor resolvePropertyEditor(@Nonnull Class&lt;?&gt; type, @Nullable String format) {
+<span class="nc" id="L189">        requireNonNull(type, ERROR_TYPE_NULL);</span>
+<span class="nc" id="L190">        PropertyEditor propertyEditor = findEditor(type);</span>
+<span class="nc bnc" id="L191" title="All 2 branches missed.">        if (propertyEditor instanceof ExtendedPropertyEditor) {</span>
+<span class="nc" id="L192">            ((ExtendedPropertyEditor) propertyEditor).setFormat(format);</span>
+        }
+<span class="nc" id="L194">        return propertyEditor;</span>
+    }
+
+    protected void setPropertyValue(@Nonnull Object instance, @Nonnull Method method, @Nullable Object value, @Nonnull String fqName) {
+<span class="nc" id="L198">        requireNonNull(instance, ERROR_INSTANCE_NULL);</span>
+<span class="nc" id="L199">        requireNonNull(method, ERROR_METHOD_NULL);</span>
+<span class="nc" id="L200">        requireNonBlank(fqName, ERROR_FULLY_QUALIFIED_NAME_BLANK);</span>
+        try {
+<span class="nc" id="L202">            method.invoke(instance, value);</span>
+<span class="nc" id="L203">        } catch (IllegalAccessException | InvocationTargetException e) {</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">            if (LOG.isWarnEnabled()) {</span>
+<span class="nc" id="L205">                LOG.warn(&quot;Cannot set value on property &quot; + fqName + &quot; of instance &quot; + instance, sanitize(e));</span>
+            }
+<span class="nc" id="L207">        }</span>
+<span class="nc" id="L208">    }</span>
+
+    protected void setFieldValue(@Nonnull Object instance, @Nonnull Field field, @Nullable Object value, @Nonnull String fqFieldName) {
+<span class="nc" id="L211">        requireNonNull(instance, ERROR_INSTANCE_NULL);</span>
+<span class="nc" id="L212">        requireNonNull(field, ERROR_FIELD_NULL);</span>
+<span class="nc" id="L213">        requireNonBlank(fqFieldName, ERROR_FULLY_QUALIFIED_FIELD_NAME_BLANK);</span>
+<span class="nc" id="L214">        String setter = getSetterName(field.getName());</span>
+        try {
+<span class="nc" id="L216">            invokeExactInstanceMethod(instance, setter, value);</span>
+<span class="nc" id="L217">        } catch (InstanceMethodInvocationException imie) {</span>
+            try {
+<span class="nc" id="L219">                field.setAccessible(true);</span>
+<span class="nc" id="L220">                field.set(instance, value);</span>
+<span class="nc" id="L221">            } catch (IllegalAccessException e) {</span>
+<span class="nc" id="L222">                LOG.warn(&quot;Cannot set value on field {} of instance {}&quot;, fqFieldName, instance, sanitize(e));</span>
+<span class="nc" id="L223">            }</span>
+<span class="nc" id="L224">        }</span>
+<span class="nc" id="L225">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>

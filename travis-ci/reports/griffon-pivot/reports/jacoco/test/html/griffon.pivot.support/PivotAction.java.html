@@ -16,8 +16,12 @@
 package griffon.pivot.support;
 
 import griffon.core.CallableWithArgs;
+import griffon.core.RunnableWithArgs;
 import org.apache.pivot.wtk.Action;
 import org.apache.pivot.wtk.Component;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static java.util.Objects.requireNonNull;
 
@@ -25,50 +29,68 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  */
 public class PivotAction extends Action {
+    private static final String ERROR_CALLABLE_NULL = &quot;Argument 'callable' must not be null&quot;;
+    private static final String ERROR_RUNNABLE_NULL = &quot;Argument 'runnable' must not be null&quot;;
     private String name;
     private String description;
-    private CallableWithArgs&lt;Void&gt; callable;
+    private RunnableWithArgs runnable;
 
-    public PivotAction() {
-<span class="fc" id="L33">        this(null);</span>
-<span class="fc" id="L34">    }</span>
+<span class="fc" id="L38">    public PivotAction() {</span>
 
-<span class="fc" id="L36">    public PivotAction(CallableWithArgs&lt;Void&gt; callable) {</span>
-<span class="fc" id="L37">        this.callable = callable;</span>
-<span class="fc" id="L38">    }</span>
+<span class="fc" id="L40">    }</span>
+
+<span class="nc" id="L42">    public PivotAction(@Nonnull RunnableWithArgs runnable) {</span>
+<span class="nc" id="L43">        this.runnable = requireNonNull(runnable, ERROR_RUNNABLE_NULL);</span>
+<span class="nc" id="L44">    }</span>
+
+    @Deprecated
+<span class="nc" id="L47">    public PivotAction(@Nonnull CallableWithArgs&lt;Void&gt; callable) {</span>
+<span class="nc" id="L48">        setCallable(callable);</span>
+<span class="nc" id="L49">    }</span>
 
     public String getName() {
-<span class="fc" id="L41">        return name;</span>
+<span class="fc" id="L52">        return name;</span>
     }
 
     public void setName(String name) {
-<span class="fc" id="L45">        this.name = name;</span>
-<span class="fc" id="L46">    }</span>
+<span class="fc" id="L56">        this.name = name;</span>
+<span class="fc" id="L57">    }</span>
 
     public String getDescription() {
-<span class="fc" id="L49">        return description;</span>
+<span class="fc" id="L60">        return description;</span>
     }
 
     public void setDescription(String description) {
-<span class="fc" id="L53">        this.description = description;</span>
-<span class="fc" id="L54">    }</span>
+<span class="fc" id="L64">        this.description = description;</span>
+<span class="fc" id="L65">    }</span>
 
-    public CallableWithArgs&lt;Void&gt; getCallable() {
-<span class="fc" id="L57">        return callable;</span>
+    @Deprecated
+    public void setCallable(final @Nonnull CallableWithArgs&lt;Void&gt; callable) {
+<span class="nc" id="L69">        requireNonNull(callable, ERROR_CALLABLE_NULL);</span>
+<span class="nc" id="L70">        this.runnable = new RunnableWithArgs() {</span>
+            @Override
+            public void run(@Nullable Object... args) {
+<span class="nc" id="L73">                callable.call(args);</span>
+<span class="nc" id="L74">            }</span>
+        };
+<span class="nc" id="L76">    }</span>
+
+    public RunnableWithArgs getRunnable() {
+<span class="fc" id="L79">        return runnable;</span>
     }
 
-    public void setCallable(CallableWithArgs&lt;Void&gt; callable) {
-<span class="fc" id="L61">        this.callable = callable;</span>
-<span class="fc" id="L62">    }</span>
+    public void setRunnable(RunnableWithArgs runnable) {
+<span class="fc" id="L83">        this.runnable = runnable;</span>
+<span class="fc" id="L84">    }</span>
 
     public String toString() {
-<span class="fc" id="L65">        return &quot;Action[&quot; + name + &quot;, &quot; + description + &quot;]&quot;;</span>
+<span class="fc" id="L87">        return &quot;Action[&quot; + name + &quot;, &quot; + description + &quot;]&quot;;</span>
     }
 
     @Override
     public void perform(Component component) {
-<span class="fc" id="L70">        requireNonNull(callable, &quot;Argument 'callable' must not be null for &quot; + this);</span>
-<span class="fc" id="L71">        callable.call(component);</span>
-<span class="fc" id="L72">    }</span>
+<span class="fc" id="L92">        requireNonNull(runnable, &quot;Argument 'runnable' must not be null for &quot; + this);</span>
+<span class="fc" id="L93">        runnable.run(component);</span>
+<span class="fc" id="L94">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>

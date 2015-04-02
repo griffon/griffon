@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DelegatingMutableConfiguration.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-groovy</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core</a> &gt; <span class="el_source">DelegatingMutableConfiguration.java</span></div><h1>DelegatingMutableConfiguration.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core;
+
+import griffon.core.Configuration;
+import griffon.core.MutableConfiguration;
+import griffon.util.AbstractMapResourceBundle;
+import griffon.util.CompositeResourceBundle;
+import griffon.util.ConfigUtils;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import java.util.Set;
+
+import static griffon.util.ConfigUtils.getConfigValue;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableMap;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.2.0
+ */
+public class DelegatingMutableConfiguration extends ConfigurationDecorator implements MutableConfiguration {
+    private static final String ERROR_KEY_BLANK = &quot;Argument 'key' must not be blank&quot;;
+    private static final String ERROR_VALUE_NULL = &quot;Argument 'value' must not be null&quot;;
+
+<span class="nc" id="L47">    private final Map&lt;String, Object&gt; mutableKeyValues = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L48">    private final Set&lt;String&gt; removedKeys = new LinkedHashSet&lt;&gt;();</span>
+
+    public DelegatingMutableConfiguration(@Nonnull Configuration delegate) {
+<span class="nc" id="L51">        super(delegate);</span>
+<span class="nc" id="L52">    }</span>
+
+    @Override
+    public void set(@Nonnull String key, @Nonnull Object value) {
+<span class="nc" id="L56">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="nc" id="L57">        requireNonNull(value, ERROR_VALUE_NULL);</span>
+<span class="nc" id="L58">        mutableKeyValues.put(key, value);</span>
+<span class="nc" id="L59">    }</span>
+
+    @Nullable
+    @Override
+    public Object remove(@Nonnull String key) {
+<span class="nc" id="L64">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        if (mutableKeyValues.containsKey(key)) {</span>
+<span class="nc" id="L66">            return mutableKeyValues.remove(key);</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        } else if (delegate.containsKey(key)) {</span>
+<span class="nc" id="L68">            removedKeys.add(key);</span>
+<span class="nc" id="L69">            return delegate.get(key);</span>
+        }
+<span class="nc" id="L71">        return null;</span>
+    }
+
+    @Nonnull
+    @Override
+    public Map&lt;String, Object&gt; asFlatMap() {
+<span class="nc" id="L77">        Map&lt;String, Object&gt; flatMap = new LinkedHashMap&lt;&gt;(delegate.asFlatMap());</span>
+<span class="nc" id="L78">        flatMap.putAll(mutableKeyValues);</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        for (String removedKey : removedKeys) {</span>
+<span class="nc" id="L80">            flatMap.remove(removedKey);</span>
+<span class="nc" id="L81">        }</span>
+<span class="nc" id="L82">        return unmodifiableMap(flatMap);</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceBundle asResourceBundle() {
+<span class="nc" id="L88">        return new CompositeResourceBundle(asList(new PrivateMapResourceBundle(asFlatMap()), delegate.asResourceBundle()));</span>
+    }
+
+    @Nullable
+    @Override
+    public Object get(@Nonnull String key) {
+<span class="nc" id="L94">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+        try {
+<span class="nc" id="L96">            return getConfigValue(mutableKeyValues, key);</span>
+<span class="nc" id="L97">        } catch (MissingResourceException mre) {</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">            if (removedKeys.contains(key)) {</span>
+<span class="nc" id="L99">                return null;</span>
+            }
+<span class="nc" id="L101">            return super.get(key);</span>
+        }
+    }
+
+    @Override
+    public boolean containsKey(@Nonnull String key) {
+<span class="nc" id="L107">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="nc bnc" id="L108" title="All 6 branches missed.">        return ConfigUtils.containsKey(mutableKeyValues, key) || (!removedKeys.contains(key) &amp;&amp; delegate.containsKey(key));</span>
+    }
+
+    private static class PrivateMapResourceBundle extends AbstractMapResourceBundle {
+<span class="nc" id="L112">        private final Map&lt;String, Object&gt; map = new LinkedHashMap&lt;&gt;();</span>
+
+<span class="nc" id="L114">        private PrivateMapResourceBundle(Map&lt;String, Object&gt; map) {</span>
+<span class="nc" id="L115">            this.map.putAll(map);</span>
+<span class="nc" id="L116">            initialize(entries);</span>
+<span class="nc" id="L117">            initializeKeys();</span>
+<span class="nc" id="L118">        }</span>
+
+        @Override
+        protected void initialize(@Nonnull Map&lt;String, Object&gt; entries) {
+<span class="nc bnc" id="L122" title="All 4 branches missed.">            if (map != null &amp;&amp; entries != null) {</span>
+<span class="nc" id="L123">                entries.putAll(map);</span>
+            }
+<span class="nc" id="L125">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>

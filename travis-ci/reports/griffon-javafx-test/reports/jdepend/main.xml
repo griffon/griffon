@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<JDepend>
+    <Packages>
+
+        <Package name="griffon.core">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.core.env">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.core.test">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.core.view">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.javafx">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="griffon.javafx.test">
+            <Stats>
+                <TotalClasses>4</TotalClasses>
+                <ConcreteClasses>4</ConcreteClasses>
+                <AbstractClasses>0</AbstractClasses>
+                <Ca>1</Ca>
+                <Ce>12</Ce>
+                <A>0</A>
+                <I>0.92</I>
+                <D>0.08</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="GriffonTestFXRule.java">
+                    griffon.javafx.test.GriffonTestFXRule
+                </Class>
+                <Class sourceFile="GriffonTestFXRule.java">
+                    griffon.javafx.test.GriffonTestFXRule$WindowShownHandler
+                </Class>
+                <Class sourceFile="TestContext.java">
+                    griffon.javafx.test.TestContext
+                </Class>
+                <Class sourceFile="TestFX.java">
+                    griffon.javafx.test.TestFX
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>griffon.core</Package>
+                <Package>griffon.core.env</Package>
+                <Package>griffon.javafx</Package>
+                <Package>griffon.util</Package>
+                <Package>java.lang</Package>
+                <Package>java.util</Package>
+                <Package>java.util.concurrent</Package>
+                <Package>org.codehaus.griffon.runtime.core</Package>
+                <Package>org.codehaus.griffon.runtime.javafx</Package>
+                <Package>org.junit.rules</Package>
+                <Package>org.junit.runners.model</Package>
+                <Package>org.testfx.api</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>org.codehaus.griffon.runtime.javafx</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="griffon.util">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.lang">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.util">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.util.concurrent">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="javax.inject">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.codehaus.griffon.runtime.core">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.codehaus.griffon.runtime.core.injection">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.codehaus.griffon.runtime.javafx">
+            <Stats>
+                <TotalClasses>5</TotalClasses>
+                <ConcreteClasses>5</ConcreteClasses>
+                <AbstractClasses>0</AbstractClasses>
+                <Ca>1</Ca>
+                <Ce>11</Ce>
+                <A>0</A>
+                <I>0.92</I>
+                <D>0.08</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="TestJavaFXGriffonApplication.java">
+                    org.codehaus.griffon.runtime.javafx.TestJavaFXGriffonApplication
+                </Class>
+                <Class sourceFile="TestJavaFXGriffonApplicationBootstrapper.java">
+                    org.codehaus.griffon.runtime.javafx.TestJavaFXGriffonApplicationBootstrapper
+                </Class>
+                <Class sourceFile="TestJavaFXGriffonApplicationBootstrapper.java">
+                    org.codehaus.griffon.runtime.javafx.TestJavaFXGriffonApplicationBootstrapper$1
+                </Class>
+                <Class sourceFile="TestJavaFXWindowManager.java">
+                    org.codehaus.griffon.runtime.javafx.TestJavaFXWindowManager
+                </Class>
+                <Class sourceFile="TestJavaFXWindowManagerProvider.java">
+                    org.codehaus.griffon.runtime.javafx.TestJavaFXWindowManagerProvider
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>griffon.core</Package>
+                <Package>griffon.core.test</Package>
+                <Package>griffon.core.view</Package>
+                <Package>griffon.javafx</Package>
+                <Package>griffon.javafx.test</Package>
+                <Package>griffon.util</Package>
+                <Package>java.lang</Package>
+                <Package>java.util</Package>
+                <Package>javax.inject</Package>
+                <Package>org.codehaus.griffon.runtime.core</Package>
+                <Package>org.codehaus.griffon.runtime.core.injection</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>griffon.javafx.test</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="org.junit.rules">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.junit.runners.model">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.testfx.api">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+    </Packages>
+
+    <Cycles>
+        <Package Name="griffon.javafx.test">
+            <Package>org.codehaus.griffon.runtime.javafx</Package>
+            <Package>griffon.javafx.test</Package>
+        </Package>
+
+        <Package Name="org.codehaus.griffon.runtime.javafx">
+            <Package>griffon.javafx.test</Package>
+            <Package>org.codehaus.griffon.runtime.javafx</Package>
+        </Package>
+
+    </Cycles>
+</JDepend>

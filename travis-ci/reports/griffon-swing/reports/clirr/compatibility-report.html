@@ -41,7 +41,7 @@
           <tr>
             <td>
               <p class='error'>ERROR</p>
-              <div>3</div>
+              <div>16</div>
             </td>
             <td>
               <p class='warning'>WARNING</p>
@@ -49,7 +49,7 @@
             </td>
             <td>
               <p class='info'>INFO</p>
-              <div>12</div>
+              <div>37</div>
             </td>
           </tr>
         </table>
@@ -63,6 +63,47 @@
         </thead>
         <tbody>
           <tr>
+            <td>griffon.core.RunnableWithArgs</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='info'>INFO(8000): </span>Class griffon.core.RunnableWithArgs added
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>griffon.core.event.EventPublisher</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='info'>INFO(7007): </span>Method 'public void addEventListener(java.lang.String, griffon.core.CallableWithArgs)' has been deprecated
+                </li>
+                <li>
+                  <span class='info'>INFO(7007): </span>Method 'public void addEventListener(java.lang.Class, griffon.core.CallableWithArgs)' has been deprecated
+                </li>
+                <li>
+                  <span class='error'>ERROR(7012): </span>Method 'public void addEventListener(java.lang.String, griffon.core.RunnableWithArgs)' has been added to an interface
+                </li>
+                <li>
+                  <span class='error'>ERROR(7012): </span>Method 'public void addEventListener(java.lang.Class, griffon.core.RunnableWithArgs)' has been added to an interface
+                </li>
+                <li>
+                  <span class='info'>INFO(7007): </span>Method 'public void removeEventListener(java.lang.String, griffon.core.CallableWithArgs)' has been deprecated
+                </li>
+                <li>
+                  <span class='info'>INFO(7007): </span>Method 'public void removeEventListener(java.lang.Class, griffon.core.CallableWithArgs)' has been deprecated
+                </li>
+                <li>
+                  <span class='error'>ERROR(7012): </span>Method 'public void removeEventListener(java.lang.String, griffon.core.RunnableWithArgs)' has been added to an interface
+                </li>
+                <li>
+                  <span class='error'>ERROR(7012): </span>Method 'public void removeEventListener(java.lang.Class, griffon.core.RunnableWithArgs)' has been added to an interface
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
             <td>griffon.core.view.WindowManager</td>
             <td>
               <ul>
@@ -74,6 +115,48 @@
                 </li>
                 <li>
                   <span class='error'>ERROR(7012): </span>Method 'public int indexOf(java.lang.Object)' has been added to an interface
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>griffon.swing.SwingWindowManager</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='error'>ERROR(7012): </span>Method 'public java.lang.String findInternalWindowName(javax.swing.JInternalFrame)' has been added to an interface
+                </li>
+                <li>
+                  <span class='error'>ERROR(7012): </span>Method 'public java.util.Set getInternalWindowNames()' has been added to an interface
+                </li>
+                <li>
+                  <span class='error'>ERROR(7012): </span>Method 'public int indexOfInternal(javax.swing.JInternalFrame)' has been added to an interface
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>griffon.swing.support.SwingAction</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='info'>INFO(7007): </span>Method 'public SwingAction(griffon.core.CallableWithArgs)' has been deprecated
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public SwingAction(griffon.core.RunnableWithArgs)' has been added
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>griffon.swing.support.SwingAction$ActionBuilder</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='info'>INFO(7007): </span>Method 'public griffon.swing.support.SwingAction$ActionBuilder withRunnable(griffon.core.CallableWithArgs)' has been deprecated
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public griffon.swing.support.SwingAction$ActionBuilder withRunnable(griffon.core.RunnableWithArgs)' has been added
                 </li>
               </ul>
             </td>
@@ -99,6 +182,84 @@
                 </li>
                 <li>
                   <span class='info'>INFO(7011): </span>Method 'public java.util.Map requireNonEmpty(java.util.Map, java.lang.String)' has been added
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='error'>ERROR(4001): </span>Removed griffon.core.CallableWithArgs from the set of implemented interfaces
+                </li>
+                <li>
+                  <span class='info'>INFO(4000): </span>Added griffon.core.RunnableWithArgs to the set of implemented interfaces
+                </li>
+                <li>
+                  <span class='error'>ERROR(7002): </span>Method 'public java.lang.Void call(java.lang.Object[])' has been removed
+                </li>
+                <li>
+                  <span class='error'>ERROR(7002): </span>Method 'public java.lang.Object call(java.lang.Object[])' has been removed
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public void run(java.lang.Object[])' has been added
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>org.codehaus.griffon.runtime.core.event.AbstractEventPublisher</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public void addEventListener(java.lang.String, griffon.core.RunnableWithArgs)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public void addEventListener(java.lang.Class, griffon.core.RunnableWithArgs)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public void removeEventListener(java.lang.Class, griffon.core.RunnableWithArgs)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public void removeEventListener(java.lang.String, griffon.core.RunnableWithArgs)' has been added
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>org.codehaus.griffon.runtime.core.event.AbstractEventRouter</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='error'>ERROR(6001): </span>Removed field callableListeners
+                </li>
+                <li>
+                  <span class='info'>INFO(6000): </span>Added protected field functionalListeners
+                </li>
+                <li>
+                  <span class='info'>INFO(6000): </span>Added protected field instanceListeners
+                </li>
+                <li>
+                  <span class='error'>ERROR(6001): </span>Removed field listeners
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public void addEventListener(java.lang.Class, griffon.core.RunnableWithArgs)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public void addEventListener(java.lang.String, griffon.core.RunnableWithArgs)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'protected void fireEvent(griffon.core.RunnableWithArgs, java.util.List)' has been added
+                </li>
+                <li>
+                  <span class='error'>ERROR(7005): </span>Parameter 1 of 'protected boolean isNestedListener(griffon.core.CallableWithArgs, java.lang.Object)' has changed its type to java.lang.Object
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public void removeEventListener(java.lang.Class, griffon.core.RunnableWithArgs)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public void removeEventListener(java.lang.String, griffon.core.RunnableWithArgs)' has been added
                 </li>
               </ul>
             </td>
@@ -131,6 +292,22 @@
                 </li>
                 <li>
                   <span class='info'>INFO(7011): </span>Method 'public int indexOf(java.lang.Object)' has been added
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>org.codehaus.griffon.runtime.swing.DefaultSwingWindowManager</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public java.lang.String findInternalWindowName(javax.swing.JInternalFrame)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public java.util.Set getInternalWindowNames()' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public int indexOfInternal(javax.swing.JInternalFrame)' has been added
                 </li>
               </ul>
             </td>

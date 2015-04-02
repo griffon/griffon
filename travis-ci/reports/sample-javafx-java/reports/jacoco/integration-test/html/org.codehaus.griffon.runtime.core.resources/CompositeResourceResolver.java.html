@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>CompositeResourceResolver.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-java</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core.resources</a> &gt; <span class="el_source">CompositeResourceResolver.java</span></div><h1>CompositeResourceResolver.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core.resources;
+
+import griffon.core.resources.NoSuchResourceException;
+import griffon.core.resources.ResourceResolver;
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Locale;
+
+import static griffon.util.GriffonClassUtils.requireNonEmpty;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public class CompositeResourceResolver extends AbstractResourceResolver {
+    private final ResourceResolver[] resourceResolvers;
+
+    public CompositeResourceResolver(@Nonnull Collection&lt;ResourceResolver&gt; resourceResolvers) {
+<span class="nc" id="L37">        this(toResourceResolverArray(resourceResolvers));</span>
+<span class="nc" id="L38">    }</span>
+
+<span class="nc" id="L40">    public CompositeResourceResolver(@Nonnull ResourceResolver[] resourceResolvers) {</span>
+<span class="nc" id="L41">        this.resourceResolvers = requireNonNull(resourceResolvers, &quot;Argument 'resourceResolvers' must not be null&quot;);</span>
+<span class="nc" id="L42">    }</span>
+
+    private static ResourceResolver[] toResourceResolverArray(@Nonnull Collection&lt;ResourceResolver&gt; resourceResolvers) {
+<span class="nc" id="L45">        requireNonNull(resourceResolvers, &quot;Argument 'resourceResolvers' must not be null&quot;);</span>
+<span class="nc" id="L46">        requireNonEmpty(resourceResolvers, &quot;Argument 'resourceResolvers' must not be empty&quot;);</span>
+<span class="nc" id="L47">        return resourceResolvers.toArray(new ResourceResolver[resourceResolvers.size()]);</span>
+    }
+
+    @Nonnull
+    @Override
+    protected Object doResolveResourceValue(@Nonnull String key, @Nonnull Locale locale) throws NoSuchResourceException {
+<span class="nc" id="L53">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="nc" id="L54">        requireNonNull(locale, ERROR_LOCALE_NULL);</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        for (ResourceResolver resourceResolver : resourceResolvers) {</span>
+            try {
+<span class="nc" id="L57">                return resourceResolver.resolveResourceValue(key, locale);</span>
+<span class="nc" id="L58">            } catch (NoSuchResourceException nsre) {</span>
+                // ignore
+            }
+        }
+<span class="nc" id="L62">        throw new NoSuchResourceException(key, locale);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>

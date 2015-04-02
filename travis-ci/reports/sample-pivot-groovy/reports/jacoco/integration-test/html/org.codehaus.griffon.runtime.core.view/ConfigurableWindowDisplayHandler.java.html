@@ -17,6 +17,7 @@ package org.codehaus.griffon.runtime.core.view;
 
 import griffon.core.CallableWithArgs;
 import griffon.core.GriffonApplication;
+import griffon.core.RunnableWithArgs;
 import griffon.core.view.WindowDisplayHandler;
 import griffon.exceptions.InstanceNotFoundException;
 import org.slf4j.Logger;
@@ -49,7 +50,7 @@ import static java.util.Objects.requireNonNull;
  *         ]
  *     }
  * &lt;/pre&gt;
- * &lt;p/&gt;
+ * &lt;p&gt;
  * For these settings to work you must specify a &lt;code&gt;name:&lt;/code&gt; property on the Window/Frame instance. This
  * {@code WindowDisplayHandler} is smart enough to use the default show/hide behavior should any or both are not specified
  * or if a window name does not have a matching configuration. The default behavior will also be used if the Window/Frame
@@ -66,7 +67,7 @@ import static java.util.Objects.requireNonNull;
  *         ]
  *     }
  * &lt;/pre&gt;
- * &lt;p/&gt;
+ * &lt;p&gt;
  * Lastly, a global handler can be specified for all windows that have not been configured. If specified, this handler will
  * override the usage of the default one. It can be configured as follows&lt;p&gt;
  * &lt;pre&gt;
@@ -77,10 +78,10 @@ import static java.util.Objects.requireNonNull;
  *         ]
  *     }
  * &lt;/pre&gt;
- * &lt;p/&gt;
+ * &lt;p&gt;
  * Fine grained control for default &lt;code&gt;show&lt;/code&gt; and &lt;code&gt;hide&lt;/code&gt; is also possible, by specifying &lt;code&gt;defaultShow&lt;/code&gt;
  * and/or &lt;code&gt;defaultHide&lt;/code&gt; properties at the global level. These properties take precedence over &lt;code&gt;defaultHandler&lt;/code&gt; .
- * &lt;p/&gt;
+ * &lt;p&gt;
  * &lt;pre&gt;
  *     windowManager {
  *         defaultHide = {name, window -&gt; ... }
@@ -89,161 +90,161 @@ import static java.util.Objects.requireNonNull;
  *         ]
  *     }
  * &lt;/pre&gt;
- * &lt;p/&gt;
+ * &lt;p&gt;
  * &lt;strong&gt;Note:&lt;/strong&gt; the value for &lt;code&gt;show&lt;/code&gt; and &lt;code&gt;hide&lt;/code&gt; can be either a Closure or a {@code RunnableWithArgs}.
  *
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class ConfigurableWindowDisplayHandler&lt;W&gt; implements WindowDisplayHandler&lt;W&gt; {
-<span class="fc" id="L99">    private static final Logger LOG = LoggerFactory.getLogger(ConfigurableWindowDisplayHandler.class);</span>
-
     protected static final String ERROR_NAME_BLANK = &quot;Argument 'name' must not be blank&quot;;
     protected static final String ERROR_WINDOW_NULL = &quot;Argument 'window' must not be null&quot;;
-
+<span class="fc" id="L102">    private static final Logger LOG = LoggerFactory.getLogger(ConfigurableWindowDisplayHandler.class);</span>
     private final GriffonApplication application;
     private final WindowDisplayHandler&lt;W&gt; delegateWindowsDisplayHandler;
 
     @Inject
-<span class="fc" id="L108">    public ConfigurableWindowDisplayHandler(@Nonnull GriffonApplication application, @Nonnull @Named(&quot;defaultWindowDisplayHandler&quot;) WindowDisplayHandler&lt;W&gt; delegateWindowsDisplayHandler) {</span>
-<span class="fc" id="L109">        this.application = requireNonNull(application, &quot;Argument 'application' must not be null&quot;);</span>
-<span class="fc" id="L110">        this.delegateWindowsDisplayHandler = requireNonNull(delegateWindowsDisplayHandler, &quot;Argument 'delegateWindowsDisplayHandler' must not be null&quot;);</span>
-<span class="fc" id="L111">    }</span>
+<span class="fc" id="L107">    public ConfigurableWindowDisplayHandler(@Nonnull GriffonApplication application, @Nonnull @Named(&quot;defaultWindowDisplayHandler&quot;) WindowDisplayHandler&lt;W&gt; delegateWindowsDisplayHandler) {</span>
+<span class="fc" id="L108">        this.application = requireNonNull(application, &quot;Argument 'application' must not be null&quot;);</span>
+<span class="fc" id="L109">        this.delegateWindowsDisplayHandler = requireNonNull(delegateWindowsDisplayHandler, &quot;Argument 'delegateWindowsDisplayHandler' must not be null&quot;);</span>
+<span class="fc" id="L110">    }</span>
 
     @SuppressWarnings(&quot;unchecked&quot;)
     public void show(@Nonnull String name, @Nonnull W window) {
-<span class="fc" id="L115">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
-<span class="fc" id="L116">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="fc" id="L114">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="fc" id="L115">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
 
-<span class="fc" id="L118">        Map&lt;String, Object&gt; options = windowBlock(name);</span>
-<span class="pc bpc" id="L119" title="1 of 2 branches missed.">        if (!options.isEmpty()) {</span>
-<span class="nc" id="L120">            Object handler = options.get(&quot;show&quot;);</span>
-<span class="nc bnc" id="L121" title="All 2 branches missed.">            if (canBeRun(handler)) {</span>
-<span class="nc" id="L122">                LOG.trace(&quot;Showing {} with show: handler&quot;, name);</span>
-<span class="nc" id="L123">                run(handler, name, window);</span>
-<span class="nc" id="L124">                return;</span>
-<span class="nc bnc" id="L125" title="All 2 branches missed.">            } else if (options.get(&quot;handler&quot;) instanceof WindowDisplayHandler) {</span>
-<span class="nc" id="L126">                LOG.trace(&quot;Showing {} with handler: handler&quot;, name);</span>
-<span class="nc" id="L127">                ((WindowDisplayHandler&lt;W&gt;) options.get(&quot;handler&quot;)).show(name, window);</span>
-<span class="nc" id="L128">                return;</span>
+<span class="fc" id="L117">        Map&lt;String, Object&gt; options = windowBlock(name);</span>
+<span class="pc bpc" id="L118" title="1 of 2 branches missed.">        if (!options.isEmpty()) {</span>
+<span class="nc" id="L119">            Object handler = options.get(&quot;show&quot;);</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">            if (canBeRun(handler)) {</span>
+<span class="nc" id="L121">                LOG.trace(&quot;Showing {} with show: handler&quot;, name);</span>
+<span class="nc" id="L122">                run(handler, name, window);</span>
+<span class="nc" id="L123">                return;</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">            } else if (options.get(&quot;handler&quot;) instanceof WindowDisplayHandler) {</span>
+<span class="nc" id="L125">                LOG.trace(&quot;Showing {} with handler: handler&quot;, name);</span>
+<span class="nc" id="L126">                ((WindowDisplayHandler&lt;W&gt;) options.get(&quot;handler&quot;)).show(name, window);</span>
+<span class="nc" id="L127">                return;</span>
             }
         }
 
-<span class="pc bpc" id="L132" title="1 of 2 branches missed.">        if (handleShowByInjectedHandler(name, window)) {</span>
-<span class="nc" id="L133">            return;</span>
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">        if (handleShowByInjectedHandler(name, window)) {</span>
+<span class="nc" id="L132">            return;</span>
         }
 
-<span class="fc" id="L136">        options = windowManagerBlock();</span>
-<span class="pc bpc" id="L137" title="1 of 2 branches missed.">        if (!options.isEmpty()) {</span>
-<span class="nc" id="L138">            Object defaultShow = options.get(&quot;defaultShow&quot;);</span>
-<span class="nc bnc" id="L139" title="All 2 branches missed.">            if (canBeRun(defaultShow)) {</span>
-<span class="nc" id="L140">                LOG.trace(&quot;Showing {} with defaultShow: handler&quot;, name);</span>
-<span class="nc" id="L141">                run(defaultShow, name, window);</span>
-<span class="nc" id="L142">                return;</span>
+<span class="fc" id="L135">        options = windowManagerBlock();</span>
+<span class="pc bpc" id="L136" title="1 of 2 branches missed.">        if (!options.isEmpty()) {</span>
+<span class="nc" id="L137">            Object defaultShow = options.get(&quot;defaultShow&quot;);</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">            if (canBeRun(defaultShow)) {</span>
+<span class="nc" id="L139">                LOG.trace(&quot;Showing {} with defaultShow: handler&quot;, name);</span>
+<span class="nc" id="L140">                run(defaultShow, name, window);</span>
+<span class="nc" id="L141">                return;</span>
             }
         }
 
-<span class="fc" id="L146">        LOG.trace(&quot;Showing {} with default handler&quot;, name);</span>
-<span class="fc" id="L147">        fetchDefaultWindowDisplayHandler().show(name, window);</span>
-<span class="fc" id="L148">    }</span>
+<span class="fc" id="L145">        LOG.trace(&quot;Showing {} with default handler&quot;, name);</span>
+<span class="fc" id="L146">        fetchDefaultWindowDisplayHandler().show(name, window);</span>
+<span class="fc" id="L147">    }</span>
 
     @SuppressWarnings(&quot;unchecked&quot;)
     public void hide(@Nonnull String name, @Nonnull W window) {
-<span class="fc" id="L152">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
-<span class="fc" id="L153">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="fc" id="L151">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="fc" id="L152">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
 
-<span class="fc" id="L155">        Map&lt;String, Object&gt; options = windowBlock(name);</span>
-<span class="pc bpc" id="L156" title="1 of 2 branches missed.">        if (!options.isEmpty()) {</span>
-<span class="nc" id="L157">            Object handler = options.get(&quot;hide&quot;);</span>
-<span class="nc bnc" id="L158" title="All 2 branches missed.">            if (canBeRun(handler)) {</span>
-<span class="nc" id="L159">                LOG.trace(&quot;Hiding {} with hide: handler&quot;, name);</span>
-<span class="nc" id="L160">                run(handler, name, window);</span>
-<span class="nc" id="L161">                return;</span>
-<span class="nc bnc" id="L162" title="All 2 branches missed.">            } else if (options.get(&quot;handler&quot;) instanceof WindowDisplayHandler) {</span>
-<span class="nc" id="L163">                LOG.trace(&quot;Hiding {} with handler: handler&quot;, name);</span>
-<span class="nc" id="L164">                ((WindowDisplayHandler&lt;W&gt;) options.get(&quot;handler&quot;)).hide(name, window);</span>
-<span class="nc" id="L165">                return;</span>
+<span class="fc" id="L154">        Map&lt;String, Object&gt; options = windowBlock(name);</span>
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">        if (!options.isEmpty()) {</span>
+<span class="nc" id="L156">            Object handler = options.get(&quot;hide&quot;);</span>
+<span class="nc bnc" id="L157" title="All 2 branches missed.">            if (canBeRun(handler)) {</span>
+<span class="nc" id="L158">                LOG.trace(&quot;Hiding {} with hide: handler&quot;, name);</span>
+<span class="nc" id="L159">                run(handler, name, window);</span>
+<span class="nc" id="L160">                return;</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">            } else if (options.get(&quot;handler&quot;) instanceof WindowDisplayHandler) {</span>
+<span class="nc" id="L162">                LOG.trace(&quot;Hiding {} with handler: handler&quot;, name);</span>
+<span class="nc" id="L163">                ((WindowDisplayHandler&lt;W&gt;) options.get(&quot;handler&quot;)).hide(name, window);</span>
+<span class="nc" id="L164">                return;</span>
             }
         }
 
-<span class="pc bpc" id="L169" title="1 of 2 branches missed.">        if (handleHideByInjectedHandler(name, window)) {</span>
-<span class="nc" id="L170">            return;</span>
+<span class="pc bpc" id="L168" title="1 of 2 branches missed.">        if (handleHideByInjectedHandler(name, window)) {</span>
+<span class="nc" id="L169">            return;</span>
         }
 
-<span class="fc" id="L173">        options = windowManagerBlock();</span>
-<span class="pc bpc" id="L174" title="1 of 2 branches missed.">        if (!options.isEmpty()) {</span>
-<span class="nc" id="L175">            Object defaultHide = options.get(&quot;defaultHide&quot;);</span>
-<span class="nc bnc" id="L176" title="All 2 branches missed.">            if (canBeRun(defaultHide)) {</span>
-<span class="nc" id="L177">                LOG.trace(&quot;Hiding {} with defaultHide: handler&quot;, name);</span>
-<span class="nc" id="L178">                run(defaultHide, name, window);</span>
-<span class="nc" id="L179">                return;</span>
+<span class="fc" id="L172">        options = windowManagerBlock();</span>
+<span class="pc bpc" id="L173" title="1 of 2 branches missed.">        if (!options.isEmpty()) {</span>
+<span class="nc" id="L174">            Object defaultHide = options.get(&quot;defaultHide&quot;);</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">            if (canBeRun(defaultHide)) {</span>
+<span class="nc" id="L176">                LOG.trace(&quot;Hiding {} with defaultHide: handler&quot;, name);</span>
+<span class="nc" id="L177">                run(defaultHide, name, window);</span>
+<span class="nc" id="L178">                return;</span>
             }
         }
 
-<span class="fc" id="L183">        LOG.trace(&quot;Hiding {} with default handler&quot;, name);</span>
-<span class="fc" id="L184">        fetchDefaultWindowDisplayHandler().hide(name, window);</span>
-<span class="fc" id="L185">    }</span>
+<span class="fc" id="L182">        LOG.trace(&quot;Hiding {} with default handler&quot;, name);</span>
+<span class="fc" id="L183">        fetchDefaultWindowDisplayHandler().hide(name, window);</span>
+<span class="fc" id="L184">    }</span>
 
     @SuppressWarnings(&quot;unchecked&quot;)
     protected boolean handleShowByInjectedHandler(@Nonnull String name, @Nonnull W window) {
         try {
-<span class="nc" id="L190">            WindowDisplayHandler&lt;W&gt; handler = getApplication().getInjector()</span>
-<span class="nc" id="L191">                .getInstance(WindowDisplayHandler.class, named(name));</span>
-<span class="nc" id="L192">            LOG.trace(&quot;Showing {} with injected handler&quot;, name);</span>
-<span class="nc" id="L193">            handler.show(name, window);</span>
-<span class="nc" id="L194">            return true;</span>
-<span class="fc" id="L195">        } catch (InstanceNotFoundException infe) {</span>
+<span class="nc" id="L189">            WindowDisplayHandler&lt;W&gt; handler = getApplication().getInjector()</span>
+<span class="nc" id="L190">                .getInstance(WindowDisplayHandler.class, named(name));</span>
+<span class="nc" id="L191">            LOG.trace(&quot;Showing {} with injected handler&quot;, name);</span>
+<span class="nc" id="L192">            handler.show(name, window);</span>
+<span class="nc" id="L193">            return true;</span>
+<span class="fc" id="L194">        } catch (InstanceNotFoundException infe) {</span>
             // ignore
         }
-<span class="fc" id="L198">        return false;</span>
+<span class="fc" id="L197">        return false;</span>
     }
 
     @SuppressWarnings(&quot;unchecked&quot;)
     protected boolean handleHideByInjectedHandler(@Nonnull String name, @Nonnull W window) {
         try {
-<span class="nc" id="L204">            WindowDisplayHandler&lt;W&gt; handler = getApplication().getInjector()</span>
-<span class="nc" id="L205">                .getInstance(WindowDisplayHandler.class, named(name));</span>
-<span class="nc" id="L206">            LOG.trace(&quot;Hiding {} with injected handler&quot;, name);</span>
-<span class="nc" id="L207">            handler.hide(name, window);</span>
-<span class="nc" id="L208">            return true;</span>
-<span class="fc" id="L209">        } catch (InstanceNotFoundException infe) {</span>
+<span class="nc" id="L203">            WindowDisplayHandler&lt;W&gt; handler = getApplication().getInjector()</span>
+<span class="nc" id="L204">                .getInstance(WindowDisplayHandler.class, named(name));</span>
+<span class="nc" id="L205">            LOG.trace(&quot;Hiding {} with injected handler&quot;, name);</span>
+<span class="nc" id="L206">            handler.hide(name, window);</span>
+<span class="nc" id="L207">            return true;</span>
+<span class="fc" id="L208">        } catch (InstanceNotFoundException infe) {</span>
             // ignore
         }
-<span class="fc" id="L212">        return false;</span>
+<span class="fc" id="L211">        return false;</span>
     }
 
     public WindowDisplayHandler&lt;W&gt; getDelegateWindowsDisplayHandler() {
-<span class="fc" id="L216">        return delegateWindowsDisplayHandler;</span>
+<span class="fc" id="L215">        return delegateWindowsDisplayHandler;</span>
     }
 
     protected boolean canBeRun(@Nullable Object obj) {
-<span class="nc" id="L220">        return obj instanceof CallableWithArgs;</span>
+<span class="nc bnc" id="L219" title="All 4 branches missed.">        return obj instanceof RunnableWithArgs || obj instanceof CallableWithArgs;</span>
     }
 
     protected void run(@Nonnull Object handler, @Nonnull String name, @Nonnull W window) {
-<span class="nc bnc" id="L224" title="All 2 branches missed.">        if (handler instanceof CallableWithArgs) {</span>
-<span class="nc" id="L225">            ((CallableWithArgs&lt;?&gt;) handler).call(name, window);</span>
+<span class="nc bnc" id="L223" title="All 2 branches missed.">        if (handler instanceof RunnableWithArgs) {</span>
+<span class="nc" id="L224">            ((RunnableWithArgs) handler).run(name, window);</span>
+<span class="nc bnc" id="L225" title="All 2 branches missed.">        } else if (handler instanceof CallableWithArgs) {</span>
+<span class="nc" id="L226">            ((CallableWithArgs&lt;?&gt;) handler).call(name, window);</span>
         }
-<span class="nc" id="L227">    }</span>
+<span class="nc" id="L228">    }</span>
 
     protected Map&lt;String, Object&gt; windowManagerBlock() {
-<span class="fc" id="L230">        return application.getConfiguration().get(&quot;windowManager&quot;, Collections.&lt;String, Object&gt;emptyMap());</span>
+<span class="fc" id="L231">        return application.getConfiguration().get(&quot;windowManager&quot;, Collections.&lt;String, Object&gt;emptyMap());</span>
     }
 
     protected Map&lt;String, Object&gt; windowBlock(String windowName) {
-<span class="fc" id="L234">        Map&lt;String, Object&gt; options = windowManagerBlock();</span>
-<span class="fc" id="L235">        return getConfigValue(options, windowName, Collections.&lt;String, Object&gt;emptyMap());</span>
+<span class="fc" id="L235">        Map&lt;String, Object&gt; options = windowManagerBlock();</span>
+<span class="fc" id="L236">        return getConfigValue(options, windowName, Collections.&lt;String, Object&gt;emptyMap());</span>
     }
 
     protected GriffonApplication getApplication() {
-<span class="fc" id="L239">        return application;</span>
+<span class="fc" id="L240">        return application;</span>
     }
 
     @Nonnull
     @SuppressWarnings(&quot;unchecked&quot;)
     protected WindowDisplayHandler&lt;W&gt; fetchDefaultWindowDisplayHandler() {
-<span class="nc" id="L245">        Object handler = windowManagerBlock().get(&quot;defaultHandler&quot;);</span>
-<span class="nc bnc" id="L246" title="All 2 branches missed.">        return handler instanceof WindowDisplayHandler ? (WindowDisplayHandler&lt;W&gt;) handler : delegateWindowsDisplayHandler;</span>
+<span class="nc" id="L246">        Object handler = windowManagerBlock().get(&quot;defaultHandler&quot;);</span>
+<span class="nc bnc" id="L247" title="All 2 branches missed.">        return handler instanceof WindowDisplayHandler ? (WindowDisplayHandler&lt;W&gt;) handler : delegateWindowsDisplayHandler;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GriffonTestFXRule.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-javafx-test</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.test</a> &gt; <span class="el_source">GriffonTestFXRule.java</span></div><h1>GriffonTestFXRule.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.test;
+
+import griffon.core.ApplicationEvent;
+import griffon.core.RunnableWithArgs;
+import griffon.core.env.Environment;
+import griffon.javafx.JavaFXGriffonApplication;
+import org.codehaus.griffon.runtime.core.DefaultGriffonApplication;
+import org.codehaus.griffon.runtime.javafx.TestJavaFXGriffonApplication;
+import org.junit.rules.MethodRule;
+import org.junit.runners.model.FrameworkMethod;
+import org.junit.runners.model.Statement;
+import org.testfx.api.FxToolkit;
+
+import javax.annotation.Nonnull;
+import java.util.concurrent.TimeoutException;
+
+import static com.jayway.awaitility.Awaitility.await;
+import static griffon.javafx.test.TestContext.getTestContext;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.3.0
+ */
+public class GriffonTestFXRule extends TestFX implements MethodRule {
+    protected String windowName;
+    protected String[] startupArgs;
+    protected Class&lt;? extends TestJavaFXGriffonApplication&gt; applicationClass;
+
+    public GriffonTestFXRule(@Nonnull String windowName) {
+<span class="nc" id="L47">        this(TestJavaFXGriffonApplication.class, windowName, DefaultGriffonApplication.EMPTY_ARGS);</span>
+<span class="nc" id="L48">    }</span>
+
+    public GriffonTestFXRule(@Nonnull Class&lt;? extends TestJavaFXGriffonApplication&gt; applicationClass, @Nonnull String windowName) {
+<span class="nc" id="L51">        this(applicationClass, windowName, DefaultGriffonApplication.EMPTY_ARGS);</span>
+<span class="nc" id="L52">    }</span>
+
+<span class="nc" id="L54">    public GriffonTestFXRule(@Nonnull Class&lt;? extends TestJavaFXGriffonApplication&gt; applicationClass, @Nonnull String windowName, @Nonnull String[] startupArgs) {</span>
+<span class="nc" id="L55">        this.applicationClass = requireNonNull(applicationClass, &quot;Argument 'applicationClass' must not be null&quot;);</span>
+<span class="nc" id="L56">        this.windowName = requireNonBlank(windowName, &quot;Argument 'windowName' cannot be blank&quot;);</span>
+<span class="nc" id="L57">        requireNonNull(startupArgs, &quot;Argument 'startupArgs' must not be null&quot;);</span>
+<span class="nc" id="L58">        this.startupArgs = new String[startupArgs.length];</span>
+<span class="nc" id="L59">        System.arraycopy(startupArgs, 0, this.startupArgs, 0, startupArgs.length);</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        if (!Environment.isSystemSet()) {</span>
+<span class="nc" id="L61">            System.setProperty(Environment.KEY, Environment.TEST.getName());</span>
+        }
+<span class="nc" id="L63">    }</span>
+
+    @Override
+    public Statement apply(final Statement base, final FrameworkMethod method, final Object target) {
+<span class="nc" id="L67">        initialize(target);</span>
+
+<span class="nc" id="L69">        return new Statement() {</span>
+            @Override
+            public void evaluate() throws Throwable {
+<span class="nc" id="L72">                FxToolkit.registerPrimaryStage();</span>
+
+<span class="nc" id="L74">                JavaFXGriffonApplication application = (JavaFXGriffonApplication) FxToolkit.setupApplication(applicationClass);</span>
+<span class="nc" id="L75">                WindowShownHandler startingWindow = new WindowShownHandler(windowName);</span>
+<span class="nc" id="L76">                application.getEventRouter().addEventListener(ApplicationEvent.WINDOW_SHOWN.getName(), startingWindow);</span>
+<span class="nc" id="L77">                application.getInjector().injectMembers(target);</span>
+
+<span class="nc" id="L79">                await().until(() -&gt; startingWindow.isShowing());</span>
+
+<span class="nc" id="L81">                before(application, target);</span>
+                try {
+<span class="nc" id="L83">                    base.evaluate();</span>
+                } finally {
+<span class="nc" id="L85">                    after(application, target);</span>
+<span class="nc" id="L86">                }</span>
+<span class="nc" id="L87">            }</span>
+        };
+    }
+
+    protected void initialize(Object target) {
+<span class="nc" id="L92">        getTestContext().setTestCase(target);</span>
+<span class="nc" id="L93">        getTestContext().setWindowName(windowName);</span>
+<span class="nc" id="L94">    }</span>
+
+    protected void before(@Nonnull JavaFXGriffonApplication application, @Nonnull Object target) throws Throwable {
+
+<span class="nc" id="L98">    }</span>
+
+    protected void after(@Nonnull JavaFXGriffonApplication application, @Nonnull Object target) throws TimeoutException {
+<span class="nc" id="L101">        application.shutdown();</span>
+<span class="nc" id="L102">        FxToolkit.cleanupApplication(application);</span>
+<span class="nc" id="L103">    }</span>
+
+    private static class WindowShownHandler implements RunnableWithArgs {
+        private final String windowName;
+        private boolean showing;
+
+<span class="nc" id="L109">        private WindowShownHandler(String windowName) {</span>
+<span class="nc" id="L110">            this.windowName = windowName;</span>
+<span class="nc" id="L111">        }</span>
+
+        public boolean isShowing() {
+<span class="nc" id="L114">            return showing;</span>
+        }
+
+        @Override
+        public void run(Object... args) {
+<span class="nc bnc" id="L119" title="All 6 branches missed.">            if (args != null &amp;&amp; args.length &gt; 0 &amp;&amp; args[0] instanceof CharSequence) {</span>
+<span class="nc" id="L120">                showing = windowName.equals(String.valueOf(args[0]));</span>
+            }
+<span class="nc" id="L122">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>
