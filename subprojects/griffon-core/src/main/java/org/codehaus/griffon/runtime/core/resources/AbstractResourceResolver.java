@@ -38,7 +38,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     protected static final String ERROR_KEY_BLANK = "Argument 'key' must not be blank";
     protected static final String ERROR_LOCALE_NULL = "Argument 'locale' must not be null";
     protected static final String ERROR_ARGS_NULL = "Argument 'args' must not be null";
-    protected static final String ERROR_RESOURCE_BLANK = "Argument 'resource' must not be blank";
+    protected static final String ERROR_RESOURCE_NULL = "Argument 'resource' must not be null";
 
     protected static final Object[] EMPTY_OBJECT_ARGS = new Object[0];
 
@@ -181,7 +181,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     @Nonnull
     @Override
     public String formatResource(@Nonnull String resource, @Nonnull List<?> args) {
-        requireNonBlank(resource, ERROR_RESOURCE_BLANK);
+        requireNonNull(resource, ERROR_RESOURCE_NULL);
         requireNonNull(args, ERROR_ARGS_NULL);
         return formatResource(resource, args.toArray(new Object[args.size()]));
     }
@@ -189,7 +189,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     @Nonnull
     @Override
     public String formatResource(@Nonnull String resource, @Nonnull Object[] args) {
-        requireNonBlank(resource, ERROR_RESOURCE_BLANK);
+        requireNonNull(resource, ERROR_RESOURCE_NULL);
         requireNonNull(args, ERROR_ARGS_NULL);
         if (args.length == 0) return resource;
         return MessageFormat.format(resource, args);
@@ -198,7 +198,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     @Nonnull
     @Override
     public String formatResource(@Nonnull String resource, @Nonnull Map<String, Object> args) {
-        requireNonBlank(resource, ERROR_RESOURCE_BLANK);
+        requireNonNull(resource, ERROR_RESOURCE_NULL);
         requireNonNull(args, ERROR_ARGS_NULL);
         for (Map.Entry<String, Object> variable : args.entrySet()) {
             String var = variable.getKey();

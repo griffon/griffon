@@ -39,7 +39,7 @@ public abstract class AbstractMessageSource implements MessageSource {
     protected static final String ERROR_KEY_BLANK = "Argument 'key' must not be blank";
     protected static final String ERROR_LOCALE_NULL = "Argument 'locale' must not be null";
     protected static final String ERROR_ARGS_NULL = "Argument 'args' must not be null";
-    protected static final String ERROR_MESSAGE_BLANK = "Argument 'message' must not be blank";
+    protected static final String ERROR_MESSAGE_NULL = "Argument 'message' must not be null";
 
     protected static final Object[] EMPTY_OBJECT_ARGS = new Object[0];
 
@@ -182,7 +182,7 @@ public abstract class AbstractMessageSource implements MessageSource {
     @Nonnull
     @Override
     public String formatMessage(@Nonnull String message, @Nonnull List<?> args) {
-        requireNonBlank(message, ERROR_MESSAGE_BLANK);
+        requireNonNull(message, ERROR_MESSAGE_NULL);
         requireNonNull(args, ERROR_ARGS_NULL);
         return formatMessage(message, args.toArray(new Object[args.size()]));
     }
@@ -190,7 +190,7 @@ public abstract class AbstractMessageSource implements MessageSource {
     @Nonnull
     @Override
     public String formatMessage(@Nonnull String message, @Nonnull Object[] args) {
-        requireNonBlank(message, ERROR_MESSAGE_BLANK);
+        requireNonNull(message, ERROR_MESSAGE_NULL);
         requireNonNull(args, ERROR_ARGS_NULL);
         if (args.length == 0) return message;
         return MessageFormat.format(message, args);
@@ -199,7 +199,7 @@ public abstract class AbstractMessageSource implements MessageSource {
     @Nonnull
     @Override
     public String formatMessage(@Nonnull String message, @Nonnull Map<String, Object> args) {
-        requireNonBlank(message, ERROR_MESSAGE_BLANK);
+        requireNonNull(message, ERROR_MESSAGE_NULL);
         requireNonNull(args, ERROR_ARGS_NULL);
         for (Map.Entry<String, Object> variable : args.entrySet()) {
             String var = variable.getKey();
