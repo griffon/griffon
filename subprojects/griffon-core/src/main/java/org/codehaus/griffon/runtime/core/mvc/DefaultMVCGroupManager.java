@@ -244,6 +244,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                     Class<?> memberClass = classHolder.regularClass;
                     try {
                         Object instance = memberClass.newInstance();
+                        getApplication().getInjector().injectMembers(instance);
                         instanceMap.put(memberType, instance);
                         args.put(memberType, instance);
                     } catch (InstantiationException | IllegalAccessException e) {

@@ -18,20 +18,12 @@ package integration;
 import griffon.core.mvc.MVCGroup;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
-import javax.annotation.Nonnull;
-import java.util.Map;
-
 public class SimpleController extends AbstractGriffonController {
     private SimpleModel model;
     private String key;
     private String mvcId;
     private MVCGroup parentGroup;
     private SimpleModel parentModel;
-
-    @Override
-    public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-        System.out.println(args);
-    }
 
     public void setModel(SimpleModel model) {
         this.model = model;
@@ -41,16 +33,16 @@ public class SimpleController extends AbstractGriffonController {
         return mvcId;
     }
 
+    public void setMvcId(String mvcId) {
+        this.mvcId = mvcId;
+    }
+
     public String getKey() {
         return key;
     }
 
     public void setKey(String key) {
         this.key = key;
-    }
-
-    public void setMvcId(String mvcId) {
-        this.mvcId = mvcId;
     }
 
     public MVCGroup getParentGroup() {

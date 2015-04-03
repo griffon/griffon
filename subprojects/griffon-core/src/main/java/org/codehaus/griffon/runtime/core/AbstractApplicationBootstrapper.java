@@ -17,12 +17,14 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.core.ApplicationBootstrapper;
 import griffon.core.GriffonApplication;
+import griffon.core.artifact.GriffonService;
 import griffon.core.env.GriffonEnvironment;
 import griffon.core.injection.Binding;
 import griffon.core.injection.Injector;
 import griffon.core.injection.InjectorFactory;
 import griffon.core.injection.Module;
 import griffon.util.GriffonClassUtils;
+import griffon.util.ServiceLoaderUtils;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +40,7 @@ import java.util.ServiceLoader;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
 import static griffon.util.AnnotationUtils.sortByDependencies;
+import static griffon.util.ServiceLoaderUtils.load;
 import static java.util.Collections.unmodifiableCollection;
 import static java.util.Objects.requireNonNull;
 
@@ -48,6 +51,8 @@ import static java.util.Objects.requireNonNull;
 public abstract class AbstractApplicationBootstrapper implements ApplicationBootstrapper {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultApplicationBootstrapper.class);
     private static final String INJECTOR = "injector";
+    private static final String GRIFFON_PATH = "META-INF/griffon";
+    private static final String PROPERTIES = ".properties";
     protected final GriffonApplication application;
 
     public AbstractApplicationBootstrapper(@Nonnull GriffonApplication application) {
@@ -90,6 +95,7 @@ public abstract class AbstractApplicationBootstrapper implements ApplicationBoot
 
         List<Module> modules = new ArrayList<>();
         createApplicationModule(modules);
+        createArtifactsModule(modules);
         collectModuleBindings(modules);
 
         for (Module module : modules) {
@@ -99,6 +105,39 @@ public abstract class AbstractApplicationBootstrapper implements ApplicationBoot
         }
 
         return unmodifiableCollection(map.values());
+    }
+
+    protected void createArtifactsModule(@Nonnull List<Module> modules) {
+        final List<Class<?>> classes = new ArrayList<>();
+        load(getClass().getClassLoader(), GRIFFON_PATH, new ServiceLoaderUtils.PathFilter() {
+            @Override
+            public boolean accept(@Nonnull String path) {
+                return !path.endsWith(PROPERTIES);
+            }
+        }, new ServiceLoaderUtils.ResourceProcessor() {
+            @Override
+            public void process(@Nonnull ClassLoader classLoader, @Nonnull String line) {
+                line = line.trim();
+                try {
+                    classes.add(classLoader.loadClass(line));
+                } catch (ClassNotFoundException e) {
+                    LOG.warn("'" + line + "' could not be resolved as a Class");
+                }
+            }
+        });
+
+        modules.add(new AbstractModule() {
+            @Override
+            protected void doConfigure() {
+                for (Class<?> clazz : classes) {
+                    if (GriffonService.class.isAssignableFrom(clazz)) {
+                        bind(clazz).asSingleton();
+                    } else {
+                        bind(clazz);
+                    }
+                }
+            }
+        });
     }
 
     protected void createApplicationModule(@Nonnull List<Module> modules) {

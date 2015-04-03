@@ -44,6 +44,7 @@ class GriffonArtifactSpec extends Specification {
 
     static {
         System.setProperty('org.slf4j.simpleLogger.defaultLogLevel', 'trace')
+        System.setProperty('griffon.full.stacktrace', 'true')
     }
 
     def setupSpec() {
@@ -372,7 +373,7 @@ class GriffonArtifactSpec extends Specification {
 
     def 'Verify destroyMVCGroup(id)'(){
         given:
-        MVCGroup group = resolveMVCHandler().createMVCGroup('simple')
+        resolveMVCHandler().createMVCGroup('simple')
 
         when:
         resolveMVCHandler().destroyMVCGroup('simple')

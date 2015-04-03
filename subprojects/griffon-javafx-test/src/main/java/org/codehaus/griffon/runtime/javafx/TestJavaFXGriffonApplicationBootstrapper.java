@@ -22,7 +22,6 @@ import org.codehaus.griffon.runtime.core.TestApplicationBootstrapper;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -32,11 +31,6 @@ import java.util.List;
 public class TestJavaFXGriffonApplicationBootstrapper extends TestApplicationBootstrapper {
     public TestJavaFXGriffonApplicationBootstrapper(@Nonnull GriffonApplication application) {
         super(application);
-    }
-
-    @Override
-    protected void collectModuleBindings(@Nonnull Collection<Module> modules) {
-        super.collectModuleBindings(modules);
     }
 
     @Nonnull

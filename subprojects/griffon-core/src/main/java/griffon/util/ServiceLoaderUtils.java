@@ -19,10 +19,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Scanner;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
 import static griffon.util.GriffonNameUtils.isBlank;
@@ -35,13 +39,10 @@ import static java.util.Objects.requireNonNull;
  */
 public class ServiceLoaderUtils {
     private static final Logger LOG = LoggerFactory.getLogger(ServiceLoaderUtils.class);
+    private static final String JAR_FILE_SCHEME = "jar:file:";
 
     private ServiceLoaderUtils() {
 
-    }
-
-    public static interface LineProcessor {
-        void process(@Nonnull ClassLoader classLoader, @Nonnull Class<?> type, @Nonnull String line);
     }
 
     public static boolean load(@Nonnull ClassLoader classLoader, @Nonnull String path, @Nonnull Class<?> type, @Nonnull LineProcessor processor) {
@@ -79,5 +80,97 @@ public class ServiceLoaderUtils {
         }
 
         return true;
+    }
+
+    public static boolean load(@Nonnull ClassLoader classLoader, @Nonnull String path, @Nonnull PathFilter pathFilter, @Nonnull ResourceProcessor processor) {
+        requireNonNull(classLoader, "Argument 'classLoader' must not be null");
+        requireNonBlank(path, "Argument 'path' must not be blank");
+        requireNonNull(pathFilter, "Argument 'pathFilter' must not be blank");
+        requireNonNull(processor, "Argument 'processor' must not be null");
+
+        Enumeration<URL> urls;
+
+        try {
+            urls = classLoader.getResources(path);
+        } catch (IOException ioe) {
+            LOG.debug(ioe.getClass().getName() + " error loading resources from \"" + path + "\".");
+            return false;
+        }
+
+        if (urls == null) return false;
+
+        while (urls.hasMoreElements()) {
+            URL url = urls.nextElement();
+            LOG.debug("Reading definitions from " + url);
+            switch (url.getProtocol()) {
+                case "file":
+                    handleFileResource(url, classLoader, path, pathFilter, processor);
+                    break;
+                case "jar":
+                    handleJarResource(url, classLoader, path, pathFilter, processor);
+                    break;
+                default:
+                    LOG.warn("Could not load definitions from " + url);
+            }
+        }
+
+        return true;
+    }
+
+    private static void handleFileResource(@Nonnull URL url, @Nonnull ClassLoader classLoader, @Nonnull String path, @Nonnull PathFilter pathFilter, @Nonnull ResourceProcessor processor) {
+        try {
+            File file = new File(url.toURI());
+            for (File entry : file.listFiles()) {
+                if (pathFilter.accept(entry.getName())) {
+                    try (Scanner scanner = new Scanner(entry)) {
+                        while (scanner.hasNextLine()) {
+                            String line = scanner.nextLine();
+                            if (line.startsWith("#") || isBlank(line)) continue;
+                            processor.process(classLoader, line);
+                        }
+                    } catch (IOException e) {
+                        LOG.warn("An error occurred while loading resources from " + entry.getAbsolutePath(), sanitize(e));
+                    }
+                }
+            }
+        } catch (URISyntaxException e) {
+            LOG.warn("An error occurred while loading resources from " + url, sanitize(e));
+        }
+    }
+
+    private static void handleJarResource(@Nonnull URL url, @Nonnull ClassLoader classLoader, @Nonnull String path, @Nonnull PathFilter pathFilter, @Nonnull ResourceProcessor processor) {
+        try {
+            String u = url.toString();
+            JarFile jar = new JarFile(u.substring(JAR_FILE_SCHEME.length(), u.length() - path.length() - 2));
+            Enumeration<JarEntry> entries = jar.entries();
+            while (entries.hasMoreElements()) {
+                JarEntry jarEntry = entries.nextElement();
+                if (jarEntry.getName().startsWith(path) && pathFilter.accept(jarEntry.getName())) {
+                    try (Scanner scanner = new Scanner(jar.getInputStream(jarEntry))) {
+                        while (scanner.hasNextLine()) {
+                            String line = scanner.nextLine();
+                            if (line.startsWith("#") || isBlank(line)) continue;
+                            processor.process(classLoader, line);
+                        }
+                    } catch (IOException e) {
+                        LOG.warn("An error occurred while loading resources from " + jarEntry.getName(), sanitize(e));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            LOG.warn("An error occurred while loading resources from " + url, sanitize(e));
+        }
+    }
+
+    public static interface PathFilter {
+        boolean accept(@Nonnull String path);
+    }
+
+    public static interface LineProcessor {
+        void process(@Nonnull ClassLoader classLoader, @Nonnull Class<?> type, @Nonnull String line);
+    }
+
+    public static interface ResourceProcessor {
+        void process(@Nonnull ClassLoader classLoader, @Nonnull String line);
     }
 }

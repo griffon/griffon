@@ -80,6 +80,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
                 }
                 List<Class<? extends GriffonArtifact>> list = artifactsEntry.getValue();
                 artifacts.put(type, list.toArray(new Class[list.size()]));
+                handler.initialize(artifacts.get(type));
             }
         }
     }
@@ -111,10 +112,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
             throw new ArtifactNotFoundException(clazz);
         }
 
-        Injector injector = injectorProvider.get();
-        A artifact = (A) injector.getInstance(clazz);
-        injector.injectMembers(artifact);
-        return artifact;
+        return (A) injectorProvider.get().getInstance(clazz);
     }
 
     @Nonnull
