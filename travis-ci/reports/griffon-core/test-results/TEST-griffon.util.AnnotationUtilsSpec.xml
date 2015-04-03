@@ -1,75 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="griffon.util.AnnotationUtilsSpec" tests="16" skipped="0" failures="0" errors="0" timestamp="2015-04-02T11:30:06" hostname="testing-worker-linux-027f0490-2-22300-linux-8-56867044" time="0.044">
+<testsuite name="griffon.util.AnnotationUtilsSpec" tests="16" skipped="0" failures="0" errors="0" timestamp="2015-04-03T21:25:42" hostname="testing-worker-linux-da6418d7-1-13634-linux-8-57095380" time="0.067">
   <properties/>
-  <testcase name="Test setup of interface javax.inject.Named annotation" classname="griffon.util.AnnotationUtilsSpec" time="0.004"/>
-  <testcase name="Test setup of interface griffon.inject.Typed annotation" classname="griffon.util.AnnotationUtilsSpec" time="0.003"/>
-  <testcase name="Test setup of interface griffon.inject.BindTo annotation" classname="griffon.util.AnnotationUtilsSpec" time="0.003"/>
-  <testcase name="Find out if class java.lang.Object is annotated wit @javax.inject.Named" classname="griffon.util.AnnotationUtilsSpec" time="0.001"/>
-  <testcase name="Find out if java.lang.Object@7a4295e3 is annotated wit @javax.inject.Named" classname="griffon.util.AnnotationUtilsSpec" time="0.0"/>
-  <testcase name="Find out if class griffon.util.AnnotationUtilsSpec$Bean is annotated wit @javax.inject.Named" classname="griffon.util.AnnotationUtilsSpec" time="0.0"/>
-  <testcase name="Find out if griffon.util.AnnotationUtilsSpec$Bean@2de9d40f is annotated wit @javax.inject.Named" classname="griffon.util.AnnotationUtilsSpec" time="0.001"/>
-  <testcase name="Find out if class griffon.util.AnnotationUtilsSpec$Bean is annotated wit @griffon.inject.Typed" classname="griffon.util.AnnotationUtilsSpec" time="0.0"/>
-  <testcase name="Find out if griffon.util.AnnotationUtilsSpec$Bean@642fe844 is annotated wit @griffon.inject.Typed" classname="griffon.util.AnnotationUtilsSpec" time="0.0"/>
-  <testcase name="Enforce that class java.lang.Object is annotated with @javax.inject.Named" classname="griffon.util.AnnotationUtilsSpec" time="0.002"/>
-  <testcase name="Enforce that java.lang.Object@99cf91f is annotated with @javax.inject.Named" classname="griffon.util.AnnotationUtilsSpec" time="0.001"/>
+  <testcase name="Test setup of interface javax.inject.Named annotation" classname="griffon.util.AnnotationUtilsSpec" time="0.006"/>
+  <testcase name="Test setup of interface griffon.inject.Typed annotation" classname="griffon.util.AnnotationUtilsSpec" time="0.004"/>
+  <testcase name="Test setup of interface griffon.inject.BindTo annotation" classname="griffon.util.AnnotationUtilsSpec" time="0.004"/>
+  <testcase name="Find out if class java.lang.Object is annotated wit @javax.inject.Named" classname="griffon.util.AnnotationUtilsSpec" time="0.002"/>
+  <testcase name="Find out if java.lang.Object@734e86ed is annotated wit @javax.inject.Named" classname="griffon.util.AnnotationUtilsSpec" time="0.0"/>
+  <testcase name="Find out if class griffon.util.AnnotationUtilsSpec$Bean is annotated wit @javax.inject.Named" classname="griffon.util.AnnotationUtilsSpec" time="0.002"/>
+  <testcase name="Find out if griffon.util.AnnotationUtilsSpec$Bean@29987484 is annotated wit @javax.inject.Named" classname="griffon.util.AnnotationUtilsSpec" time="0.0"/>
+  <testcase name="Find out if class griffon.util.AnnotationUtilsSpec$Bean is annotated wit @griffon.inject.Typed" classname="griffon.util.AnnotationUtilsSpec" time="0.001"/>
+  <testcase name="Find out if griffon.util.AnnotationUtilsSpec$Bean@621416ab is annotated wit @griffon.inject.Typed" classname="griffon.util.AnnotationUtilsSpec" time="0.0"/>
+  <testcase name="Enforce that class java.lang.Object is annotated with @javax.inject.Named" classname="griffon.util.AnnotationUtilsSpec" time="0.003"/>
+  <testcase name="Enforce that java.lang.Object@299b0be6 is annotated with @javax.inject.Named" classname="griffon.util.AnnotationUtilsSpec" time="0.002"/>
   <testcase name="Enforce that class griffon.util.AnnotationUtilsSpec$Bean is annotated with @griffon.inject.Typed" classname="griffon.util.AnnotationUtilsSpec" time="0.0"/>
-  <testcase name="Enforce that griffon.util.AnnotationUtilsSpec$Bean@52049714 is annotated with @griffon.inject.Typed" classname="griffon.util.AnnotationUtilsSpec" time="0.001"/>
-  <testcase name="Instances are mapped by their names" classname="griffon.util.AnnotationUtilsSpec" time="0.014"/>
-  <testcase name="Instances are sorted by their dependencies" classname="griffon.util.AnnotationUtilsSpec" time="0.004"/>
-  <testcase name="Cyclic dependencies yield empty result" classname="griffon.util.AnnotationUtilsSpec" time="0.007"/>
+  <testcase name="Enforce that griffon.util.AnnotationUtilsSpec$Bean@486a5182 is annotated with @griffon.inject.Typed" classname="griffon.util.AnnotationUtilsSpec" time="0.001"/>
+  <testcase name="Instances are mapped by their names" classname="griffon.util.AnnotationUtilsSpec" time="0.019"/>
+  <testcase name="Instances are sorted by their dependencies" classname="griffon.util.AnnotationUtilsSpec" time="0.005"/>
+  <testcase name="Cyclic dependencies yield empty result" classname="griffon.util.AnnotationUtilsSpec" time="0.013"/>
   <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[[Test worker] DEBUG griffon.util.AnnotationUtils - Current bean order is [three, two, one]
-[Test worker] TRACE griffon.util.AnnotationUtils - Processing bean 'three'
-[Test worker] TRACE griffon.util.AnnotationUtils -   depends on '[two]'
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'three' dependencies (1)
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'three' dependencies: 
-[Test worker] TRACE griffon.util.AnnotationUtils -   skipped bean 'three', since dependency 'two' not yet added
-[Test worker] TRACE griffon.util.AnnotationUtils - Processing bean 'two'
-[Test worker] TRACE griffon.util.AnnotationUtils -   depends on '[one]'
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'two' dependencies (1)
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'two' dependencies: 
-[Test worker] TRACE griffon.util.AnnotationUtils -   skipped bean 'two', since dependency 'one' not yet added
-[Test worker] TRACE griffon.util.AnnotationUtils - Processing bean 'one'
-[Test worker] TRACE griffon.util.AnnotationUtils -   depends on '[]'
-[Test worker] TRACE griffon.util.AnnotationUtils -   adding bean 'one', since all dependencies have been added
-[Test worker] DEBUG griffon.util.AnnotationUtils - Current bean order is [three, two, one]
-[Test worker] TRACE griffon.util.AnnotationUtils - Processing bean 'three'
-[Test worker] TRACE griffon.util.AnnotationUtils -   depends on '[two]'
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'three' dependencies (1)
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'three' dependencies: 
-[Test worker] TRACE griffon.util.AnnotationUtils -   skipped bean 'three', since dependency 'two' not yet added
-[Test worker] TRACE griffon.util.AnnotationUtils - Processing bean 'two'
-[Test worker] TRACE griffon.util.AnnotationUtils -   depends on '[one]'
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'two' dependencies (1)
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'two' dependencies: 
-[Test worker] TRACE griffon.util.AnnotationUtils -   bean 'two' dependency 'one' already added
-[Test worker] TRACE griffon.util.AnnotationUtils -   adding bean 'two', since all dependencies have been added
-[Test worker] DEBUG griffon.util.AnnotationUtils - Current bean order is [three, two, one]
-[Test worker] TRACE griffon.util.AnnotationUtils - Processing bean 'three'
-[Test worker] TRACE griffon.util.AnnotationUtils -   depends on '[two]'
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'three' dependencies (1)
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'three' dependencies: 
-[Test worker] TRACE griffon.util.AnnotationUtils -   bean 'three' dependency 'two' already added
-[Test worker] TRACE griffon.util.AnnotationUtils -   adding bean 'three', since all dependencies have been added
-[Test worker] TRACE griffon.util.AnnotationUtils - bean dependency ordering complete
-[Test worker] DEBUG griffon.util.AnnotationUtils - computed bean order is [one, two, three]
-[Test worker] DEBUG griffon.util.AnnotationUtils - Current bean order is [cycle2, cycle1]
-[Test worker] TRACE griffon.util.AnnotationUtils - Processing bean 'cycle2'
-[Test worker] TRACE griffon.util.AnnotationUtils -   depends on '[cycle1]'
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'cycle2' dependencies (1)
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'cycle2' dependencies: 
-[Test worker] TRACE griffon.util.AnnotationUtils -   skipped bean 'cycle2', since dependency 'cycle1' not yet added
-[Test worker] TRACE griffon.util.AnnotationUtils - Processing bean 'cycle1'
-[Test worker] TRACE griffon.util.AnnotationUtils -   depends on '[cycle2]'
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'cycle1' dependencies (1)
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'cycle1' dependencies: 
-[Test worker] TRACE griffon.util.AnnotationUtils -   skipped bean 'cycle1', since dependency 'cycle2' not yet added
-[Test worker] WARN griffon.util.AnnotationUtils -   unresolved bean dependencies detected
+  <system-err><![CDATA[[Test worker] WARN griffon.util.AnnotationUtils -   unresolved bean dependencies detected
 [Test worker] WARN griffon.util.AnnotationUtils -   continuing with original bean order
 [Test worker] WARN griffon.util.AnnotationUtils -   bean cycle2 
 [Test worker] WARN griffon.util.AnnotationUtils -     depends on cycle1
 [Test worker] WARN griffon.util.AnnotationUtils -   bean cycle1 
 [Test worker] WARN griffon.util.AnnotationUtils -     depends on cycle2
-[Test worker] DEBUG griffon.util.AnnotationUtils - computed bean order is []
 ]]></system-err>
 </testsuite>

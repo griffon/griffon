@@ -38,7 +38,7 @@ import static java.util.Objects.requireNonNull;
     protected static final String ERROR_KEY_BLANK = &quot;Argument 'key' must not be blank&quot;;
     protected static final String ERROR_LOCALE_NULL = &quot;Argument 'locale' must not be null&quot;;
     protected static final String ERROR_ARGS_NULL = &quot;Argument 'args' must not be null&quot;;
-    protected static final String ERROR_RESOURCE_BLANK = &quot;Argument 'resource' must not be blank&quot;;
+    protected static final String ERROR_RESOURCE_NULL = &quot;Argument 'resource' must not be null&quot;;
 
 <span class="fc" id="L43">    protected static final Object[] EMPTY_OBJECT_ARGS = new Object[0];</span>
 
@@ -181,7 +181,7 @@ import static java.util.Objects.requireNonNull;
     @Nonnull
     @Override
     public String formatResource(@Nonnull String resource, @Nonnull List&lt;?&gt; args) {
-<span class="nc" id="L184">        requireNonBlank(resource, ERROR_RESOURCE_BLANK);</span>
+<span class="nc" id="L184">        requireNonNull(resource, ERROR_RESOURCE_NULL);</span>
 <span class="nc" id="L185">        requireNonNull(args, ERROR_ARGS_NULL);</span>
 <span class="nc" id="L186">        return formatResource(resource, args.toArray(new Object[args.size()]));</span>
     }
@@ -189,7 +189,7 @@ import static java.util.Objects.requireNonNull;
     @Nonnull
     @Override
     public String formatResource(@Nonnull String resource, @Nonnull Object[] args) {
-<span class="nc" id="L192">        requireNonBlank(resource, ERROR_RESOURCE_BLANK);</span>
+<span class="nc" id="L192">        requireNonNull(resource, ERROR_RESOURCE_NULL);</span>
 <span class="nc" id="L193">        requireNonNull(args, ERROR_ARGS_NULL);</span>
 <span class="nc bnc" id="L194" title="All 2 branches missed.">        if (args.length == 0) return resource;</span>
 <span class="nc" id="L195">        return MessageFormat.format(resource, args);</span>
@@ -198,7 +198,7 @@ import static java.util.Objects.requireNonNull;
     @Nonnull
     @Override
     public String formatResource(@Nonnull String resource, @Nonnull Map&lt;String, Object&gt; args) {
-<span class="nc" id="L201">        requireNonBlank(resource, ERROR_RESOURCE_BLANK);</span>
+<span class="nc" id="L201">        requireNonNull(resource, ERROR_RESOURCE_NULL);</span>
 <span class="nc" id="L202">        requireNonNull(args, ERROR_ARGS_NULL);</span>
 <span class="nc bnc" id="L203" title="All 2 branches missed.">        for (Map.Entry&lt;String, Object&gt; variable : args.entrySet()) {</span>
 <span class="nc" id="L204">            String var = variable.getKey();</span>
