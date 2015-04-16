@@ -15,13 +15,18 @@ sourceSets {
         if (file('src/integration-test/groovy').exists()) {
             groovy.srcDirs file('src/integration-test/groovy')
         }
-        compileClasspath += sourceSets.main.output
-        runtimeClasspath += compileClasspath
+        resources.srcDir file('src/integration-test/resources')
+        compileClasspath += [sourceSets.main.output]
+        compileClasspath += configurations.compileOnly
+        compileClasspath += configurations.testCompileOnly
+        runtimeClasspath += [compileClasspath]
     }
 }
 
 idea {
     module {
+        scopes.PROVIDED.plus += [configurations.integrationTestCompile]
+        scopes.PROVIDED.plus += [configurations.integrationTestRuntime]
         testSourceDirs += sourceSets.integrationTest.allSource.srcDirs
     }
 }
