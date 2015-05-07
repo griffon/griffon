@@ -19,17 +19,18 @@ import griffon.util.BuilderCustomizer
 import griffon.util.CompositeBuilder
 import groovy.swing.factory.CollectionFactory
 import groovy.swing.factory.MapFactory
+import org.codehaus.griffon.runtime.core.threading.DefaultUIThreadManager
 import org.codehaus.griffon.runtime.groovy.view.AbstractBuilderCustomizer
 import spock.lang.Specification
 import spock.lang.Unroll
 
 @Unroll
 class CoreBuilderCustomizerSpec extends Specification {
-    void "Root node is properly configured"() {
+    void "Root node is properly configured for #rootName"() {
         given:
         CompositeBuilder builder = new CompositeBuilder([
             new TestBuilderCustomizer(),
-            new CoreBuilderCustomizer()
+            newCoreBuilderCustomizer()
         ] as BuilderCustomizer[])
 
         when:
@@ -46,13 +47,37 @@ class CoreBuilderCustomizerSpec extends Specification {
         'griffon.builder.core.ChildScript1-root'   | ParentScript3
         'griffon.builder.core.ChildScript1-root'   | ParentScript4
     }
+
+    void "Threading method #methodName is available in builder"() {
+        given:
+        CompositeBuilder builder = new CompositeBuilder([
+            new TestBuilderCustomizer(),
+            newCoreBuilderCustomizer()
+        ] as BuilderCustomizer[])
+
+        when:
+        builder.build(ParentScript1)
+
+        then:
+        methodName in builder.explicitMethods.keySet()
+
+        where:
+        methodName << ['runOutsideUI', 'runInsideUISync', 'runInsideUIAsync', 'runFuture', 'isUIThread']
+    }
+
+    BuilderCustomizer newCoreBuilderCustomizer() {
+        CoreBuilderCustomizer customizer = new CoreBuilderCustomizer()
+        customizer.@uiThreadManager = new DefaultUIThreadManager()
+        customizer.setup()
+        customizer
+    }
 }
 
 class TestBuilderCustomizer extends AbstractBuilderCustomizer {
     TestBuilderCustomizer() {
         setFactories([
             list: new CollectionFactory(),
-            map: new MapFactory()
+            map : new MapFactory()
         ])
     }
 }

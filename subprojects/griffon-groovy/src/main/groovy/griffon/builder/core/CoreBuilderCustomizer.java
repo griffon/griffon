@@ -17,9 +17,14 @@ package griffon.builder.core;
 
 import griffon.builder.core.factory.MetaComponentFactory;
 import griffon.builder.core.factory.RootFactory;
+import griffon.core.threading.UIThreadManager;
+import groovy.lang.Closure;
 import groovy.util.Factory;
 import org.codehaus.griffon.runtime.groovy.view.AbstractBuilderCustomizer;
+import org.codehaus.groovy.runtime.MethodClosure;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -29,10 +34,25 @@ import java.util.Map;
  */
 @Named("core")
 public class CoreBuilderCustomizer extends AbstractBuilderCustomizer {
+    @Inject
+    private UIThreadManager uiThreadManager;
+
     public CoreBuilderCustomizer() {
         Map<String, Factory> factories = new LinkedHashMap<>();
         factories.put("root", new RootFactory());
         factories.put("metaComponent", new MetaComponentFactory());
         setFactories(factories);
+
+    }
+
+    @PostConstruct
+    private void setup() {
+        Map<String, Closure> methods = new LinkedHashMap<>();
+        methods.put("runInsideUISync", new MethodClosure(uiThreadManager, "runInsideUISync"));
+        methods.put("runInsideUIAsync", new MethodClosure(uiThreadManager, "runInsideUIAsync"));
+        methods.put("runOutsideUI", new MethodClosure(uiThreadManager, "runOutsideUI"));
+        methods.put("runFuture", new MethodClosure(uiThreadManager, "runFuture"));
+        methods.put("isUIThread", new MethodClosure(uiThreadManager, "isUIThread"));
+        setMethods(methods);
     }
 }
