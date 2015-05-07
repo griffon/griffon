@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">1.120s</div>
+<div class="counter">0.641s</div>
 <p>duration</p>
 </div>
 </td>
@@ -79,52 +79,52 @@
 </thead>
 <tr>
 <td class="success">Closed injector throws exception (1)</td>
-<td>0.024s</td>
+<td>0.035s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Closed injector throws exception (2)</td>
-<td>0.016s</td>
+<td>0.028s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Closed injector throws exception (3)</td>
-<td>0.027s</td>
+<td>0.023s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Closed injector throws exception (4)</td>
-<td>0.015s</td>
+<td>0.024s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Closed injector throws exception (5)</td>
-<td>0.018s</td>
+<td>0.023s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Closed injector throws exception (6)</td>
-<td>0.014s</td>
+<td>0.021s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Invalid bindings</td>
-<td>0.037s</td>
+<td>0.066s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Non existent binding results in exception (1)</td>
-<td>0.038s</td>
+<td>0.046s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Non existent binding results in exception (2)</td>
-<td>0.026s</td>
+<td>0.031s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Verify bindings</td>
-<td>0.905s</td>
+<td>0.344s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -132,17 +132,17 @@
 <div id="tab1" class="tab">
 <h2>Standard error</h2>
 <span class="code">
-<pre>Apr 29, 2015 6:56:24 AM com.google.inject.internal.MessageProcessor visit
-INFO: An exception was caught and reported. Message: java.lang.IllegalArgumentException: Don't know how to handle org.codehaus.griffon.runtime.injection.InvalidBinding@4213fd41
-java.lang.IllegalArgumentException: Don't know how to handle org.codehaus.griffon.runtime.injection.InvalidBinding@4213fd41
+<pre>May 07, 2015 6:02:24 AM com.google.inject.internal.MessageProcessor visit
+INFO: An exception was caught and reported. Message: java.lang.IllegalArgumentException: Don't know how to handle org.codehaus.griffon.runtime.injection.InvalidBinding@6362106d
+java.lang.IllegalArgumentException: Don't know how to handle org.codehaus.griffon.runtime.injection.InvalidBinding@6362106d
 	at org.codehaus.griffon.runtime.injection.GuiceInjector$2.configure(GuiceInjector.java:287)
-	at com.google.inject.AbstractModule.configure(AbstractModule.java:59)
-	at com.google.inject.spi.Elements$RecordingBinder.install(Elements.java:223)
-	at com.google.inject.spi.Elements.getElements(Elements.java:101)
-	at com.google.inject.internal.InjectorShell$Builder.build(InjectorShell.java:133)
-	at com.google.inject.internal.InternalInjectorCreator.build(InternalInjectorCreator.java:103)
-	at com.google.inject.Guice.createInjector(Guice.java:95)
-	at com.google.inject.Guice.createInjector(Guice.java:72)
+	at com.google.inject.AbstractModule.configure(AbstractModule.java:62)
+	at com.google.inject.spi.Elements$RecordingBinder.install(Elements.java:340)
+	at com.google.inject.spi.Elements.getElements(Elements.java:110)
+	at com.google.inject.internal.InjectorShell$Builder.build(InjectorShell.java:138)
+	at com.google.inject.internal.InternalInjectorCreator.build(InternalInjectorCreator.java:104)
+	at com.google.inject.Guice.createInjector(Guice.java:96)
+	at com.google.inject.Guice.createInjector(Guice.java:73)
 	at org.codehaus.griffon.runtime.injection.GuiceInjectorFactory.createModules(GuiceInjectorFactory.java:131)
 	at org.codehaus.griffon.runtime.injection.GuiceInjectorFactory.createInjector(GuiceInjectorFactory.java:65)
 	at org.codehaus.griffon.runtime.injection.GuiceInjectorFactory.createInjector(GuiceInjectorFactory.java:55)
@@ -201,7 +201,8 @@ java.lang.IllegalArgumentException: Don't know how to handle org.codehaus.griffo
 	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)
 	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
 	at org.gradle.messaging.remote.internal.hub.MessageHub$Handler.run(MessageHub.java:360)
-	at org.gradle.internal.concurrent.DefaultExecutorFactory$StoppableExecutorImpl$1.run(DefaultExecutorFactory.java:64)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:54)
+	at org.gradle.internal.concurrent.StoppableExecutorImpl$1.run(StoppableExecutorImpl.java:40)
 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
 	at java.lang.Thread.run(Thread.java:745)
@@ -217,7 +218,7 @@ java.lang.IllegalArgumentException: Don't know how to handle org.codehaus.griffo
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 2.3</a> at Apr 29, 2015 6:56:24 AM</p>
+<a href="http://www.gradle.org">Gradle 2.4</a> at May 7, 2015 6:02:28 AM</p>
 </div>
 </div>
 </body>
