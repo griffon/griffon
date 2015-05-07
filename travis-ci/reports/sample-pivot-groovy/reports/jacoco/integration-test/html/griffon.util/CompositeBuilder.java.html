@@ -131,9 +131,9 @@ public class CompositeBuilder extends FactoryBuilderSupport {
 <span class="fc" id="L131">    }</span>
 
     private void doRegisterMethods(@Nonnull BuilderCustomizer customizer) {
-<span class="pc bpc" id="L134" title="1 of 2 branches missed.">        for (Map.Entry&lt;String, Closure&gt; e : customizer.getMethods().entrySet()) {</span>
-<span class="nc" id="L135">            registerExplicitMethod(e.getKey(), e.getValue());</span>
-<span class="nc" id="L136">        }</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">        for (Map.Entry&lt;String, Closure&gt; e : customizer.getMethods().entrySet()) {</span>
+<span class="fc" id="L135">            registerExplicitMethod(e.getKey(), e.getValue());</span>
+<span class="fc" id="L136">        }</span>
 <span class="fc" id="L137">    }</span>
 
     private void doRegisterProps(@Nonnull BuilderCustomizer customizer) {

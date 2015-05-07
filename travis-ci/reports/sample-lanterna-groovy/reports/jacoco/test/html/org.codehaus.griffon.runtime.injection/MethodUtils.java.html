@@ -33,37 +33,37 @@ import java.util.List;
 <span class="fc bfc" id="L33" title="All 2 branches covered.">        while (klass != null) {</span>
 <span class="fc" id="L34">            boolean found = false;</span>
 <span class="fc bfc" id="L35" title="All 2 branches covered.">            for (Method method : klass.getDeclaredMethods()) {</span>
-<span class="pc bpc" id="L36" title="1 of 2 branches missed.">                if (method.isAnnotationPresent(annotation) &amp;&amp;</span>
-<span class="nc bnc" id="L37" title="All 2 branches missed.">                    method.getParameterTypes().length == 0) {</span>
-<span class="nc bnc" id="L38" title="All 2 branches missed.">                    if (found) {</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">                if (method.isAnnotationPresent(annotation) &amp;&amp;</span>
+<span class="pc bpc" id="L37" title="1 of 2 branches missed.">                    method.getParameterTypes().length == 0) {</span>
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">                    if (found) {</span>
 <span class="nc" id="L39">                        throw new InstanceMethodInvocationException(instance, method, buildCause(instance.getClass(), method, methods));</span>
                     }
-<span class="nc" id="L41">                    methods.add(method);</span>
-<span class="nc" id="L42">                    found = true;</span>
+<span class="fc" id="L41">                    methods.add(method);</span>
+<span class="fc" id="L42">                    found = true;</span>
                 }
             }
 
 <span class="fc" id="L46">            klass = klass.getSuperclass();</span>
 <span class="fc" id="L47">        }</span>
 
-<span class="pc bpc" id="L49" title="1 of 2 branches missed.">        for (final Method method : methods) {</span>
-<span class="nc" id="L50">            AccessController.doPrivileged(new PrivilegedAction&lt;Object&gt;() {</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        for (final Method method : methods) {</span>
+<span class="fc" id="L50">            AccessController.doPrivileged(new PrivilegedAction&lt;Object&gt;() {</span>
                 @Override
                 public Object run() {
-<span class="nc" id="L53">                    boolean wasAccessible = method.isAccessible();</span>
+<span class="fc" id="L53">                    boolean wasAccessible = method.isAccessible();</span>
                     try {
-<span class="nc" id="L55">                        method.setAccessible(true);</span>
-<span class="nc" id="L56">                        return method.invoke(instance);</span>
+<span class="fc" id="L55">                        method.setAccessible(true);</span>
+<span class="fc" id="L56">                        return method.invoke(instance);</span>
 <span class="nc" id="L57">                    } catch (IllegalAccessException | IllegalArgumentException e) {</span>
 <span class="nc" id="L58">                        throw new InstanceMethodInvocationException(instance, method.getName(), null, e);</span>
 <span class="nc" id="L59">                    } catch (InvocationTargetException e) {</span>
 <span class="nc" id="L60">                        throw new InstanceMethodInvocationException(instance, method.getName(), null, e.getTargetException());</span>
                     } finally {
-<span class="nc" id="L62">                        method.setAccessible(wasAccessible);</span>
+<span class="pc" id="L62">                        method.setAccessible(wasAccessible);</span>
                     }
                 }
             });
-<span class="nc" id="L66">        }</span>
+<span class="fc" id="L66">        }</span>
 <span class="fc" id="L67">    }</span>
 
     @Nonnull
