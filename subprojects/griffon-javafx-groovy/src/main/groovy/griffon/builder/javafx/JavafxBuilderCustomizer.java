@@ -17,6 +17,7 @@ package griffon.builder.javafx;
 
 import griffon.builder.javafx.factory.ActionFactory;
 import griffon.builder.javafx.factory.ApplicationFactory;
+import griffon.builder.javafx.factory.ControlFactory;
 import griffon.builder.javafx.factory.LabeledFactory;
 import griffon.builder.javafx.factory.MenuFactory;
 import griffon.builder.javafx.factory.MenuItemFactory;
@@ -27,6 +28,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Hyperlink;
@@ -83,6 +85,8 @@ public class JavafxBuilderCustomizer extends AbstractBuilderCustomizer {
         factories.put("tooltip", new LabeledFactory(Tooltip.class));
         factories.put("radioButton", new LabeledFactory(RadioButton.class));
         factories.put("toggleButton", new LabeledFactory(ToggleButton.class));
+
+        factories.put("comboBox", new ControlFactory(ComboBox.class));
 
         setFactories(factories);
         setVariables(builder.getVariables());
