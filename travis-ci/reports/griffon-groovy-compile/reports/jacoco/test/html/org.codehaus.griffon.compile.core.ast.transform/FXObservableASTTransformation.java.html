@@ -88,73 +88,73 @@ import static org.codehaus.groovy.ast.ClassHelper.MAP_TYPE;
  */
 @AnnotationHandlerFor(FXObservable.class)
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
-<span class="nc" id="L91">public class FXObservableASTTransformation extends AbstractASTTransformation implements AnnotationHandler {</span>
-<span class="nc" id="L92">    private static final ClassNode FXOBSERVABLE_CNODE = makeClassSafe(FXObservable.class);</span>
+<span class="fc" id="L91">public class FXObservableASTTransformation extends AbstractASTTransformation implements AnnotationHandler {</span>
+<span class="fc" id="L92">    private static final ClassNode FXOBSERVABLE_CNODE = makeClassSafe(FXObservable.class);</span>
 
-<span class="nc" id="L94">    private static final ClassNode OBJECT_PROPERTY_CNODE = makeClassSafe(ObjectProperty.class);</span>
-<span class="nc" id="L95">    private static final ClassNode BOOLEAN_PROPERTY_CNODE = makeClassSafe(BooleanProperty.class);</span>
-<span class="nc" id="L96">    private static final ClassNode DOUBLE_PROPERTY_CNODE = makeClassSafe(DoubleProperty.class);</span>
-<span class="nc" id="L97">    private static final ClassNode FLOAT_PROPERTY_CNODE = makeClassSafe(FloatProperty.class);</span>
-<span class="nc" id="L98">    private static final ClassNode INT_PROPERTY_CNODE = makeClassSafe(IntegerProperty.class);</span>
-<span class="nc" id="L99">    private static final ClassNode LONG_PROPERTY_CNODE = makeClassSafe(LongProperty.class);</span>
-<span class="nc" id="L100">    private static final ClassNode STRING_PROPERTY_CNODE = makeClassSafe(StringProperty.class);</span>
-<span class="nc" id="L101">    private static final ClassNode LIST_PROPERTY_CNODE = makeClassSafe(ListProperty.class);</span>
-<span class="nc" id="L102">    private static final ClassNode MAP_PROPERTY_CNODE = makeClassSafe(MapProperty.class);</span>
-<span class="nc" id="L103">    private static final ClassNode SET_PROPERTY_CNODE = makeClassSafe(SetProperty.class);</span>
+<span class="fc" id="L94">    private static final ClassNode OBJECT_PROPERTY_CNODE = makeClassSafe(ObjectProperty.class);</span>
+<span class="fc" id="L95">    private static final ClassNode BOOLEAN_PROPERTY_CNODE = makeClassSafe(BooleanProperty.class);</span>
+<span class="fc" id="L96">    private static final ClassNode DOUBLE_PROPERTY_CNODE = makeClassSafe(DoubleProperty.class);</span>
+<span class="fc" id="L97">    private static final ClassNode FLOAT_PROPERTY_CNODE = makeClassSafe(FloatProperty.class);</span>
+<span class="fc" id="L98">    private static final ClassNode INT_PROPERTY_CNODE = makeClassSafe(IntegerProperty.class);</span>
+<span class="fc" id="L99">    private static final ClassNode LONG_PROPERTY_CNODE = makeClassSafe(LongProperty.class);</span>
+<span class="fc" id="L100">    private static final ClassNode STRING_PROPERTY_CNODE = makeClassSafe(StringProperty.class);</span>
+<span class="fc" id="L101">    private static final ClassNode LIST_PROPERTY_CNODE = makeClassSafe(ListProperty.class);</span>
+<span class="fc" id="L102">    private static final ClassNode MAP_PROPERTY_CNODE = makeClassSafe(MapProperty.class);</span>
+<span class="fc" id="L103">    private static final ClassNode SET_PROPERTY_CNODE = makeClassSafe(SetProperty.class);</span>
 
-<span class="nc" id="L105">    private static final ClassNode SIMPLE_BOOLEAN_PROPERTY_CNODE = makeClassSafe(SimpleBooleanProperty.class);</span>
-<span class="nc" id="L106">    private static final ClassNode SIMPLE_DOUBLE_PROPERTY_CNODE = makeClassSafe(SimpleDoubleProperty.class);</span>
-<span class="nc" id="L107">    private static final ClassNode SIMPLE_FLOAT_PROPERTY_CNODE = makeClassSafe(SimpleFloatProperty.class);</span>
-<span class="nc" id="L108">    private static final ClassNode SIMPLE_INT_PROPERTY_CNODE = makeClassSafe(SimpleIntegerProperty.class);</span>
-<span class="nc" id="L109">    private static final ClassNode SIMPLE_LONG_PROPERTY_CNODE = makeClassSafe(SimpleLongProperty.class);</span>
-<span class="nc" id="L110">    private static final ClassNode SIMPLE_STRING_PROPERTY_CNODE = makeClassSafe(SimpleStringProperty.class);</span>
-<span class="nc" id="L111">    private static final ClassNode SIMPLE_LIST_PROPERTY_CNODE = makeClassSafe(SimpleListProperty.class);</span>
-<span class="nc" id="L112">    private static final ClassNode SIMPLE_MAP_PROPERTY_CNODE = makeClassSafe(SimpleMapProperty.class);</span>
-<span class="nc" id="L113">    private static final ClassNode SIMPLE_SET_PROPERTY_CNODE = makeClassSafe(SimpleSetProperty.class);</span>
-<span class="nc" id="L114">    private static final ClassNode SIMPLE_OBJECT_PROPERTY_CNODE = makeClassSafe(SimpleObjectProperty.class);</span>
+<span class="fc" id="L105">    private static final ClassNode SIMPLE_BOOLEAN_PROPERTY_CNODE = makeClassSafe(SimpleBooleanProperty.class);</span>
+<span class="fc" id="L106">    private static final ClassNode SIMPLE_DOUBLE_PROPERTY_CNODE = makeClassSafe(SimpleDoubleProperty.class);</span>
+<span class="fc" id="L107">    private static final ClassNode SIMPLE_FLOAT_PROPERTY_CNODE = makeClassSafe(SimpleFloatProperty.class);</span>
+<span class="fc" id="L108">    private static final ClassNode SIMPLE_INT_PROPERTY_CNODE = makeClassSafe(SimpleIntegerProperty.class);</span>
+<span class="fc" id="L109">    private static final ClassNode SIMPLE_LONG_PROPERTY_CNODE = makeClassSafe(SimpleLongProperty.class);</span>
+<span class="fc" id="L110">    private static final ClassNode SIMPLE_STRING_PROPERTY_CNODE = makeClassSafe(SimpleStringProperty.class);</span>
+<span class="fc" id="L111">    private static final ClassNode SIMPLE_LIST_PROPERTY_CNODE = makeClassSafe(SimpleListProperty.class);</span>
+<span class="fc" id="L112">    private static final ClassNode SIMPLE_MAP_PROPERTY_CNODE = makeClassSafe(SimpleMapProperty.class);</span>
+<span class="fc" id="L113">    private static final ClassNode SIMPLE_SET_PROPERTY_CNODE = makeClassSafe(SimpleSetProperty.class);</span>
+<span class="fc" id="L114">    private static final ClassNode SIMPLE_OBJECT_PROPERTY_CNODE = makeClassSafe(SimpleObjectProperty.class);</span>
 
-<span class="nc" id="L116">    private static final ClassNode OBSERVABLE_LIST_CNODE = makeClassSafe(ObservableList.class);</span>
-<span class="nc" id="L117">    private static final ClassNode OBSERVABLE_MAP_CNODE = makeClassSafe(ObservableMap.class);</span>
-<span class="nc" id="L118">    private static final ClassNode OBSERVABLE_SET_CNODE = makeClassSafe(ObservableSet.class);</span>
-<span class="nc" id="L119">    private static final ClassNode FXCOLLECTIONS_CNODE = makeClassSafe(FXCollections.class);</span>
-<span class="nc" id="L120">    private static final ClassNode SET_TYPE = makeClassSafe(Set.class);</span>
+<span class="fc" id="L116">    private static final ClassNode OBSERVABLE_LIST_CNODE = makeClassSafe(ObservableList.class);</span>
+<span class="fc" id="L117">    private static final ClassNode OBSERVABLE_MAP_CNODE = makeClassSafe(ObservableMap.class);</span>
+<span class="fc" id="L118">    private static final ClassNode OBSERVABLE_SET_CNODE = makeClassSafe(ObservableSet.class);</span>
+<span class="fc" id="L119">    private static final ClassNode FXCOLLECTIONS_CNODE = makeClassSafe(FXCollections.class);</span>
+<span class="fc" id="L120">    private static final ClassNode SET_TYPE = makeClassSafe(Set.class);</span>
 
-<span class="nc" id="L122">    private static final Map&lt;ClassNode, ClassNode&gt; PROPERTY_TYPE_MAP = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L122">    private static final Map&lt;ClassNode, ClassNode&gt; PROPERTY_TYPE_MAP = new HashMap&lt;&gt;();</span>
 
     static {
-<span class="nc" id="L125">        PROPERTY_TYPE_MAP.put(ClassHelper.STRING_TYPE, STRING_PROPERTY_CNODE);</span>
-<span class="nc" id="L126">        PROPERTY_TYPE_MAP.put(ClassHelper.boolean_TYPE, BOOLEAN_PROPERTY_CNODE);</span>
-<span class="nc" id="L127">        PROPERTY_TYPE_MAP.put(ClassHelper.Boolean_TYPE, BOOLEAN_PROPERTY_CNODE);</span>
-<span class="nc" id="L128">        PROPERTY_TYPE_MAP.put(ClassHelper.double_TYPE, DOUBLE_PROPERTY_CNODE);</span>
-<span class="nc" id="L129">        PROPERTY_TYPE_MAP.put(ClassHelper.Double_TYPE, DOUBLE_PROPERTY_CNODE);</span>
-<span class="nc" id="L130">        PROPERTY_TYPE_MAP.put(ClassHelper.float_TYPE, FLOAT_PROPERTY_CNODE);</span>
-<span class="nc" id="L131">        PROPERTY_TYPE_MAP.put(ClassHelper.Float_TYPE, FLOAT_PROPERTY_CNODE);</span>
-<span class="nc" id="L132">        PROPERTY_TYPE_MAP.put(ClassHelper.int_TYPE, INT_PROPERTY_CNODE);</span>
-<span class="nc" id="L133">        PROPERTY_TYPE_MAP.put(ClassHelper.Integer_TYPE, INT_PROPERTY_CNODE);</span>
-<span class="nc" id="L134">        PROPERTY_TYPE_MAP.put(ClassHelper.long_TYPE, LONG_PROPERTY_CNODE);</span>
-<span class="nc" id="L135">        PROPERTY_TYPE_MAP.put(ClassHelper.Long_TYPE, LONG_PROPERTY_CNODE);</span>
-<span class="nc" id="L136">        PROPERTY_TYPE_MAP.put(ClassHelper.short_TYPE, INT_PROPERTY_CNODE);</span>
-<span class="nc" id="L137">        PROPERTY_TYPE_MAP.put(ClassHelper.Short_TYPE, INT_PROPERTY_CNODE);</span>
-<span class="nc" id="L138">        PROPERTY_TYPE_MAP.put(ClassHelper.byte_TYPE, INT_PROPERTY_CNODE);</span>
-<span class="nc" id="L139">        PROPERTY_TYPE_MAP.put(ClassHelper.Byte_TYPE, INT_PROPERTY_CNODE);</span>
+<span class="fc" id="L125">        PROPERTY_TYPE_MAP.put(ClassHelper.STRING_TYPE, STRING_PROPERTY_CNODE);</span>
+<span class="fc" id="L126">        PROPERTY_TYPE_MAP.put(ClassHelper.boolean_TYPE, BOOLEAN_PROPERTY_CNODE);</span>
+<span class="fc" id="L127">        PROPERTY_TYPE_MAP.put(ClassHelper.Boolean_TYPE, BOOLEAN_PROPERTY_CNODE);</span>
+<span class="fc" id="L128">        PROPERTY_TYPE_MAP.put(ClassHelper.double_TYPE, DOUBLE_PROPERTY_CNODE);</span>
+<span class="fc" id="L129">        PROPERTY_TYPE_MAP.put(ClassHelper.Double_TYPE, DOUBLE_PROPERTY_CNODE);</span>
+<span class="fc" id="L130">        PROPERTY_TYPE_MAP.put(ClassHelper.float_TYPE, FLOAT_PROPERTY_CNODE);</span>
+<span class="fc" id="L131">        PROPERTY_TYPE_MAP.put(ClassHelper.Float_TYPE, FLOAT_PROPERTY_CNODE);</span>
+<span class="fc" id="L132">        PROPERTY_TYPE_MAP.put(ClassHelper.int_TYPE, INT_PROPERTY_CNODE);</span>
+<span class="fc" id="L133">        PROPERTY_TYPE_MAP.put(ClassHelper.Integer_TYPE, INT_PROPERTY_CNODE);</span>
+<span class="fc" id="L134">        PROPERTY_TYPE_MAP.put(ClassHelper.long_TYPE, LONG_PROPERTY_CNODE);</span>
+<span class="fc" id="L135">        PROPERTY_TYPE_MAP.put(ClassHelper.Long_TYPE, LONG_PROPERTY_CNODE);</span>
+<span class="fc" id="L136">        PROPERTY_TYPE_MAP.put(ClassHelper.short_TYPE, INT_PROPERTY_CNODE);</span>
+<span class="fc" id="L137">        PROPERTY_TYPE_MAP.put(ClassHelper.Short_TYPE, INT_PROPERTY_CNODE);</span>
+<span class="fc" id="L138">        PROPERTY_TYPE_MAP.put(ClassHelper.byte_TYPE, INT_PROPERTY_CNODE);</span>
+<span class="fc" id="L139">        PROPERTY_TYPE_MAP.put(ClassHelper.Byte_TYPE, INT_PROPERTY_CNODE);</span>
         //PROPERTY_TYPE_MAP.put(ClassHelper.char_TYPE, INT_PROPERTY_CNODE);
         //PROPERTY_TYPE_MAP.put(ClassHelper.Character_TYPE, INT_PROPERTY_CNODE);
     }
 
-<span class="nc" id="L144">    private static final Map&lt;ClassNode, ClassNode&gt; PROPERTY_IMPL_MAP = new HashMap&lt;ClassNode, ClassNode&gt;();</span>
+<span class="fc" id="L144">    private static final Map&lt;ClassNode, ClassNode&gt; PROPERTY_IMPL_MAP = new HashMap&lt;ClassNode, ClassNode&gt;();</span>
 
     static {
-<span class="nc" id="L147">        PROPERTY_IMPL_MAP.put(BOOLEAN_PROPERTY_CNODE, SIMPLE_BOOLEAN_PROPERTY_CNODE);</span>
-<span class="nc" id="L148">        PROPERTY_IMPL_MAP.put(DOUBLE_PROPERTY_CNODE, SIMPLE_DOUBLE_PROPERTY_CNODE);</span>
-<span class="nc" id="L149">        PROPERTY_IMPL_MAP.put(FLOAT_PROPERTY_CNODE, SIMPLE_FLOAT_PROPERTY_CNODE);</span>
-<span class="nc" id="L150">        PROPERTY_IMPL_MAP.put(INT_PROPERTY_CNODE, SIMPLE_INT_PROPERTY_CNODE);</span>
-<span class="nc" id="L151">        PROPERTY_IMPL_MAP.put(LONG_PROPERTY_CNODE, SIMPLE_LONG_PROPERTY_CNODE);</span>
-<span class="nc" id="L152">        PROPERTY_IMPL_MAP.put(STRING_PROPERTY_CNODE, SIMPLE_STRING_PROPERTY_CNODE);</span>
-<span class="nc" id="L153">        PROPERTY_IMPL_MAP.put(LIST_PROPERTY_CNODE, SIMPLE_LIST_PROPERTY_CNODE);</span>
-<span class="nc" id="L154">        PROPERTY_IMPL_MAP.put(MAP_PROPERTY_CNODE, SIMPLE_MAP_PROPERTY_CNODE);</span>
-<span class="nc" id="L155">        PROPERTY_IMPL_MAP.put(SET_PROPERTY_CNODE, SIMPLE_SET_PROPERTY_CNODE);</span>
+<span class="fc" id="L147">        PROPERTY_IMPL_MAP.put(BOOLEAN_PROPERTY_CNODE, SIMPLE_BOOLEAN_PROPERTY_CNODE);</span>
+<span class="fc" id="L148">        PROPERTY_IMPL_MAP.put(DOUBLE_PROPERTY_CNODE, SIMPLE_DOUBLE_PROPERTY_CNODE);</span>
+<span class="fc" id="L149">        PROPERTY_IMPL_MAP.put(FLOAT_PROPERTY_CNODE, SIMPLE_FLOAT_PROPERTY_CNODE);</span>
+<span class="fc" id="L150">        PROPERTY_IMPL_MAP.put(INT_PROPERTY_CNODE, SIMPLE_INT_PROPERTY_CNODE);</span>
+<span class="fc" id="L151">        PROPERTY_IMPL_MAP.put(LONG_PROPERTY_CNODE, SIMPLE_LONG_PROPERTY_CNODE);</span>
+<span class="fc" id="L152">        PROPERTY_IMPL_MAP.put(STRING_PROPERTY_CNODE, SIMPLE_STRING_PROPERTY_CNODE);</span>
+<span class="fc" id="L153">        PROPERTY_IMPL_MAP.put(LIST_PROPERTY_CNODE, SIMPLE_LIST_PROPERTY_CNODE);</span>
+<span class="fc" id="L154">        PROPERTY_IMPL_MAP.put(MAP_PROPERTY_CNODE, SIMPLE_MAP_PROPERTY_CNODE);</span>
+<span class="fc" id="L155">        PROPERTY_IMPL_MAP.put(SET_PROPERTY_CNODE, SIMPLE_SET_PROPERTY_CNODE);</span>
         //PROPERTY_IMPL_MAP.put(OBJECT_PROPERTY_CNODE, SIMPLE_OBJECT_PROPERTY_CNODE);
-<span class="nc" id="L157">    }</span>
+<span class="fc" id="L157">    }</span>
 
     /**
      * Convenience method to see if an annotated node is {@code @FXObservable}.
@@ -180,26 +180,26 @@ import static org.codehaus.groovy.ast.ClassHelper.MAP_TYPE;
      */
     @Override
     public void visit(ASTNode[] nodes, SourceUnit sourceUnit) {
-<span class="nc bnc" id="L183" title="All 4 branches missed.">        if (!(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof AnnotatedNode)) {</span>
+<span class="pc bpc" id="L183" title="2 of 4 branches missed.">        if (!(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof AnnotatedNode)) {</span>
 <span class="nc" id="L184">            throw new IllegalArgumentException(&quot;Internal error: wrong types: &quot;</span>
 <span class="nc" id="L185">                + nodes[0].getClass().getName() + &quot; / &quot; + nodes[1].getClass().getName());</span>
         }
 
-<span class="nc" id="L188">        AnnotationNode node = (AnnotationNode) nodes[0];</span>
-<span class="nc" id="L189">        AnnotatedNode parent = (AnnotatedNode) nodes[1];</span>
-<span class="nc" id="L190">        ClassNode declaringClass = parent.getDeclaringClass();</span>
+<span class="fc" id="L188">        AnnotationNode node = (AnnotationNode) nodes[0];</span>
+<span class="fc" id="L189">        AnnotatedNode parent = (AnnotatedNode) nodes[1];</span>
+<span class="fc" id="L190">        ClassNode declaringClass = parent.getDeclaringClass();</span>
 
-<span class="nc bnc" id="L192" title="All 2 branches missed.">        if (parent instanceof FieldNode) {</span>
-<span class="nc" id="L193">            int modifiers = ((FieldNode) parent).getModifiers();</span>
-<span class="nc bnc" id="L194" title="All 2 branches missed.">            if ((modifiers &amp; Modifier.FINAL) != 0) {</span>
+<span class="pc bpc" id="L192" title="1 of 2 branches missed.">        if (parent instanceof FieldNode) {</span>
+<span class="fc" id="L193">            int modifiers = ((FieldNode) parent).getModifiers();</span>
+<span class="pc bpc" id="L194" title="1 of 2 branches missed.">            if ((modifiers &amp; Modifier.FINAL) != 0) {</span>
 <span class="nc" id="L195">                String msg = &quot;@griffon.transform.FXObservable cannot annotate a final property.&quot;;</span>
 <span class="nc" id="L196">                generateSyntaxErrorMessage(sourceUnit, node, msg);</span>
             }
-<span class="nc" id="L198">            addJavaFXProperty(sourceUnit, node, declaringClass, (FieldNode) parent);</span>
-<span class="nc" id="L199">        } else {</span>
+<span class="fc" id="L198">            addJavaFXProperty(sourceUnit, node, declaringClass, (FieldNode) parent);</span>
+<span class="fc" id="L199">        } else {</span>
 <span class="nc" id="L200">            addJavaFXPropertyToClass(sourceUnit, node, (ClassNode) parent);</span>
         }
-<span class="nc" id="L202">    }</span>
+<span class="fc" id="L202">    }</span>
 
     /**
      * Adds a JavaFX property to the class in place of the original Groovy property.  A pair of synthetic
@@ -211,16 +211,16 @@ import static org.codehaus.groovy.ast.ClassHelper.MAP_TYPE;
      * @param field          The field upon which the annotation was placed
      */
     private void addJavaFXProperty(SourceUnit source, AnnotationNode node, ClassNode declaringClass, FieldNode field) {
-<span class="nc" id="L214">        String fieldName = field.getName();</span>
-<span class="nc bnc" id="L215" title="All 2 branches missed.">        for (PropertyNode propertyNode : declaringClass.getProperties()) {</span>
-<span class="nc bnc" id="L216" title="All 2 branches missed.">            if (propertyNode.getName().equals(fieldName)) {</span>
-<span class="nc bnc" id="L217" title="All 2 branches missed.">                if (field.isStatic()) {</span>
+<span class="fc" id="L214">        String fieldName = field.getName();</span>
+<span class="pc bpc" id="L215" title="1 of 2 branches missed.">        for (PropertyNode propertyNode : declaringClass.getProperties()) {</span>
+<span class="pc bpc" id="L216" title="1 of 2 branches missed.">            if (propertyNode.getName().equals(fieldName)) {</span>
+<span class="pc bpc" id="L217" title="1 of 2 branches missed.">                if (field.isStatic()) {</span>
 <span class="nc" id="L218">                    String message = &quot;@griffon.transform.FXObservable cannot annotate a static property.&quot;;</span>
 <span class="nc" id="L219">                    generateSyntaxErrorMessage(source, node, message);</span>
 <span class="nc" id="L220">                } else {</span>
-<span class="nc" id="L221">                    createPropertyGetterSetter(declaringClass, propertyNode);</span>
+<span class="fc" id="L221">                    createPropertyGetterSetter(declaringClass, propertyNode);</span>
                 }
-<span class="nc" id="L223">                return;</span>
+<span class="fc" id="L223">                return;</span>
             }
 <span class="nc" id="L225">        }</span>
 
@@ -266,62 +266,62 @@ import static org.codehaus.groovy.ast.ClassHelper.MAP_TYPE;
      * @param originalProp The original Groovy property
      */
     private void createPropertyGetterSetter(ClassNode classNode, PropertyNode originalProp) {
-<span class="nc" id="L269">        Expression initExp = originalProp.getInitialExpression();</span>
-<span class="nc" id="L270">        originalProp.getField().setInitialValueExpression(null);</span>
+<span class="fc" id="L269">        Expression initExp = originalProp.getInitialExpression();</span>
+<span class="fc" id="L270">        originalProp.getField().setInitialValueExpression(null);</span>
 
-<span class="nc" id="L272">        PropertyNode fxProperty = createFXProperty(originalProp);</span>
+<span class="fc" id="L272">        PropertyNode fxProperty = createFXProperty(originalProp);</span>
 
-<span class="nc" id="L274">        List&lt;AnnotationNode&gt; methodAnnotations = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L275">        List&lt;AnnotationNode&gt; fieldAnnotations = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L276" title="All 2 branches missed.">        for (AnnotationNode annotation : originalProp.getField().getAnnotations()) {</span>
-<span class="nc bnc" id="L277" title="All 2 branches missed.">            if (FXOBSERVABLE_CNODE.equals(annotation.getClassNode())) continue;</span>
-<span class="nc" id="L278">            Class annotationClass = annotation.getClassNode().getTypeClass();</span>
-<span class="nc" id="L279">            Target target = (Target) annotationClass.getAnnotation(Target.class);</span>
-<span class="nc bnc" id="L280" title="All 2 branches missed.">            if (isTargetAllowed(target, ElementType.METHOD)) {</span>
+<span class="fc" id="L274">        List&lt;AnnotationNode&gt; methodAnnotations = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L275">        List&lt;AnnotationNode&gt; fieldAnnotations = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L276" title="All 2 branches covered.">        for (AnnotationNode annotation : originalProp.getField().getAnnotations()) {</span>
+<span class="fc bfc" id="L277" title="All 2 branches covered.">            if (FXOBSERVABLE_CNODE.equals(annotation.getClassNode())) continue;</span>
+<span class="fc" id="L278">            Class annotationClass = annotation.getClassNode().getTypeClass();</span>
+<span class="fc" id="L279">            Target target = (Target) annotationClass.getAnnotation(Target.class);</span>
+<span class="pc bpc" id="L280" title="1 of 2 branches missed.">            if (isTargetAllowed(target, ElementType.METHOD)) {</span>
 <span class="nc" id="L281">                methodAnnotations.add(annotation);</span>
-<span class="nc bnc" id="L282" title="All 2 branches missed.">            } else if (isTargetAllowed(target, ElementType.FIELD)) {</span>
-<span class="nc" id="L283">                fieldAnnotations.add(annotation);</span>
+<span class="pc bpc" id="L282" title="1 of 2 branches missed.">            } else if (isTargetAllowed(target, ElementType.FIELD)) {</span>
+<span class="fc" id="L283">                fieldAnnotations.add(annotation);</span>
             }
-<span class="nc" id="L285">        }</span>
+<span class="fc" id="L285">        }</span>
 
-<span class="nc" id="L287">        String getterName = &quot;get&quot; + MetaClassHelper.capitalize(originalProp.getName());</span>
-<span class="nc bnc" id="L288" title="All 2 branches missed.">        if (classNode.getMethods(getterName).isEmpty()) {</span>
-<span class="nc" id="L289">            Statement getterBlock = createGetterStatement(createFXProperty(originalProp));</span>
-<span class="nc" id="L290">            createGetterMethod(classNode, originalProp, getterName, getterBlock, methodAnnotations);</span>
-<span class="nc" id="L291">            methodAnnotations = null;</span>
-<span class="nc" id="L292">        } else {</span>
+<span class="fc" id="L287">        String getterName = &quot;get&quot; + MetaClassHelper.capitalize(originalProp.getName());</span>
+<span class="pc bpc" id="L288" title="1 of 2 branches missed.">        if (classNode.getMethods(getterName).isEmpty()) {</span>
+<span class="fc" id="L289">            Statement getterBlock = createGetterStatement(createFXProperty(originalProp));</span>
+<span class="fc" id="L290">            createGetterMethod(classNode, originalProp, getterName, getterBlock, methodAnnotations);</span>
+<span class="fc" id="L291">            methodAnnotations = null;</span>
+<span class="fc" id="L292">        } else {</span>
 <span class="nc" id="L293">            wrapGetterMethod(classNode, originalProp.getName(), methodAnnotations);</span>
 <span class="nc" id="L294">            methodAnnotations = null;</span>
         }
 
-<span class="nc" id="L297">        String setterName = &quot;set&quot; + MetaClassHelper.capitalize(originalProp.getName());</span>
-<span class="nc bnc" id="L298" title="All 2 branches missed.">        if (classNode.getMethods(setterName).isEmpty()) {</span>
-<span class="nc" id="L299">            Statement setterBlock = createSetterStatement(createFXProperty(originalProp));</span>
-<span class="nc" id="L300">            createSetterMethod(classNode, originalProp, setterName, setterBlock, methodAnnotations);</span>
-<span class="nc" id="L301">        } else {</span>
+<span class="fc" id="L297">        String setterName = &quot;set&quot; + MetaClassHelper.capitalize(originalProp.getName());</span>
+<span class="pc bpc" id="L298" title="1 of 2 branches missed.">        if (classNode.getMethods(setterName).isEmpty()) {</span>
+<span class="fc" id="L299">            Statement setterBlock = createSetterStatement(createFXProperty(originalProp));</span>
+<span class="fc" id="L300">            createSetterMethod(classNode, originalProp, setterName, setterBlock, methodAnnotations);</span>
+<span class="fc" id="L301">        } else {</span>
 <span class="nc" id="L302">            wrapSetterMethod(classNode, originalProp.getName(), methodAnnotations);</span>
         }
 
         // We want the actual name of the field to be different from the getter (Prop vs Property) so
         // that the getter takes precedence when we say this.somethingProperty.
-<span class="nc" id="L307">        FieldNode fxFieldShortName = createFieldNodeCopy(originalProp.getName() + &quot;Prop&quot;, null, fxProperty.getField());</span>
-<span class="nc" id="L308">        createPropertyAccessor(classNode, createFXProperty(originalProp), fxFieldShortName, initExp);</span>
+<span class="fc" id="L307">        FieldNode fxFieldShortName = createFieldNodeCopy(originalProp.getName() + &quot;Prop&quot;, null, fxProperty.getField());</span>
+<span class="fc" id="L308">        createPropertyAccessor(classNode, createFXProperty(originalProp), fxFieldShortName, initExp);</span>
 
-<span class="nc" id="L310">        classNode.removeField(originalProp.getName());</span>
-<span class="nc" id="L311">        classNode.addField(fxFieldShortName);</span>
-<span class="nc" id="L312">        fxFieldShortName.addAnnotations(fieldAnnotations);</span>
-<span class="nc" id="L313">    }</span>
+<span class="fc" id="L310">        classNode.removeField(originalProp.getName());</span>
+<span class="fc" id="L311">        classNode.addField(fxFieldShortName);</span>
+<span class="fc" id="L312">        fxFieldShortName.addAnnotations(fieldAnnotations);</span>
+<span class="fc" id="L313">    }</span>
 
     private boolean isTargetAllowed(Target target, ElementType elementType) {
-<span class="nc bnc" id="L316" title="All 2 branches missed.">        if (target == null) {</span>
+<span class="pc bpc" id="L316" title="1 of 2 branches missed.">        if (target == null) {</span>
 <span class="nc" id="L317">            return false;</span>
         }
-<span class="nc bnc" id="L319" title="All 2 branches missed.">        for (ElementType et : target.value()) {</span>
-<span class="nc bnc" id="L320" title="All 2 branches missed.">            if (et == elementType) {</span>
-<span class="nc" id="L321">                return true;</span>
+<span class="fc bfc" id="L319" title="All 2 branches covered.">        for (ElementType et : target.value()) {</span>
+<span class="fc bfc" id="L320" title="All 2 branches covered.">            if (et == elementType) {</span>
+<span class="fc" id="L321">                return true;</span>
             }
         }
-<span class="nc" id="L324">        return false;</span>
+<span class="fc" id="L324">        return false;</span>
     }
 
     /**
@@ -332,11 +332,11 @@ import static org.codehaus.groovy.ast.ClassHelper.MAP_TYPE;
      * @return A new PropertyNode for the JavaFX property
      */
     private PropertyNode createFXProperty(PropertyNode orig) {
-<span class="nc" id="L335">        ClassNode origType = orig.getType();</span>
-<span class="nc" id="L336">        ClassNode newType = PROPERTY_TYPE_MAP.get(origType);</span>
+<span class="fc" id="L335">        ClassNode origType = orig.getType();</span>
+<span class="fc" id="L336">        ClassNode newType = PROPERTY_TYPE_MAP.get(origType);</span>
 
         // For the ObjectProperty, we need to add the generic type to it.
-<span class="nc bnc" id="L339" title="All 2 branches missed.">        if (newType == null) {</span>
+<span class="pc bpc" id="L339" title="1 of 2 branches missed.">        if (newType == null) {</span>
 <span class="nc bnc" id="L340" title="All 4 branches missed.">            if (origType.equals(OBSERVABLE_LIST_CNODE) || origType.declaresInterface(OBSERVABLE_LIST_CNODE)) {</span>
 <span class="nc" id="L341">                newType = makeClassSafe(SIMPLE_LIST_PROPERTY_CNODE);</span>
 <span class="nc" id="L342">                GenericsType[] genericTypes = origType.getGenericsTypes();</span>
@@ -359,8 +359,8 @@ import static org.codehaus.groovy.ast.ClassHelper.MAP_TYPE;
             }
         }
 
-<span class="nc" id="L362">        FieldNode fieldNode = createFieldNodeCopy(orig.getName() + &quot;Property&quot;, newType, orig.getField());</span>
-<span class="nc" id="L363">        return new PropertyNode(fieldNode, orig.getModifiers(), orig.getGetterBlock(), orig.getSetterBlock());</span>
+<span class="fc" id="L362">        FieldNode fieldNode = createFieldNodeCopy(orig.getName() + &quot;Property&quot;, newType, orig.getField());</span>
+<span class="fc" id="L363">        return new PropertyNode(fieldNode, orig.getModifiers(), orig.getGetterBlock(), orig.getSetterBlock());</span>
     }
 
     /**
@@ -375,15 +375,15 @@ import static org.codehaus.groovy.ast.ClassHelper.MAP_TYPE;
      */
     protected void createSetterMethod(ClassNode declaringClass, PropertyNode propertyNode, String setterName,
                                       Statement setterBlock, List&lt;AnnotationNode&gt; annotations) {
-<span class="nc" id="L378">        Parameter[] setterParameterTypes = {new Parameter(propertyNode.getType(), &quot;value&quot;)};</span>
-<span class="nc" id="L379">        int mod = propertyNode.getModifiers() | Opcodes.ACC_FINAL;</span>
+<span class="fc" id="L378">        Parameter[] setterParameterTypes = {new Parameter(propertyNode.getType(), &quot;value&quot;)};</span>
+<span class="fc" id="L379">        int mod = propertyNode.getModifiers() | Opcodes.ACC_FINAL;</span>
 
-<span class="nc" id="L381">        MethodNode setter = new MethodNode(setterName, mod, ClassHelper.VOID_TYPE, setterParameterTypes,</span>
+<span class="fc" id="L381">        MethodNode setter = new MethodNode(setterName, mod, ClassHelper.VOID_TYPE, setterParameterTypes,</span>
             ClassNode.EMPTY_ARRAY, setterBlock);
-<span class="nc bnc" id="L383" title="All 2 branches missed.">        if (annotations != null) setter.addAnnotations(annotations);</span>
-<span class="nc" id="L384">        setter.setSynthetic(true);</span>
-<span class="nc" id="L385">        declaringClass.addMethod(setter);</span>
-<span class="nc" id="L386">    }</span>
+<span class="pc bpc" id="L383" title="1 of 2 branches missed.">        if (annotations != null) setter.addAnnotations(annotations);</span>
+<span class="fc" id="L384">        setter.setSynthetic(true);</span>
+<span class="fc" id="L385">        declaringClass.addMethod(setter);</span>
+<span class="fc" id="L386">    }</span>
 
 
     /**
@@ -411,13 +411,13 @@ import static org.codehaus.groovy.ast.ClassHelper.MAP_TYPE;
      */
     protected void createGetterMethod(ClassNode declaringClass, PropertyNode propertyNode, String getterName,
                                       Statement getterBlock, List&lt;AnnotationNode&gt; annotations) {
-<span class="nc" id="L414">        int mod = propertyNode.getModifiers() | Opcodes.ACC_FINAL;</span>
-<span class="nc" id="L415">        MethodNode getter = new MethodNode(getterName, mod, propertyNode.getType(), Parameter.EMPTY_ARRAY,</span>
+<span class="fc" id="L414">        int mod = propertyNode.getModifiers() | Opcodes.ACC_FINAL;</span>
+<span class="fc" id="L415">        MethodNode getter = new MethodNode(getterName, mod, propertyNode.getType(), Parameter.EMPTY_ARRAY,</span>
             ClassNode.EMPTY_ARRAY, getterBlock);
-<span class="nc bnc" id="L417" title="All 2 branches missed.">        if (annotations != null) getter.addAnnotations(annotations);</span>
-<span class="nc" id="L418">        getter.setSynthetic(true);</span>
-<span class="nc" id="L419">        declaringClass.addMethod(getter);</span>
-<span class="nc" id="L420">    }</span>
+<span class="pc bpc" id="L417" title="1 of 2 branches missed.">        if (annotations != null) getter.addAnnotations(annotations);</span>
+<span class="fc" id="L418">        getter.setSynthetic(true);</span>
+<span class="fc" id="L419">        declaringClass.addMethod(getter);</span>
+<span class="fc" id="L420">    }</span>
 
     /**
      * If the getter already exists, this method should wrap it with our code.
@@ -450,16 +450,16 @@ import static org.codehaus.groovy.ast.ClassHelper.MAP_TYPE;
      */
     private void createPropertyAccessor(ClassNode classNode, PropertyNode fxProperty, FieldNode fxFieldShortName,
                                         Expression initExp) {
-<span class="nc" id="L453">        FieldExpression fieldExpression = new FieldExpression(fxFieldShortName);</span>
+<span class="fc" id="L453">        FieldExpression fieldExpression = new FieldExpression(fxFieldShortName);</span>
 
-<span class="nc bnc" id="L455" title="All 2 branches missed.">        ArgumentListExpression ctorArgs = initExp == null ?</span>
+<span class="pc bpc" id="L455" title="1 of 2 branches missed.">        ArgumentListExpression ctorArgs = initExp == null ?</span>
             ArgumentListExpression.EMPTY_ARGUMENTS :
             new ArgumentListExpression(initExp);
 
-<span class="nc" id="L459">        BlockStatement block = new BlockStatement();</span>
-<span class="nc" id="L460">        ClassNode fxType = fxProperty.getType();</span>
-<span class="nc" id="L461">        ClassNode implNode = PROPERTY_IMPL_MAP.get(fxType);</span>
-<span class="nc bnc" id="L462" title="All 2 branches missed.">        if (implNode == null) {</span>
+<span class="fc" id="L459">        BlockStatement block = new BlockStatement();</span>
+<span class="fc" id="L460">        ClassNode fxType = fxProperty.getType();</span>
+<span class="fc" id="L461">        ClassNode implNode = PROPERTY_IMPL_MAP.get(fxType);</span>
+<span class="pc bpc" id="L462" title="1 of 2 branches missed.">        if (implNode == null) {</span>
 <span class="nc bnc" id="L463" title="All 2 branches missed.">            if (fxType.getTypeClass() == SIMPLE_LIST_PROPERTY_CNODE.getTypeClass()) {</span>
 <span class="nc bnc" id="L464" title="All 2 branches missed.">                if (initExp != null) {</span>
 <span class="nc bnc" id="L465" title="All 4 branches missed.">                    if (initExp instanceof ListExpression ||</span>
@@ -524,65 +524,65 @@ import static org.codehaus.groovy.ast.ClassHelper.MAP_TYPE;
 <span class="nc" id="L524">                implNode.setGenericsTypes(origGenerics);</span>
             }
         }
-<span class="nc" id="L527">        Expression initExpression = new ConstructorCallExpression(implNode, ctorArgs);</span>
+<span class="fc" id="L527">        Expression initExpression = new ConstructorCallExpression(implNode, ctorArgs);</span>
 
-<span class="nc" id="L529">        IfStatement ifStmt = new IfStatement(</span>
+<span class="fc" id="L529">        IfStatement ifStmt = new IfStatement(</span>
             new BooleanExpression(
                 new BinaryExpression(
                     fieldExpression,
-<span class="nc" id="L533">                    Token.newSymbol(Types.COMPARE_EQUAL, 0, 0),</span>
+<span class="fc" id="L533">                    Token.newSymbol(Types.COMPARE_EQUAL, 0, 0),</span>
                     ConstantExpression.NULL
                 )
             ),
             new ExpressionStatement(
                 new BinaryExpression(
                     fieldExpression,
-<span class="nc" id="L540">                    Token.newSymbol(Types.EQUAL, 0, 0),</span>
+<span class="fc" id="L540">                    Token.newSymbol(Types.EQUAL, 0, 0),</span>
                     initExpression
                 )
             ),
             EmptyStatement.INSTANCE
         );
-<span class="nc" id="L546">        block.addStatement(ifStmt);</span>
-<span class="nc" id="L547">        block.addStatement(new ReturnStatement(fieldExpression));</span>
+<span class="fc" id="L546">        block.addStatement(ifStmt);</span>
+<span class="fc" id="L547">        block.addStatement(new ReturnStatement(fieldExpression));</span>
 
-<span class="nc" id="L549">        String getterName = getFXPropertyGetterName(fxProperty);</span>
-<span class="nc" id="L550">        MethodNode accessor = new MethodNode(getterName, fxProperty.getModifiers(), fxProperty.getType(),</span>
+<span class="fc" id="L549">        String getterName = getFXPropertyGetterName(fxProperty);</span>
+<span class="fc" id="L550">        MethodNode accessor = new MethodNode(getterName, fxProperty.getModifiers(), fxProperty.getType(),</span>
             Parameter.EMPTY_ARRAY, ClassNode.EMPTY_ARRAY, block);
-<span class="nc" id="L552">        accessor.setSynthetic(true);</span>
-<span class="nc" id="L553">        classNode.addMethod(accessor);</span>
+<span class="fc" id="L552">        accessor.setSynthetic(true);</span>
+<span class="fc" id="L553">        classNode.addMethod(accessor);</span>
 
         // Create the xxxxProperty() method that merely calls getXxxxProperty()
-<span class="nc" id="L556">        block = new BlockStatement();</span>
+<span class="fc" id="L556">        block = new BlockStatement();</span>
 
-<span class="nc" id="L558">        VariableExpression thisExpression = VariableExpression.THIS_EXPRESSION;</span>
-<span class="nc" id="L559">        ArgumentListExpression emptyArguments = ArgumentListExpression.EMPTY_ARGUMENTS;</span>
+<span class="fc" id="L558">        VariableExpression thisExpression = VariableExpression.THIS_EXPRESSION;</span>
+<span class="fc" id="L559">        ArgumentListExpression emptyArguments = ArgumentListExpression.EMPTY_ARGUMENTS;</span>
 
-<span class="nc" id="L561">        MethodCallExpression getProperty = new MethodCallExpression(thisExpression, getterName, emptyArguments);</span>
-<span class="nc" id="L562">        block.addStatement(new ReturnStatement(getProperty));</span>
+<span class="fc" id="L561">        MethodCallExpression getProperty = new MethodCallExpression(thisExpression, getterName, emptyArguments);</span>
+<span class="fc" id="L562">        block.addStatement(new ReturnStatement(getProperty));</span>
 
-<span class="nc" id="L564">        String javaFXPropertyFunction = fxProperty.getName();</span>
+<span class="fc" id="L564">        String javaFXPropertyFunction = fxProperty.getName();</span>
 
-<span class="nc" id="L566">        accessor = new MethodNode(javaFXPropertyFunction, fxProperty.getModifiers(), fxProperty.getType(),</span>
+<span class="fc" id="L566">        accessor = new MethodNode(javaFXPropertyFunction, fxProperty.getModifiers(), fxProperty.getType(),</span>
             Parameter.EMPTY_ARRAY, ClassNode.EMPTY_ARRAY, block);
-<span class="nc" id="L568">        accessor.setSynthetic(true);</span>
-<span class="nc" id="L569">        classNode.addMethod(accessor);</span>
+<span class="fc" id="L568">        accessor.setSynthetic(true);</span>
+<span class="fc" id="L569">        classNode.addMethod(accessor);</span>
 
         // Create the xxxx() method that merely calls getXxxxProperty()
-<span class="nc" id="L572">        block = new BlockStatement();</span>
+<span class="fc" id="L572">        block = new BlockStatement();</span>
 
-<span class="nc" id="L574">        thisExpression = VariableExpression.THIS_EXPRESSION;</span>
-<span class="nc" id="L575">        emptyArguments = ArgumentListExpression.EMPTY_ARGUMENTS;</span>
+<span class="fc" id="L574">        thisExpression = VariableExpression.THIS_EXPRESSION;</span>
+<span class="fc" id="L575">        emptyArguments = ArgumentListExpression.EMPTY_ARGUMENTS;</span>
 
-<span class="nc" id="L577">        getProperty = new MethodCallExpression(thisExpression, getterName, emptyArguments);</span>
-<span class="nc" id="L578">        block.addStatement(new ReturnStatement(getProperty));</span>
-<span class="nc" id="L579">        javaFXPropertyFunction = fxProperty.getName().replace(&quot;Property&quot;, &quot;&quot;);</span>
+<span class="fc" id="L577">        getProperty = new MethodCallExpression(thisExpression, getterName, emptyArguments);</span>
+<span class="fc" id="L578">        block.addStatement(new ReturnStatement(getProperty));</span>
+<span class="fc" id="L579">        javaFXPropertyFunction = fxProperty.getName().replace(&quot;Property&quot;, &quot;&quot;);</span>
 
-<span class="nc" id="L581">        accessor = new MethodNode(javaFXPropertyFunction, fxProperty.getModifiers(), fxProperty.getType(),</span>
+<span class="fc" id="L581">        accessor = new MethodNode(javaFXPropertyFunction, fxProperty.getModifiers(), fxProperty.getType(),</span>
             Parameter.EMPTY_ARRAY, ClassNode.EMPTY_ARRAY, block);
-<span class="nc" id="L583">        accessor.setSynthetic(true);</span>
-<span class="nc" id="L584">        classNode.addMethod(accessor);</span>
-<span class="nc" id="L585">    }</span>
+<span class="fc" id="L583">        accessor.setSynthetic(true);</span>
+<span class="fc" id="L584">        classNode.addMethod(accessor);</span>
+<span class="fc" id="L585">    }</span>
 
     /**
      * Creates the body of a setter method for the original property that is actually backed by a
@@ -595,16 +595,16 @@ import static org.codehaus.groovy.ast.ClassHelper.MAP_TYPE;
      * @return A Statement that is the body of the new setter.
      */
     protected Statement createSetterStatement(PropertyNode fxProperty) {
-<span class="nc" id="L598">        String fxPropertyGetter = getFXPropertyGetterName(fxProperty);</span>
-<span class="nc" id="L599">        VariableExpression thisExpression = VariableExpression.THIS_EXPRESSION;</span>
-<span class="nc" id="L600">        ArgumentListExpression emptyArgs = ArgumentListExpression.EMPTY_ARGUMENTS;</span>
+<span class="fc" id="L598">        String fxPropertyGetter = getFXPropertyGetterName(fxProperty);</span>
+<span class="fc" id="L599">        VariableExpression thisExpression = VariableExpression.THIS_EXPRESSION;</span>
+<span class="fc" id="L600">        ArgumentListExpression emptyArgs = ArgumentListExpression.EMPTY_ARGUMENTS;</span>
 
-<span class="nc" id="L602">        MethodCallExpression getProperty = new MethodCallExpression(thisExpression, fxPropertyGetter, emptyArgs);</span>
+<span class="fc" id="L602">        MethodCallExpression getProperty = new MethodCallExpression(thisExpression, fxPropertyGetter, emptyArgs);</span>
 
-<span class="nc" id="L604">        ArgumentListExpression valueArg = new ArgumentListExpression(new Expression[]{new VariableExpression(&quot;value&quot;)});</span>
-<span class="nc" id="L605">        MethodCallExpression setValue = new MethodCallExpression(getProperty, &quot;setValue&quot;, valueArg);</span>
+<span class="fc" id="L604">        ArgumentListExpression valueArg = new ArgumentListExpression(new Expression[]{new VariableExpression(&quot;value&quot;)});</span>
+<span class="fc" id="L605">        MethodCallExpression setValue = new MethodCallExpression(getProperty, &quot;setValue&quot;, valueArg);</span>
 
-<span class="nc" id="L607">        return new ExpressionStatement(setValue);</span>
+<span class="fc" id="L607">        return new ExpressionStatement(setValue);</span>
     }
 
     /**
@@ -618,19 +618,19 @@ import static org.codehaus.groovy.ast.ClassHelper.MAP_TYPE;
      * @return A Statement that is the body of the new getter.
      */
     protected Statement createGetterStatement(PropertyNode fxProperty) {
-<span class="nc" id="L621">        String fxPropertyGetter = getFXPropertyGetterName(fxProperty);</span>
-<span class="nc" id="L622">        VariableExpression thisExpression = VariableExpression.THIS_EXPRESSION;</span>
-<span class="nc" id="L623">        ArgumentListExpression emptyArguments = ArgumentListExpression.EMPTY_ARGUMENTS;</span>
+<span class="fc" id="L621">        String fxPropertyGetter = getFXPropertyGetterName(fxProperty);</span>
+<span class="fc" id="L622">        VariableExpression thisExpression = VariableExpression.THIS_EXPRESSION;</span>
+<span class="fc" id="L623">        ArgumentListExpression emptyArguments = ArgumentListExpression.EMPTY_ARGUMENTS;</span>
 
         // We're relying on the *Property() method to provide the return value - is this still needed??
 //        Expression defaultReturn = defaultReturnMap.get(originalProperty.getType());
 //        if (defaultReturn == null)
 //            defaultReturn = ConstantExpression.NULL;
 
-<span class="nc" id="L630">        MethodCallExpression getProperty = new MethodCallExpression(thisExpression, fxPropertyGetter, emptyArguments);</span>
-<span class="nc" id="L631">        MethodCallExpression getValue = new MethodCallExpression(getProperty, &quot;getValue&quot;, emptyArguments);</span>
+<span class="fc" id="L630">        MethodCallExpression getProperty = new MethodCallExpression(thisExpression, fxPropertyGetter, emptyArguments);</span>
+<span class="fc" id="L631">        MethodCallExpression getValue = new MethodCallExpression(getProperty, &quot;getValue&quot;, emptyArguments);</span>
 
-<span class="nc" id="L633">        return new ReturnStatement(new ExpressionStatement(getValue));</span>
+<span class="fc" id="L633">        return new ReturnStatement(new ExpressionStatement(getValue));</span>
     }
 
     /**
@@ -655,11 +655,11 @@ import static org.codehaus.groovy.ast.ClassHelper.MAP_TYPE;
      * @return The new FieldNode.
      */
     private FieldNode createFieldNodeCopy(String newName, ClassNode newType, FieldNode f) {
-<span class="nc bnc" id="L658" title="All 2 branches missed.">        if (newType == null)</span>
-<span class="nc" id="L659">            newType = f.getType();</span>
-<span class="nc" id="L660">        newType = newType.getPlainNodeReference();</span>
+<span class="fc bfc" id="L658" title="All 2 branches covered.">        if (newType == null)</span>
+<span class="fc" id="L659">            newType = f.getType();</span>
+<span class="fc" id="L660">        newType = newType.getPlainNodeReference();</span>
 
-<span class="nc" id="L662">        return new FieldNode(newName, f.getModifiers(), newType, f.getOwner(), f.getInitialValueExpression());</span>
+<span class="fc" id="L662">        return new FieldNode(newName, f.getModifiers(), newType, f.getOwner(), f.getInitialValueExpression());</span>
     }
 
     /**
@@ -669,7 +669,7 @@ import static org.codehaus.groovy.ast.ClassHelper.MAP_TYPE;
      * @return The getter name as a String.
      */
     private String getFXPropertyGetterName(PropertyNode fxProperty) {
-<span class="nc" id="L672">        return GriffonNameUtils.getGetterName(fxProperty.getName());</span>
+<span class="fc" id="L672">        return GriffonNameUtils.getGetterName(fxProperty.getName());</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>

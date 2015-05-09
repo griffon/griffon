@@ -36,9 +36,9 @@
 
         <Package name="griffon.transform">
             <Stats>
-                <TotalClasses>1</TotalClasses>
+                <TotalClasses>3</TotalClasses>
                 <ConcreteClasses>0</ConcreteClasses>
-                <AbstractClasses>1</AbstractClasses>
+                <AbstractClasses>3</AbstractClasses>
                 <Ca>1</Ca>
                 <Ce>2</Ce>
                 <A>1</A>
@@ -48,6 +48,12 @@
             </Stats>
 
             <AbstractClasses>
+                <Class sourceFile="ChangeListener.java">
+                    griffon.transform.ChangeListener
+                </Class>
+                <Class sourceFile="InvalidationListener.java">
+                    griffon.transform.InvalidationListener
+                </Class>
                 <Class sourceFile="PropertyListener.java">
                     griffon.transform.PropertyListener
                 </Class>
@@ -98,7 +104,15 @@
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
+        <Package name="javafx.beans">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
         <Package name="javafx.beans.property">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="javafx.beans.value">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
@@ -246,14 +260,14 @@
 
         <Package name="org.codehaus.griffon.compile.core.ast.transform">
             <Stats>
-                <TotalClasses>29</TotalClasses>
-                <ConcreteClasses>25</ConcreteClasses>
+                <TotalClasses>31</TotalClasses>
+                <ConcreteClasses>27</ConcreteClasses>
                 <AbstractClasses>4</AbstractClasses>
                 <Ca>0</Ca>
-                <Ce>34</Ce>
-                <A>0.14</A>
+                <Ce>36</Ce>
+                <A>0.13</A>
                 <I>1</I>
-                <D>0.14</D>
+                <D>0.13</D>
                 <V>1</V>
             </Stats>
 
@@ -278,6 +292,9 @@
                 </Class>
                 <Class sourceFile="AnnotationHandlerASTTransformation.java">
                     org.codehaus.griffon.compile.core.ast.transform.AnnotationHandlerASTTransformation$1
+                </Class>
+                <Class sourceFile="ChangeListenerASTTransformation.java">
+                    org.codehaus.griffon.compile.core.ast.transform.ChangeListenerASTTransformation
                 </Class>
                 <Class sourceFile="EventPublisherASTTransformation.java">
                     org.codehaus.griffon.compile.core.ast.transform.EventPublisherASTTransformation
@@ -317,6 +334,9 @@
                 </Class>
                 <Class sourceFile="GriffonViewASTTransformation.java">
                     org.codehaus.griffon.compile.core.ast.transform.GriffonViewASTTransformation$1
+                </Class>
+                <Class sourceFile="InvalidationListenerASTTransformation.java">
+                    org.codehaus.griffon.compile.core.ast.transform.InvalidationListenerASTTransformation
                 </Class>
                 <Class sourceFile="MVCAwareASTTransformation.java">
                     org.codehaus.griffon.compile.core.ast.transform.MVCAwareASTTransformation
@@ -368,7 +388,9 @@
                 <Package>java.lang.annotation</Package>
                 <Package>java.lang.reflect</Package>
                 <Package>java.util</Package>
+                <Package>javafx.beans</Package>
                 <Package>javafx.beans.property</Package>
+                <Package>javafx.beans.value</Package>
                 <Package>javafx.collections</Package>
                 <Package>javax.inject</Package>
                 <Package>org.codehaus.griffon.compile.core</Package>

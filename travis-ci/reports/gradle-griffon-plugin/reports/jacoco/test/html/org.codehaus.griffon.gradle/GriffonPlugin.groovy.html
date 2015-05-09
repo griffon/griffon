@@ -59,7 +59,7 @@ class GriffonPlugin implements Plugin&lt;Project&gt; {
         // add compile time configurations
 <span class="fc" id="L60">        project.configurations.maybeCreate('compileOnly')</span>
 <span class="fc" id="L61">        project.configurations.maybeCreate('testCompileOnly')</span>
-<span class="fc" id="L62">        project.configurations.maybeCreate('griffon').visible = false</span>
+<span class="fc" id="L62">        project.configurations.maybeCreate('griffon').visible = true</span>
 
         // wire up classpaths with compile time dependencies
 <span class="fc" id="L65">        project.sourceSets.main.compileClasspath += [project.configurations.compileOnly]</span>
@@ -283,7 +283,7 @@ class GriffonPlugin implements Plugin&lt;Project&gt; {
                         }
                     } else {
 <span class="nc" id="L285">                        Task runTask = project.tasks.findByName('run')</span>
-<span class="nc bnc" id="L286" title="All 2 branches missed.">                        if( runTask != null) {</span>
+<span class="nc bnc" id="L286" title="All 2 branches missed.">                        if (runTask != null) {</span>
 <span class="nc bnc" id="L287" title="All 2 branches missed.">                            if (project.hasProperty('griffonEnv')) {</span>
 <span class="nc" id="L288">                                project.applicationDefaultJvmArgs &lt;&lt; &quot;-Dgriffon.env=${project.griffonEnv}&quot;</span>
 <span class="nc" id="L289">                                runTask.jvmArgs &lt;&lt; &quot;-Dgriffon.env=${project.griffonEnv}&quot;</span>
@@ -306,13 +306,19 @@ class GriffonPlugin implements Plugin&lt;Project&gt; {
             }
 
             private void appendDependency(String artifactId) {
-<span class="nc bnc" id="L309" title="All 2 branches missed.">                if (artifactId.endsWith('-compile')) {</span>
-<span class="nc" id="L310">                    project.dependencies.add('compileOnly', ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':'))</span>
-<span class="nc" id="L311">                    project.dependencies.add('testCompileOnly', ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':'))</span>
-<span class="nc bnc" id="L312" title="All 2 branches missed.">                } else if (artifactId.endsWith('-test')) {</span>
-<span class="nc" id="L313">                    project.dependencies.add('testCompile', ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':'))</span>
+<span class="nc" id="L309">                String dependencyCoordinates = ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':')</span>
+
+<span class="nc bnc" id="L311" title="All 2 branches missed.">                if (artifactId.endsWith('-compile')) {</span>
+<span class="nc" id="L312">                    project.logger.info(&quot;Adding {} to 'compileOnly' configuration&quot;, dependencyCoordinates)</span>
+<span class="nc" id="L313">                    project.dependencies.add('compileOnly', dependencyCoordinates)</span>
+<span class="nc" id="L314">                    project.logger.info(&quot;Adding {} to 'testCompileOnly' configuration&quot;, dependencyCoordinates)</span>
+<span class="nc" id="L315">                    project.dependencies.add('testCompileOnly', dependencyCoordinates)</span>
+<span class="nc bnc" id="L316" title="All 2 branches missed.">                } else if (artifactId.endsWith('-test')) {</span>
+<span class="nc" id="L317">                    project.logger.info(&quot;Adding {} to 'testCompile' configuration&quot;, dependencyCoordinates)</span>
+<span class="nc" id="L318">                    project.dependencies.add('testCompile', dependencyCoordinates)</span>
                 } else {
-<span class="nc" id="L315">                    project.dependencies.add('compile', ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':'))</span>
+<span class="nc" id="L320">                    project.logger.info(&quot;Adding {} to '{}' configuration&quot;, dependencyCoordinates, 'compile')</span>
+<span class="nc" id="L321">                    project.dependencies.add('compile', dependencyCoordinates)</span>
                 }
             }
         })
