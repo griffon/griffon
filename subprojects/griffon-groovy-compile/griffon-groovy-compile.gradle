@@ -24,6 +24,8 @@ dependencies {
     compile project(':griffon-groovy')
     compile "org.kordamp.gipsy:gipsy:${jipsyVersion}"
     compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
+
+    testCompile project.files(project.jfxrtLocation)
 }
 
 compileGroovy.enabled = false

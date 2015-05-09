@@ -43,7 +43,7 @@ import java.util.Map;
  * <p/>
  * Any closures found as the annotation's value will be either transformed
  * into inner classes that implement PropertyChangeListener (when the value
- * is a closue defined in place) or be casted as a proxy of PropertyChangeListener
+ * is a closure defined in place) or be casted as a proxy of PropertyChangeListener
  * (when the value is a property reference found in the same class).<p>
  * List of closures are also supported.
  *
