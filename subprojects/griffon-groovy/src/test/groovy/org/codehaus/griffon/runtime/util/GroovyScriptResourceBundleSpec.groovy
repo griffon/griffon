@@ -58,4 +58,15 @@ class GroovyScriptResourceBundleSpec extends Specification {
         GroovyBundle | 'bogus'
         GroovyBundle | 'doesnt.exist'
     }
+
+    void "Verify key order"() {
+        given:
+        ConfigReader configReader = new ConfigReader(new DefaultApplicationClassLoader())
+
+        when:
+        ResourceBundle resourceBundle = new GroovyScriptResourceBundle(configReader, new GroovyConfigBundle())
+
+        then:
+        resourceBundle.keys.collect { it } == resourceBundle.keySet().collect { it }
+    }
 }

@@ -22,12 +22,12 @@ import groovy.util.ConfigObject;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import static griffon.util.ConfigUtils.getConfigValue;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
@@ -40,7 +40,7 @@ import static java.util.Objects.requireNonNull;
 public class GroovyScriptResourceBundle extends ResourceBundle {
     private static final String ERROR_READER_NULL = "Argument 'reader' must not be null";
     private final ConfigObject config;
-    private final List<String> keys = new ArrayList<>();
+    private final Set<String> keys = new LinkedHashSet<>();
     private final String source;
 
     public GroovyScriptResourceBundle(@Nonnull ConfigReader reader, @Nonnull URL location) {
@@ -101,5 +101,10 @@ public class GroovyScriptResourceBundle extends ResourceBundle {
                 return keysIterator.next();
             }
         };
+    }
+
+    @Override
+    public Set<String> keySet() {
+        return new LinkedHashSet<>(keys);
     }
 }
