@@ -17,6 +17,7 @@ package org.codehaus.griffon.gradle
 
 import org.gradle.api.Action
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.ResolvableDependencies
 
@@ -27,13 +28,20 @@ class GriffonPluginResolutionStrategy {
     private static final String PLUGIN_PREFIX = 'griffon-'
     private static final String PLUGIN_SUFFIX = '-plugin'
     private static final String GRIFFON_CONFIGURATION = 'griffon'
-    private static final List<String> CONFIGURATION_NAMES = ['compile', 'compileOnly', 'testCompileOnly', 'testCompile', 'runtime']
+    private static final List<String> CONFIGURATION_NAMES = [
+        'compile',
+        'compileOnly',
+        'testCompileOnly',
+        'testCompile',
+        'runtime'
+    ]
 
     static void applyTo(Project project) {
         GriffonPluginDependencyResolver resolver = new GriffonPluginDependencyResolver(project)
         project.configurations.getByName(GRIFFON_CONFIGURATION).incoming.beforeResolve(resolver)
         CONFIGURATION_NAMES.each { String configurationName ->
-            project.configurations.getByName(configurationName).incoming.beforeResolve(new GriffonDependencyResolver(configurationName, resolver))
+            Configuration configuration = project.configurations.getByName(configurationName)
+            configuration.incoming.beforeResolve(new GriffonDependencyResolver(configurationName, resolver))
         }
     }
 
@@ -72,19 +80,19 @@ class GriffonPluginResolutionStrategy {
         @Override
         void execute(ResolvableDependencies resolvableDependencies) {
             String toolkit = griffonExtension.toolkit
-            project.logger.debug("UI toolkit for project {} is {}", project.name, toolkit)
+            project.logger.info("UI toolkit for project {} is {}", project.name, toolkit)
             String toolkitRegex = (GriffonExtension.TOOLKIT_NAMES - toolkit).join('|')
 
             boolean groovyDependenciesEnabled = griffonExtension.includeGroovyDependencies?.toBoolean() ||
                 (project.plugins.hasPlugin('groovy') && griffonExtension.includeGroovyDependencies == null)
-            project.logger.debug("Groovy dependencies are {}enabled in project {}", (groovyDependenciesEnabled ? '' : 'NOT '), project.name)
+            project.logger.info("Groovy dependencies are {}enabled in project {}", (groovyDependenciesEnabled ? '' : 'NOT '), project.name)
 
             resolvableDependencies.dependencies.each { Dependency dependency ->
                 String pluginName = dependency.name
                 if (pluginName.startsWith(PLUGIN_PREFIX) && pluginName.endsWith(PLUGIN_SUFFIX)) {
                     String bomDependency = "${dependency.group}:${dependency.name}:${dependency.version}@pom"
 
-                    project.logger.debug("Resolving {}", bomDependency)
+                    project.logger.info("Resolving {}", bomDependency)
                     File bomFile = project.configurations.detachedConfiguration(
                         project.dependencies.create(bomDependency)
                     ).singleFile
@@ -104,7 +112,7 @@ class GriffonPluginResolutionStrategy {
                         version = version == '${project.version}' ? dependency.version : version
 
                         String dependencyCoordinates = [groupId, artifactId, version].join(':')
-                        project.logger.debug("Processing {} in scope {}", dependencyCoordinates, scope)
+                        project.logger.info("Processing {} in scope {}", dependencyCoordinates, scope)
 
                         if (toolkit) {
                             if (artifactId =~ /$toolkitRegex/) {
@@ -121,8 +129,6 @@ class GriffonPluginResolutionStrategy {
                         dependency.group, dependency.name, dependency.version)
                 }
             }
-
-            project.configurations.getByName(GRIFFON_CONFIGURATION).incoming.dependencies.clear()
         }
 
         private GriffonExtension getGriffonExtension() {
@@ -141,15 +147,15 @@ class GriffonPluginResolutionStrategy {
 
         private void appendDependency(String artifactId, String scope, String dependencyCoordinates) {
             if (artifactId.endsWith('-compile')) {
-                project.logger.debug("Adding {} to 'compileOnly' configuration", dependencyCoordinates)
+                project.logger.info("Adding {} to 'compileOnly' configuration", dependencyCoordinates)
                 dependencyMap.get('compileOnly', []) << dependencyCoordinates
-                project.logger.debug("Adding {} to 'testCompileOnly' configuration", dependencyCoordinates)
+                project.logger.info("Adding {} to 'testCompileOnly' configuration", dependencyCoordinates)
                 dependencyMap.get('testCompileOnly', []) << dependencyCoordinates
             } else if (scope == 'test' && artifactId.endsWith('-test')) {
-                project.logger.debug("Adding {} to 'testCompile' configuration", dependencyCoordinates)
+                project.logger.info("Adding {} to 'testCompile' configuration", dependencyCoordinates)
                 dependencyMap.get('testCompile', []) << dependencyCoordinates
             } else {
-                project.logger.debug("Adding {} to '{}' configuration", dependencyCoordinates, scope)
+                project.logger.info("Adding {} to '{}' configuration", dependencyCoordinates, scope)
                 dependencyMap.get(scope, []) << dependencyCoordinates
             }
         }

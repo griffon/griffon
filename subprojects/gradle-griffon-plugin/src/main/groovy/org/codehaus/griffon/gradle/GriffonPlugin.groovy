@@ -59,7 +59,7 @@ class GriffonPlugin implements Plugin<Project> {
         // add compile time configurations
         project.configurations.maybeCreate('compileOnly')
         project.configurations.maybeCreate('testCompileOnly')
-        project.configurations.maybeCreate('griffon').visible = false
+        project.configurations.maybeCreate('griffon').visible = true
 
         // wire up classpaths with compile time dependencies
         project.sourceSets.main.compileClasspath += [project.configurations.compileOnly]
@@ -283,7 +283,7 @@ class GriffonPlugin implements Plugin<Project> {
                         }
                     } else {
                         Task runTask = project.tasks.findByName('run')
-                        if( runTask != null) {
+                        if (runTask != null) {
                             if (project.hasProperty('griffonEnv')) {
                                 project.applicationDefaultJvmArgs << "-Dgriffon.env=${project.griffonEnv}"
                                 runTask.jvmArgs << "-Dgriffon.env=${project.griffonEnv}"
@@ -306,13 +306,19 @@ class GriffonPlugin implements Plugin<Project> {
             }
 
             private void appendDependency(String artifactId) {
+                String dependencyCoordinates = ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':')
+
                 if (artifactId.endsWith('-compile')) {
-                    project.dependencies.add('compileOnly', ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':'))
-                    project.dependencies.add('testCompileOnly', ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':'))
+                    project.logger.info("Adding {} to 'compileOnly' configuration", dependencyCoordinates)
+                    project.dependencies.add('compileOnly', dependencyCoordinates)
+                    project.logger.info("Adding {} to 'testCompileOnly' configuration", dependencyCoordinates)
+                    project.dependencies.add('testCompileOnly', dependencyCoordinates)
                 } else if (artifactId.endsWith('-test')) {
-                    project.dependencies.add('testCompile', ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':'))
+                    project.logger.info("Adding {} to 'testCompile' configuration", dependencyCoordinates)
+                    project.dependencies.add('testCompile', dependencyCoordinates)
                 } else {
-                    project.dependencies.add('compile', ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':'))
+                    project.logger.info("Adding {} to '{}' configuration", dependencyCoordinates, 'compile')
+                    project.dependencies.add('compile', dependencyCoordinates)
                 }
             }
         })
