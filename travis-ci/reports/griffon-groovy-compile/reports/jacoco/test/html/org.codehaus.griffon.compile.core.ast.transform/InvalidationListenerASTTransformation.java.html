@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>InvalidationListenerASTTransformation.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-groovy-compile</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.compile.core.ast.transform</a> &gt; <span class="el_source">InvalidationListenerASTTransformation.java</span></div><h1>InvalidationListenerASTTransformation.java</h1><pre class="source lang-java linenums">/*
- * Copyright 2015 the original author or authors.
+ * Copyright 2008-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.codehaus.griffon.compile.core.ast.transform;
 
 import griffon.transform.InvalidationListener;
@@ -53,9 +52,9 @@ import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.stmnt;
  * @author Andres Almiray
  */
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
-<span class="fc" id="L56">public class InvalidationListenerASTTransformation extends AbstractASTTransformation {</span>
-<span class="fc" id="L57">    private static final ClassNode INVALIDATION_LISTENER_CLASS = makeClassSafe(InvalidationListener.class);</span>
-<span class="fc" id="L58">    private static final ClassNode JAVAFX_INVALIDATION_LISTENER_CLASS = makeClassSafe(javafx.beans.InvalidationListener.class);</span>
+<span class="fc" id="L55">public class InvalidationListenerASTTransformation extends AbstractASTTransformation {</span>
+<span class="fc" id="L56">    private static final ClassNode INVALIDATION_LISTENER_CLASS = makeClassSafe(InvalidationListener.class);</span>
+<span class="fc" id="L57">    private static final ClassNode JAVAFX_INVALIDATION_LISTENER_CLASS = makeClassSafe(javafx.beans.InvalidationListener.class);</span>
     private static final String EMPTY_STRING = &quot;&quot;;
 
     /**
@@ -65,72 +64,72 @@ import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.stmnt;
      * @return true if the node is an event publisher
      */
     public static boolean hasListenerAnnotation(AnnotatedNode node) {
-<span class="nc bnc" id="L68" title="All 2 branches missed.">        for (AnnotationNode annotation : node.getAnnotations()) {</span>
-<span class="nc bnc" id="L69" title="All 2 branches missed.">            if (INVALIDATION_LISTENER_CLASS.equals(annotation.getClassNode())) {</span>
-<span class="nc" id="L70">                return true;</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        for (AnnotationNode annotation : node.getAnnotations()) {</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">            if (INVALIDATION_LISTENER_CLASS.equals(annotation.getClassNode())) {</span>
+<span class="nc" id="L69">                return true;</span>
             }
-<span class="nc" id="L72">        }</span>
-<span class="nc" id="L73">        return false;</span>
+<span class="nc" id="L71">        }</span>
+<span class="nc" id="L72">        return false;</span>
     }
 
     public static void addListenerToProperty(SourceUnit source, AnnotationNode annotation, ClassNode declaringClass, FieldNode field) {
-<span class="fc bfc" id="L77" title="All 2 branches covered.">        for (Map.Entry&lt;String, Expression&gt; member : annotation.getMembers().entrySet()) {</span>
-<span class="fc" id="L78">            Expression value = member.getValue();</span>
-<span class="pc bpc" id="L79" title="1 of 2 branches missed.">            if ((value instanceof ListExpression)) {</span>
-<span class="nc bnc" id="L80" title="All 2 branches missed.">                for (Expression expr : ((ListExpression) value).getExpressions()) {</span>
-<span class="nc" id="L81">                    processExpression(declaringClass, field.getName(), expr);</span>
-<span class="nc" id="L82">                }</span>
-<span class="nc" id="L83">                member.setValue(new ConstantExpression(EMPTY_STRING));</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        for (Map.Entry&lt;String, Expression&gt; member : annotation.getMembers().entrySet()) {</span>
+<span class="fc" id="L77">            Expression value = member.getValue();</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">            if ((value instanceof ListExpression)) {</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">                for (Expression expr : ((ListExpression) value).getExpressions()) {</span>
+<span class="nc" id="L80">                    processExpression(declaringClass, field.getName(), expr);</span>
+<span class="nc" id="L81">                }</span>
+<span class="nc" id="L82">                member.setValue(new ConstantExpression(EMPTY_STRING));</span>
             } else {
-<span class="fc" id="L85">                processExpression(declaringClass, field.getName(), value);</span>
-<span class="fc" id="L86">                member.setValue(new ConstantExpression(EMPTY_STRING));</span>
+<span class="fc" id="L84">                processExpression(declaringClass, field.getName(), value);</span>
+<span class="fc" id="L85">                member.setValue(new ConstantExpression(EMPTY_STRING));</span>
             }
-<span class="fc" id="L88">        }</span>
-<span class="fc" id="L89">    }</span>
+<span class="fc" id="L87">        }</span>
+<span class="fc" id="L88">    }</span>
 
     private static void processExpression(ClassNode classNode, String propertyName, Expression expression) {
-<span class="fc bfc" id="L92" title="All 2 branches covered.">        if (expression instanceof ClosureExpression) {</span>
-<span class="fc" id="L93">            addInvalidationListener(classNode, propertyName, (ClosureExpression) expression);</span>
-<span class="fc bfc" id="L94" title="All 2 branches covered.">        } else if (expression instanceof VariableExpression) {</span>
-<span class="fc" id="L95">            addInvalidationListener(classNode, propertyName, (VariableExpression) expression);</span>
-<span class="pc bpc" id="L96" title="1 of 2 branches missed.">        } else if (expression instanceof ConstantExpression) {</span>
-<span class="fc" id="L97">            addInvalidationListener(classNode, propertyName, (ConstantExpression) expression);</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        if (expression instanceof ClosureExpression) {</span>
+<span class="fc" id="L92">            addInvalidationListener(classNode, propertyName, (ClosureExpression) expression);</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        } else if (expression instanceof VariableExpression) {</span>
+<span class="fc" id="L94">            addInvalidationListener(classNode, propertyName, (VariableExpression) expression);</span>
+<span class="pc bpc" id="L95" title="1 of 2 branches missed.">        } else if (expression instanceof ConstantExpression) {</span>
+<span class="fc" id="L96">            addInvalidationListener(classNode, propertyName, (ConstantExpression) expression);</span>
         } else {
-<span class="nc" id="L99">            throw new RuntimeException(&quot;Internal error: wrong expression type. &quot; + expression);</span>
+<span class="nc" id="L98">            throw new RuntimeException(&quot;Internal error: wrong expression type. &quot; + expression);</span>
         }
-<span class="fc" id="L101">    }</span>
+<span class="fc" id="L100">    }</span>
 
     private static void addInvalidationListener(ClassNode classNode, String propertyName, ClosureExpression closure) {
-<span class="fc" id="L104">        ArgumentListExpression args = new ArgumentListExpression();</span>
-<span class="fc" id="L105">        args.addExpression(CastExpression.asExpression(JAVAFX_INVALIDATION_LISTENER_CLASS, closure));</span>
-<span class="fc" id="L106">        addListenerStatement(classNode, propertyName, args);</span>
-<span class="fc" id="L107">    }</span>
+<span class="fc" id="L103">        ArgumentListExpression args = new ArgumentListExpression();</span>
+<span class="fc" id="L104">        args.addExpression(CastExpression.asExpression(JAVAFX_INVALIDATION_LISTENER_CLASS, closure));</span>
+<span class="fc" id="L105">        addListenerStatement(classNode, propertyName, args);</span>
+<span class="fc" id="L106">    }</span>
 
     private static void addInvalidationListener(ClassNode classNode, String propertyName, VariableExpression variable) {
-<span class="fc" id="L110">        ArgumentListExpression args = new ArgumentListExpression();</span>
-<span class="fc" id="L111">        args.addExpression(CastExpression.asExpression(JAVAFX_INVALIDATION_LISTENER_CLASS, variable));</span>
-<span class="fc" id="L112">        addListenerStatement(classNode, propertyName, args);</span>
-<span class="fc" id="L113">    }</span>
+<span class="fc" id="L109">        ArgumentListExpression args = new ArgumentListExpression();</span>
+<span class="fc" id="L110">        args.addExpression(CastExpression.asExpression(JAVAFX_INVALIDATION_LISTENER_CLASS, variable));</span>
+<span class="fc" id="L111">        addListenerStatement(classNode, propertyName, args);</span>
+<span class="fc" id="L112">    }</span>
 
     private static void addInvalidationListener(ClassNode classNode, String propertyName, ConstantExpression reference) {
-<span class="fc" id="L116">        ArgumentListExpression args = new ArgumentListExpression();</span>
-<span class="fc" id="L117">        VariableExpression variable = new VariableExpression(reference.getText());</span>
-<span class="fc" id="L118">        args.addExpression(CastExpression.asExpression(JAVAFX_INVALIDATION_LISTENER_CLASS, variable));</span>
-<span class="fc" id="L119">        addListenerStatement(classNode, propertyName, args);</span>
-<span class="fc" id="L120">    }</span>
+<span class="fc" id="L115">        ArgumentListExpression args = new ArgumentListExpression();</span>
+<span class="fc" id="L116">        VariableExpression variable = new VariableExpression(reference.getText());</span>
+<span class="fc" id="L117">        args.addExpression(CastExpression.asExpression(JAVAFX_INVALIDATION_LISTENER_CLASS, variable));</span>
+<span class="fc" id="L118">        addListenerStatement(classNode, propertyName, args);</span>
+<span class="fc" id="L119">    }</span>
 
     private static void addListenerStatement(ClassNode classNode, String propertyName, ArgumentListExpression args) {
-<span class="fc" id="L123">        BlockStatement body = new BlockStatement();</span>
-<span class="fc" id="L124">        body.addStatement(stmnt(</span>
-<span class="fc" id="L125">            call(</span>
-<span class="fc" id="L126">                call(THIS, propertyName + &quot;Property&quot;, NO_ARGS),</span>
+<span class="fc" id="L122">        BlockStatement body = new BlockStatement();</span>
+<span class="fc" id="L123">        body.addStatement(stmnt(</span>
+<span class="fc" id="L124">            call(</span>
+<span class="fc" id="L125">                call(THIS, propertyName + &quot;Property&quot;, NO_ARGS),</span>
                 &quot;addListener&quot;,
                 args
             )
         ));
 
-<span class="fc" id="L132">        classNode.addObjectInitializerStatements(body);</span>
-<span class="fc" id="L133">    }</span>
+<span class="fc" id="L131">        classNode.addObjectInitializerStatements(body);</span>
+<span class="fc" id="L132">    }</span>
 
     /**
      * Handles the bulk of the processing, mostly delegating to other methods.
@@ -139,17 +138,17 @@ import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.stmnt;
      * @param source the source unit for the nodes
      */
     public void visit(ASTNode[] nodes, SourceUnit source) {
-<span class="pc bpc" id="L142" title="2 of 4 branches missed.">        if (!(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof AnnotatedNode)) {</span>
-<span class="nc" id="L143">            throw new RuntimeException(&quot;Internal error: wrong types: &quot; + nodes[0].getClass() + &quot; / &quot; + nodes[1].getClass());</span>
+<span class="pc bpc" id="L141" title="2 of 4 branches missed.">        if (!(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof AnnotatedNode)) {</span>
+<span class="nc" id="L142">            throw new RuntimeException(&quot;Internal error: wrong types: &quot; + nodes[0].getClass() + &quot; / &quot; + nodes[1].getClass());</span>
         }
 
-<span class="fc" id="L146">        AnnotationNode annotation = (AnnotationNode) nodes[0];</span>
-<span class="fc" id="L147">        AnnotatedNode parent = (AnnotatedNode) nodes[1];</span>
+<span class="fc" id="L145">        AnnotationNode annotation = (AnnotationNode) nodes[0];</span>
+<span class="fc" id="L146">        AnnotatedNode parent = (AnnotatedNode) nodes[1];</span>
 
-<span class="fc" id="L149">        ClassNode declaringClass = parent.getDeclaringClass();</span>
-<span class="pc bpc" id="L150" title="1 of 2 branches missed.">        if (parent instanceof FieldNode) {</span>
-<span class="fc" id="L151">            addListenerToProperty(source, annotation, declaringClass, (FieldNode) parent);</span>
+<span class="fc" id="L148">        ClassNode declaringClass = parent.getDeclaringClass();</span>
+<span class="pc bpc" id="L149" title="1 of 2 branches missed.">        if (parent instanceof FieldNode) {</span>
+<span class="fc" id="L150">            addListenerToProperty(source, annotation, declaringClass, (FieldNode) parent);</span>
         }
-<span class="fc" id="L153">    }</span>
+<span class="fc" id="L152">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>
