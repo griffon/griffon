@@ -1,19 +1,18 @@
 package ${project_package}
 
-import griffon.javafx.test.GriffonTestFXRule
-import org.junit.Rule
+import griffon.javafx.test.GriffonTestFXClassRule
+import org.junit.ClassRule
+import org.junit.FixMethodOrder
 import org.junit.Test
+import org.junit.runners.MethodSorters
 
 import static org.testfx.api.FxAssert.verifyThat
 import static org.testfx.matcher.control.LabeledMatchers.hasText
 
-class ${project_class_name}IntegrationTest {
-    static {
-        System.setProperty('org.slf4j.simpleLogger.defaultLogLevel', 'trace')
-    }
-
-    @Rule
-    public GriffonTestFXRule testfx = new GriffonTestFXRule('mainWindow')
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+class ${project_class_name}FunctionalTest {
+    @ClassRule
+    public static GriffonTestFXClassRule testfx = new GriffonTestFXClassRule('mainWindow')
 
     @Test
     void clickButton() {

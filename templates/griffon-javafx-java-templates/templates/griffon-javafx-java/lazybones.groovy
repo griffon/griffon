@@ -27,12 +27,14 @@ processTemplates 'griffon-app/resources/*.fxml', props
 processTemplates 'src/main/java/*.java', props
 processTemplates 'src/test/java/*.java', props
 processTemplates 'src/integration-test/java/*.java', props
+processTemplates 'src/functional-test/java/*.java', props
 processTemplates 'griffon-app/*/*.java', props
 processTemplates 'maven/distribution/bin/*', props
 
 File mainSources = new File(projectDir, 'src/main/java')
 File testSources = new File(projectDir, 'src/test/java')
 File integrationTestSources = new File(projectDir, 'src/integration-test/java')
+File functionalTestSources = new File(projectDir, 'src/functional-test/java')
 File binSources = new File(projectDir, 'maven/distribution/bin')
 
 File mainSourcesPath = new File(mainSources, packagePath)
@@ -41,6 +43,8 @@ File testSourcesPath = new File(testSources, packagePath)
 testSourcesPath.mkdirs()
 File integrationTestSourcesPath = new File(integrationTestSources, packagePath)
 integrationTestSourcesPath.mkdirs()
+File functionalTestSourcesPath = new File(functionalTestSources, packagePath)
+functionalTestSourcesPath.mkdirs()
 
 def renameFile = { File from, String path ->
     if (from.file) {
@@ -58,6 +62,9 @@ testSources.eachFile { File file ->
 }
 integrationTestSources.eachFile { File file ->
     renameFile(file, integrationTestSourcesPath.absolutePath + '/' + props.project_capitalized_name + file.name)
+}
+functionalTestSources.eachFile { File file ->
+    renameFile(file, functionalTestSourcesPath.absolutePath + '/' + props.project_capitalized_name + file.name)
 }
 
 renameFile(new File(binSources, 'run-app'), binSources.absolutePath + '/' + props.project_name)

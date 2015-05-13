@@ -26,12 +26,14 @@ processTemplates 'gradle.properties', props
 processTemplates 'src/main/groovy/*.groovy', props
 processTemplates 'src/test/groovy/*.groovy', props
 processTemplates 'src/integration-test/groovy/*.groovy', props
+processTemplates 'src/functional-test/groovy/*.groovy', props
 processTemplates 'griffon-app/*/*.groovy', props
 processTemplates 'maven/distribution/bin/*', props
 
 File mainSources = new File(projectDir, 'src/main/groovy')
 File testSources = new File(projectDir, 'src/test/groovy')
 File integrationTestSources = new File(projectDir, 'src/integration-test/groovy')
+File functionalTestSources = new File(projectDir, 'src/functional-test/groovy')
 File binSources = new File(projectDir, 'maven/distribution/bin')
 
 File mainSourcesPath = new File(mainSources, packagePath)
@@ -40,6 +42,8 @@ File testSourcesPath = new File(testSources, packagePath)
 testSourcesPath.mkdirs()
 File integrationTestSourcesPath = new File(integrationTestSources, packagePath)
 integrationTestSourcesPath.mkdirs()
+File functionalTestSourcesPath = new File(functionalTestSources, packagePath)
+functionalTestSourcesPath.mkdirs()
 
 def renameFile = { File from, String path ->
     if (from.file) {
@@ -57,6 +61,9 @@ testSources.eachFile { File file ->
 }
 integrationTestSources.eachFile { File file ->
     renameFile(file, integrationTestSourcesPath.absolutePath + '/' + props.project_capitalized_name + file.name)
+}
+functionalTestSources.eachFile { File file ->
+    renameFile(file, functionalTestSourcesPath.absolutePath + '/' + props.project_capitalized_name + file.name)
 }
 
 renameFile(new File(binSources, 'run-app'), binSources.absolutePath + '/' + props.project_name)

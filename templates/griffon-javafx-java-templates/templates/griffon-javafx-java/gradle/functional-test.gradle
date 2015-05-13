@@ -1,0 +1,53 @@
+configurations {
+    functionalTestCompile {
+        extendsFrom compile
+    }
+    functionalTestRuntime {
+        extendsFrom runtime
+    }
+}
+
+dependencies {
+    functionalTestCompile 'junit:junit:4.12'
+    functionalTestCompile "org.codehaus.groovy:groovy-all:${groovyVersion}"
+    functionalTestCompile "org.spockframework:spock-core:${spockVersion}"
+}
+
+sourceSets {
+    functionalTest {
+        if (file('src/functional-test/java').exists()) {
+            java.srcDirs file('src/functional-test/java')
+        }
+        if (file('src/functional-test/groovy').exists()) {
+            groovy.srcDirs file('src/functional-test/groovy')
+        }
+        resources.srcDir file('src/functional-test/resources')
+        compileClasspath += [sourceSets.main.output]
+        compileClasspath += configurations.compileOnly
+        compileClasspath += configurations.testCompileOnly
+        runtimeClasspath += [compileClasspath]
+    }
+}
+
+idea {
+    module {
+        scopes.PROVIDED.plus += [configurations.functionalTestCompile]
+        scopes.PROVIDED.plus += [configurations.functionalTestRuntime]
+        testSourceDirs += sourceSets.functionalTest.allSource.srcDirs
+    }
+}
+
+task functionalTest(type: Test, dependsOn: jar) {
+    testClassesDir = sourceSets.functionalTest.output.classesDir
+    classpath = sourceSets.functionalTest.runtimeClasspath
+    reports.html.enabled = false
+}
+
+task functionalTestReport(type: TestReport) {
+    destinationDir = file("${buildDir}/reports/functional-tests")
+    reportOn functionalTest.binResultsDir
+}
+
+functionalTest.mustRunAfter integrationTest
+functionalTest.finalizedBy functionalTestReport
+check.dependsOn functionalTestReport

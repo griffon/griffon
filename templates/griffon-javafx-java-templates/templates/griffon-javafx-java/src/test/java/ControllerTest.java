@@ -15,7 +15,6 @@ import static org.junit.Assert.assertEquals;
 @TestFor(${project_class_name}Controller.class)
 public class ${project_class_name}ControllerTest {
     static {
-        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
         // force initialization JavaFX Toolkit
         new javafx.embed.swing.JFXPanel();
     }
