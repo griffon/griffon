@@ -27,18 +27,19 @@ buildscript {
 
     dependencies {
         classpath 'net.saliman:gradle-cobertura-plugin:2.2.8'
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.3.1'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.4.0'
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
         classpath 'org.ajoberstar:gradle-git:1.1.0'
         classpath 'uk.co.cacoethes:lazybones-gradle:1.2.3'
-        classpath 'org.kordamp.gradle:stats-gradle-plugin:0.1.3'
+        classpath 'org.kordamp.gradle:stats-gradle-plugin:0.1.4'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.9'
         classpath 'org.kordamp.gradle:clirr-gradle-plugin:0.2.2'
     }
 }
 
 apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
 
 jacoco {
     toolVersion = jacocoVersion
@@ -246,6 +247,10 @@ subprojects { subproj ->
 }
 
 evaluationDependsOnChildren()
+
+coveralls {
+    sourceDirs = files(projectsWithCoverage.sourceSets.main.allSource.srcDirs).files.absolutePath
+}
 
 task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
     dependsOn = projectsWithCoverage.test + projectsWithIntegrationCoverage.integrationTest
