@@ -18,6 +18,8 @@ apply plugin: 'groovy'
 apply plugin: 'application'
 apply from: rootProject.file('gradle/javafx-plugin.gradle')
 apply from: rootProject.file('gradle/integration-test.gradle')
+apply from: rootProject.file('gradle/functional-test.gradle')
+
 
 mainClassName = 'sample.javafx.groovy.Launcher'
 
@@ -43,6 +45,8 @@ dependencies {
 
     testCompile project(':griffon-core-test')
     testCompile project(':griffon-javafx-test')
+
+    functionalTestCompile project(':griffon-javafx-test')
 }
 
 sourceSets {
