@@ -17,7 +17,7 @@ install:
 build_script:
   - gradlew.bat -u -i clean assemble
 test_script:
-  - gradlew.bat -u -i -S test integrationTest -x :sample-javafx-groovy:jfxJar -x :sample-javafx-groovy:jfxDeploy -x :sample-javafx-java:jfxJar -x :sample-javafx-java:jfxDeploy
+  - gradlew.bat -u -i -S test integrationTest functionalTest -x :sample-javafx-groovy:jfxJar -x :sample-javafx-groovy:jfxDeploy -x :sample-javafx-java:jfxJar -x :sample-javafx-java:jfxDeploy
 cache:
   - .gradle
   - C:\Users\appveyor\.gradle
