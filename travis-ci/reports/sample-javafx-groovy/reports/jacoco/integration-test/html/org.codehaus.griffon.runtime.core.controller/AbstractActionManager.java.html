@@ -334,7 +334,7 @@ public abstract class AbstractActionManager implements ActionManager {
     private void invokeAction(@Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Runnable runnable) {
 <span class="fc" id="L335">        String fullQualifiedActionName = controller.getClass().getName() + &quot;.&quot; + actionName;</span>
 <span class="fc" id="L336">        Threading.Policy policy = threadingPolicies.get(fullQualifiedActionName);</span>
-<span class="pc bpc" id="L337" title="1 of 2 branches missed.">        if (policy == null) {</span>
+<span class="fc bfc" id="L337" title="All 2 branches covered.">        if (policy == null) {</span>
 <span class="pc bpc" id="L338" title="1 of 2 branches missed.">            if (isThreadingDisabled(fullQualifiedActionName)) {</span>
 <span class="nc" id="L339">                policy = Threading.Policy.SKIP;</span>
             } else {
