@@ -105,8 +105,8 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
 
     @SuppressWarnings(&quot;unchecked&quot;)
     private List&lt;Module&gt; doCollectModulesFromMethod() {
-<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (testCase == null) {</span>
-<span class="fc" id="L109">            return Collections.emptyList();</span>
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">        if (testCase == null) {</span>
+<span class="nc" id="L109">            return Collections.emptyList();</span>
         }
 
 <span class="pc bpc" id="L112" title="1 of 2 branches missed.">        if (testCase instanceof TestModuleAware) {</span>
@@ -130,8 +130,8 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
 
     @SuppressWarnings(&quot;unchecked&quot;)
     private void doCollectOverridingModules(final @Nonnull Collection&lt;Module&gt; modules) {
-<span class="fc bfc" id="L133" title="All 2 branches covered.">        if (testCase == null) {</span>
-<span class="fc" id="L134">            return;</span>
+<span class="pc bpc" id="L133" title="1 of 2 branches missed.">        if (testCase == null) {</span>
+<span class="nc" id="L134">            return;</span>
         }
 
 <span class="pc bpc" id="L137" title="1 of 2 branches missed.">        if (testCase instanceof TestModuleAware) {</span>
@@ -156,13 +156,13 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
 <span class="nc" id="L156">    }</span>
 
     private void doCollectModulesFromInnerClasses(final @Nonnull Collection&lt;Module&gt; modules) {
-<span class="fc bfc" id="L159" title="All 2 branches covered.">        if (testCase != null) {</span>
+<span class="pc bpc" id="L159" title="1 of 2 branches missed.">        if (testCase != null) {</span>
 <span class="fc" id="L160">            modules.add(new InnerClassesModule());</span>
         }
 <span class="fc" id="L162">    }</span>
 
     private void doCollectModulesFromFields(final @Nonnull Collection&lt;Module&gt; modules) {
-<span class="fc bfc" id="L165" title="All 2 branches covered.">        if (testCase != null) {</span>
+<span class="pc bpc" id="L165" title="1 of 2 branches missed.">        if (testCase != null) {</span>
 <span class="fc" id="L166">            modules.add(new FieldsModule());</span>
         }
 <span class="fc" id="L168">    }</span>

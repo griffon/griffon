@@ -59,8 +59,8 @@ public class GriffonTestFXRule extends TestFX implements MethodRule {
 <span class="fc" id="L59">        requireNonNull(startupArgs, &quot;Argument 'startupArgs' must not be null&quot;);</span>
 <span class="fc" id="L60">        this.startupArgs = new String[startupArgs.length];</span>
 <span class="fc" id="L61">        System.arraycopy(startupArgs, 0, this.startupArgs, 0, startupArgs.length);</span>
-<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        if (!Environment.isSystemSet()) {</span>
-<span class="nc" id="L63">            System.setProperty(Environment.KEY, Environment.TEST.getName());</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (!Environment.isSystemSet()) {</span>
+<span class="fc" id="L63">            System.setProperty(Environment.KEY, Environment.TEST.getName());</span>
         }
 <span class="fc" id="L65">    }</span>
 
