@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-apply plugin: 'java'
+apply plugin: 'groovy'
 apply plugin: 'application'
 apply from: rootProject.file('gradle/javafx-plugin.gradle')
 apply from: rootProject.file('gradle/integration-test.gradle')
@@ -25,7 +25,8 @@ ext.depProjects = [
     ':griffon-core',
     ':griffon-javafx',
     ':griffon-guice',
-    ':griffon-core-test'
+    ':griffon-core-test',
+    ':griffon-javafx-test'
 ]
 
 ext.depProjects.each { evaluationDependsOn it }
@@ -105,3 +106,5 @@ task jacocoIntegrationTestReport(type: org.gradle.testing.jacoco.tasks.JacocoRep
 }
 
 projectsWithIntegrationCoverage << project
+
+compileGroovy.enabled = false

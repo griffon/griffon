@@ -1,11 +1,11 @@
 /*
- * Copyright 2008-2015 the original author or authors.
+ * Copyright 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,11 +18,12 @@ package griffon.javafx.test;
 import griffon.core.ApplicationEvent;
 import griffon.core.RunnableWithArgs;
 import griffon.core.env.Environment;
+import griffon.exceptions.GriffonException;
 import griffon.javafx.JavaFXGriffonApplication;
 import org.codehaus.griffon.runtime.core.DefaultGriffonApplication;
 import org.codehaus.griffon.runtime.javafx.TestJavaFXGriffonApplication;
-import org.junit.rules.MethodRule;
-import org.junit.runners.model.FrameworkMethod;
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.testfx.api.FxToolkit;
 
@@ -35,25 +36,26 @@ import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A JUnit Rule that starts an application for each test method.
+ * A JUnit Rule that starts the application once per test class.
  *
  * @author Andres Almiray
  * @since 2.3.0
  */
-public class GriffonTestFXRule extends TestFX implements MethodRule {
+public class GriffonTestFXClassRule extends TestFX implements TestRule {
     protected String windowName;
     protected String[] startupArgs;
     protected Class<? extends TestJavaFXGriffonApplication> applicationClass;
+    protected JavaFXGriffonApplication application;
 
-    public GriffonTestFXRule(@Nonnull String windowName) {
+    public GriffonTestFXClassRule(@Nonnull String windowName) {
         this(TestJavaFXGriffonApplication.class, windowName, DefaultGriffonApplication.EMPTY_ARGS);
     }
 
-    public GriffonTestFXRule(@Nonnull Class<? extends TestJavaFXGriffonApplication> applicationClass, @Nonnull String windowName) {
+    public GriffonTestFXClassRule(@Nonnull Class<? extends TestJavaFXGriffonApplication> applicationClass, @Nonnull String windowName) {
         this(applicationClass, windowName, DefaultGriffonApplication.EMPTY_ARGS);
     }
 
-    public GriffonTestFXRule(@Nonnull Class<? extends TestJavaFXGriffonApplication> applicationClass, @Nonnull String windowName, @Nonnull String[] startupArgs) {
+    public GriffonTestFXClassRule(@Nonnull Class<? extends TestJavaFXGriffonApplication> applicationClass, @Nonnull String windowName, @Nonnull String[] startupArgs) {
         this.applicationClass = requireNonNull(applicationClass, "Argument 'applicationClass' must not be null");
         this.windowName = requireNonBlank(windowName, "Argument 'windowName' cannot be blank");
         requireNonNull(startupArgs, "Argument 'startupArgs' must not be null");
@@ -64,44 +66,50 @@ public class GriffonTestFXRule extends TestFX implements MethodRule {
         }
     }
 
-    @Override
-    public Statement apply(final Statement base, final FrameworkMethod method, final Object target) {
-        initialize(target);
+    public void setup() {
+        initialize();
 
+        try {
+            FxToolkit.registerPrimaryStage();
+
+            application = (JavaFXGriffonApplication) FxToolkit.setupApplication(applicationClass);
+            WindowShownHandler startingWindow = new WindowShownHandler(windowName);
+            application.getEventRouter().addEventListener(ApplicationEvent.WINDOW_SHOWN.getName(), startingWindow);
+
+            await().until(() -> startingWindow.isShowing());
+        } catch (TimeoutException e) {
+            throw new GriffonException("An error occurred while starting up the application", e);
+        }
+    }
+
+    public void cleanup() {
+        if (application != null) {
+            application.shutdown();
+            try {
+                FxToolkit.cleanupApplication(application);
+            } catch (TimeoutException e) {
+                throw new GriffonException("An error occurred while shutting down the application",e);
+            }
+        }
+    }
+
+    @Override
+    public Statement apply(Statement base, Description description) {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                FxToolkit.registerPrimaryStage();
-
-                JavaFXGriffonApplication application = (JavaFXGriffonApplication) FxToolkit.setupApplication(applicationClass);
-                WindowShownHandler startingWindow = new WindowShownHandler(windowName);
-                application.getEventRouter().addEventListener(ApplicationEvent.WINDOW_SHOWN.getName(), startingWindow);
-                application.getInjector().injectMembers(target);
-
-                await().until(() -> startingWindow.isShowing());
-
-                before(application, target);
+                setup();
                 try {
                     base.evaluate();
                 } finally {
-                    after(application, target);
+                    cleanup();
                 }
             }
         };
     }
 
-    protected void initialize(Object target) {
-        getTestContext().setTestCase(target);
+    protected void initialize() {
         getTestContext().setWindowName(windowName);
-    }
-
-    protected void before(@Nonnull JavaFXGriffonApplication application, @Nonnull Object target) throws Throwable {
-
-    }
-
-    protected void after(@Nonnull JavaFXGriffonApplication application, @Nonnull Object target) throws TimeoutException {
-        application.shutdown();
-        FxToolkit.cleanupApplication(application);
     }
 
     private static class WindowShownHandler implements RunnableWithArgs {

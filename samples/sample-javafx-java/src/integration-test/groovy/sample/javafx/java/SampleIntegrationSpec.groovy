@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package sample.javafx.groovy
+package sample.javafx.java
 
 import griffon.javafx.test.GriffonTestFXRule
 import org.junit.Rule
-import org.junit.Test
+import spock.lang.Specification
 
 import static org.testfx.api.FxAssert.verifyThat
 import static org.testfx.matcher.control.LabeledMatchers.hasText
 
-public class SampleTest {
+public class SampleIntegrationSpec extends Specification {
     static {
         System.setProperty('org.slf4j.simpleLogger.defaultLogLevel', 'trace')
     }
@@ -30,27 +30,25 @@ public class SampleTest {
     @Rule
     public GriffonTestFXRule testfx = new GriffonTestFXRule('mainWindow')
 
-    @Test
-    void typeNameAndClickButton() {
-        // given:
-        testfx.clickOn('#input').write('Griffon')
-
-        // when:
-        testfx.clickOn('#sayHelloActionTarget')
-
-        // then:
-        verifyThat('#output', hasText('Hello Griffon'))
-    }
-
-    @Test
-    void doNotTypeNameAndClickButton() {
-        // given:
+    void 'Get default message if no input is given'() {
+        given:
         testfx.clickOn('#input').write('')
 
-        // when:
+        when:
         testfx.clickOn('#sayHelloActionTarget')
 
-        // then:
+        then:
         verifyThat('#output', hasText('Howdy stranger!'))
+    }
+
+    void 'Get hello message if input is given'() {
+        given:
+        testfx.clickOn('#input').write('Griffon')
+
+        when:
+        testfx.clickOn('#sayHelloActionTarget')
+
+        then:
+        verifyThat('#output', hasText('Hello Griffon'))
     }
 }
