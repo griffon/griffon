@@ -2,9 +2,9 @@
   <header>
     <project>griffon-core-2.3.0-SNAPSHOT</project>
     <summary>
-      <info>32</info>
+      <info>36</info>
       <warnings>0</warnings>
-      <error>15</error>
+      <error>28</error>
     </summary>
   </header>
   <differences>
@@ -13,6 +13,24 @@
       <severity>info</severity>
       <identifier>8000</identifier>
       <message>Class griffon.core.RunnableWithArgs added</message>
+    </difference>
+    <difference>
+      <classname>griffon.core.artifact.ArtifactHandler</classname>
+      <severity>error</severity>
+      <identifier>7006</identifier>
+      <message>Return type of method 'public java.util.Collection initialize(java.lang.Class[])' has been changed to void</message>
+    </difference>
+    <difference>
+      <classname>griffon.core.artifact.ArtifactManager</classname>
+      <severity>error</severity>
+      <identifier>4001</identifier>
+      <message>Removed griffon.core.ShutdownHandler from the set of implemented interfaces</message>
+    </difference>
+    <difference>
+      <classname>griffon.core.artifact.ArtifactManager</classname>
+      <severity>error</severity>
+      <identifier>7004</identifier>
+      <message>In method 'public void loadArtifactMetadata(griffon.core.injection.Injector)' the number of arguments has changed</message>
     </difference>
     <difference>
       <classname>griffon.core.event.EventPublisher</classname>
@@ -61,6 +79,18 @@
       <severity>error</severity>
       <identifier>7012</identifier>
       <message>Method 'public void removeEventListener(java.lang.Class, griffon.core.RunnableWithArgs)' has been added to an interface</message>
+    </difference>
+    <difference>
+      <classname>griffon.core.injection.Injector</classname>
+      <severity>error</severity>
+      <identifier>7002</identifier>
+      <message>Method 'public griffon.core.injection.Injector createNestedInjector(java.lang.Iterable)' has been removed</message>
+    </difference>
+    <difference>
+      <classname>griffon.core.injection.Injector</classname>
+      <severity>error</severity>
+      <identifier>7002</identifier>
+      <message>Method 'public griffon.core.injection.Injector createNestedInjector(java.lang.String, java.lang.Iterable)' has been removed</message>
     </difference>
     <difference>
       <classname>griffon.core.view.WindowManager</classname>
@@ -117,6 +147,30 @@
       <message>Method 'public java.util.Map requireNonEmpty(java.util.Map, java.lang.String)' has been added</message>
     </difference>
     <difference>
+      <classname>griffon.util.ServiceLoaderUtils</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public boolean load(java.lang.ClassLoader, java.lang.String, griffon.util.ServiceLoaderUtils$PathFilter, griffon.util.ServiceLoaderUtils$ResourceProcessor)' has been added</message>
+    </difference>
+    <difference>
+      <classname>griffon.util.ServiceLoaderUtils$PathFilter</classname>
+      <severity>info</severity>
+      <identifier>8000</identifier>
+      <message>Class griffon.util.ServiceLoaderUtils$PathFilter added</message>
+    </difference>
+    <difference>
+      <classname>griffon.util.ServiceLoaderUtils$ResourceProcessor</classname>
+      <severity>info</severity>
+      <identifier>8000</identifier>
+      <message>Class griffon.util.ServiceLoaderUtils$ResourceProcessor added</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.AbstractApplicationBootstrapper</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'protected void createArtifactsModule(java.util.List)' has been added</message>
+    </difference>
+    <difference>
       <classname>org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler</classname>
       <severity>error</severity>
       <identifier>4001</identifier>
@@ -145,6 +199,54 @@
       <severity>info</severity>
       <identifier>7011</identifier>
       <message>Method 'public void run(java.lang.Object[])' has been added</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.artifact.AbstractArtifactHandler</classname>
+      <severity>error</severity>
+      <identifier>7002</identifier>
+      <message>Method 'protected void createBindings(java.util.List, java.lang.Class, griffon.core.artifact.GriffonClass)' has been removed</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.artifact.AbstractArtifactHandler</classname>
+      <severity>error</severity>
+      <identifier>7006</identifier>
+      <message>Return type of method 'public java.util.Collection initialize(java.lang.Class[])' has been changed to void</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager</classname>
+      <severity>error</severity>
+      <identifier>4001</identifier>
+      <message>Removed griffon.core.ShutdownHandler from the set of implemented interfaces</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager</classname>
+      <severity>error</severity>
+      <identifier>7002</identifier>
+      <message>Method 'public boolean canShutdown(griffon.core.GriffonApplication)' has been removed</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager</classname>
+      <severity>error</severity>
+      <identifier>7004</identifier>
+      <message>In method 'public void loadArtifactMetadata(griffon.core.injection.Injector)' the number of arguments has changed</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager</classname>
+      <severity>error</severity>
+      <identifier>7002</identifier>
+      <message>Method 'public void onShutdown(griffon.core.GriffonApplication)' has been removed</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.artifact.DefaultArtifactManager</classname>
+      <severity>error</severity>
+      <identifier>4001</identifier>
+      <message>Removed griffon.core.ShutdownHandler from the set of implemented interfaces</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.artifact.ServiceArtifactHandler</classname>
+      <severity>error</severity>
+      <identifier>7002</identifier>
+      <message>Method 'protected void createBindings(java.util.List, java.lang.Class, griffon.core.artifact.GriffonClass)' has been removed</message>
     </difference>
     <difference>
       <classname>org.codehaus.griffon.runtime.core.event.AbstractEventPublisher</classname>

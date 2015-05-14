@@ -41,7 +41,7 @@
           <tr>
             <td>
               <p class='error'>ERROR</p>
-              <div>15</div>
+              <div>28</div>
             </td>
             <td>
               <p class='warning'>WARNING</p>
@@ -49,7 +49,7 @@
             </td>
             <td>
               <p class='info'>INFO</p>
-              <div>32</div>
+              <div>36</div>
             </td>
           </tr>
         </table>
@@ -68,6 +68,29 @@
               <ul>
                 <li>
                   <span class='info'>INFO(8000): </span>Class griffon.core.RunnableWithArgs added
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>griffon.core.artifact.ArtifactHandler</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='error'>ERROR(7006): </span>Return type of method 'public java.util.Collection initialize(java.lang.Class[])' has been changed to void
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>griffon.core.artifact.ArtifactManager</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='error'>ERROR(4001): </span>Removed griffon.core.ShutdownHandler from the set of implemented interfaces
+                </li>
+                <li>
+                  <span class='error'>ERROR(7004): </span>In method 'public void loadArtifactMetadata(griffon.core.injection.Injector)' the number of arguments has changed
                 </li>
               </ul>
             </td>
@@ -99,6 +122,19 @@
                 </li>
                 <li>
                   <span class='error'>ERROR(7012): </span>Method 'public void removeEventListener(java.lang.Class, griffon.core.RunnableWithArgs)' has been added to an interface
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>griffon.core.injection.Injector</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='error'>ERROR(7002): </span>Method 'public griffon.core.injection.Injector createNestedInjector(java.lang.Iterable)' has been removed
+                </li>
+                <li>
+                  <span class='error'>ERROR(7002): </span>Method 'public griffon.core.injection.Injector createNestedInjector(java.lang.String, java.lang.Iterable)' has been removed
                 </li>
               </ul>
             </td>
@@ -145,6 +181,46 @@
             </td>
           </tr>
           <tr>
+            <td>griffon.util.ServiceLoaderUtils</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public boolean load(java.lang.ClassLoader, java.lang.String, griffon.util.ServiceLoaderUtils$PathFilter, griffon.util.ServiceLoaderUtils$ResourceProcessor)' has been added
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>griffon.util.ServiceLoaderUtils$PathFilter</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='info'>INFO(8000): </span>Class griffon.util.ServiceLoaderUtils$PathFilter added
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>griffon.util.ServiceLoaderUtils$ResourceProcessor</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='info'>INFO(8000): </span>Class griffon.util.ServiceLoaderUtils$ResourceProcessor added
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>org.codehaus.griffon.runtime.core.AbstractApplicationBootstrapper</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'protected void createArtifactsModule(java.util.List)' has been added
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
             <td>org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler</td>
             <td>
               <ul>
@@ -162,6 +238,58 @@
                 </li>
                 <li>
                   <span class='info'>INFO(7011): </span>Method 'public void run(java.lang.Object[])' has been added
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>org.codehaus.griffon.runtime.core.artifact.AbstractArtifactHandler</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='error'>ERROR(7002): </span>Method 'protected void createBindings(java.util.List, java.lang.Class, griffon.core.artifact.GriffonClass)' has been removed
+                </li>
+                <li>
+                  <span class='error'>ERROR(7006): </span>Return type of method 'public java.util.Collection initialize(java.lang.Class[])' has been changed to void
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='error'>ERROR(4001): </span>Removed griffon.core.ShutdownHandler from the set of implemented interfaces
+                </li>
+                <li>
+                  <span class='error'>ERROR(7002): </span>Method 'public boolean canShutdown(griffon.core.GriffonApplication)' has been removed
+                </li>
+                <li>
+                  <span class='error'>ERROR(7004): </span>In method 'public void loadArtifactMetadata(griffon.core.injection.Injector)' the number of arguments has changed
+                </li>
+                <li>
+                  <span class='error'>ERROR(7002): </span>Method 'public void onShutdown(griffon.core.GriffonApplication)' has been removed
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>org.codehaus.griffon.runtime.core.artifact.DefaultArtifactManager</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='error'>ERROR(4001): </span>Removed griffon.core.ShutdownHandler from the set of implemented interfaces
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>org.codehaus.griffon.runtime.core.artifact.ServiceArtifactHandler</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='error'>ERROR(7002): </span>Method 'protected void createBindings(java.util.List, java.lang.Class, griffon.core.artifact.GriffonClass)' has been removed
                 </li>
               </ul>
             </td>

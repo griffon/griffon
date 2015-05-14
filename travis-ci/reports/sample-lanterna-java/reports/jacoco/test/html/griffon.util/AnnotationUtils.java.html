@@ -281,7 +281,7 @@ public class AnnotationUtils {
 
     @Nonnull
     public static Typed typed(@Nonnull Class&lt;?&gt; clazz) {
-<span class="fc" id="L284">        return new TypedImpl(requireNonNull(clazz, &quot;Argument 'clazz' must not be null&quot;));</span>
+<span class="nc" id="L284">        return new TypedImpl(requireNonNull(clazz, &quot;Argument 'clazz' must not be null&quot;));</span>
     }
 
     @Nonnull
@@ -338,34 +338,34 @@ public class AnnotationUtils {
     private static class TypedImpl implements Typed, Serializable {
         private final Class&lt;?&gt; value;
 
-<span class="fc" id="L341">        public TypedImpl(Class&lt;?&gt; value) {</span>
-<span class="fc" id="L342">            this.value = requireNonNull(value, &quot;value&quot;);</span>
-<span class="fc" id="L343">        }</span>
+<span class="nc" id="L341">        public TypedImpl(Class&lt;?&gt; value) {</span>
+<span class="nc" id="L342">            this.value = requireNonNull(value, &quot;value&quot;);</span>
+<span class="nc" id="L343">        }</span>
 
         public Class&lt;?&gt; value() {
-<span class="fc" id="L346">            return this.value;</span>
+<span class="nc" id="L346">            return this.value;</span>
         }
 
         public int hashCode() {
             // This is specified in java.lang.Annotation.
-<span class="fc" id="L351">            return (127 * &quot;value&quot;.hashCode()) ^ value.hashCode();</span>
+<span class="nc" id="L351">            return (127 * &quot;value&quot;.hashCode()) ^ value.hashCode();</span>
         }
 
         public boolean equals(Object o) {
-<span class="pc bpc" id="L355" title="1 of 2 branches missed.">            if (!(o instanceof Typed)) {</span>
+<span class="nc bnc" id="L355" title="All 2 branches missed.">            if (!(o instanceof Typed)) {</span>
 <span class="nc" id="L356">                return false;</span>
             }
 
-<span class="fc" id="L359">            Typed other = (Typed) o;</span>
-<span class="fc" id="L360">            return value.equals(other.value());</span>
+<span class="nc" id="L359">            Typed other = (Typed) o;</span>
+<span class="nc" id="L360">            return value.equals(other.value());</span>
         }
 
         public String toString() {
-<span class="fc" id="L364">            return &quot;@&quot; + Typed.class.getName() + &quot;(value=&quot; + value + &quot;)&quot;;</span>
+<span class="nc" id="L364">            return &quot;@&quot; + Typed.class.getName() + &quot;(value=&quot; + value + &quot;)&quot;;</span>
         }
 
         public Class&lt;? extends Annotation&gt; annotationType() {
-<span class="fc" id="L368">            return Typed.class;</span>
+<span class="nc" id="L368">            return Typed.class;</span>
         }
 
         private static final long serialVersionUID = 0;

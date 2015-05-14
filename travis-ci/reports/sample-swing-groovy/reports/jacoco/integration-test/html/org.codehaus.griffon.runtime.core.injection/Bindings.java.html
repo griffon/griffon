@@ -97,7 +97,7 @@ import static java.util.Objects.requireNonNull;
         @Override
         public Binding&lt;T&gt; getBinding() {
 <span class="fc bfc" id="L99" title="All 2 branches covered.">            if (instance != null) {</span>
-<span class="fc bfc" id="L100" title="All 2 branches covered.">                return classifier != null ? new InstanceBindingImpl&lt;&gt;(source, classifier, instance) : new InstanceBindingImpl&lt;&gt;(source, classifierType, instance);</span>
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">                return classifier != null ? new InstanceBindingImpl&lt;&gt;(source, classifier, instance) : new InstanceBindingImpl&lt;&gt;(source, classifierType, instance);</span>
 <span class="fc bfc" id="L101" title="All 2 branches covered.">            } else if (providerType != null) {</span>
 <span class="fc bfc" id="L102" title="All 2 branches covered.">                return classifier != null ? new ProviderTypeBindingImpl&lt;&gt;(source, providerType, classifier, singleton) : new ProviderTypeBindingImpl&lt;&gt;(source, providerType, classifierType, singleton);</span>
 <span class="fc bfc" id="L103" title="All 2 branches covered.">            } else if (provider != null) {</span>
@@ -230,10 +230,10 @@ import static java.util.Objects.requireNonNull;
         private final T instance;
 
         protected InstanceBindingImpl(@Nonnull Class&lt;T&gt; source, @Nonnull Annotation classifier, @Nonnull T instance) {
-<span class="fc" id="L233">            super(source, classifier, true);</span>
-<span class="fc" id="L234">            this.instance = instance;</span>
-<span class="fc" id="L235">            updateClassifier(instance.getClass());</span>
-<span class="fc" id="L236">        }</span>
+<span class="nc" id="L233">            super(source, classifier, true);</span>
+<span class="nc" id="L234">            this.instance = instance;</span>
+<span class="nc" id="L235">            updateClassifier(instance.getClass());</span>
+<span class="nc" id="L236">        }</span>
 
         protected InstanceBindingImpl(@Nonnull Class&lt;T&gt; source, @Nonnull Class&lt;? extends Annotation&gt; classifierType, @Nonnull T instance) {
 <span class="fc" id="L239">            super(source, classifierType, true);</span>
@@ -251,8 +251,8 @@ import static java.util.Objects.requireNonNull;
         public String toString() {
 <span class="fc" id="L252">            final StringBuilder sb = new StringBuilder(&quot;InstanceBinding[&quot;);</span>
 <span class="fc" id="L253">            sb.append(&quot;source=&quot;).append(source.getName());</span>
-<span class="fc bfc" id="L254" title="All 2 branches covered.">            if (classifier != null) {</span>
-<span class="fc" id="L255">                sb.append(&quot;, classifier=&quot;).append(classifier);</span>
+<span class="pc bpc" id="L254" title="1 of 2 branches missed.">            if (classifier != null) {</span>
+<span class="nc" id="L255">                sb.append(&quot;, classifier=&quot;).append(classifier);</span>
 <span class="pc bpc" id="L256" title="1 of 2 branches missed.">            } else if (classifierType != null) {</span>
 <span class="nc" id="L257">                sb.append(&quot;, classifierType=&quot;).append(classifierType.getName());</span>
             }

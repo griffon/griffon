@@ -22,7 +22,6 @@ import org.codehaus.griffon.runtime.core.TestApplicationBootstrapper;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -31,27 +30,22 @@ import java.util.List;
  */
 public class TestJavaFXGriffonApplicationBootstrapper extends TestApplicationBootstrapper {
     public TestJavaFXGriffonApplicationBootstrapper(@Nonnull GriffonApplication application) {
-<span class="nc" id="L34">        super(application);</span>
-<span class="nc" id="L35">    }</span>
-
-    @Override
-    protected void collectModuleBindings(@Nonnull Collection&lt;Module&gt; modules) {
-<span class="nc" id="L39">        super.collectModuleBindings(modules);</span>
-<span class="nc" id="L40">    }</span>
+<span class="nc" id="L33">        super(application);</span>
+<span class="nc" id="L34">    }</span>
 
     @Nonnull
     @Override
     protected List&lt;Module&gt; loadModules() {
-<span class="nc" id="L45">        List&lt;Module&gt; modules = super.loadModules();</span>
-<span class="nc" id="L46">        modules.add(new AbstractModule() {</span>
+<span class="nc" id="L39">        List&lt;Module&gt; modules = super.loadModules();</span>
+<span class="nc" id="L40">        modules.add(new AbstractModule() {</span>
             @Override
             protected void doConfigure() {
-<span class="nc" id="L49">                bind(WindowManager.class)</span>
-<span class="nc" id="L50">                    .toProvider(new TestJavaFXWindowManagerProvider())</span>
-<span class="nc" id="L51">                    .asSingleton();</span>
-<span class="nc" id="L52">            }</span>
+<span class="nc" id="L43">                bind(WindowManager.class)</span>
+<span class="nc" id="L44">                    .toProvider(new TestJavaFXWindowManagerProvider())</span>
+<span class="nc" id="L45">                    .asSingleton();</span>
+<span class="nc" id="L46">            }</span>
         });
-<span class="nc" id="L54">        return modules;</span>
+<span class="nc" id="L48">        return modules;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>

@@ -19,17 +19,11 @@ import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonClass;
 import griffon.core.artifact.GriffonService;
 import griffon.core.artifact.GriffonServiceClass;
-import griffon.core.injection.Binding;
 import griffon.inject.Typed;
-import org.codehaus.griffon.runtime.core.injection.AnnotatedBindingBuilder;
-import org.codehaus.griffon.runtime.core.injection.Bindings;
-import org.codehaus.griffon.runtime.core.injection.LinkedBindingBuilder;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.List;
 
-import static griffon.util.AnnotationUtils.typed;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -41,24 +35,13 @@ import static java.util.Objects.requireNonNull;
 public class ServiceArtifactHandler extends AbstractArtifactHandler&lt;GriffonService&gt; {
     @Inject
     public ServiceArtifactHandler(@Nonnull GriffonApplication application) {
-<span class="fc" id="L44">        super(application, GriffonService.class, GriffonServiceClass.TYPE, GriffonServiceClass.TRAILING);</span>
-<span class="fc" id="L45">    }</span>
+<span class="fc" id="L38">        super(application, GriffonService.class, GriffonServiceClass.TYPE, GriffonServiceClass.TRAILING);</span>
+<span class="fc" id="L39">    }</span>
 
     @Nonnull
     public GriffonClass newGriffonClassInstance(@Nonnull Class&lt;GriffonService&gt; clazz) {
-<span class="fc" id="L49">        requireNonNull(clazz, ERROR_CLASS_NULL);</span>
-<span class="fc" id="L50">        return new DefaultGriffonServiceClass(getApplication(), clazz);</span>
+<span class="fc" id="L43">        requireNonNull(clazz, ERROR_CLASS_NULL);</span>
+<span class="fc" id="L44">        return new DefaultGriffonServiceClass(getApplication(), clazz);</span>
     }
-
-    @Override
-    protected void createBindings(@Nonnull List&lt;Binding&lt;?&gt;&gt; bindings, @Nonnull Class&lt;GriffonService&gt; clazz, @Nonnull GriffonClass griffonClass) {
-<span class="fc" id="L55">        LinkedBindingBuilder&lt;GriffonClass&gt; builder1 = Bindings.bind(GriffonClass.class)</span>
-<span class="fc" id="L56">            .withClassifier(typed(clazz));</span>
-<span class="fc" id="L57">        builder1.toInstance(griffonClass);</span>
-<span class="fc" id="L58">        bindings.add(builder1.getBinding());</span>
-<span class="fc" id="L59">        AnnotatedBindingBuilder&lt;GriffonService&gt; builder2 = Bindings.bind(clazz);</span>
-<span class="fc" id="L60">        builder2.asSingleton();</span>
-<span class="fc" id="L61">        bindings.add(builder2.getBinding());</span>
-<span class="fc" id="L62">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>
