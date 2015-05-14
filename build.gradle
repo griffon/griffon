@@ -270,7 +270,7 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
 
 task clirrRootReport(type: org.kordamp.gradle.clirr.ClirrReportTask) {
     dependsOn = projectsWithClirr.tasks.clirr
-    reports = files(projectsWithClirr.tasks.clirr.xmlReport)
+    reports = files(projectsWithClirr.findAll{ it.extensions.clirr.enabled }.tasks.clirr.xmlReport)
     filter = { difference ->
         difference?.message?.text() =~ /field __timeStamp/ ||
         difference?.message?.text() =~ /super\$/ ||
