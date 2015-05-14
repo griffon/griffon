@@ -23,7 +23,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import javax.inject.Inject;
-import java.util.concurrent.Callable;
 
 import static com.jayway.awaitility.Awaitility.await;
 import static java.util.concurrent.TimeUnit.SECONDS;
