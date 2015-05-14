@@ -19,12 +19,12 @@ import griffon.pivot.test.GriffonPivotFuncRule
 import org.apache.pivot.wtk.PushButton
 import org.apache.pivot.wtk.TextInput
 import org.junit.Rule
-import org.junit.Test
+import spock.lang.Specification
 
 import static com.jayway.awaitility.Awaitility.await
 import static java.util.concurrent.TimeUnit.SECONDS
 
-class SampleTest {
+class SampleIntegrationSpec extends Specification {
     static {
         System.setProperty('org.slf4j.simpleLogger.defaultLogLevel', 'trace')
         System.setProperty('griffon.swing.edt.violations.check', 'true')
@@ -34,8 +34,7 @@ class SampleTest {
     @Rule
     public final GriffonPivotFuncRule pivot = new GriffonPivotFuncRule()
 
-    @Test
-    void typeNameAndClickButton() {
+    void 'Get default message if no input is given'() {
         pivot.runInsideUISync {
             // given:
             pivot.find('input', TextInput).text = 'Griffon'
@@ -52,8 +51,7 @@ class SampleTest {
         }
     }
 
-    @Test
-    void doNotTypeNameAndClickButton() {
+    void 'Get hello message if input is given'() {
         pivot.runInsideUISync {
             // given:
             pivot.find('input', TextInput).text = ''

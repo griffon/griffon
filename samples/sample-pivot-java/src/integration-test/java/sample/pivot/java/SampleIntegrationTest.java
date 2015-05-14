@@ -29,7 +29,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 
-public class SampleTest {
+public class SampleIntegrationTest {
     static {
         System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
         System.setProperty("griffon.swing.edt.violations.check", "true");

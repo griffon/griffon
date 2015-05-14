@@ -20,7 +20,7 @@ import org.fest.swing.fixture.FrameFixture
 import org.junit.Rule
 import org.junit.Test
 
-public class SampleTest {
+public class SampleIntegrationTest {
     static {
         System.setProperty('org.slf4j.simpleLogger.defaultLogLevel', 'trace')
         System.setProperty('griffon.swing.edt.violations.check', 'true')

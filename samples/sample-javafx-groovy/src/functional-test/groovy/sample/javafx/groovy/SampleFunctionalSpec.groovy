@@ -23,7 +23,7 @@ import static org.testfx.api.FxAssert.verifyThat
 import static org.testfx.matcher.control.LabeledMatchers.hasText
 
 @Stepwise
-public class SampleFunctionalSpec extends Specification {
+class SampleFunctionalSpec extends Specification {
     static {
         System.setProperty('org.slf4j.simpleLogger.defaultLogLevel', 'trace')
     }
