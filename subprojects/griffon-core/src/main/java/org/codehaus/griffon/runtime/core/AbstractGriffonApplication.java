@@ -234,7 +234,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     }
 
     public void setInjector(@Nonnull Injector<?> injector) {
-        this.injector = requireNonNull(injector, "Argument 'injector' must not be bull");
+        this.injector = requireNonNull(injector, "Argument 'injector' must not be null");
         this.injector.injectMembers(this);
         addShutdownHandler(getWindowManager());
         MVCGroupExceptionHandler.registerWith(this);

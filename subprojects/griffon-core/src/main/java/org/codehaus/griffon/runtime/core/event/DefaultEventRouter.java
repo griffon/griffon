@@ -57,7 +57,7 @@ public class DefaultEventRouter extends AbstractEventRouter {
 
     @Inject
     public void setUIThreadManager(@Nonnull UIThreadManager uiThreadManager) {
-        this.uiThreadManager = requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be bull");
+        this.uiThreadManager = requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be null");
     }
 
     protected void doPublishOutsideUI(@Nonnull Runnable publisher) {

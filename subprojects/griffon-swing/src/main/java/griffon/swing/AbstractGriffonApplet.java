@@ -245,7 +245,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
     }
 
     public void setInjector(@Nonnull Injector<?> injector) {
-        this.injector = requireNonNull(injector, "Argument 'injector' cannot be bull");
+        this.injector = requireNonNull(injector, "Argument 'injector' cannot be null");
         this.injector.injectMembers(this);
         addShutdownHandler(getWindowManager());
         MVCGroupExceptionHandler.registerWith(this);

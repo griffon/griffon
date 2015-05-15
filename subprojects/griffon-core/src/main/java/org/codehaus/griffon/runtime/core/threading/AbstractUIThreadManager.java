@@ -37,7 +37,7 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public abstract class AbstractUIThreadManager implements UIThreadManager {
-    protected static final String ERROR_RUNNABLE_NULL = "Argument 'runnable' must not be bull";
+    protected static final String ERROR_RUNNABLE_NULL = "Argument 'runnable' must not be null";
     protected static final String ERROR_CALLABLE_NULL = "Argument 'callable' must not be null";
     private static final Thread.UncaughtExceptionHandler UNCAUGHT_EXCEPTION_HANDLER = new GriffonExceptionHandler();
 
@@ -48,7 +48,7 @@ public abstract class AbstractUIThreadManager implements UIThreadManager {
 
     @Inject
     public void setExecutorServiceManager(@Nonnull ExecutorServiceManager executorServiceManager) {
-        requireNonNull(executorServiceManager, "Argument 'executorServiceManager' must not be bull");
+        requireNonNull(executorServiceManager, "Argument 'executorServiceManager' must not be null");
         if (this.executorServiceManager != null) {
             this.executorServiceManager.remove(executorService);
         }
