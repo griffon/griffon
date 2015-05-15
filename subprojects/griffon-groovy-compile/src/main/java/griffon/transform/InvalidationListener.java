@@ -36,7 +36,7 @@ import java.lang.annotation.Target;
  *     &#064;FXObservable String name
  *     &#064;FXObservable String lastname
  *
- *     private def snoopAll = { ob, ov, nv -> ... }
+ *     private def snoopAll = { ... }
  *
  *     MyModel() {
  *         nameProperty().addListener(snoopAll as InvalidationListener)

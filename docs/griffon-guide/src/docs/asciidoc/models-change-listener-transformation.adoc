@@ -1,0 +1,61 @@
+
+[[_models_change_listener_transformation]]
+= The @ChangeListener AST Transformation
+
+The `{link_change_listener}` helps you to register ``ChangeListener``s
+without so much effort. The following code
+
+[source,groovy,linenums,options="nowrap"]
+----
+import griffon.transform.ChangeListener
+import griffon.transform.FXObservable
+import griffon.core.artifact.GriffonModel
+
+@griffon.metadata.ArtifactProviderFor(GriffonModel)
+class SampleModel {
+    def controller
+
+    @FXObservable
+    @ChangeListener(snoopAll)
+    String name
+
+    @FXObservable
+    @ChangeListener({ ob, ov, nv -> controller.someAction(nv)})
+    String lastname
+
+    def snoopAll = { ob, ov, nv -> ... }
+}
+----
+
+is equivalent to this one
+
+[source,groovy,linenums,options="nowrap"]
+----
+import javafx.beans.value.ChangeListener
+import griffon.transform.FXObservable
+import griffon.core.artifact.GriffonModel
+
+@griffon.metadata.ArtifactProviderFor(GriffonModel)
+class SampleModel {
+    def controller
+
+    @FXObservable String name
+    @FXObservable String lastname
+
+    def snoopAll = { ob, ov, nv -> ... }
+
+    SampleModel() {
+        nameProperty().addListener(snoopAll as ChangeListener)
+        lastnameProperty().addListener({ ob, ov, nv ->
+            controller.someAction(nv)
+        } as ChangeListener)
+    }
+}
+----
+
+`{link_change_listener}` accepts the following values
+
+ * in-place definition of a closure
+ * reference of a closure property defined in the same class
+ * a List of any of the previous two
+

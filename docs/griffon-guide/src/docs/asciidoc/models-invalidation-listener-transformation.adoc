@@ -1,0 +1,61 @@
+
+[[_models_invalidation_listener_transformation]]
+= The @InvalidationListener AST Transformation
+
+The `{link_invalidation_listener}` helps you to register ``InvalidationListener``s
+without so much effort. The following code
+
+[source,groovy,linenums,options="nowrap"]
+----
+import griffon.transform.InvalidationListener
+import griffon.transform.FXObservable
+import griffon.core.artifact.GriffonModel
+
+@griffon.metadata.ArtifactProviderFor(GriffonModel)
+class SampleModel {
+    def controller
+
+    @FXObservable
+    @InvalidationListener(snoopAll)
+    String name
+
+    @FXObservable
+    @InvalidationListener({ controller.someAction(it)})
+    String lastname
+
+    def snoopAll = { ... }
+}
+----
+
+is equivalent to this one
+
+[source,groovy,linenums,options="nowrap"]
+----
+import javafx.beans.InvalidationListener
+import griffon.transform.FXObservable
+import griffon.core.artifact.GriffonModel
+
+@griffon.metadata.ArtifactProviderFor(GriffonModel)
+class SampleModel {
+    def controller
+
+    @FXObservable String name
+    @FXObservable String lastname
+
+    def snoopAll = { ... }
+
+    SampleModel() {
+        nameProperty().addListener(snoopAll as InvalidationListener)
+        lastnameProperty().addListener({
+            controller.someAction(it)
+        } as InvalidationListener)
+    }
+}
+----
+
+`{link_invalidation_listener}` accepts the following values
+
+ * in-place definition of a closure
+ * reference of a closure property defined in the same class
+ * a List of any of the previous two
+
