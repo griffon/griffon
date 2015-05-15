@@ -90,10 +90,10 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
 
     @Override
     public void runLifecycleHandler(@Nonnull Lifecycle lifecycle) {
-<span class="nc" id="L93">        requireNonNull(lifecycle, &quot;Argument 'lifecycle' must not be null&quot;);</span>
+<span class="fc" id="L93">        requireNonNull(lifecycle, &quot;Argument 'lifecycle' must not be null&quot;);</span>
 
-<span class="nc" id="L95">        boolean skipHandler = application.getConfiguration().getAsBoolean(KEY_APP_LIFECYCLE_HANDLER_DISABLE, false);</span>
-<span class="nc bnc" id="L96" title="All 2 branches missed.">        if (skipHandler) {</span>
+<span class="fc" id="L95">        boolean skipHandler = application.getConfiguration().getAsBoolean(KEY_APP_LIFECYCLE_HANDLER_DISABLE, false);</span>
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">        if (skipHandler) {</span>
 <span class="nc" id="L97">            LOG.info(&quot;Lifecycle handler '{}' has been disabled. SKIPPING.&quot;, lifecycle.getName());</span>
 <span class="nc" id="L98">            return;</span>
         }
@@ -284,4 +284,4 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
 <span class="fc" id="L284">        return application.getInjector().getInstance(ApplicationClassLoader.class);</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

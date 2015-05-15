@@ -282,7 +282,7 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
     }
 
     public void setInjector(@Nonnull Injector&lt;?&gt; injector) {
-<span class="nc" id="L285">        this.injector = requireNonNull(injector, &quot;Argument 'injector' cannot be bull&quot;);</span>
+<span class="nc" id="L285">        this.injector = requireNonNull(injector, &quot;Argument 'injector' cannot be null&quot;);</span>
 <span class="nc" id="L286">        this.injector.injectMembers(this);</span>
 <span class="nc" id="L287">        addShutdownHandler(getWindowManager());</span>
 <span class="nc" id="L288">        MVCGroupExceptionHandler.registerWith(this);</span>
@@ -464,4 +464,4 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
 <span class="nc" id="L464">        getEventRouter().publishEvent(event.getName(), args);</span>
 <span class="nc" id="L465">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

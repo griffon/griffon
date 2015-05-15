@@ -249,7 +249,7 @@ public class GuiceInjector implements Injector&lt;com.google.inject.Injector&gt;
     public void injectMembers(@Nonnull Object instance) throws MembersInjectionException {
 <span class="fc" id="L250">        requireNonNull(instance, ERROR_INSTANCE_NULL);</span>
 
-<span class="pc bpc" id="L252" title="1 of 2 branches missed.">        if (isClosed()) {</span>
+<span class="fc bfc" id="L252" title="All 2 branches covered.">        if (isClosed()) {</span>
 <span class="fc" id="L253">            throw new MembersInjectionException(instance, new ClosedInjectorException(this));</span>
         }
 
@@ -297,4 +297,4 @@ public class GuiceInjector implements Injector&lt;com.google.inject.Injector&gt;
 <span class="nc" id="L297">        }</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

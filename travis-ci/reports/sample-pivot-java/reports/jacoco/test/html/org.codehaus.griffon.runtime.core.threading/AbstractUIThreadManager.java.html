@@ -37,7 +37,7 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 <span class="fc" id="L39">public abstract class AbstractUIThreadManager implements UIThreadManager {</span>
-    protected static final String ERROR_RUNNABLE_NULL = &quot;Argument 'runnable' must not be bull&quot;;
+    protected static final String ERROR_RUNNABLE_NULL = &quot;Argument 'runnable' must not be null&quot;;
     protected static final String ERROR_CALLABLE_NULL = &quot;Argument 'callable' must not be null&quot;;
 <span class="fc" id="L42">    private static final Thread.UncaughtExceptionHandler UNCAUGHT_EXCEPTION_HANDLER = new GriffonExceptionHandler();</span>
 
@@ -48,7 +48,7 @@ import static java.util.Objects.requireNonNull;
 
     @Inject
     public void setExecutorServiceManager(@Nonnull ExecutorServiceManager executorServiceManager) {
-<span class="fc" id="L51">        requireNonNull(executorServiceManager, &quot;Argument 'executorServiceManager' must not be bull&quot;);</span>
+<span class="fc" id="L51">        requireNonNull(executorServiceManager, &quot;Argument 'executorServiceManager' must not be null&quot;);</span>
 <span class="pc bpc" id="L52" title="1 of 2 branches missed.">        if (this.executorServiceManager != null) {</span>
 <span class="nc" id="L53">            this.executorServiceManager.remove(executorService);</span>
         }
@@ -112,4 +112,4 @@ import static java.util.Objects.requireNonNull;
         }
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

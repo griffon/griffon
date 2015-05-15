@@ -234,7 +234,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     }
 
     public void setInjector(@Nonnull Injector&lt;?&gt; injector) {
-<span class="fc" id="L237">        this.injector = requireNonNull(injector, &quot;Argument 'injector' must not be bull&quot;);</span>
+<span class="fc" id="L237">        this.injector = requireNonNull(injector, &quot;Argument 'injector' must not be null&quot;);</span>
 <span class="fc" id="L238">        this.injector.injectMembers(this);</span>
 <span class="fc" id="L239">        addShutdownHandler(getWindowManager());</span>
 <span class="fc" id="L240">        MVCGroupExceptionHandler.registerWith(this);</span>
@@ -405,4 +405,4 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 <span class="fc" id="L405">        getEventRouter().publishEvent(event.getName(), args);</span>
 <span class="fc" id="L406">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

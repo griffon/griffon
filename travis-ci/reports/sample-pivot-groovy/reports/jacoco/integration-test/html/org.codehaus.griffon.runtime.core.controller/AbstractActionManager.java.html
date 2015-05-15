@@ -98,7 +98,7 @@ public abstract class AbstractActionManager implements ActionManager {
     @Nullable
     private static Method findActionAsMethod(@Nonnull GriffonController controller, @Nonnull String actionName) {
 <span class="pc bpc" id="L100" title="1 of 2 branches missed.">        for (Method method : controller.getClass().getMethods()) {</span>
-<span class="fc bfc" id="L101" title="All 2 branches covered.">            if (actionName.equals(method.getName()) &amp;&amp;</span>
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">            if (actionName.equals(method.getName()) &amp;&amp;</span>
 <span class="pc bpc" id="L102" title="1 of 2 branches missed.">                isPublic(method.getModifiers()) &amp;&amp;</span>
 <span class="pc bpc" id="L103" title="1 of 2 branches missed.">                !isStatic(method.getModifiers()) &amp;&amp;</span>
 <span class="pc bpc" id="L104" title="1 of 2 branches missed.">                method.getReturnType() == Void.TYPE) {</span>
@@ -567,4 +567,4 @@ public abstract class AbstractActionManager implements ActionManager {
         }
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

@@ -697,10 +697,10 @@ import java.util.WeakHashMap;
         Class[] parameterTypes) {
 
         try {
-<span class="nc" id="L700">            MethodDescriptor md = new MethodDescriptor(clazz, methodName, parameterTypes, true);</span>
+<span class="fc" id="L700">            MethodDescriptor md = new MethodDescriptor(clazz, methodName, parameterTypes, true);</span>
             // Check the cache first
-<span class="nc" id="L702">            Method method = getCachedMethod(md);</span>
-<span class="nc bnc" id="L703" title="All 2 branches missed.">            if (method != null) {</span>
+<span class="fc" id="L702">            Method method = getCachedMethod(md);</span>
+<span class="pc bpc" id="L703" title="1 of 2 branches missed.">            if (method != null) {</span>
 <span class="nc" id="L704">                return method;</span>
             }
 
@@ -1266,16 +1266,16 @@ import java.util.WeakHashMap;
          * @return true, if the object describes the same Method.
          */
         public boolean equals(Object obj) {
-<span class="nc bnc" id="L1269" title="All 2 branches missed.">            if (!(obj instanceof MethodDescriptor)) {</span>
+<span class="pc bpc" id="L1269" title="1 of 2 branches missed.">            if (!(obj instanceof MethodDescriptor)) {</span>
 <span class="nc" id="L1270">                return false;</span>
             }
-<span class="nc" id="L1272">            MethodDescriptor md = (MethodDescriptor) obj;</span>
+<span class="fc" id="L1272">            MethodDescriptor md = (MethodDescriptor) obj;</span>
 
-<span class="nc bnc" id="L1274" title="All 2 branches missed.">            return (</span>
+<span class="pc bpc" id="L1274" title="1 of 2 branches missed.">            return (</span>
                 exact == md.exact &amp;&amp;
 <span class="nc bnc" id="L1276" title="All 2 branches missed.">                    methodName.equals(md.methodName) &amp;&amp;</span>
 <span class="nc bnc" id="L1277" title="All 2 branches missed.">                    cls.equals(md.cls) &amp;&amp;</span>
-<span class="nc bnc" id="L1278" title="All 2 branches missed.">                    java.util.Arrays.equals(paramTypes, md.paramTypes)</span>
+<span class="pc bnc" id="L1278" title="All 2 branches missed.">                    java.util.Arrays.equals(paramTypes, md.paramTypes)</span>
             );
         }
 
@@ -1292,4 +1292,4 @@ import java.util.WeakHashMap;
         }
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.3.201502191951</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
