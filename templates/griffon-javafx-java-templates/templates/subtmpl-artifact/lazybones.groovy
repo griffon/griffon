@@ -32,6 +32,16 @@ while (!className) {
     className = ask("Define value for 'class' name: ", null, "class")?.capitalize()
 }
 
+uncapitalize = { String str ->
+    if (!str) return str
+    str = str.trim()
+    if (str.length() == 1) {
+        str.toLowerCase()
+    } else {
+        str[0].toLowerCase() + str[1..-1]
+    }
+}
+
 processArtifact = { artifactClass, artifactTemplate, artifactType, artifactPath ->
     props.project_class_name = artifactClass
     String suffix = artifactTemplate.capitalize()
@@ -62,6 +72,26 @@ processArtifact = { artifactClass, artifactTemplate, artifactType, artifactPath 
     } else {
         FileUtils.moveFile(new File(templateDir, templateName), destFile)
         println "Created new artifact ${FilenameUtils.normalize(destFile.path)}"
+    }
+
+    if (artifactTemplate == 'View') {
+        templateName = artifactType + '.fxml'
+        processTemplates(templateName, props)
+        filename = uncapitalize(props.project_class_name) + '.fxml'
+        destFile = new File(projectDir, concat(concat('griffon-app/resources', packagePath), filename))
+        destFile.parentFile.mkdirs()
+
+        if (destFile.exists()) {
+            def overwrite = ask("Overwrite ${destFile.absolutePath} [yes]", true, 'overwrite')
+            if (overwrite in [true, 'yes', 'y', 'Y', 'true']) {
+                destFile.delete()
+                FileUtils.moveFile(new File(templateDir, templateName), destFile)
+                println "Created new artifact ${FilenameUtils.normalize(destFile.path)}"
+            }
+        } else {
+            FileUtils.moveFile(new File(templateDir, templateName), destFile)
+            println "Created new artifact ${FilenameUtils.normalize(destFile.path)}"
+        }
     }
 }
 
