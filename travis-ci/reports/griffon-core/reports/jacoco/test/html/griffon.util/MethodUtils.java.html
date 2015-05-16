@@ -1266,16 +1266,16 @@ import java.util.WeakHashMap;
          * @return true, if the object describes the same Method.
          */
         public boolean equals(Object obj) {
-<span class="pc bpc" id="L1269" title="1 of 2 branches missed.">            if (!(obj instanceof MethodDescriptor)) {</span>
+<span class="nc bnc" id="L1269" title="All 2 branches missed.">            if (!(obj instanceof MethodDescriptor)) {</span>
 <span class="nc" id="L1270">                return false;</span>
             }
-<span class="fc" id="L1272">            MethodDescriptor md = (MethodDescriptor) obj;</span>
+<span class="nc" id="L1272">            MethodDescriptor md = (MethodDescriptor) obj;</span>
 
-<span class="pc bpc" id="L1274" title="1 of 2 branches missed.">            return (</span>
+<span class="nc bnc" id="L1274" title="All 2 branches missed.">            return (</span>
                 exact == md.exact &amp;&amp;
 <span class="nc bnc" id="L1276" title="All 2 branches missed.">                    methodName.equals(md.methodName) &amp;&amp;</span>
 <span class="nc bnc" id="L1277" title="All 2 branches missed.">                    cls.equals(md.cls) &amp;&amp;</span>
-<span class="pc bnc" id="L1278" title="All 2 branches missed.">                    java.util.Arrays.equals(paramTypes, md.paramTypes)</span>
+<span class="nc bnc" id="L1278" title="All 2 branches missed.">                    java.util.Arrays.equals(paramTypes, md.paramTypes)</span>
             );
         }
 
