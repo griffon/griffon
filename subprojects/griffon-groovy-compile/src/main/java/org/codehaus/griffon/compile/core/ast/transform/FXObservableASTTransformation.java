@@ -78,9 +78,9 @@ import static org.codehaus.groovy.ast.ClassHelper.MAP_TYPE;
 
 /**
  * Handles generation of code for the {@code @FXObservable}
- * <p/>
+ * <p>
  * Generally, it adds (if needed) a javafx.beans.property.Property type
- * <p/>
+ * <p>
  * It also generates the setter and getter and wires the them through the
  * javafx.beans.property.Property.
  *
@@ -160,7 +160,7 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
      * Convenience method to see if an annotated node is {@code @FXObservable}.
      *
      * @param node the node to check
-     * @return true if the node is bindable
+     * @return true if the node is observable
      */
     public static boolean hasFXObservableAnnotation(AnnotatedNode node) {
         for (AnnotationNode annotation : node.getAnnotations()) {
@@ -257,7 +257,7 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
      * getter/setter methods for accessing the original (now synthetic) Groovy property.  For
      * example, if the original property was "String firstName" then these three methods would
      * be generated:
-     * <p/>
+     * <p>
      * public String getFirstName()
      * public void setFirstName(String value)
      * public StringProperty firstNameProperty()
@@ -337,15 +337,15 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
 
         // For the ObjectProperty, we need to add the generic type to it.
         if (newType == null) {
-            if (origType.equals(OBSERVABLE_LIST_CNODE) || origType.declaresInterface(OBSERVABLE_LIST_CNODE)) {
+            if (isTypeCompatible(ClassHelper.LIST_TYPE, origType) || isTypeCompatible(OBSERVABLE_LIST_CNODE, origType)) {
                 newType = makeClassSafe(SIMPLE_LIST_PROPERTY_CNODE);
                 GenericsType[] genericTypes = origType.getGenericsTypes();
                 newType.setGenericsTypes(genericTypes);
-            } else if (origType.equals(OBSERVABLE_MAP_CNODE) || origType.declaresInterface(OBSERVABLE_MAP_CNODE)) {
+            } else if (isTypeCompatible(ClassHelper.MAP_TYPE, origType) || isTypeCompatible(OBSERVABLE_MAP_CNODE, origType)) {
                 newType = makeClassSafe(SIMPLE_MAP_PROPERTY_CNODE);
                 GenericsType[] genericTypes = origType.getGenericsTypes();
                 newType.setGenericsTypes(genericTypes);
-            } else if (origType.equals(OBSERVABLE_SET_CNODE) || origType.declaresInterface(OBSERVABLE_SET_CNODE)) {
+            } else if (isTypeCompatible(SET_TYPE, origType) || isTypeCompatible(OBSERVABLE_SET_CNODE, origType)) {
                 newType = makeClassSafe(SIMPLE_SET_PROPERTY_CNODE);
                 GenericsType[] genericTypes = origType.getGenericsTypes();
                 newType.setGenericsTypes(genericTypes);
@@ -363,9 +363,13 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
         return new PropertyNode(fieldNode, orig.getModifiers(), orig.getGetterBlock(), orig.getSetterBlock());
     }
 
+    private boolean isTypeCompatible(ClassNode base, ClassNode target) {
+        return target.equals(base) || target.implementsInterface(base) || target.declaresInterface(base);
+    }
+
     /**
      * Creates a setter method and adds it to the declaring class.  The setter has the form:
-     * <p/>
+     * <p>
      * void <setter>(<type> fieldName)
      *
      * @param declaringClass The class to which the method is added
@@ -389,7 +393,7 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
     /**
      * If the setter already exists, this method should wrap it with our code and then a call to the original
      * setter.
-     * <p/>
+     * <p>
      * TODO: Not implemented yet
      *
      * @param classNode    The declaring class to which the method will be added
@@ -421,7 +425,7 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
 
     /**
      * If the getter already exists, this method should wrap it with our code.
-     * <p/>
+     * <p>
      * TODO: Not implemented yet -- what to do with the returned value from the original getter?
      *
      * @param classNode    The declaring class to which the method will be added
@@ -437,7 +441,7 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
     /**
      * Creates the body of a property access method that returns the JavaFX *Property instance.  If
      * the original property was "String firstName" then the generated code would be:
-     * <p/>
+     * <p>
      * if (firstNameProperty == null) {
      * firstNameProperty = new javafx.beans.property.StringProperty()
      * }
@@ -587,7 +591,7 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
     /**
      * Creates the body of a setter method for the original property that is actually backed by a
      * JavaFX *Property instance:
-     * <p/>
+     * <p>
      * Object $property = this.someProperty()
      * $property.setValue(value)
      *
@@ -610,7 +614,7 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
     /**
      * Creates the body of a getter method for the original property that is actually backed by a
      * JavaFX *Property instance:
-     * <p/>
+     * <p>
      * Object $property = this.someProperty()
      * return $property.getValue()
      *
