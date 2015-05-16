@@ -51,7 +51,7 @@ processArtifact = { artifactClass, artifactTemplate, artifactType, artifactPath 
     destFile.parentFile.mkdirs()
 
     if (destFile.exists()) {
-        def overwrite = ask("Overwrite ${destFile.absolutePath} [yes]", true, 'overwrite')
+        def overwrite = ask("Overwrite ${destFile.absolutePath} [yes]", 'true', 'overwrite')
         if (overwrite in [true, 'yes', 'y', 'Y', 'true']) {
             destFile.delete()
             FileUtils.moveFile(new File(templateDir, templateName), destFile)

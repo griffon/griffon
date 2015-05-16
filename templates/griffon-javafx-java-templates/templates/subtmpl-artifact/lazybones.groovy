@@ -63,7 +63,7 @@ processArtifact = { artifactClass, artifactTemplate, artifactType, artifactPath 
     destFile.parentFile.mkdirs()
 
     if (destFile.exists()) {
-        def overwrite = ask("Overwrite ${destFile.absolutePath} [yes]", true, 'overwrite')
+        def overwrite = ask("Overwrite ${destFile.absolutePath} [yes]", 'true', 'overwrite')
         if (overwrite in [true, 'yes', 'y', 'Y', 'true']) {
             destFile.delete()
             FileUtils.moveFile(new File(templateDir, templateName), destFile)
@@ -75,14 +75,14 @@ processArtifact = { artifactClass, artifactTemplate, artifactType, artifactPath 
     }
 
     if (artifactTemplate == 'View') {
-        templateName = artifactType + '.fxml'
+        templateName = 'view.fxml'
         processTemplates(templateName, props)
         filename = uncapitalize(props.project_class_name) + '.fxml'
         destFile = new File(projectDir, concat(concat('griffon-app/resources', packagePath), filename))
         destFile.parentFile.mkdirs()
 
         if (destFile.exists()) {
-            def overwrite = ask("Overwrite ${destFile.absolutePath} [yes]", true, 'overwrite')
+            def overwrite = ask("Overwrite ${destFile.absolutePath} [yes]", 'true', 'overwrite')
             if (overwrite in [true, 'yes', 'y', 'Y', 'true']) {
                 destFile.delete()
                 FileUtils.moveFile(new File(templateDir, templateName), destFile)
