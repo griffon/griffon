@@ -2,9 +2,9 @@
   <header>
     <project>griffon-javafx-2.3.0-SNAPSHOT</project>
     <summary>
-      <info>41</info>
+      <info>59</info>
       <warnings>1</warnings>
-      <error>28</error>
+      <error>29</error>
     </summary>
   </header>
   <differences>
@@ -117,6 +117,48 @@
       <message>Method 'protected void afterStart()' has been added</message>
     </difference>
     <difference>
+      <classname>griffon.javafx.editors.GraphicPropertyEditor</classname>
+      <severity>info</severity>
+      <identifier>8000</identifier>
+      <message>Class griffon.javafx.editors.GraphicPropertyEditor added</message>
+    </difference>
+    <difference>
+      <classname>griffon.javafx.support.JavaFXAction</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public javafx.scene.Node getGraphic()' has been added</message>
+    </difference>
+    <difference>
+      <classname>griffon.javafx.support.JavaFXAction</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public javafx.scene.image.Image getImage()' has been added</message>
+    </difference>
+    <difference>
+      <classname>griffon.javafx.support.JavaFXAction</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public javafx.beans.property.ObjectProperty graphicProperty()' has been added</message>
+    </difference>
+    <difference>
+      <classname>griffon.javafx.support.JavaFXAction</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public javafx.beans.property.ObjectProperty imageProperty()' has been added</message>
+    </difference>
+    <difference>
+      <classname>griffon.javafx.support.JavaFXAction</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public void setGraphic(javafx.scene.Node)' has been added</message>
+    </difference>
+    <difference>
+      <classname>griffon.javafx.support.JavaFXAction</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public void setImage(javafx.scene.image.Image)' has been added</message>
+    </difference>
+    <difference>
       <classname>griffon.javafx.support.JavaFXUtils</classname>
       <severity>info</severity>
       <identifier>7011</identifier>
@@ -139,6 +181,36 @@
       <severity>info</severity>
       <identifier>7010</identifier>
       <message>Accessibility of method 'private javafx.scene.Node resolveIcon(java.lang.String)' has been increased from private to public</message>
+    </difference>
+    <difference>
+      <classname>griffon.javafx.support.JavaFXUtils</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public void setGraphic(javafx.scene.control.Labeled, javafx.scene.image.Image)' has been added</message>
+    </difference>
+    <difference>
+      <classname>griffon.javafx.support.JavaFXUtils</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public void setGraphic(javafx.scene.control.MenuItem, javafx.scene.image.Image)' has been added</message>
+    </difference>
+    <difference>
+      <classname>griffon.javafx.support.JavaFXUtils</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public void setGraphic(javafx.scene.control.Labeled, javafx.scene.Node)' has been added</message>
+    </difference>
+    <difference>
+      <classname>griffon.javafx.support.JavaFXUtils</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public void setGraphic(javafx.scene.control.MenuItem, javafx.scene.Node)' has been added</message>
+    </difference>
+    <difference>
+      <classname>griffon.javafx.support.JavaFXUtils</classname>
+      <severity>error</severity>
+      <identifier>7005</identifier>
+      <message>Parameter 1 of 'public void setIcon(javafx.scene.control.ButtonBase, java.lang.String)' has changed its type to javafx.scene.control.Labeled</message>
     </difference>
     <difference>
       <classname>griffon.util.GriffonClassUtils</classname>
@@ -265,6 +337,12 @@
       <severity>error</severity>
       <identifier>7002</identifier>
       <message>Method 'public void onShutdown(griffon.core.GriffonApplication)' has been removed</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'protected griffon.core.controller.Action actionFor(java.lang.String)' has been added</message>
     </difference>
     <difference>
       <classname>org.codehaus.griffon.runtime.core.artifact.DefaultArtifactManager</classname>
@@ -427,6 +505,42 @@
       <severity>info</severity>
       <identifier>7011</identifier>
       <message>Method 'public int indexOf(java.lang.Object)' has been added</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.javafx.controller.JavaFXGriffonControllerAction</classname>
+      <severity>info</severity>
+      <identifier>6000</identifier>
+      <message>Added public field KEY_GRAPHIC</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.javafx.controller.JavaFXGriffonControllerAction</classname>
+      <severity>info</severity>
+      <identifier>6000</identifier>
+      <message>Added public field KEY_IMAGE</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.javafx.controller.JavaFXGriffonControllerAction</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public javafx.scene.Node getGraphic()' has been added</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.javafx.controller.JavaFXGriffonControllerAction</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public javafx.scene.image.Image getImage()' has been added</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.javafx.controller.JavaFXGriffonControllerAction</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public void setGraphic(javafx.scene.Node)' has been added</message>
+    </difference>
+    <difference>
+      <classname>org.codehaus.griffon.runtime.javafx.controller.JavaFXGriffonControllerAction</classname>
+      <severity>info</severity>
+      <identifier>7011</identifier>
+      <message>Method 'public void setImage(java.lang.String)' has been added</message>
     </difference>
   </differences>
 </diffreport>
