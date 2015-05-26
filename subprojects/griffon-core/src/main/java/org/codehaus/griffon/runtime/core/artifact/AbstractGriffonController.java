@@ -18,9 +18,11 @@ package org.codehaus.griffon.runtime.core.artifact;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonControllerClass;
+import griffon.core.controller.Action;
 import griffon.core.controller.ActionManager;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
@@ -61,5 +63,10 @@ public abstract class AbstractGriffonController extends AbstractGriffonMvcArtifa
 
     public void invokeAction(@Nonnull String name, Object... args) {
         getActionManager().invokeAction(this, requireNonBlank(name, "Argument 'name' must not be blank"), args);
+    }
+
+    @Nullable
+    protected Action actionFor(@Nonnull String actionName) {
+        return getActionManager().actionFor(this, actionName);
     }
 }
