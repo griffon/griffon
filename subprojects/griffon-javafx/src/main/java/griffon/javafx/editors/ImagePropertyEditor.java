@@ -18,9 +18,12 @@ package griffon.javafx.editors;
 import griffon.core.editors.AbstractPropertyEditor;
 import griffon.metadata.PropertyEditorFor;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.io.File;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -55,6 +58,8 @@ public class ImagePropertyEditor extends AbstractPropertyEditor {
     private void handleAsString(String str) {
         if (isBlank(str)) {
             super.setValueInternal(null);
+        } else if (str.contains("|")) {
+            handleAsClassWithArg(str);
         } else {
             handleAsURL(getClass().getClassLoader().getResource(str));
         }
@@ -89,6 +94,40 @@ public class ImagePropertyEditor extends AbstractPropertyEditor {
             super.setValueInternal(new Image(stream));
         } catch (Exception e) {
             throw illegalValue(stream, URL.class, e);
+        }
+    }
+
+    private void handleAsClassWithArg(String str) {
+        String[] args = str.split("\\|");
+        if (args.length == 2) {
+            Class<?> iconClass = null;
+            try {
+                iconClass = ImagePropertyEditor.class.getClassLoader().loadClass(args[0]);
+            } catch (ClassNotFoundException e) {
+                throw illegalValue(str, Image.class, e);
+            }
+
+            Constructor<?> constructor = null;
+            try {
+                constructor = iconClass.getConstructor(String.class);
+            } catch (NoSuchMethodException e) {
+                throw illegalValue(str, Image.class, e);
+            }
+
+            try {
+                Object o = constructor.newInstance(args[1]);
+                if (o instanceof Image) {
+                    super.setValueInternal(o);
+                } else if (o instanceof ImageView) {
+                    super.setValueInternal(((ImageView) o).getImage());
+                } else {
+                    throw illegalValue(str, Image.class);
+                }
+            } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
+                throw illegalValue(str, Image.class, e);
+            }
+        } else {
+            throw illegalValue(str, Image.class);
         }
     }
 }

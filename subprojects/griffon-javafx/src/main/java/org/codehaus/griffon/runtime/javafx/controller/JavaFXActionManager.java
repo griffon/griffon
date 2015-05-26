@@ -79,6 +79,14 @@ public class JavaFXActionManager extends AbstractActionManager {
             javafxAction.setIcon(rsIcon);
         }
 
+        String rsImage = msg(keyPrefix, normalizeNamed, "image", "");
+        if (!isBlank(rsImage)) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace(keyPrefix + normalizeNamed + ".image = " + rsImage);
+            }
+            javafxAction.setImage(rsImage);
+        }
+
         String rsEnabled = msg(keyPrefix, normalizeNamed, "enabled", "true");
         if (!isBlank(rsEnabled)) {
             if (LOG.isTraceEnabled()) {

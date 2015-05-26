@@ -31,6 +31,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.Control;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -57,6 +58,7 @@ import static griffon.util.GriffonClassUtils.invokeExactInstanceMethod;
 import static griffon.util.GriffonClassUtils.invokeInstanceMethod;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -169,6 +171,26 @@ public final class JavaFXUtils {
             setIcon(control, action.getIcon());
         }
 
+        action.imageProperty().addListener(new ChangeListener<Image>() {
+            @Override
+            public void changed(ObservableValue<? extends Image> observableValue, Image oldValue, Image newValue) {
+                setGraphic(control, newValue);
+            }
+        });
+        if (!isNull(action.getImage())) {
+            setGraphic(control, action.getImage());
+        }
+
+        action.graphicProperty().addListener(new ChangeListener<Node>() {
+            @Override
+            public void changed(ObservableValue<? extends Node> observableValue, Node oldValue, Node newValue) {
+                setGraphic(control, newValue);
+            }
+        });
+        if (!isNull(action.getGraphic())) {
+            setGraphic(control, action.getGraphic());
+        }
+
         action.enabledProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
@@ -239,7 +261,7 @@ public final class JavaFXUtils {
         tooltip.setText(text);
     }
 
-    public static void setIcon(@Nonnull ButtonBase control, @Nonnull String iconUrl) {
+    public static void setIcon(@Nonnull Labeled control, @Nonnull String iconUrl) {
         requireNonNull(control, ERROR_CONTROL_NULL);
         requireNonBlank(iconUrl, ERROR_ICON_BLANK);
 
@@ -256,6 +278,48 @@ public final class JavaFXUtils {
         Node graphicNode = resolveIcon(iconUrl);
         if (graphicNode != null) {
             control.graphicProperty().set(graphicNode);
+        }
+    }
+
+    public static void setGraphic(@Nonnull Labeled control, @Nullable Image graphic) {
+        requireNonNull(control, ERROR_CONTROL_NULL);
+
+        if (graphic != null) {
+            Node graphicNode = new ImageView(graphic);
+            control.graphicProperty().set(graphicNode);
+        } else {
+            control.graphicProperty().set(null);
+        }
+    }
+
+    public static void setGraphic(@Nonnull MenuItem control, @Nullable Image graphic) {
+        requireNonNull(control, ERROR_CONTROL_NULL);
+
+        if (graphic != null) {
+            Node graphicNode = new ImageView(graphic);
+            control.graphicProperty().set(graphicNode);
+        } else {
+            control.graphicProperty().set(null);
+        }
+    }
+
+    public static void setGraphic(@Nonnull Labeled control, @Nullable Node graphic) {
+        requireNonNull(control, ERROR_CONTROL_NULL);
+
+        if (graphic != null) {
+            control.graphicProperty().set(graphic);
+        } else {
+            control.graphicProperty().set(null);
+        }
+    }
+
+    public static void setGraphic(@Nonnull MenuItem control, @Nullable Node graphic) {
+        requireNonNull(control, ERROR_CONTROL_NULL);
+
+        if (graphic != null) {
+            control.graphicProperty().set(graphic);
+        } else {
+            control.graphicProperty().set(null);
         }
     }
 

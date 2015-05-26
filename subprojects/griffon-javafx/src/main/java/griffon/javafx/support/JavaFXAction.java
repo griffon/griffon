@@ -23,6 +23,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCombination;
 
 /**
@@ -145,6 +147,44 @@ public class JavaFXAction {
 
     public String getIcon() {
         return icon == null ? null : iconProperty().get();
+    }
+
+    // -- image
+
+    private ObjectProperty<Image> image;
+
+    public final ObjectProperty<Image> imageProperty() {
+        if (image == null) {
+            image = new SimpleObjectProperty<>(this, "image");
+        }
+        return image;
+    }
+
+    public void setImage(Image image) {
+        imageProperty().set(image);
+    }
+
+    public Image getImage() {
+        return image == null ? null : imageProperty().get();
+    }
+
+    // -- graphic
+
+    private ObjectProperty<Node> graphic;
+
+    public final ObjectProperty<Node> graphicProperty() {
+        if (graphic == null) {
+            graphic = new SimpleObjectProperty<>(this, "graphic");
+        }
+        return graphic;
+    }
+
+    public void setGraphic(Node graphic) {
+        graphicProperty().set(graphic);
+    }
+
+    public Node getGraphic() {
+        return graphic == null ? null : graphicProperty().get();
     }
 
     // -- selected

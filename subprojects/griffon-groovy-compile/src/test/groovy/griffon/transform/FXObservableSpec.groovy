@@ -71,6 +71,7 @@ class FXObservableSpec extends Specification {
             Double theDouble
             String theString
             Date theDate
+            Object theObject
         }
         new Bean()
         '''
@@ -88,6 +89,7 @@ class FXObservableSpec extends Specification {
         bean.theDoubleProperty() instanceof DoubleProperty
         bean.theStringProperty() instanceof StringProperty
         bean.theDateProperty() instanceof ObjectProperty
+        bean.theObjectProperty() instanceof ObjectProperty
     }
 
     void "Observable collection properties"() {

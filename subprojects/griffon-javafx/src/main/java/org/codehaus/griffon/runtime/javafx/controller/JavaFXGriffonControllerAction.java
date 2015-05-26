@@ -21,15 +21,20 @@ import griffon.core.threading.UIThreadManager;
 import griffon.javafx.support.JavaFXAction;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
+import javafx.scene.image.Image;
 import org.codehaus.griffon.runtime.core.controller.AbstractAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyEditor;
 
+import static griffon.core.editors.PropertyEditorResolver.findEditor;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.TypeUtils.castToBoolean;
+import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -38,11 +43,15 @@ import static java.util.Objects.requireNonNull;
 public class JavaFXGriffonControllerAction extends AbstractAction {
     public static final String KEY_DESCRIPTION = "description";
     public static final String KEY_ICON = "icon";
+    public static final String KEY_IMAGE = "image";
+    public static final String KEY_GRAPHIC = "graphic";
     public static final String KEY_SELECTED = "selected";
     public static final String KEY_ACCELERATOR = "accelerator";
     private final JavaFXAction toolkitAction;
     private String description;
     private String icon;
+    private String image;
+    private Node graphic;
     private String accelerator;
     private boolean selected;
 
@@ -73,8 +82,14 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
                             if (!isBlank(accelerator))
                                 toolkitAction.setAccelerator(accelerator);
                         } else if (KEY_ICON.equals(evt.getPropertyName())) {
-                            final String icon = (String) evt.getNewValue();
+                            String icon = (String) evt.getNewValue();
                             if (!isBlank(icon)) toolkitAction.setIcon(icon);
+                        } else if (KEY_IMAGE.equals(evt.getPropertyName())) {
+                            Image image = (Image) evt.getNewValue();
+                            if (!isNull(image)) toolkitAction.setImage(image);
+                        } else if (KEY_GRAPHIC.equals(evt.getPropertyName())) {
+                            Node graphic = (Node) evt.getNewValue();
+                            if (!isNull(graphic)) toolkitAction.setGraphic(graphic);
                         }
                     }
                 });
@@ -117,6 +132,26 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
         firePropertyChange(KEY_ICON, this.icon, this.icon = icon);
     }
 
+    @Nullable
+    public Image getImage() {
+        PropertyEditor editor = findEditor(Image.class);
+        editor.setValue(image);
+        return (Image) editor.getValue();
+    }
+
+    public void setImage(@Nullable String image) {
+        firePropertyChange(KEY_IMAGE, this.image, this.image = image);
+    }
+
+    @Nullable
+    public Node getGraphic() {
+        return graphic;
+    }
+
+    public void setGraphic(@Nullable Node graphic) {
+        firePropertyChange(KEY_ICON, this.graphic, this.graphic = graphic);
+    }
+
     @Nonnull
     public Object getToolkitAction() {
         return toolkitAction;
@@ -140,5 +175,7 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
         if (!isBlank(accelerator)) toolkitAction.setAccelerator(accelerator);
         String icon = getIcon();
         if (!isBlank(icon)) toolkitAction.setIcon(icon);
+        if (!isNull(getImage())) toolkitAction.setImage(getImage());
+        if (!isNull(getGraphic())) toolkitAction.setGraphic(getGraphic());
     }
 }

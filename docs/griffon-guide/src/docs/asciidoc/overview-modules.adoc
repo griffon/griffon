@@ -154,7 +154,7 @@ bind(Calculator.class)
 
 == The Guice Injector
 
-The dependency `griffon-guide-{griffon-version}` uses {link_google_guice} to implement the JSR-330 API
+The dependency `griffon-guice-{griffon-version}` uses {link_google_guice} to implement the JSR-330 API
 that `griffon-core-{griffon-version}` requires. As an additional feature this dependency can automatically
 load Guice modules during startup. The only requirement is a metadata file that defines the module class
 that should be loaded.
@@ -172,9 +172,9 @@ import org.kordamp.jipsy.ServiceProviderFor;
 @ServiceProviderFor(Module.class)
 public class MyQuartzModule extends QuartzModule {
     @Override
-   protected void schedule() {
-       scheduleJob(MyJobClass.class);
-   }
+    protected void schedule() {
+        scheduleJob(MyJobClass.class);
+    }
 }
 ----
 
