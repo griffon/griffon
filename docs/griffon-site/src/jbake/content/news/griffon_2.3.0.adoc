@@ -1,6 +1,6 @@
 = Griffon 2.3.0 Released
 Andres Almiray
-2015-06-01
+2015-06-03
 :jbake-type: post
 :jbake-status: published
 :category: news
@@ -14,6 +14,15 @@ The Griffon team is happy to announce the release of Griffon 2.3.0!
 
 The following list summarizes the changes brought by this release:
 
+ * Upgraded to Groovy 2.4.3 and Guice 4.0.
+ * JavaFX support received lots up updates:
+ ** `@FXObservable` AST transformation can handle List/Map/Set properties correctly.
+ ** new AST transformations: `@ChangeListener` and `@InvalidationListener`.
+ ** Integration test support via `GriffonTestFXRule`.
+ ** Functional test support via `GriffonTestFXClassRule`.
+ ** Builder actions can be applied to comboBox nodes.
+ * Threading methods are now available on builder nodes, like in the old days.
+ * Allow blank messages/resources to be formatted/resolved.
 
 A more detailed description of the changes and compatibility issues can be found at the link:/releasenotes/griffon_2.3.0.html[release notes, window="_blank"].
 

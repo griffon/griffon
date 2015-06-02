@@ -1,6 +1,6 @@
 = Griffon 2.3.0 Release Notes
 Andres Almiray
-2015-06-01
+2015-06-03
 :jbake-type: post
 :jbake-status: published
 :category: releasenotes
@@ -20,8 +20,41 @@ The following dependencies have been upgraded
 
 === Runtime
 
+==== Testing
+
+link:https://github.com/testfx/testfx[TestFX, window="_blank"] is the chosen library for testing JavaFX UIs. There are two modes
+of operation: integration and functional. The difference strives in that integration allows mocking and bindings to be overridden
+(like in unit mode) and the application instances is created for every single test; in functional mode no mocking should be used
+and no bindings can be overridden, also the application instance is created once per testcase.
+
+==== Resources and Messages
+
+It's now possible to define an empty value for a resource or a message key. This is important to configure buttons and menus
+that should have icons but no text.
+
+==== Builder Updates
+
+Threading methods, such as `runInsideUISync` are now available as explicit methods on builder instances. This enables easier migration
+from Griffon 1.x where these methods were also available to View scripts. The JavaFX builder supports the construction of comboBox
+nodes using an action as an argument, same way as buttons and menus.
+
+=== Buildtime
+
+==== AST Transformations
+
+JavaFX support adds two new AST transformations: `@ChangeListener` and `@InvalidationListener`. They enable the registration
+of `ChangeListener` and `InvalidationListener` on JavaFX properties, much in the same way as `@PropertyListener` works
+with `PropertyChangeListener` and `PropertyChangeEvent`.
+
+==== FXML Templates
+
+The `griffon-javafx-java` template can now generate FXML files when a `view` artifact is selected.
 
 === Compatibility
+
+ * Usage of `CallableWithArgs` in events has been deprecated in favor of `RunnableWithArgs`.
+ * The `WindowShown` and `WindowHidden` events will send 2 arguments now: the name of the window and the window reference.
+ * The injector API no longer requires a nested injector.
 
 Full binary compatibility report between Griffon 2.2.0 and 2.3.0 can be found
 link:../reports/2.3.0/compatibility-report.html[here].
