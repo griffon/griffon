@@ -79,21 +79,29 @@ public class JavaFXActionManager extends AbstractActionManager {
 <span class="nc" id="L79">            javafxAction.setIcon(rsIcon);</span>
         }
 
-<span class="nc" id="L82">        String rsEnabled = msg(keyPrefix, normalizeNamed, &quot;enabled&quot;, &quot;true&quot;);</span>
-<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (!isBlank(rsEnabled)) {</span>
+<span class="nc" id="L82">        String rsImage = msg(keyPrefix, normalizeNamed, &quot;image&quot;, &quot;&quot;);</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (!isBlank(rsImage)) {</span>
 <span class="nc bnc" id="L84" title="All 2 branches missed.">            if (LOG.isTraceEnabled()) {</span>
-<span class="nc" id="L85">                LOG.trace(keyPrefix + normalizeNamed + &quot;.enabled = &quot; + rsEnabled);</span>
+<span class="nc" id="L85">                LOG.trace(keyPrefix + normalizeNamed + &quot;.image = &quot; + rsImage);</span>
             }
-<span class="nc" id="L87">            javafxAction.setEnabled(castToBoolean(rsEnabled));</span>
+<span class="nc" id="L87">            javafxAction.setImage(rsImage);</span>
         }
 
-<span class="nc" id="L90">        String rsSelected = msg(keyPrefix, normalizeNamed, &quot;selected&quot;, &quot;false&quot;);</span>
-<span class="nc bnc" id="L91" title="All 2 branches missed.">        if (!isBlank(rsSelected)) {</span>
+<span class="nc" id="L90">        String rsEnabled = msg(keyPrefix, normalizeNamed, &quot;enabled&quot;, &quot;true&quot;);</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        if (!isBlank(rsEnabled)) {</span>
 <span class="nc bnc" id="L92" title="All 2 branches missed.">            if (LOG.isTraceEnabled()) {</span>
-<span class="nc" id="L93">                LOG.trace(keyPrefix + normalizeNamed + &quot;.selected = &quot; + rsSelected);</span>
+<span class="nc" id="L93">                LOG.trace(keyPrefix + normalizeNamed + &quot;.enabled = &quot; + rsEnabled);</span>
             }
-<span class="nc" id="L95">            javafxAction.setSelected(castToBoolean(rsSelected));</span>
+<span class="nc" id="L95">            javafxAction.setEnabled(castToBoolean(rsEnabled));</span>
         }
-<span class="nc" id="L97">    }</span>
+
+<span class="nc" id="L98">        String rsSelected = msg(keyPrefix, normalizeNamed, &quot;selected&quot;, &quot;false&quot;);</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        if (!isBlank(rsSelected)) {</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">            if (LOG.isTraceEnabled()) {</span>
+<span class="nc" id="L101">                LOG.trace(keyPrefix + normalizeNamed + &quot;.selected = &quot; + rsSelected);</span>
+            }
+<span class="nc" id="L103">            javafxAction.setSelected(castToBoolean(rsSelected));</span>
+        }
+<span class="nc" id="L105">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

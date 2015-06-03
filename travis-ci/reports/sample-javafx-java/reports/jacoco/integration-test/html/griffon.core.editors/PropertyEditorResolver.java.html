@@ -35,7 +35,7 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public final class PropertyEditorResolver {
-<span class="nc" id="L38">    private static final Logger LOG = LoggerFactory.getLogger(PropertyEditorResolver.class);</span>
+<span class="fc" id="L38">    private static final Logger LOG = LoggerFactory.getLogger(PropertyEditorResolver.class);</span>
 
 <span class="nc" id="L40">    private PropertyEditorResolver() {</span>
 
@@ -55,23 +55,23 @@ public final class PropertyEditorResolver {
     @Nonnull
     @SuppressWarnings(&quot;unchecked&quot;)
     public static PropertyEditor findEditor(@Nonnull Class&lt;?&gt; type) {
-<span class="nc" id="L58">        requireNonNull(type, &quot;Argument 'type' must not be  null&quot;);</span>
-<span class="nc" id="L59">        LOG.trace(&quot;Searching PropertyEditor for {}&quot;, type.getName());</span>
+<span class="fc" id="L58">        requireNonNull(type, &quot;Argument 'type' must not be  null&quot;);</span>
+<span class="fc" id="L59">        LOG.trace(&quot;Searching PropertyEditor for {}&quot;, type.getName());</span>
 
         PropertyEditor editor;
-<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (Enum.class.isAssignableFrom(type)) {</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        if (Enum.class.isAssignableFrom(type)) {</span>
 <span class="nc" id="L63">            editor = new EnumPropertyEditor();</span>
 <span class="nc" id="L64">            ((EnumPropertyEditor) editor).setEnumType((Class&lt;? extends Enum&lt;?&gt;&gt;) type);</span>
         } else {
-<span class="nc" id="L66">            editor = PropertyEditorManager.findEditor(type);</span>
+<span class="fc" id="L66">            editor = PropertyEditorManager.findEditor(type);</span>
         }
 
-<span class="nc bnc" id="L69" title="All 2 branches missed.">        if (editor == null) {</span>
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">        if (editor == null) {</span>
 <span class="nc" id="L70">            editor = new NoopPropertyEditor();</span>
         }
 
-<span class="nc" id="L73">        LOG.trace(&quot;PropertyEditor for {} is {}&quot;, type.getName(), editor.getClass().getName());</span>
-<span class="nc" id="L74">        return editor;</span>
+<span class="fc" id="L73">        LOG.trace(&quot;PropertyEditor for {} is {}&quot;, type.getName(), editor.getClass().getName());</span>
+<span class="fc" id="L74">        return editor;</span>
     }
 
 <span class="nc" id="L77">    private static final class NoopPropertyEditor extends PropertyEditorSupport {</span>

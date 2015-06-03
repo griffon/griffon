@@ -18,9 +18,11 @@ package org.codehaus.griffon.runtime.core.artifact;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonControllerClass;
+import griffon.core.controller.Action;
 import griffon.core.controller.ActionManager;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
@@ -32,9 +34,9 @@ import static griffon.util.GriffonNameUtils.requireNonBlank;
  * @since 2.0.0
  */
 public abstract class AbstractGriffonController extends AbstractGriffonMvcArtifact implements GriffonController {
-<span class="fc" id="L35">    public AbstractGriffonController() {</span>
+<span class="fc" id="L37">    public AbstractGriffonController() {</span>
 
-<span class="fc" id="L37">    }</span>
+<span class="fc" id="L39">    }</span>
 
     /**
      * Creates a new instance of this class.
@@ -45,22 +47,27 @@ public abstract class AbstractGriffonController extends AbstractGriffonMvcArtifa
     @Inject
     @Deprecated
     public AbstractGriffonController(@Nonnull GriffonApplication application) {
-<span class="nc" id="L48">        super(application);</span>
-<span class="nc" id="L49">    }</span>
+<span class="nc" id="L50">        super(application);</span>
+<span class="nc" id="L51">    }</span>
 
     @Nonnull
     @Override
     protected String getArtifactType() {
-<span class="fc" id="L54">        return GriffonControllerClass.TYPE;</span>
+<span class="fc" id="L56">        return GriffonControllerClass.TYPE;</span>
     }
 
     @Nonnull
     protected ActionManager getActionManager() {
-<span class="fc" id="L59">        return getApplication().getActionManager();</span>
+<span class="fc" id="L61">        return getApplication().getActionManager();</span>
     }
 
     public void invokeAction(@Nonnull String name, Object... args) {
-<span class="fc" id="L63">        getActionManager().invokeAction(this, requireNonBlank(name, &quot;Argument 'name' must not be blank&quot;), args);</span>
-<span class="fc" id="L64">    }</span>
+<span class="fc" id="L65">        getActionManager().invokeAction(this, requireNonBlank(name, &quot;Argument 'name' must not be blank&quot;), args);</span>
+<span class="fc" id="L66">    }</span>
+
+    @Nullable
+    protected Action actionFor(@Nonnull String actionName) {
+<span class="nc" id="L70">        return getActionManager().actionFor(this, actionName);</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

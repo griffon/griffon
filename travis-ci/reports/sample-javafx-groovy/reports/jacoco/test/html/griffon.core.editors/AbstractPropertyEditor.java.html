@@ -60,16 +60,16 @@ import static griffon.util.GriffonNameUtils.isBlank;
 
     @Override
     public void setValue(Object value) {
-<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (value instanceof CharSequence) {</span>
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">        if (value instanceof CharSequence) {</span>
 <span class="nc" id="L64">            setFormattedValue(String.valueOf(value));</span>
         } else {
-<span class="nc" id="L66">            setValueInternal(value);</span>
+<span class="fc" id="L66">            setValueInternal(value);</span>
         }
-<span class="nc" id="L68">    }</span>
+<span class="fc" id="L68">    }</span>
 
     protected void setValueInternal(Object value) {
-<span class="nc" id="L71">        super.setValue(value);</span>
-<span class="nc" id="L72">    }</span>
+<span class="fc" id="L71">        super.setValue(value);</span>
+<span class="fc" id="L72">    }</span>
 
     protected Object getValueInternal() {
 <span class="nc" id="L75">        return super.getValue();</span>
