@@ -1,6 +1,6 @@
 <!DOCTYPE html><html>
   <head>
-    <title>Binary Compatibility Report - griffon-core-test-2.3.0</title>
+    <title>Binary Compatibility Report - griffon-core-test-2.4.0-SNAPSHOT</title>
     <style>
                         body{margin:0;padding:0;font-family:sans-serif;font-size:12pt;}
                         body,a,a:visited{color:#303030;}
@@ -35,13 +35,13 @@
   </head>
   <body>
     <div id='content'>
-      <h1>Binary Compatibility Report - griffon-core-test-2.3.0</h1>
+      <h1>Binary Compatibility Report - griffon-core-test-2.4.0-SNAPSHOT</h1>
       <div id='summary'>
         <table>
           <tr>
             <td>
               <p class='error'>ERROR</p>
-              <div>12</div>
+              <div>0</div>
             </td>
             <td>
               <p class='warning'>WARNING</p>
@@ -49,7 +49,7 @@
             </td>
             <td>
               <p class='info'>INFO</p>
-              <div>14</div>
+              <div>0</div>
             </td>
           </tr>
         </table>
@@ -61,156 +61,7 @@
             <th>Results</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>griffon.core.RunnableWithArgs</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(8000): </span>Class griffon.core.RunnableWithArgs added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>griffon.core.artifact.ArtifactHandler</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='error'>ERROR(7006): </span>Return type of method 'public java.util.Collection initialize(java.lang.Class[])' has been changed to void
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>griffon.core.artifact.ArtifactManager</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='error'>ERROR(4001): </span>Removed griffon.core.ShutdownHandler from the set of implemented interfaces
-                </li>
-                <li>
-                  <span class='error'>ERROR(7004): </span>In method 'public void loadArtifactMetadata(griffon.core.injection.Injector)' the number of arguments has changed
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>griffon.core.event.EventPublisher</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(7007): </span>Method 'public void addEventListener(java.lang.String, griffon.core.CallableWithArgs)' has been deprecated
-                </li>
-                <li>
-                  <span class='info'>INFO(7007): </span>Method 'public void addEventListener(java.lang.Class, griffon.core.CallableWithArgs)' has been deprecated
-                </li>
-                <li>
-                  <span class='error'>ERROR(7012): </span>Method 'public void addEventListener(java.lang.String, griffon.core.RunnableWithArgs)' has been added to an interface
-                </li>
-                <li>
-                  <span class='error'>ERROR(7012): </span>Method 'public void addEventListener(java.lang.Class, griffon.core.RunnableWithArgs)' has been added to an interface
-                </li>
-                <li>
-                  <span class='info'>INFO(7007): </span>Method 'public void removeEventListener(java.lang.String, griffon.core.CallableWithArgs)' has been deprecated
-                </li>
-                <li>
-                  <span class='info'>INFO(7007): </span>Method 'public void removeEventListener(java.lang.Class, griffon.core.CallableWithArgs)' has been deprecated
-                </li>
-                <li>
-                  <span class='error'>ERROR(7012): </span>Method 'public void removeEventListener(java.lang.String, griffon.core.RunnableWithArgs)' has been added to an interface
-                </li>
-                <li>
-                  <span class='error'>ERROR(7012): </span>Method 'public void removeEventListener(java.lang.Class, griffon.core.RunnableWithArgs)' has been added to an interface
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>griffon.core.injection.Injector</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='error'>ERROR(7002): </span>Method 'public griffon.core.injection.Injector createNestedInjector(java.lang.Iterable)' has been removed
-                </li>
-                <li>
-                  <span class='error'>ERROR(7002): </span>Method 'public griffon.core.injection.Injector createNestedInjector(java.lang.String, java.lang.Iterable)' has been removed
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>griffon.core.view.WindowManager</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='error'>ERROR(7012): </span>Method 'public java.lang.String findWindowName(java.lang.Object)' has been added to an interface
-                </li>
-                <li>
-                  <span class='error'>ERROR(7012): </span>Method 'public java.util.Set getWindowNames()' has been added to an interface
-                </li>
-                <li>
-                  <span class='error'>ERROR(7012): </span>Method 'public int indexOf(java.lang.Object)' has been added to an interface
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>griffon.util.GriffonClassUtils</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public java.lang.Object[] requireNonEmpty(java.lang.Object[])' has been added
-                </li>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public java.lang.Object[] requireNonEmpty(java.lang.Object[], java.lang.String)' has been added
-                </li>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public java.util.Collection requireNonEmpty(java.util.Collection)' has been added
-                </li>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public java.util.Collection requireNonEmpty(java.util.Collection, java.lang.String)' has been added
-                </li>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public java.util.Map requireNonEmpty(java.util.Map)' has been added
-                </li>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public java.util.Map requireNonEmpty(java.util.Map, java.lang.String)' has been added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>griffon.util.ServiceLoaderUtils</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(7011): </span>Method 'public boolean load(java.lang.ClassLoader, java.lang.String, griffon.util.ServiceLoaderUtils$PathFilter, griffon.util.ServiceLoaderUtils$ResourceProcessor)' has been added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>griffon.util.ServiceLoaderUtils$PathFilter</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(8000): </span>Class griffon.util.ServiceLoaderUtils$PathFilter added
-                </li>
-              </ul>
-            </td>
-          </tr>
-          <tr>
-            <td>griffon.util.ServiceLoaderUtils$ResourceProcessor</td>
-            <td>
-              <ul>
-                <li>
-                  <span class='info'>INFO(8000): </span>Class griffon.util.ServiceLoaderUtils$ResourceProcessor added
-                </li>
-              </ul>
-            </td>
-          </tr>
-        </tbody>
+        <tbody />
       </table>
     </div>
   </body>
