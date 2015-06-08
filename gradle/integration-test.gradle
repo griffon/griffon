@@ -51,6 +51,7 @@ task integrationTest(type: Test, dependsOn: jar) {
     testClassesDir = sourceSets.integrationTest.output.classesDir
     classpath = sourceSets.integrationTest.runtimeClasspath
     reports.html.enabled = false
+    ignoreFailures = !rootProject.fullBuild
 }
 
 task integrationTestReport(type: TestReport) {

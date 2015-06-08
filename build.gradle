@@ -44,6 +44,8 @@ jacoco {
     toolVersion = jacocoVersion
 }
 
+boolean travis   = (System.env['TRAVIS'] ?: false) as boolean
+boolean appveyor = (System.env['APPVEYOR'] ?: false) as boolean
 Date buildTimeAndDate = new Date()
 ext {
     buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
@@ -52,6 +54,7 @@ ext {
     projectsWithIntegrationCoverage = []
     projectsWithClirr = []
     depProjects = []
+    fullBuild = !travis && !appveyor
 }
 
 allprojects {
@@ -172,6 +175,10 @@ subprojects { subproj ->
                     '-Xlint:all', '-Xlint:deprecation', '-Xlint:unchecked'
                 ]
             }
+        }
+
+        test {
+            ignoreFailures = !rootProject.fullBuild
         }
 
         subproj.apply from: rootProject.file('gradle/publish.gradle')
