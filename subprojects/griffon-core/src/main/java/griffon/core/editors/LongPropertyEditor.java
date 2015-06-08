@@ -37,7 +37,7 @@ public class LongPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsString(String str) {
+    protected void handleAsString(String str) {
         try {
             super.setValueInternal(isBlank(str) ? null : Long.parseLong(str));
         } catch (NumberFormatException e) {
@@ -45,7 +45,7 @@ public class LongPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsNumber(Number number) {
+    protected void handleAsNumber(Number number) {
         super.setValueInternal(number.longValue());
     }
 

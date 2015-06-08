@@ -67,7 +67,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
         return !isBlank(getFormat()) ? ColorFormatter.getInstance(getFormat()) : null;
     }
 
-    private void handleAsString(String str) {
+    protected void handleAsString(String str) {
         if (isBlank(str)) {
             super.setValueInternal(null);
             return;
@@ -80,7 +80,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsList(List<?> list) {
+    protected void handleAsList(List<?> list) {
         if (list.isEmpty()) {
             super.setValueInternal(null);
             return;
@@ -118,7 +118,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
         );
     }
 
-    private void handleAsMap(Map<?, ?> map) {
+    protected void handleAsMap(Map<?, ?> map) {
         if (map.isEmpty()) {
             super.setValueInternal(null);
             return;
@@ -131,7 +131,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(new Color(r, g, b, a));
     }
 
-    private int parse(String val) {
+    protected int parse(String val) {
         try {
             return Integer.parseInt(String.valueOf(val).trim(), 16) & 0xFF;
         } catch (NumberFormatException e) {
@@ -139,11 +139,11 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private int parse(Number val) {
+    protected int parse(Number val) {
         return val.intValue() & 0xFF;
     }
 
-    private int getMapValue(Map<?, ?> map, String key, int defaultValue) {
+    protected int getMapValue(Map<?, ?> map, String key, int defaultValue) {
         Object val = map.get(key);
         if (null == val) val = map.get(String.valueOf(key.charAt(0)));
         if (null == val) {
@@ -156,7 +156,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
         throw illegalValue(map, Color.class);
     }
 
-    private void handleAsNumber(Number value) {
+    protected void handleAsNumber(Number value) {
         int c = parse(value);
         super.setValueInternal(new Color(c, c, c, 255));
     }

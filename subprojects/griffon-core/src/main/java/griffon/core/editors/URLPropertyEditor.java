@@ -40,7 +40,7 @@ public class URLPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsString(String str) {
+    protected void handleAsString(String str) {
         if (isBlank(str)) {
             super.setValueInternal(null);
             return;
@@ -52,7 +52,7 @@ public class URLPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsFile(File file) {
+    protected void handleAsFile(File file) {
         try {
             super.setValueInternal(file.toURI().toURL());
         } catch (MalformedURLException e) {

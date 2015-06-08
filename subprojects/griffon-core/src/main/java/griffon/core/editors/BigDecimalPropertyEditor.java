@@ -40,7 +40,7 @@ public class BigDecimalPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsString(String str) {
+    protected void handleAsString(String str) {
         try {
             super.setValueInternal(isBlank(str) ? null : new BigDecimal(str));
         } catch (NumberFormatException e) {
@@ -48,7 +48,7 @@ public class BigDecimalPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsNumber(Number number) {
+    protected void handleAsNumber(Number number) {
         if (number instanceof BigInteger) {
             super.setValueInternal(new BigDecimal((BigInteger) number));
         } else if (number instanceof BigDecimal) {

@@ -58,7 +58,7 @@ public class PolygonPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsString(String str) {
+    protected void handleAsString(String str) {
         if (isBlank(str)) {
             super.setValueInternal(null);
             return;
@@ -80,7 +80,7 @@ public class PolygonPropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(new Polygon(xpoints, ypoints, npoints));
     }
 
-    private void handleAsList(List<?> list) {
+    protected void handleAsList(List<?> list) {
         if (list.isEmpty()) {
             super.setValueInternal(null);
             return;
@@ -101,7 +101,7 @@ public class PolygonPropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(new Polygon(xpoints, ypoints, npoints));
     }
 
-    private int parseValue(Object value) {
+    protected int parseValue(Object value) {
         if (value instanceof CharSequence) {
             return parse(String.valueOf(value));
         } else if (value instanceof Number) {
@@ -110,7 +110,7 @@ public class PolygonPropertyEditor extends AbstractPropertyEditor {
         throw illegalValue(value, Polygon.class);
     }
 
-    private int parse(String val) {
+    protected int parse(String val) {
         try {
             return Integer.parseInt(val.trim());
         } catch (NumberFormatException e) {
@@ -118,7 +118,7 @@ public class PolygonPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private int parse(Number val) {
+    protected int parse(Number val) {
         return val.intValue();
     }
 }

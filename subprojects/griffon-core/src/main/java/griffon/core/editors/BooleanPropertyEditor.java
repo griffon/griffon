@@ -37,11 +37,11 @@ public class BooleanPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsString(String str) {
+    protected void handleAsString(String str) {
         super.setValueInternal(isBlank(str) ? null : Boolean.parseBoolean(str));
     }
 
-    private void handleAsBoolean(Boolean bool) {
+    protected void handleAsBoolean(Boolean bool) {
         super.setValueInternal(bool);
     }
 

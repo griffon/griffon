@@ -35,7 +35,7 @@ public class FontPropertyEditor extends AbstractPropertyEditor {
         return font.getFamily() + "-" + formatStyle(font) + "-" + font.getSize();
     }
 
-    private String formatStyle(Font font) {
+    protected String formatStyle(Font font) {
         if (font.isBold() && font.isItalic()) {
             return "BOLDITALIC";
         } else if (font.isBold()) {
@@ -62,7 +62,7 @@ public class FontPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsString(String str) {
+    protected void handleAsString(String str) {
         if (isBlank(str)) {
             super.setValueInternal(null);
             return;
@@ -79,7 +79,7 @@ public class FontPropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(new Font(family, style, size));
     }
 
-    private void handleAsList(List<?> list) {
+    protected void handleAsList(List<?> list) {
         if(list.isEmpty()) {
             super.setValueInternal(null);
             return;
@@ -96,7 +96,7 @@ public class FontPropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(new Font(family, style, size));
     }
 
-    private void handleAsMap(Map<?, ?> map) {
+    protected void handleAsMap(Map<?, ?> map) {
         if(map.isEmpty()) {
             super.setValueInternal(null);
             return;
@@ -108,7 +108,7 @@ public class FontPropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(new Font(family, resolveStyle(map, style), parseSize(map, size)));
     }
 
-    private String getMapValue(Map<?, ?> map, String key, String defaultValue) {
+    protected String getMapValue(Map<?, ?> map, String key, String defaultValue) {
         Object val = map.get(key);
         if (null == val) val = map.get(String.valueOf(key.charAt(0)));
         if (null == val) {
@@ -119,7 +119,7 @@ public class FontPropertyEditor extends AbstractPropertyEditor {
         throw illegalValue(map, Font.class);
     }
 
-    private int parseSize(Object source, String str) {
+    protected int parseSize(Object source, String str) {
         int size;
         try {
             size = Integer.parseInt(str);
@@ -129,7 +129,7 @@ public class FontPropertyEditor extends AbstractPropertyEditor {
         return size;
     }
 
-    private int resolveStyle(Object source, String str) {
+    protected int resolveStyle(Object source, String str) {
         if ("PLAIN".equals(str.toUpperCase())) {
             return Font.PLAIN;
         } else if ("BOLD".equals(str.toUpperCase())) {

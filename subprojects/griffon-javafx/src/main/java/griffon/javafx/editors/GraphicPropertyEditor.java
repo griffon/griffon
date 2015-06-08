@@ -28,10 +28,11 @@ import static griffon.util.GriffonNameUtils.isBlank;
 
 /**
  * @author Andres Almiray
+ * @since 2.3.0
  */
 @PropertyEditorFor(Node.class)
 public class GraphicPropertyEditor extends AbstractPropertyEditor {
-    private final ImagePropertyEditor imagePropertyEditor = new ImagePropertyEditor();
+    protected final ImagePropertyEditor imagePropertyEditor = new ImagePropertyEditor();
 
     protected void setValueInternal(Object value) {
         if (null == value) {
@@ -43,7 +44,7 @@ public class GraphicPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsString(String str) {
+    protected void handleAsString(String str) {
         if (isBlank(str)) {
             super.setValueInternal(null);
         } else if (str.contains("|")) {
@@ -53,7 +54,7 @@ public class GraphicPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleWithImagePropertyEditor(Object value) {
+    protected void handleWithImagePropertyEditor(Object value) {
         try {
             imagePropertyEditor.setValueInternal(value);
             Image image = (Image) imagePropertyEditor.getValue();
@@ -67,7 +68,7 @@ public class GraphicPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsClassWithArg(String str) {
+    protected void handleAsClassWithArg(String str) {
         String[] args = str.split("\\|");
         if (args.length == 2) {
             Class<?> iconClass = null;

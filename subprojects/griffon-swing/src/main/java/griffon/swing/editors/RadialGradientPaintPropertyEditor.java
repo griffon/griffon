@@ -55,7 +55,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
             .toString();
     }
 
-    private String formatFractions(float[] fractions) {
+    protected String formatFractions(float[] fractions) {
         StringBuilder b = new StringBuilder("[");
         boolean first = true;
 
@@ -70,7 +70,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
         return b.append("]").toString();
     }
 
-    private String formatColors(Color[] colors) {
+    protected String formatColors(Color[] colors) {
         StringBuilder b = new StringBuilder("[");
         boolean first = true;
 
@@ -101,7 +101,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsString(String str) {
+    protected void handleAsString(String str) {
         if (isBlank(str)) {
             super.setValueInternal(null);
             return;
@@ -137,7 +137,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsList(List<?> list) {
+    protected void handleAsList(List<?> list) {
         if(list.isEmpty()) {
             super.setValueInternal(null);
             return;
@@ -172,7 +172,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsMap(Map<?, ?> map) {
+    protected void handleAsMap(Map<?, ?> map) {
         if(map.isEmpty()) {
             super.setValueInternal(null);
             return;
@@ -198,7 +198,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(new RadialGradientPaint(cx, cy, radius, fx, fy, fractions, colors, cyclicMethod));
     }
 
-    private float[] parseFractions(Object source, Object obj) {
+    protected float[] parseFractions(Object source, Object obj) {
         if (obj instanceof CharSequence) {
             return parseFractions(source, String.valueOf(obj).trim());
         } else if (obj instanceof List) {
@@ -207,7 +207,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
         throw illegalValue(source, RadialGradientPaint.class);
     }
 
-    private float[] parseFractions(Object source, String str) {
+    protected float[] parseFractions(Object source, String str) {
         if (!str.startsWith("[") || !str.endsWith("]")) {
             throw illegalValue(source, RadialGradientPaint.class);
         }
@@ -221,7 +221,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
         return fractions;
     }
 
-    private float[] parseFractions(Object source, List<?> list) {
+    protected float[] parseFractions(Object source, List<?> list) {
         float[] fractions = new float[list.size()];
         for (int i = 0; i < list.size(); i++) {
             fractions[i] = parseValue(list.get(i));
@@ -230,7 +230,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
         return fractions;
     }
 
-    private Color[] parseColors(Object source, Object obj) {
+    protected Color[] parseColors(Object source, Object obj) {
         if (obj instanceof CharSequence) {
             return parseColors(source, String.valueOf(obj).trim());
         } else if (obj instanceof List) {
@@ -239,7 +239,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
         throw illegalValue(source, RadialGradientPaint.class);
     }
 
-    private Color[] parseColors(Object source, String str) {
+    protected Color[] parseColors(Object source, String str) {
         if (!str.startsWith("[") || !str.endsWith("]")) {
             throw illegalValue(source, RadialGradientPaint.class);
         }
@@ -259,7 +259,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
         return colors;
     }
 
-    private Color[] parseColors(Object source, List<?> list) {
+    protected Color[] parseColors(Object source, List<?> list) {
         Color[] colors = new Color[list.size()];
         ColorPropertyEditor colorEditor = new ColorPropertyEditor();
         for (int i = 0; i < list.size(); i++) {
@@ -274,7 +274,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
         return colors;
     }
 
-    private MultipleGradientPaint.CycleMethod parseCyclicMethod(Object source, String str) {
+    protected MultipleGradientPaint.CycleMethod parseCyclicMethod(Object source, String str) {
         try {
             Field cyclicMethodField = MultipleGradientPaint.CycleMethod.class.getDeclaredField(str.toUpperCase().trim());
             return (MultipleGradientPaint.CycleMethod) cyclicMethodField.get(null);
@@ -283,7 +283,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private float parse(String val) {
+    protected float parse(String val) {
         try {
             return Float.parseFloat(val.trim());
         } catch (NumberFormatException e) {
@@ -291,7 +291,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private float parseValue(Object value) {
+    protected float parseValue(Object value) {
         if (value instanceof CharSequence) {
             return parse(String.valueOf(value));
         } else if (value instanceof Number) {
@@ -300,11 +300,11 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
         throw illegalValue(value, RadialGradientPaint.class);
     }
 
-    private float parse(Number val) {
+    protected float parse(Number val) {
         return val.floatValue();
     }
 
-    private Object getMapValue(Map<?, ?> map, String key, Object defaultValue) {
+    protected Object getMapValue(Map<?, ?> map, String key, Object defaultValue) {
         Object val = map.get(key);
         if (null == val) {
             return defaultValue;

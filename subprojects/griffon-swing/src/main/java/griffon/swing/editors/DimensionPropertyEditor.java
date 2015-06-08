@@ -55,7 +55,7 @@ public class DimensionPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsString(String str) {
+    protected void handleAsString(String str) {
         if (isBlank(str)) {
             super.setValueInternal(null);
             return;
@@ -76,7 +76,7 @@ public class DimensionPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsList(List<?> list) {
+    protected void handleAsList(List<?> list) {
         if(list.isEmpty()) {
             super.setValueInternal(null);
             return;
@@ -97,7 +97,7 @@ public class DimensionPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsMap(Map<?, ?> map) {
+    protected void handleAsMap(Map<?, ?> map) {
         if(map.isEmpty()) {
             super.setValueInternal(null);
             return;
@@ -108,7 +108,7 @@ public class DimensionPropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(new Dimension(w, h));
     }
 
-    private int parseValue(Object value) {
+    protected int parseValue(Object value) {
         if (value instanceof CharSequence) {
             return parse(String.valueOf(value));
         } else if (value instanceof Number) {
@@ -117,7 +117,7 @@ public class DimensionPropertyEditor extends AbstractPropertyEditor {
         throw illegalValue(value, Dimension.class);
     }
 
-    private int parse(String val) {
+    protected int parse(String val) {
         try {
             return Integer.parseInt(val.trim());
         } catch (NumberFormatException e) {
@@ -125,11 +125,11 @@ public class DimensionPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private int parse(Number val) {
+    protected int parse(Number val) {
         return val.intValue();
     }
 
-    private int getMapValue(Map<?, ?> map, String key, int defaultValue) {
+    protected int getMapValue(Map<?, ?> map, String key, int defaultValue) {
         Object val = map.get(key);
         if (null == val) val = map.get(String.valueOf(key.charAt(0)));
         if (null == val) {
@@ -142,7 +142,7 @@ public class DimensionPropertyEditor extends AbstractPropertyEditor {
         throw illegalValue(map, Dimension.class);
     }
 
-    private void handleAsNumber(Number value) {
+    protected void handleAsNumber(Number value) {
         int s = parse(value);
         super.setValueInternal(new Dimension(s, s));
     }
