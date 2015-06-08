@@ -39,17 +39,7 @@ public class GraphicPropertyEditor extends AbstractPropertyEditor {
         } else if (value instanceof CharSequence) {
             handleAsString(String.valueOf(value));
         } else {
-            try {
-                imagePropertyEditor.setValueInternal(value);
-                Image image = (Image) imagePropertyEditor.getValue();
-                if (image != null) {
-                    super.setValueInternal(new ImageView(image));
-                } else {
-                    super.setValueInternal(null);
-                }
-            } catch (IllegalArgumentException iae) {
-                throw illegalValue(value, Node.class, iae);
-            }
+            handleWithImagePropertyEditor(value);
         }
     }
 
@@ -59,7 +49,21 @@ public class GraphicPropertyEditor extends AbstractPropertyEditor {
         } else if (str.contains("|")) {
             handleAsClassWithArg(str);
         } else {
-            throw illegalValue(str, Node.class);
+            handleWithImagePropertyEditor(str);
+        }
+    }
+
+    private void handleWithImagePropertyEditor(Object value) {
+        try {
+            imagePropertyEditor.setValueInternal(value);
+            Image image = (Image) imagePropertyEditor.getValue();
+            if (image != null) {
+                super.setValueInternal(new ImageView(image));
+            } else {
+                super.setValueInternal(null);
+            }
+        } catch (IllegalArgumentException iae) {
+            throw illegalValue(value, Node.class, iae);
         }
     }
 
