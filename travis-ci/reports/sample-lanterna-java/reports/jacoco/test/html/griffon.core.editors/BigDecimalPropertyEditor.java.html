@@ -40,7 +40,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
 <span class="nc" id="L41">    }</span>
 
-    private void handleAsString(String str) {
+    protected void handleAsString(String str) {
         try {
 <span class="nc bnc" id="L45" title="All 2 branches missed.">            super.setValueInternal(isBlank(str) ? null : new BigDecimal(str));</span>
 <span class="nc" id="L46">        } catch (NumberFormatException e) {</span>
@@ -48,7 +48,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L48">        }</span>
 <span class="nc" id="L49">    }</span>
 
-    private void handleAsNumber(Number number) {
+    protected void handleAsNumber(Number number) {
 <span class="nc bnc" id="L52" title="All 2 branches missed.">        if (number instanceof BigInteger) {</span>
 <span class="nc" id="L53">            super.setValueInternal(new BigDecimal((BigInteger) number));</span>
 <span class="nc bnc" id="L54" title="All 2 branches missed.">        } else if (number instanceof BigDecimal) {</span>
