@@ -53,7 +53,7 @@ public class InsetsPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsString(String str) {
+    protected void handleAsString(String str) {
         if (isBlank(str)) {
             super.setValueInternal(null);
             return;
@@ -80,7 +80,7 @@ public class InsetsPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsList(List<?> list) {
+    protected void handleAsList(List<?> list) {
         if (list.isEmpty()) {
             super.setValueInternal(null);
             return;
@@ -106,7 +106,7 @@ public class InsetsPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsMap(Map<?, ?> map) {
+    protected void handleAsMap(Map<?, ?> map) {
         if (map.isEmpty()) {
             super.setValueInternal(null);
             return;
@@ -119,7 +119,7 @@ public class InsetsPropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(new Insets(t, r, b, l));
     }
 
-    private double parseValue(Object value) {
+    protected double parseValue(Object value) {
         if (value instanceof CharSequence) {
             return parse(String.valueOf(value));
         } else if (value instanceof Number) {
@@ -128,7 +128,7 @@ public class InsetsPropertyEditor extends AbstractPropertyEditor {
         throw illegalValue(value, Insets.class);
     }
 
-    private double parse(String val) {
+    protected double parse(String val) {
         try {
             return Double.parseDouble(String.valueOf(val).trim());
         } catch (NumberFormatException e) {
@@ -136,11 +136,11 @@ public class InsetsPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private double parse(Number val) {
+    protected double parse(Number val) {
         return val.doubleValue();
     }
 
-    private double getMapValue(Map<?, ?> map, String key, double defaultValue) {
+    protected double getMapValue(Map<?, ?> map, String key, double defaultValue) {
         Object val = map.get(key);
         if (null == val) val = map.get(String.valueOf(key.charAt(0)));
         if (null == val) {
@@ -153,7 +153,7 @@ public class InsetsPropertyEditor extends AbstractPropertyEditor {
         throw illegalValue(map, Insets.class);
     }
 
-    private void handleAsNumber(Number value) {
+    protected void handleAsNumber(Number value) {
         double c = parse(value);
         super.setValueInternal(new Insets(c, c, c, c));
     }

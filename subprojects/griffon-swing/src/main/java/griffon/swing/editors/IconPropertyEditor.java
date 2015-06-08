@@ -66,7 +66,7 @@ public class IconPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsString(String str) {
+    protected void handleAsString(String str) {
         if (isBlank(str)) {
             super.setValueInternal(null);
             return;
@@ -80,7 +80,7 @@ public class IconPropertyEditor extends AbstractPropertyEditor {
     }
 
     @SuppressWarnings("unchecked")
-    private void handleAsClassWithArg(String str) {
+    protected void handleAsClassWithArg(String str) {
         String[] args = str.split("\\|");
         if (args.length == 2) {
             Class<? extends Icon> iconClass = null;
@@ -107,7 +107,7 @@ public class IconPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsFile(File file) {
+    protected void handleAsFile(File file) {
         try {
             handleAsImage(ImageIO.read(file));
         } catch (IOException e) {
@@ -115,7 +115,7 @@ public class IconPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsURL(URL url) {
+    protected void handleAsURL(URL url) {
         try {
             handleAsImage(ImageIO.read(url));
         } catch (IOException e) {
@@ -123,7 +123,7 @@ public class IconPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsURI(URI uri) {
+    protected void handleAsURI(URI uri) {
         try {
             handleAsURL(uri.toURL());
         } catch (MalformedURLException e) {
@@ -131,7 +131,7 @@ public class IconPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsInputStream(InputStream stream) {
+    protected void handleAsInputStream(InputStream stream) {
         try {
             handleAsImage(ImageIO.read(stream));
         } catch (IOException e) {
@@ -139,7 +139,7 @@ public class IconPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsImageInputStream(ImageInputStream stream) {
+    protected void handleAsImageInputStream(ImageInputStream stream) {
         try {
             handleAsImage(ImageIO.read(stream));
         } catch (IOException e) {
@@ -147,11 +147,11 @@ public class IconPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsByteArray(byte[] bytes) {
+    protected void handleAsByteArray(byte[] bytes) {
         super.setValueInternal(new ImageIcon(bytes));
     }
 
-    private void handleAsImage(Image img) {
+    protected void handleAsImage(Image img) {
         super.setValueInternal(new ImageIcon(img));
     }
 }

@@ -54,7 +54,7 @@ public class Point2DPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsString(String str) {
+    protected void handleAsString(String str) {
         if (isBlank(str)) {
             super.setValueInternal(null);
             return;
@@ -76,7 +76,7 @@ public class Point2DPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsList(List<?> list) {
+    protected void handleAsList(List<?> list) {
         if(list.isEmpty()) {
             super.setValueInternal(null);
             return;
@@ -97,7 +97,7 @@ public class Point2DPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsMap(Map<?, ?> map) {
+    protected void handleAsMap(Map<?, ?> map) {
         if(map.isEmpty()) {
             super.setValueInternal(null);
             return;
@@ -108,7 +108,7 @@ public class Point2DPropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(new Point2D.Double(x, y));
     }
 
-    private double parseValue(Object value) {
+    protected double parseValue(Object value) {
         if (value instanceof CharSequence) {
             return parse(String.valueOf(value));
         } else if (value instanceof Number) {
@@ -117,7 +117,7 @@ public class Point2DPropertyEditor extends AbstractPropertyEditor {
         throw illegalValue(value, Point2D.class);
     }
 
-    private double parse(String val) {
+    protected double parse(String val) {
         try {
             return Double.parseDouble(val.trim());
         } catch (NumberFormatException e) {
@@ -125,11 +125,11 @@ public class Point2DPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private double parse(Number val) {
+    protected double parse(Number val) {
         return val.doubleValue();
     }
 
-    private double getMapValue(Map<?, ?> map, String key, int defaultValue) {
+    protected double getMapValue(Map<?, ?> map, String key, int defaultValue) {
         Object val = map.get(key);
         if (null == val) {
             return defaultValue;
@@ -141,7 +141,7 @@ public class Point2DPropertyEditor extends AbstractPropertyEditor {
         throw illegalValue(map, Point2D.class);
     }
 
-    private void handleAsNumber(Number value) {
+    protected void handleAsNumber(Number value) {
         double s = parse(value);
         super.setValueInternal(new Point2D.Double(s, s));
     }

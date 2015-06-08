@@ -68,7 +68,7 @@ public class GradientPaintPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsString(String str) {
+    protected void handleAsString(String str) {
         if (isBlank(str)) {
             super.setValueInternal(null);
             return;
@@ -156,7 +156,7 @@ public class GradientPaintPropertyEditor extends AbstractPropertyEditor {
 
     }
 
-    private void handleAsList(List<?> list) {
+    protected void handleAsList(List<?> list) {
         if(list.isEmpty()) {
             super.setValueInternal(null);
             return;
@@ -197,7 +197,7 @@ public class GradientPaintPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsMap(Map<?, ?> map) {
+    protected void handleAsMap(Map<?, ?> map) {
         if(map.isEmpty()) {
             super.setValueInternal(null);
             return;
@@ -242,7 +242,7 @@ public class GradientPaintPropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(new GradientPaint(x1, y1, c1, x2, y2, c2, cyclic));
     }
 
-    private float parse(String val) {
+    protected float parse(String val) {
         try {
             return Float.parseFloat(val.trim());
         } catch (NumberFormatException e) {
@@ -250,7 +250,7 @@ public class GradientPaintPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private boolean parseBoolean(String val) {
+    protected boolean parseBoolean(String val) {
         try {
             return Boolean.parseBoolean(val.trim());
         } catch (Exception e) {
@@ -258,7 +258,7 @@ public class GradientPaintPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private float parseValue(Object value) {
+    protected float parseValue(Object value) {
         if (value instanceof CharSequence) {
             return parse(String.valueOf(value));
         } else if (value instanceof Number) {
@@ -267,11 +267,11 @@ public class GradientPaintPropertyEditor extends AbstractPropertyEditor {
         throw illegalValue(value, GradientPaint.class);
     }
 
-    private float parse(Number val) {
+    protected float parse(Number val) {
         return val.floatValue();
     }
 
-    private Object getMapValue(Map<?, ?> map, String key, Object defaultValue) {
+    protected Object getMapValue(Map<?, ?> map, String key, Object defaultValue) {
         Object val = map.get(key);
         if (null == val) {
             return defaultValue;

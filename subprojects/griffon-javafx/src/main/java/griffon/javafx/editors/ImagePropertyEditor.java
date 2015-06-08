@@ -55,7 +55,7 @@ public class ImagePropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsString(String str) {
+    protected void handleAsString(String str) {
         if (isBlank(str)) {
             super.setValueInternal(null);
         } else if (str.contains("|")) {
@@ -65,7 +65,7 @@ public class ImagePropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsFile(File file) {
+    protected void handleAsFile(File file) {
         try {
             handleAsURL(file.toURI().toURL());
         } catch (MalformedURLException e) {
@@ -73,7 +73,7 @@ public class ImagePropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsURL(URL url) {
+    protected void handleAsURL(URL url) {
         try {
             super.setValueInternal(new Image(url.toString()));
         } catch (Exception e) {
@@ -81,7 +81,7 @@ public class ImagePropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsURI(URI uri) {
+    protected void handleAsURI(URI uri) {
         try {
             handleAsURL(uri.toURL());
         } catch (MalformedURLException e) {
@@ -89,7 +89,7 @@ public class ImagePropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsInputStream(InputStream stream) {
+    protected void handleAsInputStream(InputStream stream) {
         try {
             super.setValueInternal(new Image(stream));
         } catch (Exception e) {
@@ -97,7 +97,7 @@ public class ImagePropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsClassWithArg(String str) {
+    protected void handleAsClassWithArg(String str) {
         String[] args = str.split("\\|");
         if (args.length == 2) {
             Class<?> iconClass = null;

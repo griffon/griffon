@@ -58,7 +58,7 @@ public class BufferedImagePropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsString(String str) {
+    protected void handleAsString(String str) {
         if (isBlank(str)) {
             super.setValueInternal(null);
         } else {
@@ -66,7 +66,7 @@ public class BufferedImagePropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsFile(File file) {
+    protected void handleAsFile(File file) {
         try {
             super.setValueInternal(ImageIO.read(file));
         } catch (IOException e) {
@@ -74,7 +74,7 @@ public class BufferedImagePropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsURL(URL url) {
+    protected void handleAsURL(URL url) {
         try {
             super.setValueInternal(ImageIO.read(url));
         } catch (IOException e) {
@@ -82,7 +82,7 @@ public class BufferedImagePropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsURI(URI uri) {
+    protected void handleAsURI(URI uri) {
         try {
             handleAsURL(uri.toURL());
         } catch (MalformedURLException e) {
@@ -90,7 +90,7 @@ public class BufferedImagePropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsInputStream(InputStream stream) {
+    protected void handleAsInputStream(InputStream stream) {
         try {
             super.setValueInternal(ImageIO.read(stream));
         } catch (IOException e) {
@@ -98,7 +98,7 @@ public class BufferedImagePropertyEditor extends AbstractPropertyEditor {
         }
     }
 
-    private void handleAsImageInputStream(ImageInputStream stream) {
+    protected void handleAsImageInputStream(ImageInputStream stream) {
         try {
             super.setValueInternal(ImageIO.read(stream));
         } catch (IOException e) {
