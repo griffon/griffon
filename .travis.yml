@@ -17,6 +17,8 @@ script: ./gradlew -S check test integrationTest functionalTest jacocoTestReport 
 after_success:
   - ./update-gh-pages.sh
   - ./gradlew coveralls
+  - bash <(curl -s https://codecov.io/bash)
 after_failure:
   - ./update-gh-pages.sh
   - ./gradlew coveralls
+  - bash <(curl -s https://codecov.io/bash)
