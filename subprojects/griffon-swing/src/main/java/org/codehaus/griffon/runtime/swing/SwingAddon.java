@@ -33,7 +33,8 @@ import javax.swing.RepaintManager;
  * @since 2.0.0
  */
 @Named("swing")
-public class SwingAddon extends AbstractGriffonAddon {
+public class
+    SwingAddon extends AbstractGriffonAddon {
     private static final String SWING_EDT_VIOLATIONS_KEY = "griffon.swing.edt.violations.check";
     private static final String SWING_EDT_HANG_MONITOR_KEY = "griffon.swing.edt.hang.monitor";
     private static final String SWING_EDT_HANG_MONITOR_TIMEOUT_KEY = "griffon.swing.edt.hang.monitor.timeout";
