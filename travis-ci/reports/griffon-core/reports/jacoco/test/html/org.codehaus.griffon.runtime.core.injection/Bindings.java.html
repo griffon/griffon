@@ -212,17 +212,17 @@ import static java.util.Objects.requireNonNull;
 
         @Override
         public String toString() {
-<span class="nc" id="L215">            final StringBuilder sb = new StringBuilder(&quot;TargetBinding[&quot;);</span>
-<span class="nc" id="L216">            sb.append(&quot;source=&quot;).append(source.getName());</span>
-<span class="nc bnc" id="L217" title="All 2 branches missed.">            if (classifier != null) {</span>
-<span class="nc" id="L218">                sb.append(&quot;, classifier=&quot;).append(classifier);</span>
-<span class="nc bnc" id="L219" title="All 2 branches missed.">            } else if (classifierType != null) {</span>
+<span class="fc" id="L215">            final StringBuilder sb = new StringBuilder(&quot;TargetBinding[&quot;);</span>
+<span class="fc" id="L216">            sb.append(&quot;source=&quot;).append(source.getName());</span>
+<span class="fc bfc" id="L217" title="All 2 branches covered.">            if (classifier != null) {</span>
+<span class="fc" id="L218">                sb.append(&quot;, classifier=&quot;).append(classifier);</span>
+<span class="pc bpc" id="L219" title="1 of 2 branches missed.">            } else if (classifierType != null) {</span>
 <span class="nc" id="L220">                sb.append(&quot;, classifierType=&quot;).append(classifierType.getName());</span>
             }
-<span class="nc" id="L222">            sb.append(&quot;, target=&quot;).append(target.getName());</span>
-<span class="nc" id="L223">            sb.append(&quot;, singleton=&quot;).append(singleton);</span>
-<span class="nc" id="L224">            sb.append(']');</span>
-<span class="nc" id="L225">            return sb.toString();</span>
+<span class="fc" id="L222">            sb.append(&quot;, target=&quot;).append(target.getName());</span>
+<span class="fc" id="L223">            sb.append(&quot;, singleton=&quot;).append(singleton);</span>
+<span class="fc" id="L224">            sb.append(']');</span>
+<span class="fc" id="L225">            return sb.toString();</span>
         }
     }
 
@@ -249,17 +249,17 @@ import static java.util.Objects.requireNonNull;
 
         @Override
         public String toString() {
-<span class="nc" id="L252">            final StringBuilder sb = new StringBuilder(&quot;InstanceBinding[&quot;);</span>
-<span class="nc" id="L253">            sb.append(&quot;source=&quot;).append(source.getName());</span>
-<span class="nc bnc" id="L254" title="All 2 branches missed.">            if (classifier != null) {</span>
+<span class="fc" id="L252">            final StringBuilder sb = new StringBuilder(&quot;InstanceBinding[&quot;);</span>
+<span class="fc" id="L253">            sb.append(&quot;source=&quot;).append(source.getName());</span>
+<span class="pc bpc" id="L254" title="1 of 2 branches missed.">            if (classifier != null) {</span>
 <span class="nc" id="L255">                sb.append(&quot;, classifier=&quot;).append(classifier);</span>
-<span class="nc bnc" id="L256" title="All 2 branches missed.">            } else if (classifierType != null) {</span>
+<span class="pc bpc" id="L256" title="1 of 2 branches missed.">            } else if (classifierType != null) {</span>
 <span class="nc" id="L257">                sb.append(&quot;, classifierType=&quot;).append(classifierType.getName());</span>
             }
-<span class="nc" id="L259">            sb.append(&quot;, instance=&quot;).append(instance);</span>
-<span class="nc" id="L260">            sb.append(&quot;, singleton=&quot;).append(singleton);</span>
-<span class="nc" id="L261">            sb.append(']');</span>
-<span class="nc" id="L262">            return sb.toString();</span>
+<span class="fc" id="L259">            sb.append(&quot;, instance=&quot;).append(instance);</span>
+<span class="fc" id="L260">            sb.append(&quot;, singleton=&quot;).append(singleton);</span>
+<span class="fc" id="L261">            sb.append(']');</span>
+<span class="fc" id="L262">            return sb.toString();</span>
         }
     }
 
@@ -287,17 +287,17 @@ import static java.util.Objects.requireNonNull;
 
         @Override
         public String toString() {
-<span class="nc" id="L290">            final StringBuilder sb = new StringBuilder(&quot;ProviderBinding[&quot;);</span>
-<span class="nc" id="L291">            sb.append(&quot;source=&quot;).append(source.getName());</span>
-<span class="nc bnc" id="L292" title="All 2 branches missed.">            if (classifier != null) {</span>
-<span class="nc" id="L293">                sb.append(&quot;, classifier=&quot;).append(classifier);</span>
+<span class="fc" id="L290">            final StringBuilder sb = new StringBuilder(&quot;ProviderBinding[&quot;);</span>
+<span class="fc" id="L291">            sb.append(&quot;source=&quot;).append(source.getName());</span>
+<span class="pc bpc" id="L292" title="1 of 2 branches missed.">            if (classifier != null) {</span>
+<span class="fc" id="L293">                sb.append(&quot;, classifier=&quot;).append(classifier);</span>
 <span class="nc bnc" id="L294" title="All 2 branches missed.">            } else if (classifierType != null) {</span>
 <span class="nc" id="L295">                sb.append(&quot;, classifierType=&quot;).append(classifierType.getName());</span>
             }
-<span class="nc" id="L297">            sb.append(&quot;, provider=&quot;).append(provider);</span>
-<span class="nc" id="L298">            sb.append(&quot;, singleton=&quot;).append(singleton);</span>
-<span class="nc" id="L299">            sb.append(']');</span>
-<span class="nc" id="L300">            return sb.toString();</span>
+<span class="fc" id="L297">            sb.append(&quot;, provider=&quot;).append(provider);</span>
+<span class="fc" id="L298">            sb.append(&quot;, singleton=&quot;).append(singleton);</span>
+<span class="fc" id="L299">            sb.append(']');</span>
+<span class="fc" id="L300">            return sb.toString();</span>
         }
     }
 
@@ -325,17 +325,17 @@ import static java.util.Objects.requireNonNull;
 
         @Override
         public String toString() {
-<span class="nc" id="L328">            final StringBuilder sb = new StringBuilder(&quot;ProviderTypeBinding[&quot;);</span>
-<span class="nc" id="L329">            sb.append(&quot;source=&quot;).append(source.getName());</span>
-<span class="nc bnc" id="L330" title="All 2 branches missed.">            if (classifier != null) {</span>
-<span class="nc" id="L331">                sb.append(&quot;, classifier=&quot;).append(classifier);</span>
-<span class="nc bnc" id="L332" title="All 2 branches missed.">            } else if (classifierType != null) {</span>
+<span class="fc" id="L328">            final StringBuilder sb = new StringBuilder(&quot;ProviderTypeBinding[&quot;);</span>
+<span class="fc" id="L329">            sb.append(&quot;source=&quot;).append(source.getName());</span>
+<span class="fc bfc" id="L330" title="All 2 branches covered.">            if (classifier != null) {</span>
+<span class="fc" id="L331">                sb.append(&quot;, classifier=&quot;).append(classifier);</span>
+<span class="pc bpc" id="L332" title="1 of 2 branches missed.">            } else if (classifierType != null) {</span>
 <span class="nc" id="L333">                sb.append(&quot;, classifierType=&quot;).append(classifierType.getName());</span>
             }
-<span class="nc" id="L335">            sb.append(&quot;, providerType=&quot;).append(providerType);</span>
-<span class="nc" id="L336">            sb.append(&quot;, singleton=&quot;).append(singleton);</span>
-<span class="nc" id="L337">            sb.append(']');</span>
-<span class="nc" id="L338">            return sb.toString();</span>
+<span class="fc" id="L335">            sb.append(&quot;, providerType=&quot;).append(providerType);</span>
+<span class="fc" id="L336">            sb.append(&quot;, singleton=&quot;).append(singleton);</span>
+<span class="fc" id="L337">            sb.append(']');</span>
+<span class="fc" id="L338">            return sb.toString();</span>
         }
     }
 }
