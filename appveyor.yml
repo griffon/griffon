@@ -15,9 +15,9 @@ matrix:
 install:
   - gradlew.bat --version
 build_script:
-  - gradlew.bat -u -i clean assemble
+  - gradlew.bat -u -i clean
 test_script:
-  - gradlew.bat -u -i -S test integrationTest functionalTest -x :sample-javafx-groovy:jfxJar -x :sample-javafx-groovy:jfxDeploy -x :sample-javafx-java:jfxJar -x :sample-javafx-java:jfxDeploy
+  - gradlew.bat -u -i -S test
 cache:
   - .gradle
   - C:\Users\appveyor\.gradle
