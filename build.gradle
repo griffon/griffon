@@ -177,10 +177,6 @@ subprojects { subproj ->
             }
         }
 
-        test {
-            ignoreFailures = !rootProject.fullBuild
-        }
-
         subproj.apply from: rootProject.file('gradle/publish.gradle')
         subproj.apply from: rootProject.file('gradle/code-quality.gradle')
 
