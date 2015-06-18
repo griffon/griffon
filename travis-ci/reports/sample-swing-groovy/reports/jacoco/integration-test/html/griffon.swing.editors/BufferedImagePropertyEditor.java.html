@@ -58,7 +58,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
 <span class="nc" id="L59">    }</span>
 
-    protected void handleAsString(String str) {
+    private void handleAsString(String str) {
 <span class="nc bnc" id="L62" title="All 2 branches missed.">        if (isBlank(str)) {</span>
 <span class="nc" id="L63">            super.setValueInternal(null);</span>
         } else {
@@ -66,7 +66,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
 <span class="nc" id="L67">    }</span>
 
-    protected void handleAsFile(File file) {
+    private void handleAsFile(File file) {
         try {
 <span class="nc" id="L71">            super.setValueInternal(ImageIO.read(file));</span>
 <span class="nc" id="L72">        } catch (IOException e) {</span>
@@ -74,7 +74,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L74">        }</span>
 <span class="nc" id="L75">    }</span>
 
-    protected void handleAsURL(URL url) {
+    private void handleAsURL(URL url) {
         try {
 <span class="nc" id="L79">            super.setValueInternal(ImageIO.read(url));</span>
 <span class="nc" id="L80">        } catch (IOException e) {</span>
@@ -82,7 +82,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L82">        }</span>
 <span class="nc" id="L83">    }</span>
 
-    protected void handleAsURI(URI uri) {
+    private void handleAsURI(URI uri) {
         try {
 <span class="nc" id="L87">            handleAsURL(uri.toURL());</span>
 <span class="nc" id="L88">        } catch (MalformedURLException e) {</span>
@@ -90,7 +90,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L90">        }</span>
 <span class="nc" id="L91">    }</span>
 
-    protected void handleAsInputStream(InputStream stream) {
+    private void handleAsInputStream(InputStream stream) {
         try {
 <span class="nc" id="L95">            super.setValueInternal(ImageIO.read(stream));</span>
 <span class="nc" id="L96">        } catch (IOException e) {</span>
@@ -98,7 +98,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L98">        }</span>
 <span class="nc" id="L99">    }</span>
 
-    protected void handleAsImageInputStream(ImageInputStream stream) {
+    private void handleAsImageInputStream(ImageInputStream stream) {
         try {
 <span class="nc" id="L103">            super.setValueInternal(ImageIO.read(stream));</span>
 <span class="nc" id="L104">        } catch (IOException e) {</span>

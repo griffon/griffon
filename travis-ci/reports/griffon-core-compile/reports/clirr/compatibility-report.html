@@ -1,6 +1,6 @@
 <!DOCTYPE html><html>
   <head>
-    <title>Binary Compatibility Report - griffon-core-compile-2.4.0-SNAPSHOT</title>
+    <title>Binary Compatibility Report - griffon-core-compile-2.3.0</title>
     <style>
                         body{margin:0;padding:0;font-family:sans-serif;font-size:12pt;}
                         body,a,a:visited{color:#303030;}
@@ -35,21 +35,21 @@
   </head>
   <body>
     <div id='content'>
-      <h1>Binary Compatibility Report - griffon-core-compile-2.4.0-SNAPSHOT</h1>
+      <h1>Binary Compatibility Report - griffon-core-compile-2.3.0</h1>
       <div id='summary'>
         <table>
           <tr>
             <td>
               <p class='error'>ERROR</p>
-              <div>0</div>
+              <div>28</div>
             </td>
             <td>
               <p class='warning'>WARNING</p>
-              <div>0</div>
+              <div>1</div>
             </td>
             <td>
               <p class='info'>INFO</p>
-              <div>26</div>
+              <div>38</div>
             </td>
           </tr>
         </table>
@@ -63,184 +63,377 @@
         </thead>
         <tbody>
           <tr>
-            <td>griffon.core.editors.BigDecimalPropertyEditor</td>
+            <td>griffon.core.RunnableWithArgs</td>
             <td>
               <ul>
                 <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsNumber(java.lang.Number)' has been increased from private to protected
-                </li>
-                <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsString(java.lang.String)' has been increased from private to protected
+                  <span class='info'>INFO(8000): </span>Class griffon.core.RunnableWithArgs added
                 </li>
               </ul>
             </td>
           </tr>
           <tr>
-            <td>griffon.core.editors.BigIntegerPropertyEditor</td>
+            <td>griffon.core.artifact.ArtifactHandler</td>
             <td>
               <ul>
                 <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsNumber(java.lang.Number)' has been increased from private to protected
-                </li>
-                <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsString(java.lang.String)' has been increased from private to protected
+                  <span class='error'>ERROR(7006): </span>Return type of method 'public java.util.Collection initialize(java.lang.Class[])' has been changed to void
                 </li>
               </ul>
             </td>
           </tr>
           <tr>
-            <td>griffon.core.editors.BooleanPropertyEditor</td>
+            <td>griffon.core.artifact.ArtifactManager</td>
             <td>
               <ul>
                 <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsBoolean(java.lang.Boolean)' has been increased from private to protected
+                  <span class='error'>ERROR(4001): </span>Removed griffon.core.ShutdownHandler from the set of implemented interfaces
                 </li>
                 <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsString(java.lang.String)' has been increased from private to protected
+                  <span class='error'>ERROR(7004): </span>In method 'public void loadArtifactMetadata(griffon.core.injection.Injector)' the number of arguments has changed
                 </li>
               </ul>
             </td>
           </tr>
           <tr>
-            <td>griffon.core.editors.BytePropertyEditor</td>
+            <td>griffon.core.event.EventPublisher</td>
             <td>
               <ul>
                 <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsNumber(java.lang.Number)' has been increased from private to protected
+                  <span class='info'>INFO(7007): </span>Method 'public void addEventListener(java.lang.String, griffon.core.CallableWithArgs)' has been deprecated
                 </li>
                 <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsString(java.lang.String)' has been increased from private to protected
+                  <span class='info'>INFO(7007): </span>Method 'public void addEventListener(java.lang.Class, griffon.core.CallableWithArgs)' has been deprecated
+                </li>
+                <li>
+                  <span class='error'>ERROR(7012): </span>Method 'public void addEventListener(java.lang.String, griffon.core.RunnableWithArgs)' has been added to an interface
+                </li>
+                <li>
+                  <span class='error'>ERROR(7012): </span>Method 'public void addEventListener(java.lang.Class, griffon.core.RunnableWithArgs)' has been added to an interface
+                </li>
+                <li>
+                  <span class='info'>INFO(7007): </span>Method 'public void removeEventListener(java.lang.String, griffon.core.CallableWithArgs)' has been deprecated
+                </li>
+                <li>
+                  <span class='info'>INFO(7007): </span>Method 'public void removeEventListener(java.lang.Class, griffon.core.CallableWithArgs)' has been deprecated
+                </li>
+                <li>
+                  <span class='error'>ERROR(7012): </span>Method 'public void removeEventListener(java.lang.String, griffon.core.RunnableWithArgs)' has been added to an interface
+                </li>
+                <li>
+                  <span class='error'>ERROR(7012): </span>Method 'public void removeEventListener(java.lang.Class, griffon.core.RunnableWithArgs)' has been added to an interface
                 </li>
               </ul>
             </td>
           </tr>
           <tr>
-            <td>griffon.core.editors.CalendarPropertyEditor</td>
+            <td>griffon.core.injection.Injector</td>
             <td>
               <ul>
                 <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsString(java.lang.String)' has been increased from private to protected
+                  <span class='error'>ERROR(7002): </span>Method 'public griffon.core.injection.Injector createNestedInjector(java.lang.Iterable)' has been removed
+                </li>
+                <li>
+                  <span class='error'>ERROR(7002): </span>Method 'public griffon.core.injection.Injector createNestedInjector(java.lang.String, java.lang.Iterable)' has been removed
                 </li>
               </ul>
             </td>
           </tr>
           <tr>
-            <td>griffon.core.editors.DatePropertyEditor</td>
+            <td>griffon.core.view.WindowManager</td>
             <td>
               <ul>
                 <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsString(java.lang.String)' has been increased from private to protected
+                  <span class='error'>ERROR(7012): </span>Method 'public java.lang.String findWindowName(java.lang.Object)' has been added to an interface
+                </li>
+                <li>
+                  <span class='error'>ERROR(7012): </span>Method 'public java.util.Set getWindowNames()' has been added to an interface
+                </li>
+                <li>
+                  <span class='error'>ERROR(7012): </span>Method 'public int indexOf(java.lang.Object)' has been added to an interface
                 </li>
               </ul>
             </td>
           </tr>
           <tr>
-            <td>griffon.core.editors.DoublePropertyEditor</td>
+            <td>griffon.util.GriffonClassUtils</td>
             <td>
               <ul>
                 <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsNumber(java.lang.Number)' has been increased from private to protected
+                  <span class='info'>INFO(7011): </span>Method 'public java.lang.Object[] requireNonEmpty(java.lang.Object[])' has been added
                 </li>
                 <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsString(java.lang.String)' has been increased from private to protected
+                  <span class='info'>INFO(7011): </span>Method 'public java.lang.Object[] requireNonEmpty(java.lang.Object[], java.lang.String)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public java.util.Collection requireNonEmpty(java.util.Collection)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public java.util.Collection requireNonEmpty(java.util.Collection, java.lang.String)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public java.util.Map requireNonEmpty(java.util.Map)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public java.util.Map requireNonEmpty(java.util.Map, java.lang.String)' has been added
                 </li>
               </ul>
             </td>
           </tr>
           <tr>
-            <td>griffon.core.editors.EnumPropertyEditor</td>
+            <td>griffon.util.ServiceLoaderUtils</td>
             <td>
               <ul>
                 <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsString(java.lang.String)' has been increased from private to protected
+                  <span class='info'>INFO(7011): </span>Method 'public boolean load(java.lang.ClassLoader, java.lang.String, griffon.util.ServiceLoaderUtils$PathFilter, griffon.util.ServiceLoaderUtils$ResourceProcessor)' has been added
                 </li>
               </ul>
             </td>
           </tr>
           <tr>
-            <td>griffon.core.editors.FilePropertyEditor</td>
+            <td>griffon.util.ServiceLoaderUtils$PathFilter</td>
             <td>
               <ul>
                 <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsString(java.lang.String)' has been increased from private to protected
+                  <span class='info'>INFO(8000): </span>Class griffon.util.ServiceLoaderUtils$PathFilter added
                 </li>
               </ul>
             </td>
           </tr>
           <tr>
-            <td>griffon.core.editors.FloatPropertyEditor</td>
+            <td>griffon.util.ServiceLoaderUtils$ResourceProcessor</td>
             <td>
               <ul>
                 <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsNumber(java.lang.Number)' has been increased from private to protected
-                </li>
-                <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsString(java.lang.String)' has been increased from private to protected
+                  <span class='info'>INFO(8000): </span>Class griffon.util.ServiceLoaderUtils$ResourceProcessor added
                 </li>
               </ul>
             </td>
           </tr>
           <tr>
-            <td>griffon.core.editors.IntegerPropertyEditor</td>
+            <td>org.codehaus.griffon.compile.core.BaseConstants</td>
             <td>
               <ul>
                 <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsNumber(java.lang.Number)' has been increased from private to protected
-                </li>
-                <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsString(java.lang.String)' has been increased from private to protected
+                  <span class='info'>INFO(6000): </span>Added public field GRIFFON_CORE_RUNNABLEWITHARGS
                 </li>
               </ul>
             </td>
           </tr>
           <tr>
-            <td>griffon.core.editors.LongPropertyEditor</td>
+            <td>org.codehaus.griffon.runtime.core.AbstractApplicationBootstrapper</td>
             <td>
               <ul>
                 <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsNumber(java.lang.Number)' has been increased from private to protected
-                </li>
-                <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsString(java.lang.String)' has been increased from private to protected
+                  <span class='info'>INFO(7011): </span>Method 'protected void createArtifactsModule(java.util.List)' has been added
                 </li>
               </ul>
             </td>
           </tr>
           <tr>
-            <td>griffon.core.editors.ShortPropertyEditor</td>
+            <td>org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler</td>
             <td>
               <ul>
                 <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsNumber(java.lang.Number)' has been increased from private to protected
+                  <span class='error'>ERROR(4001): </span>Removed griffon.core.CallableWithArgs from the set of implemented interfaces
                 </li>
                 <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsString(java.lang.String)' has been increased from private to protected
+                  <span class='info'>INFO(4000): </span>Added griffon.core.RunnableWithArgs to the set of implemented interfaces
+                </li>
+                <li>
+                  <span class='error'>ERROR(7002): </span>Method 'public java.lang.Void call(java.lang.Object[])' has been removed
+                </li>
+                <li>
+                  <span class='error'>ERROR(7002): </span>Method 'public java.lang.Object call(java.lang.Object[])' has been removed
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public void run(java.lang.Object[])' has been added
                 </li>
               </ul>
             </td>
           </tr>
           <tr>
-            <td>griffon.core.editors.URIPropertyEditor</td>
+            <td>org.codehaus.griffon.runtime.core.artifact.AbstractArtifactHandler</td>
             <td>
               <ul>
                 <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsFile(java.io.File)' has been increased from private to protected
+                  <span class='error'>ERROR(7002): </span>Method 'protected void createBindings(java.util.List, java.lang.Class, griffon.core.artifact.GriffonClass)' has been removed
                 </li>
                 <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsString(java.lang.String)' has been increased from private to protected
+                  <span class='error'>ERROR(7006): </span>Return type of method 'public java.util.Collection initialize(java.lang.Class[])' has been changed to void
                 </li>
               </ul>
             </td>
           </tr>
           <tr>
-            <td>griffon.core.editors.URLPropertyEditor</td>
+            <td>org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager</td>
             <td>
               <ul>
                 <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsFile(java.io.File)' has been increased from private to protected
+                  <span class='error'>ERROR(4001): </span>Removed griffon.core.ShutdownHandler from the set of implemented interfaces
                 </li>
                 <li>
-                  <span class='info'>INFO(7010): </span>Accessibility of method 'private void handleAsString(java.lang.String)' has been increased from private to protected
+                  <span class='error'>ERROR(7002): </span>Method 'public boolean canShutdown(griffon.core.GriffonApplication)' has been removed
+                </li>
+                <li>
+                  <span class='error'>ERROR(7004): </span>In method 'public void loadArtifactMetadata(griffon.core.injection.Injector)' the number of arguments has changed
+                </li>
+                <li>
+                  <span class='error'>ERROR(7002): </span>Method 'public void onShutdown(griffon.core.GriffonApplication)' has been removed
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'protected griffon.core.controller.Action actionFor(java.lang.String)' has been added
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>org.codehaus.griffon.runtime.core.artifact.DefaultArtifactManager</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='error'>ERROR(4001): </span>Removed griffon.core.ShutdownHandler from the set of implemented interfaces
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>org.codehaus.griffon.runtime.core.artifact.ServiceArtifactHandler</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='error'>ERROR(7002): </span>Method 'protected void createBindings(java.util.List, java.lang.Class, griffon.core.artifact.GriffonClass)' has been removed
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>org.codehaus.griffon.runtime.core.event.AbstractEventPublisher</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public void addEventListener(java.lang.String, griffon.core.RunnableWithArgs)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public void addEventListener(java.lang.Class, griffon.core.RunnableWithArgs)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public void removeEventListener(java.lang.Class, griffon.core.RunnableWithArgs)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public void removeEventListener(java.lang.String, griffon.core.RunnableWithArgs)' has been added
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>org.codehaus.griffon.runtime.core.event.AbstractEventRouter</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='error'>ERROR(6001): </span>Removed field callableListeners
+                </li>
+                <li>
+                  <span class='info'>INFO(6000): </span>Added protected field functionalListeners
+                </li>
+                <li>
+                  <span class='info'>INFO(6000): </span>Added protected field instanceListeners
+                </li>
+                <li>
+                  <span class='error'>ERROR(6001): </span>Removed field listeners
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public void addEventListener(java.lang.Class, griffon.core.RunnableWithArgs)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public void addEventListener(java.lang.String, griffon.core.RunnableWithArgs)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'protected void fireEvent(griffon.core.RunnableWithArgs, java.util.List)' has been added
+                </li>
+                <li>
+                  <span class='error'>ERROR(7005): </span>Parameter 1 of 'protected boolean isNestedListener(griffon.core.CallableWithArgs, java.lang.Object)' has changed its type to java.lang.Object
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public void removeEventListener(java.lang.Class, griffon.core.RunnableWithArgs)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public void removeEventListener(java.lang.String, griffon.core.RunnableWithArgs)' has been added
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>org.codehaus.griffon.runtime.core.i18n.AbstractMessageSource</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='error'>ERROR(6011): </span>Field ERROR_MESSAGE_BLANK has been removed, but it was previously a constant
+                </li>
+                <li>
+                  <span class='info'>INFO(6000): </span>Added protected field ERROR_MESSAGE_NULL
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>org.codehaus.griffon.runtime.core.resources.AbstractResourceResolver</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='error'>ERROR(6011): </span>Field ERROR_RESOURCE_BLANK has been removed, but it was previously a constant
+                </li>
+                <li>
+                  <span class='info'>INFO(6000): </span>Added protected field ERROR_RESOURCE_NULL
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>org.codehaus.griffon.runtime.core.threading.AbstractUIThreadManager</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='warning'>WARNING(6003): </span>Value of compile-time constant ERROR_RUNNABLE_NULL has been changed
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>org.codehaus.griffon.runtime.core.view.AbstractWindowManager</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public java.lang.String findWindowName(java.lang.Object)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public java.util.Set getWindowNames()' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public int indexOf(java.lang.Object)' has been added
+                </li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>org.codehaus.griffon.runtime.core.view.NoopWindowManager</td>
+            <td>
+              <ul>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public java.lang.String findWindowName(java.lang.Object)' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public java.util.Set getWindowNames()' has been added
+                </li>
+                <li>
+                  <span class='info'>INFO(7011): </span>Method 'public int indexOf(java.lang.Object)' has been added
                 </li>
               </ul>
             </td>

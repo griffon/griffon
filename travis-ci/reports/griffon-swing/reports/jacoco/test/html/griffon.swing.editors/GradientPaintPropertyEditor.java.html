@@ -68,7 +68,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
 <span class="fc" id="L69">    }</span>
 
-    protected void handleAsString(String str) {
+    private void handleAsString(String str) {
 <span class="fc bfc" id="L72" title="All 2 branches covered.">        if (isBlank(str)) {</span>
 <span class="fc" id="L73">            super.setValueInternal(null);</span>
 <span class="fc" id="L74">            return;</span>
@@ -156,7 +156,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 
 <span class="fc" id="L157">    }</span>
 
-    protected void handleAsList(List&lt;?&gt; list) {
+    private void handleAsList(List&lt;?&gt; list) {
 <span class="fc bfc" id="L160" title="All 2 branches covered.">        if(list.isEmpty()) {</span>
 <span class="fc" id="L161">            super.setValueInternal(null);</span>
 <span class="fc" id="L162">            return;</span>
@@ -197,7 +197,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
 <span class="fc" id="L198">    }</span>
 
-    protected void handleAsMap(Map&lt;?, ?&gt; map) {
+    private void handleAsMap(Map&lt;?, ?&gt; map) {
 <span class="fc bfc" id="L201" title="All 2 branches covered.">        if(map.isEmpty()) {</span>
 <span class="fc" id="L202">            super.setValueInternal(null);</span>
 <span class="fc" id="L203">            return;</span>
@@ -242,7 +242,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="fc" id="L242">        super.setValueInternal(new GradientPaint(x1, y1, c1, x2, y2, c2, cyclic));</span>
 <span class="fc" id="L243">    }</span>
 
-    protected float parse(String val) {
+    private float parse(String val) {
         try {
 <span class="fc" id="L247">            return Float.parseFloat(val.trim());</span>
 <span class="nc" id="L248">        } catch (NumberFormatException e) {</span>
@@ -250,7 +250,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
     }
 
-    protected boolean parseBoolean(String val) {
+    private boolean parseBoolean(String val) {
         try {
 <span class="nc" id="L255">            return Boolean.parseBoolean(val.trim());</span>
 <span class="nc" id="L256">        } catch (Exception e) {</span>
@@ -258,7 +258,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
     }
 
-    protected float parseValue(Object value) {
+    private float parseValue(Object value) {
 <span class="fc bfc" id="L262" title="All 2 branches covered.">        if (value instanceof CharSequence) {</span>
 <span class="fc" id="L263">            return parse(String.valueOf(value));</span>
 <span class="pc bpc" id="L264" title="1 of 2 branches missed.">        } else if (value instanceof Number) {</span>
@@ -267,11 +267,11 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L267">        throw illegalValue(value, GradientPaint.class);</span>
     }
 
-    protected float parse(Number val) {
+    private float parse(Number val) {
 <span class="fc" id="L271">        return val.floatValue();</span>
     }
 
-    protected Object getMapValue(Map&lt;?, ?&gt; map, String key, Object defaultValue) {
+    private Object getMapValue(Map&lt;?, ?&gt; map, String key, Object defaultValue) {
 <span class="fc" id="L275">        Object val = map.get(key);</span>
 <span class="pc bpc" id="L276" title="1 of 2 branches missed.">        if (null == val) {</span>
 <span class="nc" id="L277">            return defaultValue;</span>

@@ -55,7 +55,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
 <span class="fc" id="L56">    }</span>
 
-    protected void handleAsString(String str) {
+    private void handleAsString(String str) {
 <span class="pc bpc" id="L59" title="1 of 2 branches missed.">        if (isBlank(str)) {</span>
 <span class="fc" id="L60">            super.setValueInternal(null);</span>
 <span class="nc bnc" id="L61" title="All 2 branches missed.">        } else if (str.contains(&quot;|&quot;)) {</span>
@@ -65,7 +65,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
 <span class="fc" id="L66">    }</span>
 
-    protected void handleAsFile(File file) {
+    private void handleAsFile(File file) {
         try {
 <span class="fc" id="L70">            handleAsURL(file.toURI().toURL());</span>
 <span class="nc" id="L71">        } catch (MalformedURLException e) {</span>
@@ -73,7 +73,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="fc" id="L73">        }</span>
 <span class="fc" id="L74">    }</span>
 
-    protected void handleAsURL(URL url) {
+    private void handleAsURL(URL url) {
         try {
 <span class="fc" id="L78">            super.setValueInternal(new Image(url.toString()));</span>
 <span class="nc" id="L79">        } catch (Exception e) {</span>
@@ -81,7 +81,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="fc" id="L81">        }</span>
 <span class="fc" id="L82">    }</span>
 
-    protected void handleAsURI(URI uri) {
+    private void handleAsURI(URI uri) {
         try {
 <span class="fc" id="L86">            handleAsURL(uri.toURL());</span>
 <span class="nc" id="L87">        } catch (MalformedURLException e) {</span>
@@ -89,7 +89,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="fc" id="L89">        }</span>
 <span class="fc" id="L90">    }</span>
 
-    protected void handleAsInputStream(InputStream stream) {
+    private void handleAsInputStream(InputStream stream) {
         try {
 <span class="fc" id="L94">            super.setValueInternal(new Image(stream));</span>
 <span class="nc" id="L95">        } catch (Exception e) {</span>
@@ -97,7 +97,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="fc" id="L97">        }</span>
 <span class="fc" id="L98">    }</span>
 
-    protected void handleAsClassWithArg(String str) {
+    private void handleAsClassWithArg(String str) {
 <span class="nc" id="L101">        String[] args = str.split(&quot;\\|&quot;);</span>
 <span class="nc bnc" id="L102" title="All 2 branches missed.">        if (args.length == 2) {</span>
 <span class="nc" id="L103">            Class&lt;?&gt; iconClass = null;</span>

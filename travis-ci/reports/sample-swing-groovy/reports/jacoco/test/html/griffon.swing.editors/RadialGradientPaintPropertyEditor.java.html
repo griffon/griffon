@@ -55,7 +55,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L55">            .toString();</span>
     }
 
-    protected String formatFractions(float[] fractions) {
+    private String formatFractions(float[] fractions) {
 <span class="nc" id="L59">        StringBuilder b = new StringBuilder(&quot;[&quot;);</span>
 <span class="nc" id="L60">        boolean first = true;</span>
 
@@ -70,7 +70,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L70">        return b.append(&quot;]&quot;).toString();</span>
     }
 
-    protected String formatColors(Color[] colors) {
+    private String formatColors(Color[] colors) {
 <span class="nc" id="L74">        StringBuilder b = new StringBuilder(&quot;[&quot;);</span>
 <span class="nc" id="L75">        boolean first = true;</span>
 
@@ -101,7 +101,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
 <span class="nc" id="L102">    }</span>
 
-    protected void handleAsString(String str) {
+    private void handleAsString(String str) {
 <span class="nc bnc" id="L105" title="All 2 branches missed.">        if (isBlank(str)) {</span>
 <span class="nc" id="L106">            super.setValueInternal(null);</span>
 <span class="nc" id="L107">            return;</span>
@@ -137,7 +137,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
 <span class="nc" id="L138">    }</span>
 
-    protected void handleAsList(List&lt;?&gt; list) {
+    private void handleAsList(List&lt;?&gt; list) {
 <span class="nc bnc" id="L141" title="All 2 branches missed.">        if(list.isEmpty()) {</span>
 <span class="nc" id="L142">            super.setValueInternal(null);</span>
 <span class="nc" id="L143">            return;</span>
@@ -172,7 +172,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
 <span class="nc" id="L173">    }</span>
 
-    protected void handleAsMap(Map&lt;?, ?&gt; map) {
+    private void handleAsMap(Map&lt;?, ?&gt; map) {
 <span class="nc bnc" id="L176" title="All 2 branches missed.">        if(map.isEmpty()) {</span>
 <span class="nc" id="L177">            super.setValueInternal(null);</span>
 <span class="nc" id="L178">            return;</span>
@@ -198,7 +198,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L198">        super.setValueInternal(new RadialGradientPaint(cx, cy, radius, fx, fy, fractions, colors, cyclicMethod));</span>
 <span class="nc" id="L199">    }</span>
 
-    protected float[] parseFractions(Object source, Object obj) {
+    private float[] parseFractions(Object source, Object obj) {
 <span class="nc bnc" id="L202" title="All 2 branches missed.">        if (obj instanceof CharSequence) {</span>
 <span class="nc" id="L203">            return parseFractions(source, String.valueOf(obj).trim());</span>
 <span class="nc bnc" id="L204" title="All 2 branches missed.">        } else if (obj instanceof List) {</span>
@@ -207,7 +207,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L207">        throw illegalValue(source, RadialGradientPaint.class);</span>
     }
 
-    protected float[] parseFractions(Object source, String str) {
+    private float[] parseFractions(Object source, String str) {
 <span class="nc bnc" id="L211" title="All 4 branches missed.">        if (!str.startsWith(&quot;[&quot;) || !str.endsWith(&quot;]&quot;)) {</span>
 <span class="nc" id="L212">            throw illegalValue(source, RadialGradientPaint.class);</span>
         }
@@ -221,7 +221,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L221">        return fractions;</span>
     }
 
-    protected float[] parseFractions(Object source, List&lt;?&gt; list) {
+    private float[] parseFractions(Object source, List&lt;?&gt; list) {
 <span class="nc" id="L225">        float[] fractions = new float[list.size()];</span>
 <span class="nc bnc" id="L226" title="All 2 branches missed.">        for (int i = 0; i &lt; list.size(); i++) {</span>
 <span class="nc" id="L227">            fractions[i] = parseValue(list.get(i));</span>
@@ -230,7 +230,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L230">        return fractions;</span>
     }
 
-    protected Color[] parseColors(Object source, Object obj) {
+    private Color[] parseColors(Object source, Object obj) {
 <span class="nc bnc" id="L234" title="All 2 branches missed.">        if (obj instanceof CharSequence) {</span>
 <span class="nc" id="L235">            return parseColors(source, String.valueOf(obj).trim());</span>
 <span class="nc bnc" id="L236" title="All 2 branches missed.">        } else if (obj instanceof List) {</span>
@@ -239,7 +239,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L239">        throw illegalValue(source, RadialGradientPaint.class);</span>
     }
 
-    protected Color[] parseColors(Object source, String str) {
+    private Color[] parseColors(Object source, String str) {
 <span class="nc bnc" id="L243" title="All 4 branches missed.">        if (!str.startsWith(&quot;[&quot;) || !str.endsWith(&quot;]&quot;)) {</span>
 <span class="nc" id="L244">            throw illegalValue(source, RadialGradientPaint.class);</span>
         }
@@ -259,7 +259,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L259">        return colors;</span>
     }
 
-    protected Color[] parseColors(Object source, List&lt;?&gt; list) {
+    private Color[] parseColors(Object source, List&lt;?&gt; list) {
 <span class="nc" id="L263">        Color[] colors = new Color[list.size()];</span>
 <span class="nc" id="L264">        ColorPropertyEditor colorEditor = new ColorPropertyEditor();</span>
 <span class="nc bnc" id="L265" title="All 2 branches missed.">        for (int i = 0; i &lt; list.size(); i++) {</span>
@@ -274,7 +274,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L274">        return colors;</span>
     }
 
-    protected MultipleGradientPaint.CycleMethod parseCyclicMethod(Object source, String str) {
+    private MultipleGradientPaint.CycleMethod parseCyclicMethod(Object source, String str) {
         try {
 <span class="nc" id="L279">            Field cyclicMethodField = MultipleGradientPaint.CycleMethod.class.getDeclaredField(str.toUpperCase().trim());</span>
 <span class="nc" id="L280">            return (MultipleGradientPaint.CycleMethod) cyclicMethodField.get(null);</span>
@@ -283,7 +283,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
     }
 
-    protected float parse(String val) {
+    private float parse(String val) {
         try {
 <span class="nc" id="L288">            return Float.parseFloat(val.trim());</span>
 <span class="nc" id="L289">        } catch (NumberFormatException e) {</span>
@@ -291,7 +291,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
     }
 
-    protected float parseValue(Object value) {
+    private float parseValue(Object value) {
 <span class="nc bnc" id="L295" title="All 2 branches missed.">        if (value instanceof CharSequence) {</span>
 <span class="nc" id="L296">            return parse(String.valueOf(value));</span>
 <span class="nc bnc" id="L297" title="All 2 branches missed.">        } else if (value instanceof Number) {</span>
@@ -300,11 +300,11 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L300">        throw illegalValue(value, RadialGradientPaint.class);</span>
     }
 
-    protected float parse(Number val) {
+    private float parse(Number val) {
 <span class="nc" id="L304">        return val.floatValue();</span>
     }
 
-    protected Object getMapValue(Map&lt;?, ?&gt; map, String key, Object defaultValue) {
+    private Object getMapValue(Map&lt;?, ?&gt; map, String key, Object defaultValue) {
 <span class="nc" id="L308">        Object val = map.get(key);</span>
 <span class="nc bnc" id="L309" title="All 2 branches missed.">        if (null == val) {</span>
 <span class="nc" id="L310">            return defaultValue;</span>

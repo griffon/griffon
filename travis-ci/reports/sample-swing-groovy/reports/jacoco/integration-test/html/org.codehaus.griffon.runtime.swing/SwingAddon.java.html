@@ -33,72 +33,71 @@ import javax.swing.RepaintManager;
  * @since 2.0.0
  */
 @Named(&quot;swing&quot;)
-<span class="fc" id="L36">public class</span>
-    SwingAddon extends AbstractGriffonAddon {
+<span class="fc" id="L36">public class SwingAddon extends AbstractGriffonAddon {</span>
     private static final String SWING_EDT_VIOLATIONS_KEY = &quot;griffon.swing.edt.violations.check&quot;;
     private static final String SWING_EDT_HANG_MONITOR_KEY = &quot;griffon.swing.edt.hang.monitor&quot;;
     private static final String SWING_EDT_HANG_MONITOR_TIMEOUT_KEY = &quot;griffon.swing.edt.hang.monitor.timeout&quot;;
 
-<span class="fc" id="L42">    private static final String[] EXCLUDED_PACKAGES =</span>
-<span class="fc" id="L43">        System.getProperty(&quot;groovy.sanitized.stacktraces&quot;,</span>
+<span class="fc" id="L41">    private static final String[] EXCLUDED_PACKAGES =</span>
+<span class="fc" id="L42">        System.getProperty(&quot;groovy.sanitized.stacktraces&quot;,</span>
             &quot;groovy.,&quot; +
                 &quot;org.codehaus.groovy.,&quot; +
                 &quot;java.,&quot; +
                 &quot;javax.,&quot; +
                 &quot;sun.,&quot; +
                 &quot;gjdk.groovy.,&quot; +
-<span class="fc" id="L50">                CheckThreadViolationRepaintManager.class.getPackage().getName()</span>
-<span class="fc" id="L51">        ).split(&quot;(\\s|,)+&quot;);</span>
+<span class="fc" id="L49">                CheckThreadViolationRepaintManager.class.getPackage().getName()</span>
+<span class="fc" id="L50">        ).split(&quot;(\\s|,)+&quot;);</span>
 
     public void init(@Nonnull GriffonApplication application) {
-<span class="fc" id="L54">        String value = System.getProperty(SWING_EDT_VIOLATIONS_KEY);</span>
-<span class="pc bpc" id="L55" title="2 of 4 branches missed.">        if (value != null &amp;&amp; Boolean.parseBoolean(value)) {</span>
-<span class="pc bpc" id="L56" title="1 of 2 branches missed.">            if (getLog().isInfoEnabled()) {</span>
-<span class="fc" id="L57">                getLog().info(&quot;EDT violations check enabled.&quot;);</span>
+<span class="fc" id="L53">        String value = System.getProperty(SWING_EDT_VIOLATIONS_KEY);</span>
+<span class="pc bpc" id="L54" title="2 of 4 branches missed.">        if (value != null &amp;&amp; Boolean.parseBoolean(value)) {</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">            if (getLog().isInfoEnabled()) {</span>
+<span class="fc" id="L56">                getLog().info(&quot;EDT violations check enabled.&quot;);</span>
             }
-<span class="fc" id="L59">            RepaintManager currentRepaintManager = getCurrentRepaintManager();</span>
-<span class="fc bfc" id="L60" title="All 2 branches covered.">            if (null == currentRepaintManager) {</span>
-<span class="fc" id="L61">                currentRepaintManager = new RepaintManager();</span>
+<span class="fc" id="L58">            RepaintManager currentRepaintManager = getCurrentRepaintManager();</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">            if (null == currentRepaintManager) {</span>
+<span class="fc" id="L60">                currentRepaintManager = new RepaintManager();</span>
             }
-<span class="fc bfc" id="L63" title="All 2 branches covered.">            if( currentRepaintManager instanceof CheckThreadViolationRepaintManager) {</span>
-<span class="fc" id="L64">                return;</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">            if( currentRepaintManager instanceof CheckThreadViolationRepaintManager) {</span>
+<span class="fc" id="L63">                return;</span>
             }
-<span class="fc" id="L66">            RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager(currentRepaintManager));</span>
+<span class="fc" id="L65">            RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager(currentRepaintManager));</span>
 
-<span class="fc" id="L68">            GriffonExceptionHandler.addClassTest(new CallableWithArgs&lt;Boolean&gt;() {</span>
+<span class="fc" id="L67">            GriffonExceptionHandler.addClassTest(new CallableWithArgs&lt;Boolean&gt;() {</span>
                 @Override
                 @Nullable
                 public Boolean call(@Nullable Object... args) {
-<span class="nc" id="L72">                    String className = (String) args[0];</span>
-<span class="nc bnc" id="L73" title="All 2 branches missed.">                    for (String groovyPackage : EXCLUDED_PACKAGES) {</span>
-<span class="nc bnc" id="L74" title="All 2 branches missed.">                        if (className.startsWith(groovyPackage)) {</span>
-<span class="nc" id="L75">                            return false;</span>
+<span class="nc" id="L71">                    String className = (String) args[0];</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">                    for (String groovyPackage : EXCLUDED_PACKAGES) {</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">                        if (className.startsWith(groovyPackage)) {</span>
+<span class="nc" id="L74">                            return false;</span>
                         }
                     }
-<span class="nc" id="L78">                    return true;</span>
+<span class="nc" id="L77">                    return true;</span>
                 }
             });
         }
 
-<span class="fc" id="L83">        value = System.getProperty(SWING_EDT_HANG_MONITOR_KEY);</span>
-<span class="pc bpc" id="L84" title="2 of 4 branches missed.">        if (value != null &amp;&amp; Boolean.parseBoolean(value)) {</span>
-<span class="pc bpc" id="L85" title="1 of 2 branches missed.">            if (getLog().isInfoEnabled()) {</span>
-<span class="fc" id="L86">                getLog().info(&quot;EDT hang monitor enabled.&quot;);</span>
+<span class="fc" id="L82">        value = System.getProperty(SWING_EDT_HANG_MONITOR_KEY);</span>
+<span class="pc bpc" id="L83" title="2 of 4 branches missed.">        if (value != null &amp;&amp; Boolean.parseBoolean(value)) {</span>
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">            if (getLog().isInfoEnabled()) {</span>
+<span class="fc" id="L85">                getLog().info(&quot;EDT hang monitor enabled.&quot;);</span>
             }
-<span class="fc" id="L88">            EventDispatchThreadHangMonitor.initMonitoring();</span>
-<span class="fc" id="L89">            value = System.getProperty(SWING_EDT_HANG_MONITOR_TIMEOUT_KEY);</span>
-<span class="pc bpc" id="L90" title="1 of 2 branches missed.">            if (value != null) {</span>
+<span class="fc" id="L87">            EventDispatchThreadHangMonitor.initMonitoring();</span>
+<span class="fc" id="L88">            value = System.getProperty(SWING_EDT_HANG_MONITOR_TIMEOUT_KEY);</span>
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">            if (value != null) {</span>
                 try {
-<span class="nc" id="L92">                    EventDispatchThreadHangMonitor.getInstance().setTimeout(Long.parseLong(value));</span>
-<span class="nc" id="L93">                } catch (NumberFormatException e) {</span>
+<span class="nc" id="L91">                    EventDispatchThreadHangMonitor.getInstance().setTimeout(Long.parseLong(value));</span>
+<span class="nc" id="L92">                } catch (NumberFormatException e) {</span>
                     // ignore
-<span class="nc" id="L95">                }</span>
+<span class="nc" id="L94">                }</span>
             }
         }
-<span class="fc" id="L98">    }</span>
+<span class="fc" id="L97">    }</span>
 
     private RepaintManager getCurrentRepaintManager() {
-<span class="fc" id="L101">        return (RepaintManager) AppContext.getAppContext().get(RepaintManager.class);</span>
+<span class="fc" id="L100">        return (RepaintManager) AppContext.getAppContext().get(RepaintManager.class);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

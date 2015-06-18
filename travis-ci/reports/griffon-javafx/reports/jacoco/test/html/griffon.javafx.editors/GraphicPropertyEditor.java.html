@@ -28,78 +28,73 @@ import static griffon.util.GriffonNameUtils.isBlank;
 
 /**
  * @author Andres Almiray
- * @since 2.3.0
  */
 @PropertyEditorFor(Node.class)
-<span class="nc" id="L34">public class GraphicPropertyEditor extends AbstractPropertyEditor {</span>
-<span class="nc" id="L35">    protected final ImagePropertyEditor imagePropertyEditor = new ImagePropertyEditor();</span>
+<span class="nc" id="L33">public class GraphicPropertyEditor extends AbstractPropertyEditor {</span>
+<span class="nc" id="L34">    private final ImagePropertyEditor imagePropertyEditor = new ImagePropertyEditor();</span>
 
     protected void setValueInternal(Object value) {
-<span class="nc bnc" id="L38" title="All 2 branches missed.">        if (null == value) {</span>
-<span class="nc" id="L39">            super.setValueInternal(null);</span>
-<span class="nc bnc" id="L40" title="All 2 branches missed.">        } else if (value instanceof CharSequence) {</span>
-<span class="nc" id="L41">            handleAsString(String.valueOf(value));</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">        if (null == value) {</span>
+<span class="nc" id="L38">            super.setValueInternal(null);</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        } else if (value instanceof CharSequence) {</span>
+<span class="nc" id="L40">            handleAsString(String.valueOf(value));</span>
         } else {
-<span class="nc" id="L43">            handleWithImagePropertyEditor(value);</span>
-        }
-<span class="nc" id="L45">    }</span>
-
-    protected void handleAsString(String str) {
-<span class="nc bnc" id="L48" title="All 2 branches missed.">        if (isBlank(str)) {</span>
-<span class="nc" id="L49">            super.setValueInternal(null);</span>
-<span class="nc bnc" id="L50" title="All 2 branches missed.">        } else if (str.contains(&quot;|&quot;)) {</span>
-<span class="nc" id="L51">            handleAsClassWithArg(str);</span>
-        } else {
-<span class="nc" id="L53">            handleWithImagePropertyEditor(str);</span>
-        }
-<span class="nc" id="L55">    }</span>
-
-    protected void handleWithImagePropertyEditor(Object value) {
-        try {
-<span class="nc" id="L59">            imagePropertyEditor.setValueInternal(value);</span>
-<span class="nc" id="L60">            Image image = (Image) imagePropertyEditor.getValue();</span>
-<span class="nc bnc" id="L61" title="All 2 branches missed.">            if (image != null) {</span>
-<span class="nc" id="L62">                super.setValueInternal(new ImageView(image));</span>
-            } else {
-<span class="nc" id="L64">                super.setValueInternal(null);</span>
-            }
-<span class="nc" id="L66">        } catch (IllegalArgumentException iae) {</span>
-<span class="nc" id="L67">            throw illegalValue(value, Node.class, iae);</span>
-<span class="nc" id="L68">        }</span>
-<span class="nc" id="L69">    }</span>
-
-    protected void handleAsClassWithArg(String str) {
-<span class="nc" id="L72">        String[] args = str.split(&quot;\\|&quot;);</span>
-<span class="nc bnc" id="L73" title="All 2 branches missed.">        if (args.length == 2) {</span>
-<span class="nc" id="L74">            Class&lt;?&gt; iconClass = null;</span>
             try {
-<span class="nc" id="L76">                iconClass = GraphicPropertyEditor.class.getClassLoader().loadClass(args[0]);</span>
-<span class="nc" id="L77">            } catch (ClassNotFoundException e) {</span>
-<span class="nc" id="L78">                throw illegalValue(str, Node.class, e);</span>
-<span class="nc" id="L79">            }</span>
-
-<span class="nc" id="L81">            Constructor&lt;?&gt; constructor = null;</span>
-            try {
-<span class="nc" id="L83">                constructor = iconClass.getConstructor(String.class);</span>
-<span class="nc" id="L84">            } catch (NoSuchMethodException e) {</span>
-<span class="nc" id="L85">                throw illegalValue(str, Node.class, e);</span>
-<span class="nc" id="L86">            }</span>
-
-            try {
-<span class="nc" id="L89">                Object o = constructor.newInstance(args[1]);</span>
-<span class="nc bnc" id="L90" title="All 2 branches missed.">                if (o instanceof Node) {</span>
-<span class="nc" id="L91">                    super.setValueInternal(o);</span>
-<span class="nc bnc" id="L92" title="All 2 branches missed.">                } else if (o instanceof Image) {</span>
-<span class="nc" id="L93">                    super.setValueInternal(new ImageView((Image) o));</span>
+<span class="nc" id="L43">                imagePropertyEditor.setValueInternal(value);</span>
+<span class="nc" id="L44">                Image image = (Image) imagePropertyEditor.getValue();</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">                if (image != null) {</span>
+<span class="nc" id="L46">                    super.setValueInternal(new ImageView(image));</span>
                 } else {
-<span class="nc" id="L95">                    throw illegalValue(str, Node.class);</span>
+<span class="nc" id="L48">                    super.setValueInternal(null);</span>
                 }
-<span class="nc" id="L97">            } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {</span>
-<span class="nc" id="L98">                throw illegalValue(str, Node.class, e);</span>
-<span class="nc" id="L99">            }</span>
-<span class="nc" id="L100">        } else {</span>
-<span class="nc" id="L101">            throw illegalValue(str, Node.class);</span>
+<span class="nc" id="L50">            } catch (IllegalArgumentException iae) {</span>
+<span class="nc" id="L51">                throw illegalValue(value, Node.class, iae);</span>
+<span class="nc" id="L52">            }</span>
         }
-<span class="nc" id="L103">    }</span>
+<span class="nc" id="L54">    }</span>
+
+    private void handleAsString(String str) {
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        if (isBlank(str)) {</span>
+<span class="nc" id="L58">            super.setValueInternal(null);</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        } else if (str.contains(&quot;|&quot;)) {</span>
+<span class="nc" id="L60">            handleAsClassWithArg(str);</span>
+        } else {
+<span class="nc" id="L62">            throw illegalValue(str, Node.class);</span>
+        }
+<span class="nc" id="L64">    }</span>
+
+    private void handleAsClassWithArg(String str) {
+<span class="nc" id="L67">        String[] args = str.split(&quot;\\|&quot;);</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (args.length == 2) {</span>
+<span class="nc" id="L69">            Class&lt;?&gt; iconClass = null;</span>
+            try {
+<span class="nc" id="L71">                iconClass = GraphicPropertyEditor.class.getClassLoader().loadClass(args[0]);</span>
+<span class="nc" id="L72">            } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L73">                throw illegalValue(str, Node.class, e);</span>
+<span class="nc" id="L74">            }</span>
+
+<span class="nc" id="L76">            Constructor&lt;?&gt; constructor = null;</span>
+            try {
+<span class="nc" id="L78">                constructor = iconClass.getConstructor(String.class);</span>
+<span class="nc" id="L79">            } catch (NoSuchMethodException e) {</span>
+<span class="nc" id="L80">                throw illegalValue(str, Node.class, e);</span>
+<span class="nc" id="L81">            }</span>
+
+            try {
+<span class="nc" id="L84">                Object o = constructor.newInstance(args[1]);</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">                if (o instanceof Node) {</span>
+<span class="nc" id="L86">                    super.setValueInternal(o);</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">                } else if (o instanceof Image) {</span>
+<span class="nc" id="L88">                    super.setValueInternal(new ImageView((Image) o));</span>
+                } else {
+<span class="nc" id="L90">                    throw illegalValue(str, Node.class);</span>
+                }
+<span class="nc" id="L92">            } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {</span>
+<span class="nc" id="L93">                throw illegalValue(str, Node.class, e);</span>
+<span class="nc" id="L94">            }</span>
+<span class="nc" id="L95">        } else {</span>
+<span class="nc" id="L96">            throw illegalValue(str, Node.class);</span>
+        }
+<span class="nc" id="L98">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

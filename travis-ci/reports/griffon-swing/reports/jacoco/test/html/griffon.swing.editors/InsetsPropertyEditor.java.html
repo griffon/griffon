@@ -55,7 +55,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
 <span class="fc" id="L56">    }</span>
 
-    protected void handleAsString(String str) {
+    private void handleAsString(String str) {
 <span class="fc bfc" id="L59" title="All 2 branches covered.">        if (isBlank(str)) {</span>
 <span class="fc" id="L60">            super.setValueInternal(null);</span>
 <span class="fc" id="L61">            return;</span>
@@ -82,7 +82,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
 <span class="fc" id="L83">    }</span>
 
-    protected void handleAsList(List&lt;?&gt; list) {
+    private void handleAsList(List&lt;?&gt; list) {
 <span class="fc bfc" id="L86" title="All 2 branches covered.">        if(list.isEmpty()) {</span>
 <span class="fc" id="L87">            super.setValueInternal(null);</span>
 <span class="fc" id="L88">            return;</span>
@@ -108,7 +108,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
 <span class="fc" id="L109">    }</span>
 
-    protected void handleAsMap(Map&lt;?, ?&gt; map) {
+    private void handleAsMap(Map&lt;?, ?&gt; map) {
 <span class="fc bfc" id="L112" title="All 2 branches covered.">        if(map.isEmpty()) {</span>
 <span class="fc" id="L113">            super.setValueInternal(null);</span>
 <span class="fc" id="L114">            return;</span>
@@ -121,7 +121,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="fc" id="L121">        super.setValueInternal(new Insets(t, l, r, b));</span>
 <span class="fc" id="L122">    }</span>
 
-    protected int parseValue(Object value) {
+    private int parseValue(Object value) {
 <span class="fc bfc" id="L125" title="All 2 branches covered.">        if (value instanceof CharSequence) {</span>
 <span class="fc" id="L126">            return parse(String.valueOf(value));</span>
 <span class="pc bpc" id="L127" title="1 of 2 branches missed.">        } else if (value instanceof Number) {</span>
@@ -130,7 +130,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L130">        throw illegalValue(value, Insets.class);</span>
     }
 
-    protected int parse(String val) {
+    private int parse(String val) {
         try {
 <span class="fc" id="L135">            return Integer.parseInt(val.trim());</span>
 <span class="nc" id="L136">        } catch (NumberFormatException e) {</span>
@@ -138,11 +138,11 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
     }
 
-    protected int parse(Number val) {
+    private int parse(Number val) {
 <span class="fc" id="L142">        return val.intValue();</span>
     }
 
-    protected int getMapValue(Map&lt;?, ?&gt; map, String key, int defaultValue) {
+    private int getMapValue(Map&lt;?, ?&gt; map, String key, int defaultValue) {
 <span class="fc" id="L146">        Object val = map.get(key);</span>
 <span class="fc bfc" id="L147" title="All 2 branches covered.">        if (null == val) val = map.get(String.valueOf(key.charAt(0)));</span>
 <span class="fc bfc" id="L148" title="All 2 branches covered.">        if (null == val) {</span>
@@ -155,7 +155,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L155">        throw illegalValue(map, Insets.class);</span>
     }
 
-    protected void handleAsNumber(Number value) {
+    private void handleAsNumber(Number value) {
 <span class="fc" id="L159">        int c = parse(value);</span>
 <span class="fc" id="L160">        super.setValueInternal(new Insets(c, c, c, c));</span>
 <span class="fc" id="L161">    }</span>

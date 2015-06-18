@@ -40,7 +40,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
 <span class="nc" id="L41">    }</span>
 
-    protected void handleAsString(String str) {
+    private void handleAsString(String str) {
 <span class="nc bnc" id="L44" title="All 2 branches missed.">        if (isBlank(str)) {</span>
 <span class="nc" id="L45">            super.setValueInternal(null);</span>
 <span class="nc" id="L46">            return;</span>
@@ -53,7 +53,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L53">        }</span>
 <span class="nc" id="L54">    }</span>
 
-    protected void handleAsFile(File file) {
+    private void handleAsFile(File file) {
 <span class="nc" id="L57">        super.setValueInternal(file.toURI());</span>
 <span class="nc" id="L58">    }</span>
 }

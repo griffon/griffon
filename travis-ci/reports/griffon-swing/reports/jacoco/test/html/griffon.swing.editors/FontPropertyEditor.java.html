@@ -35,7 +35,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="fc" id="L35">        return font.getFamily() + &quot;-&quot; + formatStyle(font) + &quot;-&quot; + font.getSize();</span>
     }
 
-    protected String formatStyle(Font font) {
+    private String formatStyle(Font font) {
 <span class="fc bfc" id="L39" title="All 4 branches covered.">        if (font.isBold() &amp;&amp; font.isItalic()) {</span>
 <span class="fc" id="L40">            return &quot;BOLDITALIC&quot;;</span>
 <span class="fc bfc" id="L41" title="All 2 branches covered.">        } else if (font.isBold()) {</span>
@@ -62,7 +62,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
 <span class="fc" id="L63">    }</span>
 
-    protected void handleAsString(String str) {
+    private void handleAsString(String str) {
 <span class="fc bfc" id="L66" title="All 2 branches covered.">        if (isBlank(str)) {</span>
 <span class="fc" id="L67">            super.setValueInternal(null);</span>
 <span class="fc" id="L68">            return;</span>
@@ -79,7 +79,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="fc" id="L79">        super.setValueInternal(new Font(family, style, size));</span>
 <span class="fc" id="L80">    }</span>
 
-    protected void handleAsList(List&lt;?&gt; list) {
+    private void handleAsList(List&lt;?&gt; list) {
 <span class="fc bfc" id="L83" title="All 2 branches covered.">        if(list.isEmpty()) {</span>
 <span class="fc" id="L84">            super.setValueInternal(null);</span>
 <span class="fc" id="L85">            return;</span>
@@ -96,7 +96,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="fc" id="L96">        super.setValueInternal(new Font(family, style, size));</span>
 <span class="fc" id="L97">    }</span>
 
-    protected void handleAsMap(Map&lt;?, ?&gt; map) {
+    private void handleAsMap(Map&lt;?, ?&gt; map) {
 <span class="fc bfc" id="L100" title="All 2 branches covered.">        if(map.isEmpty()) {</span>
 <span class="fc" id="L101">            super.setValueInternal(null);</span>
 <span class="fc" id="L102">            return;</span>
@@ -108,7 +108,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="fc" id="L108">        super.setValueInternal(new Font(family, resolveStyle(map, style), parseSize(map, size)));</span>
 <span class="fc" id="L109">    }</span>
 
-    protected String getMapValue(Map&lt;?, ?&gt; map, String key, String defaultValue) {
+    private String getMapValue(Map&lt;?, ?&gt; map, String key, String defaultValue) {
 <span class="fc" id="L112">        Object val = map.get(key);</span>
 <span class="fc bfc" id="L113" title="All 2 branches covered.">        if (null == val) val = map.get(String.valueOf(key.charAt(0)));</span>
 <span class="fc bfc" id="L114" title="All 2 branches covered.">        if (null == val) {</span>
@@ -119,7 +119,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L119">        throw illegalValue(map, Font.class);</span>
     }
 
-    protected int parseSize(Object source, String str) {
+    private int parseSize(Object source, String str) {
         int size;
         try {
 <span class="fc" id="L125">            size = Integer.parseInt(str);</span>
@@ -129,7 +129,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="fc" id="L129">        return size;</span>
     }
 
-    protected int resolveStyle(Object source, String str) {
+    private int resolveStyle(Object source, String str) {
 <span class="fc bfc" id="L133" title="All 2 branches covered.">        if (&quot;PLAIN&quot;.equals(str.toUpperCase())) {</span>
 <span class="fc" id="L134">            return Font.PLAIN;</span>
 <span class="fc bfc" id="L135" title="All 2 branches covered.">        } else if (&quot;BOLD&quot;.equals(str.toUpperCase())) {</span>

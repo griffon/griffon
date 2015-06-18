@@ -37,7 +37,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
 <span class="nc" id="L38">    }</span>
 
-    protected void handleAsString(String str) {
+    private void handleAsString(String str) {
         try {
 <span class="nc bnc" id="L42" title="All 2 branches missed.">            super.setValueInternal(isBlank(str) ? null : Double.parseDouble(str));</span>
 <span class="nc" id="L43">        } catch (NumberFormatException e) {</span>
@@ -45,7 +45,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L45">        }</span>
 <span class="nc" id="L46">    }</span>
 
-    protected void handleAsNumber(Number number) {
+    private void handleAsNumber(Number number) {
 <span class="nc" id="L49">        super.setValueInternal(number.doubleValue());</span>
 <span class="nc" id="L50">    }</span>
 
