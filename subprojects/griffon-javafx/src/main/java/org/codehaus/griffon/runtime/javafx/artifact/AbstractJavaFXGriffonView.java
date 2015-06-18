@@ -88,12 +88,7 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
         fxmlLoader.setResources(getApplication().getMessageSource().asResourceBundle());
         fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory(getApplication().getApplicationClassLoader().get()));
         fxmlLoader.setClassLoader(getApplication().getApplicationClassLoader().get());
-        fxmlLoader.setControllerFactory(new Callback<Class<?>, Object>() {
-            @Override
-            public Object call(Class<?> aClass) {
-                return getMvcGroup().getView();
-            }
-        });
+        fxmlLoader.setControllerFactory(klass -> getMvcGroup().getView());
 
         try {
             fxmlLoader.load();
