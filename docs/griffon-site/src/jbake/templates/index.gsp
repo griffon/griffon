@@ -14,7 +14,7 @@
     <p><a
         href="http://griffon-framework.org/">Griffon</a> is desktop application development platform for the JVM.Inspired by <a
         href="http://grails.org/">Grails</a>, Griffon leverages the use of the <a
-        href="http://groovy.codehaus.org/">Groovy</a> language and concepts like Convention over
+        href="http://groovy-lang.org/">Groovy</a> language and concepts like Convention over
     Configuration. The Swing toolkit is the default UI toolkit of choice however others may be used,
     for example JavaFX.
     </p>
