@@ -24,12 +24,17 @@ import com.intellij.patterns.*
  * @author Andres Almiray
  */
 
-['Controller', 'Model', 'View', 'Service'].each { type ->
-    String artifactPath = type.toLowerCase() + 's'
-    contributor(ctype: PsiJavaPatterns.psiClass().withName(PlatformPatterns.string().matches(/.*${type}/))) {
-        def path = psiClass?.containingFile?.originalFile?.virtualFile?.path
-        if (path && path =~ ".*/*griffon-app/${artifactPath}/.*") {
-            delegatesTo(findClass("griffon.core.artifact.Griffon${type}"))
+String artifactProviderForType = 'griffon.metadata.ArtifactProviderFor'
+
+contributor(scope: annotatedScope(ctype: artifactProviderForType)) {
+    def clazz = enclosingClass()
+    if (clazz) {
+        String value = clazz.getAnnotation(artifactProviderForType).findAttributeValue('value').text
+        String targetType = 'griffon.core.artifact.' + value
+        try {
+            delegatesTo(findClass(targetType))
+        } catch (x) {
+            // skip
         }
     }
 }

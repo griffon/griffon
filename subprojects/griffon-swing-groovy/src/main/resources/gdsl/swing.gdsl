@@ -1,0 +1,203 @@
+/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import com.intellij.patterns.*
+import com.intellij.openapi.diagnostic.*
+
+import groovy.swing.impl.TableLayout
+import groovy.swing.impl.TableLayoutCell
+import groovy.swing.impl.TableLayoutRow
+
+import java.beans.Introspector
+import javax.swing.table.TableColumn
+import javax.swing.table.TableModel
+import java.awt.*
+import javax.swing.*
+import javax.swing.border.*
+
+/**
+ * @author Kasper Fock
+ * @author David Askirk
+ * @author Peter Gromov
+ * @author Andres Almiray
+ */
+private java.util.List defaultNodeNamedParams(receiver, Class target) {
+    java.util.List params = []
+    Introspector.getBeanInfo(target).propertyDescriptors.each { p ->
+        if (p.propertyType && !p.propertyType.isArray()) params << receiver.parameter(name: p.name, type: p.propertyType.name)
+    }
+    params
+}
+
+private java.util.List defaultWidgetNodeNamedParams(receiver, Class target) {
+    java.util.List params = []
+    Introspector.getBeanInfo(target).eventSetDescriptors.each { e ->
+        e.listenerType.methods.each { m ->
+            params << receiver.parameter(name: m.name, type: 'groovy.lang.Closure')
+        }
+    }
+    params
+}
+
+def baseBuilderNode = { receiver, String name, Class type, Map params = [:], java.util.List namedParams = [] ->
+    Map args = [name: name, type: type, params: params]
+    args.namedParams = [receiver.parameter(name: 'id', type: String)] + namedParams
+    receiver.method(args)
+}
+
+def builderNode = { receiver, String name, Class type, Map params = [:], java.util.List namedParams = [] ->
+    namedParams.addAll(defaultNodeNamedParams(receiver, type))
+    baseBuilderNode(receiver, name, type, params, namedParams)
+}
+
+def widgetNode = { receiver, String name, Class type, Map params = [:], java.util.List namedParams = [] ->
+    namedParams << receiver.parameter(name: 'constraints', type: Object)
+    namedParams.addAll(defaultWidgetNodeNamedParams(receiver, type))
+    builderNode(receiver, name, type, params, namedParams)
+}
+
+def containerNode = { receiver, String name, Class type, Map params = [:], java.util.List namedParams = [] ->
+    params += [children: Closure]
+    widgetNode(receiver, name, type, params, namedParams)
+}
+
+def addNodeContributions = { receiver ->
+    containerNode(receiver, 'application', JFrame)
+    builderNode(receiver, 'action', Action)
+    builderNode(receiver, 'actions', java.util.List, [closure: 'groovy.lang.Closure'])
+    builderNode(receiver, 'map', Map)
+    widgetNode(receiver, 'imageIcon', ImageIcon)
+    widgetNode(receiver, 'buttonGroup', ButtonGroup)
+    receiver.method name: 'noparent', type: 'void', params: [closure: 'groovy.lang.Closure']
+    containerNode(receiver, 'container', Container)
+    widgetNode(receiver, 'widget', JComponent)
+    builderNode(receiver, 'bean', Object)
+    builderNode(receiver, 'bind', Object, [:], [
+        receiver.parameter(name: 'source', type: Object),
+        receiver.parameter(name: 'target', type: Object),
+        receiver.parameter(name: 'sourceProperty', type: String),
+        receiver.parameter(name: 'targetProperty', type: String),
+        receiver.parameter(name: 'converter', type: Closure),
+        receiver.parameter(name: 'reverseConverter', type: Closure),
+        receiver.parameter(name: 'validator', type: Closure),
+        receiver.parameter(name: 'mutual', type: boolean)
+    ])
+
+    containerNode(receiver, 'dialog', JDialog)
+    containerNode(receiver, 'fileChooser', JFileChooser)
+    containerNode(receiver, 'frame', JFrame)
+    containerNode(receiver, 'optionPane', JOptionPane)
+    containerNode(receiver, 'window', JWindow)
+
+    widgetNode(receiver, 'button', JButton)
+    widgetNode(receiver, 'checkBox', JCheckBox)
+    widgetNode(receiver, 'checkBoxMenuItem', JCheckBoxMenuItem)
+    widgetNode(receiver, 'menuItem', JMenuItem)
+    widgetNode(receiver, 'radioButton', JRadioButton)
+    widgetNode(receiver, 'radioButtonMenuItem', JRadioButtonMenuItem)
+    widgetNode(receiver, 'toggleButton', JToggleButton)
+
+    widgetNode(receiver, 'editorPane', JEditorPane)
+    widgetNode(receiver, 'label', JLabel)
+    widgetNode(receiver, 'passwordField', JPasswordField)
+    widgetNode(receiver, 'textArea', JTextArea)
+    widgetNode(receiver, 'textField', JTextField)
+    widgetNode(receiver, 'formattedTextField', JFormattedTextField)
+    widgetNode(receiver, 'textPane', JTextPane)
+
+    containerNode(receiver, 'desktopPane', JDesktopPane)
+    containerNode(receiver, 'internalFrame', JInternalFrame)
+
+    widgetNode(receiver, 'colorChooser', JColorChooser)
+    widgetNode(receiver, 'comboBox', JComboBox)
+    widgetNode(receiver, 'list', JList)
+    widgetNode(receiver, 'progressBar', JProgressBar)
+    widgetNode(receiver, 'separator', JSeparator)
+    widgetNode(receiver, 'scrollBar', JScrollBar)
+    widgetNode(receiver, 'slider', JSlider)
+    widgetNode(receiver, 'spinner', JSpinner)
+    widgetNode(receiver, 'tree', JTree)
+
+    containerNode(receiver, 'menu', JMenu)
+    containerNode(receiver, 'menuBar', JMenuBar)
+    containerNode(receiver, 'popupMenu', JPopupMenu)
+
+    containerNode(receiver, 'panel', JPanel)
+    containerNode(receiver, 'scrollPane', JScrollPane)
+    containerNode(receiver, 'splitPane', JSplitPane)
+    containerNode(receiver, 'tabbedPane', JTabbedPane)
+    containerNode(receiver, 'toolBar', JToolBar)
+    containerNode(receiver, 'viewport', JViewport)
+    containerNode(receiver, 'layeredPane', JLayeredPane)
+
+    widgetNode(receiver, 'boundedRangeModel', DefaultBoundedRangeModel)
+    widgetNode(receiver, 'spinnerDateModel', SpinnerDateModel)
+    widgetNode(receiver, 'spinnerListModel', SpinnerListModel)
+    widgetNode(receiver, 'spinnerNumberModel', SpinnerNumberModel)
+
+    containerNode(receiver, 'table', JTable)
+    widgetNode(receiver, 'tableColumn', TableColumn)
+    widgetNode(receiver, 'tableModel', TableModel)
+    receiver.method name: 'propertyColumn', type: 'void'
+    receiver.method name: 'closureColumn', type: 'void'
+
+    widgetNode(receiver, 'borderLayout', BorderLayout, [hgap: 'int', vgap: 'int'])
+    widgetNode(receiver, 'cardLayout', CardLayout)
+    widgetNode(receiver, 'flowLayout', FlowLayout)
+    widgetNode(receiver, 'gridLayout', GridLayout, [rows: 'int', cols: 'int'])
+    widgetNode(receiver, 'overlayLayout', OverlayLayout)
+    widgetNode(receiver, 'springLayout', SpringLayout)
+    widgetNode(receiver, 'gridBagLayout', GridBagLayout)
+    builderNode(receiver, 'gridBagConstraints', GridBagConstraints)
+    builderNode(receiver, 'gbc', GridBagConstraints)
+
+    containerNode(receiver, 'box', Box)
+    widgetNode(receiver, 'boxLayout', BoxLayout)
+    containerNode(receiver, 'hbox', Box)
+    widgetNode(receiver, 'hglue', Component)
+    widgetNode(receiver, 'hstrut', Component)
+    containerNode(receiver, 'vbox', Box)
+    widgetNode(receiver, 'vglue', Component)
+    widgetNode(receiver, 'vstrut', Component)
+    widgetNode(receiver, 'glue', Component)
+    widgetNode(receiver, 'rigidArea', Component)
+
+    widgetNode(receiver, 'tableLayout', TableLayout)
+    widgetNode(receiver, 'tr', TableLayoutRow)
+    widgetNode(receiver, 'td', TableLayoutCell)
+
+    widgetNode(receiver, 'lineBorder', LineBorder)
+    widgetNode(receiver, 'loweredBevelBorder', BevelBorder)
+    widgetNode(receiver, 'raisedBevelBorder', BevelBorder)
+    widgetNode(receiver, 'etchedBorder', EtchedBorder)
+    widgetNode(receiver, 'loweredEtchedBorder', EtchedBorder)
+    widgetNode(receiver, 'raisedEtchedBorder', EtchedBorder)
+    widgetNode(receiver, 'titledBorder', TitledBorder)
+    widgetNode(receiver, 'emptyBorder', EmptyBorder)
+    widgetNode(receiver, 'compoundBorder', CompoundBorder)
+    widgetNode(receiver, 'matteBorder', MatteBorder)
+}
+
+String artifactProviderForType = 'griffon.metadata.ArtifactProviderFor'
+contributor(scope: annotatedScope(ctype: artifactProviderForType)) {
+    def clazz = enclosingClass()
+    if (clazz) {
+        String value = clazz.getAnnotation(artifactProviderForType).findAttributeValue('value').text
+        if(value == 'GriffonView') {
+            addNodeContributions(delegate)
+        }
+    }
+}
