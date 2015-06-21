@@ -57,7 +57,13 @@ public class InstanceMethodInvocationException extends MethodInvocationException
             } else {
                 b.append(",");
             }
-            b.append(type.getName());
+            if (type == null) {
+                // we don't know the type as the argument is null,
+                // let's fallback to plain old Object
+                b.append(Object.class.getName());
+            } else {
+                b.append(type.getName());
+            }
         }
         b.append(")");
 
