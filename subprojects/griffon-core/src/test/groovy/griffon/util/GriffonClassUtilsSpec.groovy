@@ -99,11 +99,37 @@ class GriffonClassUtilsSpec extends Specification {
         [result, method] << methodsOf(GriffonArtifact, true).plus(methodsOf(EventPublisher, false))
     }
 
+    void "InvokeInstanceMethod can resolved overloaded calls inputs=#inputs"() {
+        expect:
+        output == GriffonClassUtils.invokeInstanceMethod(new Bean(), 'doSomething', *inputs)
+
+        where:
+        inputs        || output
+        ['foo', 1]    || 'java.lang.String:java.lang.Integer'
+        ['foo', []]   || 'java.lang.String:java.lang.Object'
+        ['foo', null] || 'java.lang.String:java.lang.Object'
+        ['foo']       || 'java.lang.String'
+    }
+
     private static List methodsOf(Class<?> type, boolean result) {
         List data = []
         for (Method m : type.methods) {
             data << [result, MethodDescriptor.forMethod(m, true)]
         }
         data
+    }
+
+    static class Bean {
+        def doSomething(String arg0, Integer arg1) {
+            String.name + ':' + Integer.name
+        }
+
+        def doSomething(String arg0, Object arg1) {
+            String.name + ':' + Object.name
+        }
+
+        def doSomething(String arg0) {
+            String.name
+        }
     }
 }
