@@ -18,6 +18,7 @@ package griffon.core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -150,6 +151,15 @@ public class GriffonExceptionHandler implements Thread.UncaughtExceptionHandler 
             current = doSanitize(current.getCause());
         }
         return doSanitize(t);
+    }
+
+    public static Throwable getRootCause(Throwable e) {
+        if (e instanceof InvocationTargetException) {
+            return getRootCause(((InvocationTargetException) e).getTargetException());
+        } else if (e.getCause() != null) {
+            return getRootCause(e.getCause());
+        }
+        return e;
     }
 
     private static Throwable doSanitize(Throwable t) {
