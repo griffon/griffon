@@ -40,9 +40,12 @@ import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.ServiceLoader;
 
 import static com.google.inject.util.Providers.guicify;
+import static griffon.util.AnnotationUtils.sortByDependencies;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 import static org.codehaus.griffon.runtime.injection.GuiceInjector.moduleFromBindings;
@@ -122,11 +125,14 @@ public class GuiceInjectorFactory implements InjectorFactory {
         modules.add(injectorModule);
         modules.add(moduleFromBindings(bindings));
 
+        List<Module> loadedModules = new ArrayList<>();
         ServiceLoader<Module> moduleLoader = ServiceLoader.load(Module.class, getClass().getClassLoader());
         for (Module module : moduleLoader) {
             LOG.trace("Adding module {}", module);
-            modules.add(module);
+            loadedModules.add(module);
         }
+        Map<String, Module> sortedModules = sortByDependencies(loadedModules, "Module", "module");
+        modules.addAll(sortedModules.values());
 
         com.google.inject.Injector injector = Guice.createInjector(modules);
         return new GuiceInjector(injector);
