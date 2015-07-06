@@ -18,7 +18,9 @@ package org.codehaus.griffon.runtime.injection;
 import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonArtifact;
+import griffon.core.event.EventRouter;
 import griffon.inject.Prototype;
+import griffon.util.ServiceLoaderUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -31,6 +33,7 @@ import org.springframework.beans.factory.support.CglibSubclassingInstantiationSt
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.CommonAnnotationBeanPostProcessor;
+import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,6 +42,8 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -47,6 +52,8 @@ import java.util.Map;
 import java.util.Set;
 
 import static griffon.util.GriffonNameUtils.getPropertyName;
+import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.ServiceLoaderUtils.load;
 import static java.util.Arrays.asList;
 import static org.codehaus.griffon.runtime.injection.BeanUtils.asAutowireCandidateQualifiers;
 import static org.codehaus.griffon.runtime.injection.BeanUtils.toAutowireCandidateQualifiers;
@@ -58,7 +65,11 @@ import static org.codehaus.griffon.runtime.injection.BeanUtils.toAutowireCandida
  * @since 2.4.0
  */
 public class SpringContext {
+    public static final String SPRING_SCANNED_PACKAGES_KEY = "griffon.spring.scanned.packages";
+
     private static final Logger LOG = LoggerFactory.getLogger(SpringContext.class);
+    private static final String CONFIGURATION_CLASS_PATH = "META-INF/services" + Configuration.class.getName();
+
     private final Map<String, Object> instances = new LinkedHashMap<>();
     private final Map<String, AbstractSpringBean> beans = new LinkedHashMap<>();
     private final GriffonApplication application;
@@ -83,14 +94,43 @@ public class SpringContext {
 
     @Nonnull
     public ApplicationContext create(@Nullable ApplicationContext parent) {
-        GriffonApplicationContext applicationContext;
-        if (parent != null) {
-            applicationContext = new GriffonApplicationContext(parent);
+        GriffonApplicationContext applicationContext = null;
+
+        String scannedPackages = System.getProperty(SPRING_SCANNED_PACKAGES_KEY);
+        if (!isBlank(scannedPackages)) {
+            applicationContext = new GriffonApplicationContext(scannedPackages.split(","));
         } else {
-            applicationContext = new GriffonApplicationContext();
+            // configuration classes?
+            final List<Class<?>> classes = new ArrayList<>();
+            load(getClass().getClassLoader(), CONFIGURATION_CLASS_PATH, new ServiceLoaderUtils.PathFilter() {
+                @Override
+                public boolean accept(@Nonnull String path) {
+                    return true;
+                }
+            }, new ServiceLoaderUtils.ResourceProcessor() {
+                @Override
+                public void process(@Nonnull ClassLoader classLoader, @Nonnull String line) {
+                    line = line.trim();
+                    try {
+                        classes.add(classLoader.loadClass(line));
+                    } catch (ClassNotFoundException e) {
+                        LOG.warn("'" + line + "' could not be resolved as a Class");
+                    }
+                }
+            });
+
+            if (!classes.isEmpty()) {
+                applicationContext = new GriffonApplicationContext(classes.toArray(new Class[classes.size()]));
+            } else {
+                applicationContext = new GriffonApplicationContext();
+            }
         }
 
-        DefaultListableBeanFactory factory = applicationContext.getDefaultListableBeanFactory();
+        if (parent != null) {
+            applicationContext.setParent(parent);
+        }
+
+        final DefaultListableBeanFactory factory = applicationContext.getDefaultListableBeanFactory();
 
         factory.setBeanClassLoader(getClass().getClassLoader());
         factory.setInstantiationStrategy(new SingletonInstantiationStrategy(new CglibSubclassingInstantiationStrategy(), instances));
@@ -114,12 +154,13 @@ public class SpringContext {
 
             @Override
             public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-                if(bean instanceof GriffonArtifact) {
-                    application.getEventRouter().publishEvent(
+                System.out.println("Is "+bean+" an artifact? " + (bean instanceof GriffonArtifact));
+                /*if (bean instanceof GriffonArtifact) {
+                    factory.getBean(EventRouter.class).publishEvent(
                         ApplicationEvent.NEW_INSTANCE.getName(),
                         asList(bean.getClass(), bean)
                     );
-                }
+                }*/
                 return bean;
             }
         });
@@ -134,6 +175,15 @@ public class SpringContext {
         QualifierAnnotationAutowireCandidateResolver customResolver = new QualifierAnnotationAutowireCandidateResolver();
         factory.setAutowireCandidateResolver(customResolver);
         configurer.postProcessBeanFactory(factory);
+
+        applicationContext.init();
+        System.out.println("************************************");
+        String[] names = applicationContext.getBeanDefinitionNames();
+        Arrays.sort(names);
+        for (String n : names) {
+            System.out.println(n);
+        }
+        System.out.println("************************************");
 
         return applicationContext;
     }

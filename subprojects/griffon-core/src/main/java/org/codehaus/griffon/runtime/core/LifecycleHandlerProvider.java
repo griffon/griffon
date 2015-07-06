@@ -19,7 +19,6 @@ import griffon.core.ApplicationClassLoader;
 import griffon.core.GriffonApplication;
 import griffon.core.LifecycleHandler;
 import griffon.exceptions.InstanceNotFoundException;
-import griffon.exceptions.TypeNotFoundException;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -62,7 +61,7 @@ public class LifecycleHandlerProvider implements Provider<LifecycleHandler> {
         try {
             handlerClass = (Class<LifecycleHandler>) applicationClassLoader.get().loadClass(basename);
         } catch (ClassNotFoundException e) {
-            throw new TypeNotFoundException(LifecycleHandler.class.getName(), named(basename), e);
+            return new NoopLifecycleHandler(application);
         }
 
         try {
@@ -72,6 +71,17 @@ public class LifecycleHandlerProvider implements Provider<LifecycleHandler> {
             throw new InstanceNotFoundException(handlerClass, named(basename), e);
         } catch (InvocationTargetException e) {
             throw new InstanceNotFoundException(handlerClass, named(basename), e.getTargetException());
+        }
+    }
+
+    private static class NoopLifecycleHandler extends AbstractLifecycleHandler {
+        public NoopLifecycleHandler(@Nonnull GriffonApplication application) {
+            super(application);
+        }
+
+        @Override
+        public void execute() {
+            // noop
         }
     }
 }

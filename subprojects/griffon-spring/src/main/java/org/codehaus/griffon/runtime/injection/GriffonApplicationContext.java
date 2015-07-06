@@ -18,16 +18,20 @@ package org.codehaus.griffon.runtime.injection;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.Map;
+
+import static java.util.Arrays.copyOf;
 
 /**
  * @author Andres Almiray
  * @since 2.4.0
  */
-public class GriffonApplicationContext extends GenericApplicationContext {
+public class GriffonApplicationContext extends AnnotationConfigApplicationContext {
+    private String[] basePackages;
+    private Class[] annotatedClasses;
+
     /**
      * Create a new GriffonApplicationContext.
      *
@@ -51,19 +55,34 @@ public class GriffonApplicationContext extends GenericApplicationContext {
     }
 
     /**
-     * Create a new GriffonApplicationContext with the given parent.
+     * Create a new AnnotationConfigApplicationContext, deriving bean definitions
+     * from the given annotated classes and automatically refreshing the context.
      *
-     * @see #registerBeanDefinition
-     * @see #refresh
+     * @param annotatedClasses one or more annotated classes,
+     *                         e.g. {@link org.springframework.context.annotation.Configuration @Configuration} classes
      */
-    public GriffonApplicationContext(ApplicationContext parent) throws BeansException {
-        super(parent);
+    public GriffonApplicationContext(Class<?>... annotatedClasses) {
+        this();
+        this.annotatedClasses = copyOf(annotatedClasses, annotatedClasses.length);
     }
 
     /**
-     * Overridden to turn it into a no-op, to be more lenient towards test cases.
+     * Create a new AnnotationConfigApplicationContext, scanning for bean definitions
+     * in the given packages and automatically refreshing the context.
+     *
+     * @param basePackages the packages to check for annotated classes
      */
-    @Override
-    protected void assertBeanFactoryActive() {
+    public GriffonApplicationContext(String... basePackages) {
+        this();
+        this.basePackages = copyOf(basePackages, basePackages.length);
+    }
+
+    public void init() {
+        if (basePackages != null) {
+            scan(basePackages);
+        } else {
+            register(annotatedClasses);
+        }
+        refresh();
     }
 }

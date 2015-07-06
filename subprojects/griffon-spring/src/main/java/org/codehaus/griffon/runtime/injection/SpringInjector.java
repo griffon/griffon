@@ -64,7 +64,6 @@ public class SpringInjector implements Injector<SpringContext> {
     @GuardedBy("lock")
     private boolean closed;
 
-
     public SpringInjector(@Nonnull SpringContext delegate) {
         this.delegate = requireNonNull(delegate, ERROR_DELEGATE_NULL);
         this.applicationContext = delegate.create();
