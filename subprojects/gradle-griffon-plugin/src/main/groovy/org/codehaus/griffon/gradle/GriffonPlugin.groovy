@@ -17,6 +17,7 @@ package org.codehaus.griffon.gradle
 
 import org.apache.tools.ant.filters.ReplaceTokens
 import org.gradle.BuildAdapter
+import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -242,6 +243,9 @@ class GriffonPlugin implements Plugin<Project> {
                 appendDependency('core')
                 appendDependency('core-compile')
                 appendDependency('core-test')
+                if (JavaVersion.current().isJava8Compatible()) {
+                    appendDependency('core-java8')
+                }
 
                 validateToolkit(project, extension)
                 project.plugins.withId('application') { plugin ->
