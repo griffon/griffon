@@ -56,11 +56,12 @@ public final class GriffonApplicationUtils {
     private static final String javaVersion;
     private static final boolean is64Bit;
 
-    private static final boolean isJdk14;
-    private static final boolean isJdk15;
-    private static final boolean isJdk16;
-    private static final boolean isJdk17;
-    private static final boolean isJdk18;
+    private static final boolean isJdk4;
+    private static final boolean isJdk5;
+    private static final boolean isJdk6;
+    private static final boolean isJdk7;
+    private static final boolean isJdk8;
+    private static final boolean isJdk9;
 
     public static final String platform;
     public static final String basePlatform;
@@ -237,37 +238,49 @@ public final class GriffonApplicationUtils {
         osVersion = System.getProperty("os.version");
         javaVersion = System.getProperty("java.version");
         String version = javaVersion.substring(0, 3);
-        isJdk14 = true;
+        isJdk4 = true;
         switch (version) {
+            case "1.9":
+                isJdk9 = true;
+                isJdk8 = true;
+                isJdk7 = true;
+                isJdk6 = true;
+                isJdk5 = true;
+                break;
             case "1.8":
-                isJdk18 = true;
-                isJdk17 = true;
-                isJdk16 = true;
-                isJdk15 = true;
+                isJdk9 = false;
+                isJdk8 = true;
+                isJdk7 = true;
+                isJdk6 = true;
+                isJdk5 = true;
                 break;
             case "1.7":
-                isJdk18 = false;
-                isJdk17 = true;
-                isJdk16 = true;
-                isJdk15 = true;
+                isJdk9 = false;
+                isJdk8 = false;
+                isJdk7 = true;
+                isJdk6 = true;
+                isJdk5 = true;
                 break;
             case "1.6":
-                isJdk18 = false;
-                isJdk17 = false;
-                isJdk16 = true;
-                isJdk15 = true;
+                isJdk9 = false;
+                isJdk8 = false;
+                isJdk7 = false;
+                isJdk6 = true;
+                isJdk5 = true;
                 break;
             case "1.5":
-                isJdk18 = false;
-                isJdk17 = false;
-                isJdk16 = false;
-                isJdk15 = true;
+                isJdk9 = false;
+                isJdk8 = false;
+                isJdk7 = false;
+                isJdk6 = false;
+                isJdk5 = true;
                 break;
             default:
-                isJdk18 = false;
-                isJdk17 = false;
-                isJdk16 = false;
-                isJdk15 = false;
+                isJdk9 = false;
+                isJdk8 = false;
+                isJdk7 = false;
+                isJdk6 = false;
+                isJdk5 = false;
                 break;
         }
 
@@ -350,24 +363,53 @@ public final class GriffonApplicationUtils {
         return is64Bit;
     }
 
+    @Deprecated
     public static boolean isJdk14() {
-        return isJdk14;
+        return isJdk4();
     }
 
+    @Deprecated
     public static boolean isJdk15() {
-        return isJdk15;
+        return isJdk5();
     }
 
+    @Deprecated
     public static boolean isJdk16() {
-        return isJdk16;
+        return isJdk6();
     }
 
+    @Deprecated
     public static boolean isJdk17() {
-        return isJdk17;
+        return isJdk7();
     }
 
+    @Deprecated
     public static boolean isJdk18() {
-        return isJdk18;
+        return isJdk8();
+    }
+
+    public static boolean isJdk4() {
+        return isJdk4;
+    }
+
+    public static boolean isJdk5() {
+        return isJdk5;
+    }
+
+    public static boolean isJdk6() {
+        return isJdk6;
+    }
+
+    public static boolean isJdk7() {
+        return isJdk7;
+    }
+
+    public static boolean isJdk8() {
+        return isJdk8;
+    }
+
+    public static boolean isJdk9() {
+        return isJdk9;
     }
 
     public static String getPlatform() {
@@ -438,24 +480,53 @@ public final class GriffonApplicationUtils {
         return is64Bit;
     }
 
+    @Deprecated
     public static boolean getIsJdk14() {
-        return isJdk14;
+        return isJdk4;
     }
 
+    @Deprecated
     public static boolean getIsJdk15() {
-        return isJdk15;
+        return isJdk5;
     }
 
+    @Deprecated
     public static boolean getIsJdk16() {
-        return isJdk16;
+        return isJdk6;
     }
 
+    @Deprecated
     public static boolean getIsJdk17() {
-        return isJdk17;
+        return isJdk7;
     }
 
+    @Deprecated
     public static boolean getIsJdk18() {
-        return isJdk18;
+        return isJdk8;
+    }
+
+    public static boolean getIsJdk4() {
+        return isJdk4;
+    }
+
+    public static boolean getIsJdk5() {
+        return isJdk5;
+    }
+
+    public static boolean getIsJdk6() {
+        return isJdk6;
+    }
+
+    public static boolean getIsJdk7() {
+        return isJdk7;
+    }
+
+    public static boolean getIsJdk8() {
+        return isJdk8;
+    }
+
+    public static boolean getIsJdk9() {
+        return isJdk9;
     }
 
     @Nonnull
