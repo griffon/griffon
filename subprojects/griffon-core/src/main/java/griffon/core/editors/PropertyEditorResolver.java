@@ -112,7 +112,7 @@ public final class PropertyEditorResolver {
     public static void unregisterEditor(@Nonnull Class<?> targetType) {
         requireNonNull(targetType, ERROR_TARGET_TYPE_NULL);
         synchronized (LOCK) {
-            String targetTypeName = targetType.getTypeName();
+            String targetTypeName = targetType.getName();
             propertyEditorChainRegistry.remove(targetTypeName);
             propertyEditorRegistry.remove(targetTypeName);
         }
@@ -135,7 +135,7 @@ public final class PropertyEditorResolver {
     public static void registerEditor(@Nonnull Class<?> targetType, @Nullable Class<? extends PropertyEditor> editorClass) {
         requireNonNull(targetType, ERROR_TARGET_TYPE_NULL);
         synchronized (LOCK) {
-            String targetTypeName = targetType.getTypeName();
+            String targetTypeName = targetType.getName();
             if (editorClass == null) {
                 propertyEditorChainRegistry.remove(targetTypeName);
                 propertyEditorRegistry.remove(targetTypeName);
@@ -165,7 +165,7 @@ public final class PropertyEditorResolver {
 
     private static PropertyEditor doFindEditor(Class<?> targetType) {
         synchronized (LOCK) {
-            String targetTypeName = targetType.getTypeName();
+            String targetTypeName = targetType.getName();
             if (propertyEditorChainRegistry.containsKey(targetTypeName)) {
                 PropertyEditorChain chain = propertyEditorChainRegistry.get(targetTypeName);
                 return chain.copyOf();
