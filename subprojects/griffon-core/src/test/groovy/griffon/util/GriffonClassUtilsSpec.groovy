@@ -31,41 +31,89 @@ import java.lang.reflect.Method
 
 @Unroll
 class GriffonClassUtilsSpec extends Specification {
-    void "isResourceResolverMethod() returns #result for '#method'"() {
+    void "isContributionMethod() returns #result for '#method' (name)"() {
         expect:
-        assert result == GriffonClassUtils.isResourceResolverMethod(method)
+        assert result == GriffonClassUtils.isContributionMethod(method)
+
+        where:
+        [result, method] << [[true, 'withSomething'], [false, 'something']]
+    }
+
+    void "isEventHandler() returns #result for '#method' (name)"() {
+        expect:
+        assert result == GriffonClassUtils.isEventHandler(method)
+
+        where:
+        [result, method] << [[true, 'onSomething'], [false, 'something']]
+    }
+
+    void "isSetterMethod() returns #result for '#method' (java.lang.reflect.Method)"() {
+        expect:
+        assert result == GriffonClassUtils.isSetterMethod(method, true)
+
+        where:
+        [result, method] << methodsOf(MySetter, true).plus(methodsOf(MyGetter, false))
+    }
+
+    void "isGetterMethod() returns #result for '#method' (java.lang.reflect.Method)"() {
+        expect:
+        assert result == GriffonClassUtils.isGetterMethod(method, true)
+
+        where:
+        [result, method] << methodsOf(MyGetter, true).plus(methodsOf(MySetter, false))
+    }
+
+    void "isContributionMethod() returns #result for '#method' (java.lang.reflect.Method)"() {
+        expect:
+        assert result == GriffonClassUtils.isContributionMethod(method, true)
+
+        where:
+        [result, method] << methodsOf(MyContributor, true).plus(methodsOf(MyEventHandler, false))
+    }
+
+    void "isEventHandler() returns #result for '#method' (java.lang.reflect.Method)"() {
+        expect:
+        assert result == GriffonClassUtils.isEventHandler(method, true)
+
+        where:
+        [result, method] << methodsOf(MyEventHandler, true).plus(methodsOf(MyContributor, false))
+    }
+
+    void "isResourceResolverMethod() returns #result for '#method' (java.lang.reflect.Method)"() {
+        expect:
+        assert result == GriffonClassUtils.isResourceResolverMethod(method, true)
 
         where:
         [result, method] << methodsOf(ResourceResolver, true).plus(methodsOf(ResourceHandler, false))
     }
 
-    void "isResourceHandlerMethod() returns #result for '#method'"() {
+    void "isResourceHandlerMethod() returns #result for '#method' (java.lang.reflect.Method)"() {
         expect:
-        assert result == GriffonClassUtils.isResourceHandlerMethod(method)
+        assert result == GriffonClassUtils.isResourceHandlerMethod(method, true)
 
         where:
         [result, method] << methodsOf(ResourceHandler, true).plus(methodsOf(ThreadingHandler, false))
     }
 
-    void "isEventPublisherMethod() returns #result for '#method'"() {
+    void "isEventPublisherMethod() returns #result for '#method' (java.lang.reflect.Method)"() {
         expect:
-        assert result == GriffonClassUtils.isEventPublisherMethod(method)
+        assert result == GriffonClassUtils.isEventPublisherMethod(method, true)
 
         where:
         [result, method] << methodsOf(EventPublisher, true).plus(methodsOf(ResourceHandler, false))
     }
 
-    void "isMessageSourceMethod() returns #result for '#method'"() {
+    void "isMessageSourceMethod() returns #result for '#method' (java.lang.reflect.Method)"() {
         expect:
-        assert result == GriffonClassUtils.isMessageSourceMethod(method)
+        assert result == GriffonClassUtils.isMessageSourceMethod(method, true)
 
         where:
         [result, method] << methodsOf(MessageSource, true).plus(methodsOf(ResourceHandler, false))
     }
 
-    void "isMvcMethod() returns #result for '#method'"() {
+    void "isMvcMethod() returns #result for '#method' (java.lang.reflect.Method)"() {
         expect:
-        assert result == GriffonClassUtils.isMvcMethod(method)
+        assert result == GriffonClassUtils.isMvcMethod(method, true)
 
         where:
         [result, method] << methodsOf(MVCHandler, true)
@@ -73,17 +121,17 @@ class GriffonClassUtilsSpec extends Specification {
             .plus(methodsOf(EventPublisher, false))
     }
 
-    void "isThreadingMethod() returns #result for '#method'"() {
+    void "isThreadingMethod() returns #result for '#method' (java.lang.reflect.Method)"() {
         expect:
-        assert result == GriffonClassUtils.isThreadingMethod(method)
+        assert result == GriffonClassUtils.isThreadingMethod(method, true)
 
         where:
         [result, method] << methodsOf(ThreadingHandler, true).plus(methodsOf(ResourceHandler, false))
     }
 
-    void "isObservableMethod() returns #result for '#method'"() {
+    void "isObservableMethod() returns #result for '#method' (java.lang.reflect.Method)"() {
         expect:
-        assert result == GriffonClassUtils.isObservableMethod(method)
+        assert result == GriffonClassUtils.isObservableMethod(method, true)
 
         where:
         [result, method] << methodsOf(griffon.core.Observable, true)
@@ -91,12 +139,112 @@ class GriffonClassUtilsSpec extends Specification {
             .plus(methodsOf(ResourceHandler, false))
     }
 
+    void "isArtifactMethod() returns #result for '#method' (java.lang.reflect.Method)"() {
+        expect:
+        assert result == GriffonClassUtils.isArtifactMethod(method, true)
+
+        where:
+        [result, method] << methodsOf(GriffonArtifact, true).plus(methodsOf(EventPublisher, false))
+    }
+
+    void "isSetterMethod() returns #result for '#method'"() {
+        expect:
+        assert result == GriffonClassUtils.isSetterMethod(method)
+
+        where:
+        [result, method] << methodDescriptorsOf(MySetter, true).plus(methodDescriptorsOf(MyGetter, false))
+    }
+
+    void "isGetterMethod() returns #result for '#method'"() {
+        expect:
+        assert result == GriffonClassUtils.isGetterMethod(method)
+
+        where:
+        [result, method] << methodDescriptorsOf(MyGetter, true).plus(methodDescriptorsOf(MySetter, false))
+    }
+
+    void "isContributionMethod() returns #result for '#method'"() {
+        expect:
+        assert result == GriffonClassUtils.isContributionMethod(method)
+
+        where:
+        [result, method] << methodDescriptorsOf(MyContributor, true).plus(methodDescriptorsOf(MyEventHandler, false))
+    }
+
+    void "isEventHandler() returns #result for '#method'"() {
+        expect:
+        assert result == GriffonClassUtils.isEventHandler(method)
+
+        where:
+        [result, method] << methodDescriptorsOf(MyEventHandler, true).plus(methodDescriptorsOf(MyContributor, false))
+    }
+
+    void "isResourceResolverMethod() returns #result for '#method'"() {
+        expect:
+        assert result == GriffonClassUtils.isResourceResolverMethod(method)
+
+        where:
+        [result, method] << methodDescriptorsOf(ResourceResolver, true).plus(methodDescriptorsOf(ResourceHandler, false))
+    }
+
+    void "isResourceHandlerMethod() returns #result for '#method'"() {
+        expect:
+        assert result == GriffonClassUtils.isResourceHandlerMethod(method)
+
+        where:
+        [result, method] << methodDescriptorsOf(ResourceHandler, true).plus(methodDescriptorsOf(ThreadingHandler, false))
+    }
+
+    void "isEventPublisherMethod() returns #result for '#method'"() {
+        expect:
+        assert result == GriffonClassUtils.isEventPublisherMethod(method)
+
+        where:
+        [result, method] << methodDescriptorsOf(EventPublisher, true).plus(methodDescriptorsOf(ResourceHandler, false))
+    }
+
+    void "isMessageSourceMethod() returns #result for '#method'"() {
+        expect:
+        assert result == GriffonClassUtils.isMessageSourceMethod(method)
+
+        where:
+        [result, method] << methodDescriptorsOf(MessageSource, true).plus(methodDescriptorsOf(ResourceHandler, false))
+    }
+
+    void "isMvcMethod() returns #result for '#method'"() {
+        expect:
+        assert result == GriffonClassUtils.isMvcMethod(method)
+
+        where:
+        [result, method] << methodDescriptorsOf(MVCHandler, true)
+            .plus(methodDescriptorsOf(GriffonMvcArtifact, true))
+            .plus(methodDescriptorsOf(EventPublisher, false))
+    }
+
+    void "isThreadingMethod() returns #result for '#method'"() {
+        expect:
+        assert result == GriffonClassUtils.isThreadingMethod(method)
+
+        where:
+        [result, method] << methodDescriptorsOf(ThreadingHandler, true).plus(methodDescriptorsOf(ResourceHandler, false))
+    }
+
+    void "isObservableMethod() returns #result for '#method'"() {
+        expect:
+        assert result == GriffonClassUtils.isObservableMethod(method)
+
+        where:
+        [result, method] << methodDescriptorsOf(griffon.core.Observable, true)
+            .plus(methodDescriptorsOf(Vetoable, true))
+            .plus(methodDescriptorsOf(ResourceHandler, false))
+    }
+
     void "isArtifactMethod() returns #result for '#method'"() {
         expect:
         assert result == GriffonClassUtils.isArtifactMethod(method)
 
         where:
-        [result, method] << methodsOf(GriffonArtifact, true).plus(methodsOf(EventPublisher, false))
+        [result, method] << methodDescriptorsOf(GriffonArtifact, true).plus(methodDescriptorsOf(EventPublisher, false))
     }
 
     void "InvokeInstanceMethod can resolved overloaded calls inputs=#inputs"() {
@@ -321,5 +469,21 @@ class GriffonClassUtilsSpec extends Specification {
         def doSomething(String arg0) {
             String.name
         }
+    }
+
+    static interface MyEventHandler {
+        void onMyEvent()
+    }
+
+    static interface MyContributor {
+        void withSomething()
+    }
+
+    static interface MyGetter {
+        String getSomething()
+    }
+
+    static interface MySetter {
+        void setSomething(String s)
     }
 }

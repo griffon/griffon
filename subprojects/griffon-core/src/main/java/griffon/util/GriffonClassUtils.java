@@ -654,8 +654,27 @@ public class GriffonClassUtils {
      * pattern, false otherwise.
      */
     public static boolean isEventHandler(@Nonnull Method method) {
+        return isEventHandler(method, false);
+    }
+
+    /**
+     * Finds out if the given Method represents an event handler
+     * by matching its name against the following pattern:
+     * "^on[A-Z][\\w]*$"<p>
+     * <pre>
+     * // assuming getMethod() returns an appropriate Method reference
+     * isEventHandler(getMethod("onBootstrapEnd")) = true
+     * isEventHandler(getMethod("mvcGroupInit"))   = false
+     * isEventHandler(getMethod("online"))         = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method name matches the given event handler
+     * pattern, false otherwise.
+     */
+    public static boolean isEventHandler(@Nonnull Method method, boolean removeAbstractModifier) {
         requireNonNull(method, ERROR_METHOD_NULL);
-        return isEventHandler(MethodDescriptor.forMethod(method));
+        return isEventHandler(MethodDescriptor.forMethod(method, removeAbstractModifier));
     }
 
     /**
@@ -688,15 +707,40 @@ public class GriffonClassUtils {
      * {@code GroovyObject}, false otherwise.
      */
     public static boolean isBasicMethod(@Nonnull Method method) {
+        return isBasicMethod(method, false);
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs either to the
+     * {@code Object} class or the {@code GroovyObject} class.<p>
+     *
+     * @param method a Method reference
+     * @return true if the method belongs to {@code Object} or
+     * {@code GroovyObject}, false otherwise.
+     */
+    public static boolean isBasicMethod(@Nonnull Method method, boolean removeAbstractModifier) {
         requireNonNull(method, ERROR_METHOD_NULL);
-        return isBasicMethod(MethodDescriptor.forMethod(method));
+        return isBasicMethod(MethodDescriptor.forMethod(method, removeAbstractModifier));
+    }
+
+    /**
+     * Finds out if the given {@code MethodDescriptor} belongs either to the
+     * {@code Object} class or the {@code GroovyObject} class.<p>
+     *
+     * @param method a MethodDescriptor reference
+     * @return true if the method belongs to {@code Object} or
+     * {@code GroovyObject}, false otherwise.
+     */
+    public static boolean isBasicMethod(@Nonnull MethodDescriptor method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
+        return isInstanceMethod(method) && BASIC_METHODS.contains(method);
     }
 
     /**
      * Finds out if the given string represents the name of a
      * contribution method by matching against the following pattern:
      * "^with[A-Z][a-z0-9_]*[\w]*$"<p>
-     * <p/>
+     * <p>
      * <pre>
      * isContributionMethod("withRest")     = true
      * isContributionMethod("withMVCGroup") = false
@@ -728,8 +772,27 @@ public class GriffonClassUtils {
      * pattern, false otherwise.
      */
     public static boolean isContributionMethod(@Nonnull Method method) {
+        return isContributionMethod(method, false);
+    }
+
+    /**
+     * Finds out if the given Method represents a contribution method
+     * by matching its name against the following pattern:
+     * "^with[A-Z][a-z0-9_]*[\w]*$"<p>
+     * <pre>
+     * // assuming getMethod() returns an appropriate Method reference
+     * isContributionMethod(getMethod("withRest"))     = true
+     * isContributionMethod(getMethod("withMVCGroup")) = false
+     * isContributionMethod(getMethod("without"))      = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method name matches the given contribution method
+     * pattern, false otherwise.
+     */
+    public static boolean isContributionMethod(@Nonnull Method method, boolean removeAbstractModifier) {
         requireNonNull(method, ERROR_METHOD_NULL);
-        return isContributionMethod(MethodDescriptor.forMethod(method));
+        return isContributionMethod(MethodDescriptor.forMethod(method, removeAbstractModifier));
     }
 
     /**
@@ -754,16 +817,16 @@ public class GriffonClassUtils {
     }
 
     /**
-     * Finds out if the given {@code MethodDescriptor} belongs either to the
-     * {@code Object} class or the {@code GroovyObject} class.<p>
+     * Finds out if the given {@code Method} was injected by the Groovy
+     * compiler.<p>
+     * Performs a basic checks against the method's name, returning true
+     * if the name starts with either "super$" or "this$".
      *
-     * @param method a MethodDescriptor reference
-     * @return true if the method belongs to {@code Object} or
-     * {@code GroovyObject}, false otherwise.
+     * @param method a Method reference
+     * @return true if the method matches the given criteria, false otherwise.
      */
-    public static boolean isBasicMethod(@Nonnull MethodDescriptor method) {
-        requireNonNull(method, ERROR_METHOD_NULL);
-        return isInstanceMethod(method) && BASIC_METHODS.contains(method);
+    public static boolean isGroovyInjectedMethod(@Nonnull Method method) {
+        return isGroovyInjectedMethod(method, false);
     }
 
     /**
@@ -775,9 +838,9 @@ public class GriffonClassUtils {
      * @param method a Method reference
      * @return true if the method matches the given criteria, false otherwise.
      */
-    public static boolean isGroovyInjectedMethod(@Nonnull Method method) {
+    public static boolean isGroovyInjectedMethod(@Nonnull Method method, boolean removeAbstractModifier) {
         requireNonNull(method, ERROR_METHOD_NULL);
-        return isGroovyInjectedMethod(MethodDescriptor.forMethod(method));
+        return isGroovyInjectedMethod(MethodDescriptor.forMethod(method, removeAbstractModifier));
     }
 
     /**
@@ -797,7 +860,7 @@ public class GriffonClassUtils {
 
     /**
      * Finds out if the given {@code Method} is a getter method.
-     * <p/>
+     * <p>
      * <pre>
      * // assuming getMethod() returns an appropriate Method reference
      * isGetterMethod(getMethod("getFoo"))       = true
@@ -811,13 +874,32 @@ public class GriffonClassUtils {
      * @return true if the method is a getter, false otherwise.
      */
     public static boolean isGetterMethod(@Nonnull Method method) {
+        return isGetterMethod(method, false);
+    }
+
+    /**
+     * Finds out if the given {@code Method} is a getter method.
+     * <p>
+     * <pre>
+     * // assuming getMethod() returns an appropriate Method reference
+     * isGetterMethod(getMethod("getFoo"))       = true
+     * isGetterMethod(getMethod("getfoo") )      = false
+     * isGetterMethod(getMethod("mvcGroupInit")) = false
+     * isGetterMethod(getMethod("isFoo"))        = true
+     * isGetterMethod(getMethod("island"))       = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is a getter, false otherwise.
+     */
+    public static boolean isGetterMethod(@Nonnull Method method, boolean removeAbstractModifier) {
         requireNonNull(method, ERROR_METHOD_NULL);
-        return isGetterMethod(MethodDescriptor.forMethod(method));
+        return isGetterMethod(MethodDescriptor.forMethod(method, removeAbstractModifier));
     }
 
     /**
      * Finds out if the given {@code MetaMethod} is a getter method.
-     * <p/>
+     * <p>
      * <pre>
      * // assuming getMethod() returns an appropriate MethodDescriptor reference
      * isGetterMethod(getMethod("getFoo"))       = true
@@ -838,7 +920,7 @@ public class GriffonClassUtils {
 
     /**
      * Finds out if the given {@code Method} is a setter method.
-     * <p/>
+     * <p>
      * <pre>
      * // assuming getMethod() returns an appropriate Method reference
      * isGetterMethod(getMethod("setFoo"))       = true
@@ -850,13 +932,30 @@ public class GriffonClassUtils {
      * @return true if the method is a setter, false otherwise.
      */
     public static boolean isSetterMethod(@Nonnull Method method) {
+        return isSetterMethod(method, false);
+    }
+
+    /**
+     * Finds out if the given {@code Method} is a setter method.
+     * <p>
+     * <pre>
+     * // assuming getMethod() returns an appropriate Method reference
+     * isGetterMethod(getMethod("setFoo"))       = true
+     * isGetterMethod(getMethod("setfoo"))       = false
+     * isGetterMethod(getMethod("mvcGroupInit")) = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is a setter, false otherwise.
+     */
+    public static boolean isSetterMethod(@Nonnull Method method, boolean removeAbstractModifier) {
         requireNonNull(method, ERROR_METHOD_NULL);
-        return isSetterMethod(MethodDescriptor.forMethod(method));
+        return isSetterMethod(MethodDescriptor.forMethod(method, removeAbstractModifier));
     }
 
     /**
      * Finds out if the given {@code MethodDescriptor} is a setter method.
-     * <p/>
+     * <p>
      * <pre>
      * // assuming getMethod() returns an appropriate MethodDescriptor reference
      * isGetterMethod(getMethod("setFoo"))       = true
@@ -875,7 +974,7 @@ public class GriffonClassUtils {
     /**
      * Finds out if the given {@code Method} belongs to the set of
      * predefined Artifact methods by convention.
-     * <p/>
+     * <p>
      * <pre>
      * // assuming getMethod() returns an appropriate Method reference
      * isArtifactMethod(getMethod("newInstance"))    = true
@@ -887,14 +986,32 @@ public class GriffonClassUtils {
      * @return true if the method is an Artifact method, false otherwise.
      */
     public static boolean isArtifactMethod(@Nonnull Method method) {
+        return isArtifactMethod(method, false);
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined Artifact methods by convention.
+     * <p>
+     * <pre>
+     * // assuming getMethod() returns an appropriate Method reference
+     * isArtifactMethod(getMethod("newInstance"))    = true
+     * isArtifactMethod(getMethod("griffonDestroy")) = false
+     * isArtifactMethod(getMethod("foo"))            = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is an Artifact method, false otherwise.
+     */
+    public static boolean isArtifactMethod(@Nonnull Method method, boolean removeAbstractModifier) {
         requireNonNull(method, ERROR_METHOD_NULL);
-        return isArtifactMethod(MethodDescriptor.forMethod(method));
+        return isArtifactMethod(MethodDescriptor.forMethod(method, removeAbstractModifier));
     }
 
     /**
      * Finds out if the given {@code MethodDescriptor} belongs to the set of
      * predefined Artifact methods by convention.
-     * <p/>
+     * <p>
      * <pre>
      * // assuming getMethod() returns an appropriate MethodDescriptor reference
      * isArtifactMethod(getMethod("newInstance"))    = true
@@ -914,7 +1031,7 @@ public class GriffonClassUtils {
     /**
      * Finds out if the given {@code Method} belongs to the set of
      * predefined MVC methods by convention.
-     * <p/>
+     * <p>
      * <pre>
      * // assuming getMethod() returns an appropriate Method reference
      * isMvcMethod(getMethod("mvcGroupInit"))    = true
@@ -926,14 +1043,32 @@ public class GriffonClassUtils {
      * @return true if the method is an MVC method, false otherwise.
      */
     public static boolean isMvcMethod(@Nonnull Method method) {
+        return isMvcMethod(method, false);
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined MVC methods by convention.
+     * <p>
+     * <pre>
+     * // assuming getMethod() returns an appropriate Method reference
+     * isMvcMethod(getMethod("mvcGroupInit"))    = true
+     * isMvcMethod(getMethod("mvcGroupDestroy")) = true
+     * isMvcMethod(getMethod("foo"))             = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is an MVC method, false otherwise.
+     */
+    public static boolean isMvcMethod(@Nonnull Method method, boolean removeAbstractModifier) {
         requireNonNull(method, ERROR_METHOD_NULL);
-        return isMvcMethod(MethodDescriptor.forMethod(method));
+        return isMvcMethod(MethodDescriptor.forMethod(method, removeAbstractModifier));
     }
 
     /**
      * Finds out if the given {@code MethodDescriptor} belongs to the set of
      * predefined MVC methods by convention.
-     * <p/>
+     * <p>
      * <pre>
      * // assuming getMethod() returns an appropriate MethodDescriptor reference
      * isMvcMethod(getMethod("mvcGroupInit"))    = true
@@ -953,7 +1088,7 @@ public class GriffonClassUtils {
     /**
      * Finds out if the given {@code Method} belongs to the set of
      * predefined threading methods by convention.
-     * <p/>
+     * <p>
      * <pre>
      * // assuming getMethod() returns an appropriate Method reference
      * isThreadingMethod(getMethod("execOutsideUI"))    = true
@@ -965,14 +1100,32 @@ public class GriffonClassUtils {
      * @return true if the method is a threading method, false otherwise.
      */
     public static boolean isThreadingMethod(@Nonnull Method method) {
+        return isThreadingMethod(method, false);
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined threading methods by convention.
+     * <p>
+     * <pre>
+     * // assuming getMethod() returns an appropriate Method reference
+     * isThreadingMethod(getMethod("execOutsideUI"))    = true
+     * isThreadingMethod(getMethod("doLater"))          = true
+     * isThreadingMethod(getMethod("foo"))              = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is a threading method, false otherwise.
+     */
+    public static boolean isThreadingMethod(@Nonnull Method method, boolean removeAbstractModifier) {
         requireNonNull(method, ERROR_METHOD_NULL);
-        return isThreadingMethod(MethodDescriptor.forMethod(method));
+        return isThreadingMethod(MethodDescriptor.forMethod(method, removeAbstractModifier));
     }
 
     /**
      * Finds out if the given {@code MethodDescriptor} belongs to the set of
      * predefined threading methods by convention.
-     * <p/>
+     * <p>
      * <pre>
      * // assuming getMethod() returns an appropriate MethodDescriptor reference
      * isThreadingMethod(getMethod("execOutsideUI"))    = true
@@ -992,7 +1145,7 @@ public class GriffonClassUtils {
     /**
      * Finds out if the given {@code Method} belongs to the set of
      * predefined event publisher methods by convention.
-     * <p/>
+     * <p>
      * <pre>
      * // assuming getMethod() returns an appropriate Method reference
      * isEventPublisherMethod(getMethod("addEventPublisher"))  = true
@@ -1004,8 +1157,26 @@ public class GriffonClassUtils {
      * @return true if the method is an @EventPublisher method, false otherwise.
      */
     public static boolean isEventPublisherMethod(@Nonnull Method method) {
+        return isEventPublisherMethod(method, false);
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined event publisher methods by convention.
+     * <p>
+     * <pre>
+     * // assuming getMethod() returns an appropriate Method reference
+     * isEventPublisherMethod(getMethod("addEventPublisher"))  = true
+     * isEventPublisherMethod(getMethod("publishEvent"))       = true
+     * isEventPublisherMethod(getMethod("foo"))                = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is an @EventPublisher method, false otherwise.
+     */
+    public static boolean isEventPublisherMethod(@Nonnull Method method, boolean removeAbstractModifier) {
         requireNonNull(method, ERROR_METHOD_NULL);
-        return isEventPublisherMethod(MethodDescriptor.forMethod(method));
+        return isEventPublisherMethod(MethodDescriptor.forMethod(method, removeAbstractModifier));
     }
 
     /**
@@ -1043,8 +1214,26 @@ public class GriffonClassUtils {
      * @return true if the method is an Observable method, false otherwise.
      */
     public static boolean isObservableMethod(@Nonnull Method method) {
+        return isObservableMethod(method, false);
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined observable methods by convention.
+     * <p>
+     * <pre>
+     * // assuming getMethod() returns an appropriate Method reference
+     * isObservableMethod(getMethod("addPropertyChangeListener"))  = true
+     * isObservableMethod(getMethod("getPropertyChangeListeners")) = true
+     * isObservableMethod(getMethod("foo"))                        = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isObservableMethod(@Nonnull Method method, boolean removeAbstractModifier) {
         requireNonNull(method, ERROR_METHOD_NULL);
-        return isObservableMethod(MethodDescriptor.forMethod(method));
+        return isObservableMethod(MethodDescriptor.forMethod(method, removeAbstractModifier));
     }
 
     /**
@@ -1082,8 +1271,26 @@ public class GriffonClassUtils {
      * @return true if the method is an Observable method, false otherwise.
      */
     public static boolean isResourceHandlerMethod(@Nonnull Method method) {
+        return isResourceHandlerMethod(method, false);
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined resources methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate Method reference
+     * isResourceHandlerMethod(getMethod("getResourceAsURL"))    = true
+     * isResourceHandlerMethod(getMethod("getResourceAsStream")) = true
+     * isResourceHandlerMethod(getMethod("foo"))                 = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isResourceHandlerMethod(@Nonnull Method method, boolean removeAbstractModifier) {
         requireNonNull(method, ERROR_METHOD_NULL);
-        return isResourceHandlerMethod(MethodDescriptor.forMethod(method, true));
+        return isResourceHandlerMethod(MethodDescriptor.forMethod(method, removeAbstractModifier));
     }
 
     /**
@@ -1120,8 +1327,25 @@ public class GriffonClassUtils {
      * @return true if the method is an Observable method, false otherwise.
      */
     public static boolean isMessageSourceMethod(@Nonnull Method method) {
+        return isMessageSourceMethod(method, false);
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined message source methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate Method reference
+     * isMessageSourceMethod(getMethod("getMessage"))    = true
+     * isMessageSourceMethod(getMethod("foo"))           = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isMessageSourceMethod(@Nonnull Method method, boolean removeAbstractModifier) {
         requireNonNull(method, ERROR_METHOD_NULL);
-        return isMessageSourceMethod(MethodDescriptor.forMethod(method));
+        return isMessageSourceMethod(MethodDescriptor.forMethod(method, removeAbstractModifier));
     }
 
     /**
@@ -1157,8 +1381,25 @@ public class GriffonClassUtils {
      * @return true if the method is an Observable method, false otherwise.
      */
     public static boolean isResourceResolverMethod(@Nonnull Method method) {
+        return isResourceResolverMethod(method, false);
+    }
+
+    /**
+     * Finds out if the given {@code Method} belongs to the set of
+     * predefined resource resolver methods by convention.
+     * <p/>
+     * <pre>
+     * // assuming getMethod() returns an appropriate Method reference
+     * isResourceResolverMethod(getMethod("resolveResource")) = true
+     * isResourceResolverMethod(getMethod("foo"))             = false
+     * </pre>
+     *
+     * @param method a Method reference
+     * @return true if the method is an Observable method, false otherwise.
+     */
+    public static boolean isResourceResolverMethod(@Nonnull Method method, boolean removeAbstractModifier) {
         requireNonNull(method, ERROR_METHOD_NULL);
-        return isResourceResolverMethod(MethodDescriptor.forMethod(method));
+        return isResourceResolverMethod(MethodDescriptor.forMethod(method, removeAbstractModifier));
     }
 
     /**
@@ -1188,8 +1429,19 @@ public class GriffonClassUtils {
      * @return true if the method is an instance method, false otherwise.
      */
     public static boolean isInstanceMethod(@Nonnull Method method) {
+        return isInstanceMethod(method, false);
+    }
+
+    /**
+     * Finds out if the given {@code Method} is an instance method, i.e,
+     * it is public and non-static.
+     *
+     * @param method a Method reference
+     * @return true if the method is an instance method, false otherwise.
+     */
+    public static boolean isInstanceMethod(@Nonnull Method method, boolean removeAbstractModifier) {
         requireNonNull(method, ERROR_METHOD_NULL);
-        return isInstanceMethod(MethodDescriptor.forMethod(method));
+        return isInstanceMethod(MethodDescriptor.forMethod(method, removeAbstractModifier));
     }
 
     /**
@@ -1228,8 +1480,32 @@ public class GriffonClassUtils {
      * @return true if the method matches the given criteria, false otherwise.
      */
     public static boolean isPlainMethod(@Nonnull Method method) {
+        return isPlainMethod(method, false);
+    }
+
+    /**
+     * Finds out if the given {@code Method} matches the following criteria:<ul>
+     * <li>isInstanceMethod(method)</li>
+     * <li>! isBasicMethod(method)</li>
+     * <li>! isGroovyInjectedMethod(method)</li>
+     * <li>! isThreadingMethod(method)</li>
+     * <li>! isArtifactMethod(method)</li>
+     * <li>! isMvcMethod(method)</li>
+     * <li>! isServiceMethod(method)</li>
+     * <li>! isEventPublisherMethod(method)</li>
+     * <li>! isObservableMethod(method)</li>
+     * <li>! isResourceHandlerMethod(method)</li>
+     * <li>! isGetterMethod(method)</li>
+     * <li>! isSetterMethod(method)</li>
+     * <li>! isContributionMethod(method)</li>
+     * </ul>
+     *
+     * @param method a Method reference
+     * @return true if the method matches the given criteria, false otherwise.
+     */
+    public static boolean isPlainMethod(@Nonnull Method method, boolean removeAbstractModifier) {
         requireNonNull(method, ERROR_METHOD_NULL);
-        return isPlainMethod(MethodDescriptor.forMethod(method));
+        return isPlainMethod(MethodDescriptor.forMethod(method, removeAbstractModifier));
     }
 
     /**
@@ -1932,7 +2208,7 @@ public class GriffonClassUtils {
         if (type == null || clazz == null) {
             return false;
         } else if (type.isPrimitive()) {
-            // convert primitive type to compatible class 
+            // convert primitive type to compatible class
             Class<?> primitiveClass = PRIMITIVE_TYPE_COMPATIBLE_CLASSES.get(type);
             return primitiveClass != null && clazz.isAssignableFrom(primitiveClass);
         } else {
