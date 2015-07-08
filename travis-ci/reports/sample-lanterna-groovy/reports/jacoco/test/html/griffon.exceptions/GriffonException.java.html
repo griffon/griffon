@@ -34,19 +34,19 @@ public class GriffonException extends RuntimeException {
 <span class="nc" id="L34">    }</span>
 
     public GriffonException(String arg0, Throwable arg1) {
-<span class="fc" id="L37">        super(arg0, arg1);</span>
-<span class="fc" id="L38">    }</span>
+<span class="nc" id="L37">        super(arg0, arg1);</span>
+<span class="nc" id="L38">    }</span>
 
     public GriffonException(Throwable arg0) {
 <span class="nc" id="L41">        super(arg0);</span>
 <span class="nc" id="L42">    }</span>
 
     protected static &lt;T&gt; T checkNonNull(T arg, String argName) {
-<span class="fc" id="L45">        return requireNonNull(arg, &quot;Argument '&quot; + argName + &quot;' must not be null&quot;);</span>
+<span class="nc" id="L45">        return requireNonNull(arg, &quot;Argument '&quot; + argName + &quot;' must not be null&quot;);</span>
     }
 
     protected static String checkNonBlank(String arg, String argName) {
-<span class="fc" id="L49">        return requireNonBlank(arg, &quot;Argument '&quot; + argName + &quot;' must not be blank&quot;);</span>
+<span class="nc" id="L49">        return requireNonBlank(arg, &quot;Argument '&quot; + argName + &quot;' must not be blank&quot;);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

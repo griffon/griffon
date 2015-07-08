@@ -37,11 +37,11 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
 <span class="nc" id="L38">    }</span>
 
-    private void handleAsString(String str) {
+    protected void handleAsString(String str) {
 <span class="nc bnc" id="L41" title="All 2 branches missed.">        super.setValueInternal(isBlank(str) ? null : Boolean.parseBoolean(str));</span>
 <span class="nc" id="L42">    }</span>
 
-    private void handleAsBoolean(Boolean bool) {
+    protected void handleAsBoolean(Boolean bool) {
 <span class="nc" id="L45">        super.setValueInternal(bool);</span>
 <span class="nc" id="L46">    }</span>
 

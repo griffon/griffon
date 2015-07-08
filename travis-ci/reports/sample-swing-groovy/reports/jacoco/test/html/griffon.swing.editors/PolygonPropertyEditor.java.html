@@ -58,7 +58,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
 <span class="nc" id="L59">    }</span>
 
-    private void handleAsString(String str) {
+    protected void handleAsString(String str) {
 <span class="nc bnc" id="L62" title="All 2 branches missed.">        if (isBlank(str)) {</span>
 <span class="nc" id="L63">            super.setValueInternal(null);</span>
 <span class="nc" id="L64">            return;</span>
@@ -80,7 +80,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L80">        super.setValueInternal(new Polygon(xpoints, ypoints, npoints));</span>
 <span class="nc" id="L81">    }</span>
 
-    private void handleAsList(List&lt;?&gt; list) {
+    protected void handleAsList(List&lt;?&gt; list) {
 <span class="nc bnc" id="L84" title="All 2 branches missed.">        if (list.isEmpty()) {</span>
 <span class="nc" id="L85">            super.setValueInternal(null);</span>
 <span class="nc" id="L86">            return;</span>
@@ -101,7 +101,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L101">        super.setValueInternal(new Polygon(xpoints, ypoints, npoints));</span>
 <span class="nc" id="L102">    }</span>
 
-    private int parseValue(Object value) {
+    protected int parseValue(Object value) {
 <span class="nc bnc" id="L105" title="All 2 branches missed.">        if (value instanceof CharSequence) {</span>
 <span class="nc" id="L106">            return parse(String.valueOf(value));</span>
 <span class="nc bnc" id="L107" title="All 2 branches missed.">        } else if (value instanceof Number) {</span>
@@ -110,7 +110,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L110">        throw illegalValue(value, Polygon.class);</span>
     }
 
-    private int parse(String val) {
+    protected int parse(String val) {
         try {
 <span class="nc" id="L115">            return Integer.parseInt(val.trim());</span>
 <span class="nc" id="L116">        } catch (NumberFormatException e) {</span>
@@ -118,7 +118,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
     }
 
-    private int parse(Number val) {
+    protected int parse(Number val) {
 <span class="nc" id="L122">        return val.intValue();</span>
     }
 }

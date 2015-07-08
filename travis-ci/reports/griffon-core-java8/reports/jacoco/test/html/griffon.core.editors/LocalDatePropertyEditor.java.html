@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>LocalDatePropertyEditor.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-core-java8</a> &gt; <a href="index.source.html" class="el_package">griffon.core.editors</a> &gt; <span class="el_source">LocalDatePropertyEditor.java</span></div><h1>LocalDatePropertyEditor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.core.editors;
+
+import griffon.core.formatters.Formatter;
+import griffon.core.formatters.LocalDateFormatter;
+import griffon.metadata.PropertyEditorFor;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import static griffon.util.GriffonNameUtils.isBlank;
+import static java.time.LocalDate.ofEpochDay;
+
+/**
+ * @author Andres Almiray
+ * @since 2.4.0
+ */
+@PropertyEditorFor(LocalDate.class)
+<span class="fc" id="L39">public class LocalDatePropertyEditor extends AbstractPropertyEditor {</span>
+    protected void setValueInternal(Object value) {
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        if (null == value) {</span>
+<span class="fc" id="L42">            super.setValueInternal(null);</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        } else if (value instanceof CharSequence) {</span>
+<span class="fc" id="L44">            handleAsString(String.valueOf(value));</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        } else if (value instanceof LocalDate) {</span>
+<span class="fc" id="L46">            super.setValueInternal(value);</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        } else if (value instanceof LocalDateTime) {</span>
+<span class="fc" id="L48">            super.setValueInternal(((LocalDateTime) value).toLocalDate());</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        } else if (value instanceof Date) {</span>
+<span class="fc" id="L50">            super.setValueInternal(ofEpochDay(((Date) value).getTime()));</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        } else if (value instanceof Calendar) {</span>
+<span class="fc" id="L52">            super.setValueInternal(ofEpochDay(((Calendar) value).getTime().getTime()));</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        } else if (value instanceof Number) {</span>
+<span class="fc" id="L54">            super.setValueInternal(ofEpochDay(((Number) value).longValue()));</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        } else if (value instanceof List) {</span>
+<span class="fc" id="L56">            handleAsList((List) value);</span>
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">        } else if (value instanceof Map) {</span>
+<span class="fc" id="L58">            handleAsMap((Map) value);</span>
+        } else {
+<span class="nc" id="L60">            throw illegalValue(value, LocalDate.class);</span>
+        }
+<span class="fc" id="L62">    }</span>
+
+    protected void handleAsString(String str) {
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        if (isBlank(str)) {</span>
+<span class="fc" id="L66">            super.setValueInternal(null);</span>
+<span class="fc" id="L67">            return;</span>
+        }
+
+        try {
+<span class="fc" id="L71">            super.setValueInternal(LocalDate.parse(str));</span>
+<span class="nc" id="L72">        } catch (DateTimeParseException dtpe) {</span>
+<span class="nc" id="L73">            throw illegalValue(str, LocalDate.class, dtpe);</span>
+<span class="fc" id="L74">        }</span>
+<span class="fc" id="L75">    }</span>
+
+    protected Formatter&lt;LocalDate&gt; resolveFormatter() {
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        return isBlank(getFormat()) ? null : new LocalDateFormatter(getFormat());</span>
+    }
+
+    protected void handleAsList(List&lt;?&gt; list) {
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        if (list.isEmpty()) {</span>
+<span class="fc" id="L83">            super.setValueInternal(null);</span>
+<span class="fc" id="L84">            return;</span>
+        }
+
+<span class="fc" id="L87">        List&lt;Object&gt; values = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L88">        values.addAll(list);</span>
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">        if (values.size() != 3) {</span>
+<span class="nc" id="L90">            throw illegalValue(list, LocalDate.class);</span>
+        }
+
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        for (int i = 0, valuesSize = values.size(); i &lt; valuesSize; i++) {</span>
+<span class="fc" id="L94">            Object val = values.get(i);</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">            if (val instanceof Number) {</span>
+<span class="fc" id="L96">                values.set(i, parse((Number) val));</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">            } else if (val instanceof CharSequence) {</span>
+<span class="fc" id="L98">                values.set(i, parse(String.valueOf(val)));</span>
+            } else {
+<span class="nc" id="L100">                throw illegalValue(list, LocalDate.class);</span>
+            }
+        }
+<span class="fc" id="L103">        super.setValueInternal(</span>
+<span class="fc" id="L104">            LocalDate.of(</span>
+<span class="fc" id="L105">                (Integer) values.get(0),</span>
+<span class="fc" id="L106">                (Integer) values.get(1),</span>
+<span class="fc" id="L107">                (Integer) values.get(2)</span>
+            )
+        );
+<span class="fc" id="L110">    }</span>
+
+    protected void handleAsMap(Map&lt;?, ?&gt; map) {
+<span class="fc bfc" id="L113" title="All 2 branches covered.">        if (map.isEmpty()) {</span>
+<span class="fc" id="L114">            super.setValueInternal(null);</span>
+<span class="fc" id="L115">            return;</span>
+        }
+
+<span class="fc" id="L118">        int y = getMapValue(map, &quot;year&quot;, 1970);</span>
+<span class="fc" id="L119">        int m = getMapValue(map, &quot;month&quot;, 1);</span>
+<span class="fc" id="L120">        int d = getMapValue(map, &quot;day&quot;, 1);</span>
+<span class="fc" id="L121">        super.setValueInternal(LocalDate.of(y, m, d));</span>
+<span class="fc" id="L122">    }</span>
+
+    protected int parse(String val) {
+        try {
+<span class="fc" id="L126">            return Integer.parseInt(val.trim());</span>
+<span class="nc" id="L127">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L128">            throw illegalValue(val, LocalDate.class, e);</span>
+        }
+    }
+
+    protected int parse(Number val) {
+<span class="fc" id="L133">        return val.intValue();</span>
+    }
+
+    protected int getMapValue(Map&lt;?, ?&gt; map, String key, int defaultValue) {
+<span class="fc" id="L137">        Object val = map.get(key);</span>
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">        if (null == val) val = map.get(String.valueOf(key.charAt(0)));</span>
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">        if (null == val) {</span>
+<span class="nc" id="L140">            return defaultValue;</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">        } else if (val instanceof CharSequence) {</span>
+<span class="fc" id="L142">            return parse(String.valueOf(val));</span>
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">        } else if (val instanceof Number) {</span>
+<span class="fc" id="L144">            return parse((Number) val);</span>
+        }
+<span class="nc" id="L146">        throw illegalValue(map, LocalDate.class);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

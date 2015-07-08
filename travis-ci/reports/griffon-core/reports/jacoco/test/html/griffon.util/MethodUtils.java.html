@@ -209,8 +209,8 @@ import java.util.WeakHashMap;
         }
 <span class="fc" id="L210">        int arguments = args.length;</span>
 <span class="fc" id="L211">        Class[] parameterTypes = new Class[arguments];</span>
-<span class="pc bpc" id="L212" title="1 of 2 branches missed.">        for (int i = 0; i &lt; arguments; i++) {</span>
-<span class="nc bnc" id="L213" title="All 2 branches missed.">            parameterTypes[i] = args[i] != null ? args[i].getClass() : Object.class;</span>
+<span class="fc bfc" id="L212" title="All 2 branches covered.">        for (int i = 0; i &lt; arguments; i++) {</span>
+<span class="fc bfc" id="L213" title="All 2 branches covered.">            parameterTypes[i] = args[i] != null ? args[i].getClass() : Object.class;</span>
         }
 <span class="fc" id="L215">        return invokeMethod(object, methodName, args, parameterTypes);</span>
 
@@ -931,47 +931,47 @@ import java.util.WeakHashMap;
 <span class="fc" id="L931">            cacheMethod(md, method);</span>
 <span class="fc" id="L932">            return method;</span>
 
-<span class="nc" id="L934">        } catch (NoSuchMethodException e) { /* SWALLOW */ }</span>
+<span class="fc" id="L934">        } catch (NoSuchMethodException e) { /* SWALLOW */ }</span>
 
         // search through all methods 
-<span class="nc" id="L937">        int paramSize = parameterTypes.length;</span>
-<span class="nc" id="L938">        Method bestMatch = null;</span>
-<span class="nc" id="L939">        Method[] methods = clazz.getMethods();</span>
-<span class="nc" id="L940">        float bestMatchCost = Float.MAX_VALUE;</span>
-<span class="nc" id="L941">        float myCost = Float.MAX_VALUE;</span>
-<span class="nc bnc" id="L942" title="All 2 branches missed.">        for (int i = 0, size = methods.length; i &lt; size; i++) {</span>
-<span class="nc bnc" id="L943" title="All 2 branches missed.">            if (methods[i].getName().equals(methodName)) {</span>
+<span class="fc" id="L937">        int paramSize = parameterTypes.length;</span>
+<span class="fc" id="L938">        Method bestMatch = null;</span>
+<span class="fc" id="L939">        Method[] methods = clazz.getMethods();</span>
+<span class="fc" id="L940">        float bestMatchCost = Float.MAX_VALUE;</span>
+<span class="fc" id="L941">        float myCost = Float.MAX_VALUE;</span>
+<span class="fc bfc" id="L942" title="All 2 branches covered.">        for (int i = 0, size = methods.length; i &lt; size; i++) {</span>
+<span class="fc bfc" id="L943" title="All 2 branches covered.">            if (methods[i].getName().equals(methodName)) {</span>
                 // compare parameters
-<span class="nc" id="L945">                Class[] methodsParams = methods[i].getParameterTypes();</span>
-<span class="nc" id="L946">                int methodParamSize = methodsParams.length;</span>
-<span class="nc bnc" id="L947" title="All 2 branches missed.">                if (methodParamSize == paramSize) {</span>
-<span class="nc" id="L948">                    boolean match = true;</span>
-<span class="nc bnc" id="L949" title="All 2 branches missed.">                    for (int n = 0; n &lt; methodParamSize; n++) {</span>
-<span class="nc bnc" id="L950" title="All 2 branches missed.">                        if (!isAssignmentCompatible(methodsParams[n], parameterTypes[n])) {</span>
-<span class="nc" id="L951">                            match = false;</span>
-<span class="nc" id="L952">                            break;</span>
+<span class="fc" id="L945">                Class[] methodsParams = methods[i].getParameterTypes();</span>
+<span class="fc" id="L946">                int methodParamSize = methodsParams.length;</span>
+<span class="fc bfc" id="L947" title="All 2 branches covered.">                if (methodParamSize == paramSize) {</span>
+<span class="fc" id="L948">                    boolean match = true;</span>
+<span class="fc bfc" id="L949" title="All 2 branches covered.">                    for (int n = 0; n &lt; methodParamSize; n++) {</span>
+<span class="fc bfc" id="L950" title="All 2 branches covered.">                        if (!isAssignmentCompatible(methodsParams[n], parameterTypes[n])) {</span>
+<span class="fc" id="L951">                            match = false;</span>
+<span class="fc" id="L952">                            break;</span>
                         }
                     }
 
-<span class="nc bnc" id="L956" title="All 2 branches missed.">                    if (match) {</span>
+<span class="fc bfc" id="L956" title="All 2 branches covered.">                    if (match) {</span>
                         // get accessible version of method
-<span class="nc" id="L958">                        Method method = getAccessibleMethod(clazz, methods[i]);</span>
-<span class="nc bnc" id="L959" title="All 2 branches missed.">                        if (method != null) {</span>
-<span class="nc" id="L960">                            setMethodAccessible(method); // Default access superclass workaround</span>
-<span class="nc" id="L961">                            myCost = getTotalTransformationCost(parameterTypes, method.getParameterTypes());</span>
-<span class="nc bnc" id="L962" title="All 2 branches missed.">                            if (myCost &lt; bestMatchCost) {</span>
-<span class="nc" id="L963">                                bestMatch = method;</span>
-<span class="nc" id="L964">                                bestMatchCost = myCost;</span>
+<span class="fc" id="L958">                        Method method = getAccessibleMethod(clazz, methods[i]);</span>
+<span class="pc bpc" id="L959" title="1 of 2 branches missed.">                        if (method != null) {</span>
+<span class="fc" id="L960">                            setMethodAccessible(method); // Default access superclass workaround</span>
+<span class="fc" id="L961">                            myCost = getTotalTransformationCost(parameterTypes, method.getParameterTypes());</span>
+<span class="pc bpc" id="L962" title="1 of 2 branches missed.">                            if (myCost &lt; bestMatchCost) {</span>
+<span class="fc" id="L963">                                bestMatch = method;</span>
+<span class="fc" id="L964">                                bestMatchCost = myCost;</span>
                             }
                         }
                     }
                 }
             }
         }
-<span class="nc bnc" id="L971" title="All 2 branches missed.">        if (bestMatch != null) { //find a match</span>
-<span class="nc" id="L972">            cacheMethod(md, bestMatch);</span>
+<span class="pc bpc" id="L971" title="1 of 2 branches missed.">        if (bestMatch != null) { //find a match</span>
+<span class="fc" id="L972">            cacheMethod(md, bestMatch);</span>
         }
-<span class="nc" id="L974">        return bestMatch;</span>
+<span class="fc" id="L974">        return bestMatch;</span>
     }
 
     /**
@@ -1016,15 +1016,15 @@ import java.util.WeakHashMap;
      */
     private static float getTotalTransformationCost(Class[] srcArgs, Class[] destArgs) {
 
-<span class="nc" id="L1019">        float totalCost = 0.0f;</span>
-<span class="nc bnc" id="L1020" title="All 2 branches missed.">        for (int i = 0; i &lt; srcArgs.length; i++) {</span>
+<span class="fc" id="L1019">        float totalCost = 0.0f;</span>
+<span class="fc bfc" id="L1020" title="All 2 branches covered.">        for (int i = 0; i &lt; srcArgs.length; i++) {</span>
             Class srcClass, destClass;
-<span class="nc" id="L1022">            srcClass = srcArgs[i];</span>
-<span class="nc" id="L1023">            destClass = destArgs[i];</span>
-<span class="nc" id="L1024">            totalCost += getObjectTransformationCost(srcClass, destClass);</span>
+<span class="fc" id="L1022">            srcClass = srcArgs[i];</span>
+<span class="fc" id="L1023">            destClass = destArgs[i];</span>
+<span class="fc" id="L1024">            totalCost += getObjectTransformationCost(srcClass, destClass);</span>
         }
 
-<span class="nc" id="L1027">        return totalCost;</span>
+<span class="fc" id="L1027">        return totalCost;</span>
     }
 
     /**
@@ -1037,9 +1037,9 @@ import java.util.WeakHashMap;
      * @return The cost of transforming an object
      */
     private static float getObjectTransformationCost(Class srcClass, Class destClass) {
-<span class="nc" id="L1040">        float cost = 0.0f;</span>
-<span class="nc bnc" id="L1041" title="All 4 branches missed.">        while (destClass != null &amp;&amp; !destClass.equals(srcClass)) {</span>
-<span class="nc bnc" id="L1042" title="All 4 branches missed.">            if (destClass.isInterface() &amp;&amp; isAssignmentCompatible(destClass, srcClass)) {</span>
+<span class="fc" id="L1040">        float cost = 0.0f;</span>
+<span class="fc bfc" id="L1041" title="All 4 branches covered.">        while (destClass != null &amp;&amp; !destClass.equals(srcClass)) {</span>
+<span class="pc bpc" id="L1042" title="3 of 4 branches missed.">            if (destClass.isInterface() &amp;&amp; isAssignmentCompatible(destClass, srcClass)) {</span>
                 // slight penalty for interface match. 
                 // we still want an exact match to override an interface match, but  
                 // an interface match should override anything where we have to get a 
@@ -1047,19 +1047,19 @@ import java.util.WeakHashMap;
 <span class="nc" id="L1047">                cost += 0.25f;</span>
 <span class="nc" id="L1048">                break;</span>
             }
-<span class="nc" id="L1050">            cost++;</span>
-<span class="nc" id="L1051">            destClass = destClass.getSuperclass();</span>
+<span class="fc" id="L1050">            cost++;</span>
+<span class="fc" id="L1051">            destClass = destClass.getSuperclass();</span>
         }
 
         /*
          * If the destination class is null, we've travelled all the way up to 
          * an Object match. We'll penalize this by adding 1.5 to the cost.
          */
-<span class="nc bnc" id="L1058" title="All 2 branches missed.">        if (destClass == null) {</span>
-<span class="nc" id="L1059">            cost += 1.5f;</span>
+<span class="fc bfc" id="L1058" title="All 2 branches covered.">        if (destClass == null) {</span>
+<span class="fc" id="L1059">            cost += 1.5f;</span>
         }
 
-<span class="nc" id="L1062">        return cost;</span>
+<span class="fc" id="L1062">        return cost;</span>
     }
 
 
@@ -1081,11 +1081,11 @@ import java.util.WeakHashMap;
      */
     public static boolean isAssignmentCompatible(Class&lt;?&gt; parameterType, Class&lt;?&gt; parameterization) {
         // try plain assignment
-<span class="nc bnc" id="L1084" title="All 2 branches missed.">        if (parameterType.isAssignableFrom(parameterization)) {</span>
-<span class="nc" id="L1085">            return true;</span>
+<span class="fc bfc" id="L1084" title="All 2 branches covered.">        if (parameterType.isAssignableFrom(parameterization)) {</span>
+<span class="fc" id="L1085">            return true;</span>
         }
 
-<span class="nc bnc" id="L1088" title="All 2 branches missed.">        if (parameterType.isPrimitive()) {</span>
+<span class="pc bpc" id="L1088" title="1 of 2 branches missed.">        if (parameterType.isPrimitive()) {</span>
             // this method does *not* do widening - you must specify exactly
             // is this the right behaviour?
 <span class="nc" id="L1091">            Class parameterWrapperClazz = getPrimitiveWrapper(parameterType);</span>
@@ -1094,7 +1094,7 @@ import java.util.WeakHashMap;
             }
         }
 
-<span class="nc" id="L1097">        return false;</span>
+<span class="fc" id="L1097">        return false;</span>
     }
 
     /**
@@ -1266,16 +1266,16 @@ import java.util.WeakHashMap;
          * @return true, if the object describes the same Method.
          */
         public boolean equals(Object obj) {
-<span class="nc bnc" id="L1269" title="All 2 branches missed.">            if (!(obj instanceof MethodDescriptor)) {</span>
+<span class="pc bpc" id="L1269" title="1 of 2 branches missed.">            if (!(obj instanceof MethodDescriptor)) {</span>
 <span class="nc" id="L1270">                return false;</span>
             }
-<span class="nc" id="L1272">            MethodDescriptor md = (MethodDescriptor) obj;</span>
+<span class="fc" id="L1272">            MethodDescriptor md = (MethodDescriptor) obj;</span>
 
-<span class="nc bnc" id="L1274" title="All 2 branches missed.">            return (</span>
+<span class="pc bpc" id="L1274" title="1 of 2 branches missed.">            return (</span>
                 exact == md.exact &amp;&amp;
-<span class="nc bnc" id="L1276" title="All 2 branches missed.">                    methodName.equals(md.methodName) &amp;&amp;</span>
-<span class="nc bnc" id="L1277" title="All 2 branches missed.">                    cls.equals(md.cls) &amp;&amp;</span>
-<span class="nc bnc" id="L1278" title="All 2 branches missed.">                    java.util.Arrays.equals(paramTypes, md.paramTypes)</span>
+<span class="pc bpc" id="L1276" title="1 of 2 branches missed.">                    methodName.equals(md.methodName) &amp;&amp;</span>
+<span class="pc bpc" id="L1277" title="1 of 2 branches missed.">                    cls.equals(md.cls) &amp;&amp;</span>
+<span class="pc bpc" id="L1278" title="1 of 2 branches missed.">                    java.util.Arrays.equals(paramTypes, md.paramTypes)</span>
             );
         }
 

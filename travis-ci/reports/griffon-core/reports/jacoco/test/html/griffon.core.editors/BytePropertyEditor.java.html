@@ -37,7 +37,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
 <span class="fc" id="L38">    }</span>
 
-    private void handleAsString(String str) {
+    protected void handleAsString(String str) {
         try {
 <span class="fc bfc" id="L42" title="All 2 branches covered.">            super.setValueInternal(isBlank(str) ? null : Byte.parseByte(str));</span>
 <span class="nc" id="L43">        } catch (NumberFormatException e) {</span>
@@ -45,7 +45,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="fc" id="L45">        }</span>
 <span class="fc" id="L46">    }</span>
 
-    private void handleAsNumber(Number number) {
+    protected void handleAsNumber(Number number) {
 <span class="fc" id="L49">        super.setValueInternal(number.byteValue());</span>
 <span class="fc" id="L50">    }</span>
 

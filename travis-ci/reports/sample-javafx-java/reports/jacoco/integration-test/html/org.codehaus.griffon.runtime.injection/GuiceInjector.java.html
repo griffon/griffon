@@ -279,8 +279,8 @@ public class GuiceInjector implements Injector&lt;com.google.inject.Injector&gt;
 <span class="fc" id="L279">                    continue;</span>
                 }
 <span class="fc" id="L281">                invokeAnnotatedMethod(binding.getProvider().get(), PreDestroy.class);</span>
-<span class="fc" id="L282">            } catch (ProvisionException pe) {</span>
-<span class="pc bpc" id="L283" title="1 of 2 branches missed.">                if (!(pe.getCause() instanceof TypeNotFoundException)) {</span>
+<span class="nc" id="L282">            } catch (ProvisionException pe) {</span>
+<span class="nc bnc" id="L283" title="All 2 branches missed.">                if (!(pe.getCause() instanceof TypeNotFoundException)) {</span>
 <span class="nc" id="L284">                    pe.printStackTrace();</span>
                 }
 <span class="fc" id="L286">            }</span>

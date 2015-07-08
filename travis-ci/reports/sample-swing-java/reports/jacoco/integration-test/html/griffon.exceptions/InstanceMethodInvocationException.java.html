@@ -57,33 +57,39 @@ public class InstanceMethodInvocationException extends MethodInvocationException
             } else {
 <span class="nc" id="L58">                b.append(&quot;,&quot;);</span>
             }
-<span class="fc" id="L60">            b.append(type.getName());</span>
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">            if (type == null) {</span>
+                // we don't know the type as the argument is null,
+                // let's fallback to plain old Object
+<span class="nc" id="L63">                b.append(Object.class.getName());</span>
+            } else {
+<span class="fc" id="L65">                b.append(type.getName());</span>
+            }
         }
-<span class="fc" id="L62">        b.append(&quot;)&quot;);</span>
+<span class="fc" id="L68">        b.append(&quot;)&quot;);</span>
 
-<span class="fc" id="L64">        return b.toString();</span>
+<span class="fc" id="L70">        return b.toString();</span>
     }
 
     @Nonnull
     protected static String formatArguments(@Nonnull Object instance, @Nonnull Method method) {
-<span class="nc" id="L69">        checkNonNull(instance, &quot;instance&quot;);</span>
-<span class="nc" id="L70">        checkNonNull(method, &quot;method&quot;);</span>
-<span class="nc" id="L71">        StringBuilder b = new StringBuilder(&quot;An error occurred while invoking instance method &quot;)</span>
-<span class="nc" id="L72">            .append(instance.getClass().getName())</span>
-<span class="nc" id="L73">            .append(&quot;.&quot;).append(method.getName()).append(&quot;(&quot;);</span>
+<span class="nc" id="L75">        checkNonNull(instance, &quot;instance&quot;);</span>
+<span class="nc" id="L76">        checkNonNull(method, &quot;method&quot;);</span>
+<span class="nc" id="L77">        StringBuilder b = new StringBuilder(&quot;An error occurred while invoking instance method &quot;)</span>
+<span class="nc" id="L78">            .append(instance.getClass().getName())</span>
+<span class="nc" id="L79">            .append(&quot;.&quot;).append(method.getName()).append(&quot;(&quot;);</span>
 
-<span class="nc" id="L75">        boolean first = true;</span>
-<span class="nc bnc" id="L76" title="All 2 branches missed.">        for (Class&lt;?&gt; type : method.getParameterTypes()) {</span>
-<span class="nc bnc" id="L77" title="All 2 branches missed.">            if (first) {</span>
-<span class="nc" id="L78">                first = false;</span>
+<span class="nc" id="L81">        boolean first = true;</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">        for (Class&lt;?&gt; type : method.getParameterTypes()) {</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">            if (first) {</span>
+<span class="nc" id="L84">                first = false;</span>
             } else {
-<span class="nc" id="L80">                b.append(&quot;,&quot;);</span>
+<span class="nc" id="L86">                b.append(&quot;,&quot;);</span>
             }
-<span class="nc" id="L82">            b.append(type.getName());</span>
+<span class="nc" id="L88">            b.append(type.getName());</span>
         }
-<span class="nc" id="L84">        b.append(&quot;)&quot;);</span>
+<span class="nc" id="L90">        b.append(&quot;)&quot;);</span>
 
-<span class="nc" id="L86">        return b.toString();</span>
+<span class="nc" id="L92">        return b.toString();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

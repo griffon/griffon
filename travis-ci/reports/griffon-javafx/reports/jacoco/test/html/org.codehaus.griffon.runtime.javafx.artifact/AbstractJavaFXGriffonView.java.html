@@ -26,7 +26,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.util.Callback;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
 
 import javax.annotation.Nonnull;
@@ -48,9 +47,9 @@ import static griffon.util.GriffonNameUtils.requireNonBlank;
 public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
     private static final String FXML_SUFFIX = &quot;.fxml&quot;;
 
-<span class="nc" id="L51">    public AbstractJavaFXGriffonView() {</span>
+<span class="nc" id="L50">    public AbstractJavaFXGriffonView() {</span>
 
-<span class="nc" id="L53">    }</span>
+<span class="nc" id="L52">    }</span>
 
     /**
      * Creates a new instance of this class.
@@ -61,76 +60,71 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
     @Inject
     @Deprecated
     public AbstractJavaFXGriffonView(@Nonnull GriffonApplication application) {
-<span class="nc" id="L64">        super(application);</span>
-<span class="nc" id="L65">    }</span>
+<span class="nc" id="L63">        super(application);</span>
+<span class="nc" id="L64">    }</span>
 
     @Nullable
     protected Node loadFromFXML() {
-<span class="nc" id="L69">        return loadFromFXML(resolveBasename());</span>
+<span class="nc" id="L68">        return loadFromFXML(resolveBasename());</span>
     }
 
     @Nullable
     protected Node loadFromFXML(@Nonnull String baseName) {
-<span class="nc" id="L74">        requireNonBlank(baseName, &quot;Argument 'baseName' must not be blank&quot;);</span>
-<span class="nc bnc" id="L75" title="All 2 branches missed.">        if (baseName.endsWith(FXML_SUFFIX)) {</span>
-<span class="nc" id="L76">            baseName = stripFilenameExtension(baseName);</span>
+<span class="nc" id="L73">        requireNonBlank(baseName, &quot;Argument 'baseName' must not be blank&quot;);</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (baseName.endsWith(FXML_SUFFIX)) {</span>
+<span class="nc" id="L75">            baseName = stripFilenameExtension(baseName);</span>
         }
-<span class="nc" id="L78">        baseName = baseName.replace('.', '/');</span>
-<span class="nc" id="L79">        String viewName = baseName + FXML_SUFFIX;</span>
-<span class="nc" id="L80">        String styleName = baseName + &quot;.css&quot;;</span>
+<span class="nc" id="L77">        baseName = baseName.replace('.', '/');</span>
+<span class="nc" id="L78">        String viewName = baseName + FXML_SUFFIX;</span>
+<span class="nc" id="L79">        String styleName = baseName + &quot;.css&quot;;</span>
 
-<span class="nc" id="L82">        URL viewResource = getResourceAsURL(viewName);</span>
-<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (viewResource == null) {</span>
-<span class="nc" id="L84">            return null;</span>
+<span class="nc" id="L81">        URL viewResource = getResourceAsURL(viewName);</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">        if (viewResource == null) {</span>
+<span class="nc" id="L83">            return null;</span>
         }
 
-<span class="nc" id="L87">        FXMLLoader fxmlLoader = new FXMLLoader(viewResource);</span>
-<span class="nc" id="L88">        fxmlLoader.setResources(getApplication().getMessageSource().asResourceBundle());</span>
-<span class="nc" id="L89">        fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory(getApplication().getApplicationClassLoader().get()));</span>
-<span class="nc" id="L90">        fxmlLoader.setClassLoader(getApplication().getApplicationClassLoader().get());</span>
-<span class="nc" id="L91">        fxmlLoader.setControllerFactory(new Callback&lt;Class&lt;?&gt;, Object&gt;() {</span>
-            @Override
-            public Object call(Class&lt;?&gt; aClass) {
-<span class="nc" id="L94">                return getMvcGroup().getView();</span>
-            }
-        });
+<span class="nc" id="L86">        FXMLLoader fxmlLoader = new FXMLLoader(viewResource);</span>
+<span class="nc" id="L87">        fxmlLoader.setResources(getApplication().getMessageSource().asResourceBundle());</span>
+<span class="nc" id="L88">        fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory(getApplication().getApplicationClassLoader().get()));</span>
+<span class="nc" id="L89">        fxmlLoader.setClassLoader(getApplication().getApplicationClassLoader().get());</span>
+<span class="nc" id="L90">        fxmlLoader.setControllerFactory(klass -&gt; getMvcGroup().getView());</span>
 
         try {
-<span class="nc" id="L99">            fxmlLoader.load();</span>
-<span class="nc" id="L100">        } catch (IOException e) {</span>
-<span class="nc" id="L101">            throw new GriffonException(e);</span>
-<span class="nc" id="L102">        }</span>
+<span class="nc" id="L93">            fxmlLoader.load();</span>
+<span class="nc" id="L94">        } catch (IOException e) {</span>
+<span class="nc" id="L95">            throw new GriffonException(e);</span>
+<span class="nc" id="L96">        }</span>
 
-<span class="nc" id="L104">        Parent node = fxmlLoader.getRoot();</span>
+<span class="nc" id="L98">        Parent node = fxmlLoader.getRoot();</span>
 
-<span class="nc" id="L106">        URL cssResource = getResourceAsURL(styleName);</span>
-<span class="nc bnc" id="L107" title="All 2 branches missed.">        if (cssResource != null) {</span>
-<span class="nc" id="L108">            String uriToCss = cssResource.toExternalForm();</span>
-<span class="nc" id="L109">            node.getStylesheets().add(uriToCss);</span>
+<span class="nc" id="L100">        URL cssResource = getResourceAsURL(styleName);</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        if (cssResource != null) {</span>
+<span class="nc" id="L102">            String uriToCss = cssResource.toExternalForm();</span>
+<span class="nc" id="L103">            node.getStylesheets().add(uriToCss);</span>
         }
 
-<span class="nc" id="L112">        return node;</span>
+<span class="nc" id="L106">        return node;</span>
     }
 
     @Nonnull
     protected String resolveBasename() {
-<span class="nc" id="L117">        GriffonClass griffonClass = getGriffonClass();</span>
-<span class="nc" id="L118">        String packageName = griffonClass.getPackageName();</span>
-<span class="nc" id="L119">        String baseName = griffonClass.getLogicalPropertyName();</span>
-<span class="nc bnc" id="L120" title="All 2 branches missed.">        if (!isBlank(packageName)) {</span>
-<span class="nc" id="L121">            baseName = packageName + &quot;.&quot; + baseName;</span>
+<span class="nc" id="L111">        GriffonClass griffonClass = getGriffonClass();</span>
+<span class="nc" id="L112">        String packageName = griffonClass.getPackageName();</span>
+<span class="nc" id="L113">        String baseName = griffonClass.getLogicalPropertyName();</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">        if (!isBlank(packageName)) {</span>
+<span class="nc" id="L115">            baseName = packageName + &quot;.&quot; + baseName;</span>
         }
-<span class="nc" id="L123">        return baseName;</span>
+<span class="nc" id="L117">        return baseName;</span>
     }
 
     protected void connectActions(@Nonnull Node node, @Nonnull GriffonController controller) {
-<span class="nc" id="L127">        JavaFXUtils.connectActions(node, controller);</span>
-<span class="nc" id="L128">    }</span>
+<span class="nc" id="L121">        JavaFXUtils.connectActions(node, controller);</span>
+<span class="nc" id="L122">    }</span>
 
     @Nullable
     protected JavaFXAction toolkitActionFor(@Nonnull GriffonController controller, @Nonnull String actionName) {
-<span class="nc" id="L132">        Action action = actionFor(controller, actionName);</span>
-<span class="nc bnc" id="L133" title="All 2 branches missed.">        return action != null ? (JavaFXAction) action.getToolkitAction() : null;</span>
+<span class="nc" id="L126">        Action action = actionFor(controller, actionName);</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        return action != null ? (JavaFXAction) action.getToolkitAction() : null;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

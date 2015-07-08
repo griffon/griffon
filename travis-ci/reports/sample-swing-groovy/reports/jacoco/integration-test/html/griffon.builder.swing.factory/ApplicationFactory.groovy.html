@@ -47,7 +47,7 @@ class ApplicationFactory extends AbstractFactory {
 <span class="nc bnc" id="L47" title="All 2 branches missed.">            if (cl) {</span>
 <span class="nc" id="L48">                jxStatusBarClass = cl.loadClass('org.jdesktop.swingx.JXStatusBar')</span>
             } else {
-<span class="nc" id="L50">                jxStatusBarClass = Class.forName('org.jdesktop.swingx.JXStatusBar')</span>
+<span class="nc" id="L50">                jxStatusBarClass = Class.forName('org.jdesktop.swingx.JXStatusBar', true, ApplicationFactory.classLoader)</span>
             }
 <span class="pc" id="L52">            swingXPresent = true</span>
         } catch (Throwable t) {

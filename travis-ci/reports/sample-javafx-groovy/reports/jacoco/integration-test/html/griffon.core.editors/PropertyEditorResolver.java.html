@@ -19,9 +19,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.beans.PropertyEditorSupport;
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import static java.util.Objects.requireNonNull;
 
@@ -29,21 +36,38 @@ import static java.util.Objects.requireNonNull;
  * The PropertyEditorResolver can be used to locate a property editor for
  * any given type name. This property editor must support the
  * java.beans.PropertyEditor interface for editing a given object.
- * &lt;p/&gt;
+ * &lt;p&gt;
  *
  * @author Andres Almiray
  * @since 2.0.0
  */
 public final class PropertyEditorResolver {
-<span class="fc" id="L38">    private static final Logger LOG = LoggerFactory.getLogger(PropertyEditorResolver.class);</span>
+<span class="fc" id="L45">    private static final Logger LOG = LoggerFactory.getLogger(PropertyEditorResolver.class);</span>
+<span class="fc" id="L46">    private static final Object LOCK = new Object[0];</span>
+    @GuardedBy(&quot;LOCK&quot;)
+<span class="fc" id="L48">    private static final WeakCache&lt;String, Class&lt;? extends PropertyEditor&gt;&gt; propertyEditorRegistry = new WeakCache();</span>
+    @GuardedBy(&quot;LOCK&quot;)
+<span class="fc" id="L50">    private static final Map&lt;String, PropertyEditorChain&gt; propertyEditorChainRegistry = new LinkedHashMap&lt;&gt;();</span>
+    private static final String ERROR_TARGET_TYPE_NULL = &quot;Argument 'targetType' must not be null&quot;;
 
-<span class="nc" id="L40">    private PropertyEditorResolver() {</span>
+<span class="nc" id="L53">    private PropertyEditorResolver() {</span>
 
-<span class="nc" id="L42">    }</span>
+<span class="nc" id="L55">    }</span>
+
+    /**
+     * Removes all currently registered value editors.
+     * @since 2.4.0
+     */
+    public static void clear() {
+<span class="nc" id="L62">        synchronized (LOCK) {</span>
+<span class="nc" id="L63">            propertyEditorRegistry.clear();</span>
+<span class="nc" id="L64">            propertyEditorChainRegistry.clear();</span>
+<span class="nc" id="L65">        }</span>
+<span class="nc" id="L66">    }</span>
 
     /**
      * Locate a value editor for a given target type.
-     * &lt;p/&gt;
+     * &lt;p&gt;
      * If the input {@code type} is an Enum then an instance of {@code EnumPropertyEditor}
      * is returned with the {@code type} set as {@code enumType}.
      *
@@ -55,27 +79,161 @@ public final class PropertyEditorResolver {
     @Nonnull
     @SuppressWarnings(&quot;unchecked&quot;)
     public static PropertyEditor findEditor(@Nonnull Class&lt;?&gt; type) {
-<span class="fc" id="L58">        requireNonNull(type, &quot;Argument 'type' must not be  null&quot;);</span>
-<span class="fc" id="L59">        LOG.trace(&quot;Searching PropertyEditor for {}&quot;, type.getName());</span>
+<span class="fc" id="L82">        requireNonNull(type, &quot;Argument 'type' must not be  null&quot;);</span>
+<span class="fc" id="L83">        LOG.trace(&quot;Searching PropertyEditor for {}&quot;, type.getName());</span>
 
         PropertyEditor editor;
-<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        if (Enum.class.isAssignableFrom(type)) {</span>
-<span class="nc" id="L63">            editor = new EnumPropertyEditor();</span>
-<span class="nc" id="L64">            ((EnumPropertyEditor) editor).setEnumType((Class&lt;? extends Enum&lt;?&gt;&gt;) type);</span>
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">        if (Enum.class.isAssignableFrom(type)) {</span>
+<span class="nc" id="L87">            editor = new EnumPropertyEditor();</span>
+<span class="nc" id="L88">            ((EnumPropertyEditor) editor).setEnumType((Class&lt;? extends Enum&lt;?&gt;&gt;) type);</span>
         } else {
-<span class="fc" id="L66">            editor = PropertyEditorManager.findEditor(type);</span>
+<span class="fc" id="L90">            editor = doFindEditor(type);</span>
         }
 
-<span class="pc bpc" id="L69" title="1 of 2 branches missed.">        if (editor == null) {</span>
-<span class="nc" id="L70">            editor = new NoopPropertyEditor();</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">        if (editor == null) {</span>
+            // fallback
+<span class="nc" id="L95">            editor = PropertyEditorManager.findEditor(type);</span>
         }
 
-<span class="fc" id="L73">        LOG.trace(&quot;PropertyEditor for {} is {}&quot;, type.getName(), editor.getClass().getName());</span>
-<span class="fc" id="L74">        return editor;</span>
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">        if (editor == null) {</span>
+<span class="nc" id="L99">            editor = new NoopPropertyEditor();</span>
+        }
+
+<span class="fc" id="L102">        LOG.trace(&quot;PropertyEditor for {} is {}&quot;, type.getName(), editor.getClass().getName());</span>
+<span class="fc" id="L103">        return editor;</span>
     }
 
-<span class="nc" id="L77">    private static final class NoopPropertyEditor extends PropertyEditorSupport {</span>
+    /**
+     * Unregisters an editor class to edit values of the given target class.
+     *
+     * @param targetType the class object of the type to be edited
+     * @since 2.4.0
+     */
+    public static void unregisterEditor(@Nonnull Class&lt;?&gt; targetType) {
+<span class="nc" id="L113">        requireNonNull(targetType, ERROR_TARGET_TYPE_NULL);</span>
+<span class="nc" id="L114">        synchronized (LOCK) {</span>
+<span class="nc" id="L115">            String targetTypeName = targetType.getName();</span>
+<span class="nc" id="L116">            propertyEditorChainRegistry.remove(targetTypeName);</span>
+<span class="nc" id="L117">            propertyEditorRegistry.remove(targetTypeName);</span>
+<span class="nc" id="L118">        }</span>
+<span class="nc" id="L119">    }</span>
 
+    /**
+     * Registers an editor class to edit values of the given target class.
+     * If the editor class is {@code null},
+     * then any existing definition will be removed.
+     * Thus this method can be used to cancel the registration.
+     * The registration is canceled automatically
+     * if either the target or editor class is unloaded.
+     * &lt;p&gt;
+     *
+     * @param targetType  the class object of the type to be edited
+     * @param editorClass the class object of the editor class
+     * @since 2.4.0
+     */
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public static void registerEditor(@Nonnull Class&lt;?&gt; targetType, @Nullable Class&lt;? extends PropertyEditor&gt; editorClass) {
+<span class="fc" id="L136">        requireNonNull(targetType, ERROR_TARGET_TYPE_NULL);</span>
+<span class="fc" id="L137">        synchronized (LOCK) {</span>
+<span class="fc" id="L138">            String targetTypeName = targetType.getName();</span>
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">            if (editorClass == null) {</span>
+<span class="nc" id="L140">                propertyEditorChainRegistry.remove(targetTypeName);</span>
+<span class="nc" id="L141">                propertyEditorRegistry.remove(targetTypeName);</span>
+<span class="nc" id="L142">                return;</span>
+            }
+
+            // is targetType handled by a chain?
+<span class="fc" id="L146">            PropertyEditorChain chain = propertyEditorChainRegistry.get(targetTypeName);</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">            if (chain != null) {</span>
+<span class="fc" id="L148">                propertyEditorChainRegistry.put(targetTypeName, chain.copyOf(editorClass));</span>
+            } else {
+                // is targetType handled by an editor ?
+<span class="fc" id="L151">                Class&lt;? extends PropertyEditor&gt; propertyEditorType = propertyEditorRegistry.get(targetTypeName);</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">                if (propertyEditorType != null) {</span>
+<span class="fc" id="L153">                    propertyEditorRegistry.remove(targetTypeName);</span>
+<span class="fc" id="L154">                    Class&lt;? extends PropertyEditor&gt;[] propertyEditorClasses = new Class[2];</span>
+<span class="fc" id="L155">                    propertyEditorClasses[0] = propertyEditorType;</span>
+<span class="fc" id="L156">                    propertyEditorClasses[1] = editorClass;</span>
+<span class="fc" id="L157">                    propertyEditorChainRegistry.put(targetTypeName, new PropertyEditorChain(targetType, propertyEditorClasses));</span>
+<span class="fc" id="L158">                } else {</span>
+                    // standard registration
+<span class="fc" id="L160">                    propertyEditorRegistry.put(targetTypeName, editorClass);</span>
+                }
+            }
+<span class="pc" id="L163">        }</span>
+<span class="fc" id="L164">    }</span>
+
+    private static PropertyEditor doFindEditor(Class&lt;?&gt; targetType) {
+<span class="fc" id="L167">        synchronized (LOCK) {</span>
+<span class="fc" id="L168">            String targetTypeName = targetType.getName();</span>
+<span class="fc bfc" id="L169" title="All 2 branches covered.">            if (propertyEditorChainRegistry.containsKey(targetTypeName)) {</span>
+<span class="fc" id="L170">                PropertyEditorChain chain = propertyEditorChainRegistry.get(targetTypeName);</span>
+<span class="fc" id="L171">                return chain.copyOf();</span>
+            } else {
+<span class="fc" id="L173">                Class&lt;?&gt; propertyEditorType = propertyEditorRegistry.get(targetTypeName);</span>
+<span class="pc bpc" id="L174" title="1 of 2 branches missed.">                if (propertyEditorType != null) {</span>
+                    try {
+<span class="fc" id="L176">                        return (PropertyEditor) propertyEditorType.newInstance();</span>
+<span class="nc" id="L177">                    } catch (InstantiationException | IllegalAccessException e) {</span>
+<span class="nc" id="L178">                        throw new IllegalStateException(&quot;Can't instantiate &quot; + propertyEditorType, e);</span>
+                    }
+                }
+            }
+<span class="nc" id="L182">        }</span>
+<span class="nc" id="L183">        return null;</span>
+    }
+
+<span class="nc" id="L186">    private static final class NoopPropertyEditor extends PropertyEditorSupport {</span>
+
+    }
+
+<span class="fc" id="L190">    private static final class WeakCache&lt;K, V&gt; {</span>
+<span class="fc" id="L191">        private final Map&lt;K, Reference&lt;V&gt;&gt; map = new WeakHashMap&lt;&gt;();</span>
+
+        private V get(K key) {
+<span class="fc" id="L194">            Reference reference = this.map.get(key);</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">            if (reference == null) {</span>
+<span class="fc" id="L196">                return null;</span>
+            } else {
+<span class="fc" id="L198">                V value = (V) reference.get();</span>
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">                if (value == null) {</span>
+<span class="nc" id="L200">                    this.map.remove(key);</span>
+                }
+
+<span class="fc" id="L203">                return value;</span>
+            }
+        }
+
+        private void put(K key, V value) {
+<span class="pc bpc" id="L208" title="1 of 2 branches missed.">            if (value != null) {</span>
+<span class="fc" id="L209">                this.map.put(key, new WeakReference&lt;&gt;(value));</span>
+            } else {
+<span class="nc" id="L211">                this.map.remove(key);</span>
+            }
+<span class="fc" id="L213">        }</span>
+
+        private void remove(K key) {
+<span class="fc" id="L216">            this.map.remove(key);</span>
+<span class="fc" id="L217">        }</span>
+
+        private boolean contains(K key) {
+<span class="nc" id="L220">            Reference reference = this.map.get(key);</span>
+<span class="nc bnc" id="L221" title="All 2 branches missed.">            if (reference == null) {</span>
+<span class="nc" id="L222">                return false;</span>
+            } else {
+<span class="nc" id="L224">                V value = (V) reference.get();</span>
+<span class="nc bnc" id="L225" title="All 2 branches missed.">                if (value == null) {</span>
+<span class="nc" id="L226">                    this.map.remove(key);</span>
+<span class="nc" id="L227">                    return false;</span>
+                }
+
+<span class="nc" id="L230">                return true;</span>
+            }
+        }
+
+        private void clear() {
+<span class="nc" id="L235">            this.map.clear();</span>
+<span class="nc" id="L236">        }</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

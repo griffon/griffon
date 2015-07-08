@@ -29,8 +29,8 @@ public abstract class MethodInvocationException extends GriffonException {
     private static final long serialVersionUID = -4458948337239674524L;
 
     public MethodInvocationException(@Nonnull String message) {
-<span class="nc" id="L32">        super(requireNonBlank(message, &quot;message&quot;));</span>
-<span class="nc" id="L33">    }</span>
+<span class="fc" id="L32">        super(requireNonBlank(message, &quot;message&quot;));</span>
+<span class="fc" id="L33">    }</span>
 
     public MethodInvocationException(@Nonnull String message, @Nonnull Throwable cause) {
 <span class="fc" id="L36">        super(requireNonBlank(message, &quot;message&quot;), requireNonNull(cause));</span>
@@ -45,7 +45,7 @@ public abstract class MethodInvocationException extends GriffonException {
 <span class="fc" id="L45">        Class&lt;?&gt;[] ans = new Class&lt;?&gt;[s];</span>
 <span class="fc bfc" id="L46" title="All 2 branches covered.">        for (int i = 0; i &lt; s; i++) {</span>
 <span class="fc" id="L47">            Object o = args[i];</span>
-<span class="pc bpc" id="L48" title="1 of 2 branches missed.">            ans[i] = o != null ? o.getClass() : null;</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">            ans[i] = o != null ? o.getClass() : null;</span>
         }
 <span class="fc" id="L50">        return ans;</span>
     }

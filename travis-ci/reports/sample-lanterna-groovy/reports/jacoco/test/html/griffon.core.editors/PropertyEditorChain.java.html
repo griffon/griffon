@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PropertyEditorChain.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-lanterna-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.core.editors</a> &gt; <span class="el_source">PropertyEditorChain.java</span></div><h1>PropertyEditorChain.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.core.editors;
+
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.GuardedBy;
+import java.beans.PropertyEditor;
+import java.beans.PropertyEditorSupport;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+
+import static griffon.util.GriffonClassUtils.requireNonEmpty;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.4.0
+ */
+public class PropertyEditorChain extends PropertyEditorSupport {
+    private final Class&lt;?&gt; targetClass;
+<span class="fc" id="L35">    private final Object lock = new Object[0];</span>
+    private final WeakReference&lt;Class&lt;? extends PropertyEditor&gt;&gt;[] propertyEditorClasses;
+    @GuardedBy(&quot;lock&quot;)
+    private WeakReference&lt;PropertyEditor&gt;[] propertyEditors;
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+<span class="fc" id="L41">    public PropertyEditorChain(@Nonnull Class&lt;?&gt; targetClass, @Nonnull Class&lt;? extends PropertyEditor&gt;[] propertyEditorClasses) {</span>
+<span class="fc" id="L42">        this.targetClass = requireNonNull(targetClass, &quot;Argument 'targetClass' must not be null&quot;);</span>
+<span class="fc" id="L43">        requireNonEmpty(propertyEditorClasses, &quot;Argument 'propertyEditorClasses' must not be null nor empty&quot;);</span>
+<span class="fc" id="L44">        this.propertyEditorClasses = new WeakReference[propertyEditorClasses.length];</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        for (int i = 0; i &lt; propertyEditorClasses.length; i++) {</span>
+<span class="fc" id="L46">            this.propertyEditorClasses[i] = new WeakReference&lt;Class&lt;? extends PropertyEditor&gt;&gt;(propertyEditorClasses[i]);</span>
+        }
+<span class="fc" id="L48">    }</span>
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public PropertyEditorChain copyOf() {
+<span class="fc" id="L52">        List&lt;Class&lt;? extends PropertyEditor&gt;&gt; classes = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        for (WeakReference&lt;Class&lt;? extends PropertyEditor&gt;&gt; reference : propertyEditorClasses) {</span>
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">            if (reference.get() != null) {</span>
+<span class="fc" id="L55">                classes.add(reference.get());</span>
+            }
+        }
+<span class="fc" id="L58">        return new PropertyEditorChain(targetClass, classes.toArray(new Class[classes.size()]));</span>
+    }
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public PropertyEditorChain copyOf(Class&lt;? extends PropertyEditor&gt; propertyEditorClass) {
+<span class="nc" id="L63">        requireNonNull(propertyEditorClass, &quot;Argument 'propertyEditorClass' must not be null&quot;);</span>
+<span class="nc" id="L64">        List&lt;Class&lt;? extends PropertyEditor&gt;&gt; classes = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        for (WeakReference&lt;Class&lt;? extends PropertyEditor&gt;&gt; reference : propertyEditorClasses) {</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">            if (reference.get() != null) {</span>
+<span class="nc" id="L67">                classes.add(reference.get());</span>
+            }
+        }
+<span class="nc" id="L70">        classes.add(propertyEditorClass);</span>
+<span class="nc" id="L71">        return new PropertyEditorChain(targetClass, classes.toArray(new Class[classes.size()]));</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L76">        StringBuilder sb = new StringBuilder(super.toString());</span>
+<span class="nc" id="L77">        sb.append(&quot;[&quot;).append(targetClass.getName()).append(']');</span>
+<span class="nc" id="L78">        return sb.toString();</span>
+    }
+
+    @Override
+    public Object getValue() {
+<span class="nc" id="L83">        initPropertyEditors();</span>
+
+<span class="nc" id="L85">        Object value = super.getValue();</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        for (WeakReference&lt;PropertyEditor&gt; reference : propertyEditors) {</span>
+            try {
+<span class="nc" id="L88">                PropertyEditor propertyEditor = reference.get();</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">                if (propertyEditor != null) {</span>
+<span class="nc" id="L90">                    propertyEditor.setValue(value);</span>
+<span class="nc" id="L91">                    return propertyEditor.getValue();</span>
+                }
+<span class="nc" id="L93">            } catch (Exception e) {</span>
+                // ignore. next editor
+<span class="nc" id="L95">            }</span>
+        }
+
+<span class="nc" id="L98">        throw illegalValue(value, targetClass);</span>
+    }
+
+    @Override
+    public String getAsText() {
+<span class="nc" id="L103">        initPropertyEditors();</span>
+
+<span class="nc" id="L105">        Object value = super.getValue();</span>
+
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        for (WeakReference&lt;PropertyEditor&gt; reference : propertyEditors) {</span>
+            try {
+<span class="nc" id="L109">                PropertyEditor propertyEditor = reference.get();</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">                if (propertyEditor != null) {</span>
+<span class="nc" id="L111">                    propertyEditor.setValue(value);</span>
+<span class="nc" id="L112">                    return propertyEditor.getAsText();</span>
+                }
+<span class="nc" id="L114">            } catch (Exception e) {</span>
+                // ignore. next editor
+<span class="nc" id="L116">            }</span>
+        }
+
+<span class="nc" id="L119">        throw illegalValue(value, targetClass);</span>
+    }
+
+    protected ValueConversionException illegalValue(Object value, Class&lt;?&gt; klass) {
+<span class="nc" id="L123">        throw new ValueConversionException(value, klass);</span>
+    }
+
+    protected ValueConversionException illegalValue(Object value, Class&lt;?&gt; klass, Exception e) {
+<span class="nc" id="L127">        throw new ValueConversionException(value, klass, e);</span>
+    }
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    private void initPropertyEditors() {
+<span class="nc" id="L132">        synchronized (lock) {</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">            if (propertyEditors == null) {</span>
+<span class="nc" id="L134">                List&lt;WeakReference&lt;PropertyEditor&gt;&gt; editors = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">                for (WeakReference&lt;Class&lt;? extends PropertyEditor&gt;&gt; propertyEditorClass : propertyEditorClasses) {</span>
+                    try {
+<span class="nc" id="L137">                        Class&lt;? extends PropertyEditor&gt; klass = propertyEditorClass.get();</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">                        if (klass != null) {</span>
+<span class="nc" id="L139">                            editors.add(new WeakReference&lt;&gt;(klass.newInstance()));</span>
+                        }
+<span class="nc" id="L141">                    } catch (InstantiationException | IllegalAccessException e) {</span>
+<span class="nc" id="L142">                        throw new IllegalArgumentException(&quot;Can't create instance&quot;, e);</span>
+<span class="nc" id="L143">                    }</span>
+                }
+
+<span class="nc bnc" id="L146" title="All 2 branches missed.">                if (editors.size() &gt; 0) {</span>
+<span class="nc" id="L147">                    propertyEditors = editors.toArray(new WeakReference[editors.size()]);</span>
+                } else {
+<span class="nc" id="L149">                    throw new IllegalStateException(&quot;No available PropertyEditors for &quot; + this);</span>
+                }
+            }
+<span class="nc" id="L152">        }</span>
+<span class="nc" id="L153">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
