@@ -20,8 +20,6 @@ import groovyx.javafx.factory.AbstractFXBeanFactory
 import javafx.beans.value.ChangeListener
 import javafx.beans.value.ObservableValue
 import javafx.scene.control.Tooltip
-import javafx.scene.image.Image
-import javafx.scene.image.ImageView
 
 import static griffon.javafx.support.JavaFXUtils.resolveIcon
 

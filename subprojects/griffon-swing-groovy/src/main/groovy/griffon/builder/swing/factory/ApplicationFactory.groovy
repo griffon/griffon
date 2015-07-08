@@ -47,7 +47,7 @@ class ApplicationFactory extends AbstractFactory {
             if (cl) {
                 jxStatusBarClass = cl.loadClass('org.jdesktop.swingx.JXStatusBar')
             } else {
-                jxStatusBarClass = Class.forName('org.jdesktop.swingx.JXStatusBar')
+                jxStatusBarClass = Class.forName('org.jdesktop.swingx.JXStatusBar', true, ApplicationFactory.classLoader)
             }
             swingXPresent = true
         } catch (Throwable t) {

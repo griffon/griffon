@@ -32,9 +32,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class PropertyEditorChain extends PropertyEditorSupport {
     private final Class<?> targetClass;
-    private final Object LOCK = new Object[0];
+    private final Object lock = new Object[0];
     private final WeakReference<Class<? extends PropertyEditor>>[] propertyEditorClasses;
-    @GuardedBy("LOCK")
+    @GuardedBy("lock")
     private WeakReference<PropertyEditor>[] propertyEditors;
 
     @SuppressWarnings("unchecked")
@@ -129,7 +129,7 @@ public class PropertyEditorChain extends PropertyEditorSupport {
 
     @SuppressWarnings("unchecked")
     private void initPropertyEditors() {
-        synchronized (LOCK) {
+        synchronized (lock) {
             if (propertyEditors == null) {
                 List<WeakReference<PropertyEditor>> editors = new ArrayList<>();
                 for (WeakReference<Class<? extends PropertyEditor>> propertyEditorClass : propertyEditorClasses) {

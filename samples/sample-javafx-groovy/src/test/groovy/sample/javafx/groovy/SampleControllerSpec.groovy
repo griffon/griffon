@@ -20,7 +20,6 @@ import griffon.core.test.GriffonUnitRule
 import griffon.core.test.TestFor
 import javafx.embed.swing.JFXPanel
 import org.junit.Rule
-import org.junit.Test
 import spock.lang.Specification
 
 import javax.inject.Inject
