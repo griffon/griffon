@@ -111,10 +111,200 @@ class GriffonClassUtilsSpec extends Specification {
         ['foo']       || 'java.lang.String'
     }
 
-    private static List methodsOf(Class<?> type, boolean result) {
+    void "Verify arguments for requireNonEmpty: null byte array throws NPE"() {
+        when:
+        GriffonClassUtils.requireNonEmpty((byte[]) null)
+
+        then:
+        thrown(NullPointerException)
+    }
+
+    void "Verify arguments for requireNonEmpty: null boolean array throws NPE"() {
+        when:
+        GriffonClassUtils.requireNonEmpty((boolean[]) null)
+
+        then:
+        thrown(NullPointerException)
+    }
+
+    void "Verify arguments for requireNonEmpty: null short array throws NPE"() {
+        when:
+        GriffonClassUtils.requireNonEmpty((short[]) null)
+
+        then:
+        thrown(NullPointerException)
+    }
+
+    void "Verify arguments for requireNonEmpty: null int array throws NPE"() {
+        when:
+        GriffonClassUtils.requireNonEmpty((int[]) null)
+
+        then:
+        thrown(NullPointerException)
+    }
+
+    void "Verify arguments for requireNonEmpty: null long array throws NPE"() {
+        when:
+        GriffonClassUtils.requireNonEmpty((long[]) null)
+
+        then:
+        thrown(NullPointerException)
+    }
+
+    void "Verify arguments for requireNonEmpty: null float array throws NPE"() {
+        when:
+        GriffonClassUtils.requireNonEmpty((float[]) null)
+
+        then:
+        thrown(NullPointerException)
+    }
+
+    void "Verify arguments for requireNonEmpty: null double array throws NPE"() {
+        when:
+        GriffonClassUtils.requireNonEmpty((double[]) null)
+
+        then:
+        thrown(NullPointerException)
+    }
+
+    void "Verify arguments for requireNonEmpty: null char array throws NPE"() {
+        when:
+        GriffonClassUtils.requireNonEmpty((char[]) null)
+
+        then:
+        thrown(NullPointerException)
+    }
+
+    void "Verify arguments for requireNonEmpty: null Object array throws NPE"() {
+        when:
+        GriffonClassUtils.requireNonEmpty((Object[]) null)
+
+        then:
+        thrown(NullPointerException)
+    }
+
+    void "Verify arguments for requireNonEmpty: null Collection throws NPE"() {
+        when:
+        GriffonClassUtils.requireNonEmpty((Collection) null)
+
+        then:
+        thrown(NullPointerException)
+    }
+
+    void "Verify arguments for requireNonEmpty: null Map throws NPE"() {
+        when:
+        GriffonClassUtils.requireNonEmpty((Map) null)
+
+        then:
+        thrown(NullPointerException)
+    }
+
+    void "Verify arguments for requireNonEmpty: null message for  #input (#input.getClass()) throws IAE"() {
+        when:
+        GriffonClassUtils.requireNonEmpty(input, null)
+
+        then:
+        thrown(IllegalArgumentException)
+
+        where:
+        input << [
+            new byte[0],
+            new boolean[0],
+            new short[0],
+            new int[0],
+            new long[0],
+            new float[0],
+            new double[0],
+            new char[0],
+            new Object[0],
+            [],
+            [:]
+        ]
+    }
+
+    void "Verify arguments for requireNonEmpty: empty  #input (#input.getClass()) throws ISE"() {
+        when:
+        GriffonClassUtils.requireNonEmpty(input)
+
+        then:
+        thrown(IllegalStateException)
+
+        where:
+        input << [
+            new byte[0],
+            new boolean[0],
+            new short[0],
+            new int[0],
+            new long[0],
+            new float[0],
+            new double[0],
+            new char[0],
+            new Object[0],
+            [],
+            [:]
+        ]
+    }
+
+    void "Verify arguments for requireNonEmpty: empty  #input (#input.getClass()) with message throws ISE"() {
+        when:
+        GriffonClassUtils.requireNonEmpty(input, 'message')
+
+        then:
+        thrown(IllegalStateException)
+
+        where:
+        input << [
+            new byte[0],
+            new boolean[0],
+            new short[0],
+            new int[0],
+            new long[0],
+            new float[0],
+            new double[0],
+            new char[0],
+            new Object[0],
+            [],
+            [:]
+        ]
+    }
+
+    void "RequireNonEmpty is successful for #input (#input.getClass())"() {
+        when:
+        def output1 = GriffonClassUtils.requireNonEmpty(input)
+        def output2 = GriffonClassUtils.requireNonEmpty(input, 'message')
+
+        then:
+        input == output1
+        input == output2
+
+        where:
+        input << [
+            [(byte) 1] as byte[],
+            [(short) 1] as short[],
+            [(int) 1] as int[],
+            [(long) 1] as long[],
+            [(float) 1] as float[],
+            [(double) 1] as double[],
+            [(char) 1] as char[],
+            [true] as boolean[],
+            [new Object()] as Object[],
+            [1],
+            [key: 'value']
+        ]
+    }
+
+    private static List methodDescriptorsOf(Class<?> type, boolean result) {
         List data = []
         for (Method m : type.methods) {
             data << [result, MethodDescriptor.forMethod(m, true)]
+        }
+        data
+    }
+
+    private static List methodsOf(Class<?> type, boolean result) {
+        List data = []
+        for (Method m : type.methods) {
+            data << [result, m]
         }
         data
     }

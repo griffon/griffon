@@ -285,6 +285,254 @@ public class GriffonClassUtils {
      * @throws NullPointerException  if {@code array} is null
      * @throws IllegalStateException if {@code array} is empty
      */
+    public static byte[] requireNonEmpty(@Nonnull byte[] array) {
+        requireNonNull(array);
+        requireState(array.length != 0);
+        return array;
+    }
+
+    /**
+     * Checks that the specified array is not empty, throwing a customized
+     * {@link IllegalStateException} if it is.
+     *
+     * @param array the array to check
+     * @param message    detail message to be used in the event that a {@code
+     *                   IllegalStateException} is thrown
+     * @throws NullPointerException     if {@code array} is null
+     * @throws IllegalArgumentException if {@code message} is {@code blank}
+     * @throws IllegalStateException    if {@code array} is empty
+     */
+    public static byte[] requireNonEmpty(@Nonnull byte[] array, @Nonnull String message) {
+        requireNonNull(array);
+        requireState(array.length != 0, requireNonBlank(message, "message"));
+        return array;
+    }
+
+    /**
+     * Checks that the specified array is not empty, throwing a
+     * {@link IllegalStateException} if it is.
+     *
+     * @param array the array to check
+     * @throws NullPointerException  if {@code array} is null
+     * @throws IllegalStateException if {@code array} is empty
+     */
+    public static short[] requireNonEmpty(@Nonnull short[] array) {
+        requireNonNull(array);
+        requireState(array.length != 0);
+        return array;
+    }
+
+    /**
+     * Checks that the specified array is not empty, throwing a customized
+     * {@link IllegalStateException} if it is.
+     *
+     * @param array the array to check
+     * @param message    detail message to be used in the event that a {@code
+     *                   IllegalStateException} is thrown
+     * @throws NullPointerException     if {@code array} is null
+     * @throws IllegalArgumentException if {@code message} is {@code blank}
+     * @throws IllegalStateException    if {@code array} is empty
+     */
+    public static short[] requireNonEmpty(@Nonnull short[] array, @Nonnull String message) {
+        requireNonNull(array);
+        requireState(array.length != 0, requireNonBlank(message, "message"));
+        return array;
+    }
+
+    /**
+     * Checks that the specified array is not empty, throwing a
+     * {@link IllegalStateException} if it is.
+     *
+     * @param array the array to check
+     * @throws NullPointerException  if {@code array} is null
+     * @throws IllegalStateException if {@code array} is empty
+     */
+    public static int[] requireNonEmpty(@Nonnull int[] array) {
+        requireNonNull(array);
+        requireState(array.length != 0);
+        return array;
+    }
+
+    /**
+     * Checks that the specified array is not empty, throwing a customized
+     * {@link IllegalStateException} if it is.
+     *
+     * @param array the array to check
+     * @param message    detail message to be used in the event that a {@code
+     *                   IllegalStateException} is thrown
+     * @throws NullPointerException     if {@code array} is null
+     * @throws IllegalArgumentException if {@code message} is {@code blank}
+     * @throws IllegalStateException    if {@code array} is empty
+     */
+    public static int[] requireNonEmpty(@Nonnull int[] array, @Nonnull String message) {
+        requireNonNull(array);
+        requireState(array.length != 0, requireNonBlank(message, "message"));
+        return array;
+    }
+
+    /**
+     * Checks that the specified array is not empty, throwing a
+     * {@link IllegalStateException} if it is.
+     *
+     * @param array the array to check
+     * @throws NullPointerException  if {@code array} is null
+     * @throws IllegalStateException if {@code array} is empty
+     */
+    public static long[] requireNonEmpty(@Nonnull long[] array) {
+        requireNonNull(array);
+        requireState(array.length != 0);
+        return array;
+    }
+
+    /**
+     * Checks that the specified array is not empty, throwing a customized
+     * {@link IllegalStateException} if it is.
+     *
+     * @param array the array to check
+     * @param message    detail message to be used in the event that a {@code
+     *                   IllegalStateException} is thrown
+     * @throws NullPointerException     if {@code array} is null
+     * @throws IllegalArgumentException if {@code message} is {@code blank}
+     * @throws IllegalStateException    if {@code array} is empty
+     */
+    public static long[] requireNonEmpty(@Nonnull long[] array, @Nonnull String message) {
+        requireNonNull(array);
+        requireState(array.length != 0, requireNonBlank(message, "message"));
+        return array;
+    }
+
+    /**
+     * Checks that the specified array is not empty, throwing a
+     * {@link IllegalStateException} if it is.
+     *
+     * @param array the array to check
+     * @throws NullPointerException  if {@code array} is null
+     * @throws IllegalStateException if {@code array} is empty
+     */
+    public static float[] requireNonEmpty(@Nonnull float[] array) {
+        requireNonNull(array);
+        requireState(array.length != 0);
+        return array;
+    }
+
+    /**
+     * Checks that the specified array is not empty, throwing a customized
+     * {@link IllegalStateException} if it is.
+     *
+     * @param array the array to check
+     * @param message    detail message to be used in the event that a {@code
+     *                   IllegalStateException} is thrown
+     * @throws NullPointerException     if {@code array} is null
+     * @throws IllegalArgumentException if {@code message} is {@code blank}
+     * @throws IllegalStateException    if {@code array} is empty
+     */
+    public static float[] requireNonEmpty(@Nonnull float[] array, @Nonnull String message) {
+        requireNonNull(array);
+        requireState(array.length != 0, requireNonBlank(message, "message"));
+        return array;
+    }
+
+    /**
+     * Checks that the specified array is not empty, throwing a
+     * {@link IllegalStateException} if it is.
+     *
+     * @param array the array to check
+     * @throws NullPointerException  if {@code array} is null
+     * @throws IllegalStateException if {@code array} is empty
+     */
+    public static double[] requireNonEmpty(@Nonnull double[] array) {
+        requireNonNull(array);
+        requireState(array.length != 0);
+        return array;
+    }
+
+    /**
+     * Checks that the specified array is not empty, throwing a customized
+     * {@link IllegalStateException} if it is.
+     *
+     * @param array the array to check
+     * @param message    detail message to be used in the event that a {@code
+     *                   IllegalStateException} is thrown
+     * @throws NullPointerException     if {@code array} is null
+     * @throws IllegalArgumentException if {@code message} is {@code blank}
+     * @throws IllegalStateException    if {@code array} is empty
+     */
+    public static double[] requireNonEmpty(@Nonnull double[] array, @Nonnull String message) {
+        requireNonNull(array);
+        requireState(array.length != 0, requireNonBlank(message, "message"));
+        return array;
+    }
+
+    /**
+     * Checks that the specified array is not empty, throwing a
+     * {@link IllegalStateException} if it is.
+     *
+     * @param array the array to check
+     * @throws NullPointerException  if {@code array} is null
+     * @throws IllegalStateException if {@code array} is empty
+     */
+    public static char[] requireNonEmpty(@Nonnull char[] array) {
+        requireNonNull(array);
+        requireState(array.length != 0);
+        return array;
+    }
+
+    /**
+     * Checks that the specified array is not empty, throwing a customized
+     * {@link IllegalStateException} if it is.
+     *
+     * @param array the array to check
+     * @param message    detail message to be used in the event that a {@code
+     *                   IllegalStateException} is thrown
+     * @throws NullPointerException     if {@code array} is null
+     * @throws IllegalArgumentException if {@code message} is {@code blank}
+     * @throws IllegalStateException    if {@code array} is empty
+     */
+    public static char[] requireNonEmpty(@Nonnull char[] array, @Nonnull String message) {
+        requireNonNull(array);
+        requireState(array.length != 0, requireNonBlank(message, "message"));
+        return array;
+    }
+
+    /**
+     * Checks that the specified array is not empty, throwing a
+     * {@link IllegalStateException} if it is.
+     *
+     * @param array the array to check
+     * @throws NullPointerException  if {@code array} is null
+     * @throws IllegalStateException if {@code array} is empty
+     */
+    public static boolean[] requireNonEmpty(@Nonnull boolean[] array) {
+        requireNonNull(array);
+        requireState(array.length != 0);
+        return array;
+    }
+
+    /**
+     * Checks that the specified array is not empty, throwing a customized
+     * {@link IllegalStateException} if it is.
+     *
+     * @param array the array to check
+     * @param message    detail message to be used in the event that a {@code
+     *                   IllegalStateException} is thrown
+     * @throws NullPointerException     if {@code array} is null
+     * @throws IllegalArgumentException if {@code message} is {@code blank}
+     * @throws IllegalStateException    if {@code array} is empty
+     */
+    public static boolean[] requireNonEmpty(@Nonnull boolean[] array, @Nonnull String message) {
+        requireNonNull(array);
+        requireState(array.length != 0, requireNonBlank(message, "message"));
+        return array;
+    }
+
+    /**
+     * Checks that the specified array is not empty, throwing a
+     * {@link IllegalStateException} if it is.
+     *
+     * @param array the array to check
+     * @throws NullPointerException  if {@code array} is null
+     * @throws IllegalStateException if {@code array} is empty
+     */
     public static <E> E[] requireNonEmpty(@Nonnull E[] array) {
         requireNonNull(array);
         requireState(array.length != 0);
