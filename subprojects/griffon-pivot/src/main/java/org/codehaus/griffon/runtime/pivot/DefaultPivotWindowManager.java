@@ -44,7 +44,7 @@ public class DefaultPivotWindowManager extends AbstractWindowManager<Window> imp
     @Nonnull
     public DefaultPivotWindowManager(@Nonnull GriffonApplication application, @Nonnull @Named("windowDisplayHandler") PivotWindowDisplayHandler windowDisplayHandler) {
         super(application, windowDisplayHandler);
-        requireNonNull(application.getEventRouter(), "Argument 'application.eventRouter' must not be null");
+        // requireNonNull(application.getEventRouter(), "Argument 'application.eventRouter' must not be null");
     }
 
     @Override

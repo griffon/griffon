@@ -45,6 +45,7 @@ public class SpringInjectorFactory implements InjectorFactory {
         InjectorProvider injectorProvider = new InjectorProvider();
         SpringInjector injector = createModules(application, injectorProvider, bindings);
         injectorProvider.setInjector(injector);
+        injector.getDelegateInjector().init();
         return injector;
     }
 

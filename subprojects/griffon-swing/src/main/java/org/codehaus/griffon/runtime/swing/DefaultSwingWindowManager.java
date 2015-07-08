@@ -65,7 +65,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
     @Nonnull
     public DefaultSwingWindowManager(@Nonnull GriffonApplication application, @Nonnull @Named("windowDisplayHandler") SwingWindowDisplayHandler windowDisplayHandler) {
         super(application, windowDisplayHandler);
-        requireNonNull(application.getEventRouter(), "Argument 'application.eventRouter' must not be null");
+        // requireNonNull(application.getEventRouter(), "Argument 'application.eventRouter' must not be null");
     }
 
     /**

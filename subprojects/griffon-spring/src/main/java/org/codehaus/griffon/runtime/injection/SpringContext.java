@@ -25,8 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
-import org.springframework.beans.factory.annotation.CustomAutowireConfigurer;
-import org.springframework.beans.factory.annotation.QualifierAnnotationAutowireCandidateResolver;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.support.AutowireCandidateQualifier;
 import org.springframework.beans.factory.support.CglibSubclassingInstantiationStrategy;
@@ -38,18 +36,14 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static griffon.util.GriffonNameUtils.getPropertyName;
 import static griffon.util.GriffonNameUtils.isBlank;
@@ -88,12 +82,12 @@ public class SpringContext {
     }
 
     @Nonnull
-    public ApplicationContext create() {
+    public GriffonApplicationContext create() {
         return create(null);
     }
 
     @Nonnull
-    public ApplicationContext create(@Nullable ApplicationContext parent) {
+    public GriffonApplicationContext create(@Nullable ApplicationContext parent) {
         GriffonApplicationContext applicationContext = null;
 
         String scannedPackages = System.getProperty(SPRING_SCANNED_PACKAGES_KEY);
@@ -154,36 +148,19 @@ public class SpringContext {
 
             @Override
             public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-                System.out.println("Is "+bean+" an artifact? " + (bean instanceof GriffonArtifact));
-                /*if (bean instanceof GriffonArtifact) {
+                System.out.println("Is " + bean + " an artifact? " + (bean instanceof GriffonArtifact));
+                if (bean instanceof GriffonArtifact) {
                     factory.getBean(EventRouter.class).publishEvent(
                         ApplicationEvent.NEW_INSTANCE.getName(),
                         asList(bean.getClass(), bean)
                     );
-                }*/
+                }
                 return bean;
             }
         });
 
         CommonAnnotationBeanPostProcessor commonAnnotationBeanProcessor = new CommonAnnotationBeanPostProcessor();
         factory.addBeanPostProcessor(commonAnnotationBeanProcessor);
-
-        Set<Class<?>> cqt = new HashSet<>();
-        cqt.add(Named.class);
-        CustomAutowireConfigurer configurer = new CustomAutowireConfigurer();
-        configurer.setCustomQualifierTypes(cqt);
-        QualifierAnnotationAutowireCandidateResolver customResolver = new QualifierAnnotationAutowireCandidateResolver();
-        factory.setAutowireCandidateResolver(customResolver);
-        configurer.postProcessBeanFactory(factory);
-
-        applicationContext.init();
-        System.out.println("************************************");
-        String[] names = applicationContext.getBeanDefinitionNames();
-        Arrays.sort(names);
-        for (String n : names) {
-            System.out.println(n);
-        }
-        System.out.println("************************************");
 
         return applicationContext;
     }
@@ -196,7 +173,7 @@ public class SpringContext {
         boolean singleton) {
         List<AutowireCandidateQualifier> autowireQualifiers = pickQualifier(classifierType, classifier);
         String scope = scopeFor(singleton);
-        LOG.trace("Declaring bean {} to {} with qualifier {} on {} scope", source, target, qualifier(classifierType, classifier), scope);
+        LOG.trace("Declaring bean {} to {} with qualifier {} on {} scope", source.getName(), target.getName(), qualifier(classifierType, classifier), scope);
         declareBean(new DeclaredBean(source, target, scope, autowireQualifiers));
     }
 
@@ -206,7 +183,7 @@ public class SpringContext {
         @Nullable Annotation classifier,
         @Nonnull T instance) {
         List<AutowireCandidateQualifier> autowireQualifiers = pickQualifier(classifierType, classifier);
-        LOG.trace("Declaring singleton bean {} with instance {} and qualifiers {}", source, instance, qualifier(classifierType, classifier));
+        LOG.trace("Declaring singleton bean {} with instance {} and qualifiers {}", source.getName(), instance, qualifier(classifierType, classifier));
         declareBean(new SingletonBean<>(source, instance, autowireQualifiers));
     }
 
@@ -218,7 +195,7 @@ public class SpringContext {
         boolean singleton) {
         List<AutowireCandidateQualifier> autowireQualifiers = pickQualifier(classifierType, classifier);
         String scope = scopeFor(singleton);
-        LOG.trace("Declaring provider {} for type {} with qualifier {} on {} scope", providerType, source, qualifier(classifierType, classifier), scope);
+        LOG.trace("Declaring provider {} for type {} with qualifier {} on {} scope", providerType.getName(), source.getName(), qualifier(classifierType, classifier), scope);
         declareBean(new DeclaredProviderBean<>(source, scope, autowireQualifiers, providerType));
     }
 
@@ -230,7 +207,7 @@ public class SpringContext {
         boolean singleton) {
         List<AutowireCandidateQualifier> autowireQualifiers = pickQualifier(classifierType, classifier);
         String scope = scopeFor(singleton);
-        LOG.trace("Declaring provider {} for type {} with qualifier {} on {} scope", provider, source, qualifier(classifierType, classifier), scope);
+        LOG.trace("Declaring provider {} for type {} with qualifier {} on {} scope", provider, source.getName(), qualifier(classifierType, classifier), scope);
         declareBean(new SingletonProviderBean<>(source, scope, autowireQualifiers, provider));
     }
 

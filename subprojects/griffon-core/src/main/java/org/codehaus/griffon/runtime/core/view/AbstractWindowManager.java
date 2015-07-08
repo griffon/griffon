@@ -56,8 +56,8 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
     @Inject
     public AbstractWindowManager(@Nonnull GriffonApplication application, @Nonnull WindowDisplayHandler<W> windowDisplayHandler) {
         this.application = requireNonNull(application, "Argument 'application' must not be null");
-        requireNonNull(application.getConfiguration(), "Argument 'application.configuration' must not be null");
-        requireNonNull(application.getUIThreadManager(), "Argument 'application.uiThreadManager' must not be null");
+        // requireNonNull(application.getConfiguration(), "Argument 'application.configuration' must not be null");
+        // requireNonNull(application.getUIThreadManager(), "Argument 'application.uiThreadManager' must not be null");
         this.windowDisplayHandler = requireNonNull(windowDisplayHandler, "Argument 'windowDisplayHandler' must not be null");
     }
 

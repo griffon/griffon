@@ -16,11 +16,17 @@
 package org.codehaus.griffon.runtime.injection;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.CustomAutowireConfigurer;
+import org.springframework.beans.factory.annotation.QualifierAnnotationAutowireCandidateResolver;
 import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import javax.annotation.concurrent.GuardedBy;
+import javax.inject.Named;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static java.util.Arrays.copyOf;
 
@@ -31,6 +37,9 @@ import static java.util.Arrays.copyOf;
 public class GriffonApplicationContext extends AnnotationConfigApplicationContext {
     private String[] basePackages;
     private Class[] annotatedClasses;
+    private final Object refreshLock = new Object[0];
+    @GuardedBy("refreshLock")
+    private boolean refreshed;
 
     /**
      * Create a new GriffonApplicationContext.
@@ -80,9 +89,32 @@ public class GriffonApplicationContext extends AnnotationConfigApplicationContex
     public void init() {
         if (basePackages != null) {
             scan(basePackages);
-        } else {
+        } else if (annotatedClasses != null) {
             register(annotatedClasses);
         }
-        refresh();
+
+        DefaultListableBeanFactory factory = getDefaultListableBeanFactory();
+
+        Set<Class<?>> cqt = new HashSet<>();
+        cqt.add(Named.class);
+        CustomAutowireConfigurer configurer = new CustomAutowireConfigurer();
+        configurer.setCustomQualifierTypes(cqt);
+        QualifierAnnotationAutowireCandidateResolver customResolver = new QualifierAnnotationAutowireCandidateResolver();
+        factory.setAutowireCandidateResolver(customResolver);
+        configurer.postProcessBeanFactory(factory);
+    }
+
+    @Override
+    public void refresh() throws BeansException, IllegalStateException {
+        synchronized (refreshLock) {
+            if (!refreshed) {
+                doRefresh();
+                refreshed = true;
+            }
+        }
+    }
+
+    protected void doRefresh() throws BeansException, IllegalStateException {
+        super.refresh();
     }
 }

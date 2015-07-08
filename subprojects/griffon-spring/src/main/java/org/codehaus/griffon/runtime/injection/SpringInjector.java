@@ -30,7 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoUniqueBeanDefinitionException;
 import org.springframework.beans.factory.support.AutowireCandidateQualifier;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import javax.annotation.Nonnull;
@@ -49,7 +48,7 @@ import static org.codehaus.griffon.runtime.injection.BeanUtils.asAutowireCandida
  * @author Andres Almiray
  * @since 2.4.0
  */
-public class SpringInjector implements Injector<SpringContext> {
+public class SpringInjector implements Injector<GriffonApplicationContext> {
     private static final Logger LOG = LoggerFactory.getLogger(SpringInjector.class);
     private static final String ERROR_TYPE_NULL = "Argument 'type' must not be null";
     private static final String ERROR_BINDINGS_NULL = "Argument 'bindings' must not be null";
@@ -58,15 +57,14 @@ public class SpringInjector implements Injector<SpringContext> {
     private static final String ERROR_INSTANCE_NULL = "Argument 'instance' must not be null";
     private static final String ERROR_NAME_BLANK = "Argument 'name' must not be blank";
 
-    private final SpringContext delegate;
-    private final ApplicationContext applicationContext;
+    private final GriffonApplicationContext delegate;
     private final Object lock = new Object[0];
     @GuardedBy("lock")
     private boolean closed;
 
     public SpringInjector(@Nonnull SpringContext delegate) {
-        this.delegate = requireNonNull(delegate, ERROR_DELEGATE_NULL);
-        this.applicationContext = delegate.create();
+        requireNonNull(delegate, ERROR_DELEGATE_NULL);
+        this.delegate = delegate.create();
     }
 
     static SpringContext contextFromBindings(final @Nonnull GriffonApplication application, final @Nonnull Iterable<Binding<?>> bindings) {
@@ -130,7 +128,7 @@ public class SpringInjector implements Injector<SpringContext> {
 
     @Nonnull
     @Override
-    public SpringContext getDelegateInjector() {
+    public GriffonApplicationContext getDelegateInjector() {
         return delegate;
     }
 
@@ -144,13 +142,14 @@ public class SpringInjector implements Injector<SpringContext> {
         }
 
         try {
-            return applicationContext.getBean(type);
+            delegate.refresh();
+            return delegate.getBean(type);
         } catch (RuntimeException e) {
             Throwable t = getRootCause(e);
             if (t instanceof NoUniqueBeanDefinitionException) {
                 String beanDefinitionName = BeanUtils.Key.of(type, Collections.<AutowireCandidateQualifier>emptyList()).asFormattedName();
                 try {
-                    return (T) applicationContext.getBean(beanDefinitionName);
+                    return (T) delegate.getBean(beanDefinitionName);
                 } catch (RuntimeException e2) {
                     LOG.trace("ERROR", e2);
                     throw new InstanceNotFoundException(type, e);
@@ -174,7 +173,8 @@ public class SpringInjector implements Injector<SpringContext> {
             List<AutowireCandidateQualifier> qualifiers = asAutowireCandidateQualifiers(qualifier);
             String beanDefinitionName = BeanUtils.Key.of(type, qualifiers).asFormattedName();
 
-            return (T) applicationContext.getBean(beanDefinitionName);
+            delegate.refresh();
+            return (T) delegate.getBean(beanDefinitionName);
         } catch (RuntimeException e) {
             throw new InstanceNotFoundException(type, qualifier, e);
         }
@@ -190,7 +190,8 @@ public class SpringInjector implements Injector<SpringContext> {
         }
 
         try {
-            return applicationContext.getBeansOfType(type).values();
+            delegate.refresh();
+            return delegate.getBeansOfType(type).values();
         } catch (RuntimeException e) {
             throw new InstanceNotFoundException(type, e);
         }
@@ -210,12 +211,12 @@ public class SpringInjector implements Injector<SpringContext> {
         /*
         try {
             System.out.println("-------------------------");
-            applicationContext.getBeanNamesForType(type);
-            AutowireCapableBeanFactory autowireCapableBeanFactory = applicationContext.getAutowireCapableBeanFactory();
+            delegate.getBeanNamesForType(type);
+            AutowireCapableBeanFactory autowireCapableBeanFactory = delegate.getAutowireCapableBeanFactory();
             if (autowireCapableBeanFactory instanceof BeanDefinitionRegistry) {
                 BeanDefinitionRegistry beanDefinitionRegistry = (BeanDefinitionRegistry) autowireCapableBeanFactory;
-                for (String beanDefinitionName : applicationContext.getBeanNamesForType(type)) {
-                    // T instance= (T) applicationContext.getBean(beanDefinitionName);
+                for (String beanDefinitionName : delegate.getBeanNamesForType(type)) {
+                    // T instance= (T) delegate.getBean(beanDefinitionName);
                     BeanDefinition beanDefinition = beanDefinitionRegistry.getBeanDefinition(beanDefinitionName);
                     AnnotatedGenericBeanDefinition agbd = (AnnotatedGenericBeanDefinition) beanDefinition;
                     AutowireCandidateQualifier qualifier = null;
@@ -227,7 +228,7 @@ public class SpringInjector implements Injector<SpringContext> {
                 }
             }
 
-            for (T instance : applicationContext.getBeansOfType(type).values()) {
+            for (T instance : delegate.getBeansOfType(type).values()) {
                 try {
                     List<Annotation> qualifiers = AnnotationUtils.harvestQualifiers(instance.getClass());
                     Annotation annotation = !qualifiers.isEmpty() ? qualifiers.get(0) : null;
@@ -254,7 +255,8 @@ public class SpringInjector implements Injector<SpringContext> {
         }
 
         try {
-            applicationContext.getAutowireCapableBeanFactory().autowireBean(instance);
+            delegate.refresh();
+            delegate.getAutowireCapableBeanFactory().autowireBean(instance);
         } catch (RuntimeException e) {
             throw new MembersInjectionException(instance, e);
         }
@@ -266,7 +268,8 @@ public class SpringInjector implements Injector<SpringContext> {
             throw new ClosedInjectorException(this);
         }
 
-        ((ConfigurableApplicationContext) applicationContext).close();
+        delegate.refresh();
+        delegate.close();
 
         synchronized (lock) {
             closed = true;

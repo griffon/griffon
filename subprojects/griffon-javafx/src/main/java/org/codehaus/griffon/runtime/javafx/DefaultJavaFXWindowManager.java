@@ -45,7 +45,7 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> im
     @Nonnull
     public DefaultJavaFXWindowManager(@Nonnull GriffonApplication application, @Nonnull @Named("windowDisplayHandler") JavaFXWindowDisplayHandler windowDisplayHandler) {
         super(application, windowDisplayHandler);
-        requireNonNull(application.getEventRouter(), "Argument 'application.eventRouter' must not be null");
+        // requireNonNull(application.getEventRouter(), "Argument 'application.eventRouter' must not be null");
     }
 
     @Override
