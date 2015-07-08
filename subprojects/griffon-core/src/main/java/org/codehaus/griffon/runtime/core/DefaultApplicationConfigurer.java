@@ -27,6 +27,7 @@ import griffon.core.artifact.ArtifactManager;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionHandler;
 import griffon.core.controller.ActionInterceptor;
+import griffon.core.editors.PropertyEditorResolver;
 import griffon.core.env.Lifecycle;
 import griffon.core.event.EventHandler;
 import griffon.core.injection.Injector;
@@ -42,7 +43,6 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.inject.Inject;
 import java.beans.PropertyEditor;
-import java.beans.PropertyEditorManager;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -139,16 +139,17 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
     protected void initializePropertyEditors() {
         ServiceLoaderUtils.load(applicationClassLoader().get(), "META-INF/editors/", PropertyEditor.class, new ServiceLoaderUtils.LineProcessor() {
             @Override
+            @SuppressWarnings("unchecked")
             public void process(@Nonnull ClassLoader classLoader, @Nonnull Class<?> type, @Nonnull String line) {
                 try {
                     String[] parts = line.trim().split("=");
                     Class<?> targetType = loadClass(parts[0].trim(), classLoader);
-                    Class<?> editorClass = loadClass(parts[1].trim(), classLoader);
+                    Class<? extends PropertyEditor> editorClass = (Class<? extends PropertyEditor>) loadClass(parts[1].trim(), classLoader);
 
                     // Editor must have a no-args constructor
                     // CCE means the class can not be used
                     editorClass.newInstance();
-                    PropertyEditorManager.registerEditor(targetType, editorClass);
+                    PropertyEditorResolver.registerEditor(targetType, editorClass);
                     LOG.debug("Registering {} as editor for {}", editorClass.getName(), targetType.getName());
                 } catch (Exception e) {
                     if (LOG.isWarnEnabled()) {
@@ -169,9 +170,9 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
         };
 
         for (Class<?>[] pair : pairs) {
-            PropertyEditor editor = PropertyEditorManager.findEditor(pair[0]);
+            PropertyEditor editor = PropertyEditorResolver.findEditor(pair[0]);
             LOG.debug("Registering {} as editor for {}", editor.getClass().getName(), pair[1].getName());
-            PropertyEditorManager.registerEditor(pair[1], editor.getClass());
+            PropertyEditorResolver.registerEditor(pair[1], editor.getClass());
         }
     }
 

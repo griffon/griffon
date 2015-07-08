@@ -15,11 +15,13 @@
  */
 package griffon.core.editors;
 
+import java.beans.PropertyEditor;
+
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
-public interface ExtendedPropertyEditor {
+public interface ExtendedPropertyEditor extends PropertyEditor {
     void setFormat(String format);
 
     String getFormat();

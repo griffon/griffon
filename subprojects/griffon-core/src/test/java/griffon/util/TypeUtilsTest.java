@@ -15,10 +15,10 @@
  */
 package griffon.util;
 
+import griffon.core.editors.PropertyEditorResolver;
 import griffon.core.editors.URIPropertyEditor;
 import org.junit.Test;
 
-import java.beans.PropertyEditorManager;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
@@ -180,7 +180,7 @@ public class TypeUtilsTest {
     public void convertValue() throws URISyntaxException {
         URI expected = new URI("http://localhost");
         assertEquals(expected, TypeUtils.convertValue(URI.class, expected));
-        PropertyEditorManager.registerEditor(URI.class, URIPropertyEditor.class);
+        PropertyEditorResolver.registerEditor(URI.class, URIPropertyEditor.class);
         assertEquals(expected, TypeUtils.convertValue(URI.class, "http://localhost"));
         assertEquals(expected, TypeUtils.convertValue(URI.class, "http://localhost", "format"));
         TypeUtils.convertValue(TypeUtils.class, expected);

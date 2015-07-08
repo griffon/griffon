@@ -18,13 +18,14 @@ package griffon.core.editors
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import java.beans.PropertyEditorManager
+import java.beans.PropertyEditor
 
 @Unroll
 class PropertyEditorResolverSpec extends Specification {
     void "PropertyEditor for type #type should be #editorClass"() {
         setup:
-        PropertyEditorManager.registerEditor(String, StringPropertyEditor)
+        PropertyEditorResolver.clear()
+        PropertyEditorResolver.registerEditor(String, StringPropertyEditor)
 
         expect:
         PropertyEditorResolver.findEditor(type)?.class == editorClass
@@ -33,5 +34,67 @@ class PropertyEditorResolverSpec extends Specification {
         type    | editorClass
         Numbers | EnumPropertyEditor
         String  | StringPropertyEditor
+    }
+
+    void "PropertyEditor at index 0 is called"() {
+        setup:
+        APropertyEditor.called = 0
+        BPropertyEditor.called = 0
+        PropertyEditorResolver.registerEditor(Object, APropertyEditor)
+        PropertyEditorResolver.registerEditor(Object, BPropertyEditor)
+
+        when:
+        PropertyEditor editor = PropertyEditorResolver.findEditor(Object)
+        editor.value = 'Groovy'
+
+        then:
+        editor.value == 'Groovy'
+        APropertyEditor.called == 1
+        BPropertyEditor.called == 0
+    }
+
+    void "PropertyEditor at index 1 is called"() {
+        setup:
+        APropertyEditor.called = 0
+        BPropertyEditor.called = 0
+        PropertyEditorResolver.registerEditor(Object, APropertyEditor)
+        PropertyEditorResolver.registerEditor(Object, BPropertyEditor)
+
+        when:
+        PropertyEditor editor = PropertyEditorResolver.findEditor(Object)
+        editor.value = 1
+
+        then:
+        editor.value == 1
+        APropertyEditor.called == 0
+        BPropertyEditor.called == 1
+    }
+
+    static class APropertyEditor extends AbstractPropertyEditor {
+        static int called = 0
+
+        @Override
+        void setValue(Object value) {
+            if (value instanceof String) {
+                super.setValue(value)
+                called++
+            } else {
+                throw illegalValue(value, Object)
+            }
+        }
+    }
+
+    static class BPropertyEditor extends AbstractPropertyEditor {
+        static int called = 0
+
+        @Override
+        void setValue(Object value) {
+            if (value instanceof Number) {
+                super.setValue(value)
+                called++
+            } else {
+                throw illegalValue(value, Object)
+            }
+        }
     }
 }
