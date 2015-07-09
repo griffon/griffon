@@ -328,4 +328,9 @@ public abstract class AbstractASTTransformation implements ASTTransformation {
             throw new IllegalArgumentException("Internal error: wrong types: " + node1.getClass() + " / " + node2.getClass());
         }
     }
+
+    protected boolean memberHasValue(AnnotationNode node, String name, Object value) {
+        final Expression member = node.getMember(name);
+        return member != null && member instanceof ConstantExpression && ((ConstantExpression) member).getValue().equals(value);
+    }
 }
