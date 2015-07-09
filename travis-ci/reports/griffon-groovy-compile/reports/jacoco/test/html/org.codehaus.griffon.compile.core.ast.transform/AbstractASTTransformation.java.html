@@ -328,5 +328,10 @@ import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.var;
 <span class="nc" id="L328">            throw new IllegalArgumentException(&quot;Internal error: wrong types: &quot; + node1.getClass() + &quot; / &quot; + node2.getClass());</span>
         }
 <span class="fc" id="L330">    }</span>
+
+    protected boolean memberHasValue(AnnotationNode node, String name, Object value) {
+<span class="nc" id="L333">        final Expression member = node.getMember(name);</span>
+<span class="nc bnc" id="L334" title="All 6 branches missed.">        return member != null &amp;&amp; member instanceof ConstantExpression &amp;&amp; ((ConstantExpression) member).getValue().equals(value);</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
