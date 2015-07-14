@@ -1,0 +1,56 @@
+
+[[_models_map_change_listener_transformation]]
+= The @MapChangeListener AST Transformation
+
+The `{link_map_change_listener}` helps you to register ``MapChangeListener``s
+without so much effort. The following code
+
+[source,groovy,linenums,options="nowrap"]
+----
+import griffon.transform.MapChangeListener
+import griffon.transform.FXObservable
+import javafx.collections.FXCollections
+import javafx.collections.ObservableMap
+import griffon.core.artifact.GriffonModel
+
+@griffon.metadata.ArtifactProviderFor(GriffonModel)
+class SampleModel {
+    def controller
+
+    @FXObservable
+    @MapChangeListener(snoop)
+    ObservableMap map = FXCollections.observableHashMap()
+
+    def snoop = { change -> ... }
+}
+----
+
+is equivalent to this one
+
+[source,groovy,linenums,options="nowrap"]
+----
+import javafx.collections.MapChangeListener
+import javafx.collections.FXCollections
+import javafx.collections.ObservableMap
+import griffon.core.artifact.GriffonModel
+
+@griffon.metadata.ArtifactProviderFor(GriffonModel)
+class SampleModel {
+    def controller
+
+    @FXObservable ObservableMap map = FXCollections.observableHashMap()
+
+    def snoop = { change -> ... }
+
+    SampleModel() {
+        listProperty().addListener(snoopAll as MapChangeListener)
+    }
+}
+----
+
+`{link_map_change_listener}` accepts the following values
+
+ * in-place definition of a closure
+ * reference of a closure property defined in the same class
+ * a List of any of the previous two
+

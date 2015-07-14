@@ -86,7 +86,7 @@ task apiDocs(type: Javadoc, dependsOn: copyDocs) {
     options.encoding    = 'UTF-8'
     options.author      = true
     options.version     = true
-    options.source      = '1.7'
+    options.source      = project.sourceCompatibility
     options.overview    = file('src/javadoc/overview.html')
     options.windowTitle = "Griffon $version"
     options.docTitle    = "Griffon $version"
