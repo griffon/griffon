@@ -17,14 +17,14 @@ package griffon.transform
 
 import spock.lang.Specification
 
-class ListChangeListenerSpec extends Specification {
-    void "ListChangeListener AST transformation attaches a closure reference as listener"() {
+class MapChangeListenerSpec extends Specification {
+    void "MapChangeListener AST transformation attaches a closure reference as listener"() {
         given:
         String script = '''import javafx.collections.FXCollections
         class Bean {
             @griffon.transform.FXObservable
-            @griffon.transform.ListChangeListener(snoop)
-            javafx.collections.ObservableList list = FXCollections.observableArrayList()
+            @griffon.transform.MapChangeListener(snoop)
+            javafx.collections.ObservableMap map = FXCollections.observableHashMap()
 
             int count = 0
 
@@ -35,20 +35,20 @@ class ListChangeListenerSpec extends Specification {
 
         when:
         def bean = new GroovyShell().evaluate(script)
-        bean.list << 'griffon'
-        bean.list << 'groovy'
+        bean.map.name = 'griffon'
+        bean.map.name = 'groovy'
 
         then:
         bean.count == 2
     }
 
-    void "ListChangeListener AST transformation attaches a closure as listener"() {
+    void "MapChangeListener AST transformation attaches a closure as listener"() {
         given:
         String script = '''import javafx.collections.FXCollections
         class Bean {
             @griffon.transform.FXObservable
-            @griffon.transform.ListChangeListener({ c -> ++count })
-            javafx.collections.ObservableList list = FXCollections.observableArrayList()
+            @griffon.transform.MapChangeListener({ c -> ++count })
+            javafx.collections.ObservableMap map = FXCollections.observableHashMap()
 
             int count = 0
         }
@@ -57,21 +57,21 @@ class ListChangeListenerSpec extends Specification {
 
         when:
         def bean = new GroovyShell().evaluate(script)
-        bean.list << 'griffon'
-        bean.list << 'groovy'
+        bean.map.name = 'griffon'
+        bean.map.name = 'groovy'
 
         then:
         bean.count == 2
     }
 
 
-    void "ListChangeListener AST transformation attaches a closure reference literal as listener"() {
+    void "MapChangeListener AST transformation attaches a closure reference literal as listener"() {
         given:
         String script = '''import javafx.collections.FXCollections
         class Bean {
             @griffon.transform.FXObservable
-            @griffon.transform.ListChangeListener('snoop')
-            javafx.collections.ObservableList list = FXCollections.observableArrayList()
+            @griffon.transform.MapChangeListener('snoop')
+            javafx.collections.ObservableMap map = FXCollections.observableHashMap()
 
             int count = 0
 
@@ -82,8 +82,8 @@ class ListChangeListenerSpec extends Specification {
 
         when:
         def bean = new GroovyShell().evaluate(script)
-        bean.list << 'griffon'
-        bean.list << 'groovy'
+        bean.map.name = 'griffon'
+        bean.map.name = 'groovy'
 
         then:
         bean.count == 2
