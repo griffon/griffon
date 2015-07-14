@@ -364,7 +364,7 @@ import static org.codehaus.groovy.ast.ClassHelper.MAP_TYPE;
     }
 
     private boolean isTypeCompatible(ClassNode base, ClassNode target) {
-<span class="pc bpc" id="L367" title="2 of 6 branches missed.">        return target.equals(base) || target.implementsInterface(base) || target.declaresInterface(base);</span>
+<span class="pc bpc" id="L367" title="1 of 6 branches missed.">        return target.equals(base) || target.implementsInterface(base) || target.declaresInterface(base);</span>
     }
 
     /**
@@ -456,7 +456,7 @@ import static org.codehaus.groovy.ast.ClassHelper.MAP_TYPE;
                                         Expression initExp) {
 <span class="fc" id="L457">        FieldExpression fieldExpression = new FieldExpression(fxFieldShortName);</span>
 
-<span class="pc bpc" id="L459" title="1 of 2 branches missed.">        ArgumentListExpression ctorArgs = initExp == null ?</span>
+<span class="fc bfc" id="L459" title="All 2 branches covered.">        ArgumentListExpression ctorArgs = initExp == null ?</span>
             ArgumentListExpression.EMPTY_ARGUMENTS :
             new ArgumentListExpression(initExp);
 
@@ -465,11 +465,11 @@ import static org.codehaus.groovy.ast.ClassHelper.MAP_TYPE;
 <span class="fc" id="L465">        ClassNode implNode = PROPERTY_IMPL_MAP.get(fxType);</span>
 <span class="fc bfc" id="L466" title="All 2 branches covered.">        if (implNode == null) {</span>
 <span class="fc bfc" id="L467" title="All 2 branches covered.">            if (fxType.getTypeClass() == SIMPLE_LIST_PROPERTY_CNODE.getTypeClass()) {</span>
-<span class="pc bpc" id="L468" title="1 of 2 branches missed.">                if (initExp != null) {</span>
-<span class="nc bnc" id="L469" title="All 4 branches missed.">                    if (initExp instanceof ListExpression ||</span>
+<span class="fc bfc" id="L468" title="All 2 branches covered.">                if (initExp != null) {</span>
+<span class="pc bpc" id="L469" title="2 of 4 branches missed.">                    if (initExp instanceof ListExpression ||</span>
                         (initExp instanceof CastExpression &amp;&amp;
 <span class="nc bnc" id="L471" title="All 2 branches missed.">                            (((CastExpression) initExp).getType().equals(LIST_TYPE) ||</span>
-<span class="nc bnc" id="L472" title="All 4 branches missed.">                                ((CastExpression) initExp).getType().declaresInterface(LIST_TYPE))) ||</span>
+<span class="pc bpc" id="L472" title="3 of 4 branches missed.">                                ((CastExpression) initExp).getType().declaresInterface(LIST_TYPE))) ||</span>
                         (initExp instanceof ConstructorCallExpression &amp;&amp;
 <span class="nc bnc" id="L474" title="All 2 branches missed.">                            (((ConstructorCallExpression) initExp).getType().equals(LIST_TYPE) ||</span>
 <span class="nc bnc" id="L475" title="All 2 branches missed.">                                ((ConstructorCallExpression) initExp).getType().declaresInterface(LIST_TYPE)))</span>
@@ -484,11 +484,11 @@ import static org.codehaus.groovy.ast.ClassHelper.MAP_TYPE;
                 }
 <span class="fc" id="L485">                implNode = fxType;</span>
 <span class="fc bfc" id="L486" title="All 2 branches covered.">            } else if (fxType.getTypeClass() == SIMPLE_MAP_PROPERTY_CNODE.getTypeClass()) {</span>
-<span class="pc bpc" id="L487" title="1 of 2 branches missed.">                if (initExp != null) {</span>
-<span class="nc bnc" id="L488" title="All 4 branches missed.">                    if (initExp instanceof MapExpression ||</span>
+<span class="fc bfc" id="L487" title="All 2 branches covered.">                if (initExp != null) {</span>
+<span class="pc bpc" id="L488" title="2 of 4 branches missed.">                    if (initExp instanceof MapExpression ||</span>
                         (initExp instanceof CastExpression &amp;&amp;
 <span class="nc bnc" id="L490" title="All 2 branches missed.">                            (((CastExpression) initExp).getType().equals(MAP_TYPE) ||</span>
-<span class="nc bnc" id="L491" title="All 4 branches missed.">                                ((CastExpression) initExp).getType().declaresInterface(MAP_TYPE))) ||</span>
+<span class="pc bpc" id="L491" title="3 of 4 branches missed.">                                ((CastExpression) initExp).getType().declaresInterface(MAP_TYPE))) ||</span>
                         (initExp instanceof ConstructorCallExpression &amp;&amp;
 <span class="nc bnc" id="L493" title="All 2 branches missed.">                            (((ConstructorCallExpression) initExp).getType().equals(MAP_TYPE) ||</span>
 <span class="nc bnc" id="L494" title="All 2 branches missed.">                                ((ConstructorCallExpression) initExp).getType().declaresInterface(MAP_TYPE)))</span>
