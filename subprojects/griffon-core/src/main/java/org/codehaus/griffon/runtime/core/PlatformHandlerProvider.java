@@ -16,7 +16,6 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.Configuration;
-import griffon.core.LifecycleHandler;
 import griffon.core.PlatformHandler;
 import griffon.exceptions.InstanceNotFoundException;
 import griffon.exceptions.TypeNotFoundException;
@@ -70,7 +69,14 @@ public class PlatformHandlerProvider implements Provider<PlatformHandler> {
         try {
             handlerClass = (Class<PlatformHandler>) Class.forName(handlerClassName, true, getClass().getClassLoader());
         } catch (ClassNotFoundException e) {
-            throw new TypeNotFoundException(LifecycleHandler.class.getName(), e);
+            throw new TypeNotFoundException(PlatformHandler.class.getName(), e);
+        } catch (NoClassDefFoundError e) {
+            // could be caused by a missing class in the classpath (such as com.apple.mrj.MRJAboutHandler)
+            // use a dummy handler if and only if +JDK9
+            if (GriffonApplicationUtils.isJdk9()) {
+                return new DefaultPlatformHandler();
+            }
+            throw new TypeNotFoundException(PlatformHandler.class.getName(), e);
         }
 
         try {
