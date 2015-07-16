@@ -33,6 +33,17 @@ class ContextSpec extends Specification {
         ctx3['foo'] = 'bar'
     }
 
+    def "Find values on context 1 using defaults"() {
+        expect:
+        value == ctx1.get(key, defaultValue)
+        value == ctx1.getAt(key, defaultValue)
+
+        where:
+        key   | value | defaultValue
+        'foo' | 'foo' | 'bar'
+        'bar' | 'bar' | 'bar'
+    }
+
     def "Find values on context 1"() {
         expect:
         value == ctx1[key]

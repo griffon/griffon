@@ -23,11 +23,12 @@ import spock.lang.Unroll
 import javax.annotation.Nonnull
 
 @Unroll
-class DefaultConfigurationSpec extends Specification {
+class ConfigurationDecoratorSpec extends Specification {
     def 'Calling configuration.#method(#key, #defaultValue) gives #value as result'() {
         given:
         ResourceBundle bundle = new MapResourceBundle()
         Configuration configuration = new DefaultConfiguration(bundle)
+        configuration = new MyConfigurationDecorator(configuration)
 
         expect:
         value == (defaultValue != null ? configuration."$method"(key, defaultValue) : configuration."$method"(key))
@@ -65,6 +66,7 @@ class DefaultConfigurationSpec extends Specification {
         given:
         ResourceBundle bundle = new AppResourceBundle()
         Configuration configuration = new DefaultConfiguration(bundle)
+        configuration = new MyConfigurationDecorator(configuration)
         Properties props = configuration.asProperties()
 
         expect:
@@ -74,7 +76,7 @@ class DefaultConfigurationSpec extends Specification {
         props['application.title'] == configuration['application.title']
     }
 
-    class AppResourceBundle extends AbstractMapResourceBundle {
+    static class AppResourceBundle extends AbstractMapResourceBundle {
         @Override
         protected void initialize(@Nonnull Map<String, Object> entries) {
             entries['application'] = [
@@ -89,6 +91,27 @@ class DefaultConfigurationSpec extends Specification {
                     controller: 'sample.SampleController'
                 ]
             ]
+        }
+    }
+
+    static class MyConfigurationDecorator extends ConfigurationDecorator {
+        MyConfigurationDecorator(@Nonnull Configuration delegate) {
+            super(delegate)
+        }
+
+        @Override
+        boolean containsKey(@Nonnull String key) {
+            return delegate.containsKey(key)
+        }
+
+        @Override
+        Map<String, Object> asFlatMap() {
+            return delegate.asFlatMap()
+        }
+
+        @Override
+        ResourceBundle asResourceBundle() {
+            return delegate.asResourceBundle()
         }
     }
 }

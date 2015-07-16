@@ -119,6 +119,26 @@ public class PropertyEditorChain extends PropertyEditorSupport {
         throw illegalValue(value, targetClass);
     }
 
+    @Override
+    public void setAsText(String text) throws IllegalArgumentException {
+        initPropertyEditors();
+
+        for (WeakReference<PropertyEditor> reference : propertyEditors) {
+            try {
+                PropertyEditor propertyEditor = reference.get();
+                if (propertyEditor != null) {
+                    propertyEditor.setAsText(text);
+                    super.setValue(propertyEditor.getValue());
+                    return;
+                }
+            } catch (Exception e) {
+                // ignore. next editor
+            }
+        }
+
+        throw illegalValue(text, targetClass);
+    }
+
     protected ValueConversionException illegalValue(Object value, Class<?> klass) {
         throw new ValueConversionException(value, klass);
     }

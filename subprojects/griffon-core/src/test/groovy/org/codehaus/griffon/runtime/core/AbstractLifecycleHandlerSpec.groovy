@@ -19,6 +19,8 @@ import com.google.guiceberry.GuiceBerryModule
 import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
 import griffon.core.ExecutorServiceManager
+import griffon.core.GriffonApplication
+import griffon.core.LifecycleHandler
 import griffon.core.threading.ThreadingHandler
 import griffon.core.threading.UIThreadManager
 import griffon.util.AnnotationUtils
@@ -28,6 +30,7 @@ import org.codehaus.griffon.runtime.core.threading.UIThreadManagerTestSupport
 import org.junit.Rule
 import spock.lang.Specification
 
+import javax.annotation.Nonnull
 import javax.inject.Inject
 import javax.inject.Singleton
 import java.util.concurrent.Callable
@@ -35,16 +38,16 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 
-class AbstractUIThreadHandlerSpec extends Specification {
+class AbstractLifecycleHandlerSpec extends Specification {
     @Rule
     final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
 
     @Inject
-    private ThreadingHandler threadingHandler
+    private LifecycleHandler lifecycleHandler
 
     def 'Query if UI thread'() {
         expect:
-        !threadingHandler.UIThread
+        !lifecycleHandler.UIThread
     }
 
     def 'Execute callable inside UI sync'() {
@@ -52,7 +55,7 @@ class AbstractUIThreadHandlerSpec extends Specification {
         boolean invoked = false
 
         when:
-        invoked = threadingHandler.runInsideUISync({
+        invoked = lifecycleHandler.runInsideUISync({
             true
         } as Callable)
 
@@ -65,7 +68,7 @@ class AbstractUIThreadHandlerSpec extends Specification {
         boolean invoked = false
 
         when:
-        threadingHandler.runInsideUISync {
+        lifecycleHandler.runInsideUISync {
             invoked = true
         }
 
@@ -78,7 +81,7 @@ class AbstractUIThreadHandlerSpec extends Specification {
         boolean invoked = false
 
         when:
-        threadingHandler.runInsideUIAsync {
+        lifecycleHandler.runInsideUIAsync {
             invoked = true
         }
 
@@ -91,7 +94,7 @@ class AbstractUIThreadHandlerSpec extends Specification {
         boolean invoked = false
 
         when:
-        threadingHandler.runOutsideUI() {
+        lifecycleHandler.runOutsideUI() {
             invoked = true
         }
 
@@ -104,7 +107,7 @@ class AbstractUIThreadHandlerSpec extends Specification {
         boolean invoked = false
 
         when:
-        Future future = threadingHandler.runFuture {
+        Future future = lifecycleHandler.runFuture {
             invoked = true
         }
         future.get()
@@ -118,7 +121,7 @@ class AbstractUIThreadHandlerSpec extends Specification {
         boolean invoked = false
 
         when:
-        Future future = threadingHandler.runFuture(Executors.newFixedThreadPool(1)) {
+        Future future = lifecycleHandler.runFuture(Executors.newFixedThreadPool(1)) {
             invoked = true
         }
         future.get()
@@ -134,10 +137,46 @@ class AbstractUIThreadHandlerSpec extends Specification {
             bind(ExecutorServiceManager).to(DefaultExecutorServiceManager).in(Singleton)
             bind(UIThreadManager).to(UIThreadManagerTestSupport).in(Singleton)
             bind(ThreadingHandler).to(TestThreadingHandler).in(Singleton)
+            bind(LifecycleHandler).to(TestLifecycleHandler).in(Singleton)
             bind(ExecutorService).annotatedWith(AnnotationUtils.named('defaultExecutorService')).toProvider(DefaultExecutorServiceProvider).in(Singleton)
+            bind(GriffonApplication).to(TestGriffonApplication).in(Singleton)
         }
     }
 
     static class TestThreadingHandler extends AbstractThreadingHandler {
+    }
+
+    static class TestLifecycleHandler extends AbstractLifecycleHandler {
+        @Inject
+        TestLifecycleHandler(@Nonnull GriffonApplication application) {
+            super(application)
+        }
+
+        @Override
+        void execute() {
+
+        }
+    }
+
+    static class TestGriffonApplication extends AbstractGriffonApplication {
+        @Inject
+        private UIThreadManager uiThreadManager
+
+        TestGriffonApplication() {
+        }
+
+        TestGriffonApplication(String[] args) {
+            super(args)
+        }
+
+        @Override
+        UIThreadManager getUIThreadManager() {
+            this.uiThreadManager
+        }
+
+        @Override
+        Object createApplicationContainer(@Nonnull Map<String, Object> attributes) {
+            return null
+        }
     }
 }

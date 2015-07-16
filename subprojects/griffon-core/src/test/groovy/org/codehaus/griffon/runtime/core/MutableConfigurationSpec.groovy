@@ -99,6 +99,12 @@ class MutableConfigurationSpec extends Specification {
         then:
         null == value
 
+        when:
+        value = configuration.remove(key)
+
+        then:
+        null == value
+
         where:
         key                  || _
         'key.string'         || _
@@ -125,6 +131,13 @@ class MutableConfigurationSpec extends Specification {
 
         then:
         null != map[key]
+
+        when:
+        configuration.remove(key)
+        map = configuration.asFlatMap()
+
+        then:
+        !map[key]
 
         where:
         key                  || _

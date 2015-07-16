@@ -36,7 +36,7 @@ class PropertyEditorResolverSpec extends Specification {
         String  | StringPropertyEditor
     }
 
-    void "PropertyEditor at index 0 is called"() {
+    void "PropertyEditor at index 0 is called (value)"() {
         setup:
         APropertyEditor.called = 0
         BPropertyEditor.called = 0
@@ -53,7 +53,7 @@ class PropertyEditorResolverSpec extends Specification {
         BPropertyEditor.called == 0
     }
 
-    void "PropertyEditor at index 1 is called"() {
+    void "PropertyEditor at index 1 is called (value)"() {
         setup:
         APropertyEditor.called = 0
         BPropertyEditor.called = 0
@@ -68,6 +68,60 @@ class PropertyEditorResolverSpec extends Specification {
         editor.value == 1
         APropertyEditor.called == 0
         BPropertyEditor.called == 1
+    }
+
+    void "PropertyEditor at index 0 is called (text)"() {
+        setup:
+        APropertyEditor.called = 0
+        BPropertyEditor.called = 0
+        PropertyEditorResolver.registerEditor(Object, APropertyEditor)
+        PropertyEditorResolver.registerEditor(Object, BPropertyEditor)
+
+        when:
+        PropertyEditor editor = PropertyEditorResolver.findEditor(Object)
+        editor.asText = 'Groovy'
+
+        then:
+        editor.asText == 'Groovy'
+        APropertyEditor.called == 1
+        BPropertyEditor.called == 0
+    }
+
+    void "Register and unregister an editor class"() {
+        given:
+        PropertyEditorResolver.clear()
+        PropertyEditorResolver.registerEditor(Object, APropertyEditor)
+
+        when:
+        PropertyEditor editor = PropertyEditorResolver.findEditor(Object)
+
+        then:
+        editor instanceof APropertyEditor
+
+        when:
+        editor = PropertyEditorResolver.unregisterEditor(Object)
+
+        then: 'editor is a NoopPropertyEditor'
+        !(editor instanceof APropertyEditor)
+    }
+
+    void "Register non-null and null editor for the same target class"() {
+        given:
+        PropertyEditorResolver.clear()
+
+        when:
+        PropertyEditorResolver.registerEditor(Object, APropertyEditor)
+        PropertyEditor editor = PropertyEditorResolver.findEditor(Object)
+
+        then:
+        editor instanceof APropertyEditor
+
+        when:
+        PropertyEditorResolver.registerEditor(Object, null)
+        editor = PropertyEditorResolver.unregisterEditor(Object)
+
+        then: 'editor is a NoopPropertyEditor'
+        !(editor instanceof APropertyEditor)
     }
 
     static class APropertyEditor extends AbstractPropertyEditor {

@@ -63,8 +63,9 @@ public class DelegatingMutableConfiguration extends ConfigurationDecorator imple
     public Object remove(@Nonnull String key) {
         requireNonBlank(key, ERROR_KEY_BLANK);
         if (mutableKeyValues.containsKey(key)) {
+            removedKeys.add(key);
             return mutableKeyValues.remove(key);
-        } else if (delegate.containsKey(key)) {
+        } else if (!removedKeys.contains(key) && delegate.containsKey(key)) {
             removedKeys.add(key);
             return delegate.get(key);
         }
