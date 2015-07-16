@@ -71,6 +71,7 @@ class DefaultObjectStorageSpec extends Specification {
         storage.keys == ['key']
         storage.contains(key)
         storage.get(key) == 'key'
+        storage.values == ([key] as Set)
         storage.remove(key) == 'key'
     }
 }

@@ -86,7 +86,7 @@ public class DefaultCompositeResourceBundleBuilder extends AbstractCompositeReso
                 }
             } catch (ClassNotFoundException e) {
                 // ignore
-            } catch (IllegalAccessException | InstantiationException e) {
+            } catch (Exception e) {
                 LOG.warn("An error occurred while loading resource bundle " + fileName + " from " + url, e);
             }
         }

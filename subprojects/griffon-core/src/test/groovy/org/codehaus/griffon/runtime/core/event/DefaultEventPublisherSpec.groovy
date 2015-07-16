@@ -54,12 +54,15 @@ class DefaultEventPublisherSpec extends Specification {
 
         when:
 
+        eventPublisher.publishEvent(eventName1)
+        eventPublisher.publishEvent(eventName2)
         eventPublisher.publishEvent(eventName1, [1, 'one'])
         eventPublisher.publishEvent(eventName2, [2, 'two'])
 
         then:
 
         eventHandler.args == [1, 'one']
+        eventHandler.called == 2
     }
 
     def 'Invoking an event by name in asynchronous mode with a callable listener'() {
@@ -72,6 +75,8 @@ class DefaultEventPublisherSpec extends Specification {
 
         when:
 
+        eventPublisher.publishEventAsync(eventName1)
+        eventPublisher.publishEventAsync(eventName2)
         eventPublisher.publishEventAsync(eventName1, [1, 'one'])
         eventPublisher.publishEventAsync(eventName2, [2, 'two'])
         Thread.sleep(200L)
@@ -79,6 +84,7 @@ class DefaultEventPublisherSpec extends Specification {
         then:
 
         eventHandler.args == [1, 'one']
+        eventHandler.called == 2
     }
 
     def 'Invoking an event by name in outside mode with a callable listener'() {
@@ -91,12 +97,15 @@ class DefaultEventPublisherSpec extends Specification {
 
         when:
 
+        eventPublisher.publishEventOutsideUI(eventName1)
+        eventPublisher.publishEventOutsideUI(eventName2)
         eventPublisher.publishEventOutsideUI(eventName1, [1, 'one'])
         eventPublisher.publishEventOutsideUI(eventName2, [2, 'two'])
 
         then:
 
         eventHandler.args == [1, 'one']
+        eventHandler.called == 2
     }
 
     def 'Invoking an event by name in synchronous mode with a runnable listener'() {
@@ -703,6 +712,24 @@ class DefaultEventPublisherSpec extends Specification {
         eventPublisher.removeEventListener(eventHandler)
     }
 
+    def 'Triggering an event with event published disabled does not notify listener'() {
+        given:
+
+        String eventName1 = MyEvent1.simpleName
+        TestCallableEventHandler eventHandler = new TestCallableEventHandler()
+
+        when:
+
+        eventPublisher.eventPublishingEnabled = false
+        eventPublisher.publishEvent(eventName1, [1, 'one'])
+
+        then:
+
+        !eventHandler.args
+        eventHandler.called == 0
+        eventPublisher.eventPublishingEnabled == false
+    }
+
     static final class TestModule extends AbstractModule {
         @Override
         protected void configure() {
@@ -716,21 +743,25 @@ class DefaultEventPublisherSpec extends Specification {
     }
     
     static class TestCallableEventHandler implements CallableWithArgs<Void> {
+        int called
         Object[] args
 
         @Override
         @Nullable
         Void call(@Nullable Object... args) {
+            called++
             this.args = args
             null
         }
     }
 
     static class TestRunnableEventHandler implements RunnableWithArgs {
+        int called
         Object[] args
 
         @Override
         void run(@Nullable Object... args) {
+            called++
             this.args = args
         }
     }
