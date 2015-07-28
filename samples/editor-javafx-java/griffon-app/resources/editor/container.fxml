@@ -23,27 +23,32 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.BorderPane?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-            prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="editor.ContainerController">
-    <top>
-        <MenuBar BorderPane.alignment="CENTER">
-            <menus>
-                <Menu mnemonicParsing="false" text="File">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Open" fx:id="openActionTarget"/>
-                        <MenuItem mnemonicParsing="false" text="Close" fx:id="closeActionTarget"/>
-                        <SeparatorMenuItem mnemonicParsing="false"/>
-                        <MenuItem mnemonicParsing="false" text="Save" fx:id="saveActionTarget"/>
-                        <SeparatorMenuItem mnemonicParsing="false"/>
-                        <MenuItem mnemonicParsing="false" text="Quit" fx:id="quitActionTarget"/>
-                    </items>
-                </Menu>
-            </menus>
-        </MenuBar>
-    </top>
-    <center>
-        <TabPane fx:id="tabGroup" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE"
-                 BorderPane.alignment="CENTER"/>
-    </center>
-</BorderPane>
+
+<?import javafx.scene.control.ScrollPane?>
+<ScrollPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="editor.ContainerController" fitToHeight="true" fitToWidth="true"
+            vbarPolicy="AS_NEEDED" hbarPolicy="AS_NEEDED">
+    <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+                prefWidth="600.0">
+        <top>
+            <MenuBar BorderPane.alignment="CENTER">
+                <menus>
+                    <Menu mnemonicParsing="false" text="File">
+                        <items>
+                            <MenuItem mnemonicParsing="false" text="Open" fx:id="openActionTarget"/>
+                            <MenuItem mnemonicParsing="false" text="Close" fx:id="closeActionTarget"/>
+                            <SeparatorMenuItem mnemonicParsing="false"/>
+                            <MenuItem mnemonicParsing="false" text="Save" fx:id="saveActionTarget"/>
+                            <SeparatorMenuItem mnemonicParsing="false"/>
+                            <MenuItem mnemonicParsing="false" text="Quit" fx:id="quitActionTarget"/>
+                        </items>
+                    </Menu>
+                </menus>
+            </MenuBar>
+        </top>
+        <center>
+            <TabPane fx:id="tabGroup" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE"
+                     BorderPane.alignment="CENTER"/>
+        </center>
+    </BorderPane>
+</ScrollPane>
