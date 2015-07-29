@@ -119,37 +119,57 @@ public class PropertyEditorChain extends PropertyEditorSupport {
 <span class="nc" id="L119">        throw illegalValue(value, targetClass);</span>
     }
 
+    @Override
+    public void setAsText(String text) throws IllegalArgumentException {
+<span class="nc" id="L124">        initPropertyEditors();</span>
+
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        for (WeakReference&lt;PropertyEditor&gt; reference : propertyEditors) {</span>
+            try {
+<span class="nc" id="L128">                PropertyEditor propertyEditor = reference.get();</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">                if (propertyEditor != null) {</span>
+<span class="nc" id="L130">                    propertyEditor.setAsText(text);</span>
+<span class="nc" id="L131">                    super.setValue(propertyEditor.getValue());</span>
+<span class="nc" id="L132">                    return;</span>
+                }
+<span class="nc" id="L134">            } catch (Exception e) {</span>
+                // ignore. next editor
+<span class="nc" id="L136">            }</span>
+        }
+
+<span class="nc" id="L139">        throw illegalValue(text, targetClass);</span>
+    }
+
     protected ValueConversionException illegalValue(Object value, Class&lt;?&gt; klass) {
-<span class="nc" id="L123">        throw new ValueConversionException(value, klass);</span>
+<span class="nc" id="L143">        throw new ValueConversionException(value, klass);</span>
     }
 
     protected ValueConversionException illegalValue(Object value, Class&lt;?&gt; klass, Exception e) {
-<span class="nc" id="L127">        throw new ValueConversionException(value, klass, e);</span>
+<span class="nc" id="L147">        throw new ValueConversionException(value, klass, e);</span>
     }
 
     @SuppressWarnings(&quot;unchecked&quot;)
     private void initPropertyEditors() {
-<span class="fc" id="L132">        synchronized (lock) {</span>
-<span class="pc bpc" id="L133" title="1 of 2 branches missed.">            if (propertyEditors == null) {</span>
-<span class="fc" id="L134">                List&lt;WeakReference&lt;PropertyEditor&gt;&gt; editors = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L135" title="All 2 branches covered.">                for (WeakReference&lt;Class&lt;? extends PropertyEditor&gt;&gt; propertyEditorClass : propertyEditorClasses) {</span>
+<span class="fc" id="L152">        synchronized (lock) {</span>
+<span class="pc bpc" id="L153" title="1 of 2 branches missed.">            if (propertyEditors == null) {</span>
+<span class="fc" id="L154">                List&lt;WeakReference&lt;PropertyEditor&gt;&gt; editors = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L155" title="All 2 branches covered.">                for (WeakReference&lt;Class&lt;? extends PropertyEditor&gt;&gt; propertyEditorClass : propertyEditorClasses) {</span>
                     try {
-<span class="fc" id="L137">                        Class&lt;? extends PropertyEditor&gt; klass = propertyEditorClass.get();</span>
-<span class="pc bpc" id="L138" title="1 of 2 branches missed.">                        if (klass != null) {</span>
-<span class="fc" id="L139">                            editors.add(new WeakReference&lt;&gt;(klass.newInstance()));</span>
+<span class="fc" id="L157">                        Class&lt;? extends PropertyEditor&gt; klass = propertyEditorClass.get();</span>
+<span class="pc bpc" id="L158" title="1 of 2 branches missed.">                        if (klass != null) {</span>
+<span class="fc" id="L159">                            editors.add(new WeakReference&lt;&gt;(klass.newInstance()));</span>
                         }
-<span class="nc" id="L141">                    } catch (InstantiationException | IllegalAccessException e) {</span>
-<span class="nc" id="L142">                        throw new IllegalArgumentException(&quot;Can't create instance&quot;, e);</span>
-<span class="fc" id="L143">                    }</span>
+<span class="nc" id="L161">                    } catch (InstantiationException | IllegalAccessException e) {</span>
+<span class="nc" id="L162">                        throw new IllegalArgumentException(&quot;Can't create instance&quot;, e);</span>
+<span class="fc" id="L163">                    }</span>
                 }
 
-<span class="pc bpc" id="L146" title="1 of 2 branches missed.">                if (editors.size() &gt; 0) {</span>
-<span class="fc" id="L147">                    propertyEditors = editors.toArray(new WeakReference[editors.size()]);</span>
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">                if (editors.size() &gt; 0) {</span>
+<span class="fc" id="L167">                    propertyEditors = editors.toArray(new WeakReference[editors.size()]);</span>
                 } else {
-<span class="nc" id="L149">                    throw new IllegalStateException(&quot;No available PropertyEditors for &quot; + this);</span>
+<span class="nc" id="L169">                    throw new IllegalStateException(&quot;No available PropertyEditors for &quot; + this);</span>
                 }
             }
-<span class="pc" id="L152">        }</span>
-<span class="fc" id="L153">    }</span>
+<span class="pc" id="L172">        }</span>
+<span class="fc" id="L173">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

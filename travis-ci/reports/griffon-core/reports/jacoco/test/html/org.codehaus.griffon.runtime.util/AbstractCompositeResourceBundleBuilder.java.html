@@ -75,8 +75,8 @@ public abstract class AbstractCompositeResourceBundleBuilder implements Composit
 <span class="fc" id="L75">            bundles.addAll(loadBundlesFor(basename + &quot;_&quot; + suffix));</span>
         }
 <span class="fc" id="L77">        bundles.addAll(loadBundlesFor(basename));</span>
-<span class="pc bpc" id="L78" title="1 of 2 branches missed.">        if (bundles.size() == 0) {</span>
-<span class="nc" id="L79">            throw new IllegalArgumentException(&quot;There are no ResourceBundle resources matching &quot; + basename);</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        if (bundles.size() == 0) {</span>
+<span class="fc" id="L79">            throw new IllegalArgumentException(&quot;There are no ResourceBundle resources matching &quot; + basename);</span>
         }
 
 <span class="fc" id="L82">        return new CompositeResourceBundle(bundles);</span>

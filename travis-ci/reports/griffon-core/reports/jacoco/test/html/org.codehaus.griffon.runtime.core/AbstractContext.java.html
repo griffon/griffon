@@ -35,8 +35,8 @@ public abstract class AbstractContext implements Context {
     @Override
     @SuppressWarnings(&quot;unchecked&quot;)
     public &lt;T&gt; T get(@Nonnull String key, @Nullable T defaultValue) {
-<span class="nc" id="L38">        T value = (T) get(key);</span>
-<span class="nc bnc" id="L39" title="All 2 branches missed.">        return value != null ? value : defaultValue;</span>
+<span class="fc" id="L38">        T value = (T) get(key);</span>
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        return value != null ? value : defaultValue;</span>
     }
 
     @Nullable
@@ -48,7 +48,7 @@ public abstract class AbstractContext implements Context {
     @Nullable
     @Override
     public &lt;T&gt; T getAt(@Nonnull String key, @Nullable T defaultValue) {
-<span class="nc" id="L51">        return get(key, defaultValue);</span>
+<span class="fc" id="L51">        return get(key, defaultValue);</span>
     }
 
     @Nullable

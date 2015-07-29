@@ -42,7 +42,7 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L42">    }</span>
 
     public boolean isUIThread() {
-<span class="nc" id="L45">        return uiThreadManager.isUIThread();</span>
+<span class="fc" id="L45">        return uiThreadManager.isUIThread();</span>
     }
 
     public void runInsideUIAsync(@Nonnull Runnable runnable) {
@@ -70,7 +70,7 @@ import static java.util.Objects.requireNonNull;
     @Nullable
     @Override
     public &lt;R&gt; R runInsideUISync(@Nonnull Callable&lt;R&gt; callable) {
-<span class="nc" id="L73">        return uiThreadManager.runInsideUISync(callable);</span>
+<span class="fc" id="L73">        return uiThreadManager.runInsideUISync(callable);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

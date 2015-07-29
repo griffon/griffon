@@ -110,13 +110,13 @@ public final class PropertyEditorResolver {
      * @since 2.4.0
      */
     public static void unregisterEditor(@Nonnull Class&lt;?&gt; targetType) {
-<span class="nc" id="L113">        requireNonNull(targetType, ERROR_TARGET_TYPE_NULL);</span>
-<span class="nc" id="L114">        synchronized (LOCK) {</span>
-<span class="nc" id="L115">            String targetTypeName = targetType.getName();</span>
-<span class="nc" id="L116">            propertyEditorChainRegistry.remove(targetTypeName);</span>
-<span class="nc" id="L117">            propertyEditorRegistry.remove(targetTypeName);</span>
-<span class="nc" id="L118">        }</span>
-<span class="nc" id="L119">    }</span>
+<span class="fc" id="L113">        requireNonNull(targetType, ERROR_TARGET_TYPE_NULL);</span>
+<span class="fc" id="L114">        synchronized (LOCK) {</span>
+<span class="fc" id="L115">            String targetTypeName = targetType.getName();</span>
+<span class="fc" id="L116">            propertyEditorChainRegistry.remove(targetTypeName);</span>
+<span class="fc" id="L117">            propertyEditorRegistry.remove(targetTypeName);</span>
+<span class="pc" id="L118">        }</span>
+<span class="fc" id="L119">    }</span>
 
     /**
      * Registers an editor class to edit values of the given target class.
@@ -136,10 +136,10 @@ public final class PropertyEditorResolver {
 <span class="fc" id="L136">        requireNonNull(targetType, ERROR_TARGET_TYPE_NULL);</span>
 <span class="fc" id="L137">        synchronized (LOCK) {</span>
 <span class="fc" id="L138">            String targetTypeName = targetType.getName();</span>
-<span class="pc bpc" id="L139" title="1 of 2 branches missed.">            if (editorClass == null) {</span>
-<span class="nc" id="L140">                propertyEditorChainRegistry.remove(targetTypeName);</span>
-<span class="nc" id="L141">                propertyEditorRegistry.remove(targetTypeName);</span>
-<span class="nc" id="L142">                return;</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">            if (editorClass == null) {</span>
+<span class="fc" id="L140">                propertyEditorChainRegistry.remove(targetTypeName);</span>
+<span class="fc" id="L141">                propertyEditorRegistry.remove(targetTypeName);</span>
+<span class="fc" id="L142">                return;</span>
             }
 
             // is targetType handled by a chain?

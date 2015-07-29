@@ -86,7 +86,7 @@ public class DefaultCompositeResourceBundleBuilder extends AbstractCompositeReso
                 }
 <span class="nc" id="L87">            } catch (ClassNotFoundException e) {</span>
                 // ignore
-<span class="nc" id="L89">            } catch (IllegalAccessException | InstantiationException e) {</span>
+<span class="nc" id="L89">            } catch (Exception e) {</span>
 <span class="nc" id="L90">                LOG.warn(&quot;An error occurred while loading resource bundle &quot; + fileName + &quot; from &quot; + url, e);</span>
 <span class="pc" id="L91">            }</span>
         }

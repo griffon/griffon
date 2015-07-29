@@ -85,7 +85,7 @@ import static java.util.Objects.requireNonNull;
 
     @Override
     public void publishEvent(@Nonnull String eventName, @Nullable List&lt;?&gt; params) {
-<span class="pc bpc" id="L88" title="1 of 2 branches missed.">        if (!isEventPublishingEnabled()) return;</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (!isEventPublishingEnabled()) return;</span>
 <span class="fc" id="L89">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
 <span class="pc bpc" id="L90" title="1 of 2 branches missed.">        if (params == null) params = EMPTY_LIST;</span>
 <span class="fc" id="L91">        buildPublisher(eventName, params, &quot;synchronously&quot;).run();</span>
@@ -93,8 +93,8 @@ import static java.util.Objects.requireNonNull;
 
     @Override
     public void publishEventOutsideUI(@Nonnull String eventName) {
-<span class="nc" id="L96">        publishEventOutsideUI(eventName, EMPTY_LIST);</span>
-<span class="nc" id="L97">    }</span>
+<span class="fc" id="L96">        publishEventOutsideUI(eventName, EMPTY_LIST);</span>
+<span class="fc" id="L97">    }</span>
 
     @Override
     public void publishEventOutsideUI(@Nonnull String eventName, @Nullable List&lt;?&gt; params) {
@@ -109,8 +109,8 @@ import static java.util.Objects.requireNonNull;
 
     @Override
     public void publishEventAsync(@Nonnull String eventName) {
-<span class="nc" id="L112">        publishEventAsync(eventName, EMPTY_LIST);</span>
-<span class="nc" id="L113">    }</span>
+<span class="fc" id="L112">        publishEventAsync(eventName, EMPTY_LIST);</span>
+<span class="fc" id="L113">    }</span>
 
     @Override
     public void publishEventAsync(@Nonnull String eventName, @Nullable List&lt;?&gt; params) {

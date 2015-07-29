@@ -46,17 +46,17 @@ import static griffon.util.GriffonNameUtils.isBlank;
 
     @Override
     public String getAsText() {
-<span class="nc bnc" id="L49" title="All 2 branches missed.">        return isBlank(getFormat()) ? getAsTextInternal() : getFormattedValue();</span>
+<span class="pc bpc" id="L49" title="1 of 2 branches missed.">        return isBlank(getFormat()) ? getAsTextInternal() : getFormattedValue();</span>
     }
 
     @Override
     public void setAsText(String str) throws IllegalArgumentException {
-<span class="nc bnc" id="L54" title="All 2 branches missed.">        if (isBlank(getFormat())) {</span>
-<span class="nc" id="L55">            setAsTextInternal(str);</span>
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">        if (isBlank(getFormat())) {</span>
+<span class="fc" id="L55">            setAsTextInternal(str);</span>
         } else {
 <span class="nc" id="L57">            setFormattedValue(str);</span>
         }
-<span class="nc" id="L59">    }</span>
+<span class="fc" id="L59">    }</span>
 
     @Override
     public void setValue(Object value) {
@@ -76,11 +76,11 @@ import static griffon.util.GriffonNameUtils.isBlank;
     }
 
     protected void setAsTextInternal(String str) throws IllegalArgumentException {
-<span class="nc" id="L79">        setValueInternal(str);</span>
-<span class="nc" id="L80">    }</span>
+<span class="fc" id="L79">        setValueInternal(str);</span>
+<span class="fc" id="L80">    }</span>
 
     protected String getAsTextInternal() {
-<span class="nc" id="L83">        return super.getAsText();</span>
+<span class="fc" id="L83">        return super.getAsText();</span>
     }
 
     @SuppressWarnings({&quot;unchecked&quot;, &quot;rawtypes&quot;})

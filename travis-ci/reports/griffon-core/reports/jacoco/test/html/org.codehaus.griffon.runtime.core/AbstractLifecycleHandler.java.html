@@ -48,40 +48,40 @@ public abstract class AbstractLifecycleHandler implements LifecycleHandler {
 
     @Override
     public boolean isUIThread() {
-<span class="nc" id="L51">        return application.getUIThreadManager().isUIThread();</span>
+<span class="fc" id="L51">        return application.getUIThreadManager().isUIThread();</span>
     }
 
     @Override
     @Nonnull
     public &lt;R&gt; Future&lt;R&gt; runFuture(@Nonnull Callable&lt;R&gt; callable) {
-<span class="nc" id="L57">        return application.getUIThreadManager().runFuture(callable);</span>
+<span class="fc" id="L57">        return application.getUIThreadManager().runFuture(callable);</span>
     }
 
     @Override
     @Nonnull
     public &lt;R&gt; Future&lt;R&gt; runFuture(@Nonnull ExecutorService executorService, @Nonnull Callable&lt;R&gt; callable) {
-<span class="nc" id="L63">        return application.getUIThreadManager().runFuture(executorService, callable);</span>
+<span class="fc" id="L63">        return application.getUIThreadManager().runFuture(executorService, callable);</span>
     }
 
     @Override
     public void runInsideUIAsync(@Nonnull Runnable runnable) {
-<span class="nc" id="L68">        application.getUIThreadManager().runInsideUIAsync(runnable);</span>
-<span class="nc" id="L69">    }</span>
+<span class="fc" id="L68">        application.getUIThreadManager().runInsideUIAsync(runnable);</span>
+<span class="fc" id="L69">    }</span>
 
     @Override
     public void runInsideUISync(@Nonnull Runnable runnable) {
-<span class="nc" id="L73">        application.getUIThreadManager().runInsideUISync(runnable);</span>
-<span class="nc" id="L74">    }</span>
+<span class="fc" id="L73">        application.getUIThreadManager().runInsideUISync(runnable);</span>
+<span class="fc" id="L74">    }</span>
 
     @Override
     public void runOutsideUI(@Nonnull Runnable runnable) {
-<span class="nc" id="L78">        application.getUIThreadManager().runOutsideUI(runnable);</span>
-<span class="nc" id="L79">    }</span>
+<span class="fc" id="L78">        application.getUIThreadManager().runOutsideUI(runnable);</span>
+<span class="fc" id="L79">    }</span>
 
     @Nullable
     @Override
     public &lt;R&gt; R runInsideUISync(@Nonnull Callable&lt;R&gt; callable) {
-<span class="nc" id="L84">        return application.getUIThreadManager().runInsideUISync(callable);</span>
+<span class="fc" id="L84">        return application.getUIThreadManager().runInsideUISync(callable);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

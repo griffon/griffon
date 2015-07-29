@@ -48,12 +48,12 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L48">    }</span>
 
     public boolean isEventPublishingEnabled() {
-<span class="nc" id="L51">        return eventRouter.isEventPublishingEnabled();</span>
+<span class="fc" id="L51">        return eventRouter.isEventPublishingEnabled();</span>
     }
 
     public void setEventPublishingEnabled(boolean enabled) {
-<span class="nc" id="L55">        eventRouter.setEventPublishingEnabled(enabled);</span>
-<span class="nc" id="L56">    }</span>
+<span class="fc" id="L55">        eventRouter.setEventPublishingEnabled(enabled);</span>
+<span class="fc" id="L56">    }</span>
 
     public &lt;E extends Event&gt; void removeEventListener(@Nonnull Class&lt;E&gt; eventClass, @Nonnull CallableWithArgs&lt;?&gt; listener) {
 <span class="fc" id="L59">        requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);</span>
@@ -112,9 +112,9 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L112">    }</span>
 
     public void publishEventOutsideUI(@Nonnull String eventName) {
-<span class="nc" id="L115">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
-<span class="nc" id="L116">        eventRouter.publishEventOutsideUI(eventName);</span>
-<span class="nc" id="L117">    }</span>
+<span class="fc" id="L115">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
+<span class="fc" id="L116">        eventRouter.publishEventOutsideUI(eventName);</span>
+<span class="fc" id="L117">    }</span>
 
     public void publishEventOutsideUI(@Nonnull String eventName, @Nullable List&lt;?&gt; params) {
 <span class="fc" id="L120">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
@@ -159,9 +159,9 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L159">    }</span>
 
     public void publishEventAsync(@Nonnull String eventName) {
-<span class="nc" id="L162">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
-<span class="nc" id="L163">        eventRouter.publishEventAsync(eventName);</span>
-<span class="nc" id="L164">    }</span>
+<span class="fc" id="L162">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
+<span class="fc" id="L163">        eventRouter.publishEventAsync(eventName);</span>
+<span class="fc" id="L164">    }</span>
 
     public void publishEventAsync(@Nonnull Event event) {
 <span class="fc" id="L167">        requireNonNull(event, ERROR_EVENT_NULL);</span>

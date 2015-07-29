@@ -63,66 +63,67 @@ public class DelegatingMutableConfiguration extends ConfigurationDecorator imple
     public Object remove(@Nonnull String key) {
 <span class="fc" id="L64">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
 <span class="fc bfc" id="L65" title="All 2 branches covered.">        if (mutableKeyValues.containsKey(key)) {</span>
-<span class="fc" id="L66">            return mutableKeyValues.remove(key);</span>
-<span class="pc bpc" id="L67" title="1 of 2 branches missed.">        } else if (delegate.containsKey(key)) {</span>
-<span class="fc" id="L68">            removedKeys.add(key);</span>
-<span class="fc" id="L69">            return delegate.get(key);</span>
+<span class="fc" id="L66">            removedKeys.add(key);</span>
+<span class="fc" id="L67">            return mutableKeyValues.remove(key);</span>
+<span class="pc bpc" id="L68" title="1 of 4 branches missed.">        } else if (!removedKeys.contains(key) &amp;&amp; delegate.containsKey(key)) {</span>
+<span class="fc" id="L69">            removedKeys.add(key);</span>
+<span class="fc" id="L70">            return delegate.get(key);</span>
         }
-<span class="nc" id="L71">        return null;</span>
+<span class="fc" id="L72">        return null;</span>
     }
 
     @Nonnull
     @Override
     public Map&lt;String, Object&gt; asFlatMap() {
-<span class="fc" id="L77">        Map&lt;String, Object&gt; flatMap = new LinkedHashMap&lt;&gt;(delegate.asFlatMap());</span>
-<span class="fc" id="L78">        flatMap.putAll(mutableKeyValues);</span>
-<span class="pc bpc" id="L79" title="1 of 2 branches missed.">        for (String removedKey : removedKeys) {</span>
-<span class="nc" id="L80">            flatMap.remove(removedKey);</span>
-<span class="nc" id="L81">        }</span>
-<span class="fc" id="L82">        return unmodifiableMap(flatMap);</span>
+<span class="fc" id="L78">        Map&lt;String, Object&gt; flatMap = new LinkedHashMap&lt;&gt;(delegate.asFlatMap());</span>
+<span class="fc" id="L79">        flatMap.putAll(mutableKeyValues);</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        for (String removedKey : removedKeys) {</span>
+<span class="fc" id="L81">            flatMap.remove(removedKey);</span>
+<span class="fc" id="L82">        }</span>
+<span class="fc" id="L83">        return unmodifiableMap(flatMap);</span>
     }
 
     @Nonnull
     @Override
     public ResourceBundle asResourceBundle() {
-<span class="fc" id="L88">        return new CompositeResourceBundle(asList(new PrivateMapResourceBundle(asFlatMap()), delegate.asResourceBundle()));</span>
+<span class="fc" id="L89">        return new CompositeResourceBundle(asList(new PrivateMapResourceBundle(asFlatMap()), delegate.asResourceBundle()));</span>
     }
 
     @Nullable
     @Override
     public Object get(@Nonnull String key) {
-<span class="fc" id="L94">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="fc" id="L95">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
         try {
-<span class="fc" id="L96">            return getConfigValue(mutableKeyValues, key);</span>
-<span class="fc" id="L97">        } catch (MissingResourceException mre) {</span>
-<span class="fc bfc" id="L98" title="All 2 branches covered.">            if (removedKeys.contains(key)) {</span>
-<span class="fc" id="L99">                return null;</span>
+<span class="fc" id="L97">            return getConfigValue(mutableKeyValues, key);</span>
+<span class="fc" id="L98">        } catch (MissingResourceException mre) {</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">            if (removedKeys.contains(key)) {</span>
+<span class="fc" id="L100">                return null;</span>
             }
-<span class="fc" id="L101">            return super.get(key);</span>
+<span class="fc" id="L102">            return super.get(key);</span>
         }
     }
 
     @Override
     public boolean containsKey(@Nonnull String key) {
-<span class="fc" id="L107">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
-<span class="fc bfc" id="L108" title="All 6 branches covered.">        return ConfigUtils.containsKey(mutableKeyValues, key) || (!removedKeys.contains(key) &amp;&amp; delegate.containsKey(key));</span>
+<span class="fc" id="L108">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="pc bpc" id="L109" title="1 of 6 branches missed.">        return ConfigUtils.containsKey(mutableKeyValues, key) || (!removedKeys.contains(key) &amp;&amp; delegate.containsKey(key));</span>
     }
 
     private static class PrivateMapResourceBundle extends AbstractMapResourceBundle {
-<span class="fc" id="L112">        private final Map&lt;String, Object&gt; map = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L113">        private final Map&lt;String, Object&gt; map = new LinkedHashMap&lt;&gt;();</span>
 
-<span class="fc" id="L114">        private PrivateMapResourceBundle(Map&lt;String, Object&gt; map) {</span>
-<span class="fc" id="L115">            this.map.putAll(map);</span>
-<span class="fc" id="L116">            initialize(entries);</span>
-<span class="fc" id="L117">            initializeKeys();</span>
-<span class="fc" id="L118">        }</span>
+<span class="fc" id="L115">        private PrivateMapResourceBundle(Map&lt;String, Object&gt; map) {</span>
+<span class="fc" id="L116">            this.map.putAll(map);</span>
+<span class="fc" id="L117">            initialize(entries);</span>
+<span class="fc" id="L118">            initializeKeys();</span>
+<span class="fc" id="L119">        }</span>
 
         @Override
         protected void initialize(@Nonnull Map&lt;String, Object&gt; entries) {
-<span class="pc bpc" id="L122" title="1 of 4 branches missed.">            if (map != null &amp;&amp; entries != null) {</span>
-<span class="fc" id="L123">                entries.putAll(map);</span>
+<span class="pc bpc" id="L123" title="1 of 4 branches missed.">            if (map != null &amp;&amp; entries != null) {</span>
+<span class="fc" id="L124">                entries.putAll(map);</span>
             }
-<span class="fc" id="L125">        }</span>
+<span class="fc" id="L126">        }</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
