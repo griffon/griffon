@@ -28,18 +28,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Accordion;
-import javafx.scene.control.ButtonBase;
-import javafx.scene.control.Control;
-import javafx.scene.control.Labeled;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
@@ -464,6 +453,10 @@ public final class JavaFXUtils {
                 Object found = findElement(child, id);
                 if (found != null) return found;
             }
+        } else if (root instanceof ScrollPane) {
+            ScrollPane scrollPane = (ScrollPane) root;
+            Object found = findElement(scrollPane.getContent(), id);
+            if (found != null) return found;
         } else if (root instanceof Parent) {
             Parent parent = (Parent) root;
             for (Node child : parent.getChildrenUnmodifiable()) {
