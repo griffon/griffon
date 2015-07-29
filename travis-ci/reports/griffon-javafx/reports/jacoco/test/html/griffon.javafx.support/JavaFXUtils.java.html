@@ -376,126 +376,134 @@ public final class JavaFXUtils {
 
     @Nullable
     public static Node findNode(@Nonnull Node root, @Nonnull String id) {
-<span class="nc" id="L379">        requireNonNull(root, ERROR_ROOT_NULL);</span>
-<span class="nc" id="L380">        requireNonBlank(id, ERROR_ID_BLANK);</span>
+<span class="fc" id="L379">        requireNonNull(root, ERROR_ROOT_NULL);</span>
+<span class="fc" id="L380">        requireNonBlank(id, ERROR_ID_BLANK);</span>
 
-<span class="nc bnc" id="L382" title="All 2 branches missed.">        if (id.equals(root.getId())) return root;</span>
+<span class="fc bfc" id="L382" title="All 2 branches covered.">        if (id.equals(root.getId())) return root;</span>
 
-<span class="nc bnc" id="L384" title="All 2 branches missed.">        if (root instanceof TabPane) {</span>
-<span class="nc" id="L385">            TabPane parent = (TabPane) root;</span>
-<span class="nc bnc" id="L386" title="All 2 branches missed.">            for (Tab child : parent.getTabs()) {</span>
-<span class="nc" id="L387">                Node found = findNode(child.getContent(), id);</span>
-<span class="nc bnc" id="L388" title="All 2 branches missed.">                if (found != null) return found;</span>
-<span class="nc" id="L389">            }</span>
-<span class="nc bnc" id="L390" title="All 2 branches missed.">        } else if (root instanceof TitledPane) {</span>
-<span class="nc" id="L391">            TitledPane parent = (TitledPane) root;</span>
-<span class="nc" id="L392">            Node found = findNode(parent.getContent(), id);</span>
-<span class="nc bnc" id="L393" title="All 2 branches missed.">            if (found != null) return found;</span>
-<span class="nc bnc" id="L394" title="All 2 branches missed.">        } else if (root instanceof Accordion) {</span>
-<span class="nc" id="L395">            Accordion parent = (Accordion) root;</span>
-<span class="nc bnc" id="L396" title="All 2 branches missed.">            for (TitledPane child : parent.getPanes()) {</span>
-<span class="nc" id="L397">                Node found = findNode(child, id);</span>
-<span class="nc bnc" id="L398" title="All 2 branches missed.">                if (found != null) return found;</span>
-<span class="nc" id="L399">            }</span>
-<span class="nc bnc" id="L400" title="All 2 branches missed.">        } else if (root instanceof SplitPane) {</span>
-<span class="nc" id="L401">            SplitPane parent = (SplitPane) root;</span>
-<span class="nc bnc" id="L402" title="All 2 branches missed.">            for (Node child : parent.getItems()) {</span>
-<span class="nc" id="L403">                Node found = findNode(child, id);</span>
-<span class="nc bnc" id="L404" title="All 2 branches missed.">                if (found != null) return found;</span>
-<span class="nc" id="L405">            }</span>
+<span class="fc bfc" id="L384" title="All 2 branches covered.">        if (root instanceof TabPane) {</span>
+<span class="fc" id="L385">            TabPane parent = (TabPane) root;</span>
+<span class="pc bpc" id="L386" title="1 of 2 branches missed.">            for (Tab child : parent.getTabs()) {</span>
+<span class="fc bfc" id="L387" title="All 2 branches covered.">                if(child.getContent() != null) {</span>
+<span class="fc" id="L388">                    Node found = findNode(child.getContent(), id);</span>
+<span class="pc bpc" id="L389" title="1 of 2 branches missed.">                    if (found != null) return found;</span>
+                }
+<span class="fc" id="L391">            }</span>
+<span class="pc bfc" id="L392" title="All 2 branches covered.">        } else if (root instanceof TitledPane) {</span>
+<span class="fc" id="L393">            TitledPane parent = (TitledPane) root;</span>
+<span class="fc" id="L394">            Node found = findNode(parent.getContent(), id);</span>
+<span class="pc bpc" id="L395" title="1 of 2 branches missed.">            if (found != null) return found;</span>
+<span class="pc bfc" id="L396" title="All 2 branches covered.">        } else if (root instanceof Accordion) {</span>
+<span class="fc" id="L397">            Accordion parent = (Accordion) root;</span>
+<span class="pc bpc" id="L398" title="1 of 2 branches missed.">            for (TitledPane child : parent.getPanes()) {</span>
+<span class="fc" id="L399">                Node found = findNode(child, id);</span>
+<span class="pc bpc" id="L400" title="1 of 2 branches missed.">                if (found != null) return found;</span>
+<span class="nc" id="L401">            }</span>
+<span class="pc bfc" id="L402" title="All 2 branches covered.">        } else if (root instanceof SplitPane) {</span>
+<span class="fc" id="L403">            SplitPane parent = (SplitPane) root;</span>
+<span class="pc bpc" id="L404" title="1 of 2 branches missed.">            for (Node child : parent.getItems()) {</span>
+<span class="fc" id="L405">                Node found = findNode(child, id);</span>
+<span class="fc bfc" id="L406" title="All 2 branches covered.">                if (found != null) return found;</span>
+<span class="fc" id="L407">            }</span>
         }
-<span class="nc bnc" id="L407" title="All 2 branches missed.">        if (root instanceof Parent) {</span>
-<span class="nc" id="L408">            Parent parent = (Parent) root;</span>
-<span class="nc bnc" id="L409" title="All 2 branches missed.">            for (Node child : parent.getChildrenUnmodifiable()) {</span>
-<span class="nc" id="L410">                Node found = findNode(child, id);</span>
-<span class="nc bnc" id="L411" title="All 2 branches missed.">                if (found != null) return found;</span>
-<span class="nc" id="L412">            }</span>
+<span class="pc bpc" id="L409" title="1 of 2 branches missed.">        if (root instanceof Parent) {</span>
+<span class="fc" id="L410">            Parent parent = (Parent) root;</span>
+<span class="fc bfc" id="L411" title="All 2 branches covered.">            for (Node child : parent.getChildrenUnmodifiable()) {</span>
+<span class="fc" id="L412">                Node found = findNode(child, id);</span>
+<span class="pc bpc" id="L413" title="1 of 2 branches missed.">                if (found != null) return found;</span>
+<span class="nc" id="L414">            }</span>
         }
 
-<span class="nc" id="L415">        return null;</span>
+<span class="fc" id="L417">        return null;</span>
     }
 
     @Nullable
     public static Object findElement(@Nonnull Object root, @Nonnull String id) {
-<span class="nc" id="L420">        requireNonNull(root, ERROR_ROOT_NULL);</span>
-<span class="nc" id="L421">        requireNonBlank(id, ERROR_ID_BLANK);</span>
+<span class="fc" id="L422">        requireNonNull(root, ERROR_ROOT_NULL);</span>
+<span class="fc" id="L423">        requireNonBlank(id, ERROR_ID_BLANK);</span>
 
-<span class="nc bnc" id="L423" title="All 2 branches missed.">        if (id.equals(getPropertyValue(root, &quot;id&quot;))) return root;</span>
+<span class="fc bfc" id="L425" title="All 2 branches covered.">        if (id.equals(getPropertyValue(root, &quot;id&quot;))) return root;</span>
 
-<span class="nc bnc" id="L425" title="All 2 branches missed.">        if (root instanceof MenuBar) {</span>
-<span class="nc" id="L426">            MenuBar menuBar = (MenuBar) root;</span>
-<span class="nc bnc" id="L427" title="All 2 branches missed.">            for (Menu child : menuBar.getMenus()) {</span>
-<span class="nc" id="L428">                Object found = findElement(child, id);</span>
-<span class="nc bnc" id="L429" title="All 2 branches missed.">                if (found != null) return found;</span>
-<span class="nc" id="L430">            }</span>
-<span class="nc bnc" id="L431" title="All 2 branches missed.">        } else if (root instanceof Menu) {</span>
-<span class="nc" id="L432">            Menu menu = (Menu) root;</span>
-<span class="nc bnc" id="L433" title="All 2 branches missed.">            for (MenuItem child : menu.getItems()) {</span>
-<span class="nc" id="L434">                Object found = findElement(child, id);</span>
-<span class="nc bnc" id="L435" title="All 2 branches missed.">                if (found != null) return found;</span>
-<span class="nc" id="L436">            }</span>
-<span class="nc bnc" id="L437" title="All 2 branches missed.">        } else if (root instanceof TabPane) {</span>
-<span class="nc" id="L438">            TabPane tabPane = (TabPane) root;</span>
-<span class="nc bnc" id="L439" title="All 2 branches missed.">            for (Tab child : tabPane.getTabs()) {</span>
-<span class="nc" id="L440">                Object found = findElement(child, id);</span>
-<span class="nc bnc" id="L441" title="All 2 branches missed.">                if (found != null) return found;</span>
-<span class="nc" id="L442">            }</span>
-<span class="nc bnc" id="L443" title="All 2 branches missed.">        } else if (root instanceof TitledPane) {</span>
-<span class="nc" id="L444">            TitledPane parent = (TitledPane) root;</span>
-<span class="nc" id="L445">            Object found = findElement(parent.getContent(), id);</span>
-<span class="nc bnc" id="L446" title="All 2 branches missed.">            if (found != null) return found;</span>
-<span class="nc bnc" id="L447" title="All 2 branches missed.">        } else if (root instanceof Accordion) {</span>
-<span class="nc" id="L448">            Accordion parent = (Accordion) root;</span>
-<span class="nc bnc" id="L449" title="All 2 branches missed.">            for (TitledPane child : parent.getPanes()) {</span>
-<span class="nc" id="L450">                Object found = findElement(child, id);</span>
-<span class="nc bnc" id="L451" title="All 2 branches missed.">                if (found != null) return found;</span>
-<span class="nc" id="L452">            }</span>
-<span class="nc bnc" id="L453" title="All 2 branches missed.">        } else if (root instanceof SplitPane) {</span>
-<span class="nc" id="L454">            SplitPane parent = (SplitPane) root;</span>
-<span class="nc bnc" id="L455" title="All 2 branches missed.">            for (Node child : parent.getItems()) {</span>
-<span class="nc" id="L456">                Object found = findElement(child, id);</span>
-<span class="nc bnc" id="L457" title="All 2 branches missed.">                if (found != null) return found;</span>
-<span class="nc" id="L458">            }</span>
-<span class="nc bnc" id="L459" title="All 2 branches missed.">        } else if (root instanceof Parent) {</span>
-<span class="nc" id="L460">            Parent parent = (Parent) root;</span>
-<span class="nc bnc" id="L461" title="All 2 branches missed.">            for (Node child : parent.getChildrenUnmodifiable()) {</span>
-<span class="nc" id="L462">                Object found = findElement(child, id);</span>
-<span class="nc bnc" id="L463" title="All 2 branches missed.">                if (found != null) return found;</span>
-<span class="nc" id="L464">            }</span>
+<span class="fc bfc" id="L427" title="All 2 branches covered.">        if (root instanceof MenuBar) {</span>
+<span class="fc" id="L428">            MenuBar menuBar = (MenuBar) root;</span>
+<span class="pc bpc" id="L429" title="1 of 2 branches missed.">            for (Menu child : menuBar.getMenus()) {</span>
+<span class="fc" id="L430">                Object found = findElement(child, id);</span>
+<span class="pc bpc" id="L431" title="1 of 2 branches missed.">                if (found != null) return found;</span>
+<span class="nc" id="L432">            }</span>
+<span class="pc bfc" id="L433" title="All 2 branches covered.">        } else if (root instanceof Menu) {</span>
+<span class="fc" id="L434">            Menu menu = (Menu) root;</span>
+<span class="pc bpc" id="L435" title="1 of 2 branches missed.">            for (MenuItem child : menu.getItems()) {</span>
+<span class="fc" id="L436">                Object found = findElement(child, id);</span>
+<span class="pc bpc" id="L437" title="1 of 2 branches missed.">                if (found != null) return found;</span>
+<span class="nc" id="L438">            }</span>
+<span class="pc bfc" id="L439" title="All 2 branches covered.">        } else if (root instanceof TabPane) {</span>
+<span class="fc" id="L440">            TabPane tabPane = (TabPane) root;</span>
+<span class="pc bpc" id="L441" title="1 of 2 branches missed.">            for (Tab child : tabPane.getTabs()) {</span>
+<span class="fc" id="L442">                Object found = findElement(child, id);</span>
+<span class="fc bfc" id="L443" title="All 2 branches covered.">                if (found != null) return found;</span>
+<span class="fc" id="L444">            }</span>
+<span class="pc bfc" id="L445" title="All 2 branches covered.">        } else if (root instanceof Tab) {</span>
+<span class="fc" id="L446">            Tab tab = (Tab) root;</span>
+<span class="fc bfc" id="L447" title="All 2 branches covered.">            if(tab.getContent() != null) {</span>
+<span class="fc" id="L448">                Object found = findElement(tab.getContent(), id);</span>
+<span class="pc bpc" id="L449" title="1 of 2 branches missed.">                if (found != null) return found;</span>
+            }
+<span class="fc bfc" id="L451" title="All 2 branches covered.">        } else if (root instanceof TitledPane) {</span>
+<span class="fc" id="L452">            TitledPane parent = (TitledPane) root;</span>
+<span class="fc" id="L453">            Object found = findElement(parent.getContent(), id);</span>
+<span class="pc bpc" id="L454" title="1 of 2 branches missed.">            if (found != null) return found;</span>
+<span class="pc bfc" id="L455" title="All 2 branches covered.">        } else if (root instanceof Accordion) {</span>
+<span class="fc" id="L456">            Accordion parent = (Accordion) root;</span>
+<span class="pc bpc" id="L457" title="1 of 2 branches missed.">            for (TitledPane child : parent.getPanes()) {</span>
+<span class="fc" id="L458">                Object found = findElement(child, id);</span>
+<span class="pc bpc" id="L459" title="1 of 2 branches missed.">                if (found != null) return found;</span>
+<span class="nc" id="L460">            }</span>
+<span class="pc bfc" id="L461" title="All 2 branches covered.">        } else if (root instanceof SplitPane) {</span>
+<span class="fc" id="L462">            SplitPane parent = (SplitPane) root;</span>
+<span class="pc bpc" id="L463" title="1 of 2 branches missed.">            for (Node child : parent.getItems()) {</span>
+<span class="fc" id="L464">                Object found = findElement(child, id);</span>
+<span class="fc bfc" id="L465" title="All 2 branches covered.">                if (found != null) return found;</span>
+<span class="fc" id="L466">            }</span>
+<span class="pc bpc" id="L467" title="1 of 2 branches missed.">        } else if (root instanceof Parent) {</span>
+<span class="fc" id="L468">            Parent parent = (Parent) root;</span>
+<span class="fc bfc" id="L469" title="All 2 branches covered.">            for (Node child : parent.getChildrenUnmodifiable()) {</span>
+<span class="fc" id="L470">                Object found = findElement(child, id);</span>
+<span class="pc bpc" id="L471" title="1 of 2 branches missed.">                if (found != null) return found;</span>
+<span class="nc" id="L472">            }</span>
         }
 
-<span class="nc" id="L467">        return null;</span>
+<span class="fc" id="L475">        return null;</span>
     }
 
     @Nullable
     public static Window getWindowAncestor(@Nonnull Object node) {
-<span class="nc" id="L472">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L480">        requireNonNull(node, ERROR_NODE_NULL);</span>
 
-<span class="nc bnc" id="L474" title="All 2 branches missed.">        if (node instanceof Window) {</span>
-<span class="nc" id="L475">            return (Window) node;</span>
-<span class="nc bnc" id="L476" title="All 2 branches missed.">        } else if (node instanceof Scene) {</span>
-<span class="nc" id="L477">            return ((Scene) node).getWindow();</span>
-<span class="nc bnc" id="L478" title="All 2 branches missed.">        } else if (node instanceof Node) {</span>
-<span class="nc" id="L479">            Scene scene = ((Node) node).getScene();</span>
-<span class="nc bnc" id="L480" title="All 2 branches missed.">            if (scene != null) {</span>
-<span class="nc" id="L481">                return scene.getWindow();</span>
+<span class="nc bnc" id="L482" title="All 2 branches missed.">        if (node instanceof Window) {</span>
+<span class="nc" id="L483">            return (Window) node;</span>
+<span class="nc bnc" id="L484" title="All 2 branches missed.">        } else if (node instanceof Scene) {</span>
+<span class="nc" id="L485">            return ((Scene) node).getWindow();</span>
+<span class="nc bnc" id="L486" title="All 2 branches missed.">        } else if (node instanceof Node) {</span>
+<span class="nc" id="L487">            Scene scene = ((Node) node).getScene();</span>
+<span class="nc bnc" id="L488" title="All 2 branches missed.">            if (scene != null) {</span>
+<span class="nc" id="L489">                return scene.getWindow();</span>
             }
-<span class="nc bnc" id="L483" title="All 2 branches missed.">        } else if (node instanceof Tab) {</span>
-<span class="nc" id="L484">            TabPane tabPane = ((Tab) node).getTabPane();</span>
-<span class="nc bnc" id="L485" title="All 2 branches missed.">            if (tabPane != null) {</span>
-<span class="nc" id="L486">                return getWindowAncestor(tabPane);</span>
+<span class="nc bnc" id="L491" title="All 2 branches missed.">        } else if (node instanceof Tab) {</span>
+<span class="nc" id="L492">            TabPane tabPane = ((Tab) node).getTabPane();</span>
+<span class="nc bnc" id="L493" title="All 2 branches missed.">            if (tabPane != null) {</span>
+<span class="nc" id="L494">                return getWindowAncestor(tabPane);</span>
             }
         }
 
-<span class="nc" id="L490">        return null;</span>
+<span class="nc" id="L498">        return null;</span>
     }
 
     private static ValueConversionException illegalValue(Object value, Class&lt;?&gt; klass) {
-<span class="nc" id="L494">        throw new ValueConversionException(value, klass);</span>
+<span class="nc" id="L502">        throw new ValueConversionException(value, klass);</span>
     }
 
     private static ValueConversionException illegalValue(Object value, Class&lt;?&gt; klass, Exception e) {
-<span class="nc" id="L498">        throw new ValueConversionException(value, klass, e);</span>
+<span class="nc" id="L506">        throw new ValueConversionException(value, klass, e);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

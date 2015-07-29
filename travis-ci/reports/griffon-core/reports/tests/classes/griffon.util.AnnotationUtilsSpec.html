@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.105s</div>
+<div class="counter">0.098s</div>
 <p>duration</p>
 </div>
 </td>
@@ -79,7 +79,7 @@
 </thead>
 <tr>
 <td class="success">Cyclic dependencies yield empty result</td>
-<td>0.017s</td>
+<td>0.023s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -89,17 +89,17 @@
 </tr>
 <tr>
 <td class="success">Enforce that class java.lang.Object is annotated with @javax.inject.Named</td>
-<td>0.006s</td>
+<td>0.004s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Enforce that griffon.util.AnnotationUtilsSpec$Bean@772fa4b9 is annotated with @griffon.inject.Typed</td>
+<td class="success">Enforce that griffon.util.AnnotationUtilsSpec$Bean@20cdd4c9 is annotated with @griffon.inject.Typed</td>
 <td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Enforce that java.lang.Object@322368c6 is annotated with @javax.inject.Named</td>
-<td>0.001s</td>
+<td class="success">Enforce that java.lang.Object@43f78d7a is annotated with @javax.inject.Named</td>
+<td>0.004s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -109,7 +109,7 @@
 </tr>
 <tr>
 <td class="success">Find out if class griffon.util.AnnotationUtilsSpec$Bean is annotated wit @javax.inject.Named</td>
-<td>0s</td>
+<td>0.004s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -118,43 +118,43 @@
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Find out if griffon.util.AnnotationUtilsSpec$Bean@45207b10 is annotated wit @griffon.inject.Typed</td>
+<td class="success">Find out if griffon.util.AnnotationUtilsSpec$Bean@5f702b04 is annotated wit @griffon.inject.Typed</td>
 <td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Find out if griffon.util.AnnotationUtilsSpec$Bean@7709890e is annotated wit @javax.inject.Named</td>
+<td class="success">Find out if griffon.util.AnnotationUtilsSpec$Bean@72409c62 is annotated wit @javax.inject.Named</td>
 <td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Find out if java.lang.Object@60c10a21 is annotated wit @javax.inject.Named</td>
-<td>0s</td>
+<td class="success">Find out if java.lang.Object@6c62eedc is annotated wit @javax.inject.Named</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Instances are mapped by their names</td>
-<td>0.046s</td>
+<td>0.033s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Instances are sorted by their dependencies</td>
-<td>0.004s</td>
+<td>0.007s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Test setup of interface griffon.inject.BindTo annotation</td>
-<td>0.017s</td>
+<td>0.007s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Test setup of interface griffon.inject.Typed annotation</td>
-<td>0.008s</td>
+<td>0.007s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Test setup of interface javax.inject.Named annotation</td>
-<td>0.005s</td>
+<td>0.007s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -162,59 +162,12 @@
 <div id="tab1" class="tab">
 <h2>Standard error</h2>
 <span class="code">
-<pre>[Test worker] DEBUG griffon.util.AnnotationUtils - Current bean order is [three, two, one]
-[Test worker] TRACE griffon.util.AnnotationUtils - Processing bean 'three'
-[Test worker] TRACE griffon.util.AnnotationUtils -   depends on '[two]'
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'three' dependencies (1)
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'three' dependencies: 
-[Test worker] TRACE griffon.util.AnnotationUtils -   skipped bean 'three', since dependency 'two' not yet added
-[Test worker] TRACE griffon.util.AnnotationUtils - Processing bean 'two'
-[Test worker] TRACE griffon.util.AnnotationUtils -   depends on '[one]'
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'two' dependencies (1)
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'two' dependencies: 
-[Test worker] TRACE griffon.util.AnnotationUtils -   skipped bean 'two', since dependency 'one' not yet added
-[Test worker] TRACE griffon.util.AnnotationUtils - Processing bean 'one'
-[Test worker] TRACE griffon.util.AnnotationUtils -   depends on '[]'
-[Test worker] TRACE griffon.util.AnnotationUtils -   adding bean 'one', since all dependencies have been added
-[Test worker] DEBUG griffon.util.AnnotationUtils - Current bean order is [three, two, one]
-[Test worker] TRACE griffon.util.AnnotationUtils - Processing bean 'three'
-[Test worker] TRACE griffon.util.AnnotationUtils -   depends on '[two]'
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'three' dependencies (1)
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'three' dependencies: 
-[Test worker] TRACE griffon.util.AnnotationUtils -   skipped bean 'three', since dependency 'two' not yet added
-[Test worker] TRACE griffon.util.AnnotationUtils - Processing bean 'two'
-[Test worker] TRACE griffon.util.AnnotationUtils -   depends on '[one]'
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'two' dependencies (1)
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'two' dependencies: 
-[Test worker] TRACE griffon.util.AnnotationUtils -   bean 'two' dependency 'one' already added
-[Test worker] TRACE griffon.util.AnnotationUtils -   adding bean 'two', since all dependencies have been added
-[Test worker] DEBUG griffon.util.AnnotationUtils - Current bean order is [three, two, one]
-[Test worker] TRACE griffon.util.AnnotationUtils - Processing bean 'three'
-[Test worker] TRACE griffon.util.AnnotationUtils -   depends on '[two]'
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'three' dependencies (1)
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'three' dependencies: 
-[Test worker] TRACE griffon.util.AnnotationUtils -   bean 'three' dependency 'two' already added
-[Test worker] TRACE griffon.util.AnnotationUtils -   adding bean 'three', since all dependencies have been added
-[Test worker] TRACE griffon.util.AnnotationUtils - bean dependency ordering complete
-[Test worker] DEBUG griffon.util.AnnotationUtils - computed bean order is [one, two, three]
-[Test worker] DEBUG griffon.util.AnnotationUtils - Current bean order is [cycle2, cycle1]
-[Test worker] TRACE griffon.util.AnnotationUtils - Processing bean 'cycle2'
-[Test worker] TRACE griffon.util.AnnotationUtils -   depends on '[cycle1]'
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'cycle2' dependencies (1)
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'cycle2' dependencies: 
-[Test worker] TRACE griffon.util.AnnotationUtils -   skipped bean 'cycle2', since dependency 'cycle1' not yet added
-[Test worker] TRACE griffon.util.AnnotationUtils - Processing bean 'cycle1'
-[Test worker] TRACE griffon.util.AnnotationUtils -   depends on '[cycle2]'
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'cycle1' dependencies (1)
-[Test worker] TRACE griffon.util.AnnotationUtils -   checking bean 'cycle1' dependencies: 
-[Test worker] TRACE griffon.util.AnnotationUtils -   skipped bean 'cycle1', since dependency 'cycle2' not yet added
-[Test worker] WARN griffon.util.AnnotationUtils -   unresolved bean dependencies detected
+<pre>[Test worker] WARN griffon.util.AnnotationUtils -   unresolved bean dependencies detected
 [Test worker] WARN griffon.util.AnnotationUtils -   continuing with original bean order
 [Test worker] WARN griffon.util.AnnotationUtils -   bean cycle2 
 [Test worker] WARN griffon.util.AnnotationUtils -     depends on cycle1
 [Test worker] WARN griffon.util.AnnotationUtils -   bean cycle1 
 [Test worker] WARN griffon.util.AnnotationUtils -     depends on cycle2
-[Test worker] DEBUG griffon.util.AnnotationUtils - computed bean order is []
 </pre>
 </span>
 </div>
@@ -226,7 +179,7 @@
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 2.5</a> at Jul 29, 2015 5:18:54 PM</p>
+<a href="http://www.gradle.org">Gradle 2.5</a> at Jul 29, 2015 7:53:02 PM</p>
 </div>
 </div>
 </body>
