@@ -384,8 +384,10 @@ public final class JavaFXUtils {
         if (root instanceof TabPane) {
             TabPane parent = (TabPane) root;
             for (Tab child : parent.getTabs()) {
-                Node found = findNode(child.getContent(), id);
-                if (found != null) return found;
+                if(child.getContent() != null) {
+                    Node found = findNode(child.getContent(), id);
+                    if (found != null) return found;
+                }
             }
         } else if (root instanceof TitledPane) {
             TitledPane parent = (TitledPane) root;
@@ -438,6 +440,12 @@ public final class JavaFXUtils {
             TabPane tabPane = (TabPane) root;
             for (Tab child : tabPane.getTabs()) {
                 Object found = findElement(child, id);
+                if (found != null) return found;
+            }
+        } else if (root instanceof Tab) {
+            Tab tab = (Tab) root;
+            if(tab.getContent() != null) {
+                Object found = findElement(tab.getContent(), id);
                 if (found != null) return found;
             }
         } else if (root instanceof TitledPane) {
