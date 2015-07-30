@@ -26,6 +26,7 @@ import javafx.scene.control.SplitPane
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import javafx.scene.control.TitledPane
+import javafx.scene.control.ScrollPane
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.Pane
 import spock.lang.Specification
@@ -66,7 +67,8 @@ class JavaFXUtilsSpec extends Specification {
             createTitledPane(),
             createSplitPane(),
             createAccordion(),
-            createMenuBar()
+            createMenuBar(),
+            createScrollPane()
         ]
     }
 
@@ -109,6 +111,12 @@ class JavaFXUtilsSpec extends Specification {
         SplitPane pane = new SplitPane()
         pane.items << new Pane()
         pane.items << createBorderPane()
+        pane
+    }
+
+    private ScrollPane createScrollPane() {
+        ScrollPane pane = new ScrollPane()
+        pane.content = createBorderPane()
         pane
     }
 

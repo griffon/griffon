@@ -39,6 +39,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -464,6 +465,10 @@ public final class JavaFXUtils {
                 Object found = findElement(child, id);
                 if (found != null) return found;
             }
+        } else if (root instanceof ScrollPane) {
+            ScrollPane scrollPane = (ScrollPane) root;
+            Object found = findElement(scrollPane.getContent(), id);
+            if (found != null) return found;
         } else if (root instanceof Parent) {
             Parent parent = (Parent) root;
             for (Node child : parent.getChildrenUnmodifiable()) {
