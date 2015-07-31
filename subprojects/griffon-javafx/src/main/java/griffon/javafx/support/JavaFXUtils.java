@@ -406,8 +406,11 @@ public final class JavaFXUtils {
                 Node found = findNode(child, id);
                 if (found != null) return found;
             }
-        }
-        if (root instanceof Parent) {
+        }else if (root instanceof ScrollPane) {
+            ScrollPane scrollPane = (ScrollPane) root;
+            Node found = findNode(scrollPane.getContent(), id);
+            if (found != null) return found;
+        } else if (root instanceof Parent) {
             Parent parent = (Parent) root;
             for (Node child : parent.getChildrenUnmodifiable()) {
                 Node found = findNode(child, id);

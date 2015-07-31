@@ -52,7 +52,8 @@ class JavaFXUtilsSpec extends Specification {
             createTabPane(),
             createTitledPane(),
             createSplitPane(),
-            createAccordion()
+            createAccordion(),
+            createScrollPane()
         ]
     }
 
@@ -67,8 +68,8 @@ class JavaFXUtilsSpec extends Specification {
             createTitledPane(),
             createSplitPane(),
             createAccordion(),
-            createMenuBar(),
-            createScrollPane()
+            createScrollPane(),
+            createMenuBar()
         ]
     }
 
