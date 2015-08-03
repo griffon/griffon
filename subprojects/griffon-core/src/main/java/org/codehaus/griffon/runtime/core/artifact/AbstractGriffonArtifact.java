@@ -22,6 +22,7 @@ import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonModel;
 import griffon.core.artifact.GriffonMvcArtifact;
 import griffon.core.artifact.GriffonView;
+import griffon.core.i18n.NoSuchMessageException;
 import griffon.core.mvc.MVCFunction;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupFunction;
@@ -294,5 +295,63 @@ public abstract class AbstractGriffonArtifact implements GriffonArtifact {
     @Override
     public void destroyMVCGroup(@Nonnull String mvcId) {
         application.getMvcGroupManager().destroyMVCGroup(mvcId);
+    }
+
+    /**
+     * Try to resolve the message.
+     *
+     * @param key Key to lookup, such as 'log4j.appenders.console'
+     * @return The resolved message at the given key for the default locale
+     * @throws NoSuchMessageException if no message is found
+     * @since 2.4.0
+     */
+    @Nonnull
+    protected String msg(@Nonnull String key) throws NoSuchMessageException {
+        return getApplication().getMessageSource().getMessage(key);
+    }
+
+    /**
+     * Try to resolve the message.
+     *
+     * @param key  Key to lookup, such as 'log4j.appenders.console'
+     * @param args Arguments that will be filled in for params within the message (params look like "{0}" within a
+     *             message, but this might differ between implementations), or null if none.
+     * @return The resolved message at the given key for the default locale
+     * @throws NoSuchMessageException if no message is found
+     * @since 2.4.0
+     */
+    @Nonnull
+    protected String msg(@Nonnull String key, @Nonnull List<?> args) throws NoSuchMessageException {
+        return getApplication().getMessageSource().getMessage(key, args);
+    }
+
+    /**
+     * Try to resolve the message.
+     *
+     * @param key  Key to lookup, such as 'log4j.appenders.console'
+     * @param args Arguments that will be filled in for params within the message (params look like "{0}" within a
+     *             message, but this might differ between implementations), or null if none.
+     * @return The resolved message at the given key for the default locale
+     * @throws NoSuchMessageException if no message is found
+     * @since 2.4.0
+     */
+    @Nonnull
+    protected String msg(@Nonnull String key, @Nonnull Object[] args) throws NoSuchMessageException {
+        return getApplication().getMessageSource().getMessage(key, args);
+    }
+
+    /**
+     * Try to resolve the message.
+     *
+     * @param key  Key to lookup, such as 'log4j.appenders.console'
+     * @param args Arguments that will be filled in for params within the message (params look like "{:key}"
+     *             within a message, but this might differ between implementations), or null if none.
+     * @return The resolved message at the given key for the default locale
+     * @throws NoSuchMessageException if no message is found
+     * @since 2.4.0
+     */
+    @Nonnull
+    protected String msg(@Nonnull String key, @Nonnull Map<String, Object> args) throws NoSuchMessageException {
+        return getApplication().getMessageSource().getMessage(key, args);
     }
 }

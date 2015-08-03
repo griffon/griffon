@@ -332,7 +332,7 @@ public class Bindings {
             } else if (classifierType != null) {
                 sb.append(", classifierType=").append(classifierType.getName());
             }
-            sb.append(", providerType=").append(providerType);
+            sb.append(", providerType=").append(providerType.getName());
             sb.append(", singleton=").append(singleton);
             sb.append(']');
             return sb.toString();
