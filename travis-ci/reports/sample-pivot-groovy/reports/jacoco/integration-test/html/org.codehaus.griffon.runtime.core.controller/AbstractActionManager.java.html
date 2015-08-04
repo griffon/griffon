@@ -98,7 +98,7 @@ public abstract class AbstractActionManager implements ActionManager {
     @Nullable
     private static Method findActionAsMethod(@Nonnull GriffonController controller, @Nonnull String actionName) {
 <span class="pc bpc" id="L100" title="1 of 2 branches missed.">        for (Method method : controller.getClass().getMethods()) {</span>
-<span class="fc bfc" id="L101" title="All 2 branches covered.">            if (actionName.equals(method.getName()) &amp;&amp;</span>
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">            if (actionName.equals(method.getName()) &amp;&amp;</span>
 <span class="pc bpc" id="L102" title="1 of 2 branches missed.">                isPublic(method.getModifiers()) &amp;&amp;</span>
 <span class="pc bpc" id="L103" title="1 of 2 branches missed.">                !isStatic(method.getModifiers()) &amp;&amp;</span>
 <span class="pc bpc" id="L104" title="1 of 2 branches missed.">                method.getReturnType() == Void.TYPE) {</span>
@@ -249,15 +249,15 @@ public abstract class AbstractActionManager implements ActionManager {
 <span class="pc bpc" id="L249" title="1 of 2 branches missed.">                if (status == ActionExecutionStatus.OK) {</span>
                     try {
 <span class="fc" id="L251">                        doInvokeAction(controller, actionName, updatedArgs);</span>
-<span class="nc" id="L252">                    } catch (RuntimeException e) {</span>
-<span class="nc" id="L253">                        status = ActionExecutionStatus.EXCEPTION;</span>
-<span class="nc" id="L254">                        exception = (RuntimeException) sanitize(e);</span>
-<span class="nc" id="L255">                        LOG.warn(&quot;An exception occurred when executing {}&quot;, qualifiedActionName, exception);</span>
+<span class="fc" id="L252">                    } catch (RuntimeException e) {</span>
+<span class="fc" id="L253">                        status = ActionExecutionStatus.EXCEPTION;</span>
+<span class="fc" id="L254">                        exception = (RuntimeException) sanitize(e);</span>
+<span class="fc" id="L255">                        LOG.warn(&quot;An exception occurred when executing {}&quot;, qualifiedActionName, exception);</span>
 <span class="fc" id="L256">                    }</span>
 <span class="fc" id="L257">                    LOG.trace(&quot;Status after execution of {} is {}&quot;, qualifiedActionName, status);</span>
 
-<span class="pc bpc" id="L259" title="1 of 2 branches missed.">                    if (exception != null) {</span>
-<span class="nc bnc" id="L260" title="All 2 branches missed.">                        for (ActionHandler handler : reverse(invokedHandlers)) {</span>
+<span class="fc bfc" id="L259" title="All 2 branches covered.">                    if (exception != null) {</span>
+<span class="pc bpc" id="L260" title="1 of 2 branches missed.">                        for (ActionHandler handler : reverse(invokedHandlers)) {</span>
 <span class="nc" id="L261">                            LOG.trace(&quot;Calling {}.exception() on {}&quot;, handler, qualifiedActionName);</span>
 <span class="nc" id="L262">                            exceptionWasHandled = handler.exception(exception, action, updatedArgs);</span>
 <span class="nc" id="L263">                        }</span>
@@ -269,9 +269,9 @@ public abstract class AbstractActionManager implements ActionManager {
 <span class="nc" id="L269">                    handler.after(status, action, updatedArgs);</span>
 <span class="nc" id="L270">                }</span>
 
-<span class="pc bpc" id="L272" title="3 of 4 branches missed.">                if (exception != null &amp;&amp; !exceptionWasHandled) {</span>
+<span class="pc bpc" id="L272" title="1 of 4 branches missed.">                if (exception != null &amp;&amp; !exceptionWasHandled) {</span>
                     // throw it again
-<span class="nc" id="L274">                    throw exception;</span>
+<span class="fc" id="L274">                    throw exception;</span>
                 }
 <span class="fc" id="L276">            }</span>
         };
