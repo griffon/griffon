@@ -35,11 +35,12 @@ import javafx.scene.control.Labeled;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TitledPane;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -385,7 +386,7 @@ public final class JavaFXUtils {
         if (root instanceof TabPane) {
             TabPane parent = (TabPane) root;
             for (Tab child : parent.getTabs()) {
-                if(child.getContent() != null) {
+                if (child.getContent() != null) {
                     Node found = findNode(child.getContent(), id);
                     if (found != null) return found;
                 }
@@ -406,10 +407,16 @@ public final class JavaFXUtils {
                 Node found = findNode(child, id);
                 if (found != null) return found;
             }
-        }else if (root instanceof ScrollPane) {
+        } else if (root instanceof ScrollPane) {
             ScrollPane scrollPane = (ScrollPane) root;
             Node found = findNode(scrollPane.getContent(), id);
             if (found != null) return found;
+        } else if (root instanceof ToolBar) {
+            ToolBar toolBar = (ToolBar) root;
+            for (Node child : toolBar.getItems()) {
+                Node found = findNode(child, id);
+                if (found != null) return found;
+            }
         } else if (root instanceof Parent) {
             Parent parent = (Parent) root;
             for (Node child : parent.getChildrenUnmodifiable()) {
@@ -448,7 +455,7 @@ public final class JavaFXUtils {
             }
         } else if (root instanceof Tab) {
             Tab tab = (Tab) root;
-            if(tab.getContent() != null) {
+            if (tab.getContent() != null) {
                 Object found = findElement(tab.getContent(), id);
                 if (found != null) return found;
             }
@@ -472,6 +479,12 @@ public final class JavaFXUtils {
             ScrollPane scrollPane = (ScrollPane) root;
             Object found = findElement(scrollPane.getContent(), id);
             if (found != null) return found;
+        } else if (root instanceof ToolBar) {
+            ToolBar toolBar = (ToolBar) root;
+            for (Node child : toolBar.getItems()) {
+                Node found = findNode(child, id);
+                if (found != null) return found;
+            }
         } else if (root instanceof Parent) {
             Parent parent = (Parent) root;
             for (Node child : parent.getChildrenUnmodifiable()) {

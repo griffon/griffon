@@ -27,6 +27,7 @@ import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import javafx.scene.control.TitledPane
 import javafx.scene.control.ScrollPane
+import javafx.scene.control.ToolBar
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.Pane
 import spock.lang.Specification
@@ -53,7 +54,8 @@ class JavaFXUtilsSpec extends Specification {
             createTitledPane(),
             createSplitPane(),
             createAccordion(),
-            createScrollPane()
+            createScrollPane(),
+            createToolBar()
         ]
     }
 
@@ -69,6 +71,7 @@ class JavaFXUtilsSpec extends Specification {
             createSplitPane(),
             createAccordion(),
             createScrollPane(),
+            createToolBar(),
             createMenuBar()
         ]
     }
@@ -125,6 +128,12 @@ class JavaFXUtilsSpec extends Specification {
         Accordion accordion = new Accordion()
         accordion.panes << createTitledPane()
         accordion
+    }
+
+    private ToolBar createToolBar() {
+        ToolBar toolBar = new ToolBar()
+        toolBar.items << createButton()
+        toolBar
     }
 
     private Button createButton() {
