@@ -142,11 +142,11 @@ Here's how it can be done
 ----
 import javax.swing.Icon
 import java.beans.PropertyEditor
-import java.beans.PropertyEditorManager
+import griffon.core.editors.PropertyEditorResolver
 ...
 Object iconValue = getApplication().getResourceResolver()
                                    .resolveResource('menu.icon', ['large'])
-PropertyEditor propertyEditor = PropertyEditorManager.findEditor(Icon)
+PropertyEditor propertyEditor = PropertyEditorResolver.findEditor(Icon)
 propertyEditor.setAsText(String.valueOf(iconValue))
 Icon icon = propertyEditor.getValue()
 ----

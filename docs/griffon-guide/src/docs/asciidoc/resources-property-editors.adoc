@@ -97,7 +97,7 @@ Where the following apply
  * 'query' accepts `yes` and `no` as values.
  * 'switch' accepts `on` and `off` as values.
 
-Core UI Toolkit dependencies, such as `griffon-swing` and `griffon-javafx`, deliver
+Core UI Toolkit dependencies, such as `griffon-swing`, `griffon-javafx`, and `griffon-pivot` deliver
 additional PropertyEditors. The following tables summarize these additions
 
 .Swing PropertyEditor mappings
@@ -220,7 +220,6 @@ The following styles are supported by `FontPropertyEditor`
 
 |===
 
-
 Where the following apply
 
  * `R`, `G`, `B` and `A` represent an hexadecimal number.
@@ -255,10 +254,43 @@ Where the following apply
 
 |===
 
-
 Where the following apply
 
  * `R`, `G`, `B` and `A` represent an hexadecimal number.
  * Color supports all color constants defined by `griffon.pivot.support.Colors`.
 
+Since Griffon 2.4.0 there's a `core-java8` package that delivers JDK8 specific property editors
+
+.JDK8 PropertyEditor mappings
+[cols="3*", options="header"]
+|===
+
+| Type
+| Editor Class
+| Format
+
+| java.time.LocalDate
+| griffon.core.editors.LocalDatePropertyEditor
+|
+
+| java.time.LocalDateTime
+| griffon.core.editors.LocalDateTimePropertyEditor
+|
+
+| java.time.LocalTime
+| griffon.core.editors.LocalTimePropertyEditor
+|
+
+| java.util.Calendar
+| griffon.core.editors.ExtendedCalendarPropertyEditor
+|
+
+| java.util.Date
+| griffon.core.editors.ExtendedDatePropertyEditor
+|
+
+|===
+
+These versions of `Calendar` and `Date` property editors accept all formats as the previous core editors, while also
+being able to transform values from the `java.time` package.
 

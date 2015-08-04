@@ -5,15 +5,15 @@
 Any artifact or class that abides to the following conventions can be registered as
 an application listener, those conventions are:
 
- - it is a Map, a `{link_callable_with_args}` or an Object.
- - in the case of a Map, each key maps to `<EventName>`, the value must be a CallableWithArgs.
+ - it is a Map, a `{link_runnable_with_args}` or an Object.
+ - in the case of a Map, each key maps to `<EventName>`, the value must be a RunnableWithArgs.
  - in the case of object, public methods whose name matches `on<EventName>` will be used
    as event handlers.
  - Objects and maps can be registered/unregistered by calling
    `addApplicationListener()`/`removeApplicationListener()` on the `EventRouter` instance.
- - CallableWithArgs event handlers must be registered with an overloaded version of
+ - RunnableWithArgs event handlers must be registered with an overloaded version of
    `addApplicationListener()`/`removeApplicationListener()` that takes `<EventName>`
-   as the first parameter, and the callable itself as the second parameter.
+   as the first parameter, and the runnable itself as the second parameter.
 
 There is a global, per-application event handler that can be registered. If you want
 to take advantage of this feature you must define a class that implements the
@@ -96,7 +96,7 @@ import griffon.core.artifact.GriffonController
 class MyController {
     void mvcGroupInit(Map<String, Object> args) {
         application.eventRouter.addEventListener([
-            Foo: { println 'got foo!' } as CallableWithArgs
+            Foo: { println 'got foo!' } as RunnableWithArgs
         ])
     }
 
@@ -107,7 +107,7 @@ class MyController {
 }
 ----
 
-An alternative to the previous example using a `CallableWithArgs` event handler
+An alternative to the previous example using a `RunnableWithArgs` event handler
 
 .griffon-app/controller/MyController.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -120,7 +120,7 @@ import griffon.core.artifact.GriffonController
 class MyController {
     void mvcGroupInit(Map<String, Object> args) {
         application.eventRouter.addEventListener('Foo',
-            { println 'got foo!' } as CallableWithArgs
+            { println 'got foo!' } as RunnableWithArgs
         ])
     }
 
