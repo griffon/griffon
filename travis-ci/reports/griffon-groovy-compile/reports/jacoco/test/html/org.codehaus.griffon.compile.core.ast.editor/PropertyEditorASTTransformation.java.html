@@ -15,6 +15,7 @@
  */
 package org.codehaus.griffon.compile.core.ast.editor;
 
+import com.googlecode.openbeans.PropertyEditor;
 import griffon.metadata.PropertyEditorFor;
 import org.codehaus.griffon.compile.core.processor.editor.PropertyEditorCollector;
 import org.codehaus.groovy.ast.AnnotationNode;
@@ -31,7 +32,6 @@ import org.kordamp.jipsy.processor.CheckResult;
 import org.kordamp.jipsy.processor.LogLocation;
 import org.kordamp.jipsy.processor.Persistence;
 
-import java.beans.PropertyEditor;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;

@@ -15,6 +15,7 @@
  */
 package griffon.util;
 
+import com.googlecode.openbeans.PropertyEditor;
 import griffon.core.editors.ExtendedPropertyEditor;
 import griffon.core.editors.PropertyEditorResolver;
 import griffon.exceptions.GriffonException;
@@ -22,7 +23,6 @@ import griffon.exceptions.TypeConversionException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.PropertyEditor;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;

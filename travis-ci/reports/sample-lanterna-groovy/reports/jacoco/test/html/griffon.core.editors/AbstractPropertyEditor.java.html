@@ -15,13 +15,13 @@
  */
 package griffon.core.editors;
 
+import com.googlecode.openbeans.PropertyEditorSupport;
 import griffon.core.formatters.Formatter;
 import griffon.core.formatters.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
-import java.beans.PropertyEditorSupport;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
 import static griffon.util.GriffonNameUtils.isBlank;
@@ -30,8 +30,8 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @author Andres Almiray
  * @since 2.0.0
  */
-<span class="fc" id="L33">public abstract class AbstractPropertyEditor extends PropertyEditorSupport implements ExtendedPropertyEditor {</span>
-<span class="fc" id="L34">    private static final Logger LOG = LoggerFactory.getLogger(AbstractPropertyEditor.class);</span>
+<span class="nc" id="L33">public abstract class AbstractPropertyEditor extends PropertyEditorSupport implements ExtendedPropertyEditor {</span>
+<span class="nc" id="L34">    private static final Logger LOG = LoggerFactory.getLogger(AbstractPropertyEditor.class);</span>
 
     private String format;
 

@@ -15,10 +15,10 @@
  */
 package org.codehaus.griffon.runtime.core.artifact;
 
+import com.googlecode.openbeans.PropertyDescriptor;
 import griffon.util.GriffonClassUtils;
 import griffon.util.GriffonNameUtils;
 
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -369,7 +369,7 @@ public class ClassPropertyFetcher {
     }
 
     private static void makeAccessible(AccessibleObject obj) {
-<span class="fc bfc" id="L372" title="All 2 branches covered.">        if (!obj.isAccessible()) {</span>
+<span class="pc bpc" id="L372" title="1 of 2 branches missed.">        if (!obj.isAccessible()) {</span>
             try {
 <span class="fc" id="L374">                obj.setAccessible(true);</span>
 <span class="nc" id="L375">            } catch (SecurityException e) {</span>

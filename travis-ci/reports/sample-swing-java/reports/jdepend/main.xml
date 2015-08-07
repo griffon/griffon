@@ -2,6 +2,10 @@
 <JDepend>
     <Packages>
 
+        <Package name="com.googlecode.openbeans">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
         <Package name="griffon.core">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
@@ -31,10 +35,6 @@
         </Package>
 
         <Package name="java.awt">
-            <error>No stats available: package referenced, but not analyzed.</error>
-        </Package>
-
-        <Package name="java.beans">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
@@ -138,6 +138,7 @@
             </ConcreteClasses>
 
             <DependsUpon>
+                <Package>com.googlecode.openbeans</Package>
                 <Package>griffon.core</Package>
                 <Package>griffon.core.env</Package>
                 <Package>griffon.core.i18n</Package>
@@ -146,7 +147,6 @@
                 <Package>griffon.swing.support</Package>
                 <Package>griffon.util</Package>
                 <Package>java.awt</Package>
-                <Package>java.beans</Package>
                 <Package>java.lang</Package>
                 <Package>java.util</Package>
                 <Package>javax.swing</Package>

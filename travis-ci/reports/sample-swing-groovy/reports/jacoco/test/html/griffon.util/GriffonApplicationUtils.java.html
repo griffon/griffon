@@ -41,6 +41,8 @@ public final class GriffonApplicationUtils {
     private static final boolean isWindows7;
     private static final boolean isWindows8;
 
+    private static final boolean isIOS;
+
     /**
      * True if running Linux, Solaris or MacOSX
      */
@@ -67,482 +69,517 @@ public final class GriffonApplicationUtils {
     public static final String basePlatform;
 
     static {
-<span class="fc" id="L70">        osArch = System.getProperty(&quot;os.arch&quot;);</span>
-<span class="fc" id="L71">        osName = System.getProperty(&quot;os.name&quot;);</span>
-<span class="fc" id="L72">        is64Bit = osArch.contains(&quot;64&quot;);</span>
+<span class="fc" id="L72">        osArch = System.getProperty(&quot;os.arch&quot;);</span>
+<span class="fc" id="L73">        osName = System.getProperty(&quot;os.name&quot;);</span>
+<span class="fc" id="L74">        is64Bit = osArch.contains(&quot;64&quot;);</span>
 
-<span class="pc bpc" id="L74" title="1 of 2 branches missed.">        if (osName.contains(&quot;Windows&quot;)) {</span>
-<span class="nc" id="L75">            basePlatform = &quot;windows&quot;;</span>
-<span class="nc" id="L76">            isWindows = true;</span>
-<span class="nc" id="L77">            isLinux = false;</span>
-<span class="nc" id="L78">            isUnix = false;</span>
-<span class="nc" id="L79">            isMacOSX = false;</span>
-<span class="nc" id="L80">            isSolaris = false;</span>
-<span class="nc bnc" id="L81" title="All 2 branches missed.">            if (osName.contains(&quot;95&quot;)) {</span>
-<span class="nc" id="L82">                isWindows95 = true;</span>
-<span class="nc" id="L83">                isWindows98 = false;</span>
-<span class="nc" id="L84">                isWindowsNT = false;</span>
-<span class="nc" id="L85">                isWindows2000 = false;</span>
-<span class="nc" id="L86">                isWindows2003 = false;</span>
-<span class="nc" id="L87">                isWindowsXP = false;</span>
-<span class="nc" id="L88">                isWindowsVista = false;</span>
-<span class="nc" id="L89">                isWindows7 = false;</span>
-<span class="nc" id="L90">                isWindows8 = false;</span>
-<span class="nc bnc" id="L91" title="All 2 branches missed.">            } else if (osName.contains(&quot;98&quot;)) {</span>
-<span class="nc" id="L92">                isWindows95 = false;</span>
-<span class="nc" id="L93">                isWindows98 = true;</span>
-<span class="nc" id="L94">                isWindowsNT = false;</span>
-<span class="nc" id="L95">                isWindows2000 = false;</span>
-<span class="nc" id="L96">                isWindows2003 = false;</span>
-<span class="nc" id="L97">                isWindowsXP = false;</span>
-<span class="nc" id="L98">                isWindowsVista = false;</span>
-<span class="nc" id="L99">                isWindows7 = false;</span>
-<span class="nc" id="L100">                isWindows8 = false;</span>
-<span class="nc bnc" id="L101" title="All 2 branches missed.">            } else if (osName.contains(&quot;NT&quot;)) {</span>
-<span class="nc" id="L102">                isWindows95 = false;</span>
-<span class="nc" id="L103">                isWindows98 = false;</span>
-<span class="nc" id="L104">                isWindowsNT = false;</span>
-<span class="nc" id="L105">                isWindows2000 = true;</span>
-<span class="nc" id="L106">                isWindows2003 = false;</span>
-<span class="nc" id="L107">                isWindowsXP = false;</span>
-<span class="nc" id="L108">                isWindowsVista = false;</span>
-<span class="nc" id="L109">                isWindows7 = false;</span>
-<span class="nc" id="L110">                isWindows8 = false;</span>
-<span class="nc bnc" id="L111" title="All 2 branches missed.">            } else if (osName.contains(&quot;2003&quot;)) {</span>
-<span class="nc" id="L112">                isWindows95 = false;</span>
-<span class="nc" id="L113">                isWindows98 = false;</span>
-<span class="nc" id="L114">                isWindowsNT = false;</span>
-<span class="nc" id="L115">                isWindows2000 = false;</span>
-<span class="nc" id="L116">                isWindows2003 = true;</span>
-<span class="nc" id="L117">                isWindowsXP = true;</span>
-<span class="nc" id="L118">                isWindowsVista = false;</span>
-<span class="nc" id="L119">                isWindows7 = false;</span>
-<span class="nc" id="L120">                isWindows8 = false;</span>
-<span class="nc bnc" id="L121" title="All 2 branches missed.">            } else if (osName.contains(&quot;XP&quot;)) {</span>
-<span class="nc" id="L122">                isWindows95 = false;</span>
-<span class="nc" id="L123">                isWindows98 = false;</span>
-<span class="nc" id="L124">                isWindowsNT = true;</span>
-<span class="nc" id="L125">                isWindows2000 = true;</span>
-<span class="nc" id="L126">                isWindows2003 = true;</span>
-<span class="nc" id="L127">                isWindowsXP = false;</span>
-<span class="nc" id="L128">                isWindowsVista = false;</span>
-<span class="nc" id="L129">                isWindows7 = false;</span>
-<span class="nc" id="L130">                isWindows8 = false;</span>
-<span class="nc bnc" id="L131" title="All 2 branches missed.">            } else if (osName.contains(&quot;Vista&quot;)) {</span>
-<span class="nc" id="L132">                isWindows95 = false;</span>
-<span class="nc" id="L133">                isWindows98 = false;</span>
-<span class="nc" id="L134">                isWindowsNT = false;</span>
-<span class="nc" id="L135">                isWindows2000 = false;</span>
-<span class="nc" id="L136">                isWindows2003 = false;</span>
-<span class="nc" id="L137">                isWindowsXP = false;</span>
-<span class="nc" id="L138">                isWindowsVista = true;</span>
-<span class="nc" id="L139">                isWindows7 = false;</span>
-<span class="nc" id="L140">                isWindows8 = false;</span>
-<span class="nc bnc" id="L141" title="All 2 branches missed.">            } else if (osName.contains(&quot;Windows 7&quot;)) {</span>
-<span class="nc" id="L142">                isWindows95 = false;</span>
-<span class="nc" id="L143">                isWindows98 = false;</span>
-<span class="nc" id="L144">                isWindowsNT = false;</span>
-<span class="nc" id="L145">                isWindows2000 = false;</span>
-<span class="nc" id="L146">                isWindows2003 = false;</span>
-<span class="nc" id="L147">                isWindowsXP = false;</span>
-<span class="nc" id="L148">                isWindowsVista = false;</span>
-<span class="nc" id="L149">                isWindows7 = true;</span>
-<span class="nc" id="L150">                isWindows8 = false;</span>
-<span class="nc bnc" id="L151" title="All 2 branches missed.">            } else if (osName.equals(&quot;Windows 8&quot;)) {</span>
-<span class="nc" id="L152">                isWindows95 = false;</span>
-<span class="nc" id="L153">                isWindows98 = false;</span>
-<span class="nc" id="L154">                isWindowsNT = false;</span>
-<span class="nc" id="L155">                isWindows2000 = false;</span>
-<span class="nc" id="L156">                isWindows2003 = false;</span>
-<span class="nc" id="L157">                isWindowsXP = false;</span>
-<span class="nc" id="L158">                isWindowsVista = false;</span>
-<span class="nc" id="L159">                isWindows7 = false;</span>
-<span class="nc" id="L160">                isWindows8 = true;</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">        if (osName.contains(&quot;Windows&quot;)) {</span>
+<span class="nc" id="L77">            basePlatform = &quot;windows&quot;;</span>
+<span class="nc" id="L78">            isWindows = true;</span>
+<span class="nc" id="L79">            isLinux = false;</span>
+<span class="nc" id="L80">            isUnix = false;</span>
+<span class="nc" id="L81">            isMacOSX = false;</span>
+<span class="nc" id="L82">            isSolaris = false;</span>
+<span class="nc" id="L83">            isIOS = false;</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">            if (osName.contains(&quot;95&quot;)) {</span>
+<span class="nc" id="L85">                isWindows95 = true;</span>
+<span class="nc" id="L86">                isWindows98 = false;</span>
+<span class="nc" id="L87">                isWindowsNT = false;</span>
+<span class="nc" id="L88">                isWindows2000 = false;</span>
+<span class="nc" id="L89">                isWindows2003 = false;</span>
+<span class="nc" id="L90">                isWindowsXP = false;</span>
+<span class="nc" id="L91">                isWindowsVista = false;</span>
+<span class="nc" id="L92">                isWindows7 = false;</span>
+<span class="nc" id="L93">                isWindows8 = false;</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">            } else if (osName.contains(&quot;98&quot;)) {</span>
+<span class="nc" id="L95">                isWindows95 = false;</span>
+<span class="nc" id="L96">                isWindows98 = true;</span>
+<span class="nc" id="L97">                isWindowsNT = false;</span>
+<span class="nc" id="L98">                isWindows2000 = false;</span>
+<span class="nc" id="L99">                isWindows2003 = false;</span>
+<span class="nc" id="L100">                isWindowsXP = false;</span>
+<span class="nc" id="L101">                isWindowsVista = false;</span>
+<span class="nc" id="L102">                isWindows7 = false;</span>
+<span class="nc" id="L103">                isWindows8 = false;</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">            } else if (osName.contains(&quot;NT&quot;)) {</span>
+<span class="nc" id="L105">                isWindows95 = false;</span>
+<span class="nc" id="L106">                isWindows98 = false;</span>
+<span class="nc" id="L107">                isWindowsNT = false;</span>
+<span class="nc" id="L108">                isWindows2000 = true;</span>
+<span class="nc" id="L109">                isWindows2003 = false;</span>
+<span class="nc" id="L110">                isWindowsXP = false;</span>
+<span class="nc" id="L111">                isWindowsVista = false;</span>
+<span class="nc" id="L112">                isWindows7 = false;</span>
+<span class="nc" id="L113">                isWindows8 = false;</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">            } else if (osName.contains(&quot;2003&quot;)) {</span>
+<span class="nc" id="L115">                isWindows95 = false;</span>
+<span class="nc" id="L116">                isWindows98 = false;</span>
+<span class="nc" id="L117">                isWindowsNT = false;</span>
+<span class="nc" id="L118">                isWindows2000 = false;</span>
+<span class="nc" id="L119">                isWindows2003 = true;</span>
+<span class="nc" id="L120">                isWindowsXP = true;</span>
+<span class="nc" id="L121">                isWindowsVista = false;</span>
+<span class="nc" id="L122">                isWindows7 = false;</span>
+<span class="nc" id="L123">                isWindows8 = false;</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">            } else if (osName.contains(&quot;XP&quot;)) {</span>
+<span class="nc" id="L125">                isWindows95 = false;</span>
+<span class="nc" id="L126">                isWindows98 = false;</span>
+<span class="nc" id="L127">                isWindowsNT = true;</span>
+<span class="nc" id="L128">                isWindows2000 = true;</span>
+<span class="nc" id="L129">                isWindows2003 = true;</span>
+<span class="nc" id="L130">                isWindowsXP = false;</span>
+<span class="nc" id="L131">                isWindowsVista = false;</span>
+<span class="nc" id="L132">                isWindows7 = false;</span>
+<span class="nc" id="L133">                isWindows8 = false;</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">            } else if (osName.contains(&quot;Vista&quot;)) {</span>
+<span class="nc" id="L135">                isWindows95 = false;</span>
+<span class="nc" id="L136">                isWindows98 = false;</span>
+<span class="nc" id="L137">                isWindowsNT = false;</span>
+<span class="nc" id="L138">                isWindows2000 = false;</span>
+<span class="nc" id="L139">                isWindows2003 = false;</span>
+<span class="nc" id="L140">                isWindowsXP = false;</span>
+<span class="nc" id="L141">                isWindowsVista = true;</span>
+<span class="nc" id="L142">                isWindows7 = false;</span>
+<span class="nc" id="L143">                isWindows8 = false;</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">            } else if (osName.contains(&quot;Windows 7&quot;)) {</span>
+<span class="nc" id="L145">                isWindows95 = false;</span>
+<span class="nc" id="L146">                isWindows98 = false;</span>
+<span class="nc" id="L147">                isWindowsNT = false;</span>
+<span class="nc" id="L148">                isWindows2000 = false;</span>
+<span class="nc" id="L149">                isWindows2003 = false;</span>
+<span class="nc" id="L150">                isWindowsXP = false;</span>
+<span class="nc" id="L151">                isWindowsVista = false;</span>
+<span class="nc" id="L152">                isWindows7 = true;</span>
+<span class="nc" id="L153">                isWindows8 = false;</span>
+<span class="nc bnc" id="L154" title="All 2 branches missed.">            } else if (osName.equals(&quot;Windows 8&quot;)) {</span>
+<span class="nc" id="L155">                isWindows95 = false;</span>
+<span class="nc" id="L156">                isWindows98 = false;</span>
+<span class="nc" id="L157">                isWindowsNT = false;</span>
+<span class="nc" id="L158">                isWindows2000 = false;</span>
+<span class="nc" id="L159">                isWindows2003 = false;</span>
+<span class="nc" id="L160">                isWindowsXP = false;</span>
+<span class="nc" id="L161">                isWindowsVista = false;</span>
+<span class="nc" id="L162">                isWindows7 = false;</span>
+<span class="nc" id="L163">                isWindows8 = true;</span>
             } else {
-<span class="nc" id="L162">                isWindows95 = false;</span>
-<span class="nc" id="L163">                isWindows98 = false;</span>
-<span class="nc" id="L164">                isWindowsNT = false;</span>
-<span class="nc" id="L165">                isWindows2000 = false;</span>
-<span class="nc" id="L166">                isWindows2003 = false;</span>
-<span class="nc" id="L167">                isWindowsXP = false;</span>
-<span class="nc" id="L168">                isWindowsVista = false;</span>
-<span class="nc" id="L169">                isWindows7 = false;</span>
-<span class="nc" id="L170">                isWindows8 = false;</span>
+<span class="nc" id="L165">                isWindows95 = false;</span>
+<span class="nc" id="L166">                isWindows98 = false;</span>
+<span class="nc" id="L167">                isWindowsNT = false;</span>
+<span class="nc" id="L168">                isWindows2000 = false;</span>
+<span class="nc" id="L169">                isWindows2003 = false;</span>
+<span class="nc" id="L170">                isWindowsXP = false;</span>
+<span class="nc" id="L171">                isWindowsVista = false;</span>
+<span class="nc" id="L172">                isWindows7 = false;</span>
+<span class="nc" id="L173">                isWindows8 = false;</span>
             }
-<span class="pc bpc" id="L172" title="1 of 2 branches missed.">        } else if (osName.contains(&quot;Linux&quot;)) {</span>
-<span class="fc" id="L173">            basePlatform = &quot;linux&quot;;</span>
-<span class="fc" id="L174">            isWindows = false;</span>
-<span class="fc" id="L175">            isLinux = true;</span>
-<span class="fc" id="L176">            isUnix = true;</span>
-<span class="fc" id="L177">            isMacOSX = false;</span>
-<span class="fc" id="L178">            isSolaris = false;</span>
-<span class="fc" id="L179">            isWindows95 = false;</span>
-<span class="fc" id="L180">            isWindows98 = false;</span>
-<span class="fc" id="L181">            isWindowsNT = false;</span>
-<span class="fc" id="L182">            isWindows2000 = false;</span>
-<span class="fc" id="L183">            isWindows2003 = false;</span>
-<span class="fc" id="L184">            isWindowsXP = false;</span>
-<span class="fc" id="L185">            isWindowsVista = false;</span>
-<span class="fc" id="L186">            isWindows7 = false;</span>
-<span class="fc" id="L187">            isWindows8 = false;</span>
-<span class="nc bnc" id="L188" title="All 4 branches missed.">        } else if (osName.contains(&quot;Solaris&quot;) || osName.contains(&quot;SunOS&quot;)) {</span>
-<span class="nc" id="L189">            basePlatform = &quot;solaris&quot;;</span>
-<span class="nc" id="L190">            isWindows = false;</span>
-<span class="nc" id="L191">            isLinux = false;</span>
-<span class="nc" id="L192">            isUnix = true;</span>
-<span class="nc" id="L193">            isMacOSX = false;</span>
-<span class="nc" id="L194">            isSolaris = true;</span>
-<span class="nc" id="L195">            isWindows95 = false;</span>
-<span class="nc" id="L196">            isWindows98 = false;</span>
-<span class="nc" id="L197">            isWindowsNT = false;</span>
-<span class="nc" id="L198">            isWindows2000 = false;</span>
-<span class="nc" id="L199">            isWindows2003 = false;</span>
-<span class="nc" id="L200">            isWindowsXP = false;</span>
-<span class="nc" id="L201">            isWindowsVista = false;</span>
-<span class="nc" id="L202">            isWindows7 = false;</span>
-<span class="nc" id="L203">            isWindows8 = false;</span>
-<span class="nc bnc" id="L204" title="All 2 branches missed.">        } else if (osName.contains(&quot;Mac OS&quot;)) {</span>
-<span class="nc" id="L205">            basePlatform = &quot;macosx&quot;;</span>
-<span class="nc" id="L206">            isWindows = false;</span>
-<span class="nc" id="L207">            isLinux = false;</span>
-<span class="nc" id="L208">            isUnix = true;</span>
-<span class="nc" id="L209">            isMacOSX = true;</span>
-<span class="nc" id="L210">            isSolaris = false;</span>
-<span class="nc" id="L211">            isWindows95 = false;</span>
-<span class="nc" id="L212">            isWindows98 = false;</span>
-<span class="nc" id="L213">            isWindowsNT = false;</span>
-<span class="nc" id="L214">            isWindows2000 = false;</span>
-<span class="nc" id="L215">            isWindows2003 = false;</span>
-<span class="nc" id="L216">            isWindowsXP = false;</span>
-<span class="nc" id="L217">            isWindowsVista = false;</span>
-<span class="nc" id="L218">            isWindows7 = false;</span>
-<span class="nc" id="L219">            isWindows8 = false;</span>
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">        } else if (osName.contains(&quot;Linux&quot;)) {</span>
+<span class="fc" id="L176">            basePlatform = &quot;linux&quot;;</span>
+<span class="fc" id="L177">            isWindows = false;</span>
+<span class="fc" id="L178">            isLinux = true;</span>
+<span class="fc" id="L179">            isUnix = true;</span>
+<span class="fc" id="L180">            isMacOSX = false;</span>
+<span class="fc" id="L181">            isSolaris = false;</span>
+<span class="fc" id="L182">            isWindows95 = false;</span>
+<span class="fc" id="L183">            isWindows98 = false;</span>
+<span class="fc" id="L184">            isWindowsNT = false;</span>
+<span class="fc" id="L185">            isWindows2000 = false;</span>
+<span class="fc" id="L186">            isWindows2003 = false;</span>
+<span class="fc" id="L187">            isWindowsXP = false;</span>
+<span class="fc" id="L188">            isWindowsVista = false;</span>
+<span class="fc" id="L189">            isWindows7 = false;</span>
+<span class="fc" id="L190">            isWindows8 = false;</span>
+<span class="fc" id="L191">            isIOS = false;</span>
+<span class="nc bnc" id="L192" title="All 4 branches missed.">        } else if (osName.contains(&quot;Solaris&quot;) || osName.contains(&quot;SunOS&quot;)) {</span>
+<span class="nc" id="L193">            basePlatform = &quot;solaris&quot;;</span>
+<span class="nc" id="L194">            isWindows = false;</span>
+<span class="nc" id="L195">            isLinux = false;</span>
+<span class="nc" id="L196">            isUnix = true;</span>
+<span class="nc" id="L197">            isMacOSX = false;</span>
+<span class="nc" id="L198">            isSolaris = true;</span>
+<span class="nc" id="L199">            isWindows95 = false;</span>
+<span class="nc" id="L200">            isWindows98 = false;</span>
+<span class="nc" id="L201">            isWindowsNT = false;</span>
+<span class="nc" id="L202">            isWindows2000 = false;</span>
+<span class="nc" id="L203">            isWindows2003 = false;</span>
+<span class="nc" id="L204">            isWindowsXP = false;</span>
+<span class="nc" id="L205">            isWindowsVista = false;</span>
+<span class="nc" id="L206">            isWindows7 = false;</span>
+<span class="nc" id="L207">            isWindows8 = false;</span>
+<span class="nc" id="L208">            isIOS = false;</span>
+<span class="nc bnc" id="L209" title="All 2 branches missed.">        } else if (osName.contains(&quot;Mac OS&quot;)) {</span>
+<span class="nc" id="L210">            basePlatform = &quot;macosx&quot;;</span>
+<span class="nc" id="L211">            isWindows = false;</span>
+<span class="nc" id="L212">            isLinux = false;</span>
+<span class="nc" id="L213">            isUnix = true;</span>
+<span class="nc" id="L214">            isMacOSX = true;</span>
+<span class="nc" id="L215">            isSolaris = false;</span>
+<span class="nc" id="L216">            isWindows95 = false;</span>
+<span class="nc" id="L217">            isWindows98 = false;</span>
+<span class="nc" id="L218">            isWindowsNT = false;</span>
+<span class="nc" id="L219">            isWindows2000 = false;</span>
+<span class="nc" id="L220">            isWindows2003 = false;</span>
+<span class="nc" id="L221">            isWindowsXP = false;</span>
+<span class="nc" id="L222">            isWindowsVista = false;</span>
+<span class="nc" id="L223">            isWindows7 = false;</span>
+<span class="nc" id="L224">            isWindows8 = false;</span>
+<span class="nc" id="L225">            isIOS = false;</span>
+<span class="nc bnc" id="L226" title="All 2 branches missed.">        } else if (osName.contains(&quot;iOS&quot;)) {</span>
+<span class="nc" id="L227">            basePlatform = &quot;ios&quot;;</span>
+<span class="nc" id="L228">            isWindows = false;</span>
+<span class="nc" id="L229">            isLinux = false;</span>
+<span class="nc" id="L230">            isUnix = true;</span>
+<span class="nc" id="L231">            isMacOSX = true;</span>
+<span class="nc" id="L232">            isSolaris = false;</span>
+<span class="nc" id="L233">            isWindows95 = false;</span>
+<span class="nc" id="L234">            isWindows98 = false;</span>
+<span class="nc" id="L235">            isWindowsNT = false;</span>
+<span class="nc" id="L236">            isWindows2000 = false;</span>
+<span class="nc" id="L237">            isWindows2003 = false;</span>
+<span class="nc" id="L238">            isWindowsXP = false;</span>
+<span class="nc" id="L239">            isWindowsVista = false;</span>
+<span class="nc" id="L240">            isWindows7 = false;</span>
+<span class="nc" id="L241">            isWindows8 = false;</span>
+<span class="nc" id="L242">            isIOS = true;</span>
         } else {
-<span class="nc" id="L221">            basePlatform = &quot;unknown&quot;;</span>
-<span class="nc" id="L222">            isWindows = false;</span>
-<span class="nc" id="L223">            isLinux = false;</span>
-<span class="nc" id="L224">            isUnix = false;</span>
-<span class="nc" id="L225">            isMacOSX = false;</span>
-<span class="nc" id="L226">            isSolaris = false;</span>
-<span class="nc" id="L227">            isWindows95 = false;</span>
-<span class="nc" id="L228">            isWindows98 = false;</span>
-<span class="nc" id="L229">            isWindowsNT = false;</span>
-<span class="nc" id="L230">            isWindows2000 = false;</span>
-<span class="nc" id="L231">            isWindows2003 = false;</span>
-<span class="nc" id="L232">            isWindowsXP = false;</span>
-<span class="nc" id="L233">            isWindowsVista = false;</span>
-<span class="nc" id="L234">            isWindows7 = false;</span>
-<span class="nc" id="L235">            isWindows8 = false;</span>
+<span class="nc" id="L244">            basePlatform = &quot;unknown&quot;;</span>
+<span class="nc" id="L245">            isWindows = false;</span>
+<span class="nc" id="L246">            isLinux = false;</span>
+<span class="nc" id="L247">            isUnix = false;</span>
+<span class="nc" id="L248">            isMacOSX = false;</span>
+<span class="nc" id="L249">            isSolaris = false;</span>
+<span class="nc" id="L250">            isWindows95 = false;</span>
+<span class="nc" id="L251">            isWindows98 = false;</span>
+<span class="nc" id="L252">            isWindowsNT = false;</span>
+<span class="nc" id="L253">            isWindows2000 = false;</span>
+<span class="nc" id="L254">            isWindows2003 = false;</span>
+<span class="nc" id="L255">            isWindowsXP = false;</span>
+<span class="nc" id="L256">            isWindowsVista = false;</span>
+<span class="nc" id="L257">            isWindows7 = false;</span>
+<span class="nc" id="L258">            isWindows8 = false;</span>
+<span class="nc" id="L259">            isIOS = false;</span>
         }
 
-<span class="fc" id="L238">        osVersion = System.getProperty(&quot;os.version&quot;);</span>
-<span class="fc" id="L239">        javaVersion = System.getProperty(&quot;java.version&quot;);</span>
-<span class="fc" id="L240">        String version = javaVersion.substring(0, 3);</span>
-<span class="fc" id="L241">        isJdk4 = true;</span>
-<span class="pc bpc" id="L242" title="19 of 22 branches missed.">        switch (version) {</span>
+<span class="fc" id="L262">        osVersion = System.getProperty(&quot;os.version&quot;);</span>
+<span class="fc" id="L263">        javaVersion = System.getProperty(&quot;java.version&quot;);</span>
+<span class="fc" id="L264">        String version = &quot;0&quot;;</span>
+<span class="pc bpc" id="L265" title="2 of 4 branches missed.">        if (javaVersion != null &amp;&amp; javaVersion.length() &gt; 1) {</span>
+<span class="fc" id="L266">            version = javaVersion.substring(0, 3);</span>
+<span class="nc bnc" id="L267" title="All 2 branches missed.">        } else if (isIOS) {</span>
+<span class="nc" id="L268">            version = &quot;1.8&quot;;</span>
+        }
+<span class="fc" id="L270">        isJdk4 = true;</span>
+<span class="pc bpc" id="L271" title="19 of 22 branches missed.">        switch (version) {</span>
             case &quot;1.9&quot;:
-<span class="nc" id="L244">                isJdk9 = true;</span>
-<span class="nc" id="L245">                isJdk8 = true;</span>
-<span class="nc" id="L246">                isJdk7 = true;</span>
-<span class="nc" id="L247">                isJdk6 = true;</span>
-<span class="nc" id="L248">                isJdk5 = true;</span>
-<span class="nc" id="L249">                break;</span>
+<span class="nc" id="L273">                isJdk9 = true;</span>
+<span class="nc" id="L274">                isJdk8 = true;</span>
+<span class="nc" id="L275">                isJdk7 = true;</span>
+<span class="nc" id="L276">                isJdk6 = true;</span>
+<span class="nc" id="L277">                isJdk5 = true;</span>
+<span class="nc" id="L278">                break;</span>
             case &quot;1.8&quot;:
-<span class="fc" id="L251">                isJdk9 = false;</span>
-<span class="fc" id="L252">                isJdk8 = true;</span>
-<span class="fc" id="L253">                isJdk7 = true;</span>
-<span class="fc" id="L254">                isJdk6 = true;</span>
-<span class="fc" id="L255">                isJdk5 = true;</span>
-<span class="fc" id="L256">                break;</span>
+<span class="fc" id="L280">                isJdk9 = false;</span>
+<span class="fc" id="L281">                isJdk8 = true;</span>
+<span class="fc" id="L282">                isJdk7 = true;</span>
+<span class="fc" id="L283">                isJdk6 = true;</span>
+<span class="fc" id="L284">                isJdk5 = true;</span>
+<span class="fc" id="L285">                break;</span>
             case &quot;1.7&quot;:
-<span class="nc" id="L258">                isJdk9 = false;</span>
-<span class="nc" id="L259">                isJdk8 = false;</span>
-<span class="nc" id="L260">                isJdk7 = true;</span>
-<span class="nc" id="L261">                isJdk6 = true;</span>
-<span class="nc" id="L262">                isJdk5 = true;</span>
-<span class="nc" id="L263">                break;</span>
+<span class="nc" id="L287">                isJdk9 = false;</span>
+<span class="nc" id="L288">                isJdk8 = false;</span>
+<span class="nc" id="L289">                isJdk7 = true;</span>
+<span class="nc" id="L290">                isJdk6 = true;</span>
+<span class="nc" id="L291">                isJdk5 = true;</span>
+<span class="nc" id="L292">                break;</span>
             case &quot;1.6&quot;:
-<span class="nc" id="L265">                isJdk9 = false;</span>
-<span class="nc" id="L266">                isJdk8 = false;</span>
-<span class="nc" id="L267">                isJdk7 = false;</span>
-<span class="nc" id="L268">                isJdk6 = true;</span>
-<span class="nc" id="L269">                isJdk5 = true;</span>
-<span class="nc" id="L270">                break;</span>
+<span class="nc" id="L294">                isJdk9 = false;</span>
+<span class="nc" id="L295">                isJdk8 = false;</span>
+<span class="nc" id="L296">                isJdk7 = false;</span>
+<span class="nc" id="L297">                isJdk6 = true;</span>
+<span class="nc" id="L298">                isJdk5 = true;</span>
+<span class="nc" id="L299">                break;</span>
             case &quot;1.5&quot;:
-<span class="nc" id="L272">                isJdk9 = false;</span>
-<span class="nc" id="L273">                isJdk8 = false;</span>
-<span class="nc" id="L274">                isJdk7 = false;</span>
-<span class="nc" id="L275">                isJdk6 = false;</span>
-<span class="nc" id="L276">                isJdk5 = true;</span>
-<span class="nc" id="L277">                break;</span>
+<span class="nc" id="L301">                isJdk9 = false;</span>
+<span class="nc" id="L302">                isJdk8 = false;</span>
+<span class="nc" id="L303">                isJdk7 = false;</span>
+<span class="nc" id="L304">                isJdk6 = false;</span>
+<span class="nc" id="L305">                isJdk5 = true;</span>
+<span class="nc" id="L306">                break;</span>
             default:
-<span class="nc" id="L279">                isJdk9 = false;</span>
-<span class="nc" id="L280">                isJdk8 = false;</span>
-<span class="nc" id="L281">                isJdk7 = false;</span>
-<span class="nc" id="L282">                isJdk6 = false;</span>
-<span class="nc" id="L283">                isJdk5 = false;</span>
+<span class="nc" id="L308">                isJdk9 = false;</span>
+<span class="nc" id="L309">                isJdk8 = false;</span>
+<span class="nc" id="L310">                isJdk7 = false;</span>
+<span class="nc" id="L311">                isJdk6 = false;</span>
+<span class="nc" id="L312">                isJdk5 = false;</span>
                 break;
         }
 
-<span class="pc bpc" id="L287" title="2 of 4 branches missed.">        platform = basePlatform + (is64Bit &amp;&amp; !isSolaris ? &quot;64&quot; : &quot;&quot;);</span>
-<span class="fc" id="L288">    }</span>
+<span class="pc bpc" id="L316" title="2 of 4 branches missed.">        platform = basePlatform + (is64Bit &amp;&amp; !isSolaris ? &quot;64&quot; : &quot;&quot;);</span>
+<span class="fc" id="L317">    }</span>
 
     public static boolean isWindows() {
-<span class="nc" id="L291">        return isWindows;</span>
+<span class="nc" id="L320">        return isWindows;</span>
     }
 
     public static boolean isWindows95() {
-<span class="nc" id="L295">        return isWindows95;</span>
+<span class="nc" id="L324">        return isWindows95;</span>
     }
 
     public static boolean isWindows98() {
-<span class="nc" id="L299">        return isWindows98;</span>
+<span class="nc" id="L328">        return isWindows98;</span>
     }
 
     public static boolean isWindowsNT() {
-<span class="nc" id="L303">        return isWindowsNT;</span>
+<span class="nc" id="L332">        return isWindowsNT;</span>
     }
 
     public static boolean isWindows2000() {
-<span class="nc" id="L307">        return isWindows2000;</span>
+<span class="nc" id="L336">        return isWindows2000;</span>
     }
 
     public static boolean isWindows2003() {
-<span class="nc" id="L311">        return isWindows2003;</span>
+<span class="nc" id="L340">        return isWindows2003;</span>
     }
 
     public static boolean isWindowsXP() {
-<span class="nc" id="L315">        return isWindowsXP;</span>
+<span class="nc" id="L344">        return isWindowsXP;</span>
     }
 
     public static boolean isWindowsVista() {
-<span class="nc" id="L319">        return isWindowsVista;</span>
+<span class="nc" id="L348">        return isWindowsVista;</span>
     }
 
     public static boolean isWindows7() {
-<span class="nc" id="L323">        return isWindows7;</span>
+<span class="nc" id="L352">        return isWindows7;</span>
     }
 
     public static boolean isWindows8() {
-<span class="nc" id="L327">        return isWindows8;</span>
+<span class="nc" id="L356">        return isWindows8;</span>
     }
 
     public static boolean isUnix() {
-<span class="nc" id="L331">        return isUnix;</span>
+<span class="nc" id="L360">        return isUnix;</span>
     }
 
     public static boolean isLinux() {
-<span class="nc" id="L335">        return isLinux;</span>
+<span class="nc" id="L364">        return isLinux;</span>
     }
 
     public static boolean isSolaris() {
-<span class="nc" id="L339">        return isSolaris;</span>
+<span class="nc" id="L368">        return isSolaris;</span>
     }
 
     public static boolean isMacOSX() {
-<span class="nc" id="L343">        return isMacOSX;</span>
+<span class="nc" id="L372">        return isMacOSX;</span>
+    }
+
+    public static boolean isIOS() {
+<span class="nc" id="L376">        return isIOS;</span>
     }
 
     public static String getOsArch() {
-<span class="nc" id="L347">        return osArch;</span>
+<span class="nc" id="L380">        return osArch;</span>
     }
 
     public static String getOsName() {
-<span class="nc" id="L351">        return osName;</span>
+<span class="nc" id="L384">        return osName;</span>
     }
 
     public static String getOsVersion() {
-<span class="nc" id="L355">        return osVersion;</span>
+<span class="nc" id="L388">        return osVersion;</span>
     }
 
     public static String getJavaVersion() {
-<span class="nc" id="L359">        return javaVersion;</span>
+<span class="nc" id="L392">        return javaVersion;</span>
     }
 
     public static boolean is64Bit() {
-<span class="nc" id="L363">        return is64Bit;</span>
+<span class="nc" id="L396">        return is64Bit;</span>
     }
 
     @Deprecated
     public static boolean isJdk14() {
-<span class="nc" id="L368">        return isJdk4();</span>
+<span class="nc" id="L401">        return isJdk4();</span>
     }
 
     @Deprecated
     public static boolean isJdk15() {
-<span class="nc" id="L373">        return isJdk5();</span>
+<span class="nc" id="L406">        return isJdk5();</span>
     }
 
     @Deprecated
     public static boolean isJdk16() {
-<span class="nc" id="L378">        return isJdk6();</span>
+<span class="nc" id="L411">        return isJdk6();</span>
     }
 
     @Deprecated
     public static boolean isJdk17() {
-<span class="nc" id="L383">        return isJdk7();</span>
+<span class="nc" id="L416">        return isJdk7();</span>
     }
 
     @Deprecated
     public static boolean isJdk18() {
-<span class="nc" id="L388">        return isJdk8();</span>
+<span class="nc" id="L421">        return isJdk8();</span>
     }
 
     public static boolean isJdk4() {
-<span class="nc" id="L392">        return isJdk4;</span>
+<span class="nc" id="L425">        return isJdk4;</span>
     }
 
     public static boolean isJdk5() {
-<span class="nc" id="L396">        return isJdk5;</span>
+<span class="nc" id="L429">        return isJdk5;</span>
     }
 
     public static boolean isJdk6() {
-<span class="nc" id="L400">        return isJdk6;</span>
+<span class="nc" id="L433">        return isJdk6;</span>
     }
 
     public static boolean isJdk7() {
-<span class="nc" id="L404">        return isJdk7;</span>
+<span class="nc" id="L437">        return isJdk7;</span>
     }
 
     public static boolean isJdk8() {
-<span class="nc" id="L408">        return isJdk8;</span>
+<span class="nc" id="L441">        return isJdk8;</span>
     }
 
     public static boolean isJdk9() {
-<span class="nc" id="L412">        return isJdk9;</span>
+<span class="nc" id="L445">        return isJdk9;</span>
     }
 
     public static String getPlatform() {
-<span class="fc" id="L416">        return platform;</span>
+<span class="fc" id="L449">        return platform;</span>
     }
 
     public static String getBasePlatform() {
-<span class="nc" id="L420">        return basePlatform;</span>
+<span class="nc" id="L453">        return basePlatform;</span>
     }
 
     public static boolean getIsWindows() {
-<span class="nc" id="L424">        return isWindows;</span>
+<span class="nc" id="L457">        return isWindows;</span>
     }
 
     public static boolean getIsWindows95() {
-<span class="nc" id="L428">        return isWindows95;</span>
+<span class="nc" id="L461">        return isWindows95;</span>
     }
 
     public static boolean getIsWindows98() {
-<span class="nc" id="L432">        return isWindows98;</span>
+<span class="nc" id="L465">        return isWindows98;</span>
     }
 
     public static boolean getIsWindowsNT() {
-<span class="nc" id="L436">        return isWindowsNT;</span>
+<span class="nc" id="L469">        return isWindowsNT;</span>
     }
 
     public static boolean getIsWindows2000() {
-<span class="nc" id="L440">        return isWindows2000;</span>
+<span class="nc" id="L473">        return isWindows2000;</span>
     }
 
     public static boolean getIsWindows2003() {
-<span class="nc" id="L444">        return isWindows2003;</span>
+<span class="nc" id="L477">        return isWindows2003;</span>
     }
 
     public static boolean getIsWindowsXP() {
-<span class="nc" id="L448">        return isWindowsXP;</span>
+<span class="nc" id="L481">        return isWindowsXP;</span>
     }
 
     public static boolean getIsWindowsVista() {
-<span class="nc" id="L452">        return isWindowsVista;</span>
+<span class="nc" id="L485">        return isWindowsVista;</span>
     }
 
     public static boolean getIsWindows7() {
-<span class="nc" id="L456">        return isWindows7;</span>
+<span class="nc" id="L489">        return isWindows7;</span>
     }
 
     public static boolean getIsWindows8() {
-<span class="nc" id="L460">        return isWindows8;</span>
+<span class="nc" id="L493">        return isWindows8;</span>
     }
 
     public static boolean getIsUnix() {
-<span class="nc" id="L464">        return isUnix;</span>
+<span class="nc" id="L497">        return isUnix;</span>
     }
 
     public static boolean getIsLinux() {
-<span class="nc" id="L468">        return isLinux;</span>
+<span class="nc" id="L501">        return isLinux;</span>
     }
 
     public static boolean getIsSolaris() {
-<span class="nc" id="L472">        return isSolaris;</span>
+<span class="nc" id="L505">        return isSolaris;</span>
     }
 
     public static boolean getIsMacOSX() {
-<span class="fc" id="L476">        return isMacOSX;</span>
+<span class="fc" id="L509">        return isMacOSX;</span>
+    }
+
+    public static boolean getIsIOS() {
+<span class="nc" id="L513">        return isIOS;</span>
     }
 
     public static boolean getIs64Bit() {
-<span class="nc" id="L480">        return is64Bit;</span>
+<span class="nc" id="L517">        return is64Bit;</span>
     }
 
     @Deprecated
     public static boolean getIsJdk14() {
-<span class="nc" id="L485">        return isJdk4;</span>
+<span class="nc" id="L522">        return isJdk4;</span>
     }
 
     @Deprecated
     public static boolean getIsJdk15() {
-<span class="nc" id="L490">        return isJdk5;</span>
+<span class="nc" id="L527">        return isJdk5;</span>
     }
 
     @Deprecated
     public static boolean getIsJdk16() {
-<span class="nc" id="L495">        return isJdk6;</span>
+<span class="nc" id="L532">        return isJdk6;</span>
     }
 
     @Deprecated
     public static boolean getIsJdk17() {
-<span class="nc" id="L500">        return isJdk7;</span>
+<span class="nc" id="L537">        return isJdk7;</span>
     }
 
     @Deprecated
     public static boolean getIsJdk18() {
-<span class="nc" id="L505">        return isJdk8;</span>
+<span class="nc" id="L542">        return isJdk8;</span>
     }
 
     public static boolean getIsJdk4() {
-<span class="nc" id="L509">        return isJdk4;</span>
+<span class="nc" id="L546">        return isJdk4;</span>
     }
 
     public static boolean getIsJdk5() {
-<span class="nc" id="L513">        return isJdk5;</span>
+<span class="nc" id="L550">        return isJdk5;</span>
     }
 
     public static boolean getIsJdk6() {
-<span class="nc" id="L517">        return isJdk6;</span>
+<span class="nc" id="L554">        return isJdk6;</span>
     }
 
     public static boolean getIsJdk7() {
-<span class="nc" id="L521">        return isJdk7;</span>
+<span class="nc" id="L558">        return isJdk7;</span>
     }
 
     public static boolean getIsJdk8() {
-<span class="nc" id="L525">        return isJdk8;</span>
+<span class="nc" id="L562">        return isJdk8;</span>
     }
 
     public static boolean getIsJdk9() {
-<span class="nc" id="L529">        return isJdk9;</span>
+<span class="nc" id="L566">        return isJdk9;</span>
     }
 
     @Nonnull
     @SuppressWarnings(&quot;ConstantConditions&quot;)
     public static Locale parseLocale(@Nullable String locale) {
-<span class="nc bnc" id="L535" title="All 2 branches missed.">        if (isBlank(locale)) return Locale.getDefault();</span>
-<span class="nc" id="L536">        String[] parts = locale.split(&quot;_&quot;);</span>
-<span class="nc bnc" id="L537" title="All 4 branches missed.">        switch (parts.length) {</span>
+<span class="nc bnc" id="L572" title="All 2 branches missed.">        if (isBlank(locale)) return Locale.getDefault();</span>
+<span class="nc" id="L573">        String[] parts = locale.split(&quot;_&quot;);</span>
+<span class="nc bnc" id="L574" title="All 4 branches missed.">        switch (parts.length) {</span>
             case 1:
-<span class="nc" id="L539">                return new Locale(parts[0]);</span>
+<span class="nc" id="L576">                return new Locale(parts[0]);</span>
             case 2:
-<span class="nc" id="L541">                return new Locale(parts[0], parts[1]);</span>
+<span class="nc" id="L578">                return new Locale(parts[0], parts[1]);</span>
             case 3:
-<span class="nc" id="L543">                return new Locale(parts[0], parts[1], parts[2]);</span>
+<span class="nc" id="L580">                return new Locale(parts[0], parts[1], parts[2]);</span>
             default:
-<span class="nc" id="L545">                return Locale.getDefault();</span>
+<span class="nc" id="L582">                return Locale.getDefault();</span>
         }
     }
 }

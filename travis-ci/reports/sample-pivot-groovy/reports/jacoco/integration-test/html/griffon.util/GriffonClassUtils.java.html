@@ -15,6 +15,10 @@
  */
 package griffon.util;
 
+import com.googlecode.openbeans.BeanInfo;
+import com.googlecode.openbeans.IntrospectionException;
+import com.googlecode.openbeans.Introspector;
+import com.googlecode.openbeans.PropertyDescriptor;
 import griffon.core.Observable;
 import griffon.core.Vetoable;
 import griffon.core.artifact.GriffonArtifact;
@@ -33,10 +37,6 @@ import griffon.exceptions.StaticMethodInvocationException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -2961,8 +2961,8 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L2961">            return invokeExactMethod(object, methodName, args);</span>
 <span class="fc" id="L2962">        } catch (NoSuchMethodException | IllegalAccessException e) {</span>
 <span class="fc" id="L2963">            throw new InstanceMethodInvocationException(object, methodName, args, e);</span>
-<span class="fc" id="L2964">        } catch (InvocationTargetException e) {</span>
-<span class="fc" id="L2965">            throw new InstanceMethodInvocationException(object, methodName, args, e.getTargetException());</span>
+<span class="nc" id="L2964">        } catch (InvocationTargetException e) {</span>
+<span class="nc" id="L2965">            throw new InstanceMethodInvocationException(object, methodName, args, e.getTargetException());</span>
         }
     }
 
