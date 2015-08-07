@@ -381,6 +381,18 @@ public class GriffonNameUtils {
     }
 
     /**
+     * Returns {@code true} if the provided reference is {@code null} otherwise
+     * returns {@code false}.
+     *
+     * @param obj a reference to be checked against {@code null}
+     * @return {@code true} if the provided reference is {@code null} otherwise
+     * {@code false}
+     */
+    public static boolean isNull(Object obj) {
+        return obj == null;
+    }
+
+    /**
      * <p>Determines whether a given string is <code>null</code>, empty,
      * or only contains whitespace. If it contains anything other than
      * whitespace then the string is not considered to be blank and the

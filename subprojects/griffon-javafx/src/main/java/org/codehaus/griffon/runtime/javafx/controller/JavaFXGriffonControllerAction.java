@@ -33,8 +33,8 @@ import javax.annotation.Nullable;
 
 import static griffon.core.editors.PropertyEditorResolver.findEditor;
 import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNull;
 import static griffon.util.TypeUtils.castToBoolean;
-import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -67,30 +67,28 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
         });
         addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(final PropertyChangeEvent evt) {
-                uiThreadManager.runInsideUIAsync(new Runnable() {
-                    public void run() {
-                        if (KEY_NAME.equals(evt.getPropertyName())) {
-                            toolkitAction.setName(String.valueOf(evt.getNewValue()));
-                        } else if (KEY_DESCRIPTION.equals(evt.getPropertyName())) {
-                            toolkitAction.setDescription(String.valueOf(evt.getNewValue()));
-                        } else if (KEY_ENABLED.equals(evt.getPropertyName())) {
-                            toolkitAction.setEnabled(castToBoolean(evt.getNewValue()));
-                        } else if (KEY_SELECTED.equals(evt.getPropertyName())) {
-                            toolkitAction.setSelected(castToBoolean(evt.getNewValue()));
-                        } else if (KEY_ACCELERATOR.equals(evt.getPropertyName())) {
-                            String accelerator = (String) evt.getNewValue();
-                            if (!isBlank(accelerator))
-                                toolkitAction.setAccelerator(accelerator);
-                        } else if (KEY_ICON.equals(evt.getPropertyName())) {
-                            String icon = (String) evt.getNewValue();
-                            if (!isBlank(icon)) toolkitAction.setIcon(icon);
-                        } else if (KEY_IMAGE.equals(evt.getPropertyName())) {
-                            Image image = (Image) evt.getNewValue();
-                            if (!isNull(image)) toolkitAction.setImage(image);
-                        } else if (KEY_GRAPHIC.equals(evt.getPropertyName())) {
-                            Node graphic = (Node) evt.getNewValue();
-                            if (!isNull(graphic)) toolkitAction.setGraphic(graphic);
-                        }
+                uiThreadManager.runInsideUIAsync(() -> {
+                    if (KEY_NAME.equals(evt.getPropertyName())) {
+                        toolkitAction.setName(String.valueOf(evt.getNewValue()));
+                    } else if (KEY_DESCRIPTION.equals(evt.getPropertyName())) {
+                        toolkitAction.setDescription(String.valueOf(evt.getNewValue()));
+                    } else if (KEY_ENABLED.equals(evt.getPropertyName())) {
+                        toolkitAction.setEnabled(castToBoolean(evt.getNewValue()));
+                    } else if (KEY_SELECTED.equals(evt.getPropertyName())) {
+                        toolkitAction.setSelected(castToBoolean(evt.getNewValue()));
+                    } else if (KEY_ACCELERATOR.equals(evt.getPropertyName())) {
+                        String accelerator1 = (String) evt.getNewValue();
+                        if (!isBlank(accelerator1))
+                            toolkitAction.setAccelerator(accelerator1);
+                    } else if (KEY_ICON.equals(evt.getPropertyName())) {
+                        String icon1 = (String) evt.getNewValue();
+                        if (!isBlank(icon1)) toolkitAction.setIcon(icon1);
+                    } else if (KEY_IMAGE.equals(evt.getPropertyName())) {
+                        Image image1 = (Image) evt.getNewValue();
+                        if (!isNull(image1)) toolkitAction.setImage(image1);
+                    } else if (KEY_GRAPHIC.equals(evt.getPropertyName())) {
+                        Node graphic1 = (Node) evt.getNewValue();
+                        if (!isNull(graphic1)) toolkitAction.setGraphic(graphic1);
                     }
                 });
             }
