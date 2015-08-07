@@ -15,12 +15,11 @@
  */
 package griffon.pivot.editors
 
+import com.googlecode.openbeans.PropertyEditor
 import org.apache.pivot.wtk.Dimensions
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
-
-import java.beans.PropertyEditor
 
 @Unroll
 class DimensionsPropertyEditorSpec extends Specification {

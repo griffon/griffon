@@ -15,6 +15,8 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
+import com.googlecode.openbeans.PropertyChangeEvent;
+import com.googlecode.openbeans.PropertyChangeSupport;
 import griffon.core.Observable;
 import org.codehaus.griffon.compile.core.AnnotationHandler;
 import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
@@ -40,8 +42,6 @@ import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Modifier;
 
 import static griffon.util.GriffonNameUtils.getGetterName;
@@ -270,7 +270,7 @@ public class ObservableASTTransformation extends AbstractASTTransformation imple
         ClassNode pceClassNode = makeClassSafe(PropertyChangeEvent.class);
 
         // add field:
-        // protected final PropertyChangeSupport this$propertyChangeSupport = new java.beans.PropertyChangeSupport(this)
+        // protected final PropertyChangeSupport this$propertyChangeSupport = new com.googlecode.openbeans.PropertyChangeSupport(this)
         FieldNode pcsField = injectField(classNode,
             PROPERTY_CHANGE_SUPPORT_FIELD_NAME,
             FINAL | PROTECTED,

@@ -15,12 +15,12 @@
  */
 package griffon.swing.editors
 
+import com.googlecode.openbeans.PropertyEditor
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.awt.geom.Point2D
-import java.beans.PropertyEditor
 
 @Unroll
 class Point2DPropertyEditorSpec extends Specification {

@@ -15,10 +15,9 @@
  */
 package integration;
 
+import com.googlecode.openbeans.PropertyChangeEvent;
+import com.googlecode.openbeans.PropertyVetoException;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyVetoException;
 
 public class SimpleModel extends AbstractGriffonModel {
     private String value1;

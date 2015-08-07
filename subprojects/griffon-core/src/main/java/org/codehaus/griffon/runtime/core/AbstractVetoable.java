@@ -15,14 +15,14 @@
  */
 package org.codehaus.griffon.runtime.core;
 
+import com.googlecode.openbeans.PropertyChangeEvent;
+import com.googlecode.openbeans.PropertyVetoException;
+import com.googlecode.openbeans.VetoableChangeListener;
+import com.googlecode.openbeans.VetoableChangeSupport;
 import griffon.core.Vetoable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyVetoException;
-import java.beans.VetoableChangeListener;
-import java.beans.VetoableChangeSupport;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;

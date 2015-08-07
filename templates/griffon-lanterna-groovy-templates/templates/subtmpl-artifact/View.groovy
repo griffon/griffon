@@ -2,7 +2,7 @@ package ${project_package}
 
 import griffon.core.artifact.GriffonView
 import griffon.metadata.ArtifactProviderFor
-import java.beans.PropertyChangeListener
+import com.googlecode.openbeans.PropertyChangeListener
 
 @ArtifactProviderFor(GriffonView)
 class ${project_class_name}View {

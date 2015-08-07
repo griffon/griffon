@@ -41,6 +41,8 @@ public final class GriffonApplicationUtils {
     private static final boolean isWindows7;
     private static final boolean isWindows8;
 
+    private static final boolean isIOS;
+
     /**
      * True if running Linux, Solaris or MacOSX
      */
@@ -78,6 +80,7 @@ public final class GriffonApplicationUtils {
             isUnix = false;
             isMacOSX = false;
             isSolaris = false;
+            isIOS = false;
             if (osName.contains("95")) {
                 isWindows95 = true;
                 isWindows98 = false;
@@ -185,6 +188,7 @@ public final class GriffonApplicationUtils {
             isWindowsVista = false;
             isWindows7 = false;
             isWindows8 = false;
+            isIOS = false;
         } else if (osName.contains("Solaris") || osName.contains("SunOS")) {
             basePlatform = "solaris";
             isWindows = false;
@@ -201,6 +205,7 @@ public final class GriffonApplicationUtils {
             isWindowsVista = false;
             isWindows7 = false;
             isWindows8 = false;
+            isIOS = false;
         } else if (osName.contains("Mac OS")) {
             basePlatform = "macosx";
             isWindows = false;
@@ -217,6 +222,24 @@ public final class GriffonApplicationUtils {
             isWindowsVista = false;
             isWindows7 = false;
             isWindows8 = false;
+            isIOS = false;
+        } else if (osName.contains("iOS")) {
+            basePlatform = "ios";
+            isWindows = false;
+            isLinux = false;
+            isUnix = true;
+            isMacOSX = true;
+            isSolaris = false;
+            isWindows95 = false;
+            isWindows98 = false;
+            isWindowsNT = false;
+            isWindows2000 = false;
+            isWindows2003 = false;
+            isWindowsXP = false;
+            isWindowsVista = false;
+            isWindows7 = false;
+            isWindows8 = false;
+            isIOS = true;
         } else {
             basePlatform = "unknown";
             isWindows = false;
@@ -233,11 +256,17 @@ public final class GriffonApplicationUtils {
             isWindowsVista = false;
             isWindows7 = false;
             isWindows8 = false;
+            isIOS = false;
         }
 
         osVersion = System.getProperty("os.version");
         javaVersion = System.getProperty("java.version");
-        String version = javaVersion.substring(0, 3);
+        String version = "0";
+        if (javaVersion != null && javaVersion.length() > 1) {
+            version = javaVersion.substring(0, 3);
+        } else if (isIOS) {
+            version = "1.8";
+        }
         isJdk4 = true;
         switch (version) {
             case "1.9":
@@ -341,6 +370,10 @@ public final class GriffonApplicationUtils {
 
     public static boolean isMacOSX() {
         return isMacOSX;
+    }
+
+    public static boolean isIOS() {
+        return isIOS;
     }
 
     public static String getOsArch() {
@@ -474,6 +507,10 @@ public final class GriffonApplicationUtils {
 
     public static boolean getIsMacOSX() {
         return isMacOSX;
+    }
+
+    public static boolean getIsIOS() {
+        return isIOS;
     }
 
     public static boolean getIs64Bit() {

@@ -30,9 +30,9 @@ import static org.codehaus.griffon.compile.core.MethodDescriptor.type;
  */
 public interface VetoableConstants extends ObservableConstants {
     String VETOABLE_TYPE = "griffon.core.Vetoable";
-    String VETOABLE_CHANGE_LISTENER_TYPE = "java.beans.VetoableChangeListener";
-    String PROPERTY_VETO_EXCEPTION_TYPE = "java.beans.PropertyVetoException";
-    String VETOABLE_CHANGE_SUPPORT_TYPE = "java.beans.VetoableChangeSupport";
+    String VETOABLE_CHANGE_LISTENER_TYPE = "com.googlecode.openbeans.VetoableChangeListener";
+    String PROPERTY_VETO_EXCEPTION_TYPE = "com.googlecode.openbeans.PropertyVetoException";
+    String VETOABLE_CHANGE_SUPPORT_TYPE = "com.googlecode.openbeans.VetoableChangeSupport";
     String VETOABLE_CHANGE_SUPPORT_FIELD_NAME = "this$vetoableChangeSupport";
     String VETOABLE_CHANGE_SUPPORT_FIELD_NAME_LOCK = "this$vetoableChangeSupportLock";
 

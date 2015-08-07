@@ -15,12 +15,12 @@
  */
 package griffon.swing.editors
 
+import com.googlecode.openbeans.PropertyEditor
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.awt.GradientPaint
-import java.beans.PropertyEditor
 
 import static java.awt.Color.BLACK
 import static java.awt.Color.WHITE

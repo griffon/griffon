@@ -15,6 +15,9 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
+import com.googlecode.openbeans.PropertyChangeEvent;
+import com.googlecode.openbeans.PropertyVetoException;
+import com.googlecode.openbeans.VetoableChangeSupport;
 import griffon.core.Vetoable;
 import org.codehaus.griffon.compile.core.AnnotationHandler;
 import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
@@ -41,9 +44,6 @@ import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyVetoException;
-import java.beans.VetoableChangeSupport;
 import java.lang.reflect.Modifier;
 
 import static griffon.util.GriffonNameUtils.getGetterName;
@@ -286,7 +286,7 @@ public class VetoableASTTransformation extends AbstractASTTransformation impleme
         ClassNode pceClassNode = makeClassSafe(PropertyChangeEvent.class);
 
         // add field:
-        // protected final VetoableChangeSupport this$vetoableChangeSupport = new java.beans.VetoableChangeSupport(this)
+        // protected final VetoableChangeSupport this$vetoableChangeSupport = new com.googlecode.openbeans.VetoableChangeSupport(this)
         FieldNode vcsField = injectField(classNode,
             VETOABLE_CHANGE_SUPPORT_FIELD_NAME,
             FINAL | PROTECTED,

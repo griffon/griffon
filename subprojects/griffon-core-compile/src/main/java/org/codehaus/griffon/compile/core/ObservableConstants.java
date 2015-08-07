@@ -29,9 +29,9 @@ import static org.codehaus.griffon.compile.core.MethodDescriptor.type;
  */
 public interface ObservableConstants extends BaseConstants {
     String OBSERVABLE_TYPE = "griffon.core.Observable";
-    String PROPERTY_CHANGE_LISTENER_TYPE = "java.beans.PropertyChangeListener";
-    String PROPERTY_CHANGE_EVENT_TYPE = "java.beans.PropertyChangeEvent";
-    String PROPERTY_CHANGE_SUPPORT_TYPE = "java.beans.PropertyChangeSupport";
+    String PROPERTY_CHANGE_LISTENER_TYPE = "com.googlecode.openbeans.PropertyChangeListener";
+    String PROPERTY_CHANGE_EVENT_TYPE = "com.googlecode.openbeans.PropertyChangeEvent";
+    String PROPERTY_CHANGE_SUPPORT_TYPE = "com.googlecode.openbeans.PropertyChangeSupport";
     String PROPERTY_CHANGE_SUPPORT_FIELD_NAME = "this$propertyChangeSupport";
     String PROPERTY_CHANGE_SUPPORT_FIELD_NAME_LOCK = "this$propertyChangeSupportLock";
 

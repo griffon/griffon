@@ -15,13 +15,12 @@
  */
 package griffon.javafx.editors
 
+import com.googlecode.openbeans.PropertyEditor
 import javafx.embed.swing.JFXPanel
 import javafx.scene.image.Image
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
-
-import java.beans.PropertyEditor
 
 @Unroll
 class ImagePropertyEditorSpec extends Specification {

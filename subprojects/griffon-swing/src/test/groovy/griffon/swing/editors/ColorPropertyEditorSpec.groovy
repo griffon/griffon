@@ -15,12 +15,12 @@
  */
 package griffon.swing.editors
 
+import com.googlecode.openbeans.PropertyEditor
 import griffon.swing.support.Colors
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.awt.Color
-import java.beans.PropertyEditor
 
 @Unroll
 class ColorPropertyEditorSpec extends Specification {

@@ -15,6 +15,7 @@
  */
 package org.codehaus.griffon.runtime.core;
 
+import com.googlecode.openbeans.PropertyEditor;
 import griffon.core.ApplicationClassLoader;
 import griffon.core.ApplicationConfigurer;
 import griffon.core.ApplicationEvent;
@@ -42,7 +43,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.inject.Inject;
-import java.beans.PropertyEditor;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;

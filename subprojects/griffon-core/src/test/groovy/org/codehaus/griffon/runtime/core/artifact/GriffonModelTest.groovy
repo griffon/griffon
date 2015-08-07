@@ -15,14 +15,13 @@
  */
 package org.codehaus.griffon.runtime.core.artifact
 
+import com.googlecode.openbeans.PropertyChangeListener
+import com.googlecode.openbeans.VetoableChangeListener
 import integration.SimpleModel
 import integration.TestGriffonApplication
 import org.codehaus.griffon.runtime.core.PropertyChangeListenerWitness
 import org.codehaus.griffon.runtime.core.VetoableChangeListenerWitness
 import org.junit.Test
-
-import java.beans.PropertyChangeListener
-import java.beans.VetoableChangeListener
 
 class GriffonModelTest {
     @Test

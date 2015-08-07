@@ -15,10 +15,11 @@
  */
 package griffon.core.editors;
 
+import com.googlecode.openbeans.PropertyEditor;
+import com.googlecode.openbeans.PropertyEditorSupport;
+
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.GuardedBy;
-import java.beans.PropertyEditor;
-import java.beans.PropertyEditorSupport;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;

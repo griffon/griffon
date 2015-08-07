@@ -15,11 +15,10 @@
  */
 package griffon.javafx.editors
 
+import com.googlecode.openbeans.PropertyEditor
 import javafx.scene.paint.Color
 import spock.lang.Specification
 import spock.lang.Unroll
-
-import java.beans.PropertyEditor
 
 @Unroll
 class ColorPropertyEditorSpec extends Specification {

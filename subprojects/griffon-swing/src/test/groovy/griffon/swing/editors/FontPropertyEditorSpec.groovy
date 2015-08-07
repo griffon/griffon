@@ -15,13 +15,13 @@
  */
 package griffon.swing.editors
 
+import com.googlecode.openbeans.PropertyEditor
 import griffon.util.TestUtils
 import spock.lang.IgnoreIf
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.awt.Font
-import java.beans.PropertyEditor
 
 @Unroll
 @IgnoreIf({ TestUtils.headless })

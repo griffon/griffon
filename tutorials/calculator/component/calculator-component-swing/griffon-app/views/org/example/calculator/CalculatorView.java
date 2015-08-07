@@ -19,8 +19,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import com.googlecode.openbeans.PropertyChangeEvent;
+import com.googlecode.openbeans.PropertyChangeListener;
 
 import static griffon.util.GriffonClassUtils.getPropertyValue;
 import static griffon.util.GriffonClassUtils.setPropertyValue;

@@ -41,6 +41,7 @@ class GriffonPlugin implements Plugin<Project> {
         project.repositories.jcenter()
         // enable griffon-plugins @ bintray
         project.repositories.maven { url 'http://dl.bintray.com/griffon/griffon-plugins' }
+        project.repositories.maven { url 'https://dl.bintray.com/melix/thirdparty-apache' }
 
         applyDefaultDependencies(project)
 

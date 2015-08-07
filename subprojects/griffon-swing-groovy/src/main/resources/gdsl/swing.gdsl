@@ -14,19 +14,32 @@
  * limitations under the License.
  */
 
-import com.intellij.patterns.*
-import com.intellij.openapi.diagnostic.*
 
+import com.googlecode.openbeans.Introspector
+import com.intellij.openapi.diagnostic.*
+import com.intellij.patterns.*
 import groovy.swing.impl.TableLayout
 import groovy.swing.impl.TableLayoutCell
 import groovy.swing.impl.TableLayoutRow
 
-import java.beans.Introspector
+import javax.swing.*
+import javax.swing.border.BevelBorder
+import javax.swing.border.CompoundBorder
+import javax.swing.border.EmptyBorder
+import javax.swing.border.EtchedBorder
+import javax.swing.border.LineBorder
+import javax.swing.border.MatteBorder
+import javax.swing.border.TitledBorder
 import javax.swing.table.TableColumn
 import javax.swing.table.TableModel
-import java.awt.*
-import javax.swing.*
-import javax.swing.border.*
+import java.awt.BorderLayout
+import java.awt.CardLayout
+import java.awt.Component
+import java.awt.Container
+import java.awt.FlowLayout
+import java.awt.GridBagConstraints
+import java.awt.GridBagLayout
+import java.awt.GridLayout
 
 /**
  * @author Kasper Fock

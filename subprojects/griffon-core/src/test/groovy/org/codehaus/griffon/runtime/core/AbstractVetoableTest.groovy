@@ -15,12 +15,11 @@
  */
 package org.codehaus.griffon.runtime.core
 
+import com.googlecode.openbeans.PropertyChangeEvent
+import com.googlecode.openbeans.PropertyChangeListener
+import com.googlecode.openbeans.PropertyVetoException
+import com.googlecode.openbeans.VetoableChangeListener
 import org.junit.Test
-
-import java.beans.PropertyChangeEvent
-import java.beans.PropertyChangeListener
-import java.beans.PropertyVetoException
-import java.beans.VetoableChangeListener
 
 class AbstractVetoableTest {
     @Test

@@ -15,9 +15,10 @@
  */
 package griffon.core;
 
+import com.googlecode.openbeans.PropertyChangeListener;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.PropertyChangeListener;
 
 /**
  * Describes objects that provide bound properties as specified in the

@@ -15,9 +15,8 @@
  */
 package griffon.core.editors
 
+import com.googlecode.openbeans.PropertyEditor
 import spock.lang.Unroll
-
-import java.beans.PropertyEditor
 
 @Unroll
 class IntegerPropertyEditorSpec extends PropertyEditorSpecSupport {

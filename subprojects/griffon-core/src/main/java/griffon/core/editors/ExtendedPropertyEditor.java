@@ -15,7 +15,7 @@
  */
 package griffon.core.editors;
 
-import java.beans.PropertyEditor;
+import com.googlecode.openbeans.PropertyEditor;
 
 /**
  * @author Andres Almiray

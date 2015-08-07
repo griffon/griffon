@@ -18,7 +18,7 @@ package editor
 import griffon.transform.Observable
 import griffon.transform.PropertyListener
 
-import java.beans.PropertyChangeListener
+import com.googlecode.openbeans.PropertyChangeListener
 
 class DocumentModel extends Document {
     @Observable

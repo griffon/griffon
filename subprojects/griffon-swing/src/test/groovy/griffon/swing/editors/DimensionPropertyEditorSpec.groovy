@@ -15,12 +15,12 @@
  */
 package griffon.swing.editors
 
+import com.googlecode.openbeans.PropertyEditor
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.awt.Dimension
-import java.beans.PropertyEditor
 
 @Unroll
 class DimensionPropertyEditorSpec extends Specification {

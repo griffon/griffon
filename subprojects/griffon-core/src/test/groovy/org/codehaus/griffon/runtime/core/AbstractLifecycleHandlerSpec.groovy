@@ -169,11 +169,13 @@ class AbstractLifecycleHandlerSpec extends Specification {
             super(args)
         }
 
+        @Nonnull
         @Override
         UIThreadManager getUIThreadManager() {
             this.uiThreadManager
         }
 
+        @Nonnull
         @Override
         Object createApplicationContainer(@Nonnull Map<String, Object> attributes) {
             return null

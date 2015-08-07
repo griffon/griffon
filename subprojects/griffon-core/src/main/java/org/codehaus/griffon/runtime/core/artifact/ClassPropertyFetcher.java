@@ -15,10 +15,10 @@
  */
 package org.codehaus.griffon.runtime.core.artifact;
 
+import com.googlecode.openbeans.PropertyDescriptor;
 import griffon.util.GriffonClassUtils;
 import griffon.util.GriffonNameUtils;
 
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

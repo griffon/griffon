@@ -15,7 +15,7 @@
  */
 package editor;
 
-import java.beans.PropertyChangeListener;
+import com.googlecode.openbeans.PropertyChangeListener;
 
 import static griffon.util.GriffonClassUtils.setPropertyValue;
 

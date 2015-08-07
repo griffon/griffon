@@ -15,6 +15,7 @@
  */
 package org.codehaus.griffon.compile.core.processor.editor;
 
+import com.googlecode.openbeans.PropertyEditor;
 import griffon.metadata.PropertyEditorFor;
 import org.kordamp.jipsy.processor.AbstractSpiProcessor;
 import org.kordamp.jipsy.processor.CheckResult;
@@ -33,7 +34,6 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
-import java.beans.PropertyEditor;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;

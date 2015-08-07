@@ -15,9 +15,9 @@
  */
 package griffon.core.editors
 
+import com.googlecode.openbeans.PropertyEditor
 import spock.lang.Unroll
 
-import java.beans.PropertyEditor
 import java.time.LocalDate
 import java.time.LocalDateTime
 

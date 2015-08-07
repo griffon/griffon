@@ -9,8 +9,8 @@ import griffon.lanterna.widgets.MutableButton;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.lanterna.artifact.AbstractLanternaGriffonView;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import com.googlecode.openbeans.PropertyChangeEvent;
+import com.googlecode.openbeans.PropertyChangeListener;
 import java.util.Collections;
 
 @ArtifactProviderFor(GriffonView.class)

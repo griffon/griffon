@@ -15,10 +15,9 @@
  */
 package org.codehaus.griffon.runtime.core
 
+import com.googlecode.openbeans.PropertyChangeEvent
+import com.googlecode.openbeans.PropertyChangeListener
 import org.junit.Test
-
-import java.beans.PropertyChangeEvent
-import java.beans.PropertyChangeListener
 
 class AbstractObservableTest {
     @Test

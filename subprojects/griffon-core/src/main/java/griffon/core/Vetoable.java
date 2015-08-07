@@ -15,9 +15,10 @@
  */
 package griffon.core;
 
+import com.googlecode.openbeans.VetoableChangeListener;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.VetoableChangeListener;
 
 /**
  * Describes objects that provide bound and vetoable properties as specified in the

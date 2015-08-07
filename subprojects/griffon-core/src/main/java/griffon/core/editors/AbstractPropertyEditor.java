@@ -15,13 +15,13 @@
  */
 package griffon.core.editors;
 
+import com.googlecode.openbeans.PropertyEditorSupport;
 import griffon.core.formatters.Formatter;
 import griffon.core.formatters.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
-import java.beans.PropertyEditorSupport;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
 import static griffon.util.GriffonNameUtils.isBlank;

@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
  * of PropertyChangeListeners. One of them is a catch-all handler while the second is property specific.
  * <pre>
  * import griffon.transform.Observable
- * import java.beans.PropertyChangeListener
+ * import com.googlecode.openbeans.PropertyChangeListener
  *
  * class MyModel {
  *     &#064;Observable String name

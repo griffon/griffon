@@ -7,8 +7,8 @@ import org.apache.pivot.serialization.SerializationException;
 import org.codehaus.griffon.runtime.pivot.artifact.AbstractPivotGriffonView;
 import org.apache.pivot.wtk.*;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import com.googlecode.openbeans.PropertyChangeEvent;
+import com.googlecode.openbeans.PropertyChangeListener;
 import java.util.Collections;
 
 import static java.util.Arrays.asList;

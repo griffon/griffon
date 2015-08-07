@@ -15,12 +15,11 @@
  */
 package griffon.javafx.editors
 
+import com.googlecode.openbeans.PropertyEditor
 import javafx.geometry.Insets
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
-
-import java.beans.PropertyEditor
 
 @Unroll
 class InsetsPropertyEditorSpec extends Specification {
