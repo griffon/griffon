@@ -15,8 +15,6 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
-import com.googlecode.openbeans.PropertyChangeEvent;
-import com.googlecode.openbeans.PropertyChangeSupport;
 import griffon.core.Observable;
 import org.codehaus.griffon.compile.core.AnnotationHandler;
 import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
@@ -42,6 +40,8 @@ import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Modifier;
 
 import static griffon.util.GriffonNameUtils.getGetterName;
@@ -270,7 +270,7 @@ import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
 <span class="fc" id="L270">        ClassNode pceClassNode = makeClassSafe(PropertyChangeEvent.class);</span>
 
         // add field:
-        // protected final PropertyChangeSupport this$propertyChangeSupport = new com.googlecode.openbeans.PropertyChangeSupport(this)
+        // protected final PropertyChangeSupport this$propertyChangeSupport = new java.beans.PropertyChangeSupport(this)
 <span class="fc" id="L274">        FieldNode pcsField = injectField(classNode,</span>
             PROPERTY_CHANGE_SUPPORT_FIELD_NAME,
             FINAL | PROTECTED,
