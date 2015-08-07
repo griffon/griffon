@@ -1,0 +1,120 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenLocal()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    }
+
+    dependencies {
+        classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.4.0-SNAPSHOT'
+        classpath 'net.saliman:gradle-cobertura-plugin:2.2.8'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.4.0'
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
+        classpath 'org.gradle.api.plugins:gradle-izpack-plugin:0.2.3'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.2'
+        classpath 'com.github.cr0:gradle-macappbundle-plugin:3.1.0'
+        classpath 'org.kordamp.gradle:stats-gradle-plugin:0.1.5'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.11.3'
+        classpath 'de.gliderpilot.gradle.jnlp:gradle-jnlp-plugin:0.2.1'
+        classpath 'org.javafxports:jfxmobile-plugin:1.0.0-b11-SNAPSHOT'
+    }
+}
+
+apply plugin: 'groovy'
+apply plugin: 'org.codehaus.griffon.griffon'
+apply plugin: 'org.javafxports.jfxmobile'
+
+repositories {
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+}
+
+griffon {
+    disableDependencyResolution = false
+    includeGroovyDependencies = false
+    version = '${griffon_version}'
+    toolkit = 'javafx'
+}
+
+ext {
+    macosx = System.getProperty('os.name').contains('Mac OS')
+}
+
+mainClassName = '${project_package}.Launcher'
+
+apply from: 'gradle/publishing.gradle'
+apply from: 'gradle/code-coverage.gradle'
+apply from: 'gradle/code-quality.gradle'
+apply from: 'gradle/integration-test.gradle'
+apply from: 'gradle/functional-test.gradle'
+apply from: 'gradle/package.gradle'
+apply from: 'gradle/docs.gradle'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'org.kordamp.gradle.stats'
+apply plugin: 'com.github.ben-manes.versions'
+apply plugin: 'com.github.kt3k.coveralls'
+
+dependencies {
+    compile("org.codehaus.griffon:griffon-guice:\${griffon.version}") {
+        exclude group: 'com.google.inject', module: 'guice'
+    }
+    compile('com.google.inject:guice:4.0:no_aop') {
+        exclude group: 'org.sonatype.sisu.inject', module: 'cglib'
+    }
+
+    runtime 'org.slf4j:slf4j-simple:1.7.12'
+
+    testCompile "org.codehaus.griffon:griffon-javafx-test:\${griffon.version}"
+    testCompile "org.codehaus.groovy:groovy-all:\${groovyVersion}"
+    testCompile "org.spockframework:spock-core:\${spockVersion}"
+
+    functionalTestCompile "org.codehaus.griffon:griffon-javafx-test:\${griffon.version}"
+
+    retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.0.5'
+}
+
+compileGroovy.enabled = false
+
+tasks.withType(JavaCompile) {
+    sourceCompatibility = project.sourceCompatibility
+    targetCompatibility = project.targetCompatibility
+}
+
+tasks.withType(GroovyCompile) {
+    sourceCompatibility = project.sourceCompatibility
+    targetCompatibility = project.targetCompatibility
+}
+
+import com.github.jengelman.gradle.plugins.shadow.transformers.*
+shadowJar {
+    transform(ServiceFileTransformer)
+    transform(ServiceFileTransformer) {
+        path = 'META-INF/griffon'
+    }
+    transform(ServiceFileTransformer) {
+        path = 'META-INF/types'
+    }
+    transform(PropertiesFileTransformer) {
+        paths = [
+            'META-INF/editors/com.googlecode.openbeans.PropertyEditor'
+        ]
+    }
+}
+
+jfxmobile {
+    ios {
+        forceLinkClasses = ['${project_package}.**.*', 'griffon.**.*', 'org.codehaus.griffon.**.*']
+    }
+}
+
+// The following task is needed because Retrolambda places META-INF files at
+// build/retrolambda/main but they should be at build/classes/main
+// hardcoding paths for now
+task copyMetainf << {
+    copy {
+        from project.file("\${buildDir}/retrolambda/main")
+        into project.file("\${buildDir}/classes/main")
+    }
+}
+
+classes.finalizedBy copyMetainf
+
