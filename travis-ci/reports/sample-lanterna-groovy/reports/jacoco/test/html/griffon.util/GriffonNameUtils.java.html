@@ -381,6 +381,18 @@ import java.util.Locale;
     }
 
     /**
+     * Returns {@code true} if the provided reference is {@code null} otherwise
+     * returns {@code false}.
+     *
+     * @param obj a reference to be checked against {@code null}
+     * @return {@code true} if the provided reference is {@code null} otherwise
+     * {@code false}
+     */
+    public static boolean isNull(Object obj) {
+<span class="nc bnc" id="L392" title="All 2 branches missed.">        return obj == null;</span>
+    }
+
+    /**
      * &lt;p&gt;Determines whether a given string is &lt;code&gt;null&lt;/code&gt;, empty,
      * or only contains whitespace. If it contains anything other than
      * whitespace then the string is not considered to be blank and the
@@ -394,16 +406,16 @@ import java.util.Locale;
      * blank.
      */
     public static boolean isBlank(String str) {
-<span class="pc bpc" id="L397" title="1 of 4 branches missed.">        if (str == null || str.length() == 0) {</span>
-<span class="fc" id="L398">            return true;</span>
+<span class="pc bpc" id="L409" title="1 of 4 branches missed.">        if (str == null || str.length() == 0) {</span>
+<span class="fc" id="L410">            return true;</span>
         }
-<span class="pc bpc" id="L400" title="1 of 2 branches missed.">        for (char c : str.toCharArray()) {</span>
-<span class="pc bpc" id="L401" title="1 of 2 branches missed.">            if (!Character.isWhitespace(c)) {</span>
-<span class="fc" id="L402">                return false;</span>
+<span class="pc bpc" id="L412" title="1 of 2 branches missed.">        for (char c : str.toCharArray()) {</span>
+<span class="pc bpc" id="L413" title="1 of 2 branches missed.">            if (!Character.isWhitespace(c)) {</span>
+<span class="fc" id="L414">                return false;</span>
             }
         }
 
-<span class="nc" id="L406">        return true;</span>
+<span class="nc" id="L418">        return true;</span>
     }
 
     /**
@@ -421,10 +433,10 @@ import java.util.Locale;
      * @throws IllegalArgumentException if {@code str} is {@code blank}
      */
     public static String requireNonBlank(String str) {
-<span class="nc bnc" id="L424" title="All 2 branches missed.">        if (isBlank(str)) {</span>
-<span class="nc" id="L425">            throw new IllegalArgumentException();</span>
+<span class="nc bnc" id="L436" title="All 2 branches missed.">        if (isBlank(str)) {</span>
+<span class="nc" id="L437">            throw new IllegalArgumentException();</span>
         }
-<span class="nc" id="L427">        return str;</span>
+<span class="nc" id="L439">        return str;</span>
     }
 
     /**
@@ -445,10 +457,10 @@ import java.util.Locale;
      * @throws IllegalArgumentException if {@code str} is {@code blank}
      */
     public static String requireNonBlank(String str, String message) {
-<span class="pc bpc" id="L448" title="1 of 2 branches missed.">        if (isBlank(str)) {</span>
-<span class="nc" id="L449">            throw new IllegalArgumentException(message);</span>
+<span class="pc bpc" id="L460" title="1 of 2 branches missed.">        if (isBlank(str)) {</span>
+<span class="nc" id="L461">            throw new IllegalArgumentException(message);</span>
         }
-<span class="fc" id="L451">        return str;</span>
+<span class="fc" id="L463">        return str;</span>
     }
 
     /**
@@ -459,10 +471,10 @@ import java.util.Locale;
      * @return The hyphenated name representation
      */
     public static String getHyphenatedName(Class&lt;?&gt; clazz) {
-<span class="nc bnc" id="L462" title="All 2 branches missed.">        if (clazz == null) {</span>
-<span class="nc" id="L463">            return null;</span>
+<span class="nc bnc" id="L474" title="All 2 branches missed.">        if (clazz == null) {</span>
+<span class="nc" id="L475">            return null;</span>
         }
-<span class="nc" id="L465">        return getHyphenatedName(clazz.getName());</span>
+<span class="nc" id="L477">        return getHyphenatedName(clazz.getName());</span>
     }
 
     /**
@@ -473,12 +485,12 @@ import java.util.Locale;
      * @return The hyphenated name representation.
      */
     public static String getHyphenatedName(String name) {
-<span class="nc bnc" id="L476" title="All 2 branches missed.">        if (isBlank(name)) return name;</span>
-<span class="nc bnc" id="L477" title="All 2 branches missed.">        if (name.endsWith(&quot;.groovy&quot;)) {</span>
-<span class="nc" id="L478">            name = name.substring(0, name.length() - 7);</span>
+<span class="nc bnc" id="L488" title="All 2 branches missed.">        if (isBlank(name)) return name;</span>
+<span class="nc bnc" id="L489" title="All 2 branches missed.">        if (name.endsWith(&quot;.groovy&quot;)) {</span>
+<span class="nc" id="L490">            name = name.substring(0, name.length() - 7);</span>
         }
-<span class="nc" id="L480">        String naturalName = getNaturalName(getShortName(name));</span>
-<span class="nc" id="L481">        return naturalName.replaceAll(&quot;\\s&quot;, &quot;-&quot;).toLowerCase();</span>
+<span class="nc" id="L492">        String naturalName = getNaturalName(getShortName(name));</span>
+<span class="nc" id="L493">        return naturalName.replaceAll(&quot;\\s&quot;, &quot;-&quot;).toLowerCase();</span>
     }
 
     /**
@@ -491,20 +503,20 @@ import java.util.Locale;
      */
     @Nonnull
     public static String join(@Nonnull Iterable self, @Nullable String separator) {
-<span class="nc" id="L494">        StringBuilder buffer = new StringBuilder();</span>
-<span class="nc" id="L495">        boolean first = true;</span>
+<span class="nc" id="L506">        StringBuilder buffer = new StringBuilder();</span>
+<span class="nc" id="L507">        boolean first = true;</span>
 
-<span class="nc bnc" id="L497" title="All 2 branches missed.">        if (separator == null) separator = &quot;&quot;;</span>
+<span class="nc bnc" id="L509" title="All 2 branches missed.">        if (separator == null) separator = &quot;&quot;;</span>
 
-<span class="nc bnc" id="L499" title="All 2 branches missed.">        for (Object value : self) {</span>
-<span class="nc bnc" id="L500" title="All 2 branches missed.">            if (first) {</span>
-<span class="nc" id="L501">                first = false;</span>
+<span class="nc bnc" id="L511" title="All 2 branches missed.">        for (Object value : self) {</span>
+<span class="nc bnc" id="L512" title="All 2 branches missed.">            if (first) {</span>
+<span class="nc" id="L513">                first = false;</span>
             } else {
-<span class="nc" id="L503">                buffer.append(separator);</span>
+<span class="nc" id="L515">                buffer.append(separator);</span>
             }
-<span class="nc" id="L505">            buffer.append(String.valueOf(value));</span>
-<span class="nc" id="L506">        }</span>
-<span class="nc" id="L507">        return buffer.toString();</span>
+<span class="nc" id="L517">            buffer.append(String.valueOf(value));</span>
+<span class="nc" id="L518">        }</span>
+<span class="nc" id="L519">        return buffer.toString();</span>
     }
 
     /**
@@ -514,14 +526,14 @@ import java.util.Locale;
      * @return a copy of the original String, surrounded by quotes
      */
     public static String quote(String str) {
-<span class="nc bnc" id="L517" title="All 2 branches missed.">        if (isBlank(str)) return str;</span>
-<span class="nc bnc" id="L518" title="All 2 branches missed.">        for (int i = 0; i &lt; str.length(); i++) {</span>
-<span class="nc bnc" id="L519" title="All 2 branches missed.">            if (Character.isWhitespace(str.charAt(i))) {</span>
-<span class="nc" id="L520">                str = applyQuotes(str);</span>
-<span class="nc" id="L521">                break;</span>
+<span class="nc bnc" id="L529" title="All 2 branches missed.">        if (isBlank(str)) return str;</span>
+<span class="nc bnc" id="L530" title="All 2 branches missed.">        for (int i = 0; i &lt; str.length(); i++) {</span>
+<span class="nc bnc" id="L531" title="All 2 branches missed.">            if (Character.isWhitespace(str.charAt(i))) {</span>
+<span class="nc" id="L532">                str = applyQuotes(str);</span>
+<span class="nc" id="L533">                break;</span>
             }
         }
-<span class="nc" id="L524">        return str;</span>
+<span class="nc" id="L536">        return str;</span>
     }
 
     /**
@@ -531,89 +543,89 @@ import java.util.Locale;
      * @return the unquoted String
      */
     public static String unquote(String str) {
-<span class="nc bnc" id="L534" title="All 2 branches missed.">        if (isBlank(str)) return str;</span>
-<span class="nc bnc" id="L535" title="All 4 branches missed.">        if ((str.startsWith(&quot;'&quot;) &amp;&amp; str.endsWith(&quot;'&quot;)) ||</span>
-<span class="nc bnc" id="L536" title="All 4 branches missed.">            (str.startsWith(&quot;\&quot;&quot;) &amp;&amp; str.endsWith(&quot;\&quot;&quot;))) {</span>
-<span class="nc" id="L537">            return str.substring(1, str.length() - 1);</span>
+<span class="nc bnc" id="L546" title="All 2 branches missed.">        if (isBlank(str)) return str;</span>
+<span class="nc bnc" id="L547" title="All 4 branches missed.">        if ((str.startsWith(&quot;'&quot;) &amp;&amp; str.endsWith(&quot;'&quot;)) ||</span>
+<span class="nc bnc" id="L548" title="All 4 branches missed.">            (str.startsWith(&quot;\&quot;&quot;) &amp;&amp; str.endsWith(&quot;\&quot;&quot;))) {</span>
+<span class="nc" id="L549">            return str.substring(1, str.length() - 1);</span>
         }
-<span class="nc" id="L539">        return str;</span>
+<span class="nc" id="L551">        return str;</span>
     }
 
     private static String applyQuotes(String string) {
-<span class="nc bnc" id="L543" title="All 4 branches missed.">        if (string == null || string.length() == 0) {</span>
-<span class="nc" id="L544">            return &quot;\&quot;\&quot;&quot;;</span>
+<span class="nc bnc" id="L555" title="All 4 branches missed.">        if (string == null || string.length() == 0) {</span>
+<span class="nc" id="L556">            return &quot;\&quot;\&quot;&quot;;</span>
         }
 
         char b;
-<span class="nc" id="L548">        char c = 0;</span>
+<span class="nc" id="L560">        char c = 0;</span>
         int i;
-<span class="nc" id="L550">        int len = string.length();</span>
-<span class="nc" id="L551">        StringBuilder sb = new StringBuilder(len * 2);</span>
+<span class="nc" id="L562">        int len = string.length();</span>
+<span class="nc" id="L563">        StringBuilder sb = new StringBuilder(len * 2);</span>
         String t;
-<span class="nc" id="L553">        char[] chars = string.toCharArray();</span>
-<span class="nc" id="L554">        char[] buffer = new char[1030];</span>
-<span class="nc" id="L555">        int bufferIndex = 0;</span>
-<span class="nc" id="L556">        sb.append('&quot;');</span>
-<span class="nc bnc" id="L557" title="All 2 branches missed.">        for (i = 0; i &lt; len; i += 1) {</span>
-<span class="nc bnc" id="L558" title="All 2 branches missed.">            if (bufferIndex &gt; 1024) {</span>
-<span class="nc" id="L559">                sb.append(buffer, 0, bufferIndex);</span>
-<span class="nc" id="L560">                bufferIndex = 0;</span>
+<span class="nc" id="L565">        char[] chars = string.toCharArray();</span>
+<span class="nc" id="L566">        char[] buffer = new char[1030];</span>
+<span class="nc" id="L567">        int bufferIndex = 0;</span>
+<span class="nc" id="L568">        sb.append('&quot;');</span>
+<span class="nc bnc" id="L569" title="All 2 branches missed.">        for (i = 0; i &lt; len; i += 1) {</span>
+<span class="nc bnc" id="L570" title="All 2 branches missed.">            if (bufferIndex &gt; 1024) {</span>
+<span class="nc" id="L571">                sb.append(buffer, 0, bufferIndex);</span>
+<span class="nc" id="L572">                bufferIndex = 0;</span>
             }
-<span class="nc" id="L562">            b = c;</span>
-<span class="nc" id="L563">            c = chars[i];</span>
-<span class="nc bnc" id="L564" title="All 3 branches missed.">            switch (c) {</span>
+<span class="nc" id="L574">            b = c;</span>
+<span class="nc" id="L575">            c = chars[i];</span>
+<span class="nc bnc" id="L576" title="All 3 branches missed.">            switch (c) {</span>
                 case '\\':
                 case '&quot;':
-<span class="nc" id="L567">                    buffer[bufferIndex++] = '\\';</span>
-<span class="nc" id="L568">                    buffer[bufferIndex++] = c;</span>
-<span class="nc" id="L569">                    break;</span>
+<span class="nc" id="L579">                    buffer[bufferIndex++] = '\\';</span>
+<span class="nc" id="L580">                    buffer[bufferIndex++] = c;</span>
+<span class="nc" id="L581">                    break;</span>
                 case '/':
-<span class="nc bnc" id="L571" title="All 2 branches missed.">                    if (b == '&lt;') {</span>
-<span class="nc" id="L572">                        buffer[bufferIndex++] = '\\';</span>
+<span class="nc bnc" id="L583" title="All 2 branches missed.">                    if (b == '&lt;') {</span>
+<span class="nc" id="L584">                        buffer[bufferIndex++] = '\\';</span>
                     }
-<span class="nc" id="L574">                    buffer[bufferIndex++] = c;</span>
-<span class="nc" id="L575">                    break;</span>
+<span class="nc" id="L586">                    buffer[bufferIndex++] = c;</span>
+<span class="nc" id="L587">                    break;</span>
                 default:
-<span class="nc bnc" id="L577" title="All 2 branches missed.">                    if (c &lt; ' ') {</span>
-<span class="nc bnc" id="L578" title="All 6 branches missed.">                        switch (c) {</span>
+<span class="nc bnc" id="L589" title="All 2 branches missed.">                    if (c &lt; ' ') {</span>
+<span class="nc bnc" id="L590" title="All 6 branches missed.">                        switch (c) {</span>
                             case '\b':
-<span class="nc" id="L580">                                buffer[bufferIndex++] = '\\';</span>
-<span class="nc" id="L581">                                buffer[bufferIndex++] = 'b';</span>
-<span class="nc" id="L582">                                break;</span>
-                            case '\t':
-<span class="nc" id="L584">                                buffer[bufferIndex++] = '\\';</span>
-<span class="nc" id="L585">                                buffer[bufferIndex++] = 't';</span>
-<span class="nc" id="L586">                                break;</span>
-                            case '\n':
-<span class="nc" id="L588">                                buffer[bufferIndex++] = '\\';</span>
-<span class="nc" id="L589">                                buffer[bufferIndex++] = 'n';</span>
-<span class="nc" id="L590">                                break;</span>
-                            case '\f':
 <span class="nc" id="L592">                                buffer[bufferIndex++] = '\\';</span>
-<span class="nc" id="L593">                                buffer[bufferIndex++] = 'f';</span>
+<span class="nc" id="L593">                                buffer[bufferIndex++] = 'b';</span>
 <span class="nc" id="L594">                                break;</span>
-                            case '\r':
+                            case '\t':
 <span class="nc" id="L596">                                buffer[bufferIndex++] = '\\';</span>
-<span class="nc" id="L597">                                buffer[bufferIndex++] = 'r';</span>
+<span class="nc" id="L597">                                buffer[bufferIndex++] = 't';</span>
 <span class="nc" id="L598">                                break;</span>
+                            case '\n':
+<span class="nc" id="L600">                                buffer[bufferIndex++] = '\\';</span>
+<span class="nc" id="L601">                                buffer[bufferIndex++] = 'n';</span>
+<span class="nc" id="L602">                                break;</span>
+                            case '\f':
+<span class="nc" id="L604">                                buffer[bufferIndex++] = '\\';</span>
+<span class="nc" id="L605">                                buffer[bufferIndex++] = 'f';</span>
+<span class="nc" id="L606">                                break;</span>
+                            case '\r':
+<span class="nc" id="L608">                                buffer[bufferIndex++] = '\\';</span>
+<span class="nc" id="L609">                                buffer[bufferIndex++] = 'r';</span>
+<span class="nc" id="L610">                                break;</span>
                             default:
-<span class="nc" id="L600">                                t = &quot;000&quot; + Integer.toHexString(c);</span>
-<span class="nc" id="L601">                                int tLength = t.length();</span>
-<span class="nc" id="L602">                                buffer[bufferIndex++] = '\\';</span>
-<span class="nc" id="L603">                                buffer[bufferIndex++] = 'u';</span>
-<span class="nc" id="L604">                                buffer[bufferIndex++] = t.charAt(tLength - 4);</span>
-<span class="nc" id="L605">                                buffer[bufferIndex++] = t.charAt(tLength - 3);</span>
-<span class="nc" id="L606">                                buffer[bufferIndex++] = t.charAt(tLength - 2);</span>
-<span class="nc" id="L607">                                buffer[bufferIndex++] = t.charAt(tLength - 1);</span>
+<span class="nc" id="L612">                                t = &quot;000&quot; + Integer.toHexString(c);</span>
+<span class="nc" id="L613">                                int tLength = t.length();</span>
+<span class="nc" id="L614">                                buffer[bufferIndex++] = '\\';</span>
+<span class="nc" id="L615">                                buffer[bufferIndex++] = 'u';</span>
+<span class="nc" id="L616">                                buffer[bufferIndex++] = t.charAt(tLength - 4);</span>
+<span class="nc" id="L617">                                buffer[bufferIndex++] = t.charAt(tLength - 3);</span>
+<span class="nc" id="L618">                                buffer[bufferIndex++] = t.charAt(tLength - 2);</span>
+<span class="nc" id="L619">                                buffer[bufferIndex++] = t.charAt(tLength - 1);</span>
                         }
                     } else {
-<span class="nc" id="L610">                        buffer[bufferIndex++] = c;</span>
+<span class="nc" id="L622">                        buffer[bufferIndex++] = c;</span>
                     }
             }
         }
-<span class="nc" id="L614">        sb.append(buffer, 0, bufferIndex);</span>
-<span class="nc" id="L615">        sb.append('&quot;');</span>
-<span class="nc" id="L616">        return sb.toString();</span>
+<span class="nc" id="L626">        sb.append(buffer, 0, bufferIndex);</span>
+<span class="nc" id="L627">        sb.append('&quot;');</span>
+<span class="nc" id="L628">        return sb.toString();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

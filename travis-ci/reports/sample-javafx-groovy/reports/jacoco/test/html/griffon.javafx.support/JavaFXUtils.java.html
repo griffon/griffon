@@ -59,8 +59,8 @@ import static griffon.util.GriffonClassUtils.getPropertyValue;
 import static griffon.util.GriffonClassUtils.invokeExactInstanceMethod;
 import static griffon.util.GriffonClassUtils.invokeInstanceMethod;
 import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNull;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
-import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
 /**
