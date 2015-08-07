@@ -2,6 +2,10 @@
 <JDepend>
     <Packages>
 
+        <Package name="com.googlecode.openbeans">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
         <Package name="griffon.core">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
@@ -83,10 +87,6 @@
         </Package>
 
         <Package name="groovyjarjarasm.asm">
-            <error>No stats available: package referenced, but not analyzed.</error>
-        </Package>
-
-        <Package name="java.beans">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
@@ -246,8 +246,8 @@
             </ConcreteClasses>
 
             <DependsUpon>
+                <Package>com.googlecode.openbeans</Package>
                 <Package>griffon.metadata</Package>
-                <Package>java.beans</Package>
                 <Package>java.io</Package>
                 <Package>java.lang</Package>
                 <Package>java.lang.reflect</Package>
@@ -383,6 +383,7 @@
             </ConcreteClasses>
 
             <DependsUpon>
+                <Package>com.googlecode.openbeans</Package>
                 <Package>griffon.core</Package>
                 <Package>griffon.core.artifact</Package>
                 <Package>griffon.core.event</Package>
@@ -394,7 +395,6 @@
                 <Package>griffon.transform</Package>
                 <Package>griffon.util</Package>
                 <Package>groovyjarjarasm.asm</Package>
-                <Package>java.beans</Package>
                 <Package>java.io</Package>
                 <Package>java.lang</Package>
                 <Package>java.lang.annotation</Package>

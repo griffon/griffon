@@ -15,6 +15,9 @@
  */
 package org.codehaus.griffon.runtime.javafx.controller;
 
+import com.googlecode.openbeans.PropertyChangeEvent;
+import com.googlecode.openbeans.PropertyChangeListener;
+import com.googlecode.openbeans.PropertyEditor;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
 import griffon.core.threading.UIThreadManager;
@@ -27,9 +30,6 @@ import org.codehaus.griffon.runtime.core.controller.AbstractAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyEditor;
 
 import static griffon.core.editors.PropertyEditorResolver.findEditor;
 import static griffon.util.GriffonNameUtils.isBlank;

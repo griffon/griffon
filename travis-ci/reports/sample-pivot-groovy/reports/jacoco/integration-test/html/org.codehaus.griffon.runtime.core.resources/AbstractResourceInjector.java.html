@@ -15,6 +15,8 @@
  */
 package org.codehaus.griffon.runtime.core.resources;
 
+import com.googlecode.openbeans.PropertyDescriptor;
+import com.googlecode.openbeans.PropertyEditor;
 import griffon.core.editors.ExtendedPropertyEditor;
 import griffon.core.resources.InjectedResource;
 import griffon.core.resources.ResourceInjector;
@@ -24,8 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.PropertyDescriptor;
-import java.beans.PropertyEditor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

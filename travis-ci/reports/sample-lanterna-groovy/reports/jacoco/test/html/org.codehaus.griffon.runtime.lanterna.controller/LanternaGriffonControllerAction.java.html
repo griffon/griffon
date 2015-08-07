@@ -15,6 +15,8 @@
  */
 package org.codehaus.griffon.runtime.lanterna.controller;
 
+import com.googlecode.openbeans.PropertyChangeEvent;
+import com.googlecode.openbeans.PropertyChangeListener;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
 import griffon.core.threading.UIThreadManager;
@@ -22,8 +24,6 @@ import griffon.lanterna.support.LanternaAction;
 import org.codehaus.griffon.runtime.core.controller.AbstractAction;
 
 import javax.annotation.Nonnull;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import static java.util.Objects.requireNonNull;
 

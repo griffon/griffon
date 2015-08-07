@@ -15,6 +15,7 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
+import com.googlecode.openbeans.PropertyChangeListener;
 import griffon.transform.PropertyListener;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
@@ -35,7 +36,6 @@ import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
 
-import java.beans.PropertyChangeListener;
 import java.util.Map;
 
 /**

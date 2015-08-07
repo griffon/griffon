@@ -15,6 +15,8 @@
  */
 package org.codehaus.griffon.runtime.pivot.controller;
 
+import com.googlecode.openbeans.PropertyChangeEvent;
+import com.googlecode.openbeans.PropertyChangeListener;
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
@@ -25,8 +27,6 @@ import org.codehaus.griffon.runtime.core.controller.AbstractAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import static java.util.Objects.requireNonNull;
 

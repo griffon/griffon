@@ -17,11 +17,11 @@ package griffon.lanterna.widgets;
 
 import com.googlecode.lanterna.gui.Action;
 import com.googlecode.lanterna.gui.component.Button;
+import com.googlecode.openbeans.PropertyChangeEvent;
+import com.googlecode.openbeans.PropertyChangeListener;
 import griffon.exceptions.GriffonException;
 import griffon.lanterna.support.LanternaAction;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.lang.reflect.Field;
 
 import static griffon.util.GriffonNameUtils.isBlank;
