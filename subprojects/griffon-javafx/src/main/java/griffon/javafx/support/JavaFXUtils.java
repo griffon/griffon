@@ -60,7 +60,6 @@ import static griffon.util.GriffonClassUtils.invokeExactInstanceMethod;
 import static griffon.util.GriffonClassUtils.invokeInstanceMethod;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
-import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -179,7 +178,7 @@ public final class JavaFXUtils {
                 setGraphic(control, newValue);
             }
         });
-        if (!isNull(action.getImage())) {
+        if (null != action.getImage()) {
             setGraphic(control, action.getImage());
         }
 
@@ -189,7 +188,7 @@ public final class JavaFXUtils {
                 setGraphic(control, newValue);
             }
         });
-        if (!isNull(action.getGraphic())) {
+        if (null != action.getGraphic()) {
             setGraphic(control, action.getGraphic());
         }
 
@@ -393,8 +392,10 @@ public final class JavaFXUtils {
             }
         } else if (root instanceof TitledPane) {
             TitledPane parent = (TitledPane) root;
-            Node found = findNode(parent.getContent(), id);
-            if (found != null) return found;
+            if (parent.getContent() != null) {
+                Node found = findNode(parent.getContent(), id);
+                if (found != null) return found;
+            }
         } else if (root instanceof Accordion) {
             Accordion parent = (Accordion) root;
             for (TitledPane child : parent.getPanes()) {
@@ -409,8 +410,10 @@ public final class JavaFXUtils {
             }
         } else if (root instanceof ScrollPane) {
             ScrollPane scrollPane = (ScrollPane) root;
-            Node found = findNode(scrollPane.getContent(), id);
-            if (found != null) return found;
+            if (scrollPane.getContent() != null) {
+                Node found = findNode(scrollPane.getContent(), id);
+                if (found != null) return found;
+            }
         } else if (root instanceof ToolBar) {
             ToolBar toolBar = (ToolBar) root;
             for (Node child : toolBar.getItems()) {
@@ -461,8 +464,10 @@ public final class JavaFXUtils {
             }
         } else if (root instanceof TitledPane) {
             TitledPane parent = (TitledPane) root;
-            Object found = findElement(parent.getContent(), id);
-            if (found != null) return found;
+            if (parent.getContent() != null) {
+                Object found = findElement(parent.getContent(), id);
+                if (found != null) return found;
+            }
         } else if (root instanceof Accordion) {
             Accordion parent = (Accordion) root;
             for (TitledPane child : parent.getPanes()) {
@@ -477,8 +482,10 @@ public final class JavaFXUtils {
             }
         } else if (root instanceof ScrollPane) {
             ScrollPane scrollPane = (ScrollPane) root;
-            Object found = findElement(scrollPane.getContent(), id);
-            if (found != null) return found;
+            if (scrollPane.getContent() != null) {
+                Object found = findElement(scrollPane.getContent(), id);
+                if (found != null) return found;
+            }
         } else if (root instanceof ToolBar) {
             ToolBar toolBar = (ToolBar) root;
             for (Node child : toolBar.getItems()) {

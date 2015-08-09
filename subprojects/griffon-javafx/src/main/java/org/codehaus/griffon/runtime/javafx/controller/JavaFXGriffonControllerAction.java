@@ -34,7 +34,6 @@ import java.beans.PropertyEditor;
 import static griffon.core.editors.PropertyEditorResolver.findEditor;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.TypeUtils.castToBoolean;
-import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -86,10 +85,10 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
                             if (!isBlank(icon)) toolkitAction.setIcon(icon);
                         } else if (KEY_IMAGE.equals(evt.getPropertyName())) {
                             Image image = (Image) evt.getNewValue();
-                            if (!isNull(image)) toolkitAction.setImage(image);
+                            if (null != image) toolkitAction.setImage(image);
                         } else if (KEY_GRAPHIC.equals(evt.getPropertyName())) {
                             Node graphic = (Node) evt.getNewValue();
-                            if (!isNull(graphic)) toolkitAction.setGraphic(graphic);
+                            if (null != graphic) toolkitAction.setGraphic(graphic);
                         }
                     }
                 });
@@ -175,7 +174,7 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
         if (!isBlank(accelerator)) toolkitAction.setAccelerator(accelerator);
         String icon = getIcon();
         if (!isBlank(icon)) toolkitAction.setIcon(icon);
-        if (!isNull(getImage())) toolkitAction.setImage(getImage());
-        if (!isNull(getGraphic())) toolkitAction.setGraphic(getGraphic());
+        if (null != getImage()) toolkitAction.setImage(getImage());
+        if (null != getGraphic()) toolkitAction.setGraphic(getGraphic());
     }
 }
