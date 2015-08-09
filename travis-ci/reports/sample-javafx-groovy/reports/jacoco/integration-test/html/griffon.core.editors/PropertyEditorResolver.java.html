@@ -15,15 +15,15 @@
  */
 package griffon.core.editors;
 
-import com.googlecode.openbeans.PropertyEditor;
-import com.googlecode.openbeans.PropertyEditorManager;
-import com.googlecode.openbeans.PropertyEditorSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
+import java.beans.PropertyEditor;
+import java.beans.PropertyEditorManager;
+import java.beans.PropertyEditorSupport;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.LinkedHashMap;
@@ -35,7 +35,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * The PropertyEditorResolver can be used to locate a property editor for
  * any given type name. This property editor must support the
- * com.googlecode.openbeans.PropertyEditor interface for editing a given object.
+ * java.beans.PropertyEditor interface for editing a given object.
  * &lt;p&gt;
  *
  * @author Andres Almiray
@@ -90,13 +90,13 @@ public final class PropertyEditorResolver {
 <span class="fc" id="L90">            editor = doFindEditor(type);</span>
         }
 
-<span class="fc bfc" id="L93" title="All 2 branches covered.">        if (editor == null) {</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">        if (editor == null) {</span>
             // fallback
-<span class="fc" id="L95">            editor = PropertyEditorManager.findEditor(type);</span>
+<span class="nc" id="L95">            editor = PropertyEditorManager.findEditor(type);</span>
         }
 
-<span class="fc bfc" id="L98" title="All 2 branches covered.">        if (editor == null) {</span>
-<span class="fc" id="L99">            editor = new NoopPropertyEditor();</span>
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">        if (editor == null) {</span>
+<span class="nc" id="L99">            editor = new NoopPropertyEditor();</span>
         }
 
 <span class="fc" id="L102">        LOG.trace(&quot;PropertyEditor for {} is {}&quot;, type.getName(), editor.getClass().getName());</span>
@@ -171,7 +171,7 @@ public final class PropertyEditorResolver {
 <span class="fc" id="L171">                return chain.copyOf();</span>
             } else {
 <span class="fc" id="L173">                Class&lt;?&gt; propertyEditorType = propertyEditorRegistry.get(targetTypeName);</span>
-<span class="fc bfc" id="L174" title="All 2 branches covered.">                if (propertyEditorType != null) {</span>
+<span class="pc bpc" id="L174" title="1 of 2 branches missed.">                if (propertyEditorType != null) {</span>
                     try {
 <span class="fc" id="L176">                        return (PropertyEditor) propertyEditorType.newInstance();</span>
 <span class="nc" id="L177">                    } catch (InstantiationException | IllegalAccessException e) {</span>
@@ -179,11 +179,11 @@ public final class PropertyEditorResolver {
                     }
                 }
             }
-<span class="pc" id="L182">        }</span>
-<span class="fc" id="L183">        return null;</span>
+<span class="nc" id="L182">        }</span>
+<span class="nc" id="L183">        return null;</span>
     }
 
-<span class="fc" id="L186">    private static final class NoopPropertyEditor extends PropertyEditorSupport {</span>
+<span class="nc" id="L186">    private static final class NoopPropertyEditor extends PropertyEditorSupport {</span>
 
     }
 

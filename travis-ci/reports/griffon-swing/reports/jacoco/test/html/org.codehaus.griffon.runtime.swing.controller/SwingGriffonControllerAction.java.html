@@ -15,9 +15,6 @@
  */
 package org.codehaus.griffon.runtime.swing.controller;
 
-import com.googlecode.openbeans.PropertyChangeEvent;
-import com.googlecode.openbeans.PropertyChangeListener;
-import com.googlecode.openbeans.PropertyEditor;
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
@@ -32,6 +29,9 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.KeyStroke;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyEditor;
 
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Objects.requireNonNull;

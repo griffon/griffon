@@ -15,8 +15,6 @@
  */
 package org.codehaus.griffon.runtime.core.resources;
 
-import com.googlecode.openbeans.PropertyDescriptor;
-import com.googlecode.openbeans.PropertyEditor;
 import griffon.core.editors.ExtendedPropertyEditor;
 import griffon.core.resources.InjectedResource;
 import griffon.core.resources.ResourceInjector;
@@ -26,6 +24,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.beans.PropertyDescriptor;
+import java.beans.PropertyEditor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -95,10 +95,10 @@ import static java.util.Objects.requireNonNull;
 <span class="pc bpc" id="L95" title="1 of 2 branches missed.">            if (isBlank(key)) key = fqName;</span>
 
 <span class="pc bpc" id="L97" title="1 of 2 branches missed.">            if (LOG.isDebugEnabled()) {</span>
-<span class="fc" id="L98">                LOG.debug(&quot;Property &quot; + propertyName +</span>
+<span class="nc" id="L98">                LOG.debug(&quot;Property &quot; + propertyName +</span>
                     &quot; of instance &quot; + instance +
                     &quot; [key='&quot; + key +
-<span class="fc" id="L101">                    &quot;', args='&quot; + Arrays.toString(args) +</span>
+<span class="nc" id="L101">                    &quot;', args='&quot; + Arrays.toString(args) +</span>
                     &quot;', defaultValue='&quot; + defaultValue +
                     &quot;', format='&quot; + format +
                     &quot;'] is marked for resource injection.&quot;);
@@ -137,10 +137,10 @@ import static java.util.Objects.requireNonNull;
 <span class="fc bfc" id="L137" title="All 2 branches covered.">            if (isBlank(key)) key = fqName;</span>
 
 <span class="pc bpc" id="L139" title="1 of 2 branches missed.">            if (LOG.isDebugEnabled()) {</span>
-<span class="fc" id="L140">                LOG.debug(&quot;Field &quot; + fqName +</span>
+<span class="nc" id="L140">                LOG.debug(&quot;Field &quot; + fqName +</span>
                     &quot; of instance &quot; + instance +
                     &quot; [key='&quot; + key +
-<span class="fc" id="L143">                    &quot;', args='&quot; + Arrays.toString(args) +</span>
+<span class="nc" id="L143">                    &quot;', args='&quot; + Arrays.toString(args) +</span>
                     &quot;', defaultValue='&quot; + defaultValue +
                     &quot;', format='&quot; + format +
                     &quot;'] is marked for resource injection.&quot;);

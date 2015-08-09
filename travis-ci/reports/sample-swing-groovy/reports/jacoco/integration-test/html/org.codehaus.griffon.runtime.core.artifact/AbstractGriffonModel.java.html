@@ -16,12 +16,6 @@
 package org.codehaus.griffon.runtime.core.artifact;
 
 
-import com.googlecode.openbeans.PropertyChangeEvent;
-import com.googlecode.openbeans.PropertyChangeListener;
-import com.googlecode.openbeans.PropertyChangeSupport;
-import com.googlecode.openbeans.PropertyVetoException;
-import com.googlecode.openbeans.VetoableChangeListener;
-import com.googlecode.openbeans.VetoableChangeSupport;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonModel;
 import griffon.core.artifact.GriffonModelClass;
@@ -29,6 +23,12 @@ import griffon.core.artifact.GriffonModelClass;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.beans.PropertyVetoException;
+import java.beans.VetoableChangeListener;
+import java.beans.VetoableChangeSupport;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
@@ -109,8 +109,8 @@ public abstract class AbstractGriffonModel extends AbstractGriffonMvcArtifact im
 
     @Override
     public void addPropertyChangeListener(@Nullable String propertyName, @Nullable PropertyChangeListener listener) {
-<span class="nc" id="L112">        pcs.addPropertyChangeListener(propertyName, listener);</span>
-<span class="nc" id="L113">    }</span>
+<span class="fc" id="L112">        pcs.addPropertyChangeListener(propertyName, listener);</span>
+<span class="fc" id="L113">    }</span>
 
     @Override
     public void removePropertyChangeListener(@Nullable PropertyChangeListener listener) {
@@ -119,8 +119,8 @@ public abstract class AbstractGriffonModel extends AbstractGriffonMvcArtifact im
 
     @Override
     public void removePropertyChangeListener(@Nullable String propertyName, @Nullable PropertyChangeListener listener) {
-<span class="nc" id="L122">        pcs.removePropertyChangeListener(propertyName, listener);</span>
-<span class="nc" id="L123">    }</span>
+<span class="fc" id="L122">        pcs.removePropertyChangeListener(propertyName, listener);</span>
+<span class="fc" id="L123">    }</span>
 
     @Nonnull
     @Override
