@@ -34,10 +34,12 @@ import griffon.core.env.RunMode;
 import griffon.core.event.EventHandler;
 import griffon.core.event.EventRouter;
 import griffon.core.i18n.MessageSource;
+import griffon.core.i18n.MessageSourceDecoratorFactory;
 import griffon.core.mvc.MVCGroupManager;
 import griffon.core.resources.ResourceHandler;
 import griffon.core.resources.ResourceInjector;
 import griffon.core.resources.ResourceResolver;
+import griffon.core.resources.ResourceResolverDecoratorFactory;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import griffon.util.CompositeResourceBundleBuilder;
@@ -53,11 +55,13 @@ import org.codehaus.griffon.runtime.core.env.MetadataProvider;
 import org.codehaus.griffon.runtime.core.env.RunModeProvider;
 import org.codehaus.griffon.runtime.core.event.DefaultEventHandler;
 import org.codehaus.griffon.runtime.core.event.DefaultEventRouter;
+import org.codehaus.griffon.runtime.core.i18n.DefaultMessageSourceDecoratorFactory;
 import org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager;
 import org.codehaus.griffon.runtime.core.resources.DefaultApplicationResourceInjector;
 import org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler;
+import org.codehaus.griffon.runtime.core.resources.DefaultResourceResolverDecoratorFactory;
 import org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider;
 import org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider;
 import org.codehaus.griffon.runtime.core.threading.DefaultUIThreadManager;
@@ -76,142 +80,148 @@ import static griffon.util.AnnotationUtils.named;
  * @since 2.0.0
  */
 @Named(&quot;core&quot;)
-<span class="fc" id="L79">public class DefaultApplicationModule extends AbstractModule {</span>
+<span class="fc" id="L83">public class DefaultApplicationModule extends AbstractModule {</span>
     @Override
     protected void doConfigure() {
         // tag::bindings[]
-<span class="fc" id="L83">        bind(ApplicationClassLoader.class)</span>
-<span class="fc" id="L84">            .to(DefaultApplicationClassLoader.class)</span>
-<span class="fc" id="L85">            .asSingleton();</span>
-
-<span class="fc" id="L87">        bind(Metadata.class)</span>
-<span class="fc" id="L88">            .toProvider(MetadataProvider.class)</span>
+<span class="fc" id="L87">        bind(ApplicationClassLoader.class)</span>
+<span class="fc" id="L88">            .to(DefaultApplicationClassLoader.class)</span>
 <span class="fc" id="L89">            .asSingleton();</span>
 
-<span class="fc" id="L91">        bind(RunMode.class)</span>
-<span class="fc" id="L92">            .toProvider(RunModeProvider.class)</span>
+<span class="fc" id="L91">        bind(Metadata.class)</span>
+<span class="fc" id="L92">            .toProvider(MetadataProvider.class)</span>
 <span class="fc" id="L93">            .asSingleton();</span>
 
-<span class="fc" id="L95">        bind(Environment.class)</span>
-<span class="fc" id="L96">            .toProvider(EnvironmentProvider.class)</span>
+<span class="fc" id="L95">        bind(RunMode.class)</span>
+<span class="fc" id="L96">            .toProvider(RunModeProvider.class)</span>
 <span class="fc" id="L97">            .asSingleton();</span>
 
-<span class="fc" id="L99">        bind(Context.class)</span>
-<span class="fc" id="L100">            .withClassifier(named(&quot;applicationContext&quot;))</span>
-<span class="fc" id="L101">            .to(DefaultContext.class)</span>
-<span class="fc" id="L102">            .asSingleton();</span>
+<span class="fc" id="L99">        bind(Environment.class)</span>
+<span class="fc" id="L100">            .toProvider(EnvironmentProvider.class)</span>
+<span class="fc" id="L101">            .asSingleton();</span>
 
-<span class="fc" id="L104">        bind(ApplicationConfigurer.class)</span>
-<span class="fc" id="L105">            .to(DefaultApplicationConfigurer.class)</span>
+<span class="fc" id="L103">        bind(Context.class)</span>
+<span class="fc" id="L104">            .withClassifier(named(&quot;applicationContext&quot;))</span>
+<span class="fc" id="L105">            .to(DefaultContext.class)</span>
 <span class="fc" id="L106">            .asSingleton();</span>
 
-<span class="fc" id="L108">        bind(ResourceHandler.class)</span>
-<span class="fc" id="L109">            .to(DefaultResourceHandler.class)</span>
+<span class="fc" id="L108">        bind(ApplicationConfigurer.class)</span>
+<span class="fc" id="L109">            .to(DefaultApplicationConfigurer.class)</span>
 <span class="fc" id="L110">            .asSingleton();</span>
 
-<span class="fc" id="L112">        bind(CompositeResourceBundleBuilder.class)</span>
-<span class="fc" id="L113">            .to(DefaultCompositeResourceBundleBuilder.class)</span>
+<span class="fc" id="L112">        bind(ResourceHandler.class)</span>
+<span class="fc" id="L113">            .to(DefaultResourceHandler.class)</span>
 <span class="fc" id="L114">            .asSingleton();</span>
 
-<span class="fc" id="L116">        bind(ResourceBundle.class)</span>
-<span class="fc" id="L117">            .withClassifier(named(&quot;applicationResourceBundle&quot;))</span>
-<span class="fc" id="L118">            .toProvider(new ResourceBundleProvider(&quot;Config&quot;))</span>
-<span class="fc" id="L119">            .asSingleton();</span>
+<span class="fc" id="L116">        bind(CompositeResourceBundleBuilder.class)</span>
+<span class="fc" id="L117">            .to(DefaultCompositeResourceBundleBuilder.class)</span>
+<span class="fc" id="L118">            .asSingleton();</span>
 
-<span class="fc" id="L121">        bind(Configuration.class)</span>
-<span class="fc" id="L122">            .to(DefaultConfiguration.class)</span>
+<span class="fc" id="L120">        bind(ResourceBundle.class)</span>
+<span class="fc" id="L121">            .withClassifier(named(&quot;applicationResourceBundle&quot;))</span>
+<span class="fc" id="L122">            .toProvider(new ResourceBundleProvider(&quot;Config&quot;))</span>
 <span class="fc" id="L123">            .asSingleton();</span>
 
-<span class="fc" id="L125">        bind(ExecutorServiceManager.class)</span>
-<span class="fc" id="L126">            .to(DefaultExecutorServiceManager.class)</span>
+<span class="fc" id="L125">        bind(Configuration.class)</span>
+<span class="fc" id="L126">            .to(DefaultConfiguration.class)</span>
 <span class="fc" id="L127">            .asSingleton();</span>
 
-<span class="fc" id="L129">        bind(EventRouter.class)</span>
-<span class="fc" id="L130">            .withClassifier(named(&quot;applicationEventRouter&quot;))</span>
-<span class="fc" id="L131">            .to(DefaultEventRouter.class)</span>
-<span class="fc" id="L132">            .asSingleton();</span>
+<span class="fc" id="L129">        bind(ExecutorServiceManager.class)</span>
+<span class="fc" id="L130">            .to(DefaultExecutorServiceManager.class)</span>
+<span class="fc" id="L131">            .asSingleton();</span>
 
-<span class="fc" id="L134">        bind(EventRouter.class)</span>
-<span class="fc" id="L135">            .to(DefaultEventRouter.class);</span>
+<span class="fc" id="L133">        bind(EventRouter.class)</span>
+<span class="fc" id="L134">            .withClassifier(named(&quot;applicationEventRouter&quot;))</span>
+<span class="fc" id="L135">            .to(DefaultEventRouter.class)</span>
+<span class="fc" id="L136">            .asSingleton();</span>
 
-<span class="fc" id="L137">        bind(ResourceResolver.class)</span>
-<span class="fc" id="L138">            .withClassifier(named(&quot;applicationResourceResolver&quot;))</span>
-<span class="fc" id="L139">            .toProvider(new ResourceResolverProvider(&quot;resources&quot;))</span>
-<span class="fc" id="L140">            .asSingleton();</span>
+<span class="fc" id="L138">        bind(EventRouter.class)</span>
+<span class="fc" id="L139">            .to(DefaultEventRouter.class);</span>
 
-<span class="fc" id="L142">        bind(MessageSource.class)</span>
-<span class="fc" id="L143">            .withClassifier(named(&quot;applicationMessageSource&quot;))</span>
-<span class="fc" id="L144">            .toProvider(new MessageSourceProvider(&quot;messages&quot;))</span>
-<span class="fc" id="L145">            .asSingleton();</span>
+<span class="fc" id="L141">        bind(ResourceResolverDecoratorFactory.class)</span>
+<span class="fc" id="L142">            .to(DefaultResourceResolverDecoratorFactory.class);</span>
 
-<span class="fc" id="L147">        bind(ResourceInjector.class)</span>
-<span class="fc" id="L148">            .withClassifier(named(&quot;applicationResourceInjector&quot;))</span>
-<span class="fc" id="L149">            .to(DefaultApplicationResourceInjector.class)</span>
+<span class="fc" id="L144">        bind(MessageSourceDecoratorFactory.class)</span>
+<span class="fc" id="L145">            .to(DefaultMessageSourceDecoratorFactory.class);</span>
+
+<span class="fc" id="L147">        bind(ResourceResolver.class)</span>
+<span class="fc" id="L148">            .withClassifier(named(&quot;applicationResourceResolver&quot;))</span>
+<span class="fc" id="L149">            .toProvider(new ResourceResolverProvider(&quot;resources&quot;))</span>
 <span class="fc" id="L150">            .asSingleton();</span>
 
-<span class="fc" id="L152">        bind(ExecutorService.class)</span>
-<span class="fc" id="L153">            .withClassifier(named(&quot;defaultExecutorService&quot;))</span>
-<span class="fc" id="L154">            .toProvider(DefaultExecutorServiceProvider.class)</span>
+<span class="fc" id="L152">        bind(MessageSource.class)</span>
+<span class="fc" id="L153">            .withClassifier(named(&quot;applicationMessageSource&quot;))</span>
+<span class="fc" id="L154">            .toProvider(new MessageSourceProvider(&quot;messages&quot;))</span>
 <span class="fc" id="L155">            .asSingleton();</span>
 
-<span class="fc" id="L157">        bind(UIThreadManager.class)</span>
-<span class="fc" id="L158">            .to(DefaultUIThreadManager.class)</span>
-<span class="fc" id="L159">            .asSingleton();</span>
+<span class="fc" id="L157">        bind(ResourceInjector.class)</span>
+<span class="fc" id="L158">            .withClassifier(named(&quot;applicationResourceInjector&quot;))</span>
+<span class="fc" id="L159">            .to(DefaultApplicationResourceInjector.class)</span>
+<span class="fc" id="L160">            .asSingleton();</span>
 
-<span class="fc" id="L161">        bind(MVCGroupManager.class)</span>
-<span class="fc" id="L162">            .to(DefaultMVCGroupManager.class)</span>
-<span class="fc" id="L163">            .asSingleton();</span>
+<span class="fc" id="L162">        bind(ExecutorService.class)</span>
+<span class="fc" id="L163">            .withClassifier(named(&quot;defaultExecutorService&quot;))</span>
+<span class="fc" id="L164">            .toProvider(DefaultExecutorServiceProvider.class)</span>
+<span class="fc" id="L165">            .asSingleton();</span>
 
-<span class="fc bfc" id="L165" title="All 2 branches covered.">        for (Lifecycle lifecycle : Lifecycle.values()) {</span>
-<span class="fc" id="L166">            bind(LifecycleHandler.class)</span>
-<span class="fc" id="L167">                .withClassifier(named(lifecycle.getName()))</span>
-<span class="fc" id="L168">                .toProvider(new LifecycleHandlerProvider(lifecycle.getName()))</span>
-<span class="fc" id="L169">                .asSingleton();</span>
+<span class="fc" id="L167">        bind(UIThreadManager.class)</span>
+<span class="fc" id="L168">            .to(DefaultUIThreadManager.class)</span>
+<span class="fc" id="L169">            .asSingleton();</span>
+
+<span class="fc" id="L171">        bind(MVCGroupManager.class)</span>
+<span class="fc" id="L172">            .to(DefaultMVCGroupManager.class)</span>
+<span class="fc" id="L173">            .asSingleton();</span>
+
+<span class="fc bfc" id="L175" title="All 2 branches covered.">        for (Lifecycle lifecycle : Lifecycle.values()) {</span>
+<span class="fc" id="L176">            bind(LifecycleHandler.class)</span>
+<span class="fc" id="L177">                .withClassifier(named(lifecycle.getName()))</span>
+<span class="fc" id="L178">                .toProvider(new LifecycleHandlerProvider(lifecycle.getName()))</span>
+<span class="fc" id="L179">                .asSingleton();</span>
         }
 
-<span class="fc" id="L172">        bind(WindowManager.class)</span>
-<span class="fc" id="L173">            .to(NoopWindowManager.class)</span>
-<span class="fc" id="L174">            .asSingleton();</span>
+<span class="fc" id="L182">        bind(WindowManager.class)</span>
+<span class="fc" id="L183">            .to(NoopWindowManager.class)</span>
+<span class="fc" id="L184">            .asSingleton();</span>
 
-<span class="fc" id="L176">        bind(ActionManager.class)</span>
-<span class="fc" id="L177">            .to(DefaultActionManager.class)</span>
-<span class="fc" id="L178">            .asSingleton();</span>
+<span class="fc" id="L186">        bind(ActionManager.class)</span>
+<span class="fc" id="L187">            .to(DefaultActionManager.class)</span>
+<span class="fc" id="L188">            .asSingleton();</span>
 
-<span class="fc" id="L180">        bind(ArtifactManager.class)</span>
-<span class="fc" id="L181">            .to(DefaultArtifactManager.class)</span>
-<span class="fc" id="L182">            .asSingleton();</span>
+<span class="fc" id="L190">        bind(ArtifactManager.class)</span>
+<span class="fc" id="L191">            .to(DefaultArtifactManager.class)</span>
+<span class="fc" id="L192">            .asSingleton();</span>
 
-<span class="fc" id="L184">        bind(ArtifactHandler.class)</span>
-<span class="fc" id="L185">            .to(ModelArtifactHandler.class)</span>
-<span class="fc" id="L186">            .asSingleton();</span>
+<span class="fc" id="L194">        bind(ArtifactHandler.class)</span>
+<span class="fc" id="L195">            .to(ModelArtifactHandler.class)</span>
+<span class="fc" id="L196">            .asSingleton();</span>
 
-<span class="fc" id="L188">        bind(ArtifactHandler.class)</span>
-<span class="fc" id="L189">            .to(ViewArtifactHandler.class)</span>
-<span class="fc" id="L190">            .asSingleton();</span>
+<span class="fc" id="L198">        bind(ArtifactHandler.class)</span>
+<span class="fc" id="L199">            .to(ViewArtifactHandler.class)</span>
+<span class="fc" id="L200">            .asSingleton();</span>
 
-<span class="fc" id="L192">        bind(ArtifactHandler.class)</span>
-<span class="fc" id="L193">            .to(ControllerArtifactHandler.class)</span>
-<span class="fc" id="L194">            .asSingleton();</span>
+<span class="fc" id="L202">        bind(ArtifactHandler.class)</span>
+<span class="fc" id="L203">            .to(ControllerArtifactHandler.class)</span>
+<span class="fc" id="L204">            .asSingleton();</span>
 
-<span class="fc" id="L196">        bind(ArtifactHandler.class)</span>
-<span class="fc" id="L197">            .to(ServiceArtifactHandler.class)</span>
-<span class="fc" id="L198">            .asSingleton();</span>
+<span class="fc" id="L206">        bind(ArtifactHandler.class)</span>
+<span class="fc" id="L207">            .to(ServiceArtifactHandler.class)</span>
+<span class="fc" id="L208">            .asSingleton();</span>
 
-<span class="fc" id="L200">        bind(PlatformHandler.class)</span>
-<span class="fc" id="L201">            .toProvider(PlatformHandlerProvider.class)</span>
-<span class="fc" id="L202">            .asSingleton();</span>
+<span class="fc" id="L210">        bind(PlatformHandler.class)</span>
+<span class="fc" id="L211">            .toProvider(PlatformHandlerProvider.class)</span>
+<span class="fc" id="L212">            .asSingleton();</span>
 
-<span class="fc" id="L204">        bind(AddonManager.class)</span>
-<span class="fc" id="L205">            .to(DefaultAddonManager.class)</span>
-<span class="fc" id="L206">            .asSingleton();</span>
+<span class="fc" id="L214">        bind(AddonManager.class)</span>
+<span class="fc" id="L215">            .to(DefaultAddonManager.class)</span>
+<span class="fc" id="L216">            .asSingleton();</span>
 
-<span class="fc" id="L208">        bind(EventHandler.class)</span>
-<span class="fc" id="L209">            .to(DefaultEventHandler.class)</span>
-<span class="fc" id="L210">            .asSingleton();</span>
+<span class="fc" id="L218">        bind(EventHandler.class)</span>
+<span class="fc" id="L219">            .to(DefaultEventHandler.class)</span>
+<span class="fc" id="L220">            .asSingleton();</span>
 
-<span class="fc" id="L212">        bind(GriffonExceptionHandler.class)</span>
-<span class="fc" id="L213">            .asSingleton();</span>
+<span class="fc" id="L222">        bind(GriffonExceptionHandler.class)</span>
+<span class="fc" id="L223">            .asSingleton();</span>
         // end::bindings[]
-<span class="fc" id="L215">    }</span>
+<span class="fc" id="L225">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

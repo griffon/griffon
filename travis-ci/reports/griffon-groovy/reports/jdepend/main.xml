@@ -104,6 +104,39 @@
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
+        <Package name="griffon.core.i18n">
+            <Stats>
+                <TotalClasses>1</TotalClasses>
+                <ConcreteClasses>0</ConcreteClasses>
+                <AbstractClasses>1</AbstractClasses>
+                <Ca>2</Ca>
+                <Ce>2</Ce>
+                <A>1</A>
+                <I>0.5</I>
+                <D>0.5</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+                <Class sourceFile="GroovyAwareMessageSource.java">
+                    griffon.core.i18n.GroovyAwareMessageSource
+                </Class>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>java.lang</Package>
+                <Package>java.util</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>org.codehaus.griffon.runtime.groovy</Package>
+                <Package>org.codehaus.griffon.runtime.groovy.i18n</Package>
+            </UsedBy>
+        </Package>
+
         <Package name="griffon.core.injection">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
@@ -113,7 +146,37 @@
         </Package>
 
         <Package name="griffon.core.resources">
-            <error>No stats available: package referenced, but not analyzed.</error>
+            <Stats>
+                <TotalClasses>1</TotalClasses>
+                <ConcreteClasses>0</ConcreteClasses>
+                <AbstractClasses>1</AbstractClasses>
+                <Ca>3</Ca>
+                <Ce>2</Ce>
+                <A>1</A>
+                <I>0.4</I>
+                <D>0.4</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+                <Class sourceFile="GroovyAwareResourceResolver.java">
+                    griffon.core.resources.GroovyAwareResourceResolver
+                </Class>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>java.lang</Package>
+                <Package>java.util</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>org.codehaus.griffon.runtime.groovy.artifact</Package>
+                <Package>org.codehaus.griffon.runtime.groovy.resources</Package>
+                <Package>org.codehaus.griffon.runtime.groovy.util</Package>
+            </UsedBy>
         </Package>
 
         <Package name="griffon.core.threading">
@@ -125,11 +188,11 @@
                 <TotalClasses>16</TotalClasses>
                 <ConcreteClasses>15</ConcreteClasses>
                 <AbstractClasses>1</AbstractClasses>
-                <Ca>4</Ca>
+                <Ca>6</Ca>
                 <Ce>17</Ce>
                 <A>0.06</A>
-                <I>0.81</I>
-                <D>0.13</D>
+                <I>0.74</I>
+                <D>0.2</D>
                 <V>1</V>
             </Stats>
 
@@ -209,7 +272,9 @@
 
             <UsedBy>
                 <Package>org.codehaus.griffon.runtime.groovy</Package>
+                <Package>org.codehaus.griffon.runtime.groovy.i18n</Package>
                 <Package>org.codehaus.griffon.runtime.groovy.mvc</Package>
+                <Package>org.codehaus.griffon.runtime.groovy.resources</Package>
                 <Package>org.codehaus.griffon.runtime.groovy.util</Package>
                 <Package>org.codehaus.griffon.runtime.groovy.view</Package>
             </UsedBy>
@@ -277,7 +342,7 @@
                 <ConcreteClasses>2</ConcreteClasses>
                 <AbstractClasses>0</AbstractClasses>
                 <Ca>0</Ca>
-                <Ce>15</Ce>
+                <Ce>17</Ce>
                 <A>0</A>
                 <I>1</I>
                 <D>0</D>
@@ -302,6 +367,7 @@
                 <Package>griffon.core.addon</Package>
                 <Package>griffon.core.artifact</Package>
                 <Package>griffon.core.controller</Package>
+                <Package>griffon.core.i18n</Package>
                 <Package>griffon.core.mvc</Package>
                 <Package>griffon.util</Package>
                 <Package>groovy.util</Package>
@@ -309,6 +375,7 @@
                 <Package>java.util</Package>
                 <Package>org.codehaus.griffon.runtime.core.addon</Package>
                 <Package>org.codehaus.griffon.runtime.core.injection</Package>
+                <Package>org.codehaus.griffon.runtime.groovy.i18n</Package>
                 <Package>org.codehaus.griffon.runtime.groovy.mvc</Package>
                 <Package>org.codehaus.griffon.runtime.groovy.util</Package>
                 <Package>org.slf4j</Package>
@@ -363,6 +430,43 @@
             </UsedBy>
         </Package>
 
+        <Package name="org.codehaus.griffon.runtime.groovy.i18n">
+            <Stats>
+                <TotalClasses>2</TotalClasses>
+                <ConcreteClasses>2</ConcreteClasses>
+                <AbstractClasses>0</AbstractClasses>
+                <Ca>1</Ca>
+                <Ce>4</Ce>
+                <A>0</A>
+                <I>0.8</I>
+                <D>0.2</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="DefaultGroovyAwareMessageSource.java">
+                    org.codehaus.griffon.runtime.groovy.i18n.DefaultGroovyAwareMessageSource
+                </Class>
+                <Class sourceFile="GroovyAwareMessageSourceDecoratorFactory.java">
+                    org.codehaus.griffon.runtime.groovy.i18n.GroovyAwareMessageSourceDecoratorFactory
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>griffon.core.i18n</Package>
+                <Package>griffon.util</Package>
+                <Package>java.lang</Package>
+                <Package>java.util</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>org.codehaus.griffon.runtime.groovy</Package>
+            </UsedBy>
+        </Package>
+
         <Package name="org.codehaus.griffon.runtime.groovy.mvc">
             <Stats>
                 <TotalClasses>3</TotalClasses>
@@ -408,6 +512,42 @@
 
             <UsedBy>
                 <Package>org.codehaus.griffon.runtime.groovy</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="org.codehaus.griffon.runtime.groovy.resources">
+            <Stats>
+                <TotalClasses>2</TotalClasses>
+                <ConcreteClasses>2</ConcreteClasses>
+                <AbstractClasses>0</AbstractClasses>
+                <Ca>0</Ca>
+                <Ce>4</Ce>
+                <A>0</A>
+                <I>1</I>
+                <D>0</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="DefaultGroovyAwareResourceResolver.java">
+                    org.codehaus.griffon.runtime.groovy.resources.DefaultGroovyAwareResourceResolver
+                </Class>
+                <Class sourceFile="GroovyAwareResourceResolverDecoratorFactory.java">
+                    org.codehaus.griffon.runtime.groovy.resources.GroovyAwareResourceResolverDecoratorFactory
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>griffon.core.resources</Package>
+                <Package>griffon.util</Package>
+                <Package>java.lang</Package>
+                <Package>java.util</Package>
+            </DependsUpon>
+
+            <UsedBy>
             </UsedBy>
         </Package>
 

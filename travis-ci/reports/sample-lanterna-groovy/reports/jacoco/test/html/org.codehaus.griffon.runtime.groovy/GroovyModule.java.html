@@ -22,7 +22,9 @@ import griffon.core.mvc.MVCGroupManager;
 import griffon.util.BuilderCustomizer;
 import griffon.util.CompositeResourceBundleBuilder;
 import griffon.util.ConfigReader;
+import griffon.core.i18n.MessageSourceDecoratorFactory;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.codehaus.griffon.runtime.groovy.i18n.GroovyAwareMessageSourceDecoratorFactory;
 import org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroupManager;
 import org.codehaus.griffon.runtime.groovy.util.GroovyAwareCompositeResourceBundleBuilder;
 import org.kordamp.jipsy.ServiceProviderFor;
@@ -35,30 +37,38 @@ import javax.inject.Named;
  */
 @Named(&quot;groovy&quot;)
 @ServiceProviderFor(Module.class)
-<span class="fc" id="L38">public class GroovyModule extends AbstractModule {</span>
+<span class="fc" id="L40">public class GroovyModule extends AbstractModule {</span>
     @Override
     protected void doConfigure() {
         // tag::bindings[]
-<span class="fc" id="L42">        bind(ConfigReader.class)</span>
-<span class="fc" id="L43">            .toProvider(ConfigReader.Provider.class)</span>
-<span class="fc" id="L44">            .asSingleton();</span>
+<span class="fc" id="L44">        bind(ConfigReader.class)</span>
+<span class="fc" id="L45">            .toProvider(ConfigReader.Provider.class)</span>
+<span class="fc" id="L46">            .asSingleton();</span>
 
-<span class="fc" id="L46">        bind(CompositeResourceBundleBuilder.class)</span>
-<span class="fc" id="L47">            .to(GroovyAwareCompositeResourceBundleBuilder.class)</span>
-<span class="fc" id="L48">            .asSingleton();</span>
+<span class="fc" id="L48">        bind(CompositeResourceBundleBuilder.class)</span>
+<span class="fc" id="L49">            .to(GroovyAwareCompositeResourceBundleBuilder.class)</span>
+<span class="fc" id="L50">            .asSingleton();</span>
 
-<span class="fc" id="L50">        bind(GriffonAddon.class)</span>
-<span class="fc" id="L51">            .to(GroovyAddon.class)</span>
-<span class="fc" id="L52">            .asSingleton();</span>
+<span class="fc" id="L52">        bind(GriffonAddon.class)</span>
+<span class="fc" id="L53">            .to(GroovyAddon.class)</span>
+<span class="fc" id="L54">            .asSingleton();</span>
 
-<span class="fc" id="L54">        bind(MVCGroupManager.class)</span>
-<span class="fc" id="L55">            .to(GroovyAwareMVCGroupManager.class)</span>
-<span class="fc" id="L56">            .asSingleton();</span>
+<span class="fc" id="L56">        bind(MVCGroupManager.class)</span>
+<span class="fc" id="L57">            .to(GroovyAwareMVCGroupManager.class)</span>
+<span class="fc" id="L58">            .asSingleton();</span>
 
-<span class="fc" id="L58">        bind(BuilderCustomizer.class)</span>
-<span class="fc" id="L59">            .to(CoreBuilderCustomizer.class)</span>
-<span class="fc" id="L60">            .asSingleton();</span>
+<span class="fc" id="L60">        bind(BuilderCustomizer.class)</span>
+<span class="fc" id="L61">            .to(CoreBuilderCustomizer.class)</span>
+<span class="fc" id="L62">            .asSingleton();</span>
+
+        /*
+        bind(ResourceResolverDecorator.class)
+            .toProvider(GroovyAwareResourceResolverDecoratorProvider.class);
+            */
+
+<span class="fc" id="L69">        bind(MessageSourceDecoratorFactory.class)</span>
+<span class="fc" id="L70">            .to(GroovyAwareMessageSourceDecoratorFactory.class);</span>
         // end::bindings[]
-<span class="fc" id="L62">    }</span>
+<span class="fc" id="L72">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

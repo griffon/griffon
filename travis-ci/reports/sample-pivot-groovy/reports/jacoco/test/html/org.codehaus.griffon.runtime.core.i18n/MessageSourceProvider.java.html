@@ -16,6 +16,7 @@
 package org.codehaus.griffon.runtime.core.i18n;
 
 import griffon.core.i18n.MessageSource;
+import griffon.core.i18n.MessageSourceDecoratorFactory;
 import griffon.util.CompositeResourceBundleBuilder;
 
 import javax.annotation.Nonnull;
@@ -32,20 +33,22 @@ import static java.util.Objects.requireNonNull;
 public class MessageSourceProvider implements Provider&lt;MessageSource&gt; {
     private final String basename;
 
+    @Inject
     private CompositeResourceBundleBuilder resourceBundleBuilder;
 
-<span class="fc" id="L37">    public MessageSourceProvider(@Nonnull String basename) {</span>
-<span class="fc" id="L38">        this.basename = requireNonBlank(basename, &quot;Argument 'basename' must not be blank&quot;);</span>
-<span class="fc" id="L39">    }</span>
-
     @Inject
-    public void setResourceBundleBuilder(@Nonnull CompositeResourceBundleBuilder resourceBundleBuilder) {
-<span class="fc" id="L43">        this.resourceBundleBuilder = requireNonNull(resourceBundleBuilder, &quot;Argument 'resourceBundleBuilder' must not be null&quot;);</span>
+    private MessageSourceDecoratorFactory messageSourceDecoratorFactory;
+
+<span class="fc" id="L42">    public MessageSourceProvider(@Nonnull String basename) {</span>
+<span class="fc" id="L43">        this.basename = requireNonBlank(basename, &quot;Argument 'basename' must not be blank&quot;);</span>
 <span class="fc" id="L44">    }</span>
 
     @Override
     public MessageSource get() {
-<span class="fc" id="L48">        return new DefaultMessageSource(resourceBundleBuilder, basename);</span>
+<span class="fc" id="L48">        requireNonNull(resourceBundleBuilder, &quot;Argument 'resourceBundleBuilder' must not be null&quot;);</span>
+<span class="fc" id="L49">        requireNonNull(messageSourceDecoratorFactory, &quot;Argument 'messageSourceDecoratorFactory' must not be null&quot;);</span>
+<span class="fc" id="L50">        DefaultMessageSource messageSource = new DefaultMessageSource(resourceBundleBuilder, basename);</span>
+<span class="fc" id="L51">        return messageSourceDecoratorFactory.create(messageSource);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>MessageSourceDecorator.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-java</a> &gt; <a href="index.source.html" class="el_package">griffon.core.i18n</a> &gt; <span class="el_source">MessageSourceDecorator.java</span></div><h1>MessageSourceDecorator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.core.i18n;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.4.0
+ */
+public class MessageSourceDecorator implements MessageSource {
+    private final MessageSource delegate;
+
+<span class="fc" id="L34">    public MessageSourceDecorator(@Nonnull MessageSource delegate) {</span>
+<span class="fc" id="L35">        this.delegate = requireNonNull(delegate, &quot;Argument 'delegate' must not be null&quot;);</span>
+<span class="fc" id="L36">    }</span>
+
+    @Nonnull
+    protected MessageSource getDelegate() {
+<span class="fc" id="L40">        return delegate;</span>
+    }
+
+    @Nonnull
+    public String getMessage(@Nonnull String key) throws NoSuchMessageException {
+<span class="fc" id="L45">        return getDelegate().getMessage(key);</span>
+    }
+
+    @Nonnull
+    public String formatMessage(@Nonnull String message, @Nonnull Object[] args) {
+<span class="nc" id="L50">        return getDelegate().formatMessage(message, args);</span>
+    }
+
+    @Nullable
+    public String getMessage(@Nonnull String key, @Nonnull List&lt;?&gt; args, @Nonnull Locale locale, @Nullable String defaultMessage) {
+<span class="nc" id="L55">        return getDelegate().getMessage(key, args, locale, defaultMessage);</span>
+    }
+
+    @Nonnull
+    public String getMessage(@Nonnull String key, @Nonnull Object[] args, @Nonnull Locale locale) throws NoSuchMessageException {
+<span class="nc" id="L60">        return getDelegate().getMessage(key, args, locale);</span>
+    }
+
+    @Nonnull
+    public String getMessage(@Nonnull String key, @Nonnull List&lt;?&gt; args) throws NoSuchMessageException {
+<span class="fc" id="L65">        return getDelegate().getMessage(key, args);</span>
+    }
+
+    @Nullable
+    public String getMessage(@Nonnull String key, @Nonnull List&lt;?&gt; args, @Nullable String defaultMessage) {
+<span class="nc" id="L70">        return getDelegate().getMessage(key, args, defaultMessage);</span>
+    }
+
+    @Nullable
+    public String getMessage(@Nonnull String key, @Nonnull Object[] args, @Nonnull Locale locale, @Nullable String defaultMessage) {
+<span class="nc" id="L75">        return getDelegate().getMessage(key, args, locale, defaultMessage);</span>
+    }
+
+    @Nonnull
+    public String formatMessage(@Nonnull String message, @Nonnull List&lt;?&gt; args) {
+<span class="nc" id="L80">        return getDelegate().formatMessage(message, args);</span>
+    }
+
+    @Nonnull
+    public String formatMessage(@Nonnull String message, @Nonnull Map&lt;String, Object&gt; args) {
+<span class="nc" id="L85">        return getDelegate().formatMessage(message, args);</span>
+    }
+
+    @Nonnull
+    public String getMessage(@Nonnull String key, @Nonnull Object[] args) throws NoSuchMessageException {
+<span class="nc" id="L90">        return getDelegate().getMessage(key, args);</span>
+    }
+
+    @Nullable
+    public String getMessage(@Nonnull String key, @Nullable String defaultMessage) {
+<span class="fc" id="L95">        return getDelegate().getMessage(key, defaultMessage);</span>
+    }
+
+    @Nullable
+    public String getMessage(@Nonnull String key, @Nonnull Map&lt;String, Object&gt; args, @Nullable String defaultMessage) {
+<span class="nc" id="L100">        return getDelegate().getMessage(key, args, defaultMessage);</span>
+    }
+
+    @Nonnull
+    public String getMessage(@Nonnull String key, @Nonnull Locale locale) throws NoSuchMessageException {
+<span class="nc" id="L105">        return getDelegate().getMessage(key, locale);</span>
+    }
+
+    @Nonnull
+    public String getMessage(@Nonnull String key, @Nonnull Map&lt;String, Object&gt; args) throws NoSuchMessageException {
+<span class="nc" id="L110">        return getDelegate().getMessage(key, args);</span>
+    }
+
+    @Nullable
+    public String getMessage(@Nonnull String key, @Nonnull Locale locale, @Nullable String defaultMessage) {
+<span class="nc" id="L115">        return getDelegate().getMessage(key, locale, defaultMessage);</span>
+    }
+
+    @Nullable
+    public String getMessage(@Nonnull String key, @Nonnull Object[] args, @Nullable String defaultMessage) {
+<span class="nc" id="L120">        return getDelegate().getMessage(key, args, defaultMessage);</span>
+    }
+
+    @Nonnull
+    public String getMessage(@Nonnull String key, @Nonnull Map&lt;String, Object&gt; args, @Nonnull Locale locale) throws NoSuchMessageException {
+<span class="nc" id="L125">        return getDelegate().getMessage(key, args, locale);</span>
+    }
+
+    @Nonnull
+    public ResourceBundle asResourceBundle() {
+<span class="fc" id="L130">        return getDelegate().asResourceBundle();</span>
+    }
+
+    @Nullable
+    public String getMessage(@Nonnull String key, @Nonnull Map&lt;String, Object&gt; args, @Nonnull Locale locale, @Nullable String defaultMessage) {
+<span class="nc" id="L135">        return getDelegate().getMessage(key, args, locale, defaultMessage);</span>
+    }
+
+    @Nonnull
+    public String getMessage(@Nonnull String key, @Nonnull List&lt;?&gt; args, @Nonnull Locale locale) throws NoSuchMessageException {
+<span class="nc" id="L140">        return getDelegate().getMessage(key, args, locale);</span>
+    }
+
+    @Nonnull
+    public Object resolveMessageValue(@Nonnull String key, @Nonnull Locale locale) throws NoSuchMessageException {
+<span class="nc" id="L145">        return getDelegate().resolveMessageValue(key, locale);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

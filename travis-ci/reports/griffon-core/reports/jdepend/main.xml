@@ -615,9 +615,9 @@
 
         <Package name="griffon.core.i18n">
             <Stats>
-                <TotalClasses>2</TotalClasses>
-                <ConcreteClasses>1</ConcreteClasses>
-                <AbstractClasses>1</AbstractClasses>
+                <TotalClasses>4</TotalClasses>
+                <ConcreteClasses>2</ConcreteClasses>
+                <AbstractClasses>2</AbstractClasses>
                 <Ca>6</Ca>
                 <Ce>3</Ce>
                 <A>0.5</A>
@@ -630,9 +630,15 @@
                 <Class sourceFile="MessageSource.java">
                     griffon.core.i18n.MessageSource
                 </Class>
+                <Class sourceFile="MessageSourceDecoratorFactory.java">
+                    griffon.core.i18n.MessageSourceDecoratorFactory
+                </Class>
             </AbstractClasses>
 
             <ConcreteClasses>
+                <Class sourceFile="MessageSourceDecorator.java">
+                    griffon.core.i18n.MessageSourceDecorator
+                </Class>
                 <Class sourceFile="NoSuchMessageException.java">
                     griffon.core.i18n.NoSuchMessageException
                 </Class>
@@ -780,14 +786,14 @@
 
         <Package name="griffon.core.resources">
             <Stats>
-                <TotalClasses>5</TotalClasses>
-                <ConcreteClasses>1</ConcreteClasses>
-                <AbstractClasses>4</AbstractClasses>
+                <TotalClasses>7</TotalClasses>
+                <ConcreteClasses>2</ConcreteClasses>
+                <AbstractClasses>5</AbstractClasses>
                 <Ca>8</Ca>
                 <Ce>6</Ce>
-                <A>0.8</A>
+                <A>0.71</A>
                 <I>0.43</I>
-                <D>0.23</D>
+                <D>0.14</D>
                 <V>1</V>
             </Stats>
 
@@ -804,11 +810,17 @@
                 <Class sourceFile="ResourceResolver.java">
                     griffon.core.resources.ResourceResolver
                 </Class>
+                <Class sourceFile="ResourceResolverDecoratorFactory.java">
+                    griffon.core.resources.ResourceResolverDecoratorFactory
+                </Class>
             </AbstractClasses>
 
             <ConcreteClasses>
                 <Class sourceFile="NoSuchResourceException.java">
                     griffon.core.resources.NoSuchResourceException
+                </Class>
+                <Class sourceFile="ResourceResolverDecorator.java">
+                    griffon.core.resources.ResourceResolverDecorator
                 </Class>
             </ConcreteClasses>
 
@@ -1895,14 +1907,14 @@
 
         <Package name="org.codehaus.griffon.runtime.core.i18n">
             <Stats>
-                <TotalClasses>4</TotalClasses>
-                <ConcreteClasses>3</ConcreteClasses>
+                <TotalClasses>5</TotalClasses>
+                <ConcreteClasses>4</ConcreteClasses>
                 <AbstractClasses>1</AbstractClasses>
                 <Ca>1</Ca>
                 <Ce>9</Ce>
-                <A>0.25</A>
+                <A>0.2</A>
                 <I>0.9</I>
-                <D>0.15</D>
+                <D>0.1</D>
                 <V>1</V>
             </Stats>
 
@@ -1918,6 +1930,9 @@
                 </Class>
                 <Class sourceFile="DefaultMessageSource.java">
                     org.codehaus.griffon.runtime.core.i18n.DefaultMessageSource
+                </Class>
+                <Class sourceFile="DefaultMessageSourceDecoratorFactory.java">
+                    org.codehaus.griffon.runtime.core.i18n.DefaultMessageSourceDecoratorFactory
                 </Class>
                 <Class sourceFile="MessageSourceProvider.java">
                     org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider
@@ -2090,14 +2105,14 @@
 
         <Package name="org.codehaus.griffon.runtime.core.resources">
             <Stats>
-                <TotalClasses>9</TotalClasses>
-                <ConcreteClasses>6</ConcreteClasses>
+                <TotalClasses>10</TotalClasses>
+                <ConcreteClasses>7</ConcreteClasses>
                 <AbstractClasses>3</AbstractClasses>
                 <Ca>1</Ca>
                 <Ce>15</Ce>
-                <A>0.33</A>
+                <A>0.3</A>
                 <I>0.94</I>
-                <D>0.27</D>
+                <D>0.24</D>
                 <V>1</V>
             </Stats>
 
@@ -2128,6 +2143,9 @@
                 </Class>
                 <Class sourceFile="DefaultResourceResolver.java">
                     org.codehaus.griffon.runtime.core.resources.DefaultResourceResolver
+                </Class>
+                <Class sourceFile="DefaultResourceResolverDecoratorFactory.java">
+                    org.codehaus.griffon.runtime.core.resources.DefaultResourceResolverDecoratorFactory
                 </Class>
                 <Class sourceFile="ResourceResolverProvider.java">
                     org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider
