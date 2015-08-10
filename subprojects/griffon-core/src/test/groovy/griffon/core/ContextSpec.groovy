@@ -91,4 +91,14 @@ class ContextSpec extends Specification {
         then:
         !ctx1['foo']
     }
+
+    def "Get all the keys"() {
+        expect:
+        context.keySet() == keySet
+
+        where:
+        context | keySet
+        ctx1    | ['foo'] as Set
+        ctx2    | ['foo', 'bar'] as Set
+    }
 }

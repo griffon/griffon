@@ -68,6 +68,16 @@ public abstract class AbstractContext implements Context {
         parentContext = null;
     }
 
+    @Override
+    public boolean hasKey(@Nonnull String key) {
+        if (containsKey(key)) {
+            return true;
+        } else if (parentContext != null) {
+            return parentContext.hasKey(key);
+        }
+        return false;
+    }
+
     @Nullable
     protected abstract Object doGet(@Nonnull String key);
 }

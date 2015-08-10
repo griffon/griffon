@@ -19,7 +19,9 @@ import griffon.core.Context;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
@@ -75,5 +77,15 @@ public class DefaultContext extends AbstractContext {
     public void destroy() {
         attributes.clear();
         super.destroy();
+    }
+
+    @Nonnull
+    @Override
+    public Set<String> keySet() {
+        Set<String> keys = new HashSet<>(attributes.keySet());
+        if (parentContext != null) {
+            keys.addAll(parentContext.keySet());
+        }
+        return keys;
     }
 }
