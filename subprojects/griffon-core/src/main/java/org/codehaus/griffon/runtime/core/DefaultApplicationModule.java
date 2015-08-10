@@ -34,10 +34,12 @@ import griffon.core.env.RunMode;
 import griffon.core.event.EventHandler;
 import griffon.core.event.EventRouter;
 import griffon.core.i18n.MessageSource;
+import griffon.core.i18n.MessageSourceDecoratorFactory;
 import griffon.core.mvc.MVCGroupManager;
 import griffon.core.resources.ResourceHandler;
 import griffon.core.resources.ResourceInjector;
 import griffon.core.resources.ResourceResolver;
+import griffon.core.resources.ResourceResolverDecoratorFactory;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import griffon.util.CompositeResourceBundleBuilder;
@@ -53,11 +55,13 @@ import org.codehaus.griffon.runtime.core.env.MetadataProvider;
 import org.codehaus.griffon.runtime.core.env.RunModeProvider;
 import org.codehaus.griffon.runtime.core.event.DefaultEventHandler;
 import org.codehaus.griffon.runtime.core.event.DefaultEventRouter;
+import org.codehaus.griffon.runtime.core.i18n.DefaultMessageSourceDecoratorFactory;
 import org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager;
 import org.codehaus.griffon.runtime.core.resources.DefaultApplicationResourceInjector;
 import org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler;
+import org.codehaus.griffon.runtime.core.resources.DefaultResourceResolverDecoratorFactory;
 import org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider;
 import org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider;
 import org.codehaus.griffon.runtime.core.threading.DefaultUIThreadManager;
@@ -133,6 +137,12 @@ public class DefaultApplicationModule extends AbstractModule {
 
         bind(EventRouter.class)
             .to(DefaultEventRouter.class);
+
+        bind(ResourceResolverDecoratorFactory.class)
+            .to(DefaultResourceResolverDecoratorFactory.class);
+
+        bind(MessageSourceDecoratorFactory.class)
+            .to(DefaultMessageSourceDecoratorFactory.class);
 
         bind(ResourceResolver.class)
             .withClassifier(named("applicationResourceResolver"))

@@ -22,7 +22,9 @@ import griffon.core.mvc.MVCGroupManager;
 import griffon.util.BuilderCustomizer;
 import griffon.util.CompositeResourceBundleBuilder;
 import griffon.util.ConfigReader;
+import griffon.core.i18n.MessageSourceDecoratorFactory;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.codehaus.griffon.runtime.groovy.i18n.GroovyAwareMessageSourceDecoratorFactory;
 import org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroupManager;
 import org.codehaus.griffon.runtime.groovy.util.GroovyAwareCompositeResourceBundleBuilder;
 import org.kordamp.jipsy.ServiceProviderFor;
@@ -58,6 +60,14 @@ public class GroovyModule extends AbstractModule {
         bind(BuilderCustomizer.class)
             .to(CoreBuilderCustomizer.class)
             .asSingleton();
+
+        /*
+        bind(ResourceResolverDecorator.class)
+            .toProvider(GroovyAwareResourceResolverDecoratorProvider.class);
+            */
+
+        bind(MessageSourceDecoratorFactory.class)
+            .to(GroovyAwareMessageSourceDecoratorFactory.class);
         // end::bindings[]
     }
 }

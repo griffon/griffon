@@ -16,6 +16,7 @@
 package org.codehaus.griffon.runtime.core.resources;
 
 import griffon.core.resources.ResourceResolver;
+import griffon.core.resources.ResourceResolverDecoratorFactory;
 import griffon.util.CompositeResourceBundleBuilder;
 
 import javax.annotation.Nonnull;
@@ -32,19 +33,21 @@ import static java.util.Objects.requireNonNull;
 public class ResourceResolverProvider implements Provider<ResourceResolver> {
     private final String basename;
 
+    @Inject
     private CompositeResourceBundleBuilder resourceBundleBuilder;
+
+    @Inject
+    private ResourceResolverDecoratorFactory resourceResolverDecoratorFactory;
 
     public ResourceResolverProvider(@Nonnull String basename) {
         this.basename = requireNonBlank(basename, "Argument 'basename' must not be blank");
     }
 
-    @Inject
-    public void setResourceBundleBuilder(@Nonnull CompositeResourceBundleBuilder resourceBundleBuilder) {
-        this.resourceBundleBuilder = requireNonNull(resourceBundleBuilder, "Argument 'resourceBundleBuilder' must not be null");
-    }
-
     @Override
     public ResourceResolver get() {
-        return new DefaultResourceResolver(resourceBundleBuilder, basename);
+        requireNonNull(resourceBundleBuilder, "Argument 'resourceBundleBuilder' must not be null");
+        requireNonNull(resourceResolverDecoratorFactory, "Argument 'resourceResolverDecoratorFactory' must not be null");
+        DefaultResourceResolver resourceResolver = new DefaultResourceResolver(resourceBundleBuilder, basename);
+        return resourceResolverDecoratorFactory.create(resourceResolver);
     }
 }

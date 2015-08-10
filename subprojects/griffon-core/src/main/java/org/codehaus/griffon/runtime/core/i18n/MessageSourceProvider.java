@@ -16,6 +16,7 @@
 package org.codehaus.griffon.runtime.core.i18n;
 
 import griffon.core.i18n.MessageSource;
+import griffon.core.i18n.MessageSourceDecoratorFactory;
 import griffon.util.CompositeResourceBundleBuilder;
 
 import javax.annotation.Nonnull;
@@ -32,19 +33,21 @@ import static java.util.Objects.requireNonNull;
 public class MessageSourceProvider implements Provider<MessageSource> {
     private final String basename;
 
+    @Inject
     private CompositeResourceBundleBuilder resourceBundleBuilder;
+
+    @Inject
+    private MessageSourceDecoratorFactory messageSourceDecoratorFactory;
 
     public MessageSourceProvider(@Nonnull String basename) {
         this.basename = requireNonBlank(basename, "Argument 'basename' must not be blank");
     }
 
-    @Inject
-    public void setResourceBundleBuilder(@Nonnull CompositeResourceBundleBuilder resourceBundleBuilder) {
-        this.resourceBundleBuilder = requireNonNull(resourceBundleBuilder, "Argument 'resourceBundleBuilder' must not be null");
-    }
-
     @Override
     public MessageSource get() {
-        return new DefaultMessageSource(resourceBundleBuilder, basename);
+        requireNonNull(resourceBundleBuilder, "Argument 'resourceBundleBuilder' must not be null");
+        requireNonNull(messageSourceDecoratorFactory, "Argument 'messageSourceDecoratorFactory' must not be null");
+        DefaultMessageSource messageSource = new DefaultMessageSource(resourceBundleBuilder, basename);
+        return messageSourceDecoratorFactory.create(messageSource);
     }
 }
