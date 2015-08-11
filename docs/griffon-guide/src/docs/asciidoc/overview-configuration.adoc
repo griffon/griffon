@@ -69,34 +69,8 @@ The current `java.util.Locale` is used to determine values for language, country
 
 As mentioned before, the default application configuration is made *read-only*, however there's a way to make it
 mutable, you simply must wrap the `{link_configuration}` instance with a `{link_mutable_configuration}`. You can accomplish
-this feat using a `javax.inject.Provider`, for example
-
-[source,java,linenums,options="nowrap"]
-.com.acme.MutableApplicationConfigurationProvider.java
-----
-package com.acme;
-
-import javax.inject.Provider;
-import javax.inject.Inject;
-import javax.inject.Named;
-import griffon.core.Configuration;
-import org.codehaus.griffon.runtime.core.DelegatingMutableConfiguration;
-
-public class MutableApplicationConfigurationProvider implements Provider<Configuration> {  //<1>
-    @Inject @Named("applicationConfig-readonly")                                           //<2>
-    private Configuration readOnlyAppConfig;
-
-    public Configuration get() {
-        return new DelegatingMutableConfiguration(readOnlyAppConfig);                      //<3>
-    }
-}
-----
-<1> Must return instances of type `griffon.core.Configuration`
-<2> Link to read-only configuration
-<3> Wrap it with a default implementation of `MutableConfiguration`
-
-You'll have to register this provider with a module, making sure that the original configuration binding is redirected
-another binding, for example
+this feat by registering an appropriate implementation of `{configuration_decorator_factory}`, for example
+`{mutable_configuration_decorator_factory}`. You'll have to register this class with a module
 
 [source,java,linenums,options="nowrap"]
 .com.acme.ApplicationModule.java
@@ -106,8 +80,8 @@ package com.acme
 import griffon.core.injection.Module;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.kordamp.jipsy.ServiceProviderFor;
-import griffon.core.Configuration;
-import org.codehaus.griffon.runtime.core.DefaultConfiguration;
+import org.codehaus.griffon.runtime.core.ConfigurationDecoratorFactory;
+import org.codehaus.griffon.runtime.core.MutableConfigurationDecoratorFactory;
 
 import static griffon.util.AnnotationUtils.named;
 
@@ -115,21 +89,10 @@ import static griffon.util.AnnotationUtils.named;
 public class ApplicationModule extends AbstractModule {
     @Override
     protected void doConfigure() {
-        bind(Configuration.class)
-            .withClassifier(named("applicationConfig-readonly"))                           //<1>
-            .to(DefaultConfiguration.class)
-            .asSingleton();
-
-        bind(Configuration.class)                                                          //<2>
-            .toProvider(MutableApplicationConfigurationProvider.class)
+        bind(ConfigurationDecoratorFactory.class)
+            .toProvider(MutableConfigurationDecoratorFactory.class)
             .asSingleton();
     }
 }
 ----
-<1> Provide a binding with a new classifier
-<2> Override original binding with the mutable configuration provider
-
-As a matter of fact you can make any instance of `{link_configuration}` a mutable one if you follow this pattern.
-Remember it's very important that you override the original configuration binding using the exact same source type
-and classifier (if it exists).
 

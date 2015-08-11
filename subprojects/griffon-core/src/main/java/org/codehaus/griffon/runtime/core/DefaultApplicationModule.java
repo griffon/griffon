@@ -122,8 +122,11 @@ public class DefaultApplicationModule extends AbstractModule {
             .toProvider(new ResourceBundleProvider("Config"))
             .asSingleton();
 
+        bind(ConfigurationDecoratorFactory.class)
+            .to(DefaultConfigurationDecoratorFactory.class);
+
         bind(Configuration.class)
-            .to(DefaultConfiguration.class)
+            .toProvider(ResourceBundleConfigurationProvider.class)
             .asSingleton();
 
         bind(ExecutorServiceManager.class)

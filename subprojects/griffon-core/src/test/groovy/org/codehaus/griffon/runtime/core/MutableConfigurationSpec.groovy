@@ -15,16 +15,32 @@
  */
 package org.codehaus.griffon.runtime.core
 
+import com.google.guiceberry.GuiceBerryModule
+import com.google.guiceberry.junit4.GuiceBerryRule
+import com.google.inject.AbstractModule
+import com.google.inject.Inject
 import griffon.core.Configuration
 import griffon.core.MutableConfiguration
+import org.junit.Rule
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import javax.inject.Singleton
+
+import static com.google.inject.util.Providers.guicify
+import static griffon.util.AnnotationUtils.named
+
 @Unroll
 class MutableConfigurationSpec extends Specification {
+    @Rule
+    public final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
+
+    @Inject
+    private Configuration configuration
+
     def 'Calling configuration.set(#key, #value) stores #value'() {
         given:
-        Configuration configuration = new MyMutableConfiguration()
+        assert configuration instanceof MutableConfiguration
 
         expect:
         configuration.containsKey(key)
@@ -52,7 +68,7 @@ class MutableConfigurationSpec extends Specification {
 
     def 'Calling configuration.set(#key, #value) stores #value (recall with getAsString)'() {
         given:
-        Configuration configuration = new MyMutableConfiguration()
+        assert configuration instanceof MutableConfiguration
 
         expect:
         configuration.containsKey(key)
@@ -80,7 +96,7 @@ class MutableConfigurationSpec extends Specification {
 
     def 'Calling configuration.remove(#key) removes the key'() {
         given:
-        MutableConfiguration configuration = new MyMutableConfiguration()
+        assert configuration instanceof MutableConfiguration
         configuration.set('key.foo', 'foo')
 
         expect:
@@ -123,11 +139,12 @@ class MutableConfigurationSpec extends Specification {
 
     def 'Transforming configuration into flat Map and retrieving key #key'() {
         given:
-        MutableConfiguration configuration = new MyMutableConfiguration()
+        assert configuration instanceof MutableConfiguration
         configuration.set('key.foo', 'foo')
 
         when:
         Map map = configuration.asFlatMap()
+        println(["map", map])
 
         then:
         null != map[key]
@@ -157,11 +174,12 @@ class MutableConfigurationSpec extends Specification {
 
     def 'Transforming configuration into Properties and retrieving key #key'() {
         given:
-        MutableConfiguration configuration = new MyMutableConfiguration()
+        assert configuration instanceof MutableConfiguration
         configuration.set('key.foo', 'foo')
 
         when:
         Properties props = configuration.asProperties()
+        println(["props", props])
 
         then:
         null != props.getProperty(key)
@@ -184,7 +202,7 @@ class MutableConfigurationSpec extends Specification {
 
     def 'Transforming configuration into ResourceBundle and retrieving key #key'() {
         given:
-        MutableConfiguration configuration = new MyMutableConfiguration()
+        assert configuration instanceof MutableConfiguration
         configuration.set('key.foo', 'foo')
 
         when:
@@ -209,9 +227,17 @@ class MutableConfigurationSpec extends Specification {
         'key.foo'            || _
     }
 
-    static class MyMutableConfiguration extends DelegatingMutableConfiguration {
-        MyMutableConfiguration() {
-            super(new DefaultConfiguration(new MapResourceBundle()))
+    static final class TestModule extends AbstractModule {
+        @Override
+        protected void configure() {
+            install(new GuiceBerryModule())
+            bind(ResourceBundle)
+                .annotatedWith(named('applicationResourceBundle'))
+                .to(MapResourceBundle)
+            bind(ConfigurationDecoratorFactory)
+                .to(MutableConfigurationDecoratorFactory)
+            bind(Configuration)
+                .toProvider(guicify(new ResourceBundleConfigurationProvider()))
         }
     }
 }

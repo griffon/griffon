@@ -27,7 +27,7 @@ class ConfigurationDecoratorSpec extends Specification {
     def 'Calling configuration.#method(#key, #defaultValue) gives #value as result'() {
         given:
         ResourceBundle bundle = new MapResourceBundle()
-        Configuration configuration = new DefaultConfiguration(bundle)
+        Configuration configuration = new ResourceBundleConfiguration(bundle)
         configuration = new MyConfigurationDecorator(configuration)
 
         expect:
@@ -65,7 +65,7 @@ class ConfigurationDecoratorSpec extends Specification {
     def 'Can resolve nested keys from sample application configuration'() {
         given:
         ResourceBundle bundle = new AppResourceBundle()
-        Configuration configuration = new DefaultConfiguration(bundle)
+        Configuration configuration = new ResourceBundleConfiguration(bundle)
         configuration = new MyConfigurationDecorator(configuration)
         Properties props = configuration.asProperties()
 
@@ -104,11 +104,13 @@ class ConfigurationDecoratorSpec extends Specification {
             return delegate.containsKey(key)
         }
 
+        @Nonnull
         @Override
         Map<String, Object> asFlatMap() {
             return delegate.asFlatMap()
         }
 
+        @Nonnull
         @Override
         ResourceBundle asResourceBundle() {
             return delegate.asResourceBundle()

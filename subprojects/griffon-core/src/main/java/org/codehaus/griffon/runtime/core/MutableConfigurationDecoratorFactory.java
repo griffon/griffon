@@ -15,20 +15,21 @@
  */
 package org.codehaus.griffon.runtime.core;
 
+import griffon.core.Configuration;
+
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.ResourceBundle;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 2.0.0
- * @deprecated
+ * @since 2.4.0
  */
-@Deprecated
-public class DefaultConfiguration extends ResourceBundleConfiguration {
-    @Inject
-    public DefaultConfiguration(@Nonnull @Named("applicationResourceBundle") ResourceBundle resourceBundle) {
-        super(resourceBundle);
+public class MutableConfigurationDecoratorFactory implements ConfigurationDecoratorFactory {
+    @Nonnull
+    @Override
+    public ConfigurationDecorator create(@Nonnull Configuration configuration) {
+        requireNonNull(configuration, "Argument 'configuration' must not be null");
+        return new DelegatingMutableConfiguration(configuration);
     }
 }

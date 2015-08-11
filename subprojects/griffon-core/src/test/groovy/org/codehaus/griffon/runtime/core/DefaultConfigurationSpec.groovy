@@ -27,7 +27,7 @@ class DefaultConfigurationSpec extends Specification {
     def 'Calling configuration.#method(#key, #defaultValue) gives #value as result'() {
         given:
         ResourceBundle bundle = new MapResourceBundle()
-        Configuration configuration = new DefaultConfiguration(bundle)
+        Configuration configuration = new ResourceBundleConfiguration(bundle)
 
         expect:
         value == (defaultValue != null ? configuration."$method"(key, defaultValue) : configuration."$method"(key))
@@ -64,7 +64,7 @@ class DefaultConfigurationSpec extends Specification {
     def 'Can resolve nested keys from sample application configuration'() {
         given:
         ResourceBundle bundle = new AppResourceBundle()
-        Configuration configuration = new DefaultConfiguration(bundle)
+        Configuration configuration = new ResourceBundleConfiguration(bundle)
         Properties props = configuration.asProperties()
 
         expect:

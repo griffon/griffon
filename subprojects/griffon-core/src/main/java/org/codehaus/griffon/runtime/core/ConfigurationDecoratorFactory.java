@@ -15,20 +15,15 @@
  */
 package org.codehaus.griffon.runtime.core;
 
+import griffon.core.Configuration;
+
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.ResourceBundle;
 
 /**
  * @author Andres Almiray
- * @since 2.0.0
- * @deprecated
+ * @since 2.4.0
  */
-@Deprecated
-public class DefaultConfiguration extends ResourceBundleConfiguration {
-    @Inject
-    public DefaultConfiguration(@Nonnull @Named("applicationResourceBundle") ResourceBundle resourceBundle) {
-        super(resourceBundle);
-    }
+public interface ConfigurationDecoratorFactory {
+    @Nonnull
+    ConfigurationDecorator create(@Nonnull Configuration configuration);
 }

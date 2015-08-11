@@ -15,20 +15,31 @@
  */
 package org.codehaus.griffon.runtime.core;
 
-import javax.annotation.Nonnull;
+import griffon.core.Configuration;
+
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 import java.util.ResourceBundle;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 2.0.0
- * @deprecated
+ * @since 2.4.0
  */
-@Deprecated
-public class DefaultConfiguration extends ResourceBundleConfiguration {
+public class ResourceBundleConfigurationProvider implements Provider<Configuration> {
+    @Inject @Named("applicationResourceBundle")
+    private ResourceBundle resourceBundle;
+
     @Inject
-    public DefaultConfiguration(@Nonnull @Named("applicationResourceBundle") ResourceBundle resourceBundle) {
-        super(resourceBundle);
+    private ConfigurationDecoratorFactory configurationDecoratorFactory;
+
+    @Override
+    public Configuration get() {
+        requireNonNull(resourceBundle, "Argument 'resourceBundle' must not be null");
+        requireNonNull(configurationDecoratorFactory, "Argument 'configurationDecoratorFactory' must not be null");
+        ResourceBundleConfiguration configuration = new ResourceBundleConfiguration(resourceBundle);
+        return configurationDecoratorFactory.create(configuration);
     }
 }

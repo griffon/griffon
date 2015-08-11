@@ -19,7 +19,9 @@ import griffon.core.Configuration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
 import static griffon.util.CollectionUtils.toProperties;
 import static griffon.util.TypeUtils.castToBoolean;
@@ -33,7 +35,7 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  * @since 2.2.0
  */
-public abstract class ConfigurationDecorator implements Configuration {
+public class ConfigurationDecorator implements Configuration {
     protected final Configuration delegate;
 
     public ConfigurationDecorator(@Nonnull Configuration delegate) {
@@ -133,5 +135,22 @@ public abstract class ConfigurationDecorator implements Configuration {
     @Override
     public Properties asProperties() {
         return toProperties(asFlatMap());
+    }
+
+    @Override
+    public boolean containsKey(@Nonnull String key) {
+        return delegate.containsKey(key);
+    }
+
+    @Nonnull
+    @Override
+    public Map<String, Object> asFlatMap() {
+        return delegate.asFlatMap();
+    }
+
+    @Nonnull
+    @Override
+    public ResourceBundle asResourceBundle() {
+        return delegate.asResourceBundle();
     }
 }
