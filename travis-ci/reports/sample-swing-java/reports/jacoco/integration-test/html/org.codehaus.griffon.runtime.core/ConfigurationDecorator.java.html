@@ -19,7 +19,9 @@ import griffon.core.Configuration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
 import static griffon.util.CollectionUtils.toProperties;
 import static griffon.util.TypeUtils.castToBoolean;
@@ -33,106 +35,123 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  * @since 2.2.0
  */
-public abstract class ConfigurationDecorator implements Configuration {
+public class ConfigurationDecorator implements Configuration {
     protected final Configuration delegate;
 
-<span class="nc" id="L39">    public ConfigurationDecorator(@Nonnull Configuration delegate) {</span>
-<span class="nc" id="L40">        this.delegate = requireNonNull(delegate, &quot;Argument 'delegate' must not be null.&quot;);</span>
-<span class="nc" id="L41">    }</span>
+<span class="fc" id="L41">    public ConfigurationDecorator(@Nonnull Configuration delegate) {</span>
+<span class="fc" id="L42">        this.delegate = requireNonNull(delegate, &quot;Argument 'delegate' must not be null.&quot;);</span>
+<span class="fc" id="L43">    }</span>
 
     @Override
     @Nullable
     public Object get(@Nonnull String key) {
-<span class="nc" id="L46">        return delegate.get(key);</span>
+<span class="fc" id="L48">        return delegate.get(key);</span>
     }
 
     @Nullable
     @Override
     @SuppressWarnings(&quot;unchecked&quot;)
     public &lt;T&gt; T get(@Nonnull String key, @Nullable T defaultValue) {
-<span class="nc" id="L53">        T value = (T) get(key);</span>
-<span class="nc bnc" id="L54" title="All 2 branches missed.">        return value != null ? value : defaultValue;</span>
+<span class="fc" id="L55">        T value = (T) get(key);</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        return value != null ? value : defaultValue;</span>
     }
 
     @Nullable
     @Override
     public Object getAt(@Nonnull String key) {
-<span class="nc" id="L60">        return get(key);</span>
+<span class="nc" id="L62">        return get(key);</span>
     }
 
     @Nullable
     @Override
     public &lt;T&gt; T getAt(@Nonnull String key, @Nullable T defaultValue) {
-<span class="nc" id="L66">        return get(key, defaultValue);</span>
+<span class="nc" id="L68">        return get(key, defaultValue);</span>
     }
 
     @Override
     public boolean getAsBoolean(@Nonnull String key) {
-<span class="nc" id="L71">        return getAsBoolean(key, false);</span>
+<span class="nc" id="L73">        return getAsBoolean(key, false);</span>
     }
 
     @Override
     public boolean getAsBoolean(@Nonnull String key, boolean defaultValue) {
-<span class="nc" id="L76">        return castToBoolean(get(key), defaultValue);</span>
+<span class="fc" id="L78">        return castToBoolean(get(key), defaultValue);</span>
     }
 
     @Override
     public int getAsInt(@Nonnull String key) {
-<span class="nc" id="L81">        return getAsInt(key, 0);</span>
+<span class="nc" id="L83">        return getAsInt(key, 0);</span>
     }
 
     @Override
     public int getAsInt(@Nonnull String key, int defaultValue) {
-<span class="nc" id="L86">        return castToInt(get(key), defaultValue);</span>
+<span class="nc" id="L88">        return castToInt(get(key), defaultValue);</span>
     }
 
     @Override
     public long getAsLong(@Nonnull String key) {
-<span class="nc" id="L91">        return getAsLong(key, 0L);</span>
+<span class="nc" id="L93">        return getAsLong(key, 0L);</span>
     }
 
     @Override
     public long getAsLong(@Nonnull String key, long defaultValue) {
-<span class="nc" id="L96">        return castToLong(get(key), defaultValue);</span>
+<span class="nc" id="L98">        return castToLong(get(key), defaultValue);</span>
     }
 
     @Override
     public float getAsFloat(@Nonnull String key) {
-<span class="nc" id="L101">        return getAsFloat(key, 0f);</span>
+<span class="nc" id="L103">        return getAsFloat(key, 0f);</span>
     }
 
     @Override
     public float getAsFloat(@Nonnull String key, float defaultValue) {
-<span class="nc" id="L106">        return castToFloat(get(key), defaultValue);</span>
+<span class="nc" id="L108">        return castToFloat(get(key), defaultValue);</span>
     }
 
     @Override
     public double getAsDouble(@Nonnull String key) {
-<span class="nc" id="L111">        return getAsDouble(key, 0d);</span>
+<span class="nc" id="L113">        return getAsDouble(key, 0d);</span>
     }
 
     @Override
     public double getAsDouble(@Nonnull String key, double defaultValue) {
-<span class="nc" id="L116">        return castToDouble(get(key), defaultValue);</span>
+<span class="nc" id="L118">        return castToDouble(get(key), defaultValue);</span>
     }
 
     @Nullable
     @Override
     public String getAsString(@Nonnull String key) {
-<span class="nc" id="L122">        return getAsString(key, null);</span>
+<span class="fc" id="L124">        return getAsString(key, null);</span>
     }
 
     @Nullable
     @Override
     public String getAsString(@Nonnull String key, @Nullable String defaultValue) {
-<span class="nc" id="L128">        Object value = get(key);</span>
-<span class="nc bnc" id="L129" title="All 2 branches missed.">        return value != null ? String.valueOf(value) : defaultValue;</span>
+<span class="fc" id="L130">        Object value = get(key);</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">        return value != null ? String.valueOf(value) : defaultValue;</span>
     }
 
     @Nonnull
     @Override
     public Properties asProperties() {
-<span class="nc" id="L135">        return toProperties(asFlatMap());</span>
+<span class="nc" id="L137">        return toProperties(asFlatMap());</span>
+    }
+
+    @Override
+    public boolean containsKey(@Nonnull String key) {
+<span class="nc" id="L142">        return delegate.containsKey(key);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Map&lt;String, Object&gt; asFlatMap() {
+<span class="fc" id="L148">        return delegate.asFlatMap();</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceBundle asResourceBundle() {
+<span class="nc" id="L154">        return delegate.asResourceBundle();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

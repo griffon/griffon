@@ -22,7 +22,7 @@ import griffon.core.mvc.MVCGroupManager;
 import griffon.util.BuilderCustomizer;
 import griffon.util.CompositeResourceBundleBuilder;
 import griffon.util.ConfigReader;
-import griffon.core.i18n.MessageSourceDecoratorFactory;
+import org.codehaus.griffon.runtime.core.i18n.MessageSourceDecoratorFactory;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.codehaus.griffon.runtime.groovy.i18n.GroovyAwareMessageSourceDecoratorFactory;
 import org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroupManager;

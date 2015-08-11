@@ -37,14 +37,14 @@ import static griffon.util.TypeUtils.castToLong;
     @Override
     @SuppressWarnings(&quot;unchecked&quot;)
     public &lt;T&gt; T get(@Nonnull String key, @Nullable T defaultValue) {
-<span class="fc" id="L40">        T value = (T) get(key);</span>
-<span class="fc bfc" id="L41" title="All 2 branches covered.">        return value != null ? value : defaultValue;</span>
+<span class="nc" id="L40">        T value = (T) get(key);</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">        return value != null ? value : defaultValue;</span>
     }
 
     @Nullable
     @Override
     public Object getAt(@Nonnull String key) {
-<span class="fc" id="L47">        return get(key);</span>
+<span class="nc" id="L47">        return get(key);</span>
     }
 
     @Nullable
@@ -60,7 +60,7 @@ import static griffon.util.TypeUtils.castToLong;
 
     @Override
     public boolean getAsBoolean(@Nonnull String key, boolean defaultValue) {
-<span class="fc" id="L63">        return castToBoolean(get(key), defaultValue);</span>
+<span class="nc" id="L63">        return castToBoolean(get(key), defaultValue);</span>
     }
 
     @Override
@@ -112,8 +112,8 @@ import static griffon.util.TypeUtils.castToLong;
     @Nullable
     @Override
     public String getAsString(@Nonnull String key, @Nullable String defaultValue) {
-<span class="fc" id="L115">        Object value = get(key);</span>
-<span class="pc bpc" id="L116" title="1 of 2 branches missed.">        return value != null ? String.valueOf(value) : defaultValue;</span>
+<span class="nc" id="L115">        Object value = get(key);</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        return value != null ? String.valueOf(value) : defaultValue;</span>
     }
 
     @Nonnull

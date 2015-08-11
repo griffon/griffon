@@ -16,7 +16,6 @@
 package org.codehaus.griffon.runtime.core.resources;
 
 import griffon.core.resources.ResourceResolver;
-import griffon.core.resources.ResourceResolverDecoratorFactory;
 import griffon.util.CompositeResourceBundleBuilder;
 
 import javax.annotation.Nonnull;
@@ -39,16 +38,16 @@ public class ResourceResolverProvider implements Provider&lt;ResourceResolver&gt
     @Inject
     private ResourceResolverDecoratorFactory resourceResolverDecoratorFactory;
 
-<span class="fc" id="L42">    public ResourceResolverProvider(@Nonnull String basename) {</span>
-<span class="fc" id="L43">        this.basename = requireNonBlank(basename, &quot;Argument 'basename' must not be blank&quot;);</span>
-<span class="fc" id="L44">    }</span>
+<span class="fc" id="L41">    public ResourceResolverProvider(@Nonnull String basename) {</span>
+<span class="fc" id="L42">        this.basename = requireNonBlank(basename, &quot;Argument 'basename' must not be blank&quot;);</span>
+<span class="fc" id="L43">    }</span>
 
     @Override
     public ResourceResolver get() {
-<span class="fc" id="L48">        requireNonNull(resourceBundleBuilder, &quot;Argument 'resourceBundleBuilder' must not be null&quot;);</span>
-<span class="fc" id="L49">        requireNonNull(resourceResolverDecoratorFactory, &quot;Argument 'resourceResolverDecoratorFactory' must not be null&quot;);</span>
-<span class="fc" id="L50">        DefaultResourceResolver resourceResolver = new DefaultResourceResolver(resourceBundleBuilder, basename);</span>
-<span class="fc" id="L51">        return resourceResolverDecoratorFactory.create(resourceResolver);</span>
+<span class="fc" id="L47">        requireNonNull(resourceBundleBuilder, &quot;Argument 'resourceBundleBuilder' must not be null&quot;);</span>
+<span class="fc" id="L48">        requireNonNull(resourceResolverDecoratorFactory, &quot;Argument 'resourceResolverDecoratorFactory' must not be null&quot;);</span>
+<span class="fc" id="L49">        DefaultResourceResolver resourceResolver = new DefaultResourceResolver(resourceBundleBuilder, basename);</span>
+<span class="fc" id="L50">        return resourceResolverDecoratorFactory.create(resourceResolver);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

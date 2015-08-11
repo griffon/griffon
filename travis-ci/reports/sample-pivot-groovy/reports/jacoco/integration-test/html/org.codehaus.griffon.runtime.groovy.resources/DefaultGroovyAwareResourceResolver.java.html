@@ -18,7 +18,7 @@ package org.codehaus.griffon.runtime.groovy.resources;
 import griffon.core.resources.GroovyAwareResourceResolver;
 import griffon.core.resources.NoSuchResourceException;
 import griffon.core.resources.ResourceResolver;
-import griffon.core.resources.ResourceResolverDecorator;
+import org.codehaus.griffon.runtime.core.resources.ResourceResolverDecorator;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
