@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.core.i18n;
+package org.codehaus.griffon.runtime.core.i18n;
+
+import griffon.core.i18n.MessageSource;
+import griffon.core.i18n.NoSuchMessageException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

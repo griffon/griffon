@@ -16,7 +16,6 @@
 package org.codehaus.griffon.runtime.core.i18n;
 
 import griffon.core.i18n.MessageSource;
-import griffon.core.i18n.MessageSourceDecoratorFactory;
 import griffon.util.CompositeResourceBundleBuilder;
 
 import javax.annotation.Nonnull;

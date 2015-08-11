@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.core.resources;
+package org.codehaus.griffon.runtime.core.resources;
+
+import griffon.core.resources.NoSuchResourceException;
+import griffon.core.resources.ResourceResolver;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

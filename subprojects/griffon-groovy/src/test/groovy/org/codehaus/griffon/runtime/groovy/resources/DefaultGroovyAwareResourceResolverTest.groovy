@@ -24,7 +24,7 @@ import griffon.core.resources.ResourceResolver
 import griffon.util.CompositeResourceBundleBuilder
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
 import org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler
-import griffon.core.resources.ResourceResolverDecoratorFactory
+import org.codehaus.griffon.runtime.core.resources.ResourceResolverDecoratorFactory
 import org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider
 import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder
 import org.junit.Rule

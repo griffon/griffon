@@ -23,7 +23,6 @@ import griffon.core.CallableWithArgs
 import griffon.core.resources.NoSuchResourceException
 import griffon.core.resources.ResourceHandler
 import griffon.core.resources.ResourceResolver
-import griffon.core.resources.ResourceResolverDecoratorFactory
 import griffon.util.CompositeResourceBundleBuilder
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
 import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder

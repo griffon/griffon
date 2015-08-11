@@ -16,7 +16,6 @@
 package org.codehaus.griffon.runtime.core.resources;
 
 import griffon.core.resources.ResourceResolver;
-import griffon.core.resources.ResourceResolverDecoratorFactory;
 import griffon.util.CompositeResourceBundleBuilder;
 
 import javax.annotation.Nonnull;

@@ -23,7 +23,7 @@ import griffon.core.i18n.MessageSource
 import griffon.core.resources.ResourceHandler
 import griffon.util.CompositeResourceBundleBuilder
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
-import griffon.core.i18n.MessageSourceDecoratorFactory
+import org.codehaus.griffon.runtime.core.i18n.MessageSourceDecoratorFactory
 import org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider
 import org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler
 import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder

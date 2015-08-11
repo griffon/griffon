@@ -21,7 +21,6 @@ import com.google.inject.AbstractModule
 import griffon.core.ApplicationClassLoader
 import griffon.core.CallableWithArgs
 import griffon.core.i18n.MessageSource
-import griffon.core.i18n.MessageSourceDecoratorFactory
 import griffon.core.i18n.NoSuchMessageException
 import griffon.core.resources.ResourceHandler
 import griffon.util.CompositeResourceBundleBuilder
