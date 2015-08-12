@@ -116,4 +116,190 @@ class MVCGroupSpec extends Specification {
         then:
         checks.every { it == true }
     }
+
+    def 'Validate MVCGroup relationships after creation and destruction (createMVCGroup)'() {
+        given:
+        MVCGroup root = application.mvcGroupManager.createMVCGroup('root')
+
+        when:
+        root.createMVCGroup('child', 'child1')
+        root.createMVCGroup('child', 'child2')
+        root.createMVCGroup('child', 'child3')
+
+        then:
+        root.childGroups.keySet() == ['child1', 'child2', 'child3'] as Set
+        ['child1', 'child2', 'child3'].each { mvcId ->
+            MVCGroup child = application.mvcGroupManager.findGroup(mvcId)
+            assert child.model.parentGroup == root
+            assert child.view.parentGroup == root
+            assert child.controller.parentGroup == root
+            assert child.model.parentModel == root.model
+            assert child.view.parentView == root.view
+            assert child.controller.parentController == root.controller
+        }
+
+        when:
+        MVCGroup child2 = application.mvcGroupManager.findGroup('child2')
+        ChildModel model = child2.model
+        ChildView view = child2.view
+        ChildController controller = child2.controller
+        child2.destroy()
+
+        then:
+        root.childGroups.keySet() == ['child1', 'child3'] as Set
+        !model.parentGroup
+        !model.parentModel
+        !view.parentGroup
+        !view.parentView
+        !controller.parentGroup
+        !controller.parentController
+
+        when:
+        root.destroy()
+
+        then:
+        !root.alive
+        !root.childGroups
+        !application.mvcGroupManager.findGroup('root')
+        !application.mvcGroupManager.findGroup('child1')
+        !application.mvcGroupManager.findGroup('child3')
+    }
+
+    def 'Validate MVCGroup relationships after creation and destruction (createMVC)'() {
+        given:
+        MVCGroup root = application.mvcGroupManager.createMVCGroup('root')
+
+        when:
+        root.createMVC('child', 'child1')
+        root.createMVC('child', 'child2')
+        root.createMVC('child', 'child3')
+
+        then:
+        root.childGroups.keySet() == ['child1', 'child2', 'child3'] as Set
+        ['child1', 'child2', 'child3'].each { mvcId ->
+            MVCGroup child = application.mvcGroupManager.findGroup(mvcId)
+            assert child.model.parentGroup == root
+            assert child.view.parentGroup == root
+            assert child.controller.parentGroup == root
+            assert child.model.parentModel == root.model
+            assert child.view.parentView == root.view
+            assert child.controller.parentController == root.controller
+        }
+
+        when:
+        MVCGroup child2 = application.mvcGroupManager.findGroup('child2')
+        ChildModel model = child2.model
+        ChildView view = child2.view
+        ChildController controller = child2.controller
+        child2.destroy()
+
+        then:
+        root.childGroups.keySet() == ['child1', 'child3'] as Set
+        !model.parentGroup
+        !model.parentModel
+        !view.parentGroup
+        !view.parentView
+        !controller.parentGroup
+        !controller.parentController
+
+        when:
+        root.destroy()
+
+        then:
+        !root.alive
+        !root.childGroups
+        !application.mvcGroupManager.findGroup('root')
+        !application.mvcGroupManager.findGroup('child1')
+        !application.mvcGroupManager.findGroup('child3')
+    }
+
+    def 'Validate MVCGroup relationships after creation and destruction (withMVCGroup)'() {
+        given:
+        List checks = []
+        MVCGroup root = application.mvcGroupManager.createMVCGroup('root')
+
+        when:
+        root.withMVCGroup('child', 'child1') { MVCGroup group ->
+            checks << (root.childGroups.containsKey('child1'))
+            checks << (group.model.parentGroup == root)
+            checks << (group.view.parentGroup == root)
+            checks << (group.controller.parentGroup == root)
+            checks << (group.model.parentModel == root.model)
+            checks << (group.view.parentView == root.view)
+            checks << (group.controller.parentController == root.controller)
+        }
+        root.withMVCGroup('child', 'child2') { MVCGroup group ->
+            checks << (root.childGroups.containsKey('child2'))
+            checks << (group.model.parentGroup == root)
+            checks << (group.view.parentGroup == root)
+            checks << (group.controller.parentGroup == root)
+            checks << (group.model.parentModel == root.model)
+            checks << (group.view.parentView == root.view)
+            checks << (group.controller.parentController == root.controller)
+        }
+        root.withMVCGroup('child', 'child3') { MVCGroup group ->
+            checks << (root.childGroups.containsKey('child3'))
+            checks << (group.model.parentGroup == root)
+            checks << (group.view.parentGroup == root)
+            checks << (group.controller.parentGroup == root)
+            checks << (group.model.parentModel == root.model)
+            checks << (group.view.parentView == root.view)
+            checks << (group.controller.parentController == root.controller)
+        }
+
+        then:
+        checks.every { it == true }
+        !root.childGroups
+        !application.mvcGroupManager.findGroup('child1')
+        !application.mvcGroupManager.findGroup('child2')
+        !application.mvcGroupManager.findGroup('child3')
+
+        cleanup:
+        root.destroy()
+    }
+
+    def 'Validate MVCGroup relationships after creation and destruction (withMVC)'() {
+        given:
+        List checks = []
+        MVCGroup root = application.mvcGroupManager.createMVCGroup('root')
+
+        when:
+        root.withMVC('child', 'child1') { model, view, controller ->
+            checks << (root.childGroups.containsKey('child1'))
+            checks << (model.parentGroup == root)
+            checks << (view.parentGroup == root)
+            checks << (controller.parentGroup == root)
+            checks << (model.parentModel == root.model)
+            checks << (view.parentView == root.view)
+            checks << (controller.parentController == root.controller)
+        }
+        root.withMVC('child', 'child2') { model, view, controller ->
+            checks << (root.childGroups.containsKey('child2'))
+            checks << (model.parentGroup == root)
+            checks << (view.parentGroup == root)
+            checks << (controller.parentGroup == root)
+            checks << (model.parentModel == root.model)
+            checks << (view.parentView == root.view)
+            checks << (controller.parentController == root.controller)
+        }
+        root.withMVC('child', 'child3') { model, view, controller ->
+            checks << (root.childGroups.containsKey('child3'))
+            checks << (model.parentGroup == root)
+            checks << (view.parentGroup == root)
+            checks << (controller.parentGroup == root)
+            checks << (model.parentModel == root.model)
+            checks << (view.parentView == root.view)
+            checks << (controller.parentController == root.controller)
+        }
+
+        then:
+        checks.every { it == true }
+        !root.childGroups
+        !application.mvcGroupManager.findGroup('child1')
+        !application.mvcGroupManager.findGroup('child2')
+        !application.mvcGroupManager.findGroup('child3')
+
+        cleanup:
+        root.destroy()
+    }
 }

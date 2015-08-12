@@ -249,21 +249,28 @@ class GriffonApplicationSpec extends Specification {
 
     def 'Verify AddonManager'() {
         expect:
-        application.addonManager.addons.size() == 1
+        application.addonManager.addons.size() == 2
         application.addonManager.findAddon('integration')
         application.addonManager.findAddon('IntegrationGriffonAddon')
         application.addonManager.addons.containsKey('integration')
+        application.addonManager.findAddon('groups')
+        application.addonManager.findAddon('GroupsGriffonAddon')
+        application.addonManager.addons.containsKey('groups')
     }
 
     def 'Verify MVCGroupManager'() {
         expect:
-        application.mvcGroupManager.configurations.size() == 3
+        application.mvcGroupManager.configurations.size() == 5
         application.mvcGroupManager.findConfiguration('integration')
         application.mvcGroupManager.findConfiguration('simple')
         application.mvcGroupManager.findConfiguration('sample')
+        application.mvcGroupManager.findConfiguration('root')
+        application.mvcGroupManager.findConfiguration('child')
         application.mvcGroupManager.configurations.containsKey('integration')
         application.mvcGroupManager.configurations.containsKey('simple')
         application.mvcGroupManager.configurations.containsKey('sample')
+        application.mvcGroupManager.configurations.containsKey('root')
+        application.mvcGroupManager.configurations.containsKey('child')
 
         application.mvcGroupManager.models.containsKey('integration')
         application.mvcGroupManager.controllers.containsKey('integration')
@@ -291,16 +298,21 @@ class GriffonApplicationSpec extends Specification {
         !application.artifactManager.findGriffonClass(SimpleModel, 'domain')
         !application.artifactManager.findGriffonClass(SimpleModel, 'controller')
 
-        application.artifactManager.getClassesOfType('model').clazz == [IntegrationModel, SimpleModel]
+        application.artifactManager.getClassesOfType('model').clazz == [IntegrationModel, SimpleModel, RootModel, ChildModel]
         !application.artifactManager.getClassesOfType('domain')
 
-        application.artifactManager.allClasses*.clazz.sort() == [IntegrationModel, IntegrationView, IntegrationController, IntegrationService, SimpleModel, SimpleView, SimpleController].sort()
+        application.artifactManager.allClasses*.clazz.sort() == [
+            IntegrationModel, IntegrationView, IntegrationController, IntegrationService,
+            SimpleModel, SimpleView, SimpleController,
+            RootModel, RootView, RootController,
+            ChildModel, ChildView, ChildController
+        ].sort()
 
         modelHandler.artifactType == GriffonModel
         modelHandler.trailing == 'Model'
         modelHandler.type == 'model'
-        modelHandler.classesByName.keySet() == (['integration.IntegrationModel', 'integration.SimpleModel'] as Set)
-        modelHandler.classes.clazz == [IntegrationModel, SimpleModel]
+        modelHandler.classesByName.keySet() == (['integration.IntegrationModel', 'integration.SimpleModel', 'integration.RootModel', 'integration.ChildModel'] as Set)
+        modelHandler.classes.clazz == [IntegrationModel, SimpleModel, RootModel, ChildModel]
         modelHandler.findClassFor('integrationModel')
         modelHandler.findClassFor('integration')
         !modelHandler.findClassFor('sample')

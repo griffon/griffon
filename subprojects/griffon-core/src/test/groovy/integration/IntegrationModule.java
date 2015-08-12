@@ -62,6 +62,10 @@ public class IntegrationModule extends AbstractModule {
             .to(IntegrationAddon.class)
             .asSingleton();
 
+        bind(GriffonAddon.class)
+            .to(GroupsAddon.class)
+            .asSingleton();
+
         bind(ActionHandler.class)
             .to(InvokeActionHandler.class)
             .asSingleton();

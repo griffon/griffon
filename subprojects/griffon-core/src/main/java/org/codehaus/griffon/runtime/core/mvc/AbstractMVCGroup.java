@@ -31,6 +31,8 @@ import griffon.core.mvc.MVCGroupManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +56,7 @@ public abstract class AbstractMVCGroup extends AbstractMVCHandler implements MVC
     protected final String mvcId;
     protected final Context context;
     protected final Map<String, Object> members = new LinkedHashMap<>();
+    protected final Map<String, MVCGroup> children = new LinkedHashMap<>();
     private final Object[] lock = new Object[0];
     protected MVCGroup parentGroup;
     private boolean alive;
@@ -140,14 +143,29 @@ public abstract class AbstractMVCGroup extends AbstractMVCHandler implements MVC
     @Override
     public void destroy() {
         if (isAlive()) {
+            List<String> childrenIds = new ArrayList<>(children.keySet());
+            Collections.reverse(childrenIds);
+            for (String id : childrenIds) {
+                getMvcGroupManager().destroyMVCGroup(id);
+            }
             getMvcGroupManager().destroyMVCGroup(mvcId);
             members.clear();
+            children.clear();
+            if (parentGroup != null) {
+                parentGroup.notifyMVCGroupDestroyed(mvcId);
+            }
             parentGroup = null;
             context.destroy();
             synchronized (lock) {
                 alive = false;
             }
         }
+    }
+
+    @Override
+    public void notifyMVCGroupDestroyed(@Nonnull String mvcId) {
+        requireNonBlank(mvcId, "Argument 'mvcId' must not be blank");
+        children.remove(mvcId);
     }
 
     @Override
@@ -164,133 +182,160 @@ public abstract class AbstractMVCGroup extends AbstractMVCHandler implements MVC
     @Nonnull
     @Override
     public MVCGroup createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType) {
-        return super.createMVCGroup(injectParentGroup(args), mvcType);
+        return manageChildGroup(super.createMVCGroup(injectParentGroup(args), mvcType));
     }
 
     @Nonnull
     @Override
     public MVCGroup createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
-        return super.createMVCGroup(injectParentGroup(args), mvcType, mvcId);
+        return manageChildGroup(super.createMVCGroup(injectParentGroup(args), mvcType, mvcId));
     }
 
     @Nonnull
     @Override
     public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args) {
-        return super.createMVCGroup(mvcType, injectParentGroup(args));
+        return manageChildGroup(super.createMVCGroup(mvcType, injectParentGroup(args)));
     }
 
     @Nonnull
     @Override
     public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
-        return super.createMVCGroup(mvcType, mvcId, injectParentGroup(args));
+        return manageChildGroup(super.createMVCGroup(mvcType, mvcId, injectParentGroup(args)));
     }
 
     @Nonnull
     @Override
     public List<? extends GriffonMvcArtifact> createMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType) {
-        return super.createMVC(injectParentGroup(args), mvcType);
+        return manageChildGroup(super.createMVC(injectParentGroup(args), mvcType));
     }
 
     @Nonnull
     @Override
     public List<? extends GriffonMvcArtifact> createMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
-        return super.createMVC(injectParentGroup(args), mvcType, mvcId);
+        return manageChildGroup(super.createMVC(injectParentGroup(args), mvcType, mvcId));
     }
 
     @Nonnull
     @Override
     public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull Map<String, Object> args) {
-        return super.createMVC(mvcType, injectParentGroup(args));
+        return manageChildGroup(super.createMVC(mvcType, injectParentGroup(args)));
     }
 
     @Nonnull
     @Override
     public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
-        return super.createMVC(mvcType, mvcId, injectParentGroup(args));
+        return manageChildGroup(super.createMVC(mvcType, mvcId, injectParentGroup(args)));
     }
 
     @Override
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCFunction<M, V, C> handler) {
-        super.withMVC(injectParentGroup(args), mvcType, handler);
+        super.withMVC(injectParentGroup(args), mvcType, new MVCFunctionDecorator<>(handler));
     }
 
     @Override
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCFunction<M, V, C> handler) {
-        super.withMVC(injectParentGroup(args), mvcType, mvcId, handler);
+        super.withMVC(injectParentGroup(args), mvcType, mvcId, new MVCFunctionDecorator<>(handler));
     }
 
     @Override
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCFunction<M, V, C> handler) {
-        super.withMVC(mvcType, injectParentGroup(args), handler);
+        super.withMVC(mvcType, injectParentGroup(args), new MVCFunctionDecorator<>(handler));
     }
 
     @Override
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCFunction<M, V, C> handler) {
-        super.withMVC(mvcType, mvcId, injectParentGroup(args), handler);
+        super.withMVC(mvcType, mvcId, injectParentGroup(args), new MVCFunctionDecorator<>(handler));
     }
 
     @Override
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull MVCFunction<M, V, C> handler) {
-        super.withMVC(mvcType, injectParentGroup(), handler);
+        super.withMVC(mvcType, injectParentGroup(), new MVCFunctionDecorator<>(handler));
     }
 
     @Override
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCFunction<M, V, C> handler) {
-        super.withMVC(mvcType, mvcId, injectParentGroup(), handler);
+        super.withMVC(mvcType, mvcId, injectParentGroup(), new MVCFunctionDecorator<>(handler));
     }
 
     @Override
     public void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCGroupFunction handler) {
-        super.withMVCGroup(injectParentGroup(args), mvcType, handler);
+        super.withMVCGroup(injectParentGroup(args), mvcType, new MVCGroupFunctionDecorator(handler));
     }
 
     @Override
     public void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupFunction handler) {
-        super.withMVCGroup(injectParentGroup(args), mvcType, mvcId, handler);
+        super.withMVCGroup(injectParentGroup(args), mvcType, mvcId, new MVCGroupFunctionDecorator(handler));
     }
 
     @Override
     public void withMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCGroupFunction handler) {
-        super.withMVCGroup(mvcType, injectParentGroup(args), handler);
+        super.withMVCGroup(mvcType, injectParentGroup(args), new MVCGroupFunctionDecorator(handler));
     }
 
     @Override
     public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCGroupFunction handler) {
-        super.withMVCGroup(mvcType, mvcId, injectParentGroup(args), handler);
+        super.withMVCGroup(mvcType, mvcId, injectParentGroup(args), new MVCGroupFunctionDecorator(handler));
     }
 
     @Override
     public void withMVCGroup(@Nonnull String mvcType, @Nonnull MVCGroupFunction handler) {
-        super.withMVCGroup(mvcType, injectParentGroup(), handler);
+        super.withMVCGroup(mvcType, injectParentGroup(), new MVCGroupFunctionDecorator(handler));
     }
 
     @Override
-    public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupFunction handler) {
-        super.withMVCGroup(mvcType, mvcId, injectParentGroup(), handler);
+    public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, final @Nonnull MVCGroupFunction handler) {
+        super.withMVCGroup(mvcType, mvcId, injectParentGroup(), new MVCGroupFunctionDecorator(handler));
     }
 
     @Nonnull
     @Override
     public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull String mvcId) {
-        return super.createMVC(mvcType, mvcId, injectParentGroup());
+        return manageChildGroup(super.createMVC(mvcType, mvcId, injectParentGroup()));
     }
 
     @Nonnull
     @Override
     public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType) {
-        return super.createMVC(mvcType, injectParentGroup());
+        return manageChildGroup(super.createMVC(mvcType, injectParentGroup()));
     }
 
     @Nonnull
     @Override
     public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId) {
-        return super.createMVCGroup(mvcType, mvcId, injectParentGroup());
+        return manageChildGroup(super.createMVCGroup(mvcType, mvcId, injectParentGroup()));
     }
 
     @Nonnull
     @Override
     public MVCGroup createMVCGroup(@Nonnull String mvcType) {
-        return super.createMVCGroup(mvcType, injectParentGroup());
+        return manageChildGroup(super.createMVCGroup(mvcType, injectParentGroup()));
+    }
+
+    @Nonnull
+    private MVCGroup manageChildGroup(@Nonnull MVCGroup group) {
+        children.put(group.getMvcId(), group);
+        return group;
+    }
+
+    @Nonnull
+    private List<? extends GriffonMvcArtifact> manageChildGroup(@Nonnull List<? extends GriffonMvcArtifact> artifacts) {
+        MVCGroup group = null;
+        for (GriffonMvcArtifact artifact : artifacts) {
+            if (artifact != null) {
+                group = artifact.getMvcGroup();
+                break;
+            }
+        }
+        if (group != null) {
+            children.put(group.getMvcId(), group);
+        }
+        return artifacts;
+    }
+
+    @Nonnull
+    @Override
+    public Map<String, MVCGroup> getChildGroups() {
+        return unmodifiableMap(children);
     }
 
     @Nonnull
@@ -304,5 +349,40 @@ public abstract class AbstractMVCGroup extends AbstractMVCHandler implements MVC
         map.put("parentGroup", this);
         map.putAll(args);
         return map;
+    }
+
+    private final class MVCFunctionDecorator<M extends GriffonModel, V extends GriffonView, C extends GriffonController> implements MVCFunction<M, V, C> {
+        private final MVCFunction<M, V, C> delegate;
+
+        private MVCFunctionDecorator(MVCFunction<M, V, C> delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public void apply(@Nullable M model, @Nullable V view, @Nullable C controller) {
+            MVCGroup group = null;
+            if (model != null) group = model.getMvcGroup();
+            if (view != null) group = view.getMvcGroup();
+            if (controller != null) group = controller.getMvcGroup();
+
+            if (group != null) children.put(group.getMvcId(), group);
+            delegate.apply(model, view, controller);
+            if (group != null) children.remove(group.getMvcId());
+        }
+    }
+
+    private final class MVCGroupFunctionDecorator implements MVCGroupFunction {
+        private final MVCGroupFunction delegate;
+
+        private MVCGroupFunctionDecorator(MVCGroupFunction delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public void apply(@Nullable MVCGroup group) {
+            children.put(group.getMvcId(), group);
+            delegate.apply(group);
+            children.remove(group.getMvcId());
+        }
     }
 }

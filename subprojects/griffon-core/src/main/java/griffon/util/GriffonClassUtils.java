@@ -2328,6 +2328,27 @@ public class GriffonClassUtils {
     }
 
     /**
+     * Sets or updates an object's property.
+     * <p>
+     * This method will attempt setting a property using a matching
+     * {@code PropertyDescriptor}; next it will try direct field
+     * access if the property was not found.
+     *
+     * @param bean  the target object on which the property will be set
+     * @param name  the name of the property to set
+     * @param value the value to be set
+     * @throws PropertyException if the property could not be found
+     * @since 2.4.0
+     */
+    public static void setPropertyOrFieldValueNoException(@Nonnull Object bean, @Nonnull String name, @Nullable Object value) {
+        try {
+            setPropertyOrFieldValue(bean, name, value);
+        } catch (PropertyException pe) {
+            // ignore
+        }
+    }
+
+    /**
      * Sets or updates an object's properties.
      * <p/>
      * This method will attempt setting a property using direct field

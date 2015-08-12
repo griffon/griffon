@@ -43,8 +43,8 @@ import java.util.Map;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
 import static griffon.util.ConfigUtils.getConfigValueAsBoolean;
-import static griffon.util.GriffonClassUtils.setFieldValueNoException;
 import static griffon.util.GriffonClassUtils.setPropertiesOrFieldsNoException;
+import static griffon.util.GriffonClassUtils.setPropertyOrFieldValueNoException;
 import static griffon.util.GriffonNameUtils.capitalize;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Arrays.asList;
@@ -366,7 +366,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
             // clear all parent* references
             for (String parentMemberName : new String[]{"parentModel", "parentView", "parentController", "parentGroup"}) {
-                setFieldValueNoException(member, parentMemberName, null);
+                setPropertyOrFieldValueNoException(member, parentMemberName, null);
             }
         }
     }
