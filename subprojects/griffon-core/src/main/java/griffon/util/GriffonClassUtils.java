@@ -2450,6 +2450,23 @@ public class GriffonClassUtils {
     }
 
     /**
+     * Sets or updates an object's field.
+     *
+     * @param bean  the target object on which the field will be set
+     * @param name  the name of the field to set
+     * @param value the value to be set
+     * @throws FieldException if the field could not be found
+     * @since 2.4.0
+     */
+    public static void setFieldValueNoException(@Nonnull Object bean, @Nonnull String name, @Nullable Object value) {
+        try {
+            setFieldValue(bean, name, value);
+        } catch (FieldException e) {
+            // ignore
+        }
+    }
+
+    /**
      * Sets or updates properties on an object.
      *
      * @param bean       the target object on which properties will be set

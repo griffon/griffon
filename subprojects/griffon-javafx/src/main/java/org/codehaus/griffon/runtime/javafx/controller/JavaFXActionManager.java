@@ -66,7 +66,7 @@ public class JavaFXActionManager extends AbstractActionManager {
         String rsDescription = msg(keyPrefix, normalizeNamed, "description", "");
         if (!isBlank(rsDescription)) {
             if (LOG.isTraceEnabled()) {
-                LOG.trace(keyPrefix + normalizeNamed + "._description = " + rsDescription);
+                LOG.trace(keyPrefix + normalizeNamed + ".description = " + rsDescription);
             }
             javafxAction.setDescription(rsDescription);
         }
