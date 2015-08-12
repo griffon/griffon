@@ -53,8 +53,8 @@ class ApplicationFactory extends StageFactory {
 <span class="nc" id="L53">                stage.title = value</span>
         }
 
-<span class="nc bnc" id="L56" title="All 8 branches missed.">        if (!stage.title &amp;&amp; builder.application.getConfiguration['application.title']) {</span>
-<span class="nc" id="L57">            stage.title = builder.application.getConfiguration['application.title']</span>
+<span class="nc bnc" id="L56" title="All 8 branches missed.">        if (!stage.title &amp;&amp; builder.application.configuration['application.title']) {</span>
+<span class="nc" id="L57">            stage.title = builder.application.configuration['application.title']</span>
         }
 
 <span class="nc" id="L60">        def style = attributes.remove(&quot;style&quot;)</span>

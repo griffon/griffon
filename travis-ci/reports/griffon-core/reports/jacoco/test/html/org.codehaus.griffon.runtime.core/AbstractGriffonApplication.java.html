@@ -384,8 +384,8 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
 <span class="fc bfc" id="L385" title="All 2 branches covered.">        for (Map.Entry&lt;String, GriffonAddon&gt; e : getAddonManager().getAddons().entrySet()) {</span>
 <span class="fc" id="L386">            List&lt;String&gt; groups = e.getValue().getStartupGroups();</span>
-<span class="pc bpc" id="L387" title="1 of 2 branches missed.">            if (groups.isEmpty()) {</span>
-<span class="nc" id="L388">                continue;</span>
+<span class="fc bfc" id="L387" title="All 2 branches covered.">            if (groups.isEmpty()) {</span>
+<span class="fc" id="L388">                continue;</span>
             }
 <span class="fc" id="L390">            log.info(&quot;Initializing all {} startup groups: {}&quot;, e.getKey(), groups);</span>
 <span class="fc" id="L391">            Map&lt;String, Map&lt;String, Object&gt;&gt; mvcGroups = e.getValue().getMvcGroups();</span>
