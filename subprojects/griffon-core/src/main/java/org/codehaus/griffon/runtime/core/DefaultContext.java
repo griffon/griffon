@@ -50,7 +50,7 @@ public class DefaultContext extends AbstractContext {
     }
 
     @Override
-    public boolean containsKey(@Nonnull String key) {
+    public boolean hasKey(@Nonnull String key) {
         requireNonBlank(key, ERROR_KEY_BLANK);
         return attributes.containsKey(key);
     }

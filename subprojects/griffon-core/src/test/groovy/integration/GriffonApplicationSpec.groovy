@@ -278,6 +278,18 @@ class GriffonApplicationSpec extends Specification {
         application.mvcGroupManager.models.containsKey('sample')
         application.mvcGroupManager.controllers.containsKey('sample')
         application.mvcGroupManager.views.containsKey('sample')
+
+        application.mvcGroupManager.findModel('integration', IntegrationModel)
+        application.mvcGroupManager.findView('integration', IntegrationView)
+        application.mvcGroupManager.findController('integration', IntegrationController)
+
+        !application.mvcGroupManager.findModel('foo', IntegrationModel)
+        !application.mvcGroupManager.findView('foo', IntegrationView)
+        !application.mvcGroupManager.findController('foo', IntegrationController)
+
+        application.mvcGroupManager.getModel('integration', IntegrationModel)
+        application.mvcGroupManager.getView('integration', IntegrationView)
+        application.mvcGroupManager.getController('integration', IntegrationController)
     }
 
     def 'Verify ArtifactManager'() {

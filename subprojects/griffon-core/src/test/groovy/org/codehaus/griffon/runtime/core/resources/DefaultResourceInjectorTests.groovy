@@ -19,12 +19,17 @@ import com.google.guiceberry.GuiceBerryModule
 import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
 import griffon.core.ApplicationClassLoader
+import griffon.core.editors.IntegerPropertyEditor
+import griffon.core.editors.PropertyEditorResolver
+import griffon.core.editors.StringPropertyEditor
 import griffon.core.resources.ResourceHandler
 import griffon.core.resources.ResourceInjector
 import griffon.core.resources.ResourceResolver
 import griffon.util.CompositeResourceBundleBuilder
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
 import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder
+import org.junit.AfterClass
+import org.junit.BeforeClass
 import org.junit.Rule
 import org.junit.Test
 
@@ -38,6 +43,19 @@ class DefaultResourceInjectorTests {
     @Inject
     private CompositeResourceBundleBuilder bundleBuilder
 
+    @BeforeClass
+    public static void setup() {
+        PropertyEditorResolver.clear()
+        PropertyEditorResolver.registerEditor(String, StringPropertyEditor)
+        PropertyEditorResolver.registerEditor(Integer, IntegerPropertyEditor)
+        PropertyEditorResolver.registerEditor(int.class, IntegerPropertyEditor)
+    }
+
+    @AfterClass
+    public static void cleanup() {
+        PropertyEditorResolver.clear()
+    }
+
     @Test
     void resolveAllFormatsByProperties() {
         ResourceResolver resourceResolver = new DefaultResourceResolver(bundleBuilder, 'org.codehaus.griffon.runtime.core.resources.injector')
@@ -47,6 +65,8 @@ class DefaultResourceInjectorTests {
 
         assert bean.@privateField == 'privateField'
         assert bean.@fieldBySetter == 'fieldBySetter'
+        assert bean.@privateIntField == 42
+        assert bean.@intFieldBySetter == 21
         assert bean.@fieldWithKey == 'no_args'
         assert bean.@fieldWithKeyAndArgs == 'with_args 1 2'
         assert bean.@fieldWithKeyNoArgsWithDefault == 'DEFAULT_NO_ARGS'

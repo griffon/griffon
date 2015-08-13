@@ -15,7 +15,9 @@
  */
 package griffon.core;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -23,6 +25,15 @@ import java.util.concurrent.ExecutorService;
  * @since 2.0.0
  */
 public interface ExecutorServiceManager {
+    /**
+     * Returns an immutable view of all {@code ExecutorService}s currently managed.
+     *
+     * @return a collection of all {@code ExecutorService}s or empty if none.
+     * @since 2.4.0
+     */
+    @Nonnull
+    Collection<ExecutorService> getExecutorServices();
+
     @Nullable
     ExecutorService add(@Nullable ExecutorService executorService);
 

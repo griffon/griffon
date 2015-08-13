@@ -17,10 +17,14 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.core.ExecutorServiceManager;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
+
+import static java.util.Collections.unmodifiableSet;
 
 /**
  * @author Andres Almiray
@@ -28,6 +32,12 @@ import java.util.concurrent.ExecutorService;
  */
 public class DefaultExecutorServiceManager implements ExecutorServiceManager {
     private final Set<ExecutorService> executorServices = new LinkedHashSet<>();
+
+    @Nonnull
+    @Override
+    public Collection<ExecutorService> getExecutorServices() {
+        return unmodifiableSet(executorServices);
+    }
 
     @Override
     @Nullable

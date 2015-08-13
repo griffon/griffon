@@ -54,7 +54,7 @@ public abstract class AbstractContext implements Context {
     @Nullable
     @Override
     public Object get(@Nonnull String key) {
-        if (containsKey(key)) {
+        if (hasKey(key)) {
             return doGet(key);
         } else if (parentContext != null) {
             return parentContext.get(key);
@@ -69,11 +69,11 @@ public abstract class AbstractContext implements Context {
     }
 
     @Override
-    public boolean hasKey(@Nonnull String key) {
-        if (containsKey(key)) {
+    public boolean containsKey(@Nonnull String key) {
+        if (hasKey(key)) {
             return true;
         } else if (parentContext != null) {
-            return parentContext.hasKey(key);
+            return parentContext.containsKey(key);
         }
         return false;
     }

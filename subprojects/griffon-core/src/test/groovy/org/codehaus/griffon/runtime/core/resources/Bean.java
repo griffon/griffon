@@ -24,9 +24,17 @@ public class Bean {
     private String fieldBySetter;
 
     @InjectedResource
+    private int privateIntField;
+
+    private int intFieldBySetter;
+
+    @InjectedResource
     public void setValue(String value) {
         this.fieldBySetter = value;
     }
+
+    @InjectedResource
+    public void setIntValue(int value) { this.intFieldBySetter = value; }
 
     @InjectedResource(key = "sample.key.no_args")
     private String fieldWithKey;

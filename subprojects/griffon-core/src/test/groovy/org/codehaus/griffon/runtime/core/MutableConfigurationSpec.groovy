@@ -38,6 +38,30 @@ class MutableConfigurationSpec extends Specification {
     @Inject
     private Configuration configuration
 
+    def 'Calling configuration.get(#key, #defaultValue) returns #expectedValue'() {
+        expect:
+        expectedValue == configuration.get(key, defaultValue)
+
+        where:
+        key            | defaultValue || expectedValue
+        'key.string'   | null         || 'string'
+        'key.string'   | 'foo'        || 'string'
+        'key.foo'      | null         || null
+        'key.foo'      | 'foo'        || 'foo'
+    }
+
+    def 'Calling configuration.getAsString(#key, #defaultValue) returns #expectedValue'() {
+        expect:
+        expectedValue == configuration.getAsString(key, defaultValue)
+
+        where:
+        key            | defaultValue || expectedValue
+        'key.string'   | null         || 'string'
+        'key.string'   | 'foo'        || 'string'
+        'key.foo'      | null         || null
+        'key.foo'      | 'foo'        || 'foo'
+    }
+
     def 'Calling configuration.set(#key, #value) stores #value'() {
         given:
         assert configuration instanceof MutableConfiguration
@@ -49,6 +73,7 @@ class MutableConfigurationSpec extends Specification {
         configuration.set(key, value)
 
         then:
+        configuration.containsKey(key)
         configuration.get(key) == value
 
         where:
@@ -64,6 +89,27 @@ class MutableConfigurationSpec extends Specification {
         'key.float.string'   || 'foo'
         'key.double.type'    || 'foo'
         'key.double.string'  || 'foo'
+    }
+
+    def 'Check containsKey after removal'() {
+        given:
+        String key = 'key.foo'
+        assert configuration instanceof MutableConfiguration
+
+        expect:
+        !configuration.containsKey(key)
+
+        when:
+        configuration.set(key, 'foo')
+
+        then:
+        configuration.containsKey(key)
+
+        when:
+        configuration.remove(key)
+
+        then:
+        !configuration.containsKey(key)
     }
 
     def 'Calling configuration.set(#key, #value) stores #value (recall with getAsString)'() {
@@ -144,7 +190,6 @@ class MutableConfigurationSpec extends Specification {
 
         when:
         Map map = configuration.asFlatMap()
-        println(["map", map])
 
         then:
         null != map[key]
@@ -179,7 +224,6 @@ class MutableConfigurationSpec extends Specification {
 
         when:
         Properties props = configuration.asProperties()
-        println(["props", props])
 
         then:
         null != props.getProperty(key)

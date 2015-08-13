@@ -28,7 +28,7 @@ class ConfigurationDecoratorSpec extends Specification {
         given:
         ResourceBundle bundle = new MapResourceBundle()
         Configuration configuration = new ResourceBundleConfiguration(bundle)
-        configuration = new MyConfigurationDecorator(configuration)
+        configuration = new ConfigurationDecorator(configuration)
 
         expect:
         value == (defaultValue != null ? configuration."$method"(key, defaultValue) : configuration."$method"(key))
@@ -62,18 +62,32 @@ class ConfigurationDecoratorSpec extends Specification {
         'getAsDouble'  | 'key.double.unknown'  | Double.MAX_VALUE  | Double.MAX_VALUE
     }
 
-    def 'Can resolve nested keys from sample application configuration'() {
+    def 'Can resolve nested keys from sample application configuration (Properties)'() {
         given:
         ResourceBundle bundle = new AppResourceBundle()
         Configuration configuration = new ResourceBundleConfiguration(bundle)
-        configuration = new MyConfigurationDecorator(configuration)
+        configuration = new ConfigurationDecorator(configuration)
         Properties props = configuration.asProperties()
 
         expect:
-
+        configuration.containsKey('application.title')
         'Griffon' == configuration['application.title']
         'sample.SampleView' == configuration['mvcGroups.sample.view']
         props['application.title'] == configuration['application.title']
+    }
+
+    def 'Can resolve nested keys from sample application configuration (ResourceBundle)'() {
+        given:
+        ResourceBundle bundle = new AppResourceBundle()
+        Configuration configuration = new ResourceBundleConfiguration(bundle)
+        configuration = new ConfigurationDecorator(configuration)
+        ResourceBundle asBundle = configuration.asResourceBundle()
+
+        expect:
+        configuration.containsKey('application.title')
+        'Griffon' == configuration['application.title']
+        'sample.SampleView' == configuration['mvcGroups.sample.view']
+        asBundle.getString('application.title') == configuration['application.title']
     }
 
     static class AppResourceBundle extends AbstractMapResourceBundle {
@@ -91,29 +105,6 @@ class ConfigurationDecoratorSpec extends Specification {
                     controller: 'sample.SampleController'
                 ]
             ]
-        }
-    }
-
-    static class MyConfigurationDecorator extends ConfigurationDecorator {
-        MyConfigurationDecorator(@Nonnull Configuration delegate) {
-            super(delegate)
-        }
-
-        @Override
-        boolean containsKey(@Nonnull String key) {
-            return delegate.containsKey(key)
-        }
-
-        @Nonnull
-        @Override
-        Map<String, Object> asFlatMap() {
-            return delegate.asFlatMap()
-        }
-
-        @Nonnull
-        @Override
-        ResourceBundle asResourceBundle() {
-            return delegate.asResourceBundle()
         }
     }
 }

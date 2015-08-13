@@ -103,6 +103,20 @@ public class DelegatingMutableConfiguration extends ConfigurationDecorator imple
         }
     }
 
+    @Nullable
+    @Override
+    public <T> T get(@Nonnull String key, @Nullable T defaultValue) {
+        T value = (T) get(key);
+        return value != null ? value : defaultValue;
+    }
+
+    @Nullable
+    @Override
+    public String getAsString(@Nonnull String key, @Nullable String defaultValue) {
+        Object value = get(key);
+        return value != null ? String.valueOf(value) : defaultValue;
+    }
+
     @Override
     public boolean containsKey(@Nonnull String key) {
         requireNonBlank(key, ERROR_KEY_BLANK);

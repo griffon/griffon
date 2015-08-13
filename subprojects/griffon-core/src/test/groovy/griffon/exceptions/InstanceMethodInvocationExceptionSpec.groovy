@@ -16,19 +16,35 @@
 package griffon.exceptions
 
 import spock.lang.Specification
+import spock.lang.Unroll
 
+import java.lang.reflect.Method
+
+@Unroll
 class InstanceMethodInvocationExceptionSpec extends Specification {
-    void 'Exception should have proper formatted message'() {
+    void 'Exception should have proper formatted message (1)'() {
         setup:
         InstanceMethodInvocationException e = new InstanceMethodInvocationException(new TheClass(), methodName, args)
 
         expect:
-        e.message.contains(regex)
+        e.message.contains(message)
 
         where:
-        methodName  | args                      | regex
+        methodName  | args                      | message
         'theMethod' | ['foo', 1] as Object[]    | 'TheClass.theMethod(java.lang.String,java.lang.Integer)'
         'theMethod' | ['foo', null] as Object[] | 'TheClass.theMethod(java.lang.String,java.lang.Object)'
+    }
+
+    void 'Exception should have proper formatted message (2)'() {
+        setup:
+        Method method = TheClass.declaredMethods.find { it.name == 'theMethod' }
+        InstanceMethodInvocationException e = new InstanceMethodInvocationException(new TheClass(), method)
+
+        expect:
+        e.message.contains(message)
+
+        where:
+        message << ['TheClass.theMethod(java.lang.String,java.lang.Integer)']
     }
 
     private static class TheClass {

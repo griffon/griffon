@@ -52,8 +52,7 @@ public class ConfigurationDecorator implements Configuration {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(@Nonnull String key, @Nullable T defaultValue) {
-        T value = (T) get(key);
-        return value != null ? value : defaultValue;
+        return delegate.get(key, defaultValue);
     }
 
     @Nullable
@@ -127,8 +126,7 @@ public class ConfigurationDecorator implements Configuration {
     @Nullable
     @Override
     public String getAsString(@Nonnull String key, @Nullable String defaultValue) {
-        Object value = get(key);
-        return value != null ? String.valueOf(value) : defaultValue;
+        return delegate.getAsString(key, defaultValue);
     }
 
     @Nonnull

@@ -80,6 +80,17 @@ class DefaultMessageSourceTests {
         assert quote == 'not found :('
         quote = messageSource.getMessage('famous.quote.bogus', [location: 'Sparta'], 'not found :(')
         assert quote == 'not found :('
+
+        quote = messageSource.getMessage('famous.quote.index')
+        assert quote == 'This is {0}!'
+        quote = messageSource.getMessage('famous.quote.index', ['Sparta'], Locale.default)
+        assert quote == 'This is Sparta!'
+        quote = messageSource.getMessage('famous.quote.index', ['Sparta'] as Object[], Locale.default)
+        assert quote == 'This is Sparta!'
+        quote = messageSource.getMessage('famous.quote.index', Locale.default)
+        assert quote == 'This is {0}!'
+        quote = messageSource.getMessage('famous.quote.map', [location: 'Sparta'], Locale.default)
+        assert quote == 'This is Sparta!'
     }
 
     @Test

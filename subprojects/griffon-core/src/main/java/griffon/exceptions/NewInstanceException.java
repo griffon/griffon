@@ -36,6 +36,6 @@ public class NewInstanceException extends GriffonException {
 
     private static String format(Class<?> klass) {
         requireNonNull(klass, "class");
-        return "Can't create a new instance of type " + klass.getName();
+        return "Cannot create a new instance of type " + klass.getName();
     }
 }

@@ -13,7 +13,7 @@ before_install:
   - sudo apt-get install oracle-java8-installer
 before_script:
   - ./gradlew --version
-script: ./gradlew -S check test integrationTest functionalTest jacocoTestReport jacocoIntegrationTestReport jacocoRootReport -x :sample-javafx-groovy:jfxJar -x :sample-javafx-groovy:jfxDeploy -x :sample-javafx-java:jfxJar -x :sample-javafx-java:jfxDeploy -x clirr
+script: ./gradlew -S check test integrationTest functionalTest jacocoTestReport jacocoIntegrationTestReport jacocoFunctionalTestReport jacocoRootReport -x :sample-javafx-groovy:jfxJar -x :sample-javafx-groovy:jfxDeploy -x :sample-javafx-java:jfxJar -x :sample-javafx-java:jfxDeploy -x clirr
 after_success:
   - ./update-gh-pages.sh
   - ./gradlew coveralls

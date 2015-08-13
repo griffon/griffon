@@ -101,4 +101,20 @@ class ContextSpec extends Specification {
         ctx1    | ['foo'] as Set
         ctx2    | ['foo', 'bar'] as Set
     }
+
+    def "ContainsKey on child context" () {
+        expect:
+        ctx2.containsKey('foo')
+        ctx2.containsKey('bar')
+        ctx1.containsKey('foo')
+        !ctx1.containsKey('bar')
+    }
+
+    def "HasKey on child context" () {
+        expect:
+        !ctx2.hasKey('foo')
+        ctx2.hasKey('bar')
+        ctx1.hasKey('foo')
+        !ctx1.hasKey('bar')
+    }
 }

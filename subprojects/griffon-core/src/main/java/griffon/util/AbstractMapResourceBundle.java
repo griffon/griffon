@@ -25,6 +25,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import static griffon.util.ConfigUtils.collectKeys;
+import static griffon.util.ConfigUtils.getConfigValue;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 
 /**
@@ -39,17 +40,17 @@ public abstract class AbstractMapResourceBundle extends ResourceBundle {
         initialize(entries);
         initializeKeys();
     }
+
     protected abstract void initialize(@Nonnull Map<String, Object> entries);
 
     protected void initializeKeys() {
         keys = collectKeys(entries);
     }
 
-
     @Nullable
     @Override
     protected final Object handleGetObject(@Nonnull String key) {
-        return entries.get(requireNonBlank(key, "Argument 'key' must not be blank"));
+        return getConfigValue(entries, requireNonBlank(key, "Argument 'key' must not be blank"));
     }
 
     @Nonnull

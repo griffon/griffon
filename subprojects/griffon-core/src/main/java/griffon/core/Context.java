@@ -25,19 +25,19 @@ import java.util.Set;
  */
 public interface Context {
     /**
-     * Searches for the key in this context only
-     *
-     * @param key the key to search
-     * @return true if the context contains the given key, false otherwise
-     */
-    boolean containsKey(@Nonnull String key);
-
-    /**
      * Searches for the key in this context and its hierarchy
      *
      * @param key the key to search
      * @return true if the context (or its parent) contains the given key, false otherwise
      * @since 2.4.0
+     */
+    boolean containsKey(@Nonnull String key);
+
+    /**
+     * Searches for the key in this context only
+     *
+     * @param key the key to search
+     * @return true if the context contains the given key, false otherwise
      */
     boolean hasKey(@Nonnull String key);
 
