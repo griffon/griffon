@@ -53,6 +53,7 @@ ext {
     buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
     projectsWithCoverage = []
     projectsWithIntegrationCoverage = []
+    projectsWithFunctionalCoverage = []
     projectsWithClirr = []
     depProjects = []
     fullBuild = !travis && !appveyor
@@ -256,13 +257,17 @@ coveralls {
 }
 
 task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
-    dependsOn = projectsWithCoverage.test + projectsWithIntegrationCoverage.integrationTest
+    dependsOn = projectsWithCoverage.test + projectsWithIntegrationCoverage.integrationTest + projectsWithFunctionalCoverage.functionalTest
     group = "Reporting"
     description = "Aggregate Jacoco coverage reports."
-    additionalSourceDirs = files([projectsWithCoverage + projectsWithIntegrationCoverage].unique().sourceSets.main.allSource.srcDirs)
-    sourceDirectories = files([projectsWithCoverage + projectsWithIntegrationCoverage].unique().sourceSets.main.allSource.srcDirs)
-    classDirectories = files([projectsWithCoverage + projectsWithIntegrationCoverage].unique().sourceSets.main.output)
-    executionData = files([projectsWithCoverage.jacocoTestReport + projectsWithIntegrationCoverage.jacocoIntegrationTestReport].executionData)
+    additionalSourceDirs = files(projectsWithCoverage.sourceSets.main.allSource.srcDirs)
+    sourceDirectories = files(projectsWithCoverage .sourceSets.main.allSource.srcDirs)
+    classDirectories = files(projectsWithCoverage.sourceSets.main.output)
+    executionData = files([
+        projectsWithCoverage.jacocoTestReport +
+        projectsWithIntegrationCoverage.jacocoIntegrationTestReport +
+        projectsWithFunctionalCoverage.jacocoFunctionalTestReport
+    ].executionData)
     reports {
         html.enabled = true
         xml.enabled = true

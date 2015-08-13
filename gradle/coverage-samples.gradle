@@ -1,0 +1,141 @@
+/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = jacocoVersion
+}
+
+test {
+    jacoco {
+        excludes = ['sample.**']
+    }
+}
+
+jacocoTestReport {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports after running tests."
+
+    List _classDirectories = []
+    Set _sourceDirectories = [] as Set
+    project.depProjects.each { String projectName ->
+        _classDirectories << project(projectName).sourceSets.main.output.classesDir.path
+        _sourceDirectories << project(projectName).sourceSets.main.allSource.srcDirs
+    }
+
+    additionalSourceDirs = project.files(_sourceDirectories)
+    sourceDirectories = project.files(_sourceDirectories)
+    classDirectories = project.files(_classDirectories)
+
+    reports {
+        xml.enabled = true
+        csv.enabled = false
+        html.enabled = true
+    }
+
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect { d ->
+            fileTree(dir: d, exclude: 'sample/**')
+        })
+    }
+}
+
+if (hasIntegrationTests) {
+    integrationTest {
+        jacoco {
+            excludes = ['sample.**']
+        }
+    }
+
+    task jacocoIntegrationTestReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
+        dependsOn integrationTest
+        group = "Reporting"
+        description = "Generate Jacoco coverage reports after running integration tests."
+
+        List _classDirectories = []
+        Set _sourceDirectories = [] as Set
+        project.depProjects.each { String projectName ->
+            _classDirectories << project(projectName).sourceSets.main.output.classesDir.path
+            _sourceDirectories << project(projectName).sourceSets.main.allSource.srcDirs
+        }
+
+        additionalSourceDirs = project.files(_sourceDirectories)
+        sourceDirectories = project.files(_sourceDirectories)
+        classDirectories = project.files(_classDirectories)
+        executionData integrationTest
+        jacocoClasspath = configurations.jacocoAnt
+
+        reports {
+            xml.enabled = true
+            csv.enabled = false
+            html.enabled = true
+            html.destination = "${buildDir}/reports/jacoco/integration-test/html"
+            xml.destination = "${buildDir}/reports/jacoco/integration-test/jacocoTestReport.xml"
+        }
+
+        afterEvaluate {
+            classDirectories = files(classDirectories.files.collect { d ->
+                fileTree(dir: d, exclude: 'sample/**')
+            })
+        }
+    }
+
+    projectsWithIntegrationCoverage << project
+}
+
+if (hasFunctionalTests) {
+    functionalTest {
+        jacoco {
+            excludes = ['sample.**']
+        }
+    }
+
+    task jacocoFunctionalTestReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
+        dependsOn functionalTest
+        group = "Reporting"
+        description = "Generate Jacoco coverage reports after running functional tests."
+
+        List _classDirectories = []
+        Set _sourceDirectories = [] as Set
+        project.depProjects.each { String projectName ->
+            _classDirectories << project(projectName).sourceSets.main.output.classesDir.path
+            _sourceDirectories << project(projectName).sourceSets.main.allSource.srcDirs
+        }
+
+        additionalSourceDirs = project.files(_sourceDirectories)
+        sourceDirectories = project.files(_sourceDirectories)
+        classDirectories = project.files(_classDirectories)
+        executionData functionalTest
+        jacocoClasspath = configurations.jacocoAnt
+
+        reports {
+            xml.enabled = true
+            csv.enabled = false
+            html.enabled = true
+            html.destination = "${buildDir}/reports/jacoco/functional-test/html"
+            xml.destination = "${buildDir}/reports/jacoco/functional-test/jacocoTestReport.xml"
+        }
+
+        afterEvaluate {
+            classDirectories = files(classDirectories.files.collect { d ->
+                fileTree(dir: d, exclude: 'sample/**')
+            })
+        }
+    }
+
+    projectsWithFunctionalCoverage << project
+}

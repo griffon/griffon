@@ -20,9 +20,10 @@ apply from: rootProject.file('gradle/javafx-plugin.gradle')
 apply from: rootProject.file('gradle/integration-test.gradle')
 apply from: rootProject.file('gradle/functional-test.gradle')
 
-
 mainClassName = 'sample.javafx.groovy.Launcher'
 
+ext.hasIntegrationTests = true
+ext.hasFunctionalTests = true
 ext.depProjects = [
     ':griffon-core',
     ':griffon-javafx',
@@ -32,7 +33,7 @@ ext.depProjects = [
 ]
 
 ext.depProjects.each { evaluationDependsOn it }
-apply from: rootProject.file('gradle/coverage.gradle')
+apply from: rootProject.file('gradle/coverage-samples.gradle')
 
 dependencies {
     compileOnly project(':griffon-groovy-compile')
@@ -80,34 +81,3 @@ gradle.taskGraph.whenReady {
     sourceSets.main.groovy.srcDirs.each { it.mkdirs() }
     sourceSets.main.resources.srcDirs.each { it.mkdirs() }
 }
-
-task jacocoIntegrationTestReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
-    dependsOn integrationTest
-    group = "Reporting"
-    description = "Generate Jacoco coverage reports after running integration tests."
-
-    List cd = []
-    Set csd = [] as Set
-    project.depProjects.each { String projectName ->
-        cd << project(projectName).sourceSets.main.output.classesDir.path
-        csd << project(projectName).sourceSets.main.allSource.srcDirs
-    }
-    cd << sourceSets.main.output.classesDir.path
-    csd << sourceSets.main.allSource.srcDirs
-
-    additionalSourceDirs = project.files(csd)
-    sourceDirectories = project.files(csd)
-    classDirectories =  project.files(cd)
-    executionData integrationTest
-    jacocoClasspath = configurations.jacocoAnt
-
-    reports {
-        xml.enabled = true
-        csv.enabled = false
-        html.enabled = true
-        html.destination = "${buildDir}/reports/jacoco/integration-test/html"
-        xml.destination = "${buildDir}/reports/jacoco/integration-test/jacocoTestReport.xml"
-    }
-}
-
-projectsWithIntegrationCoverage << project

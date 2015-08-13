@@ -19,6 +19,8 @@ apply plugin: 'application'
 
 mainClassName = 'sample.lanterna.groovy.Launcher'
 
+ext.hasIntegrationTests = false
+ext.hasFunctionalTests = false
 ext.depProjects = [
     ':griffon-core',
     ':griffon-groovy',
@@ -29,7 +31,7 @@ ext.depProjects = [
 ]
 
 ext.depProjects.each { evaluationDependsOn it }
-apply from: rootProject.file('gradle/coverage.gradle')
+apply from: rootProject.file('gradle/coverage-samples.gradle')
 
 dependencies {
     compileOnly project(':griffon-groovy-compile')
