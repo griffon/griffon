@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractGriffonClass.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-java</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core.artifact</a> &gt; <span class="el_source">AbstractGriffonClass.java</span></div><h1>AbstractGriffonClass.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core.artifact;
+
+import griffon.core.GriffonApplication;
+import griffon.core.artifact.GriffonClass;
+import griffon.util.GriffonClassUtils;
+import griffon.util.GriffonNameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.lang.reflect.Method;
+import java.util.Set;
+import java.util.TreeSet;
+
+import static griffon.util.GriffonClassUtils.isEventHandler;
+import static griffon.util.GriffonClassUtils.isPlainMethod;
+import static griffon.util.GriffonNameUtils.getPropertyNameRepresentation;
+import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+import static org.codehaus.griffon.runtime.core.artifact.ClassPropertyFetcher.forClass;
+
+/**
+ * Abstract base class for Griffon types that provides common functionality for
+ * evaluating conventions within classes
+ *
+ * @author Steven Devijver (Grails 0.1)
+ * @author Graeme Rocher (Grails 0.1)
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public abstract class AbstractGriffonClass implements GriffonClass {
+    private static final String ERROR_NAME_BLANK = &quot;Argument 'name' must not be blank&quot;;
+    private static final String ERROR_ARTIFACT_TYPE_BLANK = &quot;Argument 'artifactType' must not be blank&quot;;
+    private static final String ERROR_TYPE_NULL = &quot;Argument 'type' must not be null&quot;;
+    private static final String ERROR_APPLICATION_NULL = &quot;Argument 'application' must not be null&quot;;
+
+    private final GriffonApplication application;
+    private final Class&lt;?&gt; clazz;
+    private final String artifactType;
+    private final String fullName;
+    private final String name;
+    private final String packageName;
+    private final String naturalName;
+    private final String shortName;
+    private final String propertyName;
+    private final String logicalPropertyName;
+    private final ClassPropertyFetcher classPropertyFetcher;
+
+<span class="fc" id="L66">    protected final Set&lt;String&gt; eventsCache = new TreeSet&lt;&gt;();</span>
+    protected final Logger log;
+
+<span class="fc" id="L69">    public AbstractGriffonClass(@Nonnull GriffonApplication application, @Nonnull Class&lt;?&gt; type, @Nonnull String artifactType, @Nonnull String trailingName) {</span>
+<span class="fc" id="L70">        this.application = requireNonNull(application, ERROR_APPLICATION_NULL);</span>
+<span class="fc" id="L71">        this.clazz = requireNonNull(type, ERROR_TYPE_NULL);</span>
+<span class="fc" id="L72">        this.artifactType = requireNonBlank(artifactType, ERROR_ARTIFACT_TYPE_BLANK).trim();</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">        trailingName = isBlank(trailingName) ? &quot;&quot; : trailingName.trim();</span>
+<span class="fc" id="L74">        fullName = type.getName();</span>
+<span class="fc" id="L75">        log = LoggerFactory.getLogger(getClass().getSimpleName() + &quot;[&quot; + fullName + &quot;]&quot;);</span>
+<span class="fc" id="L76">        packageName = GriffonClassUtils.getPackageName(type);</span>
+<span class="fc" id="L77">        naturalName = GriffonNameUtils.getNaturalName(type.getName());</span>
+<span class="fc" id="L78">        shortName = GriffonClassUtils.getShortClassName(type);</span>
+<span class="fc" id="L79">        name = GriffonNameUtils.getLogicalName(type, trailingName);</span>
+<span class="fc" id="L80">        propertyName = getPropertyNameRepresentation(shortName);</span>
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">        if (isBlank(name)) {</span>
+<span class="nc" id="L82">            logicalPropertyName = propertyName;</span>
+        } else {
+<span class="fc" id="L84">            logicalPropertyName = getPropertyNameRepresentation(name);</span>
+        }
+<span class="fc" id="L86">        classPropertyFetcher = forClass(type);</span>
+<span class="fc" id="L87">    }</span>
+
+    @Nonnull
+    public GriffonApplication getApplication() {
+<span class="nc" id="L91">        return application;</span>
+    }
+
+    @Nullable
+    @Override
+    public Object getPropertyValue(@Nonnull String name) {
+<span class="nc" id="L97">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc" id="L98">        return getPropertyOrStaticPropertyOrFieldValue(name, Object.class);</span>
+    }
+
+    @Override
+    public boolean hasProperty(@Nonnull String name) {
+<span class="nc" id="L103">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc" id="L104">        return classPropertyFetcher.isReadableProperty(name);</span>
+    }
+
+    @Nonnull
+    @Override
+    public String getName() {
+<span class="nc" id="L110">        return name;</span>
+    }
+
+    @Nonnull
+    @Override
+    public String getShortName() {
+<span class="nc" id="L116">        return shortName;</span>
+    }
+
+    @Nonnull
+    @Override
+    public String getFullName() {
+<span class="nc" id="L122">        return fullName;</span>
+    }
+
+    @Nonnull
+    @Override
+    public String getPropertyName() {
+<span class="nc" id="L128">        return propertyName;</span>
+    }
+
+    @Nonnull
+    @Override
+    public String getLogicalPropertyName() {
+<span class="fc" id="L134">        return logicalPropertyName;</span>
+    }
+
+    @Nonnull
+    @Override
+    public String getNaturalName() {
+<span class="nc" id="L140">        return naturalName;</span>
+    }
+
+    @Nonnull
+    @Override
+    public String getPackageName() {
+<span class="fc" id="L146">        return packageName;</span>
+    }
+
+    @Nonnull
+    @Override
+    public Class&lt;?&gt; getClazz() {
+<span class="fc" id="L152">        return clazz;</span>
+    }
+
+    @Nonnull
+    @Override
+    public String getArtifactType() {
+<span class="nc" id="L158">        return artifactType;</span>
+    }
+
+    @Nullable
+    @Override
+    public &lt;T&gt; T getPropertyValue(@Nonnull String name, @Nonnull Class&lt;T&gt; type) {
+<span class="nc" id="L164">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc" id="L165">        requireNonNull(type, ERROR_TYPE_NULL);</span>
+<span class="nc" id="L166">        return null;</span>
+    }
+
+    public String toString() {
+<span class="nc" id="L170">        return &quot;Artifact[&quot; + artifactType + &quot;] &gt; &quot; + getName();</span>
+    }
+
+    public boolean equals(@Nullable Object obj) {
+<span class="nc bnc" id="L174" title="All 2 branches missed.">        if (this == obj) return true;</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">        if (obj == null) return false;</span>
+<span class="nc bnc" id="L176" title="All 2 branches missed.">        if (!obj.getClass().getName().equals(getClass().getName()))</span>
+<span class="nc" id="L177">            return false;</span>
+
+<span class="nc" id="L179">        GriffonClass gc = (GriffonClass) obj;</span>
+<span class="nc" id="L180">        return clazz.getName().equals(gc.getClazz().getName());</span>
+    }
+
+    public int hashCode() {
+<span class="nc" id="L184">        return clazz.hashCode() + artifactType.hashCode();</span>
+    }
+
+    public void resetCaches() {
+<span class="nc" id="L188">        eventsCache.clear();</span>
+<span class="nc" id="L189">    }</span>
+
+    @Nonnull
+    public String[] getEventNames() {
+<span class="nc bnc" id="L193" title="All 2 branches missed.">        if (eventsCache.isEmpty()) {</span>
+<span class="nc bnc" id="L194" title="All 2 branches missed.">            for (Method method : getClazz().getMethods()) {</span>
+<span class="nc" id="L195">                String methodName = method.getName();</span>
+<span class="nc bnc" id="L196" title="All 2 branches missed.">                if (!eventsCache.contains(methodName) &amp;&amp;</span>
+<span class="nc bnc" id="L197" title="All 2 branches missed.">                    isPlainMethod(method) &amp;&amp;</span>
+<span class="nc bnc" id="L198" title="All 2 branches missed.">                    isEventHandler(methodName)) {</span>
+<span class="nc" id="L199">                    eventsCache.add(methodName.substring(2));</span>
+                }
+            }
+        }
+
+<span class="nc" id="L204">        return eventsCache.toArray(new String[eventsCache.size()]);</span>
+    }
+
+    /**
+     * Returns an array of property names that are backed by a filed with a matching
+     * name.&lt;p&gt;
+     * Fields must be private and non-static. Names will be returned in the order
+     * they are declared in the class, starting from the deepest class in the
+     * class hierarchy up to the topmost superclass != null
+     */
+    public String[] getPropertiesWithFields() {
+<span class="nc" id="L215">        return classPropertyFetcher.getPropertiesWithFields();</span>
+    }
+
+    public Class&lt;?&gt; getPropertyType(String name) {
+<span class="nc" id="L219">        return classPropertyFetcher.getPropertyType(name);</span>
+    }
+
+    public boolean isReadableProperty(String name) {
+<span class="nc" id="L223">        return classPropertyFetcher.isReadableProperty(name);</span>
+    }
+
+    /**
+     * &lt;p&gt;Looks for a property of the reference instance with a given name and type.&lt;/p&gt;
+     * &lt;p&gt;If found its value is returned. We follow the Java bean conventions with augmentation for groovy support
+     * and static fields/properties. We will therefore match, in this order:
+     * &lt;/p&gt;
+     * &lt;ol&gt;
+     * &lt;li&gt;Public static field
+     * &lt;li&gt;Public static property with getter method
+     * &lt;li&gt;Standard public bean property (with getter or just public field, using normal introspection)
+     * &lt;/ol&gt;
+     *
+     * @return property value or null if no property or static field was found
+     */
+    protected Object getPropertyOrStaticPropertyOrFieldValue(@SuppressWarnings(&quot;hiding&quot;) @Nonnull String name, @Nonnull Class&lt;?&gt; type) {
+<span class="nc" id="L240">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc" id="L241">        requireNonNull(type, ERROR_TYPE_NULL);</span>
+<span class="nc" id="L242">        Object value = classPropertyFetcher.getPropertyValue(name);</span>
+<span class="nc" id="L243">        return classPropertyFetcher.returnOnlyIfInstanceOf(value, type);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

@@ -406,46 +406,46 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     @Nonnull
     @Override
     public &lt;C extends GriffonController&gt; C getController(@Nonnull String name, @Nonnull Class&lt;C&gt; type) throws ArtifactNotFoundException {
-<span class="nc" id="L409">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
-<span class="nc" id="L410">        requireNonNull(type, ERROR_TYPE_NULL);</span>
-<span class="nc" id="L411">        GriffonController controller = getControllers().get(name);</span>
-<span class="nc bnc" id="L412" title="All 2 branches missed.">        if (controller != null) {</span>
-<span class="nc" id="L413">            return type.cast(controller);</span>
+<span class="fc" id="L409">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="fc" id="L410">        requireNonNull(type, ERROR_TYPE_NULL);</span>
+<span class="fc" id="L411">        GriffonController controller = getControllers().get(name);</span>
+<span class="fc bfc" id="L412" title="All 2 branches covered.">        if (controller != null) {</span>
+<span class="fc" id="L413">            return type.cast(controller);</span>
         }
-<span class="nc" id="L415">        throw new ArtifactNotFoundException(type, name);</span>
+<span class="fc" id="L415">        throw new ArtifactNotFoundException(type, name);</span>
     }
 
     @Nonnull
     @Override
     public &lt;M extends GriffonModel&gt; M getModel(@Nonnull String name, @Nonnull Class&lt;M&gt; type) throws ArtifactNotFoundException {
-<span class="nc" id="L421">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
-<span class="nc" id="L422">        requireNonNull(type, ERROR_TYPE_NULL);</span>
-<span class="nc" id="L423">        GriffonModel model = getModels().get(name);</span>
-<span class="nc bnc" id="L424" title="All 2 branches missed.">        if (model != null) {</span>
-<span class="nc" id="L425">            return type.cast(model);</span>
+<span class="fc" id="L421">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="fc" id="L422">        requireNonNull(type, ERROR_TYPE_NULL);</span>
+<span class="fc" id="L423">        GriffonModel model = getModels().get(name);</span>
+<span class="fc bfc" id="L424" title="All 2 branches covered.">        if (model != null) {</span>
+<span class="fc" id="L425">            return type.cast(model);</span>
         }
-<span class="nc" id="L427">        throw new ArtifactNotFoundException(type, name);</span>
+<span class="fc" id="L427">        throw new ArtifactNotFoundException(type, name);</span>
     }
 
     @Nonnull
     @Override
     public &lt;V extends GriffonView&gt; V getView(@Nonnull String name, @Nonnull Class&lt;V&gt; type) throws ArtifactNotFoundException {
-<span class="nc" id="L433">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
-<span class="nc" id="L434">        requireNonNull(type, ERROR_TYPE_NULL);</span>
-<span class="nc" id="L435">        GriffonView view = getViews().get(name);</span>
-<span class="nc bnc" id="L436" title="All 2 branches missed.">        if (view != null) {</span>
-<span class="nc" id="L437">            return type.cast(view);</span>
+<span class="fc" id="L433">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="fc" id="L434">        requireNonNull(type, ERROR_TYPE_NULL);</span>
+<span class="fc" id="L435">        GriffonView view = getViews().get(name);</span>
+<span class="fc bfc" id="L436" title="All 2 branches covered.">        if (view != null) {</span>
+<span class="fc" id="L437">            return type.cast(view);</span>
         }
-<span class="nc" id="L439">        throw new ArtifactNotFoundException(type, name);</span>
+<span class="fc" id="L439">        throw new ArtifactNotFoundException(type, name);</span>
     }
 
     @Nullable
     @Override
     public &lt;C extends GriffonController&gt; C findController(@Nonnull String name, @Nonnull Class&lt;C&gt; type) {
         try {
-<span class="nc" id="L446">            return getController(name, type);</span>
-<span class="nc" id="L447">        } catch (ArtifactNotFoundException anfe) {</span>
-<span class="nc" id="L448">            return null;</span>
+<span class="fc" id="L446">            return getController(name, type);</span>
+<span class="fc" id="L447">        } catch (ArtifactNotFoundException anfe) {</span>
+<span class="fc" id="L448">            return null;</span>
         }
     }
 
@@ -453,9 +453,9 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     @Override
     public &lt;M extends GriffonModel&gt; M findModel(@Nonnull String name, @Nonnull Class&lt;M&gt; type) {
         try {
-<span class="nc" id="L456">            return getModel(name, type);</span>
-<span class="nc" id="L457">        } catch (ArtifactNotFoundException anfe) {</span>
-<span class="nc" id="L458">            return null;</span>
+<span class="fc" id="L456">            return getModel(name, type);</span>
+<span class="fc" id="L457">        } catch (ArtifactNotFoundException anfe) {</span>
+<span class="fc" id="L458">            return null;</span>
         }
     }
 
@@ -463,9 +463,9 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     @Override
     public &lt;V extends GriffonView&gt; V findView(@Nonnull String name, @Nonnull Class&lt;V&gt; type) {
         try {
-<span class="nc" id="L466">            return getView(name, type);</span>
-<span class="nc" id="L467">        } catch (ArtifactNotFoundException anfe) {</span>
-<span class="nc" id="L468">            return null;</span>
+<span class="fc" id="L466">            return getView(name, type);</span>
+<span class="fc" id="L467">        } catch (ArtifactNotFoundException anfe) {</span>
+<span class="fc" id="L468">            return null;</span>
         }
     }
 }

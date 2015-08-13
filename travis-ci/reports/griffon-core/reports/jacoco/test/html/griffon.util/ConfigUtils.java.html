@@ -341,10 +341,10 @@ public final class ConfigUtils {
 <span class="nc" id="L341">            throw missingResource(type, key);</span>
         }
 <span class="fc" id="L343">        Object value = config.get(keys[keys.length - 1]);</span>
-<span class="pc bpc" id="L344" title="1 of 2 branches missed.">        if (value != null) {</span>
+<span class="fc bfc" id="L344" title="All 2 branches covered.">        if (value != null) {</span>
 <span class="fc" id="L345">            return (T) value;</span>
         }
-<span class="nc" id="L347">        throw missingResource(type, key);</span>
+<span class="fc" id="L347">        throw missingResource(type, key);</span>
     }
 
     /**
@@ -386,11 +386,11 @@ public final class ConfigUtils {
         }
 
 <span class="fc" id="L388">        Map&lt;String, Object&gt; map = (Map&lt;String, Object&gt;) node;</span>
-<span class="fc bfc" id="L389" title="All 2 branches covered.">        for (int i = 1; i &lt; keys.length - 1; i++) {</span>
+<span class="pc bpc" id="L389" title="1 of 2 branches missed.">        for (int i = 1; i &lt; keys.length - 1; i++) {</span>
 <span class="pc bpc" id="L390" title="1 of 2 branches missed.">            if (map != null) {</span>
 <span class="fc" id="L391">                node = map.get(keys[i]);</span>
-<span class="fc bfc" id="L392" title="All 2 branches covered.">                if (node instanceof Map) {</span>
-<span class="fc" id="L393">                    map = (Map&lt;String, Object&gt;) node;</span>
+<span class="pc bpc" id="L392" title="1 of 2 branches missed.">                if (node instanceof Map) {</span>
+<span class="nc" id="L393">                    map = (Map&lt;String, Object&gt;) node;</span>
                 } else {
 <span class="fc" id="L395">                    throw missingResource(type, key);</span>
                 }
@@ -398,13 +398,13 @@ public final class ConfigUtils {
 <span class="nc" id="L398">                throw missingResource(type, key);</span>
             }
         }
-<span class="pc bpc" id="L401" title="1 of 2 branches missed.">        if (map == null) {</span>
+<span class="nc bnc" id="L401" title="All 2 branches missed.">        if (map == null) {</span>
 <span class="nc" id="L402">            throw missingResource(type, key);</span>
         }
 
-<span class="fc" id="L405">        Object value = map.get(keys[keys.length - 1]);</span>
-<span class="pc bpc" id="L406" title="1 of 2 branches missed.">        if (value != null) {</span>
-<span class="fc" id="L407">            return (T) value;</span>
+<span class="nc" id="L405">        Object value = map.get(keys[keys.length - 1]);</span>
+<span class="nc bnc" id="L406" title="All 2 branches missed.">        if (value != null) {</span>
+<span class="nc" id="L407">            return (T) value;</span>
         }
 <span class="nc" id="L409">        throw missingResource(type, key);</span>
     }

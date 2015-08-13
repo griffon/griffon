@@ -464,7 +464,7 @@ import static java.util.Objects.requireNonNull;
 
         @Override
         public synchronized boolean isEmpty() {
-<span class="fc" id="L467">            return map.isEmpty();</span>
+<span class="nc" id="L467">            return map.isEmpty();</span>
         }
 
         @Override
@@ -548,8 +548,8 @@ import static java.util.Objects.requireNonNull;
 
         @Override
         public Set&lt;Map.Entry&lt;Object, Object&gt;&gt; entrySet() {
-<span class="fc" id="L551">            Set&lt;Map.Entry&lt;Object, Object&gt;&gt; set = new LinkedHashSet&lt;&gt;((Set) map.entrySet());</span>
-<span class="fc" id="L552">            return new LinkedHashSet&lt;&gt;(set);</span>
+<span class="nc" id="L551">            Set&lt;Map.Entry&lt;Object, Object&gt;&gt; set = new LinkedHashSet&lt;&gt;((Set) map.entrySet());</span>
+<span class="nc" id="L552">            return new LinkedHashSet&lt;&gt;(set);</span>
         }
 
         @Override

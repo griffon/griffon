@@ -52,106 +52,104 @@ public class ConfigurationDecorator implements Configuration {
     @Override
     @SuppressWarnings(&quot;unchecked&quot;)
     public &lt;T&gt; T get(@Nonnull String key, @Nullable T defaultValue) {
-<span class="fc" id="L55">        T value = (T) get(key);</span>
-<span class="fc bfc" id="L56" title="All 2 branches covered.">        return value != null ? value : defaultValue;</span>
+<span class="fc" id="L55">        return delegate.get(key, defaultValue);</span>
     }
 
     @Nullable
     @Override
     public Object getAt(@Nonnull String key) {
-<span class="fc" id="L62">        return get(key);</span>
+<span class="fc" id="L61">        return get(key);</span>
     }
 
     @Nullable
     @Override
     public &lt;T&gt; T getAt(@Nonnull String key, @Nullable T defaultValue) {
-<span class="fc" id="L68">        return get(key, defaultValue);</span>
+<span class="fc" id="L67">        return get(key, defaultValue);</span>
     }
 
     @Override
     public boolean getAsBoolean(@Nonnull String key) {
-<span class="fc" id="L73">        return getAsBoolean(key, false);</span>
+<span class="fc" id="L72">        return getAsBoolean(key, false);</span>
     }
 
     @Override
     public boolean getAsBoolean(@Nonnull String key, boolean defaultValue) {
-<span class="fc" id="L78">        return castToBoolean(get(key), defaultValue);</span>
+<span class="fc" id="L77">        return castToBoolean(get(key), defaultValue);</span>
     }
 
     @Override
     public int getAsInt(@Nonnull String key) {
-<span class="fc" id="L83">        return getAsInt(key, 0);</span>
+<span class="fc" id="L82">        return getAsInt(key, 0);</span>
     }
 
     @Override
     public int getAsInt(@Nonnull String key, int defaultValue) {
-<span class="fc" id="L88">        return castToInt(get(key), defaultValue);</span>
+<span class="fc" id="L87">        return castToInt(get(key), defaultValue);</span>
     }
 
     @Override
     public long getAsLong(@Nonnull String key) {
-<span class="fc" id="L93">        return getAsLong(key, 0L);</span>
+<span class="fc" id="L92">        return getAsLong(key, 0L);</span>
     }
 
     @Override
     public long getAsLong(@Nonnull String key, long defaultValue) {
-<span class="fc" id="L98">        return castToLong(get(key), defaultValue);</span>
+<span class="fc" id="L97">        return castToLong(get(key), defaultValue);</span>
     }
 
     @Override
     public float getAsFloat(@Nonnull String key) {
-<span class="fc" id="L103">        return getAsFloat(key, 0f);</span>
+<span class="fc" id="L102">        return getAsFloat(key, 0f);</span>
     }
 
     @Override
     public float getAsFloat(@Nonnull String key, float defaultValue) {
-<span class="fc" id="L108">        return castToFloat(get(key), defaultValue);</span>
+<span class="fc" id="L107">        return castToFloat(get(key), defaultValue);</span>
     }
 
     @Override
     public double getAsDouble(@Nonnull String key) {
-<span class="fc" id="L113">        return getAsDouble(key, 0d);</span>
+<span class="fc" id="L112">        return getAsDouble(key, 0d);</span>
     }
 
     @Override
     public double getAsDouble(@Nonnull String key, double defaultValue) {
-<span class="fc" id="L118">        return castToDouble(get(key), defaultValue);</span>
+<span class="fc" id="L117">        return castToDouble(get(key), defaultValue);</span>
     }
 
     @Nullable
     @Override
     public String getAsString(@Nonnull String key) {
-<span class="fc" id="L124">        return getAsString(key, null);</span>
+<span class="fc" id="L123">        return getAsString(key, null);</span>
     }
 
     @Nullable
     @Override
     public String getAsString(@Nonnull String key, @Nullable String defaultValue) {
-<span class="fc" id="L130">        Object value = get(key);</span>
-<span class="fc bfc" id="L131" title="All 2 branches covered.">        return value != null ? String.valueOf(value) : defaultValue;</span>
+<span class="fc" id="L129">        return delegate.getAsString(key, defaultValue);</span>
     }
 
     @Nonnull
     @Override
     public Properties asProperties() {
-<span class="fc" id="L137">        return toProperties(asFlatMap());</span>
+<span class="fc" id="L135">        return toProperties(asFlatMap());</span>
     }
 
     @Override
     public boolean containsKey(@Nonnull String key) {
-<span class="nc" id="L142">        return delegate.containsKey(key);</span>
+<span class="fc" id="L140">        return delegate.containsKey(key);</span>
     }
 
     @Nonnull
     @Override
     public Map&lt;String, Object&gt; asFlatMap() {
-<span class="fc" id="L148">        return delegate.asFlatMap();</span>
+<span class="fc" id="L146">        return delegate.asFlatMap();</span>
     }
 
     @Nonnull
     @Override
     public ResourceBundle asResourceBundle() {
-<span class="nc" id="L154">        return delegate.asResourceBundle();</span>
+<span class="fc" id="L152">        return delegate.asResourceBundle();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

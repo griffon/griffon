@@ -35,8 +35,8 @@ public class InstanceMethodInvocationException extends MethodInvocationException
 <span class="fc" id="L35">    }</span>
 
     public InstanceMethodInvocationException(@Nonnull Object instance, @Nonnull Method method) {
-<span class="nc" id="L38">        super(formatArguments(instance, method));</span>
-<span class="nc" id="L39">    }</span>
+<span class="fc" id="L38">        super(formatArguments(instance, method));</span>
+<span class="fc" id="L39">    }</span>
 
     public InstanceMethodInvocationException(@Nonnull Object instance, @Nonnull Method method, @Nonnull Throwable cause) {
 <span class="nc" id="L42">        super(formatArguments(instance, method), cause);</span>
@@ -72,24 +72,24 @@ public class InstanceMethodInvocationException extends MethodInvocationException
 
     @Nonnull
     protected static String formatArguments(@Nonnull Object instance, @Nonnull Method method) {
-<span class="nc" id="L75">        checkNonNull(instance, &quot;instance&quot;);</span>
-<span class="nc" id="L76">        checkNonNull(method, &quot;method&quot;);</span>
-<span class="nc" id="L77">        StringBuilder b = new StringBuilder(&quot;An error occurred while invoking instance method &quot;)</span>
-<span class="nc" id="L78">            .append(instance.getClass().getName())</span>
-<span class="nc" id="L79">            .append(&quot;.&quot;).append(method.getName()).append(&quot;(&quot;);</span>
+<span class="fc" id="L75">        checkNonNull(instance, &quot;instance&quot;);</span>
+<span class="fc" id="L76">        checkNonNull(method, &quot;method&quot;);</span>
+<span class="fc" id="L77">        StringBuilder b = new StringBuilder(&quot;An error occurred while invoking instance method &quot;)</span>
+<span class="fc" id="L78">            .append(instance.getClass().getName())</span>
+<span class="fc" id="L79">            .append(&quot;.&quot;).append(method.getName()).append(&quot;(&quot;);</span>
 
-<span class="nc" id="L81">        boolean first = true;</span>
-<span class="nc bnc" id="L82" title="All 2 branches missed.">        for (Class&lt;?&gt; type : method.getParameterTypes()) {</span>
-<span class="nc bnc" id="L83" title="All 2 branches missed.">            if (first) {</span>
-<span class="nc" id="L84">                first = false;</span>
+<span class="fc" id="L81">        boolean first = true;</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        for (Class&lt;?&gt; type : method.getParameterTypes()) {</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">            if (first) {</span>
+<span class="fc" id="L84">                first = false;</span>
             } else {
-<span class="nc" id="L86">                b.append(&quot;,&quot;);</span>
+<span class="fc" id="L86">                b.append(&quot;,&quot;);</span>
             }
-<span class="nc" id="L88">            b.append(type.getName());</span>
+<span class="fc" id="L88">            b.append(type.getName());</span>
         }
-<span class="nc" id="L90">        b.append(&quot;)&quot;);</span>
+<span class="fc" id="L90">        b.append(&quot;)&quot;);</span>
 
-<span class="nc" id="L92">        return b.toString();</span>
+<span class="fc" id="L92">        return b.toString();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

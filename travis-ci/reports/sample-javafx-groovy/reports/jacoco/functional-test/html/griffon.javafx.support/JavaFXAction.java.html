@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>JavaFXAction.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.support</a> &gt; <span class="el_source">JavaFXAction.java</span></div><h1>JavaFXAction.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.support;
+
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.input.KeyCombination;
+
+/**
+ * @author Andres Almiray
+ */
+<span class="fc" id="L33">public class JavaFXAction {</span>
+    // -- onAction
+
+    private ObjectProperty&lt;EventHandler&lt;ActionEvent&gt;&gt; onAction;
+
+    public final ObjectProperty&lt;EventHandler&lt;ActionEvent&gt;&gt; onActionProperty() {
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        if (onAction == null) {</span>
+<span class="fc" id="L40">            onAction = new SimpleObjectProperty&lt;&gt;(this, &quot;onAction&quot;);</span>
+        }
+<span class="fc" id="L42">        return onAction;</span>
+    }
+
+    public void setOnAction(EventHandler&lt;ActionEvent&gt; value) {
+<span class="fc" id="L46">        onActionProperty().set(value);</span>
+<span class="fc" id="L47">    }</span>
+
+    public EventHandler&lt;ActionEvent&gt; getOnAction() {
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        return onAction == null ? null : onActionProperty().get();</span>
+    }
+
+    // -- name
+
+    private StringProperty name;
+
+    public final StringProperty nameProperty() {
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (name == null) {</span>
+<span class="fc" id="L59">            name = new SimpleStringProperty(this, &quot;name&quot;);</span>
+        }
+<span class="fc" id="L61">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="fc" id="L65">        nameProperty().set(name);</span>
+<span class="fc" id="L66">    }</span>
+
+    public String getName() {
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">        return name == null ? null : nameProperty().get();</span>
+    }
+
+    // -- description
+
+    private StringProperty description;
+
+    public final StringProperty descriptionProperty() {
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        if (description == null) {</span>
+<span class="fc" id="L78">            description = new SimpleStringProperty(this, &quot;description&quot;);</span>
+        }
+<span class="fc" id="L80">        return description;</span>
+    }
+
+    public void setDescription(String description) {
+<span class="fc" id="L84">        descriptionProperty().set(description);</span>
+<span class="fc" id="L85">    }</span>
+
+    public String getDescription() {
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">        return description == null ? null : descriptionProperty().get();</span>
+    }
+
+    // -- enabled
+
+    private BooleanProperty enabled;
+
+    public final BooleanProperty enabledProperty() {
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        if (enabled == null) {</span>
+<span class="fc" id="L97">            enabled = new SimpleBooleanProperty(this, &quot;enabled&quot;, true);</span>
+        }
+<span class="fc" id="L99">        return enabled;</span>
+    }
+
+    public void setEnabled(boolean enabled) {
+<span class="fc" id="L103">        enabledProperty().set(enabled);</span>
+<span class="fc" id="L104">    }</span>
+
+    public boolean getEnabled() {
+<span class="pc bpc" id="L107" title="2 of 4 branches missed.">        return enabled != null &amp;&amp; enabledProperty().get();</span>
+    }
+
+    // -- accelerator
+
+    private ObjectProperty&lt;KeyCombination&gt; accelerator;
+
+    public void setAccelerator(String accelerator) {
+<span class="nc" id="L115">        setAccelerator(KeyCombination.keyCombination(accelerator));</span>
+<span class="nc" id="L116">    }</span>
+
+    public final void setAccelerator(KeyCombination value) {
+<span class="nc" id="L119">        acceleratorProperty().set(value);</span>
+<span class="nc" id="L120">    }</span>
+
+    public final KeyCombination getAccelerator() {
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        return accelerator == null ? null : accelerator.get();</span>
+    }
+
+    public final ObjectProperty&lt;KeyCombination&gt; acceleratorProperty() {
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        if (accelerator == null) {</span>
+<span class="nc" id="L128">            accelerator = new SimpleObjectProperty&lt;&gt;(this, &quot;accelerator&quot;);</span>
+        }
+<span class="nc" id="L130">        return accelerator;</span>
+    }
+
+    // -- icon
+
+    private StringProperty icon;
+
+    public final StringProperty iconProperty() {
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        if (icon == null) {</span>
+<span class="fc" id="L139">            icon = new SimpleStringProperty(this, &quot;icon&quot;);</span>
+        }
+<span class="fc" id="L141">        return icon;</span>
+    }
+
+    public void setIcon(String icon) {
+<span class="nc" id="L145">        iconProperty().set(icon);</span>
+<span class="nc" id="L146">    }</span>
+
+    public String getIcon() {
+<span class="pc bpc" id="L149" title="1 of 2 branches missed.">        return icon == null ? null : iconProperty().get();</span>
+    }
+
+    // -- image
+
+    private ObjectProperty&lt;Image&gt; image;
+
+    public final ObjectProperty&lt;Image&gt; imageProperty() {
+<span class="nc bnc" id="L157" title="All 2 branches missed.">        if (image == null) {</span>
+<span class="nc" id="L158">            image = new SimpleObjectProperty&lt;&gt;(this, &quot;image&quot;);</span>
+        }
+<span class="nc" id="L160">        return image;</span>
+    }
+
+    public void setImage(Image image) {
+<span class="nc" id="L164">        imageProperty().set(image);</span>
+<span class="nc" id="L165">    }</span>
+
+    public Image getImage() {
+<span class="nc bnc" id="L168" title="All 2 branches missed.">        return image == null ? null : imageProperty().get();</span>
+    }
+
+    // -- graphic
+
+    private ObjectProperty&lt;Node&gt; graphic;
+
+    public final ObjectProperty&lt;Node&gt; graphicProperty() {
+<span class="nc bnc" id="L176" title="All 2 branches missed.">        if (graphic == null) {</span>
+<span class="nc" id="L177">            graphic = new SimpleObjectProperty&lt;&gt;(this, &quot;graphic&quot;);</span>
+        }
+<span class="nc" id="L179">        return graphic;</span>
+    }
+
+    public void setGraphic(Node graphic) {
+<span class="nc" id="L183">        graphicProperty().set(graphic);</span>
+<span class="nc" id="L184">    }</span>
+
+    public Node getGraphic() {
+<span class="nc bnc" id="L187" title="All 2 branches missed.">        return graphic == null ? null : graphicProperty().get();</span>
+    }
+
+    // -- selected
+
+    private BooleanProperty selected;
+
+    public final BooleanProperty selectedProperty() {
+<span class="pc bpc" id="L195" title="1 of 2 branches missed.">        if (selected == null) {</span>
+<span class="fc" id="L196">            selected = new SimpleBooleanProperty(this, &quot;selected&quot;);</span>
+        }
+<span class="fc" id="L198">        return selected;</span>
+    }
+
+    public void setSelected(boolean selected) {
+<span class="fc" id="L202">        selectedProperty().set(selected);</span>
+<span class="fc" id="L203">    }</span>
+
+    public boolean getSelected() {
+<span class="nc bnc" id="L206" title="All 4 branches missed.">        return selected != null &amp;&amp; selectedProperty().get();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

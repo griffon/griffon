@@ -113,8 +113,8 @@ import static java.util.Objects.requireNonNull;
 
 <span class="pc bpc" id="L114" title="1 of 2 branches missed.">            if (null != value) {</span>
 <span class="fc" id="L115">                Class&lt;?&gt; propertyType = method.getParameterTypes()[0];</span>
-<span class="pc bpc" id="L116" title="1 of 2 branches missed.">                if (!propertyType.isAssignableFrom(value.getClass())) {</span>
-<span class="nc" id="L117">                    value = convertValue(propertyType, value, format);</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">                if (!propertyType.isAssignableFrom(value.getClass())) {</span>
+<span class="fc" id="L117">                    value = convertValue(propertyType, value, format);</span>
                 }
 <span class="fc" id="L119">                setPropertyValue(instance, method, value, fqName);</span>
             }
@@ -154,8 +154,8 @@ import static java.util.Objects.requireNonNull;
             }
 
 <span class="fc bfc" id="L156" title="All 2 branches covered.">            if (null != value) {</span>
-<span class="pc bpc" id="L157" title="1 of 2 branches missed.">                if (!field.getType().isAssignableFrom(value.getClass())) {</span>
-<span class="nc" id="L158">                    value = convertValue(field.getType(), value, format);</span>
+<span class="fc bfc" id="L157" title="All 2 branches covered.">                if (!field.getType().isAssignableFrom(value.getClass())) {</span>
+<span class="fc" id="L158">                    value = convertValue(field.getType(), value, format);</span>
                 }
 <span class="fc" id="L160">                setFieldValue(instance, field, value, fqName);</span>
             }
@@ -172,26 +172,26 @@ import static java.util.Objects.requireNonNull;
 
     @Nonnull
     protected Object convertValue(@Nonnull Class&lt;?&gt; type, @Nonnull Object value, @Nullable String format) {
-<span class="nc" id="L175">        requireNonNull(type, ERROR_TYPE_NULL);</span>
-<span class="nc" id="L176">        requireNonNull(value, ERROR_VALUE_NULL);</span>
-<span class="nc" id="L177">        PropertyEditor propertyEditor = resolvePropertyEditor(type, format);</span>
-<span class="nc bnc" id="L178" title="All 2 branches missed.">        if (null == propertyEditor) return value;</span>
-<span class="nc bnc" id="L179" title="All 2 branches missed.">        if (value instanceof CharSequence) {</span>
-<span class="nc" id="L180">            propertyEditor.setAsText(String.valueOf(value));</span>
+<span class="fc" id="L175">        requireNonNull(type, ERROR_TYPE_NULL);</span>
+<span class="fc" id="L176">        requireNonNull(value, ERROR_VALUE_NULL);</span>
+<span class="fc" id="L177">        PropertyEditor propertyEditor = resolvePropertyEditor(type, format);</span>
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">        if (null == propertyEditor) return value;</span>
+<span class="pc bpc" id="L179" title="1 of 2 branches missed.">        if (value instanceof CharSequence) {</span>
+<span class="fc" id="L180">            propertyEditor.setAsText(String.valueOf(value));</span>
         } else {
 <span class="nc" id="L182">            propertyEditor.setValue(value);</span>
         }
-<span class="nc" id="L184">        return propertyEditor.getValue();</span>
+<span class="fc" id="L184">        return propertyEditor.getValue();</span>
     }
 
     @Nullable
     protected PropertyEditor resolvePropertyEditor(@Nonnull Class&lt;?&gt; type, @Nullable String format) {
-<span class="nc" id="L189">        requireNonNull(type, ERROR_TYPE_NULL);</span>
-<span class="nc" id="L190">        PropertyEditor propertyEditor = findEditor(type);</span>
-<span class="nc bnc" id="L191" title="All 2 branches missed.">        if (propertyEditor instanceof ExtendedPropertyEditor) {</span>
-<span class="nc" id="L192">            ((ExtendedPropertyEditor) propertyEditor).setFormat(format);</span>
+<span class="fc" id="L189">        requireNonNull(type, ERROR_TYPE_NULL);</span>
+<span class="fc" id="L190">        PropertyEditor propertyEditor = findEditor(type);</span>
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">        if (propertyEditor instanceof ExtendedPropertyEditor) {</span>
+<span class="fc" id="L192">            ((ExtendedPropertyEditor) propertyEditor).setFormat(format);</span>
         }
-<span class="nc" id="L194">        return propertyEditor;</span>
+<span class="fc" id="L194">        return propertyEditor;</span>
     }
 
     protected void setPropertyValue(@Nonnull Object instance, @Nonnull Method method, @Nullable Object value, @Nonnull String fqName) {

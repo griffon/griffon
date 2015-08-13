@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>InsetsPropertyEditor.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.editors</a> &gt; <span class="el_source">InsetsPropertyEditor.java</span></div><h1>InsetsPropertyEditor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.editors;
+
+import griffon.core.editors.AbstractPropertyEditor;
+import griffon.metadata.PropertyEditorFor;
+import javafx.geometry.Insets;
+
+import java.util.List;
+import java.util.Map;
+
+import static griffon.util.GriffonNameUtils.isBlank;
+
+/**
+ * @author Andres Almiray
+ */
+@PropertyEditorFor(Insets.class)
+<span class="fc" id="L31">public class InsetsPropertyEditor extends AbstractPropertyEditor {</span>
+    public String getAsText() {
+<span class="nc bnc" id="L33" title="All 2 branches missed.">        if (null == getValue()) return null;</span>
+<span class="nc" id="L34">        Insets i = (Insets) getValue();</span>
+<span class="nc" id="L35">        return i.getTop() + &quot;, &quot; + i.getRight() + &quot;, &quot; + i.getBottom() + &quot;, &quot; + i.getLeft();</span>
+    }
+
+    protected void setValueInternal(Object value) {
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (null == value) {</span>
+<span class="nc" id="L40">            super.setValueInternal(null);</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">        } else if (value instanceof CharSequence) {</span>
+<span class="nc" id="L42">            handleAsString(String.valueOf(value));</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        } else if (value instanceof List) {</span>
+<span class="nc" id="L44">            handleAsList((List) value);</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">        } else if (value instanceof Map) {</span>
+<span class="nc" id="L46">            handleAsMap((Map) value);</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        } else if (value instanceof Number) {</span>
+<span class="nc" id="L48">            handleAsNumber((Number) value);</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        } else if (value instanceof Insets) {</span>
+<span class="nc" id="L50">            super.setValueInternal(value);</span>
+        } else {
+<span class="nc" id="L52">            throw illegalValue(value, Insets.class);</span>
+        }
+<span class="nc" id="L54">    }</span>
+
+    protected void handleAsString(String str) {
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        if (isBlank(str)) {</span>
+<span class="nc" id="L58">            super.setValueInternal(null);</span>
+<span class="nc" id="L59">            return;</span>
+        }
+
+<span class="nc" id="L62">        double t = 0;</span>
+<span class="nc" id="L63">        double l = 0;</span>
+<span class="nc" id="L64">        double r = 0;</span>
+<span class="nc" id="L65">        double b = 0;</span>
+<span class="nc" id="L66">        String[] parts = str.split(&quot;,&quot;);</span>
+<span class="nc bnc" id="L67" title="All 5 branches missed.">        switch (parts.length) {</span>
+            case 4:
+<span class="nc" id="L69">                l = parseValue(parts[3]);</span>
+            case 3:
+<span class="nc" id="L71">                b = parseValue(parts[2]);</span>
+            case 2:
+<span class="nc" id="L73">                r = parseValue(parts[1]);</span>
+            case 1:
+<span class="nc" id="L75">                t = parseValue(parts[0]);</span>
+<span class="nc" id="L76">                super.setValueInternal(new Insets(t, r, b, l));</span>
+<span class="nc" id="L77">                break;</span>
+            default:
+<span class="nc" id="L79">                throw illegalValue(str, Insets.class);</span>
+        }
+<span class="nc" id="L81">    }</span>
+
+    protected void handleAsList(List&lt;?&gt; list) {
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        if (list.isEmpty()) {</span>
+<span class="nc" id="L85">            super.setValueInternal(null);</span>
+<span class="nc" id="L86">            return;</span>
+        }
+
+<span class="nc" id="L89">        double t = 0;</span>
+<span class="nc" id="L90">        double l = 0;</span>
+<span class="nc" id="L91">        double r = 0;</span>
+<span class="nc" id="L92">        double b = 0;</span>
+<span class="nc bnc" id="L93" title="All 5 branches missed.">        switch (list.size()) {</span>
+            case 4:
+<span class="nc" id="L95">                l = parseValue(list.get(3));</span>
+            case 3:
+<span class="nc" id="L97">                b = parseValue(list.get(2));</span>
+            case 2:
+<span class="nc" id="L99">                r = parseValue(list.get(1));</span>
+            case 1:
+<span class="nc" id="L101">                t = parseValue(list.get(0));</span>
+<span class="nc" id="L102">                super.setValueInternal(new Insets(t, r, b, l));</span>
+<span class="nc" id="L103">                break;</span>
+            default:
+<span class="nc" id="L105">                throw illegalValue(list, Insets.class);</span>
+        }
+<span class="nc" id="L107">    }</span>
+
+    protected void handleAsMap(Map&lt;?, ?&gt; map) {
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (map.isEmpty()) {</span>
+<span class="nc" id="L111">            super.setValueInternal(null);</span>
+<span class="nc" id="L112">            return;</span>
+        }
+
+<span class="nc" id="L115">        double t = getMapValue(map, &quot;top&quot;, 0);</span>
+<span class="nc" id="L116">        double l = getMapValue(map, &quot;left&quot;, 0);</span>
+<span class="nc" id="L117">        double r = getMapValue(map, &quot;right&quot;, 0);</span>
+<span class="nc" id="L118">        double b = getMapValue(map, &quot;bottom&quot;, 0);</span>
+<span class="nc" id="L119">        super.setValueInternal(new Insets(t, r, b, l));</span>
+<span class="nc" id="L120">    }</span>
+
+    protected double parseValue(Object value) {
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        if (value instanceof CharSequence) {</span>
+<span class="nc" id="L124">            return parse(String.valueOf(value));</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">        } else if (value instanceof Number) {</span>
+<span class="nc" id="L126">            return parse((Number) value);</span>
+        }
+<span class="nc" id="L128">        throw illegalValue(value, Insets.class);</span>
+    }
+
+    protected double parse(String val) {
+        try {
+<span class="nc" id="L133">            return Double.parseDouble(String.valueOf(val).trim());</span>
+<span class="nc" id="L134">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L135">            throw illegalValue(val, Insets.class, e);</span>
+        }
+    }
+
+    protected double parse(Number val) {
+<span class="nc" id="L140">        return val.doubleValue();</span>
+    }
+
+    protected double getMapValue(Map&lt;?, ?&gt; map, String key, double defaultValue) {
+<span class="nc" id="L144">        Object val = map.get(key);</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">        if (null == val) val = map.get(String.valueOf(key.charAt(0)));</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">        if (null == val) {</span>
+<span class="nc" id="L147">            return defaultValue;</span>
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        } else if (val instanceof CharSequence) {</span>
+<span class="nc" id="L149">            return parse(String.valueOf(val));</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        } else if (val instanceof Number) {</span>
+<span class="nc" id="L151">            return parse((Number) val);</span>
+        }
+<span class="nc" id="L153">        throw illegalValue(map, Insets.class);</span>
+    }
+
+    protected void handleAsNumber(Number value) {
+<span class="nc" id="L157">        double c = parse(value);</span>
+<span class="nc" id="L158">        super.setValueInternal(new Insets(c, c, c, c));</span>
+<span class="nc" id="L159">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

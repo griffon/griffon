@@ -17,41 +17,51 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.core.ExecutorServiceManager;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
+
+import static java.util.Collections.unmodifiableSet;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
-<span class="fc" id="L29">public class DefaultExecutorServiceManager implements ExecutorServiceManager {</span>
-<span class="fc" id="L30">    private final Set&lt;ExecutorService&gt; executorServices = new LinkedHashSet&lt;&gt;();</span>
+<span class="fc" id="L33">public class DefaultExecutorServiceManager implements ExecutorServiceManager {</span>
+<span class="fc" id="L34">    private final Set&lt;ExecutorService&gt; executorServices = new LinkedHashSet&lt;&gt;();</span>
+
+    @Nonnull
+    @Override
+    public Collection&lt;ExecutorService&gt; getExecutorServices() {
+<span class="nc" id="L39">        return unmodifiableSet(executorServices);</span>
+    }
 
     @Override
     @Nullable
     public ExecutorService add(@Nullable ExecutorService executorService) {
-<span class="pc bpc" id="L35" title="1 of 2 branches missed.">        if (executorService != null) {</span>
-<span class="fc" id="L36">            executorServices.add(executorService);</span>
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">        if (executorService != null) {</span>
+<span class="fc" id="L46">            executorServices.add(executorService);</span>
         }
-<span class="fc" id="L38">        return executorService;</span>
+<span class="fc" id="L48">        return executorService;</span>
     }
 
     @Override
     @Nullable
     public ExecutorService remove(@Nullable ExecutorService executorService) {
-<span class="nc" id="L44">        executorServices.remove(executorService);</span>
-<span class="nc" id="L45">        return executorService;</span>
+<span class="nc" id="L54">        executorServices.remove(executorService);</span>
+<span class="nc" id="L55">        return executorService;</span>
     }
 
     @Override
     public void shutdownAll() {
-<span class="fc bfc" id="L50" title="All 2 branches covered.">        for (ExecutorService executorService : executorServices) {</span>
-<span class="pc bpc" id="L51" title="1 of 2 branches missed.">            if (!executorService.isShutdown()) {</span>
-<span class="fc" id="L52">                executorService.shutdown();</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">        for (ExecutorService executorService : executorServices) {</span>
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">            if (!executorService.isShutdown()) {</span>
+<span class="fc" id="L62">                executorService.shutdown();</span>
             }
-<span class="fc" id="L54">        }</span>
-<span class="fc" id="L55">    }</span>
+<span class="fc" id="L64">        }</span>
+<span class="fc" id="L65">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

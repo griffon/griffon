@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GuiceInjectorFactory.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-java</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.injection</a> &gt; <span class="el_source">GuiceInjectorFactory.java</span></div><h1>GuiceInjectorFactory.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.injection;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Module;
+import com.google.inject.TypeLiteral;
+import com.google.inject.matcher.AbstractMatcher;
+import com.google.inject.matcher.Matchers;
+import com.google.inject.spi.InjectionListener;
+import com.google.inject.spi.TypeEncounter;
+import com.google.inject.spi.TypeListener;
+import griffon.core.ApplicationEvent;
+import griffon.core.GriffonApplication;
+import griffon.core.artifact.GriffonArtifact;
+import griffon.core.injection.Binding;
+import griffon.core.injection.Injector;
+import griffon.core.injection.InjectorFactory;
+import org.codehaus.griffon.runtime.core.injection.InjectorProvider;
+import org.kordamp.jipsy.ServiceProviderFor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
+import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.ServiceLoader;
+
+import static com.google.inject.util.Providers.guicify;
+import static griffon.util.AnnotationUtils.sortByDependencies;
+import static java.util.Arrays.asList;
+import static java.util.Objects.requireNonNull;
+import static org.codehaus.griffon.runtime.injection.GuiceInjector.moduleFromBindings;
+import static org.codehaus.griffon.runtime.injection.MethodUtils.invokeAnnotatedMethod;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+@ServiceProviderFor(InjectorFactory.class)
+<span class="fc" id="L59">public class GuiceInjectorFactory implements InjectorFactory {</span>
+<span class="fc" id="L60">    private static final Logger LOG = LoggerFactory.getLogger(GuiceInjectorFactory.class);</span>
+
+    @Nonnull
+    @Override
+    public GuiceInjector createInjector(@Nonnull GriffonApplication application, @Nonnull Iterable&lt;Binding&lt;?&gt;&gt; bindings) {
+<span class="fc" id="L65">        requireNonNull(application, &quot;Argument 'application' must not be null&quot;);</span>
+<span class="fc" id="L66">        requireNonNull(bindings, &quot;Argument 'bindings' must not be null&quot;);</span>
+<span class="fc" id="L67">        InjectorProvider injectorProvider = new InjectorProvider();</span>
+<span class="fc" id="L68">        GuiceInjector injector = createModules(application, injectorProvider, bindings);</span>
+<span class="fc" id="L69">        injectorProvider.setInjector(injector);</span>
+<span class="fc" id="L70">        return injector;</span>
+    }
+
+    private GuiceInjector createModules(final @Nonnull GriffonApplication application, @Nonnull final InjectorProvider injectorProvider, @Nonnull Iterable&lt;Binding&lt;?&gt;&gt; bindings) {
+<span class="fc" id="L74">        final InjectionListener&lt;GriffonArtifact&gt; injectionListener = new InjectionListener&lt;GriffonArtifact&gt;() {</span>
+            @Override
+            public void afterInjection(GriffonArtifact injectee) {
+<span class="fc" id="L77">                application.getEventRouter().publishEvent(</span>
+<span class="fc" id="L78">                    ApplicationEvent.NEW_INSTANCE.getName(),</span>
+<span class="fc" id="L79">                    asList(injectee.getClass(), injectee)</span>
+                );
+<span class="fc" id="L81">            }</span>
+        };
+
+<span class="fc" id="L84">        final InjectionListener&lt;Object&gt; postConstructorInjectorListener = new InjectionListener&lt;Object&gt;() {</span>
+            @SuppressWarnings(&quot;ThrowableResultOfMethodCallIgnored&quot;)
+            @Override
+            public void afterInjection(Object injectee) {
+<span class="fc" id="L88">                invokeAnnotatedMethod(injectee, PostConstruct.class);</span>
+<span class="fc" id="L89">            }</span>
+        };
+
+<span class="fc" id="L92">        Module injectorModule = new AbstractModule() {</span>
+            @Override
+            protected void configure() {
+<span class="fc" id="L95">                bind(Injector.class)</span>
+<span class="fc" id="L96">                    .toProvider(guicify(injectorProvider))</span>
+<span class="fc" id="L97">                    .in(Singleton.class);</span>
+
+<span class="fc" id="L99">                bindListener(new AbstractMatcher&lt;TypeLiteral&lt;?&gt;&gt;() {</span>
+                                 public boolean matches(TypeLiteral&lt;?&gt; typeLiteral) {
+<span class="fc" id="L101">                                     return GriffonArtifact.class.isAssignableFrom(typeLiteral.getRawType());</span>
+                                 }
+<span class="fc" id="L103">                             }, new TypeListener() {</span>
+                                 @SuppressWarnings(&quot;unchecked&quot;)
+                                 @Override
+                                 public &lt;I&gt; void hear(TypeLiteral&lt;I&gt; type, TypeEncounter&lt;I&gt; encounter) {
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">                                     if (GriffonArtifact.class.isAssignableFrom(type.getRawType())) {</span>
+<span class="fc" id="L108">                                         TypeEncounter&lt;GriffonArtifact&gt; artifactEncounter = (TypeEncounter&lt;GriffonArtifact&gt;) encounter;</span>
+<span class="fc" id="L109">                                         artifactEncounter.register(injectionListener);</span>
+                                     }
+<span class="fc" id="L111">                                 }</span>
+                             }
+                );
+
+<span class="fc" id="L115">                bindListener(Matchers.any(), new TypeListener() {</span>
+                    @Override
+                    public &lt;I&gt; void hear(TypeLiteral&lt;I&gt; type, TypeEncounter&lt;I&gt; encounter) {
+<span class="fc" id="L118">                        encounter.register(postConstructorInjectorListener);</span>
+<span class="fc" id="L119">                    }</span>
+                });
+<span class="fc" id="L121">            }</span>
+        };
+
+<span class="fc" id="L124">        Collection&lt;Module&gt; modules = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L125">        modules.add(injectorModule);</span>
+<span class="fc" id="L126">        modules.add(moduleFromBindings(bindings));</span>
+
+<span class="fc" id="L128">        List&lt;Module&gt; loadedModules = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L129">        ServiceLoader&lt;Module&gt; moduleLoader = ServiceLoader.load(Module.class, getClass().getClassLoader());</span>
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">        for (Module module : moduleLoader) {</span>
+<span class="nc" id="L131">            LOG.trace(&quot;Adding module {}&quot;, module);</span>
+<span class="nc" id="L132">            loadedModules.add(module);</span>
+<span class="nc" id="L133">        }</span>
+<span class="fc" id="L134">        Map&lt;String, Module&gt; sortedModules = sortByDependencies(loadedModules, &quot;Module&quot;, &quot;module&quot;);</span>
+<span class="fc" id="L135">        modules.addAll(sortedModules.values());</span>
+
+<span class="fc" id="L137">        com.google.inject.Injector injector = Guice.createInjector(modules);</span>
+<span class="fc" id="L138">        return new GuiceInjector(injector);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

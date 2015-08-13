@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Rectangle2DPropertyEditor.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-java</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.editors</a> &gt; <span class="el_source">Rectangle2DPropertyEditor.java</span></div><h1>Rectangle2DPropertyEditor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.editors;
+
+import griffon.core.editors.AbstractPropertyEditor;
+import griffon.metadata.PropertyEditorFor;
+import javafx.geometry.Rectangle2D;
+
+import java.util.List;
+import java.util.Map;
+
+import static griffon.util.GriffonNameUtils.isBlank;
+
+/**
+ * @author Andres Almiray
+ */
+@PropertyEditorFor(Rectangle2D.class)
+<span class="fc" id="L31">public class Rectangle2DPropertyEditor extends AbstractPropertyEditor {</span>
+    public String getAsText() {
+<span class="nc bnc" id="L33" title="All 2 branches missed.">        if (null == getValue()) return null;</span>
+<span class="nc" id="L34">        Rectangle2D r = (Rectangle2D) getValue();</span>
+<span class="nc" id="L35">        return r.getMinX() + &quot;, &quot; + r.getMinY() + &quot;, &quot; + r.getWidth() + &quot;, &quot; + r.getHeight();</span>
+    }
+
+    protected void setValueInternal(Object value) {
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (null == value) {</span>
+<span class="nc" id="L40">            super.setValueInternal(null);</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">        } else if (value instanceof CharSequence) {</span>
+<span class="nc" id="L42">            handleAsString(String.valueOf(value));</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        } else if (value instanceof List) {</span>
+<span class="nc" id="L44">            handleAsList((List) value);</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">        } else if (value instanceof Map) {</span>
+<span class="nc" id="L46">            handleAsMap((Map) value);</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        } else if (value instanceof Rectangle2D) {</span>
+<span class="nc" id="L48">            super.setValueInternal(value);</span>
+        } else {
+<span class="nc" id="L50">            throw illegalValue(value, Rectangle2D.class);</span>
+        }
+<span class="nc" id="L52">    }</span>
+
+    protected void handleAsString(String str) {
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        if (isBlank(str)) {</span>
+<span class="nc" id="L56">            super.setValueInternal(null);</span>
+<span class="nc" id="L57">            return;</span>
+        }
+
+<span class="nc" id="L60">        String[] parts = str.split(&quot;,&quot;);</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        switch (parts.length) {</span>
+            case 4:
+<span class="nc" id="L63">                double x = parseValue(parts[0]);</span>
+<span class="nc" id="L64">                double y = parseValue(parts[1]);</span>
+<span class="nc" id="L65">                double w = parseValue(parts[2]);</span>
+<span class="nc" id="L66">                double h = parseValue(parts[3]);</span>
+<span class="nc" id="L67">                super.setValueInternal(new Rectangle2D(x, y, w, h));</span>
+<span class="nc" id="L68">                break;</span>
+            default:
+<span class="nc" id="L70">                throw illegalValue(str, Rectangle2D.class);</span>
+        }
+<span class="nc" id="L72">    }</span>
+
+    protected void handleAsList(List&lt;?&gt; list) {
+<span class="nc bnc" id="L75" title="All 2 branches missed.">        if (list.isEmpty()) {</span>
+<span class="nc" id="L76">            super.setValueInternal(null);</span>
+<span class="nc" id="L77">            return;</span>
+        }
+
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        switch (list.size()) {</span>
+            case 4:
+<span class="nc" id="L82">                double x = parseValue(list.get(0));</span>
+<span class="nc" id="L83">                double y = parseValue(list.get(1));</span>
+<span class="nc" id="L84">                double w = parseValue(list.get(2));</span>
+<span class="nc" id="L85">                double h = parseValue(list.get(3));</span>
+<span class="nc" id="L86">                super.setValueInternal(new Rectangle2D(x, y, w, h));</span>
+<span class="nc" id="L87">                break;</span>
+            default:
+<span class="nc" id="L89">                throw illegalValue(list, Rectangle2D.class);</span>
+        }
+<span class="nc" id="L91">    }</span>
+
+    protected void handleAsMap(Map&lt;?, ?&gt; map) {
+<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (map.isEmpty()) {</span>
+<span class="nc" id="L95">            super.setValueInternal(null);</span>
+<span class="nc" id="L96">            return;</span>
+        }
+
+<span class="nc" id="L99">        double x = getMapValue(map, &quot;x&quot;, 0);</span>
+<span class="nc" id="L100">        double y = getMapValue(map, &quot;y&quot;, 0);</span>
+<span class="nc" id="L101">        double w = getMapValue(map, &quot;width&quot;, 0);</span>
+<span class="nc" id="L102">        double h = getMapValue(map, &quot;height&quot;, 0);</span>
+<span class="nc" id="L103">        super.setValueInternal(new Rectangle2D(x, y, w, h));</span>
+<span class="nc" id="L104">    }</span>
+
+    protected double parseValue(Object value) {
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        if (value instanceof CharSequence) {</span>
+<span class="nc" id="L108">            return parse(String.valueOf(value));</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">        } else if (value instanceof Number) {</span>
+<span class="nc" id="L110">            return parse((Number) value);</span>
+        }
+<span class="nc" id="L112">        throw illegalValue(value, Rectangle2D.class);</span>
+    }
+
+    protected double parse(String val) {
+        try {
+<span class="nc" id="L117">            return Double.parseDouble(val.trim());</span>
+<span class="nc" id="L118">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L119">            throw illegalValue(val, Rectangle2D.class, e);</span>
+        }
+    }
+
+    protected double parse(Number val) {
+<span class="nc" id="L124">        return val.doubleValue();</span>
+    }
+
+    protected double getMapValue(Map&lt;?, ?&gt; map, String key, double defaultValue) {
+<span class="nc" id="L128">        Object val = map.get(key);</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">        if (null == val) val = map.get(String.valueOf(key.charAt(0)));</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">        if (null == val) {</span>
+<span class="nc" id="L131">            return defaultValue;</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">        } else if (val instanceof CharSequence) {</span>
+<span class="nc" id="L133">            return parse(String.valueOf(val));</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">        } else if (val instanceof Number) {</span>
+<span class="nc" id="L135">            return parse((Number) val);</span>
+        }
+<span class="nc" id="L137">        throw illegalValue(map, Rectangle2D.class);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

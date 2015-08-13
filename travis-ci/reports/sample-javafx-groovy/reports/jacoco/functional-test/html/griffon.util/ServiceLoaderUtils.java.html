@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ServiceLoaderUtils.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.util</a> &gt; <span class="el_source">ServiceLoaderUtils.java</span></div><h1>ServiceLoaderUtils.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.util;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.Scanner;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+
+import static griffon.core.GriffonExceptionHandler.sanitize;
+import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public class ServiceLoaderUtils {
+<span class="fc" id="L41">    private static final Logger LOG = LoggerFactory.getLogger(ServiceLoaderUtils.class);</span>
+    private static final String JAR_FILE_SCHEME = &quot;jar:file:&quot;;
+
+<span class="nc" id="L44">    private ServiceLoaderUtils() {</span>
+
+<span class="nc" id="L46">    }</span>
+
+    public static boolean load(@Nonnull ClassLoader classLoader, @Nonnull String path, @Nonnull Class&lt;?&gt; type, @Nonnull LineProcessor processor) {
+<span class="fc" id="L49">        requireNonNull(classLoader, &quot;Argument 'classLoader' must not be null&quot;);</span>
+<span class="fc" id="L50">        requireNonBlank(path, &quot;Argument 'path' must not be blank&quot;);</span>
+<span class="fc" id="L51">        requireNonNull(type, &quot;Argument 'type' must not be null&quot;);</span>
+<span class="fc" id="L52">        requireNonNull(processor, &quot;Argument 'processor' must not be null&quot;);</span>
+        // &quot;The name of a resource is a /-separated path name that identifies the resource.&quot;
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">        String normalizedPath = path.endsWith(&quot;/&quot;) ? path : path + &quot;/&quot;;</span>
+
+        Enumeration&lt;URL&gt; urls;
+
+        try {
+<span class="fc" id="L59">            urls = classLoader.getResources(normalizedPath + type.getName());</span>
+<span class="nc" id="L60">        } catch (IOException ioe) {</span>
+<span class="nc" id="L61">            LOG.error(ioe.getClass().getName() + &quot; error loading resources of type \&quot;&quot; + type.getName() + &quot;\&quot; from \&quot;&quot; + normalizedPath + &quot;\&quot;.&quot;);</span>
+<span class="nc" id="L62">            return false;</span>
+<span class="fc" id="L63">        }</span>
+
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">        if (urls == null) return false;</span>
+
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        while (urls.hasMoreElements()) {</span>
+<span class="fc" id="L68">            URL url = urls.nextElement();</span>
+<span class="fc" id="L69">            LOG.debug(&quot;Reading {} definitions from {}&quot;, type.getName(), url);</span>
+
+<span class="pc" id="L71">            try (Scanner scanner = new Scanner(url.openStream())) {</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">                while (scanner.hasNextLine()) {</span>
+<span class="fc" id="L73">                    String line = scanner.nextLine();</span>
+<span class="pc bpc" id="L74" title="1 of 4 branches missed.">                    if (line.startsWith(&quot;#&quot;) || isBlank(line)) continue;</span>
+<span class="fc" id="L75">                    processor.process(classLoader, type, line);</span>
+<span class="fc" id="L76">                }</span>
+<span class="pc bpc" id="L77" title="6 of 8 branches missed.">            } catch (IOException e) {</span>
+<span class="nc" id="L78">                LOG.warn(&quot;Could not load &quot; + type.getName() + &quot; definitions from &quot; + url, sanitize(e));</span>
+<span class="fc" id="L79">            }</span>
+<span class="fc" id="L80">        }</span>
+
+<span class="fc" id="L82">        return true;</span>
+    }
+
+    public static boolean load(@Nonnull ClassLoader classLoader, @Nonnull String path, @Nonnull PathFilter pathFilter, @Nonnull ResourceProcessor processor) {
+<span class="fc" id="L86">        requireNonNull(classLoader, &quot;Argument 'classLoader' must not be null&quot;);</span>
+<span class="fc" id="L87">        requireNonBlank(path, &quot;Argument 'path' must not be blank&quot;);</span>
+<span class="fc" id="L88">        requireNonNull(pathFilter, &quot;Argument 'pathFilter' must not be blank&quot;);</span>
+<span class="fc" id="L89">        requireNonNull(processor, &quot;Argument 'processor' must not be null&quot;);</span>
+
+        Enumeration&lt;URL&gt; urls;
+
+        try {
+<span class="fc" id="L94">            urls = classLoader.getResources(path);</span>
+<span class="nc" id="L95">        } catch (IOException ioe) {</span>
+<span class="nc" id="L96">            LOG.debug(ioe.getClass().getName() + &quot; error loading resources from \&quot;&quot; + path + &quot;\&quot;.&quot;);</span>
+<span class="nc" id="L97">            return false;</span>
+<span class="fc" id="L98">        }</span>
+
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">        if (urls == null) return false;</span>
+
+<span class="fc bfc" id="L102" title="All 2 branches covered.">        while (urls.hasMoreElements()) {</span>
+<span class="fc" id="L103">            URL url = urls.nextElement();</span>
+<span class="fc" id="L104">            LOG.debug(&quot;Reading definitions from &quot; + url);</span>
+<span class="pc bpc" id="L105" title="7 of 10 branches missed.">            switch (url.getProtocol()) {</span>
+                case &quot;file&quot;:
+<span class="fc" id="L107">                    handleFileResource(url, classLoader, path, pathFilter, processor);</span>
+<span class="fc" id="L108">                    break;</span>
+                case &quot;jar&quot;:
+<span class="nc" id="L110">                    handleJarResource(url, classLoader, path, pathFilter, processor);</span>
+<span class="nc" id="L111">                    break;</span>
+                default:
+<span class="nc" id="L113">                    LOG.warn(&quot;Could not load definitions from &quot; + url);</span>
+            }
+<span class="fc" id="L115">        }</span>
+
+<span class="fc" id="L117">        return true;</span>
+    }
+
+    private static void handleFileResource(@Nonnull URL url, @Nonnull ClassLoader classLoader, @Nonnull String path, @Nonnull PathFilter pathFilter, @Nonnull ResourceProcessor processor) {
+        try {
+<span class="fc" id="L122">            File file = new File(url.toURI());</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">            for (File entry : file.listFiles()) {</span>
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">                if (pathFilter.accept(entry.getName())) {</span>
+<span class="pc" id="L125">                    try (Scanner scanner = new Scanner(entry)) {</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">                        while (scanner.hasNextLine()) {</span>
+<span class="fc" id="L127">                            String line = scanner.nextLine();</span>
+<span class="pc bpc" id="L128" title="1 of 4 branches missed.">                            if (line.startsWith(&quot;#&quot;) || isBlank(line)) continue;</span>
+<span class="fc" id="L129">                            processor.process(classLoader, line);</span>
+<span class="fc" id="L130">                        }</span>
+<span class="pc bpc" id="L131" title="6 of 8 branches missed.">                    } catch (IOException e) {</span>
+<span class="nc" id="L132">                        LOG.warn(&quot;An error occurred while loading resources from &quot; + entry.getAbsolutePath(), sanitize(e));</span>
+<span class="fc" id="L133">                    }</span>
+                }
+            }
+<span class="nc" id="L136">        } catch (URISyntaxException e) {</span>
+<span class="nc" id="L137">            LOG.warn(&quot;An error occurred while loading resources from &quot; + url, sanitize(e));</span>
+<span class="fc" id="L138">        }</span>
+<span class="fc" id="L139">    }</span>
+
+    private static void handleJarResource(@Nonnull URL url, @Nonnull ClassLoader classLoader, @Nonnull String path, @Nonnull PathFilter pathFilter, @Nonnull ResourceProcessor processor) {
+        try {
+<span class="nc" id="L143">            String u = url.toString();</span>
+<span class="nc" id="L144">            JarFile jar = new JarFile(u.substring(JAR_FILE_SCHEME.length(), u.length() - path.length() - 2));</span>
+<span class="nc" id="L145">            Enumeration&lt;JarEntry&gt; entries = jar.entries();</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">            while (entries.hasMoreElements()) {</span>
+<span class="nc" id="L147">                JarEntry jarEntry = entries.nextElement();</span>
+<span class="nc bnc" id="L148" title="All 4 branches missed.">                if (jarEntry.getName().startsWith(path) &amp;&amp; pathFilter.accept(jarEntry.getName())) {</span>
+<span class="nc" id="L149">                    try (Scanner scanner = new Scanner(jar.getInputStream(jarEntry))) {</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">                        while (scanner.hasNextLine()) {</span>
+<span class="nc" id="L151">                            String line = scanner.nextLine();</span>
+<span class="nc bnc" id="L152" title="All 4 branches missed.">                            if (line.startsWith(&quot;#&quot;) || isBlank(line)) continue;</span>
+<span class="nc" id="L153">                            processor.process(classLoader, line);</span>
+<span class="nc" id="L154">                        }</span>
+<span class="nc bnc" id="L155" title="All 8 branches missed.">                    } catch (IOException e) {</span>
+<span class="nc" id="L156">                        LOG.warn(&quot;An error occurred while loading resources from &quot; + jarEntry.getName(), sanitize(e));</span>
+<span class="nc" id="L157">                    }</span>
+                }
+<span class="nc" id="L159">            }</span>
+<span class="nc" id="L160">        } catch (IOException e) {</span>
+<span class="nc" id="L161">            LOG.warn(&quot;An error occurred while loading resources from &quot; + url, sanitize(e));</span>
+<span class="nc" id="L162">        }</span>
+<span class="nc" id="L163">    }</span>
+
+    public static interface PathFilter {
+        boolean accept(@Nonnull String path);
+    }
+
+    public static interface LineProcessor {
+        void process(@Nonnull ClassLoader classLoader, @Nonnull Class&lt;?&gt; type, @Nonnull String line);
+    }
+
+    public static interface ResourceProcessor {
+        void process(@Nonnull ClassLoader classLoader, @Nonnull String line);
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

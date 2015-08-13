@@ -27,16 +27,16 @@ public class NewInstanceException extends GriffonException {
     private static final long serialVersionUID = -2311364344106926056L;
 
     public NewInstanceException(@Nonnull Class&lt;?&gt; klass) {
-<span class="nc" id="L30">        super(format(klass));</span>
-<span class="nc" id="L31">    }</span>
+<span class="fc" id="L30">        super(format(klass));</span>
+<span class="fc" id="L31">    }</span>
 
     public NewInstanceException(@Nonnull Class&lt;?&gt; klass, @Nonnull Throwable cause) {
-<span class="nc" id="L34">        super(format(klass), requireNonNull(cause, &quot;cause&quot;));</span>
-<span class="nc" id="L35">    }</span>
+<span class="fc" id="L34">        super(format(klass), requireNonNull(cause, &quot;cause&quot;));</span>
+<span class="fc" id="L35">    }</span>
 
     private static String format(Class&lt;?&gt; klass) {
-<span class="nc" id="L38">        requireNonNull(klass, &quot;class&quot;);</span>
-<span class="nc" id="L39">        return &quot;Can't create a new instance of type &quot; + klass.getName();</span>
+<span class="fc" id="L38">        requireNonNull(klass, &quot;class&quot;);</span>
+<span class="fc" id="L39">        return &quot;Cannot create a new instance of type &quot; + klass.getName();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

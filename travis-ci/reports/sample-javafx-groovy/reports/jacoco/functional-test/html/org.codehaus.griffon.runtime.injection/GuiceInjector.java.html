@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GuiceInjector.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-groovy</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.injection</a> &gt; <span class="el_source">GuiceInjector.java</span></div><h1>GuiceInjector.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.injection;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.Key;
+import com.google.inject.Module;
+import com.google.inject.ProvisionException;
+import com.google.inject.Scopes;
+import com.google.inject.TypeLiteral;
+import com.google.inject.binder.AnnotatedBindingBuilder;
+import com.google.inject.binder.LinkedBindingBuilder;
+import com.google.inject.binder.ScopedBindingBuilder;
+import griffon.core.injection.Binding;
+import griffon.core.injection.Injector;
+import griffon.core.injection.InstanceBinding;
+import griffon.core.injection.ProviderBinding;
+import griffon.core.injection.ProviderTypeBinding;
+import griffon.core.injection.Qualified;
+import griffon.core.injection.TargetBinding;
+import griffon.exceptions.ClosedInjectorException;
+import griffon.exceptions.InstanceNotFoundException;
+import griffon.exceptions.MembersInjectionException;
+import griffon.exceptions.TypeNotFoundException;
+import griffon.util.AnnotationUtils;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.PreDestroy;
+import javax.annotation.concurrent.GuardedBy;
+import javax.inject.Singleton;
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static com.google.inject.util.Providers.guicify;
+import static java.util.Objects.requireNonNull;
+import static org.codehaus.griffon.runtime.injection.MethodUtils.invokeAnnotatedMethod;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public class GuiceInjector implements Injector&lt;com.google.inject.Injector&gt; {
+    private static final String ERROR_TYPE_NULL = &quot;Argument 'type' must not be null&quot;;
+    private static final String ERROR_BINDINGS_NULL = &quot;Argument 'bindings' must not be null&quot;;
+    private static final String ERROR_DELEGATE_NULL = &quot;Argument 'delegate' must not be null&quot;;
+    private static final String ERROR_QUALIFIER_NULL = &quot;Argument 'qualifier' must not be null&quot;;
+    private static final String ERROR_INSTANCE_NULL = &quot;Argument 'instance' must not be null&quot;;
+    private static final String ERROR_NAME_BLANK = &quot;Argument 'name' must not be blank&quot;;
+
+    private final com.google.inject.Injector delegate;
+<span class="fc" id="L67">    private final Object lock = new Object[0];</span>
+    @GuardedBy(&quot;lock&quot;)
+    private boolean closed;
+
+<span class="fc" id="L71">    public GuiceInjector(@Nonnull com.google.inject.Injector delegate) {</span>
+<span class="fc" id="L72">        this.delegate = requireNonNull(delegate, ERROR_DELEGATE_NULL);</span>
+<span class="fc" id="L73">    }</span>
+
+    static Module moduleFromBindings(final @Nonnull Iterable&lt;Binding&lt;?&gt;&gt; bindings) {
+<span class="fc" id="L76">        return new AbstractModule() {</span>
+            @Override
+            protected void configure() {
+<span class="fc bfc" id="L79" title="All 2 branches covered.">                for (Binding&lt;?&gt; binding : bindings) {</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">                    if (binding instanceof TargetBinding) {</span>
+<span class="fc" id="L81">                        handleTargetBinding((TargetBinding) binding);</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">                    } else if (binding instanceof InstanceBinding) {</span>
+<span class="fc" id="L83">                        handleInstanceBinding((InstanceBinding) binding);</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">                    } else if (binding instanceof ProviderTypeBinding) {</span>
+<span class="fc" id="L85">                        handleProviderTypeBinding((ProviderTypeBinding) binding);</span>
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">                    } else if (binding instanceof ProviderBinding) {</span>
+<span class="fc" id="L87">                        handleProviderBinding((ProviderBinding) binding);</span>
+                    } else {
+<span class="nc" id="L89">                        throw new IllegalArgumentException(&quot;Don't know how to handle &quot; + binding);</span>
+                    }
+<span class="fc" id="L91">                }</span>
+<span class="fc" id="L92">            }</span>
+
+            @Nonnull
+            private LinkedBindingBuilder handleBinding(@Nonnull Binding&lt;?&gt; binding) {
+<span class="fc" id="L96">                AnnotatedBindingBuilder&lt;?&gt; builder = bind(binding.getSource());</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">                if (binding.getClassifier() != null) {</span>
+<span class="fc" id="L98">                    return builder.annotatedWith(binding.getClassifier());</span>
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">                } else if (binding.getClassifierType() != null) {</span>
+<span class="nc" id="L100">                    return builder.annotatedWith(binding.getClassifierType());</span>
+                }
+<span class="fc" id="L102">                return builder;</span>
+            }
+
+            @SuppressWarnings(&quot;unchecked&quot;)
+            private void handleTargetBinding(@Nonnull TargetBinding&lt;?&gt; binding) {
+<span class="fc" id="L107">                LinkedBindingBuilder lbuilder = handleBinding(binding);</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">                if (binding.getSource() != binding.getTarget()) {</span>
+<span class="fc" id="L109">                    ScopedBindingBuilder sbuilder = lbuilder.to(binding.getTarget());</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">                    if (binding.isSingleton()) {</span>
+<span class="fc" id="L111">                        sbuilder.in(Singleton.class);</span>
+                    }
+<span class="fc bfc" id="L113" title="All 2 branches covered.">                } else if (binding.isSingleton()) {</span>
+<span class="fc" id="L114">                    lbuilder.in(Singleton.class);</span>
+                }
+<span class="fc" id="L116">            }</span>
+
+            @SuppressWarnings(&quot;unchecked&quot;)
+            private void handleInstanceBinding(@Nonnull InstanceBinding&lt;?&gt; binding) {
+<span class="fc" id="L120">                handleBinding(binding).toInstance(binding.getInstance());</span>
+<span class="fc" id="L121">            }</span>
+
+            @SuppressWarnings(&quot;unchecked&quot;)
+            private void handleProviderTypeBinding(@Nonnull ProviderTypeBinding&lt;?&gt; binding) {
+<span class="fc" id="L125">                ScopedBindingBuilder builder = handleBinding(binding).toProvider(binding.getProviderType());</span>
+<span class="pc bpc" id="L126" title="1 of 2 branches missed.">                if (binding.isSingleton()) {</span>
+<span class="fc" id="L127">                    builder.in(Singleton.class);</span>
+                }
+<span class="fc" id="L129">            }</span>
+
+            @SuppressWarnings(&quot;unchecked&quot;)
+            private void handleProviderBinding(@Nonnull ProviderBinding&lt;?&gt; binding) {
+<span class="fc" id="L133">                ScopedBindingBuilder builder = handleBinding(binding).toProvider(guicify(binding.getProvider()));</span>
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">                if (binding.isSingleton()) {</span>
+<span class="fc" id="L135">                    builder.in(Singleton.class);</span>
+                }
+<span class="fc" id="L137">            }</span>
+        };
+    }
+
+    @Nonnull
+    @Override
+    public &lt;T&gt; T getInstance(@Nonnull Class&lt;T&gt; type) throws InstanceNotFoundException {
+<span class="fc" id="L144">        requireNonNull(type, ERROR_TYPE_NULL);</span>
+
+<span class="pc bpc" id="L146" title="1 of 2 branches missed.">        if (isClosed()) {</span>
+<span class="nc" id="L147">            throw new InstanceNotFoundException(type, new ClosedInjectorException(this));</span>
+        }
+
+        try {
+<span class="fc" id="L151">            return delegate.getInstance(type);</span>
+<span class="nc" id="L152">        } catch (RuntimeException e) {</span>
+<span class="nc" id="L153">            throw new InstanceNotFoundException(type, e);</span>
+        }
+    }
+
+    @Nonnull
+    @Override
+    public &lt;T&gt; T getInstance(@Nonnull Class&lt;T&gt; type, @Nonnull Annotation qualifier) throws InstanceNotFoundException {
+<span class="fc" id="L160">        requireNonNull(type, ERROR_TYPE_NULL);</span>
+<span class="fc" id="L161">        requireNonNull(qualifier, ERROR_QUALIFIER_NULL);</span>
+
+<span class="pc bpc" id="L163" title="1 of 2 branches missed.">        if (isClosed()) {</span>
+<span class="nc" id="L164">            throw new InstanceNotFoundException(type, qualifier, new ClosedInjectorException(this));</span>
+        }
+
+        try {
+<span class="fc" id="L168">            return delegate.getInstance(Key.get(type, qualifier));</span>
+<span class="fc" id="L169">        } catch (RuntimeException e) {</span>
+<span class="fc" id="L170">            throw new InstanceNotFoundException(type, qualifier, e);</span>
+        }
+    }
+
+    @Nonnull
+    @Override
+    public &lt;T&gt; Collection&lt;T&gt; getInstances(@Nonnull Class&lt;T&gt; type) throws InstanceNotFoundException {
+<span class="fc" id="L177">        requireNonNull(type, ERROR_TYPE_NULL);</span>
+
+<span class="pc bpc" id="L179" title="1 of 2 branches missed.">        if (isClosed()) {</span>
+<span class="nc" id="L180">            throw new InstanceNotFoundException(type, new ClosedInjectorException(this));</span>
+        }
+
+<span class="fc" id="L183">        List&lt;T&gt; instances = new ArrayList&lt;&gt;();</span>
+
+        List&lt;com.google.inject.Binding&lt;T&gt;&gt; bindings;
+        try {
+<span class="fc" id="L187">            bindings = delegate.findBindingsByType(TypeLiteral.get(type));</span>
+<span class="nc" id="L188">        } catch (RuntimeException e) {</span>
+<span class="nc" id="L189">            throw new InstanceNotFoundException(type, e);</span>
+<span class="fc" id="L190">        }</span>
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">        if (bindings == null) {</span>
+<span class="nc" id="L192">            throw new InstanceNotFoundException(type);</span>
+        }
+
+<span class="fc bfc" id="L195" title="All 2 branches covered.">        for (com.google.inject.Binding&lt;T&gt; binding : bindings) {</span>
+            try {
+<span class="fc" id="L197">                instances.add(delegate.getInstance(binding.getKey()));</span>
+<span class="nc" id="L198">            } catch (RuntimeException e) {</span>
+<span class="nc" id="L199">                throw new InstanceNotFoundException(type, e);</span>
+<span class="fc" id="L200">            }</span>
+<span class="fc" id="L201">        }</span>
+
+<span class="fc" id="L203">        return instances;</span>
+    }
+
+    @Nonnull
+    @Override
+    public &lt;T&gt; Collection&lt;Qualified&lt;T&gt;&gt; getQualifiedInstances(@Nonnull Class&lt;T&gt; type) throws InstanceNotFoundException {
+<span class="nc" id="L209">        requireNonNull(type, ERROR_TYPE_NULL);</span>
+
+<span class="nc bnc" id="L211" title="All 2 branches missed.">        if (isClosed()) {</span>
+<span class="nc" id="L212">            throw new InstanceNotFoundException(type, new ClosedInjectorException(this));</span>
+        }
+
+<span class="nc" id="L215">        List&lt;Qualified&lt;T&gt;&gt; instances = new ArrayList&lt;&gt;();</span>
+
+        List&lt;com.google.inject.Binding&lt;T&gt;&gt; bindings;
+        try {
+<span class="nc" id="L219">            bindings = delegate.findBindingsByType(TypeLiteral.get(type));</span>
+<span class="nc" id="L220">        } catch (RuntimeException e) {</span>
+<span class="nc" id="L221">            throw new InstanceNotFoundException(type, e);</span>
+<span class="nc" id="L222">        }</span>
+<span class="nc bnc" id="L223" title="All 2 branches missed.">        if (bindings == null) {</span>
+<span class="nc" id="L224">            throw new InstanceNotFoundException(type);</span>
+        }
+
+<span class="nc bnc" id="L227" title="All 2 branches missed.">        for (com.google.inject.Binding&lt;T&gt; binding : bindings) {</span>
+            try {
+<span class="nc" id="L229">                Key&lt;T&gt; key = binding.getKey();</span>
+<span class="nc" id="L230">                final T instance = delegate.getInstance(key);</span>
+<span class="nc" id="L231">                instances.add(new Qualified&lt;&gt;(instance, translate(key.getAnnotation())));</span>
+<span class="nc" id="L232">            } catch (RuntimeException e) {</span>
+<span class="nc" id="L233">                throw new InstanceNotFoundException(type, e);</span>
+<span class="nc" id="L234">            }</span>
+<span class="nc" id="L235">        }</span>
+
+<span class="nc" id="L237">        return instances;</span>
+    }
+
+    @Nullable
+    private Annotation translate(@Nullable Annotation annotation) {
+<span class="nc bnc" id="L242" title="All 2 branches missed.">        if (annotation instanceof com.google.inject.name.Named) {</span>
+<span class="nc" id="L243">            return AnnotationUtils.named(((com.google.inject.name.Named) annotation).value());</span>
+        }
+<span class="nc" id="L245">        return annotation;</span>
+    }
+
+    @Override
+    public void injectMembers(@Nonnull Object instance) throws MembersInjectionException {
+<span class="fc" id="L250">        requireNonNull(instance, ERROR_INSTANCE_NULL);</span>
+
+<span class="pc bpc" id="L252" title="1 of 2 branches missed.">        if (isClosed()) {</span>
+<span class="nc" id="L253">            throw new MembersInjectionException(instance, new ClosedInjectorException(this));</span>
+        }
+
+        try {
+<span class="fc" id="L257">            delegate.injectMembers(instance);</span>
+<span class="nc" id="L258">        } catch (RuntimeException e) {</span>
+<span class="nc" id="L259">            throw new MembersInjectionException(instance, e);</span>
+<span class="fc" id="L260">        }</span>
+<span class="fc" id="L261">    }</span>
+
+    @Nonnull
+    @Override
+    public com.google.inject.Injector getDelegateInjector() {
+<span class="nc" id="L266">        return delegate;</span>
+    }
+
+    @Override
+    public void close() {
+<span class="pc bpc" id="L271" title="1 of 2 branches missed.">        if (isClosed()) {</span>
+<span class="nc" id="L272">            throw new ClosedInjectorException(this);</span>
+        }
+
+<span class="fc bfc" id="L275" title="All 2 branches covered.">        for (Key&lt;?&gt; key : delegate.getAllBindings().keySet()) {</span>
+            try {
+<span class="fc" id="L277">                com.google.inject.Binding&lt;?&gt; binding = delegate.getExistingBinding(key);</span>
+<span class="fc bfc" id="L278" title="All 2 branches covered.">                if (!Scopes.isSingleton(binding)) {</span>
+<span class="fc" id="L279">                    continue;</span>
+                }
+<span class="fc" id="L281">                invokeAnnotatedMethod(binding.getProvider().get(), PreDestroy.class);</span>
+<span class="nc" id="L282">            } catch (ProvisionException pe) {</span>
+<span class="nc bnc" id="L283" title="All 2 branches missed.">                if (!(pe.getCause() instanceof TypeNotFoundException)) {</span>
+<span class="nc" id="L284">                    pe.printStackTrace();</span>
+                }
+<span class="fc" id="L286">            }</span>
+<span class="fc" id="L287">        }</span>
+
+<span class="fc" id="L289">        synchronized (lock) {</span>
+<span class="fc" id="L290">            closed = true;</span>
+<span class="pc" id="L291">        }</span>
+<span class="fc" id="L292">    }</span>
+
+    private boolean isClosed() {
+<span class="fc" id="L295">        synchronized (lock) {</span>
+<span class="fc" id="L296">            return closed;</span>
+<span class="nc" id="L297">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

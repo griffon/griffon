@@ -25,15 +25,15 @@ public class ArtifactHandlerNotFoundException extends GriffonException {
     private static final long serialVersionUID = -5575844741820466545L;
 
     public ArtifactHandlerNotFoundException(@Nonnull String type) {
-<span class="nc" id="L28">        super(format(type));</span>
-<span class="nc" id="L29">    }</span>
+<span class="fc" id="L28">        super(format(type));</span>
+<span class="fc" id="L29">    }</span>
 
     public ArtifactHandlerNotFoundException(@Nonnull String type, @Nonnull Throwable cause) {
-<span class="nc" id="L32">        super(format(type), checkNonNull(cause, &quot;cause&quot;));</span>
-<span class="nc" id="L33">    }</span>
+<span class="fc" id="L32">        super(format(type), checkNonNull(cause, &quot;cause&quot;));</span>
+<span class="fc" id="L33">    }</span>
 
     private static String format(String type) {
-<span class="nc" id="L36">        return &quot;Could not find an ArtifactHandler for type &quot; + checkNonNull(type, &quot;type&quot;);</span>
+<span class="fc" id="L36">        return &quot;Could not find an ArtifactHandler for type &quot; + checkNonNull(type, &quot;type&quot;);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

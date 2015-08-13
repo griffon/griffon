@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>NoopActionManager.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-groovy</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core.controller</a> &gt; <span class="el_source">NoopActionManager.java</span></div><h1>NoopActionManager.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core.controller;
+
+import griffon.core.artifact.GriffonController;
+import griffon.core.controller.Action;
+import griffon.core.controller.ActionHandler;
+import griffon.core.controller.ActionInterceptor;
+import griffon.core.controller.ActionManager;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.Map;
+
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.GriffonNameUtils.uncapitalize;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="nc" id="L36">public class NoopActionManager implements ActionManager {</span>
+    @Nonnull
+    @Override
+    public Map&lt;String, Action&gt; actionsFor(@Nonnull GriffonController controller) {
+<span class="nc" id="L40">        return Collections.emptyMap();</span>
+    }
+
+    @Nullable
+    @Override
+    public Action actionFor(@Nonnull GriffonController controller, @Nonnull String actionName) {
+<span class="nc" id="L46">        return null;</span>
+    }
+
+    @Override
+    public void createActions(@Nonnull GriffonController controller) {
+
+<span class="nc" id="L52">    }</span>
+
+    @Nonnull
+    @Override
+    public String normalizeName(@Nonnull String actionName) {
+<span class="nc" id="L57">        requireNonBlank(actionName, &quot;Argument 'actionName' must not be blank&quot;);</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (actionName.endsWith(ACTION)) {</span>
+<span class="nc" id="L59">            actionName = actionName.substring(0, actionName.length() - ACTION.length());</span>
+        }
+<span class="nc" id="L61">        return uncapitalize(actionName);</span>
+    }
+
+    @Override
+    public void updateActions() {
+
+<span class="nc" id="L67">    }</span>
+
+    @Override
+    public void updateActions(@Nonnull GriffonController controller) {
+
+<span class="nc" id="L72">    }</span>
+
+    @Override
+    public void updateAction(@Nonnull Action action) {
+
+<span class="nc" id="L77">    }</span>
+
+    @Override
+    public void updateAction(@Nonnull GriffonController controller, @Nonnull String actionName) {
+
+<span class="nc" id="L82">    }</span>
+
+    @Override
+    public void invokeAction(@Nonnull GriffonController controller, @Nonnull String actionName, Object... args) {
+
+<span class="nc" id="L87">    }</span>
+
+    @Override
+    public void invokeAction(@Nonnull Action action, @Nonnull Object... args) {
+
+<span class="nc" id="L92">    }</span>
+
+    @Override
+    public void addActionHandler(@Nonnull ActionHandler actionHandler) {
+
+<span class="nc" id="L97">    }</span>
+
+    @Deprecated
+    @Override
+    public void addActionInterceptor(@Nonnull ActionInterceptor actionInterceptor) {
+
+<span class="nc" id="L103">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

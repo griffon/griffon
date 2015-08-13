@@ -54,7 +54,7 @@ public abstract class AbstractContext implements Context {
     @Nullable
     @Override
     public Object get(@Nonnull String key) {
-<span class="nc bnc" id="L57" title="All 2 branches missed.">        if (containsKey(key)) {</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        if (hasKey(key)) {</span>
 <span class="nc" id="L58">            return doGet(key);</span>
 <span class="nc bnc" id="L59" title="All 2 branches missed.">        } else if (parentContext != null) {</span>
 <span class="nc" id="L60">            return parentContext.get(key);</span>
@@ -69,11 +69,11 @@ public abstract class AbstractContext implements Context {
 <span class="fc" id="L69">    }</span>
 
     @Override
-    public boolean hasKey(@Nonnull String key) {
-<span class="nc bnc" id="L73" title="All 2 branches missed.">        if (containsKey(key)) {</span>
+    public boolean containsKey(@Nonnull String key) {
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        if (hasKey(key)) {</span>
 <span class="nc" id="L74">            return true;</span>
 <span class="nc bnc" id="L75" title="All 2 branches missed.">        } else if (parentContext != null) {</span>
-<span class="nc" id="L76">            return parentContext.hasKey(key);</span>
+<span class="nc" id="L76">            return parentContext.containsKey(key);</span>
         }
 <span class="nc" id="L78">        return false;</span>
     }

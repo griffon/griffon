@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractMessageSource.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-java</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core.i18n</a> &gt; <span class="el_source">AbstractMessageSource.java</span></div><h1>AbstractMessageSource.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core.i18n;
+
+import griffon.core.CallableWithArgs;
+import griffon.core.i18n.MessageSource;
+import griffon.core.i18n.NoSuchMessageException;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.text.MessageFormat;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.MissingResourceException;
+
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @author Alexander Klein
+ * @since 2.0.0
+ */
+<span class="fc" id="L38">public abstract class AbstractMessageSource implements MessageSource {</span>
+    protected static final String ERROR_KEY_BLANK = &quot;Argument 'key' must not be blank&quot;;
+    protected static final String ERROR_LOCALE_NULL = &quot;Argument 'locale' must not be null&quot;;
+    protected static final String ERROR_ARGS_NULL = &quot;Argument 'args' must not be null&quot;;
+    protected static final String ERROR_MESSAGE_NULL = &quot;Argument 'message' must not be null&quot;;
+
+<span class="fc" id="L44">    protected static final Object[] EMPTY_OBJECT_ARGS = new Object[0];</span>
+
+    @Nonnull
+    @Override
+    public String getMessage(@Nonnull String key) throws NoSuchMessageException {
+<span class="fc" id="L49">        return getMessage(key, EMPTY_OBJECT_ARGS, Locale.getDefault());</span>
+    }
+
+    @Nonnull
+    @Override
+    public String getMessage(@Nonnull String key, @Nonnull Locale locale) throws NoSuchMessageException {
+<span class="nc" id="L55">        return getMessage(key, EMPTY_OBJECT_ARGS, locale);</span>
+    }
+
+    @Nonnull
+    @Override
+    public String getMessage(@Nonnull String key, @Nonnull Object[] args) throws NoSuchMessageException {
+<span class="nc" id="L61">        return getMessage(key, args, Locale.getDefault());</span>
+    }
+
+    @Nonnull
+    @Override
+    public String getMessage(@Nonnull String key, @Nonnull Object[] args, @Nonnull Locale locale) throws NoSuchMessageException {
+<span class="fc" id="L67">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="fc" id="L68">        requireNonNull(args, ERROR_ARGS_NULL);</span>
+<span class="fc" id="L69">        requireNonNull(locale, ERROR_LOCALE_NULL);</span>
+<span class="fc" id="L70">        Object message = resolveMessageValue(key, locale);</span>
+<span class="fc" id="L71">        Object result = evalMessageWithArguments(message, args);</span>
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">        if (result != null) return result.toString();</span>
+<span class="nc" id="L73">        throw new NoSuchMessageException(key, locale);</span>
+    }
+
+    @Nonnull
+    @Override
+    public String getMessage(@Nonnull String key, @Nonnull List&lt;?&gt; args) throws NoSuchMessageException {
+<span class="fc" id="L79">        return getMessage(key, toObjectArray(args), Locale.getDefault());</span>
+    }
+
+    @Nonnull
+    @Override
+    public String getMessage(@Nonnull String key, @Nonnull List&lt;?&gt; args, @Nonnull Locale locale) throws NoSuchMessageException {
+<span class="nc" id="L85">        return getMessage(key, toObjectArray(args), locale);</span>
+    }
+
+    @Nullable
+    @Override
+    public String getMessage(@Nonnull String key, @Nullable String defaultMessage) {
+<span class="fc" id="L91">        return getMessage(key, EMPTY_OBJECT_ARGS, Locale.getDefault(), defaultMessage);</span>
+    }
+
+    @Nullable
+    @Override
+    public String getMessage(@Nonnull String key, @Nonnull Locale locale, @Nullable String defaultMessage) {
+<span class="nc" id="L97">        return getMessage(key, EMPTY_OBJECT_ARGS, locale, defaultMessage);</span>
+    }
+
+    @Nullable
+    @Override
+    public String getMessage(@Nonnull String key, @Nonnull Object[] args, @Nullable String defaultMessage) {
+<span class="nc" id="L103">        return getMessage(key, args, Locale.getDefault(), defaultMessage);</span>
+    }
+
+    @Nullable
+    @Override
+    public String getMessage(@Nonnull String key, @Nonnull Object[] args, @Nonnull Locale locale, @Nullable String defaultMessage) {
+        try {
+<span class="nc" id="L110">            return getMessage(key, args, locale);</span>
+<span class="fc" id="L111">        } catch (NoSuchMessageException nsme) {</span>
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">            return null == defaultMessage ? key : defaultMessage;</span>
+        }
+    }
+
+    @Nullable
+    @Override
+    public String getMessage(@Nonnull String key, @Nonnull List&lt;?&gt; args, @Nullable String defaultMessage) {
+<span class="nc" id="L119">        return getMessage(key, toObjectArray(args), Locale.getDefault(), defaultMessage);</span>
+    }
+
+    @Nullable
+    @Override
+    public String getMessage(@Nonnull String key, @Nonnull List&lt;?&gt; args, @Nonnull Locale locale, @Nullable String defaultMessage) {
+<span class="nc" id="L125">        return getMessage(key, toObjectArray(args), locale, defaultMessage);</span>
+    }
+
+    @Nonnull
+    @Override
+    public String getMessage(@Nonnull String key, @Nonnull Map&lt;String, Object&gt; args) throws NoSuchMessageException {
+<span class="nc" id="L131">        return getMessage(key, args, Locale.getDefault());</span>
+    }
+
+    @Nonnull
+    @Override
+    public String getMessage(@Nonnull String key, @Nonnull Map&lt;String, Object&gt; args, @Nonnull Locale locale) throws NoSuchMessageException {
+<span class="nc" id="L137">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="nc" id="L138">        requireNonNull(args, ERROR_ARGS_NULL);</span>
+<span class="nc" id="L139">        requireNonNull(locale, ERROR_LOCALE_NULL);</span>
+<span class="nc" id="L140">        Object message = resolveMessageValue(key, locale);</span>
+<span class="nc" id="L141">        Object result = evalMessageWithArguments(message, args);</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        if (result != null) return result.toString();</span>
+<span class="nc" id="L143">        throw new NoSuchMessageException(key, locale);</span>
+    }
+
+    @Nullable
+    @Override
+    public String getMessage(@Nonnull String key, @Nonnull Map&lt;String, Object&gt; args, @Nullable String defaultMessage) {
+<span class="nc" id="L149">        return getMessage(key, args, Locale.getDefault(), defaultMessage);</span>
+    }
+
+    @Nullable
+    @Override
+    public String getMessage(@Nonnull String key, @Nonnull Map&lt;String, Object&gt; args, @Nonnull Locale locale, @Nullable String defaultMessage) {
+        try {
+<span class="nc" id="L156">            return getMessage(key, args, locale);</span>
+<span class="nc" id="L157">        } catch (NoSuchMessageException nsme) {</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">            return null == defaultMessage ? key : defaultMessage;</span>
+        }
+    }
+
+    @Nonnull
+    @Override
+    public Object resolveMessageValue(@Nonnull String key, @Nonnull Locale locale) throws NoSuchMessageException {
+<span class="fc" id="L165">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="fc" id="L166">        requireNonNull(locale, ERROR_LOCALE_NULL);</span>
+        try {
+<span class="fc" id="L168">            Object message = doResolveMessageValue(key, locale);</span>
+<span class="pc bpc" id="L169" title="1 of 2 branches missed.">            if (message instanceof CharSequence) {</span>
+<span class="fc" id="L170">                String msg = message.toString();</span>
+<span class="pc bpc" id="L171" title="4 of 6 branches missed.">                if (msg.length() &gt;= 4 &amp;&amp; msg.startsWith(REF_KEY_START) &amp;&amp; msg.endsWith(REF_KEY_END)) {</span>
+<span class="nc" id="L172">                    String refKey = msg.substring(2, msg.length() - 1);</span>
+<span class="nc" id="L173">                    message = resolveMessageValue(refKey, locale);</span>
+                }
+            }
+<span class="fc" id="L176">            return message;</span>
+<span class="fc" id="L177">        } catch (MissingResourceException mre) {</span>
+<span class="fc" id="L178">            throw new NoSuchMessageException(key, locale);</span>
+        }
+    }
+
+    @Nonnull
+    @Override
+    public String formatMessage(@Nonnull String message, @Nonnull List&lt;?&gt; args) {
+<span class="nc" id="L185">        requireNonNull(message, ERROR_MESSAGE_NULL);</span>
+<span class="nc" id="L186">        requireNonNull(args, ERROR_ARGS_NULL);</span>
+<span class="nc" id="L187">        return formatMessage(message, args.toArray(new Object[args.size()]));</span>
+    }
+
+    @Nonnull
+    @Override
+    public String formatMessage(@Nonnull String message, @Nonnull Object[] args) {
+<span class="fc" id="L193">        requireNonNull(message, ERROR_MESSAGE_NULL);</span>
+<span class="fc" id="L194">        requireNonNull(args, ERROR_ARGS_NULL);</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">        if (args.length == 0) return message;</span>
+<span class="fc" id="L196">        return MessageFormat.format(message, args);</span>
+    }
+
+    @Nonnull
+    @Override
+    public String formatMessage(@Nonnull String message, @Nonnull Map&lt;String, Object&gt; args) {
+<span class="nc" id="L202">        requireNonNull(message, ERROR_MESSAGE_NULL);</span>
+<span class="nc" id="L203">        requireNonNull(args, ERROR_ARGS_NULL);</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">        for (Map.Entry&lt;String, Object&gt; variable : args.entrySet()) {</span>
+<span class="nc" id="L205">            String var = variable.getKey();</span>
+<span class="nc bnc" id="L206" title="All 2 branches missed.">            String value = variable.getValue() != null ? variable.getValue().toString() : null;</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">            if (value != null) {</span>
+<span class="nc" id="L208">                message = message.replace(&quot;{:&quot; + var + &quot;}&quot;, value);</span>
+            }
+<span class="nc" id="L210">        }</span>
+<span class="nc" id="L211">        return message;</span>
+    }
+
+    @Nonnull
+    protected abstract Object doResolveMessageValue(@Nonnull String key, @Nonnull Locale locale) throws NoSuchMessageException;
+
+    @Nullable
+    protected Object evalMessageWithArguments(@Nonnull Object message, @Nonnull Object[] args) {
+<span class="pc bpc" id="L219" title="1 of 2 branches missed.">        if (message instanceof CallableWithArgs) {</span>
+<span class="nc" id="L220">            CallableWithArgs&lt;?&gt; callable = (CallableWithArgs&lt;?&gt;) message;</span>
+<span class="nc" id="L221">            return callable.call(args);</span>
+<span class="pc bpc" id="L222" title="1 of 2 branches missed.">        } else if (message instanceof CharSequence) {</span>
+<span class="fc" id="L223">            return formatMessage(String.valueOf(message), args);</span>
+        }
+<span class="nc" id="L225">        return null;</span>
+    }
+
+    @Nullable
+    protected Object evalMessageWithArguments(@Nonnull Object message, @Nonnull Map&lt;String, Object&gt; args) {
+<span class="nc bnc" id="L230" title="All 2 branches missed.">        if (message instanceof CallableWithArgs) {</span>
+<span class="nc" id="L231">            CallableWithArgs&lt;?&gt; callable = (CallableWithArgs&lt;?&gt;) message;</span>
+<span class="nc" id="L232">            return callable.call(args);</span>
+<span class="nc bnc" id="L233" title="All 2 branches missed.">        } else if (message instanceof CharSequence) {</span>
+<span class="nc" id="L234">            return formatMessage(String.valueOf(message), args);</span>
+        }
+<span class="nc" id="L236">        return null;</span>
+    }
+
+    @Nonnull
+    protected Object[] toObjectArray(@Nonnull List&lt;?&gt; args) {
+<span class="pc bpc" id="L241" title="1 of 2 branches missed.">        if (args.isEmpty()) {</span>
+<span class="nc" id="L242">            return EMPTY_OBJECT_ARGS;</span>
+        }
+<span class="fc" id="L244">        return args.toArray(new Object[args.size()]);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

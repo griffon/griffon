@@ -48,11 +48,11 @@ public class ArtifactNotFoundException extends GriffonException {
     }
 
     private static String format(Class&lt;?&gt; clazz) {
-<span class="nc" id="L51">        return &quot;Could not find artifact for &quot; + checkNonNull(clazz, &quot;clazz&quot;);</span>
+<span class="nc" id="L51">        return &quot;Could not find artifact for &quot; + checkNonNull(clazz, &quot;clazz&quot;).getName();</span>
     }
 
     private static String format(Class&lt;? extends GriffonArtifact&gt; clazz, String name) {
-<span class="nc" id="L55">        return &quot;Could not find artifact of type &quot; + checkNonNull(clazz, &quot;clazz&quot;) + &quot; named &quot; + checkNonBlank(name, &quot;name&quot;);</span>
+<span class="nc" id="L55">        return &quot;Could not find artifact of type &quot; + checkNonNull(clazz, &quot;clazz&quot;).getName() + &quot; named &quot; + checkNonBlank(name, &quot;name&quot;);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>JavaFXActionManager.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-java</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.javafx.controller</a> &gt; <span class="el_source">JavaFXActionManager.java</span></div><h1>JavaFXActionManager.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.javafx.controller;
+
+import griffon.core.GriffonApplication;
+import griffon.core.artifact.GriffonController;
+import griffon.core.controller.Action;
+import org.codehaus.griffon.runtime.core.controller.AbstractActionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+
+import static griffon.util.GriffonApplicationUtils.isMacOSX;
+import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.TypeUtils.castToBoolean;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public class JavaFXActionManager extends AbstractActionManager {
+<span class="fc" id="L37">    private static final Logger LOG = LoggerFactory.getLogger(JavaFXActionManager.class);</span>
+
+    @Inject
+    public JavaFXActionManager(@Nonnull GriffonApplication application) {
+<span class="fc" id="L41">        super(application);</span>
+<span class="fc" id="L42">    }</span>
+
+    @Nonnull
+    @Override
+    protected Action createControllerAction(@Nonnull GriffonController controller, @Nonnull String actionName) {
+<span class="fc" id="L47">        return new JavaFXGriffonControllerAction(getUiThreadManager(), this, controller, actionName);</span>
+    }
+
+    @Override
+    protected void doConfigureAction(@Nonnull Action action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+<span class="fc" id="L52">        JavaFXGriffonControllerAction javafxAction = (JavaFXGriffonControllerAction) action;</span>
+
+<span class="fc" id="L54">        String rsAccelerator = msg(keyPrefix, normalizeNamed, &quot;accelerator&quot;, &quot;&quot;);</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        if (!isBlank(rsAccelerator)) {</span>
+            //noinspection ConstantConditions
+<span class="nc bnc" id="L57" title="All 6 branches missed.">            if (!isMacOSX() &amp;&amp; rsAccelerator.contains(&quot;meta&quot;) &amp;&amp; !rsAccelerator.contains(&quot;ctrl&quot;)) {</span>
+<span class="nc" id="L58">                rsAccelerator = rsAccelerator.replace(&quot;meta&quot;, &quot;ctrl&quot;);</span>
+            }
+<span class="nc bnc" id="L60" title="All 2 branches missed.">            if (LOG.isTraceEnabled()) {</span>
+<span class="nc" id="L61">                LOG.trace(keyPrefix + normalizeNamed + &quot;.accelerator = &quot; + rsAccelerator);</span>
+            }
+<span class="nc" id="L63">            javafxAction.setAccelerator(rsAccelerator);</span>
+        }
+
+<span class="fc" id="L66">        String rsDescription = msg(keyPrefix, normalizeNamed, &quot;description&quot;, &quot;&quot;);</span>
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">        if (!isBlank(rsDescription)) {</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">            if (LOG.isTraceEnabled()) {</span>
+<span class="nc" id="L69">                LOG.trace(keyPrefix + normalizeNamed + &quot;.description = &quot; + rsDescription);</span>
+            }
+<span class="nc" id="L71">            javafxAction.setDescription(rsDescription);</span>
+        }
+
+<span class="fc" id="L74">        String rsIcon = msg(keyPrefix, normalizeNamed, &quot;icon&quot;, &quot;&quot;);</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">        if (!isBlank(rsIcon)) {</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">            if (LOG.isTraceEnabled()) {</span>
+<span class="nc" id="L77">                LOG.trace(keyPrefix + normalizeNamed + &quot;.icon = &quot; + rsIcon);</span>
+            }
+<span class="nc" id="L79">            javafxAction.setIcon(rsIcon);</span>
+        }
+
+<span class="fc" id="L82">        String rsImage = msg(keyPrefix, normalizeNamed, &quot;image&quot;, &quot;&quot;);</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        if (!isBlank(rsImage)) {</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">            if (LOG.isTraceEnabled()) {</span>
+<span class="nc" id="L85">                LOG.trace(keyPrefix + normalizeNamed + &quot;.image = &quot; + rsImage);</span>
+            }
+<span class="nc" id="L87">            javafxAction.setImage(rsImage);</span>
+        }
+
+<span class="fc" id="L90">        String rsEnabled = msg(keyPrefix, normalizeNamed, &quot;enabled&quot;, &quot;true&quot;);</span>
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">        if (!isBlank(rsEnabled)) {</span>
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">            if (LOG.isTraceEnabled()) {</span>
+<span class="fc" id="L93">                LOG.trace(keyPrefix + normalizeNamed + &quot;.enabled = &quot; + rsEnabled);</span>
+            }
+<span class="fc" id="L95">            javafxAction.setEnabled(castToBoolean(rsEnabled));</span>
+        }
+
+<span class="fc" id="L98">        String rsSelected = msg(keyPrefix, normalizeNamed, &quot;selected&quot;, &quot;false&quot;);</span>
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">        if (!isBlank(rsSelected)) {</span>
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">            if (LOG.isTraceEnabled()) {</span>
+<span class="fc" id="L101">                LOG.trace(keyPrefix + normalizeNamed + &quot;.selected = &quot; + rsSelected);</span>
+            }
+<span class="fc" id="L103">            javafxAction.setSelected(castToBoolean(rsSelected));</span>
+        }
+<span class="fc" id="L105">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

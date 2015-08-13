@@ -28,31 +28,31 @@ public class ArtifactNotFoundException extends GriffonException {
     private static final long serialVersionUID = -7881105306242340254L;
 
     public ArtifactNotFoundException(@Nonnull Throwable cause) {
-<span class="nc" id="L31">        super(&quot;Could not find artifact&quot;, checkNonNull(cause, &quot;cause&quot;));</span>
-<span class="nc" id="L32">    }</span>
+<span class="fc" id="L31">        super(&quot;Could not find artifact&quot;, checkNonNull(cause, &quot;cause&quot;));</span>
+<span class="fc" id="L32">    }</span>
 
     public ArtifactNotFoundException(@Nonnull Class&lt;?&gt; clazz) {
-<span class="nc" id="L35">        super(format(clazz));</span>
-<span class="nc" id="L36">    }</span>
+<span class="fc" id="L35">        super(format(clazz));</span>
+<span class="fc" id="L36">    }</span>
 
     public ArtifactNotFoundException(@Nonnull GriffonClass griffonClass, @Nonnull Throwable cause) {
 <span class="nc" id="L39">        super(format(griffonClass), checkNonNull(cause, &quot;cause&quot;));</span>
 <span class="nc" id="L40">    }</span>
 
     public ArtifactNotFoundException(@Nonnull Class&lt;? extends GriffonArtifact&gt; clazz, @Nonnull String name) {
-<span class="nc" id="L43">        super(format(clazz, name));</span>
-<span class="nc" id="L44">    }</span>
+<span class="fc" id="L43">        super(format(clazz, name));</span>
+<span class="fc" id="L44">    }</span>
 
     private static String format(GriffonClass griffonClass) {
 <span class="nc" id="L47">        return &quot;Could not find artifact for &quot; + checkNonNull(griffonClass, &quot;griffonClass&quot;).getPropertyName();</span>
     }
 
     private static String format(Class&lt;?&gt; clazz) {
-<span class="nc" id="L51">        return &quot;Could not find artifact for &quot; + checkNonNull(clazz, &quot;clazz&quot;);</span>
+<span class="fc" id="L51">        return &quot;Could not find artifact for &quot; + checkNonNull(clazz, &quot;clazz&quot;).getName();</span>
     }
 
     private static String format(Class&lt;? extends GriffonArtifact&gt; clazz, String name) {
-<span class="nc" id="L55">        return &quot;Could not find artifact of type &quot; + checkNonNull(clazz, &quot;clazz&quot;) + &quot; named &quot; + checkNonBlank(name, &quot;name&quot;);</span>
+<span class="fc" id="L55">        return &quot;Could not find artifact of type &quot; + checkNonNull(clazz, &quot;clazz&quot;).getName() + &quot; named &quot; + checkNonBlank(name, &quot;name&quot;);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>CollectionUtils.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.util</a> &gt; <span class="el_source">CollectionUtils.java</span></div><h1>CollectionUtils.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.util;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import static java.util.Objects.requireNonNull;
+
+/**
+ * &lt;p&gt;Utility class that simplifies creating collections in Java.&lt;/p&gt;
+ * &lt;p&gt;&lt;strong&gt;Creating Maps&lt;/strong&gt;&lt;br/&gt;
+ * &lt;pre&gt;
+ * Map&lt;String, Object&gt; m = map()
+ *     .e(&quot;foo&quot;, foo)
+ *     .e(&quot;bar&quot;, bar);
+ * &lt;/pre&gt;&lt;/p&gt;
+ *
+ * &lt;p&gt;&lt;strong&gt;Creating Lists&lt;/strong&gt;&lt;br/&gt;
+ * &lt;pre&gt;
+ * List&lt;String&gt; l = list()
+ *     .e(&quot;foo&quot;)
+ *     .e(&quot;bar&quot;);
+ * &lt;/pre&gt;&lt;/p&gt;
+ *
+ * &lt;p&gt;&lt;strong&gt;Creating Maps&lt;/strong&gt;&lt;br/&gt;
+ * &lt;pre&gt;
+ * Set&lt;String&gt; s = set()
+ *     .e(&quot;foo&quot;)
+ *     .e(&quot;bar&quot;);
+ * &lt;/pre&gt;&lt;/p&gt;
+ *
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+<span class="nc" id="L63">public final class CollectionUtils {</span>
+    public static &lt;T&gt; List&lt;T&gt; reverse(List&lt;T&gt; input) {
+<span class="fc" id="L65">        List&lt;T&gt; output = new ArrayList&lt;&gt;(input);</span>
+<span class="fc" id="L66">        Collections.reverse(output);</span>
+<span class="fc" id="L67">        return output;</span>
+    }
+
+    public static &lt;T&gt; List&lt;T&gt; reverse(Collection&lt;T&gt; input) {
+<span class="fc" id="L71">        List&lt;T&gt; output = new ArrayList&lt;&gt;(input);</span>
+<span class="fc" id="L72">        Collections.reverse(output);</span>
+<span class="fc" id="L73">        return output;</span>
+    }
+
+    @SuppressWarnings({&quot;rawtypes&quot;, &quot;unchecked&quot;})
+    public static &lt;K, V&gt; Map newMap(Object... keysAndValues) {
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        if (keysAndValues == null) {</span>
+<span class="nc" id="L79">            return Collections.emptyMap();</span>
+        }
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        if (keysAndValues.length % 2 == 1) {</span>
+<span class="nc" id="L82">            throw new IllegalArgumentException(&quot;Must have an even number of keys and values&quot;);</span>
+        }
+
+<span class="nc" id="L85">        Map&lt;K, V&gt; map = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        for (int i = 0; i &lt; keysAndValues.length; i += 2) {</span>
+<span class="nc" id="L87">            map.put((K) keysAndValues[i], (V) keysAndValues[i + 1]);</span>
+        }
+<span class="nc" id="L89">        return map;</span>
+    }
+
+    @SafeVarargs
+    public static &lt;T&gt; Set&lt;T&gt; newSet(T... values) {
+<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (values == null) {</span>
+<span class="nc" id="L95">            return Collections.emptySet();</span>
+        }
+
+<span class="nc" id="L98">        return new HashSet&lt;&gt;(Arrays.asList(values));</span>
+    }
+
+    @SafeVarargs
+    public static &lt;T&gt; List&lt;T&gt; newList(T... values) {
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        if (values == null) {</span>
+<span class="nc" id="L104">            return Collections.emptyList();</span>
+        }
+
+<span class="nc" id="L107">        return new ArrayList&lt;&gt;(Arrays.asList(values));</span>
+    }
+
+    public static &lt;K, V&gt; MapBuilder&lt;K, V&gt; map() {
+<span class="fc" id="L111">        return map(new LinkedHashMap&lt;K, V&gt;());</span>
+    }
+
+    public static &lt;K, V&gt; MapBuilder&lt;K, V&gt; map(Map&lt;K, V&gt; delegate) {
+<span class="fc" id="L115">        return new MapBuilder&lt;&gt;(delegate);</span>
+    }
+
+    public static &lt;E&gt; ListBuilder&lt;E&gt; list() {
+<span class="nc" id="L119">        return list(new ArrayList&lt;E&gt;());</span>
+    }
+
+    public static &lt;E&gt; ListBuilder&lt;E&gt; list(List&lt;E&gt; delegate) {
+<span class="nc" id="L123">        return new ListBuilder&lt;&gt;(delegate);</span>
+    }
+
+    public static &lt;E&gt; SetBuilder&lt;E&gt; set() {
+<span class="nc" id="L127">        return set(new HashSet&lt;E&gt;());</span>
+    }
+
+    public static &lt;E&gt; SetBuilder&lt;E&gt; set(Set&lt;E&gt; delegate) {
+<span class="nc" id="L131">        return new SetBuilder&lt;&gt;(delegate);</span>
+    }
+
+    /**
+     * Returns an adapted Map as a Properties instance.
+     * &lt;p&gt;
+     * The Map is used live, which means changes made to it will affect the
+     * Properties instance directly.
+     *
+     * @param map the Map instance ot adapt as a Properties instance
+     * @return a new Properties instance backed by the supplied Map.
+     * @since 2.1.0
+     */
+    @Nonnull
+    public static Properties toProperties(@Nonnull Map&lt;String, Object&gt; map) {
+<span class="nc" id="L146">        requireNonNull(map, &quot;Argument 'map' must not be null&quot;);</span>
+<span class="nc" id="L147">        return new MapToPropertiesAdapter(map);</span>
+    }
+
+    public static class MapBuilder&lt;K, V&gt; implements Map&lt;K, V&gt; {
+        private final Map&lt;K, V&gt; delegate;
+
+<span class="fc" id="L153">        public MapBuilder(Map&lt;K, V&gt; delegate) {</span>
+<span class="fc" id="L154">            this.delegate = delegate;</span>
+<span class="fc" id="L155">        }</span>
+
+        public MapBuilder&lt;K, V&gt; e(K k, V v) {
+<span class="fc" id="L158">            delegate.put(k, v);</span>
+<span class="fc" id="L159">            return this;</span>
+        }
+
+        public int size() {
+<span class="fc" id="L163">            return delegate.size();</span>
+        }
+
+        public boolean isEmpty() {
+<span class="fc" id="L167">            return delegate.isEmpty();</span>
+        }
+
+        public boolean containsKey(Object o) {
+<span class="fc" id="L171">            return delegate.containsKey(o);</span>
+        }
+
+        public boolean containsValue(Object o) {
+<span class="nc" id="L175">            return delegate.containsValue(o);</span>
+        }
+
+        public V get(Object o) {
+<span class="fc" id="L179">            return delegate.get(o);</span>
+        }
+
+        public V put(K k, V v) {
+<span class="fc" id="L183">            return delegate.put(k, v);</span>
+        }
+
+        public V remove(Object o) {
+<span class="nc" id="L187">            return delegate.remove(o);</span>
+        }
+
+        public void putAll(Map&lt;? extends K, ? extends V&gt; map) {
+<span class="fc" id="L191">            delegate.putAll(map);</span>
+<span class="fc" id="L192">        }</span>
+
+        public void clear() {
+<span class="nc" id="L195">            delegate.clear();</span>
+<span class="nc" id="L196">        }</span>
+
+        public Set&lt;K&gt; keySet() {
+<span class="nc" id="L199">            return delegate.keySet();</span>
+        }
+
+        public Collection&lt;V&gt; values() {
+<span class="nc" id="L203">            return delegate.values();</span>
+        }
+
+        public Set&lt;Entry&lt;K, V&gt;&gt; entrySet() {
+<span class="fc" id="L207">            return delegate.entrySet();</span>
+        }
+
+        @Override
+        public boolean equals(Object o) {
+<span class="nc" id="L212">            return delegate.equals(o);</span>
+        }
+
+        @Override
+        public int hashCode() {
+<span class="nc" id="L217">            return delegate.hashCode();</span>
+        }
+
+        @Override
+        public String toString() {
+<span class="nc" id="L222">            return delegate.toString();</span>
+        }
+    }
+
+    public static class ListBuilder&lt;E&gt; implements List&lt;E&gt; {
+        private final List&lt;E&gt; delegate;
+
+<span class="nc" id="L229">        public ListBuilder(List&lt;E&gt; delegate) {</span>
+<span class="nc" id="L230">            this.delegate = delegate;</span>
+<span class="nc" id="L231">        }</span>
+
+        public ListBuilder&lt;E&gt; e(E e) {
+<span class="nc" id="L234">            delegate.add(e);</span>
+<span class="nc" id="L235">            return this;</span>
+        }
+
+        public int size() {
+<span class="nc" id="L239">            return delegate.size();</span>
+        }
+
+        public boolean isEmpty() {
+<span class="nc" id="L243">            return delegate.isEmpty();</span>
+        }
+
+        public boolean contains(Object o) {
+<span class="nc" id="L247">            return delegate.contains(o);</span>
+        }
+
+        public Iterator&lt;E&gt; iterator() {
+<span class="nc" id="L251">            return delegate.iterator();</span>
+        }
+
+        public Object[] toArray() {
+<span class="nc" id="L255">            return delegate.toArray();</span>
+        }
+
+        public &lt;T&gt; T[] toArray(T[] ts) {
+<span class="nc" id="L259">            return delegate.toArray(ts);</span>
+        }
+
+        public boolean add(E e) {
+<span class="nc" id="L263">            return delegate.add(e);</span>
+        }
+
+        public boolean remove(Object o) {
+<span class="nc" id="L267">            return delegate.remove(o);</span>
+        }
+
+        public boolean containsAll(Collection&lt;?&gt; objects) {
+<span class="nc" id="L271">            return delegate.containsAll(objects);</span>
+        }
+
+        public boolean addAll(Collection&lt;? extends E&gt; es) {
+<span class="nc" id="L275">            return delegate.addAll(es);</span>
+        }
+
+        public boolean addAll(int i, Collection&lt;? extends E&gt; es) {
+<span class="nc" id="L279">            return delegate.addAll(i, es);</span>
+        }
+
+        public boolean removeAll(Collection&lt;?&gt; objects) {
+<span class="nc" id="L283">            return delegate.removeAll(objects);</span>
+        }
+
+        public boolean retainAll(Collection&lt;?&gt; objects) {
+<span class="nc" id="L287">            return delegate.retainAll(objects);</span>
+        }
+
+        public void clear() {
+<span class="nc" id="L291">            delegate.clear();</span>
+<span class="nc" id="L292">        }</span>
+
+        @Override
+        public boolean equals(Object o) {
+<span class="nc" id="L296">            return delegate.equals(o);</span>
+        }
+
+        @Override
+        public int hashCode() {
+<span class="nc" id="L301">            return delegate.hashCode();</span>
+        }
+
+        @Override
+        public String toString() {
+<span class="nc" id="L306">            return delegate.toString();</span>
+        }
+
+        public E get(int i) {
+<span class="nc" id="L310">            return delegate.get(i);</span>
+        }
+
+        public E set(int i, E e) {
+<span class="nc" id="L314">            return delegate.set(i, e);</span>
+        }
+
+        public void add(int i, E e) {
+<span class="nc" id="L318">            delegate.add(i, e);</span>
+<span class="nc" id="L319">        }</span>
+
+        public E remove(int i) {
+<span class="nc" id="L322">            return delegate.remove(i);</span>
+        }
+
+        public int indexOf(Object o) {
+<span class="nc" id="L326">            return delegate.indexOf(o);</span>
+        }
+
+        public int lastIndexOf(Object o) {
+<span class="nc" id="L330">            return delegate.lastIndexOf(o);</span>
+        }
+
+        public ListIterator&lt;E&gt; listIterator() {
+<span class="nc" id="L334">            return delegate.listIterator();</span>
+        }
+
+        public ListIterator&lt;E&gt; listIterator(int i) {
+<span class="nc" id="L338">            return delegate.listIterator(i);</span>
+        }
+
+        public List&lt;E&gt; subList(int i, int i1) {
+<span class="nc" id="L342">            return delegate.subList(i, i1);</span>
+        }
+    }
+
+    public static class SetBuilder&lt;E&gt; implements Set&lt;E&gt; {
+        private final Set&lt;E&gt; delegate;
+
+<span class="nc" id="L349">        public SetBuilder(Set&lt;E&gt; delegate) {</span>
+<span class="nc" id="L350">            this.delegate = delegate;</span>
+<span class="nc" id="L351">        }</span>
+
+        public SetBuilder&lt;E&gt; e(E e) {
+<span class="nc" id="L354">            delegate.add(e);</span>
+<span class="nc" id="L355">            return this;</span>
+        }
+
+        public int size() {
+<span class="nc" id="L359">            return delegate.size();</span>
+        }
+
+        public boolean isEmpty() {
+<span class="nc" id="L363">            return delegate.isEmpty();</span>
+        }
+
+        public boolean contains(Object o) {
+<span class="nc" id="L367">            return delegate.contains(o);</span>
+        }
+
+        public Iterator&lt;E&gt; iterator() {
+<span class="nc" id="L371">            return delegate.iterator();</span>
+        }
+
+        public Object[] toArray() {
+<span class="nc" id="L375">            return delegate.toArray();</span>
+        }
+
+        public &lt;T&gt; T[] toArray(T[] ts) {
+<span class="nc" id="L379">            return delegate.toArray(ts);</span>
+        }
+
+        public boolean add(E e) {
+<span class="nc" id="L383">            return delegate.add(e);</span>
+        }
+
+        public boolean remove(Object o) {
+<span class="nc" id="L387">            return delegate.remove(o);</span>
+        }
+
+        public boolean containsAll(Collection&lt;?&gt; objects) {
+<span class="nc" id="L391">            return delegate.containsAll(objects);</span>
+        }
+
+        public boolean addAll(Collection&lt;? extends E&gt; es) {
+<span class="nc" id="L395">            return delegate.addAll(es);</span>
+        }
+
+        public boolean retainAll(Collection&lt;?&gt; objects) {
+<span class="nc" id="L399">            return delegate.retainAll(objects);</span>
+        }
+
+        public boolean removeAll(Collection&lt;?&gt; objects) {
+<span class="nc" id="L403">            return delegate.removeAll(objects);</span>
+        }
+
+        public void clear() {
+<span class="nc" id="L407">            delegate.clear();</span>
+<span class="nc" id="L408">        }</span>
+
+        @Override
+        public boolean equals(Object o) {
+<span class="nc" id="L412">            return delegate.equals(o);</span>
+        }
+
+        @Override
+        public int hashCode() {
+<span class="nc" id="L417">            return delegate.hashCode();</span>
+        }
+
+        @Override
+        public String toString() {
+<span class="nc" id="L422">            return delegate.toString();</span>
+        }
+    }
+
+<span class="nc" id="L426">    private static class MapToPropertiesAdapter extends Properties {</span>
+        private final Map&lt;String, Object&gt; map;
+
+<span class="nc" id="L429">        private MapToPropertiesAdapter(@Nonnull Map&lt;String, Object&gt; map) {</span>
+<span class="nc" id="L430">            this.map = map;</span>
+<span class="nc" id="L431">        }</span>
+
+        @Override
+        public synchronized Object setProperty(String key, String value) {
+<span class="nc" id="L435">            return map.put(key, value);</span>
+        }
+
+        @Override
+        public String getProperty(String key) {
+<span class="nc" id="L440">            Object value = map.get(key);</span>
+<span class="nc bnc" id="L441" title="All 2 branches missed.">            return value != null ? String.valueOf(value) : null;</span>
+        }
+
+        @Override
+        public String getProperty(String key, String defaultValue) {
+<span class="nc" id="L446">            Object value = map.get(key);</span>
+<span class="nc bnc" id="L447" title="All 2 branches missed.">            return value != null ? String.valueOf(value) : defaultValue;</span>
+        }
+
+        @Override
+        public Enumeration&lt;?&gt; propertyNames() {
+<span class="nc" id="L452">            return keys();</span>
+        }
+
+        @Override
+        public Set&lt;String&gt; stringPropertyNames() {
+<span class="nc" id="L457">            return map.keySet();</span>
+        }
+
+        @Override
+        public synchronized int size() {
+<span class="nc" id="L462">            return map.size();</span>
+        }
+
+        @Override
+        public synchronized boolean isEmpty() {
+<span class="nc" id="L467">            return map.isEmpty();</span>
+        }
+
+        @Override
+        public synchronized Enumeration&lt;Object&gt; keys() {
+<span class="nc" id="L472">            return new Enumeration&lt;Object&gt;() {</span>
+<span class="nc" id="L473">                private Iterator&lt;String&gt; keys = new ArrayList&lt;&gt;(map.keySet()).iterator();</span>
+
+                @Override
+                public boolean hasMoreElements() {
+<span class="nc" id="L477">                    return keys.hasNext();</span>
+                }
+
+                @Override
+                public String nextElement() {
+<span class="nc" id="L482">                    return keys.next();</span>
+                }
+            };
+        }
+
+        @Override
+        public synchronized Enumeration&lt;Object&gt; elements() {
+<span class="nc" id="L489">            return new Enumeration&lt;Object&gt;() {</span>
+<span class="nc" id="L490">                private Iterator&lt;Object&gt; values = new ArrayList&lt;&gt;(map.values()).iterator();</span>
+
+                @Override
+                public boolean hasMoreElements() {
+<span class="nc" id="L494">                    return values.hasNext();</span>
+                }
+
+                @Override
+                public Object nextElement() {
+<span class="nc" id="L499">                    return values.next();</span>
+                }
+            };
+        }
+
+        @Override
+        public synchronized boolean contains(Object value) {
+<span class="nc" id="L506">            return map.containsValue(value);</span>
+        }
+
+        @Override
+        public boolean containsValue(Object value) {
+<span class="nc" id="L511">            return map.containsValue(value);</span>
+        }
+
+        @Override
+        public synchronized boolean containsKey(Object key) {
+<span class="nc" id="L516">            return map.containsKey(key);</span>
+        }
+
+        @Override
+        public synchronized Object get(Object key) {
+<span class="nc" id="L521">            return map.get(key);</span>
+        }
+
+        @Override
+        public synchronized Object put(Object key, Object value) {
+<span class="nc" id="L526">            return map.put(String.valueOf(key), value);</span>
+        }
+
+        @Override
+        public synchronized Object remove(Object key) {
+<span class="nc" id="L531">            return map.remove(key);</span>
+        }
+
+        @Override
+        public synchronized void putAll(Map&lt;?, ?&gt; t) {
+<span class="nc" id="L536">            map.putAll((Map&lt;String, Object&gt;) t);</span>
+<span class="nc" id="L537">        }</span>
+
+        @Override
+        public synchronized void clear() {
+<span class="nc" id="L541">            map.clear();</span>
+<span class="nc" id="L542">        }</span>
+
+        @Override
+        public Set&lt;Object&gt; keySet() {
+<span class="nc" id="L546">            return new LinkedHashSet&lt;Object&gt;(map.keySet());</span>
+        }
+
+        @Override
+        public Set&lt;Map.Entry&lt;Object, Object&gt;&gt; entrySet() {
+<span class="nc" id="L551">            Set&lt;Map.Entry&lt;Object, Object&gt;&gt; set = new LinkedHashSet&lt;&gt;((Set) map.entrySet());</span>
+<span class="nc" id="L552">            return new LinkedHashSet&lt;&gt;(set);</span>
+        }
+
+        @Override
+        public Collection&lt;Object&gt; values() {
+<span class="nc" id="L557">            return map.values();</span>
+        }
+
+        @Override
+        public synchronized Object clone() {
+<span class="nc" id="L562">            Map&lt;String, Object&gt; m = new LinkedHashMap&lt;&gt;(map);</span>
+<span class="nc" id="L563">            return new MapToPropertiesAdapter(m);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

@@ -103,27 +103,41 @@ public class DelegatingMutableConfiguration extends ConfigurationDecorator imple
         }
     }
 
+    @Nullable
+    @Override
+    public &lt;T&gt; T get(@Nonnull String key, @Nullable T defaultValue) {
+<span class="fc" id="L109">        T value = (T) get(key);</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        return value != null ? value : defaultValue;</span>
+    }
+
+    @Nullable
+    @Override
+    public String getAsString(@Nonnull String key, @Nullable String defaultValue) {
+<span class="fc" id="L116">        Object value = get(key);</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">        return value != null ? String.valueOf(value) : defaultValue;</span>
+    }
+
     @Override
     public boolean containsKey(@Nonnull String key) {
-<span class="fc" id="L108">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
-<span class="pc bpc" id="L109" title="1 of 6 branches missed.">        return ConfigUtils.containsKey(mutableKeyValues, key) || (!removedKeys.contains(key) &amp;&amp; delegate.containsKey(key));</span>
+<span class="fc" id="L122">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="fc bfc" id="L123" title="All 6 branches covered.">        return ConfigUtils.containsKey(mutableKeyValues, key) || (!removedKeys.contains(key) &amp;&amp; delegate.containsKey(key));</span>
     }
 
     private static class PrivateMapResourceBundle extends AbstractMapResourceBundle {
-<span class="fc" id="L113">        private final Map&lt;String, Object&gt; map = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L127">        private final Map&lt;String, Object&gt; map = new LinkedHashMap&lt;&gt;();</span>
 
-<span class="fc" id="L115">        private PrivateMapResourceBundle(Map&lt;String, Object&gt; map) {</span>
-<span class="fc" id="L116">            this.map.putAll(map);</span>
-<span class="fc" id="L117">            initialize(entries);</span>
-<span class="fc" id="L118">            initializeKeys();</span>
-<span class="fc" id="L119">        }</span>
+<span class="fc" id="L129">        private PrivateMapResourceBundle(Map&lt;String, Object&gt; map) {</span>
+<span class="fc" id="L130">            this.map.putAll(map);</span>
+<span class="fc" id="L131">            initialize(entries);</span>
+<span class="fc" id="L132">            initializeKeys();</span>
+<span class="fc" id="L133">        }</span>
 
         @Override
         protected void initialize(@Nonnull Map&lt;String, Object&gt; entries) {
-<span class="pc bpc" id="L123" title="1 of 4 branches missed.">            if (map != null &amp;&amp; entries != null) {</span>
-<span class="fc" id="L124">                entries.putAll(map);</span>
+<span class="pc bpc" id="L137" title="1 of 4 branches missed.">            if (map != null &amp;&amp; entries != null) {</span>
+<span class="fc" id="L138">                entries.putAll(map);</span>
             }
-<span class="fc" id="L126">        }</span>
+<span class="fc" id="L140">        }</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
