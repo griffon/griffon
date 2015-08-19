@@ -128,8 +128,11 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
     }
 
     protected void initializeEventHandler() {
-        EventHandler eventHandler = application.getInjector().getInstance(EventHandler.class);
-        application.getEventRouter().addEventListener(eventHandler);
+        Collection<EventHandler> handlerInstances =  application.getInjector().getInstances(EventHandler.class);
+        Map<String, EventHandler> sortedHandlers = sortByDependencies(handlerInstances, "EventHandler", "handler");
+        for (EventHandler handler : sortedHandlers.values()) {
+            application.getEventRouter().addEventListener(handler);
+        }
     }
 
     protected void event(@Nonnull ApplicationEvent event, @Nullable List<?> args) {
