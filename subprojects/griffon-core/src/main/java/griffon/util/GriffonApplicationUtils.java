@@ -40,6 +40,7 @@ public final class GriffonApplicationUtils {
     private static final boolean isWindowsVista;
     private static final boolean isWindows7;
     private static final boolean isWindows8;
+    private static final boolean isWindows10;
 
     /**
      * True if running Linux, Solaris or MacOSX
@@ -88,6 +89,7 @@ public final class GriffonApplicationUtils {
                 isWindowsVista = false;
                 isWindows7 = false;
                 isWindows8 = false;
+                isWindows10 = false;
             } else if (osName.contains("98")) {
                 isWindows95 = false;
                 isWindows98 = true;
@@ -98,6 +100,7 @@ public final class GriffonApplicationUtils {
                 isWindowsVista = false;
                 isWindows7 = false;
                 isWindows8 = false;
+                isWindows10 = false;
             } else if (osName.contains("NT")) {
                 isWindows95 = false;
                 isWindows98 = false;
@@ -108,6 +111,7 @@ public final class GriffonApplicationUtils {
                 isWindowsVista = false;
                 isWindows7 = false;
                 isWindows8 = false;
+                isWindows10 = false;
             } else if (osName.contains("2003")) {
                 isWindows95 = false;
                 isWindows98 = false;
@@ -118,6 +122,7 @@ public final class GriffonApplicationUtils {
                 isWindowsVista = false;
                 isWindows7 = false;
                 isWindows8 = false;
+                isWindows10 = false;
             } else if (osName.contains("XP")) {
                 isWindows95 = false;
                 isWindows98 = false;
@@ -128,6 +133,7 @@ public final class GriffonApplicationUtils {
                 isWindowsVista = false;
                 isWindows7 = false;
                 isWindows8 = false;
+                isWindows10 = false;
             } else if (osName.contains("Vista")) {
                 isWindows95 = false;
                 isWindows98 = false;
@@ -138,6 +144,7 @@ public final class GriffonApplicationUtils {
                 isWindowsVista = true;
                 isWindows7 = false;
                 isWindows8 = false;
+                isWindows10 = false;
             } else if (osName.contains("Windows 7")) {
                 isWindows95 = false;
                 isWindows98 = false;
@@ -148,6 +155,7 @@ public final class GriffonApplicationUtils {
                 isWindowsVista = false;
                 isWindows7 = true;
                 isWindows8 = false;
+                isWindows10 = false;
             } else if (osName.equals("Windows 8")) {
                 isWindows95 = false;
                 isWindows98 = false;
@@ -158,6 +166,18 @@ public final class GriffonApplicationUtils {
                 isWindowsVista = false;
                 isWindows7 = false;
                 isWindows8 = true;
+                isWindows10 = false;
+            } else if (osName.equals("Windows 8.1") || osName.equals("Windows 10")) {
+                isWindows95 = false;
+                isWindows98 = false;
+                isWindowsNT = false;
+                isWindows2000 = false;
+                isWindows2003 = false;
+                isWindowsXP = false;
+                isWindowsVista = false;
+                isWindows7 = false;
+                isWindows8 = false;
+                isWindows10 = true;
             } else {
                 isWindows95 = false;
                 isWindows98 = false;
@@ -168,6 +188,7 @@ public final class GriffonApplicationUtils {
                 isWindowsVista = false;
                 isWindows7 = false;
                 isWindows8 = false;
+                isWindows10 = false;
             }
         } else if (osName.contains("Linux")) {
             basePlatform = "linux";
@@ -185,6 +206,7 @@ public final class GriffonApplicationUtils {
             isWindowsVista = false;
             isWindows7 = false;
             isWindows8 = false;
+            isWindows10 = false;
         } else if (osName.contains("Solaris") || osName.contains("SunOS")) {
             basePlatform = "solaris";
             isWindows = false;
@@ -201,6 +223,7 @@ public final class GriffonApplicationUtils {
             isWindowsVista = false;
             isWindows7 = false;
             isWindows8 = false;
+            isWindows10 = false;
         } else if (osName.contains("Mac OS")) {
             basePlatform = "macosx";
             isWindows = false;
@@ -217,6 +240,7 @@ public final class GriffonApplicationUtils {
             isWindowsVista = false;
             isWindows7 = false;
             isWindows8 = false;
+            isWindows10 = false;
         } else {
             basePlatform = "unknown";
             isWindows = false;
@@ -233,6 +257,7 @@ public final class GriffonApplicationUtils {
             isWindowsVista = false;
             isWindows7 = false;
             isWindows8 = false;
+            isWindows10 = false;
         }
 
         osVersion = System.getProperty("os.version");
@@ -325,6 +350,10 @@ public final class GriffonApplicationUtils {
 
     public static boolean isWindows8() {
         return isWindows8;
+    }
+
+    public static boolean isWindows10() {
+        return isWindows10;
     }
 
     public static boolean isUnix() {
@@ -458,6 +487,10 @@ public final class GriffonApplicationUtils {
 
     public static boolean getIsWindows8() {
         return isWindows8;
+    }
+
+    public static boolean getIsWindows10() {
+        return isWindows10;
     }
 
     public static boolean getIsUnix() {
