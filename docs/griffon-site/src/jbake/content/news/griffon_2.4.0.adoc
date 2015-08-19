@@ -14,6 +14,19 @@ The Griffon team is happy to announce the release of Griffon 2.4.0!
 
 The following list summarizes the changes brought by this release:
 
+ * Upgraded to Groovy 2.4.4 and Guice 4.0.
+ * New GDSL for SwingBuilder nodes.
+ * Guice modules may be annotated with `griffon.inject.DependsOn`.
+ * Query for a key's existence on a specific `griffon.core.Context` or its hierarchy.
+ * Updates to MVCGroup relationship behavior.
+ * Java8 specific property editors added:
+ ** `java.time.LocalDate`, `java.time.LocalDateTime`, `java.time.LocalTime`.
+ ** extensions for `java.util.Calendar` and `java.util.Date` that can handle `java.time` types.
+ * JavaFX support received lots up updates:
+ ** new AST transformations: `@ListChangeListener` and `@MapChangeListener`.
+ ** `JavaFXUtils` can bind `ToolBar` buttons to actions.
+ ** `JavaFXUtils.findElement` works with more containers.
+ ** `GraphicPropertyEditor` can handle plain resources.
 
 A more detailed description of the changes and compatibility issues can be found at the link:/releasenotes/griffon_2.4.0.html[release notes, window="_blank"].
 

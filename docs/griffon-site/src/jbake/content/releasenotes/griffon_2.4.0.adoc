@@ -10,5 +10,68 @@ Andres Almiray
 
 == Griffon 2.4.0 Release Notes
 
+=== Dependencies
+
+The following dependencies have been upgraded
+
+ * org.codehaus.groovy:groovy-all:2.4.4
+
+=== Runtime
+
+==== Java8 Support
+
+There is a new `griffon-core-java8` module that delivers Java8 specific support. The first iteration of this module provides
+specialized ``PropertyEditor``s for `java.time.LocalDate`, `java.time.LocalDateTime` and `java.time.LocalTime`.
+
+==== Chained PropertyEditors
+
+It's now possible to chain several ``PropertyEditor``s that target the same source class. You must make use of
+`PropertyEditorResolver.registerEditor` and `PropertyEditorResolver.findEditor` instead of the JDK's `PropertyEditorManager`.
+
+==== MVCGroup Relationships
+
+An `MVCGroup` can now supply the names of its children groups. When a parent `MVCGroup` is destroyed so will its children,
+automatically. All references to `parent*` members on a child artifact will be set to `null` upon the group's destruction.
+
+==== Resources, Messages and Configuration
+
+It's now possible to decorate instances of `ResourceResolver`, `MessageSource` and `Configuration` using a decorator for
+the respective type. The `griffon-groovy` package for example, adds the capabiltiy to resolve simple messages and resources
+using Groovy's property syntax. Thus the following lines are equivalent
+
+[source,groovy]
+----
+application.messageSource.getMessage('some.key') == application.messageSource['some.key']
+application.resourceResolver.resolveResource('some.key') == application.resourceResolver['some.key']
+----
+
+==== JavaFX Support
+
+There are a couple of improvements in `JavaFXUtils`:
+
+ * The methods `findElement` and `findNode` work with more containers.
+ * Actions can be bound to `ToolBar` buttons.
+
+Also, the `GraphicPropertyEditor` can handle plain resources, such as `images/icon.png`, instead of an icon class argument
+as before.
+
+=== Buildtime
+
+==== AST Transformations
+
+JavaFX support adds two new AST transformations: `@ListChangeListener` and `@MapChangeListener`. They enable the registration
+of `ListChangeListener` and `MapChangeListener` on JavaFX properties, much in the same way as `@PropertyListener` works
+with `PropertyChangeListener` and `PropertyChangeEvent`.
+
+==== Swing GDSL
+
+For those developers that rely on IntelliJ IDEA, there's a new GDSL file that can autocomplete all nodes delivered by
+SwingBuilder.
+
+=== Compatibility
+
+ * The method `containsKey` in `griffon.core.Context` returns `true` if the key exists in the current context or its hierarchy.
+ * The method `hasKey` in `griffon.core.Context` returns `true` if the key exists in the current context only.
+
 Full binary compatibility report between Griffon 2.3.0 and 2.4.0 can be found
-link:../reports/2.3.0/compatibility-report.html[here].
+link:../reports/2.4.0/compatibility-report.html[here].
