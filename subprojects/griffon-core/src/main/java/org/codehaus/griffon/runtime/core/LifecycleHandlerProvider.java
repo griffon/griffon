@@ -66,7 +66,9 @@ public class LifecycleHandlerProvider implements Provider<LifecycleHandler> {
 
         try {
             Constructor<LifecycleHandler> ctor = handlerClass.getDeclaredConstructor(GriffonApplication.class);
-            return ctor.newInstance(application);
+            LifecycleHandler handler = ctor.newInstance(application);
+            application.getInjector().injectMembers(handler);
+            return handler;
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException e) {
             throw new InstanceNotFoundException(handlerClass, named(basename), e);
         } catch (InvocationTargetException e) {
