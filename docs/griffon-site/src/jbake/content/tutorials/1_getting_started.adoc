@@ -291,14 +291,41 @@ goals using the respective build tool view.
 NOTE: Mac OSX users must run IntelliJ IDEA using JDK7 (the default is JDK6) otherwise the Gradle plugin will not
 be able to import the project and will fail with a cryptic error.
 
+You must also have Annotation Processing enabled for compile time annotations such as `@ArtifactProviderFor` to be picked
+up automatically. Open up Preferences and navigate to *Build, Execution Deployment* > *Compiler* > *Annotation Processors*
+
+.Annotation Processing in IntelliJ
+image::/img/intellij_apt_processor.png[]
+
 .NetBeans
 NetBeans can import Maven projects without additional plugins. You must install the Gradle plugin first if you
 want to build Gradle based projects. The Gradle plugin is directly accessible from the default plugin location
 as configured in the Plugins preference panel.
 
+NetBeans is able to pick up Annotation Processors automatically form the classpath, there's no extra step needed.
+
 .Eclipse
 Unfortunately Eclipse is the odd member of the three IDEs. You must locate and install the m2e (Maven) and
 gradle plugins that are compatible with your current Eclipse installation. Once you do, you will be able to
 import the project directly into your workspace.
+
+You must also install the Gradle Buildship and Groovy plugins from the marketplace
+
+.Required Eclipse Plugins
+image::/img/eclipse_plugins.png[]
+
+Finally, Annotation Processing must be manually enabled. You must do this in a per project basis. Search for *Annotation Processing*
+in the project's properties and tick the checkbox to activate this option.
+
+.Annotation Processing in Eclipse (1)
+image::/img/eclipse_apt_processing.1.png[]
+
+You must also define *every* single JAR file that provides APT processors. The most basic ones ar `jipsy` and
+`griffon-core-compile`. These JARs are found in your build tools' cache and/or local repository.
+
+.Annotation Processing in Eclipse (2)
+image::/img/eclipse_apt_processing.2.png[]
+
+As a rule, all `griffon-*-compile` JARs provide APT processors and AST transformations.
 
 icon:arrow-up[link="#_tutorial_1_toc"] <<_tutorial_1_toc,Top>>
