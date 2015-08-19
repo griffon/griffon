@@ -29,6 +29,9 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
@@ -74,16 +77,16 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> im
         if (getApplication().getPhase() == ApplicationPhase.SHUTDOWN) {
             return;
         }
-        int visibleWindows = 0;
+
+        List<Window> visibleWindows = new ArrayList<>();
         for (Window window : getWindows()) {
             if (window.isShowing()) {
-                visibleWindows++;
+                visibleWindows.add(window);
             }
         }
 
-        if (visibleWindows <= 1 && isAutoShutdown()) {
-            if (!getApplication().shutdown())
-                show(widget);
+        if (isAutoShutdown() && visibleWindows.size() <= 1 && visibleWindows.contains(widget)) {
+            if (!getApplication().shutdown()) show(widget);
         }
     }
 

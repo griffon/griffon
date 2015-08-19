@@ -169,6 +169,7 @@ class AbstractLifecycleHandlerSpec extends Specification {
             super(args)
         }
 
+        @Nonnull
         @Override
         UIThreadManager getUIThreadManager() {
             this.uiThreadManager

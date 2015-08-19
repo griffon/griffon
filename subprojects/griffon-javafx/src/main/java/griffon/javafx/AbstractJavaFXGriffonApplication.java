@@ -22,7 +22,6 @@ import griffon.core.Configuration;
 import griffon.core.Context;
 import griffon.core.ExecutorServiceManager;
 import griffon.core.GriffonApplication;
-import griffon.core.RunnableWithArgs;
 import griffon.core.ShutdownHandler;
 import griffon.core.addon.AddonManager;
 import griffon.core.addon.GriffonAddon;
@@ -40,9 +39,7 @@ import griffon.core.resources.ResourceResolver;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,11 +96,7 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
 
     @Override
     public void start(Stage stage) throws Exception {
-        stage.setOnHidden(new EventHandler<WindowEvent>() {
-            public void handle(WindowEvent t) {
-                shutdown();
-            }
-        });
+        stage.setOnHidden(t -> shutdown());
     }
 
     @Override
@@ -371,12 +364,7 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
         log.debug("Shutdown stage 1: notify all event listeners");
         if (getEventRouter().isEventPublishingEnabled()) {
             final CountDownLatch latch = new CountDownLatch(getUIThreadManager().isUIThread() ? 1 : 0);
-            getEventRouter().addEventListener(ApplicationEvent.SHUTDOWN_START.getName(), new RunnableWithArgs() {
-                @Override
-                public void run(@Nullable Object... args) {
-                    latch.countDown();
-                }
-            });
+            getEventRouter().addEventListener(ApplicationEvent.SHUTDOWN_START.getName(), (Object... args) -> latch.countDown());
             event(ApplicationEvent.SHUTDOWN_START, asList(this));
             try {
                 latch.await();
