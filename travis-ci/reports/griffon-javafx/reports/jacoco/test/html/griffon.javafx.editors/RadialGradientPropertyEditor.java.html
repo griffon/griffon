@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>RadialGradientPropertyEditor.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-javafx</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.editors</a> &gt; <span class="el_source">RadialGradientPropertyEditor.java</span></div><h1>RadialGradientPropertyEditor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.editors;
+
+import griffon.core.editors.AbstractPropertyEditor;
+import griffon.metadata.PropertyEditorFor;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.RadialGradient;
+import javafx.scene.paint.Stop;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static griffon.util.GriffonNameUtils.isBlank;
+
+/**
+ * @author Andres Almiray
+ * @since 2.4.0
+ */
+@PropertyEditorFor(RadialGradient.class)
+<span class="fc" id="L36">public class RadialGradientPropertyEditor extends AbstractPropertyEditor {</span>
+    @Override
+    public String getAsText() {
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (null == getValue()) return null;</span>
+<span class="nc" id="L40">        return getValueInternal().toString();</span>
+    }
+
+    protected void setValueInternal(Object value) {
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        if (null == value) {</span>
+<span class="fc" id="L45">            super.setValueInternal(null);</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        } else if (value instanceof CharSequence) {</span>
+<span class="fc" id="L47">            handleAsString(String.valueOf(value).trim());</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        } else if (value instanceof List) {</span>
+<span class="fc" id="L49">            handleAsList((List) value);</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        } else if (value instanceof Map) {</span>
+<span class="fc" id="L51">            handleAsMap((Map) value);</span>
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">        } else if (value instanceof RadialGradient) {</span>
+<span class="fc" id="L53">            super.setValueInternal(value);</span>
+        } else {
+<span class="nc" id="L55">            throw illegalValue(value, RadialGradient.class);</span>
+        }
+<span class="fc" id="L57">    }</span>
+
+    protected void handleAsString(String str) {
+<span class="fc bfc" id="L60" title="All 2 branches covered.">        if (isBlank(str)) {</span>
+<span class="fc" id="L61">            super.setValueInternal(null);</span>
+<span class="fc" id="L62">            return;</span>
+        }
+        try {
+<span class="nc" id="L65">            super.setValueInternal(RadialGradient.valueOf(str));</span>
+<span class="nc" id="L66">        } catch (Exception e) {</span>
+<span class="nc" id="L67">            throw illegalValue(str, RadialGradient.class, e);</span>
+<span class="nc" id="L68">        }</span>
+<span class="nc" id="L69">    }</span>
+
+    protected void handleAsList(List&lt;?&gt; list) {
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (list.isEmpty()) {</span>
+<span class="fc" id="L73">            super.setValueInternal(null);</span>
+<span class="fc" id="L74">            return;</span>
+        }
+
+<span class="fc" id="L77">        double fa = 0;</span>
+<span class="fc" id="L78">        double fd = 0;</span>
+<span class="fc" id="L79">        double cx = 0;</span>
+<span class="fc" id="L80">        double cy = 0;</span>
+<span class="fc" id="L81">        double r = 0;</span>
+<span class="fc" id="L82">        boolean proportional = false;</span>
+<span class="fc" id="L83">        List&lt;Stop&gt; stops = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L84">        CycleMethod cyclicMethod = CycleMethod.NO_CYCLE;</span>
+
+<span class="pc bpc" id="L86" title="1 of 3 branches missed.">        switch (list.size()) {</span>
+            case 8:
+<span class="fc" id="L88">                cyclicMethod = parseCyclicMethod(list, String.valueOf(list.get(7)).trim());</span>
+            case 7:
+<span class="fc" id="L90">                fa = parseValue(list.get(0));</span>
+<span class="fc" id="L91">                fd = parseValue(list.get(1));</span>
+<span class="fc" id="L92">                cx = parseValue(list.get(2));</span>
+<span class="fc" id="L93">                cy = parseValue(list.get(3));</span>
+<span class="fc" id="L94">                r = parseValue(list.get(4));</span>
+<span class="fc" id="L95">                proportional = (Boolean) list.get(5);</span>
+<span class="fc" id="L96">                stops = (List&lt;Stop&gt;) list.get(6);</span>
+<span class="fc" id="L97">                super.setValueInternal(new RadialGradient(fa, fd, cx, cy, r, proportional, cyclicMethod, stops));</span>
+<span class="fc" id="L98">                break;</span>
+            default:
+<span class="nc" id="L100">                throw illegalValue(list, RadialGradient.class);</span>
+        }
+<span class="fc" id="L102">    }</span>
+
+    protected void handleAsMap(Map&lt;?, ?&gt; map) {
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        if (map.isEmpty()) {</span>
+<span class="fc" id="L106">            super.setValueInternal(null);</span>
+<span class="fc" id="L107">            return;</span>
+        }
+
+<span class="fc" id="L110">        double fa = (Double) getMapValue(map, &quot;fa&quot;, 0d);</span>
+<span class="fc" id="L111">        double fd = (Double) getMapValue(map, &quot;fd&quot;, 0d);</span>
+<span class="fc" id="L112">        double cx = (Double) getMapValue(map, &quot;cx&quot;, 0d);</span>
+<span class="fc" id="L113">        double cy = (Double) getMapValue(map, &quot;cy&quot;, 0d);</span>
+<span class="fc" id="L114">        double r = (Double) getMapValue(map, &quot;r&quot;, 0d);</span>
+<span class="fc" id="L115">        boolean proportional = (Boolean) getMapValue(map, &quot;p&quot;, false);</span>
+<span class="fc" id="L116">        List&lt;Stop&gt; stops = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L117">        CycleMethod cyclicMethod = CycleMethod.NO_CYCLE;</span>
+
+<span class="pc bpc" id="L119" title="1 of 2 branches missed.">        if (map.containsKey(&quot;stops&quot;)) {</span>
+<span class="fc" id="L120">            stops = (List&lt;Stop&gt;) map.get(&quot;stops&quot;);</span>
+        }
+<span class="fc" id="L122">        Object cyclicValue = map.get(&quot;cycle&quot;);</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        if (null != cyclicValue) {</span>
+<span class="fc" id="L124">            cyclicMethod = parseCyclicMethod(map, String.valueOf(cyclicValue));</span>
+        }
+
+<span class="fc" id="L127">        super.setValueInternal(new RadialGradient(fa, fd, cx, cy, r, proportional, cyclicMethod, stops));</span>
+<span class="fc" id="L128">    }</span>
+
+    protected CycleMethod parseCyclicMethod(Object source, String str) {
+        try {
+<span class="fc" id="L132">            Field cyclicMethodField = CycleMethod.class.getDeclaredField(str.toUpperCase().trim());</span>
+<span class="fc" id="L133">            return (CycleMethod) cyclicMethodField.get(null);</span>
+<span class="nc" id="L134">        } catch (NoSuchFieldException | IllegalAccessException e) {</span>
+<span class="nc" id="L135">            throw illegalValue(source, RadialGradient.class, e);</span>
+        }
+    }
+
+    protected double parse(String val) {
+        try {
+<span class="nc" id="L141">            return Float.parseFloat(val.trim());</span>
+<span class="nc" id="L142">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L143">            throw illegalValue(val, RadialGradient.class, e);</span>
+        }
+    }
+
+    protected double parseValue(Object value) {
+<span class="pc bpc" id="L148" title="1 of 2 branches missed.">        if (value instanceof CharSequence) {</span>
+<span class="nc" id="L149">            return parse(String.valueOf(value));</span>
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">        } else if (value instanceof Number) {</span>
+<span class="fc" id="L151">            return parse((Number) value);</span>
+        }
+<span class="nc" id="L153">        throw illegalValue(value, RadialGradient.class);</span>
+    }
+
+    protected double parse(Number val) {
+<span class="fc" id="L157">        return val.doubleValue();</span>
+    }
+
+    protected Object getMapValue(Map&lt;?, ?&gt; map, String key, Object defaultValue) {
+<span class="fc" id="L161">        Object val = map.get(key);</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">        if (null == val) {</span>
+<span class="fc" id="L163">            return defaultValue;</span>
+<span class="pc bpc" id="L164" title="1 of 2 branches missed.">        } else if (val instanceof CharSequence) {</span>
+<span class="nc" id="L165">            return parse(String.valueOf(val));</span>
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">        } else if (val instanceof Number) {</span>
+<span class="fc" id="L167">            return parse((Number) val);</span>
+        }
+<span class="nc" id="L169">        throw illegalValue(map, RadialGradient.class);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

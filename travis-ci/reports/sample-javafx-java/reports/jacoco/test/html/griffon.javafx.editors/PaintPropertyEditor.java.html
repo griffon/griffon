@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PaintPropertyEditor.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-java</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.editors</a> &gt; <span class="el_source">PaintPropertyEditor.java</span></div><h1>PaintPropertyEditor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.editors;
+
+import griffon.core.editors.AbstractPropertyEditor;
+import griffon.metadata.PropertyEditorFor;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Paint;
+import javafx.scene.paint.RadialGradient;
+
+import java.beans.PropertyEditor;
+import java.util.List;
+import java.util.Map;
+
+import static griffon.core.editors.PropertyEditorResolver.findEditor;
+
+/**
+ * @author Andres Almiray
+ * @since 2.4.0
+ */
+@PropertyEditorFor(Paint.class)
+<span class="fc" id="L36">public class PaintPropertyEditor extends AbstractPropertyEditor {</span>
+
+    @Override
+    public String getAsText() {
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        if (null == getValue()) return null;</span>
+<span class="nc" id="L41">        return getValueInternal().toString();</span>
+    }
+
+    protected void setValueInternal(Object value) {
+<span class="nc bnc" id="L45" title="All 2 branches missed.">        if (null == value) {</span>
+<span class="nc" id="L46">            super.setValueInternal(null);</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        } else if (value instanceof CharSequence) {</span>
+<span class="nc" id="L48">            handleInternal(String.valueOf(value).trim());</span>
+<span class="nc bnc" id="L49" title="All 4 branches missed.">        } else if (value instanceof List || value instanceof Map) {</span>
+<span class="nc" id="L50">            handleInternal(value);</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        } else if (value instanceof Paint) {</span>
+<span class="nc" id="L52">            super.setValueInternal(value);</span>
+        } else {
+<span class="nc" id="L54">            throw illegalValue(value, Paint.class);</span>
+        }
+<span class="nc" id="L56">    }</span>
+
+    private void handleInternal(Object value) {
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        for (Class&lt;?&gt; type : new Class[]{Color.class, RadialGradient.class, LinearGradient.class}) {</span>
+            try {
+<span class="nc" id="L61">                PropertyEditor propertyEditor = findEditor(type);</span>
+<span class="nc" id="L62">                propertyEditor.setValue(value);</span>
+<span class="nc" id="L63">                super.setValueInternal(propertyEditor.getValue());</span>
+<span class="nc" id="L64">                return;</span>
+<span class="nc" id="L65">            } catch (Exception e) {</span>
+                // ignore
+            }
+        }
+<span class="nc" id="L69">        throw illegalValue(value, Paint.class);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
