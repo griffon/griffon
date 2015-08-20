@@ -86,7 +86,6 @@ class LinearGradientPaintPropertyEditorSpec extends Specification {
 
         when:
         editor.value = format
-        println editor.value
 
         then:
 

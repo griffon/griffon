@@ -88,7 +88,6 @@ class RadialGradientPaintPropertyEditorSpec extends Specification {
 
         when:
         editor.value = format
-        println editor.value
 
         then:
 
