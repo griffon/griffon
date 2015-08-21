@@ -16,14 +16,16 @@
 package griffon.transform
 
 import spock.lang.Specification
+import spock.lang.Unroll
 
+@Unroll
 class ChangeListenerSpec extends Specification {
-    void "ChangeListener AST transformation attaches a closure reference as listener"() {
+    void "ChangeListener AST transformation attaches a closure reference as listener (weak=#weak)"() {
         given:
-        String script = '''
+        String script = """
         class Bean {
             @griffon.transform.FXObservable
-            @griffon.transform.ChangeListener(snoop)
+            @griffon.transform.ChangeListener(value=snoop, weak=$weak)
             String name
 
             int count = 0
@@ -31,7 +33,7 @@ class ChangeListenerSpec extends Specification {
             private snoop = { ob, ov, nv -> ++count }
         }
         new Bean()
-        '''
+        """
 
         when:
         def bean = new GroovyShell().evaluate(script)
@@ -40,20 +42,23 @@ class ChangeListenerSpec extends Specification {
 
         then:
         bean.count == 2
+
+        where:
+        weak << [false, true]
     }
 
-    void "ChangeListener AST transformation attaches a closure as listener"() {
+    void "ChangeListener AST transformation attaches a closure as listener (weak=#weak)"() {
         given:
-        String script = '''
+        String script = """
         class Bean {
             @griffon.transform.FXObservable
-            @griffon.transform.ChangeListener({ ob, ov, nv -> ++count })
+            @griffon.transform.ChangeListener(value={ ob, ov, nv -> ++count }, weak=$weak)
             String name
 
             int count = 0
         }
         new Bean()
-        '''
+        """
 
         when:
         def bean = new GroovyShell().evaluate(script)
@@ -62,15 +67,18 @@ class ChangeListenerSpec extends Specification {
 
         then:
         bean.count == 2
+
+        where:
+        weak << [false, true]
     }
 
 
-    void "ChangeListener AST transformation attaches a closure reference literal as listener"() {
+    void "ChangeListener AST transformation attaches a closure reference literal as listener (weak=#weak)"() {
         given:
-        String script = '''
+        String script = """
         class Bean {
             @griffon.transform.FXObservable
-            @griffon.transform.ChangeListener('snoop')
+            @griffon.transform.ChangeListener(value='snoop', weak=$weak)
             String name
 
             int count = 0
@@ -78,7 +86,7 @@ class ChangeListenerSpec extends Specification {
             private snoop = { ob, ov, nv -> ++count }
         }
         new Bean()
-        '''
+        """
 
         when:
         def bean = new GroovyShell().evaluate(script)
@@ -87,5 +95,8 @@ class ChangeListenerSpec extends Specification {
 
         then:
         bean.count == 2
+
+        where:
+        weak << [false, true]
     }
 }

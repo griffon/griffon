@@ -78,4 +78,11 @@ import java.lang.annotation.Target;
 @GroovyASTTransformationClass("org.codehaus.griffon.compile.core.ast.transform.ChangeListenerASTTransformation")
 public @interface ChangeListener {
     String value();
+
+    /**
+     * If the {@code ChangeListener} should be wrapped with a {@code WeakChangeListener} or not
+     *
+     * @since 2.4.0
+     */
+    boolean weak() default true;
 }

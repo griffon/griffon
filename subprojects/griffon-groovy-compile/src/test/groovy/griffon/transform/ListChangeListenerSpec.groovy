@@ -16,14 +16,16 @@
 package griffon.transform
 
 import spock.lang.Specification
+import spock.lang.Unroll
 
+@Unroll
 class ListChangeListenerSpec extends Specification {
-    void "ListChangeListener AST transformation attaches a closure reference as listener"() {
+    void "ListChangeListener AST transformation attaches a closure reference as listener (weak=#weak)"() {
         given:
-        String script = '''import javafx.collections.FXCollections
+        String script = """import javafx.collections.FXCollections
         class Bean {
             @griffon.transform.FXObservable
-            @griffon.transform.ListChangeListener(snoop)
+            @griffon.transform.ListChangeListener(value=snoop, weak=$weak)
             javafx.collections.ObservableList list = FXCollections.observableArrayList()
 
             int count = 0
@@ -31,7 +33,7 @@ class ListChangeListenerSpec extends Specification {
             private snoop = { c -> ++count }
         }
         new Bean()
-        '''
+        """
 
         when:
         def bean = new GroovyShell().evaluate(script)
@@ -40,20 +42,23 @@ class ListChangeListenerSpec extends Specification {
 
         then:
         bean.count == 2
+
+        where:
+        weak << [false, true]
     }
 
-    void "ListChangeListener AST transformation attaches a closure as listener"() {
+    void "ListChangeListener AST transformation attaches a closure as listener (weak=#weak)"() {
         given:
-        String script = '''import javafx.collections.FXCollections
+        String script = """import javafx.collections.FXCollections
         class Bean {
             @griffon.transform.FXObservable
-            @griffon.transform.ListChangeListener({ c -> ++count })
+            @griffon.transform.ListChangeListener(value={ c -> ++count }, weak=$weak)
             javafx.collections.ObservableList list = FXCollections.observableArrayList()
 
             int count = 0
         }
         new Bean()
-        '''
+        """
 
         when:
         def bean = new GroovyShell().evaluate(script)
@@ -62,15 +67,18 @@ class ListChangeListenerSpec extends Specification {
 
         then:
         bean.count == 2
+
+        where:
+        weak << [false, true]
     }
 
 
-    void "ListChangeListener AST transformation attaches a closure reference literal as listener"() {
+    void "ListChangeListener AST transformation attaches a closure reference literal as listener (weak=#weak)"() {
         given:
-        String script = '''import javafx.collections.FXCollections
+        String script = """import javafx.collections.FXCollections
         class Bean {
             @griffon.transform.FXObservable
-            @griffon.transform.ListChangeListener('snoop')
+            @griffon.transform.ListChangeListener(value='snoop', weak=$weak)
             javafx.collections.ObservableList list = FXCollections.observableArrayList()
 
             int count = 0
@@ -78,7 +86,7 @@ class ListChangeListenerSpec extends Specification {
             private snoop = { c -> ++count }
         }
         new Bean()
-        '''
+        """
 
         when:
         def bean = new GroovyShell().evaluate(script)
@@ -87,5 +95,8 @@ class ListChangeListenerSpec extends Specification {
 
         then:
         bean.count == 2
+
+        where:
+        weak << [false, true]
     }
 }

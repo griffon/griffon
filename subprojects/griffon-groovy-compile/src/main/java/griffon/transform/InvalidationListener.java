@@ -78,4 +78,11 @@ import java.lang.annotation.Target;
 @GroovyASTTransformationClass("org.codehaus.griffon.compile.core.ast.transform.InvalidationListenerASTTransformation")
 public @interface InvalidationListener {
     String value();
+
+    /**
+     * If the {@code InvalidationListener} should be wrapped with a {@code WeakInvalidationListener} or not
+     *
+     * @since 2.4.0
+     */
+    boolean weak() default false;
 }

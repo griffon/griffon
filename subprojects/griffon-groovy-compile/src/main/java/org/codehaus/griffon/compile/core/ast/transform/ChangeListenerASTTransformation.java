@@ -16,6 +16,7 @@
 package org.codehaus.griffon.compile.core.ast.transform;
 
 import griffon.transform.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
 import org.codehaus.groovy.ast.AnnotationNode;
@@ -33,11 +34,13 @@ import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
 
-import java.util.Map;
-
+import static java.lang.reflect.Modifier.FINAL;
+import static java.lang.reflect.Modifier.PRIVATE;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_ARGS;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.THIS;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.call;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.ctor;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.field;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.stmnt;
 
 /**
@@ -55,7 +58,9 @@ import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.stmnt;
 public class ChangeListenerASTTransformation extends AbstractASTTransformation {
     private static final ClassNode CHANGE_LISTENER_CLASS = makeClassSafe(ChangeListener.class);
     private static final ClassNode JAVAFX_CHANGE_LISTENER_CLASS = makeClassSafe(javafx.beans.value.ChangeListener.class);
+    private static final ClassNode JAVAFX_WEAK_CHANGE_LISTENER_CLASS = makeClassSafe(WeakChangeListener.class);
     private static final String EMPTY_STRING = "";
+    private static final String VALUE = "value";
 
     /**
      * Convenience method to see if an annotated node is {@code @ChangeListener}.
@@ -73,49 +78,70 @@ public class ChangeListenerASTTransformation extends AbstractASTTransformation {
     }
 
     public static void addListenerToProperty(SourceUnit source, AnnotationNode annotation, ClassNode declaringClass, FieldNode field) {
-        for (Map.Entry<String, Expression> member : annotation.getMembers().entrySet()) {
-            Expression value = member.getValue();
-            if ((value instanceof ListExpression)) {
-                for (Expression expr : ((ListExpression) value).getExpressions()) {
-                    processExpression(declaringClass, field.getName(), expr);
-                }
-                member.setValue(new ConstantExpression(EMPTY_STRING));
-            } else {
-                processExpression(declaringClass, field.getName(), value);
-                member.setValue(new ConstantExpression(EMPTY_STRING));
+        Expression value = annotation.getMember(VALUE);
+        Expression weak = annotation.getMember("weak");
+        boolean useWeakListener = false;
+        if (weak != null && weak instanceof ConstantExpression && ((ConstantExpression) weak).isTrueExpression()) {
+            useWeakListener = true;
+        }
+
+        if ((value instanceof ListExpression)) {
+            for (Expression expr : ((ListExpression) value).getExpressions()) {
+                processExpression(declaringClass, field.getName(), expr, useWeakListener);
             }
+            annotation.setMember(VALUE, new ConstantExpression(EMPTY_STRING));
+        } else {
+            processExpression(declaringClass, field.getName(), value, useWeakListener);
+            annotation.setMember(VALUE, new ConstantExpression(EMPTY_STRING));
         }
     }
 
-    private static void processExpression(ClassNode classNode, String propertyName, Expression expression) {
+    private static void processExpression(ClassNode classNode, String propertyName, Expression expression, boolean useWeakListener) {
         if (expression instanceof ClosureExpression) {
-            addChangeListener(classNode, propertyName, (ClosureExpression) expression);
+            addChangeListener(classNode, propertyName, (ClosureExpression) expression, useWeakListener);
         } else if (expression instanceof VariableExpression) {
-            addChangeListener(classNode, propertyName, (VariableExpression) expression);
+            addChangeListener(classNode, propertyName, (VariableExpression) expression, useWeakListener);
         } else if (expression instanceof ConstantExpression) {
-            addChangeListener(classNode, propertyName, (ConstantExpression) expression);
+            addChangeListener(classNode, propertyName, (ConstantExpression) expression, useWeakListener);
         } else {
             throw new RuntimeException("Internal error: wrong expression type. " + expression);
         }
     }
 
-    private static void addChangeListener(ClassNode classNode, String propertyName, ClosureExpression closure) {
-        ArgumentListExpression args = new ArgumentListExpression();
-        args.addExpression(CastExpression.asExpression(JAVAFX_CHANGE_LISTENER_CLASS, closure));
+    private static void addChangeListener(ClassNode classNode, String propertyName, ClosureExpression closure, boolean useWeakListener) {
+        ArgumentListExpression args = createListenerExpression(classNode, propertyName, CastExpression.asExpression(JAVAFX_CHANGE_LISTENER_CLASS, closure), useWeakListener);
         addListenerStatement(classNode, propertyName, args);
     }
 
-    private static void addChangeListener(ClassNode classNode, String propertyName, VariableExpression variable) {
-        ArgumentListExpression args = new ArgumentListExpression();
-        args.addExpression(CastExpression.asExpression(JAVAFX_CHANGE_LISTENER_CLASS, variable));
+    private static void addChangeListener(ClassNode classNode, String propertyName, VariableExpression variable, boolean useWeakListener) {
+        ArgumentListExpression args = createListenerExpression(classNode, propertyName, CastExpression.asExpression(JAVAFX_CHANGE_LISTENER_CLASS, variable), useWeakListener);
         addListenerStatement(classNode, propertyName, args);
     }
 
-    private static void addChangeListener(ClassNode classNode, String propertyName, ConstantExpression reference) {
+    private static ArgumentListExpression createListenerExpression(ClassNode classNode, String propertyName, Expression expression, boolean useWeakListener) {
         ArgumentListExpression args = new ArgumentListExpression();
-        VariableExpression variable = new VariableExpression(reference.getText());
-        args.addExpression(CastExpression.asExpression(JAVAFX_CHANGE_LISTENER_CLASS, variable));
-        addListenerStatement(classNode, propertyName, args);
+        if (useWeakListener) {
+            String fieldName = "$" + propertyName + "ChangeListener__" + System.nanoTime();
+            FieldNode listenerField = new FieldNode(
+                fieldName,
+                PRIVATE | FINAL,
+                JAVAFX_CHANGE_LISTENER_CLASS,
+                classNode,
+                expression);
+            classNode.addField(listenerField);
+            ArgumentListExpression params = new ArgumentListExpression();
+            params.addExpression(field(listenerField));
+            args.addExpression(
+                ctor(JAVAFX_WEAK_CHANGE_LISTENER_CLASS, params)
+            );
+        } else {
+            args.addExpression(CastExpression.asExpression(JAVAFX_CHANGE_LISTENER_CLASS, expression));
+        }
+        return args;
+    }
+
+    private static void addChangeListener(ClassNode classNode, String propertyName, ConstantExpression reference, boolean useWeakListener) {
+        addChangeListener(classNode, propertyName, new VariableExpression(reference.getText()), useWeakListener);
     }
 
     private static void addListenerStatement(ClassNode classNode, String propertyName, ArgumentListExpression args) {

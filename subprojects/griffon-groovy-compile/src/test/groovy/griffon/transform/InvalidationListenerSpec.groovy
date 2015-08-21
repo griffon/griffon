@@ -17,14 +17,16 @@
 package griffon.transform
 
 import spock.lang.Specification
+import spock.lang.Unroll
 
+@Unroll
 class InvalidationListenerSpec extends Specification {
-    void "InvalidationListener AST transformation attaches a closure reference as listener"() {
+    void "InvalidationListener AST transformation attaches a closure reference as listener (weak=#weak)"() {
         given:
-        String script = '''
+        String script = """
         class Bean {
             @griffon.transform.FXObservable
-            @griffon.transform.InvalidationListener(snoop)
+            @griffon.transform.InvalidationListener(value=snoop, weak=$weak)
             String name
 
             int count = 0
@@ -32,7 +34,7 @@ class InvalidationListenerSpec extends Specification {
             private snoop = { ++count }
         }
         new Bean()
-        '''
+        """
 
         when:
         def bean = new GroovyShell().evaluate(script)
@@ -40,20 +42,23 @@ class InvalidationListenerSpec extends Specification {
 
         then:
         bean.count == 1
+
+        where:
+        weak << [false, true]
     }
 
-    void "InvalidationListener AST transformation attaches a closure as listener"() {
+    void "InvalidationListener AST transformation attaches a closure as listener (weak=#weak)"() {
         given:
-        String script = '''
+        String script = """
         class Bean {
             @griffon.transform.FXObservable
-            @griffon.transform.InvalidationListener({ ++count })
+            @griffon.transform.InvalidationListener(value={ ++count }, weak=$weak)
             String name
 
             int count = 0
         }
         new Bean()
-        '''
+        """
 
         when:
         def bean = new GroovyShell().evaluate(script)
@@ -61,15 +66,18 @@ class InvalidationListenerSpec extends Specification {
 
         then:
         bean.count == 1
+
+        where:
+        weak << [false, true]
     }
 
 
-    void "InvalidationListener AST transformation attaches a closure reference literal as listener"() {
+    void "InvalidationListener AST transformation attaches a closure reference literal as listener (weak=#weak)"() {
         given:
-        String script = '''
+        String script = """
         class Bean {
             @griffon.transform.FXObservable
-            @griffon.transform.InvalidationListener('snoop')
+            @griffon.transform.InvalidationListener(value='snoop', weak=$weak)
             String name
 
             int count = 0
@@ -77,7 +85,7 @@ class InvalidationListenerSpec extends Specification {
             private snoop = { ++count }
         }
         new Bean()
-        '''
+        """
 
         when:
         def bean = new GroovyShell().evaluate(script)
@@ -85,5 +93,8 @@ class InvalidationListenerSpec extends Specification {
 
         then:
         bean.count == 1
+
+        where:
+        weak << [false, true]
     }
 }

@@ -82,4 +82,9 @@ import java.lang.annotation.Target;
 @GroovyASTTransformationClass("org.codehaus.griffon.compile.core.ast.transform.MapChangeListenerASTTransformation")
 public @interface MapChangeListener {
     String value();
+
+    /**
+     * If the {@code MapChangeListener} should be wrapped with a {@code WeakMapChangeListener} or not
+     */
+    boolean weak() default false;
 }
