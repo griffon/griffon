@@ -16,6 +16,7 @@
 package org.codehaus.griffon.compile.core.ast.transform;
 
 import griffon.transform.ListChangeListener;
+import javafx.collections.WeakListChangeListener;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
 import org.codehaus.groovy.ast.AnnotationNode;
@@ -33,11 +34,13 @@ import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
 
-import java.util.Map;
-
+import static java.lang.reflect.Modifier.FINAL;
+import static java.lang.reflect.Modifier.PRIVATE;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_ARGS;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.THIS;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.call;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.ctor;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.field;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.stmnt;
 
 /**
@@ -53,10 +56,12 @@ import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.stmnt;
  * @since 2.4.0
  */
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
-<span class="fc" id="L56">public class ListChangeListenerASTTransformation extends AbstractASTTransformation {</span>
-<span class="fc" id="L57">    private static final ClassNode LIST_CHANGE_LISTENER_CLASS = makeClassSafe(ListChangeListener.class);</span>
-<span class="fc" id="L58">    private static final ClassNode JAVAFX_LIST_CHANGE_LISTENER_CLASS = makeClassSafe(javafx.collections.ListChangeListener.class);</span>
+<span class="fc" id="L59">public class ListChangeListenerASTTransformation extends AbstractASTTransformation {</span>
+<span class="fc" id="L60">    private static final ClassNode LIST_CHANGE_LISTENER_CLASS = makeClassSafe(ListChangeListener.class);</span>
+<span class="fc" id="L61">    private static final ClassNode JAVAFX_LIST_CHANGE_LISTENER_CLASS = makeClassSafe(javafx.collections.ListChangeListener.class);</span>
+<span class="fc" id="L62">    private static final ClassNode JAVAFX_WEAK_LIST_CHANGE_LISTENER_CLASS = makeClassSafe(WeakListChangeListener.class);</span>
     private static final String EMPTY_STRING = &quot;&quot;;
+    private static final String VALUE = &quot;value&quot;;
 
     /**
      * Convenience method to see if an annotated node is {@code @ListChangeListener}.
@@ -65,72 +70,93 @@ import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.stmnt;
      * @return true if the node is an event publisher
      */
     public static boolean hasListenerAnnotation(AnnotatedNode node) {
-<span class="nc bnc" id="L68" title="All 2 branches missed.">        for (AnnotationNode annotation : node.getAnnotations()) {</span>
-<span class="nc bnc" id="L69" title="All 2 branches missed.">            if (LIST_CHANGE_LISTENER_CLASS.equals(annotation.getClassNode())) {</span>
-<span class="nc" id="L70">                return true;</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        for (AnnotationNode annotation : node.getAnnotations()) {</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">            if (LIST_CHANGE_LISTENER_CLASS.equals(annotation.getClassNode())) {</span>
+<span class="nc" id="L75">                return true;</span>
             }
-<span class="nc" id="L72">        }</span>
-<span class="nc" id="L73">        return false;</span>
+<span class="nc" id="L77">        }</span>
+<span class="nc" id="L78">        return false;</span>
     }
 
     public static void addListenerToProperty(SourceUnit source, AnnotationNode annotation, ClassNode declaringClass, FieldNode field) {
-<span class="fc bfc" id="L77" title="All 2 branches covered.">        for (Map.Entry&lt;String, Expression&gt; member : annotation.getMembers().entrySet()) {</span>
-<span class="fc" id="L78">            Expression value = member.getValue();</span>
-<span class="pc bpc" id="L79" title="1 of 2 branches missed.">            if ((value instanceof ListExpression)) {</span>
-<span class="nc bnc" id="L80" title="All 2 branches missed.">                for (Expression expr : ((ListExpression) value).getExpressions()) {</span>
-<span class="nc" id="L81">                    processExpression(declaringClass, field.getName(), expr);</span>
-<span class="nc" id="L82">                }</span>
-<span class="nc" id="L83">                member.setValue(new ConstantExpression(EMPTY_STRING));</span>
-            } else {
-<span class="fc" id="L85">                processExpression(declaringClass, field.getName(), value);</span>
-<span class="fc" id="L86">                member.setValue(new ConstantExpression(EMPTY_STRING));</span>
-            }
-<span class="fc" id="L88">        }</span>
-<span class="fc" id="L89">    }</span>
-
-    private static void processExpression(ClassNode classNode, String propertyName, Expression expression) {
-<span class="fc bfc" id="L92" title="All 2 branches covered.">        if (expression instanceof ClosureExpression) {</span>
-<span class="fc" id="L93">            addChangeListener(classNode, propertyName, (ClosureExpression) expression);</span>
-<span class="fc bfc" id="L94" title="All 2 branches covered.">        } else if (expression instanceof VariableExpression) {</span>
-<span class="fc" id="L95">            addChangeListener(classNode, propertyName, (VariableExpression) expression);</span>
-<span class="pc bpc" id="L96" title="1 of 2 branches missed.">        } else if (expression instanceof ConstantExpression) {</span>
-<span class="fc" id="L97">            addChangeListener(classNode, propertyName, (ConstantExpression) expression);</span>
-        } else {
-<span class="nc" id="L99">            throw new RuntimeException(&quot;Internal error: wrong expression type. &quot; + expression);</span>
+<span class="fc" id="L82">        Expression value = annotation.getMember(VALUE);</span>
+<span class="fc" id="L83">        Expression weak = annotation.getMember(&quot;weak&quot;);</span>
+<span class="fc" id="L84">        boolean useWeakListener = false;</span>
+<span class="pc bpc" id="L85" title="2 of 6 branches missed.">        if (weak != null &amp;&amp; weak instanceof ConstantExpression &amp;&amp; ((ConstantExpression) weak).isTrueExpression()) {</span>
+<span class="fc" id="L86">            useWeakListener = true;</span>
         }
-<span class="fc" id="L101">    }</span>
 
-    private static void addChangeListener(ClassNode classNode, String propertyName, ClosureExpression closure) {
-<span class="fc" id="L104">        ArgumentListExpression args = new ArgumentListExpression();</span>
-<span class="fc" id="L105">        args.addExpression(CastExpression.asExpression(JAVAFX_LIST_CHANGE_LISTENER_CLASS, closure));</span>
-<span class="fc" id="L106">        addListenerStatement(classNode, propertyName, args);</span>
-<span class="fc" id="L107">    }</span>
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">        if ((value instanceof ListExpression)) {</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">            for (Expression expr : ((ListExpression) value).getExpressions()) {</span>
+<span class="nc" id="L91">                processExpression(declaringClass, field.getName(), expr, useWeakListener);</span>
+<span class="nc" id="L92">            }</span>
+<span class="nc" id="L93">            annotation.setMember(VALUE, new ConstantExpression(EMPTY_STRING));</span>
+        } else {
+<span class="fc" id="L95">            processExpression(declaringClass, field.getName(), value, useWeakListener);</span>
+<span class="fc" id="L96">            annotation.setMember(VALUE, new ConstantExpression(EMPTY_STRING));</span>
+        }
+<span class="fc" id="L98">    }</span>
 
-    private static void addChangeListener(ClassNode classNode, String propertyName, VariableExpression variable) {
-<span class="fc" id="L110">        ArgumentListExpression args = new ArgumentListExpression();</span>
-<span class="fc" id="L111">        args.addExpression(CastExpression.asExpression(JAVAFX_LIST_CHANGE_LISTENER_CLASS, variable));</span>
-<span class="fc" id="L112">        addListenerStatement(classNode, propertyName, args);</span>
-<span class="fc" id="L113">    }</span>
+    private static void processExpression(ClassNode classNode, String propertyName, Expression expression, boolean useWeakListener) {
+<span class="fc bfc" id="L101" title="All 2 branches covered.">        if (expression instanceof ClosureExpression) {</span>
+<span class="fc" id="L102">            addListChangeListener(classNode, propertyName, (ClosureExpression) expression, useWeakListener);</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        } else if (expression instanceof VariableExpression) {</span>
+<span class="fc" id="L104">            addListChangeListener(classNode, propertyName, (VariableExpression) expression, useWeakListener);</span>
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">        } else if (expression instanceof ConstantExpression) {</span>
+<span class="fc" id="L106">            addListChangeListener(classNode, propertyName, (ConstantExpression) expression, useWeakListener);</span>
+        } else {
+<span class="nc" id="L108">            throw new RuntimeException(&quot;Internal error: wrong expression type. &quot; + expression);</span>
+        }
+<span class="fc" id="L110">    }</span>
 
-    private static void addChangeListener(ClassNode classNode, String propertyName, ConstantExpression reference) {
-<span class="fc" id="L116">        ArgumentListExpression args = new ArgumentListExpression();</span>
-<span class="fc" id="L117">        VariableExpression variable = new VariableExpression(reference.getText());</span>
-<span class="fc" id="L118">        args.addExpression(CastExpression.asExpression(JAVAFX_LIST_CHANGE_LISTENER_CLASS, variable));</span>
+    private static void addListChangeListener(ClassNode classNode, String propertyName, ClosureExpression closure, boolean useWeakListener) {
+<span class="fc" id="L113">        ArgumentListExpression args = createListenerExpression(classNode, propertyName, CastExpression.asExpression(JAVAFX_LIST_CHANGE_LISTENER_CLASS, closure), useWeakListener);</span>
+<span class="fc" id="L114">        addListenerStatement(classNode, propertyName, args);</span>
+<span class="fc" id="L115">    }</span>
+
+    private static void addListChangeListener(ClassNode classNode, String propertyName, VariableExpression variable, boolean useWeakListener) {
+<span class="fc" id="L118">        ArgumentListExpression args = createListenerExpression(classNode, propertyName, CastExpression.asExpression(JAVAFX_LIST_CHANGE_LISTENER_CLASS, variable), useWeakListener);</span>
 <span class="fc" id="L119">        addListenerStatement(classNode, propertyName, args);</span>
 <span class="fc" id="L120">    }</span>
 
+    private static ArgumentListExpression createListenerExpression(ClassNode classNode, String propertyName, Expression expression, boolean useWeakListener) {
+<span class="fc" id="L123">        ArgumentListExpression args = new ArgumentListExpression();</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        if (useWeakListener) {</span>
+<span class="fc" id="L125">            String fieldName = &quot;$&quot; + propertyName + &quot;ListChangeListener__&quot; + System.nanoTime();</span>
+<span class="fc" id="L126">            FieldNode listenerField = new FieldNode(</span>
+                fieldName,
+                PRIVATE | FINAL,
+                JAVAFX_LIST_CHANGE_LISTENER_CLASS,
+                classNode,
+                expression);
+<span class="fc" id="L132">            classNode.addField(listenerField);</span>
+<span class="fc" id="L133">            ArgumentListExpression params = new ArgumentListExpression();</span>
+<span class="fc" id="L134">            params.addExpression(field(listenerField));</span>
+<span class="fc" id="L135">            args.addExpression(</span>
+<span class="fc" id="L136">                ctor(JAVAFX_WEAK_LIST_CHANGE_LISTENER_CLASS, params)</span>
+            );
+<span class="fc" id="L138">        } else {</span>
+<span class="fc" id="L139">            args.addExpression(CastExpression.asExpression(JAVAFX_LIST_CHANGE_LISTENER_CLASS, expression));</span>
+        }
+<span class="fc" id="L141">        return args;</span>
+    }
+
+    private static void addListChangeListener(ClassNode classNode, String propertyName, ConstantExpression reference, boolean useWeakListener) {
+<span class="fc" id="L145">        addListChangeListener(classNode, propertyName, new VariableExpression(reference.getText()), useWeakListener);</span>
+<span class="fc" id="L146">    }</span>
+
     private static void addListenerStatement(ClassNode classNode, String propertyName, ArgumentListExpression args) {
-<span class="fc" id="L123">        BlockStatement body = new BlockStatement();</span>
-<span class="fc" id="L124">        body.addStatement(stmnt(</span>
-<span class="fc" id="L125">            call(</span>
-<span class="fc" id="L126">                call(THIS, propertyName + &quot;Property&quot;, NO_ARGS),</span>
+<span class="fc" id="L149">        BlockStatement body = new BlockStatement();</span>
+<span class="fc" id="L150">        body.addStatement(stmnt(</span>
+<span class="fc" id="L151">            call(</span>
+<span class="fc" id="L152">                call(THIS, propertyName + &quot;Property&quot;, NO_ARGS),</span>
                 &quot;addListener&quot;,
                 args
             )
         ));
 
-<span class="fc" id="L132">        classNode.addObjectInitializerStatements(body);</span>
-<span class="fc" id="L133">    }</span>
+<span class="fc" id="L158">        classNode.addObjectInitializerStatements(body);</span>
+<span class="fc" id="L159">    }</span>
 
     /**
      * Handles the bulk of the processing, mostly delegating to other methods.
@@ -139,17 +165,17 @@ import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.stmnt;
      * @param source the source unit for the nodes
      */
     public void visit(ASTNode[] nodes, SourceUnit source) {
-<span class="pc bpc" id="L142" title="2 of 4 branches missed.">        if (!(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof AnnotatedNode)) {</span>
-<span class="nc" id="L143">            throw new RuntimeException(&quot;Internal error: wrong types: &quot; + nodes[0].getClass() + &quot; / &quot; + nodes[1].getClass());</span>
+<span class="pc bpc" id="L168" title="2 of 4 branches missed.">        if (!(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof AnnotatedNode)) {</span>
+<span class="nc" id="L169">            throw new RuntimeException(&quot;Internal error: wrong types: &quot; + nodes[0].getClass() + &quot; / &quot; + nodes[1].getClass());</span>
         }
 
-<span class="fc" id="L146">        AnnotationNode annotation = (AnnotationNode) nodes[0];</span>
-<span class="fc" id="L147">        AnnotatedNode parent = (AnnotatedNode) nodes[1];</span>
+<span class="fc" id="L172">        AnnotationNode annotation = (AnnotationNode) nodes[0];</span>
+<span class="fc" id="L173">        AnnotatedNode parent = (AnnotatedNode) nodes[1];</span>
 
-<span class="fc" id="L149">        ClassNode declaringClass = parent.getDeclaringClass();</span>
-<span class="pc bpc" id="L150" title="1 of 2 branches missed.">        if (parent instanceof FieldNode) {</span>
-<span class="fc" id="L151">            addListenerToProperty(source, annotation, declaringClass, (FieldNode) parent);</span>
+<span class="fc" id="L175">        ClassNode declaringClass = parent.getDeclaringClass();</span>
+<span class="pc bpc" id="L176" title="1 of 2 branches missed.">        if (parent instanceof FieldNode) {</span>
+<span class="fc" id="L177">            addListenerToProperty(source, annotation, declaringClass, (FieldNode) parent);</span>
         }
-<span class="fc" id="L153">    }</span>
+<span class="fc" id="L179">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
