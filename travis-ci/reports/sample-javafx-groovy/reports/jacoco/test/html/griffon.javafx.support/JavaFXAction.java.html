@@ -107,27 +107,31 @@ import javafx.scene.input.KeyCombination;
 <span class="nc bnc" id="L107" title="All 4 branches missed.">        return enabled != null &amp;&amp; enabledProperty().get();</span>
     }
 
+    public boolean isEnabled() {
+<span class="nc bnc" id="L111" title="All 4 branches missed.">        return enabled != null &amp;&amp; enabledProperty().get();</span>
+    }
+
     // -- accelerator
 
     private ObjectProperty&lt;KeyCombination&gt; accelerator;
 
     public void setAccelerator(String accelerator) {
-<span class="nc" id="L115">        setAccelerator(KeyCombination.keyCombination(accelerator));</span>
-<span class="nc" id="L116">    }</span>
-
-    public final void setAccelerator(KeyCombination value) {
-<span class="nc" id="L119">        acceleratorProperty().set(value);</span>
+<span class="nc" id="L119">        setAccelerator(KeyCombination.keyCombination(accelerator));</span>
 <span class="nc" id="L120">    }</span>
 
+    public final void setAccelerator(KeyCombination value) {
+<span class="nc" id="L123">        acceleratorProperty().set(value);</span>
+<span class="nc" id="L124">    }</span>
+
     public final KeyCombination getAccelerator() {
-<span class="nc bnc" id="L123" title="All 2 branches missed.">        return accelerator == null ? null : accelerator.get();</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        return accelerator == null ? null : accelerator.get();</span>
     }
 
     public final ObjectProperty&lt;KeyCombination&gt; acceleratorProperty() {
-<span class="nc bnc" id="L127" title="All 2 branches missed.">        if (accelerator == null) {</span>
-<span class="nc" id="L128">            accelerator = new SimpleObjectProperty&lt;&gt;(this, &quot;accelerator&quot;);</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        if (accelerator == null) {</span>
+<span class="nc" id="L132">            accelerator = new SimpleObjectProperty&lt;&gt;(this, &quot;accelerator&quot;);</span>
         }
-<span class="nc" id="L130">        return accelerator;</span>
+<span class="nc" id="L134">        return accelerator;</span>
     }
 
     // -- icon
@@ -135,18 +139,18 @@ import javafx.scene.input.KeyCombination;
     private StringProperty icon;
 
     public final StringProperty iconProperty() {
-<span class="nc bnc" id="L138" title="All 2 branches missed.">        if (icon == null) {</span>
-<span class="nc" id="L139">            icon = new SimpleStringProperty(this, &quot;icon&quot;);</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        if (icon == null) {</span>
+<span class="nc" id="L143">            icon = new SimpleStringProperty(this, &quot;icon&quot;);</span>
         }
-<span class="nc" id="L141">        return icon;</span>
+<span class="nc" id="L145">        return icon;</span>
     }
 
     public void setIcon(String icon) {
-<span class="nc" id="L145">        iconProperty().set(icon);</span>
-<span class="nc" id="L146">    }</span>
+<span class="nc" id="L149">        iconProperty().set(icon);</span>
+<span class="nc" id="L150">    }</span>
 
     public String getIcon() {
-<span class="nc bnc" id="L149" title="All 2 branches missed.">        return icon == null ? null : iconProperty().get();</span>
+<span class="nc bnc" id="L153" title="All 2 branches missed.">        return icon == null ? null : iconProperty().get();</span>
     }
 
     // -- image
@@ -154,18 +158,18 @@ import javafx.scene.input.KeyCombination;
     private ObjectProperty&lt;Image&gt; image;
 
     public final ObjectProperty&lt;Image&gt; imageProperty() {
-<span class="nc bnc" id="L157" title="All 2 branches missed.">        if (image == null) {</span>
-<span class="nc" id="L158">            image = new SimpleObjectProperty&lt;&gt;(this, &quot;image&quot;);</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">        if (image == null) {</span>
+<span class="nc" id="L162">            image = new SimpleObjectProperty&lt;&gt;(this, &quot;image&quot;);</span>
         }
-<span class="nc" id="L160">        return image;</span>
+<span class="nc" id="L164">        return image;</span>
     }
 
     public void setImage(Image image) {
-<span class="nc" id="L164">        imageProperty().set(image);</span>
-<span class="nc" id="L165">    }</span>
+<span class="nc" id="L168">        imageProperty().set(image);</span>
+<span class="nc" id="L169">    }</span>
 
     public Image getImage() {
-<span class="nc bnc" id="L168" title="All 2 branches missed.">        return image == null ? null : imageProperty().get();</span>
+<span class="nc bnc" id="L172" title="All 2 branches missed.">        return image == null ? null : imageProperty().get();</span>
     }
 
     // -- graphic
@@ -173,18 +177,18 @@ import javafx.scene.input.KeyCombination;
     private ObjectProperty&lt;Node&gt; graphic;
 
     public final ObjectProperty&lt;Node&gt; graphicProperty() {
-<span class="nc bnc" id="L176" title="All 2 branches missed.">        if (graphic == null) {</span>
-<span class="nc" id="L177">            graphic = new SimpleObjectProperty&lt;&gt;(this, &quot;graphic&quot;);</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">        if (graphic == null) {</span>
+<span class="nc" id="L181">            graphic = new SimpleObjectProperty&lt;&gt;(this, &quot;graphic&quot;);</span>
         }
-<span class="nc" id="L179">        return graphic;</span>
+<span class="nc" id="L183">        return graphic;</span>
     }
 
     public void setGraphic(Node graphic) {
-<span class="nc" id="L183">        graphicProperty().set(graphic);</span>
-<span class="nc" id="L184">    }</span>
+<span class="nc" id="L187">        graphicProperty().set(graphic);</span>
+<span class="nc" id="L188">    }</span>
 
     public Node getGraphic() {
-<span class="nc bnc" id="L187" title="All 2 branches missed.">        return graphic == null ? null : graphicProperty().get();</span>
+<span class="nc bnc" id="L191" title="All 2 branches missed.">        return graphic == null ? null : graphicProperty().get();</span>
     }
 
     // -- selected
@@ -192,18 +196,22 @@ import javafx.scene.input.KeyCombination;
     private BooleanProperty selected;
 
     public final BooleanProperty selectedProperty() {
-<span class="pc bpc" id="L195" title="1 of 2 branches missed.">        if (selected == null) {</span>
-<span class="fc" id="L196">            selected = new SimpleBooleanProperty(this, &quot;selected&quot;);</span>
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">        if (selected == null) {</span>
+<span class="fc" id="L200">            selected = new SimpleBooleanProperty(this, &quot;selected&quot;);</span>
         }
-<span class="fc" id="L198">        return selected;</span>
+<span class="fc" id="L202">        return selected;</span>
     }
 
     public void setSelected(boolean selected) {
-<span class="fc" id="L202">        selectedProperty().set(selected);</span>
-<span class="fc" id="L203">    }</span>
+<span class="fc" id="L206">        selectedProperty().set(selected);</span>
+<span class="fc" id="L207">    }</span>
 
     public boolean getSelected() {
-<span class="nc bnc" id="L206" title="All 4 branches missed.">        return selected != null &amp;&amp; selectedProperty().get();</span>
+<span class="nc bnc" id="L210" title="All 4 branches missed.">        return selected != null &amp;&amp; selectedProperty().get();</span>
+    }
+
+    public boolean isSelected() {
+<span class="nc bnc" id="L214" title="All 4 branches missed.">        return selected != null &amp;&amp; selectedProperty().get();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
