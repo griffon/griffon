@@ -107,6 +107,10 @@ public class JavaFXAction {
         return enabled != null && enabledProperty().get();
     }
 
+    public boolean isEnabled() {
+        return enabled != null && enabledProperty().get();
+    }
+
     // -- accelerator
 
     private ObjectProperty<KeyCombination> accelerator;
@@ -203,6 +207,10 @@ public class JavaFXAction {
     }
 
     public boolean getSelected() {
+        return selected != null && selectedProperty().get();
+    }
+
+    public boolean isSelected() {
         return selected != null && selectedProperty().get();
     }
 }

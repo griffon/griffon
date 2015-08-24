@@ -30,16 +30,19 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.ButtonBase;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
@@ -134,6 +137,27 @@ public final class JavaFXUtils {
         }
     }
 
+    public static void configure(final @Nonnull ToggleButton control, final @Nonnull JavaFXAction action) {
+        configure((ButtonBase) control, action);
+
+        action.selectedProperty().addListener((observableValue, oldValue, newValue) -> control.setSelected(newValue));
+        control.setSelected(action.isSelected());
+    }
+
+    public static void configure(final @Nonnull CheckBox control, final @Nonnull JavaFXAction action) {
+        configure((ButtonBase) control, action);
+
+        action.selectedProperty().addListener((observableValue, oldValue, newValue) -> control.setSelected(newValue));
+        control.setSelected(action.isSelected());
+    }
+
+    public static void configure(final @Nonnull RadioButton control, final @Nonnull JavaFXAction action) {
+        configure((ButtonBase) control, action);
+
+        action.selectedProperty().addListener((observableValue, oldValue, newValue) -> control.setSelected(newValue));
+        control.setSelected(action.isSelected());
+    }
+
     public static void configure(final @Nonnull ButtonBase control, final @Nonnull JavaFXAction action) {
         requireNonNull(control, ERROR_CONTROL_NULL);
         requireNonNull(action, ERROR_ACTION_NULL);
@@ -141,7 +165,7 @@ public final class JavaFXUtils {
         action.onActionProperty().addListener(new ChangeListener<EventHandler<ActionEvent>>() {
             @Override
             public void changed(ObservableValue<? extends EventHandler<ActionEvent>> observableValue, EventHandler<ActionEvent> oldValue, EventHandler<ActionEvent> newValue) {
-                control.onActionProperty().set(newValue);
+                control.setOnAction(newValue);
             }
         });
         control.onActionProperty().set(action.getOnAction());
@@ -149,7 +173,7 @@ public final class JavaFXUtils {
         action.nameProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
-                control.textProperty().set(newValue);
+                control.setText(newValue);
             }
         });
         control.textProperty().set(action.getName());
@@ -198,7 +222,7 @@ public final class JavaFXUtils {
                 control.setDisable(!newValue);
             }
         });
-        control.setDisable(!action.getEnabled());
+        control.setDisable(!action.isEnabled());
     }
 
     public static void configure(final @Nonnull MenuItem control, final @Nonnull JavaFXAction action) {
@@ -208,7 +232,7 @@ public final class JavaFXUtils {
         action.onActionProperty().addListener(new ChangeListener<EventHandler<ActionEvent>>() {
             @Override
             public void changed(ObservableValue<? extends EventHandler<ActionEvent>> observableValue, EventHandler<ActionEvent> oldValue, EventHandler<ActionEvent> newValue) {
-                control.onActionProperty().set(newValue);
+                control.setOnAction(newValue);
             }
         });
         control.onActionProperty().set(action.getOnAction());
@@ -216,7 +240,7 @@ public final class JavaFXUtils {
         action.nameProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
-                control.textProperty().set(newValue);
+                control.setText(newValue);
             }
         });
         control.textProperty().set(action.getName());
