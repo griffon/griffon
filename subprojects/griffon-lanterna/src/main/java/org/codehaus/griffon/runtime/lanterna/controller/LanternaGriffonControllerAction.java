@@ -37,21 +37,30 @@ public class LanternaGriffonControllerAction extends AbstractAction {
         super(actionManager, controller, actionName);
         requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be null");
 
-        toolkitAction = new LanternaAction(new Runnable() {
+        toolkitAction = createAction(actionManager, controller, actionName);
+        addPropertyChangeListener(new PropertyChangeListener() {
+            public void propertyChange(final PropertyChangeEvent evt) {
+                uiThreadManager.runInsideUIAsync(new Runnable() {
+                    public void run() {
+                        handlePropertyChange(evt);
+                    }
+                });
+            }
+        });
+    }
+
+    @Nonnull
+    protected LanternaAction createAction(final @Nonnull ActionManager actionManager, final @Nonnull GriffonController controller, final @Nonnull String actionName) {
+        return new LanternaAction(new Runnable() {
             @Override
             public void run() {
                 actionManager.invokeAction(controller, actionName);
             }
         });
-        addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(final PropertyChangeEvent evt) {
-                uiThreadManager.runInsideUIAsync(new Runnable() {
-                    public void run() {
-                        toolkitAction.setName(String.valueOf(evt.getNewValue()));
-                    }
-                });
-            }
-        });
+    }
+
+    protected void handlePropertyChange(@Nonnull PropertyChangeEvent evt) {
+        toolkitAction.setName(String.valueOf(evt.getNewValue()));
     }
 
     @Nonnull

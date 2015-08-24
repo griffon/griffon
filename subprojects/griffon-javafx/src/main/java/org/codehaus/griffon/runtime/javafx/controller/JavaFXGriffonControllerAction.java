@@ -20,7 +20,6 @@ import griffon.core.controller.ActionManager;
 import griffon.core.threading.UIThreadManager;
 import griffon.javafx.support.JavaFXAction;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import org.codehaus.griffon.runtime.core.controller.AbstractAction;
@@ -28,7 +27,6 @@ import org.codehaus.griffon.runtime.core.controller.AbstractAction;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyEditor;
 
 import static griffon.core.editors.PropertyEditorResolver.findEditor;
@@ -58,42 +56,39 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
         super(actionManager, controller, actionName);
         requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be null");
 
-        toolkitAction = new JavaFXAction();
-        toolkitAction.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent actionEvent) {
-                actionManager.invokeAction(controller, actionName, actionEvent);
-            }
-        });
-        addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(final PropertyChangeEvent evt) {
-                uiThreadManager.runInsideUIAsync(new Runnable() {
-                    public void run() {
-                        if (KEY_NAME.equals(evt.getPropertyName())) {
-                            toolkitAction.setName(String.valueOf(evt.getNewValue()));
-                        } else if (KEY_DESCRIPTION.equals(evt.getPropertyName())) {
-                            toolkitAction.setDescription(String.valueOf(evt.getNewValue()));
-                        } else if (KEY_ENABLED.equals(evt.getPropertyName())) {
-                            toolkitAction.setEnabled(castToBoolean(evt.getNewValue()));
-                        } else if (KEY_SELECTED.equals(evt.getPropertyName())) {
-                            toolkitAction.setSelected(castToBoolean(evt.getNewValue()));
-                        } else if (KEY_ACCELERATOR.equals(evt.getPropertyName())) {
-                            String accelerator = (String) evt.getNewValue();
-                            if (!isBlank(accelerator))
-                                toolkitAction.setAccelerator(accelerator);
-                        } else if (KEY_ICON.equals(evt.getPropertyName())) {
-                            String icon = (String) evt.getNewValue();
-                            if (!isBlank(icon)) toolkitAction.setIcon(icon);
-                        } else if (KEY_IMAGE.equals(evt.getPropertyName())) {
-                            Image image = (Image) evt.getNewValue();
-                            if (null != image) toolkitAction.setImage(image);
-                        } else if (KEY_GRAPHIC.equals(evt.getPropertyName())) {
-                            Node graphic = (Node) evt.getNewValue();
-                            if (null != graphic) toolkitAction.setGraphic(graphic);
-                        }
-                    }
-                });
-            }
-        });
+        toolkitAction = createAction(actionManager, controller, actionName);
+        toolkitAction.setOnAction(actionEvent -> actionManager.invokeAction(controller, actionName, actionEvent));
+
+        addPropertyChangeListener(evt -> uiThreadManager.runInsideUIAsync(() -> handlePropertyChange(evt)));
+    }
+
+    protected JavaFXAction createAction(final @Nonnull ActionManager actionManager, final @Nonnull GriffonController controller, final @Nonnull String actionName) {
+        return new JavaFXAction();
+    }
+
+    protected void handlePropertyChange(@Nonnull PropertyChangeEvent evt) {
+        if (KEY_NAME.equals(evt.getPropertyName())) {
+            toolkitAction.setName(String.valueOf(evt.getNewValue()));
+        } else if (KEY_DESCRIPTION.equals(evt.getPropertyName())) {
+            toolkitAction.setDescription(String.valueOf(evt.getNewValue()));
+        } else if (KEY_ENABLED.equals(evt.getPropertyName())) {
+            toolkitAction.setEnabled(castToBoolean(evt.getNewValue()));
+        } else if (KEY_SELECTED.equals(evt.getPropertyName())) {
+            toolkitAction.setSelected(castToBoolean(evt.getNewValue()));
+        } else if (KEY_ACCELERATOR.equals(evt.getPropertyName())) {
+            String accelerator = (String) evt.getNewValue();
+            if (!isBlank(accelerator))
+                toolkitAction.setAccelerator(accelerator);
+        } else if (KEY_ICON.equals(evt.getPropertyName())) {
+            String icon = (String) evt.getNewValue();
+            if (!isBlank(icon)) toolkitAction.setIcon(icon);
+        } else if (KEY_IMAGE.equals(evt.getPropertyName())) {
+            Image image = (Image) evt.getNewValue();
+            if (null != image) toolkitAction.setImage(image);
+        } else if (KEY_GRAPHIC.equals(evt.getPropertyName())) {
+            Node graphic = (Node) evt.getNewValue();
+            if (null != graphic) toolkitAction.setGraphic(graphic);
+        }
     }
 
     @Nullable

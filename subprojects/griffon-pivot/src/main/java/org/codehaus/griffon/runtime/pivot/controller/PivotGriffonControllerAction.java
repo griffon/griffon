@@ -43,27 +43,36 @@ public class PivotGriffonControllerAction extends AbstractAction {
         super(actionManager, controller, actionName);
         requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be null");
 
-        toolkitAction = new PivotAction(new RunnableWithArgs() {
-            public void run(@Nullable Object... args) {
-                actionManager.invokeAction(controller, actionName, args);
-            }
-        });
+        toolkitAction = createAction(actionManager, controller, actionName);
 
         addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(final PropertyChangeEvent evt) {
                 uiThreadManager.runInsideUIAsync(new Runnable() {
                     public void run() {
-                        if (KEY_NAME.equals(evt.getPropertyName())) {
-                            toolkitAction.setName((String) evt.getNewValue());
-                        } else if (KEY_DESCRIPTION.equals(evt.getPropertyName())) {
-                            toolkitAction.setDescription((String) evt.getNewValue());
-                        } else if (KEY_ENABLED.equals(evt.getPropertyName())) {
-                            toolkitAction.setEnabled((Boolean) evt.getNewValue());
-                        }
+                        handlePropertyChange(evt);
                     }
                 });
             }
         });
+    }
+
+    @Nonnull
+    protected PivotAction createAction(final @Nonnull ActionManager actionManager, final @Nonnull GriffonController controller, final @Nonnull String actionName) {
+        return new PivotAction(new RunnableWithArgs() {
+            public void run(@Nullable Object... args) {
+                actionManager.invokeAction(controller, actionName, args);
+            }
+        });
+    }
+
+    protected void handlePropertyChange(@Nonnull PropertyChangeEvent evt) {
+        if (KEY_NAME.equals(evt.getPropertyName())) {
+            toolkitAction.setName((String) evt.getNewValue());
+        } else if (KEY_DESCRIPTION.equals(evt.getPropertyName())) {
+            toolkitAction.setDescription((String) evt.getNewValue());
+        } else if (KEY_ENABLED.equals(evt.getPropertyName())) {
+            toolkitAction.setEnabled((Boolean) evt.getNewValue());
+        }
     }
 
     protected void doInitialize() {

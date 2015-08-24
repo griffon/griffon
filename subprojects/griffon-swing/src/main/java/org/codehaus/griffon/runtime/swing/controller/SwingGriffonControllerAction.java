@@ -63,47 +63,56 @@ public class SwingGriffonControllerAction extends AbstractAction {
         super(actionManager, controller, actionName);
         requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be null");
 
-        toolkitAction = new SwingAction(new RunnableWithArgs() {
-            public void run(@Nullable Object... args) {
-                actionManager.invokeAction(controller, actionName, args);
-            }
-        });
+        toolkitAction = createAction(actionManager, controller, actionName);
 
         addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(final PropertyChangeEvent evt) {
                 uiThreadManager.runInsideUIAsync(new Runnable() {
                     public void run() {
-                        if (KEY_NAME.equals(evt.getPropertyName())) {
-                            toolkitAction.putValue(Action.NAME, evt.getNewValue());
-                        } else if (KEY_COMMAND.equals(evt.getPropertyName())) {
-                            toolkitAction.putValue(Action.ACTION_COMMAND_KEY, evt.getNewValue());
-                        } else if (KEY_SHORT_DESCRIPTION.equals(evt.getPropertyName())) {
-                            toolkitAction.putValue(Action.SHORT_DESCRIPTION, evt.getNewValue());
-                        } else if (KEY_LONG_DESCRIPTION.equals(evt.getPropertyName())) {
-                            toolkitAction.putValue(Action.LONG_DESCRIPTION, evt.getNewValue());
-                        } else if (KEY_ENABLED.equals(evt.getPropertyName())) {
-                            toolkitAction.setEnabled((Boolean) evt.getNewValue());
-                        } else if (KEY_SELECTED.equals(evt.getPropertyName())) {
-                            toolkitAction.putValue(Action.SELECTED_KEY, evt.getNewValue());
-                        } else if (KEY_MNEMONIC.equals(evt.getPropertyName())) {
-                            String mnemonic = (String) evt.getNewValue();
-                            if (!isBlank(mnemonic)) {
-                                toolkitAction.putValue(Action.MNEMONIC_KEY, KeyStroke.getKeyStroke(mnemonic).getKeyCode());
-                            }
-                        } else if (KEY_ACCELERATOR.equals(evt.getPropertyName())) {
-                            String accelerator = (String) evt.getNewValue();
-                            if (!isBlank(accelerator)) {
-                                toolkitAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(accelerator));
-                            }
-                        } else if (KEY_SMALL_ICON.equals(evt.getPropertyName())) {
-                            handleIcon(evt.getNewValue(), Action.SMALL_ICON);
-                        } else if (KEY_LARGE_ICON.equals(evt.getPropertyName())) {
-                            handleIcon(evt.getNewValue(), Action.LARGE_ICON_KEY);
-                        }
+                        handlePropertyChange(evt);
                     }
                 });
             }
         });
+    }
+
+    @Nonnull
+    protected SwingAction createAction(final @Nonnull ActionManager actionManager, final @Nonnull GriffonController controller, final @Nonnull String actionName) {
+        return new SwingAction(new RunnableWithArgs() {
+            public void run(@Nullable Object... args) {
+                actionManager.invokeAction(controller, actionName, args);
+            }
+        });
+    }
+
+    protected void handlePropertyChange(@Nonnull PropertyChangeEvent evt) {
+        if (KEY_NAME.equals(evt.getPropertyName())) {
+            toolkitAction.putValue(Action.NAME, evt.getNewValue());
+        } else if (KEY_COMMAND.equals(evt.getPropertyName())) {
+            toolkitAction.putValue(Action.ACTION_COMMAND_KEY, evt.getNewValue());
+        } else if (KEY_SHORT_DESCRIPTION.equals(evt.getPropertyName())) {
+            toolkitAction.putValue(Action.SHORT_DESCRIPTION, evt.getNewValue());
+        } else if (KEY_LONG_DESCRIPTION.equals(evt.getPropertyName())) {
+            toolkitAction.putValue(Action.LONG_DESCRIPTION, evt.getNewValue());
+        } else if (KEY_ENABLED.equals(evt.getPropertyName())) {
+            toolkitAction.setEnabled((Boolean) evt.getNewValue());
+        } else if (KEY_SELECTED.equals(evt.getPropertyName())) {
+            toolkitAction.putValue(Action.SELECTED_KEY, evt.getNewValue());
+        } else if (KEY_MNEMONIC.equals(evt.getPropertyName())) {
+            String mnemonic = (String) evt.getNewValue();
+            if (!isBlank(mnemonic)) {
+                toolkitAction.putValue(Action.MNEMONIC_KEY, KeyStroke.getKeyStroke(mnemonic).getKeyCode());
+            }
+        } else if (KEY_ACCELERATOR.equals(evt.getPropertyName())) {
+            String accelerator = (String) evt.getNewValue();
+            if (!isBlank(accelerator)) {
+                toolkitAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(accelerator));
+            }
+        } else if (KEY_SMALL_ICON.equals(evt.getPropertyName())) {
+            handleIcon(evt.getNewValue(), Action.SMALL_ICON);
+        } else if (KEY_LARGE_ICON.equals(evt.getPropertyName())) {
+            handleIcon(evt.getNewValue(), Action.LARGE_ICON_KEY);
+        }
     }
 
     protected void handleIcon(@Nullable Object value, @Nonnull String key) {
