@@ -48,22 +48,22 @@ if (macosx) {
     }
 }
 
-apply plugin: 'de.gliderpilot.jnlp'
-
 if (!project.hasProperty('keyAlias')) ext.keyAlias = ''
 if (!project.hasProperty('keystorePwd')) ext.keystorePwd = ''
 
-
-jnlp {
-    useVersions = true
-    withXml {
-        information {
-            title project.name
-            vendor project.group ?: project.name
+if (keyAlias || keystorePwd) {
+    apply plugin: 'de.gliderpilot.jnlp'
+    jnlp {
+        useVersions = true
+        withXml {
+            information {
+                title project.name
+                vendor project.group ?: project.name
+            }
+            security {
+                'all-permissions'()
+            }
         }
-        security {
-            'all-permissions'()
-        }
+        signJarParams = [alias: keyAlias, storepass: keystorePwd]
     }
-    signJarParams = [alias: keyAlias, storepass: keystorePwd]
 }
