@@ -31,12 +31,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Control;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
@@ -223,6 +225,20 @@ public final class JavaFXUtils {
             }
         });
         control.setDisable(!action.isEnabled());
+    }
+
+    public static void configure(final @Nonnull CheckMenuItem control, final @Nonnull JavaFXAction action) {
+        configure((MenuItem) control, action);
+
+        action.selectedProperty().addListener((observableValue, oldValue, newValue) -> control.setSelected(newValue));
+        control.setSelected(action.isSelected());
+    }
+
+    public static void configure(final @Nonnull RadioMenuItem control, final @Nonnull JavaFXAction action) {
+        configure((MenuItem) control, action);
+
+        action.selectedProperty().addListener((observableValue, oldValue, newValue) -> control.setSelected(newValue));
+        control.setSelected(action.isSelected());
     }
 
     public static void configure(final @Nonnull MenuItem control, final @Nonnull JavaFXAction action) {
