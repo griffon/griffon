@@ -29,7 +29,7 @@
 </td>
 <td>
 <div class="infoBox" id="failures">
-<div class="counter">1</div>
+<div class="counter">0</div>
 <p>failures</p>
 </div>
 </td>
@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">3.075s</div>
+<div class="counter">3.228s</div>
 <p>duration</p>
 </div>
 </td>
@@ -50,8 +50,8 @@
 </div>
 </td>
 <td>
-<div class="infoBox failures" id="successRate">
-<div class="percent">50%</div>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
 <p>successful</p>
 </div>
 </td>
@@ -61,65 +61,13 @@
 <div id="tabs">
 <ul class="tabLinks">
 <li>
-<a href="#tab0">Failed tests</a>
+<a href="#tab0">Tests</a>
 </li>
 <li>
-<a href="#tab1">Tests</a>
-</li>
-<li>
-<a href="#tab2">Standard error</a>
+<a href="#tab1">Standard error</a>
 </li>
 </ul>
 <div id="tab0" class="tab">
-<h2>Failed tests</h2>
-<div class="test">
-<a name="doNotTypeNameAndClickButton"></a>
-<h3 class="failures">doNotTypeNameAndClickButton</h3>
-<span class="code">
-<pre>Assertion failed: 
-
-assert 'Howdy stranger!' == pivot.find('output', TextInput).text
-                         |  |     |                         |
-                         |  |     |                         &quot;&quot;
-                         |  |     org.apache.pivot.wtk.TextInput
-                         |  griffon.pivot.test.GriffonPivotFuncRule@3c39687c
-                         false
-
-	at org.codehaus.groovy.runtime.InvokerHelper.assertFailed(InvokerHelper.java:402)
-	at org.codehaus.groovy.runtime.ScriptBytecodeAdapter.assertFailed(ScriptBytecodeAdapter.java:650)
-	at sample.pivot.groovy.SampleIntegrationTest$_doNotTypeNameAndClickButton_closure4.doCall(SampleIntegrationTest.groovy:69)
-	at sample.pivot.groovy.SampleIntegrationTest$_doNotTypeNameAndClickButton_closure4.doCall(SampleIntegrationTest.groovy)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:497)
-	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:93)
-	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:325)
-	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:294)
-	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1019)
-	at groovy.lang.Closure.call(Closure.java:426)
-	at groovy.lang.Closure.call(Closure.java:420)
-	at groovy.lang.Closure.run(Closure.java:507)
-	at griffon.pivot.test.GriffonPivotFuncRule$1.run(GriffonPivotFuncRule.java:90)
-	at java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:301)
-	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:756)
-	at java.awt.EventQueue.access$500(EventQueue.java:97)
-	at java.awt.EventQueue$3.run(EventQueue.java:709)
-	at java.awt.EventQueue$3.run(EventQueue.java:703)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
-	at java.awt.EventQueue.dispatchEvent(EventQueue.java:726)
-	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:201)
-	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:116)
-	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:105)
-	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
-	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)
-	at java.awt.EventDispatchThread.run(EventDispatchThread.java:82)
-</pre>
-</span>
-</div>
-</div>
-<div id="tab1" class="tab">
 <h2>Tests</h2>
 <table>
 <thead>
@@ -130,24 +78,24 @@ assert 'Howdy stranger!' == pivot.find('output', TextInput).text
 </tr>
 </thead>
 <tr>
-<td class="failures">doNotTypeNameAndClickButton</td>
-<td>0.152s</td>
-<td class="failures">failed</td>
+<td class="success">doNotTypeNameAndClickButton</td>
+<td>0.170s</td>
+<td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">typeNameAndClickButton</td>
-<td>2.923s</td>
+<td>3.058s</td>
 <td class="success">passed</td>
 </tr>
 </table>
 </div>
-<div id="tab2" class="tab">
+<div id="tab1" class="tab">
 <h2>Standard error</h2>
 <span class="code">
 <pre>[AWT-EventQueue-0] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Griffon 2.4.0-SNAPSHOT
-[AWT-EventQueue-0] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Build: 2015-08-24T10:37:07.706+0000
+[AWT-EventQueue-0] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Build: 2015-08-24T20:19:20.379+0000
 [AWT-EventQueue-0] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - JVM: 1.8.0_60 (Oracle Corporation 25.60-b23)
-[AWT-EventQueue-0] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - OS: Linux 2.6.32-042stab108.8 amd64
+[AWT-EventQueue-0] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - OS: Linux 2.6.32-042stab105.14 amd64
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Creating module bindings
 [AWT-EventQueue-0] DEBUG griffon.util.ServiceLoaderUtils - Reading definitions from file:/home/travis/build/griffon/griffon/samples/sample-pivot-groovy/build/classes/main/META-INF/griffon
 [AWT-EventQueue-0] DEBUG griffon.util.AnnotationUtils - Current module order is [core, groovy, pivot-groovy, pivot, application, testApplicationBootstrapper$InnerClasses, testApplicationBootstrapper$Fields]
@@ -184,17 +132,17 @@ assert 'Howdy stranger!' == pivot.find('output', TextInput).text
 [AWT-EventQueue-0] TRACE griffon.util.AnnotationUtils - module dependency ordering complete
 [AWT-EventQueue-0] DEBUG griffon.util.AnnotationUtils - computed module order is [core, groovy, pivot, application, testApplicationBootstrapper$InnerClasses, testApplicationBootstrapper$Fields, pivot-groovy]
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.TestApplicationBootstrapper - computed Module order is [core, groovy, pivot, application, pivot-groovy, testApplicationBootstrapper$InnerClasses, testApplicationBootstrapper$Fields]
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from core:org.codehaus.griffon.runtime.core.DefaultApplicationModule@b0f2dcf
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from groovy:org.codehaus.griffon.runtime.groovy.GroovyModule@24ca5f5f
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from pivot:org.codehaus.griffon.runtime.pivot.PivotModule@75dbcad2
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from application:sample.pivot.groovy.ApplicationModule@6003043f
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from pivot-groovy:org.codehaus.griffon.runtime.pivot.PivotBuilderModule@12902ca5
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from testApplicationBootstrapper$InnerClasses:org.codehaus.griffon.runtime.core.TestApplicationBootstrapper$InnerClassesModule@6456b90f
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from testApplicationBootstrapper$Fields:org.codehaus.griffon.runtime.core.TestApplicationBootstrapper$FieldsModule@4f70720d
-[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - InstanceBinding[source=griffon.core.GriffonApplication, instance=org.codehaus.griffon.runtime.pivot.TestDesktopPivotApplication@353e3f6d, singleton=true]
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from core:org.codehaus.griffon.runtime.core.DefaultApplicationModule@2403b24e
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from groovy:org.codehaus.griffon.runtime.groovy.GroovyModule@52d1a632
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from pivot:org.codehaus.griffon.runtime.pivot.PivotModule@1283d73
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from application:sample.pivot.groovy.ApplicationModule@1a1a4fff
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from pivot-groovy:org.codehaus.griffon.runtime.pivot.PivotBuilderModule@23b20f30
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from testApplicationBootstrapper$InnerClasses:org.codehaus.griffon.runtime.core.TestApplicationBootstrapper$InnerClassesModule@7c0dcd42
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from testApplicationBootstrapper$Fields:org.codehaus.griffon.runtime.core.TestApplicationBootstrapper$FieldsModule@3c0eb415
+[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - InstanceBinding[source=griffon.core.GriffonApplication, instance=org.codehaus.griffon.runtime.pivot.TestDesktopPivotApplication@526ae86f, singleton=true]
+[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=sample.pivot.groovy.SampleService, target=sample.pivot.groovy.SampleService, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=sample.pivot.groovy.SampleView, target=sample.pivot.groovy.SampleView, singleton=false]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=sample.pivot.groovy.SampleController, target=sample.pivot.groovy.SampleController, singleton=false]
-[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=sample.pivot.groovy.SampleService, target=sample.pivot.groovy.SampleService, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - InstanceBinding[source=org.apache.pivot.wtk.Display, instance=org.apache.pivot.wtk.Display, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.ApplicationClassLoader, target=org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderTypeBinding[source=griffon.core.env.Metadata, providerType=org.codehaus.griffon.runtime.core.env.MetadataProvider, singleton=true]
@@ -204,7 +152,7 @@ assert 'Howdy stranger!' == pivot.find('output', TextInput).text
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.ApplicationConfigurer, target=org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.resources.ResourceHandler, target=org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.util.CompositeResourceBundleBuilder, target=org.codehaus.griffon.runtime.groovy.util.GroovyAwareCompositeResourceBundleBuilder, singleton=true]
-[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=java.util.ResourceBundle, classifier=@javax.inject.Named(value=applicationResourceBundle), provider=org.codehaus.griffon.runtime.util.ResourceBundleProvider@57a8cfd4, singleton=true]
+[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=java.util.ResourceBundle, classifier=@javax.inject.Named(value=applicationResourceBundle), provider=org.codehaus.griffon.runtime.util.ResourceBundleProvider@443f9f77, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=org.codehaus.griffon.runtime.core.ConfigurationDecoratorFactory, target=org.codehaus.griffon.runtime.core.DefaultConfigurationDecoratorFactory, singleton=false]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderTypeBinding[source=griffon.core.Configuration, providerType=org.codehaus.griffon.runtime.core.ResourceBundleConfigurationProvider, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.ExecutorServiceManager, target=org.codehaus.griffon.runtime.core.DefaultExecutorServiceManager, singleton=true]
@@ -212,17 +160,17 @@ assert 'Howdy stranger!' == pivot.find('output', TextInput).text
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.event.EventRouter, target=org.codehaus.griffon.runtime.core.event.DefaultEventRouter, singleton=false]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=org.codehaus.griffon.runtime.core.resources.ResourceResolverDecoratorFactory, target=org.codehaus.griffon.runtime.groovy.resources.GroovyAwareResourceResolverDecoratorFactory, singleton=false]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=org.codehaus.griffon.runtime.core.i18n.MessageSourceDecoratorFactory, target=org.codehaus.griffon.runtime.groovy.i18n.GroovyAwareMessageSourceDecoratorFactory, singleton=false]
-[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.resources.ResourceResolver, classifier=@javax.inject.Named(value=applicationResourceResolver), provider=org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider@57695b70, singleton=true]
-[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.i18n.MessageSource, classifier=@javax.inject.Named(value=applicationMessageSource), provider=org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider@18a70ac2, singleton=true]
+[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.resources.ResourceResolver, classifier=@javax.inject.Named(value=applicationResourceResolver), provider=org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider@3f14a1fc, singleton=true]
+[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.i18n.MessageSource, classifier=@javax.inject.Named(value=applicationMessageSource), provider=org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider@10602448, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.resources.ResourceInjector, classifier=@javax.inject.Named(value=applicationResourceInjector), target=org.codehaus.griffon.runtime.core.resources.DefaultApplicationResourceInjector, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderTypeBinding[source=java.util.concurrent.ExecutorService, classifier=@javax.inject.Named(value=defaultExecutorService), providerType=org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.threading.UIThreadManager, target=org.codehaus.griffon.runtime.pivot.PivotUIThreadManager, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.mvc.MVCGroupManager, target=org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroupManager, singleton=true]
-[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Initialize), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@5c269bec, singleton=true]
-[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Startup), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@4d6129d3, singleton=true]
-[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Ready), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@504e59d4, singleton=true]
-[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Shutdown), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@709fb805, singleton=true]
-[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Stop), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@180eb401, singleton=true]
+[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Initialize), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@15cc9fbb, singleton=true]
+[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Startup), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@2d306e52, singleton=true]
+[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Ready), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@37b12149, singleton=true]
+[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Shutdown), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@26e20193, singleton=true]
+[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Stop), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@572273b3, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.view.WindowManager, target=org.codehaus.griffon.runtime.pivot.DefaultPivotWindowManager, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.controller.ActionManager, target=org.codehaus.griffon.runtime.pivot.controller.PivotActionManager, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.artifact.ArtifactManager, target=org.codehaus.griffon.runtime.core.artifact.DefaultArtifactManager, singleton=true]
@@ -241,22 +189,22 @@ assert 'Howdy stranger!' == pivot.find('output', TextInput).text
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.pivot.PivotWindowDisplayHandler, classifier=@javax.inject.Named(value=windowDisplayHandler), target=org.codehaus.griffon.runtime.pivot.GroovyAwareConfigurablePivotWindowDisplayHandler, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.util.BuilderCustomizer, classifier=@javax.inject.Named(value=pivot), target=griffon.builder.pivot.PivotBuilderCustomizer, singleton=true]
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Creating application injector
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Injector will be created by org.codehaus.griffon.runtime.injection.GuiceInjectorFactory@7aeb631c
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Injector will be created by org.codehaus.griffon.runtime.injection.GuiceInjectorFactory@5c2cd44d
 [AWT-EventQueue-0] DEBUG griffon.util.AnnotationUtils - computed module order is []
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=application
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@60554ae4; key=application; value='{title=Pivot + Groovy, startupGroups=[sample], autoShutdown=true}'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3f40c40b; key=application; value='{title=Pivot + Groovy, startupGroups=[sample], autoShutdown=true}'
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=application.title
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@60554ae4; key=application.title; value='Pivot + Groovy'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3f40c40b; key=application.title; value='Pivot + Groovy'
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=application.startupGroups
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@60554ae4; key=application.startupGroups; value='[sample]'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3f40c40b; key=application.startupGroups; value='[sample]'
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=application.autoShutdown
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@60554ae4; key=application.autoShutdown; value='true'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3f40c40b; key=application.autoShutdown; value='true'
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@60554ae4; key=mvcGroups; value='{sample={view=sample.pivot.groovy.SampleView, controller=sample.pivot.groovy.SampleController}}'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3f40c40b; key=mvcGroups; value='{sample={view=sample.pivot.groovy.SampleView, controller=sample.pivot.groovy.SampleController}}'
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups.sample.view
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@60554ae4; key=mvcGroups.sample.view; value='sample.pivot.groovy.SampleView'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3f40c40b; key=mvcGroups.sample.view; value='sample.pivot.groovy.SampleView'
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups.sample.controller
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@60554ae4; key=mvcGroups.sample.controller; value='sample.pivot.groovy.SampleController'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3f40c40b; key=mvcGroups.sample.controller; value='sample.pivot.groovy.SampleController'
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler on UncaughtMVCGroupConfigurationException
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler on UncaughtMVCGroupInstantiationException
 [AWT-EventQueue-0] DEBUG griffon.util.AnnotationUtils - Current handler order is [default]
@@ -312,7 +260,7 @@ assert 'Howdy stranger!' == pivot.find('output', TextInput).text
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer$2 on NewInstance
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=application.lifecycle.handler.disable
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=application
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@60554ae4; key=application; value='{title=Pivot + Groovy, startupGroups=[sample], autoShutdown=true}'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3f40c40b; key=application; value='{title=Pivot + Groovy, startupGroups=[sample], autoShutdown=true}'
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=platform.handler.linux64
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=platform
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.PlatformHandlerProvider - Using org.codehaus.griffon.runtime.core.DefaultPlatformHandler as PlatformHandler
@@ -326,22 +274,22 @@ assert 'Howdy stranger!' == pivot.find('output', TextInput).text
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'LoadAddonsStart' synchronously
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.addon.AbstractAddonManager - Loading addon groovy with class org.codehaus.griffon.runtime.groovy.GroovyAddon
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'LoadAddonStart' synchronously
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.groovy.GroovyAddon@7f49fa21
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.groovy.GroovyAddon@2b82741c
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'LoadAddonEnd' synchronously
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.addon.AbstractAddonManager - Loaded addon groovy
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.addon.AbstractAddonManager - Loading addons [END]
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'LoadAddonsEnd' synchronously
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@60554ae4; key=mvcGroups; value='{sample={view=sample.pivot.groovy.SampleView, controller=sample.pivot.groovy.SampleController}}'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3f40c40b; key=mvcGroups; value='{sample={view=sample.pivot.groovy.SampleView, controller=sample.pivot.groovy.SampleController}}'
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Adding MVC group sample
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer$3 on NewInstance
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=griffon.controller.action.handler.order
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=griffon
 [AWT-EventQueue-0] DEBUG griffon.util.AnnotationUtils - computed handler order is []
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'model': org.codehaus.griffon.runtime.core.artifact.ModelArtifactHandler@10272414
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'view': org.codehaus.griffon.runtime.core.artifact.ViewArtifactHandler@4db8c812
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'controller': org.codehaus.griffon.runtime.core.artifact.ControllerArtifactHandler@6412a159
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'service': org.codehaus.griffon.runtime.core.artifact.ServiceArtifactHandler@1d20300a
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'model': org.codehaus.griffon.runtime.core.artifact.ModelArtifactHandler@6495d7d5
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'view': org.codehaus.griffon.runtime.core.artifact.ViewArtifactHandler@664cfe9b
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'controller': org.codehaus.griffon.runtime.core.artifact.ControllerArtifactHandler@116cb13f
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'service': org.codehaus.griffon.runtime.core.artifact.ServiceArtifactHandler@778779cf
 [AWT-EventQueue-0] DEBUG griffon.util.ServiceLoaderUtils - Reading griffon.core.artifact.GriffonView definitions from file:/home/travis/build/griffon/griffon/samples/sample-pivot-groovy/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonView
 [AWT-EventQueue-0] DEBUG griffon.util.ServiceLoaderUtils - Reading griffon.core.artifact.GriffonController definitions from file:/home/travis/build/griffon/griffon/samples/sample-pivot-groovy/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonController
 [AWT-EventQueue-0] DEBUG griffon.util.ServiceLoaderUtils - Reading griffon.core.artifact.GriffonService definitions from file:/home/travis/build/griffon/griffon/samples/sample-pivot-groovy/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonService
@@ -351,7 +299,7 @@ assert 'Howdy stranger!' == pivot.find('output', TextInput).text
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'BootstrapEnd' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'StartupStart' synchronously
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.startupGroups
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@60554ae4; key=application.startupGroups; value='[sample]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3f40c40b; key=application.startupGroups; value='[sample]'
 [Test worker] INFO org.codehaus.griffon.runtime.pivot.TestDesktopPivotApplication - Initializing all startup groups: [sample]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group sample
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'sample' with name 'sample'
@@ -388,30 +336,30 @@ assert 'Howdy stranger!' == pivot.find('output', TextInput).text
 [Test worker] DEBUG griffon.util.AnnotationUtils - computed customizer order is [core, pivot]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
 [Test worker] TRACE griffon.addon.GroovyAddon - Adding action sayHelloAction to sample:sample:builder
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group sample:org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup@5335bde4[sample:sample]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group sample:org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup@6525ddde[sample:sample]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'sample'
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=application.title
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@60554ae4; key=application.title; value='Pivot + Groovy'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3f40c40b; key=application.title; value='Pivot + Groovy'
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.view.AbstractWindowManager - Attaching window with name: 'window0' at index 0 org.apache.pivot.wtk.Window
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'WindowAttached' synchronously
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=name.label
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@7f1c9cf5; key=name.label; value='Please enter your name'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@13b0473d; key=name.label; value='Please enter your name'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.lifecycle.handler.disable
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@60554ae4; key=application; value='{title=Pivot + Groovy, startupGroups=[sample], autoShutdown=true}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3f40c40b; key=application; value='{title=Pivot + Groovy, startupGroups=[sample], autoShutdown=true}'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'StartupEnd' synchronously
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager.startingWindow
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.view.AbstractWindowManager - windowManager.startingWindow configured to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.view.AbstractWindowManager - No startingWindow configured, selecting the first one from the windows list
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.view.AbstractWindowManager - Starting Window is org.apache.pivot.wtk.Window
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'ReadyStart' synchronously
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.view.AbstractWindowManager - Showing window with name: 'window0' at index 0 org.apache.pivot.wtk.Window
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'ReadyStart' synchronously
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.lifecycle.handler.disable
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@60554ae4; key=application; value='{title=Pivot + Groovy, startupGroups=[sample], autoShutdown=true}'
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3f40c40b; key=application; value='{title=Pivot + Groovy, startupGroups=[sample], autoShutdown=true}'
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'ReadyEnd' synchronously
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager.startingWindow
@@ -433,7 +381,7 @@ assert 'Howdy stranger!' == pivot.find('output', TextInput).text
 [pool-1-thread-1] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Executing 0 handlers for sample.pivot.groovy.SampleController.sayHello
 [pool-1-thread-1] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Status before execution of sample.pivot.groovy.SampleController.sayHello is OK
 [pool-1-thread-1] TRACE griffon.util.CompositeResourceBundle - Searching key=greeting.parameterized
-[pool-1-thread-1] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@7f1c9cf5; key=greeting.parameterized; value='Hello {0}'
+[pool-1-thread-1] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@13b0473d; key=greeting.parameterized; value='Hello {0}'
 [pool-1-thread-1] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Status after execution of sample.pivot.groovy.SampleController.sayHello is OK
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'ShutdownRequested' synchronously
 [Test worker] INFO org.codehaus.griffon.runtime.pivot.TestDesktopPivotApplication - Shutdown is in process
@@ -444,31 +392,31 @@ assert 'Howdy stranger!' == pivot.find('output', TextInput).text
 [Test worker] DEBUG org.codehaus.griffon.runtime.pivot.TestDesktopPivotApplication - Shutdown stage 3: destroy all MVC groups
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.view.AbstractWindowManager - Hiding window with name: 'window0' at index 0 org.apache.pivot.wtk.Window
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group sample
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'sample' points to org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup@5335bde4[sample:sample]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'sample' points to org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup@6525ddde[sample:sample]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'sample'
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener sample.pivot.groovy.SampleController@61fd361
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener sample.pivot.groovy.SampleController@215a6e92
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.view.ConfigurableWindowDisplayHandler - Hiding window0 with default handler
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group sample:org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup@5335bde4[sample:sample]
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group sample:org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup@6525ddde[sample:sample]
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'WindowHidden' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group sample
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'sample' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
 [Test worker] DEBUG org.codehaus.griffon.runtime.pivot.TestDesktopPivotApplication - Shutdown stage 4: execute Shutdown script
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.lifecycle.handler.disable
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@60554ae4; key=application; value='{title=Pivot + Groovy, startupGroups=[sample], autoShutdown=true}'
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'WindowHidden' synchronously
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3f40c40b; key=application; value='{title=Pivot + Groovy, startupGroups=[sample], autoShutdown=true}'
 [AWT-EventQueue-0] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Griffon 2.4.0-SNAPSHOT
-[AWT-EventQueue-0] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Build: 2015-08-24T10:37:07.706+0000
+[AWT-EventQueue-0] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Build: 2015-08-24T20:19:20.379+0000
 [AWT-EventQueue-0] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - JVM: 1.8.0_60 (Oracle Corporation 25.60-b23)
-[AWT-EventQueue-0] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - OS: Linux 2.6.32-042stab108.8 amd64
+[AWT-EventQueue-0] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - OS: Linux 2.6.32-042stab105.14 amd64
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Creating module bindings
 [AWT-EventQueue-0] DEBUG griffon.util.ServiceLoaderUtils - Reading definitions from file:/home/travis/build/griffon/griffon/samples/sample-pivot-groovy/build/classes/main/META-INF/griffon
 [AWT-EventQueue-0] DEBUG griffon.util.AnnotationUtils - Current module order is [core, groovy, pivot-groovy, pivot, application, testApplicationBootstrapper$InnerClasses, testApplicationBootstrapper$Fields]
@@ -505,17 +453,17 @@ assert 'Howdy stranger!' == pivot.find('output', TextInput).text
 [AWT-EventQueue-0] TRACE griffon.util.AnnotationUtils - module dependency ordering complete
 [AWT-EventQueue-0] DEBUG griffon.util.AnnotationUtils - computed module order is [core, groovy, pivot, application, testApplicationBootstrapper$InnerClasses, testApplicationBootstrapper$Fields, pivot-groovy]
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.TestApplicationBootstrapper - computed Module order is [core, groovy, pivot, application, pivot-groovy, testApplicationBootstrapper$InnerClasses, testApplicationBootstrapper$Fields]
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from core:org.codehaus.griffon.runtime.core.DefaultApplicationModule@16271ad7
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from groovy:org.codehaus.griffon.runtime.groovy.GroovyModule@bc9a
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from pivot:org.codehaus.griffon.runtime.pivot.PivotModule@43034190
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from application:sample.pivot.groovy.ApplicationModule@72803840
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from pivot-groovy:org.codehaus.griffon.runtime.pivot.PivotBuilderModule@5cdf6565
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from testApplicationBootstrapper$InnerClasses:org.codehaus.griffon.runtime.core.TestApplicationBootstrapper$InnerClassesModule@593ef608
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from testApplicationBootstrapper$Fields:org.codehaus.griffon.runtime.core.TestApplicationBootstrapper$FieldsModule@68237e
-[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - InstanceBinding[source=griffon.core.GriffonApplication, instance=org.codehaus.griffon.runtime.pivot.TestDesktopPivotApplication@3b98738f, singleton=true]
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from core:org.codehaus.griffon.runtime.core.DefaultApplicationModule@313985a4
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from groovy:org.codehaus.griffon.runtime.groovy.GroovyModule@62c7848d
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from pivot:org.codehaus.griffon.runtime.pivot.PivotModule@39116237
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from application:sample.pivot.groovy.ApplicationModule@40dcabff
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from pivot-groovy:org.codehaus.griffon.runtime.pivot.PivotBuilderModule@3d3502e5
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from testApplicationBootstrapper$InnerClasses:org.codehaus.griffon.runtime.core.TestApplicationBootstrapper$InnerClassesModule@63880a22
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from testApplicationBootstrapper$Fields:org.codehaus.griffon.runtime.core.TestApplicationBootstrapper$FieldsModule@513adcbe
+[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - InstanceBinding[source=griffon.core.GriffonApplication, instance=org.codehaus.griffon.runtime.pivot.TestDesktopPivotApplication@450934bc, singleton=true]
+[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=sample.pivot.groovy.SampleService, target=sample.pivot.groovy.SampleService, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=sample.pivot.groovy.SampleView, target=sample.pivot.groovy.SampleView, singleton=false]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=sample.pivot.groovy.SampleController, target=sample.pivot.groovy.SampleController, singleton=false]
-[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=sample.pivot.groovy.SampleService, target=sample.pivot.groovy.SampleService, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - InstanceBinding[source=org.apache.pivot.wtk.Display, instance=org.apache.pivot.wtk.Display, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.ApplicationClassLoader, target=org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderTypeBinding[source=griffon.core.env.Metadata, providerType=org.codehaus.griffon.runtime.core.env.MetadataProvider, singleton=true]
@@ -525,7 +473,7 @@ assert 'Howdy stranger!' == pivot.find('output', TextInput).text
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.ApplicationConfigurer, target=org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.resources.ResourceHandler, target=org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.util.CompositeResourceBundleBuilder, target=org.codehaus.griffon.runtime.groovy.util.GroovyAwareCompositeResourceBundleBuilder, singleton=true]
-[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=java.util.ResourceBundle, classifier=@javax.inject.Named(value=applicationResourceBundle), provider=org.codehaus.griffon.runtime.util.ResourceBundleProvider@2b074e6, singleton=true]
+[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=java.util.ResourceBundle, classifier=@javax.inject.Named(value=applicationResourceBundle), provider=org.codehaus.griffon.runtime.util.ResourceBundleProvider@5130af96, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=org.codehaus.griffon.runtime.core.ConfigurationDecoratorFactory, target=org.codehaus.griffon.runtime.core.DefaultConfigurationDecoratorFactory, singleton=false]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderTypeBinding[source=griffon.core.Configuration, providerType=org.codehaus.griffon.runtime.core.ResourceBundleConfigurationProvider, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.ExecutorServiceManager, target=org.codehaus.griffon.runtime.core.DefaultExecutorServiceManager, singleton=true]
@@ -533,17 +481,17 @@ assert 'Howdy stranger!' == pivot.find('output', TextInput).text
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.event.EventRouter, target=org.codehaus.griffon.runtime.core.event.DefaultEventRouter, singleton=false]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=org.codehaus.griffon.runtime.core.resources.ResourceResolverDecoratorFactory, target=org.codehaus.griffon.runtime.groovy.resources.GroovyAwareResourceResolverDecoratorFactory, singleton=false]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=org.codehaus.griffon.runtime.core.i18n.MessageSourceDecoratorFactory, target=org.codehaus.griffon.runtime.groovy.i18n.GroovyAwareMessageSourceDecoratorFactory, singleton=false]
-[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.resources.ResourceResolver, classifier=@javax.inject.Named(value=applicationResourceResolver), provider=org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider@1cb2256, singleton=true]
-[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.i18n.MessageSource, classifier=@javax.inject.Named(value=applicationMessageSource), provider=org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider@2d2e8ffc, singleton=true]
+[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.resources.ResourceResolver, classifier=@javax.inject.Named(value=applicationResourceResolver), provider=org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider@6821c591, singleton=true]
+[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.i18n.MessageSource, classifier=@javax.inject.Named(value=applicationMessageSource), provider=org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider@24470d8e, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.resources.ResourceInjector, classifier=@javax.inject.Named(value=applicationResourceInjector), target=org.codehaus.griffon.runtime.core.resources.DefaultApplicationResourceInjector, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderTypeBinding[source=java.util.concurrent.ExecutorService, classifier=@javax.inject.Named(value=defaultExecutorService), providerType=org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.threading.UIThreadManager, target=org.codehaus.griffon.runtime.pivot.PivotUIThreadManager, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.mvc.MVCGroupManager, target=org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroupManager, singleton=true]
-[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Initialize), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@55d285dd, singleton=true]
-[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Startup), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@5444ccc5, singleton=true]
-[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Ready), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@c458d89, singleton=true]
-[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Shutdown), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@554da292, singleton=true]
-[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Stop), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@14f0298b, singleton=true]
+[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Initialize), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@28e7616e, singleton=true]
+[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Startup), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@7c7f27fb, singleton=true]
+[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Ready), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@1a1468a8, singleton=true]
+[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Shutdown), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@6a33d19, singleton=true]
+[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Stop), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@15dcd0b2, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.view.WindowManager, target=org.codehaus.griffon.runtime.pivot.DefaultPivotWindowManager, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.controller.ActionManager, target=org.codehaus.griffon.runtime.pivot.controller.PivotActionManager, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.artifact.ArtifactManager, target=org.codehaus.griffon.runtime.core.artifact.DefaultArtifactManager, singleton=true]
@@ -562,22 +510,22 @@ assert 'Howdy stranger!' == pivot.find('output', TextInput).text
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.pivot.PivotWindowDisplayHandler, classifier=@javax.inject.Named(value=windowDisplayHandler), target=org.codehaus.griffon.runtime.pivot.GroovyAwareConfigurablePivotWindowDisplayHandler, singleton=true]
 [AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.util.BuilderCustomizer, classifier=@javax.inject.Named(value=pivot), target=griffon.builder.pivot.PivotBuilderCustomizer, singleton=true]
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Creating application injector
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Injector will be created by org.codehaus.griffon.runtime.injection.GuiceInjectorFactory@7ec86ec9
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Injector will be created by org.codehaus.griffon.runtime.injection.GuiceInjectorFactory@3625bd5c
 [AWT-EventQueue-0] DEBUG griffon.util.AnnotationUtils - computed module order is []
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=application
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@400928f1; key=application; value='{title=Pivot + Groovy, startupGroups=[sample], autoShutdown=true}'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@aa0abff; key=application; value='{title=Pivot + Groovy, startupGroups=[sample], autoShutdown=true}'
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=application.title
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@400928f1; key=application.title; value='Pivot + Groovy'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@aa0abff; key=application.title; value='Pivot + Groovy'
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=application.startupGroups
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@400928f1; key=application.startupGroups; value='[sample]'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@aa0abff; key=application.startupGroups; value='[sample]'
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=application.autoShutdown
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@400928f1; key=application.autoShutdown; value='true'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@aa0abff; key=application.autoShutdown; value='true'
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@400928f1; key=mvcGroups; value='{sample={view=sample.pivot.groovy.SampleView, controller=sample.pivot.groovy.SampleController}}'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@aa0abff; key=mvcGroups; value='{sample={view=sample.pivot.groovy.SampleView, controller=sample.pivot.groovy.SampleController}}'
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups.sample.view
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@400928f1; key=mvcGroups.sample.view; value='sample.pivot.groovy.SampleView'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@aa0abff; key=mvcGroups.sample.view; value='sample.pivot.groovy.SampleView'
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups.sample.controller
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@400928f1; key=mvcGroups.sample.controller; value='sample.pivot.groovy.SampleController'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@aa0abff; key=mvcGroups.sample.controller; value='sample.pivot.groovy.SampleController'
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler on UncaughtMVCGroupConfigurationException
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler on UncaughtMVCGroupInstantiationException
 [AWT-EventQueue-0] DEBUG griffon.util.AnnotationUtils - Current handler order is [default]
@@ -633,7 +581,7 @@ assert 'Howdy stranger!' == pivot.find('output', TextInput).text
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer$2 on NewInstance
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=application.lifecycle.handler.disable
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=application
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@400928f1; key=application; value='{title=Pivot + Groovy, startupGroups=[sample], autoShutdown=true}'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@aa0abff; key=application; value='{title=Pivot + Groovy, startupGroups=[sample], autoShutdown=true}'
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=platform.handler.linux64
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=platform
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.PlatformHandlerProvider - Using org.codehaus.griffon.runtime.core.DefaultPlatformHandler as PlatformHandler
@@ -647,22 +595,22 @@ assert 'Howdy stranger!' == pivot.find('output', TextInput).text
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'LoadAddonsStart' synchronously
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.addon.AbstractAddonManager - Loading addon groovy with class org.codehaus.griffon.runtime.groovy.GroovyAddon
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'LoadAddonStart' synchronously
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.groovy.GroovyAddon@555d1ed1
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.groovy.GroovyAddon@4786c209
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'LoadAddonEnd' synchronously
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.addon.AbstractAddonManager - Loaded addon groovy
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.addon.AbstractAddonManager - Loading addons [END]
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'LoadAddonsEnd' synchronously
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@400928f1; key=mvcGroups; value='{sample={view=sample.pivot.groovy.SampleView, controller=sample.pivot.groovy.SampleController}}'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@aa0abff; key=mvcGroups; value='{sample={view=sample.pivot.groovy.SampleView, controller=sample.pivot.groovy.SampleController}}'
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Adding MVC group sample
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer$3 on NewInstance
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=griffon.controller.action.handler.order
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=griffon
 [AWT-EventQueue-0] DEBUG griffon.util.AnnotationUtils - computed handler order is []
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'model': org.codehaus.griffon.runtime.core.artifact.ModelArtifactHandler@75046518
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'view': org.codehaus.griffon.runtime.core.artifact.ViewArtifactHandler@64de45f1
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'controller': org.codehaus.griffon.runtime.core.artifact.ControllerArtifactHandler@76868
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'service': org.codehaus.griffon.runtime.core.artifact.ServiceArtifactHandler@217fc823
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'model': org.codehaus.griffon.runtime.core.artifact.ModelArtifactHandler@6b485d00
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'view': org.codehaus.griffon.runtime.core.artifact.ViewArtifactHandler@1fd3d6d0
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'controller': org.codehaus.griffon.runtime.core.artifact.ControllerArtifactHandler@5e8448c7
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'service': org.codehaus.griffon.runtime.core.artifact.ServiceArtifactHandler@3122fa16
 [AWT-EventQueue-0] DEBUG griffon.util.ServiceLoaderUtils - Reading griffon.core.artifact.GriffonView definitions from file:/home/travis/build/griffon/griffon/samples/sample-pivot-groovy/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonView
 [AWT-EventQueue-0] DEBUG griffon.util.ServiceLoaderUtils - Reading griffon.core.artifact.GriffonController definitions from file:/home/travis/build/griffon/griffon/samples/sample-pivot-groovy/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonController
 [AWT-EventQueue-0] DEBUG griffon.util.ServiceLoaderUtils - Reading griffon.core.artifact.GriffonService definitions from file:/home/travis/build/griffon/griffon/samples/sample-pivot-groovy/build/classes/main/META-INF/griffon/griffon.core.artifact.GriffonService
@@ -672,7 +620,7 @@ assert 'Howdy stranger!' == pivot.find('output', TextInput).text
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'BootstrapEnd' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'StartupStart' synchronously
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.startupGroups
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@400928f1; key=application.startupGroups; value='[sample]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@aa0abff; key=application.startupGroups; value='[sample]'
 [Test worker] INFO org.codehaus.griffon.runtime.pivot.TestDesktopPivotApplication - Initializing all startup groups: [sample]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group sample
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'sample' with name 'sample'
@@ -709,18 +657,18 @@ assert 'Howdy stranger!' == pivot.find('output', TextInput).text
 [Test worker] DEBUG griffon.util.AnnotationUtils - computed customizer order is [core, pivot]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
 [Test worker] TRACE griffon.addon.GroovyAddon - Adding action sayHelloAction to sample:sample:builder
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group sample:org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup@7c6e2799[sample:sample]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group sample:org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup@12a95fb7[sample:sample]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'sample'
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=application.title
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@400928f1; key=application.title; value='Pivot + Groovy'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@aa0abff; key=application.title; value='Pivot + Groovy'
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.view.AbstractWindowManager - Attaching window with name: 'window1' at index 0 org.apache.pivot.wtk.Window
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'WindowAttached' synchronously
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=name.label
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@2aa2da81; key=name.label; value='Please enter your name'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@63e5f4a7; key=name.label; value='Please enter your name'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.lifecycle.handler.disable
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@400928f1; key=application; value='{title=Pivot + Groovy, startupGroups=[sample], autoShutdown=true}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@aa0abff; key=application; value='{title=Pivot + Groovy, startupGroups=[sample], autoShutdown=true}'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'StartupEnd' synchronously
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager.startingWindow
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
@@ -729,23 +677,23 @@ assert 'Howdy stranger!' == pivot.find('output', TextInput).text
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.view.AbstractWindowManager - Starting Window is org.apache.pivot.wtk.Window
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'ReadyStart' synchronously
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.view.AbstractWindowManager - Showing window with name: 'window1' at index 0 org.apache.pivot.wtk.Window
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.lifecycle.handler.disable
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@400928f1; key=application; value='{title=Pivot + Groovy, startupGroups=[sample], autoShutdown=true}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.lifecycle.handler.disable
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@aa0abff; key=application; value='{title=Pivot + Groovy, startupGroups=[sample], autoShutdown=true}'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
+[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.view.ConfigurableWindowDisplayHandler - Showing window1 with default handler
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'ReadyEnd' synchronously
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager.startingWindow
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.view.AbstractWindowManager - windowManager.startingWindow configured to null
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.view.AbstractWindowManager - No startingWindow configured, selecting the first one from the windows list
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.view.AbstractWindowManager - Starting Window is org.apache.pivot.wtk.Window
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
-[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.view.ConfigurableWindowDisplayHandler - Showing window1 with default handler
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'WindowShown' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.view.AbstractWindowManager - Starting Window is org.apache.pivot.wtk.Window
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=griffon.disable.threading.injection
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=griffon
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=controller.threading.default
@@ -754,7 +702,7 @@ assert 'Howdy stranger!' == pivot.find('output', TextInput).text
 [pool-2-thread-1] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Executing 0 handlers for sample.pivot.groovy.SampleController.sayHello
 [pool-2-thread-1] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Status before execution of sample.pivot.groovy.SampleController.sayHello is OK
 [pool-2-thread-1] TRACE griffon.util.CompositeResourceBundle - Searching key=greeting.default
-[pool-2-thread-1] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@2aa2da81; key=greeting.default; value='Howdy stranger!'
+[pool-2-thread-1] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@63e5f4a7; key=greeting.default; value='Howdy stranger!'
 [pool-2-thread-1] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Status after execution of sample.pivot.groovy.SampleController.sayHello is OK
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'ShutdownRequested' synchronously
 [Test worker] INFO org.codehaus.griffon.runtime.pivot.TestDesktopPivotApplication - Shutdown is in process
@@ -764,28 +712,28 @@ assert 'Howdy stranger!' == pivot.find('output', TextInput).text
 [Test worker] DEBUG org.codehaus.griffon.runtime.pivot.TestDesktopPivotApplication - Shutdown stage 2: notify all shutdown handlers
 [Test worker] DEBUG org.codehaus.griffon.runtime.pivot.TestDesktopPivotApplication - Shutdown stage 3: destroy all MVC groups
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group sample
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'sample' points to org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup@7c6e2799[sample:sample]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'sample' points to org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup@12a95fb7[sample:sample]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'sample'
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener sample.pivot.groovy.SampleController@7bcc0c4a
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Removing listener sample.pivot.groovy.SampleController@71a74d56
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.view.AbstractWindowManager - Hiding window with name: 'window1' at index 0 org.apache.pivot.wtk.Window
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
 [AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
-[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.view.ConfigurableWindowDisplayHandler - Hiding window1 with default handler
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
-[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
-[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'WindowHidden' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group sample:org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup@7c6e2799[sample:sample]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group sample:org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup@12a95fb7[sample:sample]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group sample
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'sample' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.pivot.TestDesktopPivotApplication - Shutdown stage 4: execute Shutdown script
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.lifecycle.handler.disable
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@400928f1; key=application; value='{title=Pivot + Groovy, startupGroups=[sample], autoShutdown=true}'
+[AWT-EventQueue-0] TRACE org.codehaus.griffon.runtime.core.view.ConfigurableWindowDisplayHandler - Hiding window1 with default handler
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@aa0abff; key=application; value='{title=Pivot + Groovy, startupGroups=[sample], autoShutdown=true}'
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
+[AWT-EventQueue-0] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
+[AWT-EventQueue-0] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'WindowHidden' synchronously
 </pre>
 </span>
 </div>
@@ -797,7 +745,7 @@ assert 'Howdy stranger!' == pivot.find('output', TextInput).text
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 2.6</a> at Aug 24, 2015 10:42:46 AM</p>
+<a href="http://www.gradle.org">Gradle 2.6</a> at Aug 24, 2015 8:25:08 PM</p>
 </div>
 </div>
 </body>
