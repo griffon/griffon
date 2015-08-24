@@ -43,55 +43,64 @@ public class PivotGriffonControllerAction extends AbstractAction {
 <span class="fc" id="L43">        super(actionManager, controller, actionName);</span>
 <span class="fc" id="L44">        requireNonNull(uiThreadManager, &quot;Argument 'uiThreadManager' must not be null&quot;);</span>
 
-<span class="fc" id="L46">        toolkitAction = new PivotAction(new RunnableWithArgs() {</span>
-            public void run(@Nullable Object... args) {
-<span class="nc" id="L48">                actionManager.invokeAction(controller, actionName, args);</span>
-<span class="nc" id="L49">            }</span>
-        });
+<span class="fc" id="L46">        toolkitAction = createAction(actionManager, controller, actionName);</span>
 
-<span class="fc" id="L52">        addPropertyChangeListener(new PropertyChangeListener() {</span>
+<span class="fc" id="L48">        addPropertyChangeListener(new PropertyChangeListener() {</span>
             public void propertyChange(final PropertyChangeEvent evt) {
-<span class="fc" id="L54">                uiThreadManager.runInsideUIAsync(new Runnable() {</span>
+<span class="fc" id="L50">                uiThreadManager.runInsideUIAsync(new Runnable() {</span>
                     public void run() {
-<span class="pc bpc" id="L56" title="1 of 2 branches missed.">                        if (KEY_NAME.equals(evt.getPropertyName())) {</span>
-<span class="fc" id="L57">                            toolkitAction.setName((String) evt.getNewValue());</span>
-<span class="nc bnc" id="L58" title="All 2 branches missed.">                        } else if (KEY_DESCRIPTION.equals(evt.getPropertyName())) {</span>
-<span class="nc" id="L59">                            toolkitAction.setDescription((String) evt.getNewValue());</span>
-<span class="nc bnc" id="L60" title="All 2 branches missed.">                        } else if (KEY_ENABLED.equals(evt.getPropertyName())) {</span>
-<span class="nc" id="L61">                            toolkitAction.setEnabled((Boolean) evt.getNewValue());</span>
-                        }
-<span class="fc" id="L63">                    }</span>
+<span class="fc" id="L52">                        handlePropertyChange(evt);</span>
+<span class="fc" id="L53">                    }</span>
                 });
-<span class="fc" id="L65">            }</span>
+<span class="fc" id="L55">            }</span>
         });
-<span class="fc" id="L67">    }</span>
+<span class="fc" id="L57">    }</span>
+
+    @Nonnull
+    protected PivotAction createAction(final @Nonnull ActionManager actionManager, final @Nonnull GriffonController controller, final @Nonnull String actionName) {
+<span class="fc" id="L61">        return new PivotAction(new RunnableWithArgs() {</span>
+            public void run(@Nullable Object... args) {
+<span class="nc" id="L63">                actionManager.invokeAction(controller, actionName, args);</span>
+<span class="nc" id="L64">            }</span>
+        });
+    }
+
+    protected void handlePropertyChange(@Nonnull PropertyChangeEvent evt) {
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">        if (KEY_NAME.equals(evt.getPropertyName())) {</span>
+<span class="fc" id="L70">            toolkitAction.setName((String) evt.getNewValue());</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">        } else if (KEY_DESCRIPTION.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L72">            toolkitAction.setDescription((String) evt.getNewValue());</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        } else if (KEY_ENABLED.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L74">            toolkitAction.setEnabled((Boolean) evt.getNewValue());</span>
+        }
+<span class="fc" id="L76">    }</span>
 
     protected void doInitialize() {
-<span class="fc" id="L70">        toolkitAction.setName(getName());</span>
-<span class="fc" id="L71">        toolkitAction.setDescription(getDescription());</span>
-<span class="fc" id="L72">        toolkitAction.setEnabled(isEnabled());</span>
-<span class="fc" id="L73">    }</span>
+<span class="fc" id="L79">        toolkitAction.setName(getName());</span>
+<span class="fc" id="L80">        toolkitAction.setDescription(getDescription());</span>
+<span class="fc" id="L81">        toolkitAction.setEnabled(isEnabled());</span>
+<span class="fc" id="L82">    }</span>
 
     @Nullable
     public String getDescription() {
-<span class="fc" id="L77">        return description;</span>
+<span class="fc" id="L86">        return description;</span>
     }
 
     public void setDescription(@Nullable String description) {
-<span class="nc" id="L81">        firePropertyChange(KEY_DESCRIPTION, this.description, this.description = description);</span>
-<span class="nc" id="L82">    }</span>
+<span class="nc" id="L90">        firePropertyChange(KEY_DESCRIPTION, this.description, this.description = description);</span>
+<span class="nc" id="L91">    }</span>
 
     @Nonnull
     public Object getToolkitAction() {
-<span class="nc" id="L86">        return toolkitAction;</span>
+<span class="nc" id="L95">        return toolkitAction;</span>
     }
 
     protected void doExecute(Object... args) {
-<span class="nc" id="L90">        Component component = null;</span>
-<span class="nc bnc" id="L91" title="All 6 branches missed.">        if (args != null &amp;&amp; args.length == 1 &amp;&amp; args[0] instanceof Component) {</span>
-<span class="nc" id="L92">            component = (Component) args[0];</span>
+<span class="nc" id="L99">        Component component = null;</span>
+<span class="nc bnc" id="L100" title="All 6 branches missed.">        if (args != null &amp;&amp; args.length == 1 &amp;&amp; args[0] instanceof Component) {</span>
+<span class="nc" id="L101">            component = (Component) args[0];</span>
         }
-<span class="nc" id="L94">        toolkitAction.perform(component);</span>
-<span class="nc" id="L95">    }</span>
+<span class="nc" id="L103">        toolkitAction.perform(component);</span>
+<span class="nc" id="L104">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

@@ -37,35 +37,44 @@ public class LanternaGriffonControllerAction extends AbstractAction {
 <span class="fc" id="L37">        super(actionManager, controller, actionName);</span>
 <span class="fc" id="L38">        requireNonNull(uiThreadManager, &quot;Argument 'uiThreadManager' must not be null&quot;);</span>
 
-<span class="fc" id="L40">        toolkitAction = new LanternaAction(new Runnable() {</span>
+<span class="fc" id="L40">        toolkitAction = createAction(actionManager, controller, actionName);</span>
+<span class="fc" id="L41">        addPropertyChangeListener(new PropertyChangeListener() {</span>
+            public void propertyChange(final PropertyChangeEvent evt) {
+<span class="fc" id="L43">                uiThreadManager.runInsideUIAsync(new Runnable() {</span>
+                    public void run() {
+<span class="fc" id="L45">                        handlePropertyChange(evt);</span>
+<span class="fc" id="L46">                    }</span>
+                });
+<span class="fc" id="L48">            }</span>
+        });
+<span class="fc" id="L50">    }</span>
+
+    @Nonnull
+    protected LanternaAction createAction(final @Nonnull ActionManager actionManager, final @Nonnull GriffonController controller, final @Nonnull String actionName) {
+<span class="fc" id="L54">        return new LanternaAction(new Runnable() {</span>
             @Override
             public void run() {
-<span class="nc" id="L43">                actionManager.invokeAction(controller, actionName);</span>
-<span class="nc" id="L44">            }</span>
+<span class="nc" id="L57">                actionManager.invokeAction(controller, actionName);</span>
+<span class="nc" id="L58">            }</span>
         });
-<span class="fc" id="L46">        addPropertyChangeListener(new PropertyChangeListener() {</span>
-            public void propertyChange(final PropertyChangeEvent evt) {
-<span class="fc" id="L48">                uiThreadManager.runInsideUIAsync(new Runnable() {</span>
-                    public void run() {
-<span class="fc" id="L50">                        toolkitAction.setName(String.valueOf(evt.getNewValue()));</span>
-<span class="fc" id="L51">                    }</span>
-                });
-<span class="fc" id="L53">            }</span>
-        });
-<span class="fc" id="L55">    }</span>
+    }
+
+    protected void handlePropertyChange(@Nonnull PropertyChangeEvent evt) {
+<span class="fc" id="L63">        toolkitAction.setName(String.valueOf(evt.getNewValue()));</span>
+<span class="fc" id="L64">    }</span>
 
     @Nonnull
     public Object getToolkitAction() {
-<span class="nc" id="L59">        return toolkitAction;</span>
+<span class="nc" id="L68">        return toolkitAction;</span>
     }
 
     protected void doExecute(Object... args) {
-<span class="nc" id="L63">        toolkitAction.doAction();</span>
-<span class="nc" id="L64">    }</span>
+<span class="nc" id="L72">        toolkitAction.doAction();</span>
+<span class="nc" id="L73">    }</span>
 
     @Override
     protected void doInitialize() {
-<span class="fc" id="L68">        toolkitAction.setName(getName());</span>
-<span class="fc" id="L69">    }</span>
+<span class="fc" id="L77">        toolkitAction.setName(getName());</span>
+<span class="fc" id="L78">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
