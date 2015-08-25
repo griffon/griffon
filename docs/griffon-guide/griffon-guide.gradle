@@ -29,15 +29,24 @@ apply plugin: 'org.asciidoctor.convert'
 apply plugin: 'com.bmuschko.java2html'
 
 ext.childProjects = [
+    ':griffon-core',
     ':griffon-core-compile',
+    ':griffon-core-java8',
     ':griffon-core-test',
-    ':griffon-groovy-compile',
     ':griffon-groovy',
+    ':griffon-groovy-compile',
+    ':griffon-guice',
     ':griffon-swing',
     ':griffon-javafx',
     ':griffon-lanterna',
     ':griffon-pivot',
-    ':griffon-core'
+    ':griffon-swing-groovy',
+    ':griffon-javafx-groovy',
+    ':griffon-lanterna-groovy',
+    ':griffon-pivot-groovy',
+    ':griffon-javafx-test',
+    ':griffon-fest-test',
+    ':griffon-pivot-test'
 ]
 
 def sampleApps = []
@@ -81,6 +90,8 @@ task apiDocs(type: Javadoc, dependsOn: copyDocs) {
 
     excludes = ['**/*.html', 'META-INF/**', '**/*.groovy']
 
+    options.addBooleanOption('javafx', true)
+
     options.use         = true
     options.splitIndex  = true
     options.encoding    = 'UTF-8'
@@ -92,8 +103,17 @@ task apiDocs(type: Javadoc, dependsOn: copyDocs) {
     options.docTitle    = "Griffon $version"
     options.footer      = project.javadocFooter
     options.links       = ['http://www.slf4j.org/apidocs/',
+                           'http://junit.org/javadoc/latest/',
+                           'http://docs.oracle.com/javase/8/docs/api/',
+                           'https://docs.oracle.com/javaee/6/api/',
                            'http://jsr-305.googlecode.com/svn/trunk/javadoc/',
-                           'http://docs.oracle.com/javase/7/docs/api/']
+                           'http://google.github.io/guice/api-docs/4.0/javadoc/',
+                           'https://raw.githubusercontent.com/mabe02/lanterna/gh-pages/apidocs/2.1/',
+                           'http://pivot.apache.org/2.0.4/docs/api/',
+                           'http://docs.oracle.com/javase/8/javafx/api/',
+                           'http://docs.groovy-lang.org/latest/html/api/',
+                           'https://raw.githubusercontent.com/aalmiray/jipsy/gh-pages/apidocs/',
+                           'https://raw.githubusercontent.com/aalmiray/gipsy/gh-pages/apidocs/']
 
     doLast { task ->
         copy {

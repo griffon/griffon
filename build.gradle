@@ -208,6 +208,8 @@ subprojects { subproj ->
             javadoc {
                 excludes = ['**/*.html', 'META-INF/**', '**/*.groovy']
 
+                options.addBooleanOption('javafx', true)
+
                 options.use         = true
                 options.splitIndex  = true
                 options.encoding    = 'UTF-8'
@@ -217,8 +219,17 @@ subprojects { subproj ->
                 options.docTitle    = "$subproj.pomDescription $version"
                 options.footer      = rootProject.javadocFooter
                 options.links       = ['http://www.slf4j.org/apidocs/',
+                                       'http://junit.org/javadoc/latest/',
+                                       'http://docs.oracle.com/javase/8/docs/api/',
+                                       'https://docs.oracle.com/javaee/6/api/',
                                        'http://jsr-305.googlecode.com/svn/trunk/javadoc/',
-                                       'http://docs.oracle.com/javase/7/docs/api/']
+                                       'http://google.github.io/guice/api-docs/4.0/javadoc/',
+                                       'https://raw.githubusercontent.com/mabe02/lanterna/gh-pages/apidocs/2.1/',
+                                       'http://pivot.apache.org/2.0.4/docs/api/',
+                                       'http://docs.oracle.com/javase/8/javafx/api/',
+                                       'http://docs.groovy-lang.org/latest/html/api/',
+                                       'https://raw.githubusercontent.com/aalmiray/jipsy/gh-pages/apidocs/',
+                                       'https://raw.githubusercontent.com/aalmiray/gipsy/gh-pages/apidocs/']
 
                 doLast { task ->
                     copy {
