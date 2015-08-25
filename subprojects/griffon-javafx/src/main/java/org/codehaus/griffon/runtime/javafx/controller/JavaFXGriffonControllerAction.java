@@ -43,6 +43,7 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
     public static final String KEY_IMAGE = "image";
     public static final String KEY_GRAPHIC = "graphic";
     public static final String KEY_SELECTED = "selected";
+    public static final String KEY_VISIBLE = "visible";
     public static final String KEY_ACCELERATOR = "accelerator";
     private final JavaFXAction toolkitAction;
     private String description;
@@ -51,6 +52,7 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
     private Node graphic;
     private String accelerator;
     private boolean selected;
+    private boolean visible = true;
 
     public JavaFXGriffonControllerAction(final @Nonnull UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
         super(actionManager, controller, actionName);
@@ -75,10 +77,11 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
             toolkitAction.setEnabled(castToBoolean(evt.getNewValue()));
         } else if (KEY_SELECTED.equals(evt.getPropertyName())) {
             toolkitAction.setSelected(castToBoolean(evt.getNewValue()));
+        } else if (KEY_VISIBLE.equals(evt.getPropertyName())) {
+            toolkitAction.setVisible(castToBoolean(evt.getNewValue()));
         } else if (KEY_ACCELERATOR.equals(evt.getPropertyName())) {
             String accelerator = (String) evt.getNewValue();
-            if (!isBlank(accelerator))
-                toolkitAction.setAccelerator(accelerator);
+            if (!isBlank(accelerator)) toolkitAction.setAccelerator(accelerator);
         } else if (KEY_ICON.equals(evt.getPropertyName())) {
             String icon = (String) evt.getNewValue();
             if (!isBlank(icon)) toolkitAction.setIcon(icon);
@@ -106,6 +109,14 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
 
     public void setSelected(boolean selected) {
         firePropertyChange(KEY_SELECTED, this.selected, this.selected = selected);
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        firePropertyChange(KEY_SELECTED, this.visible, this.visible = visible);
     }
 
     @Nullable
@@ -165,6 +176,7 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
         toolkitAction.setDescription(getDescription());
         toolkitAction.setEnabled(isEnabled());
         toolkitAction.setSelected(isSelected());
+        toolkitAction.setVisible(isVisible());
         String accelerator = getAccelerator();
         if (!isBlank(accelerator)) toolkitAction.setAccelerator(accelerator);
         String icon = getIcon();

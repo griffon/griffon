@@ -213,4 +213,27 @@ public class JavaFXAction {
     public boolean isSelected() {
         return selected != null && selectedProperty().get();
     }
+
+    // -- visible
+
+    private BooleanProperty visible;
+
+    public final BooleanProperty visibleProperty() {
+        if (visible == null) {
+            visible = new SimpleBooleanProperty(this, "visible", true);
+        }
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        visibleProperty().set(visible);
+    }
+
+    public boolean getVisible() {
+        return visible != null && visibleProperty().get();
+    }
+
+    public boolean isVisible() {
+        return visible != null && visibleProperty().get();
+    }
 }

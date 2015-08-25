@@ -259,8 +259,8 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
 
         Collection<ActionInterceptor> interceptorInstances = injector.getInstances(ActionInterceptor.class);
         if (!interceptorInstances.isEmpty()) {
-            application.getLog().error(ActionInterceptor.class.getName() + " have been deprecated and is no longer supported");
-            throw new UnsupportedOperationException(ActionInterceptor.class.getName() + " have been deprecated and is no longer supported");
+            application.getLog().error(ActionInterceptor.class.getName() + " has been deprecated and is no longer supported");
+            throw new UnsupportedOperationException(ActionInterceptor.class.getName() + " has been deprecated and is no longer supported");
         }
     }
 
