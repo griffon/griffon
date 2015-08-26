@@ -1,0 +1,44 @@
+= Building Griffon
+
+== Requirements
+
+ * JDK 8u40 as a minimum.
+ * Gradle 2.6. You may use the included `gradlew` script.
+
+== Binaries
+
+.Building
+
+ * Make sure your environment is setup correctly by invoking `gradle` or `gradlew`.
+ * Make a full build invoking `gradle build`.
+
+.Installing
+
+ * Install all binaries to your local maven repository with `gradle publishToMavenLocal`.
+
+== Lazybones Templates
+
+.Building & Installing
+
+ * Invoke `gradle installAllTemplates`.
+
+.Usage
+
+ * You must specify a version number that matches the version you just built, for example
+  `lazybones create griffon-javafx-groovy 1.4.0-SNAPSHOT sample`.
+
+== Sample Applications
+
+ * Change into the desired application directory (under `samples`) and execute `gradle run`.
+
+== Guide
+
+ * Change into `docs/griffon.guide`.
+ * Create a new version of the guide by invoking `gradle guide`.
+
+== Site
+
+ * Change into `docs/griffon-site`.
+ * Create a new version of the site by invoking `gradle site`.
+ * Run the site on an embedded HTTP server with `gradle siteRun`.
+ * Browse to `http://localhost:8080/`.
