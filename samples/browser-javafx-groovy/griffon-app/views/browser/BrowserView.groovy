@@ -50,7 +50,7 @@ class BrowserView {
 
         setupListeners()
 
-        builder.urlField.text = 'http://new.griffon-framework.org'
+        builder.urlField.text = 'http://griffon-framework.org'
         controller.openUrl()
     }
 
