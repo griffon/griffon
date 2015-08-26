@@ -28,7 +28,6 @@ import org.codehaus.griffon.runtime.core.view.AbstractWindowManager;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,66 +39,66 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class DefaultJavaFXWindowManager extends AbstractWindowManager&lt;Window&gt; implements JavaFXWindowManager {
-<span class="fc" id="L43">    private final OnWindowHidingHelper onWindowHiding = new OnWindowHidingHelper();</span>
-<span class="fc" id="L44">    private final OnWindowShownHelper onWindowShown = new OnWindowShownHelper();</span>
-<span class="fc" id="L45">    private final OnWindowHiddenHelper onWindowHidden = new OnWindowHiddenHelper();</span>
+<span class="fc" id="L42">    private final OnWindowHidingHelper onWindowHiding = new OnWindowHidingHelper();</span>
+<span class="fc" id="L43">    private final OnWindowShownHelper onWindowShown = new OnWindowShownHelper();</span>
+<span class="fc" id="L44">    private final OnWindowHiddenHelper onWindowHidden = new OnWindowHiddenHelper();</span>
 
     @Inject
     @Nonnull
     public DefaultJavaFXWindowManager(@Nonnull GriffonApplication application, @Nonnull @Named(&quot;windowDisplayHandler&quot;) JavaFXWindowDisplayHandler windowDisplayHandler) {
-<span class="fc" id="L50">        super(application, windowDisplayHandler);</span>
-<span class="fc" id="L51">        requireNonNull(application.getEventRouter(), &quot;Argument 'application.eventRouter' must not be null&quot;);</span>
-<span class="fc" id="L52">    }</span>
+<span class="fc" id="L49">        super(application, windowDisplayHandler);</span>
+<span class="fc" id="L50">        requireNonNull(application.getEventRouter(), &quot;Argument 'application.eventRouter' must not be null&quot;);</span>
+<span class="fc" id="L51">    }</span>
 
     @Override
     protected void doAttach(@Nonnull Window window) {
-<span class="fc" id="L56">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
-<span class="fc" id="L57">        window.setOnHiding(onWindowHiding);</span>
-<span class="fc" id="L58">        window.setOnShown(onWindowShown);</span>
-<span class="fc" id="L59">        window.setOnHidden(onWindowHidden);</span>
-<span class="fc" id="L60">    }</span>
+<span class="fc" id="L55">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="fc" id="L56">        window.setOnHiding(onWindowHiding);</span>
+<span class="fc" id="L57">        window.setOnShown(onWindowShown);</span>
+<span class="fc" id="L58">        window.setOnHidden(onWindowHidden);</span>
+<span class="fc" id="L59">    }</span>
 
     @Override
     protected void doDetach(@Nonnull Window window) {
-<span class="nc" id="L64">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
-<span class="nc" id="L65">        window.setOnHiding(null);</span>
-<span class="nc" id="L66">        window.setOnShown(null);</span>
-<span class="nc" id="L67">        window.setOnHidden(null);</span>
-<span class="nc" id="L68">    }</span>
+<span class="nc" id="L63">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="nc" id="L64">        window.setOnHiding(null);</span>
+<span class="nc" id="L65">        window.setOnShown(null);</span>
+<span class="nc" id="L66">        window.setOnHidden(null);</span>
+<span class="nc" id="L67">    }</span>
 
     @Override
     protected boolean isWindowVisible(@Nonnull Window window) {
-<span class="fc" id="L72">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
-<span class="fc" id="L73">        return window.isShowing();</span>
+<span class="fc" id="L71">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="fc" id="L72">        return window.isShowing();</span>
     }
 
     public void handleClose(@Nonnull Window widget) {
-<span class="pc bpc" id="L77" title="1 of 2 branches missed.">        if (getApplication().getPhase() == ApplicationPhase.SHUTDOWN) {</span>
-<span class="fc" id="L78">            return;</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">        if (getApplication().getPhase() == ApplicationPhase.SHUTDOWN) {</span>
+<span class="fc" id="L77">            return;</span>
         }
 
-<span class="nc" id="L81">        List&lt;Window&gt; visibleWindows = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L82" title="All 2 branches missed.">        for (Window window : getWindows()) {</span>
-<span class="nc bnc" id="L83" title="All 2 branches missed.">            if (window.isShowing()) {</span>
-<span class="nc" id="L84">                visibleWindows.add(window);</span>
+<span class="nc" id="L80">        List&lt;Window&gt; visibleWindows = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        for (Window window : getWindows()) {</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">            if (window.isShowing()) {</span>
+<span class="nc" id="L83">                visibleWindows.add(window);</span>
             }
-<span class="nc" id="L86">        }</span>
+<span class="nc" id="L85">        }</span>
 
-<span class="nc bnc" id="L88" title="All 6 branches missed.">        if (isAutoShutdown() &amp;&amp; visibleWindows.size() &lt;= 1 &amp;&amp; visibleWindows.contains(widget)) {</span>
-<span class="nc bnc" id="L89" title="All 2 branches missed.">            if (!getApplication().shutdown()) show(widget);</span>
+<span class="nc bnc" id="L87" title="All 6 branches missed.">        if (isAutoShutdown() &amp;&amp; visibleWindows.size() &lt;= 1 &amp;&amp; visibleWindows.contains(widget)) {</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">            if (!getApplication().shutdown()) show(widget);</span>
         }
-<span class="nc" id="L91">    }</span>
+<span class="nc" id="L90">    }</span>
 
     /**
      * WindowAdapter that invokes hide() when the window is about to be closed.
      *
      * @author Andres Almiray
      */
-<span class="fc" id="L98">    private class OnWindowHidingHelper implements EventHandler&lt;WindowEvent&gt; {</span>
+<span class="fc" id="L97">    private class OnWindowHidingHelper implements EventHandler&lt;WindowEvent&gt; {</span>
         public void handle(WindowEvent event) {
-<span class="fc" id="L100">            hide((Window) event.getSource());</span>
-<span class="fc" id="L101">            handleClose((Window) event.getSource());</span>
-<span class="fc" id="L102">        }</span>
+<span class="fc" id="L99">            hide((Window) event.getSource());</span>
+<span class="fc" id="L100">            handleClose((Window) event.getSource());</span>
+<span class="fc" id="L101">        }</span>
     }
 
     /**
@@ -107,14 +106,14 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager&lt;Window&
      *
      * @author Andres Almiray
      */
-<span class="fc" id="L110">    private class OnWindowShownHelper implements EventHandler&lt;WindowEvent&gt; {</span>
+<span class="fc" id="L109">    private class OnWindowShownHelper implements EventHandler&lt;WindowEvent&gt; {</span>
         /**
          * Triggers a &lt;tt&gt;WindowShown&lt;/tt&gt; event with the window as sole argument
          */
         public void handle(WindowEvent windowEvent) {
-<span class="fc" id="L115">            Window window = (Window) windowEvent.getSource();</span>
-<span class="fc" id="L116">            event(ApplicationEvent.WINDOW_SHOWN, asList(findWindowName(window), window));</span>
-<span class="fc" id="L117">        }</span>
+<span class="fc" id="L114">            Window window = (Window) windowEvent.getSource();</span>
+<span class="fc" id="L115">            event(ApplicationEvent.WINDOW_SHOWN, asList(findWindowName(window), window));</span>
+<span class="fc" id="L116">        }</span>
     }
 
     /**
@@ -122,14 +121,14 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager&lt;Window&
      *
      * @author Andres Almiray
      */
-<span class="fc" id="L125">    private class OnWindowHiddenHelper implements EventHandler&lt;WindowEvent&gt; {</span>
+<span class="fc" id="L124">    private class OnWindowHiddenHelper implements EventHandler&lt;WindowEvent&gt; {</span>
         /**
          * Triggers a &lt;tt&gt;WindowHidden&lt;/tt&gt; event with the window as sole argument
          */
         public void handle(WindowEvent windowEvent) {
-<span class="fc" id="L130">            Window window = (Window) windowEvent.getSource();</span>
-<span class="fc" id="L131">            event(ApplicationEvent.WINDOW_HIDDEN, asList(findWindowName(window), window));</span>
-<span class="fc" id="L132">        }</span>
+<span class="fc" id="L129">            Window window = (Window) windowEvent.getSource();</span>
+<span class="fc" id="L130">            event(ApplicationEvent.WINDOW_HIDDEN, asList(findWindowName(window), window));</span>
+<span class="fc" id="L131">        }</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

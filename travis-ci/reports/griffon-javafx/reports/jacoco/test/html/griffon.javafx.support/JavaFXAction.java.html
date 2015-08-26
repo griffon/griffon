@@ -213,5 +213,28 @@ import javafx.scene.input.KeyCombination;
     public boolean isSelected() {
 <span class="nc bnc" id="L214" title="All 4 branches missed.">        return selected != null &amp;&amp; selectedProperty().get();</span>
     }
+
+    // -- visible
+
+    private BooleanProperty visible;
+
+    public final BooleanProperty visibleProperty() {
+<span class="nc bnc" id="L222" title="All 2 branches missed.">        if (visible == null) {</span>
+<span class="nc" id="L223">            visible = new SimpleBooleanProperty(this, &quot;visible&quot;, true);</span>
+        }
+<span class="nc" id="L225">        return visible;</span>
+    }
+
+    public void setVisible(boolean visible) {
+<span class="nc" id="L229">        visibleProperty().set(visible);</span>
+<span class="nc" id="L230">    }</span>
+
+    public boolean getVisible() {
+<span class="nc bnc" id="L233" title="All 4 branches missed.">        return visible != null &amp;&amp; visibleProperty().get();</span>
+    }
+
+    public boolean isVisible() {
+<span class="nc bnc" id="L237" title="All 4 branches missed.">        return visible != null &amp;&amp; visibleProperty().get();</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
