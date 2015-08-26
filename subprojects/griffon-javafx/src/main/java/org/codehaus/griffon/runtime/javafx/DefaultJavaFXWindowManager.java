@@ -28,7 +28,6 @@ import org.codehaus.griffon.runtime.core.view.AbstractWindowManager;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
-
 import java.util.ArrayList;
 import java.util.List;
 

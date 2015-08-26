@@ -21,10 +21,7 @@ import griffon.core.controller.ActionManager;
 import griffon.core.editors.ValueConversionException;
 import griffon.exceptions.InstanceMethodInvocationException;
 import javafx.beans.property.Property;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -49,7 +46,6 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCombination;
 import javafx.stage.Window;
 
 import javax.annotation.Nonnull;
