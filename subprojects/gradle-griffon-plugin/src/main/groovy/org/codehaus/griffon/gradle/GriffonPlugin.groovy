@@ -290,7 +290,10 @@ class GriffonPlugin implements Plugin<Project> {
                         if (runTask != null) {
                             if (project.hasProperty('griffonEnv')) {
                                 project.applicationDefaultJvmArgs << "-Dgriffon.env=${project.griffonEnv}"
-                                runTask.jvmArgs << "-Dgriffon.env=${project.griffonEnv}"
+                                def jvmArgs = []
+                                jvmArgs.addAll(runTask.jvmArgs)
+                                jvmArgs << "-Dgriffon.env=${project.griffonEnv}"
+                                runTask.jvmArgs = jvmArgs
                             } else {
                                 runTask.jvmArgs << '-Dgriffon.env=dev'
                             }
