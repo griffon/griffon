@@ -221,11 +221,11 @@ import java.util.Locale;
     public static String getLogicalName(String name, String trailingName) {
 <span class="pc bpc" id="L222" title="1 of 2 branches missed.">        if (!isBlank(trailingName)) {</span>
 <span class="fc" id="L223">            String shortName = getShortName(name);</span>
-<span class="fc bfc" id="L224" title="All 2 branches covered.">            if (shortName.endsWith(trailingName)) {</span>
+<span class="pc bpc" id="L224" title="1 of 2 branches missed.">            if (shortName.endsWith(trailingName)) {</span>
 <span class="fc" id="L225">                return shortName.substring(0, shortName.length() - trailingName.length());</span>
             }
         }
-<span class="fc" id="L228">        return name;</span>
+<span class="nc" id="L228">        return name;</span>
     }
 
     public static String getLogicalPropertyName(String className, String trailingName) {
@@ -283,7 +283,7 @@ import java.util.Locale;
         }
 
         // Check whether the name begins with two upper case letters.
-<span class="pc bpc" id="L286" title="2 of 6 branches missed.">        if (name.length() &gt; 1 &amp;&amp; Character.isUpperCase(name.charAt(0)) &amp;&amp; Character.isUpperCase(name.charAt(1))) {</span>
+<span class="pc bpc" id="L286" title="3 of 6 branches missed.">        if (name.length() &gt; 1 &amp;&amp; Character.isUpperCase(name.charAt(0)) &amp;&amp; Character.isUpperCase(name.charAt(1))) {</span>
 <span class="nc" id="L287">            return name;</span>
         }
 
