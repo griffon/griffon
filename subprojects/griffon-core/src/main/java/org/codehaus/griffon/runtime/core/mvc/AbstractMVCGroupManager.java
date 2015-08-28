@@ -23,6 +23,8 @@ import griffon.core.artifact.GriffonView;
 import griffon.core.mvc.MVCFunction;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
+import griffon.core.mvc.MVCGroupConfigurationFactory;
+import griffon.core.mvc.MVCGroupFactory;
 import griffon.core.mvc.MVCGroupFunction;
 import griffon.core.mvc.MVCGroupManager;
 import griffon.exceptions.ArtifactNotFoundException;
@@ -70,6 +72,12 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     private boolean initialized;
 
     @Inject
+    private MVCGroupConfigurationFactory mvcGroupConfigurationFactory;
+
+    @Inject
+    private MVCGroupFactory mvcGroupFactory;
+
+    @Inject
     public AbstractMVCGroupManager(@Nonnull GriffonApplication application) {
         this.application = requireNonNull(application, "Argument 'application' must not be null");
     }
@@ -77,6 +85,16 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     @Override
     public GriffonApplication getApplication() {
         return application;
+    }
+
+    @Nonnull
+    public MVCGroupConfiguration newMVCGroupConfiguration(@Nonnull String mvcType, @Nonnull Map<String, String> members, @Nonnull Map<String, Object> config) {
+        return mvcGroupConfigurationFactory.create(mvcType, members, config);
+    }
+
+    @Nonnull
+    public MVCGroup newMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> members, @Nullable MVCGroup parentGroup) {
+        return mvcGroupFactory.create(configuration, mvcId, members, parentGroup);
     }
 
     @Nonnull
