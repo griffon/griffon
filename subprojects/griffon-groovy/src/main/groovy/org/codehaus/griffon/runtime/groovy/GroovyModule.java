@@ -18,6 +18,7 @@ package org.codehaus.griffon.runtime.groovy;
 import griffon.builder.core.CoreBuilderCustomizer;
 import griffon.core.addon.GriffonAddon;
 import griffon.core.injection.Module;
+import griffon.core.mvc.MVCGroupFactory;
 import griffon.core.mvc.MVCGroupManager;
 import griffon.util.BuilderCustomizer;
 import griffon.util.CompositeResourceBundleBuilder;
@@ -26,6 +27,7 @@ import org.codehaus.griffon.runtime.core.i18n.MessageSourceDecoratorFactory;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.codehaus.griffon.runtime.core.resources.ResourceResolverDecoratorFactory;
 import org.codehaus.griffon.runtime.groovy.i18n.GroovyAwareMessageSourceDecoratorFactory;
+import org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroupFactory;
 import org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroupManager;
 import org.codehaus.griffon.runtime.groovy.resources.GroovyAwareResourceResolverDecoratorFactory;
 import org.codehaus.griffon.runtime.groovy.util.GroovyAwareCompositeResourceBundleBuilder;
@@ -53,6 +55,10 @@ public class GroovyModule extends AbstractModule {
 
         bind(GriffonAddon.class)
             .to(GroovyAddon.class)
+            .asSingleton();
+
+        bind(MVCGroupFactory.class)
+            .to(GroovyAwareMVCGroupFactory.class)
             .asSingleton();
 
         bind(MVCGroupManager.class)

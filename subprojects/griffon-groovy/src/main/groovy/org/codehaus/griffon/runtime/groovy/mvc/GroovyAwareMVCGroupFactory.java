@@ -13,29 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.core.mvc;
+package org.codehaus.griffon.runtime.groovy.mvc;
 
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
-import griffon.core.mvc.MVCGroupFactory;
-import griffon.core.mvc.MVCGroupManager;
+import org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import java.util.Map;
 
 /**
  * @author Andres Almiray
  * @since 2.4.0
  */
-public class DefaultMVCGroupFactory implements MVCGroupFactory {
-    @Inject
-    protected MVCGroupManager mvcGroupManager;
-
+public class GroovyAwareMVCGroupFactory extends DefaultMVCGroupFactory {
     @Nonnull
     @Override
     public MVCGroup create(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> members, @Nullable MVCGroup parentGroup) {
-        return new DefaultMVCGroup(mvcGroupManager, configuration, mvcId, members, parentGroup);
+        return new GroovyAwareMVCGroup(mvcGroupManager, configuration, mvcId, members, parentGroup);
     }
 }

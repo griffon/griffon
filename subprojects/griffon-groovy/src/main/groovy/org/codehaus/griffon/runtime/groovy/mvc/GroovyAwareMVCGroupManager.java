@@ -19,7 +19,6 @@ import griffon.core.ApplicationClassLoader;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonArtifact;
 import griffon.core.mvc.MVCGroup;
-import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.util.BuilderCustomizer;
 import griffon.util.CompositeBuilder;
 import groovy.lang.Script;
@@ -29,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Map;
@@ -48,12 +46,6 @@ public class GroovyAwareMVCGroupManager extends DefaultMVCGroupManager {
     @Inject
     public GroovyAwareMVCGroupManager(@Nonnull GriffonApplication application, @Nonnull ApplicationClassLoader applicationClassLoader) {
         super(application, applicationClassLoader);
-    }
-
-    @Nonnull
-    @Override
-    public MVCGroup newMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> members, @Nullable MVCGroup parentGroup) {
-        return new GroovyAwareMVCGroup(this, configuration, mvcId, members, parentGroup);
     }
 
     @Nonnull
