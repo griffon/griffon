@@ -40,7 +40,7 @@ public class AbstractActionHandler implements ActionHandler {
     @Nonnull
     @Override
     public Object[] before(@Nonnull Action action, @Nonnull Object[] args) {
-        return new Object[0];
+        return args;
     }
 
     @Override

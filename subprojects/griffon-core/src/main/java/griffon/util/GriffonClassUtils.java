@@ -42,6 +42,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -2032,6 +2033,36 @@ public class GriffonClassUtils {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * Returns an array of {@code Field} objects reflecting all the fields
+     * declared by the class and its hierarchy, represented by this
+     * {@code Class} object. This includes public, protected, default
+     * (package) access, and private fields, but excludes inherited fields.
+     * <p>
+     * <p> The elements in the returned array are not sorted and are not in any
+     * particular order.
+     *
+     * @param clazz the clazz that will be queried.
+     * @return the array of {@code Field} objects representing all the
+     * declared fields of this class and its hierarchy
+     */
+    public static Field[] getAllDeclaredFields(@Nonnull Class<?> clazz) {
+        requireNonNull(clazz, ERROR_CLAZZ_NULL);
+
+        List<Field> fields = new ArrayList<>();
+
+        Class c = clazz;
+        while (c != null && !c.equals(Object.class)) {
+            Field[] declaredFields = c.getDeclaredFields();
+            if (declaredFields != null && declaredFields.length > 0) {
+                fields.addAll(Arrays.asList(declaredFields));
+            }
+            c = c.getSuperclass();
+        }
+
+        return fields.toArray(new Field[fields.size()]);
     }
 
     /**

@@ -21,6 +21,7 @@ impprt org.apache.shiro.subject.Subject
 import javax.swing.JOptionPane
 
 import javax.inject.Inject
+import javax.inject.Named
 import griffon.inject.Contextual
 
 @ArtifactProviderFor(GriffonController)
@@ -29,7 +30,7 @@ class StrutsController {
     private Subject subject
 
     @RequiresGuest
-    void login(@Contextual('credentials') UsernamePasswordToken token) {
+    void login(@Contextual @Named('credentials') UsernamePasswordToken token) {
         try {
             subject.login(token)
         } catch(Exception e) {
@@ -55,11 +56,13 @@ Another interesting thing is that the instance of `org.apache.shiro.authc.Userna
 by the parent `{link_context}`, or the application's `{link_context}` (remember that contexts are hierarchical), thus
 the value can be shared with more than one controller or with the whole application, as needed.
 
-If the `@Contextual` argument does not have `@Named` qualifier then the fully qualified class name of the argument's
+If the `{link_contextual}` argument does not have `@Named` qualifier then the fully qualified class name of the argument's
 type will be used as a key. This means that the key "org.apache.shiro.authc.UsernamePasswordToken" would be used to
 search for the argument if `@Named('credentials')` were to be ommitted.
 
-It's worth noting that failure to resolve a `@Contextual` argument does not result in an immediate exception; if the key
+It's worth noting that failure to resolve a `{link_contextual}` argument does not result in an immediate exception; if the key
 could not be found in the `{link_context}` then a `null` value will be set as the argument's value. It's the action's
-job to check if it received the correct arguments.
+job to check if it received the correct arguments. An alternative would be to annotate the parameter with `@Nonnull`,
+in which case the `{link_action_manager}` will abort the execution if the named parameter was not found in the context or if
+its value is null.
 

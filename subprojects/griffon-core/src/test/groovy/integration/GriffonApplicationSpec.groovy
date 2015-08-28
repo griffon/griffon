@@ -56,6 +56,7 @@ class GriffonApplicationSpec extends Specification {
 
     static {
         System.setProperty('org.slf4j.simpleLogger.defaultLogLevel', 'trace')
+        System.setProperty('griffon.full.stacktrace', 'true')
     }
 
     def setupSpec() {
@@ -101,7 +102,7 @@ class GriffonApplicationSpec extends Specification {
 
         expect:
         controllerClass.eventNames == []
-        controllerClass.actionNames == ['abort', 'handleException', 'sayHello', 'throwException']
+        controllerClass.actionNames == ['abort', 'contextualFailure', 'contextualSuccess', 'handleException', 'sayHello', 'throwException']
     }
 
     def 'Check artifact model'() {
@@ -175,6 +176,39 @@ class GriffonApplicationSpec extends Specification {
         !handler.update
     }
 
+    def 'Invoke contextualSuccess Action'() {
+        given:
+        InvokeActionHandler handler = application.injector.getInstance(ActionHandler)
+        MVCGroup group = application.mvcGroupManager.findGroup('integration')
+        invokables << group.view
+        group.context['key'] = 'VALUE'
+
+        when:
+        group.controller.invokeAction('contextualSuccess')
+
+        then:
+        handler.configure
+        handler.before
+        handler.after
+        !handler.exception
+        !handler.update
+        group.controller.key == 'VALUE'
+    }
+
+    def 'Invoke contextualFailure Action'() {
+        given:
+        InvokeActionHandler handler = application.injector.getInstance(ActionHandler)
+        MVCGroup group = application.mvcGroupManager.findGroup('integration')
+        invokables << group.view
+
+        when:
+        group.controller.invokeAction('contextualFailure')
+
+        then:
+        def e = thrown(IllegalStateException)
+        e.message =~ /Could not find an instance of type java.lang.String/
+    }
+
     def 'Invoke sayHello Action'() {
         given:
         InvokeActionHandler handler = application.injector.getInstance(ActionHandler)
@@ -223,7 +257,7 @@ class GriffonApplicationSpec extends Specification {
         handler.exception
     }
 
-    def 'Invoke update Action'() {
+    def 'Update Action'() {
         given:
         InvokeActionHandler handler = application.injector.getInstance(ActionHandler)
         ActionManager actionManager = application.actionManager
@@ -240,7 +274,7 @@ class GriffonApplicationSpec extends Specification {
         GriffonController controller = application.mvcGroupManager.findGroup('integration').controller
 
         expect:
-        application.actionManager.actionsFor(controller).keySet() == (['abort', 'handleException', 'sayHello', 'throwException'] as Set)
+        application.actionManager.actionsFor(controller).keySet() == (['abort', 'contextualFailure', 'contextualSuccess', 'handleException', 'sayHello', 'throwException'] as Set)
         application.actionManager.normalizeName('fooAction') == 'foo'
         application.actionManager.normalizeName('foo') == 'foo'
         application.actionManager.actionFor(controller, 'sayHello')

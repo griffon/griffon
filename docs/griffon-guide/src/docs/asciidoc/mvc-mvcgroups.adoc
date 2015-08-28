@@ -231,3 +231,12 @@ previous examples, the context of the `app` group is set as the parent of the co
 The `{link_context}` of an `{link_mvc_group}` has the same lifetime of its owning group, that is, once the owning
 `{link_mvc_group}` is destroyed so is the `{link_context}`.
 
+MVC members can have some of their properties injected from the group's `{link_context}`. Either annotate a field or a
+property setter with `{link_contextual}`. If the `{link_contextual}` field or argument does not have `@Named` qualifier
+then the fully qualified class name of the field's or argument's type will be used as a key.
+
+It's worth noting that failure to resolve a `{link_contextual}` injection does not result in an immediate exception; if
+the key could not be found in the `{link_context}` then a `null` value will be set as value. You may annotate the field
+or argument with `@Nonnull`, in which case contextual injection will fail if the named key was not found in the context
+or if its value is null.
+

@@ -33,6 +33,32 @@ It's now possible to chain several ``PropertyEditor``s that target the same sour
 An `MVCGroup` can now supply the names of its children groups. When a parent `MVCGroup` is destroyed so will its children,
 automatically. All references to `parent*` members on a child artifact will be set to `null` upon the group's destruction.
 
+==== Context
+
+MVC members may have their properties injected from the group's context. You just need to annotate the field or the property
+setter with `@Contextual`, for example
+
+[source,groovy]
+----
+package org.example
+
+import javafx.inject.Inject
+import griffon.inject.Contextual
+
+class LoginController {
+    LoginModel model                  // injected by MVC group
+
+    @Inject
+    private LoginService loginService // injected by DI container
+
+    @Contextual
+    private Credentials credentials   // injected from context
+                                      // found under key = org.example.Credentials
+}
+----
+
+You may use `@Named` to change the default key and `@Nonnull` to specify a required injection.
+
 ==== Resources, Messages and Configuration
 
 It's now possible to decorate instances of `ResourceResolver`, `MessageSource` and `Configuration` using a decorator for

@@ -26,9 +26,11 @@ import griffon.core.artifact.GriffonMvcArtifact;
 import griffon.core.artifact.GriffonView;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
+import griffon.exceptions.FieldException;
 import griffon.exceptions.GriffonException;
 import griffon.exceptions.MVCGroupInstantiationException;
 import griffon.exceptions.NewInstanceException;
+import griffon.inject.Contextual;
 import griffon.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,11 +38,21 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
+import static griffon.util.AnnotationUtils.annotationsOfMethodParameter;
+import static griffon.util.AnnotationUtils.findAnnotation;
+import static griffon.util.AnnotationUtils.nameFor;
 import static griffon.util.ConfigUtils.getConfigValueAsBoolean;
+import static griffon.util.GriffonClassUtils.getAllDeclaredFields;
+import static griffon.util.GriffonClassUtils.getPropertyDescriptors;
+import static griffon.util.GriffonClassUtils.setFieldValue;
 import static griffon.util.GriffonClassUtils.setPropertiesOrFieldsNoException;
 import static griffon.util.GriffonClassUtils.setPropertyOrFieldValueNoException;
 import static griffon.util.GriffonNameUtils.capitalize;
@@ -284,6 +296,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             } else {
                 fillNonArtifactMemberProperties(memberType, member, args);
             }
+            fillContextualMemberProperties(group, memberType, member);
         }
     }
 
@@ -294,6 +307,51 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
     protected void fillNonArtifactMemberProperties(@Nonnull String type, @Nonnull Object member, @Nonnull Map<String, Object> args) {
         // empty
+    }
+
+    protected void fillContextualMemberProperties(@Nonnull MVCGroup group, @Nonnull String type, @Nonnull Object member) {
+        for (PropertyDescriptor descriptor : getPropertyDescriptors(member.getClass())) {
+            Method method = descriptor.getWriteMethod();
+            if (method != null && method.getAnnotation(Contextual.class) != null) {
+                String key = nameFor(method);
+                Object arg = group.getContext().get(key);
+
+                Nonnull nonNull = findAnnotation(annotationsOfMethodParameter(method, 0), Nonnull.class);
+                if (arg == null && nonNull != null) {
+                    throw new IllegalStateException("Could not find an instance of type " +
+                        method.getParameterTypes()[0].getName() + " under key '" + key +
+                        "' in the context of MVCGroup[" + group.getMvcType() + ":" + group.getMvcId() +
+                        "] to be injected on property '" + descriptor.getName() +
+                        "' in " + type + " (" + member.getClass().getName() + "). Property does not accept null values.");
+                }
+
+                try {
+                    method.invoke(member, arg);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new MVCGroupInstantiationException(group.getMvcType(), group.getMvcId(), e);
+                }
+            }
+        }
+
+        for (Field field : getAllDeclaredFields(member.getClass())) {
+            if (field.getAnnotation(Contextual.class) != null) {
+                String key = nameFor(field);
+                Object arg = group.getContext().get(key);
+                if (arg == null && field.getAnnotation(Nonnull.class) != null) {
+                    throw new IllegalStateException("Could not find an instance of type " +
+                        field.getType().getName() + " under key '" + key +
+                        "' in the context of MVCGroup[" + group.getMvcType() + ":" + group.getMvcId() +
+                        "] to be injected on field '" + field.getName() +
+                        "' in " + type + " (" + member.getClass().getName() + "). Field does not accept null values.");
+                }
+
+                try {
+                    setFieldValue(member, field.getName(), arg);
+                } catch (FieldException e) {
+                    throw new MVCGroupInstantiationException(group.getMvcType(), group.getMvcId(), e);
+                }
+            }
+        }
     }
 
     protected void doAddGroup(@Nonnull MVCGroup group) {

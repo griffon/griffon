@@ -302,4 +302,19 @@ class MVCGroupSpec extends Specification {
         cleanup:
         root.destroy()
     }
+
+    def 'Validate contextual injections'() {
+        given:
+        MVCGroup root = application.mvcGroupManager.createMVCGroup('root')
+
+        when:
+        MVCGroup child = root.createMVCGroup('child', 'child1')
+
+        then:
+        child.controller.value == 'VALUE'
+        child.controller.val == 'VALUE'
+
+        cleanup:
+        root.destroy()
+    }
 }

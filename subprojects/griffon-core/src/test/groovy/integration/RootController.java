@@ -17,6 +17,9 @@ package integration;
 
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
+import javax.annotation.Nonnull;
+import java.util.Map;
+
 public class RootController extends AbstractGriffonController {
     private RootModel model;
     private RootView view;
@@ -27,5 +30,10 @@ public class RootController extends AbstractGriffonController {
 
     public void setView(RootView view) {
         this.view = view;
+    }
+
+    @Override
+    public void mvcGroupInit(@Nonnull Map<String, Object> args) {
+        getMvcGroup().getContext().put("KEY", "VALUE");
     }
 }

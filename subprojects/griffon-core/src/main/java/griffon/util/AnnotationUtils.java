@@ -27,6 +27,8 @@ import javax.inject.Named;
 import javax.inject.Qualifier;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -38,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static griffon.util.GriffonClassUtils.requireState;
 import static griffon.util.GriffonNameUtils.getLogicalPropertyName;
 import static griffon.util.GriffonNameUtils.getPropertyName;
 import static griffon.util.GriffonNameUtils.isBlank;
@@ -49,6 +52,10 @@ import static java.util.Objects.requireNonNull;
  */
 public class AnnotationUtils {
     private static final Logger LOG = LoggerFactory.getLogger(AnnotationUtils.class);
+    private static final String ERROR_CLASS_NULL = "Argument 'class' must not be null";
+    private static final String ERROR_SUFFIX_NULL = "Argument 'suffix' must not be null";
+    private static final String ERROR_INSTANCE_NULL = "Argument 'instance' must not be null";
+    private static final String ERROR_ANNOTATION_TYPE_NULL = "Argument 'annotationType' must not be null";
 
     private AnnotationUtils() {
 
@@ -81,26 +88,36 @@ public class AnnotationUtils {
 
     @Nullable
     public static <A extends Annotation> A findAnnotation(@Nonnull Class<?> klass, @Nonnull Class<A> annotationType) {
-        requireNonNull(klass, "Argument 'class' must not be null");
-        requireNonNull(annotationType, "Argument 'annotationType' must not be null");
+        requireNonNull(klass, ERROR_CLASS_NULL);
+        requireNonNull(annotationType, ERROR_ANNOTATION_TYPE_NULL);
+
         while (klass != null) {
-            for (Annotation annotation : klass.getAnnotations()) {
-                if (annotationType.isAssignableFrom(annotation.getClass())) {
-                    return (A) annotation;
-                }
-            }
+            Annotation annotation = findAnnotation(klass.getAnnotations(), annotationType);
+            if (annotation != null) return (A) annotation;
             klass = klass.getSuperclass();
         }
         return null;
     }
 
+    @Nullable
+    public static <A extends Annotation> A findAnnotation(@Nonnull Annotation[] annotations, @Nonnull Class<A> annotationType) {
+        requireNonNull(annotations, "Argument 'annotations' must not be null");
+        requireNonNull(annotationType, ERROR_ANNOTATION_TYPE_NULL);
+        for (Annotation annotation : annotations) {
+            if (annotationType.isAssignableFrom(annotation.getClass())) {
+                return (A) annotation;
+            }
+        }
+        return null;
+    }
+
     public static boolean isAnnotatedWith(@Nonnull Object instance, @Nonnull Class<? extends Annotation> annotationType) {
-        return isAnnotatedWith(requireNonNull(instance, "Argument 'instance' must not be null").getClass(), annotationType);
+        return isAnnotatedWith(requireNonNull(instance, ERROR_INSTANCE_NULL).getClass(), annotationType);
     }
 
     public static boolean isAnnotatedWith(@Nonnull Class<?> clazz, @Nonnull Class<? extends Annotation> annotationType) {
-        requireNonNull(clazz, "Argument 'class' must not be null");
-        requireNonNull(annotationType, "Argument 'annotationType' must not be null");
+        requireNonNull(clazz, ERROR_CLASS_NULL);
+        requireNonNull(annotationType, ERROR_ANNOTATION_TYPE_NULL);
 
         //noinspection ConstantConditions
         while (clazz != null) {
@@ -138,18 +155,59 @@ public class AnnotationUtils {
 
     @Nonnull
     public static String[] getDependsOn(@Nonnull Object instance) {
+        requireNonNull(instance, ERROR_INSTANCE_NULL);
+
         DependsOn dependsOn = instance.getClass().getAnnotation(DependsOn.class);
         return dependsOn != null ? dependsOn.value() : new String[0];
     }
 
     @Nonnull
-    public static String nameFor(@Nonnull Object instance, @Nonnull String suffix) {
+    public static String nameFor(@Nonnull Object instance) {
+        requireNonNull(instance, ERROR_INSTANCE_NULL);
+
         Named annotation = instance.getClass().getAnnotation(Named.class);
         if (annotation != null && !isBlank(annotation.value())) {
             return annotation.value();
         } else {
-            return getLogicalPropertyName(instance.getClass().getName(), suffix);
+            return instance.getClass().getName();
         }
+    }
+
+    @Nonnull
+    public static String nameFor(@Nonnull Field field) {
+        requireNonNull(field, "Argument 'field' must not be null");
+
+        Named annotation = field.getAnnotation(Named.class);
+        if (annotation != null && !isBlank(annotation.value())) {
+            return annotation.value();
+        } else {
+            return field.getType().getName();
+        }
+    }
+
+    @Nonnull
+    public static String nameFor(@Nonnull Method setterMethod) {
+        requireNonNull(setterMethod, "Argument 'setterMethod' must not be null");
+
+        Class<?>[] parameterTypes = setterMethod.getParameterTypes();
+        requireState(parameterTypes != null && parameterTypes.length > 0, "Argument 'setterMethod' must have at least one parameter. " + MethodDescriptor.forMethod(setterMethod));
+
+        Named annotation = findAnnotation(annotationsOfMethodParameter(setterMethod, 0), Named.class);
+        if (annotation != null && !isBlank(annotation.value())) {
+            return annotation.value();
+        } else {
+            return parameterTypes[0].getName();
+        }
+    }
+
+    @Nonnull
+    public static Annotation[] annotationsOfMethodParameter(@Nonnull Method method, int paramIndex) {
+        requireNonNull(method, "Argument 'method' must not be null");
+
+        Class<?>[] parameterTypes = method.getParameterTypes();
+        requireState(parameterTypes != null && parameterTypes.length > paramIndex, "Index " + paramIndex + " is out of bounds");
+
+        return method.getParameterAnnotations()[paramIndex];
     }
 
     @Nonnull
@@ -157,7 +215,7 @@ public class AnnotationUtils {
         Map<String, T> map = new LinkedHashMap<>();
 
         for (T instance : instances) {
-            map.put(nameFor(instance, suffix), instance);
+            map.put(getLogicalPropertyName(nameFor(instance), suffix), instance);
         }
 
         return map;
@@ -171,7 +229,7 @@ public class AnnotationUtils {
     @Nonnull
     public static <T> Map<String, T> sortByDependencies(@Nonnull Collection<T> instances, @Nonnull String suffix, @Nonnull String type, @Nonnull List<String> order) {
         requireNonNull(instances, "Argument 'instances' must not be null");
-        requireNonNull(suffix, "Argument 'suffix' must not be null");
+        requireNonNull(suffix, ERROR_SUFFIX_NULL);
         requireNonNull(type, "Argument 'type' must not be null");
         requireNonNull(order, "Argument 'order' must not be null");
 
@@ -281,12 +339,12 @@ public class AnnotationUtils {
 
     @Nonnull
     public static Typed typed(@Nonnull Class<?> clazz) {
-        return new TypedImpl(requireNonNull(clazz, "Argument 'clazz' must not be null"));
+        return new TypedImpl(requireNonNull(clazz, ERROR_CLASS_NULL));
     }
 
     @Nonnull
     public static BindTo bindto(@Nonnull Class<?> clazz) {
-        return new BindToImpl(requireNonNull(clazz, "Argument 'clazz' must not be null"));
+        return new BindToImpl(requireNonNull(clazz, ERROR_CLASS_NULL));
     }
 
     /**
@@ -295,6 +353,7 @@ public class AnnotationUtils {
      */
     @SuppressWarnings("ClassExplicitlyAnnotation")
     private static class NamedImpl implements Named, Serializable {
+        private static final long serialVersionUID = 0;
         private final String value;
 
         public NamedImpl(String value) {
@@ -326,8 +385,6 @@ public class AnnotationUtils {
         public Class<? extends Annotation> annotationType() {
             return Named.class;
         }
-
-        private static final long serialVersionUID = 0;
     }
 
     /**
@@ -336,6 +393,7 @@ public class AnnotationUtils {
      */
     @SuppressWarnings("ClassExplicitlyAnnotation")
     private static class TypedImpl implements Typed, Serializable {
+        private static final long serialVersionUID = 0;
         private final Class<?> value;
 
         public TypedImpl(Class<?> value) {
@@ -367,8 +425,6 @@ public class AnnotationUtils {
         public Class<? extends Annotation> annotationType() {
             return Typed.class;
         }
-
-        private static final long serialVersionUID = 0;
     }
 
     /**
@@ -377,6 +433,7 @@ public class AnnotationUtils {
      */
     @SuppressWarnings("ClassExplicitlyAnnotation")
     private static class BindToImpl implements BindTo, Serializable {
+        private static final long serialVersionUID = 0;
         private final Class<?> value;
 
         public BindToImpl(Class<?> value) {
@@ -408,7 +465,5 @@ public class AnnotationUtils {
         public Class<? extends Annotation> annotationType() {
             return BindTo.class;
         }
-
-        private static final long serialVersionUID = 0;
     }
 }

@@ -20,12 +20,6 @@ import griffon.core.ContextFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
-import static griffon.util.GriffonNameUtils.requireNonBlank;
 
 /**
  * @author Andres Almiray

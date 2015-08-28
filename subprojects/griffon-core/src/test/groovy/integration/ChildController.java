@@ -16,13 +16,30 @@
 package integration;
 
 import griffon.core.mvc.MVCGroup;
+import griffon.inject.Contextual;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+
+import javax.inject.Named;
 
 public class ChildController extends AbstractGriffonController {
     private ChildModel model;
     private ChildView view;
     private MVCGroup parentGroup;
     private RootController parentController;
+
+    @Contextual @Named("KEY")
+    private String value;
+
+    private String theField;
+
+    public String getVal() {
+        return theField;
+    }
+
+    @Contextual
+    public void setVal(@Named("KEY") String theField) {
+        this.theField = theField;
+    }
 
     public ChildModel getModel() {
         return model;

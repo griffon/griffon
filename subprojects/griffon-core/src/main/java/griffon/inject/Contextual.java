@@ -29,6 +29,6 @@ import java.lang.annotation.Target;
 @Qualifier
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.PARAMETER})
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
 public @interface Contextual {
 }

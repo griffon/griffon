@@ -15,12 +15,16 @@
  */
 package integration;
 
+import griffon.inject.Contextual;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 public class IntegrationController extends AbstractGriffonController {
     private IntegrationModel model;
+    private String key;
 
     @Inject
     private IntegrationService sampleService;
@@ -49,5 +53,17 @@ public class IntegrationController extends AbstractGriffonController {
 
     public void handleException() {
         throw new RuntimeException("Boom!");
+    }
+
+    public void contextualSuccess(@Contextual @Named("key") String key) {
+        this.key = key;
+    }
+
+    public void contextualFailure(@Contextual @Nonnull @Named("undefined") String key) {
+        // empty
+    }
+
+    public String getKey() {
+        return key;
     }
 }

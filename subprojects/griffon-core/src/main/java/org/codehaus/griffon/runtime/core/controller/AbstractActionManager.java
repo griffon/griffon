@@ -221,10 +221,16 @@ public abstract class AbstractActionManager implements ActionManager {
                 List<ActionHandler> copy = new ArrayList<>(handlers);
                 List<ActionHandler> invokedHandlers = new ArrayList<>();
 
-                updatedArgs = injectFromContext(action, updatedArgs);
-
                 final String qualifiedActionName = action.getFullyQualifiedName();
                 ActionExecutionStatus status = ActionExecutionStatus.OK;
+
+                try {
+                    LOG.trace("Resolving contextual arguments for " + qualifiedActionName);
+                    updatedArgs = injectFromContext(action, updatedArgs);
+                } catch (IllegalStateException ise) {
+                    LOG.debug("Execution of " + qualifiedActionName + " was aborted", ise);
+                    throw ise;
+                }
 
                 if (LOG.isDebugEnabled()) {
                     int size = copy.size();
@@ -295,13 +301,21 @@ public abstract class AbstractActionManager implements ActionManager {
         }
 
         Context context = group.getContext();
-        List<String> namedArgs = wrappedAction.namedArgs;
-
         if (wrappedAction.hasContextualArgs) {
-            args = new Object[namedArgs.size()];
-            for (int i = 0; i < namedArgs.size(); i++) {
-                args[i] = context.get(wrappedAction.namedArgs.get(i));
+            Object[] newArgs = new Object[wrappedAction.argumentsInfo.size()];
+            for (int i = 0; i < newArgs.length; i++) {
+                ArgInfo argInfo = wrappedAction.argumentsInfo.get(i);
+                newArgs[i] = argInfo.contextual ? context.get(argInfo.name) : args[i];
+                if (argInfo.contextual && newArgs[i] != null) context.put(argInfo.name, newArgs[i]);
+                if (argInfo.contextual && !argInfo.nullable && newArgs[i] == null) {
+                    throw new IllegalStateException("Could not find an instance of type " +
+                        argInfo.type.getName() + " under key '" + argInfo.name +
+                        "' in the context of MVCGroup[" + group.getMvcType() + ":" + group.getMvcId() +
+                        "] to be injected as argument " + i +
+                        " at " + action.getFullyQualifiedName() + "(). Argument does not accept null values.");
+                }
             }
+            return newArgs;
         }
 
         return args;
@@ -487,7 +501,7 @@ public abstract class AbstractActionManager implements ActionManager {
     }
 
     private static class ActionWrapper extends ActionDecorator {
-        private final List<String> namedArgs = new ArrayList<>();
+        private final List<ArgInfo> argumentsInfo = new ArrayList<>();
         private boolean hasContextualArgs;
 
         public ActionWrapper(@Nonnull Action delegate, @Nonnull Method method) {
@@ -497,26 +511,38 @@ public abstract class AbstractActionManager implements ActionManager {
             Annotation[][] parameterAnnotations = method.getParameterAnnotations();
             hasContextualArgs = method.getAnnotation(Contextual.class) != null;
             for (int i = 0; i < parameterTypes.length; i++) {
-                Class<?> type = parameterTypes[i];
+                ArgInfo argInfo = new ArgInfo();
+                argInfo.type = parameterTypes[i];
+                argInfo.name = argInfo.type.getCanonicalName();
 
                 Annotation[] annotations = parameterAnnotations[i];
-                String name = type.getCanonicalName();
                 if (annotations != null) {
                     for (Annotation annotation : annotations) {
                         if (Contextual.class.isAssignableFrom(annotation.annotationType())) {
                             hasContextualArgs = true;
+                            argInfo.contextual = true;
+                        }
+                        if (Nonnull.class.isAssignableFrom(annotation.annotationType())) {
+                            argInfo.nullable = false;
                         }
                         if (Named.class.isAssignableFrom(annotation.annotationType())) {
                             Named named = (Named) annotation;
                             if (!isBlank(named.value())) {
-                                name = named.value();
+                                argInfo.name = named.value();
                             }
                         }
                     }
                 }
-                namedArgs.add(name);
+                argumentsInfo.add(argInfo);
             }
         }
+    }
+
+    private static class ArgInfo {
+        private Class<?> type;
+        private String name;
+        private boolean nullable = true;
+        private boolean contextual = false;
     }
 
     private static class ActionCache {
