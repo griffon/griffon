@@ -15,6 +15,8 @@
  */
 package org.codehaus.griffon.runtime.core.mvc;
 
+import griffon.core.Context;
+import griffon.core.ContextFactory;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonModel;
@@ -54,7 +56,6 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public abstract class AbstractMVCGroupManager implements MVCGroupManager {
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractMVCGroupManager.class);
     protected static final String ERROR_MVCTYPE_BLANK = "Argument 'mvcType' must not be blank";
     protected static final String ERROR_MVCID_BLANK = "Argument 'mvcId' must not be blank";
     protected static final String ERROR_CONFIGURATION_NULL = "Argument 'configuration' must not be null";
@@ -63,7 +64,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     protected static final String ERROR_ARGS_NULL = "Argument 'args' must not be null";
     protected static final String ERROR_NAME_BLANK = "Argument 'name' cannot be blank";
     protected static final String ERROR_TYPE_NULL = "Argument 'type' cannot be null";
-
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractMVCGroupManager.class);
     private final GriffonApplication application;
 
     private final Map<String, MVCGroupConfiguration> configurations = new LinkedHashMap<>();
@@ -76,6 +77,9 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
 
     @Inject
     private MVCGroupFactory mvcGroupFactory;
+
+    @Inject
+    private ContextFactory contextFactory;
 
     @Inject
     public AbstractMVCGroupManager(@Nonnull GriffonApplication application) {
@@ -95,6 +99,13 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     @Nonnull
     public MVCGroup newMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> members, @Nullable MVCGroup parentGroup) {
         return mvcGroupFactory.create(configuration, mvcId, members, parentGroup);
+    }
+
+    @Nonnull
+    @Override
+    public Context newContext(@Nullable MVCGroup parentGroup) {
+        Context parentContext = parentGroup != null ? parentGroup.getContext() : getApplication().getContext();
+        return contextFactory.create(parentContext);
     }
 
     @Nonnull

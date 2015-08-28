@@ -17,7 +17,6 @@ package org.codehaus.griffon.runtime.core.mvc;
 
 import griffon.core.ApplicationClassLoader;
 import griffon.core.ApplicationEvent;
-import griffon.core.Context;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.ArtifactManager;
 import griffon.core.artifact.GriffonArtifact;
@@ -31,7 +30,6 @@ import griffon.exceptions.GriffonException;
 import griffon.exceptions.MVCGroupInstantiationException;
 import griffon.exceptions.NewInstanceException;
 import griffon.util.CollectionUtils;
-import org.codehaus.griffon.runtime.core.DefaultContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,13 +69,6 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     public DefaultMVCGroupManager(@Nonnull GriffonApplication application, @Nonnull ApplicationClassLoader applicationClassLoader) {
         super(application);
         this.applicationClassLoader = requireNonNull(applicationClassLoader, "Argument 'applicationClassLoader' must not be null");
-    }
-
-    @Nonnull
-    @Override
-    public Context newContext(@Nullable MVCGroup parentGroup) {
-        Context parentContext = parentGroup != null ? parentGroup.getContext() : getApplication().getContext();
-        return new DefaultContext(parentContext);
     }
 
     protected void doInitialize(@Nonnull Map<String, MVCGroupConfiguration> configurations) {

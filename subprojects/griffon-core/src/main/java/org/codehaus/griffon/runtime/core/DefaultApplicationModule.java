@@ -19,6 +19,7 @@ import griffon.core.ApplicationClassLoader;
 import griffon.core.ApplicationConfigurer;
 import griffon.core.Configuration;
 import griffon.core.Context;
+import griffon.core.ContextFactory;
 import griffon.core.ExecutorServiceManager;
 import griffon.core.GriffonExceptionHandler;
 import griffon.core.LifecycleHandler;
@@ -104,9 +105,13 @@ public class DefaultApplicationModule extends AbstractModule {
             .toProvider(EnvironmentProvider.class)
             .asSingleton();
 
+        bind(ContextFactory.class)
+            .to(DefaultContextFactory.class)
+            .asSingleton();
+
         bind(Context.class)
             .withClassifier(named("applicationContext"))
-            .to(DefaultContext.class)
+            .toProvider(DefaultContextProvider.class)
             .asSingleton();
 
         bind(ApplicationConfigurer.class)
