@@ -34,12 +34,12 @@ import griffon.core.env.RunMode;
 import griffon.core.event.EventHandler;
 import griffon.core.event.EventRouter;
 import griffon.core.i18n.MessageSource;
-import org.codehaus.griffon.runtime.core.i18n.MessageSourceDecoratorFactory;
+import griffon.core.mvc.MVCGroupConfigurationFactory;
+import griffon.core.mvc.MVCGroupFactory;
 import griffon.core.mvc.MVCGroupManager;
 import griffon.core.resources.ResourceHandler;
 import griffon.core.resources.ResourceInjector;
 import griffon.core.resources.ResourceResolver;
-import org.codehaus.griffon.runtime.core.resources.ResourceResolverDecoratorFactory;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import griffon.util.CompositeResourceBundleBuilder;
@@ -56,12 +56,16 @@ import org.codehaus.griffon.runtime.core.env.RunModeProvider;
 import org.codehaus.griffon.runtime.core.event.DefaultEventHandler;
 import org.codehaus.griffon.runtime.core.event.DefaultEventRouter;
 import org.codehaus.griffon.runtime.core.i18n.DefaultMessageSourceDecoratorFactory;
+import org.codehaus.griffon.runtime.core.i18n.MessageSourceDecoratorFactory;
 import org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupConfigurationFactory;
+import org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupFactory;
 import org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager;
 import org.codehaus.griffon.runtime.core.resources.DefaultApplicationResourceInjector;
 import org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler;
 import org.codehaus.griffon.runtime.core.resources.DefaultResourceResolverDecoratorFactory;
+import org.codehaus.griffon.runtime.core.resources.ResourceResolverDecoratorFactory;
 import org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider;
 import org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider;
 import org.codehaus.griffon.runtime.core.threading.DefaultUIThreadManager;
@@ -169,6 +173,14 @@ public class DefaultApplicationModule extends AbstractModule {
 
         bind(UIThreadManager.class)
             .to(DefaultUIThreadManager.class)
+            .asSingleton();
+
+        bind(MVCGroupConfigurationFactory.class)
+            .to(DefaultMVCGroupConfigurationFactory.class)
+            .asSingleton();
+
+        bind(MVCGroupFactory.class)
+            .to(DefaultMVCGroupFactory.class)
             .asSingleton();
 
         bind(MVCGroupManager.class)
