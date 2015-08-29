@@ -64,6 +64,7 @@ public abstract class AbstractApplicationBootstrapper implements ApplicationBoot
         // 1 initialize environment settings
         LOG.info("Griffon {}", GriffonEnvironment.getGriffonVersion());
         LOG.info("Build: {}", GriffonEnvironment.getBuildDateTime());
+        LOG.info("Revision: {}", GriffonEnvironment.getBuildRevision());
         LOG.info("JVM: {}", GriffonEnvironment.getJvmVersion());
         LOG.info("OS: {}", GriffonEnvironment.getOsVersion());
 

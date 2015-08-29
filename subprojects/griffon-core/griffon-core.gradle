@@ -40,6 +40,7 @@ project.processResources {
             'created.by': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})".toString(),
             'build.date': buildDate,
             'build.time': buildTime,
+            'build.revision': versioning.info.commit,
             'griffon.version': project.version
         ])
     }

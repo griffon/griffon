@@ -29,14 +29,15 @@ import static griffon.util.GriffonNameUtils.isBlank;
 public class GriffonEnvironment {
     private static final Logger LOG = LoggerFactory.getLogger(GriffonEnvironment.class);
 
-    private static final String GRIFFON_IMPLEMENTATION_TITLE = "griffon-core";
     private static final String BUILD_DATE;
     private static final String BUILD_TIME;
+    private static final String BUILD_REVISION;
     private static final String GRIFFON_VERSION;
 
     static {
         String buildDate = null;
         String buildTime = null;
+        String buildRevision = null;
         String version = null;
 
         try {
@@ -47,20 +48,22 @@ public class GriffonEnvironment {
                 griffonProperties.load(griffonPropertiesResource.openStream());
                 buildDate = griffonProperties.getProperty("build.date");
                 buildTime = griffonProperties.getProperty("build.time");
+                buildRevision = griffonProperties.getProperty("build.revision");
                 version = griffonProperties.getProperty("griffon.version");
             }
 
             if (isBlank(buildDate) || isBlank(buildTime) || isBlank(version)) {
                 LOG.error("Unable to read Griffon version from META-INF/griffon-core.properties. Are you sure the griffon-core jar is in the classpath?");
-                buildDate = buildTime = version = "";
+                buildDate = buildTime = buildRevision = version = "";
             }
         } catch (Exception e) {
             LOG.error("Unable to read Griffon version from META-INF/griffon-core.properties. Are you sure the griffon-core jar is in the classpath? " + e.getMessage(), e);
-            buildDate = buildTime = version = "";
+            buildDate = buildTime = buildRevision = version = "";
         }
 
         BUILD_DATE = buildDate;
         BUILD_TIME = buildTime;
+        BUILD_REVISION = buildRevision;
         GRIFFON_VERSION = version;
     }
 
@@ -105,6 +108,10 @@ public class GriffonEnvironment {
         return BUILD_TIME;
     }
 
+    public static String getBuildRevision() {
+        return BUILD_REVISION;
+    }
+
     public static String prettyPrint() {
         padLeft("Griffon", 8, " ");
 
@@ -115,6 +122,7 @@ public class GriffonEnvironment {
             .append(getGriffonVersion())
             .append("\n------------------------------------------------------------\n\n");
         entry("Build", getBuildDateTime(), sb);
+        entry("Revision", getBuildRevision(), sb);
         entry("JVM", getJvmVersion(), sb);
         entry("OS", getOsVersion(), sb);
         return sb.toString();
