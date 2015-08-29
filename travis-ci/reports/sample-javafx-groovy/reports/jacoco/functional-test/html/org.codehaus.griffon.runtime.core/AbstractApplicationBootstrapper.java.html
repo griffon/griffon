@@ -64,122 +64,123 @@ public abstract class AbstractApplicationBootstrapper implements ApplicationBoot
         // 1 initialize environment settings
 <span class="fc" id="L65">        LOG.info(&quot;Griffon {}&quot;, GriffonEnvironment.getGriffonVersion());</span>
 <span class="fc" id="L66">        LOG.info(&quot;Build: {}&quot;, GriffonEnvironment.getBuildDateTime());</span>
-<span class="fc" id="L67">        LOG.info(&quot;JVM: {}&quot;, GriffonEnvironment.getJvmVersion());</span>
-<span class="fc" id="L68">        LOG.info(&quot;OS: {}&quot;, GriffonEnvironment.getOsVersion());</span>
+<span class="fc" id="L67">        LOG.info(&quot;Revision: {}&quot;, GriffonEnvironment.getBuildRevision());</span>
+<span class="fc" id="L68">        LOG.info(&quot;JVM: {}&quot;, GriffonEnvironment.getJvmVersion());</span>
+<span class="fc" id="L69">        LOG.info(&quot;OS: {}&quot;, GriffonEnvironment.getOsVersion());</span>
 
         // 2 create bindings
-<span class="fc" id="L71">        LOG.debug(&quot;Creating module bindings&quot;);</span>
-<span class="fc" id="L72">        Iterable&lt;Binding&lt;?&gt;&gt; bindings = createBindings();</span>
+<span class="fc" id="L72">        LOG.debug(&quot;Creating module bindings&quot;);</span>
+<span class="fc" id="L73">        Iterable&lt;Binding&lt;?&gt;&gt; bindings = createBindings();</span>
 
-<span class="pc bpc" id="L74" title="1 of 2 branches missed.">        if (LOG.isTraceEnabled()) {</span>
-<span class="fc bfc" id="L75" title="All 2 branches covered.">            for (Binding&lt;?&gt; binding : bindings) {</span>
-<span class="fc" id="L76">                LOG.trace(binding.toString());</span>
-<span class="fc" id="L77">            }</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">        if (LOG.isTraceEnabled()) {</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">            for (Binding&lt;?&gt; binding : bindings) {</span>
+<span class="fc" id="L77">                LOG.trace(binding.toString());</span>
+<span class="fc" id="L78">            }</span>
         }
 
         // 3 create injector
-<span class="fc" id="L81">        LOG.debug(&quot;Creating application injector&quot;);</span>
-<span class="fc" id="L82">        createInjector(bindings);</span>
-<span class="fc" id="L83">    }</span>
+<span class="fc" id="L82">        LOG.debug(&quot;Creating application injector&quot;);</span>
+<span class="fc" id="L83">        createInjector(bindings);</span>
+<span class="fc" id="L84">    }</span>
 
     @Override
     public void run() {
-<span class="nc" id="L87">        application.initialize();</span>
-<span class="nc" id="L88">        application.startup();</span>
-<span class="nc" id="L89">        application.ready();</span>
-<span class="nc" id="L90">    }</span>
+<span class="nc" id="L88">        application.initialize();</span>
+<span class="nc" id="L89">        application.startup();</span>
+<span class="nc" id="L90">        application.ready();</span>
+<span class="nc" id="L91">    }</span>
 
     @Nonnull
     protected Iterable&lt;Binding&lt;?&gt;&gt; createBindings() {
-<span class="fc" id="L94">        Map&lt;Key, Binding&lt;?&gt;&gt; map = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L95">        Map&lt;Key, Binding&lt;?&gt;&gt; map = new LinkedHashMap&lt;&gt;();</span>
 
-<span class="fc" id="L96">        List&lt;Module&gt; modules = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L97">        createApplicationModule(modules);</span>
-<span class="fc" id="L98">        createArtifactsModule(modules);</span>
-<span class="fc" id="L99">        collectModuleBindings(modules);</span>
+<span class="fc" id="L97">        List&lt;Module&gt; modules = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L98">        createApplicationModule(modules);</span>
+<span class="fc" id="L99">        createArtifactsModule(modules);</span>
+<span class="fc" id="L100">        collectModuleBindings(modules);</span>
 
-<span class="fc bfc" id="L101" title="All 2 branches covered.">        for (Module module : modules) {</span>
-<span class="fc bfc" id="L102" title="All 2 branches covered.">            for (Binding&lt;?&gt; binding : module.getBindings()) {</span>
-<span class="fc" id="L103">                map.put(Key.of(binding), binding);</span>
-<span class="fc" id="L104">            }</span>
-<span class="fc" id="L105">        }</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">        for (Module module : modules) {</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">            for (Binding&lt;?&gt; binding : module.getBindings()) {</span>
+<span class="fc" id="L104">                map.put(Key.of(binding), binding);</span>
+<span class="fc" id="L105">            }</span>
+<span class="fc" id="L106">        }</span>
 
-<span class="fc" id="L107">        return unmodifiableCollection(map.values());</span>
+<span class="fc" id="L108">        return unmodifiableCollection(map.values());</span>
     }
 
     protected void createArtifactsModule(@Nonnull List&lt;Module&gt; modules) {
-<span class="fc" id="L111">        final List&lt;Class&lt;?&gt;&gt; classes = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L112">        load(getClass().getClassLoader(), GRIFFON_PATH, new ServiceLoaderUtils.PathFilter() {</span>
+<span class="fc" id="L112">        final List&lt;Class&lt;?&gt;&gt; classes = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L113">        load(getClass().getClassLoader(), GRIFFON_PATH, new ServiceLoaderUtils.PathFilter() {</span>
             @Override
             public boolean accept(@Nonnull String path) {
-<span class="pc bpc" id="L115" title="1 of 2 branches missed.">                return !path.endsWith(PROPERTIES);</span>
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">                return !path.endsWith(PROPERTIES);</span>
             }
-<span class="fc" id="L117">        }, new ServiceLoaderUtils.ResourceProcessor() {</span>
+<span class="fc" id="L118">        }, new ServiceLoaderUtils.ResourceProcessor() {</span>
             @Override
             public void process(@Nonnull ClassLoader classLoader, @Nonnull String line) {
-<span class="fc" id="L120">                line = line.trim();</span>
+<span class="fc" id="L121">                line = line.trim();</span>
                 try {
-<span class="fc" id="L122">                    classes.add(classLoader.loadClass(line));</span>
-<span class="nc" id="L123">                } catch (ClassNotFoundException e) {</span>
-<span class="nc" id="L124">                    LOG.warn(&quot;'&quot; + line + &quot;' could not be resolved as a Class&quot;);</span>
-<span class="fc" id="L125">                }</span>
-<span class="fc" id="L126">            }</span>
+<span class="fc" id="L123">                    classes.add(classLoader.loadClass(line));</span>
+<span class="nc" id="L124">                } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L125">                    LOG.warn(&quot;'&quot; + line + &quot;' could not be resolved as a Class&quot;);</span>
+<span class="fc" id="L126">                }</span>
+<span class="fc" id="L127">            }</span>
         });
 
-<span class="fc" id="L129">        modules.add(new AbstractModule() {</span>
+<span class="fc" id="L130">        modules.add(new AbstractModule() {</span>
             @Override
             protected void doConfigure() {
-<span class="fc bfc" id="L132" title="All 2 branches covered.">                for (Class&lt;?&gt; clazz : classes) {</span>
-<span class="fc bfc" id="L133" title="All 2 branches covered.">                    if (GriffonService.class.isAssignableFrom(clazz)) {</span>
-<span class="fc" id="L134">                        bind(clazz).asSingleton();</span>
+<span class="fc bfc" id="L133" title="All 2 branches covered.">                for (Class&lt;?&gt; clazz : classes) {</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">                    if (GriffonService.class.isAssignableFrom(clazz)) {</span>
+<span class="fc" id="L135">                        bind(clazz).asSingleton();</span>
                     } else {
-<span class="fc" id="L136">                        bind(clazz);</span>
+<span class="fc" id="L137">                        bind(clazz);</span>
                     }
-<span class="fc" id="L138">                }</span>
-<span class="fc" id="L139">            }</span>
+<span class="fc" id="L139">                }</span>
+<span class="fc" id="L140">            }</span>
         });
-<span class="fc" id="L141">    }</span>
+<span class="fc" id="L142">    }</span>
 
     protected void createApplicationModule(@Nonnull List&lt;Module&gt; modules) {
-<span class="fc" id="L144">        modules.add(new AbstractModule() {</span>
+<span class="fc" id="L145">        modules.add(new AbstractModule() {</span>
             @Override
             protected void doConfigure() {
-<span class="fc" id="L147">                bind(GriffonApplication.class)</span>
-<span class="fc" id="L148">                    .toInstance(application);</span>
-<span class="fc" id="L149">            }</span>
+<span class="fc" id="L148">                bind(GriffonApplication.class)</span>
+<span class="fc" id="L149">                    .toInstance(application);</span>
+<span class="fc" id="L150">            }</span>
         });
-<span class="fc" id="L151">    }</span>
+<span class="fc" id="L152">    }</span>
 
     protected void collectModuleBindings(@Nonnull Collection&lt;Module&gt; modules) {
-<span class="fc" id="L154">        List&lt;Module&gt; moduleInstances = loadModules();</span>
-<span class="fc" id="L155">        moduleInstances.add(0, new DefaultApplicationModule());</span>
-<span class="fc" id="L156">        Map&lt;String, Module&gt; sortedModules = sortModules(moduleInstances);</span>
-<span class="fc bfc" id="L157" title="All 2 branches covered.">        for (Map.Entry&lt;String, Module&gt; entry : sortedModules.entrySet()) {</span>
-<span class="fc" id="L158">            LOG.debug(&quot;Loading module bindings from {}:{}&quot;, entry.getKey(), entry.getValue());</span>
-<span class="fc" id="L159">            modules.add(entry.getValue());</span>
-<span class="fc" id="L160">        }</span>
-<span class="fc" id="L161">    }</span>
+<span class="fc" id="L155">        List&lt;Module&gt; moduleInstances = loadModules();</span>
+<span class="fc" id="L156">        moduleInstances.add(0, new DefaultApplicationModule());</span>
+<span class="fc" id="L157">        Map&lt;String, Module&gt; sortedModules = sortModules(moduleInstances);</span>
+<span class="fc bfc" id="L158" title="All 2 branches covered.">        for (Map.Entry&lt;String, Module&gt; entry : sortedModules.entrySet()) {</span>
+<span class="fc" id="L159">            LOG.debug(&quot;Loading module bindings from {}:{}&quot;, entry.getKey(), entry.getValue());</span>
+<span class="fc" id="L160">            modules.add(entry.getValue());</span>
+<span class="fc" id="L161">        }</span>
+<span class="fc" id="L162">    }</span>
 
     @Nonnull
     protected Map&lt;String, Module&gt; sortModules(@Nonnull List&lt;Module&gt; moduleInstances) {
-<span class="fc" id="L165">        return sortByDependencies(moduleInstances, &quot;Module&quot;, &quot;module&quot;);</span>
+<span class="fc" id="L166">        return sortByDependencies(moduleInstances, &quot;Module&quot;, &quot;module&quot;);</span>
     }
 
     @Nonnull
     protected abstract List&lt;Module&gt; loadModules();
 
     private void createInjector(@Nonnull Iterable&lt;Binding&lt;?&gt;&gt; bindings) throws Exception {
-<span class="fc" id="L172">        ServiceLoader&lt;InjectorFactory&gt; serviceLoader = ServiceLoader.load(InjectorFactory.class);</span>
+<span class="fc" id="L173">        ServiceLoader&lt;InjectorFactory&gt; serviceLoader = ServiceLoader.load(InjectorFactory.class);</span>
         try {
-<span class="fc" id="L174">            Iterator&lt;InjectorFactory&gt; iterator = serviceLoader.iterator();</span>
-<span class="fc" id="L175">            InjectorFactory injectorFactory = iterator.next();</span>
-<span class="fc" id="L176">            LOG.debug(&quot;Injector will be created by {}&quot;, injectorFactory);</span>
-<span class="fc" id="L177">            Injector&lt;?&gt; injector = injectorFactory.createInjector(application, bindings);</span>
-<span class="fc" id="L178">            GriffonClassUtils.setProperty(application, INJECTOR, injector);</span>
-<span class="nc" id="L179">        } catch (Exception e) {</span>
-<span class="nc" id="L180">            LOG.error(&quot;An error occurred while initializing the injector&quot;, sanitize(e));</span>
-<span class="nc" id="L181">            throw e;</span>
-<span class="fc" id="L182">        }</span>
-<span class="fc" id="L183">    }</span>
+<span class="fc" id="L175">            Iterator&lt;InjectorFactory&gt; iterator = serviceLoader.iterator();</span>
+<span class="fc" id="L176">            InjectorFactory injectorFactory = iterator.next();</span>
+<span class="fc" id="L177">            LOG.debug(&quot;Injector will be created by {}&quot;, injectorFactory);</span>
+<span class="fc" id="L178">            Injector&lt;?&gt; injector = injectorFactory.createInjector(application, bindings);</span>
+<span class="fc" id="L179">            GriffonClassUtils.setProperty(application, INJECTOR, injector);</span>
+<span class="nc" id="L180">        } catch (Exception e) {</span>
+<span class="nc" id="L181">            LOG.error(&quot;An error occurred while initializing the injector&quot;, sanitize(e));</span>
+<span class="nc" id="L182">            throw e;</span>
+<span class="fc" id="L183">        }</span>
+<span class="fc" id="L184">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
