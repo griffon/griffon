@@ -18,6 +18,7 @@ package griffon.builder.javafx;
 import griffon.builder.javafx.factory.ActionFactory;
 import griffon.builder.javafx.factory.ApplicationFactory;
 import griffon.builder.javafx.factory.ControlFactory;
+import griffon.builder.javafx.factory.FXMLFactory;
 import griffon.builder.javafx.factory.LabeledFactory;
 import griffon.builder.javafx.factory.MenuFactory;
 import griffon.builder.javafx.factory.MenuItemFactory;
@@ -87,6 +88,8 @@ public class JavafxBuilderCustomizer extends AbstractBuilderCustomizer {
         factories.put("toggleButton", new LabeledFactory(ToggleButton.class));
 
         factories.put("comboBox", new ControlFactory(ComboBox.class));
+
+        factories.put("fxml", new FXMLFactory());
 
         setFactories(factories);
         setVariables(builder.getVariables());
