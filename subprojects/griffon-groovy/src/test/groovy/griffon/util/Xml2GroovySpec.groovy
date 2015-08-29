@@ -35,7 +35,7 @@ class Xml2GroovySpec extends Specification {
         String output = Xml2Groovy.instance.parse(input)
 
         expect:
-        expected.trim() == output.trim() || expected8.trim() == output.trim()
+        expected.trim().normalize() == output.trim().normalize() || expected8.trim().normalize() == output.trim().normalize()
 
         where:
         type          | input
@@ -51,7 +51,7 @@ class Xml2GroovySpec extends Specification {
         String output = Xml2Groovy.instance.parseText(new File(APPLICATION_XML).text)
 
         expect:
-        expected.trim() == output.trim() || expected8.trim() == output.trim()
+        expected.trim().normalize() == output.trim().normalize() || expected8.trim().normalize() == output.trim().normalize()
     }
 
     def "Bad application.xml from #type results in error"() {
