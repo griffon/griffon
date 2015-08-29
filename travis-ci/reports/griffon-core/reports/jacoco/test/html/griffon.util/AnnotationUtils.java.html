@@ -27,6 +27,8 @@ import javax.inject.Named;
 import javax.inject.Qualifier;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -38,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static griffon.util.GriffonClassUtils.requireState;
 import static griffon.util.GriffonNameUtils.getLogicalPropertyName;
 import static griffon.util.GriffonNameUtils.getPropertyName;
 import static griffon.util.GriffonNameUtils.isBlank;
@@ -48,245 +51,300 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class AnnotationUtils {
-<span class="fc" id="L51">    private static final Logger LOG = LoggerFactory.getLogger(AnnotationUtils.class);</span>
+<span class="fc" id="L54">    private static final Logger LOG = LoggerFactory.getLogger(AnnotationUtils.class);</span>
+    private static final String ERROR_CLASS_NULL = &quot;Argument 'class' must not be null&quot;;
+    private static final String ERROR_SUFFIX_NULL = &quot;Argument 'suffix' must not be null&quot;;
+    private static final String ERROR_INSTANCE_NULL = &quot;Argument 'instance' must not be null&quot;;
+    private static final String ERROR_ANNOTATION_TYPE_NULL = &quot;Argument 'annotationType' must not be null&quot;;
 
-<span class="nc" id="L53">    private AnnotationUtils() {</span>
+<span class="nc" id="L60">    private AnnotationUtils() {</span>
 
-<span class="nc" id="L55">    }</span>
+<span class="nc" id="L62">    }</span>
 
     @Nonnull
     public static List&lt;Annotation&gt; harvestQualifiers(@Nonnull Class&lt;?&gt; klass) {
-<span class="fc" id="L59">        requireNonNull(klass, &quot;Argument 'class' must not be null&quot;);</span>
-<span class="fc" id="L60">        List&lt;Annotation&gt; list = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L61">        Annotation[] annotations = klass.getAnnotations();</span>
-<span class="fc bfc" id="L62" title="All 2 branches covered.">        for (Annotation annotation : annotations) {</span>
-<span class="pc bpc" id="L63" title="1 of 2 branches missed.">            if (AnnotationUtils.isAnnotatedWith(annotation, Qualifier.class)) {</span>
+<span class="fc" id="L66">        requireNonNull(klass, &quot;Argument 'class' must not be null&quot;);</span>
+<span class="fc" id="L67">        List&lt;Annotation&gt; list = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L68">        Annotation[] annotations = klass.getAnnotations();</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        for (Annotation annotation : annotations) {</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">            if (AnnotationUtils.isAnnotatedWith(annotation, Qualifier.class)) {</span>
                 // special case @BindTo is only used during tests
-<span class="pc bpc" id="L65" title="1 of 2 branches missed.">                if (BindTo.class.isAssignableFrom(annotation.getClass())) {</span>
-<span class="nc" id="L66">                    continue;</span>
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">                if (BindTo.class.isAssignableFrom(annotation.getClass())) {</span>
+<span class="nc" id="L73">                    continue;</span>
                 }
                 // special case for @Named
-<span class="fc bfc" id="L69" title="All 2 branches covered.">                if (Named.class.isAssignableFrom(annotation.getClass())) {</span>
-<span class="fc" id="L70">                    Named named = (Named) annotation;</span>
-<span class="pc bpc" id="L71" title="1 of 2 branches missed.">                    if (isBlank(named.value())) {</span>
-<span class="nc" id="L72">                        list.add(named(getPropertyName(klass)));</span>
-<span class="nc" id="L73">                        continue;</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">                if (Named.class.isAssignableFrom(annotation.getClass())) {</span>
+<span class="fc" id="L77">                    Named named = (Named) annotation;</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">                    if (isBlank(named.value())) {</span>
+<span class="nc" id="L79">                        list.add(named(getPropertyName(klass)));</span>
+<span class="nc" id="L80">                        continue;</span>
                     }
                 }
-<span class="fc" id="L76">                list.add(annotation);</span>
+<span class="fc" id="L83">                list.add(annotation);</span>
             }
         }
-<span class="fc" id="L79">        return list;</span>
+<span class="fc" id="L86">        return list;</span>
     }
 
     @Nullable
     public static &lt;A extends Annotation&gt; A findAnnotation(@Nonnull Class&lt;?&gt; klass, @Nonnull Class&lt;A&gt; annotationType) {
-<span class="fc" id="L84">        requireNonNull(klass, &quot;Argument 'class' must not be null&quot;);</span>
-<span class="fc" id="L85">        requireNonNull(annotationType, &quot;Argument 'annotationType' must not be null&quot;);</span>
-<span class="fc bfc" id="L86" title="All 2 branches covered.">        while (klass != null) {</span>
-<span class="pc bpc" id="L87" title="1 of 2 branches missed.">            for (Annotation annotation : klass.getAnnotations()) {</span>
-<span class="nc bnc" id="L88" title="All 2 branches missed.">                if (annotationType.isAssignableFrom(annotation.getClass())) {</span>
-<span class="nc" id="L89">                    return (A) annotation;</span>
-                }
+<span class="fc" id="L91">        requireNonNull(klass, ERROR_CLASS_NULL);</span>
+<span class="fc" id="L92">        requireNonNull(annotationType, ERROR_ANNOTATION_TYPE_NULL);</span>
+
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        while (klass != null) {</span>
+<span class="fc" id="L95">            Annotation annotation = findAnnotation(klass.getAnnotations(), annotationType);</span>
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">            if (annotation != null) return (A) annotation;</span>
+<span class="fc" id="L97">            klass = klass.getSuperclass();</span>
+<span class="fc" id="L98">        }</span>
+<span class="fc" id="L99">        return null;</span>
+    }
+
+    @Nullable
+    public static &lt;A extends Annotation&gt; A findAnnotation(@Nonnull Annotation[] annotations, @Nonnull Class&lt;A&gt; annotationType) {
+<span class="fc" id="L104">        requireNonNull(annotations, &quot;Argument 'annotations' must not be null&quot;);</span>
+<span class="fc" id="L105">        requireNonNull(annotationType, ERROR_ANNOTATION_TYPE_NULL);</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        for (Annotation annotation : annotations) {</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">            if (annotationType.isAssignableFrom(annotation.getClass())) {</span>
+<span class="fc" id="L108">                return (A) annotation;</span>
             }
-<span class="fc" id="L92">            klass = klass.getSuperclass();</span>
         }
-<span class="fc" id="L94">        return null;</span>
+<span class="fc" id="L111">        return null;</span>
     }
 
     public static boolean isAnnotatedWith(@Nonnull Object instance, @Nonnull Class&lt;? extends Annotation&gt; annotationType) {
-<span class="fc" id="L98">        return isAnnotatedWith(requireNonNull(instance, &quot;Argument 'instance' must not be null&quot;).getClass(), annotationType);</span>
+<span class="fc" id="L115">        return isAnnotatedWith(requireNonNull(instance, ERROR_INSTANCE_NULL).getClass(), annotationType);</span>
     }
 
     public static boolean isAnnotatedWith(@Nonnull Class&lt;?&gt; clazz, @Nonnull Class&lt;? extends Annotation&gt; annotationType) {
-<span class="fc" id="L102">        requireNonNull(clazz, &quot;Argument 'class' must not be null&quot;);</span>
-<span class="fc" id="L103">        requireNonNull(annotationType, &quot;Argument 'annotationType' must not be null&quot;);</span>
+<span class="fc" id="L119">        requireNonNull(clazz, ERROR_CLASS_NULL);</span>
+<span class="fc" id="L120">        requireNonNull(annotationType, ERROR_ANNOTATION_TYPE_NULL);</span>
 
         //noinspection ConstantConditions
-<span class="fc bfc" id="L106" title="All 2 branches covered.">        while (clazz != null) {</span>
-<span class="fc bfc" id="L107" title="All 2 branches covered.">            for (Annotation annotation : clazz.getAnnotations()) {</span>
-<span class="fc bfc" id="L108" title="All 2 branches covered.">                if (annotationType.equals(annotation.annotationType())) {</span>
-<span class="fc" id="L109">                    return true;</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        while (clazz != null) {</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">            for (Annotation annotation : clazz.getAnnotations()) {</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">                if (annotationType.equals(annotation.annotationType())) {</span>
+<span class="fc" id="L126">                    return true;</span>
                 }
             }
-<span class="fc bfc" id="L112" title="All 2 branches covered.">            for (Class&lt;?&gt; iface : clazz.getInterfaces()) {</span>
-<span class="fc bfc" id="L113" title="All 2 branches covered.">                if (isAnnotatedWith(iface, annotationType)) {</span>
-<span class="fc" id="L114">                    return true;</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">            for (Class&lt;?&gt; iface : clazz.getInterfaces()) {</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">                if (isAnnotatedWith(iface, annotationType)) {</span>
+<span class="fc" id="L131">                    return true;</span>
                 }
             }
 
-<span class="fc" id="L118">            clazz = clazz.getSuperclass();</span>
+<span class="fc" id="L135">            clazz = clazz.getSuperclass();</span>
         }
-<span class="fc" id="L120">        return false;</span>
+<span class="fc" id="L137">        return false;</span>
     }
 
     @Nonnull
     public static &lt;T&gt; T requireAnnotation(@Nonnull T instance, @Nonnull Class&lt;? extends Annotation&gt; annotationType) {
-<span class="pc bpc" id="L125" title="1 of 2 branches missed.">        if (!isAnnotatedWith(instance, annotationType)) {</span>
-<span class="fc" id="L126">            throw new IllegalArgumentException(&quot;Instance of &quot; + instance.getClass() + &quot; is not annotated with &quot; + annotationType.getName());</span>
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">        if (!isAnnotatedWith(instance, annotationType)) {</span>
+<span class="fc" id="L143">            throw new IllegalArgumentException(&quot;Instance of &quot; + instance.getClass() + &quot; is not annotated with &quot; + annotationType.getName());</span>
         }
-<span class="nc" id="L128">        return instance;</span>
+<span class="nc" id="L145">        return instance;</span>
     }
 
     @Nonnull
     public static &lt;T&gt; Class&lt;T&gt; requireAnnotation(@Nonnull Class&lt;T&gt; klass, @Nonnull Class&lt;? extends Annotation&gt; annotationType) {
-<span class="fc bfc" id="L133" title="All 2 branches covered.">        if (!isAnnotatedWith(klass, annotationType)) {</span>
-<span class="fc" id="L134">            throw new IllegalArgumentException(&quot;Class &quot; + klass.getName() + &quot; is not annotated with &quot; + annotationType.getName());</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">        if (!isAnnotatedWith(klass, annotationType)) {</span>
+<span class="fc" id="L151">            throw new IllegalArgumentException(&quot;Class &quot; + klass.getName() + &quot; is not annotated with &quot; + annotationType.getName());</span>
         }
-<span class="fc" id="L136">        return klass;</span>
+<span class="fc" id="L153">        return klass;</span>
     }
 
     @Nonnull
     public static String[] getDependsOn(@Nonnull Object instance) {
-<span class="fc" id="L141">        DependsOn dependsOn = instance.getClass().getAnnotation(DependsOn.class);</span>
-<span class="fc bfc" id="L142" title="All 2 branches covered.">        return dependsOn != null ? dependsOn.value() : new String[0];</span>
+<span class="fc" id="L158">        requireNonNull(instance, ERROR_INSTANCE_NULL);</span>
+
+<span class="fc" id="L160">        DependsOn dependsOn = instance.getClass().getAnnotation(DependsOn.class);</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">        return dependsOn != null ? dependsOn.value() : new String[0];</span>
     }
 
     @Nonnull
-    public static String nameFor(@Nonnull Object instance, @Nonnull String suffix) {
-<span class="fc" id="L147">        Named annotation = instance.getClass().getAnnotation(Named.class);</span>
-<span class="pc bpc" id="L148" title="1 of 4 branches missed.">        if (annotation != null &amp;&amp; !isBlank(annotation.value())) {</span>
-<span class="fc" id="L149">            return annotation.value();</span>
+    public static String nameFor(@Nonnull Object instance) {
+<span class="fc" id="L166">        requireNonNull(instance, ERROR_INSTANCE_NULL);</span>
+
+<span class="fc" id="L168">        Named annotation = instance.getClass().getAnnotation(Named.class);</span>
+<span class="pc bpc" id="L169" title="1 of 4 branches missed.">        if (annotation != null &amp;&amp; !isBlank(annotation.value())) {</span>
+<span class="fc" id="L170">            return annotation.value();</span>
         } else {
-<span class="fc" id="L151">            return getLogicalPropertyName(instance.getClass().getName(), suffix);</span>
+<span class="fc" id="L172">            return instance.getClass().getName();</span>
         }
+    }
+
+    @Nonnull
+    public static String nameFor(@Nonnull Field field) {
+<span class="fc" id="L178">        requireNonNull(field, &quot;Argument 'field' must not be null&quot;);</span>
+
+<span class="fc" id="L180">        Named annotation = field.getAnnotation(Named.class);</span>
+<span class="pc bpc" id="L181" title="2 of 4 branches missed.">        if (annotation != null &amp;&amp; !isBlank(annotation.value())) {</span>
+<span class="fc" id="L182">            return annotation.value();</span>
+        } else {
+<span class="nc" id="L184">            return field.getType().getName();</span>
+        }
+    }
+
+    @Nonnull
+    public static String nameFor(@Nonnull Method setterMethod) {
+<span class="fc" id="L190">        requireNonNull(setterMethod, &quot;Argument 'setterMethod' must not be null&quot;);</span>
+
+<span class="fc" id="L192">        Class&lt;?&gt;[] parameterTypes = setterMethod.getParameterTypes();</span>
+<span class="pc bpc" id="L193" title="2 of 4 branches missed.">        requireState(parameterTypes != null &amp;&amp; parameterTypes.length &gt; 0, &quot;Argument 'setterMethod' must have at least one parameter. &quot; + MethodDescriptor.forMethod(setterMethod));</span>
+
+<span class="fc" id="L195">        Named annotation = findAnnotation(annotationsOfMethodParameter(setterMethod, 0), Named.class);</span>
+<span class="pc bpc" id="L196" title="2 of 4 branches missed.">        if (annotation != null &amp;&amp; !isBlank(annotation.value())) {</span>
+<span class="fc" id="L197">            return annotation.value();</span>
+        } else {
+<span class="nc" id="L199">            return parameterTypes[0].getName();</span>
+        }
+    }
+
+    @Nonnull
+    public static Annotation[] annotationsOfMethodParameter(@Nonnull Method method, int paramIndex) {
+<span class="fc" id="L205">        requireNonNull(method, &quot;Argument 'method' must not be null&quot;);</span>
+
+<span class="fc" id="L207">        Class&lt;?&gt;[] parameterTypes = method.getParameterTypes();</span>
+<span class="pc bpc" id="L208" title="2 of 4 branches missed.">        requireState(parameterTypes != null &amp;&amp; parameterTypes.length &gt; paramIndex, &quot;Index &quot; + paramIndex + &quot; is out of bounds&quot;);</span>
+
+<span class="fc" id="L210">        return method.getParameterAnnotations()[paramIndex];</span>
     }
 
     @Nonnull
     public static &lt;T&gt; Map&lt;String, T&gt; mapInstancesByName(@Nonnull Collection&lt;T&gt; instances, @Nonnull String suffix) {
-<span class="fc" id="L157">        Map&lt;String, T&gt; map = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L215">        Map&lt;String, T&gt; map = new LinkedHashMap&lt;&gt;();</span>
 
-<span class="fc bfc" id="L159" title="All 2 branches covered.">        for (T instance : instances) {</span>
-<span class="fc" id="L160">            map.put(nameFor(instance, suffix), instance);</span>
-<span class="fc" id="L161">        }</span>
+<span class="fc bfc" id="L217" title="All 2 branches covered.">        for (T instance : instances) {</span>
+<span class="fc" id="L218">            map.put(getLogicalPropertyName(nameFor(instance), suffix), instance);</span>
+<span class="fc" id="L219">        }</span>
 
-<span class="fc" id="L163">        return map;</span>
+<span class="fc" id="L221">        return map;</span>
     }
 
     @Nonnull
     public static &lt;T&gt; Map&lt;String, T&gt; sortByDependencies(@Nonnull Collection&lt;T&gt; instances, @Nonnull String suffix, @Nonnull String type) {
-<span class="fc" id="L168">        return sortByDependencies(instances, suffix, type, Collections.&lt;String&gt;emptyList());</span>
+<span class="fc" id="L226">        return sortByDependencies(instances, suffix, type, Collections.&lt;String&gt;emptyList());</span>
     }
 
     @Nonnull
     public static &lt;T&gt; Map&lt;String, T&gt; sortByDependencies(@Nonnull Collection&lt;T&gt; instances, @Nonnull String suffix, @Nonnull String type, @Nonnull List&lt;String&gt; order) {
-<span class="fc" id="L173">        requireNonNull(instances, &quot;Argument 'instances' must not be null&quot;);</span>
-<span class="fc" id="L174">        requireNonNull(suffix, &quot;Argument 'suffix' must not be null&quot;);</span>
-<span class="fc" id="L175">        requireNonNull(type, &quot;Argument 'type' must not be null&quot;);</span>
-<span class="fc" id="L176">        requireNonNull(order, &quot;Argument 'order' must not be null&quot;);</span>
+<span class="fc" id="L231">        requireNonNull(instances, &quot;Argument 'instances' must not be null&quot;);</span>
+<span class="fc" id="L232">        requireNonNull(suffix, ERROR_SUFFIX_NULL);</span>
+<span class="fc" id="L233">        requireNonNull(type, &quot;Argument 'type' must not be null&quot;);</span>
+<span class="fc" id="L234">        requireNonNull(order, &quot;Argument 'order' must not be null&quot;);</span>
 
-<span class="fc" id="L178">        Map&lt;String, T&gt; instancesByName = mapInstancesByName(instances, suffix);</span>
+<span class="fc" id="L236">        Map&lt;String, T&gt; instancesByName = mapInstancesByName(instances, suffix);</span>
 
-<span class="fc" id="L180">        Map&lt;String, T&gt; map = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L181">        map.putAll(instancesByName);</span>
+<span class="fc" id="L238">        Map&lt;String, T&gt; map = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L239">        map.putAll(instancesByName);</span>
 
-<span class="pc bpc" id="L183" title="1 of 2 branches missed.">        if (!order.isEmpty()) {</span>
-<span class="nc" id="L184">            Map&lt;String, T&gt; tmp1 = new LinkedHashMap&lt;&gt;(instancesByName);</span>
-<span class="nc" id="L185">            Map&lt;String, T&gt; tmp2 = new LinkedHashMap&lt;&gt;();</span>
+<span class="pc bpc" id="L241" title="1 of 2 branches missed.">        if (!order.isEmpty()) {</span>
+<span class="nc" id="L242">            Map&lt;String, T&gt; tmp1 = new LinkedHashMap&lt;&gt;(instancesByName);</span>
+<span class="nc" id="L243">            Map&lt;String, T&gt; tmp2 = new LinkedHashMap&lt;&gt;();</span>
             //noinspection ConstantConditions
-<span class="nc bnc" id="L187" title="All 2 branches missed.">            for (String name : order) {</span>
-<span class="nc bnc" id="L188" title="All 2 branches missed.">                if (tmp1.containsKey(name)) {</span>
-<span class="nc" id="L189">                    tmp2.put(name, tmp1.remove(name));</span>
+<span class="nc bnc" id="L245" title="All 2 branches missed.">            for (String name : order) {</span>
+<span class="nc bnc" id="L246" title="All 2 branches missed.">                if (tmp1.containsKey(name)) {</span>
+<span class="nc" id="L247">                    tmp2.put(name, tmp1.remove(name));</span>
                 }
-<span class="nc" id="L191">            }</span>
-<span class="nc" id="L192">            tmp2.putAll(tmp1);</span>
-<span class="nc" id="L193">            map.clear();</span>
-<span class="nc" id="L194">            map.putAll(tmp2);</span>
+<span class="nc" id="L249">            }</span>
+<span class="nc" id="L250">            tmp2.putAll(tmp1);</span>
+<span class="nc" id="L251">            map.clear();</span>
+<span class="nc" id="L252">            map.putAll(tmp2);</span>
         }
 
-<span class="fc" id="L197">        List&lt;T&gt; sorted = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L198">        Set&lt;String&gt; instanceDeps = new LinkedHashSet&lt;&gt;();</span>
+<span class="fc" id="L255">        List&lt;T&gt; sorted = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L256">        Set&lt;String&gt; instanceDeps = new LinkedHashSet&lt;&gt;();</span>
 
-<span class="pc bpc" id="L200" title="1 of 2 branches missed.">        while (!map.isEmpty()) {</span>
-<span class="fc" id="L201">            int processed = 0;</span>
+<span class="pc bpc" id="L258" title="1 of 2 branches missed.">        while (!map.isEmpty()) {</span>
+<span class="fc" id="L259">            int processed = 0;</span>
 
-<span class="fc" id="L203">            LOG.debug(&quot;Current {} order is {}&quot;, type, instancesByName.keySet());</span>
+<span class="fc" id="L261">            LOG.debug(&quot;Current {} order is {}&quot;, type, instancesByName.keySet());</span>
 
-<span class="fc bfc" id="L205" title="All 2 branches covered.">            for (Iterator&lt;Map.Entry&lt;String, T&gt;&gt; iter = map.entrySet().iterator(); iter.hasNext(); ) {</span>
-<span class="fc" id="L206">                Map.Entry&lt;String, T&gt; entry = iter.next();</span>
-<span class="fc" id="L207">                String instanceName = entry.getKey();</span>
-<span class="fc" id="L208">                String[] dependsOn = getDependsOn(entry.getValue());</span>
+<span class="fc bfc" id="L263" title="All 2 branches covered.">            for (Iterator&lt;Map.Entry&lt;String, T&gt;&gt; iter = map.entrySet().iterator(); iter.hasNext(); ) {</span>
+<span class="fc" id="L264">                Map.Entry&lt;String, T&gt; entry = iter.next();</span>
+<span class="fc" id="L265">                String instanceName = entry.getKey();</span>
+<span class="fc" id="L266">                String[] dependsOn = getDependsOn(entry.getValue());</span>
 
-<span class="fc" id="L210">                LOG.trace(&quot;Processing {} '{}'&quot;, type, instanceName);</span>
-<span class="fc" id="L211">                LOG.trace(&quot;  depends on '{}'&quot;, Arrays.toString(dependsOn));</span>
+<span class="fc" id="L268">                LOG.trace(&quot;Processing {} '{}'&quot;, type, instanceName);</span>
+<span class="fc" id="L269">                LOG.trace(&quot;  depends on '{}'&quot;, Arrays.toString(dependsOn));</span>
 
-<span class="fc bfc" id="L213" title="All 2 branches covered.">                if (dependsOn.length != 0) {</span>
-<span class="fc" id="L214">                    LOG.trace(&quot;  checking {} '{}' dependencies ({})&quot;, type, instanceName, dependsOn.length);</span>
+<span class="fc bfc" id="L271" title="All 2 branches covered.">                if (dependsOn.length != 0) {</span>
+<span class="fc" id="L272">                    LOG.trace(&quot;  checking {} '{}' dependencies ({})&quot;, type, instanceName, dependsOn.length);</span>
 
-<span class="fc" id="L216">                    boolean failedDep = false;</span>
-<span class="fc bfc" id="L217" title="All 2 branches covered.">                    for (String dep : dependsOn) {</span>
-<span class="fc" id="L218">                        LOG.trace(&quot;  checking {} '{}' dependencies: &quot;, type, instanceName, dep);</span>
-<span class="fc bfc" id="L219" title="All 2 branches covered.">                        if (!instanceDeps.contains(dep)) {</span>
+<span class="fc" id="L274">                    boolean failedDep = false;</span>
+<span class="fc bfc" id="L275" title="All 2 branches covered.">                    for (String dep : dependsOn) {</span>
+<span class="fc" id="L276">                        LOG.trace(&quot;  checking {} '{}' dependencies: &quot;, type, instanceName, dep);</span>
+<span class="fc bfc" id="L277" title="All 2 branches covered.">                        if (!instanceDeps.contains(dep)) {</span>
                             // dep not in the list yet, we need to skip adding this to the list for now
-<span class="fc" id="L221">                            LOG.trace(&quot;  skipped {} '{}', since dependency '{}' not yet added&quot;, type, instanceName, dep);</span>
-<span class="fc" id="L222">                            failedDep = true;</span>
-<span class="fc" id="L223">                            break;</span>
+<span class="fc" id="L279">                            LOG.trace(&quot;  skipped {} '{}', since dependency '{}' not yet added&quot;, type, instanceName, dep);</span>
+<span class="fc" id="L280">                            failedDep = true;</span>
+<span class="fc" id="L281">                            break;</span>
                         } else {
-<span class="fc" id="L225">                            LOG.trace(&quot;  {} '{}' dependency '{}' already added&quot;, type, instanceName, dep);</span>
+<span class="fc" id="L283">                            LOG.trace(&quot;  {} '{}' dependency '{}' already added&quot;, type, instanceName, dep);</span>
                         }
                     }
 
-<span class="fc bfc" id="L229" title="All 2 branches covered.">                    if (failedDep) {</span>
+<span class="fc bfc" id="L287" title="All 2 branches covered.">                    if (failedDep) {</span>
                         // move on to next dependency
-<span class="fc" id="L231">                        continue;</span>
+<span class="fc" id="L289">                        continue;</span>
                     }
                 }
 
-<span class="fc" id="L235">                LOG.trace(&quot;  adding {} '{}', since all dependencies have been added&quot;, type, instanceName);</span>
-<span class="fc" id="L236">                sorted.add(entry.getValue());</span>
-<span class="fc" id="L237">                instanceDeps.add(instanceName);</span>
-<span class="fc" id="L238">                iter.remove();</span>
-<span class="fc" id="L239">                processed++;</span>
-<span class="fc" id="L240">            }</span>
+<span class="fc" id="L293">                LOG.trace(&quot;  adding {} '{}', since all dependencies have been added&quot;, type, instanceName);</span>
+<span class="fc" id="L294">                sorted.add(entry.getValue());</span>
+<span class="fc" id="L295">                instanceDeps.add(instanceName);</span>
+<span class="fc" id="L296">                iter.remove();</span>
+<span class="fc" id="L297">                processed++;</span>
+<span class="fc" id="L298">            }</span>
 
-<span class="fc bfc" id="L242" title="All 2 branches covered.">            if (processed == 0) {</span>
+<span class="fc bfc" id="L300" title="All 2 branches covered.">            if (processed == 0) {</span>
                 // we have a cyclical dependency, warn the user and load in the order they appeared originally
-<span class="fc" id="L244">                LOG.warn(&quot;  unresolved {} dependencies detected&quot;, type);</span>
-<span class="fc" id="L245">                LOG.warn(&quot;  continuing with original {} order&quot;, type);</span>
-<span class="fc bfc" id="L246" title="All 2 branches covered.">                for (Map.Entry&lt;String, T&gt; entry : map.entrySet()) {</span>
-<span class="fc" id="L247">                    String instanceName = entry.getKey();</span>
-<span class="fc" id="L248">                    String[] dependsOn = getDependsOn(entry.getValue());</span>
+<span class="fc" id="L302">                LOG.warn(&quot;  unresolved {} dependencies detected&quot;, type);</span>
+<span class="fc" id="L303">                LOG.warn(&quot;  continuing with original {} order&quot;, type);</span>
+<span class="fc bfc" id="L304" title="All 2 branches covered.">                for (Map.Entry&lt;String, T&gt; entry : map.entrySet()) {</span>
+<span class="fc" id="L305">                    String instanceName = entry.getKey();</span>
+<span class="fc" id="L306">                    String[] dependsOn = getDependsOn(entry.getValue());</span>
 
                     // display this as a cyclical dep
-<span class="fc" id="L251">                    LOG.warn(&quot;  {} {} &quot;, type, instanceName);</span>
-<span class="pc bpc" id="L252" title="1 of 2 branches missed.">                    if (dependsOn.length != 0) {</span>
-<span class="fc bfc" id="L253" title="All 2 branches covered.">                        for (String dep : dependsOn) {</span>
-<span class="fc" id="L254">                            LOG.warn(&quot;    depends on {}&quot;, dep);</span>
+<span class="fc" id="L309">                    LOG.warn(&quot;  {} {} &quot;, type, instanceName);</span>
+<span class="pc bpc" id="L310" title="1 of 2 branches missed.">                    if (dependsOn.length != 0) {</span>
+<span class="fc bfc" id="L311" title="All 2 branches covered.">                        for (String dep : dependsOn) {</span>
+<span class="fc" id="L312">                            LOG.warn(&quot;    depends on {}&quot;, dep);</span>
                         }
                     } else {
                         // we should only have items left in the list with deps, so this should never happen
                         // but a wise man once said...check for true, false and otherwise...just in case
-<span class="nc" id="L259">                        LOG.warn(&quot;  problem while resolving dependencies.&quot;);</span>
-<span class="nc" id="L260">                        LOG.warn(&quot;  unable to resolve dependency hierarchy.&quot;);</span>
+<span class="nc" id="L317">                        LOG.warn(&quot;  problem while resolving dependencies.&quot;);</span>
+<span class="nc" id="L318">                        LOG.warn(&quot;  unable to resolve dependency hierarchy.&quot;);</span>
                     }
-<span class="fc" id="L262">                }</span>
-<span class="fc" id="L263">                break;</span>
+<span class="fc" id="L320">                }</span>
+<span class="fc" id="L321">                break;</span>
                 // if we have processed all the instances, we are done
-<span class="fc bfc" id="L265" title="All 2 branches covered.">            } else if (sorted.size() == instancesByName.size()) {</span>
-<span class="fc" id="L266">                LOG.trace(&quot;{} dependency ordering complete&quot;, type);</span>
-<span class="fc" id="L267">                break;</span>
+<span class="fc bfc" id="L323" title="All 2 branches covered.">            } else if (sorted.size() == instancesByName.size()) {</span>
+<span class="fc" id="L324">                LOG.trace(&quot;{} dependency ordering complete&quot;, type);</span>
+<span class="fc" id="L325">                break;</span>
             }
-<span class="fc" id="L269">        }</span>
+<span class="fc" id="L327">        }</span>
 
-<span class="fc" id="L271">        instancesByName = mapInstancesByName(sorted, suffix);</span>
-<span class="fc" id="L272">        LOG.debug(&quot;computed {} order is {}&quot;, type, instancesByName.keySet());</span>
+<span class="fc" id="L329">        instancesByName = mapInstancesByName(sorted, suffix);</span>
+<span class="fc" id="L330">        LOG.debug(&quot;computed {} order is {}&quot;, type, instancesByName.keySet());</span>
 
-<span class="fc" id="L274">        return instancesByName;</span>
+<span class="fc" id="L332">        return instancesByName;</span>
     }
 
     @Nonnull
     public static Named named(@Nonnull String name) {
-<span class="fc" id="L279">        return new NamedImpl(requireNonNull(name, &quot;Argument 'name' must not be null&quot;));</span>
+<span class="fc" id="L337">        return new NamedImpl(requireNonNull(name, &quot;Argument 'name' must not be null&quot;));</span>
     }
 
     @Nonnull
     public static Typed typed(@Nonnull Class&lt;?&gt; clazz) {
-<span class="fc" id="L284">        return new TypedImpl(requireNonNull(clazz, &quot;Argument 'clazz' must not be null&quot;));</span>
+<span class="fc" id="L342">        return new TypedImpl(requireNonNull(clazz, ERROR_CLASS_NULL));</span>
     }
 
     @Nonnull
     public static BindTo bindto(@Nonnull Class&lt;?&gt; clazz) {
-<span class="fc" id="L289">        return new BindToImpl(requireNonNull(clazz, &quot;Argument 'clazz' must not be null&quot;));</span>
+<span class="fc" id="L347">        return new BindToImpl(requireNonNull(clazz, ERROR_CLASS_NULL));</span>
     }
 
     /**
@@ -295,39 +353,38 @@ public class AnnotationUtils {
      */
     @SuppressWarnings(&quot;ClassExplicitlyAnnotation&quot;)
     private static class NamedImpl implements Named, Serializable {
+        private static final long serialVersionUID = 0;
         private final String value;
 
-<span class="fc" id="L300">        public NamedImpl(String value) {</span>
-<span class="fc" id="L301">            this.value = requireNonNull(value, &quot;value&quot;);</span>
-<span class="fc" id="L302">        }</span>
+<span class="fc" id="L359">        public NamedImpl(String value) {</span>
+<span class="fc" id="L360">            this.value = requireNonNull(value, &quot;value&quot;);</span>
+<span class="fc" id="L361">        }</span>
 
         public String value() {
-<span class="fc" id="L305">            return this.value;</span>
+<span class="fc" id="L364">            return this.value;</span>
         }
 
         public int hashCode() {
             // This is specified in java.lang.Annotation.
-<span class="fc" id="L310">            return (127 * &quot;value&quot;.hashCode()) ^ value.hashCode();</span>
+<span class="fc" id="L369">            return (127 * &quot;value&quot;.hashCode()) ^ value.hashCode();</span>
         }
 
         public boolean equals(Object o) {
-<span class="pc bpc" id="L314" title="1 of 2 branches missed.">            if (!(o instanceof Named)) {</span>
-<span class="nc" id="L315">                return false;</span>
+<span class="pc bpc" id="L373" title="1 of 2 branches missed.">            if (!(o instanceof Named)) {</span>
+<span class="nc" id="L374">                return false;</span>
             }
 
-<span class="fc" id="L318">            Named other = (Named) o;</span>
-<span class="fc" id="L319">            return value.equals(other.value());</span>
+<span class="fc" id="L377">            Named other = (Named) o;</span>
+<span class="fc" id="L378">            return value.equals(other.value());</span>
         }
 
         public String toString() {
-<span class="fc" id="L323">            return &quot;@&quot; + Named.class.getName() + &quot;(value=&quot; + value + &quot;)&quot;;</span>
+<span class="fc" id="L382">            return &quot;@&quot; + Named.class.getName() + &quot;(value=&quot; + value + &quot;)&quot;;</span>
         }
 
         public Class&lt;? extends Annotation&gt; annotationType() {
-<span class="fc" id="L327">            return Named.class;</span>
+<span class="fc" id="L386">            return Named.class;</span>
         }
-
-        private static final long serialVersionUID = 0;
     }
 
     /**
@@ -336,39 +393,38 @@ public class AnnotationUtils {
      */
     @SuppressWarnings(&quot;ClassExplicitlyAnnotation&quot;)
     private static class TypedImpl implements Typed, Serializable {
+        private static final long serialVersionUID = 0;
         private final Class&lt;?&gt; value;
 
-<span class="fc" id="L341">        public TypedImpl(Class&lt;?&gt; value) {</span>
-<span class="fc" id="L342">            this.value = requireNonNull(value, &quot;value&quot;);</span>
-<span class="fc" id="L343">        }</span>
+<span class="fc" id="L399">        public TypedImpl(Class&lt;?&gt; value) {</span>
+<span class="fc" id="L400">            this.value = requireNonNull(value, &quot;value&quot;);</span>
+<span class="fc" id="L401">        }</span>
 
         public Class&lt;?&gt; value() {
-<span class="fc" id="L346">            return this.value;</span>
+<span class="fc" id="L404">            return this.value;</span>
         }
 
         public int hashCode() {
             // This is specified in java.lang.Annotation.
-<span class="fc" id="L351">            return (127 * &quot;value&quot;.hashCode()) ^ value.hashCode();</span>
+<span class="fc" id="L409">            return (127 * &quot;value&quot;.hashCode()) ^ value.hashCode();</span>
         }
 
         public boolean equals(Object o) {
-<span class="pc bpc" id="L355" title="1 of 2 branches missed.">            if (!(o instanceof Typed)) {</span>
-<span class="nc" id="L356">                return false;</span>
+<span class="pc bpc" id="L413" title="1 of 2 branches missed.">            if (!(o instanceof Typed)) {</span>
+<span class="nc" id="L414">                return false;</span>
             }
 
-<span class="fc" id="L359">            Typed other = (Typed) o;</span>
-<span class="fc" id="L360">            return value.equals(other.value());</span>
+<span class="fc" id="L417">            Typed other = (Typed) o;</span>
+<span class="fc" id="L418">            return value.equals(other.value());</span>
         }
 
         public String toString() {
-<span class="nc" id="L364">            return &quot;@&quot; + Typed.class.getName() + &quot;(value=&quot; + value + &quot;)&quot;;</span>
+<span class="nc" id="L422">            return &quot;@&quot; + Typed.class.getName() + &quot;(value=&quot; + value + &quot;)&quot;;</span>
         }
 
         public Class&lt;? extends Annotation&gt; annotationType() {
-<span class="fc" id="L368">            return Typed.class;</span>
+<span class="fc" id="L426">            return Typed.class;</span>
         }
-
-        private static final long serialVersionUID = 0;
     }
 
     /**
@@ -377,39 +433,38 @@ public class AnnotationUtils {
      */
     @SuppressWarnings(&quot;ClassExplicitlyAnnotation&quot;)
     private static class BindToImpl implements BindTo, Serializable {
+        private static final long serialVersionUID = 0;
         private final Class&lt;?&gt; value;
 
-<span class="fc" id="L382">        public BindToImpl(Class&lt;?&gt; value) {</span>
-<span class="fc" id="L383">            this.value = requireNonNull(value, &quot;value&quot;);</span>
-<span class="fc" id="L384">        }</span>
+<span class="fc" id="L439">        public BindToImpl(Class&lt;?&gt; value) {</span>
+<span class="fc" id="L440">            this.value = requireNonNull(value, &quot;value&quot;);</span>
+<span class="fc" id="L441">        }</span>
 
         public Class&lt;?&gt; value() {
-<span class="fc" id="L387">            return this.value;</span>
+<span class="fc" id="L444">            return this.value;</span>
         }
 
         public int hashCode() {
             // This is specified in java.lang.Annotation.
-<span class="fc" id="L392">            return (127 * &quot;value&quot;.hashCode()) ^ value.hashCode();</span>
+<span class="fc" id="L449">            return (127 * &quot;value&quot;.hashCode()) ^ value.hashCode();</span>
         }
 
         public boolean equals(Object o) {
-<span class="pc bpc" id="L396" title="1 of 2 branches missed.">            if (!(o instanceof BindTo)) {</span>
-<span class="nc" id="L397">                return false;</span>
+<span class="pc bpc" id="L453" title="1 of 2 branches missed.">            if (!(o instanceof BindTo)) {</span>
+<span class="nc" id="L454">                return false;</span>
             }
 
-<span class="fc" id="L400">            BindTo other = (BindTo) o;</span>
-<span class="fc" id="L401">            return value.equals(other.value());</span>
+<span class="fc" id="L457">            BindTo other = (BindTo) o;</span>
+<span class="fc" id="L458">            return value.equals(other.value());</span>
         }
 
         public String toString() {
-<span class="nc" id="L405">            return &quot;@&quot; + BindTo.class.getName() + &quot;(value=&quot; + value + &quot;)&quot;;</span>
+<span class="nc" id="L462">            return &quot;@&quot; + BindTo.class.getName() + &quot;(value=&quot; + value + &quot;)&quot;;</span>
         }
 
         public Class&lt;? extends Annotation&gt; annotationType() {
-<span class="fc" id="L409">            return BindTo.class;</span>
+<span class="fc" id="L466">            return BindTo.class;</span>
         }
-
-        private static final long serialVersionUID = 0;
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

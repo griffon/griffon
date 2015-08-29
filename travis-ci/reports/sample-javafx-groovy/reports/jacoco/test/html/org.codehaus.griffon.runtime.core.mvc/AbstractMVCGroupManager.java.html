@@ -15,6 +15,8 @@
  */
 package org.codehaus.griffon.runtime.core.mvc;
 
+import griffon.core.Context;
+import griffon.core.ContextFactory;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonModel;
@@ -23,6 +25,8 @@ import griffon.core.artifact.GriffonView;
 import griffon.core.mvc.MVCFunction;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
+import griffon.core.mvc.MVCGroupConfigurationFactory;
+import griffon.core.mvc.MVCGroupFactory;
 import griffon.core.mvc.MVCGroupFunction;
 import griffon.core.mvc.MVCGroupManager;
 import griffon.exceptions.ArtifactNotFoundException;
@@ -52,7 +56,6 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public abstract class AbstractMVCGroupManager implements MVCGroupManager {
-<span class="fc" id="L55">    private static final Logger LOG = LoggerFactory.getLogger(AbstractMVCGroupManager.class);</span>
     protected static final String ERROR_MVCTYPE_BLANK = &quot;Argument 'mvcType' must not be blank&quot;;
     protected static final String ERROR_MVCID_BLANK = &quot;Argument 'mvcId' must not be blank&quot;;
     protected static final String ERROR_CONFIGURATION_NULL = &quot;Argument 'configuration' must not be null&quot;;
@@ -61,210 +64,236 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     protected static final String ERROR_ARGS_NULL = &quot;Argument 'args' must not be null&quot;;
     protected static final String ERROR_NAME_BLANK = &quot;Argument 'name' cannot be blank&quot;;
     protected static final String ERROR_TYPE_NULL = &quot;Argument 'type' cannot be null&quot;;
-
+<span class="fc" id="L67">    private static final Logger LOG = LoggerFactory.getLogger(AbstractMVCGroupManager.class);</span>
     private final GriffonApplication application;
 
-<span class="fc" id="L67">    private final Map&lt;String, MVCGroupConfiguration&gt; configurations = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L68">    private final Map&lt;String, MVCGroup&gt; groups = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L69">    private final Object lock = new Object[0];</span>
+<span class="fc" id="L70">    private final Map&lt;String, MVCGroupConfiguration&gt; configurations = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L71">    private final Map&lt;String, MVCGroup&gt; groups = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L72">    private final Object lock = new Object[0];</span>
     private boolean initialized;
 
     @Inject
-<span class="fc" id="L73">    public AbstractMVCGroupManager(@Nonnull GriffonApplication application) {</span>
-<span class="fc" id="L74">        this.application = requireNonNull(application, &quot;Argument 'application' must not be null&quot;);</span>
-<span class="fc" id="L75">    }</span>
+    private MVCGroupConfigurationFactory mvcGroupConfigurationFactory;
+
+    @Inject
+    private MVCGroupFactory mvcGroupFactory;
+
+    @Inject
+    private ContextFactory contextFactory;
+
+    @Inject
+<span class="fc" id="L85">    public AbstractMVCGroupManager(@Nonnull GriffonApplication application) {</span>
+<span class="fc" id="L86">        this.application = requireNonNull(application, &quot;Argument 'application' must not be null&quot;);</span>
+<span class="fc" id="L87">    }</span>
 
     @Override
     public GriffonApplication getApplication() {
-<span class="nc" id="L79">        return application;</span>
+<span class="nc" id="L91">        return application;</span>
+    }
+
+    @Nonnull
+    public MVCGroupConfiguration newMVCGroupConfiguration(@Nonnull String mvcType, @Nonnull Map&lt;String, String&gt; members, @Nonnull Map&lt;String, Object&gt; config) {
+<span class="fc" id="L96">        return mvcGroupConfigurationFactory.create(mvcType, members, config);</span>
+    }
+
+    @Nonnull
+    public MVCGroup newMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map&lt;String, Object&gt; members, @Nullable MVCGroup parentGroup) {
+<span class="nc" id="L101">        return mvcGroupFactory.create(configuration, mvcId, members, parentGroup);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Context newContext(@Nullable MVCGroup parentGroup) {
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        Context parentContext = parentGroup != null ? parentGroup.getContext() : getApplication().getContext();</span>
+<span class="nc" id="L108">        return contextFactory.create(parentContext);</span>
     }
 
     @Nonnull
     public Map&lt;String, MVCGroupConfiguration&gt; getConfigurations() {
-<span class="nc" id="L84">        synchronized (lock) {</span>
-<span class="nc" id="L85">            return unmodifiableMap(configurations);</span>
-<span class="nc" id="L86">        }</span>
+<span class="nc" id="L113">        synchronized (lock) {</span>
+<span class="nc" id="L114">            return unmodifiableMap(configurations);</span>
+<span class="nc" id="L115">        }</span>
     }
 
     @Nonnull
     public Map&lt;String, MVCGroup&gt; getGroups() {
-<span class="fc" id="L91">        synchronized (lock) {</span>
-<span class="fc" id="L92">            return unmodifiableMap(groups);</span>
-<span class="nc" id="L93">        }</span>
+<span class="fc" id="L120">        synchronized (lock) {</span>
+<span class="fc" id="L121">            return unmodifiableMap(groups);</span>
+<span class="nc" id="L122">        }</span>
     }
 
     @Nonnull
     public MVCGroupConfiguration findConfiguration(@Nonnull String mvcType) {
-<span class="nc" id="L98">        requireNonBlank(mvcType, ERROR_MVCTYPE_BLANK);</span>
+<span class="nc" id="L127">        requireNonBlank(mvcType, ERROR_MVCTYPE_BLANK);</span>
         MVCGroupConfiguration configuration;
-<span class="nc" id="L100">        synchronized (lock) {</span>
-<span class="nc" id="L101">            configuration = configurations.get(mvcType);</span>
-<span class="nc" id="L102">        }</span>
+<span class="nc" id="L129">        synchronized (lock) {</span>
+<span class="nc" id="L130">            configuration = configurations.get(mvcType);</span>
+<span class="nc" id="L131">        }</span>
 
-<span class="nc bnc" id="L104" title="All 2 branches missed.">        if (configuration == null) {</span>
-<span class="nc" id="L105">            throw new MVCGroupConfigurationException(&quot;Unknown MVC type '&quot; + mvcType + &quot;'. Known types are &quot; + configurations.keySet(), mvcType);</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">        if (configuration == null) {</span>
+<span class="nc" id="L134">            throw new MVCGroupConfigurationException(&quot;Unknown MVC type '&quot; + mvcType + &quot;'. Known types are &quot; + configurations.keySet(), mvcType);</span>
         }
-<span class="nc" id="L107">        return configuration;</span>
+<span class="nc" id="L136">        return configuration;</span>
     }
 
     @Nullable
     public MVCGroup findGroup(@Nonnull String mvcId) {
-<span class="nc" id="L112">        requireNonBlank(mvcId, ERROR_MVCID_BLANK);</span>
-<span class="nc" id="L113">        synchronized (lock) {</span>
-<span class="nc" id="L114">            LOG.debug(&quot;Searching group {}&quot;, mvcId);</span>
-<span class="nc" id="L115">            return groups.get(mvcId);</span>
-<span class="nc" id="L116">        }</span>
+<span class="nc" id="L141">        requireNonBlank(mvcId, ERROR_MVCID_BLANK);</span>
+<span class="nc" id="L142">        synchronized (lock) {</span>
+<span class="nc" id="L143">            LOG.debug(&quot;Searching group {}&quot;, mvcId);</span>
+<span class="nc" id="L144">            return groups.get(mvcId);</span>
+<span class="nc" id="L145">        }</span>
     }
 
     @Nullable
     public MVCGroup getAt(@Nonnull String mvcId) {
-<span class="nc" id="L121">        return findGroup(mvcId);</span>
+<span class="nc" id="L150">        return findGroup(mvcId);</span>
     }
 
     public final void initialize(@Nonnull Map&lt;String, MVCGroupConfiguration&gt; configurations) {
-<span class="fc" id="L125">        requireNonNull(configurations, &quot;Argument 'configurations' must not be null&quot;);</span>
-<span class="pc bpc" id="L126" title="1 of 2 branches missed.">        if (configurations.isEmpty()) return;</span>
-<span class="fc" id="L127">        synchronized (lock) {</span>
-<span class="pc bpc" id="L128" title="1 of 2 branches missed.">            if (!initialized) {</span>
-<span class="fc" id="L129">                doInitialize(configurations);</span>
-<span class="fc" id="L130">                initialized = true;</span>
+<span class="fc" id="L154">        requireNonNull(configurations, &quot;Argument 'configurations' must not be null&quot;);</span>
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">        if (configurations.isEmpty()) return;</span>
+<span class="fc" id="L156">        synchronized (lock) {</span>
+<span class="pc bpc" id="L157" title="1 of 2 branches missed.">            if (!initialized) {</span>
+<span class="fc" id="L158">                doInitialize(configurations);</span>
+<span class="fc" id="L159">                initialized = true;</span>
             }
-<span class="pc" id="L132">        }</span>
-<span class="fc" id="L133">    }</span>
+<span class="pc" id="L161">        }</span>
+<span class="fc" id="L162">    }</span>
 
     public void addConfiguration(@Nonnull MVCGroupConfiguration configuration) {
-<span class="fc" id="L136">        requireNonNull(configuration, ERROR_CONFIGURATION_NULL);</span>
-<span class="fc" id="L137">        synchronized (lock) {</span>
-<span class="pc bpc" id="L138" title="3 of 4 branches missed.">            if (initialized &amp;&amp; configurations.get(configuration.getMvcType()) != null) {</span>
-<span class="nc" id="L139">                return;</span>
+<span class="fc" id="L165">        requireNonNull(configuration, ERROR_CONFIGURATION_NULL);</span>
+<span class="fc" id="L166">        synchronized (lock) {</span>
+<span class="pc bpc" id="L167" title="3 of 4 branches missed.">            if (initialized &amp;&amp; configurations.get(configuration.getMvcType()) != null) {</span>
+<span class="nc" id="L168">                return;</span>
             }
-<span class="fc" id="L141">            configurations.put(configuration.getMvcType(), configuration);</span>
-<span class="pc" id="L142">        }</span>
-<span class="fc" id="L143">    }</span>
+<span class="fc" id="L170">            configurations.put(configuration.getMvcType(), configuration);</span>
+<span class="pc" id="L171">        }</span>
+<span class="fc" id="L172">    }</span>
 
     public void removeConfiguration(@Nonnull MVCGroupConfiguration configuration) {
-<span class="nc" id="L146">        requireNonNull(configuration, ERROR_CONFIGURATION_NULL);</span>
-<span class="nc" id="L147">        removeConfiguration(configuration.getMvcType());</span>
-<span class="nc" id="L148">    }</span>
+<span class="nc" id="L175">        requireNonNull(configuration, ERROR_CONFIGURATION_NULL);</span>
+<span class="nc" id="L176">        removeConfiguration(configuration.getMvcType());</span>
+<span class="nc" id="L177">    }</span>
 
     public void removeConfiguration(@Nonnull String name) {
-<span class="nc" id="L151">        requireNonBlank(name, &quot;Argument 'name' must not be blank&quot;);</span>
-<span class="nc bnc" id="L152" title="All 2 branches missed.">        if (!isBlank(name)) {</span>
-<span class="nc" id="L153">            synchronized (lock) {</span>
-<span class="nc" id="L154">                configurations.remove(name);</span>
-<span class="nc" id="L155">            }</span>
+<span class="nc" id="L180">        requireNonBlank(name, &quot;Argument 'name' must not be blank&quot;);</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">        if (!isBlank(name)) {</span>
+<span class="nc" id="L182">            synchronized (lock) {</span>
+<span class="nc" id="L183">                configurations.remove(name);</span>
+<span class="nc" id="L184">            }</span>
         }
-<span class="nc" id="L157">    }</span>
+<span class="nc" id="L186">    }</span>
 
     protected void addGroup(@Nonnull MVCGroup group) {
-<span class="nc" id="L160">        requireNonNull(group, ERROR_GROUP_NULL);</span>
-<span class="nc" id="L161">        synchronized (lock) {</span>
-<span class="nc" id="L162">            LOG.debug(&quot;Adding group {}:{}&quot;, group.getMvcId(), group);</span>
-<span class="nc" id="L163">            groups.put(group.getMvcId(), group);</span>
-<span class="nc" id="L164">        }</span>
-<span class="nc" id="L165">    }</span>
+<span class="nc" id="L189">        requireNonNull(group, ERROR_GROUP_NULL);</span>
+<span class="nc" id="L190">        synchronized (lock) {</span>
+<span class="nc" id="L191">            LOG.debug(&quot;Adding group {}:{}&quot;, group.getMvcId(), group);</span>
+<span class="nc" id="L192">            groups.put(group.getMvcId(), group);</span>
+<span class="nc" id="L193">        }</span>
+<span class="nc" id="L194">    }</span>
 
     protected void removeGroup(@Nonnull MVCGroup group) {
-<span class="nc" id="L168">        requireNonNull(group, ERROR_GROUP_NULL);</span>
-<span class="nc" id="L169">        synchronized (lock) {</span>
-<span class="nc" id="L170">            LOG.debug(&quot;Removing group {}:{}&quot;, group.getMvcId(), group);</span>
-<span class="nc" id="L171">            groups.remove(group.getMvcId());</span>
-<span class="nc" id="L172">        }</span>
-<span class="nc" id="L173">    }</span>
+<span class="nc" id="L197">        requireNonNull(group, ERROR_GROUP_NULL);</span>
+<span class="nc" id="L198">        synchronized (lock) {</span>
+<span class="nc" id="L199">            LOG.debug(&quot;Removing group {}:{}&quot;, group.getMvcId(), group);</span>
+<span class="nc" id="L200">            groups.remove(group.getMvcId());</span>
+<span class="nc" id="L201">        }</span>
+<span class="nc" id="L202">    }</span>
 
     @Nonnull
     public final Map&lt;String, ? extends GriffonModel&gt; getModels() {
-<span class="nc" id="L177">        Map&lt;String, GriffonModel&gt; models = new LinkedHashMap&lt;&gt;();</span>
-<span class="nc" id="L178">        synchronized (lock) {</span>
-<span class="nc bnc" id="L179" title="All 2 branches missed.">            for (MVCGroup group : groups.values()) {</span>
-<span class="nc" id="L180">                GriffonModel model = group.getModel();</span>
-<span class="nc bnc" id="L181" title="All 2 branches missed.">                if (model != null) {</span>
-<span class="nc" id="L182">                    models.put(group.getMvcId(), model);</span>
+<span class="nc" id="L206">        Map&lt;String, GriffonModel&gt; models = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L207">        synchronized (lock) {</span>
+<span class="nc bnc" id="L208" title="All 2 branches missed.">            for (MVCGroup group : groups.values()) {</span>
+<span class="nc" id="L209">                GriffonModel model = group.getModel();</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">                if (model != null) {</span>
+<span class="nc" id="L211">                    models.put(group.getMvcId(), model);</span>
                 }
-<span class="nc" id="L184">            }</span>
-<span class="nc" id="L185">        }</span>
-<span class="nc" id="L186">        return unmodifiableMap(models);</span>
+<span class="nc" id="L213">            }</span>
+<span class="nc" id="L214">        }</span>
+<span class="nc" id="L215">        return unmodifiableMap(models);</span>
     }
 
     @Nonnull
     public final Map&lt;String, ? extends GriffonView&gt; getViews() {
-<span class="nc" id="L191">        Map&lt;String, GriffonView&gt; views = new LinkedHashMap&lt;&gt;();</span>
-<span class="nc" id="L192">        synchronized (lock) {</span>
-<span class="nc bnc" id="L193" title="All 2 branches missed.">            for (MVCGroup group : groups.values()) {</span>
-<span class="nc" id="L194">                GriffonView view = group.getView();</span>
-<span class="nc bnc" id="L195" title="All 2 branches missed.">                if (view != null) {</span>
-<span class="nc" id="L196">                    views.put(group.getMvcId(), view);</span>
+<span class="nc" id="L220">        Map&lt;String, GriffonView&gt; views = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L221">        synchronized (lock) {</span>
+<span class="nc bnc" id="L222" title="All 2 branches missed.">            for (MVCGroup group : groups.values()) {</span>
+<span class="nc" id="L223">                GriffonView view = group.getView();</span>
+<span class="nc bnc" id="L224" title="All 2 branches missed.">                if (view != null) {</span>
+<span class="nc" id="L225">                    views.put(group.getMvcId(), view);</span>
                 }
-<span class="nc" id="L198">            }</span>
-<span class="nc" id="L199">        }</span>
-<span class="nc" id="L200">        return unmodifiableMap(views);</span>
+<span class="nc" id="L227">            }</span>
+<span class="nc" id="L228">        }</span>
+<span class="nc" id="L229">        return unmodifiableMap(views);</span>
     }
 
     @Nonnull
     public final Map&lt;String, ? extends GriffonController&gt; getControllers() {
-<span class="nc" id="L205">        Map&lt;String, GriffonController&gt; controllers = new LinkedHashMap&lt;&gt;();</span>
-<span class="nc" id="L206">        synchronized (lock) {</span>
-<span class="nc bnc" id="L207" title="All 2 branches missed.">            for (MVCGroup group : groups.values()) {</span>
-<span class="nc" id="L208">                GriffonController controller = group.getController();</span>
-<span class="nc bnc" id="L209" title="All 2 branches missed.">                if (controller != null) {</span>
-<span class="nc" id="L210">                    controllers.put(group.getMvcId(), controller);</span>
+<span class="nc" id="L234">        Map&lt;String, GriffonController&gt; controllers = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L235">        synchronized (lock) {</span>
+<span class="nc bnc" id="L236" title="All 2 branches missed.">            for (MVCGroup group : groups.values()) {</span>
+<span class="nc" id="L237">                GriffonController controller = group.getController();</span>
+<span class="nc bnc" id="L238" title="All 2 branches missed.">                if (controller != null) {</span>
+<span class="nc" id="L239">                    controllers.put(group.getMvcId(), controller);</span>
                 }
-<span class="nc" id="L212">            }</span>
-<span class="nc" id="L213">        }</span>
-<span class="nc" id="L214">        return unmodifiableMap(controllers);</span>
+<span class="nc" id="L241">            }</span>
+<span class="nc" id="L242">        }</span>
+<span class="nc" id="L243">        return unmodifiableMap(controllers);</span>
     }
 
     @Nonnull
     @Override
     public MVCGroupConfiguration cloneMVCGroupConfiguration(@Nonnull String mvcType, @Nonnull Map&lt;String, Object&gt; config) {
-<span class="nc" id="L220">        requireNonBlank(mvcType, ERROR_MVCTYPE_BLANK);</span>
-<span class="nc" id="L221">        requireNonNull(config, ERROR_CONFIG_NULL);</span>
-<span class="nc" id="L222">        MVCGroupConfiguration configuration = findConfiguration(mvcType);</span>
-<span class="nc" id="L223">        Map&lt;String, Object&gt; configCopy = new LinkedHashMap&lt;&gt;();</span>
-<span class="nc" id="L224">        configCopy.putAll(configuration.getConfig());</span>
-<span class="nc" id="L225">        configCopy.putAll(config);</span>
-<span class="nc" id="L226">        return newMVCGroupConfiguration(mvcType, configuration.getMembers(), configCopy);</span>
+<span class="nc" id="L249">        requireNonBlank(mvcType, ERROR_MVCTYPE_BLANK);</span>
+<span class="nc" id="L250">        requireNonNull(config, ERROR_CONFIG_NULL);</span>
+<span class="nc" id="L251">        MVCGroupConfiguration configuration = findConfiguration(mvcType);</span>
+<span class="nc" id="L252">        Map&lt;String, Object&gt; configCopy = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L253">        configCopy.putAll(configuration.getConfig());</span>
+<span class="nc" id="L254">        configCopy.putAll(config);</span>
+<span class="nc" id="L255">        return newMVCGroupConfiguration(mvcType, configuration.getMembers(), configCopy);</span>
     }
 
     @Nonnull
     protected List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map&lt;String, Object&gt; args) {
-<span class="nc" id="L231">        MVCGroup group = createMVCGroup(findConfiguration(configuration.getMvcType()), mvcId, args);</span>
-<span class="nc" id="L232">        return asList(group.getModel(), group.getView(), group.getController());</span>
+<span class="nc" id="L260">        MVCGroup group = createMVCGroup(findConfiguration(configuration.getMvcType()), mvcId, args);</span>
+<span class="nc" id="L261">        return asList(group.getModel(), group.getView(), group.getController());</span>
     }
 
     @SuppressWarnings(&quot;unchecked&quot;)
     protected &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map&lt;String, Object&gt; args, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
-<span class="nc" id="L237">        MVCGroup group = null;</span>
+<span class="nc" id="L266">        MVCGroup group = null;</span>
         try {
-<span class="nc" id="L239">            group = createMVCGroup(configuration, mvcId, args);</span>
-<span class="nc" id="L240">            handler.apply((M) group.getModel(), (V) group.getView(), (C) group.getController());</span>
+<span class="nc" id="L268">            group = createMVCGroup(configuration, mvcId, args);</span>
+<span class="nc" id="L269">            handler.apply((M) group.getModel(), (V) group.getView(), (C) group.getController());</span>
         } finally {
-<span class="nc" id="L242">            try {</span>
-<span class="nc bnc" id="L243" title="All 4 branches missed.">                if (group != null) {</span>
-<span class="nc" id="L244">                    destroyMVCGroup(group.getMvcId());</span>
+<span class="nc" id="L271">            try {</span>
+<span class="nc bnc" id="L272" title="All 4 branches missed.">                if (group != null) {</span>
+<span class="nc" id="L273">                    destroyMVCGroup(group.getMvcId());</span>
                 }
-<span class="nc" id="L246">            } catch (Exception x) {</span>
-<span class="nc" id="L247">                LOG.warn(&quot;Could not destroy group [{}] of type {}&quot;, mvcId, configuration.getMvcType(), sanitize(x));</span>
-<span class="nc" id="L248">            }</span>
-<span class="nc" id="L249">        }</span>
-<span class="nc" id="L250">    }</span>
+<span class="nc" id="L275">            } catch (Exception x) {</span>
+<span class="nc" id="L276">                LOG.warn(&quot;Could not destroy group [{}] of type {}&quot;, mvcId, configuration.getMvcType(), sanitize(x));</span>
+<span class="nc" id="L277">            }</span>
+<span class="nc" id="L278">        }</span>
+<span class="nc" id="L279">    }</span>
 
     @SuppressWarnings(&quot;unchecked&quot;)
     protected void withMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map&lt;String, Object&gt; args, @Nonnull MVCGroupFunction handler) {
-<span class="nc" id="L254">        MVCGroup group = null;</span>
+<span class="nc" id="L283">        MVCGroup group = null;</span>
         try {
-<span class="nc" id="L256">            group = createMVCGroup(configuration, mvcId, args);</span>
-<span class="nc" id="L257">            handler.apply(group);</span>
+<span class="nc" id="L285">            group = createMVCGroup(configuration, mvcId, args);</span>
+<span class="nc" id="L286">            handler.apply(group);</span>
         } finally {
-<span class="nc" id="L259">            try {</span>
-<span class="nc bnc" id="L260" title="All 4 branches missed.">                if (group != null) {</span>
-<span class="nc" id="L261">                    destroyMVCGroup(group.getMvcId());</span>
+<span class="nc" id="L288">            try {</span>
+<span class="nc bnc" id="L289" title="All 4 branches missed.">                if (group != null) {</span>
+<span class="nc" id="L290">                    destroyMVCGroup(group.getMvcId());</span>
                 }
-<span class="nc" id="L263">            } catch (Exception x) {</span>
-<span class="nc" id="L264">                LOG.warn(&quot;Could not destroy group [{}] of type {}&quot;, mvcId, configuration.getMvcType(), sanitize(x));</span>
-<span class="nc" id="L265">            }</span>
-<span class="nc" id="L266">        }</span>
-<span class="nc" id="L267">    }</span>
+<span class="nc" id="L292">            } catch (Exception x) {</span>
+<span class="nc" id="L293">                LOG.warn(&quot;Could not destroy group [{}] of type {}&quot;, mvcId, configuration.getMvcType(), sanitize(x));</span>
+<span class="nc" id="L294">            }</span>
+<span class="nc" id="L295">        }</span>
+<span class="nc" id="L296">    }</span>
 
     @Nonnull
     protected abstract MVCGroup createMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map&lt;String, Object&gt; args);
@@ -274,178 +303,178 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     @Nonnull
     @Override
     public MVCGroup createMVCGroup(@Nonnull String mvcType) {
-<span class="nc" id="L277">        return createMVCGroup(findConfiguration(mvcType), null, Collections.&lt;String, Object&gt;emptyMap());</span>
+<span class="nc" id="L306">        return createMVCGroup(findConfiguration(mvcType), null, Collections.&lt;String, Object&gt;emptyMap());</span>
     }
 
     @Nonnull
     @Override
     public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId) {
-<span class="nc" id="L283">        return createMVCGroup(findConfiguration(mvcType), mvcId, Collections.&lt;String, Object&gt;emptyMap());</span>
+<span class="nc" id="L312">        return createMVCGroup(findConfiguration(mvcType), mvcId, Collections.&lt;String, Object&gt;emptyMap());</span>
     }
 
     @Nonnull
     @Override
     public MVCGroup createMVCGroup(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType) {
-<span class="nc" id="L289">        return createMVCGroup(findConfiguration(mvcType), null, args);</span>
+<span class="nc" id="L318">        return createMVCGroup(findConfiguration(mvcType), null, args);</span>
     }
 
     @Nonnull
     @Override
     public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull Map&lt;String, Object&gt; args) {
-<span class="nc" id="L295">        return createMVCGroup(findConfiguration(mvcType), null, args);</span>
+<span class="nc" id="L324">        return createMVCGroup(findConfiguration(mvcType), null, args);</span>
     }
 
     @Nonnull
     @Override
     public MVCGroup createMVCGroup(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType, @Nonnull String mvcId) {
-<span class="nc" id="L301">        return createMVCGroup(findConfiguration(mvcType), mvcId, args);</span>
+<span class="nc" id="L330">        return createMVCGroup(findConfiguration(mvcType), mvcId, args);</span>
     }
 
     @Nonnull
     @Override
     public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map&lt;String, Object&gt; args) {
-<span class="nc" id="L307">        return createMVCGroup(findConfiguration(mvcType), mvcId, args);</span>
+<span class="nc" id="L336">        return createMVCGroup(findConfiguration(mvcType), mvcId, args);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull String mvcType) {
-<span class="nc" id="L313">        return createMVC(findConfiguration(mvcType), null, Collections.&lt;String, Object&gt;emptyMap());</span>
+<span class="nc" id="L342">        return createMVC(findConfiguration(mvcType), null, Collections.&lt;String, Object&gt;emptyMap());</span>
     }
 
     @Nonnull
     @Override
     public List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType) {
-<span class="nc" id="L319">        return createMVC(findConfiguration(mvcType), null, args);</span>
+<span class="nc" id="L348">        return createMVC(findConfiguration(mvcType), null, args);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull String mvcType, @Nonnull Map&lt;String, Object&gt; args) {
-<span class="nc" id="L325">        return createMVC(findConfiguration(mvcType), null, args);</span>
+<span class="nc" id="L354">        return createMVC(findConfiguration(mvcType), null, args);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull String mvcType, @Nonnull String mvcId) {
-<span class="nc" id="L331">        return createMVC(findConfiguration(mvcType), mvcId, Collections.&lt;String, Object&gt;emptyMap());</span>
+<span class="nc" id="L360">        return createMVC(findConfiguration(mvcType), mvcId, Collections.&lt;String, Object&gt;emptyMap());</span>
     }
 
     @Nonnull
     @Override
     public List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType, @Nonnull String mvcId) {
-<span class="nc" id="L337">        return createMVC(findConfiguration(mvcType), mvcId, args);</span>
+<span class="nc" id="L366">        return createMVC(findConfiguration(mvcType), mvcId, args);</span>
     }
 
     @Nonnull
     @Override
     public List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map&lt;String, Object&gt; args) {
-<span class="nc" id="L343">        return createMVC(findConfiguration(mvcType), mvcId, args);</span>
+<span class="nc" id="L372">        return createMVC(findConfiguration(mvcType), mvcId, args);</span>
     }
 
     @Override
     public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull String mvcType, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
-<span class="nc" id="L348">        withMVCGroup(findConfiguration(mvcType), null, Collections.&lt;String, Object&gt;emptyMap(), handler);</span>
-<span class="nc" id="L349">    }</span>
+<span class="nc" id="L377">        withMVCGroup(findConfiguration(mvcType), null, Collections.&lt;String, Object&gt;emptyMap(), handler);</span>
+<span class="nc" id="L378">    }</span>
 
     @Override
     public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
-<span class="nc" id="L353">        withMVCGroup(findConfiguration(mvcType), mvcId, Collections.&lt;String, Object&gt;emptyMap(), handler);</span>
-<span class="nc" id="L354">    }</span>
+<span class="nc" id="L382">        withMVCGroup(findConfiguration(mvcType), mvcId, Collections.&lt;String, Object&gt;emptyMap(), handler);</span>
+<span class="nc" id="L383">    }</span>
 
     @Override
     public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map&lt;String, Object&gt; args, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
-<span class="nc" id="L358">        withMVCGroup(findConfiguration(mvcType), mvcId, args, handler);</span>
-<span class="nc" id="L359">    }</span>
+<span class="nc" id="L387">        withMVCGroup(findConfiguration(mvcType), mvcId, args, handler);</span>
+<span class="nc" id="L388">    }</span>
 
     @Override
     public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
-<span class="nc" id="L363">        withMVCGroup(findConfiguration(mvcType), mvcId, args, handler);</span>
-<span class="nc" id="L364">    }</span>
+<span class="nc" id="L392">        withMVCGroup(findConfiguration(mvcType), mvcId, args, handler);</span>
+<span class="nc" id="L393">    }</span>
 
     @Override
     public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull String mvcType, @Nonnull Map&lt;String, Object&gt; args, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
-<span class="nc" id="L368">        withMVCGroup(findConfiguration(mvcType), null, args, handler);</span>
-<span class="nc" id="L369">    }</span>
+<span class="nc" id="L397">        withMVCGroup(findConfiguration(mvcType), null, args, handler);</span>
+<span class="nc" id="L398">    }</span>
 
     @Override
     public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
-<span class="nc" id="L373">        withMVCGroup(findConfiguration(mvcType), null, args, handler);</span>
-<span class="nc" id="L374">    }</span>
+<span class="nc" id="L402">        withMVCGroup(findConfiguration(mvcType), null, args, handler);</span>
+<span class="nc" id="L403">    }</span>
 
     @Override
     public void withMVCGroup(@Nonnull String mvcType, @Nonnull MVCGroupFunction handler) {
-<span class="nc" id="L378">        withMVCGroup(findConfiguration(mvcType), null, Collections.&lt;String, Object&gt;emptyMap(), handler);</span>
-<span class="nc" id="L379">    }</span>
+<span class="nc" id="L407">        withMVCGroup(findConfiguration(mvcType), null, Collections.&lt;String, Object&gt;emptyMap(), handler);</span>
+<span class="nc" id="L408">    }</span>
 
     @Override
     public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupFunction handler) {
-<span class="nc" id="L383">        withMVCGroup(findConfiguration(mvcType), mvcId, Collections.&lt;String, Object&gt;emptyMap(), handler);</span>
-<span class="nc" id="L384">    }</span>
+<span class="nc" id="L412">        withMVCGroup(findConfiguration(mvcType), mvcId, Collections.&lt;String, Object&gt;emptyMap(), handler);</span>
+<span class="nc" id="L413">    }</span>
 
     @Override
     public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map&lt;String, Object&gt; args, @Nonnull MVCGroupFunction handler) {
-<span class="nc" id="L388">        withMVCGroup(findConfiguration(mvcType), mvcId, args, handler);</span>
-<span class="nc" id="L389">    }</span>
+<span class="nc" id="L417">        withMVCGroup(findConfiguration(mvcType), mvcId, args, handler);</span>
+<span class="nc" id="L418">    }</span>
 
     @Override
     public void withMVCGroup(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupFunction handler) {
-<span class="nc" id="L393">        withMVCGroup(findConfiguration(mvcType), mvcId, args, handler);</span>
-<span class="nc" id="L394">    }</span>
+<span class="nc" id="L422">        withMVCGroup(findConfiguration(mvcType), mvcId, args, handler);</span>
+<span class="nc" id="L423">    }</span>
 
     @Override
     public void withMVCGroup(@Nonnull String mvcType, @Nonnull Map&lt;String, Object&gt; args, @Nonnull MVCGroupFunction handler) {
-<span class="nc" id="L398">        withMVCGroup(findConfiguration(mvcType), null, args, handler);</span>
-<span class="nc" id="L399">    }</span>
+<span class="nc" id="L427">        withMVCGroup(findConfiguration(mvcType), null, args, handler);</span>
+<span class="nc" id="L428">    }</span>
 
     @Override
     public void withMVCGroup(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType, @Nonnull MVCGroupFunction handler) {
-<span class="nc" id="L403">        withMVCGroup(findConfiguration(mvcType), null, args, handler);</span>
-<span class="nc" id="L404">    }</span>
+<span class="nc" id="L432">        withMVCGroup(findConfiguration(mvcType), null, args, handler);</span>
+<span class="nc" id="L433">    }</span>
 
     @Nonnull
     @Override
     public &lt;C extends GriffonController&gt; C getController(@Nonnull String name, @Nonnull Class&lt;C&gt; type) throws ArtifactNotFoundException {
-<span class="nc" id="L409">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
-<span class="nc" id="L410">        requireNonNull(type, ERROR_TYPE_NULL);</span>
-<span class="nc" id="L411">        GriffonController controller = getControllers().get(name);</span>
-<span class="nc bnc" id="L412" title="All 2 branches missed.">        if (controller != null) {</span>
-<span class="nc" id="L413">            return type.cast(controller);</span>
+<span class="nc" id="L438">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc" id="L439">        requireNonNull(type, ERROR_TYPE_NULL);</span>
+<span class="nc" id="L440">        GriffonController controller = getControllers().get(name);</span>
+<span class="nc bnc" id="L441" title="All 2 branches missed.">        if (controller != null) {</span>
+<span class="nc" id="L442">            return type.cast(controller);</span>
         }
-<span class="nc" id="L415">        throw new ArtifactNotFoundException(type, name);</span>
+<span class="nc" id="L444">        throw new ArtifactNotFoundException(type, name);</span>
     }
 
     @Nonnull
     @Override
     public &lt;M extends GriffonModel&gt; M getModel(@Nonnull String name, @Nonnull Class&lt;M&gt; type) throws ArtifactNotFoundException {
-<span class="nc" id="L421">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
-<span class="nc" id="L422">        requireNonNull(type, ERROR_TYPE_NULL);</span>
-<span class="nc" id="L423">        GriffonModel model = getModels().get(name);</span>
-<span class="nc bnc" id="L424" title="All 2 branches missed.">        if (model != null) {</span>
-<span class="nc" id="L425">            return type.cast(model);</span>
+<span class="nc" id="L450">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc" id="L451">        requireNonNull(type, ERROR_TYPE_NULL);</span>
+<span class="nc" id="L452">        GriffonModel model = getModels().get(name);</span>
+<span class="nc bnc" id="L453" title="All 2 branches missed.">        if (model != null) {</span>
+<span class="nc" id="L454">            return type.cast(model);</span>
         }
-<span class="nc" id="L427">        throw new ArtifactNotFoundException(type, name);</span>
+<span class="nc" id="L456">        throw new ArtifactNotFoundException(type, name);</span>
     }
 
     @Nonnull
     @Override
     public &lt;V extends GriffonView&gt; V getView(@Nonnull String name, @Nonnull Class&lt;V&gt; type) throws ArtifactNotFoundException {
-<span class="nc" id="L433">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
-<span class="nc" id="L434">        requireNonNull(type, ERROR_TYPE_NULL);</span>
-<span class="nc" id="L435">        GriffonView view = getViews().get(name);</span>
-<span class="nc bnc" id="L436" title="All 2 branches missed.">        if (view != null) {</span>
-<span class="nc" id="L437">            return type.cast(view);</span>
+<span class="nc" id="L462">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc" id="L463">        requireNonNull(type, ERROR_TYPE_NULL);</span>
+<span class="nc" id="L464">        GriffonView view = getViews().get(name);</span>
+<span class="nc bnc" id="L465" title="All 2 branches missed.">        if (view != null) {</span>
+<span class="nc" id="L466">            return type.cast(view);</span>
         }
-<span class="nc" id="L439">        throw new ArtifactNotFoundException(type, name);</span>
+<span class="nc" id="L468">        throw new ArtifactNotFoundException(type, name);</span>
     }
 
     @Nullable
     @Override
     public &lt;C extends GriffonController&gt; C findController(@Nonnull String name, @Nonnull Class&lt;C&gt; type) {
         try {
-<span class="nc" id="L446">            return getController(name, type);</span>
-<span class="nc" id="L447">        } catch (ArtifactNotFoundException anfe) {</span>
-<span class="nc" id="L448">            return null;</span>
+<span class="nc" id="L475">            return getController(name, type);</span>
+<span class="nc" id="L476">        } catch (ArtifactNotFoundException anfe) {</span>
+<span class="nc" id="L477">            return null;</span>
         }
     }
 
@@ -453,9 +482,9 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     @Override
     public &lt;M extends GriffonModel&gt; M findModel(@Nonnull String name, @Nonnull Class&lt;M&gt; type) {
         try {
-<span class="nc" id="L456">            return getModel(name, type);</span>
-<span class="nc" id="L457">        } catch (ArtifactNotFoundException anfe) {</span>
-<span class="nc" id="L458">            return null;</span>
+<span class="nc" id="L485">            return getModel(name, type);</span>
+<span class="nc" id="L486">        } catch (ArtifactNotFoundException anfe) {</span>
+<span class="nc" id="L487">            return null;</span>
         }
     }
 
@@ -463,9 +492,9 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     @Override
     public &lt;V extends GriffonView&gt; V findView(@Nonnull String name, @Nonnull Class&lt;V&gt; type) {
         try {
-<span class="nc" id="L466">            return getView(name, type);</span>
-<span class="nc" id="L467">        } catch (ArtifactNotFoundException anfe) {</span>
-<span class="nc" id="L468">            return null;</span>
+<span class="nc" id="L495">            return getView(name, type);</span>
+<span class="nc" id="L496">        } catch (ArtifactNotFoundException anfe) {</span>
+<span class="nc" id="L497">            return null;</span>
         }
     }
 }

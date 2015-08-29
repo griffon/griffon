@@ -19,7 +19,6 @@ import griffon.core.ApplicationClassLoader;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonArtifact;
 import griffon.core.mvc.MVCGroup;
-import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.util.BuilderCustomizer;
 import griffon.util.CompositeBuilder;
 import groovy.lang.Script;
@@ -29,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Map;
@@ -42,102 +40,96 @@ import static org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup.BUILDE
  * @author Andres Almiray
  */
 public class GroovyAwareMVCGroupManager extends DefaultMVCGroupManager {
-<span class="fc" id="L45">    private static final Logger LOG = LoggerFactory.getLogger(DefaultMVCGroupManager.class);</span>
+<span class="fc" id="L43">    private static final Logger LOG = LoggerFactory.getLogger(DefaultMVCGroupManager.class);</span>
     private static final String BUILDER_CUSTOMIZER = &quot;BuilderCustomizer&quot;;
 
     @Inject
     public GroovyAwareMVCGroupManager(@Nonnull GriffonApplication application, @Nonnull ApplicationClassLoader applicationClassLoader) {
-<span class="fc" id="L50">        super(application, applicationClassLoader);</span>
-<span class="fc" id="L51">    }</span>
-
-    @Nonnull
-    @Override
-    public MVCGroup newMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map&lt;String, Object&gt; members, @Nullable MVCGroup parentGroup) {
-<span class="fc" id="L56">        return new GroovyAwareMVCGroup(this, configuration, mvcId, members, parentGroup);</span>
-    }
+<span class="fc" id="L48">        super(application, applicationClassLoader);</span>
+<span class="fc" id="L49">    }</span>
 
     @Nonnull
     @Override
     @SuppressWarnings(&quot;unchecked&quot;)
     protected Map&lt;String, Object&gt; instantiateMembers(@Nonnull Map&lt;String, ClassHolder&gt; classMap, @Nonnull Map&lt;String, Object&gt; args) {
-<span class="fc" id="L63">        Map&lt;String, Object&gt; map = super.instantiateMembers(classMap, args);</span>
-<span class="fc" id="L64">        FactoryBuilderSupport builder = createBuilder(getApplication());</span>
-<span class="fc" id="L65">        map.put(BUILDER, builder);</span>
+<span class="fc" id="L55">        Map&lt;String, Object&gt; map = super.instantiateMembers(classMap, args);</span>
+<span class="fc" id="L56">        FactoryBuilderSupport builder = createBuilder(getApplication());</span>
+<span class="fc" id="L57">        map.put(BUILDER, builder);</span>
 
-<span class="fc bfc" id="L67" title="All 2 branches covered.">        for (Object member : map.values()) {</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        for (Object member : map.values()) {</span>
             // all scripts get the builder as their binding
-<span class="pc bpc" id="L69" title="1 of 2 branches missed.">            if (member instanceof Script) {</span>
-<span class="nc" id="L70">                builder.getVariables().putAll(((Script) member).getBinding().getVariables());</span>
-<span class="nc" id="L71">                ((Script) member).setBinding(builder);</span>
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">            if (member instanceof Script) {</span>
+<span class="nc" id="L62">                builder.getVariables().putAll(((Script) member).getBinding().getVariables());</span>
+<span class="nc" id="L63">                ((Script) member).setBinding(builder);</span>
             }
-<span class="fc" id="L73">        }</span>
+<span class="fc" id="L65">        }</span>
 
-<span class="fc" id="L75">        return map;</span>
+<span class="fc" id="L67">        return map;</span>
     }
 
     @Nonnull
     protected FactoryBuilderSupport createBuilder(@Nonnull GriffonApplication application) {
-<span class="fc" id="L80">        Collection&lt;BuilderCustomizer&gt; customizers = resolveBuilderCustomizers(application);</span>
-<span class="fc" id="L81">        return new CompositeBuilder(customizers.toArray(new BuilderCustomizer[customizers.size()]));</span>
+<span class="fc" id="L72">        Collection&lt;BuilderCustomizer&gt; customizers = resolveBuilderCustomizers(application);</span>
+<span class="fc" id="L73">        return new CompositeBuilder(customizers.toArray(new BuilderCustomizer[customizers.size()]));</span>
     }
 
     @Override
     @SuppressWarnings(&quot;ConstantConditions&quot;)
     protected void adjustMvcArguments(@Nonnull MVCGroup group, @Nonnull Map&lt;String, Object&gt; args) {
-<span class="fc" id="L87">        super.adjustMvcArguments(group, args);</span>
-<span class="fc" id="L88">        FactoryBuilderSupport builder = (FactoryBuilderSupport) group.getMember(BUILDER);</span>
-<span class="fc" id="L89">        args.put(BUILDER, builder);</span>
-<span class="fc bfc" id="L90" title="All 2 branches covered.">        for (Map.Entry&lt;String, Object&gt; variable : args.entrySet()) {</span>
-<span class="fc" id="L91">            builder.setVariable(variable.getKey(), variable.getValue());</span>
-<span class="fc" id="L92">        }</span>
-<span class="fc" id="L93">    }</span>
+<span class="fc" id="L79">        super.adjustMvcArguments(group, args);</span>
+<span class="fc" id="L80">        FactoryBuilderSupport builder = (FactoryBuilderSupport) group.getMember(BUILDER);</span>
+<span class="fc" id="L81">        args.put(BUILDER, builder);</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        for (Map.Entry&lt;String, Object&gt; variable : args.entrySet()) {</span>
+<span class="fc" id="L83">            builder.setVariable(variable.getKey(), variable.getValue());</span>
+<span class="fc" id="L84">        }</span>
+<span class="fc" id="L85">    }</span>
 
     @Override
     @SuppressWarnings(&quot;unchecked&quot;)
     protected void fillNonArtifactMemberProperties(@Nonnull String type, @Nonnull Object member, @Nonnull Map&lt;String, Object&gt; args) {
-<span class="pc bpc" id="L98" title="1 of 2 branches missed.">        if (member instanceof Script) {</span>
-<span class="nc" id="L99">            ((Script) member).getBinding().getVariables().putAll(args);</span>
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">        if (member instanceof Script) {</span>
+<span class="nc" id="L91">            ((Script) member).getBinding().getVariables().putAll(args);</span>
         }
-<span class="fc" id="L101">    }</span>
+<span class="fc" id="L93">    }</span>
 
     @Override
     protected void initializeArtifactMember(@Nonnull MVCGroup group, @Nonnull String type, @Nonnull GriffonArtifact member, @Nonnull Map&lt;String, Object&gt; args) {
-<span class="pc bpc" id="L105" title="1 of 2 branches missed.">        if (member instanceof Script) {</span>
-<span class="nc" id="L106">            ((GroovyAwareMVCGroup) group).buildScriptMember(type);</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">        if (member instanceof Script) {</span>
+<span class="nc" id="L98">            ((GroovyAwareMVCGroup) group).buildScriptMember(type);</span>
         } else {
-<span class="fc" id="L108">            super.initializeArtifactMember(group, type, member, args);</span>
+<span class="fc" id="L100">            super.initializeArtifactMember(group, type, member, args);</span>
         }
-<span class="fc" id="L110">    }</span>
+<span class="fc" id="L102">    }</span>
 
     @Override
     protected void initializeNonArtifactMember(@Nonnull MVCGroup group, @Nonnull String type, @Nonnull Object member, @Nonnull Map&lt;String, Object&gt; args) {
-<span class="pc bpc" id="L114" title="1 of 2 branches missed.">        if (member instanceof Script) {</span>
-<span class="nc" id="L115">            ((GroovyAwareMVCGroup) group).buildScriptMember(type);</span>
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">        if (member instanceof Script) {</span>
+<span class="nc" id="L107">            ((GroovyAwareMVCGroup) group).buildScriptMember(type);</span>
         } else {
-<span class="fc" id="L117">            super.initializeNonArtifactMember(group, type, member, args);</span>
+<span class="fc" id="L109">            super.initializeNonArtifactMember(group, type, member, args);</span>
         }
-<span class="fc" id="L119">    }</span>
+<span class="fc" id="L111">    }</span>
 
     @Override
     protected void destroyMembers(@Nonnull MVCGroup group, boolean fireDestructionEvents) {
-<span class="fc" id="L123">        super.destroyMembers(group, fireDestructionEvents);</span>
+<span class="fc" id="L115">        super.destroyMembers(group, fireDestructionEvents);</span>
 
         try {
-<span class="fc" id="L126">            FactoryBuilderSupport builder = (FactoryBuilderSupport) group.getMember(BUILDER);</span>
-<span class="pc bpc" id="L127" title="1 of 2 branches missed.">            if (builder != null) {</span>
-<span class="fc" id="L128">                builder.dispose();</span>
-<span class="fc" id="L129">                builder.getVariables().clear();</span>
+<span class="fc" id="L118">            FactoryBuilderSupport builder = (FactoryBuilderSupport) group.getMember(BUILDER);</span>
+<span class="pc bpc" id="L119" title="1 of 2 branches missed.">            if (builder != null) {</span>
+<span class="fc" id="L120">                builder.dispose();</span>
+<span class="fc" id="L121">                builder.getVariables().clear();</span>
             }
-<span class="nc" id="L131">        } catch (Exception e) {</span>
+<span class="nc" id="L123">        } catch (Exception e) {</span>
             // TODO find out why this call breaks applet mode on shutdown
-<span class="nc" id="L133">            LOG.error(&quot;Application encountered an error while destroying group '&quot; + group.getMvcId() + &quot;'&quot;, sanitize(e));</span>
-<span class="fc" id="L134">        }</span>
-<span class="fc" id="L135">    }</span>
+<span class="nc" id="L125">            LOG.error(&quot;Application encountered an error while destroying group '&quot; + group.getMvcId() + &quot;'&quot;, sanitize(e));</span>
+<span class="fc" id="L126">        }</span>
+<span class="fc" id="L127">    }</span>
 
     @Nonnull
     protected Collection&lt;BuilderCustomizer&gt; resolveBuilderCustomizers(@Nonnull GriffonApplication application) {
-<span class="fc" id="L139">        Collection&lt;BuilderCustomizer&gt; customizerInstances = application.getInjector().getInstances(BuilderCustomizer.class);</span>
-<span class="fc" id="L140">        return sortByDependencies(customizerInstances, BUILDER_CUSTOMIZER, &quot;customizer&quot;).values();</span>
+<span class="fc" id="L131">        Collection&lt;BuilderCustomizer&gt; customizerInstances = application.getInjector().getInstances(BuilderCustomizer.class);</span>
+<span class="fc" id="L132">        return sortByDependencies(customizerInstances, BUILDER_CUSTOMIZER, &quot;customizer&quot;).values();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
