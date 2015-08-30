@@ -114,6 +114,15 @@ bind(Calculator.class)
     .toInstance(new GroovyShellCalculator());
 ----
 
+Consumers of this binding will typically define the following
+
+[source,java,options="nowrap"]
+----
+@Inject private Calculator calculator;
+----
+
+Notice that the field type matches the _source_ type defined in the binding.
+
 [[_overview_target_binding]]
 === Target Binding
 
@@ -126,6 +135,29 @@ is omitted then the binding assumes the _source_ to be a concrete type.
 bind(Calculator.class)
     .to(GroovyShellCalculator.class);
 ----
+
+Consumers of this binding will use the following form
+
+[source,java,options="nowrap"]
+----
+@Inject private Calculator calculator;
+----
+
+On the other hand, if the binding where to be defined as
+
+[source,java,options="nowrap"]
+----
+bind(GroovyShellCalculator.class);
+----
+
+Then the consumers must use the same matching _source_/_target_ type, that is
+
+[source,java,options="nowrap"]
+----
+@Inject private GroovyShellCalculator calculator;
+----
+
+Attempting to use the base type `Calculator` by the consumer will result in an unresolved binding.
 
 [[_overview_provider_binding]]
 === Provider Binding
@@ -140,6 +172,13 @@ bind(Calculator.class)
     .toProvider(new CalculatorProvider());
 ----
 
+Consumers of this binding will use the following form
+
+[source,java,options="nowrap"]
+----
+@Inject private Calculator calculator;
+----
+
 [[_overview_provider_type_binding]]
 === Provider Type Binding
 
@@ -151,6 +190,97 @@ type that will be used to lazily instantiate the provider before obtaining the t
 bind(Calculator.class)
     .toProvider(CalculatorProvider.class);
 ----
+
+Consumers of this binding will use the following form
+
+[source,java,options="nowrap"]
+----
+@Inject private Calculator calculator;
+----
+
+== Additional Settings
+
+All bindings (with one particular exception) accept the following additional settings
+
+.withClassifierType
+
+This method is used to define an additional annotation type that's been marked as a `@Qualifier` (such as `@javax.inject.Named`)
+that should go along with the declared binding. Any qualifiers found in the _target_ type (or `Provider`) will be overridden
+by this setting.
+
+.withClassifier
+
+Similar to the previous setting, this one allows you to supply an annotation instance, enabling the setting of a custom
+annotation property, such as the `value` of `@javax.inject.Named`. Here's an excerpt of the default bindings provided
+by the Griffon runtime
+
+[source,java,options="nowrap"]
+----
+bind(Context.class)
+    .withClassifier(griffon.util.AnnotationUtils.named("applicationContext"))
+    .toProvider(DefaultContextProvider.class)
+    .asSingleton();
+----
+
+Any qualifiers found in the _target_ (or `Provider`) will be overridden by this setting.
+
+.asSingleton
+
+If left out the binding will be placed in `prototype` scope. The only binding that does not conform to this rule is *InstanceBinding*,
+as it will be automatically placed in `singleton` scope.
+
+== Binding Equivalencies
+
+Any binding can be overridden by an equivalent binding. The following table describes the equivalencies between bindings
+
+[cols="a,a",options="header"]
+|===
+
+| Binding
+| Equivalence
+
+|
+[source,java,options="nowrap"]
+----
+bind(Calculator.class)
+    .to(GroovyShellCalculator.class);
+----
+|
+[source,java,options="nowrap"]
+----
+bind(Calculator.class)
+    .toProvider(GroovyShellCalculatorProvider.class);
+----
+
+|
+[source,java,options="nowrap"]
+----
+bind(Calculator.class)
+    .to(GroovyShellCalculator.class);
+----
+|
+[source,java,options="nowrap"]
+----
+bind(Calculator.class)
+    .toProvider(new GroovyShellCalculatorProvider());
+----
+
+|
+[source,java,options="nowrap"]
+----
+bind(Calculator.class)
+    .toProvider(GroovyShellCalculatorProvider.class);
+----
+|
+[source,java,options="nowrap"]
+----
+bind(Calculator.class)
+    .toProvider(new GroovyShellCalculatorProvider());
+----
+
+|===
+
+NOTE: Equivalent bindings must match qualifiers too.
 
 == The Guice Injector
 
