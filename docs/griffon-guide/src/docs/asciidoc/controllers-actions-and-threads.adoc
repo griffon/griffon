@@ -92,3 +92,43 @@ class GoodController {
 There are other options at your disposal to make sure the code behaves properly according to
 the specific threading rules of a particular UI toolkit. These options are covered in
 the <<_threading,threading>> chapter.
+
+The default behavior of invoking controller actions outside of the UI thread can be altered in different ways, here listed
+from most specific to most generic:
+
+ * annotating the action method with `<<_threading_annotation,@Threading>>`.
+ * annotating the controller class with `<<_threading_annotation,@Threading>>`. All controller actions belonging to the
+   annotated controller will use this setting.
+ * specify a value under key `controller.threading.default` in the application's configuration. Accepted values and their
+   equivalent `Threading.Policy` value are listed below:
+
+[horizontal]
+Threading.Policy.INSIDE_UITHREAD_SYNC:: sync, inside sync, inside uithread sync, inside_uithread_sync.
+Threading.Policy.INSIDE_UITHREAD_ASYNC:: async, inside async, inside uithread async, inside_uithread_async.
+Threading.Policy.OUTSIDE_UITHREAD:: outside, outside uithread, outside_uithread.
+Threading.Policy.SKIP:: skip.
+
+You may use lower case and/or upper case values. You may also use a real value of the `Threading.Policy` enum if the
+application's configuration is defined using Java or Groovy code.
+
+It's also possible to completely disable automatic UI threading management for a particular action, controller, package,
+or the whole application even. Just specify a value in the application's configuration with the prefix `controller.threading`
+Here are some examples:
+
+[source,java]
+----
+controller.threading.com.acme.SampleController.click = false    <1>
+controller.threading.org.example.SimpleController = false       <2>
+controller.threading.org.another = false                        <3>
+griffon.disable.threading.injection = true                      <4>
+----
+<1> targeted action
+<2> targeted controller
+<3> targeted package
+<4> application wide
+
+The [conum,data-value=1]_1_ setting disables threading management for a single action only. The [conum,data-value=2]_2_
+disables threading management for all actions belonging to a single controller. [conum,data-value=3]_3_ disables threading
+management for all controllers inside the `org.another` package. Finally, [conum,data-value=4]_4_ disables threading
+management altogether, for the whole application.
+
