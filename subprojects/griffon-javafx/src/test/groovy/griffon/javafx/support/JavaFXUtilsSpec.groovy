@@ -19,6 +19,7 @@ import javafx.application.Platform
 import javafx.embed.swing.JFXPanel
 import javafx.scene.control.Accordion
 import javafx.scene.control.Button
+import javafx.scene.control.ContextMenu
 import javafx.scene.control.Menu
 import javafx.scene.control.MenuBar
 import javafx.scene.control.MenuItem
@@ -72,6 +73,7 @@ class JavaFXUtilsSpec extends Specification {
             createAccordion(),
             createScrollPane(),
             createToolBar(),
+            createContextMenu(),
             createMenuBar()
         ]
     }
@@ -82,6 +84,18 @@ class JavaFXUtilsSpec extends Specification {
             pane.children << createButton()
             pane
         }
+    }
+
+    private ContextMenu createContextMenu() {
+        ContextMenu contextMenu = new ContextMenu()
+        Menu primary = new Menu('Primary')
+        Menu secondary = new Menu('Secondary')
+        primary.items << secondary
+        MenuItem button = new MenuItem()
+        button.id = 'buttonId'
+        secondary.items << button
+        contextMenu.items << primary
+        contextMenu
     }
 
     private MenuBar createMenuBar() {

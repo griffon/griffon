@@ -117,7 +117,7 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
         return baseName;
     }
 
-    protected void connectActions(@Nonnull Node node, @Nonnull GriffonController controller) {
+    protected void connectActions(@Nonnull Object node, @Nonnull GriffonController controller) {
         JavaFXUtils.connectActions(node, controller);
     }
 

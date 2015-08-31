@@ -29,6 +29,7 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Control;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.Menu;
@@ -108,7 +109,7 @@ public final class JavaFXUtils {
         }
     }
 
-    public static void connectActions(@Nonnull Node node, @Nonnull GriffonController controller) {
+    public static void connectActions(@Nonnull Object node, @Nonnull GriffonController controller) {
         requireNonNull(node, ERROR_NODE_NULL);
         requireNonNull(controller, ERROR_CONTROLLER_NULL);
         ActionManager actionManager = controller.getApplication().getActionManager();
@@ -433,6 +434,12 @@ public final class JavaFXUtils {
         if (root instanceof MenuBar) {
             MenuBar menuBar = (MenuBar) root;
             for (Menu child : menuBar.getMenus()) {
+                Object found = findElement(child, id);
+                if (found != null) return found;
+            }
+        } if (root instanceof ContextMenu) {
+            ContextMenu contextMenu = (ContextMenu) root;
+            for (MenuItem child : contextMenu.getItems()) {
                 Object found = findElement(child, id);
                 if (found != null) return found;
             }
