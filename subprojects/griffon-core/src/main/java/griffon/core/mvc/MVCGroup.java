@@ -135,13 +135,13 @@ public interface MVCGroup extends MVCHandler {
     MVCGroup getParentGroup();
 
     /**
-     * Returns an immutable view of all child groups for which this group is a parent
+     * Returns an immutable view of all children groups for which this group is a parent
      *
-     * @return an immutable view of child groups, keyed by mvcId.
+     * @return an immutable view of children groups, keyed by mvcId.
      * @since 2.4.0
      */
     @Nonnull
-    Map<String, MVCGroup> getChildGroups();
+    Map<String, MVCGroup> getChildrenGroups();
 
     /**
      * Notifies the group when another MVC group has been destroyed, potentially

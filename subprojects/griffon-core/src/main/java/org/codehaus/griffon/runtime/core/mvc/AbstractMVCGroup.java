@@ -334,7 +334,7 @@ public abstract class AbstractMVCGroup extends AbstractMVCHandler implements MVC
 
     @Nonnull
     @Override
-    public Map<String, MVCGroup> getChildGroups() {
+    public Map<String, MVCGroup> getChildrenGroups() {
         return unmodifiableMap(children);
     }
 

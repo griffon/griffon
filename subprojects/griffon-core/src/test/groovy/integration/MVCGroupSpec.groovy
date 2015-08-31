@@ -127,7 +127,7 @@ class MVCGroupSpec extends Specification {
         root.createMVCGroup('child', 'child3')
 
         then:
-        root.childGroups.keySet() == ['child1', 'child2', 'child3'] as Set
+        root.childrenGroups.keySet() == ['child1', 'child2', 'child3'] as Set
         ['child1', 'child2', 'child3'].each { mvcId ->
             MVCGroup child = application.mvcGroupManager.findGroup(mvcId)
             assert child.model.parentGroup == root
@@ -146,7 +146,7 @@ class MVCGroupSpec extends Specification {
         child2.destroy()
 
         then:
-        root.childGroups.keySet() == ['child1', 'child3'] as Set
+        root.childrenGroups.keySet() == ['child1', 'child3'] as Set
         !model.parentGroup
         !model.parentModel
         !view.parentGroup
@@ -159,7 +159,7 @@ class MVCGroupSpec extends Specification {
 
         then:
         !root.alive
-        !root.childGroups
+        !root.childrenGroups
         !application.mvcGroupManager.findGroup('root')
         !application.mvcGroupManager.findGroup('child1')
         !application.mvcGroupManager.findGroup('child3')
@@ -175,7 +175,7 @@ class MVCGroupSpec extends Specification {
         root.createMVC('child', 'child3')
 
         then:
-        root.childGroups.keySet() == ['child1', 'child2', 'child3'] as Set
+        root.childrenGroups.keySet() == ['child1', 'child2', 'child3'] as Set
         ['child1', 'child2', 'child3'].each { mvcId ->
             MVCGroup child = application.mvcGroupManager.findGroup(mvcId)
             assert child.model.parentGroup == root
@@ -194,7 +194,7 @@ class MVCGroupSpec extends Specification {
         child2.destroy()
 
         then:
-        root.childGroups.keySet() == ['child1', 'child3'] as Set
+        root.childrenGroups.keySet() == ['child1', 'child3'] as Set
         !model.parentGroup
         !model.parentModel
         !view.parentGroup
@@ -207,7 +207,7 @@ class MVCGroupSpec extends Specification {
 
         then:
         !root.alive
-        !root.childGroups
+        !root.childrenGroups
         !application.mvcGroupManager.findGroup('root')
         !application.mvcGroupManager.findGroup('child1')
         !application.mvcGroupManager.findGroup('child3')
@@ -220,7 +220,7 @@ class MVCGroupSpec extends Specification {
 
         when:
         root.withMVCGroup('child', 'child1') { MVCGroup group ->
-            checks << (root.childGroups.containsKey('child1'))
+            checks << (root.childrenGroups.containsKey('child1'))
             checks << (group.model.parentGroup == root)
             checks << (group.view.parentGroup == root)
             checks << (group.controller.parentGroup == root)
@@ -229,7 +229,7 @@ class MVCGroupSpec extends Specification {
             checks << (group.controller.parentController == root.controller)
         }
         root.withMVCGroup('child', 'child2') { MVCGroup group ->
-            checks << (root.childGroups.containsKey('child2'))
+            checks << (root.childrenGroups.containsKey('child2'))
             checks << (group.model.parentGroup == root)
             checks << (group.view.parentGroup == root)
             checks << (group.controller.parentGroup == root)
@@ -238,7 +238,7 @@ class MVCGroupSpec extends Specification {
             checks << (group.controller.parentController == root.controller)
         }
         root.withMVCGroup('child', 'child3') { MVCGroup group ->
-            checks << (root.childGroups.containsKey('child3'))
+            checks << (root.childrenGroups.containsKey('child3'))
             checks << (group.model.parentGroup == root)
             checks << (group.view.parentGroup == root)
             checks << (group.controller.parentGroup == root)
@@ -249,7 +249,7 @@ class MVCGroupSpec extends Specification {
 
         then:
         checks.every { it == true }
-        !root.childGroups
+        !root.childrenGroups
         !application.mvcGroupManager.findGroup('child1')
         !application.mvcGroupManager.findGroup('child2')
         !application.mvcGroupManager.findGroup('child3')
@@ -265,7 +265,7 @@ class MVCGroupSpec extends Specification {
 
         when:
         root.withMVC('child', 'child1') { model, view, controller ->
-            checks << (root.childGroups.containsKey('child1'))
+            checks << (root.childrenGroups.containsKey('child1'))
             checks << (model.parentGroup == root)
             checks << (view.parentGroup == root)
             checks << (controller.parentGroup == root)
@@ -274,7 +274,7 @@ class MVCGroupSpec extends Specification {
             checks << (controller.parentController == root.controller)
         }
         root.withMVC('child', 'child2') { model, view, controller ->
-            checks << (root.childGroups.containsKey('child2'))
+            checks << (root.childrenGroups.containsKey('child2'))
             checks << (model.parentGroup == root)
             checks << (view.parentGroup == root)
             checks << (controller.parentGroup == root)
@@ -283,7 +283,7 @@ class MVCGroupSpec extends Specification {
             checks << (controller.parentController == root.controller)
         }
         root.withMVC('child', 'child3') { model, view, controller ->
-            checks << (root.childGroups.containsKey('child3'))
+            checks << (root.childrenGroups.containsKey('child3'))
             checks << (model.parentGroup == root)
             checks << (view.parentGroup == root)
             checks << (controller.parentGroup == root)
@@ -294,7 +294,7 @@ class MVCGroupSpec extends Specification {
 
         then:
         checks.every { it == true }
-        !root.childGroups
+        !root.childrenGroups
         !application.mvcGroupManager.findGroup('child1')
         !application.mvcGroupManager.findGroup('child2')
         !application.mvcGroupManager.findGroup('child3')
