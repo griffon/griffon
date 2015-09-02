@@ -38,6 +38,11 @@ public abstract class AbstractContext implements Context {
     }
 
     @Nullable
+    public Context getParentContext() {
+        return parentContext;
+    }
+
+    @Nullable
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(@Nonnull String key, @Nullable T defaultValue) {
