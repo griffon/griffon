@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ObservableContext.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-core</a> &gt; <a href="index.source.html" class="el_package">griffon.core</a> &gt; <span class="el_source">ObservableContext.java</span></div><h1>ObservableContext.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.core;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.5.0
+ */
+public interface ObservableContext extends Context {
+    void addContextEventListener(@Nonnull ContextEventListener listener);
+
+    void removeContextEventListener(@Nonnull ContextEventListener listener);
+
+    @Nonnull
+    ContextEventListener[] getContextEventListeners();
+
+    public static interface ContextEventListener {
+        void contextChanged(@Nonnull ContextEvent contextEvent);
+    }
+
+    public static class ContextEvent {
+        private final Type type;
+        private final String key;
+        private final Object oldValue;
+        private final Object newValue;
+
+<span class="fc" id="L46">        public ContextEvent(@Nonnull Type type, @Nonnull String key, @Nullable Object oldValue, @Nullable Object newValue) {</span>
+<span class="fc" id="L47">            this.type = requireNonNull(type, &quot;Argument 'type' must not be null&quot;);</span>
+<span class="fc" id="L48">            this.key = requireNonBlank(key, &quot;Argument 'key' must not be null&quot;);</span>
+<span class="fc" id="L49">            this.oldValue = oldValue;</span>
+<span class="fc" id="L50">            this.newValue = newValue;</span>
+<span class="fc" id="L51">        }</span>
+
+        @Nonnull
+        public Type getType() {
+<span class="fc" id="L55">            return type;</span>
+        }
+
+        @Nonnull
+        public String getKey() {
+<span class="fc" id="L60">            return key;</span>
+        }
+
+        @Nullable
+        public Object getOldValue() {
+<span class="fc" id="L65">            return oldValue;</span>
+        }
+
+        @Nullable
+        public Object getNewValue() {
+<span class="fc" id="L70">            return newValue;</span>
+        }
+
+        @Override
+        public boolean equals(Object o) {
+<span class="nc bnc" id="L75" title="All 2 branches missed.">            if (this == o) return true;</span>
+<span class="nc bnc" id="L76" title="All 4 branches missed.">            if (o == null || getClass() != o.getClass()) return false;</span>
+
+<span class="nc" id="L78">            ContextEvent that = (ContextEvent) o;</span>
+
+<span class="nc bnc" id="L80" title="All 2 branches missed.">            if (!key.equals(that.key)) return false;</span>
+<span class="nc bnc" id="L81" title="All 6 branches missed.">            if (newValue != null ? !newValue.equals(that.newValue) : that.newValue != null) return false;</span>
+<span class="nc bnc" id="L82" title="All 6 branches missed.">            if (oldValue != null ? !oldValue.equals(that.oldValue) : that.oldValue != null) return false;</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">            if (type != that.type) return false;</span>
+
+<span class="nc" id="L85">            return true;</span>
+        }
+
+        @Override
+        public int hashCode() {
+<span class="nc" id="L90">            int result = type.hashCode();</span>
+<span class="nc" id="L91">            result = 31 * result + key.hashCode();</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">            result = 31 * result + (oldValue != null ? oldValue.hashCode() : 0);</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">            result = 31 * result + (newValue != null ? newValue.hashCode() : 0);</span>
+<span class="nc" id="L94">            return result;</span>
+        }
+
+        @Override
+        public String toString() {
+<span class="nc" id="L99">            final StringBuilder sb = new StringBuilder(&quot;ContextEvent{&quot;);</span>
+<span class="nc" id="L100">            sb.append(&quot;type=&quot;).append(type);</span>
+<span class="nc" id="L101">            sb.append(&quot;, key='&quot;).append(key).append('\'');</span>
+<span class="nc" id="L102">            sb.append(&quot;, oldValue=&quot;).append(oldValue);</span>
+<span class="nc" id="L103">            sb.append(&quot;, newValue=&quot;).append(newValue);</span>
+<span class="nc" id="L104">            sb.append('}');</span>
+<span class="nc" id="L105">            return sb.toString();</span>
+        }
+
+<span class="pc" id="L108">        public enum Type {</span>
+<span class="fc" id="L109">            ADD, REMOVE, UPDATE</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
