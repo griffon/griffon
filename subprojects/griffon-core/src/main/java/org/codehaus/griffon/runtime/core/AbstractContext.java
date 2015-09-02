@@ -20,6 +20,12 @@ import griffon.core.Context;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static griffon.util.TypeUtils.castToBoolean;
+import static griffon.util.TypeUtils.castToDouble;
+import static griffon.util.TypeUtils.castToFloat;
+import static griffon.util.TypeUtils.castToInt;
+import static griffon.util.TypeUtils.castToLong;
+
 /**
  * @author Andres Almiray
  * @since 2.2.0
@@ -80,4 +86,67 @@ public abstract class AbstractContext implements Context {
 
     @Nullable
     protected abstract Object doGet(@Nonnull String key);
+
+    @Override
+    public boolean getAsBoolean(@Nonnull String key) {
+        return getAsBoolean(key, false);
+    }
+
+    @Override
+    public boolean getAsBoolean(@Nonnull String key, boolean defaultValue) {
+        return castToBoolean(get(key), defaultValue);
+    }
+
+    @Override
+    public int getAsInt(@Nonnull String key) {
+        return getAsInt(key, 0);
+    }
+
+    @Override
+    public int getAsInt(@Nonnull String key, int defaultValue) {
+        return castToInt(get(key), defaultValue);
+    }
+
+    @Override
+    public long getAsLong(@Nonnull String key) {
+        return getAsLong(key, 0L);
+    }
+
+    @Override
+    public long getAsLong(@Nonnull String key, long defaultValue) {
+        return castToLong(get(key), defaultValue);
+    }
+
+    @Override
+    public float getAsFloat(@Nonnull String key) {
+        return getAsFloat(key, 0f);
+    }
+
+    @Override
+    public float getAsFloat(@Nonnull String key, float defaultValue) {
+        return castToFloat(get(key), defaultValue);
+    }
+
+    @Override
+    public double getAsDouble(@Nonnull String key) {
+        return getAsDouble(key, 0d);
+    }
+
+    @Override
+    public double getAsDouble(@Nonnull String key, double defaultValue) {
+        return castToDouble(get(key), defaultValue);
+    }
+
+    @Nullable
+    @Override
+    public String getAsString(@Nonnull String key) {
+        return getAsString(key, null);
+    }
+
+    @Nullable
+    @Override
+    public String getAsString(@Nonnull String key, @Nullable String defaultValue) {
+        Object value = get(key);
+        return value != null ? String.valueOf(value) : defaultValue;
+    }
 }
