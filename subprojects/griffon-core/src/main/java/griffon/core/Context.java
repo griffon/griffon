@@ -63,6 +63,14 @@ public interface Context {
     void destroy();
 
     /**
+     * Returns the parent {@code Context} if it exists.
+     *
+     * @since 2.4.0
+     */
+    @Nullable
+    Context getParentContext();
+
+    /**
      * Returns a {@link Set} view of the keys contained in this context.
      *
      * @return a set view of the keys contained in this map
