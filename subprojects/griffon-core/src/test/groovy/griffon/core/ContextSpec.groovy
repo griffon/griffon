@@ -44,6 +44,36 @@ class ContextSpec extends Specification {
         'bar' | 'bar' | 'bar'
     }
 
+    def "Find values on context 1 using typed defaults"() {
+        expect:
+        value == ctx1."$methodName"(key, defaultValue)
+
+        where:
+        key   | methodName     | value | defaultValue
+        'key' | 'getAsBoolean' | true  | true
+        'key' | 'getAsInt'     | 1     | 1
+        'key' | 'getAsLong'    | 1L    | 1L
+        'key' | 'getAsFloat'   | 1f    | 1f
+        'key' | 'getAsDouble'  | 1d    | 1d
+        'key' | 'getAsString'  | 'foo' | 'foo'
+        'key' | 'getAsString'  | null  | null
+        'foo' | 'getAsString'  | 'foo' | null
+    }
+
+    def "Find values on context 1 using typed getters"() {
+        expect:
+        value == ctx1."$methodName"(key)
+
+        where:
+        key   | methodName     | value
+        'key' | 'getAsBoolean' | false
+        'key' | 'getAsInt'     | 0
+        'key' | 'getAsLong'    | 0L
+        'key' | 'getAsFloat'   | 0f
+        'key' | 'getAsDouble'  | 0d
+        'key' | 'getAsString'  | null
+    }
+
     def "Find values on context 1"() {
         expect:
         value == ctx1[key]
@@ -102,7 +132,7 @@ class ContextSpec extends Specification {
         ctx2    | ['foo', 'bar'] as Set
     }
 
-    def "ContainsKey on child context" () {
+    def "ContainsKey on child context"() {
         expect:
         ctx2.containsKey('foo')
         ctx2.containsKey('bar')
@@ -110,7 +140,7 @@ class ContextSpec extends Specification {
         !ctx1.containsKey('bar')
     }
 
-    def "HasKey on child context" () {
+    def "HasKey on child context"() {
         expect:
         !ctx2.hasKey('foo')
         ctx2.hasKey('bar')

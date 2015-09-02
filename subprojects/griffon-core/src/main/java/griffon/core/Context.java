@@ -70,4 +70,126 @@ public interface Context {
      */
     @Nonnull
     Set<String> keySet();
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to a <tt>boolean</tt> if found.
+     *
+     * @param key the key to search
+     * @since 2.5.0
+     */
+    boolean getAsBoolean(@Nonnull String key);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to a <tt>boolean</tt> if found. If not found then the
+     * supplied <tt>defaultValue</tt> will be returned.
+     *
+     * @param key          the key to search
+     * @param defaultValue the value to be returned if the key is not found
+     * @since 2.5.0
+     */
+    boolean getAsBoolean(@Nonnull String key, boolean defaultValue);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to an <tt>int</tt> if found.
+     *
+     * @param key the key to search
+     * @since 2.5.0
+     */
+    int getAsInt(@Nonnull String key);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to an <tt>int</tt> if found. If not found then the
+     * supplied <tt>defaultValue</tt> will be returned.
+     *
+     * @param key          the key to search
+     * @param defaultValue the value to be returned if the key is not found
+     * @since 2.5.0
+     */
+    int getAsInt(@Nonnull String key, int defaultValue);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to a <tt>long</tt> if found.
+     *
+     * @param key the key to search
+     * @since 2.5.0
+     */
+    long getAsLong(@Nonnull String key);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to a <tt>long</tt> if found. If not found then the
+     * supplied <tt>defaultValue</tt> will be returned.
+     *
+     * @param key          the key to search
+     * @param defaultValue the value to be returned if the key is not found
+     * @since 2.5.0
+     */
+    long getAsLong(@Nonnull String key, long defaultValue);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to a <tt>float</tt> if found.
+     *
+     * @param key the key to search
+     * @since 2.5.0
+     */
+    float getAsFloat(@Nonnull String key);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to a <tt>float</tt> if found. If not found then the
+     * supplied <tt>defaultValue</tt> will be returned.
+     *
+     * @param key          the key to search
+     * @param defaultValue the value to be returned if the key is not found
+     * @since 2.5.0
+     */
+    float getAsFloat(@Nonnull String key, float defaultValue);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to a <tt>double</tt> if found.
+     *
+     * @param key the key to search
+     * @since 2.5.0
+     */
+    double getAsDouble(@Nonnull String key);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to a <tt>double</tt> if found. If not found then the
+     * supplied <tt>defaultValue</tt> will be returned.
+     *
+     * @param key          the key to search
+     * @param defaultValue the value to be returned if the key is not found
+     * @since 2.5.0
+     */
+    double getAsDouble(@Nonnull String key, double defaultValue);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to a <tt>String</tt> if found.
+     *
+     * @param key the key to search
+     * @since 2.5.0
+     */
+    @Nullable
+    String getAsString(@Nonnull String key);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to a <tt>String</tt> if found. If not found then the
+     * supplied <tt>defaultValue</tt> will be returned.
+     *
+     * @param key          the key to search
+     * @param defaultValue the value to be returned if the key is not found
+     * @since 2.5.0
+     */
+    @Nullable
+    String getAsString(@Nonnull String key, @Nullable String defaultValue);
 }
