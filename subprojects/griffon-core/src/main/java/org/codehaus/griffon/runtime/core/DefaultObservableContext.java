@@ -17,6 +17,7 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.core.Context;
 import griffon.core.ObservableContext;
+import griffon.util.TypeUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -79,27 +80,10 @@ public class DefaultObservableContext extends DefaultContext implements Observab
         boolean parentKey = !localKey && containsKey(key);
         Object oldValue = get(key);
         super.put(key, value);
+        boolean valuesAreEqual = TypeUtils.equals(oldValue, value);
 
         if (parentKey) {
-            fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value);
-        } else {
-            if (localKey) {
-                fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value);
-            } else {
-                fireContextEvent(ContextEvent.Type.ADD, key, null, value);
-            }
-        }
-    }
-
-    @Override
-    public void putAt(@Nonnull String key, @Nullable Object value) {
-        boolean localKey = hasKey(key);
-        boolean parentKey = !localKey && containsKey(key);
-        Object oldValue = get(key);
-        super.putAt(key, value);
-
-        if (parentKey) {
-            fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value);
+            if (!valuesAreEqual) fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value);
         } else {
             if (localKey) {
                 fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value);
@@ -122,7 +106,9 @@ public class DefaultObservableContext extends DefaultContext implements Observab
         } finally {
             if (localKeyRemoved) {
                 if (containsKey) {
-                    fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, get(key));
+                    Object value = get(key);
+                    boolean valuesAreEqual = TypeUtils.equals(oldValue, value);
+                    if (!valuesAreEqual) fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value);
                 } else {
                     fireContextEvent(ContextEvent.Type.REMOVE, key, oldValue, null);
                 }
