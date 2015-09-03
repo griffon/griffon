@@ -182,11 +182,11 @@ controller will get an instance of `Evaluator` if a suitable implementation is b
 
 The `executeScript` [conum,data-value=3]_3_ method will be used later in the View in combination
 with a button. You may notice that there's no explicit threading management. All Swing developers
-know they must obey the Swing Rule: long running computations must run outside of the EDT; all UI
-components should be queried/modified inside the EDT. It turns out Griffon is aware of this rule,
-making sure an action is called outside of the EDT by default; all bindings made to UI components
-via the model will be updated inside the EDT [conum,data-value=5]_5_. We'll setup the bindings in
-the next listing.
+know they must obey the Swing Rule: long running computations must run outside of the EDT (Swing's
+**E**vent **D**ispatch **T**hread); all UI components should be queried/modified inside the EDT. It
+turns out Griffon is aware of this rule, making sure an action is called outside of the EDT by
+default; all bindings made to UI components via the model will be updated inside the EDT
+[conum,data-value=5]_5_. We'll setup the bindings in the next listing.
 
 We must create a `{link_module}` in order to bind `Evaluator`.
 These are the required class definitions
