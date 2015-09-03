@@ -17,6 +17,7 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.core.Context;
 import griffon.core.ObservableContext;
+import griffon.util.TypeUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,100 +32,85 @@ import static java.util.Objects.requireNonNull;
  */
 public class DefaultObservableContext extends DefaultContext implements ObservableContext {
     private static final String ERROR_LISTENER_NULL = &quot;Argument 'listener' must not be null&quot;;
-<span class="fc" id="L34">    private final List&lt;ContextEventListener&gt; listeners = new CopyOnWriteArrayList&lt;&gt;();</span>
+<span class="fc" id="L35">    private final List&lt;ContextEventListener&gt; listeners = new CopyOnWriteArrayList&lt;&gt;();</span>
 
-<span class="fc" id="L36">    private final ContextEventListener parentListener = new ContextEventListener() {</span>
+<span class="fc" id="L37">    private final ContextEventListener parentListener = new ContextEventListener() {</span>
         @Override
         public void contextChanged(@Nonnull ContextEvent event) {
-<span class="fc" id="L39">            String key = event.getKey();</span>
-<span class="fc bfc" id="L40" title="All 2 branches covered.">            if (!hasKey(key)) {</span>
-<span class="fc" id="L41">                fireContextEvent(event.getType(), key, event.getOldValue(), event.getNewValue());</span>
+<span class="fc" id="L40">            String key = event.getKey();</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">            if (!hasKey(key)) {</span>
+<span class="fc" id="L42">                fireContextEvent(event.getType(), key, event.getOldValue(), event.getNewValue());</span>
             }
-<span class="fc" id="L43">        }</span>
+<span class="fc" id="L44">        }</span>
     };
 
     public DefaultObservableContext() {
-<span class="fc" id="L47">        super();</span>
-<span class="fc" id="L48">    }</span>
+<span class="fc" id="L48">        super();</span>
+<span class="fc" id="L49">    }</span>
 
     public DefaultObservableContext(@Nonnull Context parentContext) {
-<span class="fc" id="L51">        super(parentContext);</span>
-<span class="pc bpc" id="L52" title="1 of 2 branches missed.">        if (parentContext instanceof ObservableContext) {</span>
-<span class="fc" id="L53">            ObservableContext observableParent = (ObservableContext) parentContext;</span>
-<span class="fc" id="L54">            observableParent.addContextEventListener(parentListener);</span>
+<span class="fc" id="L52">        super(parentContext);</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        if (parentContext instanceof ObservableContext) {</span>
+<span class="fc" id="L54">            ObservableContext observableParent = (ObservableContext) parentContext;</span>
+<span class="fc" id="L55">            observableParent.addContextEventListener(parentListener);</span>
         }
-<span class="fc" id="L56">    }</span>
+<span class="fc" id="L57">    }</span>
 
     @Override
     public void addContextEventListener(@Nonnull ContextEventListener listener) {
-<span class="fc" id="L60">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
-<span class="fc bfc" id="L61" title="All 2 branches covered.">        if (!listeners.contains(listener)) listeners.add(listener);</span>
-<span class="fc" id="L62">    }</span>
+<span class="fc" id="L61">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (!listeners.contains(listener)) listeners.add(listener);</span>
+<span class="fc" id="L63">    }</span>
 
     @Override
     public void removeContextEventListener(@Nonnull ContextEventListener listener) {
-<span class="fc" id="L66">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
-<span class="fc" id="L67">        listeners.remove(listener);</span>
-<span class="fc" id="L68">    }</span>
+<span class="fc" id="L67">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="fc" id="L68">        listeners.remove(listener);</span>
+<span class="fc" id="L69">    }</span>
 
     @Nonnull
     @Override
     public ContextEventListener[] getContextEventListeners() {
-<span class="fc" id="L73">        return listeners.toArray(new ContextEventListener[listeners.size()]);</span>
+<span class="fc" id="L74">        return listeners.toArray(new ContextEventListener[listeners.size()]);</span>
     }
 
     @Override
     public void put(@Nonnull String key, @Nullable Object value) {
-<span class="fc" id="L78">        boolean localKey = hasKey(key);</span>
-<span class="fc bfc" id="L79" title="All 4 branches covered.">        boolean parentKey = !localKey &amp;&amp; containsKey(key);</span>
-<span class="fc" id="L80">        Object oldValue = get(key);</span>
-<span class="fc" id="L81">        super.put(key, value);</span>
+<span class="fc" id="L79">        boolean localKey = hasKey(key);</span>
+<span class="fc bfc" id="L80" title="All 4 branches covered.">        boolean parentKey = !localKey &amp;&amp; containsKey(key);</span>
+<span class="fc" id="L81">        Object oldValue = get(key);</span>
+<span class="fc" id="L82">        super.put(key, value);</span>
+<span class="fc" id="L83">        boolean valuesAreEqual = TypeUtils.equals(oldValue, value);</span>
 
-<span class="fc bfc" id="L83" title="All 2 branches covered.">        if (parentKey) {</span>
-<span class="fc" id="L84">            fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value);</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        if (parentKey) {</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">            if (!valuesAreEqual) fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value);</span>
         } else {
-<span class="fc bfc" id="L86" title="All 2 branches covered.">            if (localKey) {</span>
-<span class="fc" id="L87">                fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value);</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">            if (localKey) {</span>
+<span class="fc" id="L89">                fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value);</span>
             } else {
-<span class="fc" id="L89">                fireContextEvent(ContextEvent.Type.ADD, key, null, value);</span>
+<span class="fc" id="L91">                fireContextEvent(ContextEvent.Type.ADD, key, null, value);</span>
             }
         }
-<span class="fc" id="L92">    }</span>
-
-    @Override
-    public void putAt(@Nonnull String key, @Nullable Object value) {
-<span class="fc" id="L96">        boolean localKey = hasKey(key);</span>
-<span class="pc bpc" id="L97" title="1 of 4 branches missed.">        boolean parentKey = !localKey &amp;&amp; containsKey(key);</span>
-<span class="fc" id="L98">        Object oldValue = get(key);</span>
-<span class="fc" id="L99">        super.putAt(key, value);</span>
-
-<span class="pc bpc" id="L101" title="1 of 2 branches missed.">        if (parentKey) {</span>
-<span class="nc" id="L102">            fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value);</span>
-        } else {
-<span class="fc bfc" id="L104" title="All 2 branches covered.">            if (localKey) {</span>
-<span class="fc" id="L105">                fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value);</span>
-            } else {
-<span class="fc" id="L107">                fireContextEvent(ContextEvent.Type.ADD, key, null, value);</span>
-            }
-        }
-<span class="fc" id="L110">    }</span>
+<span class="fc" id="L94">    }</span>
 
     @Nullable
     @Override
     public Object remove(@Nonnull String key) {
-<span class="fc" id="L115">        boolean localKey = hasKey(key);</span>
-<span class="fc" id="L116">        Object oldValue = super.remove(key);</span>
-<span class="pc bpc" id="L117" title="1 of 4 branches missed.">        boolean localKeyRemoved = localKey &amp;&amp; !hasKey(key);</span>
-<span class="fc" id="L118">        boolean containsKey = containsKey(key);</span>
+<span class="fc" id="L99">        boolean localKey = hasKey(key);</span>
+<span class="fc" id="L100">        Object oldValue = super.remove(key);</span>
+<span class="pc bpc" id="L101" title="1 of 4 branches missed.">        boolean localKeyRemoved = localKey &amp;&amp; !hasKey(key);</span>
+<span class="fc" id="L102">        boolean containsKey = containsKey(key);</span>
 
         try {
-<span class="fc" id="L121">            return oldValue;</span>
+<span class="fc" id="L105">            return oldValue;</span>
         } finally {
-<span class="pc bpc" id="L123" title="2 of 4 branches missed.">            if (localKeyRemoved) {</span>
-<span class="pc bpc" id="L124" title="2 of 4 branches missed.">                if (containsKey) {</span>
-<span class="pc" id="L125">                    fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, get(key));</span>
-                } else {
-<span class="pc" id="L127">                    fireContextEvent(ContextEvent.Type.REMOVE, key, oldValue, null);</span>
+<span class="pc bpc" id="L107" title="2 of 4 branches missed.">            if (localKeyRemoved) {</span>
+<span class="pc bpc" id="L108" title="2 of 4 branches missed.">                if (containsKey) {</span>
+<span class="pc" id="L109">                    Object value = get(key);</span>
+<span class="pc" id="L110">                    boolean valuesAreEqual = TypeUtils.equals(oldValue, value);</span>
+<span class="pc bpc" id="L111" title="2 of 4 branches missed.">                    if (!valuesAreEqual) fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value);</span>
+<span class="pc" id="L112">                } else {</span>
+<span class="pc" id="L113">                    fireContextEvent(ContextEvent.Type.REMOVE, key, oldValue, null);</span>
                 }
             }
         }
@@ -132,22 +118,22 @@ public class DefaultObservableContext extends DefaultContext implements Observab
 
     @Override
     public void destroy() {
-<span class="pc bpc" id="L135" title="1 of 2 branches missed.">        if (getParentContext() instanceof ObservableContext) {</span>
-<span class="fc" id="L136">            ObservableContext observableParent = (ObservableContext) getParentContext();</span>
-<span class="fc" id="L137">            observableParent.removeContextEventListener(parentListener);</span>
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">        if (getParentContext() instanceof ObservableContext) {</span>
+<span class="fc" id="L122">            ObservableContext observableParent = (ObservableContext) getParentContext();</span>
+<span class="fc" id="L123">            observableParent.removeContextEventListener(parentListener);</span>
         }
-<span class="fc" id="L139">        listeners.clear();</span>
-<span class="fc" id="L140">        super.destroy();</span>
-<span class="fc" id="L141">    }</span>
+<span class="fc" id="L125">        listeners.clear();</span>
+<span class="fc" id="L126">        super.destroy();</span>
+<span class="fc" id="L127">    }</span>
 
     protected void fireContextEvent(@Nonnull ContextEvent.Type type, @Nonnull String key, @Nullable Object oldValue, @Nullable Object newValue) {
-<span class="fc" id="L144">        fireContextEvent(new ContextEvent(type, key, oldValue, newValue));</span>
-<span class="fc" id="L145">    }</span>
+<span class="fc" id="L130">        fireContextEvent(new ContextEvent(type, key, oldValue, newValue));</span>
+<span class="fc" id="L131">    }</span>
 
     protected void fireContextEvent(@Nonnull ContextEvent event) {
-<span class="fc bfc" id="L148" title="All 2 branches covered.">        for (ContextEventListener listener : listeners) {</span>
-<span class="fc" id="L149">            listener.contextChanged(event);</span>
-<span class="fc" id="L150">        }</span>
-<span class="fc" id="L151">    }</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">        for (ContextEventListener listener : listeners) {</span>
+<span class="fc" id="L135">            listener.contextChanged(event);</span>
+<span class="fc" id="L136">        }</span>
+<span class="fc" id="L137">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
