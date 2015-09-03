@@ -45,12 +45,14 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
     public static final String KEY_SELECTED = "selected";
     public static final String KEY_VISIBLE = "visible";
     public static final String KEY_ACCELERATOR = "accelerator";
+    public static final String KEY_STYLECLASS = "styleClass";
     private final JavaFXAction toolkitAction;
     private String description;
     private String icon;
     private String image;
     private Node graphic;
     private String accelerator;
+    private String styleClass;
     private boolean selected;
     private boolean visible = true;
 
@@ -82,6 +84,9 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
         } else if (KEY_ACCELERATOR.equals(evt.getPropertyName())) {
             String accelerator = (String) evt.getNewValue();
             if (!isBlank(accelerator)) toolkitAction.setAccelerator(accelerator);
+        } else if (KEY_STYLECLASS.equals(evt.getPropertyName())) {
+            String styleClass = (String) evt.getNewValue();
+            if (!isBlank(styleClass)) toolkitAction.setStyleClass(styleClass);
         } else if (KEY_ICON.equals(evt.getPropertyName())) {
             String icon = (String) evt.getNewValue();
             if (!isBlank(icon)) toolkitAction.setIcon(icon);
@@ -92,6 +97,15 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
             Node graphic = (Node) evt.getNewValue();
             if (null != graphic) toolkitAction.setGraphic(graphic);
         }
+    }
+
+    @Nullable
+    public String getStyleClass() {
+        return styleClass;
+    }
+
+    public void setStyleClass(@Nullable String styleClass) {
+        firePropertyChange(KEY_STYLECLASS, this.styleClass, this.styleClass = styleClass);
     }
 
     @Nullable
@@ -179,6 +193,7 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
         toolkitAction.setVisible(isVisible());
         String accelerator = getAccelerator();
         if (!isBlank(accelerator)) toolkitAction.setAccelerator(accelerator);
+        if (!isBlank(styleClass)) toolkitAction.setStyleClass(styleClass);
         String icon = getIcon();
         if (!isBlank(icon)) toolkitAction.setIcon(icon);
         if (null != getImage()) toolkitAction.setImage(getImage());

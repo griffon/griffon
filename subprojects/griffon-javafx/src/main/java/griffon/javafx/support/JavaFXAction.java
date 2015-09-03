@@ -236,4 +236,23 @@ public class JavaFXAction {
     public boolean isVisible() {
         return visible != null && visibleProperty().get();
     }
+
+    // -- styleClass
+
+    private StringProperty styleClass;
+
+    public final StringProperty styleClassProperty() {
+        if (styleClass == null) {
+            styleClass = new SimpleStringProperty(this, "styleClass");
+        }
+        return styleClass;
+    }
+
+    public void setStyleClass(String styleClass) {
+        styleClassProperty().set(styleClass);
+    }
+
+    public String getStyleClass() {
+        return styleClass == null ? null : styleClassProperty().get();
+    }
 }
