@@ -102,3 +102,9 @@ startScripts {
         windowsScript.text = windowsScript.text.replaceAll('"(-Xdock:(name|icon)=)([^"]*?)(")', ' ')
     }
 }
+
+if (hasProperty('debugRun') && project.debugRun) {
+    run {
+        jvmArgs '-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005'
+    }
+}
