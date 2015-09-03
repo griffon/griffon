@@ -102,6 +102,14 @@ public class JavaFXActionManager extends AbstractActionManager {
             }
             javafxAction.setSelected(castToBoolean(rsSelected));
         }
+        
+        String rsVisible = msg(keyPrefix, normalizeNamed, "visible", "true");
+        if (!isBlank(rsVisible)) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace(keyPrefix + normalizeNamed + ".visible = " + rsVisible);
+            }
+            javafxAction.setVisible(castToBoolean(rsVisible));
+        }
 
         String rsStyleClass = msg(keyPrefix, normalizeNamed, "styleclass", "");
         if (!isBlank(rsStyleClass)) {
