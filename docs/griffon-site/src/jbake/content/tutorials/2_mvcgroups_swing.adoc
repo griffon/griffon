@@ -16,7 +16,7 @@ This tutorial touches the following subjects:
  * MVC Group parent-child relationships
  * MVC Group lifecycle
 
-The goal of the Editor application shown here is to be provide basic editing capabilities fo text files. Each
+The goal of the Editor application shown here is to provide basic editing capabilities for text files. Each
 file will be handled by its own tab; tabs will be located inside a tab container.
 
 . <<_tutorial_2_1,Creating an Editor application>>
@@ -105,13 +105,13 @@ This model keeps track of two items:
 
 Notice that the _documentModel_ property is declared as final; this means it will always have the same value, thus we
 can use it to create stable bindings. This is the reason for making `DocumentModel` a subclass of `Document`. As you
-can see the former listens to changes on the latter and copying the values over. This happens very time the application
+can see the former listens to changes on the latter and copying the values over. This happens every time the application
 changes the value of _documentModel.document_ due to the ``PropertyChangeListener``s that were put into place.
 
 The final remark on this model class is that it implements the `javax.swing.event.ChangeListener` interface. In this
 way the model instance can listen to tab selection changes and update the _documentModel_ property.
 
-Let's mode to the View. Open up `ContainerView.java` and paste the following into it
+Let's move to the View. Open up `ContainerView.java` and paste the following into it
 
 [source,java,options="nowrap"]
 .griffon-app/views/editor/ContainerView.java
@@ -119,7 +119,7 @@ Let's mode to the View. Open up `ContainerView.java` and paste the following int
 include::{editor-swing-java}/griffon-app/views/editor/ContainerView.java[lines=16..-1]
 ----
 
-Here we find a `Window` object containing a `JMenuBar` and a the tab container (a `JTabbedPane`) dubbed _tabGroup_.
+Here we find a `Window` object containing a `JMenuBar` and a tab container (a `JTabbedPane`) named _tabGroup_.
 This tab container is exposed to the outside world via a getter method; we'll see why it's done this way when the
 second MVC group comes into play. The View is also responsible for managing a `JFileChooser` that will be used to
 select files for reading. Notice the conditional enabling of the `save` action given the state of the `dirty` property
@@ -216,7 +216,7 @@ We select the `mvcgroup` option. Notice that Lazybones remembered the default pa
 application. We select `editor` as the name of the new MVC group. There are 5 new files generated using the
 default templates. Take special care of the last message; the files were created but this doesn't mean the application
 will be able to instantiate the MVC group at runtime. The final piece of the puzzle is letting the application know
-that about this new MVC group, this is done by editing `Config.java`
+about this new MVC group, this is done by editing `Config.java`
 
 [source,java,options="nowrap"]
 .griffon-app/conf/Config.java
@@ -244,7 +244,7 @@ Just a basic observable model with a single _document_ property. Things get inte
 as is its responsibility to display the file's contents. One thing that must happen at some point is the new tab
 being added to the tab container. We can make this happen at the point where an instance of the `editor` MVC group
 is created; this requires the `EditorView` to expose its tab somehow. Or we can keep this behavior local to this
-group and make sure that this View handles adding and removing the tab. This is the reason why we exposed the _tabCount_
+group and make sure that this View handles adding and removing the tab. This is the reason why we exposed the _tabGroup_
 field in `ContainerView`. Let's look at the `EditorView`, shall we?
 
 [source,java,options="nowrap"]
@@ -256,7 +256,7 @@ include::{editor-swing-java}/griffon-app/views/editor/EditorView.java[lines=16..
 Besides the convoluted binding on the ``textArea``'s text property (unfortunately text is not a bound property) the other
 special pieces of code found in this class are the usages of the _parentView_ field. Notice the that the type is set to
 `ContainerView`, this means this View is aware that it's not a top level MVC group, that is, there will be another
-MVC group that will be responsible for instantiating `editor`, in this case is the `container` MVC group. A parent/child
+MVC group that is responsible for instantiating `editor`, in this case it is the `container` MVC group. A parent/child
 relationship is established between the two MVC group instances when this happens. More information about this
 relationship can be found at the link:/guide/latest/index.html#_mvc_mvc_group_relationships[guide, window="_blank"].
 
