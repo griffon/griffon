@@ -142,6 +142,21 @@ class ObservableContextSpec extends Specification {
         listener.contextEvent.newValue == 'bar'
 
         when:
+        ctx1.put('foo', 'foo')
+        listener.contextEvent = null
+        ctx2.put('foo', 'foo')
+
+        then:
+        !listener.contextEvent
+
+        when:
+        listener.contextEvent = null
+        ctx2.remove('foo')
+
+        then:
+        !listener.contextEvent
+
+        when:
         listener.contextEvent = null
         ctx2.remove('undefined')
 
