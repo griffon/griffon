@@ -21,6 +21,7 @@ import griffon.core.controller.ActionManager;
 import griffon.core.editors.ValueConversionException;
 import griffon.exceptions.InstanceMethodInvocationException;
 import javafx.beans.property.Property;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -54,7 +55,9 @@ import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static griffon.util.GriffonClassUtils.getGetterName;
 import static griffon.util.GriffonClassUtils.getPropertyValue;
@@ -190,6 +193,12 @@ public final class JavaFXUtils {
 
         action.visibleProperty().addListener((observableValue, oldValue, newValue) -> control.setVisible(newValue));
         control.setVisible(action.isVisible());
+
+        action.styleClassProperty().addListener((observableValue, oldValue, newValue) -> {
+            setStyleClass(control, oldValue, true);
+            setStyleClass(control, newValue);
+        });
+        setStyleClass(control, action.getStyleClass());
     }
 
     public static void configure(final @Nonnull CheckMenuItem control, final @Nonnull JavaFXAction action) {
@@ -239,6 +248,49 @@ public final class JavaFXUtils {
 
         action.visibleProperty().addListener((observableValue, oldValue, newValue) -> control.setVisible(newValue));
         control.setVisible(action.isVisible());
+
+        action.styleClassProperty().addListener((observableValue, oldValue, newValue) -> {
+            setStyleClass(control, oldValue, true);
+            setStyleClass(control, newValue);
+        });
+        setStyleClass(control, action.getStyleClass());
+    }
+
+    public static void setStyleClass(@Nonnull Node node, @Nonnull String styleClass) {
+        setStyleClass(node, styleClass, false);
+    }
+
+    public static void setStyleClass(@Nonnull Node node, @Nonnull String styleClass, boolean remove) {
+        requireNonNull(node, ERROR_CONTROL_NULL);
+        if (isBlank(styleClass)) return;
+
+        ObservableList<String> styleClasses = node.getStyleClass();
+        applyStyleClass(styleClass, styleClasses, remove);
+    }
+
+    public static void setStyleClass(@Nonnull MenuItem node, @Nonnull String styleClass) {
+        setStyleClass(node, styleClass, false);
+    }
+
+    public static void setStyleClass(@Nonnull MenuItem node, @Nonnull String styleClass, boolean remove) {
+        requireNonNull(node, ERROR_CONTROL_NULL);
+        if (isBlank(styleClass)) return;
+        ObservableList<String> styleClasses = node.getStyleClass();
+        applyStyleClass(styleClass, styleClasses, remove);
+    }
+
+    private static void applyStyleClass(String styleClass, ObservableList<String> styleClasses, boolean remove) {
+        String[] strings = styleClass.split("[,\\ ]");
+        if (remove) {
+            styleClasses.removeAll(strings);
+        } else {
+            Set<String> classes = new LinkedHashSet<>(styleClasses);
+            for (String s : strings) {
+                if (isBlank(s)) continue;
+                classes.add(s.trim());
+            }
+            styleClasses.setAll(classes);
+        }
     }
 
     public static void setTooltip(@Nonnull Control control, @Nullable String text) {
@@ -437,7 +489,8 @@ public final class JavaFXUtils {
                 Object found = findElement(child, id);
                 if (found != null) return found;
             }
-        } if (root instanceof ContextMenu) {
+        }
+        if (root instanceof ContextMenu) {
             ContextMenu contextMenu = (ContextMenu) root;
             for (MenuItem child : contextMenu.getItems()) {
                 Object found = findElement(child, id);
