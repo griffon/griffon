@@ -102,7 +102,7 @@ public class JavaFXActionManager extends AbstractActionManager {
             }
             javafxAction.setSelected(castToBoolean(rsSelected));
         }
-        
+
         String rsVisible = msg(keyPrefix, normalizeNamed, "visible", "true");
         if (!isBlank(rsVisible)) {
             if (LOG.isTraceEnabled()) {
