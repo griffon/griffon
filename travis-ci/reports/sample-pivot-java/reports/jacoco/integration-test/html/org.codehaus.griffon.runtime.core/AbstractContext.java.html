@@ -20,12 +20,6 @@ import griffon.core.Context;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static griffon.util.TypeUtils.castToBoolean;
-import static griffon.util.TypeUtils.castToDouble;
-import static griffon.util.TypeUtils.castToFloat;
-import static griffon.util.TypeUtils.castToInt;
-import static griffon.util.TypeUtils.castToLong;
-
 /**
  * @author Andres Almiray
  * @since 2.2.0
@@ -33,126 +27,58 @@ import static griffon.util.TypeUtils.castToLong;
 public abstract class AbstractContext implements Context {
     protected Context parentContext;
 
-<span class="fc" id="L36">    public AbstractContext(@Nullable Context parentContext) {</span>
-<span class="fc" id="L37">        this.parentContext = parentContext;</span>
-<span class="fc" id="L38">    }</span>
-
-    @Nullable
-    public Context getParentContext() {
-<span class="nc" id="L42">        return parentContext;</span>
-    }
+<span class="fc" id="L30">    public AbstractContext(@Nullable Context parentContext) {</span>
+<span class="fc" id="L31">        this.parentContext = parentContext;</span>
+<span class="fc" id="L32">    }</span>
 
     @Nullable
     @Override
     @SuppressWarnings(&quot;unchecked&quot;)
     public &lt;T&gt; T get(@Nonnull String key, @Nullable T defaultValue) {
-<span class="nc" id="L49">        T value = (T) get(key);</span>
-<span class="nc bnc" id="L50" title="All 2 branches missed.">        return value != null ? value : defaultValue;</span>
+<span class="nc" id="L38">        T value = (T) get(key);</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        return value != null ? value : defaultValue;</span>
     }
 
     @Nullable
     @Override
     public Object getAt(@Nonnull String key) {
-<span class="nc" id="L56">        return get(key);</span>
+<span class="nc" id="L45">        return get(key);</span>
     }
 
     @Nullable
     @Override
     public &lt;T&gt; T getAt(@Nonnull String key, @Nullable T defaultValue) {
-<span class="nc" id="L62">        return get(key, defaultValue);</span>
+<span class="nc" id="L51">        return get(key, defaultValue);</span>
     }
 
     @Nullable
     @Override
     public Object get(@Nonnull String key) {
-<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (hasKey(key)) {</span>
-<span class="nc" id="L69">            return doGet(key);</span>
-<span class="nc bnc" id="L70" title="All 2 branches missed.">        } else if (parentContext != null) {</span>
-<span class="nc" id="L71">            return parentContext.get(key);</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        if (hasKey(key)) {</span>
+<span class="nc" id="L58">            return doGet(key);</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        } else if (parentContext != null) {</span>
+<span class="nc" id="L60">            return parentContext.get(key);</span>
         } else {
-<span class="nc" id="L73">            return null;</span>
+<span class="nc" id="L62">            return null;</span>
         }
     }
 
     @Override
     public void destroy() {
-<span class="fc" id="L79">        parentContext = null;</span>
-<span class="fc" id="L80">    }</span>
+<span class="fc" id="L68">        parentContext = null;</span>
+<span class="fc" id="L69">    }</span>
 
     @Override
     public boolean containsKey(@Nonnull String key) {
-<span class="nc bnc" id="L84" title="All 2 branches missed.">        if (hasKey(key)) {</span>
-<span class="nc" id="L85">            return true;</span>
-<span class="nc bnc" id="L86" title="All 2 branches missed.">        } else if (parentContext != null) {</span>
-<span class="nc" id="L87">            return parentContext.containsKey(key);</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        if (hasKey(key)) {</span>
+<span class="nc" id="L74">            return true;</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">        } else if (parentContext != null) {</span>
+<span class="nc" id="L76">            return parentContext.containsKey(key);</span>
         }
-<span class="nc" id="L89">        return false;</span>
+<span class="nc" id="L78">        return false;</span>
     }
 
     @Nullable
     protected abstract Object doGet(@Nonnull String key);
-
-    @Override
-    public boolean getAsBoolean(@Nonnull String key) {
-<span class="nc" id="L97">        return getAsBoolean(key, false);</span>
-    }
-
-    @Override
-    public boolean getAsBoolean(@Nonnull String key, boolean defaultValue) {
-<span class="nc" id="L102">        return castToBoolean(get(key), defaultValue);</span>
-    }
-
-    @Override
-    public int getAsInt(@Nonnull String key) {
-<span class="nc" id="L107">        return getAsInt(key, 0);</span>
-    }
-
-    @Override
-    public int getAsInt(@Nonnull String key, int defaultValue) {
-<span class="nc" id="L112">        return castToInt(get(key), defaultValue);</span>
-    }
-
-    @Override
-    public long getAsLong(@Nonnull String key) {
-<span class="nc" id="L117">        return getAsLong(key, 0L);</span>
-    }
-
-    @Override
-    public long getAsLong(@Nonnull String key, long defaultValue) {
-<span class="nc" id="L122">        return castToLong(get(key), defaultValue);</span>
-    }
-
-    @Override
-    public float getAsFloat(@Nonnull String key) {
-<span class="nc" id="L127">        return getAsFloat(key, 0f);</span>
-    }
-
-    @Override
-    public float getAsFloat(@Nonnull String key, float defaultValue) {
-<span class="nc" id="L132">        return castToFloat(get(key), defaultValue);</span>
-    }
-
-    @Override
-    public double getAsDouble(@Nonnull String key) {
-<span class="nc" id="L137">        return getAsDouble(key, 0d);</span>
-    }
-
-    @Override
-    public double getAsDouble(@Nonnull String key, double defaultValue) {
-<span class="nc" id="L142">        return castToDouble(get(key), defaultValue);</span>
-    }
-
-    @Nullable
-    @Override
-    public String getAsString(@Nonnull String key) {
-<span class="nc" id="L148">        return getAsString(key, null);</span>
-    }
-
-    @Nullable
-    @Override
-    public String getAsString(@Nonnull String key, @Nullable String defaultValue) {
-<span class="nc" id="L154">        Object value = get(key);</span>
-<span class="nc bnc" id="L155" title="All 2 branches missed.">        return value != null ? String.valueOf(value) : defaultValue;</span>
-    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
