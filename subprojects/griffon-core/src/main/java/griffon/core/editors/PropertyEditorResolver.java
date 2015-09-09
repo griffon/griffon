@@ -183,7 +183,7 @@ public final class PropertyEditorResolver {
         return null;
     }
 
-    private static final class NoopPropertyEditor extends PropertyEditorSupport {
+    public static final class NoopPropertyEditor extends PropertyEditorSupport {
 
     }
 
