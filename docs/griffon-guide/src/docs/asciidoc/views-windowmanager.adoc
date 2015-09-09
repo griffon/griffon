@@ -11,7 +11,7 @@ The `{link_window_manager}` class is responsible for keeping track of all the wi
 managed by the application. It also controls how these windows are displayed (via a
 pair of methods: `show`, `hide`). `{link_window_manager}` relies on an instance of
 `{link_window_display_handler}` to actually show or hide a window. The default implementation
-simple shows and hide windows directly, however you can change this behavior by setting
+simply shows and hide windows directly, however you can change this behavior by setting
 a different implementation of `{link_window_display_handler}` on the application instance.
 
 [[_views_windowmanager_dsl]]
@@ -35,7 +35,7 @@ windowManager {
 
 The name of each entry must match the value of the Window's `name:` property (if supported)
 or the name used to register the Window with the `{link_window_manager}`. Each entry may
-have any the following options
+have any of the following options:
 
 [horizontal]
 show:: Used to show the window to the screen. It must be a closure that takes two
