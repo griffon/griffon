@@ -325,8 +325,8 @@ public abstract class AbstractWindowManager&lt;W&gt; implements WindowManager&lt
         try {
 <span class="fc" id="L326">            EventRouter eventRouter = getApplication().getEventRouter();</span>
 <span class="fc" id="L327">            eventRouter.publishEvent(evt, args);</span>
-<span class="fc" id="L328">        } catch (InstanceNotFoundException infe) {</span>
-<span class="pc bpc" id="L329" title="1 of 2 branches missed.">            if (getApplication().getPhase() != ApplicationPhase.SHUTDOWN) {</span>
+<span class="nc" id="L328">        } catch (InstanceNotFoundException infe) {</span>
+<span class="nc bnc" id="L329" title="All 2 branches missed.">            if (getApplication().getPhase() != ApplicationPhase.SHUTDOWN) {</span>
 <span class="nc" id="L330">                throw infe;</span>
             }
 <span class="fc" id="L332">        }</span>
