@@ -56,14 +56,15 @@ public final class PropertyEditorResolver {
 
     /**
      * Removes all currently registered value editors.
+     *
      * @since 2.4.0
      */
     public static void clear() {
-<span class="fc" id="L62">        synchronized (LOCK) {</span>
-<span class="fc" id="L63">            propertyEditorRegistry.clear();</span>
-<span class="fc" id="L64">            propertyEditorChainRegistry.clear();</span>
-<span class="pc" id="L65">        }</span>
-<span class="fc" id="L66">    }</span>
+<span class="fc" id="L63">        synchronized (LOCK) {</span>
+<span class="fc" id="L64">            propertyEditorRegistry.clear();</span>
+<span class="fc" id="L65">            propertyEditorChainRegistry.clear();</span>
+<span class="pc" id="L66">        }</span>
+<span class="fc" id="L67">    }</span>
 
     /**
      * Locate a value editor for a given target type.
@@ -79,28 +80,28 @@ public final class PropertyEditorResolver {
     @Nonnull
     @SuppressWarnings(&quot;unchecked&quot;)
     public static PropertyEditor findEditor(@Nonnull Class&lt;?&gt; type) {
-<span class="fc" id="L82">        requireNonNull(type, &quot;Argument 'type' must not be  null&quot;);</span>
-<span class="fc" id="L83">        LOG.trace(&quot;Searching PropertyEditor for {}&quot;, type.getName());</span>
+<span class="fc" id="L83">        requireNonNull(type, &quot;Argument 'type' must not be  null&quot;);</span>
+<span class="fc" id="L84">        LOG.trace(&quot;Searching PropertyEditor for {}&quot;, type.getName());</span>
 
         PropertyEditor editor;
-<span class="fc bfc" id="L86" title="All 2 branches covered.">        if (Enum.class.isAssignableFrom(type)) {</span>
-<span class="fc" id="L87">            editor = new EnumPropertyEditor();</span>
-<span class="fc" id="L88">            ((EnumPropertyEditor) editor).setEnumType((Class&lt;? extends Enum&lt;?&gt;&gt;) type);</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        if (Enum.class.isAssignableFrom(type)) {</span>
+<span class="fc" id="L88">            editor = new EnumPropertyEditor();</span>
+<span class="fc" id="L89">            ((EnumPropertyEditor) editor).setEnumType((Class&lt;? extends Enum&lt;?&gt;&gt;) type);</span>
         } else {
-<span class="fc" id="L90">            editor = doFindEditor(type);</span>
+<span class="fc" id="L91">            editor = doFindEditor(type);</span>
         }
 
-<span class="fc bfc" id="L93" title="All 2 branches covered.">        if (editor == null) {</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (editor == null) {</span>
             // fallback
-<span class="fc" id="L95">            editor = PropertyEditorManager.findEditor(type);</span>
+<span class="fc" id="L96">            editor = PropertyEditorManager.findEditor(type);</span>
         }
 
-<span class="fc bfc" id="L98" title="All 2 branches covered.">        if (editor == null) {</span>
-<span class="fc" id="L99">            editor = new NoopPropertyEditor();</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">        if (editor == null) {</span>
+<span class="fc" id="L100">            editor = new NoopPropertyEditor();</span>
         }
 
-<span class="fc" id="L102">        LOG.trace(&quot;PropertyEditor for {} is {}&quot;, type.getName(), editor.getClass().getName());</span>
-<span class="fc" id="L103">        return editor;</span>
+<span class="fc" id="L103">        LOG.trace(&quot;PropertyEditor for {} is {}&quot;, type.getName(), editor.getClass().getName());</span>
+<span class="fc" id="L104">        return editor;</span>
     }
 
     /**
@@ -110,13 +111,13 @@ public final class PropertyEditorResolver {
      * @since 2.4.0
      */
     public static void unregisterEditor(@Nonnull Class&lt;?&gt; targetType) {
-<span class="fc" id="L113">        requireNonNull(targetType, ERROR_TARGET_TYPE_NULL);</span>
-<span class="fc" id="L114">        synchronized (LOCK) {</span>
-<span class="fc" id="L115">            String targetTypeName = targetType.getName();</span>
-<span class="fc" id="L116">            propertyEditorChainRegistry.remove(targetTypeName);</span>
-<span class="fc" id="L117">            propertyEditorRegistry.remove(targetTypeName);</span>
-<span class="pc" id="L118">        }</span>
-<span class="fc" id="L119">    }</span>
+<span class="fc" id="L114">        requireNonNull(targetType, ERROR_TARGET_TYPE_NULL);</span>
+<span class="fc" id="L115">        synchronized (LOCK) {</span>
+<span class="fc" id="L116">            String targetTypeName = targetType.getName();</span>
+<span class="fc" id="L117">            propertyEditorChainRegistry.remove(targetTypeName);</span>
+<span class="fc" id="L118">            propertyEditorRegistry.remove(targetTypeName);</span>
+<span class="pc" id="L119">        }</span>
+<span class="fc" id="L120">    }</span>
 
     /**
      * Registers an editor class to edit values of the given target class.
@@ -133,107 +134,122 @@ public final class PropertyEditorResolver {
      */
     @SuppressWarnings(&quot;unchecked&quot;)
     public static void registerEditor(@Nonnull Class&lt;?&gt; targetType, @Nullable Class&lt;? extends PropertyEditor&gt; editorClass) {
-<span class="fc" id="L136">        requireNonNull(targetType, ERROR_TARGET_TYPE_NULL);</span>
-<span class="fc" id="L137">        synchronized (LOCK) {</span>
-<span class="fc" id="L138">            String targetTypeName = targetType.getName();</span>
-<span class="fc bfc" id="L139" title="All 2 branches covered.">            if (editorClass == null) {</span>
-<span class="fc" id="L140">                propertyEditorChainRegistry.remove(targetTypeName);</span>
-<span class="fc" id="L141">                propertyEditorRegistry.remove(targetTypeName);</span>
-<span class="fc" id="L142">                return;</span>
+<span class="fc" id="L137">        requireNonNull(targetType, ERROR_TARGET_TYPE_NULL);</span>
+<span class="fc" id="L138">        synchronized (LOCK) {</span>
+<span class="fc" id="L139">            String targetTypeName = targetType.getName();</span>
+<span class="fc bfc" id="L140" title="All 2 branches covered.">            if (editorClass == null) {</span>
+<span class="fc" id="L141">                propertyEditorChainRegistry.remove(targetTypeName);</span>
+<span class="fc" id="L142">                propertyEditorRegistry.remove(targetTypeName);</span>
+<span class="fc" id="L143">                return;</span>
             }
 
             // is targetType handled by a chain?
-<span class="fc" id="L146">            PropertyEditorChain chain = propertyEditorChainRegistry.get(targetTypeName);</span>
-<span class="fc bfc" id="L147" title="All 2 branches covered.">            if (chain != null) {</span>
-<span class="fc" id="L148">                propertyEditorChainRegistry.put(targetTypeName, chain.copyOf(editorClass));</span>
-            } else {
-                // is targetType handled by an editor ?
-<span class="fc" id="L151">                Class&lt;? extends PropertyEditor&gt; propertyEditorType = propertyEditorRegistry.get(targetTypeName);</span>
-<span class="fc bfc" id="L152" title="All 2 branches covered.">                if (propertyEditorType != null) {</span>
-<span class="fc" id="L153">                    propertyEditorRegistry.remove(targetTypeName);</span>
-<span class="fc" id="L154">                    Class&lt;? extends PropertyEditor&gt;[] propertyEditorClasses = new Class[2];</span>
-<span class="fc" id="L155">                    propertyEditorClasses[0] = propertyEditorType;</span>
-<span class="fc" id="L156">                    propertyEditorClasses[1] = editorClass;</span>
-<span class="fc" id="L157">                    propertyEditorChainRegistry.put(targetTypeName, new PropertyEditorChain(targetType, propertyEditorClasses));</span>
-<span class="fc" id="L158">                } else {</span>
+<span class="fc" id="L147">            PropertyEditorChain chain = propertyEditorChainRegistry.get(targetTypeName);</span>
+<span class="fc bfc" id="L148" title="All 2 branches covered.">            if (chain != null) {</span>
+<span class="fc" id="L149">                PropertyEditorChain propertyEditorChain = chain.copyOf(editorClass);</span>
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">                if (propertyEditorChain.getSize() &gt; 1) {</span>
+<span class="fc" id="L151">                    propertyEditorChainRegistry.put(targetTypeName, propertyEditorChain);</span>
+                } else {
                     // standard registration
-<span class="fc" id="L160">                    propertyEditorRegistry.put(targetTypeName, editorClass);</span>
+<span class="nc" id="L154">                    propertyEditorChainRegistry.remove(targetTypeName);</span>
+<span class="nc" id="L155">                    propertyEditorRegistry.put(targetTypeName, editorClass);</span>
+                }
+<span class="fc" id="L157">            } else {</span>
+                // is targetType handled by an editor ?
+<span class="fc" id="L159">                Class&lt;? extends PropertyEditor&gt; propertyEditorType = propertyEditorRegistry.get(targetTypeName);</span>
+<span class="fc bfc" id="L160" title="All 2 branches covered.">                if (propertyEditorType != null) {</span>
+<span class="fc" id="L161">                    propertyEditorRegistry.remove(targetTypeName);</span>
+<span class="fc" id="L162">                    Class&lt;? extends PropertyEditor&gt;[] propertyEditorClasses = new Class[2];</span>
+<span class="fc" id="L163">                    propertyEditorClasses[0] = propertyEditorType;</span>
+<span class="fc" id="L164">                    propertyEditorClasses[1] = editorClass;</span>
+<span class="fc" id="L165">                    PropertyEditorChain propertyEditorChain = new PropertyEditorChain(targetType, propertyEditorClasses);</span>
+<span class="fc bfc" id="L166" title="All 2 branches covered.">                    if (propertyEditorChain.getSize() &gt; 1) {</span>
+<span class="fc" id="L167">                        propertyEditorChainRegistry.put(targetTypeName, propertyEditorChain);</span>
+                    } else {
+                        // standard registration
+<span class="fc" id="L170">                        propertyEditorChainRegistry.remove(targetTypeName);</span>
+<span class="fc" id="L171">                        propertyEditorRegistry.put(targetTypeName, editorClass);</span>
+                    }
+<span class="fc" id="L173">                } else {</span>
+                    // standard registration
+<span class="fc" id="L175">                    propertyEditorChainRegistry.remove(targetTypeName);</span>
+<span class="fc" id="L176">                    propertyEditorRegistry.put(targetTypeName, editorClass);</span>
                 }
             }
-<span class="pc" id="L163">        }</span>
-<span class="fc" id="L164">    }</span>
+<span class="pc" id="L179">        }</span>
+<span class="fc" id="L180">    }</span>
 
     private static PropertyEditor doFindEditor(Class&lt;?&gt; targetType) {
-<span class="fc" id="L167">        synchronized (LOCK) {</span>
-<span class="fc" id="L168">            String targetTypeName = targetType.getName();</span>
-<span class="fc bfc" id="L169" title="All 2 branches covered.">            if (propertyEditorChainRegistry.containsKey(targetTypeName)) {</span>
-<span class="fc" id="L170">                PropertyEditorChain chain = propertyEditorChainRegistry.get(targetTypeName);</span>
-<span class="fc" id="L171">                return chain.copyOf();</span>
+<span class="fc" id="L183">        synchronized (LOCK) {</span>
+<span class="fc" id="L184">            String targetTypeName = targetType.getName();</span>
+<span class="fc bfc" id="L185" title="All 2 branches covered.">            if (propertyEditorChainRegistry.containsKey(targetTypeName)) {</span>
+<span class="fc" id="L186">                PropertyEditorChain chain = propertyEditorChainRegistry.get(targetTypeName);</span>
+<span class="fc" id="L187">                return chain.copyOf();</span>
             } else {
-<span class="fc" id="L173">                Class&lt;?&gt; propertyEditorType = propertyEditorRegistry.get(targetTypeName);</span>
-<span class="fc bfc" id="L174" title="All 2 branches covered.">                if (propertyEditorType != null) {</span>
+<span class="fc" id="L189">                Class&lt;?&gt; propertyEditorType = propertyEditorRegistry.get(targetTypeName);</span>
+<span class="fc bfc" id="L190" title="All 2 branches covered.">                if (propertyEditorType != null) {</span>
                     try {
-<span class="fc" id="L176">                        return (PropertyEditor) propertyEditorType.newInstance();</span>
-<span class="nc" id="L177">                    } catch (InstantiationException | IllegalAccessException e) {</span>
-<span class="nc" id="L178">                        throw new IllegalStateException(&quot;Can't instantiate &quot; + propertyEditorType, e);</span>
+<span class="fc" id="L192">                        return (PropertyEditor) propertyEditorType.newInstance();</span>
+<span class="nc" id="L193">                    } catch (InstantiationException | IllegalAccessException e) {</span>
+<span class="nc" id="L194">                        throw new IllegalStateException(&quot;Can't instantiate &quot; + propertyEditorType, e);</span>
                     }
                 }
             }
-<span class="pc" id="L182">        }</span>
-<span class="fc" id="L183">        return null;</span>
+<span class="pc" id="L198">        }</span>
+<span class="fc" id="L199">        return null;</span>
     }
 
-<span class="fc" id="L186">    public static final class NoopPropertyEditor extends PropertyEditorSupport {</span>
+<span class="fc" id="L202">    public static final class NoopPropertyEditor extends PropertyEditorSupport {</span>
 
     }
 
-<span class="fc" id="L190">    private static final class WeakCache&lt;K, V&gt; {</span>
-<span class="fc" id="L191">        private final Map&lt;K, Reference&lt;V&gt;&gt; map = new WeakHashMap&lt;&gt;();</span>
+<span class="fc" id="L206">    private static final class WeakCache&lt;K, V&gt; {</span>
+<span class="fc" id="L207">        private final Map&lt;K, Reference&lt;V&gt;&gt; map = new WeakHashMap&lt;&gt;();</span>
 
         private V get(K key) {
-<span class="fc" id="L194">            Reference reference = this.map.get(key);</span>
-<span class="fc bfc" id="L195" title="All 2 branches covered.">            if (reference == null) {</span>
-<span class="fc" id="L196">                return null;</span>
+<span class="fc" id="L210">            Reference reference = this.map.get(key);</span>
+<span class="fc bfc" id="L211" title="All 2 branches covered.">            if (reference == null) {</span>
+<span class="fc" id="L212">                return null;</span>
             } else {
-<span class="fc" id="L198">                V value = (V) reference.get();</span>
-<span class="pc bpc" id="L199" title="1 of 2 branches missed.">                if (value == null) {</span>
-<span class="nc" id="L200">                    this.map.remove(key);</span>
+<span class="fc" id="L214">                V value = (V) reference.get();</span>
+<span class="pc bpc" id="L215" title="1 of 2 branches missed.">                if (value == null) {</span>
+<span class="nc" id="L216">                    this.map.remove(key);</span>
                 }
 
-<span class="fc" id="L203">                return value;</span>
+<span class="fc" id="L219">                return value;</span>
             }
         }
 
         private void put(K key, V value) {
-<span class="pc bpc" id="L208" title="1 of 2 branches missed.">            if (value != null) {</span>
-<span class="fc" id="L209">                this.map.put(key, new WeakReference&lt;&gt;(value));</span>
+<span class="pc bpc" id="L224" title="1 of 2 branches missed.">            if (value != null) {</span>
+<span class="fc" id="L225">                this.map.put(key, new WeakReference&lt;&gt;(value));</span>
             } else {
-<span class="nc" id="L211">                this.map.remove(key);</span>
+<span class="nc" id="L227">                this.map.remove(key);</span>
             }
-<span class="fc" id="L213">        }</span>
+<span class="fc" id="L229">        }</span>
 
         private void remove(K key) {
-<span class="fc" id="L216">            this.map.remove(key);</span>
-<span class="fc" id="L217">        }</span>
+<span class="fc" id="L232">            this.map.remove(key);</span>
+<span class="fc" id="L233">        }</span>
 
         private boolean contains(K key) {
-<span class="nc" id="L220">            Reference reference = this.map.get(key);</span>
-<span class="nc bnc" id="L221" title="All 2 branches missed.">            if (reference == null) {</span>
-<span class="nc" id="L222">                return false;</span>
+<span class="nc" id="L236">            Reference reference = this.map.get(key);</span>
+<span class="nc bnc" id="L237" title="All 2 branches missed.">            if (reference == null) {</span>
+<span class="nc" id="L238">                return false;</span>
             } else {
-<span class="nc" id="L224">                V value = (V) reference.get();</span>
-<span class="nc bnc" id="L225" title="All 2 branches missed.">                if (value == null) {</span>
-<span class="nc" id="L226">                    this.map.remove(key);</span>
-<span class="nc" id="L227">                    return false;</span>
+<span class="nc" id="L240">                V value = (V) reference.get();</span>
+<span class="nc bnc" id="L241" title="All 2 branches missed.">                if (value == null) {</span>
+<span class="nc" id="L242">                    this.map.remove(key);</span>
+<span class="nc" id="L243">                    return false;</span>
                 }
 
-<span class="nc" id="L230">                return true;</span>
+<span class="nc" id="L246">                return true;</span>
             }
         }
 
         private void clear() {
-<span class="fc" id="L235">            this.map.clear();</span>
-<span class="fc" id="L236">        }</span>
+<span class="fc" id="L251">            this.map.clear();</span>
+<span class="fc" id="L252">        }</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
