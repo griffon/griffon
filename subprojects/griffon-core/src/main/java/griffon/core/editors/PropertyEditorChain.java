@@ -16,35 +16,59 @@
 package griffon.core.editors;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorSupport;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import static griffon.util.GriffonClassUtils.requireNonEmpty;
+import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
  * @since 2.4.0
  */
-public class PropertyEditorChain extends PropertyEditorSupport {
+public class PropertyEditorChain extends PropertyEditorSupport implements ExtendedPropertyEditor {
     private final Class<?> targetClass;
     private final Object lock = new Object[0];
     private final WeakReference<Class<? extends PropertyEditor>>[] propertyEditorClasses;
     @GuardedBy("lock")
     private WeakReference<PropertyEditor>[] propertyEditors;
+    private String format;
 
     @SuppressWarnings("unchecked")
     public PropertyEditorChain(@Nonnull Class<?> targetClass, @Nonnull Class<? extends PropertyEditor>[] propertyEditorClasses) {
         this.targetClass = requireNonNull(targetClass, "Argument 'targetClass' must not be null");
         requireNonEmpty(propertyEditorClasses, "Argument 'propertyEditorClasses' must not be null nor empty");
-        this.propertyEditorClasses = new WeakReference[propertyEditorClasses.length];
-        for (int i = 0; i < propertyEditorClasses.length; i++) {
-            this.propertyEditorClasses[i] = new WeakReference<Class<? extends PropertyEditor>>(propertyEditorClasses[i]);
+        // let's make sure propertyEditorClasses contains unique elements
+        Set<Class<? extends PropertyEditor>> classes = new LinkedHashSet<>();
+        Collections.addAll(classes, propertyEditorClasses);
+
+        int i = 0;
+        this.propertyEditorClasses = new WeakReference[classes.size()];
+        for (Class<? extends PropertyEditor> klass : classes) {
+            this.propertyEditorClasses[i++] = new WeakReference<Class<? extends PropertyEditor>>(klass);
         }
+    }
+
+    @Nullable
+    public String getFormat() {
+        return format;
+    }
+
+    public void setFormat(@Nullable String format) {
+        this.format = format;
+    }
+
+    public int getSize() {
+        return propertyEditorClasses.length;
     }
 
     @SuppressWarnings("unchecked")
@@ -67,7 +91,9 @@ public class PropertyEditorChain extends PropertyEditorSupport {
                 classes.add(reference.get());
             }
         }
-        classes.add(propertyEditorClass);
+        if (!classes.contains(propertyEditorClass)) {
+            classes.add(propertyEditorClass);
+        }
         return new PropertyEditorChain(targetClass, classes.toArray(new Class[classes.size()]));
     }
 
@@ -79,7 +105,92 @@ public class PropertyEditorChain extends PropertyEditorSupport {
     }
 
     @Override
-    public Object getValue() {
+    public String getAsText() {
+        return isBlank(getFormat()) ? getAsTextInternal() : getFormattedValue();
+    }
+
+    @Override
+    public void setAsText(String str) throws IllegalArgumentException {
+        if (isBlank(getFormat())) {
+            setAsTextInternal(str);
+        } else {
+            setFormattedValue(str);
+        }
+    }
+
+    @Override
+    public void setValue(Object value) {
+        if (value instanceof CharSequence) {
+            setFormattedValue(String.valueOf(value));
+        } else {
+            setValueInternal(value);
+        }
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public String getFormattedValue() {
+        initPropertyEditors();
+
+        Object value = super.getValue();
+        for (WeakReference<PropertyEditor> reference : propertyEditors) {
+            try {
+                PropertyEditor propertyEditor = reference.get();
+                if (propertyEditor != null && propertyEditor instanceof ExtendedPropertyEditor) {
+                    ExtendedPropertyEditor extendedPropertyEditor = (ExtendedPropertyEditor) propertyEditor;
+                    extendedPropertyEditor.setFormat(format);
+                    extendedPropertyEditor.setValue(value);
+                    return extendedPropertyEditor.getFormattedValue();
+                }
+            } catch (Exception e) {
+                // ignore. next editor
+            }
+        }
+
+        throw illegalValue(value, targetClass);
+    }
+
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+    public void setFormattedValue(String value) {
+        initPropertyEditors();
+
+        for (WeakReference<PropertyEditor> reference : propertyEditors) {
+            try {
+                PropertyEditor propertyEditor = reference.get();
+                if (propertyEditor != null && propertyEditor instanceof ExtendedPropertyEditor) {
+                    ExtendedPropertyEditor extendedPropertyEditor = (ExtendedPropertyEditor) propertyEditor;
+                    extendedPropertyEditor.setFormat(format);
+                    extendedPropertyEditor.setValue(value);
+                    super.setValue(extendedPropertyEditor.getValue());
+                    return;
+                }
+            } catch (Exception e) {
+                // ignore. next editor
+            }
+        }
+
+        throw illegalValue(value, targetClass);
+    }
+
+    protected void setValueInternal(Object value) throws IllegalArgumentException {
+        initPropertyEditors();
+
+        for (WeakReference<PropertyEditor> reference : propertyEditors) {
+            try {
+                PropertyEditor propertyEditor = reference.get();
+                if (propertyEditor != null) {
+                    propertyEditor.setValue(value);
+                    super.setValue(propertyEditor.getValue());
+                    return;
+                }
+            } catch (Exception e) {
+                // ignore. next editor
+            }
+        }
+
+        throw illegalValue(value, targetClass);
+    }
+
+    protected Object getValueInternal() {
         initPropertyEditors();
 
         Object value = super.getValue();
@@ -98,8 +209,7 @@ public class PropertyEditorChain extends PropertyEditorSupport {
         throw illegalValue(value, targetClass);
     }
 
-    @Override
-    public String getAsText() {
+    protected String getAsTextInternal() {
         initPropertyEditors();
 
         Object value = super.getValue();
@@ -119,8 +229,7 @@ public class PropertyEditorChain extends PropertyEditorSupport {
         throw illegalValue(value, targetClass);
     }
 
-    @Override
-    public void setAsText(String text) throws IllegalArgumentException {
+    protected void setAsTextInternal(String text) throws IllegalArgumentException {
         initPropertyEditors();
 
         for (WeakReference<PropertyEditor> reference : propertyEditors) {

@@ -56,6 +56,7 @@ public final class PropertyEditorResolver {
 
     /**
      * Removes all currently registered value editors.
+     *
      * @since 2.4.0
      */
     public static void clear() {
@@ -145,7 +146,14 @@ public final class PropertyEditorResolver {
             // is targetType handled by a chain?
             PropertyEditorChain chain = propertyEditorChainRegistry.get(targetTypeName);
             if (chain != null) {
-                propertyEditorChainRegistry.put(targetTypeName, chain.copyOf(editorClass));
+                PropertyEditorChain propertyEditorChain = chain.copyOf(editorClass);
+                if (propertyEditorChain.getSize() > 1) {
+                    propertyEditorChainRegistry.put(targetTypeName, propertyEditorChain);
+                } else {
+                    // standard registration
+                    propertyEditorChainRegistry.remove(targetTypeName);
+                    propertyEditorRegistry.put(targetTypeName, editorClass);
+                }
             } else {
                 // is targetType handled by an editor ?
                 Class<? extends PropertyEditor> propertyEditorType = propertyEditorRegistry.get(targetTypeName);
@@ -154,9 +162,17 @@ public final class PropertyEditorResolver {
                     Class<? extends PropertyEditor>[] propertyEditorClasses = new Class[2];
                     propertyEditorClasses[0] = propertyEditorType;
                     propertyEditorClasses[1] = editorClass;
-                    propertyEditorChainRegistry.put(targetTypeName, new PropertyEditorChain(targetType, propertyEditorClasses));
+                    PropertyEditorChain propertyEditorChain = new PropertyEditorChain(targetType, propertyEditorClasses);
+                    if (propertyEditorChain.getSize() > 1) {
+                        propertyEditorChainRegistry.put(targetTypeName, propertyEditorChain);
+                    } else {
+                        // standard registration
+                        propertyEditorChainRegistry.remove(targetTypeName);
+                        propertyEditorRegistry.put(targetTypeName, editorClass);
+                    }
                 } else {
                     // standard registration
+                    propertyEditorChainRegistry.remove(targetTypeName);
                     propertyEditorRegistry.put(targetTypeName, editorClass);
                 }
             }
