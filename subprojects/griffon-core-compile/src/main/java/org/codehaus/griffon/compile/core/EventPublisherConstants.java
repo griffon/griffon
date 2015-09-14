@@ -31,7 +31,7 @@ public interface EventPublisherConstants extends BaseConstants {
     String EVENT_ROUTER_PROPERTY = "eventRouter";
     String EVENT_ROUTER_TYPE = "griffon.core.event.EventRouter";
     String EVENT_PUBLISHER_TYPE = "griffon.core.event.EventPublisher";
-    String EVENT_ROUTER_FIELD_NAME = "this$eventRouter";
+    String EVENT_PUBLISHER_FIELD_NAME = "this$eventPublisher";
     String EVENT_TYPE = "griffon.core.event.Event";
 
     String METHOD_SET_EVENT_ROUTER = "setEventRouter";

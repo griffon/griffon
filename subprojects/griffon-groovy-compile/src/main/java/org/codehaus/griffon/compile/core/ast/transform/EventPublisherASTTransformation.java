@@ -43,6 +43,7 @@ import static java.lang.reflect.Modifier.PRIVATE;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_EXCEPTIONS;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.args;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.call;
+import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.ctor;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.field;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectField;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectInterface;
@@ -117,10 +118,10 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation i
         injectInterface(declaringClass, EVENT_PUBLISHER_CNODE);
 
         FieldNode epField = injectField(declaringClass,
-            EVENT_ROUTER_FIELD_NAME,
+            EVENT_PUBLISHER_FIELD_NAME,
             PRIVATE,
             EVENT_PUBLISHER_FIELD_CNODE,
-            null);
+            ctor(EVENT_PUBLISHER_FIELD_CNODE));
 
         Parameter erParam = param(EVENT_ROUTER_CNODE, EVENT_ROUTER_PROPERTY);
         if (!isBlank(beanName)) {
