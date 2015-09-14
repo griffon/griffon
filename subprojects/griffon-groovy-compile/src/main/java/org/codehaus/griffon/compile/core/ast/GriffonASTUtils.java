@@ -587,6 +587,10 @@ public class GriffonASTUtils {
         return new FieldExpression(owner.getField(fieldName));
     }
 
+    public static ConstructorCallExpression ctor(ClassNode type) {
+        return ctor(type, NO_ARGS);
+    }
+
     public static ConstructorCallExpression ctor(ClassNode type, Expression args) {
         return new ConstructorCallExpression(type, args);
     }
