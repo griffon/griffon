@@ -19,6 +19,7 @@ import com.google.guiceberry.GuiceBerryModule
 import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
 import griffon.core.CallableWithArgs
+import griffon.core.ExceptionHandler
 import griffon.core.ExecutorServiceManager
 import griffon.core.RunnableWithArgs
 import griffon.core.event.Event
@@ -26,6 +27,7 @@ import griffon.core.event.EventRouter
 import griffon.core.threading.UIThreadManager
 import griffon.util.AnnotationUtils
 import org.codehaus.griffon.runtime.core.DefaultExecutorServiceManager
+import org.codehaus.griffon.runtime.core.ExceptionHandlerProvider
 import org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider
 import org.codehaus.griffon.runtime.core.threading.UIThreadManagerTestSupport
 import org.junit.Rule
@@ -709,6 +711,7 @@ class DefaultEventRouterSpec extends Specification {
             bind(ExecutorServiceManager).to(DefaultExecutorServiceManager).in(Singleton)
             bind(UIThreadManager).to(UIThreadManagerTestSupport).in(Singleton)
             bind(EventRouter).to(DefaultEventRouter).in(Singleton)
+            bind(ExceptionHandler).toProvider(ExceptionHandlerProvider).in(Singleton)
             bind(ExecutorService).annotatedWith(AnnotationUtils.named('defaultExecutorService')).toProvider(DefaultExecutorServiceProvider).in(Singleton)
         }
     }

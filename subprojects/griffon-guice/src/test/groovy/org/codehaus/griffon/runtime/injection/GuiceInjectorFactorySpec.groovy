@@ -17,6 +17,7 @@ package org.codehaus.griffon.runtime.injection
 
 import com.google.inject.CreationException
 import griffon.core.ApplicationBootstrapper
+import griffon.core.ExceptionHandler
 import griffon.core.ExecutorServiceManager
 import griffon.core.GriffonApplication
 import griffon.core.event.EventRouter
@@ -27,6 +28,7 @@ import griffon.exceptions.ClosedInjectorException
 import griffon.exceptions.InstanceNotFoundException
 import griffon.exceptions.MembersInjectionException
 import org.codehaus.griffon.runtime.core.DefaultExecutorServiceManager
+import org.codehaus.griffon.runtime.core.GriffonExceptionHandlerProvider
 import org.codehaus.griffon.runtime.core.event.DefaultEventRouter
 import org.codehaus.griffon.runtime.core.injection.AbstractModule
 import org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider
@@ -224,6 +226,11 @@ class GuiceInjectorFactorySpec extends Specification {
                 bind(ExecutorService)
                     .withClassifier(named('defaultExecutorService'))
                     .toProvider(DefaultExecutorServiceProvider)
+                    .asSingleton()
+
+
+                bind(ExceptionHandler)
+                    .toProvider(GriffonExceptionHandlerProvider)
                     .asSingleton()
 
                 bind(Animal).to(Dog).asSingleton()

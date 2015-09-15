@@ -15,8 +15,8 @@
  */
 package org.codehaus.griffon.runtime.core.threading;
 
+import griffon.core.ExceptionHandler;
 import griffon.core.ExecutorServiceManager;
-import griffon.core.GriffonExceptionHandler;
 import griffon.core.threading.UIThreadManager;
 import griffon.exceptions.GriffonException;
 
@@ -39,12 +39,14 @@ import static java.util.Objects.requireNonNull;
 public abstract class AbstractUIThreadManager implements UIThreadManager {
     protected static final String ERROR_RUNNABLE_NULL = "Argument 'runnable' must not be null";
     protected static final String ERROR_CALLABLE_NULL = "Argument 'callable' must not be null";
-    private static final Thread.UncaughtExceptionHandler UNCAUGHT_EXCEPTION_HANDLER = new GriffonExceptionHandler();
 
     private ExecutorServiceManager executorServiceManager;
 
     @Inject @Named("defaultExecutorService")
     private ExecutorService executorService;
+
+    @Inject
+    private ExceptionHandler exceptionHandler;
 
     @Inject
     public void setExecutorServiceManager(@Nonnull ExecutorServiceManager executorServiceManager) {
@@ -92,7 +94,7 @@ public abstract class AbstractUIThreadManager implements UIThreadManager {
                     try {
                         runnable.run();
                     } catch (Throwable throwable) {
-                        UNCAUGHT_EXCEPTION_HANDLER.uncaughtException(Thread.currentThread(), throwable);
+                        exceptionHandler.uncaughtException(Thread.currentThread(), throwable);
                     }
                 }
             });
