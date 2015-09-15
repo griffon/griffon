@@ -22,24 +22,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static griffon.util.GriffonNameUtils.getShortName;
+import static java.util.Arrays.asList;
+
 /**
  * Catches and sanitizes all uncaught exceptions.
  *
  * @author Danno Ferrin
  * @author Andres Almiray
  */
-public class GriffonExceptionHandler implements Thread.UncaughtExceptionHandler {
-    /**
-     * "griffon.full.stacktrace"
-     */
-    public static final String GRIFFON_FULL_STACKTRACE = "griffon.full.stacktrace";
-
-    /**
-     * "griffon.exception.output"
-     */
-    public static final String GRIFFON_EXCEPTION_OUTPUT = "griffon.exception.output";
-
+public class GriffonExceptionHandler implements ExceptionHandler {
     private static final Logger LOG = LoggerFactory.getLogger(GriffonExceptionHandler.class);
+
     private static final String[] CONFIG_OPTIONS = {
         GRIFFON_FULL_STACKTRACE,
         GRIFFON_EXCEPTION_OUTPUT
@@ -62,21 +56,34 @@ public class GriffonExceptionHandler implements Thread.UncaughtExceptionHandler 
         TESTS.add(test);
     }
 
+    private GriffonApplication application;
+
+    public GriffonExceptionHandler() {
+        Thread.setDefaultUncaughtExceptionHandler(this);
+    }
+
+    // @Inject
+    public GriffonExceptionHandler(GriffonApplication application) {
+        this.application = application;
+        Thread.setDefaultUncaughtExceptionHandler(this);
+    }
+
+    @Override
     public void uncaughtException(Thread t, Throwable e) {
         handle(e);
     }
 
+    @Override
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     public void handle(Throwable throwable) {
         try {
             sanitize(throwable);
             if (isOutputEnabled()) throwable.printStackTrace(System.err);
-            // GriffonApplication app = ApplicationHolder.getApplication();
             LOG.error("Uncaught Exception", throwable);
-            //if (app != null) {
-            //    app.event("Uncaught" + GriffonNameUtils.getShortName(throwable.getClass()), asList(throwable));
-            //    app.event(ApplicationEvent.UNCAUGHT_EXCEPTION_THROWN.getName(), asList(throwable));
-            //}
+            if (application != null) {
+                application.getEventRouter().publishEvent("Uncaught" + getShortName(throwable.getClass()), asList(throwable));
+                application.getEventRouter().publishEvent(ApplicationEvent.UNCAUGHT_EXCEPTION_THROWN.getName(), asList(throwable));
+            }
         } catch (Throwable t) {
             sanitize(t);
             if (isOutputEnabled()) t.printStackTrace(System.err);

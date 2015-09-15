@@ -20,8 +20,8 @@ import griffon.core.ApplicationConfigurer;
 import griffon.core.Configuration;
 import griffon.core.Context;
 import griffon.core.ContextFactory;
+import griffon.core.ExceptionHandler;
 import griffon.core.ExecutorServiceManager;
-import griffon.core.GriffonExceptionHandler;
 import griffon.core.LifecycleHandler;
 import griffon.core.PlatformHandler;
 import griffon.core.addon.AddonManager;
@@ -239,7 +239,8 @@ public class DefaultApplicationModule extends AbstractModule {
             .to(DefaultEventHandler.class)
             .asSingleton();
 
-        bind(GriffonExceptionHandler.class)
+        bind(ExceptionHandler.class)
+            .toProvider(GriffonExceptionHandlerProvider.class)
             .asSingleton();
         // end::bindings[]
     }
