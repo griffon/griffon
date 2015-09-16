@@ -319,8 +319,8 @@
 
         <Package name="griffon.core.editors">
             <Stats>
-                <TotalClasses>24</TotalClasses>
-                <ConcreteClasses>22</ConcreteClasses>
+                <TotalClasses>25</TotalClasses>
+                <ConcreteClasses>23</ConcreteClasses>
                 <AbstractClasses>2</AbstractClasses>
                 <Ca>3</Ca>
                 <Ce>12</Ce>
@@ -372,6 +372,9 @@
                 </Class>
                 <Class sourceFile="IntegerPropertyEditor.java">
                     griffon.core.editors.IntegerPropertyEditor
+                </Class>
+                <Class sourceFile="LocalePropertyEditor.java">
+                    griffon.core.editors.LocalePropertyEditor
                 </Class>
                 <Class sourceFile="LongPropertyEditor.java">
                     griffon.core.editors.LongPropertyEditor
@@ -541,14 +544,14 @@
 
         <Package name="griffon.core.formatters">
             <Stats>
-                <TotalClasses>20</TotalClasses>
-                <ConcreteClasses>16</ConcreteClasses>
+                <TotalClasses>21</TotalClasses>
+                <ConcreteClasses>17</ConcreteClasses>
                 <AbstractClasses>4</AbstractClasses>
                 <Ca>1</Ca>
                 <Ce>5</Ce>
-                <A>0.2</A>
+                <A>0.19</A>
                 <I>0.83</I>
-                <D>0.03</D>
+                <D>0.02</D>
                 <V>1</V>
             </Stats>
 
@@ -606,6 +609,9 @@
                 </Class>
                 <Class sourceFile="IntegerFormatter.java">
                     griffon.core.formatters.IntegerFormatter
+                </Class>
+                <Class sourceFile="LocaleFormatter.java">
+                    griffon.core.formatters.LocaleFormatter
                 </Class>
                 <Class sourceFile="LongFormatter.java">
                     griffon.core.formatters.LongFormatter
@@ -2447,199 +2453,209 @@
 
     <Cycles>
         <Package Name="griffon.core">
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.core.controller</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
         </Package>
 
         <Package Name="griffon.core.addon">
             <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.core.controller</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
         </Package>
 
         <Package Name="griffon.core.artifact">
-            <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
         </Package>
 
         <Package Name="griffon.core.controller">
-            <Package>griffon.exceptions</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
         </Package>
 
         <Package Name="griffon.core.editors">
             <Package>griffon.util</Package>
-            <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
         </Package>
 
         <Package Name="griffon.core.env">
             <Package>griffon.util</Package>
-            <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
         </Package>
 
         <Package Name="griffon.core.event">
             <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.core.controller</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
         </Package>
 
         <Package Name="griffon.core.formatters">
             <Package>griffon.util</Package>
-            <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
         </Package>
 
         <Package Name="griffon.core.i18n">
             <Package>griffon.util</Package>
-            <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
         </Package>
 
         <Package Name="griffon.core.injection">
-            <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
+            <Package>griffon.exceptions</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
         </Package>
 
         <Package Name="griffon.core.mvc">
             <Package>griffon.core.artifact</Package>
-            <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.core.mvc</Package>
         </Package>
 
         <Package Name="griffon.core.resources">
             <Package>griffon.util</Package>
-            <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
         </Package>
 
         <Package Name="griffon.core.view">
             <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.core.controller</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
         </Package>
 
         <Package Name="griffon.exceptions">
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
         </Package>
 
         <Package Name="griffon.util">
-            <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core">
-            <Package>griffon.core.injection</Package>
             <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
+            <Package>griffon.core.controller</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.addon">
-            <Package>griffon.core.addon</Package>
-            <Package>griffon.core</Package>
             <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.exceptions</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.artifact">
-            <Package>griffon.core.controller</Package>
-            <Package>griffon.exceptions</Package>
-            <Package>griffon.core.injection</Package>
             <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
+            <Package>griffon.core.controller</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.controller">
             <Package>griffon.core.controller</Package>
-            <Package>griffon.exceptions</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.env">
             <Package>griffon.core.env</Package>
             <Package>griffon.util</Package>
-            <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.event">
-            <Package>griffon.core.event</Package>
-            <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.util</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.i18n">
             <Package>griffon.core.i18n</Package>
             <Package>griffon.util</Package>
-            <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.injection">
             <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
+            <Package>griffon.exceptions</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.mvc">
             <Package>griffon.core.mvc</Package>
             <Package>griffon.core.artifact</Package>
-            <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.core.mvc</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.resources">
             <Package>griffon.util</Package>
-            <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.storage">
             <Package>griffon.util</Package>
-            <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.threading">
             <Package>griffon.exceptions</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.view">
             <Package>griffon.core.view</Package>
             <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.core.controller</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.util">
             <Package>griffon.util</Package>
-            <Package>griffon.core</Package>
-            <Package>griffon.core.injection</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
         </Package>
 
     </Cycles>
