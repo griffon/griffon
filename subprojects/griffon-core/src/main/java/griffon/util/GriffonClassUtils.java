@@ -2825,7 +2825,7 @@ public class GriffonClassUtils {
         Class<?> declaringClass = bean.getClass();
         while (declaringClass != null) {
             try {
-                Field field = bean.getClass().getDeclaredField(name);
+                Field field = declaringClass.getDeclaredField(name);
 
                 // type conversion needed?
                 Class<?> propertyType = field.getType();
