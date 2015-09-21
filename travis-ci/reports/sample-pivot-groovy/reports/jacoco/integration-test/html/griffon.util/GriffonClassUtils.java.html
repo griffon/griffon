@@ -2351,10 +2351,10 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L2351">            setPropertyValue(bean, name, value);</span>
 <span class="fc" id="L2352">        } catch (PropertyException pe) {</span>
             try {
-<span class="nc" id="L2354">                setFieldValue(bean, name, value);</span>
+<span class="fc" id="L2354">                setFieldValue(bean, name, value);</span>
 <span class="fc" id="L2355">            } catch (FieldException fe) {</span>
 <span class="fc" id="L2356">                throw pe;</span>
-<span class="nc" id="L2357">            }</span>
+<span class="fc" id="L2357">            }</span>
 <span class="fc" id="L2358">        }</span>
 <span class="fc" id="L2359">    }</span>
 
@@ -2495,11 +2495,11 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L2495">        requireNonNull(bean, ERROR_BEAN_NULL);</span>
 <span class="fc" id="L2496">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
         try {
-<span class="nc" id="L2498">            setField(bean, name, value);</span>
+<span class="fc" id="L2498">            setField(bean, name, value);</span>
 <span class="fc" id="L2499">        } catch (IllegalAccessException | NoSuchFieldException e) {</span>
 <span class="fc" id="L2500">            throw new FieldException(bean, name, value, e);</span>
-<span class="nc" id="L2501">        }</span>
-<span class="nc" id="L2502">    }</span>
+<span class="fc" id="L2501">        }</span>
+<span class="fc" id="L2502">    }</span>
 
     /**
      * Sets or updates an object's field.
@@ -2825,18 +2825,18 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L2825">        Class&lt;?&gt; declaringClass = bean.getClass();</span>
 <span class="fc bfc" id="L2826" title="All 2 branches covered.">        while (declaringClass != null) {</span>
             try {
-<span class="nc" id="L2828">                Field field = bean.getClass().getDeclaredField(name);</span>
+<span class="fc" id="L2828">                Field field = declaringClass.getDeclaredField(name);</span>
 
                 // type conversion needed?
-<span class="nc" id="L2831">                Class&lt;?&gt; propertyType = field.getType();</span>
-<span class="nc bnc" id="L2832" title="All 4 branches missed.">                if (value != null &amp;&amp; !propertyType.isAssignableFrom(value.getClass())) {</span>
+<span class="fc" id="L2831">                Class&lt;?&gt; propertyType = field.getType();</span>
+<span class="pc bpc" id="L2832" title="2 of 4 branches missed.">                if (value != null &amp;&amp; !propertyType.isAssignableFrom(value.getClass())) {</span>
 <span class="nc" id="L2833">                    value = TypeUtils.convertValue(propertyType, value);</span>
                 }
 
-<span class="nc" id="L2836">                field.setAccessible(true);</span>
+<span class="fc" id="L2836">                field.setAccessible(true);</span>
                 try {
-<span class="nc" id="L2838">                    field.set(bean, value);</span>
-<span class="nc" id="L2839">                    return;</span>
+<span class="fc" id="L2838">                    field.set(bean, value);</span>
+<span class="fc" id="L2839">                    return;</span>
 <span class="nc" id="L2840">                } catch (IllegalArgumentException iae) {</span>
 <span class="nc" id="L2841">                    throw new FieldException(bean, name, value, iae);</span>
                 }

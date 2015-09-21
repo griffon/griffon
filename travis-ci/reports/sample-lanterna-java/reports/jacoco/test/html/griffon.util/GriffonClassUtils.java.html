@@ -2825,7 +2825,7 @@ import static java.util.Objects.requireNonNull;
 <span class="nc" id="L2825">        Class&lt;?&gt; declaringClass = bean.getClass();</span>
 <span class="nc bnc" id="L2826" title="All 2 branches missed.">        while (declaringClass != null) {</span>
             try {
-<span class="nc" id="L2828">                Field field = bean.getClass().getDeclaredField(name);</span>
+<span class="nc" id="L2828">                Field field = declaringClass.getDeclaredField(name);</span>
 
                 // type conversion needed?
 <span class="nc" id="L2831">                Class&lt;?&gt; propertyType = field.getType();</span>
