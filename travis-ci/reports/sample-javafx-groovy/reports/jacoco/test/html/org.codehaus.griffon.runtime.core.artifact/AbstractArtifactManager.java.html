@@ -19,7 +19,9 @@ import griffon.core.artifact.ArtifactHandler;
 import griffon.core.artifact.ArtifactManager;
 import griffon.core.artifact.GriffonArtifact;
 import griffon.core.artifact.GriffonClass;
+import griffon.core.artifact.GriffonView;
 import griffon.core.injection.Injector;
+import griffon.core.threading.UIThreadManager;
 import griffon.exceptions.ArtifactHandlerNotFoundException;
 import griffon.exceptions.ArtifactNotFoundException;
 import org.slf4j.Logger;
@@ -34,6 +36,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
@@ -47,48 +50,51 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 @SuppressWarnings(&quot;rawtypes&quot;)
-<span class="fc" id="L50">public abstract class AbstractArtifactManager implements ArtifactManager {</span>
+<span class="fc" id="L53">public abstract class AbstractArtifactManager implements ArtifactManager {</span>
     protected static final String ERROR_ARTIFACT_HANDLER_NULL = &quot;Argument 'artifactHandler' must not be null&quot;;
     private static final String ERROR_NAME_BLANK = &quot;Argument 'name' must not be blank&quot;;
     private static final String ERROR_TYPE_BLANK = &quot;Argument 'type' must not be blank&quot;;
     private static final String ERROR_CLASS_NULL = &quot;Argument 'clazz' must not be null&quot;;
     private static final String ERROR_ARTIFACT_NULL = &quot;Argument 'artifact' must not be null&quot;;
     private static final String ERROR_FULLY_QUALIFIED_CLASSNAME_BLANK = &quot;Argument 'fqClassName' must not be blank&quot;;
-<span class="fc" id="L57">    private static final Logger LOG = LoggerFactory.getLogger(AbstractArtifactManager.class);</span>
-<span class="fc" id="L58">    private final Map&lt;String, Class&lt;? extends GriffonArtifact&gt;[]&gt; artifacts = new ConcurrentHashMap&lt;&gt;();</span>
-<span class="fc" id="L59">    private final Map&lt;String, ArtifactHandler&gt; artifactHandlers = new ConcurrentHashMap&lt;&gt;();</span>
-<span class="fc" id="L60">    private final Object lock = new Object[0];</span>
+<span class="fc" id="L60">    private static final Logger LOG = LoggerFactory.getLogger(AbstractArtifactManager.class);</span>
+<span class="fc" id="L61">    private final Map&lt;String, Class&lt;? extends GriffonArtifact&gt;[]&gt; artifacts = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L62">    private final Map&lt;String, ArtifactHandler&gt; artifactHandlers = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L63">    private final Object lock = new Object[0];</span>
 
     @Inject
     private Provider&lt;Injector&gt; injectorProvider;
 
+    @Inject
+    private UIThreadManager uiThreadManager;
+
     @Nonnull
     protected Map&lt;String, ArtifactHandler&gt; getArtifactHandlers() {
-<span class="fc" id="L67">        return artifactHandlers;</span>
+<span class="fc" id="L73">        return artifactHandlers;</span>
     }
 
     @SuppressWarnings(&quot;unchecked&quot;)
     public final void loadArtifactMetadata() {
-<span class="fc" id="L72">        Map&lt;String, List&lt;Class&lt;? extends GriffonArtifact&gt;&gt;&gt; loadedArtifacts = doLoadArtifactMetadata();</span>
+<span class="fc" id="L78">        Map&lt;String, List&lt;Class&lt;? extends GriffonArtifact&gt;&gt;&gt; loadedArtifacts = doLoadArtifactMetadata();</span>
 
-<span class="fc" id="L74">        synchronized (lock) {</span>
-<span class="fc bfc" id="L75" title="All 2 branches covered.">            for (Map.Entry&lt;String, List&lt;Class&lt;? extends GriffonArtifact&gt;&gt;&gt; artifactsEntry : loadedArtifacts.entrySet()) {</span>
-<span class="fc" id="L76">                String type = artifactsEntry.getKey();</span>
-<span class="fc" id="L77">                ArtifactHandler handler = artifactHandlers.get(type);</span>
-<span class="pc bpc" id="L78" title="1 of 2 branches missed.">                if (handler == null) {</span>
-<span class="nc" id="L79">                    throw new ArtifactHandlerNotFoundException(type);</span>
+<span class="fc" id="L80">        synchronized (lock) {</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">            for (Map.Entry&lt;String, List&lt;Class&lt;? extends GriffonArtifact&gt;&gt;&gt; artifactsEntry : loadedArtifacts.entrySet()) {</span>
+<span class="fc" id="L82">                String type = artifactsEntry.getKey();</span>
+<span class="fc" id="L83">                ArtifactHandler handler = artifactHandlers.get(type);</span>
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">                if (handler == null) {</span>
+<span class="nc" id="L85">                    throw new ArtifactHandlerNotFoundException(type);</span>
                 }
-<span class="fc" id="L81">                List&lt;Class&lt;? extends GriffonArtifact&gt;&gt; list = artifactsEntry.getValue();</span>
-<span class="fc" id="L82">                artifacts.put(type, list.toArray(new Class[list.size()]));</span>
-<span class="fc" id="L83">                handler.initialize(artifacts.get(type));</span>
-<span class="fc" id="L84">            }</span>
-<span class="pc" id="L85">        }</span>
-<span class="fc" id="L86">    }</span>
+<span class="fc" id="L87">                List&lt;Class&lt;? extends GriffonArtifact&gt;&gt; list = artifactsEntry.getValue();</span>
+<span class="fc" id="L88">                artifacts.put(type, list.toArray(new Class[list.size()]));</span>
+<span class="fc" id="L89">                handler.initialize(artifacts.get(type));</span>
+<span class="fc" id="L90">            }</span>
+<span class="pc" id="L91">        }</span>
+<span class="fc" id="L92">    }</span>
 
     @Nonnull
     @Override
     public Set&lt;String&gt; getAllTypes() {
-<span class="nc" id="L91">        return Collections.unmodifiableSet(artifactHandlers.keySet());</span>
+<span class="nc" id="L97">        return Collections.unmodifiableSet(artifactHandlers.keySet());</span>
     }
 
     @Override
@@ -96,136 +102,145 @@ import static java.util.Objects.requireNonNull;
     @SuppressWarnings(&quot;unchecked&quot;)
     public &lt;A extends GriffonArtifact&gt; A newInstance(@Nonnull GriffonClass griffonClass) {
         try {
-<span class="nc" id="L99">            requireNonNull(griffonClass, &quot;Argument 'griffonClass' must not be null&quot;);</span>
-<span class="nc" id="L100">        } catch (RuntimeException re) {</span>
-<span class="nc" id="L101">            throw new ArtifactNotFoundException(re);</span>
-<span class="nc" id="L102">        }</span>
+<span class="nc" id="L105">            requireNonNull(griffonClass, &quot;Argument 'griffonClass' must not be null&quot;);</span>
+<span class="nc" id="L106">        } catch (RuntimeException re) {</span>
+<span class="nc" id="L107">            throw new ArtifactNotFoundException(re);</span>
+<span class="nc" id="L108">        }</span>
 
-<span class="nc" id="L104">        return newInstance((Class&lt;A&gt;) griffonClass.getClazz());</span>
+<span class="nc" id="L110">        return newInstance((Class&lt;A&gt;) griffonClass.getClazz());</span>
     }
 
     @Override
     @Nonnull
     @SuppressWarnings(&quot;unchecked&quot;)
-    public &lt;A extends GriffonArtifact&gt; A newInstance(@Nonnull Class&lt;A&gt; clazz) {
-<span class="pc bpc" id="L111" title="1 of 2 branches missed.">        if (findGriffonClass(clazz) == null) {</span>
-<span class="nc" id="L112">            throw new ArtifactNotFoundException(clazz);</span>
+    public &lt;A extends GriffonArtifact&gt; A newInstance(final @Nonnull Class&lt;A&gt; clazz) {
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">        if (findGriffonClass(clazz) == null) {</span>
+<span class="nc" id="L118">            throw new ArtifactNotFoundException(clazz);</span>
         }
 
-<span class="fc" id="L115">        return (A) injectorProvider.get().getInstance(clazz);</span>
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">        if (GriffonView.class.isAssignableFrom(clazz)) {</span>
+<span class="nc" id="L122">            return uiThreadManager.runInsideUISync(new Callable&lt;A&gt;() {</span>
+                @Override
+                public A call() throws Exception {
+<span class="nc" id="L125">                    return (A) injectorProvider.get().getInstance(clazz);</span>
+                }
+            });
+        }
+
+<span class="fc" id="L130">        return (A) injectorProvider.get().getInstance(clazz);</span>
     }
 
     @Nonnull
     protected abstract Map&lt;String, List&lt;Class&lt;? extends GriffonArtifact&gt;&gt;&gt; doLoadArtifactMetadata();
 
     public void registerArtifactHandler(@Nonnull ArtifactHandler artifactHandler) {
-<span class="fc" id="L122">        requireNonNull(artifactHandler, ERROR_ARTIFACT_HANDLER_NULL);</span>
-<span class="fc" id="L123">        LOG.debug(&quot;Registering artifact handler for type '{}': {}&quot;, artifactHandler.getType(), artifactHandler);</span>
-<span class="fc" id="L124">        synchronized (lock) {</span>
-<span class="fc" id="L125">            artifactHandlers.put(artifactHandler.getType(), artifactHandler);</span>
-<span class="pc" id="L126">        }</span>
-<span class="fc" id="L127">    }</span>
+<span class="fc" id="L137">        requireNonNull(artifactHandler, ERROR_ARTIFACT_HANDLER_NULL);</span>
+<span class="fc" id="L138">        LOG.debug(&quot;Registering artifact handler for type '{}': {}&quot;, artifactHandler.getType(), artifactHandler);</span>
+<span class="fc" id="L139">        synchronized (lock) {</span>
+<span class="fc" id="L140">            artifactHandlers.put(artifactHandler.getType(), artifactHandler);</span>
+<span class="pc" id="L141">        }</span>
+<span class="fc" id="L142">    }</span>
 
     public void unregisterArtifactHandler(@Nonnull ArtifactHandler artifactHandler) {
-<span class="nc" id="L130">        requireNonNull(artifactHandler, ERROR_ARTIFACT_HANDLER_NULL);</span>
-<span class="nc" id="L131">        LOG.debug(&quot;Removing artifact handler for type '{}': {}&quot;, artifactHandler.getType(), artifactHandler);</span>
-<span class="nc" id="L132">        synchronized (lock) {</span>
-<span class="nc" id="L133">            artifactHandlers.remove(artifactHandler.getType());</span>
-<span class="nc" id="L134">        }</span>
-<span class="nc" id="L135">    }</span>
+<span class="nc" id="L145">        requireNonNull(artifactHandler, ERROR_ARTIFACT_HANDLER_NULL);</span>
+<span class="nc" id="L146">        LOG.debug(&quot;Removing artifact handler for type '{}': {}&quot;, artifactHandler.getType(), artifactHandler);</span>
+<span class="nc" id="L147">        synchronized (lock) {</span>
+<span class="nc" id="L148">            artifactHandlers.remove(artifactHandler.getType());</span>
+<span class="nc" id="L149">        }</span>
+<span class="nc" id="L150">    }</span>
 
     protected boolean isArtifactTypeSupported(@Nonnull String type) {
-<span class="nc" id="L138">        requireNonBlank(type, ERROR_TYPE_BLANK);</span>
-<span class="nc bnc" id="L139" title="All 2 branches missed.">        return artifactHandlers.get(type) != null;</span>
+<span class="nc" id="L153">        requireNonBlank(type, ERROR_TYPE_BLANK);</span>
+<span class="nc bnc" id="L154" title="All 2 branches missed.">        return artifactHandlers.get(type) != null;</span>
     }
 
     @Nullable
     public GriffonClass findGriffonClass(@Nonnull String name, @Nonnull String type) {
-<span class="nc" id="L144">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
-<span class="nc" id="L145">        requireNonBlank(type, ERROR_TYPE_BLANK);</span>
-<span class="nc" id="L146">        LOG.debug(&quot;Searching for griffonClass of {}:{}&quot;, type, name);</span>
-<span class="nc" id="L147">        synchronized (lock) {</span>
-<span class="nc" id="L148">            ArtifactHandler handler = artifactHandlers.get(type);</span>
-<span class="nc bnc" id="L149" title="All 2 branches missed.">            return handler != null ? handler.findClassFor(name) : null;</span>
-<span class="nc" id="L150">        }</span>
+<span class="nc" id="L159">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc" id="L160">        requireNonBlank(type, ERROR_TYPE_BLANK);</span>
+<span class="nc" id="L161">        LOG.debug(&quot;Searching for griffonClass of {}:{}&quot;, type, name);</span>
+<span class="nc" id="L162">        synchronized (lock) {</span>
+<span class="nc" id="L163">            ArtifactHandler handler = artifactHandlers.get(type);</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">            return handler != null ? handler.findClassFor(name) : null;</span>
+<span class="nc" id="L165">        }</span>
     }
 
     @Nullable
     @SuppressWarnings({&quot;unchecked&quot;, &quot;rawtypes&quot;})
     public GriffonClass findGriffonClass(@Nonnull Class&lt;? extends GriffonArtifact&gt; clazz, @Nonnull String type) {
-<span class="nc" id="L156">        requireNonNull(clazz, ERROR_CLASS_NULL);</span>
-<span class="nc" id="L157">        requireNonBlank(type, ERROR_TYPE_BLANK);</span>
-<span class="nc" id="L158">        LOG.debug(&quot;Searching for griffonClass of {}:{}&quot;, type, clazz.getName());</span>
-<span class="nc" id="L159">        synchronized (lock) {</span>
-<span class="nc" id="L160">            ArtifactHandler handler = artifactHandlers.get(type);</span>
-<span class="nc bnc" id="L161" title="All 2 branches missed.">            return handler != null ? handler.getClassFor(clazz) : null;</span>
-<span class="nc" id="L162">        }</span>
+<span class="nc" id="L171">        requireNonNull(clazz, ERROR_CLASS_NULL);</span>
+<span class="nc" id="L172">        requireNonBlank(type, ERROR_TYPE_BLANK);</span>
+<span class="nc" id="L173">        LOG.debug(&quot;Searching for griffonClass of {}:{}&quot;, type, clazz.getName());</span>
+<span class="nc" id="L174">        synchronized (lock) {</span>
+<span class="nc" id="L175">            ArtifactHandler handler = artifactHandlers.get(type);</span>
+<span class="nc bnc" id="L176" title="All 2 branches missed.">            return handler != null ? handler.getClassFor(clazz) : null;</span>
+<span class="nc" id="L177">        }</span>
     }
 
     @Nullable
     public &lt;A extends GriffonArtifact&gt; GriffonClass findGriffonClass(@Nonnull A artifact) {
-<span class="nc" id="L167">        requireNonNull(artifact, ERROR_ARTIFACT_NULL);</span>
-<span class="nc" id="L168">        synchronized (lock) {</span>
-<span class="nc" id="L169">            return findGriffonClass(artifact.getClass());</span>
-<span class="nc" id="L170">        }</span>
+<span class="nc" id="L182">        requireNonNull(artifact, ERROR_ARTIFACT_NULL);</span>
+<span class="nc" id="L183">        synchronized (lock) {</span>
+<span class="nc" id="L184">            return findGriffonClass(artifact.getClass());</span>
+<span class="nc" id="L185">        }</span>
     }
 
     @Nullable
     @SuppressWarnings({&quot;unchecked&quot;, &quot;rawtypes&quot;})
     public GriffonClass findGriffonClass(@Nonnull Class&lt;? extends GriffonArtifact&gt; clazz) {
-<span class="fc" id="L176">        requireNonNull(clazz, ERROR_CLASS_NULL);</span>
-<span class="fc" id="L177">        LOG.debug(&quot;Searching for griffonClass of {}&quot;, clazz.getName());</span>
-<span class="fc" id="L178">        synchronized (lock) {</span>
-<span class="pc bpc" id="L179" title="1 of 2 branches missed.">            for (ArtifactHandler handler : artifactHandlers.values()) {</span>
-<span class="fc" id="L180">                GriffonClass griffonClass = handler.getClassFor(clazz);</span>
-<span class="fc bfc" id="L181" title="All 2 branches covered.">                if (griffonClass != null) return griffonClass;</span>
-<span class="fc" id="L182">            }</span>
-<span class="nc" id="L183">        }</span>
-<span class="nc" id="L184">        return null;</span>
+<span class="fc" id="L191">        requireNonNull(clazz, ERROR_CLASS_NULL);</span>
+<span class="fc" id="L192">        LOG.debug(&quot;Searching for griffonClass of {}&quot;, clazz.getName());</span>
+<span class="fc" id="L193">        synchronized (lock) {</span>
+<span class="pc bpc" id="L194" title="1 of 2 branches missed.">            for (ArtifactHandler handler : artifactHandlers.values()) {</span>
+<span class="fc" id="L195">                GriffonClass griffonClass = handler.getClassFor(clazz);</span>
+<span class="fc bfc" id="L196" title="All 2 branches covered.">                if (griffonClass != null) return griffonClass;</span>
+<span class="fc" id="L197">            }</span>
+<span class="nc" id="L198">        }</span>
+<span class="nc" id="L199">        return null;</span>
     }
 
     @Nullable
     public GriffonClass findGriffonClass(@Nonnull String fqClassName) {
-<span class="nc" id="L189">        requireNonBlank(fqClassName, ERROR_FULLY_QUALIFIED_CLASSNAME_BLANK);</span>
-<span class="nc" id="L190">        LOG.debug(&quot;Searching for griffonClass of {}&quot;, fqClassName);</span>
-<span class="nc" id="L191">        synchronized (lock) {</span>
-<span class="nc bnc" id="L192" title="All 2 branches missed.">            for (ArtifactHandler handler : artifactHandlers.values()) {</span>
-<span class="nc" id="L193">                GriffonClass griffonClass = handler.getClassFor(fqClassName);</span>
-<span class="nc bnc" id="L194" title="All 2 branches missed.">                if (griffonClass != null) return griffonClass;</span>
-<span class="nc" id="L195">            }</span>
-<span class="nc" id="L196">        }</span>
-<span class="nc" id="L197">        return null;</span>
+<span class="nc" id="L204">        requireNonBlank(fqClassName, ERROR_FULLY_QUALIFIED_CLASSNAME_BLANK);</span>
+<span class="nc" id="L205">        LOG.debug(&quot;Searching for griffonClass of {}&quot;, fqClassName);</span>
+<span class="nc" id="L206">        synchronized (lock) {</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">            for (ArtifactHandler handler : artifactHandlers.values()) {</span>
+<span class="nc" id="L208">                GriffonClass griffonClass = handler.getClassFor(fqClassName);</span>
+<span class="nc bnc" id="L209" title="All 2 branches missed.">                if (griffonClass != null) return griffonClass;</span>
+<span class="nc" id="L210">            }</span>
+<span class="nc" id="L211">        }</span>
+<span class="nc" id="L212">        return null;</span>
     }
 
     @Nonnull
     public List&lt;GriffonClass&gt; getClassesOfType(@Nonnull String type) {
-<span class="nc" id="L202">        requireNonBlank(type, ERROR_TYPE_BLANK);</span>
-<span class="nc" id="L203">        synchronized (lock) {</span>
-<span class="nc bnc" id="L204" title="All 2 branches missed.">            if (artifacts.containsKey(type)) {</span>
-<span class="nc" id="L205">                return asList(artifactHandlers.get(type).getClasses());</span>
+<span class="nc" id="L217">        requireNonBlank(type, ERROR_TYPE_BLANK);</span>
+<span class="nc" id="L218">        synchronized (lock) {</span>
+<span class="nc bnc" id="L219" title="All 2 branches missed.">            if (artifacts.containsKey(type)) {</span>
+<span class="nc" id="L220">                return asList(artifactHandlers.get(type).getClasses());</span>
             }
-<span class="nc" id="L207">        }</span>
-<span class="nc" id="L208">        return EMPTY_GRIFFON_CLASS_LIST;</span>
+<span class="nc" id="L222">        }</span>
+<span class="nc" id="L223">        return EMPTY_GRIFFON_CLASS_LIST;</span>
     }
 
     @Nonnull
     public List&lt;GriffonClass&gt; getAllClasses() {
-<span class="nc" id="L213">        List&lt;GriffonClass&gt; all = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L214">        synchronized (lock) {</span>
-<span class="nc bnc" id="L215" title="All 2 branches missed.">            for (ArtifactHandler handler : artifactHandlers.values()) {</span>
-<span class="nc" id="L216">                all.addAll(asList(handler.getClasses()));</span>
-<span class="nc" id="L217">            }</span>
-<span class="nc" id="L218">        }</span>
-<span class="nc" id="L219">        return Collections.unmodifiableList(all);</span>
+<span class="nc" id="L228">        List&lt;GriffonClass&gt; all = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L229">        synchronized (lock) {</span>
+<span class="nc bnc" id="L230" title="All 2 branches missed.">            for (ArtifactHandler handler : artifactHandlers.values()) {</span>
+<span class="nc" id="L231">                all.addAll(asList(handler.getClasses()));</span>
+<span class="nc" id="L232">            }</span>
+<span class="nc" id="L233">        }</span>
+<span class="nc" id="L234">        return Collections.unmodifiableList(all);</span>
     }
 
     protected &lt;A extends GriffonArtifact&gt; boolean isClassOfType(@Nonnull String type, @Nonnull Class&lt;A&gt; clazz) {
-<span class="nc bnc" id="L223" title="All 2 branches missed.">        for (Class&lt;? extends GriffonArtifact&gt; klass : artifacts.get(type)) {</span>
-<span class="nc bnc" id="L224" title="All 2 branches missed.">            if (klass.getName().equals(clazz.getName())) {</span>
-<span class="nc" id="L225">                return true;</span>
+<span class="nc bnc" id="L238" title="All 2 branches missed.">        for (Class&lt;? extends GriffonArtifact&gt; klass : artifacts.get(type)) {</span>
+<span class="nc bnc" id="L239" title="All 2 branches missed.">            if (klass.getName().equals(clazz.getName())) {</span>
+<span class="nc" id="L240">                return true;</span>
             }
         }
-<span class="nc" id="L228">        return false;</span>
+<span class="nc" id="L243">        return false;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

@@ -104,11 +104,11 @@ import static java.util.Objects.requireNonNull;
     @Nullable
     @Override
     public &lt;R&gt; R runInsideUISync(@Nonnull Callable&lt;R&gt; callable) {
-<span class="nc" id="L107">        requireNonNull(callable, ERROR_CALLABLE_NULL);</span>
-<span class="nc" id="L108">        FutureTask&lt;R&gt; ft = new FutureTask&lt;&gt;(callable);</span>
-<span class="nc" id="L109">        runInsideUISync(ft);</span>
+<span class="fc" id="L107">        requireNonNull(callable, ERROR_CALLABLE_NULL);</span>
+<span class="fc" id="L108">        FutureTask&lt;R&gt; ft = new FutureTask&lt;&gt;(callable);</span>
+<span class="fc" id="L109">        runInsideUISync(ft);</span>
         try {
-<span class="nc" id="L111">            return ft.get();</span>
+<span class="fc" id="L111">            return ft.get();</span>
 <span class="nc" id="L112">        } catch (InterruptedException | ExecutionException e) {</span>
 <span class="nc" id="L113">            throw new GriffonException(&quot;An error occurred while executing a task inside the UI thread&quot;, e);</span>
         }
