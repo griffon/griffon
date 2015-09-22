@@ -19,7 +19,9 @@ import griffon.core.artifact.ArtifactHandler;
 import griffon.core.artifact.ArtifactManager;
 import griffon.core.artifact.GriffonArtifact;
 import griffon.core.artifact.GriffonClass;
+import griffon.core.artifact.GriffonView;
 import griffon.core.injection.Injector;
+import griffon.core.threading.UIThreadManager;
 import griffon.exceptions.ArtifactHandlerNotFoundException;
 import griffon.exceptions.ArtifactNotFoundException;
 import org.slf4j.Logger;
@@ -34,6 +36,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
@@ -61,6 +64,9 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
 
     @Inject
     private Provider<Injector> injectorProvider;
+
+    @Inject
+    private UIThreadManager uiThreadManager;
 
     @Nonnull
     protected Map<String, ArtifactHandler> getArtifactHandlers() {
@@ -107,9 +113,18 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
     @Override
     @Nonnull
     @SuppressWarnings("unchecked")
-    public <A extends GriffonArtifact> A newInstance(@Nonnull Class<A> clazz) {
+    public <A extends GriffonArtifact> A newInstance(final @Nonnull Class<A> clazz) {
         if (findGriffonClass(clazz) == null) {
             throw new ArtifactNotFoundException(clazz);
+        }
+
+        if (GriffonView.class.isAssignableFrom(clazz)) {
+            return uiThreadManager.runInsideUISync(new Callable<A>() {
+                @Override
+                public A call() throws Exception {
+                    return (A) injectorProvider.get().getInstance(clazz);
+                }
+            });
         }
 
         return (A) injectorProvider.get().getInstance(clazz);
