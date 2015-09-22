@@ -1991,14 +1991,28 @@ public class GriffonClassUtils {
     public static Object getFieldValue(@Nonnull Object obj, @Nonnull String name) {
         requireNonNull(obj, ERROR_OBJECT_NULL);
         requireNonBlank(name, ERROR_NAME_BLANK);
+
         Class<?> clazz = obj.getClass();
-        Field f;
-        try {
-            f = clazz.getDeclaredField(name);
-            return f.get(obj);
-        } catch (Exception e) {
-            return null;
+        Class c = clazz;
+        while (c != null && !c.equals(Object.class)) {
+            Field field = null;
+            boolean wasAccessible = false;
+            try {
+                field = c.getDeclaredField(name);
+                wasAccessible = field.isAccessible();
+                field.setAccessible(true);
+                return field.get(obj);
+            } catch (Exception e) {
+                // ignore
+            } finally {
+                if (field != null) {
+                    field.setAccessible(wasAccessible);
+                }
+            }
+            c = c.getSuperclass();
         }
+
+        return null;
     }
 
     /**
@@ -2026,13 +2040,18 @@ public class GriffonClassUtils {
     public static Field getField(@Nonnull Class<?> clazz, @Nonnull String name) {
         requireNonNull(clazz, ERROR_CLAZZ_NULL);
         requireNonBlank(name, ERROR_NAME_BLANK);
-        Field f;
-        try {
-            f = clazz.getDeclaredField(name);
-            return f;
-        } catch (Exception e) {
-            return null;
+
+        Class c = clazz;
+        while (c != null && !c.equals(Object.class)) {
+            Field field = null;
+            try {
+                return c.getDeclaredField(name);
+            } catch (Exception e) {
+                // ignore
+            }
+            c = c.getSuperclass();
         }
+        return null;
     }
 
     /**
