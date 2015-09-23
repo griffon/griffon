@@ -18,6 +18,7 @@ package editor
 import griffon.core.artifact.GriffonView
 import griffon.metadata.ArtifactProviderFor
 
+import javax.swing.event.ChangeListener
 import java.awt.BorderLayout
 
 import static griffon.util.GriffonApplicationUtils.isMacOSX
@@ -57,7 +58,15 @@ class ContainerView {
                 borderLayout()
                 tabbedPane(id: 'tabGroup', constraints: BorderLayout.CENTER)
                 noparent {
-                    tabGroup.addChangeListener(model)
+                    tabGroup.addChangeListener({ e ->
+                        int selectedIndex = e.source.selectedIndex
+                        if (selectedIndex < 0) {
+                            model.mvcIdentifier = null
+                        } else {
+                            def tab = e.source[selectedIndex]
+                            model.mvcIdentifier = tab.getClientProperty('mvcIdentifier')
+                        }
+                    } as ChangeListener)
                 }
             }
         }

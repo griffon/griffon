@@ -114,9 +114,6 @@ can use it to create stable bindings. This is the reason for making `DocumentMod
 can see the former listens to changes on the latter and copying the values over. This happens every time the application
 changes the value of _documentModel.document_ due to the ``PropertyChangeListener``s that were put into place.
 
-icon:bolt[] The final remark on this model class is that it implements the `javafx.beans.value.ChangeListener` interface.
-In this way the model instance can listen to tab selection changes and update the _documentModel_ property.
-
 icon:bolt[] Let's move to the View. Open up `ContainerView.java` and paste the following into it
 
 [source,java,options="nowrap"]
@@ -128,6 +125,9 @@ include::{editor-javafx-java}/griffon-app/views/editor/ContainerView.java[lines=
 Here we find a `Scene` whose contents come from an FXML file. The file name is determined using a naming convention, in
 this case it's the fully qualified View class name without the `View` suffix. These are the contents of said file.
 
+icon:bolt[] Also, the `view` registers an anonymous `javafx.beans.value.ChangeListener` to listen to tab selection
+changes and update the _documentModel_ property found in the `model`.
+
 [source,java,options="nowrap"]
 [subs="verbatim,"attributes"]
 .griffon-app/resources/editor/container.fxml
@@ -137,8 +137,7 @@ include::{editor-javafx-java}/griffon-app/resources/editor/container.fxml[]
 
 This file defines a `MenuBar` and a tab container (a `TabPane`) named _tabGroup_. This tab container is exposed
 to the outside world via a getter method; we'll see why it's done this way when the second MVC group comes into play.
-The View is also responsible for managing a `FileChooser` that will be used to select files for reading. Also, the
-`model` is registered as a change listener with the _tabGroup_ field.
+The View is also responsible for managing a `FileChooser` that will be used to select files for reading.
 
 We can define a few of the action properties using a resource bundle, from the example the mnemonic and accelerator
 properties. Paste the following into `messages.properties`.

@@ -17,13 +17,10 @@ package editor;
 
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.control.Tab;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 
 @ArtifactProviderFor(GriffonModel.class)
-public class ContainerModel extends AbstractGriffonModel implements ChangeListener<Tab> {
+public class ContainerModel extends AbstractGriffonModel {
     private static final String MVC_IDENTIFIER = "mvcIdentifier";
     private final DocumentModel documentModel = new DocumentModel();
     private String mvcIdentifier;
@@ -51,10 +48,5 @@ public class ContainerModel extends AbstractGriffonModel implements ChangeListen
 
     public DocumentModel getDocumentModel() {
         return documentModel;
-    }
-
-    @Override
-    public void changed(ObservableValue<? extends Tab> observable, Tab oldTab, Tab newTab) {
-        setMvcIdentifier(newTab != null ? newTab.getId() : null);
     }
 }

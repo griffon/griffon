@@ -108,9 +108,6 @@ can use it to create stable bindings. This is the reason for making `DocumentMod
 can see the former listens to changes on the latter and copying the values over. This happens every time the application
 changes the value of _documentModel.document_ due to the ``PropertyChangeListener``s that were put into place.
 
-The final remark on this model class is that it implements the `javax.swing.event.ChangeListener` interface. In this
-way the model instance can listen to tab selection changes and update the _documentModel_ property.
-
 Let's move to the View. Open up `ContainerView.java` and paste the following into it
 
 [source,java,options="nowrap"]
@@ -123,7 +120,8 @@ Here we find a `Window` object containing a `JMenuBar` and a tab container (a `J
 This tab container is exposed to the outside world via a getter method; we'll see why it's done this way when the
 second MVC group comes into play. The View is also responsible for managing a `JFileChooser` that will be used to
 select files for reading. Notice the conditional enabling of the `save` action given the state of the `dirty` property
-coming from `model.documentModel`. Also, the `model` is registered as a change listener with the _tabGroup_ field.
+coming from `model.documentModel`. Also, the `view` registers an anonymous `javax.swing.event.ChangeListener` to listen
+to tab selection changes and update the _documentModel_ property found in the `model`.
 
 We can define a few of the action properties using a resource bundle, from the example the mnemonic and accelerator
 properties. Paste the following into `messages.properties`.

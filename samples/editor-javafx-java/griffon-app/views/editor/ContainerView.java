@@ -80,7 +80,9 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         ((Group) scene.getRoot()).getChildren().addAll(node);
         connectActions(node, controller);
 
-        tabGroup.getSelectionModel().selectedItemProperty().addListener(model);
+        tabGroup.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
+            model.setMvcIdentifier(newTab != null ? newTab.getId() : null);
+        });
 
         Action saveAction = actionFor(controller, "save");
         model.getDocumentModel().addPropertyChangeListener("dirty", (e) -> saveAction.setEnabled((Boolean) e.getNewValue()));

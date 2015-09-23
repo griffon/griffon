@@ -19,14 +19,9 @@ import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 
-import javax.swing.JComponent;
-import javax.swing.JTabbedPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 @ArtifactProviderFor(GriffonModel.class)
-public class ContainerModel extends AbstractGriffonModel implements ChangeListener {
-    private static final String MVC_IDENTIFIER = "mvcIdentifier";
+public class ContainerModel extends AbstractGriffonModel {
+    public static final String MVC_IDENTIFIER = "mvcIdentifier";
     private final DocumentModel documentModel = new DocumentModel();
     private String mvcIdentifier;
 
@@ -53,17 +48,5 @@ public class ContainerModel extends AbstractGriffonModel implements ChangeListen
 
     public DocumentModel getDocumentModel() {
         return documentModel;
-    }
-
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
-        int selectedIndex = tabbedPane.getSelectedIndex();
-        if (selectedIndex < 0) {
-            setMvcIdentifier(null);
-        } else {
-            JComponent tab = (JComponent) tabbedPane.getComponentAt(selectedIndex);
-            setMvcIdentifier((String) tab.getClientProperty(MVC_IDENTIFIER));
-        }
     }
 }
