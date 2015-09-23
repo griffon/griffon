@@ -21,12 +21,15 @@ import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView;
 
 import javax.annotation.Nullable;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -88,7 +91,19 @@ public class ContainerView extends AbstractSwingGriffonView {
 
         window.getContentPane().setLayout(new BorderLayout());
         tabGroup = new JTabbedPane();
-        tabGroup.addChangeListener(model);
+        tabGroup.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
+                int selectedIndex = tabbedPane.getSelectedIndex();
+                if (selectedIndex < 0) {
+                    model.setMvcIdentifier(null);
+                } else {
+                    JComponent tab = (JComponent) tabbedPane.getComponentAt(selectedIndex);
+                    model.setMvcIdentifier((String) tab.getClientProperty(ContainerModel.MVC_IDENTIFIER));
+                }
+            }
+        });
         window.getContentPane().add(tabGroup, BorderLayout.CENTER);
     }
 

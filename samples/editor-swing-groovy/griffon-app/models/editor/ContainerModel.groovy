@@ -20,11 +20,8 @@ import griffon.metadata.ArtifactProviderFor
 import griffon.transform.Observable
 import griffon.transform.PropertyListener
 
-import javax.swing.event.ChangeEvent
-import javax.swing.event.ChangeListener
-
 @ArtifactProviderFor(GriffonModel)
-class ContainerModel implements ChangeListener {
+class ContainerModel {
     final DocumentModel documentModel = new DocumentModel()
 
     @Observable
@@ -40,16 +37,5 @@ class ContainerModel implements ChangeListener {
             document = new Document()
         }
         documentModel.document = document
-    }
-
-    // listens to tab selection; updates the mvcId property
-    void stateChanged(ChangeEvent e) {
-        int selectedIndex = e.source.selectedIndex
-        if (selectedIndex < 0) {
-            setMvcIdentifier(null)
-        } else {
-            def tab = e.source[selectedIndex]
-            setMvcIdentifier(tab.getClientProperty('mvcIdentifier'))
-        }
     }
 }
