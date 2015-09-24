@@ -219,7 +219,15 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
         @Override
         @SuppressWarnings("unchecked")
         protected void doConfigure() {
-            for (Class<?> clazz : testCase.getClass().getDeclaredClasses()) {
+            Class<?> clazz = testCase.getClass();
+            while (clazz != null) {
+                harvestBindings(clazz);
+                clazz = clazz.getSuperclass();
+            }
+        }
+
+        protected void harvestBindings(@Nonnull Class<?> rootClass) {
+            for (Class<?> clazz : rootClass.getDeclaredClasses()) {
                 BindTo bindTo = clazz.getAnnotation(BindTo.class);
                 if (bindTo == null) continue;
                 List<Annotation> qualifiers = harvestQualifiers(clazz);
@@ -253,7 +261,15 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
         @Override
         @SuppressWarnings("unchecked")
         protected void doConfigure() {
-            for (Field field : testCase.getClass().getDeclaredFields()) {
+            Class<?> clazz = testCase.getClass();
+            while (clazz != null) {
+                harvestBindings(clazz);
+                clazz = clazz.getSuperclass();
+            }
+        }
+
+        protected void harvestBindings(@Nonnull Class<?> rootClass) {
+            for (Field field : rootClass.getDeclaredFields()) {
                 BindTo bindTo = field.getAnnotation(BindTo.class);
                 if (bindTo == null) continue;
                 List<Annotation> qualifiers = harvestQualifiers(field);
