@@ -154,5 +154,18 @@ public abstract class AbstractContext implements Context {
 <span class="nc" id="L154">        Object value = get(key);</span>
 <span class="nc bnc" id="L155" title="All 2 branches missed.">        return value != null ? String.valueOf(value) : defaultValue;</span>
     }
+
+    @Nullable
+    @Override
+    public &lt;T&gt; T getAs(@Nonnull String key, @Nonnull Class&lt;T&gt; type) {
+<span class="nc" id="L161">        return type.cast(get(key));</span>
+    }
+
+    @Nullable
+    @Override
+    public &lt;T&gt; T getAs(@Nonnull String key, @Nonnull Class&lt;T&gt; type, @Nullable T defaultValue) {
+<span class="nc" id="L167">        Object value = get(key);</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">        return type.cast(value != null ? value : defaultValue);</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
