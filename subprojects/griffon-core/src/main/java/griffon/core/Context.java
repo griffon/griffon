@@ -225,4 +225,14 @@ public interface Context {
      */
     @Nullable
     <T> T getAs(@Nonnull String key, @Nonnull Class<T> type, @Nullable T defaultValue);
+
+    /**
+     * Inject properties and members annotated with {@code griffon.inject.Contextal}.
+     *
+     * @param instance the instance on which contextual members will be injected.
+     * @param <T>      the type of the instance
+     * @return the instance on which contextual members where injected.
+     */
+    @Nonnull
+    <T> T injectMembers(@Nonnull T instance);
 }
