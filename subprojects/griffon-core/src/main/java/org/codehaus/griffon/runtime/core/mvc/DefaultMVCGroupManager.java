@@ -408,6 +408,21 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                 setPropertyOrFieldValueNoException(member, parentMemberName, null);
             }
         }
+
+        destroyContextualMemberProperties(type, member);
+    }
+
+    protected void destroyContextualMemberProperties(@Nonnull String type, @Nonnull GriffonArtifact member) {
+        for (Field field : getAllDeclaredFields(member.getClass())) {
+            if (field.getAnnotation(Contextual.class) != null) {
+                try {
+                    setFieldValue(member, field.getName(), null);
+                } catch (FieldException e) {
+                    throw new IllegalStateException("Could not nullify field " +
+                        field.getName() + "' in " + type + " (" + member.getClass().getName() + ")", e);
+                }
+            }
+        }
     }
 
     protected void destroyNonArtifactMember(@Nonnull String type, @Nonnull Object member, boolean fireDestructionEvents) {
