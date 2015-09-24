@@ -28,6 +28,7 @@ class ContextSpec extends Specification {
 
     def setup() {
         ctx1['foo'] = 'foo'
+        ctx1['class'] = String
         ctx2['bar'] = 'bar'
         ctx3['bar'] = 'bar'
         ctx3['foo'] = 'bar'
@@ -60,6 +61,15 @@ class ContextSpec extends Specification {
         'foo' | 'getAsString'  | 'foo' | null
     }
 
+    def "Find values on context 1 using typed default"() {
+        expect:
+        value == ctx1."$methodName"(key, type, defaultValue)
+
+        where:
+        key   | methodName | value  | type  | defaultValue
+        'key' | 'getAs'    | String | Class | String
+    }
+
     def "Find values on context 1 using typed getters"() {
         expect:
         value == ctx1."$methodName"(key)
@@ -72,6 +82,16 @@ class ContextSpec extends Specification {
         'key' | 'getAsFloat'   | 0f
         'key' | 'getAsDouble'  | 0d
         'key' | 'getAsString'  | null
+    }
+
+    def "Find values on context 1 using typed getter"() {
+        expect:
+        value == ctx1."$methodName"(key, type)
+
+        where:
+        key     | methodName | type  | value
+        'key'   | 'getAs'    | Class | null
+        'class' | 'getAs'    | Class | String
     }
 
     def "Find values on context 1"() {
@@ -128,8 +148,8 @@ class ContextSpec extends Specification {
 
         where:
         context | keySet
-        ctx1    | ['foo'] as Set
-        ctx2    | ['foo', 'bar'] as Set
+        ctx1    | ['foo', 'class'] as Set
+        ctx2    | ['foo', 'bar', 'class'] as Set
     }
 
     def "ContainsKey on child context"() {
