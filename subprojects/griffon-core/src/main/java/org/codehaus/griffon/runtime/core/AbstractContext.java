@@ -16,15 +16,28 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.core.Context;
+import griffon.exceptions.FieldException;
+import griffon.inject.Contextual;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
+import static griffon.util.AnnotationUtils.annotationsOfMethodParameter;
+import static griffon.util.AnnotationUtils.findAnnotation;
+import static griffon.util.AnnotationUtils.nameFor;
+import static griffon.util.GriffonClassUtils.getAllDeclaredFields;
+import static griffon.util.GriffonClassUtils.getPropertyDescriptors;
+import static griffon.util.GriffonClassUtils.setFieldValue;
 import static griffon.util.TypeUtils.castToBoolean;
 import static griffon.util.TypeUtils.castToDouble;
 import static griffon.util.TypeUtils.castToFloat;
 import static griffon.util.TypeUtils.castToInt;
 import static griffon.util.TypeUtils.castToLong;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
@@ -166,5 +179,54 @@ public abstract class AbstractContext implements Context {
     public <T> T getAs(@Nonnull String key, @Nonnull Class<T> type, @Nullable T defaultValue) {
         Object value = get(key);
         return type.cast(value != null ? value : defaultValue);
+    }
+
+    @Nonnull
+    @Override
+    public <T> T injectMembers(@Nonnull T instance) {
+        requireNonNull(instance, "Argument 'instance' must not be null");
+
+        for (PropertyDescriptor descriptor : getPropertyDescriptors(instance.getClass())) {
+            Method method = descriptor.getWriteMethod();
+            if (method != null && method.getAnnotation(Contextual.class) != null) {
+                String key = nameFor(method);
+                Object arg = get(key);
+
+                Nonnull nonNull = findAnnotation(annotationsOfMethodParameter(method, 0), Nonnull.class);
+                if (arg == null && nonNull != null) {
+                    throw new IllegalStateException("Could not find an instance of type " +
+                        method.getParameterTypes()[0].getName() + " under key '" + key +
+                        "' to be injected on property '" + descriptor.getName() +
+                        "' (" + instance.getClass().getName() + "). Property does not accept null values.");
+                }
+
+                try {
+                    method.invoke(instance, arg);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        }
+
+        for (Field field : getAllDeclaredFields(instance.getClass())) {
+            if (field.getAnnotation(Contextual.class) != null) {
+                String key = nameFor(field);
+                Object arg = get(key);
+                if (arg == null && field.getAnnotation(Nonnull.class) != null) {
+                    throw new IllegalStateException("Could not find an instance of type " +
+                        field.getType().getName() + " under key '" + key +
+                        "' to be injected on field '" + field.getName() +
+                        "' (" + instance.getClass().getName() + "). Field does not accept null values.");
+                }
+
+                try {
+                    setFieldValue(instance, field.getName(), arg);
+                } catch (FieldException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        }
+
+        return instance;
     }
 }

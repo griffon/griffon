@@ -15,10 +15,13 @@
  */
 package griffon.core
 
+import griffon.inject.Contextual
 import org.codehaus.griffon.runtime.core.DefaultContext
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
+
+import javax.inject.Named
 
 @Unroll
 class ContextSpec extends Specification {
@@ -166,5 +169,27 @@ class ContextSpec extends Specification {
         ctx2.hasKey('bar')
         ctx1.hasKey('foo')
         !ctx1.hasKey('bar')
+    }
+
+    def "Inject contextual members"() {
+        given:
+        Bean bean = new Bean()
+
+        when:
+        ctx2.injectMembers(bean)
+
+        then:
+        bean.@foo == 'foo'
+        bean.@bar == 'bar'
+    }
+
+    static class Bean {
+        @Contextual @Named('foo')
+        private String foo
+
+        private String bar
+
+        @Contextual
+        void setBar(@Named('bar') String s) { bar = s }
     }
 }
