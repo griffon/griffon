@@ -25,8 +25,6 @@ import org.junit.Rule
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import javax.inject.Singleton
-
 import static com.google.inject.util.Providers.guicify
 import static griffon.util.AnnotationUtils.named
 

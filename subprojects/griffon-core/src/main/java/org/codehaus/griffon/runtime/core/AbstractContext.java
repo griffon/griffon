@@ -154,4 +154,17 @@ public abstract class AbstractContext implements Context {
         Object value = get(key);
         return value != null ? String.valueOf(value) : defaultValue;
     }
+
+    @Nullable
+    @Override
+    public <T> T getAs(@Nonnull String key, @Nonnull Class<T> type) {
+        return type.cast(get(key));
+    }
+
+    @Nullable
+    @Override
+    public <T> T getAs(@Nonnull String key, @Nonnull Class<T> type, @Nullable T defaultValue) {
+        Object value = get(key);
+        return type.cast(value != null ? value : defaultValue);
+    }
 }

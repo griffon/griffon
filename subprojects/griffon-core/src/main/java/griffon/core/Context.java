@@ -200,4 +200,29 @@ public interface Context {
      */
     @Nullable
     String getAsString(@Nonnull String key, @Nullable String defaultValue);
+
+    /**
+     * /**
+     * Finds a value associated with the given key. The value is
+     * converted to type <tt>T</tt> if found.
+     *
+     * @param key  the key to search
+     * @param type the type to be returned
+     * @since 2.5.0
+     */
+    @Nullable
+    <T> T getAs(@Nonnull String key, @Nonnull Class<T> type);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to type <tt>T</tt> if found. If not found then the
+     * supplied <tt>defaultValue</tt> will be returned.
+     *
+     * @param key          the key to search
+     * @param type         the type to be returned
+     * @param defaultValue the value to be returned if the key is not found
+     * @since 2.5.0
+     */
+    @Nullable
+    <T> T getAs(@Nonnull String key, @Nonnull Class<T> type, @Nullable T defaultValue);
 }
