@@ -314,7 +314,11 @@ class MVCGroupSpec extends Specification {
         child.controller.value == 'VALUE'
         child.controller.val == 'VALUE'
 
-        cleanup:
+        when:
+        def controller = child.controller
         root.destroy()
+
+        then:
+        !controller.value
     }
 }
