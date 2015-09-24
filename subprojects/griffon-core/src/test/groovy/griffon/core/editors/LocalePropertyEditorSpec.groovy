@@ -23,20 +23,18 @@ import java.beans.PropertyEditor
 class LocalePropertyEditorSpec extends PropertyEditorSpecSupport {
     void "Locale literal '#literal' should be equal to #value"() {
         setup:
-
         PropertyEditor editor = new LocalePropertyEditor()
 
         when:
         editor.value = literal
 
         then:
-
         value == editor.value
 
         where:
         literal       | value
         null          | null
-        ''            | Locale.default
+        ''            | Locale.US // force Locale due to base class. See https://github.com/griffon/griffon/issues/111
         'de'          | Locale.GERMAN
         'de_CH'       | new Locale('de', 'CH')
         'de_CH_Basel' | new Locale('de', 'CH', 'Basel')
