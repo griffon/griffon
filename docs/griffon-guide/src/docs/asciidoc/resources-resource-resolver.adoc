@@ -31,6 +31,29 @@ in `key` is null.
  - Object resolveResource(String key, Map args, Object defaultValue)
  - Object resolveResource(String key, Map args, Locale locale, Object defaultValue)
 
+There is also another set of methods that convert the resource value using ``PropertyEditor``s
+
+ - <T> T resolveResourceConverted(String key, Class<T> type)
+ - <T> T resolveResourceConverted(String key, Locale locale, Class<T> type)
+ - <T> T resolveResourceConverted(String key, Object[] args, Class<T> type)
+ - <T> T resolveResourceConverted(String key, Object[] args, Locale locale, Class<T> type)
+ - <T> T resolveResourceConverted(String key, List args, Class<T> type)
+ - <T> T resolveResourceConverted(String key, List args, Locale locale, Class<T> type)
+ - <T> T resolveResourceConverted(String key, Map args, Class<T> type)
+ - <T> T resolveResourceConverted(String key, Map args, Locale locale, Class<T> type)
+ - <T> T resolveResorceValue(String key, Locale locale, Class<T> type)
+
+with default value support too
+
+ - <T> T resolveResourceConverted(String key, Object defaultValue, Class<T> type)
+ - <T> T resolveResourceConverted(String key, Locale locale, Object defaultValue, Class<T> type)
+ - <T> T resolveResourceConverted(String key, Object[] args, Object defaultValue, Class<T> type)
+ - <T> T resolveResourceConverted(String key, Object[] args, Locale locale, Object defaultValue, Class<T> type)
+ - <T> T resolveResourceConverted(String key, List args, Object defaultValue, Class<T> type)
+ - <T> T resolveResourceConverted(String key, List args, Locale locale, Object defaultValue, Class<T> type)
+ - <T> T resolveResourceConverted(String key, Map args, Object defaultValue, Class<T> type)
+ - <T> T resolveResourceConverted(String key, Map args, Locale locale, Object defaultValue, Class<T> type)
+
 The simplest way to resolve a message thus results like this
 
 [source,groovy,options="nowrap"]
@@ -150,6 +173,8 @@ PropertyEditor propertyEditor = PropertyEditorResolver.findEditor(Icon)
 propertyEditor.setAsText(String.valueOf(iconValue))
 Icon icon = propertyEditor.getValue()
 ----
+
+As an alternative you may call `resolveResourceConverted` instead.
 
 == Reference Keys
 

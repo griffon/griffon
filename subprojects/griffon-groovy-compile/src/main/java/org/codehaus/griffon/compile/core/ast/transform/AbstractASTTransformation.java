@@ -285,6 +285,8 @@ public abstract class AbstractASTTransformation implements ASTTransformation {
                 Parameter p = method.getParameters()[i];
                 parameters[i] = new Parameter(makeClassSafe(p.getType()), p.getName());
                 parameters[i].getType().setGenericsTypes(p.getType().getGenericsTypes());
+                parameters[i].getType().setGenericsPlaceHolder(p.getType().isGenericsPlaceHolder());
+                parameters[i].getType().setUsingGenerics(p.getType().isUsingGenerics());
                 parameters[i].addAnnotations(p.getAnnotations());
                 variables.add(var(p.getName()));
             }
@@ -296,6 +298,7 @@ public abstract class AbstractASTTransformation implements ASTTransformation {
             returnType.addAnnotations(method.getReturnType().getAnnotations());
             returnType.setGenericsTypes(method.getReturnType().getGenericsTypes());
             returnType.setGenericsPlaceHolder(method.getReturnType().isGenericsPlaceHolder());
+            returnType.setUsingGenerics(method.getReturnType().isUsingGenerics());
 
             boolean isVoid = ClassHelper.VOID_TYPE.equals(method.getReturnType());
             Expression delegateExpression = call(

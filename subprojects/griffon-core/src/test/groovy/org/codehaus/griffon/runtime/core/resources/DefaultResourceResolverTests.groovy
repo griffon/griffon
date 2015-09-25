@@ -20,6 +20,8 @@ import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
 import griffon.core.ApplicationClassLoader
 import griffon.core.CallableWithArgs
+import griffon.core.editors.IntegerPropertyEditor
+import griffon.core.editors.PropertyEditorResolver
 import griffon.core.resources.NoSuchResourceException
 import griffon.core.resources.ResourceHandler
 import griffon.core.resources.ResourceResolver
@@ -118,6 +120,31 @@ class DefaultResourceResolverTests {
         shouldFail(NoSuchResourceException) {
             resourceResolver.resolveResource('bogus', [] as Object[], Locale.default)
         }
+
+        shouldFail(NoSuchResourceException) {
+            resourceResolver.resolveResourceConverted('bogus', Integer)
+        }
+        shouldFail(NoSuchResourceException) {
+            resourceResolver.resolveResourceConverted('bogus', [], Integer)
+        }
+        shouldFail(NoSuchResourceException) {
+            resourceResolver.resolveResourceConverted('bogus', [:], Integer)
+        }
+        shouldFail(NoSuchResourceException) {
+            resourceResolver.resolveResourceConverted('bogus', [] as Object[], Integer)
+        }
+        shouldFail(NoSuchResourceException) {
+            resourceResolver.resolveResourceConverted('bogus', Locale.default, Integer)
+        }
+        shouldFail(NoSuchResourceException) {
+            resourceResolver.resolveResourceConverted('bogus', [], Locale.default, Integer)
+        }
+        shouldFail(NoSuchResourceException) {
+            resourceResolver.resolveResourceConverted('bogus', [:], Locale.default, Integer)
+        }
+        shouldFail(NoSuchResourceException) {
+            resourceResolver.resolveResourceConverted('bogus', [] as Object[], Locale.default, Integer)
+        }
     }
 
     @Test
@@ -140,6 +167,35 @@ class DefaultResourceResolverTests {
         assert 'bogus' == resourceResolver.resolveResource('bogus', [], Locale.default, null)
         assert 'bogus' == resourceResolver.resolveResource('bogus', [:], Locale.default, null)
         assert 'bogus' == resourceResolver.resolveResource('bogus', [] as Object[], Locale.default, null)
+    }
+
+    @Test
+    void exerciseAllMethodsWithConverter() {
+        PropertyEditorResolver.clear()
+        PropertyEditorResolver.registerEditor(Integer, IntegerPropertyEditor)
+
+        try {
+            Integer defaultValue = 21
+            assert 21 == resourceResolver.resolveResourceConverted('bogus', defaultValue, Integer)
+            assert 21 == resourceResolver.resolveResourceConverted('bogus', [], defaultValue, Integer)
+            assert 21 == resourceResolver.resolveResourceConverted('bogus', [:], defaultValue, Integer)
+            assert 21 == resourceResolver.resolveResourceConverted('bogus', [] as Object[], defaultValue, Integer)
+            assert 21 == resourceResolver.resolveResourceConverted('bogus', Locale.default, defaultValue, Integer)
+            assert 21 == resourceResolver.resolveResourceConverted('bogus', [], Locale.default, defaultValue, Integer)
+            assert 21 == resourceResolver.resolveResourceConverted('bogus', [:], Locale.default, defaultValue, Integer)
+            assert 21 == resourceResolver.resolveResourceConverted('bogus', [] as Object[], Locale.default, defaultValue, Integer)
+
+            assert 42 == resourceResolver.resolveResourceConverted('integer', Integer)
+            assert 42 == resourceResolver.resolveResourceConverted('integer', [], Integer)
+            assert 42 == resourceResolver.resolveResourceConverted('integer', [:], Integer)
+            assert 42 == resourceResolver.resolveResourceConverted('integer', [] as Object[], Integer)
+            assert 42 == resourceResolver.resolveResourceConverted('integer', Locale.default, Integer)
+            assert 42 == resourceResolver.resolveResourceConverted('integer', [], Locale.default, Integer)
+            assert 42 == resourceResolver.resolveResourceConverted('integer', [:], Locale.default, Integer)
+            assert 42 == resourceResolver.resolveResourceConverted('integer', [] as Object[], Locale.default, Integer)
+        } finally {
+            PropertyEditorResolver.clear()
+        }
     }
 
     @Test

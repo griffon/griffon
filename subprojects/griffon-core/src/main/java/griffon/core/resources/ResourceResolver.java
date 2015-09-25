@@ -232,6 +232,238 @@ public interface ResourceResolver {
     Object resolveResource(@Nonnull String key, @Nonnull Map<String, Object> args, @Nonnull Locale locale, @Nullable Object defaultValue);
 
     /**
+     * Try to resolve the resource. The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     *
+     * @param key  Key to lookup, such as 'sample.SampleModel.icon'
+     * @param type the type to be returned
+     * @return The resolved resource at the given key for the default locale
+     * @throws NoSuchResourceException if no resource is found
+     * @since 2.5.0
+     */
+    @Nonnull
+    <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Class<T> type) throws NoSuchResourceException;
+
+    /**
+     * Try to resolve the resource. The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     *
+     * @param key    Key to lookup, such as 'sample.SampleModel.icon'
+     * @param locale Locale in which to lookup
+     * @param type   the type to be returned
+     * @return The resolved resource at the given key for the given locale
+     * @throws NoSuchResourceException if no resource is found
+     * @since 2.5.0
+     */
+    @Nonnull
+    <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Locale locale, @Nonnull Class<T> type) throws NoSuchResourceException;
+
+    /**
+     * Try to resolve the resource. The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     *
+     * @param key  Key to lookup, such as 'sample.SampleModel.icon'
+     * @param args Arguments that will be filled in for params within the resource (params look like "{0}" within a
+     *             resource, but this might differ between implementations), or null if none.
+     * @param type the type to be returned
+     * @return The resolved resource at the given key for the default locale
+     * @throws NoSuchResourceException if no resource is found
+     * @since 2.5.0
+     */
+    @Nonnull
+    <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Object[] args, @Nonnull Class<T> type) throws NoSuchResourceException;
+
+    /**
+     * Try to resolve the resource. The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     *
+     * @param key    Key to lookup, such as 'sample.SampleModel.icon'
+     * @param args   Arguments that will be filled in for params within the resource (params look like "{0}" within a
+     *               resource, but this might differ between implementations), or null if none.
+     * @param locale Locale in which to lookup
+     * @param type   the type to be returned
+     * @return The resolved resource at the given key for the given locale
+     * @throws NoSuchResourceException if no resource is found
+     * @since 2.5.0
+     */
+    @Nonnull
+    <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Object[] args, @Nonnull Locale locale, @Nonnull Class<T> type) throws NoSuchResourceException;
+
+    /**
+     * Try to resolve the resource. The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     *
+     * @param key  Key to lookup, such as 'sample.SampleModel.icon'
+     * @param args Arguments that will be filled in for params within the resource (params look like "{0}" within a
+     *             resource, but this might differ between implementations), or null if none.
+     * @param type the type to be returned
+     * @return The resolved resource at the given key for the default locale
+     * @throws NoSuchResourceException if no resource is found
+     * @since 2.5.0
+     */
+    @Nonnull
+    <T> T resolveResourceConverted(@Nonnull String key, @Nonnull List<?> args, @Nonnull Class<T> type) throws NoSuchResourceException;
+
+    /**
+     * Try to resolve the resource. The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     *
+     * @param key    Key to lookup, such as 'sample.SampleModel.icon'
+     * @param args   Arguments that will be filled in for params within the resource (params look like "{0}" within a
+     *               resource, but this might differ between implementations), or null if none.
+     * @param locale Locale in which to lookup
+     * @param type   the type to be returned
+     * @return The resolved resource at the given key for the given locale
+     * @throws NoSuchResourceException if no resource is found
+     * @since 2.5.0
+     */
+    @Nonnull
+    <T> T resolveResourceConverted(@Nonnull String key, @Nonnull List<?> args, @Nonnull Locale locale, @Nonnull Class<T> type) throws NoSuchResourceException;
+
+    /**
+     * Try to resolve the resource. Returns default value if no resource was found.
+     * The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     *
+     * @param key          Key to lookup, such as 'sample.SampleModel.icon'
+     * @param defaultValue Message to return if the lookup fails
+     * @param type         the type to be returned
+     * @return The resolved resource at the given key for the default locale
+     * @since 2.5.0
+     */
+    @Nullable
+    <T> T resolveResourceConverted(@Nonnull String key, @Nullable T defaultValue, @Nonnull Class<T> type);
+
+    /**
+     * Try to resolve the resource. Returns default value if no resource was found.
+     * The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     *
+     * @param key          Key to lookup, such as 'sample.SampleModel.icon'
+     * @param locale       Locale in which to lookup
+     * @param defaultValue Message to return if the lookup fails
+     * @param type         the type to be returned
+     * @return The resolved resource at the given key for the given locale
+     * @since 2.5.0
+     */
+    @Nullable
+    <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Locale locale, @Nullable T defaultValue, @Nonnull Class<T> type);
+
+    /**
+     * Try to resolve the resource. Returns default value if no resource was found.
+     * The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     *
+     * @param key          Key to lookup, such as 'sample.SampleModel.icon'
+     * @param args         Arguments that will be filled in for params within the resource (params look like "{0}"
+     *                     within a resource, but this might differ between implementations), or null if none.
+     * @param defaultValue Message to return if the lookup fails
+     * @param type         the type to be returned
+     * @return The resolved resource at the given key for the default locale
+     * @since 2.5.0
+     */
+    @Nullable
+    <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Object[] args, @Nullable T defaultValue, @Nonnull Class<T> type);
+
+    /**
+     * Try to resolve the resource. Returns default value if no resource was found.
+     * The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     *
+     * @param key          Key to lookup, such as 'sample.SampleModel.icon'
+     * @param args         Arguments that will be filled in for params within the resource (params look like "{0}"
+     *                     within a resource, but this might differ between implementations), or null if none.
+     * @param locale       Locale in which to lookup
+     * @param defaultValue Message to return if the lookup fails
+     * @param type         the type to be returned
+     * @return The resolved resource at the given key for the given locale
+     * @since 2.5.0
+     */
+    @Nullable
+    <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Object[] args, @Nonnull Locale locale, @Nullable T defaultValue, @Nonnull Class<T> type);
+
+    /**
+     * Try to resolve the resource. Returns default value if no resource was found.
+     * The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     *
+     * @param key          Key to lookup, such as 'sample.SampleModel.icon'
+     * @param args         Arguments that will be filled in for params within the resource (params look like "{0}"
+     *                     within a resource, but this might differ between implementations), or null if none.
+     * @param defaultValue Message to return if the lookup fails
+     * @param type         the type to be returned
+     * @return The resolved resource at the given key for the default locale
+     * @since 2.5.0
+     */
+    @Nullable
+    <T> T resolveResourceConverted(@Nonnull String key, @Nonnull List<?> args, @Nullable T defaultValue, @Nonnull Class<T> type);
+
+    /**
+     * Try to resolve the resource. Returns default value if no resource was found.
+     * The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     *
+     * @param key          Key to lookup, such as 'sample.SampleModel.icon'
+     * @param args         Arguments that will be filled in for params within the resource (params look like "{0}"
+     *                     within a resource, but this might differ between implementations), or null if none.
+     * @param locale       Locale in which to lookup
+     * @param defaultValue Message to return if the lookup fails
+     * @param type         the type to be returned
+     * @return The resolved resource at the given key for the given locale
+     * @since 2.5.0
+     */
+    @Nullable
+    <T> T resolveResourceConverted(@Nonnull String key, @Nonnull List<?> args, @Nonnull Locale locale, @Nullable T defaultValue, @Nonnull Class<T> type);
+
+    /**
+     * Try to resolve the resource. The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     *
+     * @param key  Key to lookup, such as 'sample.SampleModel.icon'
+     * @param args Arguments that will be filled in for params within the resource (params look like "{:key}"
+     *             within a resource, but this might differ between implementations), or null if none.
+     * @param type the type to be returned
+     * @return The resolved resource at the given key for the default locale
+     * @throws NoSuchResourceException if no resource is found
+     * @since 2.5.0
+     */
+    @Nonnull
+    <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Map<String, Object> args, @Nonnull Class<T> type) throws NoSuchResourceException;
+
+    /**
+     * Try to resolve the resource. The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     *
+     * @param key    Key to lookup, such as 'sample.SampleModel.icon'
+     * @param args   Arguments that will be filled in for params within the resource (params look like "{:key}"
+     *               within a resource, but this might differ between implementations), or null if none.
+     * @param locale Locale in which to lookup
+     * @param type   the type to be returned
+     * @return The resolved resource at the given key for the given locale
+     * @throws NoSuchResourceException if no resource is found
+     * @since 2.5.0
+     */
+    @Nonnull
+    <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Map<String, Object> args, @Nonnull Locale locale, @Nonnull Class<T> type) throws NoSuchResourceException;
+
+    /**
+     * Try to resolve the resource. Returns default value if no resource was found.
+     * The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     *
+     * @param key          Key to lookup, such as 'sample.SampleModel.icon'
+     * @param args         Arguments that will be filled in for params within the resource (params look like "{:key}"
+     *                     within a resource, but this might differ between implementations), or null if none.
+     * @param defaultValue Message to return if the lookup fails
+     * @param type         the type to be returned
+     * @return The resolved resource at the given key for the default locale
+     * @since 2.5.0
+     */
+    @Nullable
+    <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Map<String, Object> args, @Nullable T defaultValue, @Nonnull Class<T> type);
+
+    /**
+     * Try to resolve the resource. Returns default value if no resource was found.
+     * The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     *
+     * @param key          Key to lookup, such as 'sample.SampleModel.icon'
+     * @param args         Arguments that will be filled in for params within the resource (params look like "{:key}"
+     *                     within a resource, but this might differ between implementations), or null if none.
+     * @param locale       Locale in which to lookup
+     * @param defaultValue Message to return if the lookup fails
+     * @param type         the type to be returned
+     * @return The resolved resource at the given key for the given locale
+     * @since 2.5.0
+     */
+    @Nullable
+    <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Map<String, Object> args, @Nonnull Locale locale, @Nullable T defaultValue, @Nonnull Class<T> type);
+
+    /**
      * <p>Resolve a resource given a key and a Locale.</p>
      * <p>
      * This method should use the default Locale if the locale argument is null. The {@code key} argument may refer to
