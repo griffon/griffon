@@ -19,10 +19,12 @@ import griffon.core.Configuration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.beans.PropertyEditor;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
+import static griffon.core.editors.PropertyEditorResolver.findEditor;
 import static griffon.util.CollectionUtils.toProperties;
 import static griffon.util.TypeUtils.castToBoolean;
 import static griffon.util.TypeUtils.castToDouble;
@@ -129,6 +131,30 @@ public class ConfigurationDecorator implements Configuration {
         return delegate.getAsString(key, defaultValue);
     }
 
+    @Nullable
+    @Override
+    public <T> T getAs(@Nonnull String key) {
+        return delegate.getAs(key);
+    }
+
+    @Nullable
+    @Override
+    public <T> T getAs(@Nonnull String key, @Nullable T defaultValue) {
+        return delegate.getAs(key, defaultValue);
+    }
+
+    @Nullable
+    @Override
+    public <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type) {
+        return delegate.getConverted(key, type);
+    }
+
+    @Nullable
+    @Override
+    public <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type, @Nullable T defaultValue) {
+        return delegate.getConverted(key, type, defaultValue);
+    }
+
     @Nonnull
     @Override
     public Properties asProperties() {
@@ -150,5 +176,19 @@ public class ConfigurationDecorator implements Configuration {
     @Override
     public ResourceBundle asResourceBundle() {
         return delegate.asResourceBundle();
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <T> T convertValue(@Nullable Object value, @Nonnull Class<T> type) {
+        if (value != null) {
+            if (type.isAssignableFrom(value.getClass())) {
+                return (T) value;
+            } else {
+                PropertyEditor editor = findEditor(type);
+                editor.setValue(value);
+                return (T) editor.getValue();
+            }
+        }
+        return null;
     }
 }

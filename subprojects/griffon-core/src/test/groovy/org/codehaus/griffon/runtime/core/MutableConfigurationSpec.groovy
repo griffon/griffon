@@ -21,6 +21,8 @@ import com.google.inject.AbstractModule
 import com.google.inject.Inject
 import griffon.core.Configuration
 import griffon.core.MutableConfiguration
+import griffon.core.editors.IntegerPropertyEditor
+import griffon.core.editors.PropertyEditorResolver
 import org.junit.Rule
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -41,11 +43,11 @@ class MutableConfigurationSpec extends Specification {
         expectedValue == configuration.get(key, defaultValue)
 
         where:
-        key            | defaultValue || expectedValue
-        'key.string'   | null         || 'string'
-        'key.string'   | 'foo'        || 'string'
-        'key.foo'      | null         || null
-        'key.foo'      | 'foo'        || 'foo'
+        key          | defaultValue || expectedValue
+        'key.string' | null         || 'string'
+        'key.string' | 'foo'        || 'string'
+        'key.foo'    | null         || null
+        'key.foo'    | 'foo'        || 'foo'
     }
 
     def 'Calling configuration.getAsString(#key, #defaultValue) returns #expectedValue'() {
@@ -53,11 +55,11 @@ class MutableConfigurationSpec extends Specification {
         expectedValue == configuration.getAsString(key, defaultValue)
 
         where:
-        key            | defaultValue || expectedValue
-        'key.string'   | null         || 'string'
-        'key.string'   | 'foo'        || 'string'
-        'key.foo'      | null         || null
-        'key.foo'      | 'foo'        || 'foo'
+        key          | defaultValue || expectedValue
+        'key.string' | null         || 'string'
+        'key.string' | 'foo'        || 'string'
+        'key.foo'    | null         || null
+        'key.foo'    | 'foo'        || 'foo'
     }
 
     def 'Calling configuration.set(#key, #value) stores #value'() {
@@ -179,6 +181,83 @@ class MutableConfigurationSpec extends Specification {
         'key.double.type'    || _
         'key.double.string'  || _
         'key.foo'            || _
+    }
+
+    def 'Calling configuration.removeAs(#key) removes the key'() {
+        given:
+        assert configuration instanceof MutableConfiguration
+        configuration.set('key.foo', 'foo')
+
+        expect:
+        configuration.containsKey(key)
+        null != configuration.get(key)
+
+        when:
+        String val = configuration.removeAs(key)
+
+        then:
+        !configuration.containsKey(key)
+
+        when:
+        def value = configuration.get(key)
+
+        then:
+        null == value
+
+        when:
+        value = configuration.remove(key)
+
+        then:
+        null == value
+
+        where:
+        key                  || _
+        'key.string'         || _
+        'key.boolean.string' || _
+        'key.int.string'     || _
+        'key.long.string'    || _
+        'key.float.string'   || _
+        'key.double.string'  || _
+        'key.foo'            || _
+    }
+
+    def 'Calling configuration.removeConverted(#key) removes the key'() {
+        given:
+        assert configuration instanceof MutableConfiguration
+        configuration.set('key.foo', 2)
+        PropertyEditorResolver.clear()
+        PropertyEditorResolver.registerEditor(Integer, IntegerPropertyEditor)
+
+        expect:
+        configuration.containsKey(key)
+        null != configuration.get(key)
+
+        when:
+        Integer val = configuration.removeConverted(key, Integer)
+
+        then:
+        !configuration.containsKey(key)
+
+        when:
+        def value = configuration.get(key)
+
+        then:
+        null == value
+
+        when:
+        value = configuration.remove(key)
+
+        then:
+        null == value
+
+        cleanup:
+        PropertyEditorResolver.clear()
+
+        where:
+        key              || _
+        'key.int.type'   || _
+        'key.int.string' || _
+        'key.foo'        || _
     }
 
     def 'Transforming configuration into flat Map and retrieving key #key'() {

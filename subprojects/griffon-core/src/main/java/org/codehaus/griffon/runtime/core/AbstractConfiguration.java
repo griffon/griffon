@@ -19,14 +19,17 @@ import griffon.core.Configuration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.beans.PropertyEditor;
 import java.util.Properties;
 
+import static griffon.core.editors.PropertyEditorResolver.findEditor;
 import static griffon.util.CollectionUtils.toProperties;
 import static griffon.util.TypeUtils.castToBoolean;
 import static griffon.util.TypeUtils.castToDouble;
 import static griffon.util.TypeUtils.castToFloat;
 import static griffon.util.TypeUtils.castToInt;
 import static griffon.util.TypeUtils.castToLong;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
@@ -107,6 +110,49 @@ public abstract class AbstractConfiguration implements Configuration {
     @Override
     public String getAsString(@Nonnull String key) {
         return getAsString(key, null);
+    }
+
+    @Nullable
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getAs(@Nonnull String key) {
+        return (T) get(key);
+    }
+
+    @Nullable
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getAs(@Nonnull String key, @Nullable T defaultValue) {
+        Object value = get(key);
+        return (T) (value != null ? value : defaultValue);
+    }
+
+    @Nullable
+    @Override
+    public <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type) {
+        requireNonNull(type, "Argument 'type' must not be null");
+        return convertValue(get(key), type);
+    }
+
+    @Nullable
+    @Override
+    public <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type, @Nullable T defaultValue) {
+        T value = getConverted(key, type);
+        return type.cast(value != null ? value : defaultValue);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <T> T convertValue(@Nullable Object value, @Nonnull Class<T> type) {
+        if (value != null) {
+            if (type.isAssignableFrom(value.getClass())) {
+                return (T) value;
+            } else {
+                PropertyEditor editor = findEditor(type);
+                editor.setValue(value);
+                return (T) editor.getValue();
+            }
+        }
+        return null;
     }
 
     @Nullable
