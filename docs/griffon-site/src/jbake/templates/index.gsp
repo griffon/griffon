@@ -49,13 +49,13 @@
 <p>The recommended way to get started with a <code>Griffon</code> project is to use a
 <a href="http://github.com/pledbrook/lazybones">Lazybones</a> project template and
 <a href="http://gradle.org">Gradle</a>. You can install these tools with
-<a href="http://gvmtool.net">GVM</a>.</p>
+<a href="http://sdkman.io/">SDKMAN</a>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint"><code>\$ curl -s get.gvmtool.net | bash
-\$ gvm install lazybones
-\$ gvm install gradle</code></pre>
+<pre class="prettyprint"><code>\$ curl -s http://get.sdkman.io | bash
+\$ sdk install lazybones
+\$ sdk install gradle</code></pre>
 </div>
 </div>
 <div class="paragraph">
