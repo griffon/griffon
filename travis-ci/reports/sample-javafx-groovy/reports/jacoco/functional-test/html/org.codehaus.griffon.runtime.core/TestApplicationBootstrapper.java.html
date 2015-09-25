@@ -220,110 +220,122 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
         @SuppressWarnings(&quot;unchecked&quot;)
         protected void doConfigure() {
 <span class="nc" id="L222">            Class&lt;?&gt; clazz = testCase.getClass();</span>
-<span class="nc bnc" id="L223" title="All 2 branches missed.">            while (clazz != null) {</span>
-<span class="nc" id="L224">                harvestBindings(clazz);</span>
-<span class="nc" id="L225">                clazz = clazz.getSuperclass();</span>
+<span class="nc" id="L223">            List&lt;Class&lt;?&gt;&gt; classes = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L224" title="All 2 branches missed.">            while (clazz != null) {</span>
+<span class="nc" id="L225">                classes.add(clazz);</span>
+<span class="nc" id="L226">                clazz = clazz.getSuperclass();</span>
             }
-<span class="nc" id="L227">        }</span>
+
+<span class="nc" id="L229">            Collections.reverse(classes);</span>
+<span class="nc bnc" id="L230" title="All 2 branches missed.">            for (Class&lt;?&gt; c : classes) {</span>
+<span class="nc" id="L231">                harvestBindings(c);</span>
+<span class="nc" id="L232">            }</span>
+<span class="nc" id="L233">        }</span>
 
         protected void harvestBindings(@Nonnull Class&lt;?&gt; rootClass) {
-<span class="nc bnc" id="L230" title="All 2 branches missed.">            for (Class&lt;?&gt; clazz : rootClass.getDeclaredClasses()) {</span>
-<span class="nc" id="L231">                BindTo bindTo = clazz.getAnnotation(BindTo.class);</span>
-<span class="nc bnc" id="L232" title="All 2 branches missed.">                if (bindTo == null) continue;</span>
-<span class="nc" id="L233">                List&lt;Annotation&gt; qualifiers = harvestQualifiers(clazz);</span>
-<span class="nc bnc" id="L234" title="All 2 branches missed.">                Annotation classifier = qualifiers.isEmpty() ? null : qualifiers.get(0);</span>
-<span class="nc bnc" id="L235" title="All 2 branches missed.">                boolean isSingleton = clazz.getAnnotation(Singleton.class) != null;</span>
+<span class="nc bnc" id="L236" title="All 2 branches missed.">            for (Class&lt;?&gt; clazz : rootClass.getDeclaredClasses()) {</span>
+<span class="nc" id="L237">                BindTo bindTo = clazz.getAnnotation(BindTo.class);</span>
+<span class="nc bnc" id="L238" title="All 2 branches missed.">                if (bindTo == null) continue;</span>
+<span class="nc" id="L239">                List&lt;Annotation&gt; qualifiers = harvestQualifiers(clazz);</span>
+<span class="nc bnc" id="L240" title="All 2 branches missed.">                Annotation classifier = qualifiers.isEmpty() ? null : qualifiers.get(0);</span>
+<span class="nc bnc" id="L241" title="All 2 branches missed.">                boolean isSingleton = clazz.getAnnotation(Singleton.class) != null;</span>
 
-<span class="nc" id="L237">                AnnotatedBindingBuilder&lt;?&gt; abuilder = bind(bindTo.value());</span>
-<span class="nc bnc" id="L238" title="All 2 branches missed.">                if (classifier != null) {</span>
-<span class="nc" id="L239">                    LinkedBindingBuilder&lt;?&gt; lbuilder = abuilder.withClassifier(classifier);</span>
-<span class="nc bnc" id="L240" title="All 2 branches missed.">                    if (Provider.class.isAssignableFrom(clazz)) {</span>
-<span class="nc" id="L241">                        SingletonBindingBuilder&lt;?&gt; sbuilder = lbuilder.toProvider((Class) clazz);</span>
-<span class="nc bnc" id="L242" title="All 2 branches missed.">                        if (isSingleton) sbuilder.asSingleton();</span>
-<span class="nc" id="L243">                    } else {</span>
-<span class="nc" id="L244">                        SingletonBindingBuilder&lt;?&gt; sbuilder = lbuilder.to((Class) clazz);</span>
-<span class="nc bnc" id="L245" title="All 2 branches missed.">                        if (isSingleton) sbuilder.asSingleton();</span>
+<span class="nc" id="L243">                AnnotatedBindingBuilder&lt;?&gt; abuilder = bind(bindTo.value());</span>
+<span class="nc bnc" id="L244" title="All 2 branches missed.">                if (classifier != null) {</span>
+<span class="nc" id="L245">                    LinkedBindingBuilder&lt;?&gt; lbuilder = abuilder.withClassifier(classifier);</span>
+<span class="nc bnc" id="L246" title="All 2 branches missed.">                    if (Provider.class.isAssignableFrom(clazz)) {</span>
+<span class="nc" id="L247">                        SingletonBindingBuilder&lt;?&gt; sbuilder = lbuilder.toProvider((Class) clazz);</span>
+<span class="nc bnc" id="L248" title="All 2 branches missed.">                        if (isSingleton) sbuilder.asSingleton();</span>
+<span class="nc" id="L249">                    } else {</span>
+<span class="nc" id="L250">                        SingletonBindingBuilder&lt;?&gt; sbuilder = lbuilder.to((Class) clazz);</span>
+<span class="nc bnc" id="L251" title="All 2 branches missed.">                        if (isSingleton) sbuilder.asSingleton();</span>
                     }
-<span class="nc" id="L247">                } else {</span>
-<span class="nc bnc" id="L248" title="All 2 branches missed.">                    if (Provider.class.isAssignableFrom(clazz)) {</span>
-<span class="nc" id="L249">                        SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder.toProvider((Class) clazz);</span>
-<span class="nc bnc" id="L250" title="All 2 branches missed.">                        if (isSingleton) sbuilder.asSingleton();</span>
-<span class="nc" id="L251">                    } else {</span>
-<span class="nc" id="L252">                        SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder.to((Class) clazz);</span>
-<span class="nc bnc" id="L253" title="All 2 branches missed.">                        if (isSingleton) sbuilder.asSingleton();</span>
+<span class="nc" id="L253">                } else {</span>
+<span class="nc bnc" id="L254" title="All 2 branches missed.">                    if (Provider.class.isAssignableFrom(clazz)) {</span>
+<span class="nc" id="L255">                        SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder.toProvider((Class) clazz);</span>
+<span class="nc bnc" id="L256" title="All 2 branches missed.">                        if (isSingleton) sbuilder.asSingleton();</span>
+<span class="nc" id="L257">                    } else {</span>
+<span class="nc" id="L258">                        SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder.to((Class) clazz);</span>
+<span class="nc bnc" id="L259" title="All 2 branches missed.">                        if (isSingleton) sbuilder.asSingleton();</span>
                     }
                 }
             }
-<span class="nc" id="L257">        }</span>
+<span class="nc" id="L263">        }</span>
     }
 
-<span class="nc" id="L260">    private class FieldsModule extends AbstractTestingModule {</span>
+<span class="nc" id="L266">    private class FieldsModule extends AbstractTestingModule {</span>
         @Override
         @SuppressWarnings(&quot;unchecked&quot;)
         protected void doConfigure() {
-<span class="nc" id="L264">            Class&lt;?&gt; clazz = testCase.getClass();</span>
-<span class="nc bnc" id="L265" title="All 2 branches missed.">            while (clazz != null) {</span>
-<span class="nc" id="L266">                harvestBindings(clazz);</span>
-<span class="nc" id="L267">                clazz = clazz.getSuperclass();</span>
+<span class="nc" id="L270">            Class&lt;?&gt; clazz = testCase.getClass();</span>
+<span class="nc" id="L271">            List&lt;Class&lt;?&gt;&gt; classes = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L272" title="All 2 branches missed.">            while (clazz != null) {</span>
+<span class="nc" id="L273">                classes.add(clazz);</span>
+<span class="nc" id="L274">                clazz = clazz.getSuperclass();</span>
             }
-<span class="nc" id="L269">        }</span>
+
+<span class="nc" id="L277">            Collections.reverse(classes);</span>
+<span class="nc bnc" id="L278" title="All 2 branches missed.">            for (Class&lt;?&gt; c : classes) {</span>
+<span class="nc" id="L279">                harvestBindings(c);</span>
+<span class="nc" id="L280">            }</span>
+<span class="nc" id="L281">        }</span>
 
         protected void harvestBindings(@Nonnull Class&lt;?&gt; rootClass) {
-<span class="nc bnc" id="L272" title="All 2 branches missed.">            for (Field field : rootClass.getDeclaredFields()) {</span>
-<span class="nc" id="L273">                BindTo bindTo = field.getAnnotation(BindTo.class);</span>
-<span class="nc bnc" id="L274" title="All 2 branches missed.">                if (bindTo == null) continue;</span>
-<span class="nc" id="L275">                List&lt;Annotation&gt; qualifiers = harvestQualifiers(field);</span>
-<span class="nc bnc" id="L276" title="All 2 branches missed.">                Annotation classifier = qualifiers.isEmpty() ? null : qualifiers.get(0);</span>
-<span class="nc bnc" id="L277" title="All 2 branches missed.">                boolean isSingleton = field.getAnnotation(Singleton.class) != null;</span>
+<span class="nc bnc" id="L284" title="All 2 branches missed.">            for (Field field : rootClass.getDeclaredFields()) {</span>
+<span class="nc" id="L285">                BindTo bindTo = field.getAnnotation(BindTo.class);</span>
+<span class="nc bnc" id="L286" title="All 2 branches missed.">                if (bindTo == null) continue;</span>
+<span class="nc" id="L287">                List&lt;Annotation&gt; qualifiers = harvestQualifiers(field);</span>
+<span class="nc bnc" id="L288" title="All 2 branches missed.">                Annotation classifier = qualifiers.isEmpty() ? null : qualifiers.get(0);</span>
+<span class="nc bnc" id="L289" title="All 2 branches missed.">                boolean isSingleton = field.getAnnotation(Singleton.class) != null;</span>
 
-<span class="nc" id="L279">                field.setAccessible(true);</span>
-<span class="nc" id="L280">                Object instance = null;</span>
+<span class="nc" id="L291">                field.setAccessible(true);</span>
+<span class="nc" id="L292">                Object instance = null;</span>
                 try {
-<span class="nc" id="L282">                    instance = field.get(testCase);</span>
-<span class="nc" id="L283">                } catch (IllegalAccessException e) {</span>
-<span class="nc" id="L284">                    throw new IllegalArgumentException(e);</span>
-<span class="nc" id="L285">                }</span>
+<span class="nc" id="L294">                    instance = field.get(testCase);</span>
+<span class="nc" id="L295">                } catch (IllegalAccessException e) {</span>
+<span class="nc" id="L296">                    throw new IllegalArgumentException(e);</span>
+<span class="nc" id="L297">                }</span>
 
-<span class="nc bnc" id="L287" title="All 2 branches missed.">                if (instance != null) {</span>
-<span class="nc" id="L288">                    AnnotatedBindingBuilder&lt;Object&gt; abuilder = (AnnotatedBindingBuilder&lt;Object&gt;) bind(bindTo.value());</span>
-<span class="nc bnc" id="L289" title="All 2 branches missed.">                    if (classifier != null) {</span>
-<span class="nc bnc" id="L290" title="All 2 branches missed.">                        if (Provider.class.isAssignableFrom(instance.getClass())) {</span>
-<span class="nc" id="L291">                            SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder</span>
-<span class="nc" id="L292">                                .withClassifier(classifier)</span>
-<span class="nc" id="L293">                                .toProvider((Provider&lt;Object&gt;) instance);</span>
-<span class="nc bnc" id="L294" title="All 2 branches missed.">                            if (isSingleton) sbuilder.asSingleton();</span>
-<span class="nc" id="L295">                        } else {</span>
-<span class="nc" id="L296">                            abuilder.withClassifier(classifier).toInstance(instance);</span>
+<span class="nc bnc" id="L299" title="All 2 branches missed.">                if (instance != null) {</span>
+<span class="nc" id="L300">                    AnnotatedBindingBuilder&lt;Object&gt; abuilder = (AnnotatedBindingBuilder&lt;Object&gt;) bind(bindTo.value());</span>
+<span class="nc bnc" id="L301" title="All 2 branches missed.">                    if (classifier != null) {</span>
+<span class="nc bnc" id="L302" title="All 2 branches missed.">                        if (Provider.class.isAssignableFrom(instance.getClass())) {</span>
+<span class="nc" id="L303">                            SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder</span>
+<span class="nc" id="L304">                                .withClassifier(classifier)</span>
+<span class="nc" id="L305">                                .toProvider((Provider&lt;Object&gt;) instance);</span>
+<span class="nc bnc" id="L306" title="All 2 branches missed.">                            if (isSingleton) sbuilder.asSingleton();</span>
+<span class="nc" id="L307">                        } else {</span>
+<span class="nc" id="L308">                            abuilder.withClassifier(classifier).toInstance(instance);</span>
                         }
-<span class="nc bnc" id="L298" title="All 2 branches missed.">                    } else if (Provider.class.isAssignableFrom(instance.getClass())) {</span>
-<span class="nc" id="L299">                        SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder.toProvider((Provider&lt;Object&gt;) instance);</span>
-<span class="nc bnc" id="L300" title="All 2 branches missed.">                        if (isSingleton) sbuilder.asSingleton();</span>
-<span class="nc" id="L301">                    } else {</span>
-<span class="nc" id="L302">                        abuilder.toInstance(instance);</span>
+<span class="nc bnc" id="L310" title="All 2 branches missed.">                    } else if (Provider.class.isAssignableFrom(instance.getClass())) {</span>
+<span class="nc" id="L311">                        SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder.toProvider((Provider&lt;Object&gt;) instance);</span>
+<span class="nc bnc" id="L312" title="All 2 branches missed.">                        if (isSingleton) sbuilder.asSingleton();</span>
+<span class="nc" id="L313">                    } else {</span>
+<span class="nc" id="L314">                        abuilder.toInstance(instance);</span>
                     }
-<span class="nc" id="L304">                } else {</span>
-<span class="nc" id="L305">                    AnnotatedBindingBuilder&lt;?&gt; abuilder = bind(bindTo.value());</span>
-<span class="nc bnc" id="L306" title="All 2 branches missed.">                    if (classifier != null) {</span>
-<span class="nc" id="L307">                        LinkedBindingBuilder&lt;?&gt; lbuilder = abuilder.withClassifier(classifier);</span>
-<span class="nc bnc" id="L308" title="All 2 branches missed.">                        if (Provider.class.isAssignableFrom(field.getType())) {</span>
-<span class="nc" id="L309">                            SingletonBindingBuilder&lt;?&gt; sbuilder = lbuilder.toProvider((Class) field.getType());</span>
-<span class="nc bnc" id="L310" title="All 2 branches missed.">                            if (isSingleton) sbuilder.asSingleton();</span>
-<span class="nc" id="L311">                        } else {</span>
-<span class="nc" id="L312">                            SingletonBindingBuilder&lt;?&gt; sbuilder = lbuilder.to((Class) field.getType());</span>
-<span class="nc bnc" id="L313" title="All 2 branches missed.">                            if (isSingleton) sbuilder.asSingleton();</span>
+<span class="nc" id="L316">                } else {</span>
+<span class="nc" id="L317">                    AnnotatedBindingBuilder&lt;?&gt; abuilder = bind(bindTo.value());</span>
+<span class="nc bnc" id="L318" title="All 2 branches missed.">                    if (classifier != null) {</span>
+<span class="nc" id="L319">                        LinkedBindingBuilder&lt;?&gt; lbuilder = abuilder.withClassifier(classifier);</span>
+<span class="nc bnc" id="L320" title="All 2 branches missed.">                        if (Provider.class.isAssignableFrom(field.getType())) {</span>
+<span class="nc" id="L321">                            SingletonBindingBuilder&lt;?&gt; sbuilder = lbuilder.toProvider((Class) field.getType());</span>
+<span class="nc bnc" id="L322" title="All 2 branches missed.">                            if (isSingleton) sbuilder.asSingleton();</span>
+<span class="nc" id="L323">                        } else {</span>
+<span class="nc" id="L324">                            SingletonBindingBuilder&lt;?&gt; sbuilder = lbuilder.to((Class) field.getType());</span>
+<span class="nc bnc" id="L325" title="All 2 branches missed.">                            if (isSingleton) sbuilder.asSingleton();</span>
                         }
-<span class="nc" id="L315">                    } else {</span>
-<span class="nc bnc" id="L316" title="All 2 branches missed.">                        if (Provider.class.isAssignableFrom(field.getType())) {</span>
-<span class="nc" id="L317">                            SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder.toProvider((Class) field.getType());</span>
-<span class="nc bnc" id="L318" title="All 2 branches missed.">                            if (isSingleton) sbuilder.asSingleton();</span>
-<span class="nc" id="L319">                        } else {</span>
-<span class="nc" id="L320">                            SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder.to((Class) field.getType());</span>
-<span class="nc bnc" id="L321" title="All 2 branches missed.">                            if (isSingleton) sbuilder.asSingleton();</span>
+<span class="nc" id="L327">                    } else {</span>
+<span class="nc bnc" id="L328" title="All 2 branches missed.">                        if (Provider.class.isAssignableFrom(field.getType())) {</span>
+<span class="nc" id="L329">                            SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder.toProvider((Class) field.getType());</span>
+<span class="nc bnc" id="L330" title="All 2 branches missed.">                            if (isSingleton) sbuilder.asSingleton();</span>
+<span class="nc" id="L331">                        } else {</span>
+<span class="nc" id="L332">                            SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder.to((Class) field.getType());</span>
+<span class="nc bnc" id="L333" title="All 2 branches missed.">                            if (isSingleton) sbuilder.asSingleton();</span>
                         }
                     }
                 }
             }
-<span class="nc" id="L326">        }</span>
+<span class="nc" id="L338">        }</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
