@@ -19,10 +19,12 @@ import griffon.core.Configuration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.beans.PropertyEditor;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
+import static griffon.core.editors.PropertyEditorResolver.findEditor;
 import static griffon.util.CollectionUtils.toProperties;
 import static griffon.util.TypeUtils.castToBoolean;
 import static griffon.util.TypeUtils.castToDouble;
@@ -38,118 +40,156 @@ import static java.util.Objects.requireNonNull;
 public class ConfigurationDecorator implements Configuration {
     protected final Configuration delegate;
 
-<span class="fc" id="L41">    public ConfigurationDecorator(@Nonnull Configuration delegate) {</span>
-<span class="fc" id="L42">        this.delegate = requireNonNull(delegate, &quot;Argument 'delegate' must not be null.&quot;);</span>
-<span class="fc" id="L43">    }</span>
+<span class="fc" id="L43">    public ConfigurationDecorator(@Nonnull Configuration delegate) {</span>
+<span class="fc" id="L44">        this.delegate = requireNonNull(delegate, &quot;Argument 'delegate' must not be null.&quot;);</span>
+<span class="fc" id="L45">    }</span>
 
     @Override
     @Nullable
     public Object get(@Nonnull String key) {
-<span class="fc" id="L48">        return delegate.get(key);</span>
+<span class="fc" id="L50">        return delegate.get(key);</span>
     }
 
     @Nullable
     @Override
     @SuppressWarnings(&quot;unchecked&quot;)
     public &lt;T&gt; T get(@Nonnull String key, @Nullable T defaultValue) {
-<span class="fc" id="L55">        return delegate.get(key, defaultValue);</span>
+<span class="fc" id="L57">        return delegate.get(key, defaultValue);</span>
     }
 
     @Nullable
     @Override
     public Object getAt(@Nonnull String key) {
-<span class="fc" id="L61">        return get(key);</span>
+<span class="fc" id="L63">        return get(key);</span>
     }
 
     @Nullable
     @Override
     public &lt;T&gt; T getAt(@Nonnull String key, @Nullable T defaultValue) {
-<span class="nc" id="L67">        return get(key, defaultValue);</span>
+<span class="nc" id="L69">        return get(key, defaultValue);</span>
     }
 
     @Override
     public boolean getAsBoolean(@Nonnull String key) {
-<span class="nc" id="L72">        return getAsBoolean(key, false);</span>
+<span class="nc" id="L74">        return getAsBoolean(key, false);</span>
     }
 
     @Override
     public boolean getAsBoolean(@Nonnull String key, boolean defaultValue) {
-<span class="fc" id="L77">        return castToBoolean(get(key), defaultValue);</span>
+<span class="fc" id="L79">        return castToBoolean(get(key), defaultValue);</span>
     }
 
     @Override
     public int getAsInt(@Nonnull String key) {
-<span class="nc" id="L82">        return getAsInt(key, 0);</span>
+<span class="nc" id="L84">        return getAsInt(key, 0);</span>
     }
 
     @Override
     public int getAsInt(@Nonnull String key, int defaultValue) {
-<span class="nc" id="L87">        return castToInt(get(key), defaultValue);</span>
+<span class="nc" id="L89">        return castToInt(get(key), defaultValue);</span>
     }
 
     @Override
     public long getAsLong(@Nonnull String key) {
-<span class="nc" id="L92">        return getAsLong(key, 0L);</span>
+<span class="nc" id="L94">        return getAsLong(key, 0L);</span>
     }
 
     @Override
     public long getAsLong(@Nonnull String key, long defaultValue) {
-<span class="nc" id="L97">        return castToLong(get(key), defaultValue);</span>
+<span class="nc" id="L99">        return castToLong(get(key), defaultValue);</span>
     }
 
     @Override
     public float getAsFloat(@Nonnull String key) {
-<span class="nc" id="L102">        return getAsFloat(key, 0f);</span>
+<span class="nc" id="L104">        return getAsFloat(key, 0f);</span>
     }
 
     @Override
     public float getAsFloat(@Nonnull String key, float defaultValue) {
-<span class="nc" id="L107">        return castToFloat(get(key), defaultValue);</span>
+<span class="nc" id="L109">        return castToFloat(get(key), defaultValue);</span>
     }
 
     @Override
     public double getAsDouble(@Nonnull String key) {
-<span class="nc" id="L112">        return getAsDouble(key, 0d);</span>
+<span class="nc" id="L114">        return getAsDouble(key, 0d);</span>
     }
 
     @Override
     public double getAsDouble(@Nonnull String key, double defaultValue) {
-<span class="nc" id="L117">        return castToDouble(get(key), defaultValue);</span>
+<span class="nc" id="L119">        return castToDouble(get(key), defaultValue);</span>
     }
 
     @Nullable
     @Override
     public String getAsString(@Nonnull String key) {
-<span class="nc" id="L123">        return getAsString(key, null);</span>
+<span class="nc" id="L125">        return getAsString(key, null);</span>
     }
 
     @Nullable
     @Override
     public String getAsString(@Nonnull String key, @Nullable String defaultValue) {
-<span class="fc" id="L129">        return delegate.getAsString(key, defaultValue);</span>
+<span class="fc" id="L131">        return delegate.getAsString(key, defaultValue);</span>
+    }
+
+    @Nullable
+    @Override
+    public &lt;T&gt; T getAs(@Nonnull String key) {
+<span class="nc" id="L137">        return delegate.getAs(key);</span>
+    }
+
+    @Nullable
+    @Override
+    public &lt;T&gt; T getAs(@Nonnull String key, @Nullable T defaultValue) {
+<span class="nc" id="L143">        return delegate.getAs(key, defaultValue);</span>
+    }
+
+    @Nullable
+    @Override
+    public &lt;T&gt; T getConverted(@Nonnull String key, @Nonnull Class&lt;T&gt; type) {
+<span class="nc" id="L149">        return delegate.getConverted(key, type);</span>
+    }
+
+    @Nullable
+    @Override
+    public &lt;T&gt; T getConverted(@Nonnull String key, @Nonnull Class&lt;T&gt; type, @Nullable T defaultValue) {
+<span class="nc" id="L155">        return delegate.getConverted(key, type, defaultValue);</span>
     }
 
     @Nonnull
     @Override
     public Properties asProperties() {
-<span class="nc" id="L135">        return toProperties(asFlatMap());</span>
+<span class="nc" id="L161">        return toProperties(asFlatMap());</span>
     }
 
     @Override
     public boolean containsKey(@Nonnull String key) {
-<span class="nc" id="L140">        return delegate.containsKey(key);</span>
+<span class="nc" id="L166">        return delegate.containsKey(key);</span>
     }
 
     @Nonnull
     @Override
     public Map&lt;String, Object&gt; asFlatMap() {
-<span class="fc" id="L146">        return delegate.asFlatMap();</span>
+<span class="fc" id="L172">        return delegate.asFlatMap();</span>
     }
 
     @Nonnull
     @Override
     public ResourceBundle asResourceBundle() {
-<span class="nc" id="L152">        return delegate.asResourceBundle();</span>
+<span class="nc" id="L178">        return delegate.asResourceBundle();</span>
+    }
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    protected &lt;T&gt; T convertValue(@Nullable Object value, @Nonnull Class&lt;T&gt; type) {
+<span class="nc bnc" id="L183" title="All 2 branches missed.">        if (value != null) {</span>
+<span class="nc bnc" id="L184" title="All 2 branches missed.">            if (type.isAssignableFrom(value.getClass())) {</span>
+<span class="nc" id="L185">                return (T) value;</span>
+            } else {
+<span class="nc" id="L187">                PropertyEditor editor = findEditor(type);</span>
+<span class="nc" id="L188">                editor.setValue(value);</span>
+<span class="nc" id="L189">                return (T) editor.getValue();</span>
+            }
+        }
+<span class="nc" id="L192">        return null;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

@@ -33,11 +33,11 @@ public interface ObservableContext extends Context {
     @Nonnull
     ContextEventListener[] getContextEventListeners();
 
-    public static interface ContextEventListener {
+    interface ContextEventListener {
         void contextChanged(@Nonnull ContextEvent contextEvent);
     }
 
-    public static class ContextEvent {
+    class ContextEvent {
         private final Type type;
         private final String key;
         private final Object oldValue;

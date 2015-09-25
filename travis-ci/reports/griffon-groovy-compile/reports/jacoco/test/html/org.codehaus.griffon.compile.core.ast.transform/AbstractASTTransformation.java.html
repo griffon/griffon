@@ -285,53 +285,56 @@ import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.var;
 <span class="fc" id="L285">                Parameter p = method.getParameters()[i];</span>
 <span class="fc" id="L286">                parameters[i] = new Parameter(makeClassSafe(p.getType()), p.getName());</span>
 <span class="fc" id="L287">                parameters[i].getType().setGenericsTypes(p.getType().getGenericsTypes());</span>
-<span class="fc" id="L288">                parameters[i].addAnnotations(p.getAnnotations());</span>
-<span class="fc" id="L289">                variables.add(var(p.getName()));</span>
+<span class="fc" id="L288">                parameters[i].getType().setGenericsPlaceHolder(p.getType().isGenericsPlaceHolder());</span>
+<span class="fc" id="L289">                parameters[i].getType().setUsingGenerics(p.getType().isUsingGenerics());</span>
+<span class="fc" id="L290">                parameters[i].addAnnotations(p.getAnnotations());</span>
+<span class="fc" id="L291">                variables.add(var(p.getName()));</span>
             }
-<span class="fc bfc" id="L291" title="All 2 branches covered.">            for (int i = 0; i &lt; method.getExceptions().length; i++) {</span>
-<span class="fc" id="L292">                ClassNode ex = method.getExceptions()[i];</span>
-<span class="fc" id="L293">                exceptions[i] = makeClassSafe(ex);</span>
+<span class="fc bfc" id="L293" title="All 2 branches covered.">            for (int i = 0; i &lt; method.getExceptions().length; i++) {</span>
+<span class="fc" id="L294">                ClassNode ex = method.getExceptions()[i];</span>
+<span class="fc" id="L295">                exceptions[i] = makeClassSafe(ex);</span>
             }
-<span class="fc" id="L295">            ClassNode returnType = makeClassSafe(method.getReturnType());</span>
-<span class="fc" id="L296">            returnType.addAnnotations(method.getReturnType().getAnnotations());</span>
-<span class="fc" id="L297">            returnType.setGenericsTypes(method.getReturnType().getGenericsTypes());</span>
-<span class="fc" id="L298">            returnType.setGenericsPlaceHolder(method.getReturnType().isGenericsPlaceHolder());</span>
+<span class="fc" id="L297">            ClassNode returnType = makeClassSafe(method.getReturnType());</span>
+<span class="fc" id="L298">            returnType.addAnnotations(method.getReturnType().getAnnotations());</span>
+<span class="fc" id="L299">            returnType.setGenericsTypes(method.getReturnType().getGenericsTypes());</span>
+<span class="fc" id="L300">            returnType.setGenericsPlaceHolder(method.getReturnType().isGenericsPlaceHolder());</span>
+<span class="fc" id="L301">            returnType.setUsingGenerics(method.getReturnType().isUsingGenerics());</span>
 
-<span class="fc" id="L300">            boolean isVoid = ClassHelper.VOID_TYPE.equals(method.getReturnType());</span>
-<span class="fc" id="L301">            Expression delegateExpression = call(</span>
+<span class="fc" id="L303">            boolean isVoid = ClassHelper.VOID_TYPE.equals(method.getReturnType());</span>
+<span class="fc" id="L304">            Expression delegateExpression = call(</span>
                 delegate,
-<span class="fc" id="L303">                method.getName(),</span>
-<span class="fc" id="L304">                args(variables));</span>
-<span class="fc" id="L305">            MethodNode newMethod = new MethodNode(</span>
 <span class="fc" id="L306">                method.getName(),</span>
-<span class="fc bfc" id="L307" title="All 2 branches covered.">                method.getModifiers() - Modifier.ABSTRACT,</span>
+<span class="fc" id="L307">                args(variables));</span>
+<span class="fc" id="L308">            MethodNode newMethod = new MethodNode(</span>
+<span class="fc" id="L309">                method.getName(),</span>
+<span class="fc bfc" id="L310" title="All 2 branches covered.">                method.getModifiers() - Modifier.ABSTRACT,</span>
                 returnType,
                 parameters,
                 exceptions,
-<span class="fc" id="L311">                isVoid ? stmnt(delegateExpression) : returns(delegateExpression)</span>
+<span class="fc" id="L314">                isVoid ? stmnt(delegateExpression) : returns(delegateExpression)</span>
             );
-<span class="fc" id="L313">            newMethod.setGenericsTypes(method.getGenericsTypes());</span>
-<span class="fc" id="L314">            injectMethod(classNode, newMethod);</span>
-<span class="fc" id="L315">        }</span>
-<span class="fc" id="L316">    }</span>
+<span class="fc" id="L316">            newMethod.setGenericsTypes(method.getGenericsTypes());</span>
+<span class="fc" id="L317">            injectMethod(classNode, newMethod);</span>
+<span class="fc" id="L318">        }</span>
+<span class="fc" id="L319">    }</span>
 
     public void addError(String msg, ASTNode expr, SourceUnit source) {
-<span class="nc" id="L319">        int line = expr.getLineNumber();</span>
-<span class="nc" id="L320">        int col = expr.getColumnNumber();</span>
-<span class="nc" id="L321">        source.getErrorCollector().addErrorAndContinue(</span>
+<span class="nc" id="L322">        int line = expr.getLineNumber();</span>
+<span class="nc" id="L323">        int col = expr.getColumnNumber();</span>
+<span class="nc" id="L324">        source.getErrorCollector().addErrorAndContinue(</span>
             new SyntaxErrorMessage(new SyntaxException(msg + '\n', line, col), source)
         );
-<span class="nc" id="L324">    }</span>
+<span class="nc" id="L327">    }</span>
 
     protected void checkNodesForAnnotationAndType(ASTNode node1, ASTNode node2) {
-<span class="pc bpc" id="L327" title="2 of 4 branches missed.">        if (!(node1 instanceof AnnotationNode) || !(node2 instanceof ClassNode)) {</span>
-<span class="nc" id="L328">            throw new IllegalArgumentException(&quot;Internal error: wrong types: &quot; + node1.getClass() + &quot; / &quot; + node2.getClass());</span>
+<span class="pc bpc" id="L330" title="2 of 4 branches missed.">        if (!(node1 instanceof AnnotationNode) || !(node2 instanceof ClassNode)) {</span>
+<span class="nc" id="L331">            throw new IllegalArgumentException(&quot;Internal error: wrong types: &quot; + node1.getClass() + &quot; / &quot; + node2.getClass());</span>
         }
-<span class="fc" id="L330">    }</span>
+<span class="fc" id="L333">    }</span>
 
     protected boolean memberHasValue(AnnotationNode node, String name, Object value) {
-<span class="nc" id="L333">        final Expression member = node.getMember(name);</span>
-<span class="nc bnc" id="L334" title="All 6 branches missed.">        return member != null &amp;&amp; member instanceof ConstantExpression &amp;&amp; ((ConstantExpression) member).getValue().equals(value);</span>
+<span class="nc" id="L336">        final Expression member = node.getMember(name);</span>
+<span class="nc bnc" id="L337" title="All 6 branches missed.">        return member != null &amp;&amp; member instanceof ConstantExpression &amp;&amp; ((ConstantExpression) member).getValue().equals(value);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

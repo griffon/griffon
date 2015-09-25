@@ -19,107 +19,153 @@ import griffon.core.Configuration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.beans.PropertyEditor;
 import java.util.Properties;
 
+import static griffon.core.editors.PropertyEditorResolver.findEditor;
 import static griffon.util.CollectionUtils.toProperties;
 import static griffon.util.TypeUtils.castToBoolean;
 import static griffon.util.TypeUtils.castToDouble;
 import static griffon.util.TypeUtils.castToFloat;
 import static griffon.util.TypeUtils.castToInt;
 import static griffon.util.TypeUtils.castToLong;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
-<span class="fc" id="L35">public abstract class AbstractConfiguration implements Configuration {</span>
+<span class="fc" id="L38">public abstract class AbstractConfiguration implements Configuration {</span>
     @Nullable
     @Override
     @SuppressWarnings(&quot;unchecked&quot;)
     public &lt;T&gt; T get(@Nonnull String key, @Nullable T defaultValue) {
-<span class="fc" id="L40">        T value = (T) get(key);</span>
-<span class="fc bfc" id="L41" title="All 2 branches covered.">        return value != null ? value : defaultValue;</span>
+<span class="fc" id="L43">        T value = (T) get(key);</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        return value != null ? value : defaultValue;</span>
     }
 
     @Nullable
     @Override
     public Object getAt(@Nonnull String key) {
-<span class="nc" id="L47">        return get(key);</span>
+<span class="nc" id="L50">        return get(key);</span>
     }
 
     @Nullable
     @Override
     public &lt;T&gt; T getAt(@Nonnull String key, @Nullable T defaultValue) {
-<span class="nc" id="L53">        return get(key, defaultValue);</span>
+<span class="nc" id="L56">        return get(key, defaultValue);</span>
     }
 
     @Override
     public boolean getAsBoolean(@Nonnull String key) {
-<span class="nc" id="L58">        return getAsBoolean(key, false);</span>
+<span class="nc" id="L61">        return getAsBoolean(key, false);</span>
     }
 
     @Override
     public boolean getAsBoolean(@Nonnull String key, boolean defaultValue) {
-<span class="nc" id="L63">        return castToBoolean(get(key), defaultValue);</span>
+<span class="nc" id="L66">        return castToBoolean(get(key), defaultValue);</span>
     }
 
     @Override
     public int getAsInt(@Nonnull String key) {
-<span class="nc" id="L68">        return getAsInt(key, 0);</span>
+<span class="nc" id="L71">        return getAsInt(key, 0);</span>
     }
 
     @Override
     public int getAsInt(@Nonnull String key, int defaultValue) {
-<span class="nc" id="L73">        return castToInt(get(key), defaultValue);</span>
+<span class="nc" id="L76">        return castToInt(get(key), defaultValue);</span>
     }
 
     @Override
     public long getAsLong(@Nonnull String key) {
-<span class="nc" id="L78">        return getAsLong(key, 0L);</span>
+<span class="nc" id="L81">        return getAsLong(key, 0L);</span>
     }
 
     @Override
     public long getAsLong(@Nonnull String key, long defaultValue) {
-<span class="nc" id="L83">        return castToLong(get(key), defaultValue);</span>
+<span class="nc" id="L86">        return castToLong(get(key), defaultValue);</span>
     }
 
     @Override
     public float getAsFloat(@Nonnull String key) {
-<span class="nc" id="L88">        return getAsFloat(key, 0f);</span>
+<span class="nc" id="L91">        return getAsFloat(key, 0f);</span>
     }
 
     @Override
     public float getAsFloat(@Nonnull String key, float defaultValue) {
-<span class="nc" id="L93">        return castToFloat(get(key), defaultValue);</span>
+<span class="nc" id="L96">        return castToFloat(get(key), defaultValue);</span>
     }
 
     @Override
     public double getAsDouble(@Nonnull String key) {
-<span class="nc" id="L98">        return getAsDouble(key, 0d);</span>
+<span class="nc" id="L101">        return getAsDouble(key, 0d);</span>
     }
 
     @Override
     public double getAsDouble(@Nonnull String key, double defaultValue) {
-<span class="nc" id="L103">        return castToDouble(get(key), defaultValue);</span>
+<span class="nc" id="L106">        return castToDouble(get(key), defaultValue);</span>
     }
 
     @Nullable
     @Override
     public String getAsString(@Nonnull String key) {
-<span class="nc" id="L109">        return getAsString(key, null);</span>
+<span class="nc" id="L112">        return getAsString(key, null);</span>
+    }
+
+    @Nullable
+    @Override
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public &lt;T&gt; T getAs(@Nonnull String key) {
+<span class="nc" id="L119">        return (T) get(key);</span>
+    }
+
+    @Nullable
+    @Override
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public &lt;T&gt; T getAs(@Nonnull String key, @Nullable T defaultValue) {
+<span class="nc" id="L126">        Object value = get(key);</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        return (T) (value != null ? value : defaultValue);</span>
+    }
+
+    @Nullable
+    @Override
+    public &lt;T&gt; T getConverted(@Nonnull String key, @Nonnull Class&lt;T&gt; type) {
+<span class="nc" id="L133">        requireNonNull(type, &quot;Argument 'type' must not be null&quot;);</span>
+<span class="nc" id="L134">        return convertValue(get(key), type);</span>
+    }
+
+    @Nullable
+    @Override
+    public &lt;T&gt; T getConverted(@Nonnull String key, @Nonnull Class&lt;T&gt; type, @Nullable T defaultValue) {
+<span class="nc" id="L140">        T value = getConverted(key, type);</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">        return type.cast(value != null ? value : defaultValue);</span>
+    }
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    protected &lt;T&gt; T convertValue(@Nullable Object value, @Nonnull Class&lt;T&gt; type) {
+<span class="nc bnc" id="L146" title="All 2 branches missed.">        if (value != null) {</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">            if (type.isAssignableFrom(value.getClass())) {</span>
+<span class="nc" id="L148">                return (T) value;</span>
+            } else {
+<span class="nc" id="L150">                PropertyEditor editor = findEditor(type);</span>
+<span class="nc" id="L151">                editor.setValue(value);</span>
+<span class="nc" id="L152">                return (T) editor.getValue();</span>
+            }
+        }
+<span class="nc" id="L155">        return null;</span>
     }
 
     @Nullable
     @Override
     public String getAsString(@Nonnull String key, @Nullable String defaultValue) {
-<span class="fc" id="L115">        Object value = get(key);</span>
-<span class="pc bpc" id="L116" title="1 of 2 branches missed.">        return value != null ? String.valueOf(value) : defaultValue;</span>
+<span class="fc" id="L161">        Object value = get(key);</span>
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">        return value != null ? String.valueOf(value) : defaultValue;</span>
     }
 
     @Nonnull
     @Override
     public Properties asProperties() {
-<span class="nc" id="L122">        return toProperties(asFlatMap());</span>
+<span class="nc" id="L168">        return toProperties(asFlatMap());</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

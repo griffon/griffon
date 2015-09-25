@@ -22,10 +22,12 @@ import griffon.inject.Contextual;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.beans.PropertyDescriptor;
+import java.beans.PropertyEditor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import static griffon.core.editors.PropertyEditorResolver.findEditor;
 import static griffon.util.AnnotationUtils.annotationsOfMethodParameter;
 import static griffon.util.AnnotationUtils.findAnnotation;
 import static griffon.util.AnnotationUtils.nameFor;
@@ -46,60 +48,60 @@ import static java.util.Objects.requireNonNull;
 public abstract class AbstractContext implements Context {
     protected Context parentContext;
 
-<span class="fc" id="L49">    public AbstractContext(@Nullable Context parentContext) {</span>
-<span class="fc" id="L50">        this.parentContext = parentContext;</span>
-<span class="fc" id="L51">    }</span>
+<span class="fc" id="L51">    public AbstractContext(@Nullable Context parentContext) {</span>
+<span class="fc" id="L52">        this.parentContext = parentContext;</span>
+<span class="fc" id="L53">    }</span>
 
     @Nullable
     public Context getParentContext() {
-<span class="nc" id="L55">        return parentContext;</span>
+<span class="nc" id="L57">        return parentContext;</span>
     }
 
     @Nullable
     @Override
     @SuppressWarnings(&quot;unchecked&quot;)
     public &lt;T&gt; T get(@Nonnull String key, @Nullable T defaultValue) {
-<span class="nc" id="L62">        T value = (T) get(key);</span>
-<span class="nc bnc" id="L63" title="All 2 branches missed.">        return value != null ? value : defaultValue;</span>
+<span class="nc" id="L64">        T value = (T) get(key);</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        return value != null ? value : defaultValue;</span>
     }
 
     @Nullable
     @Override
     public Object getAt(@Nonnull String key) {
-<span class="nc" id="L69">        return get(key);</span>
+<span class="nc" id="L71">        return get(key);</span>
     }
 
     @Nullable
     @Override
     public &lt;T&gt; T getAt(@Nonnull String key, @Nullable T defaultValue) {
-<span class="nc" id="L75">        return get(key, defaultValue);</span>
+<span class="nc" id="L77">        return get(key, defaultValue);</span>
     }
 
     @Nullable
     @Override
     public Object get(@Nonnull String key) {
-<span class="nc bnc" id="L81" title="All 2 branches missed.">        if (hasKey(key)) {</span>
-<span class="nc" id="L82">            return doGet(key);</span>
-<span class="nc bnc" id="L83" title="All 2 branches missed.">        } else if (parentContext != null) {</span>
-<span class="nc" id="L84">            return parentContext.get(key);</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (hasKey(key)) {</span>
+<span class="nc" id="L84">            return doGet(key);</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        } else if (parentContext != null) {</span>
+<span class="nc" id="L86">            return parentContext.get(key);</span>
         } else {
-<span class="nc" id="L86">            return null;</span>
+<span class="nc" id="L88">            return null;</span>
         }
     }
 
     @Override
     public void destroy() {
-<span class="nc" id="L92">        parentContext = null;</span>
-<span class="nc" id="L93">    }</span>
+<span class="nc" id="L94">        parentContext = null;</span>
+<span class="nc" id="L95">    }</span>
 
     @Override
     public boolean containsKey(@Nonnull String key) {
-<span class="nc bnc" id="L97" title="All 2 branches missed.">        if (hasKey(key)) {</span>
-<span class="nc" id="L98">            return true;</span>
-<span class="nc bnc" id="L99" title="All 2 branches missed.">        } else if (parentContext != null) {</span>
-<span class="nc" id="L100">            return parentContext.containsKey(key);</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        if (hasKey(key)) {</span>
+<span class="nc" id="L100">            return true;</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        } else if (parentContext != null) {</span>
+<span class="nc" id="L102">            return parentContext.containsKey(key);</span>
         }
-<span class="nc" id="L102">        return false;</span>
+<span class="nc" id="L104">        return false;</span>
     }
 
     @Nullable
@@ -107,127 +109,157 @@ public abstract class AbstractContext implements Context {
 
     @Override
     public boolean getAsBoolean(@Nonnull String key) {
-<span class="nc" id="L110">        return getAsBoolean(key, false);</span>
+<span class="nc" id="L112">        return getAsBoolean(key, false);</span>
     }
 
     @Override
     public boolean getAsBoolean(@Nonnull String key, boolean defaultValue) {
-<span class="nc" id="L115">        return castToBoolean(get(key), defaultValue);</span>
+<span class="nc" id="L117">        return castToBoolean(get(key), defaultValue);</span>
     }
 
     @Override
     public int getAsInt(@Nonnull String key) {
-<span class="nc" id="L120">        return getAsInt(key, 0);</span>
+<span class="nc" id="L122">        return getAsInt(key, 0);</span>
     }
 
     @Override
     public int getAsInt(@Nonnull String key, int defaultValue) {
-<span class="nc" id="L125">        return castToInt(get(key), defaultValue);</span>
+<span class="nc" id="L127">        return castToInt(get(key), defaultValue);</span>
     }
 
     @Override
     public long getAsLong(@Nonnull String key) {
-<span class="nc" id="L130">        return getAsLong(key, 0L);</span>
+<span class="nc" id="L132">        return getAsLong(key, 0L);</span>
     }
 
     @Override
     public long getAsLong(@Nonnull String key, long defaultValue) {
-<span class="nc" id="L135">        return castToLong(get(key), defaultValue);</span>
+<span class="nc" id="L137">        return castToLong(get(key), defaultValue);</span>
     }
 
     @Override
     public float getAsFloat(@Nonnull String key) {
-<span class="nc" id="L140">        return getAsFloat(key, 0f);</span>
+<span class="nc" id="L142">        return getAsFloat(key, 0f);</span>
     }
 
     @Override
     public float getAsFloat(@Nonnull String key, float defaultValue) {
-<span class="nc" id="L145">        return castToFloat(get(key), defaultValue);</span>
+<span class="nc" id="L147">        return castToFloat(get(key), defaultValue);</span>
     }
 
     @Override
     public double getAsDouble(@Nonnull String key) {
-<span class="nc" id="L150">        return getAsDouble(key, 0d);</span>
+<span class="nc" id="L152">        return getAsDouble(key, 0d);</span>
     }
 
     @Override
     public double getAsDouble(@Nonnull String key, double defaultValue) {
-<span class="nc" id="L155">        return castToDouble(get(key), defaultValue);</span>
+<span class="nc" id="L157">        return castToDouble(get(key), defaultValue);</span>
     }
 
     @Nullable
     @Override
     public String getAsString(@Nonnull String key) {
-<span class="nc" id="L161">        return getAsString(key, null);</span>
+<span class="nc" id="L163">        return getAsString(key, null);</span>
     }
 
     @Nullable
     @Override
     public String getAsString(@Nonnull String key, @Nullable String defaultValue) {
-<span class="nc" id="L167">        Object value = get(key);</span>
-<span class="nc bnc" id="L168" title="All 2 branches missed.">        return value != null ? String.valueOf(value) : defaultValue;</span>
+<span class="nc" id="L169">        Object value = get(key);</span>
+<span class="nc bnc" id="L170" title="All 2 branches missed.">        return value != null ? String.valueOf(value) : defaultValue;</span>
     }
 
     @Nullable
     @Override
-    public &lt;T&gt; T getAs(@Nonnull String key, @Nonnull Class&lt;T&gt; type) {
-<span class="nc" id="L174">        return type.cast(get(key));</span>
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public &lt;T&gt; T getAs(@Nonnull String key) {
+<span class="nc" id="L177">        return (T) get(key);</span>
     }
 
     @Nullable
     @Override
-    public &lt;T&gt; T getAs(@Nonnull String key, @Nonnull Class&lt;T&gt; type, @Nullable T defaultValue) {
-<span class="nc" id="L180">        Object value = get(key);</span>
-<span class="nc bnc" id="L181" title="All 2 branches missed.">        return type.cast(value != null ? value : defaultValue);</span>
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public &lt;T&gt; T getAs(@Nonnull String key, @Nullable T defaultValue) {
+<span class="nc" id="L184">        Object value = get(key);</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">        return (T) (value != null ? value : defaultValue);</span>
+    }
+
+    @Nullable
+    @Override
+    public &lt;T&gt; T getConverted(@Nonnull String key, @Nonnull Class&lt;T&gt; type) {
+<span class="nc" id="L191">        requireNonNull(type, &quot;Argument 'type' must not be null&quot;);</span>
+<span class="nc" id="L192">        return convertValue(get(key), type);</span>
+    }
+
+    @Nullable
+    @Override
+    public &lt;T&gt; T getConverted(@Nonnull String key, @Nonnull Class&lt;T&gt; type, @Nullable T defaultValue) {
+<span class="nc" id="L198">        T value = getConverted(key, type);</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">        return type.cast(value != null ? value : defaultValue);</span>
+    }
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    protected &lt;T&gt; T convertValue(@Nullable Object value, @Nonnull Class&lt;T&gt; type) {
+<span class="nc bnc" id="L204" title="All 2 branches missed.">        if (value != null) {</span>
+<span class="nc bnc" id="L205" title="All 2 branches missed.">            if (type.isAssignableFrom(value.getClass())) {</span>
+<span class="nc" id="L206">                return (T) value;</span>
+            } else {
+<span class="nc" id="L208">                PropertyEditor editor = findEditor(type);</span>
+<span class="nc" id="L209">                editor.setValue(value);</span>
+<span class="nc" id="L210">                return (T) editor.getValue();</span>
+            }
+        }
+<span class="nc" id="L213">        return null;</span>
     }
 
     @Nonnull
     @Override
     public &lt;T&gt; T injectMembers(@Nonnull T instance) {
-<span class="nc" id="L187">        requireNonNull(instance, &quot;Argument 'instance' must not be null&quot;);</span>
+<span class="nc" id="L219">        requireNonNull(instance, &quot;Argument 'instance' must not be null&quot;);</span>
 
-<span class="nc bnc" id="L189" title="All 2 branches missed.">        for (PropertyDescriptor descriptor : getPropertyDescriptors(instance.getClass())) {</span>
-<span class="nc" id="L190">            Method method = descriptor.getWriteMethod();</span>
-<span class="nc bnc" id="L191" title="All 4 branches missed.">            if (method != null &amp;&amp; method.getAnnotation(Contextual.class) != null) {</span>
-<span class="nc" id="L192">                String key = nameFor(method);</span>
-<span class="nc" id="L193">                Object arg = get(key);</span>
+<span class="nc bnc" id="L221" title="All 2 branches missed.">        for (PropertyDescriptor descriptor : getPropertyDescriptors(instance.getClass())) {</span>
+<span class="nc" id="L222">            Method method = descriptor.getWriteMethod();</span>
+<span class="nc bnc" id="L223" title="All 4 branches missed.">            if (method != null &amp;&amp; method.getAnnotation(Contextual.class) != null) {</span>
+<span class="nc" id="L224">                String key = nameFor(method);</span>
+<span class="nc" id="L225">                Object arg = get(key);</span>
 
-<span class="nc" id="L195">                Nonnull nonNull = findAnnotation(annotationsOfMethodParameter(method, 0), Nonnull.class);</span>
-<span class="nc bnc" id="L196" title="All 4 branches missed.">                if (arg == null &amp;&amp; nonNull != null) {</span>
-<span class="nc" id="L197">                    throw new IllegalStateException(&quot;Could not find an instance of type &quot; +</span>
-<span class="nc" id="L198">                        method.getParameterTypes()[0].getName() + &quot; under key '&quot; + key +</span>
-<span class="nc" id="L199">                        &quot;' to be injected on property '&quot; + descriptor.getName() +</span>
-<span class="nc" id="L200">                        &quot;' (&quot; + instance.getClass().getName() + &quot;). Property does not accept null values.&quot;);</span>
+<span class="nc" id="L227">                Nonnull nonNull = findAnnotation(annotationsOfMethodParameter(method, 0), Nonnull.class);</span>
+<span class="nc bnc" id="L228" title="All 4 branches missed.">                if (arg == null &amp;&amp; nonNull != null) {</span>
+<span class="nc" id="L229">                    throw new IllegalStateException(&quot;Could not find an instance of type &quot; +</span>
+<span class="nc" id="L230">                        method.getParameterTypes()[0].getName() + &quot; under key '&quot; + key +</span>
+<span class="nc" id="L231">                        &quot;' to be injected on property '&quot; + descriptor.getName() +</span>
+<span class="nc" id="L232">                        &quot;' (&quot; + instance.getClass().getName() + &quot;). Property does not accept null values.&quot;);</span>
                 }
 
                 try {
-<span class="nc" id="L204">                    method.invoke(instance, arg);</span>
-<span class="nc" id="L205">                } catch (IllegalAccessException | InvocationTargetException e) {</span>
-<span class="nc" id="L206">                    throw new IllegalStateException(e);</span>
-<span class="nc" id="L207">                }</span>
+<span class="nc" id="L236">                    method.invoke(instance, arg);</span>
+<span class="nc" id="L237">                } catch (IllegalAccessException | InvocationTargetException e) {</span>
+<span class="nc" id="L238">                    throw new IllegalStateException(e);</span>
+<span class="nc" id="L239">                }</span>
             }
         }
 
-<span class="nc bnc" id="L211" title="All 2 branches missed.">        for (Field field : getAllDeclaredFields(instance.getClass())) {</span>
-<span class="nc bnc" id="L212" title="All 2 branches missed.">            if (field.getAnnotation(Contextual.class) != null) {</span>
-<span class="nc" id="L213">                String key = nameFor(field);</span>
-<span class="nc" id="L214">                Object arg = get(key);</span>
-<span class="nc bnc" id="L215" title="All 4 branches missed.">                if (arg == null &amp;&amp; field.getAnnotation(Nonnull.class) != null) {</span>
-<span class="nc" id="L216">                    throw new IllegalStateException(&quot;Could not find an instance of type &quot; +</span>
-<span class="nc" id="L217">                        field.getType().getName() + &quot; under key '&quot; + key +</span>
-<span class="nc" id="L218">                        &quot;' to be injected on field '&quot; + field.getName() +</span>
-<span class="nc" id="L219">                        &quot;' (&quot; + instance.getClass().getName() + &quot;). Field does not accept null values.&quot;);</span>
+<span class="nc bnc" id="L243" title="All 2 branches missed.">        for (Field field : getAllDeclaredFields(instance.getClass())) {</span>
+<span class="nc bnc" id="L244" title="All 2 branches missed.">            if (field.getAnnotation(Contextual.class) != null) {</span>
+<span class="nc" id="L245">                String key = nameFor(field);</span>
+<span class="nc" id="L246">                Object arg = get(key);</span>
+<span class="nc bnc" id="L247" title="All 4 branches missed.">                if (arg == null &amp;&amp; field.getAnnotation(Nonnull.class) != null) {</span>
+<span class="nc" id="L248">                    throw new IllegalStateException(&quot;Could not find an instance of type &quot; +</span>
+<span class="nc" id="L249">                        field.getType().getName() + &quot; under key '&quot; + key +</span>
+<span class="nc" id="L250">                        &quot;' to be injected on field '&quot; + field.getName() +</span>
+<span class="nc" id="L251">                        &quot;' (&quot; + instance.getClass().getName() + &quot;). Field does not accept null values.&quot;);</span>
                 }
 
                 try {
-<span class="nc" id="L223">                    setFieldValue(instance, field.getName(), arg);</span>
-<span class="nc" id="L224">                } catch (FieldException e) {</span>
-<span class="nc" id="L225">                    throw new IllegalStateException(e);</span>
-<span class="nc" id="L226">                }</span>
+<span class="nc" id="L255">                    setFieldValue(instance, field.getName(), arg);</span>
+<span class="nc" id="L256">                } catch (FieldException e) {</span>
+<span class="nc" id="L257">                    throw new IllegalStateException(e);</span>
+<span class="nc" id="L258">                }</span>
             }
         }
 
-<span class="nc" id="L230">        return instance;</span>
+<span class="nc" id="L262">        return instance;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
