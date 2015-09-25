@@ -15,6 +15,8 @@
  */
 package griffon.core
 
+import griffon.core.editors.IntegerPropertyEditor
+import griffon.core.editors.PropertyEditorResolver
 import griffon.inject.Contextual
 import org.codehaus.griffon.runtime.core.DefaultContext
 import spock.lang.Shared
@@ -32,6 +34,8 @@ class ContextSpec extends Specification {
     def setup() {
         ctx1['foo'] = 'foo'
         ctx1['class'] = String
+        ctx1['int'] = 1
+        ctx1['integer'] = '1'
         ctx2['bar'] = 'bar'
         ctx3['bar'] = 'bar'
         ctx3['foo'] = 'bar'
@@ -64,13 +68,28 @@ class ContextSpec extends Specification {
         'foo' | 'getAsString'  | 'foo' | null
     }
 
-    def "Find values on context 1 using typed default"() {
-        expect:
-        value == ctx1."$methodName"(key, type, defaultValue)
+    def "Find values on context 1 using casted default"() {
+        when:
+        Integer val = ctx1."$methodName"(key, defaultValue)
+
+        then:
+        value == val
 
         where:
-        key   | methodName | value  | type  | defaultValue
-        'key' | 'getAs'    | String | Class | String
+        key   | methodName | defaultValue || value
+        'key' | 'getAs'    | 1            || 1
+    }
+
+    def "Find values on context 1 using converted default"() {
+        when:
+        String val = ctx1.getConverted(key, type, defaultValue)
+
+        then:
+        value == val
+
+        where:
+        key   | defaultValue | type   || value
+        'key' | '1'          | String || '1'
     }
 
     def "Find values on context 1 using typed getters"() {
@@ -87,14 +106,72 @@ class ContextSpec extends Specification {
         'key' | 'getAsString'  | null
     }
 
-    def "Find values on context 1 using typed getter"() {
-        expect:
-        value == ctx1."$methodName"(key, type)
+    def "Find values on context 1 using casted value"() {
+        when:
+        Integer val = ctx1.getAs(key)
+
+        then:
+        value == val
 
         where:
-        key     | methodName | type  | value
-        'key'   | 'getAs'    | Class | null
-        'class' | 'getAs'    | Class | String
+        key   || value
+        'int' || 1
+    }
+
+    def "Find values on context 1 using converted value"() {
+        given:
+        PropertyEditorResolver.clear()
+        PropertyEditorResolver.registerEditor(Integer, IntegerPropertyEditor)
+
+        when:
+        Integer val = ctx1.getConverted(key, type)
+
+        then:
+        value == val
+
+        cleanup:
+        PropertyEditorResolver.clear()
+
+        where:
+        key       | type    || value
+        'key'     | Integer || null
+        'int'     | Integer || 1
+        'integer' | Integer || 1
+    }
+
+    def "Remove values on context 1 using casted value"() {
+        when:
+        Integer val = ctx1.removeAs(key)
+
+        then:
+        !ctx1.hasKey(key)
+        value == val
+
+        where:
+        key   || value
+        'int' || 1
+    }
+
+    def "Remove values on context 1 using converted value"() {
+        given:
+        PropertyEditorResolver.clear()
+        PropertyEditorResolver.registerEditor(Integer, IntegerPropertyEditor)
+
+        when:
+        Integer val = ctx1.removeConverted(key, type)
+
+        then:
+        !ctx1.hasKey(key)
+        value == val
+
+        cleanup:
+        PropertyEditorResolver.clear()
+
+        where:
+        key       | type    || value
+        'key'     | Integer || null
+        'int'     | Integer || 1
+        'integer' | Integer || 1
     }
 
     def "Find values on context 1"() {
@@ -151,8 +228,8 @@ class ContextSpec extends Specification {
 
         where:
         context | keySet
-        ctx1    | ['foo', 'class'] as Set
-        ctx2    | ['foo', 'bar', 'class'] as Set
+        ctx1    | ['foo', 'class', 'int', 'integer'] as Set
+        ctx2    | ['foo', 'bar', 'class', 'int', 'integer'] as Set
     }
 
     def "ContainsKey on child context"() {

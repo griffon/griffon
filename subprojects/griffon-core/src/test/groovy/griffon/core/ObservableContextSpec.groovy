@@ -15,6 +15,8 @@
  */
 package griffon.core
 
+import griffon.core.editors.IntegerPropertyEditor
+import griffon.core.editors.PropertyEditorResolver
 import org.codehaus.griffon.runtime.core.DefaultObservableContext
 import spock.lang.Shared
 import spock.lang.Specification
@@ -176,6 +178,33 @@ class ObservableContextSpec extends Specification {
 
         then:
         listener.contextEvent == null
+
+        when:
+        ctx1.addContextEventListener(listener)
+        String val = ctx1.removeAs('key')
+
+        then:
+        val == 'value'
+        listener.contextEvent.type == ObservableContext.ContextEvent.Type.REMOVE
+        listener.contextEvent.key == 'key'
+        listener.contextEvent.oldValue == 'value'
+        listener.contextEvent.newValue == null
+
+        when:
+        ctx1.put('key', '1')
+        PropertyEditorResolver.clear()
+        PropertyEditorResolver.registerEditor(Integer, IntegerPropertyEditor)
+        Integer converted = ctx1.removeConverted('key', Integer)
+
+        then:
+        converted == 1
+        listener.contextEvent.type == ObservableContext.ContextEvent.Type.REMOVE
+        listener.contextEvent.key == 'key'
+        listener.contextEvent.oldValue == 1
+        listener.contextEvent.newValue == null
+
+        cleanup:
+        PropertyEditorResolver.clear()
     }
 
     private static class TestContextEventListener implements ObservableContext.ContextEventListener {
