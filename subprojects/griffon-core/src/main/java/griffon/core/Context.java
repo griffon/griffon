@@ -41,25 +41,105 @@ public interface Context {
      */
     boolean hasKey(@Nonnull String key);
 
+    /**
+     * Removes a key form this context. Does not affect the context's hierarchy.
+     *
+     * @param key the key to search
+     * @return the value associated with the key or <tt>null</tt> if there wasn't any value.
+     */
     @Nullable
     Object remove(@Nonnull String key);
 
+    /**
+     * Removes a key form this context. Does not affect the context's hierarchy.
+     * Blindly casts the returned value.
+     *
+     * @param key the key to search
+     * @return the value associated with the key or <tt>null</tt> if there wasn't any value.
+     */
+    @Nullable
+    <T> T removeAs(@Nonnull String key);
+
+    /**
+     * Removes a key form this context. Does not affect the context's hierarchy. The value is
+     * converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     *
+     * @param key  the key to search
+     * @param type the type to be returned
+     * @return the value associated with the key or <tt>null</tt> if there wasn't any value.
+     */
+    @Nullable
+    <T> T removeConverted(@Nonnull String key, @Nonnull Class<T> type);
+
+    /**
+     * Sets a key/value pair on this context. If the context has a parent and if the
+     * key matches a parent key then the value will shadow the parent's, that is, the parent
+     * value will not be overwritten.
+     *
+     * @param key   the key to be registered
+     * @param value the value to save
+     */
     void put(@Nonnull String key, @Nullable Object value);
 
+    /**
+     * Sets a key/value pair on this context. If the context has a parent and if the
+     * key matches a parent key then the value will shadow the parent's, that is, the parent
+     * value will not be overwritten.
+     * Convenience method to use in Groovy aware environments.
+     *
+     * @param key   the key to be registered
+     * @param value the value to save
+     */
     void putAt(@Nonnull String key, @Nullable Object value);
 
+    /**
+     * Returns the value associated with the given key. This operation will traverse
+     * up the context hierarchy until it finds a key.
+     *
+     * @param key the key to search
+     * @return the value associated with the key or <tt>null<</tt> if not found.
+     */
     @Nullable
     Object get(@Nonnull String key);
 
+    /**
+     * Returns the value associated with the given key. This operation will traverse
+     * up the context hierarchy until it finds a key.
+     *
+     * @param key          the key to search
+     * @param defaultValue teh value to be returned if the key was not found
+     * @param <T>          the type of the value
+     * @return returns the value associated with the key, <tt>defaultValue</tt> if the key was not found
+     */
     @Nullable
     <T> T get(@Nonnull String key, @Nullable T defaultValue);
 
+    /**
+     * Returns the value associated with the given key. This operation will traverse
+     * up the context hierarchy until it finds a key.
+     * Convenience method to use in Groovy aware environments.
+     *
+     * @param key the key to search
+     * @return the value associated with the key or <tt>null<</tt> if not found.
+     */
     @Nullable
     Object getAt(@Nonnull String key);
 
+    /**
+     * Returns the value associated with the given key. This operation will traverse
+     * up the context hierarchy until it finds a key.
+     *
+     * @param key          the key to search
+     * @param defaultValue teh value to be returned if the key was not found
+     * @param <T>          the type of the value
+     * @return returns the value associated with the key, <tt>defaultValue</tt> if the key was not found
+     */
     @Nullable
     <T> T getAt(@Nonnull String key, @Nullable T defaultValue);
 
+    /**
+     * Destroys this context. Once destroyed a context should not be used anymore.
+     */
     void destroy();
 
     /**
@@ -204,19 +284,42 @@ public interface Context {
     /**
      * /**
      * Finds a value associated with the given key. The value is
-     * converted to type <tt>T</tt> if found.
+     * blindly cast to type <tt>T</tt> if found.
+     *
+     * @param key the key to search
+     * @since 2.5.0
+     */
+    @Nullable
+    <T> T getAs(@Nonnull String key);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * blindly cast to type <tt>T</tt> if found. If not found then the
+     * supplied <tt>defaultValue</tt> will be returned.
+     *
+     * @param key          the key to search
+     * @param defaultValue the value to be returned if the key is not found
+     * @since 2.5.0
+     */
+    @Nullable
+    <T> T getAs(@Nonnull String key, @Nullable T defaultValue);
+
+    /**
+     * /**
+     * Finds a value associated with the given key. The value is
+     * converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
      *
      * @param key  the key to search
      * @param type the type to be returned
      * @since 2.5.0
      */
     @Nullable
-    <T> T getAs(@Nonnull String key, @Nonnull Class<T> type);
+    <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type);
 
     /**
      * Finds a value associated with the given key. The value is
-     * converted to type <tt>T</tt> if found. If not found then the
-     * supplied <tt>defaultValue</tt> will be returned.
+     * converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     * If not found then the supplied <tt>defaultValue</tt> will be returned.
      *
      * @param key          the key to search
      * @param type         the type to be returned
@@ -224,7 +327,7 @@ public interface Context {
      * @since 2.5.0
      */
     @Nullable
-    <T> T getAs(@Nonnull String key, @Nonnull Class<T> type, @Nullable T defaultValue);
+    <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type, @Nullable T defaultValue);
 
     /**
      * Inject properties and members annotated with {@code griffon.inject.Contextal}.

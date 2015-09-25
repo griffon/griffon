@@ -62,6 +62,20 @@ public class DefaultContext extends AbstractContext {
         return attributes.remove(key);
     }
 
+    @Nullable
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T removeAs(@Nonnull String key) {
+        return (T) remove(key);
+    }
+
+    @Nullable
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T removeConverted(@Nonnull String key, @Nonnull Class<T> type) {
+        return convertValue(remove(key), type);
+    }
+
     @Override
     public void put(@Nonnull String key, @Nullable Object value) {
         requireNonBlank(key, ERROR_KEY_BLANK);

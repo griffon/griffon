@@ -22,10 +22,12 @@ import griffon.inject.Contextual;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.beans.PropertyDescriptor;
+import java.beans.PropertyEditor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import static griffon.core.editors.PropertyEditorResolver.findEditor;
 import static griffon.util.AnnotationUtils.annotationsOfMethodParameter;
 import static griffon.util.AnnotationUtils.findAnnotation;
 import static griffon.util.AnnotationUtils.nameFor;
@@ -170,14 +172,44 @@ public abstract class AbstractContext implements Context {
 
     @Nullable
     @Override
-    public <T> T getAs(@Nonnull String key, @Nonnull Class<T> type) {
-        return type.cast(get(key));
+    @SuppressWarnings("unchecked")
+    public <T> T getAs(@Nonnull String key) {
+        return (T) get(key);
     }
 
     @Nullable
     @Override
-    public <T> T getAs(@Nonnull String key, @Nonnull Class<T> type, @Nullable T defaultValue) {
+    @SuppressWarnings("unchecked")
+    public <T> T getAs(@Nonnull String key, @Nullable T defaultValue) {
         Object value = get(key);
+        return (T) (value != null ? value : defaultValue);
+    }
+
+    @Nullable
+    @Override
+    public <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type) {
+        requireNonNull(type, "Argument 'type' must not be null");
+        return convertValue(get(key), type);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <T> T convertValue(@Nullable Object value, @Nonnull Class<T> type) {
+        if (value != null) {
+            if (type.isAssignableFrom(value.getClass())) {
+                return (T) value;
+            } else {
+                PropertyEditor editor = findEditor(type);
+                editor.setValue(value);
+                return (T) editor.getValue();
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type, @Nullable T defaultValue) {
+        T value = getConverted(key, type);
         return type.cast(value != null ? value : defaultValue);
     }
 

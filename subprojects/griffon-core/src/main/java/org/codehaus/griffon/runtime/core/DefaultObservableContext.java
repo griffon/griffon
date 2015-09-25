@@ -116,6 +116,52 @@ public class DefaultObservableContext extends DefaultContext implements Observab
         }
     }
 
+    @Nullable
+    @Override
+    public <T> T removeAs(@Nonnull String key) {
+        boolean localKey = hasKey(key);
+        T oldValue = super.removeAs(key);
+        boolean localKeyRemoved = localKey && !hasKey(key);
+        boolean containsKey = containsKey(key);
+
+        try {
+            return oldValue;
+        } finally {
+            if (localKeyRemoved) {
+                if (containsKey) {
+                    T value = getAs(key);
+                    boolean valuesAreEqual = TypeUtils.equals(oldValue, value);
+                    if (!valuesAreEqual) fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value);
+                } else {
+                    fireContextEvent(ContextEvent.Type.REMOVE, key, oldValue, null);
+                }
+            }
+        }
+    }
+
+    @Nullable
+    @Override
+    public <T> T removeConverted(@Nonnull String key, @Nonnull Class<T> type) {
+        boolean localKey = hasKey(key);
+        T oldValue = super.removeConverted(key, type);
+        boolean localKeyRemoved = localKey && !hasKey(key);
+        boolean containsKey = containsKey(key);
+
+        try {
+            return oldValue;
+        } finally {
+            if (localKeyRemoved) {
+                if (containsKey) {
+                    T value = getConverted(key, type);
+                    boolean valuesAreEqual = TypeUtils.equals(oldValue, value);
+                    if (!valuesAreEqual) fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value);
+                } else {
+                    fireContextEvent(ContextEvent.Type.REMOVE, key, oldValue, null);
+                }
+            }
+        }
+    }
+
     @Override
     public void destroy() {
         if (getParentContext() instanceof ObservableContext) {
