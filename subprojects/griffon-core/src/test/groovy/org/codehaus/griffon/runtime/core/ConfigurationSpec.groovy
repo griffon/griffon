@@ -20,6 +20,8 @@ import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
 import com.google.inject.Inject
 import griffon.core.Configuration
+import griffon.core.editors.IntegerPropertyEditor
+import griffon.core.editors.PropertyEditorResolver
 import org.junit.Rule
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -47,6 +49,40 @@ class ConfigurationSpec extends Specification {
         'key.int.type' | 'foo'        || 42
         'key.foo'      | null         || null
         'key.foo'      | 'foo'        || 'foo'
+    }
+
+
+    def 'Calling configuration.getAs(#key) returns blindly casted #expectedValue'() {
+        when:
+        Integer value = configuration.getAs(key)
+
+        then:
+        value == expectedValue
+
+        where:
+        key            || expectedValue
+        'key.int.type' || 42
+    }
+
+    def 'Calling configuration.getAsConverted(#key) returns converted #expectedValue'() {
+        given:
+        PropertyEditorResolver.clear()
+        PropertyEditorResolver.registerEditor(Integer, IntegerPropertyEditor)
+
+        when:
+        Integer value = configuration.getConverted(key, Integer)
+
+        then:
+        value == expectedValue
+
+        cleanup:
+        PropertyEditorResolver.clear()
+
+        where:
+        key              || expectedValue
+        'key.int.null'   || null
+        'key.int.type'   || 42
+        'key.int.string' || 21
     }
 
     def 'Calling configuration.getAsString(#key, #defaultValue) returns #expectedValue'() {

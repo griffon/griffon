@@ -192,6 +192,13 @@ public abstract class AbstractContext implements Context {
         return convertValue(get(key), type);
     }
 
+    @Nullable
+    @Override
+    public <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type, @Nullable T defaultValue) {
+        T value = getConverted(key, type);
+        return type.cast(value != null ? value : defaultValue);
+    }
+
     @SuppressWarnings("unchecked")
     protected <T> T convertValue(@Nullable Object value, @Nonnull Class<T> type) {
         if (value != null) {
@@ -204,13 +211,6 @@ public abstract class AbstractContext implements Context {
             }
         }
         return null;
-    }
-
-    @Nullable
-    @Override
-    public <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type, @Nullable T defaultValue) {
-        T value = getConverted(key, type);
-        return type.cast(value != null ? value : defaultValue);
     }
 
     @Nonnull

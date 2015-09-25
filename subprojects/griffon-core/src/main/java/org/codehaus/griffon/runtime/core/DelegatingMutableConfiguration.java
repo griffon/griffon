@@ -72,6 +72,20 @@ public class DelegatingMutableConfiguration extends ConfigurationDecorator imple
         return null;
     }
 
+    @Nullable
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T removeAs(@Nonnull String key) {
+        return (T) remove(key);
+    }
+
+    @Nullable
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T removeConverted(@Nonnull String key, @Nonnull Class<T> type) {
+        return convertValue(remove(key), type);
+    }
+
     @Nonnull
     @Override
     public Map<String, Object> asFlatMap() {

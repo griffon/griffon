@@ -25,7 +25,7 @@ import java.util.Set;
  */
 public interface Context {
     /**
-     * Searches for the key in this context and its hierarchy
+     * Searches for the key in this context and its hierarchy.
      *
      * @param key the key to search
      * @return true if the context (or its parent) contains the given key, false otherwise
@@ -34,7 +34,7 @@ public interface Context {
     boolean containsKey(@Nonnull String key);
 
     /**
-     * Searches for the key in this context only
+     * Searches for the key in this context only.
      *
      * @param key the key to search
      * @return true if the context contains the given key, false otherwise
@@ -42,31 +42,33 @@ public interface Context {
     boolean hasKey(@Nonnull String key);
 
     /**
-     * Removes a key form this context. Does not affect the context's hierarchy.
+     * Removes a key from this context. Does not affect the context's hierarchy.
      *
-     * @param key the key to search
+     * @param key the key to be removed
      * @return the value associated with the key or <tt>null</tt> if there wasn't any value.
      */
     @Nullable
     Object remove(@Nonnull String key);
 
     /**
-     * Removes a key form this context. Does not affect the context's hierarchy.
+     * Removes a key from this context. Does not affect the context's hierarchy.
      * Blindly casts the returned value.
      *
-     * @param key the key to search
+     * @param key the key to be removed
      * @return the value associated with the key or <tt>null</tt> if there wasn't any value.
+     * @since 2.5.0
      */
     @Nullable
     <T> T removeAs(@Nonnull String key);
 
     /**
-     * Removes a key form this context. Does not affect the context's hierarchy. The value is
+     * Removes a key from this context. Does not affect the context's hierarchy. The value is
      * converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
      *
-     * @param key  the key to search
+     * @param key  the key to be removed
      * @param type the type to be returned
      * @return the value associated with the key or <tt>null</tt> if there wasn't any value.
+     * @since 2.5.0
      */
     @Nullable
     <T> T removeConverted(@Nonnull String key, @Nonnull Class<T> type);
@@ -107,7 +109,7 @@ public interface Context {
      * up the context hierarchy until it finds a key.
      *
      * @param key          the key to search
-     * @param defaultValue teh value to be returned if the key was not found
+     * @param defaultValue the value to be returned if the key was not found
      * @param <T>          the type of the value
      * @return returns the value associated with the key, <tt>defaultValue</tt> if the key was not found
      */
@@ -130,7 +132,7 @@ public interface Context {
      * up the context hierarchy until it finds a key.
      *
      * @param key          the key to search
-     * @param defaultValue teh value to be returned if the key was not found
+     * @param defaultValue the value to be returned if the key was not found
      * @param <T>          the type of the value
      * @return returns the value associated with the key, <tt>defaultValue</tt> if the key was not found
      */
