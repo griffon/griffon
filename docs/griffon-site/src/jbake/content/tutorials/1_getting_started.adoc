@@ -25,36 +25,35 @@ The first step is to get the tools needed to create an application. While it's p
 Griffon 2 application from scratch it's also true that the power of conventions allows you to get
 faster development cycles. We need the following tools:
 
- . link:http://gvmtool.net/[GVM, window="_blank"]: tool manager.
+ . link:http://sdkman.io/[SDKMAN, window="_blank"]: tool manager.
  . link:https://github.com/pledbrook/lazybones[Lazybones, window="_blank"]: template based project generator.
  . link:http://maven.apache.org/[Maven, window="_blank"] or link:http://gradle.org/[Gradle, window="_blank"]: build tool.
  . link:https://www.jetbrains.com/idea/download/[IntelliJ IDEA, window="_blank"] or
    link:https://netbeans.org/downloads/[NetBeans, window="_blank"] or
    link:https://www.eclipse.org/downloads/[Eclipse, window="_blank"]: IDE.
 
-.GVM
+.SDKMAN
 
-GVM is a tool for managing parallel Versions of multiple Software Development Kits on most Unix based systems.
+SDKMAN is a tool for managing parallel Versions of multiple Software Development Kits on most Unix based systems.
 It provides a convenient command line interface for installing, switching, removing and listing Candidates.
 The candidates we're interested in are _Lazybones_ and _Gradle_.
 
-NOTE: You can run GVM on Windows as long as you have a POSIX environment. We recommend you to give
-link:http://babun.github.io/[Babun Shell, window="_blank"] a try first. There's also a
-link:https://github.com/flofreud/posh-gvm[PowerShell, window="_blank"] friendly version of GVM.
+NOTE: You can run SDKMAN on Windows as long as you have a POSIX environment. We recommend you to give
+link:http://babun.github.io/[Babun Shell, window="_blank"] a try first.
 
-Installing GVM is as easy as executing the following command
+Installing SDKMAN is as easy as executing the following command
 
 [source]
 ----
-$ curl -s get.gvmtool.net | bash
+$ curl -s http://get.sdkman.io | bash
 ----
 
-This will download the required files and configure your environment. After this the `gvm` command should be available.
+This will download the required files and configure your environment. After this the `sdk` command should be available.
 You can verify your setup by executing this command
 
 [source]
 ----
-$ gvm help
+$ sdk help
 ----
 
 .Lazybones
@@ -67,7 +66,7 @@ Execute the following command to install Lazybones on your system
 
 [source]
 ----
-$ gvm install lazybones
+$ sdk install lazybones
 ----
 
 Verify your setup by invoking the following command
@@ -121,13 +120,13 @@ Gradle is an open source build automation system. Gradle can automate the buildi
 deployment and more of software packages or other types of projects such as generated static websites,
 generated documentation or indeed anything else.
 
-You can download and install Gradle manually, however we recommend using GVM for this task too, as it greatly
+You can download and install Gradle manually, however we recommend using SDKMAN for this task too, as it greatly
 simplifies handling different versions and keeping binary distributions up to date. You can install Gradle via
-GVM by executing this command
+SDKMAN by executing this command
 
 [source]
 ----
-$ gvm install gradle
+$ sdk install gradle
 ----
 
 Once installed you can verify that's working by invoking this command
@@ -155,7 +154,7 @@ Gradle 2 is the minimum supported version.
 
 Maven is a software project management and comprehension tool. Based on the concept of a project object model
 (POM), Maven can manage a project's build, reporting and documentation from a central piece of information.
-Maven is a well known build tool, unfortunately there's no support for it to be found in GVM, you must follow
+Maven is a well known build tool, unfortunately there's no support for it to be found in SDKMAN, you must follow
 the link:http://maven.apache.org/download.cgi#Installation[download and install, window="_blank"] instructions.
 
 You can verify this tool by executing this command
