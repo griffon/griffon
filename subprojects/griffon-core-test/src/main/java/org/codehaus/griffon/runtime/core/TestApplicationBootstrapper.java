@@ -220,9 +220,15 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
         @SuppressWarnings("unchecked")
         protected void doConfigure() {
             Class<?> clazz = testCase.getClass();
+            List<Class<?>> classes = new ArrayList<>();
             while (clazz != null) {
-                harvestBindings(clazz);
+                classes.add(clazz);
                 clazz = clazz.getSuperclass();
+            }
+
+            Collections.reverse(classes);
+            for (Class<?> c : classes) {
+                harvestBindings(c);
             }
         }
 
@@ -262,9 +268,15 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
         @SuppressWarnings("unchecked")
         protected void doConfigure() {
             Class<?> clazz = testCase.getClass();
+            List<Class<?>> classes = new ArrayList<>();
             while (clazz != null) {
-                harvestBindings(clazz);
+                classes.add(clazz);
                 clazz = clazz.getSuperclass();
+            }
+
+            Collections.reverse(classes);
+            for (Class<?> c : classes) {
+                harvestBindings(c);
             }
         }
 
