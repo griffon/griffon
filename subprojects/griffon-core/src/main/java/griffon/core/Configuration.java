@@ -218,7 +218,6 @@ public interface Configuration {
     <T> T getAs(@Nonnull String key, @Nullable T defaultValue);
 
     /**
-     * /**
      * Finds a value associated with the given key. The value is
      * converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
      *
