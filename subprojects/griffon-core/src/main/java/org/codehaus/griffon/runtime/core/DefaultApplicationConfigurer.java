@@ -183,8 +183,7 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
         final ResourceInjector injector = application.getResourceInjector();
         application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), new RunnableWithArgs() {
             public void run(@Nullable Object... args) {
-                Object instance = args[1];
-                injector.injectResources(instance);
+                injector.injectResources(args[1]);
             }
         });
     }
@@ -242,8 +241,7 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
             public void run(@Nullable Object... args) {
                 Class<?> klass = (Class) args[0];
                 if (GriffonController.class.isAssignableFrom(klass)) {
-                    GriffonController controller = (GriffonController) args[1];
-                    application.getActionManager().createActions(controller);
+                    application.getActionManager().createActions((GriffonController) args[1]);
                 }
             }
         });
