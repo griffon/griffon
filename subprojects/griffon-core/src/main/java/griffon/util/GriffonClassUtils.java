@@ -1269,7 +1269,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
-     * @return true if the method is an Observable method, false otherwise.
+     * @return true if the method is an ResourceHandler method, false otherwise.
      */
     public static boolean isResourceHandlerMethod(@Nonnull Method method) {
         return isResourceHandlerMethod(method, false);
@@ -1287,7 +1287,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
-     * @return true if the method is an Observable method, false otherwise.
+     * @return true if the method is an ResourceHandler method, false otherwise.
      */
     public static boolean isResourceHandlerMethod(@Nonnull Method method, boolean removeAbstractModifier) {
         requireNonNull(method, ERROR_METHOD_NULL);
@@ -1306,7 +1306,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a MethodDescriptor reference
-     * @return true if the method is an Observable method, false otherwise.
+     * @return true if the method is an ResourceHandler method, false otherwise.
      */
     public static boolean isResourceHandlerMethod(@Nonnull MethodDescriptor method) {
         requireNonNull(method, ERROR_METHOD_NULL);
@@ -1325,7 +1325,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
-     * @return true if the method is an Observable method, false otherwise.
+     * @return true if the method is an MessageSource method, false otherwise.
      */
     public static boolean isMessageSourceMethod(@Nonnull Method method) {
         return isMessageSourceMethod(method, false);
@@ -1342,7 +1342,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
-     * @return true if the method is an Observable method, false otherwise.
+     * @return true if the method is an MessageSource method, false otherwise.
      */
     public static boolean isMessageSourceMethod(@Nonnull Method method, boolean removeAbstractModifier) {
         requireNonNull(method, ERROR_METHOD_NULL);
@@ -1360,7 +1360,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a MethodDescriptor reference
-     * @return true if the method is an Observable method, false otherwise.
+     * @return true if the method is an MessageSource method, false otherwise.
      */
     public static boolean isMessageSourceMethod(@Nonnull MethodDescriptor method) {
         requireNonNull(method, ERROR_METHOD_NULL);
@@ -1379,7 +1379,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
-     * @return true if the method is an Observable method, false otherwise.
+     * @return true if the method is an ResourceResolver method, false otherwise.
      */
     public static boolean isResourceResolverMethod(@Nonnull Method method) {
         return isResourceResolverMethod(method, false);
@@ -1396,7 +1396,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
-     * @return true if the method is an Observable method, false otherwise.
+     * @return true if the method is an ResourceResolver method, false otherwise.
      */
     public static boolean isResourceResolverMethod(@Nonnull Method method, boolean removeAbstractModifier) {
         requireNonNull(method, ERROR_METHOD_NULL);
@@ -1414,7 +1414,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a MethodDescriptor reference
-     * @return true if the method is an Observable method, false otherwise.
+     * @return true if the method is an ResourceResolver method, false otherwise.
      */
     public static boolean isResourceResolverMethod(@Nonnull MethodDescriptor method) {
         requireNonNull(method, ERROR_METHOD_NULL);
