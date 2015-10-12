@@ -47,6 +47,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -63,7 +64,7 @@ import static java.util.Objects.requireNonNull;
  * Class containing utility methods for dealing with Griffon class artifacts.<p>
  * Contains utility methods copied from commons-lang and commons-beanutils in order
  * to reduce dependencies on external libraries.<p>
- * <p/>
+ * <p>
  * <b>Contains code copied from commons-beanutils and commons-langs</b>
  *
  * @author Graeme Rocher (Grails 0.1)
@@ -296,9 +297,9 @@ public class GriffonClassUtils {
      * Checks that the specified array is not empty, throwing a customized
      * {@link IllegalStateException} if it is.
      *
-     * @param array the array to check
-     * @param message    detail message to be used in the event that a {@code
-     *                   IllegalStateException} is thrown
+     * @param array   the array to check
+     * @param message detail message to be used in the event that a {@code
+     *                IllegalStateException} is thrown
      * @throws NullPointerException     if {@code array} is null
      * @throws IllegalArgumentException if {@code message} is {@code blank}
      * @throws IllegalStateException    if {@code array} is empty
@@ -327,9 +328,9 @@ public class GriffonClassUtils {
      * Checks that the specified array is not empty, throwing a customized
      * {@link IllegalStateException} if it is.
      *
-     * @param array the array to check
-     * @param message    detail message to be used in the event that a {@code
-     *                   IllegalStateException} is thrown
+     * @param array   the array to check
+     * @param message detail message to be used in the event that a {@code
+     *                IllegalStateException} is thrown
      * @throws NullPointerException     if {@code array} is null
      * @throws IllegalArgumentException if {@code message} is {@code blank}
      * @throws IllegalStateException    if {@code array} is empty
@@ -358,9 +359,9 @@ public class GriffonClassUtils {
      * Checks that the specified array is not empty, throwing a customized
      * {@link IllegalStateException} if it is.
      *
-     * @param array the array to check
-     * @param message    detail message to be used in the event that a {@code
-     *                   IllegalStateException} is thrown
+     * @param array   the array to check
+     * @param message detail message to be used in the event that a {@code
+     *                IllegalStateException} is thrown
      * @throws NullPointerException     if {@code array} is null
      * @throws IllegalArgumentException if {@code message} is {@code blank}
      * @throws IllegalStateException    if {@code array} is empty
@@ -389,9 +390,9 @@ public class GriffonClassUtils {
      * Checks that the specified array is not empty, throwing a customized
      * {@link IllegalStateException} if it is.
      *
-     * @param array the array to check
-     * @param message    detail message to be used in the event that a {@code
-     *                   IllegalStateException} is thrown
+     * @param array   the array to check
+     * @param message detail message to be used in the event that a {@code
+     *                IllegalStateException} is thrown
      * @throws NullPointerException     if {@code array} is null
      * @throws IllegalArgumentException if {@code message} is {@code blank}
      * @throws IllegalStateException    if {@code array} is empty
@@ -420,9 +421,9 @@ public class GriffonClassUtils {
      * Checks that the specified array is not empty, throwing a customized
      * {@link IllegalStateException} if it is.
      *
-     * @param array the array to check
-     * @param message    detail message to be used in the event that a {@code
-     *                   IllegalStateException} is thrown
+     * @param array   the array to check
+     * @param message detail message to be used in the event that a {@code
+     *                IllegalStateException} is thrown
      * @throws NullPointerException     if {@code array} is null
      * @throws IllegalArgumentException if {@code message} is {@code blank}
      * @throws IllegalStateException    if {@code array} is empty
@@ -451,9 +452,9 @@ public class GriffonClassUtils {
      * Checks that the specified array is not empty, throwing a customized
      * {@link IllegalStateException} if it is.
      *
-     * @param array the array to check
-     * @param message    detail message to be used in the event that a {@code
-     *                   IllegalStateException} is thrown
+     * @param array   the array to check
+     * @param message detail message to be used in the event that a {@code
+     *                IllegalStateException} is thrown
      * @throws NullPointerException     if {@code array} is null
      * @throws IllegalArgumentException if {@code message} is {@code blank}
      * @throws IllegalStateException    if {@code array} is empty
@@ -482,9 +483,9 @@ public class GriffonClassUtils {
      * Checks that the specified array is not empty, throwing a customized
      * {@link IllegalStateException} if it is.
      *
-     * @param array the array to check
-     * @param message    detail message to be used in the event that a {@code
-     *                   IllegalStateException} is thrown
+     * @param array   the array to check
+     * @param message detail message to be used in the event that a {@code
+     *                IllegalStateException} is thrown
      * @throws NullPointerException     if {@code array} is null
      * @throws IllegalArgumentException if {@code message} is {@code blank}
      * @throws IllegalStateException    if {@code array} is empty
@@ -513,9 +514,9 @@ public class GriffonClassUtils {
      * Checks that the specified array is not empty, throwing a customized
      * {@link IllegalStateException} if it is.
      *
-     * @param array the array to check
-     * @param message    detail message to be used in the event that a {@code
-     *                   IllegalStateException} is thrown
+     * @param array   the array to check
+     * @param message detail message to be used in the event that a {@code
+     *                IllegalStateException} is thrown
      * @throws NullPointerException     if {@code array} is null
      * @throws IllegalArgumentException if {@code message} is {@code blank}
      * @throws IllegalStateException    if {@code array} is empty
@@ -544,9 +545,9 @@ public class GriffonClassUtils {
      * Checks that the specified array is not empty, throwing a customized
      * {@link IllegalStateException} if it is.
      *
-     * @param array the array to check
-     * @param message    detail message to be used in the event that a {@code
-     *                   IllegalStateException} is thrown
+     * @param array   the array to check
+     * @param message detail message to be used in the event that a {@code
+     *                IllegalStateException} is thrown
      * @throws NullPointerException     if {@code array} is null
      * @throws IllegalArgumentException if {@code message} is {@code blank}
      * @throws IllegalStateException    if {@code array} is empty
@@ -623,7 +624,7 @@ public class GriffonClassUtils {
      * Finds out if the given string represents the name of an
      * event handler by matching against the following pattern:
      * "^on[A-Z][\\w]*$"<p>
-     * <p/>
+     * <p>
      * <pre>
      * isEventHandler("onBootstrapEnd") = true
      * isEventHandler("mvcGroupInit")   = false
@@ -1183,7 +1184,7 @@ public class GriffonClassUtils {
     /**
      * Finds out if the given {@code MethodDescriptor} belongs to the set of
      * predefined event publisher methods by convention.
-     * <p/>
+     * <p>
      * <pre>
      * // assuming getMethod() returns an appropriate MethodDescriptor reference
      * isEventPublisherMethod(getMethod("addEventPublisher"))  = true
@@ -1203,7 +1204,7 @@ public class GriffonClassUtils {
     /**
      * Finds out if the given {@code Method} belongs to the set of
      * predefined observable methods by convention.
-     * <p/>
+     * <p>
      * <pre>
      * // assuming getMethod() returns an appropriate Method reference
      * isObservableMethod(getMethod("addPropertyChangeListener"))  = true
@@ -1240,7 +1241,7 @@ public class GriffonClassUtils {
     /**
      * Finds out if the given {@code MethodDescriptor} belongs to the set of
      * predefined observable methods by convention.
-     * <p/>
+     * <p>
      * <pre>
      * // assuming getMethod() returns an appropriate MethodDescriptor reference
      * isObservableMethod(getMethod("addPropertyChangeListener"))  = true
@@ -1260,7 +1261,7 @@ public class GriffonClassUtils {
     /**
      * Finds out if the given {@code Method} belongs to the set of
      * predefined resources methods by convention.
-     * <p/>
+     * <p>
      * <pre>
      * // assuming getMethod() returns an appropriate Method reference
      * isResourceHandlerMethod(getMethod("getResourceAsURL"))    = true
@@ -1278,7 +1279,7 @@ public class GriffonClassUtils {
     /**
      * Finds out if the given {@code Method} belongs to the set of
      * predefined resources methods by convention.
-     * <p/>
+     * <p>
      * <pre>
      * // assuming getMethod() returns an appropriate Method reference
      * isResourceHandlerMethod(getMethod("getResourceAsURL"))    = true
@@ -1297,7 +1298,7 @@ public class GriffonClassUtils {
     /**
      * Finds out if the given {@code MethodDescriptor} belongs to the set of
      * predefined resources methods by convention.
-     * <p/>
+     * <p>
      * <pre>
      * // assuming getMethod() returns an appropriate MethodDescriptor reference
      * isResourceHandlerMethod(getMethod("getResourceAsURL"))    = true
@@ -1317,7 +1318,7 @@ public class GriffonClassUtils {
     /**
      * Finds out if the given {@code Method} belongs to the set of
      * predefined message source methods by convention.
-     * <p/>
+     * <p>
      * <pre>
      * // assuming getMethod() returns an appropriate Method reference
      * isMessageSourceMethod(getMethod("getMessage"))    = true
@@ -1334,7 +1335,7 @@ public class GriffonClassUtils {
     /**
      * Finds out if the given {@code Method} belongs to the set of
      * predefined message source methods by convention.
-     * <p/>
+     * <p>
      * <pre>
      * // assuming getMethod() returns an appropriate Method reference
      * isMessageSourceMethod(getMethod("getMessage"))    = true
@@ -1352,7 +1353,7 @@ public class GriffonClassUtils {
     /**
      * Finds out if the given {@code MethodDescriptor} belongs to the set of
      * predefined message source methods by convention.
-     * <p/>
+     * <p>
      * <pre>
      * // assuming getMethod() returns an appropriate MethodDescriptor reference
      * isMessageSourceMethod(getMethod("getMessage"))    = true
@@ -1371,7 +1372,7 @@ public class GriffonClassUtils {
     /**
      * Finds out if the given {@code Method} belongs to the set of
      * predefined resource resolver methods by convention.
-     * <p/>
+     * <p>
      * <pre>
      * // assuming getMethod() returns an appropriate Method reference
      * isResourceResolverMethod(getMethod("resolveResource")) = true
@@ -1388,7 +1389,7 @@ public class GriffonClassUtils {
     /**
      * Finds out if the given {@code Method} belongs to the set of
      * predefined resource resolver methods by convention.
-     * <p/>
+     * <p>
      * <pre>
      * // assuming getMethod() returns an appropriate Method reference
      * isResourceResolverMethod(getMethod("resolveResource")) = true
@@ -1406,7 +1407,7 @@ public class GriffonClassUtils {
     /**
      * Finds out if the given {@code MethodDescriptor} belongs to the set of
      * predefined resource resolver methods by convention.
-     * <p/>
+     * <p>
      * <pre>
      * // assuming getMethod() returns an appropriate MethodDescriptor reference
      * isResourceResolverMethod(getMethod("resolveResource")) = true
@@ -2140,7 +2141,7 @@ public class GriffonClassUtils {
         } else if (interfaceType.equals(SortedSet.class)) {
             elements = new TreeSet<>();
         } else {
-            elements = new HashSet<>();
+            elements = new LinkedHashSet<>();
         }
         return elements;
     }
@@ -2311,7 +2312,7 @@ public class GriffonClassUtils {
 
     /**
      * Sets or updates an object's properties.
-     * <p/>
+     * <p>
      * This method will attempt setting a property using a matching
      * {@code PropertyDescriptor}; next it will try direct field
      * access if the property was not found.
@@ -2331,7 +2332,7 @@ public class GriffonClassUtils {
 
     /**
      * Sets or updates an object's properties.
-     * <p/>
+     * <p>
      * This method will attempt setting a property using a matching
      * {@code PropertyDescriptor}; next it will try direct field
      * access if the property was not found.
@@ -2354,7 +2355,7 @@ public class GriffonClassUtils {
 
     /**
      * Sets or updates an object's property.
-     * <p/>
+     * <p>
      * This method will attempt setting a property using a matching
      * {@code PropertyDescriptor}; next it will try direct field
      * access if the property was not found.
@@ -2400,7 +2401,7 @@ public class GriffonClassUtils {
 
     /**
      * Sets or updates an object's properties.
-     * <p/>
+     * <p>
      * This method will attempt setting a property using direct field
      * access; next it will try a {@code PropertyDescriptor} if a
      * matching field name was not found.
@@ -2420,7 +2421,7 @@ public class GriffonClassUtils {
 
     /**
      * Sets or updates an object's properties.
-     * <p/>
+     * <p>
      * This method will attempt setting a property using direct field
      * access; next it will try a {@code PropertyDescriptor} if a
      * matching field name was not found.
@@ -2443,7 +2444,7 @@ public class GriffonClassUtils {
 
     /**
      * Sets or updates an object's property.
-     * <p/>
+     * <p>
      * This method will attempt setting a property using direct field
      * access; next it will try a {@code PropertyDescriptor} if a
      * matching field name was not found.
@@ -2992,7 +2993,7 @@ public class GriffonClassUtils {
      * throwing an exception with the specified message. This method is useful when
      * validating according to an arbitrary boolean expression, such as validating a
      * primitive number or using your own custom validation expression.</p>
-     * <p/>
+     * <p>
      * <pre>
      * isTrue( (i > 0), "The value must be greater than zero");
      * isTrue( myObject.isOk(), "The object is not OK");
