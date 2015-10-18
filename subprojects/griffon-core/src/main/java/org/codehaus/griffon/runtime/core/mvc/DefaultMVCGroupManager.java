@@ -397,11 +397,25 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
     protected void destroyArtifactMember(@Nonnull String type, @Nonnull GriffonArtifact member, boolean fireDestructionEvents) {
         if (member instanceof GriffonMvcArtifact) {
-            GriffonMvcArtifact artifact = (GriffonMvcArtifact) member;
+            final GriffonMvcArtifact artifact = (GriffonMvcArtifact) member;
             if (fireDestructionEvents) {
                 getApplication().getEventRouter().publishEvent(ApplicationEvent.DESTROY_INSTANCE.getName(), asList(member.getClass(), artifact));
             }
-            artifact.mvcGroupDestroy();
+
+            if (artifact instanceof GriffonView) {
+                getApplication().getUIThreadManager().runInsideUISync(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            artifact.mvcGroupDestroy();
+                        } catch (RuntimeException e) {
+                            throw (RuntimeException) sanitize(e);
+                        }
+                    }
+                });
+            } else {
+                artifact.mvcGroupDestroy();
+            }
 
             // clear all parent* references
             for (String parentMemberName : new String[]{"parentModel", "parentView", "parentController", "parentGroup"}) {
