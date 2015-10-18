@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.084s</div>
+<div class="counter">0.269s</div>
 <p>duration</p>
 </div>
 </td>
@@ -63,6 +63,9 @@
 <li>
 <a href="#tab0">Tests</a>
 </li>
+<li>
+<a href="#tab1">Standard error</a>
+</li>
 </ul>
 <div id="tab0" class="tab">
 <h2>Tests</h2>
@@ -76,7 +79,7 @@
 </thead>
 <tr>
 <td class="success">exerciseAllExceptionThrowingMethods</td>
-<td>0.029s</td>
+<td>0.227s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -91,7 +94,7 @@
 </tr>
 <tr>
 <td class="success">exerciseFormatResource</td>
-<td>0.026s</td>
+<td>0.015s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -101,7 +104,7 @@
 </tr>
 <tr>
 <td class="success">resolveResourceFromCustomResourceResolver</td>
-<td>0.014s</td>
+<td>0.012s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -111,6 +114,122 @@
 </tr>
 </table>
 </div>
+<div id="tab1" class="tab">
+<h2>Standard error</h2>
+<span class="code">
+<pre>[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=reference.key
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=reference.key; value='@[referenced.key]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=referenced.key
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=referenced.key; value='what's up doc?'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=not.a.reference.key1
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=not.a.reference.key1; value='@[NOT'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=not.a.reference.key2
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=not.a.reference.key2; value='NOT]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=not.a.reference.key3
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=not.a.reference.key3; value='@[]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.index
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=healthy.proverb.index; value='An {0} a day keeps the {1} away'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.index
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=famous.quote.index; value='This is {0}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.index
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=healthy.proverb.index; value='An {0} a day keeps the {1} away'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.index
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=famous.quote.index; value='This is {0}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.map
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=healthy.proverb.map; value='An {:fruit} a day keeps the {:occupation} away'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.map
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=famous.quote.map; value='This is {:location}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.index
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=famous.quote.index; value='This is {0}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.index
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=famous.quote.index; value='This is {0}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.index
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=famous.quote.index; value='This is {0}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.index
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=famous.quote.index; value='This is {0}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.map
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=famous.quote.map; value='This is {:location}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integer
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=integer; value='42'
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for java.lang.Integer
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for java.lang.Integer is griffon.core.editors.IntegerPropertyEditor
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integer
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=integer; value='42'
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for java.lang.Integer
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for java.lang.Integer is griffon.core.editors.IntegerPropertyEditor
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integer
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=integer; value='42'
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for java.lang.Integer
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for java.lang.Integer is griffon.core.editors.IntegerPropertyEditor
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integer
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=integer; value='42'
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for java.lang.Integer
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for java.lang.Integer is griffon.core.editors.IntegerPropertyEditor
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integer
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=integer; value='42'
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for java.lang.Integer
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for java.lang.Integer is griffon.core.editors.IntegerPropertyEditor
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integer
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=integer; value='42'
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for java.lang.Integer
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for java.lang.Integer is griffon.core.editors.IntegerPropertyEditor
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integer
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=integer; value='42'
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for java.lang.Integer
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for java.lang.Integer is griffon.core.editors.IntegerPropertyEditor
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integer
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5e035f8f; key=integer; value='42'
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for java.lang.Integer
+[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for java.lang.Integer is griffon.core.editors.IntegerPropertyEditor
+</pre>
+</span>
+</div>
 </div>
 <div id="footer">
 <p>
@@ -119,7 +238,7 @@
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 2.7</a> at Oct 18, 2015 3:45:18 PM</p>
+<a href="http://www.gradle.org">Gradle 2.7</a> at Oct 18, 2015 4:23:07 PM</p>
 </div>
 </div>
 </body>
