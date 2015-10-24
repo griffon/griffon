@@ -5,7 +5,7 @@
 Controllers are the entry point for your application's logic. Each controller has
 access to their `model` and `view` instances from their respective MVC group.
 
-Controller actions are defined as public methods on a controller class, for example
+Controller actions are defined as public methods on a controller class. For example,
 in Groovy you'd write
 
 [source,groovy,linenums,options="nowrap"]
@@ -58,7 +58,7 @@ Actions must follow these rules in order to be considered as such:
 The application's `{link_action_manager}` will automatically configure an `{link_controller_action}`
 instance for each matching controller action. These `Action` instances can be later used
 within Views to link them to UI components. The following example shows a Swing View
-making use of the configured `clickAction` from `SampleController`
+making use of the configured `clickAction` from `SampleController`:
 
 [source,groovy,linenums,options="nowrap"]
 ----

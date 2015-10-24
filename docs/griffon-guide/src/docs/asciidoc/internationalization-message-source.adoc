@@ -15,10 +15,10 @@ the behavior exposed by `{link_message_source}`. This interface exposes the foll
  - String getMessage(String key, Map args, Locale locale)
  - Object resolveMessageValue(String key, Locale locale)
 
-The first set throws `NoSuchMessageException` if a message could not be resolved given
-the key sent as argument. The following methods take and additional `defaultMessage`
+The first set throws a `NoSuchMessageException` if a message could not be resolved given
+the key sent as argument. The following methods take an additional `defaultMessage`
 parameter that may be used if no configured message is found. If this optional parameter
-were to be null then the `key` is used as the message; in other words, these methods
+is null, then the `key` is used as the message; in other words, these methods
 never throw `NoSuchMessageException` nor return `null` unless the passed in `key` is null.
 
  - String getMessage(String key, String defaultMessage)
@@ -30,7 +30,7 @@ never throw `NoSuchMessageException` nor return `null` unless the passed in `key
  - String getMessage(String key, Map args, String defaultMessage)
  - String getMessage(String key, Map args, Locale locale, String defaultMessage)
 
-The simplest way to resolve a message thus results like this
+The simplest way to resolve a message is as follows:
 
 [source,groovy,options="nowrap"]
 ----
@@ -38,8 +38,8 @@ getApplication().getMessageSource().getMessage('some.key')
 ----
 
 The set of methods that take a `List` as arguments are meant to be used from Groovy
-code whereas those that take an `Object[]` are meant for Java code; this leads to
-better idiomatic code as the following examples reveal
+code, whereas those that take an `Object[]` are meant for Java code; this leads to
+better idiomatic code, as the following examples reveal:
 
 [source,groovy,options="nowrap"]
 ----
@@ -53,7 +53,7 @@ getApplication().getMessageSource()
                 .getMessage("java.message", new Object[]{"unicorns", "rainbows"});
 ----
 
-Of course you may also use `List` versions in Java, like this
+Of course you may also use `List` versions in Java, like this:
 
 [source,java,options="nowrap"]
 ----
@@ -65,7 +65,7 @@ getApplication().getMessageSource()
 
 There are three types of message formats supported by default. Additional formats may
 be supported if the right plugins are installed. Resources may be configured using
-either properties files or Groovy scripts, please refer to the
+either properties files or Groovy scripts; please refer to the
 <<_internationalization_message_source_configuration,configuration>> section.
 
 === Standard Format
@@ -73,8 +73,8 @@ either properties files or Groovy scripts, please refer to the
 The first set of message formats are those supported by the JDK's
 `http://docs.oracle.com/javase/6/docs/api/java/text/MessageFormat.html[MessageFormat]`
 facilities. These formats work with all versions of the `getMessage()` method that
-take a `List` or an `Object[]` as arguments. Examples follow. First the messages
-stored in a properties file
+take a `List` or an `Object[]` as arguments. Examples follow. First, the messages may be
+stored in a properties file:
 
 [source,java,linenums,options="nowrap"]
 ----
@@ -82,7 +82,7 @@ healthy.proverb = An {0} a day keeps the {1} away
 yoda.says = {0} is the path to the dark side. {0} leads to {1}. {1} leads to {2}. {2} leads to suffering.
 ----
 
-Then the code used to resolve them
+Then the code used to resolve them is:
 
 [source,groovy,options="nowrap"]
 ----
@@ -102,7 +102,7 @@ assertEquals(quote, "Fear is the path to the dark side. Fear leads to Anger. Ang
 
 The following format is non-standard (i.e, not supported by `MessageFormat`) and can
 only be resolved by Griffon. This format uses symbols instead of numbers as placeholders
-for arguments. Thus the previous messages can be rewritten as follows
+for arguments. Thus the previous messages can be rewritten as follows:
 
 [source,java,linenums,options="nowrap"]
 ----
@@ -110,7 +110,7 @@ healthy.proverb = An {:fruit} a day keeps the {:occupation} away
 yoda.says = {:foo} is the path to the dark side. {:foo} leads to {:bar}. {:bar} leads to {:foobar}. {:foobar} leads to suffering.
 ----
 
-Which may be resolved in this manner
+Which may be resolved in this manner:
 
 [source,groovy,options="nowrap"]
 ----
@@ -131,12 +131,12 @@ assertEquals(quote, "Fear is the path to the dark side. Fear leads to Anger. Ang
 
 === Groovy format
 
-Groovy scripts have one advantage over properties files as you can embed custom logic
+Groovy scripts have one advantage over properties files: you can embed custom logic
 that may conditionally resolve a message based on environmental values or generate a
-message on the fly. In order to accomplish this feat messages must be defined as
-closures and must return a String value; if they do not then their return value will
+message on the fly. In order to accomplish this feat, messages must be defined as
+closures and must return a String value; if they do not, then their return value will
 be translated to a String. The following message uses the value of the current running
-environment to determine the text of a warning to be displayed on a label
+environment to determine the text of a warning to be displayed on a label:
 
 [source,groovy,linenums,options="nowrap"]
 ----
@@ -146,14 +146,14 @@ warning.label = { args ->
     if (Environment.current == Environment.PRODUCTION) {
         "The application has encountered an error: $args"
     } else {
-        "Somebody setup us the bomb! $args"
+        "Somebody sent us a bomb! $args"
     }
 }
 ----
 
 == Reference Keys
 
-There may be times where you would want to have a 2 keys reference the same value,
+There may be times where you would want to have 2 keys reference the same value,
 as if one key were an alias for the other. `MessageSource` supports the notion of
 referenced keys for this matter. In order to achieve this, the value of the alias
 key must define the aliased key with a special format, for example

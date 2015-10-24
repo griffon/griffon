@@ -2,8 +2,8 @@
 [[_events_consuming]]
 = Consuming events
 
-Any artifact or class that abides to the following conventions can be registered as
-an application listener, those conventions are:
+Any artifact or class that abides by the following conventions can be registered as
+an application listener. These conventions are:
 
  - it is a Map, a `{link_runnable_with_args}` or an Object.
  - in the case of a Map, each key maps to `<EventName>`, the value must be a RunnableWithArgs.
@@ -16,16 +16,16 @@ an application listener, those conventions are:
    as the first parameter, and the runnable itself as the second parameter.
 
 There is a global, per-application event handler that can be registered. If you want
-to take advantage of this feature you must define a class that implements the
+to take advantage of this feature, you must define a class that implements the
 `{link_event_handler}` interface. This class must be registered with a `{link_module}`.
-Lastly both Controller and Service instances are automatically registered as application
+Lastly, both Controller and Service instances are automatically registered as application
 event listeners.
 
 == Examples
 
-These are some examples of event handlers:
+These are some examples of event handlers.
 
-Display a message right before default MVC groups are instantiated
+Display a message right before default MVC groups are instantiated:
 
 .src/main/com/acme/ApplicationEventHandler.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -66,7 +66,7 @@ class ApplicationModule extends AbstractModule {
 }
 ----
 
-Print the name of the application plus a short message when the application is about to shut down.
+Print the name of the application plus a short message when the application is about to shut down:
 
 .griffon-app/controller/MyController.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -83,7 +83,7 @@ class MyController {
 }
 ----
 
-Print a message every time the event "Foo" is published
+Print a message every time the event "Foo" is published:
 
 .griffon-app/controller/MyController.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -107,7 +107,7 @@ class MyController {
 }
 ----
 
-An alternative to the previous example using a `RunnableWithArgs` event handler
+An alternative to the previous example using a `RunnableWithArgs` event handler:
 
 .griffon-app/controller/MyController.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -131,7 +131,7 @@ class MyController {
 }
 ----
 
-An alternative to the previous example using a custom event class
+An alternative to the previous example using a custom event class:
 
 .griffon-app/controller/MyController.groovy
 [source,groovy,linenums,options="nowrap"]

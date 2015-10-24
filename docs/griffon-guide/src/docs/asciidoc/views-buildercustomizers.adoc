@@ -12,7 +12,7 @@ tightly coupled with the chosen UI toolkit.
 The UI DSL can be extended by registering new ``{link_builder_customizer}``s with the application
 using a `{link_module}`. The `{link_builder_customizer}` instance defines methods
 that can be used to configure every aspect of `groovy.factory.FactoryBuilderSupport`.
-Here's an example of the `miglayout-swing` extension
+Here's an example of the `miglayout-swing` extension:
 
 .src/main/java/griffon/builder/swing/MiglayoutSwingBuilderCustomizer.java
 [source,java,linenums,options="nowrap"]
@@ -71,19 +71,19 @@ public class MiglayoutSwingGroovyModule extends AbstractModule {
 }
 ----
 
-This module is loaded before `swing-groovy`, as per the `{link_depends_on}` definition;
-thus ensuring that the customizations from this customizer are applied after.
+This module is loaded before `swing-groovy`, as per the `{link_depends_on}` definition,
+thus ensuring that the customizations from this customizer are applied afterwards.
 
 == Default DSL Nodes
 
-The `griffon-groovy` dependency delivers the following nodes
+The `griffon-groovy` dependency delivers the following nodes:
 
 === Root
 
 Identifies the top level node of a secondary View script. View scripts are expected
-to return the top level node, however there may be times when further customizations
-prevent this from happening, for example wiring up a custom listener. When that happens
-the result has to be made explicit otherwise the script will return the wrong value.
+to return the top level node; however, there may be times when further customizations
+prevent this from happening, for example when wiring up a custom listener. When that happens,
+the result has to be made explicit; otherwise the script will return the wrong value.
 Using the `root()` node avoids forgetting this fact while also providing an alias for
 the node.
 
@@ -122,14 +122,14 @@ class PrimaryView {
 }
 ----
 
-This node accepts an additional parameter `name` that can be used to override the
+This node accepts an additional parameter `name` which can be used to override the
 default alias assigned to the node. If you specify a value for this parameter when
-the node is built then you'll need to use it again to retrieve the node.
+the node is built, then you'll need to use it again to retrieve the node.
 
 === MetaComponent
 
 Enables the usage of a meta-component as a View node. Meta-components are MVC groups
-that contain additional configuration, for example
+that contain additional configuration, for example:
 
 [source,groovy,linenums,options="nowrap"]
 ----
@@ -148,7 +148,7 @@ mvcGroups {
 
 The `metaComponent()` node instantiates the MVC group and attaches the top node from
 the groups' View member into the current hierarchy. Using the previous group definition
-in a View is straight forward
+in a View is straightforward:
 
 [source,groovy,options="nowrap"]
 ----

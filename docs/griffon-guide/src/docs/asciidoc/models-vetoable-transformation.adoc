@@ -4,11 +4,11 @@
 
 The `{link_vetoable_ast}` transformation will inject the behavior of `{link_vetoable}`
 into the annotated class. It basically injects an instance of `java.beans.VetoableChangeSupport`
-and all methods required to make the model a vetoable class. It will also make sure that
+and all methods required to make the model a vetoable class. It will also ensure that
 a `java.beans.PropertyChangeEvent` is fired for each vetoable property whenever said
 property changes value.
 
-The following is a list of all methods added by `{link_vetoable_ast}`
+The following is a list of all methods added by `{link_vetoable_ast}`:
 
  * void addVetoableChangeListener(VetoableChangeListener listener)
  * void addVetoableChangeListener(String propertyName, VetoableChangeListener listener)

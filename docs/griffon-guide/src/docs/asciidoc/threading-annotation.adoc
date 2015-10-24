@@ -4,7 +4,7 @@
 
 The `{link_threading}` annotation can be used to alter the default behavior of
 executing a controller action outside of the UI thread. There are 4 possible values
-that can be specified for this annotation
+that can be specified for this annotation:
 
 [horizontal]
 INSIDE_UITHREAD_SYNC:: Executes the code in a synchronous call inside the UI thread.
@@ -13,14 +13,14 @@ INSIDE_UITHREAD_ASYNC:: Executes the code in an asynchronous call inside the UI 
 Equivalent to wrapping the code with `runInsideUIAsync`.
 OUTSIDE_UITHREAD:: Executes the code outside of the UI thread. Equivalent to wrapping
 the code with `runOutsideUI`.
-SKIP:: Executes the code in the same thread as the invoker, whichever it may be.
+SKIP:: Executes the code in the same thread as the invoker, whatever it may be.
 
 This annotation can be used as an AST transformation on any other component that's not
 a controller. Any component may gain the ability to execute code in a particular thread,
 following the selected UI toolkit's execution rules.
 
-Here's an example of a custom component that's able to call its methods in different
-threads
+Here's an example of a custom component that's able to call its methods on different
+threads:
 
 [source,groovy,linenums,options="nowrap"]
 ----
@@ -41,7 +41,7 @@ class Sample {
 }
 ----
 
-You must annotate a method with `{link_threading}`. Annotated methods must conform to these rules
+You must annotate a method with `{link_threading}`. Annotated methods must conform to these rules:
 
  * must be public.
  * name does not match an event handler.
