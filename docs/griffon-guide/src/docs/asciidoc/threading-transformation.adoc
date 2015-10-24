@@ -6,11 +6,11 @@ Any component may gain the ability to execute code in a particular thread, follo
 the selected UI toolkit's execution rules. It injects the behavior of `{link_threadinghandler}`
 into the annotated class.
 
-This feature is just a shortcut to avoid reaching for the `UIThreadManager` instance
-from objects that do not hold a reference to it.
+This feature is just a shortcut to avoid obtaining the `UIThreadManager` instance
+by objects which do not hold a reference to it.
 
-Here's an example of a custom component that's able to call its methods in different
-threads
+Here's an example of a custom component which is able to call its methods in different
+threads:
 
 [source,groovy,linenums,options="nowrap"]
 ----

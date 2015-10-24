@@ -3,22 +3,22 @@
 = Modules
 
 ``{link_module}``s define components that can be injected using the JSR-330 API.
-Module definitions are highly influenced by the Guice 3.x API however they do not
+Module definitions are highly influenced by the Guice 3.x API; however, they do not
 impose a strict dependency on Guice.
 
 [[_overview_module_definition]]
 == Module Definition
 
-All modules must implement the `{link_module}` interface shown next
+All modules must implement the `{link_module}` interface shown next:
 
 [source,java,linenums,options="nowrap"]
 ----
 include::{rootdir}/subprojects/griffon-core/src/main/java/griffon/core/injection/Module.java[lines=25..-1]
 ----
 
-They also require to have a well defined name. This can be achieved by annotating the module
-class with `@javax.inject.Named`. If a value for `@javax.inject.Named` is not defined then
-one will be automatically calculated using the fully qualified class name. For example
+They also require a well defined name. This can be achieved by annotating the module
+class with `@javax.inject.Named`. If a value for `@javax.inject.Named` is not defined, then
+one will be automatically calculated using the fully qualified class name. For example:
 
 [source,java,linenums,options="nowrap"]
 ----
@@ -40,7 +40,7 @@ public class CustomModule extends AbstractModule {
 }
 ----
 
-Results in a module named `org.example.custom`, where as the following definition
+results in a module named `org.example.custom`; whereas the following definition
 
 [source,java,linenums,options="nowrap"]
 ----
@@ -62,10 +62,10 @@ public class CustomModule extends AbstractModule {
 }
 ----
 
-Results in a module simply called `custom`. A module may depend on another module; when
-that's the case then the bindings of this module are processed after their dependencies. This
+results in a module simply called `custom`. A module may depend on another module; when
+that's the case, then the bindings of this module are processed after their dependencies. This
 allows dependent modules to override bindings made by their dependencies. Module dependencies
-are specified using the `{link_depends_on}` annotation, like so
+are specified using the `{link_depends_on}` annotation, like so:
 
 [source,java,linenums,options="nowrap"]
 ----
@@ -90,14 +90,14 @@ public class CustomModule extends AbstractModule {
 [[_overview_module_configuration]]
 == Module Configuration
 
-Modules perform their duty by defining bindings, of which there are 4 kinds
+Modules perform their duty by defining bindings, of which there are 4 kinds:
 
  * {link_instance_binding}
  * {link_target_binding}
  * {link_provider_binding}
  * {link_provider_type_binding}
 
-Bindings have an scope, either `singleton` or `prototype`. `InstanceBinding` is the only
+Bindings have a scope of either `singleton` or `prototype`. `InstanceBinding` is the only
 binding that has `singleton` as implicit scope; this setting can't be changed.
 All bindings accept a `classifier` or an `classifier_type`. Classifiers are annotations that
 have been annotated with `@javax.inject.Qualifier`. You must specify one or the other but
@@ -106,7 +106,7 @@ not both; `classifier` has precedence over `classifier_type`.
 [[_overview_instance_binding]]
 === Instance Binding
 
-This binding is used to define explicit and eager singletons, for example
+This binding is used to define explicit and eager singletons, for example:
 
 [source,java,options="nowrap"]
 ----
@@ -114,7 +114,7 @@ bind(Calculator.class)
     .toInstance(new GroovyShellCalculator());
 ----
 
-Consumers of this binding will typically define the following
+Consumers of this binding will typically define the following:
 
 [source,java,options="nowrap"]
 ----
@@ -128,7 +128,7 @@ Notice that the field type matches the _source_ type defined in the binding.
 
 This binding enables you to specify the _source_ type and _target_ type. Typically the
 _source_ is an interface while the _target_ is a concrete implementation. If the _target_
-is omitted then the binding assumes the _source_ to be a concrete type.
+is omitted, then the binding assumes the _source_ to be a concrete type.
 
 [source,java,options="nowrap"]
 ----
@@ -136,7 +136,7 @@ bind(Calculator.class)
     .to(GroovyShellCalculator.class);
 ----
 
-Consumers of this binding will use the following form
+Consumers of this binding will use the following form:
 
 [source,java,options="nowrap"]
 ----
@@ -150,7 +150,7 @@ On the other hand, if the binding where to be defined as
 bind(GroovyShellCalculator.class);
 ----
 
-Then the consumers must use the same matching _source_/_target_ type, that is
+then the consumers must use the same matching _source_/_target_ type, that is
 
 [source,java,options="nowrap"]
 ----
@@ -172,7 +172,7 @@ bind(Calculator.class)
     .toProvider(new CalculatorProvider());
 ----
 
-Consumers of this binding will use the following form
+Consumers of this binding will use the following form:
 
 [source,java,options="nowrap"]
 ----
@@ -191,7 +191,7 @@ bind(Calculator.class)
     .toProvider(CalculatorProvider.class);
 ----
 
-Consumers of this binding will use the following form
+Consumers of this binding will use the following form:
 
 [source,java,options="nowrap"]
 ----
@@ -200,7 +200,7 @@ Consumers of this binding will use the following form
 
 == Additional Settings
 
-All bindings (with one particular exception) accept the following additional settings
+All bindings (with one particular exception) accept the following additional settings:
 
 .withClassifierType
 
@@ -212,7 +212,7 @@ by this setting.
 
 Similar to the previous setting, this one allows you to supply an annotation instance, enabling the setting of a custom
 annotation property, such as the `value` of `@javax.inject.Named`. Here's an excerpt of the default bindings provided
-by the Griffon runtime
+by the Griffon runtime:
 
 [source,java,options="nowrap"]
 ----
@@ -226,12 +226,12 @@ Any qualifiers found in the _target_ (or `Provider`) will be overridden by this 
 
 .asSingleton
 
-If left out the binding will be placed in `prototype` scope. The only binding that does not conform to this rule is *InstanceBinding*,
+If omitted, the binding will be placed in `prototype` scope. The only binding that does not conform to this rule is *InstanceBinding*,
 as it will be automatically placed in `singleton` scope.
 
 == Binding Equivalencies
 
-Any binding can be overridden by an equivalent binding. The following table describes the equivalencies between bindings
+Any binding can be overridden by an equivalent binding. The following table describes the equivalencies between bindings:
 
 [cols="a,a",options="header"]
 |===
@@ -285,7 +285,7 @@ NOTE: Equivalent bindings must match qualifiers too.
 == The Guice Injector
 
 The dependency `griffon-guice-{griffon-version}` uses {link_google_guice} to implement the JSR-330 API
-that `griffon-core-{griffon-version}` requires. As an additional feature this dependency can automatically
+that `griffon-core-{griffon-version}` requires. As an additional feature, this dependency can automatically
 load Guice modules during startup. The only requirement is a metadata file that defines the module class
 that should be loaded.
 
@@ -308,7 +308,7 @@ public class MyQuartzModule extends QuartzModule {
 }
 ----
 
-When compiled this class generates a metadata file at `META-INF/services/com.google.inject.Module` with
+When compiled, this class generates a metadata file at `META-INF/services/com.google.inject.Module` with
 contents similar to
 
 [source,java,linenums,options="nowrap"]
@@ -318,9 +318,9 @@ contents similar to
 com.acme.MyQuartzModule
 ----
 
-Of course the usage of `@ServiceProviderFor` is just a convenience, you can generate the metadata file
+Of course the usage of `@ServiceProviderFor` is just a convenience; you can generate the metadata file
 by other means. The important thing is that the file must be available in the classpath.
 
-Guice modules are added after all Griffon modules, this means they have the chance to override any bindings
+Guice modules are added after all Griffon modules; this means they have the chance to override any bindings
 set by the Griffon modules.
 

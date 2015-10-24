@@ -2,19 +2,19 @@
 [[_mvc_mvcgroups]]
 = MVC Groups
 
-Now that we know which are the different ways to instantiate MVC groups we can go
+Now that we know the different ways to instantiate MVC groups, we can go
 back to customizing them.
 
 The simplest way is to pass in new values as part of the arguments map that
-`{link_mvc_group_init}` receives, for example
+`{link_mvc_group_init}` receives, for example:
 
 [source,groovy,options="nowrap"]
 ----
 MVCGroup group = application.mvcGroupManager.createMVCGroup('foo', [key: 'foo'])
 ----
 
-However is you wish to use the special `config` key that every MVC group configuration
- may have then you must instantiate the group in the following way
+However, if you wish to use the special `config` key that every MVC group configuration
+ may have, then you must instantiate the group in the following way:
 
 [source,groovy,options="nowrap"]
 ----
@@ -36,7 +36,7 @@ Every MVC group triggers a few events during the span of its lifetime. These eve
 will be sent to the event bus even if no component is interested in handling them.
 There may be times when you don't want these events to be placed in the event bus
 in order to speed up group creation/destruction. Use the following configuration to
-gain this effect:
+obtain this effect:
 
 [source,groovy,linenums,options="nowrap"]
 ----
@@ -64,9 +64,9 @@ The following events will be disabled with this setting:
 === Disabling Instantiation Events
 
 The Griffon runtime will trigger an event for every artifact it manages. As with
-the previous events this one will be sent to the event bus even if no component handles
+the previous events, this one will be sent to the event bus even if no component handles
 it. Skipping publication of this event may result in a slight increase of speed during
-group instantiation. Use the following configuration to gain this effect:
+group instantiation. Use the following configuration to obtain this effect:
 
 [source,groovy,linenums,options="nowrap"]
 ----
@@ -91,9 +91,9 @@ The following events will be disabled with this setting:
 
 === Disabling Destruction Events
 
-This is the counterpart of the `NewInstance` event. Skipping publication of this event
+This is the counterpart to the `NewInstance` event. Skipping publication of this event
 may result in a slight increase of speed when a group or any artifact instance is destroyed.
-Use the following configuration to gain this effect:
+Use the following configuration to obtain this effect:
 
 [source,groovy,linenums,options="nowrap"]
 ----
@@ -153,7 +153,7 @@ Instances of {link_mvc_group} can be created at any time by any other instance. 
 created explicitly by another {link_mvc_group} instance _or_ by an MVC member (such as a <<_controllers,Controller>>)
 then a special link is established: the newly created {link_mvc_group} will have access to its parent {link_mvc_group}.
 
-Here's an example. Assuming the following {link_mvc_group} configuration is in place
+Here's an example. Assuming the following {link_mvc_group} configuration is in place:
 
 [source,groovy,linenums,options="nowrap"]
 ----
@@ -171,7 +171,7 @@ mvcGroups {
 }
 ----
 
-An instance of the `app` {link_mvc_group} can be used to instantiate `tab` in this way
+An instance of the `app` {link_mvc_group} can be used to instantiate `tab` in this way:
 
 [source,groovy,options="nowrap"]
 ----
@@ -182,7 +182,7 @@ assert appGroup == tabGroup.parentGroup
 
 Parent-child relationships are established right after MVC members have been instantiated and can be accessed immediately
 inside life-cycle methods such as `{link_mvc_group_init}`; this comes in handy when a child group adds new UI content to
-the parent's, for example
+the parent's, for example:
 
 [source,groovy,options="nowrap"]
 ----
@@ -218,7 +218,7 @@ class TabView {
 }
 ----
 
-NOTE: like with the default `model`, `view` and `controller` MVC properties, the _parent_ prefix can only be combined to
+NOTE: as with the default `model`, `view` and `controller` MVC properties, the _parent_ prefix can only be combined to
 form `parentModel`, `parentView` and `parentController`.
 
 [[_mvc_mvc_group_context]]

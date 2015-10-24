@@ -5,12 +5,12 @@
 There is no need to install a plugin in Eclipse in order to develop Griffon
 applications, as every Griffon project is a valid Gradle/Maven project.
 
-You must install the Gradle Buildship and Groovy plugins from the marketplace
+You must install the Gradle Buildship and Groovy plugins from the marketplace.
 
-There's however special support for code suggestions when dealing with Groovy artifacts
+There is special support for code suggestions when dealing with Groovy artifacts
 or Groovy classes annotated with a special set of annotations. This support is
 delivered using the DSLD feature found in Eclipse if the Groovy Eclipse plugin is
-installed. The following table summarizes the enhancements delivered by this feature
+installed. The following table summarizes the enhancements delivered by this feature:
 
 .Artifacts
 [cols="2*", options="header"]
@@ -36,12 +36,12 @@ installed. The following table summarizes the enhancements delivered by this fea
 | @griffon.transform.Vetoable              | griffon.core.Vetoable
 |===
 
-Finally, Annotation Processing must be manually enabled. You must do this in a per project
+Finally, Annotation Processing must be manually enabled. You must do this on a per project
 basis. Search for *Annotation Processing* in the project's properties and tick the checkbox
 to activate this option.
 
 You must also define *every* single JAR file that provides APT processors. The most basic
-ones ar `jipsy` and `griffon-core-compile`. These JARs are found in your build tools'
+ones are `jipsy` and `griffon-core-compile`. These JARs are found in your build tools'
 cache and/or local repository.
 
 As a rule, all `griffon-*-compile` JARs provide APT processors and AST transformations.

@@ -3,9 +3,9 @@
 = Migrating from Griffon 1.x
 :numbered:
 
-Griffon 2.x has tried to be as close as possible to Griffon 1.x in terms of concepts
-and APIs, however some changes were introduced that require your attention when
-migrating an application from Griffon 1.x
+Griffon 2.x has tried to remain as similar as possible to Griffon 1.x in terms of concepts
+and APIs; however, some changes were introduced which require your attention when
+migrating an application from Griffon 1.x.
 
 == Build Configuration
 
@@ -13,14 +13,14 @@ There is no longer a specific Griffon buildtime tool nor configuration settings.
 You must pick a build tool (we recommend http://gradle.org[Gradle]) and use that
 tool's configuration to match your needs. The simplest way to get started is to
 select an appropriate http://github.com/pledbrook/layzbones[Lazybones] template
-to create an empty project, then copy the files you need.
+to create an empty project, and then copy the files you need.
 
 Build time plugins and scripts are now within the realm of a particular build tool.
 
 === Dependencies
 
 Dependencies used to be configured inside `griffon-app/conf/BuildConfig.groovy`. Now
-that the file is gone you must configure dependencies using the native support of
+that the file is gone, you must configure dependencies using the native support of
 the build tool you choose. Of particular note is that all griffon dependencies are
 now standard JAR archives available from Maven compatible repositories, so they should
 work no matter which dependency resolution you pick.
@@ -30,9 +30,9 @@ work no matter which dependency resolution you pick.
 === Application and Config Scripts
 
 The files `Application.groovy` and `Config.groovy` have been merged into a single
-file : `Config.groovy`. The `log4j` DSL is no longer used, so please move your
+file: `Config.groovy`. The `log4j` DSL is no longer used, so please move your
 logging settings to `src/resources/log4j.properties`; you can also use the XML variant
-if you want. Griffon 2.x does not forces Log4j on you either, you're free to pick
+if you want. Griffon 2.x does not force Log4j on you either; you're free to pick
 a suitable Slf4j binding of your choice.
 
 === Builder Script
@@ -41,7 +41,7 @@ The `Builder.groovy` is no longer required. Its functions are now handled by
 `{link_builder_customizer}` classes bound in a `{link_module}`. You must add
 `griffon-groovy-{griffon-version}.jar` as a compile dependency in order to use
 `BuilderCustomizers`. Here's an example for adding a http://miglayout.com[Miglayout]
-customization
+customization:
 
 .src/main/java/griffon/builder/swing/MiglayoutSwingBuilderCustomizer.java
 [source,java,linenums,options="nowrap"]
@@ -102,7 +102,7 @@ public class MiglayoutSwingGroovyModule extends AbstractModule {
 
 The `Events` script usually placed in `griffon-app/conf` should be moved to the main
 source directory (`src/main/java` or `src/main/groovy` depending on your preferences).
-The following snippet shows an skeleton implementation
+The following snippet shows a skeleton implementation:
 
 .src/main/groovy/com/acme/ApplicationEventHandler.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -147,7 +147,7 @@ class ApplicationModule extends AbstractModule {
 All artifacts must be annotated with `{link_artifact_provider_for}` without exception.
 Failure to follow this rule will make Griffon miss the artifact during bootstrap.
 The value for this annotation must be the basic interface that defines the artifact's
-type, for example
+type, for example:
 
 .griffon-app/models/sample/SampleModel.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -173,7 +173,7 @@ as public methods.
 === Views
 
 View scripts have been upgraded to classes. You can use the following skeleton View
-class as an starting point
+class as an starting point:
 
 .griffon-app/views/sample/SampleView.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -201,8 +201,8 @@ Next, place the contents of your old View script inside [conum,data-value=1]_1_.
 
 == Lifecycle Scripts
 
-These scripts must be migrated to full classes too. Here's the basic skeleton code
-for any lifecycle handler
+These scripts must also be migrated to full classes. Here's the basic skeleton code
+for any lifecycle handler:
 
 .griffon-app/lifecycle/Initialize.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -228,7 +228,7 @@ class Initialize extends AbstractLifecycleHandler {
 
 == Renamed Methods
 
-The following tables describe methods that have been renamed in Griffon 2.x
+The following tables describe methods that have been renamed in Griffon 2.x:
 
 [cols="2*",options="header"]
 .Threading Methods
@@ -259,9 +259,9 @@ The following tables describe methods that have been renamed in Griffon 2.x
 Griffon 2.x no longer segregates tests between `unit` and `functional`. You must use
 your build tool's native support for both types (this is quite simple with Gradle).
 Move all unit tests under `src/test/java` or `src/test/groovy` depending on your
-choice of main language. The base `GriffonUnitTestCase` class no longer exist. Use
+choice of main language. The base `GriffonUnitTestCase` class no longer exists. Use
 any testing framework you're comfortable with to write unit tests (Junit4, Spock, etc).
-Use the following template if you need to write artifact tests
+Use the following template if you need to write artifact tests:
 
 .src/test/sample/SampleControllerTest.groovy
 [source,groovy,linenums,options="nowrap"]

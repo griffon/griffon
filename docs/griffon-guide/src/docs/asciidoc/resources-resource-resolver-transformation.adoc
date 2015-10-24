@@ -3,13 +3,13 @@
 = The @ResourceResolverAware AST Transformation
 
 Any component may gain the ability to resolve resources through a `ResourceResolver`
-instance. You only need annotate the class with `{link_resource_resolver_aware}`
+instance. You need only annotate the class with `{link_resource_resolver_aware}`
 and it will automatically gain all methods exposed by `{link_resource_resolver}`.
 
-This feature is just a shortcut to avoid reaching for the application instance
-from objects that do not hold a reference to it.
+This feature is just a shortcut to retrieving the application instance
+by objects which do not hold a reference to it.
 
-Here's an example of a custom bean that's able to resolve resources
+Here's an example of a custom bean that's able to resolve resources:
 
 [source,groovy,linenums,options="nowrap"]
 ----
@@ -19,7 +19,7 @@ class Bean {
 }
 ----
 
-This class can be used in the following way
+This class can be used in the following way:
 
 [source,groovy,linenums,options="nowrap"]
 ----
@@ -57,7 +57,7 @@ public class ApplicationModule extends AbstractModule {
 }
 ----
 
-Then make use of any of these bindings like so
+Then make use of any of these bindings, like so:
 
 [source,groovy,linenums,options="nowrap"]
 ----
