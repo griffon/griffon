@@ -2473,18 +2473,16 @@
         </Package>
 
         <Package Name="griffon.core.artifact">
-            <Package>griffon.core.mvc</Package>
             <Package>griffon.core</Package>
             <Package>griffon.core.injection</Package>
             <Package>griffon.core</Package>
         </Package>
 
         <Package Name="griffon.core.controller">
-            <Package>griffon.core.artifact</Package>
-            <Package>griffon.core.mvc</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.exceptions</Package>
             <Package>griffon.core.injection</Package>
             <Package>griffon.core</Package>
+            <Package>griffon.core.injection</Package>
         </Package>
 
         <Package Name="griffon.core.editors">
@@ -2527,6 +2525,7 @@
         </Package>
 
         <Package Name="griffon.core.mvc">
+            <Package>griffon.core.artifact</Package>
             <Package>griffon.core</Package>
             <Package>griffon.core.injection</Package>
             <Package>griffon.core</Package>
@@ -2546,11 +2545,9 @@
         </Package>
 
         <Package Name="griffon.exceptions">
-            <Package>griffon.core.artifact</Package>
-            <Package>griffon.core.mvc</Package>
-            <Package>griffon.core</Package>
             <Package>griffon.core.injection</Package>
             <Package>griffon.core</Package>
+            <Package>griffon.core.injection</Package>
         </Package>
 
         <Package Name="griffon.util">
@@ -2560,31 +2557,32 @@
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core">
-            <Package>griffon.core</Package>
             <Package>griffon.core.injection</Package>
             <Package>griffon.core</Package>
+            <Package>griffon.core.injection</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.addon">
-            <Package>griffon.core.injection</Package>
+            <Package>griffon.core.addon</Package>
             <Package>griffon.core</Package>
             <Package>griffon.core.injection</Package>
+            <Package>griffon.core</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.artifact">
-            <Package>griffon.util</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.core.controller</Package>
+            <Package>griffon.exceptions</Package>
             <Package>griffon.core.injection</Package>
             <Package>griffon.core</Package>
+            <Package>griffon.core.injection</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.controller">
             <Package>griffon.core.controller</Package>
-            <Package>griffon.core.artifact</Package>
-            <Package>griffon.core.mvc</Package>
-            <Package>griffon.core</Package>
+            <Package>griffon.exceptions</Package>
             <Package>griffon.core.injection</Package>
             <Package>griffon.core</Package>
+            <Package>griffon.core.injection</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.env">
@@ -2596,7 +2594,7 @@
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.event">
-            <Package>griffon.util</Package>
+            <Package>griffon.core.event</Package>
             <Package>griffon.core</Package>
             <Package>griffon.core.injection</Package>
             <Package>griffon.core</Package>
@@ -2618,6 +2616,7 @@
 
         <Package Name="org.codehaus.griffon.runtime.core.mvc">
             <Package>griffon.core.mvc</Package>
+            <Package>griffon.core.artifact</Package>
             <Package>griffon.core</Package>
             <Package>griffon.core.injection</Package>
             <Package>griffon.core</Package>
@@ -2638,9 +2637,10 @@
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.threading">
-            <Package>griffon.core</Package>
+            <Package>griffon.exceptions</Package>
             <Package>griffon.core.injection</Package>
             <Package>griffon.core</Package>
+            <Package>griffon.core.injection</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.view">
