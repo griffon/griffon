@@ -2,17 +2,17 @@
 [[_overview_configuration]]
 = Configuration
 
-It may seem odd that in a framework that embraces "convention-over-configuration"
-that we tackle this topic now, but since what configuration there is typically a
-one off, it is best to get it out the way.
+It may seem odd in a framework that embraces "convention-over-configuration"
+that we tackle this topic now, but since what configuration there is is typically a
+one-off, it is best to get it out the way.
 
 == Basic Configuration
 
-For general configuration Griffon provides a file called `griffon-app/conf/Config.groovy`.
-This file uses Groovy's ConfigSlurper which is very similar to Java properties files
-except it is pure Groovy hence you can re-use variables and use proper Java types!
+For general configuration, Griffon provides a file called `griffon-app/conf/Config.groovy`.
+This file uses Groovy's ConfigSlurper, which is very similar to Java properties files
+except it is pure Groovy, hence you can re-use variables and use proper Java types!
 
-Here's a typical configuration file
+Here's a typical configuration file:
 
 [source,groovy,linenums,options="nowrap"]
 .griffon-app/conf/sample/swing/groovy/Config.groovy
@@ -20,7 +20,7 @@ Here's a typical configuration file
 include::{sample-swing-groovy}/griffon-app/conf/sample/swing/groovy/Config.groovy[lines=16..-1]
 ----
 
-You can define this file using Java too
+You can define this file using Java too:
 
 [source,java,linenums,options="nowrap"]
 .griffon-app/conf/sample/swing/java/Config.java
@@ -28,7 +28,7 @@ You can define this file using Java too
 include::{sample-swing-java}/griffon-app/conf/sample/swing/java/Config.java[lines=16..-1]
 ----
 
-Or if you prefer properties files then do the following
+Or if you prefer properties files, then do the following:
 
 [source,java,linenums,options="nowrap"]
 .griffon-app/resources/Config.properties
@@ -44,15 +44,15 @@ mvcGroups.sample.controller = sample.swing.groovy.SampleController
 Take special note that this file must be placed under `griffon-app/resources` instead.
 
 The application's runtime configuration is available through the `configuration` property
-of the application instance. This configuration instance is *read-only*, you can't modify
+of the application instance. This configuration instance is *read-only*; you can't modify
 its contents in any way.
 
 == Internationalization Support
 
-Configuration files are i18n aware which means you can append
-locale specific strings to a configuration file, for example `Config_de_CH.groovy`.
+Configuration files are i18n aware, which means you can append
+locale specific strings to a configuration file; for example, `Config_de_CH.groovy`.
 Locale suffixes are resolved from least to most specific; for a locale with
-`language = 'de'`, `country = 'CH'` and `variant = 'Basel'` the following files are loaded in order
+`language = 'de'`, `country = 'CH'` and `variant = 'Basel'`, the following files are loaded in order:
 
  * `Config.groovy`
  * `Config.properties`
@@ -68,9 +68,9 @@ The current `java.util.Locale` is used to determine values for language, country
 == Mutable Configuration
 
 As mentioned before, the default application configuration is made *read-only*, however there's a way to make it
-mutable, you simply must wrap the `{link_configuration}` instance with a `{link_mutable_configuration}`. You can accomplish
-this feat by registering an appropriate implementation of `{link_configuration_decorator_factory}`, for example
-`{link_mutable_configuration_decorator_factory}`. You'll have to register this class with a module
+mutable; you simply must wrap the `{link_configuration}` instance with a `{link_mutable_configuration}`. You can accomplish
+this by registering an appropriate implementation of `{link_configuration_decorator_factory}`, for example
+`{link_mutable_configuration_decorator_factory}`. You'll have to register this class with a module:
 
 [source,java,linenums,options="nowrap"]
 .com.acme.ApplicationModule.java

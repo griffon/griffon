@@ -3,16 +3,16 @@
 = Swing Binding
 
 Binding in Griffon is achieved by leveraging Java Beans' `java.beans.PropertyChangeEvent`
-and their related classes, thus binding will work with any class that fires this type of
+and their related classes; thus binding will work with any class that fires this type of
 event, regardless of its usage of `{link_observable_ast}` or not.
 
 == Groovy Bindings
 
-The following options are available for writing bindings using the `bind` node when Groovy is the source language
+The following options are available for writing bindings using the `bind` call when Groovy is the source language:
 
 .Long
-The most complete of all three, you must specify both ends of the binding explicitly. The following snippet sets an
-unidirectional binding from `bean1.prop1` to `bean2.prop2`
+The most complete of all three. You must specify both ends of the binding explicitly. The following snippet sets a
+unidirectional binding from `bean1.prop1` to `bean2.prop2`:
 
 [source,groovy,options="nowrap"]
 ----
@@ -45,14 +45,14 @@ bean(bean1, prop1: bind('prop2', target: bean2))
 ----
 
 .Short
-This type of binding is only useful for setting implicit targets. It expects a closure as the definition of the binding value
+This type of binding is only useful for setting implicit targets. It expects a closure as the definition of the binding value:
 
 [source,groovy,options="nowrap"]
 ----
 bean(bean2, prop2: bind{ bean1.prop1 })
 ----
 
-The following properties can be used with either the *long* or *contextual* binding syntax
+The following properties can be used with either the *long* or *contextual* binding syntax:
 
 .mutual
 Bindings are usually setup in one direction. If this property is specified with a value of `true` then a bidirectional
@@ -84,7 +84,7 @@ swing.edt {
 
 Typing text on textfield #2 pushes the value to model, which in turns updates textfield #2 and #3, demonstrating that
 textfield #2 listens top model updates. Typing text on textfield #2 pushes the value to textfield #3 but not #1,
-emonstrating that textfield #1 is not a bidirectional binding.
+demonstrating that textfield #1 is not a bidirectional binding.
 
 .converter
 Transforms the value before it is sent to event listeners.
@@ -160,7 +160,7 @@ swing.edt {
 ----
 
 You can type any characters on textfield #1 and see the result in textfield #3. You can only type numbers on
-textfield #2 and see the result in textfield #3
+textfield #2 and see the result in textfield #3.
 
 NOTE: This type of validation is not suitable for semantic validation (a.k.a. constraints in domain classes).
 

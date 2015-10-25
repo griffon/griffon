@@ -11,7 +11,7 @@ groups as required. `MVCGroupManager` has a handful set of methods that deal wit
 MVC group configuration alone; however those that deal with group instantiation come
 in 3 versions, with 2 flavors each (one Groovy, the other Java friendly).
 
-Locating a group configuration is easily done by specifying the name you're interested in finding
+Locating a group configuration is easily done by specifying the name you're interested in finding:
 
 [source,groovy,options="nowrap"]
 ----
@@ -19,7 +19,7 @@ MVCGroupConfiguration configuration = application.mvcGroupManager.findConfigurat
 ----
 
 Once you have a configuration reference you can instantiate a group with it by calling
-any of the variants of the `create` method
+any of the variants of the `create` method:
 
 [source,groovy,options="nowrap"]
 ----
@@ -33,7 +33,7 @@ MVCGroup group4 = configuration.create(someKey: 'someValue')
 
 Be aware that creating groups with the same name is usually not a good idea. The
 default `MVCGroupManager` will complain when this happens and will automatically spit
-out an exception. This behavior may be changed by setting a configuration key in `Config.groovy`
+out an exception. This behavior may be changed by setting a configuration key in `Config.groovy`:
 
 [source,groovy,options="nowrap"]
 ----
@@ -41,16 +41,16 @@ griffon.mvcid.collision = 'warning' // accepted values are 'warning', 'exception
 ----
 
 The manager will log a warning and destroy the previously existing group before instantiating
-the new one when 'warning' is the preferred strategy .
+the new one when 'warning' is the preferred strategy.
 
-Now, even though you can create group instances based on their configurations the preferred
+Now, even though you can create group instances based on their configurations, the preferred
 way is to call any of `{link_mvc_group_manager_create_mvc}`,
 `{link_mvc_group_manager_create_mvc_group}`, `{link_mvc_group_manager_with_mvc_group}` or
 `{link_mvc_group_manager_with_mvc}` methods. Any class annotated with the
 <<_mvc_mvcaware_transformation,@griffon.transform.MVCAware>> will also gain access to these methods.
 
 Groups will be available by id regardless of how they were instantiated. You can ask
-the `MVCGroupManager` for a particular group at any time, for example
+the `MVCGroupManager` for a particular group at any time, for example:
 
 [source,groovy,options="nowrap"]
 ----
@@ -62,7 +62,7 @@ assert g1 == g3
 ----
 
 It's also possible to query all models, views, controllers and builders on their own.
-Say you'd want to inspect all currently instantiated models, this is how it can be done
+Say you'd want to inspect all currently instantiated models; this is how it can be done:
 
 [source,groovy,options="nowrap"]
 ----

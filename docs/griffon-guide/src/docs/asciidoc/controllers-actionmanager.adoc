@@ -6,7 +6,7 @@ Controller actions may automatically be wrapped and exposed as toolkit specific 
 this greatly simplifies how actions can be configured based on i18n concerns.
 
 At the heart of this feature lies the `{link_action_manager}`. This component is responsible
-for instantiating, configuring and keeping references to all actions per controller.
+for instantiating, configuring and maintaining references to all actions per controller.
 It will automatically harvest all action candidates from a Controller once it has been
 instantiated. Each action has all of its properties configured following this strategy:
 
@@ -64,14 +64,14 @@ properties specifically per Controller or application wide. Available keys are
 | name              | String  | Natural name minus the `Action` suffix
 |===
 
-Icon keys should point to an URL available in the classpath or they may use the following notation
+Icon keys should point to a URL available in the classpath, or they may use the following notation:
 
 [source]
 ----
 iconClassName|constructorArg
 ----
 
-Here's an example using the link:https://github.com/griffon-plugins/griffon-fontawesome-plugin[griffon-fontawesome-plugin, window="_blank"]
+Here's an example using the link:https://github.com/griffon-plugins/griffon-fontawesome-plugin[griffon-fontawesome-plugin, window="_blank"]:
 
 [source,java]
 ----
@@ -82,7 +82,7 @@ Values must be placed in resources files following the <<_resources,internationa
 
 == Configuration Examples
 
-The following Controller defines 2 actions, one of them uses the `Action` suffix because its name clashes
+The following Controller defines 2 actions; one of them uses the `Action` suffix because its name clashes
 with a known Java keyword.
 
 [source,groovy,linenums,options="nowrap"]
@@ -105,7 +105,7 @@ The `{link_action_manager}` will generate and configure the following actions:
  * `newAction`
  * `closeAction`
 
-The following keys are expected to be available in the application's i18n resources (i.e. `griffon-app/i18n/messages.properties`)
+The following keys are expected to be available in the application's i18n resources (i.e. `griffon-app/i18n/messages.properties`):
 
 [source,java,linenums,options="nowrap"]
 ----
@@ -118,7 +118,7 @@ sample.SampleController.action.Delete.name = Delete
 
 In the case that you'd like the close action to be customized for all controllers, say using
 the Spanish language, then you'll have to provide a file named `griffon-app/i18n/messages_es.properties`
-with the following keys
+with the following keys:
 
 [source,java,linenums,options="nowrap"]
 ----

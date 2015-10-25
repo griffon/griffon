@@ -2,14 +2,14 @@
 [[_mvc_mvcaware_transformation]]
 = The @MVCAware Transformation
 
-Any component may gain the ability to create and destroy MVC groups through a `MVCGroupManager`
+Any component may gain the ability to create and destroy MVC groups through an `MVCGroupManager`
 instance. You only need annotate the class with `{link_mvcaware}`
 and it will automatically gain all methods exposed by `{link_mvchandler}`.
 
 This feature is just a shortcut to avoid reaching for the application instance
 from objects that do not hold a reference to it.
 
-Here's an example of a custom bean that's able to work with MVC groups
+Here's an example of a custom bean that's able to work with MVC groups:
 
 [source,groovy,linenums,options="nowrap"]
 ----

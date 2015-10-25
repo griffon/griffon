@@ -3,8 +3,8 @@
 = Lifecycle
 
 Every Griffon application goes through the same lifecycle phases no matter in which
-mode they are running, with the exception of applet mode where there is an additional
-phase due to the intrinsic nature of applets. The application's lifecycle has been
+mode it is running, with the exception of applet mode where there is an additional
+phase due to the intrinsic nature of applets. The application's lifecycle was
 inspired by JSR-296, the Swing Application Framework.
 
 Every phase has an associated lifecycle class that will be invoked at the appropriate
@@ -19,8 +19,8 @@ The application instance has just been created and its configuration has been re
 This phase is typically used to tweak the application for the current platform,
 including its Look & Feel.
 
-NOTE: The `Initialize` lifecycle handler will be called right after the configuration
-has been read but before <<_addons,addons>> and managers are initialized.
+NOTE: The `Initialize` lifecycle handler will be called immediately after the configuration
+has been read, but before <<_addons,addons>> and managers are initialized.
 
 [[_overview_lifecycle_startup]]
 == Startup

@@ -2,7 +2,7 @@
 [[_threading_outside]]
 = Outside Calls
 
-Making sure a block of code is executed outside the UI thread is made by invoking
+Making sure a block of code is executed outside the UI thread is accomplished by invoking
 the `runOutsideUI` method. This method is smart enough to figure out if the unit
 of work is already outside of the UI thread; otherwise it instructs the Griffon
 runtime to run the unit in a different thread. This is usually performed by a
