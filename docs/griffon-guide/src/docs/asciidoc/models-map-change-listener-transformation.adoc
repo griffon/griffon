@@ -43,7 +43,7 @@ class SampleModel {
     def snoop = { change -> ... }
 
     SampleModel() {
-        listProperty().addListener(snoopAll as MapChangeListener)
+        listProperty().addListener(snoop as MapChangeListener)
     }
 }
 ----

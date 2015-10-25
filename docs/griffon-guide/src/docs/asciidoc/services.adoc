@@ -25,7 +25,7 @@ class MathService {
 Using this service from a Controller is a straight forward task, you just have to
 define an injection point and annotated it with `@javax.inject.Inject`
 
-.griffon-app/controllers/sample/SampleService.groovy
+.griffon-app/controllers/sample/SampleController.groovy
 [source,groovy,linenums,options="nowrap"]
 ----
 package sample
@@ -33,7 +33,7 @@ package sample
 import griffon.core.artifact.GriffonController
 
 @griffon.metadata.ArtifactProviderFor(GriffonController)
-class SampleController
+class SampleController {
     SampleModel model
 
     @javax.inject.Inject
