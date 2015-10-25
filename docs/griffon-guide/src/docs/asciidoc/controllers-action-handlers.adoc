@@ -6,7 +6,7 @@
 and <<_addons,addon>> authors to define code that should be executed before and after
 any controller action is invoked by the framework. For example, you may want to protect
 the execution of a particular action given specific permissions; the `shiro` plugin uses
-annotations that are handled by an `ActionHandler`, like this
+annotations that are handled by an `ActionHandler`, like this:
 
 [source,groovy,linenums,options="nowrap"]
 ----
@@ -64,7 +64,7 @@ class StrutsController {
 ----
 
 Note that the `login` action requires an instance of `LoginCommandObject`. The `scaffolding`
-plugin is aware of this fact; it will create an instance of said class, wire up an scaffolded
+plugin is aware of this fact; it will create an instance of said class, wire up a scaffolded
 view in a dialog and present it to the user. The `LoginCommandObject` instance will be set
 as the action's arguments if it validates successfully, otherwise action execution is aborted.
 
@@ -74,7 +74,7 @@ Action handlers must implement the `{link_action_handler}` interface. There's a
 handy base class (`org.codehaus.griffon.runtime.core.controller.AbstractActionHandler`)
 that provides sensible defaults. Say you'd want to know how much time it took for an action
 to be executed, also if an exception occurred during its execution. This handler could
-be implemented as follows
+be implemented as follows:
 
 [source,groovy,linenums,options="nowrap"]
 ----
@@ -134,7 +134,7 @@ Action handlers can participate in Dependency Injection.
 
 Action Handlers must be registered within a `{link_module}` in order to be picked
 up by the `ActionManager`. The following example shows how the previous `TracerActionHandler`
-can be registered in a `Module`
+can be registered in a `Module`:
 
 .src/main/com/acme/ApplicationModule.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -160,15 +160,15 @@ public class ApplicationModule extends AbstractModule {
 }
 ----
 
-An Handler may define a dependency on another handler; use the `{link_depends_on}`
+A Handler may define a dependency on another handler; use the `{link_depends_on}`
 annotation to express the relationship.
 
 It's also possible to globally override the order of execution of handlers, or
-define and order when handlers are orthogonal. Take for example the `security`
+define an order when handlers are orthogonal. Take for example the `security`
 handler provided by the `shiro` plugin and the `scaffolding` handler provided by
-`scaffolding` plugin. These handlers know nothing about each other however `security`
+`scaffolding` plugin. These handlers know nothing about each other; however, `security`
 should be called before `scaffolding`. This can be accomplished by adding the following
-snippet to `Config.groovy`
+snippet to `Config.groovy`:
 
 [source,groovy,options="nowrap"]
 ----

@@ -6,7 +6,7 @@
 This appendix showcases the same application implemented with different languages
 and different UI toolkits. The application presents a very simple form where a user
 is asked for his or her name. Once a button is clicked a reply will appear within
-the same window. In order to achieve this Models hold 2 observable properties: the
+the same window. In order to achieve this, Models hold 2 observable properties: the
 first to keep track of the `input`, the second to do the same for the `output`.
 Views are only concerned with values coming from the model and as such never
 interact directly with Controllers. Controllers in turn only interact with Models
@@ -14,7 +14,7 @@ and a Service used to transform the input value into the output value. The singl
 controller action observes the rules for invoking computations outside of the UI
 thread and updating UI components inside the UI thread.
 
-These are some screenshots of each one of the applications we'll cover next.
+These are some screenshots of each of the applications we'll cover next.
 
 [[figure-sample-swing]]
 .Swing Sample
@@ -33,20 +33,20 @@ image::sample-lanterna-java.png[Lanterna, 50%, 50%]
 image::sample-pivot-java.png[Pivot, 50%, 50%]
 
 The goal of these applications is to showcase the similarities and differences of each
-one of them given their implementation language and UI toolkit.
+of them given their implementation language and UI toolkit.
 
 [[_sample_swing]]
 == Swing
 
 Let's begin with Swing, as it's probably the most well known Java UI toolkit. First
-we'll show the Java version of an artifact, then we'll show it's Groovy counterpart.
+we'll show the Java version of an artifact, then we'll show its Groovy counterpart.
 
 [[_sample_swing_model]]
 === Model
 
 Instances of `{link_griffon_model}` implement the `{link_observable}` interface which
 means they know how to handle observable properties out of the box. We only need to be
-concerned in triggering a `java.beans.PropertyChangeEvent` when a property changes value.
+concerned about triggering a `java.beans.PropertyChangeEvent` when a property changes value.
 
 .sample-swing-java/griffon-app/models/sample/swing/java/SampleModel.java
 [source,java,linenums,options="nowrap"]
@@ -57,12 +57,12 @@ include::{sample-swing-java}/griffon-app/models/sample/swing/java/SampleModel.ja
 <2> Property accessor
 <3> Property mutator must fire a `PropertyChangeEvent`
 
-The code is quite straight forward, there's nothing much to see here other than making
+The code is quite straightforward; there's nothing much to see here other than making
 sure to follow the rules for creating observable properties. The Groovy version sports
 a short hand thanks to the usage of the @Observable AST transformation.
 
 One key difference between the Java and the Groovy version is that the Groovy Model
-does not extend a particular class. It also This is due to Griffon being aware of its own
+does not extend a particular class. This is due to Griffon being aware of its own
 conventions and applying the appropriate byte code manipulation (via AST transformations).
 The compiled Model class does implement the `{link_griffon_model}` interface as required by
 the framework. This type of byte code manipulation is expected to work for every Groovy
@@ -76,7 +76,7 @@ include::{sample-swing-groovy}/griffon-app/models/sample/swing/groovy/SampleMode
 <1> Observable property
 
 Properties become observable by simply annotating them with @Observable. The Groovy compiler
-will generate the required boilerplate code, which so happens to be functionally equivalent
+will generate the required boilerplate code, which just so happens to be functionally equivalent
 to what we showed in the Java version.
 
 [[_sample_swing_controller]]
@@ -85,7 +85,7 @@ to what we showed in the Java version.
 Controllers provide actions that are used to fill up the application's interaction.
 They usually manipulate values coming from Views via Model properties. Controllers may
 rely on additional components, such as Services, to do they work. This is exactly our
-case as there's a `SampleService` instance injected into our controllers.
+case, as there's a `SampleService` instance injected into our controllers.
 
 .sample-swing-java/griffon-app/controllers/sample/swing/java/SampleController.java
 [source,java,linenums,options="nowrap"]
@@ -97,9 +97,9 @@ include::{sample-swing-java}/griffon-app/controllers/sample/swing/java/SampleCon
 <3> Automatically run off the UI thread
 <4> Get back inside the UI thread
 
-Of particular note is the fact that actions are always executed outside off the UI thread
+Of particular note is the fact that actions are always executed outside of the UI thread
 unless otherwise configured with an `@Threading` annotation. Once we have computed the right
-output we must inform the View of the new value. This is done by updating the model
+output, we must inform the View of the new value. This is done by updating the model
 inside the UI thread [conum,data-value=4]_4_.
 
 .sample-swing-groovy/griffon-app/controllers/sample/swing/groovy/SampleController.groovy
@@ -112,14 +112,14 @@ include::{sample-swing-groovy}/griffon-app/controllers/sample/swing/groovy/Sampl
 <3> Automatically run off the UI thread
 <4> Get back inside the UI thread
 
-The Groovy version of the Controller is much terser of course however there's a nice
+The Groovy version of the Controller is much terser, of course. However, there's a nice
 feature available to Groovy Swing: Model properties bound to UI components are _always_
 updated inside the UI thread.
 
 [[_sample_swing_service]]
 === Service
 
-Services are tasked to work with raw data and I/O, they should *_never_* interact with
+Services are tasked to work with raw data and I/O; they should *_never_* interact with
 Views and Models directly, though you may have additional components injected to them.
 The following service shows another facility provide by the
 `{link_griffon_application}` interface:
@@ -142,7 +142,7 @@ include::{sample-swing-groovy}/griffon-app/services/sample/swing/groovy/SampleSe
 === View
 
 We come to the final piece of the puzzle: the View. Components are arranged in a
-one column vertical grid
+one column vertical grid:
 
 .sample-swing-java/griffon-app/views/sample/swing/java/SampleView.java
 [source,java,linenums,options="nowrap"]
@@ -155,7 +155,7 @@ include::{sample-swing-java}/griffon-app/views/sample/swing/java/SampleView.java
 <4> Hook in controller action by name
 
 Here we can appreciate at [conum,data-value=3]_3_ how Model properties are bound to
-View components, also how controller actions can be transformed into toolkit actions
+View components, and also how controller actions can be transformed into toolkit actions
 that may be applied to buttons [conum,data-value=4]_4_ for example.
 
 .sample-swing-groovy/griffon-app/views/sample/swing/groovy/SampleView.groovy
@@ -169,15 +169,15 @@ include::{sample-swing-groovy}/griffon-app/views/sample/swing/groovy/SampleView.
 <4> Hook in controller action by name
 
 The Groovy version is again much terser thanks to the http://groovy-lang.org/dsls.html#swingbuilder[SwingBuilder DSL].
-Notice how easy it's to bind [conum,data-value=3]_3_ model properties using the `bind` node.
-The controller action is also transformed into an UI toolkit specific action however
+Notice how easy it is to bind [conum,data-value=3]_3_ model properties using the `bind` node.
+The controller action is also transformed into a UI toolkit specific action; however,
 this time it's easier to grab: by convention all controller actions are exposed as variables
 to the corresponding `builder`.
 
 [[_sample_swing_resources]]
 === Resources
 
-The last file we'll touch is the one that holds de i18n-able content. Griffon supports
+The last file we'll touch is the one that holds the i18n-able content. Griffon supports
 several formats. Here we're showing the standard one as found in many Java projects.
 
 .sample-swing-java/griffon-app/i18n/messages.properties
@@ -189,7 +189,7 @@ include::{sample-swing-java}/griffon-app/i18n/messages.properties[lines=17..-1]
 [[_sample_swing_statistics]]
 === Statistics
 
-The following statistics show the amount tof lines per artifact required by both applications
+The following statistics show the number of lines per artifact required by both applications:
 
 .Java
 [source]
@@ -227,9 +227,9 @@ include::{sample-javafx-java}/griffon-app/models/sample/javafx/java/SampleModel.
 <3> Pass-thru values to `Property`
 
 The Model makes use of JavaFX's observable properties. These properties are roughly
-equivalent in behavior to the ones we saw back in the <<_swing,Swing>> example, however
-they provide much more behavior than that; values may be cached automatically for
-example, avoiding bindings to be updated needlessly.
+equivalent in behavior to the ones we saw back in the <<_swing,Swing>> example; however,
+they provide much more behavior than that; values may be cached automatically, for
+example, avoiding needless updating of bindings.
 
 .sample-javafx-groovy/griffon-app/models/sample/javafx/groovy/SampleModel.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -238,7 +238,7 @@ include::{sample-javafx-groovy}/griffon-app/models/sample/javafx/groovy/SampleMo
 ----
 <1> Observable property
 
-Similarly to `@Observable` we find that Groovy based JavaFX models can use another AST
+As with `@Observable` we find that Groovy-based JavaFX models can use another AST
 transformation named `@FXObservable`. This transformation generates equivalent byte code
 to the Java based Model we saw earlier.
 
@@ -246,7 +246,7 @@ to the Java based Model we saw earlier.
 === Controller
 
 Have a look at the controller for this application. See if you can spot the differences
-between its Swing counterpart.
+from its Swing counterpart.
 
 .sample-javafx-java/griffon-app/controllers/sample/javafx/java/SampleController.java
 [source,java,linenums,options="nowrap"]
@@ -261,7 +261,7 @@ include::{sample-javafx-java}/griffon-app/controllers/sample/javafx/java/SampleC
 Did you spot any differences? No? That's because the two controllers are 100% identical.
 How can this be? This is the power of separating concerns between MVC members. Because
 the Controller only talks to the View via the Model, and the Model exposes an identical
-contract for its properties we didn't have to change the Controller at all.
+contract for its properties; we didn't have to change the Controller at all.
 
 .sample-javafx-groovy/griffon-app/controllers/sample/javafx/groovy/SampleController.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -273,15 +273,15 @@ include::{sample-javafx-groovy}/griffon-app/controllers/sample/javafx/groovy/Sam
 <3> Automatically run off the UI thread
 <4> Get back inside the UI thread
 
-Opposed to its Swing counterpart here we have to add an explicit threading block when
+As opposed to its Swing counterpart, here we have to add an explicit threading block when
 updating model properties. This is because the `bind` node for JavaFX components is not
-aware of the same rules than the `bind` node for Swing components. Nevertheless the
+aware of the same rules as the `bind` node for Swing components. Nevertheless, the
 code remains short and to the point.
 
 [[_sample_javafx_service]]
 === Service
 
-Given that the service operates with raw data and has no ties to the toolkit in use we'd
+Given that the service operates with raw data and has no ties to the toolkit in use, we'd
 expect no changes from the Swing example.
 
 .sample-javafx-java/griffon-app/services/sample/javafx/java/SampleService.java
@@ -300,8 +300,8 @@ include::{sample-javafx-groovy}/griffon-app/services/sample/javafx/groovy/Sample
 === View
 
 Views are the artifacts that are most impacted by the choice of UI toolkit. You may
-remember we mentioned FXML as one of the strong features delivered by JavaFX and so
-we chose to implement the Java based View by reading an fxml file by convention.
+remember we mentioned FXML as one of the strong features delivered by JavaFX, so
+we chose to implement the Java-based View by reading an fxml file by convention.
 
 .sample-javafx-java/griffon-app/views/sample/javafx/java/SampleView.java
 [source,java,linenums,options="nowrap"]
@@ -333,7 +333,7 @@ Let's review what we have here:
  - the button has an `fx:id` value of `sayHelloActionTarget`
 
 Given this we infer that the `fx:id` value must be of the form `<actionName>ActionTarget`.
-The naming convention is one of two steps, you must also connect the controller using
+The naming convention is one of two steps; you must also connect the controller using
 a helper method [conum,data-value=4]_4_ as shown in the View.
 
 .sample-javafx-groovy/griffon-app/views/sample/javafx/groovy/SampleView.groovy
@@ -352,7 +352,7 @@ this DSL is very similar to SwingBuilder.
 [[_sample_javafx_resources]]
 === Resources
 
-Finally the resources for this application are identical to the Swing version.
+Finally, the resources for this application are identical to the Swing version.
 
 .sample-javafx-java/griffon-app/i18n/messages.properties
 [source,java,linenums]
@@ -363,7 +363,7 @@ include::{sample-javafx-java}/griffon-app/i18n/messages.properties[lines=17..-1]
 [[_sample_javafx_statistics]]
 === Statistics
 
-The following statistics show the amount tof lines per artifact required by both applications
+The following statistics show the number of lines per artifact required by both applications:
 
 .Java
 [source]
@@ -381,16 +381,16 @@ include::{sample-javafx-groovy}/build/reports/stats/sample-javafx-groovy.txt[ind
 == Lanterna
 
 http://code.google.com/p/lanterna/[Lanterna] is a Java library allowing you to write
-easy semi-graphical user interfaces in a text-only environment, very similar to the
-C library curses but with more functionality. Lanterna supports xterm compatible terminals
+easy semi-graphical user interfaces in a text-only environment, very much like the
+C library curses, but with more functionality. Lanterna supports xterm-compatible terminals
 and terminal emulators such as konsole, gnome-terminal, putty, xterm and many more.
-One of the main benefits of lanterna is that it's not dependent on any native library
+One of the main benefits of lanterna is that it's not dependent on any native library,
 but runs 100% in pure Java.
 
 [[_sample_lanterna_model]]
 === Model
 
-Even though Lanterna UI components do not expose observable properties in any way
+Even though Lanterna UI components do not expose observable properties in any way,
 it's a good thing to use observable properties in the Model, and so the following
 Model is identical to the <<_swing,Swing>> version.
 
@@ -403,10 +403,10 @@ include::{sample-lanterna-java}/griffon-app/models/sample/lanterna/java/SampleMo
 <2> Property accessor
 <3> Property mutator must fire a `PropertyChangeEvent`
 
-For reasons we'll see in the Groovy View and Controller we decided to skip a Model
-for the Groovy version. This also demonstrates that even though and MVC group is the
-smallest building block you can still configure how it's assembled. Have a look at
-the application's configuration to find out how
+For reasons we'll see in the Groovy View and Controller, we decided to skip a Model
+for the Groovy version. This also demonstrates that even though an MVC group is the
+smallest building block, you can still configure how it's assembled. Have a look at
+the application's configuration to find out how:
 
 .sample-lanterna-groovy/griffon-app/conf/sample/lanterna/groovy/Config.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -417,12 +417,12 @@ include::{sample-lanterna-groovy}/griffon-app/conf/sample/lanterna/groovy/Config
 [[_sample_lanterna_controller]]
 === Controller
 
-We find that for the Java version the Controler it's identical to the <<_swing,Swing>>
+We find that for the Java version, the Controller is identical to the <<_swing,Swing>>
 and <<_javafx, JavaFX>> versions. For the Groovy one we notice that both `input`
 and `output` view components are accessed directly. We know we've said in the past
-that a Controller should never do this but because Lanterna exposes no bind mechanism
+that a Controller should never do this, but because Lanterna exposes no bind mechanism,
 the Groovy binding implementation would look as verbose as the Java version; we
-decided to take a shortcut for demonstrations purposes.
+decided to take a shortcut for demonstration purposes.
 
 .sample-lanterna-java/griffon-app/controllers/sample/lanterna/java/SampleController.java
 [source,java,linenums,options="nowrap"]
@@ -447,8 +447,8 @@ include::{sample-lanterna-groovy}/griffon-app/controllers/sample/lanterna/groovy
 [[_sample_lanterna_service]]
 === Service
 
-Again, services should not be affected by the choice of UI tookit so the following
-Service definitions are identical to the previous ones be saw earlier.
+Again, services should not be affected by the choice of UI tookit, so the following
+Service definitions are identical to the previous ones we saw earlier.
 
 .sample-lanterna-java/griffon-app/services/sample/lanterna/java/SampleService.java
 [source,java,linenums,options="nowrap"]
@@ -465,11 +465,11 @@ include::{sample-lanterna-groovy}/griffon-app/services/sample/lanterna/groovy/Sa
 [[_sample_lanterna_view]]
 === View
 
-We'd expect the View to follow the same pattern we've seen in the previous examples,
+We'd expect the View to follow the same pattern we've seen in the previous examples;
 that is, create two components that will be bound to model properties and a button
 that's connected to a Controller action. Here we see that the Java version is rather
 verbose due to the fact that Lanterna has no observable UI components. This is the
-reason for which we must explicitly mode the value of the `input` component into
+reason we must explicitly set the value of the `input` component in
 the `input` Model property as soon as the button is clicked.
 
 .sample-lanterna-java/griffon-app/views/sample/lanterna/java/SampleView.java
@@ -482,8 +482,8 @@ include::{sample-lanterna-java}/griffon-app/views/sample/lanterna/java/SampleVie
 <3> Apply component-to-model binding
 <4> Hook actions by convention
 
-Fortunately we can rely on the observable `output` Model property to write back the
-value to the `output` component as soon as said property gets updated.
+Fortunately, we can rely on the observable `output` Model property to write back the
+value to the `output` component as soon as said property is updated.
 
 .sample-lanterna-groovy/griffon-app/views/sample/lanterna/groovy/SampleView.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -494,14 +494,14 @@ include::{sample-lanterna-groovy}/griffon-app/views/sample/lanterna/groovy/Sampl
 <2> Create window and attach it to `{link_window_manager}`
 <3> Hook actions by convention
 
-Here we can certify there's no binding code in the View, hence why the Controller has
+Here we can see there's no binding code in the View; for this reason, the Controller has
 to access UI components directly.
 
 [[_sample_lanterna_resources]]
 === Resources
 
-The resources file is identical to the ones found in the other applications. There's
-in fact no changes brought by the choice of UI toolkit here.
+The resources file is identical to the ones found in the other applications. There are
+in fact no changes brought about by the choice of UI toolkit.
 
 .sample-lanterna-java/griffon-app/i18n/messages.properties
 [source,java,linenums]
@@ -512,7 +512,7 @@ include::{sample-lanterna-java}/griffon-app/i18n/messages.properties[lines=17..-
 [[_sample_lanterna_statistics]]
 === Statistics
 
-The following statistics show the amount tof lines per artifact required by both applications
+The following statistics show the number of lines per artifact required by both applications:
 
 .Java
 [source]
@@ -534,8 +534,8 @@ Internet applications (IIAs). It combines the enhanced productivity and usabilit
 of a modern user interface toolkit with the robustness of the Java platform.
 
 We decided to implement this application in the same fashion as the <<_lanterna,Lanterna>>
-application because of the same reason: Pivot UI components are not observable. You'll
-notice that the Java Model is identical and there's no Groovy Model
+application for the same reason: Pivot UI components are not observable. You'll
+notice that the Java Model is identical, and there's no Groovy Model.
 
 [[_sample_pivot_model]]
 === Model
@@ -552,7 +552,7 @@ include::{sample-pivot-java}/griffon-app/models/sample/pivot/java/SampleModel.ja
 [[_sample_pivot_controller]]
 === Controller
 
-The Pivot Controllers follow the same rules than the Lanterna ones, and as such you'll
+The Pivot Controllers follow the same rules as the Lanterna ones, and as such you'll
 see there are no differences between one another.
 
 .sample-pivot-java/griffon-app/controllers/sample/pivot/java/SampleController.java
@@ -578,7 +578,7 @@ include::{sample-pivot-groovy}/griffon-app/controllers/sample/pivot/groovy/Sampl
 [[_sample_pivot_service]]
 === Service
 
-Services remain constant again, what a surprise, right?
+Services remain constant again; no surprise, right?
 
 .sample-pivot-java/griffon-app/services/sample/pivot/java/SampleService.java
 [source,java,linenums,options="nowrap"]
@@ -595,8 +595,8 @@ include::{sample-pivot-groovy}/griffon-app/services/sample/pivot/groovy/SampleSe
 [[_sample_pivot_view]]
 === View
 
-If you squint your eyes you'll see that the View is almost identical to the <<_swing,Swing>>
-and <<_lanterna,Lanterna>> Views. Besides using toolkit specific components we notice
+If you squint, you'll see that the View is almost identical to the <<_swing,Swing>>
+and <<_lanterna,Lanterna>> Views. Besides using toolkit specific components, we notice
 that both `input` and `output` Model properties have to be explicitly bound using
 the native support exposed by the toolkit.
 
@@ -622,7 +622,7 @@ include::{sample-pivot-groovy}/griffon-app/views/sample/pivot/groovy/SampleView.
 [[_sample_pivot_resources]]
 === Resources
 
-The resource file, left untouched once more.
+Here is the resource file, again unchanged:
 
 .sample-pivot-java/griffon-app/i18n/messages.properties
 [source,java,linenums]
@@ -633,7 +633,7 @@ include::{sample-pivot-java}/griffon-app/i18n/messages.properties[lines=17..-1]
 [[_sample_pivot_statistics]]
 === Statistics
 
-The following statistics show the amount tof lines per artifact required by both applications
+The following statistics show the number of lines per artifact required by both applications:
 
 .Java
 [source]

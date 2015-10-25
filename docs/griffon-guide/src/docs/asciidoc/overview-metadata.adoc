@@ -10,7 +10,7 @@ The following sections describe them with more detail.
 
 Access to the application's metadata file (`application.properties`) is available by
 querying the `{link_metadata}` singleton. Here's a snippet of code that shows how to
-setup a welcome message that displays the application's name and version
+setup a welcome message that displays the application's name and version:
 
 .griffon-app/views/sample/SampleView.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -40,7 +40,7 @@ class SampleView {
 }
 ----
 
-There are also a few helpful methods found in `{link_metadata}`
+There are also a few helpful methods found in `{link_metadata}`:
 
 * `getApplicationName()` - same result as `meta['application.name']`
 * `getApplicationVersion()` - same result as `meta['application.version']`
@@ -51,7 +51,7 @@ There are also a few helpful methods found in `{link_metadata}`
 A `{link_feature}` is a boolean flag that determines if a capability is available to
 the application at runtime. ``{link_feature}``s are nothing more than a `System`
 property. Here's an example of a module that decides if a specific binding
-should be applied over another
+should be applied over another:
 
 .src/main/groovy/org/opendolphin/demo/DolphinModule.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -83,8 +83,8 @@ class DolphinModule extends AbstractModule {
 }
 ----
 
-The remote option can be enabled when running the application with `-Ddolphin.remote=true`
-or adding the following entry to `griffon-app/resources/application.properties`
+The remote option can be enabled by running the application with `-Ddolphin.remote=true`,
+or by adding the following entry to `griffon-app/resources/application.properties`:
 
 .griffon-app/resources/application.properties
 [source,java,linenums,options="nowrap"]
@@ -96,11 +96,11 @@ dolphin.remote=true
 == Application Environment
 
 A Griffon application can run in several environments, default ones being
-`DEVELOPMENT`, `TEST` and `PRODUCTION`. Applications can inspect its current running
+`DEVELOPMENT`, `TEST` and `PRODUCTION`. An application can inspect its current running
 environment by means of the `{link_environment}` enum.
 
 The following example enhances the previous one by displaying the current running
-environment
+environment:
 
 .griffon-app/views/sample/SampleView.groovy
 [source,groovy,linenums,options="nowrap"]
@@ -136,12 +136,12 @@ class SampleView {
 
 The default environment is DEVELOPMENT. A different value can be specified by setting
 a proper value for the `griffon.env` System property. The `{link_environment}` class
-recognizes the following aliases
+recognizes the following aliases:
 
  * `dev` - short for `development`.
  * `prod` - short for `production`.
 
-You have the following options to change the environment value if using <<_buildtools_gradle,Gradle>> as build tool
+You have the following options to change the environment value if using <<_buildtools_gradle,Gradle>> as build tool:
 
  * specify the value as a project property named `griffonEnv`.
  * specify the value in the `jvmArgs` property of the `run` task.
@@ -149,14 +149,14 @@ You have the following options to change the environment value if using <<_build
 [[_overview_metadata_griffon_environment]]
 == Griffon Environment
 
-The `{link_griffon_environment}` gives you access to the following values
+The `{link_griffon_environment}` gives you access to the following values:
 
  * Griffon version
  * Griffon build date & time (link:https://en.wikipedia.org/wiki/ISO_8601[ISO 8601, window="blank"])
  * JVM version
  * OS version
 
-Here's an example displaying all values
+Here's an example displaying all values:
 
 .griffon-app/views/sample/SampleView.groovy
 [source,groovy,linenums,options="nowrap"]

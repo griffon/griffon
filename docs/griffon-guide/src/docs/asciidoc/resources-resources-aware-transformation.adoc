@@ -3,13 +3,13 @@
 = The @ResourcesAware AST Transformation
 
 Any component may gain the ability to locate resources through a `ResourceHandler`
-instance. You only need annotate the class with `{link_resources_aware}`
+instance. You need only annotate the class with `{link_resources_aware}`
 and it will automatically gain all methods exposed by `{link_resource_handler}`.
 
-This feature is just a shortcut to avoid reaching for the application instance
-from objects that do not hold a reference to it.
+This feature is just a shortcut to avoid obtaining the application instance
+by objects which do not hold a reference to it.
 
-Here's an example of a custom bean that's able to locate resources
+Here's an example of a custom bean which is able to locate resources:
 
 [source,groovy,linenums,options="nowrap"]
 ----
@@ -19,7 +19,7 @@ class Bean {
 }
 ----
 
-This class can be used in the following way
+This class can be used in the following way:
 
 [source,groovy,linenums,options="nowrap"]
 ----

@@ -4,11 +4,11 @@
 
 The `{link_observable_ast}` transformation will inject the behavior of `{link_observable}`
 into the annotated class. It basically injects an instance of `java.beans.PropertyChangeSupport`
-and all methods required to make the model an observable class. It will also make sure that
+and all methods required to make the model an observable class. It will also ensure that
 a `java.beans.PropertyChangeEvent` is fired for each observable property whenever said
 property changes value.
 
-The following is a list of all methods added by `{link_observable_ast}`
+The following is a list of all methods added by `{link_observable_ast}`:
 
  * void addPropertyChangeListener(PropertyChangeListener listener)
  * void addPropertyChangeListener(String propertyName, PropertyChangeListener listener)

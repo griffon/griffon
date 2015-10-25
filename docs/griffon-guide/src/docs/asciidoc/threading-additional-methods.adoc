@@ -3,10 +3,10 @@
 = Additional Threading Methods
 
 There are two additional methods that complement the generic threading facilities
-that Griffon exposes to the application and its artifacts
+which Griffon exposes to the application and its artifacts:
 
 isUIThread():: Returns `true` if the current thread is the UI thread, `false` otherwise.
 Functionally equivalent to calling `SwingUtilities.isEventDispatchThread()` in Swing.
 runFuture(ExecutorService s, Callable c):: schedules a callable on the target `ExecutorService`.
-The executor service can be left unspecified, if so a default Thread pool executor will be used.
+The executor service can be left unspecified; if so, a default Thread pool executor will be used.
 

@@ -9,7 +9,7 @@ property. You may use Dependency Injection to inject an `EventRouter` to any cla
 Publishing an event can be done synchronously on the current thread, asynchronously to
 the current thread, or asynchronously relative to the UI thread. For example, the following
 snippet will trigger an event that will be handled in the same thread, which could be the
-UI thread itself
+UI thread itself:
 
 [source,groovy,options="nowrap"]
 ----
@@ -17,15 +17,15 @@ application.eventRouter.publishEvent('MyEventName', ['arg0', 'arg1'])
 ----
 
 Whereas the following snippet guarantees that all event handlers that are interested in
-an event of type `MyEventName` will be called outside of the UI thread
+an event of type `MyEventName` will be called outside of the UI thread:
 
 [source,groovy,options="nowrap"]
 ----
 application.eventRouter.publishEventOutsideUI('MyEventName', ['arg0', 'arg1'])
 ----
 
-Finally, if you'd want event notification to be handed in a thread that is not the current
-one (regardless if the current one is the UI thread or not) then use the following method
+Finally, if you'd like event notification to be handled in a thread that is not the current
+one (regardless if the current one is the UI thread or not), then use the following method:
 
 [source,groovy,options="nowrap"]
 ----
@@ -37,8 +37,8 @@ argument to any of these methods. The event instance will be the single argument
 to the event handlers when the `event` methods are invoked in this way.
 
 There may be times when event publishing must be stopped for a while. If that's the
-case then you can instruct the application to stop delivering events by invoking the
-following code
+case, then you can instruct the application to stop delivering events by invoking the
+following code:
 
 [source,groovy,options="nowrap"]
 ----
@@ -47,7 +47,7 @@ application.eventRouter.eventPublishingEnabled = false
 
 Any events sent through the application's event bus will be discarded after that call;
 there's no way to get them back or replay them. When it's time to enable the event bus
-again simply call
+again, simply call
 
 [source,groovy,options="nowrap"]
 ----

@@ -7,8 +7,8 @@ mechanism provided by the `java.beans` package. The default `{link_resources_inj
 `http://docs.oracle.com/javase/6/docs/api/java/beans/PropertyEditorManager.html[PropertyEditorManager]`
 whenever a resource value must be transformed to a target type.
 
-PropertyEditorManager provides methods for registering custom PropertyEditors, it also
-follows a class name convention to load PropertyEditors should a custom one is not
+PropertyEditorManager provides methods for registering custom PropertyEditors; it also
+follows a class naming convention to load PropertyEditors should a custom one not be
 programmatically registered. Griffon applications will automatically load and register
 PropertyEditors from the following classpath resource: `/META-INF/services/java.beans.PropertyEditor`.
 Each line follows the format
@@ -95,7 +95,7 @@ The following table enumerates the default PropertyEditors loaded by Griffon at 
 
 |===
 
-Where the following apply
+Where the following apply:
 
  * 'currency' and 'percent' are literal values.
  * 'boolean' accepts `true` and `false` as values.
@@ -103,7 +103,7 @@ Where the following apply
  * 'switch' accepts `on` and `off` as values.
 
 Core UI Toolkit dependencies, such as `griffon-swing`, `griffon-javafx`, and `griffon-pivot` deliver
-additional PropertyEditors. The following tables summarize these additions
+additional PropertyEditors. The following tables summarize these additions:
 
 .Swing PropertyEditor mappings
 [cols="3*", options="header"]
@@ -175,7 +175,7 @@ additional PropertyEditors. The following tables summarize these additions
 
 |===
 
-Where the following apply
+Where the following apply:
 
  * `R`, `G`, `B` and `A` represent an hexadecimal number.
  * CYCLIC may be `true` or `false`.
@@ -184,7 +184,7 @@ Where the following apply
  * Color supports all color constants defined by `griffon.swing.support.Colors`.
  * All color formats are supported by gradient editors.
 
-The following styles are supported by `FontPropertyEditor`
+The following styles are supported by `FontPropertyEditor`:
 
  * BOLD
  * ITALIC
@@ -237,7 +237,7 @@ The following styles are supported by `FontPropertyEditor`
 
 |===
 
-Where the following apply
+Where the following applies:
 
  * `R`, `G`, `B` and `A` represent an hexadecimal number.
 
@@ -271,12 +271,12 @@ Where the following apply
 
 |===
 
-Where the following apply
+Where the following apply:
 
  * `R`, `G`, `B` and `A` represent an hexadecimal number.
  * Color supports all color constants defined by `griffon.pivot.support.Colors`.
 
-Since Griffon 2.4.0 there's a `core-java8` package that delivers JDK8 specific property editors
+Since Griffon 2.4.0, there's a `core-java8` package that delivers JDK8 specific property editors:
 
 .JDK8 PropertyEditor mappings
 [cols="3*", options="header"]
