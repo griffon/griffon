@@ -397,71 +397,42 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
     protected void destroyArtifactMember(@Nonnull String type, @Nonnull GriffonArtifact member, boolean fireDestructionEvents) {
 <span class="nc bnc" id="L399" title="All 2 branches missed.">        if (member instanceof GriffonMvcArtifact) {</span>
-<span class="nc" id="L400">            final GriffonMvcArtifact artifact = (GriffonMvcArtifact) member;</span>
+<span class="nc" id="L400">            GriffonMvcArtifact artifact = (GriffonMvcArtifact) member;</span>
 <span class="nc bnc" id="L401" title="All 2 branches missed.">            if (fireDestructionEvents) {</span>
 <span class="nc" id="L402">                getApplication().getEventRouter().publishEvent(ApplicationEvent.DESTROY_INSTANCE.getName(), asList(member.getClass(), artifact));</span>
             }
-
-<span class="nc bnc" id="L405" title="All 2 branches missed.">            if (artifact instanceof GriffonView) {</span>
-<span class="nc" id="L406">                getApplication().getUIThreadManager().runInsideUISync(new Runnable() {</span>
-                    @Override
-                    public void run() {
-                        try {
-<span class="nc" id="L410">                            artifact.mvcGroupDestroy();</span>
-<span class="nc" id="L411">                        } catch (RuntimeException e) {</span>
-<span class="nc" id="L412">                            throw (RuntimeException) sanitize(e);</span>
-<span class="nc" id="L413">                        }</span>
-<span class="nc" id="L414">                    }</span>
-                });
-            } else {
-<span class="nc" id="L417">                artifact.mvcGroupDestroy();</span>
-            }
+<span class="nc" id="L404">            artifact.mvcGroupDestroy();</span>
 
             // clear all parent* references
-<span class="nc bnc" id="L421" title="All 2 branches missed.">            for (String parentMemberName : new String[]{&quot;parentModel&quot;, &quot;parentView&quot;, &quot;parentController&quot;, &quot;parentGroup&quot;}) {</span>
-<span class="nc" id="L422">                setPropertyOrFieldValueNoException(member, parentMemberName, null);</span>
+<span class="nc bnc" id="L407" title="All 2 branches missed.">            for (String parentMemberName : new String[]{&quot;parentModel&quot;, &quot;parentView&quot;, &quot;parentController&quot;, &quot;parentGroup&quot;}) {</span>
+<span class="nc" id="L408">                setPropertyOrFieldValueNoException(member, parentMemberName, null);</span>
             }
         }
-
-<span class="nc" id="L426">        destroyContextualMemberProperties(type, member);</span>
-<span class="nc" id="L427">    }</span>
-
-    protected void destroyContextualMemberProperties(@Nonnull String type, @Nonnull GriffonArtifact member) {
-<span class="nc bnc" id="L430" title="All 2 branches missed.">        for (Field field : getAllDeclaredFields(member.getClass())) {</span>
-<span class="nc bnc" id="L431" title="All 2 branches missed.">            if (field.getAnnotation(Contextual.class) != null) {</span>
-                try {
-<span class="nc" id="L433">                    setFieldValue(member, field.getName(), null);</span>
-<span class="nc" id="L434">                } catch (FieldException e) {</span>
-<span class="nc" id="L435">                    throw new IllegalStateException(&quot;Could not nullify field &quot; +</span>
-<span class="nc" id="L436">                        field.getName() + &quot;' in &quot; + type + &quot; (&quot; + member.getClass().getName() + &quot;)&quot;, e);</span>
-<span class="nc" id="L437">                }</span>
-            }
-        }
-<span class="nc" id="L440">    }</span>
+<span class="nc" id="L411">    }</span>
 
     protected void destroyNonArtifactMember(@Nonnull String type, @Nonnull Object member, boolean fireDestructionEvents) {
         // empty
-<span class="nc" id="L444">    }</span>
+<span class="nc" id="L415">    }</span>
 
     protected void doRemoveGroup(@Nonnull MVCGroup group) {
-<span class="nc" id="L447">        removeGroup(group);</span>
-<span class="nc" id="L448">    }</span>
+<span class="nc" id="L418">        removeGroup(group);</span>
+<span class="nc" id="L419">    }</span>
 
     protected boolean isConfigFlagEnabled(@Nonnull MVCGroupConfiguration configuration, @Nonnull String key) {
-<span class="nc" id="L451">        return getConfigValueAsBoolean(configuration.getConfig(), key, true);</span>
+<span class="nc" id="L422">        return getConfigValueAsBoolean(configuration.getConfig(), key, true);</span>
     }
 
     @Nullable
     protected Class&lt;?&gt; loadClass(@Nonnull String className) {
         try {
-<span class="nc" id="L457">            return applicationClassLoader.get().loadClass(className);</span>
-<span class="nc" id="L458">        } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L428">            return applicationClassLoader.get().loadClass(className);</span>
+<span class="nc" id="L429">        } catch (ClassNotFoundException e) {</span>
             // #39 do not ignore this CNFE
-<span class="nc" id="L460">            throw new GriffonException(e.toString(), e);</span>
+<span class="nc" id="L431">            throw new GriffonException(e.toString(), e);</span>
         }
     }
 
-<span class="nc" id="L464">    protected static final class ClassHolder {</span>
+<span class="nc" id="L435">    protected static final class ClassHolder {</span>
         protected Class&lt;?&gt; regularClass;
         protected Class&lt;? extends GriffonArtifact&gt; artifactClass;
     }

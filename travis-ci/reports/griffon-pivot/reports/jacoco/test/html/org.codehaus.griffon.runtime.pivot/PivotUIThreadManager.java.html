@@ -15,7 +15,7 @@
  */
 package org.codehaus.griffon.runtime.pivot;
 
-import griffon.core.ExceptionHandler;
+import griffon.core.GriffonExceptionHandler;
 import org.codehaus.griffon.runtime.core.threading.AbstractUIThreadManager;
 
 import javax.annotation.Nonnull;
@@ -30,10 +30,10 @@ import java.lang.reflect.InvocationTargetException;
  * @since 2.0.0
  */
 public class PivotUIThreadManager extends AbstractUIThreadManager {
-    private final ExceptionHandler exceptionHandler;
+    private final GriffonExceptionHandler exceptionHandler;
 
     @Inject
-<span class="nc" id="L36">    public PivotUIThreadManager(@Nonnull ExceptionHandler exceptionHandler) {</span>
+<span class="nc" id="L36">    public PivotUIThreadManager(@Nonnull GriffonExceptionHandler exceptionHandler) {</span>
 <span class="nc" id="L37">        this.exceptionHandler = exceptionHandler;</span>
 <span class="nc" id="L38">    }</span>
 

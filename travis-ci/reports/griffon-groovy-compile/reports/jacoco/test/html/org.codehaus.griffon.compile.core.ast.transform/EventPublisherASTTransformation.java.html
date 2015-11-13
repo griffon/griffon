@@ -43,7 +43,6 @@ import static java.lang.reflect.Modifier.PRIVATE;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_EXCEPTIONS;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.args;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.call;
-import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.ctor;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.field;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectField;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectInterface;
@@ -66,12 +65,12 @@ import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
  */
 @AnnotationHandlerFor(griffon.transform.EventPublisher.class)
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
-<span class="fc" id="L69">public class EventPublisherASTTransformation extends AbstractASTTransformation implements EventPublisherConstants, AnnotationHandler {</span>
-<span class="fc" id="L70">    private static final Logger LOG = LoggerFactory.getLogger(EventPublisherASTTransformation.class);</span>
-<span class="fc" id="L71">    private static final ClassNode EVENT_ROUTER_CNODE = makeClassSafe(EventRouter.class);</span>
-<span class="fc" id="L72">    private static final ClassNode EVENT_PUBLISHER_CNODE = makeClassSafe(EventPublisher.class);</span>
-<span class="fc" id="L73">    private static final ClassNode EVENT_PUBLISHER_FIELD_CNODE = makeClassSafe(DefaultEventPublisher.class);</span>
-<span class="fc" id="L74">    private static final ClassNode EVENT_PUBLISHER_ANODE = makeClassSafe(griffon.transform.EventPublisher.class);</span>
+<span class="fc" id="L68">public class EventPublisherASTTransformation extends AbstractASTTransformation implements EventPublisherConstants, AnnotationHandler {</span>
+<span class="fc" id="L69">    private static final Logger LOG = LoggerFactory.getLogger(EventPublisherASTTransformation.class);</span>
+<span class="fc" id="L70">    private static final ClassNode EVENT_ROUTER_CNODE = makeClassSafe(EventRouter.class);</span>
+<span class="fc" id="L71">    private static final ClassNode EVENT_PUBLISHER_CNODE = makeClassSafe(EventPublisher.class);</span>
+<span class="fc" id="L72">    private static final ClassNode EVENT_PUBLISHER_FIELD_CNODE = makeClassSafe(DefaultEventPublisher.class);</span>
+<span class="fc" id="L73">    private static final ClassNode EVENT_PUBLISHER_ANODE = makeClassSafe(griffon.transform.EventPublisher.class);</span>
 
     /**
      * Convenience method to see if an annotated node is {@code @EventPublisher}.
@@ -80,12 +79,12 @@ import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
      * @return true if the node is an event publisher
      */
     public static boolean hasEventPublisherAnnotation(AnnotatedNode node) {
-<span class="nc bnc" id="L83" title="All 2 branches missed.">        for (AnnotationNode annotation : node.getAnnotations()) {</span>
-<span class="nc bnc" id="L84" title="All 2 branches missed.">            if (EVENT_PUBLISHER_ANODE.equals(annotation.getClassNode())) {</span>
-<span class="nc" id="L85">                return true;</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">        for (AnnotationNode annotation : node.getAnnotations()) {</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">            if (EVENT_PUBLISHER_ANODE.equals(annotation.getClassNode())) {</span>
+<span class="nc" id="L84">                return true;</span>
             }
-<span class="nc" id="L87">        }</span>
-<span class="nc" id="L88">        return false;</span>
+<span class="nc" id="L86">        }</span>
+<span class="nc" id="L87">        return false;</span>
     }
 
     /**
@@ -95,19 +94,19 @@ import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
      * @param source the source unit for the nodes
      */
     public void visit(ASTNode[] nodes, SourceUnit source) {
-<span class="fc" id="L98">        checkNodesForAnnotationAndType(nodes[0], nodes[1]);</span>
-<span class="fc" id="L99">        addEventPublisherIfNeeded(source, (AnnotationNode) nodes[0], (ClassNode) nodes[1]);</span>
-<span class="fc" id="L100">    }</span>
+<span class="fc" id="L97">        checkNodesForAnnotationAndType(nodes[0], nodes[1]);</span>
+<span class="fc" id="L98">        addEventPublisherIfNeeded(source, (AnnotationNode) nodes[0], (ClassNode) nodes[1]);</span>
+<span class="fc" id="L99">    }</span>
 
     public static void addEventPublisherIfNeeded(SourceUnit source, AnnotationNode annotationNode, ClassNode classNode) {
-<span class="pc bpc" id="L103" title="1 of 2 branches missed.">        if (needsDelegate(classNode, source, METHODS, &quot;EventPublisher&quot;, EVENT_PUBLISHER_TYPE)) {</span>
-<span class="fc" id="L104">            LOG.debug(&quot;Injecting {} into {}&quot;, EVENT_PUBLISHER_TYPE, classNode.getName());</span>
-<span class="fc" id="L105">            ConstantExpression value = (ConstantExpression) annotationNode.getMember(&quot;value&quot;);</span>
-<span class="pc bpc" id="L106" title="1 of 2 branches missed.">            String beanName = value != null ? value.getText() : null;</span>
-<span class="pc bpc" id="L107" title="1 of 2 branches missed.">            beanName = isBlank(beanName) ? null : beanName;</span>
-<span class="fc" id="L108">            apply(classNode, beanName);</span>
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">        if (needsDelegate(classNode, source, METHODS, &quot;EventPublisher&quot;, EVENT_PUBLISHER_TYPE)) {</span>
+<span class="fc" id="L103">            LOG.debug(&quot;Injecting {} into {}&quot;, EVENT_PUBLISHER_TYPE, classNode.getName());</span>
+<span class="fc" id="L104">            ConstantExpression value = (ConstantExpression) annotationNode.getMember(&quot;value&quot;);</span>
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">            String beanName = value != null ? value.getText() : null;</span>
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">            beanName = isBlank(beanName) ? null : beanName;</span>
+<span class="fc" id="L107">            apply(classNode, beanName);</span>
         }
-<span class="fc" id="L110">    }</span>
+<span class="fc" id="L109">    }</span>
 
     /**
      * Adds the necessary field and methods to support resource locating.
@@ -115,35 +114,35 @@ import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
      * @param declaringClass the class to which we add the support field and methods
      */
     public static void apply(@Nonnull ClassNode declaringClass, @Nullable String beanName) {
-<span class="fc" id="L118">        injectInterface(declaringClass, EVENT_PUBLISHER_CNODE);</span>
+<span class="fc" id="L117">        injectInterface(declaringClass, EVENT_PUBLISHER_CNODE);</span>
 
-<span class="fc" id="L120">        FieldNode epField = injectField(declaringClass,</span>
-            EVENT_PUBLISHER_FIELD_NAME,
+<span class="fc" id="L119">        FieldNode epField = injectField(declaringClass,</span>
+            EVENT_ROUTER_FIELD_NAME,
             PRIVATE,
             EVENT_PUBLISHER_FIELD_CNODE,
-<span class="fc" id="L124">            ctor(EVENT_PUBLISHER_FIELD_CNODE));</span>
+            null);
 
-<span class="fc" id="L126">        Parameter erParam = param(EVENT_ROUTER_CNODE, EVENT_ROUTER_PROPERTY);</span>
-<span class="pc bpc" id="L127" title="1 of 2 branches missed.">        if (!isBlank(beanName)) {</span>
-<span class="nc" id="L128">            AnnotationNode namedAnnotation = new AnnotationNode(NAMED_TYPE);</span>
-<span class="nc" id="L129">            namedAnnotation.addMember(&quot;value&quot;, new ConstantExpression(beanName));</span>
-<span class="nc" id="L130">            erParam.addAnnotation(namedAnnotation);</span>
+<span class="fc" id="L125">        Parameter erParam = param(EVENT_ROUTER_CNODE, EVENT_ROUTER_PROPERTY);</span>
+<span class="pc bpc" id="L126" title="1 of 2 branches missed.">        if (!isBlank(beanName)) {</span>
+<span class="nc" id="L127">            AnnotationNode namedAnnotation = new AnnotationNode(NAMED_TYPE);</span>
+<span class="nc" id="L128">            namedAnnotation.addMember(&quot;value&quot;, new ConstantExpression(beanName));</span>
+<span class="nc" id="L129">            erParam.addAnnotation(namedAnnotation);</span>
         }
 
-<span class="fc" id="L133">        MethodNode setter = new MethodNode(</span>
+<span class="fc" id="L132">        MethodNode setter = new MethodNode(</span>
             METHOD_SET_EVENT_ROUTER,
             PRIVATE,
             VOID_TYPE,
-<span class="fc" id="L137">            params(erParam),</span>
+<span class="fc" id="L136">            params(erParam),</span>
             NO_EXCEPTIONS,
-<span class="fc" id="L139">            stmnt(call(</span>
-<span class="fc" id="L140">                field(epField),</span>
+<span class="fc" id="L138">            stmnt(call(</span>
+<span class="fc" id="L139">                field(epField),</span>
                 METHOD_SET_EVENT_ROUTER,
-<span class="fc" id="L142">                args(var(EVENT_ROUTER_PROPERTY)))));</span>
-<span class="fc" id="L143">        setter.addAnnotation(new AnnotationNode(INJECT_TYPE));</span>
-<span class="fc" id="L144">        injectMethod(declaringClass, setter);</span>
+<span class="fc" id="L141">                args(var(EVENT_ROUTER_PROPERTY)))));</span>
+<span class="fc" id="L142">        setter.addAnnotation(new AnnotationNode(INJECT_TYPE));</span>
+<span class="fc" id="L143">        injectMethod(declaringClass, setter);</span>
 
-<span class="fc" id="L146">        addDelegateMethods(declaringClass, EVENT_PUBLISHER_CNODE, field(epField));</span>
-<span class="fc" id="L147">    }</span>
+<span class="fc" id="L145">        addDelegateMethods(declaringClass, EVENT_PUBLISHER_CNODE, field(epField));</span>
+<span class="fc" id="L146">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" tests="6" skipped="0" failures="0" errors="0" timestamp="2015-10-25T18:30:10" hostname="testing-worker-linux-968a87ce-2-528-linux-6-87339777" time="0.066">
+<testsuite name="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" tests="6" skipped="0" failures="0" errors="0" timestamp="2015-11-13T01:00:10" hostname="testing-worker-linux-89e97461-2-525-linux-8-90857738" time="1.017">
   <properties/>
-  <testcase name="Create throws class java.lang.IllegalArgumentException" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.055"/>
-  <testcase name="Create throws class java.lang.NullPointerException" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.0"/>
-  <testcase name="Create throws class java.lang.IllegalArgumentException" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.001"/>
-  <testcase name="Excercise bundle creation with org.codehaus.griffon.runtime.util.NotFoundBundle" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.002"/>
+  <testcase name="Create throws class java.lang.IllegalArgumentException" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.904"/>
+  <testcase name="Create throws class java.lang.NullPointerException" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.002"/>
+  <testcase name="Create throws class java.lang.IllegalArgumentException" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.003"/>
+  <testcase name="Excercise bundle creation with org.codehaus.griffon.runtime.util.NotFoundBundle" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.088"/>
   <testcase name="Excercise bundle creation with org.codehaus.griffon.runtime.util.NotABundle" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.002"/>
-  <testcase name="Excercise bundle creation with org.codehaus.griffon.runtime.util.BrokenBundle" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.004"/>
+  <testcase name="Excercise bundle creation with org.codehaus.griffon.runtime.util.BrokenBundle" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.014"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[[Test worker] WARN org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder - An error occurred while loading resource bundle org/codehaus/griffon/runtime/util/BrokenBundle from file:/home/travis/build/griffon/griffon/subprojects/griffon-core/build/classes/test/org/codehaus/griffon/runtime/util/BrokenBundle.class
 java.lang.RuntimeException: Boom!
@@ -29,8 +29,8 @@ java.lang.RuntimeException: Boom!
 	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:325)
 	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1210)
 	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1019)
-	at org.codehaus.groovy.runtime.InvokerHelper.invokePojoMethod(InvokerHelper.java:907)
-	at org.codehaus.groovy.runtime.InvokerHelper.invokeMethod(InvokerHelper.java:898)
+	at org.codehaus.groovy.runtime.InvokerHelper.invokePojoMethod(InvokerHelper.java:905)
+	at org.codehaus.groovy.runtime.InvokerHelper.invokeMethod(InvokerHelper.java:896)
 	at org.spockframework.runtime.GroovyRuntimeUtil.invokeMethod(GroovyRuntimeUtil.java:174)
 	at org.spockframework.runtime.SpockRuntime.verifyMethodCondition(SpockRuntime.java:52)
 	at org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec.$spock_feature_0_1(DefaultCompositeResourceBundleBuilderSpec.groovy:63)
@@ -72,7 +72,8 @@ java.lang.RuntimeException: Boom!
 	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecuter.execute(JUnitTestClassExecuter.java:56)
 	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassProcessor.processTestClass(JUnitTestClassProcessor.java:64)
 	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:50)
-	at sun.reflect.GeneratedMethodAccessor45.invoke(Unknown Source)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
 	at java.lang.reflect.Method.invoke(Method.java:497)
 	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)
@@ -81,7 +82,8 @@ java.lang.RuntimeException: Boom!
 	at org.gradle.messaging.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:93)
 	at com.sun.proxy.$Proxy2.processTestClass(Unknown Source)
 	at org.gradle.api.internal.tasks.testing.worker.TestWorker.processTestClass(TestWorker.java:106)
-	at sun.reflect.GeneratedMethodAccessor44.invoke(Unknown Source)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
 	at java.lang.reflect.Method.invoke(Method.java:497)
 	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)

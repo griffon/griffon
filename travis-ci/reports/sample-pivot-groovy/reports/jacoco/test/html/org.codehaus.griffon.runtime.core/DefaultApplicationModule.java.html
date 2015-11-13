@@ -20,8 +20,8 @@ import griffon.core.ApplicationConfigurer;
 import griffon.core.Configuration;
 import griffon.core.Context;
 import griffon.core.ContextFactory;
-import griffon.core.ExceptionHandler;
 import griffon.core.ExecutorServiceManager;
+import griffon.core.GriffonExceptionHandler;
 import griffon.core.LifecycleHandler;
 import griffon.core.PlatformHandler;
 import griffon.core.addon.AddonManager;
@@ -239,10 +239,9 @@ import static griffon.util.AnnotationUtils.named;
 <span class="fc" id="L239">            .to(DefaultEventHandler.class)</span>
 <span class="fc" id="L240">            .asSingleton();</span>
 
-<span class="fc" id="L242">        bind(ExceptionHandler.class)</span>
-<span class="fc" id="L243">            .toProvider(GriffonExceptionHandlerProvider.class)</span>
-<span class="fc" id="L244">            .asSingleton();</span>
+<span class="fc" id="L242">        bind(GriffonExceptionHandler.class)</span>
+<span class="fc" id="L243">            .asSingleton();</span>
         // end::bindings[]
-<span class="fc" id="L246">    }</span>
+<span class="fc" id="L245">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

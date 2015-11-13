@@ -60,28 +60,23 @@ public abstract class AbstractMapResourceBundle extends ResourceBundle {
     }
 
     @Override
-    public Set&lt;String&gt; keySet() {
-<span class="nc" id="L64">        return keys;</span>
-    }
-
-    @Override
     protected Set&lt;String&gt; handleKeySet() {
-<span class="nc" id="L69">        return keys;</span>
+<span class="nc" id="L64">        return keys;</span>
     }
 
     private static class IteratorAsEnumeration&lt;E&gt; implements Enumeration&lt;E&gt; {
         private final Iterator&lt;E&gt; iterator;
 
-<span class="nc" id="L75">        public IteratorAsEnumeration(Iterator&lt;E&gt; iterator) {</span>
-<span class="nc" id="L76">            this.iterator = iterator;</span>
-<span class="nc" id="L77">        }</span>
+<span class="nc" id="L70">        public IteratorAsEnumeration(Iterator&lt;E&gt; iterator) {</span>
+<span class="nc" id="L71">            this.iterator = iterator;</span>
+<span class="nc" id="L72">        }</span>
 
         public boolean hasMoreElements() {
-<span class="nc" id="L80">            return iterator.hasNext();</span>
+<span class="nc" id="L75">            return iterator.hasNext();</span>
         }
 
         public E nextElement() {
-<span class="nc" id="L84">            return iterator.next();</span>
+<span class="nc" id="L79">            return iterator.next();</span>
         }
     }
 }

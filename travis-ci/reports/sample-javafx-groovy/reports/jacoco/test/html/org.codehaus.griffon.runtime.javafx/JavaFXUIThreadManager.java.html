@@ -15,12 +15,11 @@
  */
 package org.codehaus.griffon.runtime.javafx;
 
-import griffon.core.ExceptionHandler;
+import griffon.core.GriffonExceptionHandler;
 import javafx.application.Platform;
 import org.codehaus.griffon.runtime.core.threading.AbstractUIThreadManager;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
@@ -29,47 +28,46 @@ import static java.util.Objects.requireNonNull;
 /**
  * @author Dean Iverson
  */
-<span class="fc" id="L32">public class JavaFXUIThreadManager extends AbstractUIThreadManager {</span>
-    @Inject
-    private ExceptionHandler exceptionHandler;
+<span class="fc" id="L31">public class JavaFXUIThreadManager extends AbstractUIThreadManager {</span>
+<span class="fc" id="L32">    private static final Thread.UncaughtExceptionHandler UNCAUGHT_EXCEPTION_HANDLER = new GriffonExceptionHandler();</span>
 
     /**
      * True if the current thread is the UI thread.
      */
     public boolean isUIThread() {
-<span class="fc" id="L40">        return Platform.isFxApplicationThread();</span>
+<span class="fc" id="L38">        return Platform.isFxApplicationThread();</span>
     }
 
     @Override
     public void runInsideUIAsync(@Nonnull Runnable runnable) {
-<span class="fc" id="L45">        requireNonNull(runnable, ERROR_RUNNABLE_NULL);</span>
-<span class="fc" id="L46">        Platform.runLater(runnable);</span>
-<span class="fc" id="L47">    }</span>
+<span class="fc" id="L43">        requireNonNull(runnable, ERROR_RUNNABLE_NULL);</span>
+<span class="fc" id="L44">        Platform.runLater(runnable);</span>
+<span class="fc" id="L45">    }</span>
 
     @Override
     public void runInsideUISync(final @Nonnull Runnable runnable) {
-<span class="nc" id="L51">        requireNonNull(runnable, ERROR_RUNNABLE_NULL);</span>
-<span class="nc bnc" id="L52" title="All 2 branches missed.">        if (isUIThread()) {</span>
-<span class="nc" id="L53">            runnable.run();</span>
+<span class="nc" id="L49">        requireNonNull(runnable, ERROR_RUNNABLE_NULL);</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if (isUIThread()) {</span>
+<span class="nc" id="L51">            runnable.run();</span>
         } else {
-<span class="nc" id="L55">            FutureTask&lt;Void&gt; task = new FutureTask&lt;&gt;(new Runnable() {</span>
+<span class="nc" id="L53">            FutureTask&lt;Void&gt; task = new FutureTask&lt;&gt;(new Runnable() {</span>
                 @Override
                 public void run() {
                     try {
-<span class="nc" id="L59">                        runnable.run();</span>
-<span class="nc" id="L60">                    } catch (Throwable throwable) {</span>
-<span class="nc" id="L61">                        exceptionHandler.uncaughtException(Thread.currentThread(), throwable);</span>
-<span class="nc" id="L62">                    }</span>
-<span class="nc" id="L63">                }</span>
+<span class="nc" id="L57">                        runnable.run();</span>
+<span class="nc" id="L58">                    } catch (Throwable throwable) {</span>
+<span class="nc" id="L59">                        UNCAUGHT_EXCEPTION_HANDLER.uncaughtException(Thread.currentThread(), throwable);</span>
+<span class="nc" id="L60">                    }</span>
+<span class="nc" id="L61">                }</span>
             }, null);
 
-<span class="nc" id="L66">            Platform.runLater(task);</span>
+<span class="nc" id="L64">            Platform.runLater(task);</span>
             try {
-<span class="nc" id="L68">                task.get();</span>
-<span class="nc" id="L69">            } catch (InterruptedException | ExecutionException e) {</span>
-<span class="nc" id="L70">                exceptionHandler.uncaughtException(Thread.currentThread(), e);</span>
-<span class="nc" id="L71">            }</span>
+<span class="nc" id="L66">                task.get();</span>
+<span class="nc" id="L67">            } catch (InterruptedException | ExecutionException e) {</span>
+<span class="nc" id="L68">                UNCAUGHT_EXCEPTION_HANDLER.uncaughtException(Thread.currentThread(), e);</span>
+<span class="nc" id="L69">            }</span>
         }
-<span class="nc" id="L73">    }</span>
+<span class="nc" id="L71">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
