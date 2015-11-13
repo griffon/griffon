@@ -183,109 +183,107 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
 <span class="fc" id="L183">        final ResourceInjector injector = application.getResourceInjector();</span>
 <span class="fc" id="L184">        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), new RunnableWithArgs() {</span>
             public void run(@Nullable Object... args) {
-<span class="fc" id="L186">                Object instance = args[1];</span>
-<span class="fc" id="L187">                injector.injectResources(instance);</span>
-<span class="fc" id="L188">            }</span>
+<span class="fc" id="L186">                injector.injectResources(args[1]);</span>
+<span class="fc" id="L187">            }</span>
         });
-<span class="fc" id="L190">    }</span>
+<span class="fc" id="L189">    }</span>
 
     protected void initializeArtifactManager() {
-<span class="fc" id="L193">        Injector&lt;?&gt; injector = application.getInjector();</span>
-<span class="fc" id="L194">        ArtifactManager artifactManager = application.getArtifactManager();</span>
-<span class="fc bfc" id="L195" title="All 2 branches covered.">        for (ArtifactHandler&lt;?&gt; artifactHandler : injector.getInstances(ArtifactHandler.class)) {</span>
-<span class="fc" id="L196">            artifactManager.registerArtifactHandler(artifactHandler);</span>
-<span class="fc" id="L197">        }</span>
-<span class="fc" id="L198">        artifactManager.loadArtifactMetadata();</span>
-<span class="fc" id="L199">    }</span>
+<span class="fc" id="L192">        Injector&lt;?&gt; injector = application.getInjector();</span>
+<span class="fc" id="L193">        ArtifactManager artifactManager = application.getArtifactManager();</span>
+<span class="fc bfc" id="L194" title="All 2 branches covered.">        for (ArtifactHandler&lt;?&gt; artifactHandler : injector.getInstances(ArtifactHandler.class)) {</span>
+<span class="fc" id="L195">            artifactManager.registerArtifactHandler(artifactHandler);</span>
+<span class="fc" id="L196">        }</span>
+<span class="fc" id="L197">        artifactManager.loadArtifactMetadata();</span>
+<span class="fc" id="L198">    }</span>
 
     protected void applyPlatformTweaks() {
-<span class="fc" id="L202">        PlatformHandler platformHandler = application.getInjector().getInstance(PlatformHandler.class);</span>
-<span class="fc" id="L203">        platformHandler.handle(application);</span>
-<span class="fc" id="L204">    }</span>
+<span class="fc" id="L201">        PlatformHandler platformHandler = application.getInjector().getInstance(PlatformHandler.class);</span>
+<span class="fc" id="L202">        platformHandler.handle(application);</span>
+<span class="fc" id="L203">    }</span>
 
     protected void initializeAddonManager() {
-<span class="fc" id="L207">        application.getAddonManager().initialize();</span>
-<span class="fc" id="L208">    }</span>
+<span class="fc" id="L206">        application.getAddonManager().initialize();</span>
+<span class="fc" id="L207">    }</span>
 
     @SuppressWarnings(&quot;unchecked&quot;)
     protected void initializeMvcManager() {
-<span class="fc" id="L212">        Map&lt;String, MVCGroupConfiguration&gt; configurations = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L213">        Map&lt;String, Map&lt;String, Object&gt;&gt; mvcGroups = application.getConfiguration().get(&quot;mvcGroups&quot;, Collections.&lt;String, Map&lt;String, Object&gt;&gt;emptyMap());</span>
-<span class="pc bpc" id="L214" title="1 of 2 branches missed.">        if (mvcGroups != null) {</span>
-<span class="fc bfc" id="L215" title="All 2 branches covered.">            for (Map.Entry&lt;String, Map&lt;String, Object&gt;&gt; groupEntry : mvcGroups.entrySet()) {</span>
-<span class="fc" id="L216">                String type = groupEntry.getKey();</span>
-<span class="fc" id="L217">                LOG.debug(&quot;Adding MVC group {}&quot;, type);</span>
-<span class="fc" id="L218">                Map&lt;String, Object&gt; members = groupEntry.getValue();</span>
-<span class="fc" id="L219">                Map&lt;String, Object&gt; configMap = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L220">                Map&lt;String, String&gt; membersCopy = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc bfc" id="L221" title="All 2 branches covered.">                for (Map.Entry&lt;String, Object&gt; entry : members.entrySet()) {</span>
-<span class="fc" id="L222">                    String key = String.valueOf(entry.getKey());</span>
-<span class="pc bpc" id="L223" title="3 of 4 branches missed.">                    if (&quot;config&quot;.equals(key) &amp;&amp; entry.getValue() instanceof Map) {</span>
-<span class="nc" id="L224">                        configMap = (Map&lt;String, Object&gt;) entry.getValue();</span>
+<span class="fc" id="L211">        Map&lt;String, MVCGroupConfiguration&gt; configurations = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L212">        Map&lt;String, Map&lt;String, Object&gt;&gt; mvcGroups = application.getConfiguration().get(&quot;mvcGroups&quot;, Collections.&lt;String, Map&lt;String, Object&gt;&gt;emptyMap());</span>
+<span class="pc bpc" id="L213" title="1 of 2 branches missed.">        if (mvcGroups != null) {</span>
+<span class="fc bfc" id="L214" title="All 2 branches covered.">            for (Map.Entry&lt;String, Map&lt;String, Object&gt;&gt; groupEntry : mvcGroups.entrySet()) {</span>
+<span class="fc" id="L215">                String type = groupEntry.getKey();</span>
+<span class="fc" id="L216">                LOG.debug(&quot;Adding MVC group {}&quot;, type);</span>
+<span class="fc" id="L217">                Map&lt;String, Object&gt; members = groupEntry.getValue();</span>
+<span class="fc" id="L218">                Map&lt;String, Object&gt; configMap = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L219">                Map&lt;String, String&gt; membersCopy = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L220" title="All 2 branches covered.">                for (Map.Entry&lt;String, Object&gt; entry : members.entrySet()) {</span>
+<span class="fc" id="L221">                    String key = String.valueOf(entry.getKey());</span>
+<span class="pc bpc" id="L222" title="3 of 4 branches missed.">                    if (&quot;config&quot;.equals(key) &amp;&amp; entry.getValue() instanceof Map) {</span>
+<span class="nc" id="L223">                        configMap = (Map&lt;String, Object&gt;) entry.getValue();</span>
                     } else {
-<span class="fc" id="L226">                        membersCopy.put(key, String.valueOf(entry.getValue()));</span>
+<span class="fc" id="L225">                        membersCopy.put(key, String.valueOf(entry.getValue()));</span>
                     }
-<span class="fc" id="L228">                }</span>
-<span class="fc" id="L229">                configurations.put(type, application.getMvcGroupManager().newMVCGroupConfiguration(type, membersCopy, configMap));</span>
-<span class="fc" id="L230">            }</span>
+<span class="fc" id="L227">                }</span>
+<span class="fc" id="L228">                configurations.put(type, application.getMvcGroupManager().newMVCGroupConfiguration(type, membersCopy, configMap));</span>
+<span class="fc" id="L229">            }</span>
         }
 
-<span class="fc" id="L233">        application.getMvcGroupManager().initialize(configurations);</span>
-<span class="fc" id="L234">    }</span>
+<span class="fc" id="L232">        application.getMvcGroupManager().initialize(configurations);</span>
+<span class="fc" id="L233">    }</span>
 
     protected void initializeActionManager() {
-<span class="pc bpc" id="L237" title="1 of 2 branches missed.">        if (application.getActionManager() instanceof NoopActionManager) {</span>
-<span class="nc" id="L238">            return;</span>
+<span class="pc bpc" id="L236" title="1 of 2 branches missed.">        if (application.getActionManager() instanceof NoopActionManager) {</span>
+<span class="nc" id="L237">            return;</span>
         }
 
-<span class="fc" id="L241">        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), new RunnableWithArgs() {</span>
+<span class="fc" id="L240">        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), new RunnableWithArgs() {</span>
             public void run(@Nullable Object... args) {
-<span class="fc" id="L243">                Class&lt;?&gt; klass = (Class) args[0];</span>
-<span class="fc bfc" id="L244" title="All 2 branches covered.">                if (GriffonController.class.isAssignableFrom(klass)) {</span>
-<span class="fc" id="L245">                    GriffonController controller = (GriffonController) args[1];</span>
-<span class="fc" id="L246">                    application.getActionManager().createActions(controller);</span>
+<span class="fc" id="L242">                Class&lt;?&gt; klass = (Class) args[0];</span>
+<span class="fc bfc" id="L243" title="All 2 branches covered.">                if (GriffonController.class.isAssignableFrom(klass)) {</span>
+<span class="fc" id="L244">                    application.getActionManager().createActions((GriffonController) args[1]);</span>
                 }
-<span class="fc" id="L248">            }</span>
+<span class="fc" id="L246">            }</span>
         });
 
-<span class="fc" id="L251">        Injector&lt;?&gt; injector = application.getInjector();</span>
-<span class="fc" id="L252">        Collection&lt;ActionHandler&gt; handlerInstances = injector.getInstances(ActionHandler.class);</span>
-<span class="fc" id="L253">        List&lt;String&gt; handlerOrder = application.getConfiguration().get(KEY_GRIFFON_CONTROLLER_ACTION_HANDLER_ORDER, Collections.&lt;String&gt;emptyList());</span>
-<span class="fc" id="L254">        Map&lt;String, ActionHandler&gt; sortedHandlers = sortByDependencies(handlerInstances, ActionHandler.SUFFIX, &quot;handler&quot;, handlerOrder);</span>
+<span class="fc" id="L249">        Injector&lt;?&gt; injector = application.getInjector();</span>
+<span class="fc" id="L250">        Collection&lt;ActionHandler&gt; handlerInstances = injector.getInstances(ActionHandler.class);</span>
+<span class="fc" id="L251">        List&lt;String&gt; handlerOrder = application.getConfiguration().get(KEY_GRIFFON_CONTROLLER_ACTION_HANDLER_ORDER, Collections.&lt;String&gt;emptyList());</span>
+<span class="fc" id="L252">        Map&lt;String, ActionHandler&gt; sortedHandlers = sortByDependencies(handlerInstances, ActionHandler.SUFFIX, &quot;handler&quot;, handlerOrder);</span>
 
-<span class="pc bpc" id="L256" title="1 of 2 branches missed.">        for (ActionHandler handler : sortedHandlers.values()) {</span>
-<span class="nc" id="L257">            application.getActionManager().addActionHandler(handler);</span>
-<span class="nc" id="L258">        }</span>
+<span class="pc bpc" id="L254" title="1 of 2 branches missed.">        for (ActionHandler handler : sortedHandlers.values()) {</span>
+<span class="nc" id="L255">            application.getActionManager().addActionHandler(handler);</span>
+<span class="nc" id="L256">        }</span>
 
-<span class="fc" id="L260">        Collection&lt;ActionInterceptor&gt; interceptorInstances = injector.getInstances(ActionInterceptor.class);</span>
-<span class="pc bpc" id="L261" title="1 of 2 branches missed.">        if (!interceptorInstances.isEmpty()) {</span>
-<span class="nc" id="L262">            application.getLog().error(ActionInterceptor.class.getName() + &quot; has been deprecated and is no longer supported&quot;);</span>
-<span class="nc" id="L263">            throw new UnsupportedOperationException(ActionInterceptor.class.getName() + &quot; has been deprecated and is no longer supported&quot;);</span>
+<span class="fc" id="L258">        Collection&lt;ActionInterceptor&gt; interceptorInstances = injector.getInstances(ActionInterceptor.class);</span>
+<span class="pc bpc" id="L259" title="1 of 2 branches missed.">        if (!interceptorInstances.isEmpty()) {</span>
+<span class="nc" id="L260">            application.getLog().error(ActionInterceptor.class.getName() + &quot; has been deprecated and is no longer supported&quot;);</span>
+<span class="nc" id="L261">            throw new UnsupportedOperationException(ActionInterceptor.class.getName() + &quot; has been deprecated and is no longer supported&quot;);</span>
         }
-<span class="fc" id="L265">    }</span>
+<span class="fc" id="L263">    }</span>
 
     protected Class&lt;?&gt; loadClass(@Nonnull String className, @Nonnull ClassLoader classLoader) throws ClassNotFoundException {
         ClassNotFoundException cnfe;
 
-<span class="fc" id="L270">        ClassLoader cl = DefaultApplicationConfigurer.class.getClassLoader();</span>
+<span class="fc" id="L268">        ClassLoader cl = DefaultApplicationConfigurer.class.getClassLoader();</span>
         try {
-<span class="fc" id="L272">            return cl.loadClass(className);</span>
-<span class="nc" id="L273">        } catch (ClassNotFoundException e) {</span>
-<span class="nc" id="L274">            cnfe = e;</span>
+<span class="fc" id="L270">            return cl.loadClass(className);</span>
+<span class="nc" id="L271">        } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L272">            cnfe = e;</span>
         }
 
-<span class="nc" id="L277">        cl = classLoader;</span>
+<span class="nc" id="L275">        cl = classLoader;</span>
         try {
-<span class="nc" id="L279">            return cl.loadClass(className);</span>
-<span class="nc" id="L280">        } catch (ClassNotFoundException e) {</span>
-<span class="nc" id="L281">            cnfe = e;</span>
+<span class="nc" id="L277">            return cl.loadClass(className);</span>
+<span class="nc" id="L278">        } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L279">            cnfe = e;</span>
         }
 
-<span class="nc" id="L284">        throw cnfe;</span>
+<span class="nc" id="L282">        throw cnfe;</span>
     }
 
     private ApplicationClassLoader applicationClassLoader() {
-<span class="fc" id="L288">        return application.getInjector().getInstance(ApplicationClassLoader.class);</span>
+<span class="fc" id="L286">        return application.getInjector().getInstance(ApplicationClassLoader.class);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

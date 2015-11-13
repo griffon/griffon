@@ -587,28 +587,32 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="fc" id="L587">        return new FieldExpression(owner.getField(fieldName));</span>
     }
 
+    public static ConstructorCallExpression ctor(ClassNode type) {
+<span class="fc" id="L591">        return ctor(type, NO_ARGS);</span>
+    }
+
     public static ConstructorCallExpression ctor(ClassNode type, Expression args) {
-<span class="fc" id="L591">        return new ConstructorCallExpression(type, args);</span>
+<span class="fc" id="L595">        return new ConstructorCallExpression(type, args);</span>
     }
 
     public static ListExpression listx(Expression... expressions) {
-<span class="nc" id="L595">        ListExpression list = new ListExpression();</span>
-<span class="nc bnc" id="L596" title="All 2 branches missed.">        for (Expression expression : expressions) {</span>
-<span class="nc" id="L597">            list.addExpression(expression);</span>
+<span class="nc" id="L599">        ListExpression list = new ListExpression();</span>
+<span class="nc bnc" id="L600" title="All 2 branches missed.">        for (Expression expression : expressions) {</span>
+<span class="nc" id="L601">            list.addExpression(expression);</span>
         }
-<span class="nc" id="L599">        return list;</span>
+<span class="nc" id="L603">        return list;</span>
     }
 
     public static MapEntryExpression mapEntryx(Expression key, Expression value) {
-<span class="nc" id="L603">        return new MapEntryExpression(key, value);</span>
+<span class="nc" id="L607">        return new MapEntryExpression(key, value);</span>
     }
 
     public static MapExpression mapx(MapEntryExpression... entries) {
-<span class="nc" id="L607">        MapExpression map = new MapExpression();</span>
-<span class="nc bnc" id="L608" title="All 2 branches missed.">        for (MapEntryExpression entry : entries) {</span>
-<span class="nc" id="L609">            map.addMapEntryExpression(entry);</span>
+<span class="nc" id="L611">        MapExpression map = new MapExpression();</span>
+<span class="nc bnc" id="L612" title="All 2 branches missed.">        for (MapEntryExpression entry : entries) {</span>
+<span class="nc" id="L613">            map.addMapEntryExpression(entry);</span>
         }
-<span class="nc" id="L611">        return map;</span>
+<span class="nc" id="L615">        return map;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

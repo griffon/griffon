@@ -236,5 +236,24 @@ import javafx.scene.input.KeyCombination;
     public boolean isVisible() {
 <span class="nc bnc" id="L237" title="All 4 branches missed.">        return visible != null &amp;&amp; visibleProperty().get();</span>
     }
+
+    // -- styleClass
+
+    private StringProperty styleClass;
+
+    public final StringProperty styleClassProperty() {
+<span class="nc bnc" id="L245" title="All 2 branches missed.">        if (styleClass == null) {</span>
+<span class="nc" id="L246">            styleClass = new SimpleStringProperty(this, &quot;styleClass&quot;);</span>
+        }
+<span class="nc" id="L248">        return styleClass;</span>
+    }
+
+    public void setStyleClass(String styleClass) {
+<span class="nc" id="L252">        styleClassProperty().set(styleClass);</span>
+<span class="nc" id="L253">    }</span>
+
+    public String getStyleClass() {
+<span class="nc bnc" id="L256" title="All 2 branches missed.">        return styleClass == null ? null : styleClassProperty().get();</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

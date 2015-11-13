@@ -20,10 +20,12 @@ import griffon.core.resources.ResourceResolver;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.beans.PropertyEditor;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static griffon.core.editors.PropertyEditorResolver.findEditor;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -33,133 +35,243 @@ import static java.util.Objects.requireNonNull;
 public class ResourceResolverDecorator implements ResourceResolver {
     private final ResourceResolver delegate;
 
-<span class="fc" id="L36">    public ResourceResolverDecorator(@Nonnull ResourceResolver delegate) {</span>
-<span class="fc" id="L37">        this.delegate = requireNonNull(delegate, &quot;Argument 'delegate' must not be null&quot;);</span>
-<span class="fc" id="L38">    }</span>
+<span class="fc" id="L38">    public ResourceResolverDecorator(@Nonnull ResourceResolver delegate) {</span>
+<span class="fc" id="L39">        this.delegate = requireNonNull(delegate, &quot;Argument 'delegate' must not be null&quot;);</span>
+<span class="fc" id="L40">    }</span>
 
     @Nonnull
     protected ResourceResolver getDelegate() {
-<span class="fc" id="L42">        return delegate;</span>
+<span class="fc" id="L44">        return delegate;</span>
     }
 
     @Override
     @Nonnull
     public Object resolveResource(@Nonnull String key) throws NoSuchResourceException {
-<span class="fc" id="L48">        return getDelegate().resolveResource(key);</span>
+<span class="fc" id="L50">        return getDelegate().resolveResource(key);</span>
     }
 
     @Override
     @Nonnull
     public Object resolveResource(@Nonnull String key, @Nonnull Locale locale) throws NoSuchResourceException {
-<span class="fc" id="L54">        return getDelegate().resolveResource(key, locale);</span>
+<span class="fc" id="L56">        return getDelegate().resolveResource(key, locale);</span>
     }
 
     @Override
     @Nonnull
     public Object resolveResource(@Nonnull String key, @Nonnull Object[] args) throws NoSuchResourceException {
-<span class="fc" id="L60">        return getDelegate().resolveResource(key, args);</span>
+<span class="fc" id="L62">        return getDelegate().resolveResource(key, args);</span>
     }
 
     @Override
     @Nonnull
     public Object resolveResource(@Nonnull String key, @Nonnull Object[] args, @Nonnull Locale locale) throws NoSuchResourceException {
-<span class="fc" id="L66">        return getDelegate().resolveResource(key, args, locale);</span>
+<span class="fc" id="L68">        return getDelegate().resolveResource(key, args, locale);</span>
     }
 
     @Override
     @Nonnull
     public Object resolveResource(@Nonnull String key, @Nonnull List&lt;?&gt; args) throws NoSuchResourceException {
-<span class="fc" id="L72">        return getDelegate().resolveResource(key, args);</span>
+<span class="fc" id="L74">        return getDelegate().resolveResource(key, args);</span>
     }
 
     @Override
     @Nonnull
     public Object resolveResource(@Nonnull String key, @Nonnull List&lt;?&gt; args, @Nonnull Locale locale) throws NoSuchResourceException {
-<span class="fc" id="L78">        return getDelegate().resolveResource(key, args, locale);</span>
+<span class="fc" id="L80">        return getDelegate().resolveResource(key, args, locale);</span>
     }
 
     @Override
     @Nullable
     public Object resolveResource(@Nonnull String key, @Nullable Object defaultValue) {
-<span class="fc" id="L84">        return getDelegate().resolveResource(key, defaultValue);</span>
+<span class="fc" id="L86">        return getDelegate().resolveResource(key, defaultValue);</span>
     }
 
     @Override
     @Nullable
     public Object resolveResource(@Nonnull String key, @Nonnull Locale locale, @Nullable Object defaultValue) {
-<span class="fc" id="L90">        return getDelegate().resolveResource(key, locale, defaultValue);</span>
+<span class="fc" id="L92">        return getDelegate().resolveResource(key, locale, defaultValue);</span>
     }
 
     @Override
     @Nullable
     public Object resolveResource(@Nonnull String key, @Nonnull Object[] args, @Nullable Object defaultValue) {
-<span class="fc" id="L96">        return getDelegate().resolveResource(key, args, defaultValue);</span>
+<span class="fc" id="L98">        return getDelegate().resolveResource(key, args, defaultValue);</span>
     }
 
     @Override
     @Nullable
     public Object resolveResource(@Nonnull String key, @Nonnull Object[] args, @Nonnull Locale locale, @Nullable Object defaultValue) {
-<span class="fc" id="L102">        return getDelegate().resolveResource(key, args, locale, defaultValue);</span>
+<span class="fc" id="L104">        return getDelegate().resolveResource(key, args, locale, defaultValue);</span>
     }
 
     @Override
     @Nullable
     public Object resolveResource(@Nonnull String key, @Nonnull List&lt;?&gt; args, @Nullable Object defaultValue) {
-<span class="fc" id="L108">        return getDelegate().resolveResource(key, args, defaultValue);</span>
+<span class="fc" id="L110">        return getDelegate().resolveResource(key, args, defaultValue);</span>
     }
 
     @Override
     @Nullable
     public Object resolveResource(@Nonnull String key, @Nonnull List&lt;?&gt; args, @Nonnull Locale locale, @Nullable Object defaultValue) {
-<span class="fc" id="L114">        return getDelegate().resolveResource(key, args, locale, defaultValue);</span>
+<span class="fc" id="L116">        return getDelegate().resolveResource(key, args, locale, defaultValue);</span>
     }
 
     @Override
     @Nonnull
     public Object resolveResource(@Nonnull String key, @Nonnull Map&lt;String, Object&gt; args) throws NoSuchResourceException {
-<span class="fc" id="L120">        return getDelegate().resolveResource(key, args);</span>
+<span class="fc" id="L122">        return getDelegate().resolveResource(key, args);</span>
     }
 
     @Override
     @Nonnull
     public Object resolveResource(@Nonnull String key, @Nonnull Map&lt;String, Object&gt; args, @Nonnull Locale locale) throws NoSuchResourceException {
-<span class="fc" id="L126">        return getDelegate().resolveResource(key, args, locale);</span>
+<span class="fc" id="L128">        return getDelegate().resolveResource(key, args, locale);</span>
     }
 
     @Override
     @Nullable
     public Object resolveResource(@Nonnull String key, @Nonnull Map&lt;String, Object&gt; args, @Nullable Object defaultValue) {
-<span class="fc" id="L132">        return getDelegate().resolveResource(key, args, defaultValue);</span>
+<span class="fc" id="L134">        return getDelegate().resolveResource(key, args, defaultValue);</span>
     }
 
     @Override
     @Nullable
     public Object resolveResource(@Nonnull String key, @Nonnull Map&lt;String, Object&gt; args, @Nonnull Locale locale, @Nullable Object defaultValue) {
-<span class="fc" id="L138">        return getDelegate().resolveResource(key, args, locale, defaultValue);</span>
+<span class="fc" id="L140">        return getDelegate().resolveResource(key, args, locale, defaultValue);</span>
     }
 
     @Override
     @Nonnull
     public Object resolveResourceValue(@Nonnull String key, @Nonnull Locale locale) throws NoSuchResourceException {
-<span class="fc" id="L144">        return getDelegate().resolveResourceValue(key, locale);</span>
+<span class="fc" id="L146">        return getDelegate().resolveResourceValue(key, locale);</span>
     }
 
     @Override
     @Nonnull
     public String formatResource(@Nonnull String resource, @Nonnull List&lt;?&gt; args) {
-<span class="fc" id="L150">        return getDelegate().formatResource(resource, args);</span>
+<span class="fc" id="L152">        return getDelegate().formatResource(resource, args);</span>
     }
 
     @Override
     @Nonnull
     public String formatResource(@Nonnull String resource, @Nonnull Object[] args) {
-<span class="fc" id="L156">        return getDelegate().formatResource(resource, args);</span>
+<span class="fc" id="L158">        return getDelegate().formatResource(resource, args);</span>
     }
 
     @Override
     @Nonnull
     public String formatResource(@Nonnull String resource, @Nonnull Map&lt;String, Object&gt; args) {
-<span class="fc" id="L162">        return getDelegate().formatResource(resource, args);</span>
+<span class="fc" id="L164">        return getDelegate().formatResource(resource, args);</span>
+    }
+
+    @Nullable
+    @Override
+    public &lt;T&gt; T resolveResourceConverted(@Nonnull String key, @Nonnull List&lt;?&gt; args, @Nullable T defaultValue, @Nonnull Class&lt;T&gt; type) {
+<span class="fc" id="L170">        return convertValue(resolveResource(key, args, defaultValue), type);</span>
+    }
+
+    @Nullable
+    @Override
+    public &lt;T&gt; T resolveResourceConverted(@Nonnull String key, @Nonnull List&lt;?&gt; args, @Nonnull Locale locale, @Nullable T defaultValue, @Nonnull Class&lt;T&gt; type) {
+<span class="fc" id="L176">        return convertValue(resolveResource(key, args, locale, defaultValue), type);</span>
+    }
+
+    @Nonnull
+    @Override
+    public &lt;T&gt; T resolveResourceConverted(@Nonnull String key, @Nonnull List&lt;?&gt; args, @Nonnull Locale locale, @Nonnull Class&lt;T&gt; type) throws NoSuchResourceException {
+<span class="fc" id="L182">        return convertValue(resolveResource(key, args, locale), type);</span>
+    }
+
+    @Nonnull
+    @Override
+    public &lt;T&gt; T resolveResourceConverted(@Nonnull String key, @Nonnull List&lt;?&gt; args, @Nonnull Class&lt;T&gt; type) throws NoSuchResourceException {
+<span class="fc" id="L188">        return convertValue(resolveResource(key, args), type);</span>
+    }
+
+    @Nullable
+    @Override
+    public &lt;T&gt; T resolveResourceConverted(@Nonnull String key, @Nonnull Map&lt;String, Object&gt; args, @Nullable T defaultValue, @Nonnull Class&lt;T&gt; type) {
+<span class="fc" id="L194">        return convertValue(resolveResource(key, args, defaultValue), type);</span>
+    }
+
+    @Nullable
+    @Override
+    public &lt;T&gt; T resolveResourceConverted(@Nonnull String key, @Nonnull Map&lt;String, Object&gt; args, @Nonnull Locale locale, @Nullable T defaultValue, @Nonnull Class&lt;T&gt; type) {
+<span class="fc" id="L200">        return convertValue(resolveResource(key, args, locale, defaultValue), type);</span>
+    }
+
+    @Nonnull
+    @Override
+    public &lt;T&gt; T resolveResourceConverted(@Nonnull String key, @Nonnull Map&lt;String, Object&gt; args, @Nonnull Locale locale, @Nonnull Class&lt;T&gt; type) throws NoSuchResourceException {
+<span class="fc" id="L206">        return convertValue(resolveResource(key, args, locale), type);</span>
+    }
+
+    @Nonnull
+    @Override
+    public &lt;T&gt; T resolveResourceConverted(@Nonnull String key, @Nonnull Map&lt;String, Object&gt; args, @Nonnull Class&lt;T&gt; type) throws NoSuchResourceException {
+<span class="fc" id="L212">        return convertValue(resolveResource(key, args), type);</span>
+    }
+
+    @Nullable
+    @Override
+    public &lt;T&gt; T resolveResourceConverted(@Nonnull String key, @Nonnull Object[] args, @Nullable T defaultValue, @Nonnull Class&lt;T&gt; type) {
+<span class="fc" id="L218">        return convertValue(resolveResource(key, args, defaultValue), type);</span>
+    }
+
+    @Nullable
+    @Override
+    public &lt;T&gt; T resolveResourceConverted(@Nonnull String key, @Nonnull Object[] args, @Nonnull Locale locale, @Nullable T defaultValue, @Nonnull Class&lt;T&gt; type) {
+<span class="fc" id="L224">        return convertValue(resolveResource(key, args, locale, defaultValue), type);</span>
+    }
+
+    @Nonnull
+    @Override
+    public &lt;T&gt; T resolveResourceConverted(@Nonnull String key, @Nonnull Object[] args, @Nonnull Locale locale, @Nonnull Class&lt;T&gt; type) throws NoSuchResourceException {
+<span class="fc" id="L230">        return convertValue(resolveResource(key, args, locale), type);</span>
+    }
+
+    @Nonnull
+    @Override
+    public &lt;T&gt; T resolveResourceConverted(@Nonnull String key, @Nonnull Object[] args, @Nonnull Class&lt;T&gt; type) throws NoSuchResourceException {
+<span class="fc" id="L236">        return convertValue(resolveResource(key, args), type);</span>
+    }
+
+    @Nullable
+    @Override
+    public &lt;T&gt; T resolveResourceConverted(@Nonnull String key, @Nullable T defaultValue, @Nonnull Class&lt;T&gt; type) {
+<span class="fc" id="L242">        return convertValue(resolveResource(key, defaultValue), type);</span>
+    }
+
+    @Nullable
+    @Override
+    public &lt;T&gt; T resolveResourceConverted(@Nonnull String key, @Nonnull Locale locale, @Nullable T defaultValue, @Nonnull Class&lt;T&gt; type) {
+<span class="fc" id="L248">        return convertValue(resolveResource(key, locale, defaultValue), type);</span>
+    }
+
+    @Nonnull
+    @Override
+    public &lt;T&gt; T resolveResourceConverted(@Nonnull String key, @Nonnull Locale locale, @Nonnull Class&lt;T&gt; type) throws NoSuchResourceException {
+<span class="fc" id="L254">        return convertValue(resolveResource(key, locale), type);</span>
+    }
+
+    @Nonnull
+    @Override
+    public &lt;T&gt; T resolveResourceConverted(@Nonnull String key, @Nonnull Class&lt;T&gt; type) throws NoSuchResourceException {
+<span class="fc" id="L260">        return convertValue(resolveResource(key), type);</span>
+    }
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    protected &lt;T&gt; T convertValue(@Nullable Object value, @Nonnull Class&lt;T&gt; type) {
+<span class="pc bpc" id="L265" title="1 of 2 branches missed.">        if (value != null) {</span>
+<span class="fc bfc" id="L266" title="All 2 branches covered.">            if (type.isAssignableFrom(value.getClass())) {</span>
+<span class="fc" id="L267">                return (T) value;</span>
+            } else {
+<span class="fc" id="L269">                PropertyEditor editor = findEditor(type);</span>
+<span class="fc" id="L270">                editor.setValue(value);</span>
+<span class="fc" id="L271">                return (T) editor.getValue();</span>
+            }
+        }
+<span class="nc" id="L274">        return null;</span>
     }
 }
 
