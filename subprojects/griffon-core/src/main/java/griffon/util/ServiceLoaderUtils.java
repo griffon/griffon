@@ -21,8 +21,10 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
+import java.net.JarURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.Scanner;
 import java.util.jar.JarEntry;
@@ -140,20 +142,23 @@ public class ServiceLoaderUtils {
 
     private static void handleJarResource(@Nonnull URL url, @Nonnull ClassLoader classLoader, @Nonnull String path, @Nonnull PathFilter pathFilter, @Nonnull ResourceProcessor processor) {
         try {
-            String u = url.toString();
-            JarFile jar = new JarFile(u.substring(JAR_FILE_SCHEME.length(), u.length() - path.length() - 2));
-            Enumeration<JarEntry> entries = jar.entries();
-            while (entries.hasMoreElements()) {
-                JarEntry jarEntry = entries.nextElement();
-                if (jarEntry.getName().startsWith(path) && pathFilter.accept(jarEntry.getName())) {
-                    try (Scanner scanner = new Scanner(jar.getInputStream(jarEntry))) {
-                        while (scanner.hasNextLine()) {
-                            String line = scanner.nextLine();
-                            if (line.startsWith("#") || isBlank(line)) continue;
-                            processor.process(classLoader, line);
+            URLConnection urlConnection = url.openConnection();
+            if(urlConnection instanceof JarURLConnection) {
+                JarURLConnection jarURLConnection = (JarURLConnection) urlConnection;
+                JarFile jar = jarURLConnection.getJarFile();
+                Enumeration<JarEntry> entries = jar.entries();
+                while (entries.hasMoreElements()) {
+                    JarEntry jarEntry = entries.nextElement();
+                    if (jarEntry.getName().startsWith(path) && pathFilter.accept(jarEntry.getName())) {
+                        try (Scanner scanner = new Scanner(jar.getInputStream(jarEntry))) {
+                            while (scanner.hasNextLine()) {
+                                String line = scanner.nextLine();
+                                if (line.startsWith("#") || isBlank(line)) continue;
+                                processor.process(classLoader, line);
+                            }
+                        } catch (IOException e) {
+                            LOG.warn("An error occurred while loading resources from " + jarEntry.getName(), sanitize(e));
                         }
-                    } catch (IOException e) {
-                        LOG.warn("An error occurred while loading resources from " + jarEntry.getName(), sanitize(e));
                     }
                 }
             }
@@ -162,15 +167,15 @@ public class ServiceLoaderUtils {
         }
     }
 
-    public static interface PathFilter {
+    public interface PathFilter {
         boolean accept(@Nonnull String path);
     }
 
-    public static interface LineProcessor {
+    public interface LineProcessor {
         void process(@Nonnull ClassLoader classLoader, @Nonnull Class<?> type, @Nonnull String line);
     }
 
-    public static interface ResourceProcessor {
+    public interface ResourceProcessor {
         void process(@Nonnull ClassLoader classLoader, @Nonnull String line);
     }
 }
