@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.1.0'
+        classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.4.0'
     }
 }
 
@@ -25,7 +25,7 @@ apply from: rootProject.file('client/calculator-client-common/gradle/code-qualit
 apply from: rootProject.file('client/calculator-client-common/gradle/docs.gradle')
 
 dependencies {
-    griffon 'org.codehaus.griffon.plugins:griffon-miglayout-plugin:1.0.0'
+    griffon "org.codehaus.griffon.plugins:griffon-miglayout-plugin:${miglayoutVersion}"
 
     compile project(':calculator-pm')
     compile "org.open-dolphin:dolphin-client:${dolphinVersion}"

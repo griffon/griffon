@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.1.0'
+        classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.4.0'
         classpath 'org.gradle.api.plugins:gradle-izpack-plugin:0.2.3'
     }
 }
@@ -30,20 +30,20 @@ dependencies {
     compile project(':calculator-component-swing')
     compile project(':calculator-client-common')
 
-    griffon 'org.codehaus.griffon.plugins:griffon-miglayout-plugin:1.0.0'
+    griffon "org.codehaus.griffon.plugins:griffon-miglayout-plugin:${miglayoutVersion}"
 
     compile "org.codehaus.griffon:griffon-guice:${griffon.version}"
-    compile 'org.slf4j:jul-to-slf4j:1.7.7'
-    compile 'org.slf4j:jcl-over-slf4j:1.7.7'
+    compile "org.slf4j:jul-to-slf4j:${slf4jVersion}"
+    compile "org.slf4j:jcl-over-slf4j:${slf4jVersion}"
 
     runtime('log4j:log4j:1.2.17') {
         exclude group: 'ant',         module: 'ant-nodeps'
         exclude group: 'ant',         module: 'ant-junit'
         exclude group: 'ant-contrib', module: 'ant-contrib'
     }
-    runtime 'org.slf4j:slf4j-log4j12:1.7.7'
+    runtime "org.slf4j:slf4j-log4j12:${slf4jVersion}"
 
-    testCompile 'org.codehaus.groovy:groovy-all:2.4.1'
+    testCompile 'org.codehaus.groovy:groovy-all:2.4.5'
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
 }
 
