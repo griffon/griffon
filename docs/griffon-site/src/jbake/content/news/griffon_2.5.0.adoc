@@ -14,7 +14,14 @@ The Griffon team is happy to announce the release of Griffon 2.5.0!
 
 The following list summarizes the changes brought by this release:
 
-
+ * Upgraded to Groovy 2.4.5
+ * A new interface, `ObservableContext`, allows publication of events when a property is added, removed, or updated.
+ * `Context` now sports typed getters.
+ * `Context` can inject any members annotated with `@Contextual` at any given time.
+ * Contextual injections on MVC members are automatically cleanup up during the destroy lifecycle phase of each MVC member.
+ * `JavaFXAction` has the following updates:
+ ** a `visible` property that controls the visibility of the bound widget.
+ ** a `styleClass` property that controls the stylable classes of the bound widget.
 
 A more detailed description of the changes and compatibility issues can be found at the link:/releasenotes/griffon_2.5.0.html[release notes, window="_blank"].
 

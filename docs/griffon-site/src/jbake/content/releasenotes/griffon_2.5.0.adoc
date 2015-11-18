@@ -23,7 +23,41 @@ The following dependencies have been upgraded
 
 === Runtime
 
+==== Observable Contexts
+
+A new interface, `griffon.core.ObservableContext`, enables publication of events whenever a context property is added,
+removed, or updated; taking into account the origin (the current context or its parent context). This allows a much
+more dynamic interaciton between components that share a context.
+
+==== Contextual Member Injection
+
+Just like `griffon.core.injection.Injector` can perform member injeciton on unmanaged entities, now `griffon.core.Context`
+can perform member injection on any instance that has members annotated with `@Contextual`. This is useful when a contextual
+value is not know ahead of time when MVC members are instantiated.
+
+==== Automatic Cleanup of Contextual Injections
+
+Any MVC member that makes use of `@Contextual` members will have those values nullified as part of their destroy lifecycle,
+freeing developers form manually clearing them.
+
+==== JavaFX Support
+
+`JavaFXAction` supports two new properties:
+
+ * `visible`: used to control the visibility of the widget that's bound to this action.
+ * `styleClass`: used to set style classes on the bound widget.
+
 === Buildtime
+
+==== Running Applications in Debug Mode
+
+Project templates now include settings for running an application in debug mode (suspended) allowing an IDE to connect
+remotely to it. Simply invoke the following command
+
+[source]
+----
+$ gradle -PdebugRun=true run
+----
 
 === Compatibility
 
