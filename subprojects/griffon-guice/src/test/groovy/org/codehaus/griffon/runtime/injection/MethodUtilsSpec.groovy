@@ -22,10 +22,28 @@ import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 
 class MethodUtilsSpec extends Specification {
+    void 'Find @PostConstruct annotated method on valid instance'() {
+        given:
+        ValidBean bean = new ValidBean()
+
+        expect:
+        MethodUtils.hasMethodAnnotatedwith(bean, PostConstruct)
+    }
+
+    void 'Find @PreDestroy annotated method on valid instance'() {
+        given:
+        ValidBean bean = new ValidBean()
+
+        expect:
+        MethodUtils.hasMethodAnnotatedwith(bean, PreDestroy)
+    }
+
     void 'Invoke @PostConstruct annotated method on valid instance'() {
         given:
-
         ValidBean bean = new ValidBean()
+
+        expect:
+        !bean.postConstruct
 
         when:
         MethodUtils.invokeAnnotatedMethod(bean, PostConstruct)
@@ -36,14 +54,16 @@ class MethodUtilsSpec extends Specification {
 
     void 'Invoke @PreDestroy annotated method on valid instance'() {
         given:
-
         ValidBean bean = new ValidBean()
+
+        expect:
+        !bean.preDestroy
 
         when:
         MethodUtils.invokeAnnotatedMethod(bean, PreDestroy)
 
         then:
-        !bean.preDestroy
+        bean.preDestroy
     }
 
     void 'Invoke @PostConstruct annotated method on invalid instance'() {
@@ -68,6 +88,7 @@ class ValidBean {
         postConstruct = true
     }
 
+    @PreDestroy
     void destroy(){
        preDestroy = true
     }

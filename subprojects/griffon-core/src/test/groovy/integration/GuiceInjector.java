@@ -251,6 +251,12 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
     }
 
     @Override
+    public void release(@Nonnull Object instance) {
+        requireNonNull(instance, "Argument 'instance' must not be null");
+        // NOOP
+    }
+
+    @Override
     public void close() {
         if (isClosed()) {
             throw new ClosedInjectorException(this);

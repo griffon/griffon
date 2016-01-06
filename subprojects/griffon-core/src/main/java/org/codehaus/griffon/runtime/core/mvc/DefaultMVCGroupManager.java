@@ -387,11 +387,14 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
     protected void destroyMembers(@Nonnull MVCGroup group, boolean fireDestructionEvents) {
         for (Map.Entry<String, Object> memberEntry : group.getMembers().entrySet()) {
-            if (memberEntry.getValue() instanceof GriffonArtifact) {
-                destroyArtifactMember(memberEntry.getKey(), (GriffonArtifact) memberEntry.getValue(), fireDestructionEvents);
+            Object member = memberEntry.getValue();
+            if (member instanceof GriffonArtifact) {
+                destroyArtifactMember(memberEntry.getKey(), (GriffonArtifact) member, fireDestructionEvents);
             } else {
-                destroyNonArtifactMember(memberEntry.getKey(), memberEntry.getValue(), fireDestructionEvents);
+                destroyNonArtifactMember(memberEntry.getKey(), member, fireDestructionEvents);
             }
+
+            getApplication().getInjector().release(member);
         }
     }
 

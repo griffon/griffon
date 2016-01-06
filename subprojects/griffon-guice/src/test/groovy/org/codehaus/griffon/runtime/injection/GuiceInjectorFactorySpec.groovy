@@ -228,7 +228,6 @@ class GuiceInjectorFactorySpec extends Specification {
                     .toProvider(DefaultExecutorServiceProvider)
                     .asSingleton()
 
-
                 bind(ExceptionHandler)
                     .toProvider(GriffonExceptionHandlerProvider)
                     .asSingleton()

@@ -44,5 +44,7 @@ public interface Injector<I> {
     @Nonnull
     I getDelegateInjector();
 
+    void release(@Nonnull Object instance);
+
     void close();
 }

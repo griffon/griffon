@@ -26,7 +26,30 @@ import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Andres Almiray
+ */
 public final class MethodUtils {
+    /**
+     * @since 2.6.0
+     */
+    public static boolean hasMethodAnnotatedwith(@Nonnull final Object instance, @Nonnull final Class<? extends Annotation> annotation) {
+        Class<?> klass = instance.getClass();
+        while (klass != null) {
+            boolean found = false;
+            for (Method method : klass.getDeclaredMethods()) {
+                if (method.isAnnotationPresent(annotation) &&
+                    method.getParameterTypes().length == 0) {
+                    return true;
+                }
+            }
+
+            klass = klass.getSuperclass();
+        }
+
+        return false;
+    }
+
     public static void invokeAnnotatedMethod(@Nonnull final Object instance, @Nonnull final Class<? extends Annotation> annotation) {
         List<Method> methods = new ArrayList<>();
         Class<?> klass = instance.getClass();
