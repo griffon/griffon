@@ -29,7 +29,7 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  * @since 2.0.0
  */
-<span class="fc" id="L32">public enum Environment {</span>
+<span class="pc" id="L32">public enum Environment {</span>
     /**
      * The development environment
      */
@@ -84,9 +84,9 @@ import static java.util.Objects.requireNonNull;
      */
     @Nullable
     public static Environment resolveEnvironment(@Nullable String shortName) {
-<span class="fc" id="L87">        final String envName = ENV_NAME_MAPPINGS.get(shortName);</span>
-<span class="pc bpc" id="L88" title="1 of 2 branches missed.">        if (envName != null) {</span>
-<span class="fc" id="L89">            return Environment.valueOf(envName.toUpperCase());</span>
+<span class="nc" id="L87">        final String envName = ENV_NAME_MAPPINGS.get(shortName);</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        if (envName != null) {</span>
+<span class="nc" id="L89">            return Environment.valueOf(envName.toUpperCase());</span>
         }
 <span class="nc" id="L91">        return null;</span>
     }

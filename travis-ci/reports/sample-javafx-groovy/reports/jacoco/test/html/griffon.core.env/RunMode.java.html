@@ -28,8 +28,8 @@ import java.util.Map;
  * @author Andres Almiray
  * @since 2.0.0
  */
-<span class="pc" id="L31">public enum RunMode {</span>
-<span class="fc" id="L32">    STANDALONE, WEBSTART, APPLET, CUSTOM;</span>
+<span class="nc" id="L31">public enum RunMode {</span>
+<span class="nc" id="L32">    STANDALONE, WEBSTART, APPLET, CUSTOM;</span>
     /**
      * Constant used to resolve the runMode via System.getProperty(RunMode.KEY)
      */
@@ -39,13 +39,13 @@ import java.util.Map;
     private static final String WEBSTART_RUNMODE_SHORT_NAME = &quot;webstart&quot;;
     private static final String APPLET_RUNMODE_SHORT_NAME = &quot;applet&quot;;
 
-<span class="fc" id="L42">    private static final Map&lt;String, String&gt; MODE_NAME_MAPPINGS = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L42">    private static final Map&lt;String, String&gt; MODE_NAME_MAPPINGS = new LinkedHashMap&lt;&gt;();</span>
 
     static {
-<span class="fc" id="L45">        MODE_NAME_MAPPINGS.put(STANDALONE_RUNMODE_SHORT_NAME, RunMode.STANDALONE.getName());</span>
-<span class="fc" id="L46">        MODE_NAME_MAPPINGS.put(WEBSTART_RUNMODE_SHORT_NAME, RunMode.WEBSTART.getName());</span>
-<span class="fc" id="L47">        MODE_NAME_MAPPINGS.put(APPLET_RUNMODE_SHORT_NAME, RunMode.APPLET.getName());</span>
-<span class="fc" id="L48">    }</span>
+<span class="nc" id="L45">        MODE_NAME_MAPPINGS.put(STANDALONE_RUNMODE_SHORT_NAME, RunMode.STANDALONE.getName());</span>
+<span class="nc" id="L46">        MODE_NAME_MAPPINGS.put(WEBSTART_RUNMODE_SHORT_NAME, RunMode.WEBSTART.getName());</span>
+<span class="nc" id="L47">        MODE_NAME_MAPPINGS.put(APPLET_RUNMODE_SHORT_NAME, RunMode.APPLET.getName());</span>
+<span class="nc" id="L48">    }</span>
 
     private String name;
 
@@ -80,8 +80,8 @@ import java.util.Map;
      */
     @Nonnull
     public String getName() {
-<span class="pc bpc" id="L83" title="3 of 4 branches missed.">        if (this != CUSTOM || isBlank(name)) {</span>
-<span class="fc" id="L84">            return this.toString().toLowerCase(Locale.getDefault());</span>
+<span class="nc bnc" id="L83" title="All 4 branches missed.">        if (this != CUSTOM || isBlank(name)) {</span>
+<span class="nc" id="L84">            return this.toString().toLowerCase(Locale.getDefault());</span>
         }
 <span class="nc" id="L86">        return name;</span>
     }

@@ -58,35 +58,35 @@ import static griffon.util.CollectionUtils.newList;
 @SuppressWarnings(&quot;rawtypes&quot;)
 public class LanternaBuilderCustomizer extends AbstractBuilderCustomizer {
     @SuppressWarnings(&quot;unchecked&quot;)
-<span class="fc" id="L61">    public LanternaBuilderCustomizer() {</span>
-<span class="fc" id="L62">        Map&lt;String, Factory&gt; factories = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L63">        factories.put(&quot;action&quot;, new ActionFactory());</span>
-<span class="fc" id="L64">        factories.put(&quot;actionListBox&quot;, new ActionListBoxFactory());</span>
-<span class="fc" id="L65">        factories.put(&quot;actions&quot;, new CollectionFactory());</span>
-<span class="fc" id="L66">        factories.put(&quot;application&quot;, new ApplicationFactory());</span>
-<span class="fc" id="L67">        factories.put(&quot;bean&quot;, new ComponentFactory(Object.class, true));</span>
-<span class="fc" id="L68">        factories.put(&quot;borderLayout&quot;, new LayoutFactory(BorderLayout.class));</span>
-<span class="fc" id="L69">        factories.put(&quot;button&quot;, new ButtonFactory());</span>
-<span class="fc" id="L70">        factories.put(&quot;checkBox&quot;, new CheckBoxFactory());</span>
-<span class="fc" id="L71">        factories.put(&quot;container&quot;, new ComponentFactory(Component.class, false));</span>
-<span class="fc" id="L72">        factories.put(&quot;emptySpace&quot;, new EmptySpaceFactory());</span>
-<span class="fc" id="L73">        factories.put(&quot;hbox&quot;, new BoxFactory(Panel.Orientation.HORISONTAL));</span>
-<span class="fc" id="L74">        factories.put(&quot;horisontalLayout&quot;, new LayoutFactory(HorisontalLayout.class));</span>
-<span class="fc" id="L75">        factories.put(&quot;horizontalLayout&quot;, new LayoutFactory(HorisontalLayout.class));</span>
-<span class="fc" id="L76">        factories.put(&quot;label&quot;, new LabelFactory());</span>
-<span class="fc" id="L77">        factories.put(&quot;list&quot;, new CollectionFactory());</span>
-<span class="fc" id="L78">        factories.put(&quot;panel&quot;, new PanelFactory());</span>
-<span class="fc" id="L79">        factories.put(&quot;passwordBox&quot;, new PasswordBoxFactory());</span>
-<span class="fc" id="L80">        factories.put(&quot;progressBar&quot;, new ProgressBarFactory());</span>
-<span class="fc" id="L81">        factories.put(&quot;table&quot;, new TableFactory());</span>
-<span class="fc" id="L82">        factories.put(&quot;textArea&quot;, new TextAreaFactory());</span>
-<span class="fc" id="L83">        factories.put(&quot;textBox&quot;, new TextBoxFactory());</span>
-<span class="fc" id="L84">        factories.put(&quot;vbox&quot;, new BoxFactory(Panel.Orientation.VERTICAL));</span>
-<span class="fc" id="L85">        factories.put(&quot;verticalLayout&quot;, new LayoutFactory(VerticalLayout.class));</span>
-<span class="fc" id="L86">        factories.put(&quot;widget&quot;, new ComponentFactory(Component.class, true));</span>
-<span class="fc" id="L87">        setFactories(factories);</span>
+<span class="nc" id="L61">    public LanternaBuilderCustomizer() {</span>
+<span class="nc" id="L62">        Map&lt;String, Factory&gt; factories = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L63">        factories.put(&quot;action&quot;, new ActionFactory());</span>
+<span class="nc" id="L64">        factories.put(&quot;actionListBox&quot;, new ActionListBoxFactory());</span>
+<span class="nc" id="L65">        factories.put(&quot;actions&quot;, new CollectionFactory());</span>
+<span class="nc" id="L66">        factories.put(&quot;application&quot;, new ApplicationFactory());</span>
+<span class="nc" id="L67">        factories.put(&quot;bean&quot;, new ComponentFactory(Object.class, true));</span>
+<span class="nc" id="L68">        factories.put(&quot;borderLayout&quot;, new LayoutFactory(BorderLayout.class));</span>
+<span class="nc" id="L69">        factories.put(&quot;button&quot;, new ButtonFactory());</span>
+<span class="nc" id="L70">        factories.put(&quot;checkBox&quot;, new CheckBoxFactory());</span>
+<span class="nc" id="L71">        factories.put(&quot;container&quot;, new ComponentFactory(Component.class, false));</span>
+<span class="nc" id="L72">        factories.put(&quot;emptySpace&quot;, new EmptySpaceFactory());</span>
+<span class="nc" id="L73">        factories.put(&quot;hbox&quot;, new BoxFactory(Panel.Orientation.HORISONTAL));</span>
+<span class="nc" id="L74">        factories.put(&quot;horisontalLayout&quot;, new LayoutFactory(HorisontalLayout.class));</span>
+<span class="nc" id="L75">        factories.put(&quot;horizontalLayout&quot;, new LayoutFactory(HorisontalLayout.class));</span>
+<span class="nc" id="L76">        factories.put(&quot;label&quot;, new LabelFactory());</span>
+<span class="nc" id="L77">        factories.put(&quot;list&quot;, new CollectionFactory());</span>
+<span class="nc" id="L78">        factories.put(&quot;panel&quot;, new PanelFactory());</span>
+<span class="nc" id="L79">        factories.put(&quot;passwordBox&quot;, new PasswordBoxFactory());</span>
+<span class="nc" id="L80">        factories.put(&quot;progressBar&quot;, new ProgressBarFactory());</span>
+<span class="nc" id="L81">        factories.put(&quot;table&quot;, new TableFactory());</span>
+<span class="nc" id="L82">        factories.put(&quot;textArea&quot;, new TextAreaFactory());</span>
+<span class="nc" id="L83">        factories.put(&quot;textBox&quot;, new TextBoxFactory());</span>
+<span class="nc" id="L84">        factories.put(&quot;vbox&quot;, new BoxFactory(Panel.Orientation.VERTICAL));</span>
+<span class="nc" id="L85">        factories.put(&quot;verticalLayout&quot;, new LayoutFactory(VerticalLayout.class));</span>
+<span class="nc" id="L86">        factories.put(&quot;widget&quot;, new ComponentFactory(Component.class, true));</span>
+<span class="nc" id="L87">        setFactories(factories);</span>
 
-<span class="fc" id="L89">        Closure c = new Closure(this) {</span>
+<span class="nc" id="L89">        Closure c = new Closure(this) {</span>
             @Override
             public Object call(Object... args) {
 <span class="nc" id="L92">                return handleIdAttribute(args);</span>
@@ -103,7 +103,7 @@ public class LanternaBuilderCustomizer extends AbstractBuilderCustomizer {
 <span class="nc" id="L103">                return null;</span>
             }
         };
-<span class="fc" id="L106">        setAttributeDelegates(newList(c));</span>
-<span class="fc" id="L107">    }</span>
+<span class="nc" id="L106">        setAttributeDelegates(newList(c));</span>
+<span class="nc" id="L107">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

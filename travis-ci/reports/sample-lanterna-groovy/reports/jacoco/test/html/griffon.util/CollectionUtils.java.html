@@ -100,11 +100,11 @@ import static java.util.Objects.requireNonNull;
 
     @SafeVarargs
     public static &lt;T&gt; List&lt;T&gt; newList(T... values) {
-<span class="pc bpc" id="L103" title="1 of 2 branches missed.">        if (values == null) {</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        if (values == null) {</span>
 <span class="nc" id="L104">            return Collections.emptyList();</span>
         }
 
-<span class="fc" id="L107">        return new ArrayList&lt;&gt;(Arrays.asList(values));</span>
+<span class="nc" id="L107">        return new ArrayList&lt;&gt;(Arrays.asList(values));</span>
     }
 
     public static &lt;K, V&gt; MapBuilder&lt;K, V&gt; map() {

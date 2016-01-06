@@ -26,55 +26,78 @@ import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 
-<span class="nc" id="L29">public final class MethodUtils {</span>
-    public static void invokeAnnotatedMethod(@Nonnull final Object instance, @Nonnull final Class&lt;? extends Annotation&gt; annotation) {
-<span class="fc" id="L31">        List&lt;Method&gt; methods = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L32">        Class&lt;?&gt; klass = instance.getClass();</span>
-<span class="fc bfc" id="L33" title="All 2 branches covered.">        while (klass != null) {</span>
-<span class="fc" id="L34">            boolean found = false;</span>
-<span class="fc bfc" id="L35" title="All 2 branches covered.">            for (Method method : klass.getDeclaredMethods()) {</span>
-<span class="fc bfc" id="L36" title="All 2 branches covered.">                if (method.isAnnotationPresent(annotation) &amp;&amp;</span>
-<span class="pc bpc" id="L37" title="1 of 2 branches missed.">                    method.getParameterTypes().length == 0) {</span>
-<span class="fc bfc" id="L38" title="All 2 branches covered.">                    if (found) {</span>
-<span class="fc" id="L39">                        throw new InstanceMethodInvocationException(instance, method, buildCause(instance.getClass(), method, methods));</span>
-                    }
-<span class="fc" id="L41">                    methods.add(method);</span>
-<span class="fc" id="L42">                    found = true;</span>
+/**
+ * @author Andres Almiray
+ */
+<span class="nc" id="L32">public final class MethodUtils {</span>
+    /**
+     * @since 2.6.0
+     */
+    public static boolean hasMethodAnnotatedwith(@Nonnull final Object instance, @Nonnull final Class&lt;? extends Annotation&gt; annotation) {
+<span class="fc" id="L37">        Class&lt;?&gt; klass = instance.getClass();</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        while (klass != null) {</span>
+<span class="fc" id="L39">            boolean found = false;</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">            for (Method method : klass.getDeclaredMethods()) {</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">                if (method.isAnnotationPresent(annotation) &amp;&amp;</span>
+<span class="pc bpc" id="L42" title="1 of 2 branches missed.">                    method.getParameterTypes().length == 0) {</span>
+<span class="fc" id="L43">                    return true;</span>
                 }
             }
 
-<span class="fc" id="L46">            klass = klass.getSuperclass();</span>
-<span class="fc" id="L47">        }</span>
+<span class="fc" id="L47">            klass = klass.getSuperclass();</span>
+<span class="fc" id="L48">        }</span>
 
-<span class="fc bfc" id="L49" title="All 2 branches covered.">        for (final Method method : methods) {</span>
-<span class="fc" id="L50">            AccessController.doPrivileged(new PrivilegedAction&lt;Object&gt;() {</span>
+<span class="fc" id="L50">        return false;</span>
+    }
+
+    public static void invokeAnnotatedMethod(@Nonnull final Object instance, @Nonnull final Class&lt;? extends Annotation&gt; annotation) {
+<span class="fc" id="L54">        List&lt;Method&gt; methods = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L55">        Class&lt;?&gt; klass = instance.getClass();</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        while (klass != null) {</span>
+<span class="fc" id="L57">            boolean found = false;</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">            for (Method method : klass.getDeclaredMethods()) {</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">                if (method.isAnnotationPresent(annotation) &amp;&amp;</span>
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">                    method.getParameterTypes().length == 0) {</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">                    if (found) {</span>
+<span class="fc" id="L62">                        throw new InstanceMethodInvocationException(instance, method, buildCause(instance.getClass(), method, methods));</span>
+                    }
+<span class="fc" id="L64">                    methods.add(method);</span>
+<span class="fc" id="L65">                    found = true;</span>
+                }
+            }
+
+<span class="fc" id="L69">            klass = klass.getSuperclass();</span>
+<span class="fc" id="L70">        }</span>
+
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        for (final Method method : methods) {</span>
+<span class="fc" id="L73">            AccessController.doPrivileged(new PrivilegedAction&lt;Object&gt;() {</span>
                 @Override
                 public Object run() {
-<span class="fc" id="L53">                    boolean wasAccessible = method.isAccessible();</span>
+<span class="fc" id="L76">                    boolean wasAccessible = method.isAccessible();</span>
                     try {
-<span class="fc" id="L55">                        method.setAccessible(true);</span>
-<span class="fc" id="L56">                        return method.invoke(instance);</span>
-<span class="nc" id="L57">                    } catch (IllegalAccessException | IllegalArgumentException e) {</span>
-<span class="nc" id="L58">                        throw new InstanceMethodInvocationException(instance, method.getName(), null, e);</span>
-<span class="nc" id="L59">                    } catch (InvocationTargetException e) {</span>
-<span class="nc" id="L60">                        throw new InstanceMethodInvocationException(instance, method.getName(), null, e.getTargetException());</span>
+<span class="fc" id="L78">                        method.setAccessible(true);</span>
+<span class="fc" id="L79">                        return method.invoke(instance);</span>
+<span class="nc" id="L80">                    } catch (IllegalAccessException | IllegalArgumentException e) {</span>
+<span class="nc" id="L81">                        throw new InstanceMethodInvocationException(instance, method.getName(), null, e);</span>
+<span class="nc" id="L82">                    } catch (InvocationTargetException e) {</span>
+<span class="nc" id="L83">                        throw new InstanceMethodInvocationException(instance, method.getName(), null, e.getTargetException());</span>
                     } finally {
-<span class="pc" id="L62">                        method.setAccessible(wasAccessible);</span>
+<span class="pc" id="L85">                        method.setAccessible(wasAccessible);</span>
                     }
                 }
             });
-<span class="fc" id="L66">        }</span>
-<span class="fc" id="L67">    }</span>
+<span class="fc" id="L89">        }</span>
+<span class="fc" id="L90">    }</span>
 
     @Nonnull
     private static Throwable buildCause(@Nonnull Class&lt;?&gt; clazz, @Nonnull Method method, @Nonnull List&lt;Method&gt; methods) {
-<span class="fc" id="L71">        StringBuilder b = new StringBuilder(&quot;The following methods were found annotated with @PostConstruct on &quot;)</span>
-<span class="fc" id="L72">            .append(clazz);</span>
-<span class="fc bfc" id="L73" title="All 2 branches covered.">        for (Method m : methods) {</span>
-<span class="fc" id="L74">            b.append(&quot;\n  &quot;).append(m.toGenericString());</span>
-<span class="fc" id="L75">        }</span>
-<span class="fc" id="L76">        b.append(&quot;\n  &quot;).append(method.toGenericString());</span>
-<span class="fc" id="L77">        return new IllegalStateException(b.toString());</span>
+<span class="fc" id="L94">        StringBuilder b = new StringBuilder(&quot;The following methods were found annotated with @PostConstruct on &quot;)</span>
+<span class="fc" id="L95">            .append(clazz);</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        for (Method m : methods) {</span>
+<span class="fc" id="L97">            b.append(&quot;\n  &quot;).append(m.toGenericString());</span>
+<span class="fc" id="L98">        }</span>
+<span class="fc" id="L99">        b.append(&quot;\n  &quot;).append(method.toGenericString());</span>
+<span class="fc" id="L100">        return new IllegalStateException(b.toString());</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

@@ -32,15 +32,15 @@ import static griffon.util.GriffonNameUtils.requireNonBlank;
  */
 public class DefaultContext extends AbstractContext {
     protected static final String ERROR_KEY_BLANK = &quot;Argument 'key' must not be blank&quot;;
-<span class="fc" id="L35">    private final Map&lt;String, Object&gt; attributes = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="nc" id="L35">    private final Map&lt;String, Object&gt; attributes = new ConcurrentHashMap&lt;&gt;();</span>
 
     public DefaultContext() {
 <span class="nc" id="L38">        this(null);</span>
 <span class="nc" id="L39">    }</span>
 
     public DefaultContext(@Nullable Context parentContext) {
-<span class="fc" id="L42">        super(parentContext);</span>
-<span class="fc" id="L43">    }</span>
+<span class="nc" id="L42">        super(parentContext);</span>
+<span class="nc" id="L43">    }</span>
 
     @Nullable
     @Override

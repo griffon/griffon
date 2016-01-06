@@ -25,9 +25,9 @@ class SingleElementContainerFactory extends ComponentFactory {
     private final Class constrainedType
 
     SingleElementContainerFactory(Class containerClass, String property = 'content', Class constrainedType = Component) {
-<span class="fc" id="L28">        super(containerClass)</span>
-<span class="fc" id="L29">        this.constrainedType = constrainedType</span>
-<span class="fc" id="L30">        this.setter = 'set' + property[0].toUpperCase() + property[1..-1]</span>
+<span class="nc" id="L28">        super(containerClass)</span>
+<span class="nc" id="L29">        this.constrainedType = constrainedType</span>
+<span class="nc" id="L30">        this.setter = 'set' + property[0].toUpperCase() + property[1..-1]</span>
     }
 
     void setChild(FactoryBuilderSupport builder, Object parent, Object child) {

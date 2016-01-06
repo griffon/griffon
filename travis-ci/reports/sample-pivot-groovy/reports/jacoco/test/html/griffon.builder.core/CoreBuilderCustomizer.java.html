@@ -37,23 +37,23 @@ public class CoreBuilderCustomizer extends AbstractBuilderCustomizer {
     @Inject
     private UIThreadManager uiThreadManager;
 
-<span class="fc" id="L40">    public CoreBuilderCustomizer() {</span>
-<span class="fc" id="L41">        Map&lt;String, Factory&gt; factories = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L42">        factories.put(&quot;root&quot;, new RootFactory());</span>
-<span class="fc" id="L43">        factories.put(&quot;metaComponent&quot;, new MetaComponentFactory());</span>
-<span class="fc" id="L44">        setFactories(factories);</span>
+<span class="nc" id="L40">    public CoreBuilderCustomizer() {</span>
+<span class="nc" id="L41">        Map&lt;String, Factory&gt; factories = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L42">        factories.put(&quot;root&quot;, new RootFactory());</span>
+<span class="nc" id="L43">        factories.put(&quot;metaComponent&quot;, new MetaComponentFactory());</span>
+<span class="nc" id="L44">        setFactories(factories);</span>
 
-<span class="fc" id="L46">    }</span>
+<span class="nc" id="L46">    }</span>
 
     @PostConstruct
     private void setup() {
-<span class="fc" id="L50">        Map&lt;String, Closure&gt; methods = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L51">        methods.put(&quot;runInsideUISync&quot;, new MethodClosure(uiThreadManager, &quot;runInsideUISync&quot;));</span>
-<span class="fc" id="L52">        methods.put(&quot;runInsideUIAsync&quot;, new MethodClosure(uiThreadManager, &quot;runInsideUIAsync&quot;));</span>
-<span class="fc" id="L53">        methods.put(&quot;runOutsideUI&quot;, new MethodClosure(uiThreadManager, &quot;runOutsideUI&quot;));</span>
-<span class="fc" id="L54">        methods.put(&quot;runFuture&quot;, new MethodClosure(uiThreadManager, &quot;runFuture&quot;));</span>
-<span class="fc" id="L55">        methods.put(&quot;isUIThread&quot;, new MethodClosure(uiThreadManager, &quot;isUIThread&quot;));</span>
-<span class="fc" id="L56">        setMethods(methods);</span>
-<span class="fc" id="L57">    }</span>
+<span class="nc" id="L50">        Map&lt;String, Closure&gt; methods = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L51">        methods.put(&quot;runInsideUISync&quot;, new MethodClosure(uiThreadManager, &quot;runInsideUISync&quot;));</span>
+<span class="nc" id="L52">        methods.put(&quot;runInsideUIAsync&quot;, new MethodClosure(uiThreadManager, &quot;runInsideUIAsync&quot;));</span>
+<span class="nc" id="L53">        methods.put(&quot;runOutsideUI&quot;, new MethodClosure(uiThreadManager, &quot;runOutsideUI&quot;));</span>
+<span class="nc" id="L54">        methods.put(&quot;runFuture&quot;, new MethodClosure(uiThreadManager, &quot;runFuture&quot;));</span>
+<span class="nc" id="L55">        methods.put(&quot;isUIThread&quot;, new MethodClosure(uiThreadManager, &quot;isUIThread&quot;));</span>
+<span class="nc" id="L56">        setMethods(methods);</span>
+<span class="nc" id="L57">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>InstanceTracker.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-groovy</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.injection</a> &gt; <span class="el_source">InstanceTracker.java</span></div><h1>InstanceTracker.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2016 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.injection;
+
+import com.google.inject.Binding;
+import com.google.inject.Injector;
+import com.google.inject.Scopes;
+
+import javax.annotation.Nonnull;
+import javax.annotation.PreDestroy;
+import javax.annotation.concurrent.GuardedBy;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import static java.util.Objects.requireNonNull;
+import static org.codehaus.griffon.runtime.injection.MethodUtils.invokeAnnotatedMethod;
+
+/**
+ * @author Andres Almiray
+ * @since 2.6.0
+ */
+<span class="fc" id="L38">class InstanceTracker {</span>
+    private static final String ERROR_INSTANCE_NULL = &quot;Argument 'instance' must not be null&quot;;
+    private static final String ERROR_BINDING_NULL = &quot;Argument 'binding' must not be null&quot;;
+
+
+<span class="fc" id="L43">    private final Object lock = new Object[0];</span>
+<span class="fc" id="L44">    @GuardedBy(&quot;lock&quot;)</span>
+    private final Map&lt;Object, Binding&lt;?&gt;&gt; instanceToKeyMap = new LinkedHashMap&lt;&gt;();
+
+    private com.google.inject.Injector injector;
+
+    public void setInjector(@Nonnull Injector injector) {
+<span class="fc" id="L50">        this.injector = injector;</span>
+<span class="fc" id="L51">    }</span>
+
+    @Nonnull
+    public Injector getInjector() {
+<span class="fc" id="L55">        return injector;</span>
+    }
+
+    @Nonnull
+    public &lt;T&gt; T track(@Nonnull Binding&lt;?&gt; binding, final @Nonnull T instance) {
+<span class="fc" id="L60">        requireNonNull(binding, ERROR_BINDING_NULL);</span>
+<span class="fc" id="L61">        requireNonNull(instance, ERROR_INSTANCE_NULL);</span>
+
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">        if (MethodUtils.hasMethodAnnotatedwith(instance, PreDestroy.class)) {</span>
+<span class="nc" id="L64">            synchronized (lock) {</span>
+<span class="nc" id="L65">                instanceToKeyMap.put(instance, binding);</span>
+<span class="nc" id="L66">            }</span>
+        }
+<span class="fc" id="L68">        return instance;</span>
+    }
+
+    public &lt;T&gt; void release(@Nonnull T instance) {
+<span class="nc" id="L72">        requireNonNull(instance, ERROR_INSTANCE_NULL);</span>
+
+<span class="nc" id="L74">        synchronized (lock) {</span>
+<span class="nc" id="L75">            Binding&lt;?&gt; binding = instanceToKeyMap.get(instance);</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">            if (binding != null) {</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">                if (!Scopes.isSingleton(binding)) {</span>
+<span class="nc" id="L78">                    invokeAnnotatedMethod(instance, PreDestroy.class);</span>
+<span class="nc" id="L79">                    instanceToKeyMap.remove(instance);</span>
+                }
+            }
+<span class="nc" id="L82">        }</span>
+<span class="nc" id="L83">    }</span>
+
+    public void releaseAll() {
+<span class="fc" id="L86">        List&lt;Object&gt; instances = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L87">        synchronized (lock) {</span>
+<span class="fc" id="L88">            instances.addAll(instanceToKeyMap.keySet());</span>
+<span class="fc" id="L89">            instanceToKeyMap.clear();</span>
+<span class="pc" id="L90">        }</span>
+<span class="fc" id="L91">        Collections.reverse(instances);</span>
+
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">        for (Object instance : instances) {</span>
+<span class="nc" id="L94">            invokeAnnotatedMethod(instance, PreDestroy.class);</span>
+<span class="nc" id="L95">        }</span>
+
+<span class="fc" id="L97">        instances.clear();</span>
+<span class="fc" id="L98">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

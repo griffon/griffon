@@ -35,16 +35,16 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 @SuppressWarnings(&quot;rawtypes&quot;)
-<span class="fc" id="L38">public class AbstractBuilderCustomizer implements BuilderCustomizer {</span>
-<span class="fc" id="L39">    private final Map&lt;String, Object&gt; variables = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L40">    private final Map&lt;String, Factory&gt; factories = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L41">    private final Map&lt;String, Closure&gt; methods = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L42">    private final Map&lt;String, Closure[]&gt; props = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L43">    private final List&lt;Closure&gt; attributeDelegates = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L44">    private final List&lt;Closure&gt; preInstantiateDelegates = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L45">    private final List&lt;Closure&gt; postInstantiateDelegates = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L46">    private final List&lt;Closure&gt; postNodeCompletionDelegates = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L47">    private final List&lt;Closure&gt; disposalClosures = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L38">public class AbstractBuilderCustomizer implements BuilderCustomizer {</span>
+<span class="nc" id="L39">    private final Map&lt;String, Object&gt; variables = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L40">    private final Map&lt;String, Factory&gt; factories = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L41">    private final Map&lt;String, Closure&gt; methods = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L42">    private final Map&lt;String, Closure[]&gt; props = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L43">    private final List&lt;Closure&gt; attributeDelegates = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L44">    private final List&lt;Closure&gt; preInstantiateDelegates = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L45">    private final List&lt;Closure&gt; postInstantiateDelegates = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L46">    private final List&lt;Closure&gt; postNodeCompletionDelegates = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L47">    private final List&lt;Closure&gt; disposalClosures = new ArrayList&lt;&gt;();</span>
     private Closure methodMissingDelegate;
     private Closure propertyMissingDelegate;
 
@@ -54,10 +54,10 @@ import static java.util.Objects.requireNonNull;
     }
 
     public void setVariables(@Nonnull Map&lt;String, Object&gt; variables) {
-<span class="fc" id="L57">        requireNonNull(variables, &quot;Argument 'variables' must not be null&quot;);</span>
-<span class="fc" id="L58">        this.variables.clear();</span>
-<span class="fc" id="L59">        this.variables.putAll(variables);</span>
-<span class="fc" id="L60">    }</span>
+<span class="nc" id="L57">        requireNonNull(variables, &quot;Argument 'variables' must not be null&quot;);</span>
+<span class="nc" id="L58">        this.variables.clear();</span>
+<span class="nc" id="L59">        this.variables.putAll(variables);</span>
+<span class="nc" id="L60">    }</span>
 
     @Nonnull
     public Map&lt;String, Factory&gt; getFactories() {
@@ -65,10 +65,10 @@ import static java.util.Objects.requireNonNull;
     }
 
     public void setFactories(@Nonnull Map&lt;String, Factory&gt; factories) {
-<span class="fc" id="L68">        requireNonNull(factories, &quot;Argument 'factories' must not be null&quot;);</span>
-<span class="fc" id="L69">        this.factories.clear();</span>
-<span class="fc" id="L70">        this.factories.putAll(factories);</span>
-<span class="fc" id="L71">    }</span>
+<span class="nc" id="L68">        requireNonNull(factories, &quot;Argument 'factories' must not be null&quot;);</span>
+<span class="nc" id="L69">        this.factories.clear();</span>
+<span class="nc" id="L70">        this.factories.putAll(factories);</span>
+<span class="nc" id="L71">    }</span>
 
     @Nonnull
     public Map&lt;String, Closure&gt; getMethods() {
@@ -76,10 +76,10 @@ import static java.util.Objects.requireNonNull;
     }
 
     public void setMethods(@Nonnull Map&lt;String, Closure&gt; methods) {
-<span class="fc" id="L79">        requireNonNull(methods, &quot;Argument 'methods' must not be null&quot;);</span>
-<span class="fc" id="L80">        this.methods.clear();</span>
-<span class="fc" id="L81">        this.methods.putAll(methods);</span>
-<span class="fc" id="L82">    }</span>
+<span class="nc" id="L79">        requireNonNull(methods, &quot;Argument 'methods' must not be null&quot;);</span>
+<span class="nc" id="L80">        this.methods.clear();</span>
+<span class="nc" id="L81">        this.methods.putAll(methods);</span>
+<span class="nc" id="L82">    }</span>
 
     @Nonnull
     public Map&lt;String, Closure[]&gt; getProps() {
@@ -87,10 +87,10 @@ import static java.util.Objects.requireNonNull;
     }
 
     public void setProps(@Nonnull Map&lt;String, Closure[]&gt; props) {
-<span class="fc" id="L90">        requireNonNull(props, &quot;Argument 'props' must not be null&quot;);</span>
-<span class="fc" id="L91">        this.props.clear();</span>
-<span class="fc" id="L92">        this.props.putAll(props);</span>
-<span class="fc" id="L93">    }</span>
+<span class="nc" id="L90">        requireNonNull(props, &quot;Argument 'props' must not be null&quot;);</span>
+<span class="nc" id="L91">        this.props.clear();</span>
+<span class="nc" id="L92">        this.props.putAll(props);</span>
+<span class="nc" id="L93">    }</span>
 
     @Nonnull
     public List&lt;Closure&gt; getAttributeDelegates() {
@@ -98,10 +98,10 @@ import static java.util.Objects.requireNonNull;
     }
 
     public void setAttributeDelegates(@Nonnull List&lt;Closure&gt; attributeDelegates) {
-<span class="fc" id="L101">        requireNonNull(attributeDelegates, &quot;Argument 'attributeDelegates' must not be null&quot;);</span>
-<span class="fc" id="L102">        this.attributeDelegates.clear();</span>
-<span class="fc" id="L103">        this.attributeDelegates.addAll(attributeDelegates);</span>
-<span class="fc" id="L104">    }</span>
+<span class="nc" id="L101">        requireNonNull(attributeDelegates, &quot;Argument 'attributeDelegates' must not be null&quot;);</span>
+<span class="nc" id="L102">        this.attributeDelegates.clear();</span>
+<span class="nc" id="L103">        this.attributeDelegates.addAll(attributeDelegates);</span>
+<span class="nc" id="L104">    }</span>
 
     @Nonnull
     public List&lt;Closure&gt; getPostInstantiateDelegates() {
@@ -109,10 +109,10 @@ import static java.util.Objects.requireNonNull;
     }
 
     public void setPostInstantiateDelegates(@Nonnull List&lt;Closure&gt; postInstantiateDelegates) {
-<span class="fc" id="L112">        requireNonNull(postInstantiateDelegates, &quot;Argument 'postInstantiateDelegates' must not be null&quot;);</span>
-<span class="fc" id="L113">        this.postInstantiateDelegates.clear();</span>
-<span class="fc" id="L114">        this.postInstantiateDelegates.addAll(postInstantiateDelegates);</span>
-<span class="fc" id="L115">    }</span>
+<span class="nc" id="L112">        requireNonNull(postInstantiateDelegates, &quot;Argument 'postInstantiateDelegates' must not be null&quot;);</span>
+<span class="nc" id="L113">        this.postInstantiateDelegates.clear();</span>
+<span class="nc" id="L114">        this.postInstantiateDelegates.addAll(postInstantiateDelegates);</span>
+<span class="nc" id="L115">    }</span>
 
     @Nonnull
     public List&lt;Closure&gt; getPostNodeCompletionDelegates() {
@@ -120,10 +120,10 @@ import static java.util.Objects.requireNonNull;
     }
 
     public void setPostNodeCompletionDelegates(@Nonnull List&lt;Closure&gt; postNodeCompletionDelegates) {
-<span class="fc" id="L123">        requireNonNull(postNodeCompletionDelegates, &quot;Argument 'postNodeCompletionDelegates' must not be null&quot;);</span>
-<span class="fc" id="L124">        this.postNodeCompletionDelegates.clear();</span>
-<span class="fc" id="L125">        this.postNodeCompletionDelegates.addAll(postNodeCompletionDelegates);</span>
-<span class="fc" id="L126">    }</span>
+<span class="nc" id="L123">        requireNonNull(postNodeCompletionDelegates, &quot;Argument 'postNodeCompletionDelegates' must not be null&quot;);</span>
+<span class="nc" id="L124">        this.postNodeCompletionDelegates.clear();</span>
+<span class="nc" id="L125">        this.postNodeCompletionDelegates.addAll(postNodeCompletionDelegates);</span>
+<span class="nc" id="L126">    }</span>
 
     @Nonnull
     public List&lt;Closure&gt; getPreInstantiateDelegates() {
@@ -131,10 +131,10 @@ import static java.util.Objects.requireNonNull;
     }
 
     public void setPreInstantiateDelegates(@Nonnull List&lt;Closure&gt; preInstantiateDelegates) {
-<span class="fc" id="L134">        requireNonNull(preInstantiateDelegates, &quot;Argument 'preInstantiateDelegates' must not be null&quot;);</span>
-<span class="fc" id="L135">        this.preInstantiateDelegates.clear();</span>
-<span class="fc" id="L136">        this.preInstantiateDelegates.addAll(preInstantiateDelegates);</span>
-<span class="fc" id="L137">    }</span>
+<span class="nc" id="L134">        requireNonNull(preInstantiateDelegates, &quot;Argument 'preInstantiateDelegates' must not be null&quot;);</span>
+<span class="nc" id="L135">        this.preInstantiateDelegates.clear();</span>
+<span class="nc" id="L136">        this.preInstantiateDelegates.addAll(preInstantiateDelegates);</span>
+<span class="nc" id="L137">    }</span>
 
     @Nonnull
     public List&lt;Closure&gt; getDisposalClosures() {
@@ -142,10 +142,10 @@ import static java.util.Objects.requireNonNull;
     }
 
     public void setDisposalClosures(@Nonnull List&lt;Closure&gt; disposalClosures) {
-<span class="fc" id="L145">        requireNonNull(disposalClosures, &quot;Argument 'disposalClosures' must not be null&quot;);</span>
-<span class="fc" id="L146">        this.disposalClosures.clear();</span>
-<span class="fc" id="L147">        this.disposalClosures.addAll(disposalClosures);</span>
-<span class="fc" id="L148">    }</span>
+<span class="nc" id="L145">        requireNonNull(disposalClosures, &quot;Argument 'disposalClosures' must not be null&quot;);</span>
+<span class="nc" id="L146">        this.disposalClosures.clear();</span>
+<span class="nc" id="L147">        this.disposalClosures.addAll(disposalClosures);</span>
+<span class="nc" id="L148">    }</span>
 
     @Nullable
     public Closure getMethodMissingDelegate() {
@@ -153,8 +153,8 @@ import static java.util.Objects.requireNonNull;
     }
 
     public void setMethodMissingDelegate(@Nullable Closure methodMissingDelegate) {
-<span class="fc" id="L156">        this.methodMissingDelegate = methodMissingDelegate;</span>
-<span class="fc" id="L157">    }</span>
+<span class="nc" id="L156">        this.methodMissingDelegate = methodMissingDelegate;</span>
+<span class="nc" id="L157">    }</span>
 
     @Nullable
     public Closure getPropertyMissingDelegate() {
@@ -162,7 +162,7 @@ import static java.util.Objects.requireNonNull;
     }
 
     public void setPropertyMissingDelegate(@Nullable Closure propertyMissingDelegate) {
-<span class="fc" id="L165">        this.propertyMissingDelegate = propertyMissingDelegate;</span>
-<span class="fc" id="L166">    }</span>
+<span class="nc" id="L165">        this.propertyMissingDelegate = propertyMissingDelegate;</span>
+<span class="nc" id="L166">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
