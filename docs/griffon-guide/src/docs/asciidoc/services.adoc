@@ -16,6 +16,7 @@ package sample
 
 import griffon.core.artifact.GriffonService
 
+@javax.inject.Singleton
 @griffon.metadata.ArtifactProviderFor(GriffonService)
 class MathService {
     def addition(a, b) { a + b }
@@ -63,5 +64,5 @@ will be invoked right after the instance has been created by the `{link_injector
 Likewise, it will invoke all methods annotated with `@javax.annotation.PreDestroy` when the
 `{link_injector}` is closed.
 
-NOTE: Only one method of the same class can be annotated with  `@javax.annotation.PostConstruct`
+NOTE: Only one method of the same class can be annotated with `@javax.annotation.PostConstruct`
 or `@javax.annotation.PreDestroy`.

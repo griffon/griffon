@@ -23,6 +23,7 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Arrays.asList;
 
+@javax.inject.Singleton
 @ArtifactProviderFor(GriffonService.class)
 public class SampleService extends AbstractGriffonService {
     public String sayHello(String input) {

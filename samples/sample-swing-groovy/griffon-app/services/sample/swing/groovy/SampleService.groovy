@@ -21,6 +21,7 @@ import griffon.metadata.ArtifactProviderFor
 
 import static griffon.util.GriffonNameUtils.isBlank
 
+@javax.inject.Singleton
 @ArtifactProviderFor(GriffonService)
 class SampleService {
     String sayHello(String input) {
