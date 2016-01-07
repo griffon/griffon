@@ -39,7 +39,7 @@ class InstanceTracker {
     private static final String ERROR_INSTANCE_NULL = "Argument 'instance' must not be null";
     private static final String ERROR_BINDING_NULL = "Argument 'binding' must not be null";
 
-    private final Map<Object, Binding<?>> instanceToKeyMap = synchronizedMap(new LinkedHashMap<>());
+    private final Map<Object, Binding<?>> instanceToKeyMap = synchronizedMap(new LinkedHashMap<Object, Binding<?>>());
 
     private com.google.inject.Injector injector;
 
