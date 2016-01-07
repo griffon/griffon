@@ -21,13 +21,13 @@ import com.google.inject.Scopes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PreDestroy;
-import javax.annotation.concurrent.GuardedBy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.synchronizedMap;
 import static java.util.Objects.requireNonNull;
 import static org.codehaus.griffon.runtime.injection.MethodUtils.invokeAnnotatedMethod;
 
@@ -39,10 +39,7 @@ class InstanceTracker {
     private static final String ERROR_INSTANCE_NULL = "Argument 'instance' must not be null";
     private static final String ERROR_BINDING_NULL = "Argument 'binding' must not be null";
 
-
-    private final Object lock = new Object[0];
-    @GuardedBy("lock")
-    private final Map<Object, Binding<?>> instanceToKeyMap = new LinkedHashMap<>();
+    private final Map<Object, Binding<?>> instanceToKeyMap = synchronizedMap(new LinkedHashMap<>());
 
     private com.google.inject.Injector injector;
 
@@ -61,9 +58,7 @@ class InstanceTracker {
         requireNonNull(instance, ERROR_INSTANCE_NULL);
 
         if (MethodUtils.hasMethodAnnotatedwith(instance, PreDestroy.class)) {
-            synchronized (lock) {
-                instanceToKeyMap.put(instance, binding);
-            }
+            instanceToKeyMap.put(instance, binding);
         }
         return instance;
     }
@@ -71,23 +66,21 @@ class InstanceTracker {
     public <T> void release(@Nonnull T instance) {
         requireNonNull(instance, ERROR_INSTANCE_NULL);
 
-        synchronized (lock) {
-            Binding<?> binding = instanceToKeyMap.get(instance);
-            if (binding != null) {
-                if (!Scopes.isSingleton(binding)) {
-                    invokeAnnotatedMethod(instance, PreDestroy.class);
-                    instanceToKeyMap.remove(instance);
-                }
+        Binding<?> binding = instanceToKeyMap.get(instance);
+        if (binding != null) {
+            if (!Scopes.isSingleton(binding)) {
+                invokeAnnotatedMethod(instance, PreDestroy.class);
+                instanceToKeyMap.remove(instance);
             }
         }
     }
 
     public void releaseAll() {
         List<Object> instances = new ArrayList<>();
-        synchronized (lock) {
-            instances.addAll(instanceToKeyMap.keySet());
-            instanceToKeyMap.clear();
-        }
+
+        instances.addAll(instanceToKeyMap.keySet());
+        instanceToKeyMap.clear();
+
         Collections.reverse(instances);
 
         for (Object instance : instances) {
