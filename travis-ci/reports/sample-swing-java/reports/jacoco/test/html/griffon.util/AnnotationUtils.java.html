@@ -67,7 +67,7 @@ public class AnnotationUtils {
 <span class="fc" id="L67">        List&lt;Annotation&gt; list = new ArrayList&lt;&gt;();</span>
 <span class="fc" id="L68">        Annotation[] annotations = klass.getAnnotations();</span>
 <span class="fc bfc" id="L69" title="All 2 branches covered.">        for (Annotation annotation : annotations) {</span>
-<span class="pc bpc" id="L70" title="1 of 2 branches missed.">            if (AnnotationUtils.isAnnotatedWith(annotation, Qualifier.class)) {</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">            if (AnnotationUtils.isAnnotatedWith(annotation, Qualifier.class)) {</span>
                 // special case @BindTo is only used during tests
 <span class="pc bpc" id="L72" title="1 of 2 branches missed.">                if (BindTo.class.isAssignableFrom(annotation.getClass())) {</span>
 <span class="nc" id="L73">                    continue;</span>
@@ -120,21 +120,21 @@ public class AnnotationUtils {
 <span class="fc" id="L120">        requireNonNull(annotationType, ERROR_ANNOTATION_TYPE_NULL);</span>
 
         //noinspection ConstantConditions
-<span class="pc bpc" id="L123" title="1 of 2 branches missed.">        while (clazz != null) {</span>
-<span class="pc bfc" id="L124" title="All 2 branches covered.">            for (Annotation annotation : clazz.getAnnotations()) {</span>
-<span class="pc bpc" id="L125" title="1 of 2 branches missed.">                if (annotationType.equals(annotation.annotationType())) {</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        while (clazz != null) {</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">            for (Annotation annotation : clazz.getAnnotations()) {</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">                if (annotationType.equals(annotation.annotationType())) {</span>
 <span class="fc" id="L126">                    return true;</span>
                 }
             }
-<span class="pc bpc" id="L129" title="1 of 2 branches missed.">            for (Class&lt;?&gt; iface : clazz.getInterfaces()) {</span>
-<span class="pc bpc" id="L130" title="1 of 2 branches missed.">                if (isAnnotatedWith(iface, annotationType)) {</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">            for (Class&lt;?&gt; iface : clazz.getInterfaces()) {</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">                if (isAnnotatedWith(iface, annotationType)) {</span>
 <span class="fc" id="L131">                    return true;</span>
                 }
             }
 
-<span class="nc" id="L135">            clazz = clazz.getSuperclass();</span>
+<span class="fc" id="L135">            clazz = clazz.getSuperclass();</span>
         }
-<span class="nc" id="L137">        return false;</span>
+<span class="fc" id="L137">        return false;</span>
     }
 
     @Nonnull

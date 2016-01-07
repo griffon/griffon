@@ -67,7 +67,7 @@ public class AnnotationUtils {
 <span class="fc" id="L67">        List&lt;Annotation&gt; list = new ArrayList&lt;&gt;();</span>
 <span class="fc" id="L68">        Annotation[] annotations = klass.getAnnotations();</span>
 <span class="fc bfc" id="L69" title="All 2 branches covered.">        for (Annotation annotation : annotations) {</span>
-<span class="pc bpc" id="L70" title="1 of 2 branches missed.">            if (AnnotationUtils.isAnnotatedWith(annotation, Qualifier.class)) {</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">            if (AnnotationUtils.isAnnotatedWith(annotation, Qualifier.class)) {</span>
                 // special case @BindTo is only used during tests
 <span class="pc bpc" id="L72" title="1 of 2 branches missed.">                if (BindTo.class.isAssignableFrom(annotation.getClass())) {</span>
 <span class="nc" id="L73">                    continue;</span>
