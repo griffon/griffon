@@ -2026,14 +2026,14 @@
 
         <Package name="org.codehaus.griffon.runtime.core.injection">
             <Stats>
-                <TotalClasses>16</TotalClasses>
-                <ConcreteClasses>8</ConcreteClasses>
+                <TotalClasses>17</TotalClasses>
+                <ConcreteClasses>9</ConcreteClasses>
                 <AbstractClasses>8</AbstractClasses>
-                <Ca>1</Ca>
+                <Ca>2</Ca>
                 <Ce>6</Ce>
-                <A>0.5</A>
-                <I>0.86</I>
-                <D>0.36</D>
+                <A>0.47</A>
+                <I>0.75</I>
+                <D>0.22</D>
                 <V>1</V>
             </Stats>
 
@@ -2086,6 +2086,9 @@
                 <Class sourceFile="Bindings.java">
                     org.codehaus.griffon.runtime.core.injection.Bindings$TargetBindingImpl
                 </Class>
+                <Class sourceFile="InjectionUnitOfWork.java">
+                    org.codehaus.griffon.runtime.core.injection.InjectionUnitOfWork
+                </Class>
                 <Class sourceFile="InjectorProvider.java">
                     org.codehaus.griffon.runtime.core.injection.InjectorProvider
                 </Class>
@@ -2102,6 +2105,7 @@
 
             <UsedBy>
                 <Package>org.codehaus.griffon.runtime.core</Package>
+                <Package>org.codehaus.griffon.runtime.core.mvc</Package>
             </UsedBy>
         </Package>
 
@@ -2111,10 +2115,10 @@
                 <ConcreteClasses>11</ConcreteClasses>
                 <AbstractClasses>4</AbstractClasses>
                 <Ca>1</Ca>
-                <Ce>15</Ce>
+                <Ce>16</Ce>
                 <A>0.27</A>
                 <I>0.94</I>
-                <D>0.2</D>
+                <D>0.21</D>
                 <V>1</V>
             </Stats>
 
@@ -2184,6 +2188,7 @@
                 <Package>java.lang.reflect</Package>
                 <Package>java.util</Package>
                 <Package>javax.annotation</Package>
+                <Package>org.codehaus.griffon.runtime.core.injection</Package>
                 <Package>org.slf4j</Package>
             </DependsUpon>
 

@@ -17,7 +17,7 @@ package org.codehaus.griffon.runtime.injection;
 
 import com.google.inject.Binding;
 import com.google.inject.Injector;
-import com.google.inject.Scopes;
+import org.codehaus.griffon.runtime.core.injection.InjectionUnitOfWork;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PreDestroy;
@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.google.inject.Scopes.isSingleton;
 import static java.util.Collections.synchronizedMap;
 import static java.util.Objects.requireNonNull;
 import static org.codehaus.griffon.runtime.injection.MethodUtils.invokeAnnotatedMethod;
@@ -35,59 +36,66 @@ import static org.codehaus.griffon.runtime.injection.MethodUtils.invokeAnnotated
  * @author Andres Almiray
  * @since 2.6.0
  */
-<span class="fc" id="L38">class InstanceTracker {</span>
+<span class="fc" id="L39">class InstanceTracker {</span>
     private static final String ERROR_INSTANCE_NULL = &quot;Argument 'instance' must not be null&quot;;
     private static final String ERROR_BINDING_NULL = &quot;Argument 'binding' must not be null&quot;;
 
-<span class="fc" id="L42">    private final Map&lt;Object, Binding&lt;?&gt;&gt; instanceToKeyMap = synchronizedMap(new LinkedHashMap&lt;Object, Binding&lt;?&gt;&gt;());</span>
+<span class="fc" id="L43">    private final Map&lt;Object, Binding&lt;?&gt;&gt; instanceToKeyMap = synchronizedMap(new LinkedHashMap&lt;Object, Binding&lt;?&gt;&gt;());</span>
 
     private com.google.inject.Injector injector;
 
     public void setInjector(@Nonnull Injector injector) {
-<span class="fc" id="L47">        this.injector = injector;</span>
-<span class="fc" id="L48">    }</span>
+<span class="fc" id="L48">        this.injector = injector;</span>
+<span class="fc" id="L49">    }</span>
 
     @Nonnull
     public Injector getInjector() {
-<span class="fc" id="L52">        return injector;</span>
+<span class="fc" id="L53">        return injector;</span>
     }
 
     @Nonnull
     public &lt;T&gt; T track(@Nonnull Binding&lt;?&gt; binding, final @Nonnull T instance) {
-<span class="fc" id="L57">        requireNonNull(binding, ERROR_BINDING_NULL);</span>
-<span class="fc" id="L58">        requireNonNull(instance, ERROR_INSTANCE_NULL);</span>
+<span class="fc" id="L58">        requireNonNull(binding, ERROR_BINDING_NULL);</span>
+<span class="fc" id="L59">        requireNonNull(instance, ERROR_INSTANCE_NULL);</span>
 
-<span class="pc bpc" id="L60" title="1 of 2 branches missed.">        if (MethodUtils.hasMethodAnnotatedwith(instance, PreDestroy.class)) {</span>
-<span class="nc" id="L61">            instanceToKeyMap.put(instance, binding);</span>
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">        if (MethodUtils.hasMethodAnnotatedwith(instance, PreDestroy.class)) {</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">            if (isSingleton(binding)) {</span>
+<span class="nc" id="L63">                instanceToKeyMap.put(instance, binding);</span>
+            } else {
+                try {
+<span class="nc" id="L66">                    InjectionUnitOfWork.track(instance);</span>
+<span class="nc" id="L67">                } catch (IllegalStateException ise) {</span>
+<span class="nc" id="L68">                    instanceToKeyMap.put(instance, binding);</span>
+<span class="nc" id="L69">                }</span>
+            }
         }
-<span class="fc" id="L63">        return instance;</span>
+<span class="fc" id="L72">        return instance;</span>
     }
 
     public &lt;T&gt; void release(@Nonnull T instance) {
-<span class="nc" id="L67">        requireNonNull(instance, ERROR_INSTANCE_NULL);</span>
+<span class="nc" id="L76">        requireNonNull(instance, ERROR_INSTANCE_NULL);</span>
 
-<span class="nc" id="L69">        Binding&lt;?&gt; binding = instanceToKeyMap.get(instance);</span>
-<span class="nc bnc" id="L70" title="All 2 branches missed.">        if (binding != null) {</span>
-<span class="nc bnc" id="L71" title="All 2 branches missed.">            if (!Scopes.isSingleton(binding)) {</span>
-<span class="nc" id="L72">                invokeAnnotatedMethod(instance, PreDestroy.class);</span>
-<span class="nc" id="L73">                instanceToKeyMap.remove(instance);</span>
-            }
+<span class="nc" id="L78">        invokeAnnotatedMethod(instance, PreDestroy.class);</span>
+
+<span class="nc" id="L80">        Binding&lt;?&gt; binding = instanceToKeyMap.get(instance);</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        if (binding != null) {</span>
+<span class="nc" id="L82">            instanceToKeyMap.remove(instance);</span>
         }
-<span class="nc" id="L76">    }</span>
+<span class="nc" id="L84">    }</span>
 
     public void releaseAll() {
-<span class="fc" id="L79">        List&lt;Object&gt; instances = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L87">        List&lt;Object&gt; instances = new ArrayList&lt;&gt;();</span>
 
-<span class="fc" id="L81">        instances.addAll(instanceToKeyMap.keySet());</span>
-<span class="fc" id="L82">        instanceToKeyMap.clear();</span>
+<span class="fc" id="L89">        instances.addAll(instanceToKeyMap.keySet());</span>
+<span class="fc" id="L90">        instanceToKeyMap.clear();</span>
 
-<span class="fc" id="L84">        Collections.reverse(instances);</span>
+<span class="fc" id="L92">        Collections.reverse(instances);</span>
 
-<span class="pc bpc" id="L86" title="1 of 2 branches missed.">        for (Object instance : instances) {</span>
-<span class="nc" id="L87">            invokeAnnotatedMethod(instance, PreDestroy.class);</span>
-<span class="nc" id="L88">        }</span>
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        for (Object instance : instances) {</span>
+<span class="nc" id="L95">            invokeAnnotatedMethod(instance, PreDestroy.class);</span>
+<span class="nc" id="L96">        }</span>
 
-<span class="fc" id="L90">        instances.clear();</span>
-<span class="fc" id="L91">    }</span>
+<span class="fc" id="L98">        instances.clear();</span>
+<span class="fc" id="L99">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

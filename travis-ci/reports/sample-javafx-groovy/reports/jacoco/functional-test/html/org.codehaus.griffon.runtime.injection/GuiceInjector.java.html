@@ -139,8 +139,8 @@ public class GuiceInjector implements Injector&lt;com.google.inject.Injector&gt;
     public &lt;T&gt; T getInstance(@Nonnull Class&lt;T&gt; type) throws InstanceNotFoundException {
 <span class="fc" id="L140">        requireNonNull(type, ERROR_TYPE_NULL);</span>
 
-<span class="fc bfc" id="L142" title="All 2 branches covered.">        if (isClosed()) {</span>
-<span class="fc" id="L143">            throw new InstanceNotFoundException(type, new ClosedInjectorException(this));</span>
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">        if (isClosed()) {</span>
+<span class="nc" id="L143">            throw new InstanceNotFoundException(type, new ClosedInjectorException(this));</span>
         }
 
         try {
@@ -264,8 +264,8 @@ public class GuiceInjector implements Injector&lt;com.google.inject.Injector&gt;
 
     @Override
     public void release(@Nonnull Object instance) {
-<span class="fc" id="L267">        instanceTracker.release(instance);</span>
-<span class="fc" id="L268">    }</span>
+<span class="nc" id="L267">        instanceTracker.release(instance);</span>
+<span class="nc" id="L268">    }</span>
 
     @Override
     public void close() {
