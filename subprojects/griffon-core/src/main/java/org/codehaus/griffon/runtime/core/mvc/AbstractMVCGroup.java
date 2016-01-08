@@ -60,6 +60,7 @@ public abstract class AbstractMVCGroup extends AbstractMVCHandler implements MVC
     private final Object[] lock = new Object[0];
     protected MVCGroup parentGroup;
     private boolean alive;
+    private final List<Object> injectedInstances = new ArrayList<>();
 
     public AbstractMVCGroup(@Nonnull MVCGroupManager mvcGroupManager, @Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> members, @Nullable MVCGroup parentGroup) {
         super(mvcGroupManager);
@@ -75,6 +76,11 @@ public abstract class AbstractMVCGroup extends AbstractMVCHandler implements MVC
                 setPropertyOrFieldValue(o, "mvcGroup", this);
             }
         }
+    }
+
+    @Nonnull
+    public List<Object> getInjectedInstances() {
+        return injectedInstances;
     }
 
     @Nonnull

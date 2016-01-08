@@ -17,7 +17,7 @@ package org.codehaus.griffon.runtime.injection;
 
 import com.google.inject.Binding;
 import com.google.inject.Injector;
-import com.google.inject.Scopes;
+import org.codehaus.griffon.runtime.core.injection.InjectionUnitOfWork;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PreDestroy;
@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.google.inject.Scopes.isSingleton;
 import static java.util.Collections.synchronizedMap;
 import static java.util.Objects.requireNonNull;
 import static org.codehaus.griffon.runtime.injection.MethodUtils.invokeAnnotatedMethod;
@@ -58,7 +59,15 @@ class InstanceTracker {
         requireNonNull(instance, ERROR_INSTANCE_NULL);
 
         if (MethodUtils.hasMethodAnnotatedwith(instance, PreDestroy.class)) {
-            instanceToKeyMap.put(instance, binding);
+            if (isSingleton(binding)) {
+                instanceToKeyMap.put(instance, binding);
+            } else {
+                try {
+                    InjectionUnitOfWork.track(instance);
+                } catch (IllegalStateException ise) {
+                    instanceToKeyMap.put(instance, binding);
+                }
+            }
         }
         return instance;
     }
@@ -66,12 +75,11 @@ class InstanceTracker {
     public <T> void release(@Nonnull T instance) {
         requireNonNull(instance, ERROR_INSTANCE_NULL);
 
+        invokeAnnotatedMethod(instance, PreDestroy.class);
+
         Binding<?> binding = instanceToKeyMap.get(instance);
         if (binding != null) {
-            if (!Scopes.isSingleton(binding)) {
-                invokeAnnotatedMethod(instance, PreDestroy.class);
-                instanceToKeyMap.remove(instance);
-            }
+            instanceToKeyMap.remove(instance);
         }
     }
 
