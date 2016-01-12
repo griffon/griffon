@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DelegatingObservableList.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-java</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.support</a> &gt; <span class="el_source">DelegatingObservableList.java</span></div><h1>DelegatingObservableList.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2016 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.support;
+
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableListBase;
+import javafx.collections.WeakListChangeListener;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Spliterator;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
+import java.util.stream.Stream;
+
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.6.0
+ */
+public abstract class DelegatingObservableList&lt;E&gt; extends ObservableListBase&lt;E&gt; implements ObservableList&lt;E&gt; {
+    private final ObservableList&lt;E&gt; delegate;
+    private ListChangeListener&lt;E&gt; sourceListener;
+
+<span class="nc" id="L47">    public DelegatingObservableList(@Nonnull ObservableList&lt;E&gt; delegate) {</span>
+<span class="nc" id="L48">        this.delegate = requireNonNull(delegate, &quot;Argument 'delegate' must not be null&quot;);</span>
+<span class="nc" id="L49">        this.delegate.addListener(new WeakListChangeListener&lt;&gt;(getListener()));</span>
+<span class="nc" id="L50">    }</span>
+
+    @Nonnull
+    protected ObservableList&lt;E&gt; getDelegate() {
+<span class="nc" id="L54">        return delegate;</span>
+    }
+
+    private ListChangeListener&lt;E&gt; getListener() {
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (sourceListener == null) {</span>
+<span class="nc" id="L59">            sourceListener = DelegatingObservableList.this::sourceChanged;</span>
+        }
+<span class="nc" id="L61">        return sourceListener;</span>
+    }
+
+    protected abstract void sourceChanged(@Nonnull ListChangeListener.Change&lt;? extends E&gt; c);
+
+    // --== Delegate methods ==--
+
+    public boolean removeAll(E... elements) {
+<span class="nc" id="L69">        return getDelegate().removeAll(elements);</span>
+    }
+
+    public boolean removeIf(Predicate&lt;? super E&gt; filter) {
+<span class="nc" id="L73">        return getDelegate().removeIf(filter);</span>
+    }
+
+    public void remove(int from, int to) {
+<span class="nc" id="L77">        getDelegate().remove(from, to);</span>
+<span class="nc" id="L78">    }</span>
+
+    public E remove(int index) {
+<span class="nc" id="L81">        return getDelegate().remove(index);</span>
+    }
+
+    public int size() {
+<span class="nc" id="L85">        return getDelegate().size();</span>
+    }
+
+    public int lastIndexOf(Object o) {
+<span class="nc" id="L89">        return getDelegate().lastIndexOf(o);</span>
+    }
+
+    public boolean isEmpty() {
+<span class="nc" id="L93">        return getDelegate().isEmpty();</span>
+    }
+
+    public SortedList&lt;E&gt; sorted() {
+<span class="nc" id="L97">        return getDelegate().sorted();</span>
+    }
+
+    public Stream&lt;E&gt; parallelStream() {
+<span class="nc" id="L101">        return getDelegate().parallelStream();</span>
+    }
+
+    public boolean addAll(E... elements) {
+<span class="nc" id="L105">        return getDelegate().addAll(elements);</span>
+    }
+
+    public List&lt;E&gt; subList(int fromIndex, int toIndex) {
+<span class="nc" id="L109">        return getDelegate().subList(fromIndex, toIndex);</span>
+    }
+
+    public Spliterator&lt;E&gt; spliterator() {
+<span class="nc" id="L113">        return getDelegate().spliterator();</span>
+    }
+
+    public void sort(Comparator&lt;? super E&gt; c) {
+<span class="nc" id="L117">        getDelegate().sort(c);</span>
+<span class="nc" id="L118">    }</span>
+
+    public E set(int index, E element) {
+<span class="nc" id="L121">        return getDelegate().set(index, element);</span>
+    }
+
+    public void add(int index, E element) {
+<span class="nc" id="L125">        getDelegate().add(index, element);</span>
+<span class="nc" id="L126">    }</span>
+
+    public void replaceAll(UnaryOperator&lt;E&gt; operator) {
+<span class="nc" id="L129">        getDelegate().replaceAll(operator);</span>
+<span class="nc" id="L130">    }</span>
+
+    public boolean containsAll(Collection&lt;?&gt; c) {
+<span class="nc" id="L133">        return getDelegate().containsAll(c);</span>
+    }
+
+    public void clear() {
+<span class="nc" id="L137">        getDelegate().clear();</span>
+<span class="nc" id="L138">    }</span>
+
+    public Iterator&lt;E&gt; iterator() {
+<span class="nc" id="L141">        return getDelegate().iterator();</span>
+    }
+
+    public boolean removeAll(Collection&lt;?&gt; c) {
+<span class="nc" id="L145">        return getDelegate().removeAll(c);</span>
+    }
+
+    public &lt;T&gt; T[] toArray(T[] a) {
+<span class="nc" id="L149">        return getDelegate().toArray(a);</span>
+    }
+
+    public boolean remove(Object o) {
+<span class="nc" id="L153">        return getDelegate().remove(o);</span>
+    }
+
+    public boolean addAll(Collection&lt;? extends E&gt; c) {
+<span class="nc" id="L157">        return getDelegate().addAll(c);</span>
+    }
+
+    public boolean retainAll(E... elements) {
+<span class="nc" id="L161">        return getDelegate().retainAll(elements);</span>
+    }
+
+    public boolean retainAll(Collection&lt;?&gt; c) {
+<span class="nc" id="L165">        return getDelegate().retainAll(c);</span>
+    }
+
+    public SortedList&lt;E&gt; sorted(Comparator&lt;E&gt; comparator) {
+<span class="nc" id="L169">        return getDelegate().sorted(comparator);</span>
+    }
+
+    public FilteredList&lt;E&gt; filtered(Predicate&lt;E&gt; predicate) {
+<span class="nc" id="L173">        return getDelegate().filtered(predicate);</span>
+    }
+
+    public Stream&lt;E&gt; stream() {
+<span class="nc" id="L177">        return getDelegate().stream();</span>
+    }
+
+    public boolean contains(Object o) {
+<span class="nc" id="L181">        return getDelegate().contains(o);</span>
+    }
+
+    public boolean setAll(Collection&lt;? extends E&gt; col) {
+<span class="nc" id="L185">        return getDelegate().setAll(col);</span>
+    }
+
+    public ListIterator&lt;E&gt; listIterator(int index) {
+<span class="nc" id="L189">        return getDelegate().listIterator(index);</span>
+    }
+
+    public boolean add(E e) {
+<span class="nc" id="L193">        return getDelegate().add(e);</span>
+    }
+
+    public boolean addAll(int index, Collection&lt;? extends E&gt; c) {
+<span class="nc" id="L197">        return getDelegate().addAll(index, c);</span>
+    }
+
+    public Object[] toArray() {
+<span class="nc" id="L201">        return getDelegate().toArray();</span>
+    }
+
+    public ListIterator&lt;E&gt; listIterator() {
+<span class="nc" id="L205">        return getDelegate().listIterator();</span>
+    }
+
+    public void forEach(Consumer&lt;? super E&gt; action) {
+<span class="nc" id="L209">        getDelegate().forEach(action);</span>
+<span class="nc" id="L210">    }</span>
+
+    public E get(int index) {
+<span class="nc" id="L213">        return getDelegate().get(index);</span>
+    }
+
+    public boolean setAll(E... elements) {
+<span class="nc" id="L217">        return getDelegate().setAll(elements);</span>
+    }
+
+    public int indexOf(Object o) {
+<span class="nc" id="L221">        return getDelegate().indexOf(o);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
