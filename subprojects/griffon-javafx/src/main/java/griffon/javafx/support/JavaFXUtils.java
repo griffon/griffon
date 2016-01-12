@@ -20,7 +20,9 @@ import griffon.core.controller.Action;
 import griffon.core.controller.ActionManager;
 import griffon.core.editors.ValueConversionException;
 import griffon.exceptions.InstanceMethodInvocationException;
+import javafx.application.Platform;
 import javafx.beans.property.Property;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
@@ -84,6 +86,35 @@ public final class JavaFXUtils {
 
     private JavaFXUtils() {
 
+    }
+
+    /**
+     * Wraps an <tt>ObservableList</tt>, publishing updates inside the UI thread.
+     *
+     * @param source the <tt>ObservableList</tt> to be wrapped
+     * @param <E>    the list's paramter type.
+     * @return a new  <tt>ObservableList</tt>
+     * @since 2.6.0
+     */
+    @Nonnull
+    public static <E> ObservableList<E> createJavaFXThreadProxyList(@Nonnull ObservableList<E> source) {
+        requireNonNull(source, "Argument 'source' must not be null");
+        return new JavaFXThreadProxyObservableList<>(source);
+    }
+
+    private static class JavaFXThreadProxyObservableList<E> extends DelegatingObservableList<E> {
+        protected JavaFXThreadProxyObservableList(ObservableList<E> delegate) {
+            super(delegate);
+        }
+
+        @Override
+        protected void sourceChanged(@Nonnull final ListChangeListener.Change<? extends E> c) {
+            if (Platform.isFxApplicationThread()) {
+                fireChange(c);
+            } else {
+                Platform.runLater(() -> fireChange(c));
+            }
+        }
     }
 
     @Nonnull
