@@ -170,64 +170,72 @@ public final class JavaFXUtils {
         }
     }
 
+    private static void runInsideUIThread(@Nonnull Runnable runnable) {
+        if (Platform.isFxApplicationThread()) {
+            runnable.run();
+        } else {
+            Platform.runLater(runnable);
+        }
+    }
+
     public static void configure(final @Nonnull ToggleButton control, final @Nonnull JavaFXAction action) {
         configure((ButtonBase) control, action);
 
-        action.selectedProperty().addListener((observableValue, oldValue, newValue) -> control.setSelected(newValue));
-        control.setSelected(action.isSelected());
+        action.selectedProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setSelected(n)));
+        runInsideUIThread(() -> control.setSelected(action.isSelected()));
     }
 
     public static void configure(final @Nonnull CheckBox control, final @Nonnull JavaFXAction action) {
         configure((ButtonBase) control, action);
 
-        action.selectedProperty().addListener((observableValue, oldValue, newValue) -> control.setSelected(newValue));
-        control.setSelected(action.isSelected());
+        action.selectedProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setSelected(n)));
+        runInsideUIThread(() -> control.setSelected(action.isSelected()));
     }
 
     public static void configure(final @Nonnull RadioButton control, final @Nonnull JavaFXAction action) {
         configure((ButtonBase) control, action);
 
-        action.selectedProperty().addListener((observableValue, oldValue, newValue) -> control.setSelected(newValue));
-        control.setSelected(action.isSelected());
+        action.selectedProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setSelected(n)));
+        runInsideUIThread(() -> control.setSelected(action.isSelected()));
     }
 
     public static void configure(final @Nonnull ButtonBase control, final @Nonnull JavaFXAction action) {
         requireNonNull(control, ERROR_CONTROL_NULL);
         requireNonNull(action, ERROR_ACTION_NULL);
 
-        action.onActionProperty().addListener((observableValue, oldValue, newValue) -> control.setOnAction(newValue));
+        action.onActionProperty().addListener((v, o, n) -> control.setOnAction(n));
         control.setOnAction(action.getOnAction());
 
-        action.nameProperty().addListener((observableValue, oldValue, newValue) -> control.setText(newValue));
-        control.setText(action.getName());
+        action.nameProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setText(n)));
+        runInsideUIThread(() -> control.setText(action.getName()));
 
-        action.descriptionProperty().addListener((observableValue, oldValue, newValue) -> setTooltip(control, newValue));
+        action.descriptionProperty().addListener((v, o, n) -> setTooltip(control, n));
         setTooltip(control, action.getDescription());
 
-        action.iconProperty().addListener((observableValue, oldValue, newValue) -> setIcon(control, newValue));
+        action.iconProperty().addListener((v, o, n) -> setIcon(control, n));
         if (!isBlank(action.getIcon())) {
             setIcon(control, action.getIcon());
         }
 
-        action.imageProperty().addListener((observableValue, oldValue, newValue) -> setGraphic(control, newValue));
+        action.imageProperty().addListener((v, o, n) -> setGraphic(control, n));
         if (null != action.getImage()) {
             setGraphic(control, action.getImage());
         }
 
-        action.graphicProperty().addListener((observableValue, oldValue, newValue) -> setGraphic(control, newValue));
+        action.graphicProperty().addListener((v, o, n) -> setGraphic(control, n));
         if (null != action.getGraphic()) {
             setGraphic(control, action.getGraphic());
         }
 
-        action.enabledProperty().addListener((observableValue, oldValue, newValue) -> control.setDisable(!newValue));
-        control.setDisable(!action.isEnabled());
+        action.enabledProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setDisable(!n)));
+        runInsideUIThread(() -> control.setDisable(!action.isEnabled()));
 
-        action.visibleProperty().addListener((observableValue, oldValue, newValue) -> control.setVisible(newValue));
-        control.setVisible(action.isVisible());
+        action.visibleProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setVisible(n)));
+        runInsideUIThread(() -> control.setVisible(action.isVisible()));
 
-        action.styleClassProperty().addListener((observableValue, oldValue, newValue) -> {
-            setStyleClass(control, oldValue, true);
-            setStyleClass(control, newValue);
+        action.styleClassProperty().addListener((v, o, n) -> {
+            setStyleClass(control, o, true);
+            setStyleClass(control, n);
         });
         setStyleClass(control, action.getStyleClass());
     }
@@ -235,54 +243,54 @@ public final class JavaFXUtils {
     public static void configure(final @Nonnull CheckMenuItem control, final @Nonnull JavaFXAction action) {
         configure((MenuItem) control, action);
 
-        action.selectedProperty().addListener((observableValue, oldValue, newValue) -> control.setSelected(newValue));
-        control.setSelected(action.isSelected());
+        action.selectedProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setSelected(n)));
+        runInsideUIThread(() -> control.setSelected(action.isSelected()));
     }
 
     public static void configure(final @Nonnull RadioMenuItem control, final @Nonnull JavaFXAction action) {
         configure((MenuItem) control, action);
 
-        action.selectedProperty().addListener((observableValue, oldValue, newValue) -> control.setSelected(newValue));
-        control.setSelected(action.isSelected());
+        action.selectedProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setSelected(n)));
+        runInsideUIThread(() -> control.setSelected(action.isSelected()));
     }
 
     public static void configure(final @Nonnull MenuItem control, final @Nonnull JavaFXAction action) {
         requireNonNull(control, ERROR_CONTROL_NULL);
         requireNonNull(action, ERROR_ACTION_NULL);
 
-        action.onActionProperty().addListener((observableValue, oldValue, newValue) -> control.setOnAction(newValue));
+        action.onActionProperty().addListener((v, o, n) -> control.setOnAction(n));
         control.setOnAction(action.getOnAction());
 
-        action.nameProperty().addListener((observableValue, oldValue, newValue) -> control.setText(newValue));
-        control.setText(action.getName());
+        action.nameProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setText(n)));
+        runInsideUIThread(() -> control.setText(action.getName()));
 
-        action.iconProperty().addListener((observableValue, oldValue, newValue) -> setIcon(control, newValue));
+        action.iconProperty().addListener((v, o, n) -> setIcon(control, n));
         if (!isBlank(action.getIcon())) {
             setIcon(control, action.getIcon());
         }
 
-        action.imageProperty().addListener((observableValue, oldValue, newValue) -> setGraphic(control, newValue));
+        action.imageProperty().addListener((v, o, n) -> setGraphic(control, n));
         if (null != action.getImage()) {
             setGraphic(control, action.getImage());
         }
 
-        action.graphicProperty().addListener((observableValue, oldValue, newValue) -> setGraphic(control, newValue));
+        action.graphicProperty().addListener((v, o, n) -> setGraphic(control, n));
         if (null != action.getGraphic()) {
             setGraphic(control, action.getGraphic());
         }
 
-        action.enabledProperty().addListener((observableValue, oldValue, newValue) -> control.setDisable(!newValue));
-        control.setDisable(!action.getEnabled());
+        action.enabledProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setDisable(!n)));
+        runInsideUIThread(() -> control.setDisable(!action.getEnabled()));
 
-        action.acceleratorProperty().addListener((observableValue, oldValue, newValue) -> control.setAccelerator(newValue));
-        control.setAccelerator(action.getAccelerator());
+        action.acceleratorProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setAccelerator(n)));
+        runInsideUIThread(() -> control.setAccelerator(action.getAccelerator()));
 
-        action.visibleProperty().addListener((observableValue, oldValue, newValue) -> control.setVisible(newValue));
-        control.setVisible(action.isVisible());
+        action.visibleProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setVisible(n)));
+        runInsideUIThread(() -> control.setVisible(action.isVisible()));
 
-        action.styleClassProperty().addListener((observableValue, oldValue, newValue) -> {
-            setStyleClass(control, oldValue, true);
-            setStyleClass(control, newValue);
+        action.styleClassProperty().addListener((v, o, n) -> {
+            setStyleClass(control, o, true);
+            setStyleClass(control, n);
         });
         setStyleClass(control, action.getStyleClass());
     }
@@ -311,31 +319,35 @@ public final class JavaFXUtils {
     }
 
     private static void applyStyleClass(String styleClass, ObservableList<String> styleClasses, boolean remove) {
-        String[] strings = styleClass.split("[,\\ ]");
-        if (remove) {
-            styleClasses.removeAll(strings);
-        } else {
-            Set<String> classes = new LinkedHashSet<>(styleClasses);
-            for (String s : strings) {
-                if (isBlank(s)) continue;
-                classes.add(s.trim());
+        runInsideUIThread(() -> {
+            String[] strings = styleClass.split("[,\\ ]");
+            if (remove) {
+                styleClasses.removeAll(strings);
+            } else {
+                Set<String> classes = new LinkedHashSet<>(styleClasses);
+                for (String s : strings) {
+                    if (isBlank(s)) continue;
+                    classes.add(s.trim());
+                }
+                styleClasses.setAll(classes);
             }
-            styleClasses.setAll(classes);
-        }
+        });
     }
 
     public static void setTooltip(@Nonnull Control control, @Nullable String text) {
-        if (isBlank(text)) {
-            return;
-        }
-        requireNonNull(control, ERROR_CONTROL_NULL);
+        runInsideUIThread(() -> {
+            if (isBlank(text)) {
+                return;
+            }
+            requireNonNull(control, ERROR_CONTROL_NULL);
 
-        Tooltip tooltip = control.tooltipProperty().get();
-        if (tooltip == null) {
-            tooltip = new Tooltip();
-            control.tooltipProperty().set(tooltip);
-        }
-        tooltip.setText(text);
+            Tooltip tooltip = control.tooltipProperty().get();
+            if (tooltip == null) {
+                tooltip = new Tooltip();
+                control.tooltipProperty().set(tooltip);
+            }
+            tooltip.setText(text);
+        });
     }
 
     public static void setIcon(@Nonnull Labeled control, @Nonnull String iconUrl) {
@@ -344,7 +356,7 @@ public final class JavaFXUtils {
 
         Node graphicNode = resolveIcon(iconUrl);
         if (graphicNode != null) {
-            control.graphicProperty().set(graphicNode);
+            runInsideUIThread(() -> control.graphicProperty().set(graphicNode));
         }
     }
 
@@ -354,50 +366,58 @@ public final class JavaFXUtils {
 
         Node graphicNode = resolveIcon(iconUrl);
         if (graphicNode != null) {
-            control.graphicProperty().set(graphicNode);
+            runInsideUIThread(() -> control.graphicProperty().set(graphicNode));
         }
     }
 
     public static void setGraphic(@Nonnull Labeled control, @Nullable Image graphic) {
         requireNonNull(control, ERROR_CONTROL_NULL);
 
-        if (graphic != null) {
-            Node graphicNode = new ImageView(graphic);
-            control.graphicProperty().set(graphicNode);
-        } else {
-            control.graphicProperty().set(null);
-        }
+        runInsideUIThread(() -> {
+            if (graphic != null) {
+                Node graphicNode = new ImageView(graphic);
+                control.graphicProperty().set(graphicNode);
+            } else {
+                control.graphicProperty().set(null);
+            }
+        });
     }
 
     public static void setGraphic(@Nonnull MenuItem control, @Nullable Image graphic) {
         requireNonNull(control, ERROR_CONTROL_NULL);
 
-        if (graphic != null) {
-            Node graphicNode = new ImageView(graphic);
-            control.graphicProperty().set(graphicNode);
-        } else {
-            control.graphicProperty().set(null);
-        }
+        runInsideUIThread(() -> {
+            if (graphic != null) {
+                Node graphicNode = new ImageView(graphic);
+                control.graphicProperty().set(graphicNode);
+            } else {
+                control.graphicProperty().set(null);
+            }
+        });
     }
 
     public static void setGraphic(@Nonnull Labeled control, @Nullable Node graphic) {
         requireNonNull(control, ERROR_CONTROL_NULL);
 
-        if (graphic != null) {
-            control.graphicProperty().set(graphic);
-        } else {
-            control.graphicProperty().set(null);
-        }
+        runInsideUIThread(() -> {
+            if (graphic != null) {
+                control.graphicProperty().set(graphic);
+            } else {
+                control.graphicProperty().set(null);
+            }
+        });
     }
 
     public static void setGraphic(@Nonnull MenuItem control, @Nullable Node graphic) {
         requireNonNull(control, ERROR_CONTROL_NULL);
 
-        if (graphic != null) {
-            control.graphicProperty().set(graphic);
-        } else {
-            control.graphicProperty().set(null);
-        }
+        runInsideUIThread(() -> {
+            if (graphic != null) {
+                control.graphicProperty().set(graphic);
+            } else {
+                control.graphicProperty().set(null);
+            }
+        });
     }
 
     @Nullable
