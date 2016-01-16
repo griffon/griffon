@@ -34,13 +34,11 @@ public class NoSuchMessageException extends RuntimeException {
     /**
      * Create a new exception.
      *
-     * @param key    message that could not be resolved for given locale
+     * @param key    key that could not be resolved for given locale
      * @param locale locale that was used to search for the code within
      */
     public NoSuchMessageException(@Nonnull String key, @Nonnull Locale locale) {
-        super("No message found under key '" + requireNonBlank(key, "key") + "' for locale '" + requireNonNull(locale, "locale") + "'.");
-        this.key = key;
-        this.locale = locale;
+        this(key, locale, null);
     }
 
     /**
@@ -50,6 +48,29 @@ public class NoSuchMessageException extends RuntimeException {
      */
     public NoSuchMessageException(@Nonnull String key) {
         this(key, Locale.getDefault());
+    }
+
+    /**
+     * Create a new exception.
+     *
+     * @param key key that could not be resolved for given locale
+     * @param cause throwable that caused this exception
+     */
+    public NoSuchMessageException(@Nonnull String key, Throwable cause) {
+        this(key, Locale.getDefault(), cause);
+    }
+
+    /**
+     * Create a new exception.
+     *
+     * @param key key that could not be resolved for given locale
+     * @param locale locale that was used to search for the code within
+     * @param cause throwable that caused this exception
+     */
+    public NoSuchMessageException(@Nonnull String key, @Nonnull Locale locale, Throwable cause) {
+        super("No message found under key '" + requireNonBlank(key, "key") + "' for locale '" + requireNonNull(locale, "locale") + "'.", cause);
+        this.key = key;
+        this.locale = locale;
     }
 
     /**
