@@ -27,7 +27,7 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class NoSuchResourceException extends RuntimeException {
-    private static final long serialVersionUID = -8457840608859745331L;
+    private static final long serialVersionUID = -8111520682896523405L;
 
     private final String key;
     private final Locale locale;
@@ -35,13 +35,11 @@ public class NoSuchResourceException extends RuntimeException {
     /**
      * Create a new exception.
      *
-     * @param key    message that could not be resolved for given locale
+     * @param key    key that could not be resolved for given locale
      * @param locale locale that was used to search for the code within
      */
     public NoSuchResourceException(@Nonnull String key, @Nonnull Locale locale) {
-        super("No resource found under key '" + requireNonBlank(key, "key") + "' for locale '" + requireNonNull(locale, "locale") + "'.");
-        this.key = key;
-        this.locale = locale;
+        this(key, locale, null);
     }
 
     /**
@@ -51,6 +49,29 @@ public class NoSuchResourceException extends RuntimeException {
      */
     public NoSuchResourceException(@Nonnull String key) {
         this(key, Locale.getDefault());
+    }
+
+    /**
+     * Create a new exception.
+     *
+     * @param key   key that could not be resolved for given locale
+     * @param cause throwable that caused this exception
+     */
+    public NoSuchResourceException(@Nonnull String key, @Nonnull Throwable cause) {
+        this(key, Locale.getDefault(), cause);
+    }
+
+    /**
+     * Create a new exception.
+     *
+     * @param key    key that could not be resolved for given locale
+     * @param locale locale that was used to search for the code within
+     * @param cause  throwable that caused this exception
+     */
+    public NoSuchResourceException(@Nonnull String key, @Nonnull Locale locale, @Nonnull Throwable cause) {
+        super("No resource found under key '" + requireNonBlank(key, "key") + "' for locale '" + requireNonNull(locale, "locale") + "'.", cause);
+        this.key = key;
+        this.locale = locale;
     }
 
     /**
@@ -73,4 +94,3 @@ public class NoSuchResourceException extends RuntimeException {
         return locale;
     }
 }
-

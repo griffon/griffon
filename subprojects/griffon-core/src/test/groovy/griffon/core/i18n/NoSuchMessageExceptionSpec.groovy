@@ -26,9 +26,9 @@ class NoSuchMessageExceptionSpec extends Specification {
         thrown(exception)
 
         where:
-        args          | exception
-        [null]        | IllegalArgumentException
-        ['key', null] | NullPointerException
+        args                         | exception
+        [null]                       | IllegalArgumentException
+        ['key', (Locale) null, null] | NullPointerException
     }
 
     void 'Successfully create exception'() {
@@ -40,6 +40,6 @@ class NoSuchMessageExceptionSpec extends Specification {
         exception.locale == args[1] ?: Locale.default
 
         where:
-        args << [['key'],['key', Locale.GERMAN]]
+        args << [['key'], ['key', Locale.GERMAN]]
     }
 }

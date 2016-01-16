@@ -26,7 +26,7 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class NoSuchMessageException extends RuntimeException {
-    private static final long serialVersionUID = -74043113109264466L;
+    private static final long serialVersionUID = 9098095569037988099L;
 
     private final String key;
     private final Locale locale;
@@ -53,21 +53,21 @@ public class NoSuchMessageException extends RuntimeException {
     /**
      * Create a new exception.
      *
-     * @param key key that could not be resolved for given locale
+     * @param key   key that could not be resolved for given locale
      * @param cause throwable that caused this exception
      */
-    public NoSuchMessageException(@Nonnull String key, Throwable cause) {
+    public NoSuchMessageException(@Nonnull String key, @Nonnull Throwable cause) {
         this(key, Locale.getDefault(), cause);
     }
 
     /**
      * Create a new exception.
      *
-     * @param key key that could not be resolved for given locale
+     * @param key    key that could not be resolved for given locale
      * @param locale locale that was used to search for the code within
-     * @param cause throwable that caused this exception
+     * @param cause  throwable that caused this exception
      */
-    public NoSuchMessageException(@Nonnull String key, @Nonnull Locale locale, Throwable cause) {
+    public NoSuchMessageException(@Nonnull String key, @Nonnull Locale locale, @Nonnull Throwable cause) {
         super("No message found under key '" + requireNonBlank(key, "key") + "' for locale '" + requireNonNull(locale, "locale") + "'.", cause);
         this.key = key;
         this.locale = locale;
@@ -93,4 +93,3 @@ public class NoSuchMessageException extends RuntimeException {
         return locale;
     }
 }
-

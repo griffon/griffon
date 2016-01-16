@@ -26,9 +26,9 @@ class NoSuchResourceExceptionSpec extends Specification {
         thrown(exception)
 
         where:
-        args          | exception
-        [null]        | IllegalArgumentException
-        ['key', null] | NullPointerException
+        args                         | exception
+        [null]                       | IllegalArgumentException
+        ['key', (Locale) null, null] | NullPointerException
     }
 
     void 'Successfully create exception'() {
