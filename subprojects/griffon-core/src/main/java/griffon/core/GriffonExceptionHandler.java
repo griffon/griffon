@@ -18,6 +18,7 @@ package griffon.core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +67,11 @@ public class GriffonExceptionHandler implements ExceptionHandler {
     public GriffonExceptionHandler(GriffonApplication application) {
         this.application = application;
         Thread.setDefaultUncaughtExceptionHandler(this);
+    }
+
+    @Nullable
+    protected GriffonApplication getApplication() {
+        return application;
     }
 
     @Override
