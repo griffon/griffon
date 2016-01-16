@@ -3050,8 +3050,8 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L3050">            return invokeExactMethod(object, methodName, args);</span>
 <span class="fc" id="L3051">        } catch (NoSuchMethodException | IllegalAccessException e) {</span>
 <span class="fc" id="L3052">            throw new InstanceMethodInvocationException(object, methodName, args, e);</span>
-<span class="fc" id="L3053">        } catch (InvocationTargetException e) {</span>
-<span class="fc" id="L3054">            throw new InstanceMethodInvocationException(object, methodName, args, e.getTargetException());</span>
+<span class="nc" id="L3053">        } catch (InvocationTargetException e) {</span>
+<span class="nc" id="L3054">            throw new InstanceMethodInvocationException(object, methodName, args, e.getTargetException());</span>
         }
     }
 
