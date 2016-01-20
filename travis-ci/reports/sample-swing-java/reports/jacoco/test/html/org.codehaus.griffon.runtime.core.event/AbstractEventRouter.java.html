@@ -29,9 +29,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static griffon.util.GriffonClassUtils.convertToTypeArray;
@@ -39,14 +42,14 @@ import static griffon.util.GriffonNameUtils.capitalize;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Arrays.asList;
 import static java.util.Collections.EMPTY_LIST;
-import static java.util.Collections.synchronizedList;
+import static java.util.Collections.unmodifiableCollection;
 import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
  */
-<span class="fc" id="L48">public abstract class AbstractEventRouter implements EventRouter {</span>
-<span class="fc" id="L49">    protected static final Object[] LOCK = new Object[0];</span>
+<span class="fc" id="L51">public abstract class AbstractEventRouter implements EventRouter {</span>
+<span class="fc" id="L52">    protected static final Object[] LOCK = new Object[0];</span>
     private static final String ERROR_EVENT_NAME_BLANK = &quot;Argument 'eventName' must not be blank&quot;;
     private static final String ERROR_EVENT_HANDLER_BLANK = &quot;Argument 'eventHandler' must not be blank&quot;;
     private static final String ERROR_MODE_BLANK = &quot;Argument 'mode' must not be blank&quot;;
@@ -58,407 +61,473 @@ import static java.util.Objects.requireNonNull;
     private static final String ERROR_PARAMS_NULL = &quot;Argument 'params' must not be null&quot;;
     private static final String ERROR_INSTANCE_NULL = &quot;Argument 'instance' must not be null&quot;;
     private static final String ERROR_OWNER_NULL = &quot;Argument 'owner' must not be null&quot;;
-<span class="fc" id="L61">    private static final Logger LOG = LoggerFactory.getLogger(AbstractEventRouter.class);</span>
-<span class="fc" id="L62">    protected final List&lt;Object&gt; instanceListeners = synchronizedList(new ArrayList&lt;&gt;());</span>
-<span class="fc" id="L63">    protected final Map&lt;String, List&lt;Object&gt;&gt; functionalListeners = new ConcurrentHashMap&lt;&gt;();</span>
-<span class="fc" id="L64">    private final MethodCache methodCache = new MethodCache();</span>
-<span class="fc" id="L65">    private boolean enabled = true;</span>
+<span class="fc" id="L64">    private static final Logger LOG = LoggerFactory.getLogger(AbstractEventRouter.class);</span>
+<span class="fc" id="L65">    protected final Map&lt;String, List&lt;Object&gt;&gt; instanceListeners = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L66">    protected final Map&lt;String, List&lt;Object&gt;&gt; functionalListeners = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L67">    private final MethodCache methodCache = new MethodCache();</span>
+<span class="fc" id="L68">    private boolean enabled = true;</span>
 
     @Override
     public boolean isEventPublishingEnabled() {
-<span class="fc" id="L69">        synchronized (LOCK) {</span>
-<span class="fc" id="L70">            return this.enabled;</span>
-<span class="nc" id="L71">        }</span>
+<span class="fc" id="L72">        synchronized (LOCK) {</span>
+<span class="fc" id="L73">            return this.enabled;</span>
+<span class="nc" id="L74">        }</span>
     }
 
     @Override
     public void setEventPublishingEnabled(boolean enabled) {
-<span class="nc" id="L76">        synchronized (LOCK) {</span>
-<span class="nc" id="L77">            this.enabled = enabled;</span>
-<span class="nc" id="L78">        }</span>
-<span class="nc" id="L79">    }</span>
+<span class="nc" id="L79">        synchronized (LOCK) {</span>
+<span class="nc" id="L80">            this.enabled = enabled;</span>
+<span class="nc" id="L81">        }</span>
+<span class="nc" id="L82">    }</span>
 
     @Override
     public void publishEvent(@Nonnull String eventName) {
-<span class="nc" id="L83">        publishEvent(eventName, EMPTY_LIST);</span>
-<span class="nc" id="L84">    }</span>
+<span class="nc" id="L86">        publishEvent(eventName, EMPTY_LIST);</span>
+<span class="nc" id="L87">    }</span>
 
     @Override
     public void publishEvent(@Nonnull String eventName, @Nullable List&lt;?&gt; params) {
-<span class="pc bpc" id="L88" title="1 of 2 branches missed.">        if (!isEventPublishingEnabled()) return;</span>
-<span class="fc" id="L89">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
-<span class="pc bpc" id="L90" title="1 of 2 branches missed.">        if (params == null) params = EMPTY_LIST;</span>
-<span class="fc" id="L91">        buildPublisher(eventName, params, &quot;synchronously&quot;).run();</span>
-<span class="fc" id="L92">    }</span>
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">        if (!isEventPublishingEnabled()) return;</span>
+<span class="fc" id="L92">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">        if (params == null) params = EMPTY_LIST;</span>
+<span class="fc" id="L94">        buildPublisher(eventName, params, &quot;synchronously&quot;).run();</span>
+<span class="fc" id="L95">    }</span>
 
     @Override
     public void publishEventOutsideUI(@Nonnull String eventName) {
-<span class="nc" id="L96">        publishEventOutsideUI(eventName, EMPTY_LIST);</span>
-<span class="nc" id="L97">    }</span>
+<span class="nc" id="L99">        publishEventOutsideUI(eventName, EMPTY_LIST);</span>
+<span class="nc" id="L100">    }</span>
 
     @Override
     public void publishEventOutsideUI(@Nonnull String eventName, @Nullable List&lt;?&gt; params) {
-<span class="nc bnc" id="L101" title="All 2 branches missed.">        if (!isEventPublishingEnabled()) return;</span>
-<span class="nc" id="L102">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
-<span class="nc bnc" id="L103" title="All 2 branches missed.">        if (params == null) params = EMPTY_LIST;</span>
-<span class="nc" id="L104">        final Runnable publisher = buildPublisher(eventName, params, &quot;outside UI&quot;);</span>
-<span class="nc" id="L105">        doPublishOutsideUI(publisher);</span>
-<span class="nc" id="L106">    }</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">        if (!isEventPublishingEnabled()) return;</span>
+<span class="nc" id="L105">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">        if (params == null) params = EMPTY_LIST;</span>
+<span class="nc" id="L107">        final Runnable publisher = buildPublisher(eventName, params, &quot;outside UI&quot;);</span>
+<span class="nc" id="L108">        doPublishOutsideUI(publisher);</span>
+<span class="nc" id="L109">    }</span>
 
     protected abstract void doPublishOutsideUI(@Nonnull Runnable publisher);
 
     @Override
     public void publishEventAsync(@Nonnull String eventName) {
-<span class="nc" id="L112">        publishEventAsync(eventName, EMPTY_LIST);</span>
-<span class="nc" id="L113">    }</span>
+<span class="nc" id="L115">        publishEventAsync(eventName, EMPTY_LIST);</span>
+<span class="nc" id="L116">    }</span>
 
     @Override
     public void publishEventAsync(@Nonnull String eventName, @Nullable List&lt;?&gt; params) {
-<span class="nc bnc" id="L117" title="All 2 branches missed.">        if (!isEventPublishingEnabled()) return;</span>
-<span class="nc" id="L118">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
-<span class="nc bnc" id="L119" title="All 2 branches missed.">        if (params == null) params = EMPTY_LIST;</span>
-<span class="nc" id="L120">        final Runnable publisher = buildPublisher(eventName, params, &quot;asynchronously&quot;);</span>
-<span class="nc" id="L121">        doPublishAsync(publisher);</span>
-<span class="nc" id="L122">    }</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">        if (!isEventPublishingEnabled()) return;</span>
+<span class="nc" id="L121">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        if (params == null) params = EMPTY_LIST;</span>
+<span class="nc" id="L123">        final Runnable publisher = buildPublisher(eventName, params, &quot;asynchronously&quot;);</span>
+<span class="nc" id="L124">        doPublishAsync(publisher);</span>
+<span class="nc" id="L125">    }</span>
 
     protected abstract void doPublishAsync(@Nonnull Runnable publisher);
 
     @Override
     public void publishEvent(@Nonnull Event event) {
-<span class="nc" id="L128">        requireNonNull(event, ERROR_EVENT_NULL);</span>
-<span class="nc" id="L129">        publishEvent(event.getClass().getSimpleName(), asList(event));</span>
-<span class="nc" id="L130">    }</span>
+<span class="nc" id="L131">        requireNonNull(event, ERROR_EVENT_NULL);</span>
+<span class="nc" id="L132">        publishEvent(event.getClass().getSimpleName(), asList(event));</span>
+<span class="nc" id="L133">    }</span>
 
     @Override
     public void publishEventOutsideUI(@Nonnull Event event) {
-<span class="nc" id="L134">        requireNonNull(event, ERROR_EVENT_NULL);</span>
-<span class="nc" id="L135">        publishEventOutsideUI(event.getClass().getSimpleName(), asList(event));</span>
-<span class="nc" id="L136">    }</span>
+<span class="nc" id="L137">        requireNonNull(event, ERROR_EVENT_NULL);</span>
+<span class="nc" id="L138">        publishEventOutsideUI(event.getClass().getSimpleName(), asList(event));</span>
+<span class="nc" id="L139">    }</span>
 
     @Override
     public void publishEventAsync(@Nonnull Event event) {
-<span class="nc" id="L140">        requireNonNull(event, ERROR_EVENT_NULL);</span>
-<span class="nc" id="L141">        publishEventAsync(event.getClass().getSimpleName(), asList(event));</span>
-<span class="nc" id="L142">    }</span>
+<span class="nc" id="L143">        requireNonNull(event, ERROR_EVENT_NULL);</span>
+<span class="nc" id="L144">        publishEventAsync(event.getClass().getSimpleName(), asList(event));</span>
+<span class="nc" id="L145">    }</span>
 
     @Override
     public &lt;E extends Event&gt; void removeEventListener(@Nonnull Class&lt;E&gt; eventClass, @Nonnull CallableWithArgs&lt;?&gt; listener) {
-<span class="nc" id="L146">        requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);</span>
-<span class="nc" id="L147">        removeEventListener(eventClass.getSimpleName(), listener);</span>
-<span class="nc" id="L148">    }</span>
+<span class="nc" id="L149">        requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);</span>
+<span class="nc" id="L150">        removeEventListener(eventClass.getSimpleName(), listener);</span>
+<span class="nc" id="L151">    }</span>
 
     @Override
     public &lt;E extends Event&gt; void removeEventListener(@Nonnull Class&lt;E&gt; eventClass, @Nonnull RunnableWithArgs listener) {
-<span class="nc" id="L152">        requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);</span>
-<span class="nc" id="L153">        removeEventListener(eventClass.getSimpleName(), listener);</span>
-<span class="nc" id="L154">    }</span>
+<span class="nc" id="L155">        requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);</span>
+<span class="nc" id="L156">        removeEventListener(eventClass.getSimpleName(), listener);</span>
+<span class="nc" id="L157">    }</span>
 
     protected void fireEvent(@Nonnull RunnableWithArgs runnable, @Nonnull List&lt;?&gt; params) {
-<span class="fc" id="L157">        requireNonNull(runnable, ERROR_RUNNABLE_NULL);</span>
-<span class="fc" id="L158">        requireNonNull(params, ERROR_PARAMS_NULL);</span>
-<span class="fc" id="L159">        runnable.run(asArray(params));</span>
-<span class="fc" id="L160">    }</span>
+<span class="fc" id="L160">        requireNonNull(runnable, ERROR_RUNNABLE_NULL);</span>
+<span class="fc" id="L161">        requireNonNull(params, ERROR_PARAMS_NULL);</span>
+<span class="fc" id="L162">        runnable.run(asArray(params));</span>
+<span class="fc" id="L163">    }</span>
 
     protected void fireEvent(@Nonnull CallableWithArgs&lt;?&gt; callable, @Nonnull List&lt;?&gt; params) {
-<span class="nc" id="L163">        requireNonNull(callable, ERROR_CALLABLE_NULL);</span>
-<span class="nc" id="L164">        requireNonNull(params, ERROR_PARAMS_NULL);</span>
-<span class="nc" id="L165">        callable.call(asArray(params));</span>
-<span class="nc" id="L166">    }</span>
+<span class="nc" id="L166">        requireNonNull(callable, ERROR_CALLABLE_NULL);</span>
+<span class="nc" id="L167">        requireNonNull(params, ERROR_PARAMS_NULL);</span>
+<span class="nc" id="L168">        callable.call(asArray(params));</span>
+<span class="nc" id="L169">    }</span>
 
     protected void fireEvent(@Nonnull Object instance, @Nonnull String eventHandler, @Nonnull List&lt;?&gt; params) {
-<span class="fc" id="L169">        requireNonNull(instance, ERROR_INSTANCE_NULL);</span>
-<span class="fc" id="L170">        requireNonBlank(eventHandler, ERROR_EVENT_HANDLER_BLANK);</span>
-<span class="fc" id="L171">        requireNonNull(params, ERROR_PARAMS_NULL);</span>
+<span class="nc" id="L172">        requireNonNull(instance, ERROR_INSTANCE_NULL);</span>
+<span class="nc" id="L173">        requireNonBlank(eventHandler, ERROR_EVENT_HANDLER_BLANK);</span>
+<span class="nc" id="L174">        requireNonNull(params, ERROR_PARAMS_NULL);</span>
 
-<span class="fc" id="L173">        Class[] argTypes = convertToTypeArray(asArray(params));</span>
-<span class="fc" id="L174">        MethodDescriptor target = new MethodDescriptor(eventHandler, argTypes);</span>
-<span class="fc" id="L175">        Method method = methodCache.findMatchingMethodFor(instance.getClass(), target);</span>
+<span class="nc" id="L176">        Class[] argTypes = convertToTypeArray(asArray(params));</span>
+<span class="nc" id="L177">        MethodDescriptor target = new MethodDescriptor(eventHandler, argTypes);</span>
+<span class="nc" id="L178">        Method method = methodCache.findMatchingMethodFor(instance.getClass(), target);</span>
 
-<span class="pc bpc" id="L177" title="1 of 2 branches missed.">        if (method != null) {</span>
-<span class="nc" id="L178">            MethodUtils.invokeSafe(method, instance, asArray(params));</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">        if (method != null) {</span>
+<span class="nc" id="L181">            MethodUtils.invokeSafe(method, instance, asArray(params));</span>
         }
-<span class="fc" id="L180">    }</span>
+<span class="nc" id="L183">    }</span>
 
     @Override
     public &lt;E extends Event&gt; void addEventListener(@Nonnull Class&lt;E&gt; eventClass, @Nonnull CallableWithArgs&lt;?&gt; listener) {
-<span class="nc" id="L184">        requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);</span>
-<span class="nc" id="L185">        addEventListener(eventClass.getSimpleName(), listener);</span>
-<span class="nc" id="L186">    }</span>
+<span class="nc" id="L187">        requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);</span>
+<span class="nc" id="L188">        addEventListener(eventClass.getSimpleName(), listener);</span>
+<span class="nc" id="L189">    }</span>
 
     @Override
     public &lt;E extends Event&gt; void addEventListener(@Nonnull Class&lt;E&gt; eventClass, @Nonnull RunnableWithArgs listener) {
-<span class="nc" id="L190">        requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);</span>
-<span class="nc" id="L191">        addEventListener(eventClass.getSimpleName(), listener);</span>
-<span class="nc" id="L192">    }</span>
+<span class="nc" id="L193">        requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);</span>
+<span class="nc" id="L194">        addEventListener(eventClass.getSimpleName(), listener);</span>
+<span class="nc" id="L195">    }</span>
 
     @Override
     @SuppressWarnings(&quot;unchecked&quot;)
     public void addEventListener(@Nonnull Object listener) {
-<span class="fc" id="L197">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
-<span class="pc bpc" id="L198" title="1 of 2 branches missed.">        if (listener instanceof RunnableWithArgs) {</span>
-<span class="nc" id="L199">            throw new IllegalArgumentException(&quot;Cannot add an event listener of type &quot; + RunnableWithArgs.class.getName() +</span>
+<span class="fc" id="L200">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="pc bpc" id="L201" title="1 of 2 branches missed.">        if (listener instanceof RunnableWithArgs) {</span>
+<span class="nc" id="L202">            throw new IllegalArgumentException(&quot;Cannot add an event listener of type &quot; + RunnableWithArgs.class.getName() +</span>
                 &quot; because the target event name is missing. &quot; + listener);
         }
-<span class="pc bpc" id="L202" title="1 of 2 branches missed.">        if (listener instanceof CallableWithArgs) {</span>
-<span class="nc" id="L203">            throw new IllegalArgumentException(&quot;Cannot add an event listener of type &quot; + CallableWithArgs.class.getName() +</span>
+<span class="pc bpc" id="L205" title="1 of 2 branches missed.">        if (listener instanceof CallableWithArgs) {</span>
+<span class="nc" id="L206">            throw new IllegalArgumentException(&quot;Cannot add an event listener of type &quot; + CallableWithArgs.class.getName() +</span>
                 &quot; because the target event name is missing. &quot; + listener);
         }
 
-<span class="pc bpc" id="L207" title="1 of 2 branches missed.">        if (listener instanceof Map) {</span>
-<span class="nc" id="L208">            addEventListener((Map) listener);</span>
-<span class="nc" id="L209">            return;</span>
+<span class="pc bpc" id="L210" title="1 of 2 branches missed.">        if (listener instanceof Map) {</span>
+<span class="nc" id="L211">            addEventListener((Map) listener);</span>
+<span class="nc" id="L212">            return;</span>
         }
 
-<span class="fc bfc" id="L212" title="All 2 branches covered.">        if (!methodCache.isEventListener(listener.getClass())) {</span>
-<span class="fc" id="L213">            return;</span>
+<span class="pc bpc" id="L215" title="1 of 2 branches missed.">        if (!methodCache.isEventListener(listener.getClass())) {</span>
+<span class="fc" id="L216">            return;</span>
         }
 
-<span class="fc" id="L216">        synchronized (instanceListeners) {</span>
-<span class="pc bpc" id="L217" title="1 of 2 branches missed.">            if (instanceListeners.contains(listener)) return;</span>
+<span class="nc" id="L219">        boolean added = false;</span>
+<span class="nc bnc" id="L220" title="All 2 branches missed.">        for (String eventName : methodCache.fetchMethodMetadata(listener.getClass()).keySet()) {</span>
+<span class="nc" id="L221">            eventName = eventName.substring(2); // cut off &quot;on&quot; from the name</span>
+<span class="nc" id="L222">            List&lt;Object&gt; instances = instanceListeners.get(eventName);</span>
+<span class="nc bnc" id="L223" title="All 2 branches missed.">            if (instances == null) {</span>
+<span class="nc" id="L224">                instances = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L225">                instanceListeners.put(eventName, instances);</span>
+            }
+<span class="nc" id="L227">            synchronized (instances) {</span>
+<span class="nc bnc" id="L228" title="All 2 branches missed.">                if (!instances.contains(listener)) {</span>
+<span class="nc" id="L229">                    added = true;</span>
+<span class="nc" id="L230">                    instances.add(listener);</span>
+                }
+<span class="nc" id="L232">            }</span>
+<span class="nc" id="L233">        }</span>
+
+<span class="nc bnc" id="L235" title="All 2 branches missed.">        if (added) {</span>
             try {
-<span class="fc" id="L219">                LOG.debug(&quot;Adding listener {}&quot;, listener);</span>
-<span class="nc" id="L220">            } catch (UnsupportedOperationException uoe) {</span>
-<span class="nc" id="L221">                LOG.debug(&quot;Adding listener {}&quot;, listener.getClass().getName());</span>
-<span class="fc" id="L222">            }</span>
-<span class="fc" id="L223">            instanceListeners.add(listener);</span>
-<span class="pc" id="L224">        }</span>
-<span class="fc" id="L225">    }</span>
+<span class="nc" id="L237">                LOG.debug(&quot;Adding listener {}&quot;, listener);</span>
+<span class="nc" id="L238">            } catch (UnsupportedOperationException uoe) {</span>
+<span class="nc" id="L239">                LOG.debug(&quot;Adding listener {}&quot;, listener.getClass().getName());</span>
+<span class="nc" id="L240">            }</span>
+        }
+<span class="nc" id="L242">    }</span>
 
     @Override
     public void addEventListener(@Nonnull Map&lt;String, Object&gt; listener) {
-<span class="nc" id="L229">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
-<span class="nc bnc" id="L230" title="All 2 branches missed.">        for (Map.Entry&lt;String, Object&gt; entry : listener.entrySet()) {</span>
-<span class="nc" id="L231">            Object eventHandler = entry.getValue();</span>
-<span class="nc bnc" id="L232" title="All 2 branches missed.">            if (eventHandler instanceof RunnableWithArgs) {</span>
-<span class="nc" id="L233">                addEventListener(entry.getKey(), (RunnableWithArgs) eventHandler);</span>
-<span class="nc bnc" id="L234" title="All 2 branches missed.">            } else if (eventHandler instanceof CallableWithArgs) {</span>
-<span class="nc" id="L235">                addEventListener(entry.getKey(), (CallableWithArgs) eventHandler);</span>
+<span class="nc" id="L246">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="nc bnc" id="L247" title="All 2 branches missed.">        for (Map.Entry&lt;String, Object&gt; entry : listener.entrySet()) {</span>
+<span class="nc" id="L248">            Object eventHandler = entry.getValue();</span>
+<span class="nc bnc" id="L249" title="All 2 branches missed.">            if (eventHandler instanceof RunnableWithArgs) {</span>
+<span class="nc" id="L250">                addEventListener(entry.getKey(), (RunnableWithArgs) eventHandler);</span>
+<span class="nc bnc" id="L251" title="All 2 branches missed.">            } else if (eventHandler instanceof CallableWithArgs) {</span>
+<span class="nc" id="L252">                addEventListener(entry.getKey(), (CallableWithArgs) eventHandler);</span>
             } else {
-<span class="nc" id="L237">                throw new IllegalArgumentException(&quot;Unsupported functional event listener &quot; + eventHandler);</span>
+<span class="nc" id="L254">                throw new IllegalArgumentException(&quot;Unsupported functional event listener &quot; + eventHandler);</span>
             }
-<span class="nc" id="L239">        }</span>
-<span class="nc" id="L240">    }</span>
+<span class="nc" id="L256">        }</span>
+<span class="nc" id="L257">    }</span>
 
     @Override
     @SuppressWarnings(&quot;unchecked&quot;)
     public void removeEventListener(@Nonnull Object listener) {
-<span class="nc" id="L245">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
-<span class="nc bnc" id="L246" title="All 2 branches missed.">        if (listener instanceof RunnableWithArgs) {</span>
-<span class="nc" id="L247">            throw new IllegalArgumentException(&quot;Cannot remove an event listener of type &quot; + RunnableWithArgs.class.getName() +</span>
+<span class="nc" id="L262">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="nc bnc" id="L263" title="All 2 branches missed.">        if (listener instanceof RunnableWithArgs) {</span>
+<span class="nc" id="L264">            throw new IllegalArgumentException(&quot;Cannot remove an event listener of type &quot; + RunnableWithArgs.class.getName() +</span>
                 &quot; because the target event name is missing. &quot; + listener);
         }
-<span class="nc bnc" id="L250" title="All 2 branches missed.">        if (listener instanceof CallableWithArgs) {</span>
-<span class="nc" id="L251">            throw new IllegalArgumentException(&quot;Cannot remove an event listener of type &quot; + CallableWithArgs.class.getName() +</span>
+<span class="nc bnc" id="L267" title="All 2 branches missed.">        if (listener instanceof CallableWithArgs) {</span>
+<span class="nc" id="L268">            throw new IllegalArgumentException(&quot;Cannot remove an event listener of type &quot; + CallableWithArgs.class.getName() +</span>
                 &quot; because the target event name is missing. &quot; + listener);
         }
 
-<span class="nc bnc" id="L255" title="All 2 branches missed.">        if (listener instanceof Map) {</span>
-<span class="nc" id="L256">            removeEventListener((Map) listener);</span>
-<span class="nc" id="L257">            return;</span>
+<span class="nc bnc" id="L272" title="All 2 branches missed.">        if (listener instanceof Map) {</span>
+<span class="nc" id="L273">            removeEventListener((Map) listener);</span>
+<span class="nc" id="L274">            return;</span>
         }
-<span class="nc" id="L259">        synchronized (instanceListeners) {</span>
+
+<span class="nc" id="L277">        boolean removed = false;</span>
+<span class="nc bnc" id="L278" title="All 2 branches missed.">        for (String eventName : methodCache.fetchMethodMetadata(listener.getClass()).keySet()) {</span>
+<span class="nc" id="L279">            eventName = eventName.substring(2); // cut off &quot;on&quot; from the name</span>
+<span class="nc" id="L280">            List&lt;Object&gt; instances = instanceListeners.get(eventName);</span>
+<span class="nc bnc" id="L281" title="All 4 branches missed.">            if (instances != null &amp;&amp; instances.contains(listener)) {</span>
+<span class="nc" id="L282">                instances.remove(listener);</span>
+<span class="nc" id="L283">                removed = true;</span>
+<span class="nc bnc" id="L284" title="All 2 branches missed.">                if (instances.isEmpty()) {</span>
+<span class="nc" id="L285">                    instanceListeners.remove(eventName);</span>
+                }
+            }
+<span class="nc" id="L288">        }</span>
+
+<span class="nc" id="L290">        boolean nestedRemoved = removeNestedListeners(listener);</span>
+
+<span class="nc bnc" id="L292" title="All 4 branches missed.">        if (removed || nestedRemoved) {</span>
             try {
-<span class="nc" id="L261">                LOG.debug(&quot;Removing listener {}&quot;, listener);</span>
-<span class="nc" id="L262">            } catch (UnsupportedOperationException uoe) {</span>
-<span class="nc" id="L263">                LOG.debug(&quot;Removing listener {}&quot;, listener.getClass().getName());</span>
-<span class="nc" id="L264">            }</span>
-<span class="nc" id="L265">            instanceListeners.remove(listener);</span>
-<span class="nc" id="L266">            removeNestedListeners(listener);</span>
-<span class="nc" id="L267">        }</span>
-<span class="nc" id="L268">    }</span>
-
-    @Override
-    public void removeEventListener(@Nonnull Map&lt;String, Object&gt; listener) {
-<span class="nc" id="L272">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
-<span class="nc bnc" id="L273" title="All 2 branches missed.">        for (Map.Entry&lt;String, Object&gt; entry : listener.entrySet()) {</span>
-<span class="nc" id="L274">            Object eventHandler = entry.getValue();</span>
-<span class="nc bnc" id="L275" title="All 2 branches missed.">            if (eventHandler instanceof RunnableWithArgs) {</span>
-<span class="nc" id="L276">                removeEventListener(entry.getKey(), (RunnableWithArgs) eventHandler);</span>
-<span class="nc bnc" id="L277" title="All 2 branches missed.">            } else if (eventHandler instanceof CallableWithArgs) {</span>
-<span class="nc" id="L278">                removeEventListener(entry.getKey(), (CallableWithArgs) eventHandler);</span>
-            } else {
-<span class="nc" id="L280">                throw new IllegalArgumentException(&quot;Unsupported functional event listener &quot; + eventHandler);</span>
-            }
-<span class="nc" id="L282">        }</span>
-<span class="nc" id="L283">    }</span>
-
-    @Override
-    public void addEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs&lt;?&gt; listener) {
-<span class="nc" id="L287">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
-<span class="nc" id="L288">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
-<span class="nc" id="L289">        synchronized (functionalListeners) {</span>
-<span class="nc" id="L290">            List&lt;Object&gt; list = functionalListeners.get(capitalize(eventName));</span>
-<span class="nc bnc" id="L291" title="All 2 branches missed.">            if (list == null) {</span>
-<span class="nc" id="L292">                list = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L293">                functionalListeners.put(capitalize(eventName), list);</span>
-            }
-<span class="nc bnc" id="L295" title="All 2 branches missed.">            if (list.contains(listener)) return;</span>
-<span class="nc" id="L296">            LOG.debug(&quot;Adding listener {} on {}&quot;, listener.getClass().getName(), capitalize(eventName));</span>
-<span class="nc" id="L297">            list.add(listener);</span>
-<span class="nc" id="L298">        }</span>
+<span class="nc" id="L294">                LOG.debug(&quot;Removing listener {}&quot;, listener);</span>
+<span class="nc" id="L295">            } catch (UnsupportedOperationException uoe) {</span>
+<span class="nc" id="L296">                LOG.debug(&quot;Removing listener {}&quot;, listener.getClass().getName());</span>
+<span class="nc" id="L297">            }</span>
+        }
 <span class="nc" id="L299">    }</span>
 
     @Override
-    public void addEventListener(@Nonnull String eventName, @Nonnull RunnableWithArgs listener) {
-<span class="fc" id="L303">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
-<span class="fc" id="L304">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
-<span class="fc" id="L305">        synchronized (functionalListeners) {</span>
-<span class="fc" id="L306">            List&lt;Object&gt; list = functionalListeners.get(capitalize(eventName));</span>
-<span class="fc bfc" id="L307" title="All 2 branches covered.">            if (list == null) {</span>
-<span class="fc" id="L308">                list = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L309">                functionalListeners.put(capitalize(eventName), list);</span>
+    public void removeEventListener(@Nonnull Map&lt;String, Object&gt; listener) {
+<span class="nc" id="L303">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="nc bnc" id="L304" title="All 2 branches missed.">        for (Map.Entry&lt;String, Object&gt; entry : listener.entrySet()) {</span>
+<span class="nc" id="L305">            Object eventHandler = entry.getValue();</span>
+<span class="nc bnc" id="L306" title="All 2 branches missed.">            if (eventHandler instanceof RunnableWithArgs) {</span>
+<span class="nc" id="L307">                removeEventListener(entry.getKey(), (RunnableWithArgs) eventHandler);</span>
+<span class="nc bnc" id="L308" title="All 2 branches missed.">            } else if (eventHandler instanceof CallableWithArgs) {</span>
+<span class="nc" id="L309">                removeEventListener(entry.getKey(), (CallableWithArgs) eventHandler);</span>
+            } else {
+<span class="nc" id="L311">                throw new IllegalArgumentException(&quot;Unsupported functional event listener &quot; + eventHandler);</span>
             }
-<span class="pc bpc" id="L311" title="1 of 2 branches missed.">            if (list.contains(listener)) return;</span>
-<span class="fc" id="L312">            LOG.debug(&quot;Adding listener {} on {}&quot;, listener.getClass().getName(), capitalize(eventName));</span>
-<span class="fc" id="L313">            list.add(listener);</span>
-<span class="pc" id="L314">        }</span>
-<span class="fc" id="L315">    }</span>
+<span class="nc" id="L313">        }</span>
+<span class="nc" id="L314">    }</span>
+
+    @Override
+    public void addEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs&lt;?&gt; listener) {
+<span class="nc" id="L318">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
+<span class="nc" id="L319">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="nc" id="L320">        synchronized (functionalListeners) {</span>
+<span class="nc" id="L321">            List&lt;Object&gt; list = functionalListeners.get(capitalize(eventName));</span>
+<span class="nc bnc" id="L322" title="All 2 branches missed.">            if (list == null) {</span>
+<span class="nc" id="L323">                list = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L324">                functionalListeners.put(capitalize(eventName), list);</span>
+            }
+<span class="nc bnc" id="L326" title="All 2 branches missed.">            if (list.contains(listener)) return;</span>
+<span class="nc" id="L327">            LOG.debug(&quot;Adding listener {} on {}&quot;, listener.getClass().getName(), capitalize(eventName));</span>
+<span class="nc" id="L328">            list.add(listener);</span>
+<span class="nc" id="L329">        }</span>
+<span class="nc" id="L330">    }</span>
+
+    @Override
+    public void addEventListener(@Nonnull String eventName, @Nonnull RunnableWithArgs listener) {
+<span class="fc" id="L334">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
+<span class="fc" id="L335">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="fc" id="L336">        synchronized (functionalListeners) {</span>
+<span class="fc" id="L337">            List&lt;Object&gt; list = functionalListeners.get(capitalize(eventName));</span>
+<span class="fc bfc" id="L338" title="All 2 branches covered.">            if (list == null) {</span>
+<span class="fc" id="L339">                list = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L340">                functionalListeners.put(capitalize(eventName), list);</span>
+            }
+<span class="pc bpc" id="L342" title="1 of 2 branches missed.">            if (list.contains(listener)) return;</span>
+<span class="fc" id="L343">            LOG.debug(&quot;Adding listener {} on {}&quot;, listener.getClass().getName(), capitalize(eventName));</span>
+<span class="fc" id="L344">            list.add(listener);</span>
+<span class="pc" id="L345">        }</span>
+<span class="fc" id="L346">    }</span>
 
     @Override
     public void removeEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs&lt;?&gt; listener) {
-<span class="nc" id="L319">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
-<span class="nc" id="L320">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
-<span class="nc" id="L321">        synchronized (functionalListeners) {</span>
-<span class="nc" id="L322">            List&lt;Object&gt; list = functionalListeners.get(capitalize(eventName));</span>
-<span class="nc bnc" id="L323" title="All 2 branches missed.">            if (list != null) {</span>
-<span class="nc" id="L324">                LOG.debug(&quot;Removing listener {} on {}&quot;, listener.getClass().getName(), capitalize(eventName));</span>
-<span class="nc" id="L325">                list.remove(listener);</span>
+<span class="nc" id="L350">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
+<span class="nc" id="L351">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="nc" id="L352">        synchronized (functionalListeners) {</span>
+<span class="nc" id="L353">            List&lt;Object&gt; list = functionalListeners.get(capitalize(eventName));</span>
+<span class="nc bnc" id="L354" title="All 2 branches missed.">            if (list != null) {</span>
+<span class="nc" id="L355">                LOG.debug(&quot;Removing listener {} on {}&quot;, listener.getClass().getName(), capitalize(eventName));</span>
+<span class="nc" id="L356">                list.remove(listener);</span>
             }
-<span class="nc" id="L327">        }</span>
-<span class="nc" id="L328">    }</span>
+<span class="nc" id="L358">        }</span>
+<span class="nc" id="L359">    }</span>
 
     @Override
     public void removeEventListener(@Nonnull String eventName, @Nonnull RunnableWithArgs listener) {
-<span class="nc" id="L332">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
-<span class="nc" id="L333">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
-<span class="nc" id="L334">        synchronized (functionalListeners) {</span>
-<span class="nc" id="L335">            List&lt;Object&gt; list = functionalListeners.get(capitalize(eventName));</span>
-<span class="nc bnc" id="L336" title="All 2 branches missed.">            if (list != null) {</span>
-<span class="nc" id="L337">                LOG.debug(&quot;Removing listener {} on {}&quot;, listener.getClass().getName(), capitalize(eventName));</span>
-<span class="nc" id="L338">                list.remove(listener);</span>
+<span class="nc" id="L363">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
+<span class="nc" id="L364">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="nc" id="L365">        synchronized (functionalListeners) {</span>
+<span class="nc" id="L366">            List&lt;Object&gt; list = functionalListeners.get(capitalize(eventName));</span>
+<span class="nc bnc" id="L367" title="All 2 branches missed.">            if (list != null) {</span>
+<span class="nc" id="L368">                LOG.debug(&quot;Removing listener {} on {}&quot;, listener.getClass().getName(), capitalize(eventName));</span>
+<span class="nc" id="L369">                list.remove(listener);</span>
             }
-<span class="nc" id="L340">        }</span>
-<span class="nc" id="L341">    }</span>
+<span class="nc" id="L371">        }</span>
+<span class="nc" id="L372">    }</span>
+
+    @Nonnull
+    @Override
+    public Collection&lt;Object&gt; getEventListeners() {
+<span class="nc" id="L377">        List&lt;Object&gt; listeners = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L378">        synchronized (instanceListeners) {</span>
+<span class="nc" id="L379">            Set&lt;Object&gt; instances = new HashSet&lt;&gt;();</span>
+<span class="nc bnc" id="L380" title="All 2 branches missed.">            for (List&lt;Object&gt; objects : instanceListeners.values()) {</span>
+<span class="nc" id="L381">                instances.addAll(objects);</span>
+<span class="nc" id="L382">            }</span>
+<span class="nc" id="L383">            listeners.addAll(instances);</span>
+<span class="nc" id="L384">        }</span>
+
+<span class="nc" id="L386">        synchronized (functionalListeners) {</span>
+<span class="nc bnc" id="L387" title="All 2 branches missed.">            for (List&lt;Object&gt; objects : functionalListeners.values()) {</span>
+<span class="nc" id="L388">                listeners.addAll(objects);</span>
+<span class="nc" id="L389">            }</span>
+<span class="nc" id="L390">        }</span>
+
+<span class="nc" id="L392">        return unmodifiableCollection(listeners);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Collection&lt;Object&gt; getEventListeners(@Nonnull String eventName) {
+<span class="nc" id="L398">        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);</span>
+<span class="nc" id="L399">        List&lt;Object&gt; listeners = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L400">        List&lt;Object&gt; instances = instanceListeners.get(eventName);</span>
+<span class="nc bnc" id="L401" title="All 2 branches missed.">        if (instances != null) listeners.addAll(instances);</span>
+<span class="nc" id="L402">        instances = functionalListeners.get(eventName);</span>
+<span class="nc bnc" id="L403" title="All 2 branches missed.">        if (instances != null) listeners.addAll(instances);</span>
+<span class="nc" id="L404">        return unmodifiableCollection(listeners);</span>
+    }
 
     protected Runnable buildPublisher(@Nonnull final String event, @Nonnull final List&lt;?&gt; params, @Nonnull final String mode) {
-<span class="fc" id="L344">        requireNonNull(event, ERROR_EVENT_NULL);</span>
-<span class="fc" id="L345">        requireNonNull(params, ERROR_PARAMS_NULL);</span>
-<span class="fc" id="L346">        requireNonBlank(mode, ERROR_MODE_BLANK);</span>
-<span class="fc" id="L347">        return new Runnable() {</span>
+<span class="fc" id="L408">        requireNonNull(event, ERROR_EVENT_NULL);</span>
+<span class="fc" id="L409">        requireNonNull(params, ERROR_PARAMS_NULL);</span>
+<span class="fc" id="L410">        requireNonBlank(mode, ERROR_MODE_BLANK);</span>
+<span class="fc" id="L411">        return new Runnable() {</span>
             public void run() {
-<span class="fc" id="L349">                String eventName = capitalize(event);</span>
-<span class="fc" id="L350">                LOG.debug(&quot;Triggering event '{}' {}&quot;, eventName, mode);</span>
-<span class="fc" id="L351">                String eventHandler = &quot;on&quot; + eventName;</span>
+<span class="fc" id="L413">                String eventName = capitalize(event);</span>
+<span class="fc" id="L414">                LOG.debug(&quot;Triggering event '{}' {}&quot;, eventName, mode);</span>
+<span class="fc" id="L415">                String eventHandler = &quot;on&quot; + eventName;</span>
                 // defensive copying to avoid CME during event dispatching
-                // GRIFFON-224
-<span class="fc" id="L354">                List&lt;Object&gt; listenersCopy = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L355">                synchronized (instanceListeners) {</span>
-<span class="fc" id="L356">                    listenersCopy.addAll(instanceListeners);</span>
-<span class="pc" id="L357">                }</span>
-<span class="fc" id="L358">                synchronized (functionalListeners) {</span>
-<span class="fc" id="L359">                    List list = functionalListeners.get(eventName);</span>
-<span class="fc bfc" id="L360" title="All 2 branches covered.">                    if (list != null) {</span>
-<span class="fc bfc" id="L361" title="All 2 branches covered.">                        for (Object listener : list) {</span>
-<span class="fc" id="L362">                            listenersCopy.add(listener);</span>
-<span class="fc" id="L363">                        }</span>
+<span class="fc" id="L417">                List&lt;Object&gt; listenersCopy = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L418">                List&lt;Object&gt; instances = instanceListeners.get(eventName);</span>
+<span class="pc bpc" id="L419" title="1 of 2 branches missed.">                if (instances != null) {</span>
+<span class="nc" id="L420">                    listenersCopy.addAll(instances);</span>
+                }
+<span class="fc" id="L422">                synchronized (functionalListeners) {</span>
+<span class="fc" id="L423">                    List list = functionalListeners.get(eventName);</span>
+<span class="fc bfc" id="L424" title="All 2 branches covered.">                    if (list != null) {</span>
+<span class="fc bfc" id="L425" title="All 2 branches covered.">                        for (Object listener : list) {</span>
+<span class="fc" id="L426">                            listenersCopy.add(listener);</span>
+<span class="fc" id="L427">                        }</span>
                     }
-<span class="pc" id="L365">                }</span>
+<span class="pc" id="L429">                }</span>
 
-<span class="fc bfc" id="L367" title="All 2 branches covered.">                for (Object listener : listenersCopy) {</span>
-<span class="fc bfc" id="L368" title="All 2 branches covered.">                    if (listener instanceof RunnableWithArgs) {</span>
-<span class="fc" id="L369">                        fireEvent((RunnableWithArgs) listener, params);</span>
-<span class="pc bpc" id="L370" title="1 of 2 branches missed.">                    } else if (listener instanceof CallableWithArgs) {</span>
-<span class="nc" id="L371">                        fireEvent((CallableWithArgs&lt;?&gt;) listener, params);</span>
+<span class="fc bfc" id="L431" title="All 2 branches covered.">                for (Object listener : listenersCopy) {</span>
+<span class="pc bpc" id="L432" title="1 of 2 branches missed.">                    if (listener instanceof RunnableWithArgs) {</span>
+<span class="fc" id="L433">                        fireEvent((RunnableWithArgs) listener, params);</span>
+<span class="nc bnc" id="L434" title="All 2 branches missed.">                    } else if (listener instanceof CallableWithArgs) {</span>
+<span class="nc" id="L435">                        fireEvent((CallableWithArgs&lt;?&gt;) listener, params);</span>
                     } else {
-<span class="fc" id="L373">                        fireEvent(listener, eventHandler, params);</span>
+<span class="nc" id="L437">                        fireEvent(listener, eventHandler, params);</span>
                     }
-<span class="fc" id="L375">                }</span>
-<span class="fc" id="L376">            }</span>
+<span class="fc" id="L439">                }</span>
+<span class="fc" id="L440">            }</span>
         };
     }
 
-    protected void removeNestedListeners(@Nonnull Object owner) {
-<span class="nc" id="L381">        requireNonNull(owner, ERROR_OWNER_NULL);</span>
-<span class="nc" id="L382">        synchronized (functionalListeners) {</span>
-<span class="nc bnc" id="L383" title="All 2 branches missed.">            for (Map.Entry&lt;String, List&lt;Object&gt;&gt; event : functionalListeners.entrySet()) {</span>
-<span class="nc" id="L384">                String eventName = event.getKey();</span>
-<span class="nc" id="L385">                List&lt;Object&gt; listenerList = event.getValue();</span>
-<span class="nc" id="L386">                List&lt;Object&gt; toRemove = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L387" title="All 2 branches missed.">                for (Object listener : listenerList) {</span>
-<span class="nc bnc" id="L388" title="All 2 branches missed.">                    if (isNestedListener(listener, owner)) {</span>
-<span class="nc" id="L389">                        toRemove.add(listener);</span>
+    protected boolean removeNestedListeners(@Nonnull Object owner) {
+<span class="nc" id="L445">        requireNonNull(owner, ERROR_OWNER_NULL);</span>
+
+<span class="nc" id="L447">        boolean removed = false;</span>
+<span class="nc" id="L448">        synchronized (functionalListeners) {</span>
+<span class="nc bnc" id="L449" title="All 2 branches missed.">            for (Map.Entry&lt;String, List&lt;Object&gt;&gt; event : functionalListeners.entrySet()) {</span>
+<span class="nc" id="L450">                String eventName = event.getKey();</span>
+<span class="nc" id="L451">                List&lt;Object&gt; listenerList = event.getValue();</span>
+<span class="nc" id="L452">                List&lt;Object&gt; toRemove = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L453" title="All 2 branches missed.">                for (Object listener : listenerList) {</span>
+<span class="nc bnc" id="L454" title="All 2 branches missed.">                    if (isNestedListener(listener, owner)) {</span>
+<span class="nc" id="L455">                        toRemove.add(listener);</span>
                     }
-<span class="nc" id="L391">                }</span>
-<span class="nc bnc" id="L392" title="All 2 branches missed.">                for (Object listener : toRemove) {</span>
-<span class="nc" id="L393">                    LOG.debug(&quot;Removing listener {} on {}&quot;, listener.getClass().getName(), capitalize(eventName));</span>
-<span class="nc" id="L394">                    listenerList.remove(listener);</span>
-<span class="nc" id="L395">                }</span>
-<span class="nc" id="L396">            }</span>
-<span class="nc" id="L397">        }</span>
-<span class="nc" id="L398">    }</span>
+<span class="nc" id="L457">                }</span>
+<span class="nc bnc" id="L458" title="All 2 branches missed.">                removed = toRemove.size() &gt; 0;</span>
+<span class="nc bnc" id="L459" title="All 2 branches missed.">                for (Object listener : toRemove) {</span>
+<span class="nc" id="L460">                    LOG.debug(&quot;Removing listener {} on {}&quot;, listener.getClass().getName(), capitalize(eventName));</span>
+<span class="nc" id="L461">                    listenerList.remove(listener);</span>
+<span class="nc" id="L462">                }</span>
+<span class="nc" id="L463">            }</span>
+<span class="nc" id="L464">        }</span>
+
+<span class="nc" id="L466">        return removed;</span>
+    }
 
     protected boolean isNestedListener(@Nonnull Object listener, @Nonnull Object owner) {
-<span class="nc" id="L401">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
-<span class="nc" id="L402">        requireNonNull(owner, ERROR_OWNER_NULL);</span>
-<span class="nc" id="L403">        Class&lt;?&gt; listenerClass = listener.getClass();</span>
-<span class="nc bnc" id="L404" title="All 2 branches missed.">        return listenerClass.isMemberClass() &amp;&amp;</span>
-<span class="nc bnc" id="L405" title="All 2 branches missed.">            listenerClass.getEnclosingClass().equals(owner.getClass()) &amp;&amp;</span>
-<span class="nc bnc" id="L406" title="All 2 branches missed.">            owner.equals(GriffonClassUtils.getFieldValue(listener, &quot;this$0&quot;));</span>
+<span class="nc" id="L470">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="nc" id="L471">        requireNonNull(owner, ERROR_OWNER_NULL);</span>
+<span class="nc" id="L472">        Class&lt;?&gt; listenerClass = listener.getClass();</span>
+<span class="nc bnc" id="L473" title="All 2 branches missed.">        return listenerClass.isMemberClass() &amp;&amp;</span>
+<span class="nc bnc" id="L474" title="All 2 branches missed.">            listenerClass.getEnclosingClass().equals(owner.getClass()) &amp;&amp;</span>
+<span class="nc bnc" id="L475" title="All 2 branches missed.">            owner.equals(GriffonClassUtils.getFieldValue(listener, &quot;this$0&quot;));</span>
     }
 
     protected Object[] asArray(@Nonnull List&lt;?&gt; list) {
-<span class="fc" id="L410">        return list.toArray(new Object[list.size()]);</span>
+<span class="fc" id="L479">        return list.toArray(new Object[list.size()]);</span>
     }
 
-<span class="fc" id="L413">    protected static class MethodCache {</span>
-<span class="fc" id="L414">        private final Map&lt;Class&lt;?&gt;, Map&lt;String, List&lt;MethodInfo&gt;&gt;&gt; methodMap = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L482">    protected static class MethodCache {</span>
+<span class="fc" id="L483">        private final Map&lt;Class&lt;?&gt;, Map&lt;String, List&lt;MethodInfo&gt;&gt;&gt; methodMap = new ConcurrentHashMap&lt;&gt;();</span>
 
         public boolean isEventListener(@Nonnull Class&lt;?&gt; klass) {
-<span class="fc" id="L417">            Map&lt;String, List&lt;MethodInfo&gt;&gt; methodMetadata = methodMap.get(klass);</span>
-<span class="pc bpc" id="L418" title="1 of 2 branches missed.">            if (methodMetadata == null) {</span>
-<span class="fc" id="L419">                methodMetadata = fetchMethodMetadata(klass);</span>
-<span class="fc bfc" id="L420" title="All 2 branches covered.">                if (!methodMetadata.isEmpty()) {</span>
-<span class="fc" id="L421">                    methodMap.put(klass, methodMetadata);</span>
+<span class="fc" id="L486">            Map&lt;String, List&lt;MethodInfo&gt;&gt; methodMetadata = methodMap.get(klass);</span>
+<span class="pc bpc" id="L487" title="1 of 2 branches missed.">            if (methodMetadata == null) {</span>
+<span class="fc" id="L488">                methodMetadata = fetchMethodMetadata(klass);</span>
+<span class="pc bpc" id="L489" title="1 of 2 branches missed.">                if (!methodMetadata.isEmpty()) {</span>
+<span class="nc" id="L490">                    methodMap.put(klass, methodMetadata);</span>
                 } else {
-<span class="fc" id="L423">                    methodMetadata = null;</span>
+<span class="fc" id="L492">                    methodMetadata = null;</span>
                 }
             }
-<span class="fc bfc" id="L426" title="All 2 branches covered.">            return methodMetadata != null;</span>
+<span class="pc bpc" id="L495" title="1 of 2 branches missed.">            return methodMetadata != null;</span>
         }
 
         @Nullable
         public Method findMatchingMethodFor(@Nonnull Class&lt;?&gt; klass, @Nonnull MethodDescriptor target) {
-<span class="fc" id="L431">            Map&lt;String, List&lt;MethodInfo&gt;&gt; methodMetadata = methodMap.get(klass);</span>
+<span class="nc" id="L500">            Map&lt;String, List&lt;MethodInfo&gt;&gt; methodMetadata = methodMap.get(klass);</span>
 
-<span class="fc" id="L433">            List&lt;MethodInfo&gt; descriptors = methodMetadata.get(target.getName());</span>
-<span class="pc bpc" id="L434" title="1 of 2 branches missed.">            if (descriptors != null) {</span>
-<span class="nc bnc" id="L435" title="All 2 branches missed.">                for (MethodInfo info : descriptors) {</span>
-<span class="nc bnc" id="L436" title="All 2 branches missed.">                    if (info.descriptor.matches(target)) {</span>
-<span class="nc" id="L437">                        return info.method;</span>
+<span class="nc" id="L502">            List&lt;MethodInfo&gt; descriptors = methodMetadata.get(target.getName());</span>
+<span class="nc bnc" id="L503" title="All 2 branches missed.">            if (descriptors != null) {</span>
+<span class="nc bnc" id="L504" title="All 2 branches missed.">                for (MethodInfo info : descriptors) {</span>
+<span class="nc bnc" id="L505" title="All 2 branches missed.">                    if (info.descriptor.matches(target)) {</span>
+<span class="nc" id="L506">                        return info.method;</span>
                     }
-<span class="nc" id="L439">                }</span>
+<span class="nc" id="L508">                }</span>
             }
 
-<span class="fc" id="L442">            return null;</span>
+<span class="nc" id="L511">            return null;</span>
         }
 
         private Map&lt;String, List&lt;MethodInfo&gt;&gt; fetchMethodMetadata(Class&lt;?&gt; klass) {
-<span class="fc" id="L446">            Map&lt;String, List&lt;MethodInfo&gt;&gt; methodMetadata = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L515">            Map&lt;String, List&lt;MethodInfo&gt;&gt; methodMetadata = new LinkedHashMap&lt;&gt;();</span>
 
-<span class="fc bfc" id="L448" title="All 2 branches covered.">            for (Method method : klass.getMethods()) {</span>
-<span class="fc" id="L449">                MethodDescriptor descriptor = MethodDescriptor.forMethod(method);</span>
-<span class="fc bfc" id="L450" title="All 2 branches covered.">                if (GriffonClassUtils.isEventHandler(descriptor)) {</span>
-<span class="fc" id="L451">                    String methodName = method.getName();</span>
-<span class="fc" id="L452">                    List&lt;MethodInfo&gt; descriptors = methodMetadata.get(methodName);</span>
-<span class="pc bpc" id="L453" title="1 of 2 branches missed.">                    if (descriptors == null) {</span>
-<span class="fc" id="L454">                        descriptors = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L455">                        methodMetadata.put(methodName, descriptors);</span>
+<span class="fc bfc" id="L517" title="All 2 branches covered.">            for (Method method : klass.getMethods()) {</span>
+<span class="fc" id="L518">                MethodDescriptor descriptor = MethodDescriptor.forMethod(method);</span>
+<span class="pc bpc" id="L519" title="1 of 2 branches missed.">                if (GriffonClassUtils.isEventHandler(descriptor)) {</span>
+<span class="nc" id="L520">                    String methodName = method.getName();</span>
+<span class="nc" id="L521">                    List&lt;MethodInfo&gt; descriptors = methodMetadata.get(methodName);</span>
+<span class="nc bnc" id="L522" title="All 2 branches missed.">                    if (descriptors == null) {</span>
+<span class="nc" id="L523">                        descriptors = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L524">                        methodMetadata.put(methodName, descriptors);</span>
                     }
-<span class="fc" id="L457">                    descriptors.add(new MethodInfo(descriptor, method));</span>
+<span class="nc" id="L526">                    descriptors.add(new MethodInfo(descriptor, method));</span>
                 }
             }
 
-<span class="fc" id="L461">            return methodMetadata;</span>
+<span class="fc" id="L530">            return methodMetadata;</span>
         }
     }
 
@@ -466,17 +535,17 @@ import static java.util.Objects.requireNonNull;
         private final MethodDescriptor descriptor;
         private final Method method;
 
-<span class="fc" id="L469">        public MethodInfo(MethodDescriptor descriptor, Method method) {</span>
-<span class="fc" id="L470">            this.descriptor = descriptor;</span>
-<span class="fc" id="L471">            this.method = method;</span>
-<span class="fc" id="L472">        }</span>
+<span class="nc" id="L538">        public MethodInfo(MethodDescriptor descriptor, Method method) {</span>
+<span class="nc" id="L539">            this.descriptor = descriptor;</span>
+<span class="nc" id="L540">            this.method = method;</span>
+<span class="nc" id="L541">        }</span>
 
         public MethodDescriptor getDescriptor() {
-<span class="nc" id="L475">            return descriptor;</span>
+<span class="nc" id="L544">            return descriptor;</span>
         }
 
         public Method getMethod() {
-<span class="nc" id="L479">            return method;</span>
+<span class="nc" id="L548">            return method;</span>
         }
     }
 }

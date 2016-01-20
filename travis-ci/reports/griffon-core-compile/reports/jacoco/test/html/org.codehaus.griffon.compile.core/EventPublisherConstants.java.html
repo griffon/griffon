@@ -15,6 +15,7 @@
  */
 package org.codehaus.griffon.compile.core;
 
+import static org.codehaus.griffon.compile.core.MethodDescriptor.annotatedMethod;
 import static org.codehaus.griffon.compile.core.MethodDescriptor.annotatedType;
 import static org.codehaus.griffon.compile.core.MethodDescriptor.annotations;
 import static org.codehaus.griffon.compile.core.MethodDescriptor.args;
@@ -42,162 +43,175 @@ public interface EventPublisherConstants extends BaseConstants {
     String METHOD_PUBLISH_EVENT_ASYNC = &quot;publishEventAsync&quot;;
     String METHOD_IS_EVENT_PUBLISHING_ENABLED = &quot;isEventPublishingEnabled&quot;;
     String METHOD_SET_EVENT_PUBLISHING_ENABLED = &quot;setEventPublishingEnabled&quot;;
+    String METHOD_GET_EVENT_LISTENERS = &quot;getEventListeners&quot;;
 
     String E = &quot;E&quot;;
 
-<span class="nc" id="L48">    MethodDescriptor[] METHODS = new MethodDescriptor[]{</span>
-<span class="nc" id="L49">        method(</span>
-<span class="nc" id="L50">            type(VOID),</span>
+<span class="nc" id="L50">    MethodDescriptor[] METHODS = new MethodDescriptor[]{</span>
+<span class="nc" id="L51">        method(</span>
+<span class="nc" id="L52">            type(VOID),</span>
             METHOD_ADD_EVENT_LISTENER,
-<span class="nc" id="L52">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_OBJECT))</span>
+<span class="nc" id="L54">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_OBJECT))</span>
         ),
-<span class="nc" id="L54">        method(</span>
-<span class="nc" id="L55">            type(VOID),</span>
+<span class="nc" id="L56">        method(</span>
+<span class="nc" id="L57">            type(VOID),</span>
             METHOD_ADD_EVENT_LISTENER,
-<span class="nc" id="L57">            args(</span>
-<span class="nc" id="L58">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="nc" id="L59">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))</span>
+<span class="nc" id="L59">            args(</span>
+<span class="nc" id="L60">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="nc" id="L61">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))</span>
         ),
-<span class="nc" id="L61">        method(</span>
-<span class="nc" id="L62">            type(VOID),</span>
+<span class="nc" id="L63">        method(</span>
+<span class="nc" id="L64">            type(VOID),</span>
             METHOD_ADD_EVENT_LISTENER,
-<span class="nc" id="L64">            args(</span>
-<span class="nc" id="L65">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="nc" id="L66">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_RUNNABLEWITHARGS, WILDCARD))</span>
+<span class="nc" id="L66">            args(</span>
+<span class="nc" id="L67">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="nc" id="L68">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_RUNNABLEWITHARGS, WILDCARD))</span>
         ),
-<span class="nc" id="L68">        method(</span>
-<span class="nc" id="L69">            type(VOID),</span>
+<span class="nc" id="L70">        method(</span>
+<span class="nc" id="L71">            type(VOID),</span>
             METHOD_ADD_EVENT_LISTENER,
-<span class="nc" id="L71">            args(typeWithParams(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, type(JAVA_LANG_STRING), type(JAVA_LANG_OBJECT)))</span>
+<span class="nc" id="L73">            args(typeWithParams(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, type(JAVA_LANG_STRING), type(JAVA_LANG_OBJECT)))</span>
         ),
-<span class="nc" id="L73">        method(</span>
-<span class="nc" id="L74">            type(VOID),</span>
-<span class="nc" id="L75">            typeParams(</span>
-<span class="nc" id="L76">                typeParam(E, EVENT_TYPE)</span>
+<span class="nc" id="L75">        method(</span>
+<span class="nc" id="L76">            type(VOID),</span>
+<span class="nc" id="L77">            typeParams(</span>
+<span class="nc" id="L78">                typeParam(E, EVENT_TYPE)</span>
             ),
             METHOD_ADD_EVENT_LISTENER,
-<span class="nc" id="L79">            args(</span>
-<span class="nc" id="L80">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, E),</span>
-<span class="nc" id="L81">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))</span>
+<span class="nc" id="L81">            args(</span>
+<span class="nc" id="L82">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, E),</span>
+<span class="nc" id="L83">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))</span>
         ),
-<span class="nc" id="L83">        method(</span>
-<span class="nc" id="L84">            type(VOID),</span>
-<span class="nc" id="L85">            typeParams(</span>
-<span class="nc" id="L86">                typeParam(E, EVENT_TYPE)</span>
+<span class="nc" id="L85">        method(</span>
+<span class="nc" id="L86">            type(VOID),</span>
+<span class="nc" id="L87">            typeParams(</span>
+<span class="nc" id="L88">                typeParam(E, EVENT_TYPE)</span>
             ),
             METHOD_ADD_EVENT_LISTENER,
-<span class="nc" id="L89">            args(</span>
-<span class="nc" id="L90">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, E),</span>
-<span class="nc" id="L91">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_RUNNABLEWITHARGS, WILDCARD))</span>
+<span class="nc" id="L91">            args(</span>
+<span class="nc" id="L92">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, E),</span>
+<span class="nc" id="L93">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_RUNNABLEWITHARGS, WILDCARD))</span>
         ),
 
-<span class="nc" id="L94">        method(</span>
-<span class="nc" id="L95">            type(VOID),</span>
+<span class="nc" id="L96">        method(</span>
+<span class="nc" id="L97">            type(VOID),</span>
             METHOD_REMOVE_EVENT_LISTENER,
-<span class="nc" id="L97">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_OBJECT))</span>
+<span class="nc" id="L99">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_OBJECT))</span>
         ),
-<span class="nc" id="L99">        method(</span>
-<span class="nc" id="L100">            type(VOID),</span>
+<span class="nc" id="L101">        method(</span>
+<span class="nc" id="L102">            type(VOID),</span>
             METHOD_REMOVE_EVENT_LISTENER,
-<span class="nc" id="L102">            args(</span>
-<span class="nc" id="L103">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="nc" id="L104">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))</span>
+<span class="nc" id="L104">            args(</span>
+<span class="nc" id="L105">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="nc" id="L106">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))</span>
         ),
-<span class="nc" id="L106">        method(</span>
-<span class="nc" id="L107">            type(VOID),</span>
+<span class="nc" id="L108">        method(</span>
+<span class="nc" id="L109">            type(VOID),</span>
             METHOD_REMOVE_EVENT_LISTENER,
-<span class="nc" id="L109">            args(</span>
-<span class="nc" id="L110">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="nc" id="L111">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_RUNNABLEWITHARGS, WILDCARD))</span>
+<span class="nc" id="L111">            args(</span>
+<span class="nc" id="L112">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="nc" id="L113">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_RUNNABLEWITHARGS, WILDCARD))</span>
         ),
-<span class="nc" id="L113">        method(</span>
-<span class="nc" id="L114">            type(VOID),</span>
+<span class="nc" id="L115">        method(</span>
+<span class="nc" id="L116">            type(VOID),</span>
             METHOD_REMOVE_EVENT_LISTENER,
-<span class="nc" id="L116">            args(typeWithParams(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, type(JAVA_LANG_STRING), type(JAVA_LANG_OBJECT)))</span>
+<span class="nc" id="L118">            args(typeWithParams(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, type(JAVA_LANG_STRING), type(JAVA_LANG_OBJECT)))</span>
         ),
-<span class="nc" id="L118">        method(</span>
-<span class="nc" id="L119">            type(VOID),</span>
-<span class="nc" id="L120">            typeParams(</span>
-<span class="nc" id="L121">                typeParam(E, EVENT_TYPE)</span>
+<span class="nc" id="L120">        method(</span>
+<span class="nc" id="L121">            type(VOID),</span>
+<span class="nc" id="L122">            typeParams(</span>
+<span class="nc" id="L123">                typeParam(E, EVENT_TYPE)</span>
             ),
             METHOD_REMOVE_EVENT_LISTENER,
-<span class="nc" id="L124">            args(</span>
-<span class="nc" id="L125">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, E),</span>
-<span class="nc" id="L126">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))</span>
+<span class="nc" id="L126">            args(</span>
+<span class="nc" id="L127">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, E),</span>
+<span class="nc" id="L128">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))</span>
         ),
-<span class="nc" id="L128">        method(</span>
-<span class="nc" id="L129">            type(VOID),</span>
-<span class="nc" id="L130">            typeParams(</span>
-<span class="nc" id="L131">                typeParam(E, EVENT_TYPE)</span>
+<span class="nc" id="L130">        method(</span>
+<span class="nc" id="L131">            type(VOID),</span>
+<span class="nc" id="L132">            typeParams(</span>
+<span class="nc" id="L133">                typeParam(E, EVENT_TYPE)</span>
             ),
             METHOD_REMOVE_EVENT_LISTENER,
-<span class="nc" id="L134">            args(</span>
-<span class="nc" id="L135">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, E),</span>
-<span class="nc" id="L136">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_RUNNABLEWITHARGS, WILDCARD))</span>
+<span class="nc" id="L136">            args(</span>
+<span class="nc" id="L137">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, E),</span>
+<span class="nc" id="L138">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_RUNNABLEWITHARGS, WILDCARD))</span>
         ),
 
-<span class="nc" id="L139">        method(</span>
-<span class="nc" id="L140">            type(VOID),</span>
+<span class="nc" id="L141">        method(</span>
+<span class="nc" id="L142">            type(VOID),</span>
             METHOD_PUBLISH_EVENT,
-<span class="nc" id="L142">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
+<span class="nc" id="L144">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
         ),
-<span class="nc" id="L144">        method(</span>
-<span class="nc" id="L145">            type(VOID),</span>
+<span class="nc" id="L146">        method(</span>
+<span class="nc" id="L147">            type(VOID),</span>
             METHOD_PUBLISH_EVENT,
-<span class="nc" id="L147">            args(</span>
-<span class="nc" id="L148">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="nc" id="L149">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD))</span>
+<span class="nc" id="L149">            args(</span>
+<span class="nc" id="L150">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="nc" id="L151">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD))</span>
         ),
-<span class="nc" id="L151">        method(</span>
-<span class="nc" id="L152">            type(VOID),</span>
+<span class="nc" id="L153">        method(</span>
+<span class="nc" id="L154">            type(VOID),</span>
             METHOD_PUBLISH_EVENT,
-<span class="nc" id="L154">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), EVENT_TYPE))</span>
+<span class="nc" id="L156">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), EVENT_TYPE))</span>
         ),
 
-<span class="nc" id="L157">        method(</span>
-<span class="nc" id="L158">            type(VOID),</span>
+<span class="nc" id="L159">        method(</span>
+<span class="nc" id="L160">            type(VOID),</span>
             METHOD_PUBLISH_EVENT_OUTSIDE_UI,
-<span class="nc" id="L160">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
+<span class="nc" id="L162">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
         ),
-<span class="nc" id="L162">        method(</span>
-<span class="nc" id="L163">            type(VOID),</span>
+<span class="nc" id="L164">        method(</span>
+<span class="nc" id="L165">            type(VOID),</span>
             METHOD_PUBLISH_EVENT_OUTSIDE_UI,
-<span class="nc" id="L165">            args(</span>
-<span class="nc" id="L166">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="nc" id="L167">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD))</span>
+<span class="nc" id="L167">            args(</span>
+<span class="nc" id="L168">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="nc" id="L169">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD))</span>
         ),
-<span class="nc" id="L169">        method(</span>
-<span class="nc" id="L170">            type(VOID),</span>
+<span class="nc" id="L171">        method(</span>
+<span class="nc" id="L172">            type(VOID),</span>
             METHOD_PUBLISH_EVENT_OUTSIDE_UI,
-<span class="nc" id="L172">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), EVENT_TYPE))</span>
+<span class="nc" id="L174">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), EVENT_TYPE))</span>
         ),
 
-<span class="nc" id="L175">        method(</span>
-<span class="nc" id="L176">            type(VOID),</span>
+<span class="nc" id="L177">        method(</span>
+<span class="nc" id="L178">            type(VOID),</span>
             METHOD_PUBLISH_EVENT_ASYNC,
-<span class="nc" id="L178">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
+<span class="nc" id="L180">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
         ),
-<span class="nc" id="L180">        method(</span>
-<span class="nc" id="L181">            type(VOID),</span>
+<span class="nc" id="L182">        method(</span>
+<span class="nc" id="L183">            type(VOID),</span>
             METHOD_PUBLISH_EVENT_ASYNC,
-<span class="nc" id="L183">            args(</span>
-<span class="nc" id="L184">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="nc" id="L185">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD))</span>
+<span class="nc" id="L185">            args(</span>
+<span class="nc" id="L186">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="nc" id="L187">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD))</span>
         ),
-<span class="nc" id="L187">        method(</span>
-<span class="nc" id="L188">            type(VOID),</span>
+<span class="nc" id="L189">        method(</span>
+<span class="nc" id="L190">            type(VOID),</span>
             METHOD_PUBLISH_EVENT_ASYNC,
-<span class="nc" id="L190">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), EVENT_TYPE))</span>
+<span class="nc" id="L192">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), EVENT_TYPE))</span>
         ),
 
-<span class="nc" id="L193">        method(</span>
-<span class="nc" id="L194">            type(BOOLEAN),</span>
+<span class="nc" id="L195">        method(</span>
+<span class="nc" id="L196">            type(BOOLEAN),</span>
             METHOD_IS_EVENT_PUBLISHING_ENABLED
         ),
-<span class="nc" id="L197">        method(</span>
-<span class="nc" id="L198">            type(VOID),</span>
+<span class="nc" id="L199">        method(</span>
+<span class="nc" id="L200">            type(VOID),</span>
             METHOD_SET_EVENT_PUBLISHING_ENABLED,
-<span class="nc" id="L200">            args(type(BOOLEAN))</span>
+<span class="nc" id="L202">            args(type(BOOLEAN))</span>
+        ),
+
+<span class="nc" id="L205">        annotatedMethod(</span>
+<span class="nc" id="L206">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="nc" id="L207">            typeWithParams(JAVA_UTIL_COLLECTION, type(JAVA_LANG_OBJECT)),</span>
+            METHOD_GET_EVENT_LISTENERS
+        ),
+<span class="nc" id="L210">        annotatedMethod(</span>
+<span class="nc" id="L211">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="nc" id="L212">            typeWithParams(JAVA_UTIL_COLLECTION, type(JAVA_LANG_OBJECT)),</span>
+            METHOD_GET_EVENT_LISTENERS,
+<span class="nc" id="L214">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
         )
     };
 }
