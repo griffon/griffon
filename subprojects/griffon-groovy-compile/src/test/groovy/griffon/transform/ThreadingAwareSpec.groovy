@@ -23,20 +23,20 @@ import java.lang.reflect.Method
 class ThreadingAwareSpec extends Specification {
     def 'ThreadingAwareASTTransformation is applied to a bean via @ThreadingAware'() {
         given:
-            GroovyShell shell = new GroovyShell()
+        GroovyShell shell = new GroovyShell()
 
         when:
-            def bean = shell.evaluate('''
+        def bean = shell.evaluate('''
             @griffon.transform.ThreadingAware
             class Bean { }
             new Bean()
             ''')
 
         then:
-            bean instanceof ThreadingHandler
-            ThreadingHandler.methods.every { Method target ->
-                bean.class.declaredMethods.find { Method candidate ->
-                    candidate.name == target.name &&
+        bean instanceof ThreadingHandler
+        ThreadingHandler.methods.each { Method target ->
+            assert bean.class.declaredMethods.find { Method candidate ->
+                candidate.name == target.name &&
                     candidate.returnType == target.returnType &&
                     candidate.parameterTypes == target.parameterTypes &&
                     candidate.exceptionTypes == target.exceptionTypes

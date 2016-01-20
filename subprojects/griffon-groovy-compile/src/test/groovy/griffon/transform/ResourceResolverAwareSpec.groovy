@@ -23,20 +23,20 @@ import java.lang.reflect.Method
 class ResourceResolverAwareSpec extends Specification {
     def 'ResourceResolverASTTransformation is applied to a bean via @ResourceResolverAware'() {
         given:
-             GroovyShell shell = new GroovyShell()
+        GroovyShell shell = new GroovyShell()
 
         when:
-            def bean = shell.evaluate('''
+        def bean = shell.evaluate('''
             @griffon.transform.ResourceResolverAware
             class Bean { }
             new Bean()
             ''')
 
         then:
-            bean instanceof ResourceResolver
-            ResourceResolver.methods.every { Method target ->
-                bean.class.declaredMethods.find { Method candidate ->
-                    candidate.name == target.name &&
+        bean instanceof ResourceResolver
+        ResourceResolver.methods.each { Method target ->
+            assert bean.class.declaredMethods.find { Method candidate ->
+                candidate.name == target.name &&
                     candidate.returnType == target.returnType &&
                     candidate.parameterTypes == target.parameterTypes &&
                     candidate.exceptionTypes == target.exceptionTypes

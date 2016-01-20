@@ -20,6 +20,7 @@ import griffon.core.RunnableWithArgs;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -244,4 +245,24 @@ public interface EventPublisher {
      * @param enabled the value fot the enabled state.
      */
     void setEventPublishingEnabled(boolean enabled);
+
+    /**
+     * Returns an immutable snapshot view of all event listeners registered.
+     *
+     * @return an immutable collection of all registered listeners.
+     * @since 2.6.0
+     */
+    @Nonnull
+    Collection<Object> getEventListeners();
+
+
+    /**
+     * Returns an immutable snapshot view of all event listeners registered for the target event name.
+     *
+     * @param eventName the name of the event
+     * @return an immutable collection of all registered listeners for the target event name.
+     * @since 2.6.0
+     */
+    @Nonnull
+    Collection<Object> getEventListeners(@Nonnull String eventName);
 }

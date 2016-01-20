@@ -22,20 +22,20 @@ import java.lang.reflect.Method
 class VetoableSpec extends Specification {
     def 'VetoableASTTransformation is applied to a bean via @Vetoable'() {
         given:
-            GroovyShell shell = new GroovyShell()
+        GroovyShell shell = new GroovyShell()
 
         when:
-            def bean = shell.evaluate('''
+        def bean = shell.evaluate('''
             @griffon.transform.Vetoable
             class Bean { }
             new Bean()
             ''')
 
         then:
-            bean instanceof griffon.core.Vetoable
-            griffon.core.Vetoable.methods.every { Method target ->
-                bean.class.declaredMethods.find { Method candidate ->
-                    candidate.name == target.name &&
+        bean instanceof griffon.core.Vetoable
+        griffon.core.Vetoable.methods.each { Method target ->
+            assert bean.class.declaredMethods.find { Method candidate ->
+                candidate.name == target.name &&
                     candidate.returnType == target.returnType &&
                     candidate.parameterTypes == target.parameterTypes &&
                     candidate.exceptionTypes == target.exceptionTypes

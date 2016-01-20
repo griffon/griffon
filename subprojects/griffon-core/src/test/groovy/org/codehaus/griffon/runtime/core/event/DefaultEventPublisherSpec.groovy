@@ -732,16 +732,42 @@ class DefaultEventPublisherSpec extends Specification {
         eventPublisher.eventPublishingEnabled == false
     }
 
+    def 'Query existing listeners by event name'() {
+        given:
+
+        String eventName1 = MyEvent1.simpleName
+        String eventName2 = MyEvent2.simpleName
+        TestRunnableEventHandler eventHandler1 = new TestRunnableEventHandler()
+        TestRunnableEventHandler eventHandler2 = new TestRunnableEventHandler()
+
+        expect:
+
+        !eventPublisher.eventListeners
+
+        when:
+
+        eventPublisher.addEventListener(eventName1, eventHandler1)
+        eventPublisher.addEventListener([(eventName2): eventHandler2])
+        eventPublisher.addEventListener(new EventHandler())
+        eventPublisher.addEventListener(new Subject().events)
+
+        then:
+
+        eventPublisher.eventListeners.size() == 5
+        eventPublisher.getEventListeners(eventName1).size() == 3
+        eventPublisher.getEventListeners(eventName2).size() == 2
+    }
+
     static final class TestModule extends AbstractModule {
         @Override
         protected void configure() {
             install(new GuiceBerryModule())
-            bind(ExecutorServiceManager).to(DefaultExecutorServiceManager).in(Singleton)
-            bind(UIThreadManager).to(UIThreadManagerTestSupport).in(Singleton)
-            bind(EventRouter).to(DefaultEventRouter).in(Singleton)
-            bind(EventPublisher).to(DefaultEventPublisher).in(Singleton)
-            bind(ExceptionHandler).toProvider(ExceptionHandlerProvider).in(Singleton)
-            bind(ExecutorService).annotatedWith(AnnotationUtils.named('defaultExecutorService')).toProvider(DefaultExecutorServiceProvider).in(Singleton)
+            bind(ExecutorServiceManager).to(DefaultExecutorServiceManager)
+            bind(UIThreadManager).to(UIThreadManagerTestSupport)
+            bind(EventRouter).to(DefaultEventRouter)
+            bind(EventPublisher).to(DefaultEventPublisher)
+            bind(ExceptionHandler).toProvider(ExceptionHandlerProvider)
+            bind(ExecutorService).annotatedWith(AnnotationUtils.named('defaultExecutorService')).toProvider(DefaultExecutorServiceProvider)
         }
     }
     

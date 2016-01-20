@@ -22,20 +22,20 @@ import java.lang.reflect.Method
 class EventPublisherSpec extends Specification {
     def 'EventPublisherASTTransformation is applied to a bean via @EventPublisher'() {
         given:
-            GroovyShell shell = new GroovyShell()
+        GroovyShell shell = new GroovyShell()
 
         when:
-            def bean = shell.evaluate('''
+        def bean = shell.evaluate('''
             @griffon.transform.EventPublisher
             class Bean { }
             new Bean()
             ''')
 
         then:
-            bean instanceof griffon.core.event.EventPublisher
-            griffon.core.event.EventPublisher.methods.every { Method target ->
-                bean.class.declaredMethods.find { Method candidate ->
-                    candidate.name == target.name &&
+        bean instanceof griffon.core.event.EventPublisher
+        griffon.core.event.EventPublisher.methods.each { Method target ->
+            assert bean.class.declaredMethods.find { Method candidate ->
+                candidate.name == target.name &&
                     candidate.returnType == target.returnType &&
                     candidate.parameterTypes == target.parameterTypes &&
                     candidate.exceptionTypes == target.exceptionTypes

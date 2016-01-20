@@ -23,37 +23,37 @@ import java.lang.reflect.Method
 class GriffonControllerSpec extends Specification {
     def 'GriffonControllerASTTransformation is applied to a controller class'() {
         given:
-            GroovyClassLoader gcl = new GroovyClassLoader()
+        GroovyClassLoader gcl = new GroovyClassLoader()
 
         when:
-            def clazz = gcl.parseClass('''
+        def clazz = gcl.parseClass('''
             @griffon.metadata.ArtifactProviderFor(griffon.core.artifact.GriffonController)
             class SimpleController { }
             ''')
 
         then:
-            GriffonController.isAssignableFrom(clazz)
+        GriffonController.isAssignableFrom(clazz)
     }
 
     def 'GriffonControllerASTTransformation is applied to a controller class with a custom superclass'() {
         given:
-            GroovyClassLoader gcl = new GroovyClassLoader()
+        GroovyClassLoader gcl = new GroovyClassLoader()
 
         when:
-            gcl.parseClass('''
+        gcl.parseClass('''
             class BaseController { }
             ''')
 
-            def clazz = gcl.parseClass('''
+        def clazz = gcl.parseClass('''
             @griffon.metadata.ArtifactProviderFor(griffon.core.artifact.GriffonController)
             class SimpleController extends BaseController { }
             ''')
 
         then:
-            GriffonController.isAssignableFrom(clazz)
-            GriffonController.methods.every { Method target ->
-                clazz.declaredMethods.find { Method candidate ->
-                    candidate.name == target.name &&
+        GriffonController.isAssignableFrom(clazz)
+        GriffonController.methods.each { Method target ->
+            assert clazz.declaredMethods.find { Method candidate ->
+                candidate.name == target.name &&
                     candidate.returnType == target.returnType &&
                     candidate.parameterTypes == target.parameterTypes &&
                     candidate.exceptionTypes == target.exceptionTypes

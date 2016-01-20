@@ -15,6 +15,7 @@
  */
 package org.codehaus.griffon.compile.core;
 
+import static org.codehaus.griffon.compile.core.MethodDescriptor.annotatedMethod;
 import static org.codehaus.griffon.compile.core.MethodDescriptor.annotatedType;
 import static org.codehaus.griffon.compile.core.MethodDescriptor.annotations;
 import static org.codehaus.griffon.compile.core.MethodDescriptor.args;
@@ -42,6 +43,7 @@ public interface EventPublisherConstants extends BaseConstants {
     String METHOD_PUBLISH_EVENT_ASYNC = "publishEventAsync";
     String METHOD_IS_EVENT_PUBLISHING_ENABLED = "isEventPublishingEnabled";
     String METHOD_SET_EVENT_PUBLISHING_ENABLED = "setEventPublishingEnabled";
+    String METHOD_GET_EVENT_LISTENERS = "getEventListeners";
 
     String E = "E";
 
@@ -198,6 +200,18 @@ public interface EventPublisherConstants extends BaseConstants {
             type(VOID),
             METHOD_SET_EVENT_PUBLISHING_ENABLED,
             args(type(BOOLEAN))
+        ),
+
+        annotatedMethod(
+            annotations(JAVAX_ANNOTATION_NONNULL),
+            typeWithParams(JAVA_UTIL_COLLECTION, type(JAVA_LANG_OBJECT)),
+            METHOD_GET_EVENT_LISTENERS
+        ),
+        annotatedMethod(
+            annotations(JAVAX_ANNOTATION_NONNULL),
+            typeWithParams(JAVA_UTIL_COLLECTION, type(JAVA_LANG_OBJECT)),
+            METHOD_GET_EVENT_LISTENERS,
+            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
         )
     };
 }

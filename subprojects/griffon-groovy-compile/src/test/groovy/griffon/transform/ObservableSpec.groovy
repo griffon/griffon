@@ -22,20 +22,20 @@ import java.lang.reflect.Method
 class ObservableSpec extends Specification {
     def 'ObservableASTTransformation is applied to a bean via @Observable'() {
         given:
-            GroovyShell shell = new GroovyShell()
+        GroovyShell shell = new GroovyShell()
 
         when:
-            def bean = shell.evaluate('''
+        def bean = shell.evaluate('''
             @griffon.transform.Observable
             class Bean { }
             new Bean()
             ''')
 
         then:
-            bean instanceof griffon.core.Observable
-            griffon.core.Observable.methods.every { Method target ->
-                bean.class.declaredMethods.find { Method candidate ->
-                    candidate.name == target.name &&
+        bean instanceof griffon.core.Observable
+        griffon.core.Observable.methods.each { Method target ->
+            assert bean.class.declaredMethods.find { Method candidate ->
+                candidate.name == target.name &&
                     candidate.returnType == target.returnType &&
                     candidate.parameterTypes == target.parameterTypes &&
                     candidate.exceptionTypes == target.exceptionTypes

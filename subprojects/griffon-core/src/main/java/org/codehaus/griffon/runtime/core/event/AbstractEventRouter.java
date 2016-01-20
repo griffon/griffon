@@ -29,9 +29,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static griffon.util.GriffonClassUtils.convertToTypeArray;
@@ -39,7 +42,7 @@ import static griffon.util.GriffonNameUtils.capitalize;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Arrays.asList;
 import static java.util.Collections.EMPTY_LIST;
-import static java.util.Collections.synchronizedList;
+import static java.util.Collections.unmodifiableCollection;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -59,7 +62,7 @@ public abstract class AbstractEventRouter implements EventRouter {
     private static final String ERROR_INSTANCE_NULL = "Argument 'instance' must not be null";
     private static final String ERROR_OWNER_NULL = "Argument 'owner' must not be null";
     private static final Logger LOG = LoggerFactory.getLogger(AbstractEventRouter.class);
-    protected final List<Object> instanceListeners = synchronizedList(new ArrayList<>());
+    protected final Map<String, List<Object>> instanceListeners = new ConcurrentHashMap<>();
     protected final Map<String, List<Object>> functionalListeners = new ConcurrentHashMap<>();
     private final MethodCache methodCache = new MethodCache();
     private boolean enabled = true;
@@ -213,14 +216,28 @@ public abstract class AbstractEventRouter implements EventRouter {
             return;
         }
 
-        synchronized (instanceListeners) {
-            if (instanceListeners.contains(listener)) return;
+        boolean added = false;
+        for (String eventName : methodCache.fetchMethodMetadata(listener.getClass()).keySet()) {
+            eventName = eventName.substring(2); // cut off "on" from the name
+            List<Object> instances = instanceListeners.get(eventName);
+            if (instances == null) {
+                instances = new ArrayList<>();
+                instanceListeners.put(eventName, instances);
+            }
+            synchronized (instances) {
+                if (!instances.contains(listener)) {
+                    added = true;
+                    instances.add(listener);
+                }
+            }
+        }
+
+        if (added) {
             try {
                 LOG.debug("Adding listener {}", listener);
             } catch (UnsupportedOperationException uoe) {
                 LOG.debug("Adding listener {}", listener.getClass().getName());
             }
-            instanceListeners.add(listener);
         }
     }
 
@@ -256,14 +273,28 @@ public abstract class AbstractEventRouter implements EventRouter {
             removeEventListener((Map) listener);
             return;
         }
-        synchronized (instanceListeners) {
+
+        boolean removed = false;
+        for (String eventName : methodCache.fetchMethodMetadata(listener.getClass()).keySet()) {
+            eventName = eventName.substring(2); // cut off "on" from the name
+            List<Object> instances = instanceListeners.get(eventName);
+            if (instances != null && instances.contains(listener)) {
+                instances.remove(listener);
+                removed = true;
+                if (instances.isEmpty()) {
+                    instanceListeners.remove(eventName);
+                }
+            }
+        }
+
+        boolean nestedRemoved = removeNestedListeners(listener);
+
+        if (removed || nestedRemoved) {
             try {
                 LOG.debug("Removing listener {}", listener);
             } catch (UnsupportedOperationException uoe) {
                 LOG.debug("Removing listener {}", listener.getClass().getName());
             }
-            instanceListeners.remove(listener);
-            removeNestedListeners(listener);
         }
     }
 
@@ -340,6 +371,39 @@ public abstract class AbstractEventRouter implements EventRouter {
         }
     }
 
+    @Nonnull
+    @Override
+    public Collection<Object> getEventListeners() {
+        List<Object> listeners = new ArrayList<>();
+        synchronized (instanceListeners) {
+            Set<Object> instances = new HashSet<>();
+            for (List<Object> objects : instanceListeners.values()) {
+                instances.addAll(objects);
+            }
+            listeners.addAll(instances);
+        }
+
+        synchronized (functionalListeners) {
+            for (List<Object> objects : functionalListeners.values()) {
+                listeners.addAll(objects);
+            }
+        }
+
+        return unmodifiableCollection(listeners);
+    }
+
+    @Nonnull
+    @Override
+    public Collection<Object> getEventListeners(@Nonnull String eventName) {
+        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
+        List<Object> listeners = new ArrayList<>();
+        List<Object> instances = instanceListeners.get(eventName);
+        if (instances != null) listeners.addAll(instances);
+        instances = functionalListeners.get(eventName);
+        if (instances != null) listeners.addAll(instances);
+        return unmodifiableCollection(listeners);
+    }
+
     protected Runnable buildPublisher(@Nonnull final String event, @Nonnull final List<?> params, @Nonnull final String mode) {
         requireNonNull(event, ERROR_EVENT_NULL);
         requireNonNull(params, ERROR_PARAMS_NULL);
@@ -350,10 +414,10 @@ public abstract class AbstractEventRouter implements EventRouter {
                 LOG.debug("Triggering event '{}' {}", eventName, mode);
                 String eventHandler = "on" + eventName;
                 // defensive copying to avoid CME during event dispatching
-                // GRIFFON-224
                 List<Object> listenersCopy = new ArrayList<>();
-                synchronized (instanceListeners) {
-                    listenersCopy.addAll(instanceListeners);
+                List<Object> instances = instanceListeners.get(eventName);
+                if (instances != null) {
+                    listenersCopy.addAll(instances);
                 }
                 synchronized (functionalListeners) {
                     List list = functionalListeners.get(eventName);
@@ -377,8 +441,10 @@ public abstract class AbstractEventRouter implements EventRouter {
         };
     }
 
-    protected void removeNestedListeners(@Nonnull Object owner) {
+    protected boolean removeNestedListeners(@Nonnull Object owner) {
         requireNonNull(owner, ERROR_OWNER_NULL);
+
+        boolean removed = false;
         synchronized (functionalListeners) {
             for (Map.Entry<String, List<Object>> event : functionalListeners.entrySet()) {
                 String eventName = event.getKey();
@@ -389,12 +455,15 @@ public abstract class AbstractEventRouter implements EventRouter {
                         toRemove.add(listener);
                     }
                 }
+                removed = toRemove.size() > 0;
                 for (Object listener : toRemove) {
                     LOG.debug("Removing listener {} on {}", listener.getClass().getName(), capitalize(eventName));
                     listenerList.remove(listener);
                 }
             }
         }
+
+        return removed;
     }
 
     protected boolean isNestedListener(@Nonnull Object listener, @Nonnull Object owner) {

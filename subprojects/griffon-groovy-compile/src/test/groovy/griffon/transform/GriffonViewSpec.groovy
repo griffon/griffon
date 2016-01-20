@@ -23,10 +23,10 @@ import java.lang.reflect.Method
 class GriffonViewSpec extends Specification {
     def 'GriffonViewASTTransformation is applied to a view class'() {
         given:
-            GroovyClassLoader gcl = new GroovyClassLoader()
+        GroovyClassLoader gcl = new GroovyClassLoader()
 
         when:
-            def clazz = gcl.parseClass('''
+        def clazz = gcl.parseClass('''
             @griffon.metadata.ArtifactProviderFor(griffon.core.artifact.GriffonView)
             class SimpleView {
                 void initUI() { }
@@ -34,19 +34,19 @@ class GriffonViewSpec extends Specification {
             ''')
 
         then:
-            GriffonView.isAssignableFrom(clazz)
+        GriffonView.isAssignableFrom(clazz)
     }
 
     def 'GriffonViewASTTransformation is applied to a view class with a custom superclass'() {
         given:
-            GroovyClassLoader gcl = new GroovyClassLoader()
+        GroovyClassLoader gcl = new GroovyClassLoader()
 
         when:
-            gcl.parseClass('''
+        gcl.parseClass('''
             class BaseView { }
             ''')
 
-            def clazz = gcl.parseClass('''
+        def clazz = gcl.parseClass('''
             @griffon.metadata.ArtifactProviderFor(griffon.core.artifact.GriffonView)
             class SimpleView extends BaseView {
                 void initUI() { }
@@ -54,10 +54,10 @@ class GriffonViewSpec extends Specification {
             ''')
 
         then:
-            GriffonView.isAssignableFrom(clazz)
-            GriffonView.methods.every { Method target ->
-                clazz.declaredMethods.find { Method candidate ->
-                    candidate.name == target.name &&
+        GriffonView.isAssignableFrom(clazz)
+        GriffonView.methods.each { Method target ->
+            assert clazz.declaredMethods.find { Method candidate ->
+                candidate.name == target.name &&
                     candidate.returnType == target.returnType &&
                     candidate.parameterTypes == target.parameterTypes &&
                     candidate.exceptionTypes == target.exceptionTypes

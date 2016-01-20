@@ -23,37 +23,37 @@ import java.lang.reflect.Method
 class GriffonServiceSpec extends Specification {
     def 'GriffonServiceASTTransformation is applied to a service class'() {
         given:
-            GroovyClassLoader gcl = new GroovyClassLoader()
+        GroovyClassLoader gcl = new GroovyClassLoader()
 
         when:
-            def clazz = gcl.parseClass('''
+        def clazz = gcl.parseClass('''
             @griffon.metadata.ArtifactProviderFor(griffon.core.artifact.GriffonService)
             class SimpleService { }
             ''')
 
         then:
-            GriffonService.isAssignableFrom(clazz)
+        GriffonService.isAssignableFrom(clazz)
     }
 
     def 'GriffonServiceASTTransformation is applied to a service class with a custom superclass'() {
         given:
-            GroovyClassLoader gcl = new GroovyClassLoader()
+        GroovyClassLoader gcl = new GroovyClassLoader()
 
         when:
-            gcl.parseClass('''
+        gcl.parseClass('''
             class BaseService { }
             ''')
 
-            def clazz = gcl.parseClass('''
+        def clazz = gcl.parseClass('''
             @griffon.metadata.ArtifactProviderFor(griffon.core.artifact.GriffonService)
             class SimpleService extends BaseService { }
             ''')
 
         then:
-            GriffonService.isAssignableFrom(clazz)
-            GriffonService.methods.every { Method target ->
-                clazz.declaredMethods.find { Method candidate ->
-                    candidate.name == target.name &&
+        GriffonService.isAssignableFrom(clazz)
+        GriffonService.methods.each { Method target ->
+            assert clazz.declaredMethods.find { Method candidate ->
+                candidate.name == target.name &&
                     candidate.returnType == target.returnType &&
                     candidate.parameterTypes == target.parameterTypes &&
                     candidate.exceptionTypes == target.exceptionTypes

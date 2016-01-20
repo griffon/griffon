@@ -23,20 +23,20 @@ import java.lang.reflect.Method
 class MVCAwareSpec extends Specification {
     def 'MVCAwareASTTransformation is applied to a bean via @MVCAware'() {
         given:
-            GroovyShell shell = new GroovyShell()
+        GroovyShell shell = new GroovyShell()
 
         when:
-            def bean = shell.evaluate('''
+        def bean = shell.evaluate('''
             @griffon.transform.MVCAware
             class Bean { }
             new Bean()
             ''')
 
         then:
-            bean instanceof MVCHandler
-            MVCHandler.methods.every { Method target ->
-                bean.class.declaredMethods.find { Method candidate ->
-                    candidate.name == target.name &&
+        bean instanceof MVCHandler
+        MVCHandler.methods.each { Method target ->
+            assert bean.class.declaredMethods.find { Method candidate ->
+                candidate.name == target.name &&
                     candidate.returnType == target.returnType &&
                     candidate.parameterTypes == target.parameterTypes &&
                     candidate.exceptionTypes == target.exceptionTypes

@@ -23,20 +23,20 @@ import java.lang.reflect.Method
 class ResourcesAwareSpec extends Specification {
     def 'ResourcesAwareASTTransformation is applied to a bean via @ResourcesAware'() {
         given:
-             GroovyShell shell = new GroovyShell()
+        GroovyShell shell = new GroovyShell()
 
         when:
-            def bean = shell.evaluate('''
+        def bean = shell.evaluate('''
             @griffon.transform.ResourcesAware
             class Bean { }
             new Bean()
             ''')
 
         then:
-            bean instanceof ResourceHandler
-            ResourceHandler.methods.every { Method target ->
-                bean.class.declaredMethods.find { Method candidate ->
-                    candidate.name == target.name &&
+        bean instanceof ResourceHandler
+        ResourceHandler.methods.each { Method target ->
+            assert bean.class.declaredMethods.find { Method candidate ->
+                candidate.name == target.name &&
                     candidate.returnType == target.returnType &&
                     candidate.parameterTypes == target.parameterTypes &&
                     candidate.exceptionTypes == target.exceptionTypes

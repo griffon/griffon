@@ -23,37 +23,37 @@ import java.lang.reflect.Method
 class GriffonModelSpec extends Specification {
     def 'GriffonModelASTTransformation is applied to a model class'() {
         given:
-            GroovyClassLoader gcl = new GroovyClassLoader()
+        GroovyClassLoader gcl = new GroovyClassLoader()
 
         when:
-            def clazz = gcl.parseClass('''
+        def clazz = gcl.parseClass('''
             @griffon.metadata.ArtifactProviderFor(griffon.core.artifact.GriffonModel)
             class SimpleModel { }
             ''')
 
         then:
-            GriffonModel.isAssignableFrom(clazz)
+        GriffonModel.isAssignableFrom(clazz)
     }
 
     def 'GriffonModelASTTransformation is applied to a model class with a custom superclass'() {
         given:
-            GroovyClassLoader gcl = new GroovyClassLoader()
+        GroovyClassLoader gcl = new GroovyClassLoader()
 
         when:
-            gcl.parseClass('''
+        gcl.parseClass('''
             class BaseModel { }
             ''')
 
-            def clazz = gcl.parseClass('''
+        def clazz = gcl.parseClass('''
             @griffon.metadata.ArtifactProviderFor(griffon.core.artifact.GriffonModel)
             class SimpleModel extends BaseModel { }
             ''')
 
         then:
-            GriffonModel.isAssignableFrom(clazz)
-            GriffonModel.methods.every { Method target ->
-                clazz.declaredMethods.find { Method candidate ->
-                    candidate.name == target.name &&
+        GriffonModel.isAssignableFrom(clazz)
+        GriffonModel.methods.each { Method target ->
+            assert clazz.declaredMethods.find { Method candidate ->
+                candidate.name == target.name &&
                     candidate.returnType == target.returnType &&
                     candidate.parameterTypes == target.parameterTypes &&
                     candidate.exceptionTypes == target.exceptionTypes
