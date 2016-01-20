@@ -16,6 +16,7 @@
 package griffon.util
 
 import griffon.core.Vetoable
+import griffon.core.addon.GriffonAddon
 import griffon.core.artifact.GriffonArtifact
 import griffon.core.artifact.GriffonMvcArtifact
 import griffon.core.event.EventPublisher
@@ -44,7 +45,7 @@ class GriffonClassUtilsSpec extends Specification {
         assert result == GriffonClassUtils.isEventHandler(method)
 
         where:
-        [result, method] << [[true, 'onSomething'], [false, 'something']]
+        [result, method] << [[true, 'onSomething'], [false, 'something'], [false, 'onShutdown']]
     }
 
     void "isSetterMethod() returns #result for '#method' (java.lang.reflect.Method)"() {
@@ -76,7 +77,7 @@ class GriffonClassUtilsSpec extends Specification {
         assert result == GriffonClassUtils.isEventHandler(method, true)
 
         where:
-        [result, method] << methodsOf(MyEventHandler, true).plus(methodsOf(MyContributor, false))
+        [result, method] << methodsOf(MyEventHandler, true).plus(methodsOf(MyContributor, false)).plus(methodsOf(MyAddon, false))
     }
 
     void "isResourceResolverMethod() returns #result for '#method' (java.lang.reflect.Method)"() {
@@ -176,7 +177,7 @@ class GriffonClassUtilsSpec extends Specification {
         assert result == GriffonClassUtils.isEventHandler(method)
 
         where:
-        [result, method] << methodDescriptorsOf(MyEventHandler, true).plus(methodDescriptorsOf(MyContributor, false))
+        [result, method] << methodDescriptorsOf(MyEventHandler, true).plus(methodDescriptorsOf(MyContributor, false)).plus(methodsOf(MyAddon, false))
     }
 
     void "isResourceResolverMethod() returns #result for '#method'"() {
@@ -477,6 +478,10 @@ class GriffonClassUtilsSpec extends Specification {
 
     static interface MyContributor {
         void withSomething()
+    }
+
+    static interface MyAddon extends GriffonAddon {
+
     }
 
     static interface MyGetter {

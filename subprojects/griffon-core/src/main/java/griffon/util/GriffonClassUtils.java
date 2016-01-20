@@ -77,6 +77,7 @@ public class GriffonClassUtils {
     private static final String PROPERTY_GET_PREFIX = "get";
     private static final String PROPERTY_IS_PREFIX = "is";
     private static final String PROPERTY_SET_PREFIX = "set";
+    private static final String ON_SHUTDOWN_METHOD_NAME = "onShutdown";
     public static final Map<Class<?>, Class<?>> PRIMITIVE_TYPE_COMPATIBLE_CLASSES = new LinkedHashMap<>();
     public static final Map<String, String> PRIMITIVE_TYPE_COMPATIBLE_TYPES = new LinkedHashMap<>();
 
@@ -637,7 +638,8 @@ public class GriffonClassUtils {
      */
     public static boolean isEventHandler(@Nonnull String name) {
         requireNonBlank(name, ERROR_NAME_BLANK);
-        return EVENT_HANDLER_PATTERN.matcher(name).matches();
+        return EVENT_HANDLER_PATTERN.matcher(name).matches() &&
+            !ON_SHUTDOWN_METHOD_NAME.equals(name);
     }
 
     /**
@@ -697,7 +699,7 @@ public class GriffonClassUtils {
     public static boolean isEventHandler(@Nonnull MethodDescriptor method) {
         requireNonNull(method, ERROR_METHOD_NULL);
         return isInstanceMethod(method) &&
-            EVENT_HANDLER_PATTERN.matcher(method.getName()).matches();
+            isEventHandler(method.getName());
     }
 
     /**
