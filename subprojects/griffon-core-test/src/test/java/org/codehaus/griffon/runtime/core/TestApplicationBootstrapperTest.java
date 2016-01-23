@@ -89,11 +89,62 @@ public class TestApplicationBootstrapperTest {
     }
 
     @Test
+    public void modulesMethodSuppliesAllBindings_subclass() {
+        // given:
+        GriffonApplication application = new DefaultGriffonApplication();
+        TestApplicationBootstrapper bootstrapper = new TestApplicationBootstrapper(application);
+        Object testCase = new ChildModulesMethodTestcase();
+        bootstrapper.setTestCase(testCase);
+
+        // when:
+        List<Module> modules = bootstrapper.loadModules();
+
+        // then:
+        assertEquals(1, modules.size());
+        Map<ApplicationBootstrapper.Key, Binding<?>> bindings = getBindings(modules);
+        for (Map.Entry<ApplicationBootstrapper.Key, Binding<?>> e : bindings.entrySet()) {
+            if (e.getValue() instanceof TargetBinding) {
+                TargetBinding tb = (TargetBinding) e.getValue();
+                if (ApplicationClassLoader.class.isAssignableFrom(tb.getSource())) {
+                    assertTrue(TestApplicationClassLoader.class.isAssignableFrom(tb.getTarget()));
+                    return;
+                }
+            }
+        }
+        fail("Test case did not provide an overriding binding for " + ApplicationClassLoader.class.getName());
+    }
+
+    @Test
     public void moduleOverridesMethodConfiguresCustomApplicationClassLoader() {
         // given:
         GriffonApplication application = new DefaultGriffonApplication();
         TestApplicationBootstrapper bootstrapper = new TestApplicationBootstrapper(application);
         Object testCase = new ModuleOverridesMethodTestcase();
+        bootstrapper.setTestCase(testCase);
+
+        // when:
+        List<Module> modules = bootstrapper.loadModules();
+
+        // then:
+        Map<ApplicationBootstrapper.Key, Binding<?>> bindings = getBindings(modules);
+        for (Map.Entry<ApplicationBootstrapper.Key, Binding<?>> e : bindings.entrySet()) {
+            if (e.getValue() instanceof TargetBinding) {
+                TargetBinding tb = (TargetBinding) e.getValue();
+                if (ApplicationClassLoader.class.isAssignableFrom(tb.getSource())) {
+                    assertTrue(TestApplicationClassLoader.class.isAssignableFrom(tb.getTarget()));
+                    return;
+                }
+            }
+        }
+        fail("Test case did not provide an overriding binding for " + ApplicationClassLoader.class.getName());
+    }
+
+    @Test
+    public void moduleOverridesMethodConfiguresCustomApplicationClassLoader_subclass() {
+        // given:
+        GriffonApplication application = new DefaultGriffonApplication();
+        TestApplicationBootstrapper bootstrapper = new TestApplicationBootstrapper(application);
+        Object testCase = new ChildModuleOverridesMethodTestcase();
         bootstrapper.setTestCase(testCase);
 
         // when:

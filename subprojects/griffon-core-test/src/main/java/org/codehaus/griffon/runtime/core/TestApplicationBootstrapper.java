@@ -112,20 +112,21 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
         if (testCase instanceof TestModuleAware) {
             return ((TestModuleAware) testCase).modules();
         } else {
-            Method method = null;
-            try {
-                method = testCase.getClass().getDeclaredMethod(METHOD_MODULES);
-                method.setAccessible(true);
-            } catch (NoSuchMethodException e) {
-                return Collections.emptyList();
+            Class<?> clazz = testCase.getClass();
+            List<Class<?>> classes = new ArrayList<>();
+            while (clazz != null) {
+                classes.add(clazz);
+                clazz = clazz.getSuperclass();
             }
 
-            try {
-                return (List<Module>) method.invoke(testCase);
-            } catch (Exception e) {
-                throw new IllegalArgumentException("An error occurred while initializing modules from " + testCase.getClass().getName() + "." + METHOD_MODULES, e);
+            Collections.reverse(classes);
+            for (Class<?> c : classes) {
+                List<Module> ms = harvestModulesFromMethod(c, METHOD_MODULES);
+                if (!ms.isEmpty()) { return ms; }
             }
         }
+
+        return Collections.emptyList();
     }
 
     @SuppressWarnings("unchecked")
@@ -138,20 +139,38 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
             List<Module> overrides = ((TestModuleAware) testCase).moduleOverrides();
             modules.addAll(overrides);
         } else {
-            Method method = null;
-            try {
-                method = testCase.getClass().getDeclaredMethod(METHOD_MODULE_OVERRIDES);
-                method.setAccessible(true);
-            } catch (NoSuchMethodException e) {
-                return;
+            Class<?> clazz = testCase.getClass();
+            List<Class<?>> classes = new ArrayList<>();
+            while (clazz != null) {
+                classes.add(clazz);
+                clazz = clazz.getSuperclass();
             }
 
-            try {
-                List<Module> overrides = (List<Module>) method.invoke(testCase);
-                modules.addAll(overrides);
-            } catch (Exception e) {
-                throw new IllegalArgumentException("An error occurred while initializing modules from " + testCase.getClass().getName() + "." + METHOD_MODULE_OVERRIDES, e);
+            Collections.reverse(classes);
+            for (Class<?> c : classes) {
+                List<Module> overrides = harvestModulesFromMethod(c, METHOD_MODULE_OVERRIDES);
+                if (!overrides.isEmpty()) {
+                    modules.addAll(overrides);
+                    return;
+                }
             }
+        }
+    }
+
+    @Nonnull
+    private List<Module> harvestModulesFromMethod(@Nonnull Class<?> clazz, @Nonnull String methodName) {
+        Method method = null;
+        try {
+            method = clazz.getDeclaredMethod(methodName);
+            method.setAccessible(true);
+        } catch (NoSuchMethodException e) {
+            return Collections.emptyList();
+        }
+
+        try {
+            return (List<Module>) method.invoke(testCase);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("An error occurred while initializing modules from " + clazz.getName() + "." + methodName, e);
         }
     }
 
@@ -235,7 +254,7 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
         protected void harvestBindings(@Nonnull Class<?> rootClass) {
             for (Class<?> clazz : rootClass.getDeclaredClasses()) {
                 BindTo bindTo = clazz.getAnnotation(BindTo.class);
-                if (bindTo == null) continue;
+                if (bindTo == null) { continue; }
                 List<Annotation> qualifiers = harvestQualifiers(clazz);
                 Annotation classifier = qualifiers.isEmpty() ? null : qualifiers.get(0);
                 boolean isSingleton = clazz.getAnnotation(Singleton.class) != null;
@@ -245,18 +264,18 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
                     LinkedBindingBuilder<?> lbuilder = abuilder.withClassifier(classifier);
                     if (Provider.class.isAssignableFrom(clazz)) {
                         SingletonBindingBuilder<?> sbuilder = lbuilder.toProvider((Class) clazz);
-                        if (isSingleton) sbuilder.asSingleton();
+                        if (isSingleton) { sbuilder.asSingleton(); }
                     } else {
                         SingletonBindingBuilder<?> sbuilder = lbuilder.to((Class) clazz);
-                        if (isSingleton) sbuilder.asSingleton();
+                        if (isSingleton) { sbuilder.asSingleton(); }
                     }
                 } else {
                     if (Provider.class.isAssignableFrom(clazz)) {
                         SingletonBindingBuilder<?> sbuilder = abuilder.toProvider((Class) clazz);
-                        if (isSingleton) sbuilder.asSingleton();
+                        if (isSingleton) { sbuilder.asSingleton(); }
                     } else {
                         SingletonBindingBuilder<?> sbuilder = abuilder.to((Class) clazz);
-                        if (isSingleton) sbuilder.asSingleton();
+                        if (isSingleton) { sbuilder.asSingleton(); }
                     }
                 }
             }
@@ -283,7 +302,7 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
         protected void harvestBindings(@Nonnull Class<?> rootClass) {
             for (Field field : rootClass.getDeclaredFields()) {
                 BindTo bindTo = field.getAnnotation(BindTo.class);
-                if (bindTo == null) continue;
+                if (bindTo == null) { continue; }
                 List<Annotation> qualifiers = harvestQualifiers(field);
                 Annotation classifier = qualifiers.isEmpty() ? null : qualifiers.get(0);
                 boolean isSingleton = field.getAnnotation(Singleton.class) != null;
@@ -303,13 +322,13 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
                             SingletonBindingBuilder<?> sbuilder = abuilder
                                 .withClassifier(classifier)
                                 .toProvider((Provider<Object>) instance);
-                            if (isSingleton) sbuilder.asSingleton();
+                            if (isSingleton) { sbuilder.asSingleton(); }
                         } else {
                             abuilder.withClassifier(classifier).toInstance(instance);
                         }
                     } else if (Provider.class.isAssignableFrom(instance.getClass())) {
                         SingletonBindingBuilder<?> sbuilder = abuilder.toProvider((Provider<Object>) instance);
-                        if (isSingleton) sbuilder.asSingleton();
+                        if (isSingleton) { sbuilder.asSingleton(); }
                     } else {
                         abuilder.toInstance(instance);
                     }
@@ -319,18 +338,18 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
                         LinkedBindingBuilder<?> lbuilder = abuilder.withClassifier(classifier);
                         if (Provider.class.isAssignableFrom(field.getType())) {
                             SingletonBindingBuilder<?> sbuilder = lbuilder.toProvider((Class) field.getType());
-                            if (isSingleton) sbuilder.asSingleton();
+                            if (isSingleton) { sbuilder.asSingleton(); }
                         } else {
                             SingletonBindingBuilder<?> sbuilder = lbuilder.to((Class) field.getType());
-                            if (isSingleton) sbuilder.asSingleton();
+                            if (isSingleton) { sbuilder.asSingleton(); }
                         }
                     } else {
                         if (Provider.class.isAssignableFrom(field.getType())) {
                             SingletonBindingBuilder<?> sbuilder = abuilder.toProvider((Class) field.getType());
-                            if (isSingleton) sbuilder.asSingleton();
+                            if (isSingleton) { sbuilder.asSingleton(); }
                         } else {
                             SingletonBindingBuilder<?> sbuilder = abuilder.to((Class) field.getType());
-                            if (isSingleton) sbuilder.asSingleton();
+                            if (isSingleton) { sbuilder.asSingleton(); }
                         }
                     }
                 }
