@@ -45,3 +45,18 @@ task integrationTestReport(type: TestReport) {
 integrationTest.mustRunAfter test
 integrationTest.finalizedBy integrationTestReport
 check.dependsOn integrationTestReport
+
+task jacocoIntegrationTestReport(dependsOn: integrationTest, type: JacocoReport) {
+    group = 'Reporting'
+    description = 'Generate Jacoco coverage reports after running integration tests.'
+    executionData file("${buildDir}/jacoco/integrationTest.exec")
+    sourceDirectories = files(sourceSets.main.allSource.srcDirs)
+    classDirectories = files(sourceSets.main.output)
+    reports {
+        csv.enabled = false
+        xml.enabled = true
+        html.enabled = true
+        html.destination = "${buildDir}/reports/jacoco/integration-test/html"
+        xml.destination = "${buildDir}/reports/jacoco/integration-test/jacocoIntegrationTestReport.xml"
+    }
+}
