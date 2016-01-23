@@ -470,8 +470,8 @@ public abstract class AbstractEventRouter implements EventRouter {
         requireNonNull(listener, ERROR_LISTENER_NULL);
         requireNonNull(owner, ERROR_OWNER_NULL);
         Class<?> listenerClass = listener.getClass();
-        return listenerClass.isMemberClass() &&
-            listenerClass.getEnclosingClass().equals(owner.getClass()) &&
+        return (listenerClass.isMemberClass() || listenerClass.isAnonymousClass() || listenerClass.isLocalClass()) &&
+            owner.getClass().equals(listenerClass.getEnclosingClass()) &&
             owner.equals(GriffonClassUtils.getFieldValue(listener, "this$0"));
     }
 
