@@ -18,6 +18,8 @@ package org.codehaus.griffon.runtime.core;
 import griffon.core.GriffonApplication;
 import griffon.core.injection.Module;
 import griffon.core.injection.TestingModule;
+import griffon.core.test.TestModuleOverrides;
+import griffon.core.test.TestModules;
 import griffon.core.test.TestCaseAware;
 import griffon.core.test.TestModuleAware;
 import griffon.inject.BindTo;
@@ -121,7 +123,7 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
 
             Collections.reverse(classes);
             for (Class<?> c : classes) {
-                List<Module> ms = harvestModulesFromMethod(c, METHOD_MODULES);
+                List<Module> ms = harvestModulesFromMethod(c, METHOD_MODULES, TestModules.class);
                 if (!ms.isEmpty()) { return ms; }
             }
         }
@@ -148,7 +150,7 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
 
             Collections.reverse(classes);
             for (Class<?> c : classes) {
-                List<Module> overrides = harvestModulesFromMethod(c, METHOD_MODULE_OVERRIDES);
+                List<Module> overrides = harvestModulesFromMethod(c, METHOD_MODULE_OVERRIDES, TestModuleOverrides.class);
                 if (!overrides.isEmpty()) {
                     modules.addAll(overrides);
                     return;
@@ -158,19 +160,37 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
     }
 
     @Nonnull
-    private List<Module> harvestModulesFromMethod(@Nonnull Class<?> clazz, @Nonnull String methodName) {
-        Method method = null;
-        try {
-            method = clazz.getDeclaredMethod(methodName);
-            method.setAccessible(true);
-        } catch (NoSuchMethodException e) {
-            return Collections.emptyList();
+    private List<Module> harvestModulesFromMethod(@Nonnull Class<?> clazz, @Nonnull String methodName, @Nonnull Class<? extends Annotation> annotationClass) {
+        Method annotatedMethod = null;
+
+        // check annotation first
+        for (Method m : clazz.getDeclaredMethods()) {
+            if (m.getAnnotation(annotationClass) != null) {
+                annotatedMethod = m;
+                break;
+            }
         }
 
+        // check using naming convention
+        Method namedMethod = null;
+        try {
+            namedMethod = clazz.getDeclaredMethod(methodName);
+            namedMethod.setAccessible(true);
+        } catch (NoSuchMethodException e) {
+            if (annotatedMethod == null) {
+                return Collections.emptyList();
+            }
+        }
+
+        if (namedMethod != null && annotatedMethod != namedMethod) {
+            System.err.println("Usage of method named '" + clazz.getName() + "." + methodName + "()' is discouraged. Rename the method and annotate it with @" + annotationClass.getSimpleName());
+        }
+
+        Method method = annotatedMethod != null ? annotatedMethod : namedMethod;
         try {
             return (List<Module>) method.invoke(testCase);
         } catch (Exception e) {
-            throw new IllegalArgumentException("An error occurred while initializing modules from " + clazz.getName() + "." + methodName, e);
+            throw new IllegalArgumentException("An error occurred while initializing modules from " + clazz.getName() + "." + method.getName(), e);
         }
     }
 
