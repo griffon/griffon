@@ -470,8 +470,8 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L470">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
 <span class="fc" id="L471">        requireNonNull(owner, ERROR_OWNER_NULL);</span>
 <span class="fc" id="L472">        Class&lt;?&gt; listenerClass = listener.getClass();</span>
-<span class="pc bpc" id="L473" title="1 of 2 branches missed.">        return listenerClass.isMemberClass() &amp;&amp;</span>
-<span class="nc bnc" id="L474" title="All 2 branches missed.">            listenerClass.getEnclosingClass().equals(owner.getClass()) &amp;&amp;</span>
+<span class="pc bpc" id="L473" title="2 of 6 branches missed.">        return (listenerClass.isMemberClass() || listenerClass.isAnonymousClass() || listenerClass.isLocalClass()) &amp;&amp;</span>
+<span class="pc bpc" id="L474" title="1 of 2 branches missed.">            owner.getClass().equals(listenerClass.getEnclosingClass()) &amp;&amp;</span>
 <span class="pc bnc" id="L475" title="All 2 branches missed.">            owner.equals(GriffonClassUtils.getFieldValue(listener, &quot;this$0&quot;));</span>
     }
 
