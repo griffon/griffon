@@ -175,7 +175,7 @@ public abstract class AbstractWindowManager&lt;W&gt; implements WindowManager&lt
 
 <span class="fc" id="L176">        doAttach(window);</span>
 
-<span class="fc" id="L178">        LOG.debug(&quot;Attaching window with name: '{}' at index {} {}&quot;, name, windows.size(), window);</span>
+<span class="fc" id="L178">        LOG.debug(&quot;Attaching window with name: '{}' at index {} {}&quot;, name, windows.size(), window);</span>
 <span class="fc" id="L179">        windows.put(name, window);</span>
 <span class="fc" id="L180">        event(ApplicationEvent.WINDOW_ATTACHED, asList(name, window));</span>
 <span class="fc" id="L181">    }</span>
@@ -224,7 +224,7 @@ public abstract class AbstractWindowManager&lt;W&gt; implements WindowManager&lt
 
 <span class="nc" id="L225">        application.getUIThreadManager().runInsideUIAsync(new Runnable() {</span>
             public void run() {
-<span class="nc" id="L227">                LOG.debug(&quot;Showing window with name: '{}' at index {} {}&quot;, name, index, window);</span>
+<span class="nc" id="L227">                LOG.debug(&quot;Showing window with name: '{}' at index {} {}&quot;, name, index, window);</span>
                 //noinspection ConstantConditions
 <span class="nc" id="L229">                resolveWindowDisplayHandler().show(name, window);</span>
 <span class="nc" id="L230">            }</span>
@@ -266,7 +266,7 @@ public abstract class AbstractWindowManager&lt;W&gt; implements WindowManager&lt
 
 <span class="nc" id="L267">        application.getUIThreadManager().runInsideUIAsync(new Runnable() {</span>
             public void run() {
-<span class="nc" id="L269">                LOG.debug(&quot;Hiding window with name: '{}' at index {} {}&quot;, name, index, window);</span>
+<span class="nc" id="L269">                LOG.debug(&quot;Hiding window with name: '{}' at index {} {}&quot;, name, index, window);</span>
                 //noinspection ConstantConditions
 <span class="nc" id="L271">                resolveWindowDisplayHandler().hide(name, window);</span>
 <span class="nc" id="L272">            }</span>

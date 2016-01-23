@@ -153,7 +153,7 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
                     // CCE means the class can not be used
 <span class="fc" id="L154">                    editorClass.newInstance();</span>
 <span class="fc" id="L155">                    PropertyEditorResolver.registerEditor(targetType, editorClass);</span>
-<span class="fc" id="L156">                    LOG.debug(&quot;Registering {} as editor for {}&quot;, editorClass.getName(), targetType.getName());</span>
+<span class="fc" id="L156">                    LOG.debug(&quot;Registering {} as editor for {}&quot;, editorClass.getName(), targetType.getName());</span>
 <span class="nc" id="L157">                } catch (Exception e) {</span>
 <span class="nc bnc" id="L158" title="All 2 branches missed.">                    if (LOG.isWarnEnabled()) {</span>
 <span class="nc" id="L159">                        LOG.warn(&quot;Could not load &quot; + type.getName() + &quot; with &quot; + line, sanitize(e));</span>
@@ -174,7 +174,7 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
 
 <span class="fc bfc" id="L175" title="All 2 branches covered.">        for (Class&lt;?&gt;[] pair : pairs) {</span>
 <span class="fc" id="L176">            PropertyEditor editor = PropertyEditorResolver.findEditor(pair[0]);</span>
-<span class="fc" id="L177">            LOG.debug(&quot;Registering {} as editor for {}&quot;, editor.getClass().getName(), pair[1].getName());</span>
+<span class="fc" id="L177">            LOG.debug(&quot;Registering {} as editor for {}&quot;, editor.getClass().getName(), pair[1].getName());</span>
 <span class="fc" id="L178">            PropertyEditorResolver.registerEditor(pair[1], editor.getClass());</span>
         }
 <span class="fc" id="L180">    }</span>
