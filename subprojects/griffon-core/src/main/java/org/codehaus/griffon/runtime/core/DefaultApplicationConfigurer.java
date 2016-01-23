@@ -153,7 +153,7 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
                     // CCE means the class can not be used
                     editorClass.newInstance();
                     PropertyEditorResolver.registerEditor(targetType, editorClass);
-                    LOG.debug("Registering {} as editor for {}", editorClass.getName(), targetType.getName());
+                    LOG.debug("Registering {} as editor for {}", editorClass.getName(), targetType.getName());
                 } catch (Exception e) {
                     if (LOG.isWarnEnabled()) {
                         LOG.warn("Could not load " + type.getName() + " with " + line, sanitize(e));
@@ -174,7 +174,7 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
 
         for (Class<?>[] pair : pairs) {
             PropertyEditor editor = PropertyEditorResolver.findEditor(pair[0]);
-            LOG.debug("Registering {} as editor for {}", editor.getClass().getName(), pair[1].getName());
+            LOG.debug("Registering {} as editor for {}", editor.getClass().getName(), pair[1].getName());
             PropertyEditorResolver.registerEditor(pair[1], editor.getClass());
         }
     }

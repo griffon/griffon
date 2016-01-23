@@ -175,7 +175,7 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
 
         doAttach(window);
 
-        LOG.debug("Attaching window with name: '{}' at index {} {}", name, windows.size(), window);
+        LOG.debug("Attaching window with name: '{}' at index {} {}", name, windows.size(), window);
         windows.put(name, window);
         event(ApplicationEvent.WINDOW_ATTACHED, asList(name, window));
     }
@@ -224,7 +224,7 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
 
         application.getUIThreadManager().runInsideUIAsync(new Runnable() {
             public void run() {
-                LOG.debug("Showing window with name: '{}' at index {} {}", name, index, window);
+                LOG.debug("Showing window with name: '{}' at index {} {}", name, index, window);
                 //noinspection ConstantConditions
                 resolveWindowDisplayHandler().show(name, window);
             }
@@ -266,7 +266,7 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
 
         application.getUIThreadManager().runInsideUIAsync(new Runnable() {
             public void run() {
-                LOG.debug("Hiding window with name: '{}' at index {} {}", name, index, window);
+                LOG.debug("Hiding window with name: '{}' at index {} {}", name, index, window);
                 //noinspection ConstantConditions
                 resolveWindowDisplayHandler().hide(name, window);
             }
