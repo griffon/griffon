@@ -108,28 +108,33 @@ public class GriffonTestFXClassRule extends TestFX implements TestRule {
         };
     }
 
+    public void injectMembers(@Nonnull Object target) {
+<span class="nc" id="L112">        requireNonNull(target, &quot;Argument 'target' must not be null&quot;);</span>
+<span class="nc" id="L113">        application.getInjector().injectMembers(target);</span>
+<span class="nc" id="L114">    }</span>
+
     protected void initialize() {
-<span class="fc" id="L112">        getTestContext().setWindowName(windowName);</span>
-<span class="fc" id="L113">    }</span>
+<span class="fc" id="L117">        getTestContext().setWindowName(windowName);</span>
+<span class="fc" id="L118">    }</span>
 
     private static class WindowShownHandler implements RunnableWithArgs {
         private final String windowName;
         private boolean showing;
 
-<span class="fc" id="L119">        private WindowShownHandler(String windowName) {</span>
-<span class="fc" id="L120">            this.windowName = windowName;</span>
-<span class="fc" id="L121">        }</span>
+<span class="fc" id="L124">        private WindowShownHandler(String windowName) {</span>
+<span class="fc" id="L125">            this.windowName = windowName;</span>
+<span class="fc" id="L126">        }</span>
 
         public boolean isShowing() {
-<span class="fc" id="L124">            return showing;</span>
+<span class="fc" id="L129">            return showing;</span>
         }
 
         @Override
         public void run(Object... args) {
-<span class="pc bpc" id="L129" title="3 of 6 branches missed.">            if (args != null &amp;&amp; args.length &gt; 0 &amp;&amp; args[0] instanceof CharSequence) {</span>
-<span class="fc" id="L130">                showing = windowName.equals(String.valueOf(args[0]));</span>
+<span class="pc bpc" id="L134" title="3 of 6 branches missed.">            if (args != null &amp;&amp; args.length &gt; 0 &amp;&amp; args[0] instanceof CharSequence) {</span>
+<span class="fc" id="L135">                showing = windowName.equals(String.valueOf(args[0]));</span>
             }
-<span class="fc" id="L132">        }</span>
+<span class="fc" id="L137">        }</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

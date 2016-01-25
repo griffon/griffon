@@ -502,10 +502,10 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L502">            List&lt;MethodInfo&gt; descriptors = methodMetadata.get(target.getName());</span>
 <span class="pc bpc" id="L503" title="1 of 2 branches missed.">            if (descriptors != null) {</span>
 <span class="pc bpc" id="L504" title="1 of 2 branches missed.">                for (MethodInfo info : descriptors) {</span>
-<span class="fc bfc" id="L505" title="All 2 branches covered.">                    if (info.descriptor.matches(target)) {</span>
+<span class="pc bpc" id="L505" title="1 of 2 branches missed.">                    if (info.descriptor.matches(target)) {</span>
 <span class="fc" id="L506">                        return info.method;</span>
                     }
-<span class="fc" id="L508">                }</span>
+<span class="nc" id="L508">                }</span>
             }
 
 <span class="nc" id="L511">            return null;</span>

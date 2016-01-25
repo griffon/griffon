@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" tests="6" skipped="0" failures="0" errors="0" timestamp="2016-01-23T18:37:30" hostname="testing-gce-37c1816f-5fd0-4856-9889-221a9ca4dea0.c.eco-emissary-99515.internal" time="0.076">
+<testsuite name="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" tests="6" skipped="0" failures="0" errors="0" timestamp="2016-01-25T20:36:35" hostname="testing-gce-1fbd39a0-b580-4618-997f-6fb81698b6d7.c.eco-emissary-99515.internal" time="0.086">
   <properties/>
-  <testcase name="Create throws class java.lang.IllegalArgumentException" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.056"/>
+  <testcase name="Create throws class java.lang.IllegalArgumentException" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.063"/>
   <testcase name="Create throws class java.lang.NullPointerException" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.001"/>
-  <testcase name="Create throws class java.lang.IllegalArgumentException" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.001"/>
+  <testcase name="Create throws class java.lang.IllegalArgumentException" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.002"/>
   <testcase name="Excercise bundle creation with org.codehaus.griffon.runtime.util.NotFoundBundle" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.001"/>
   <testcase name="Excercise bundle creation with org.codehaus.griffon.runtime.util.NotABundle" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.002"/>
-  <testcase name="Excercise bundle creation with org.codehaus.griffon.runtime.util.BrokenBundle" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.014"/>
+  <testcase name="Excercise bundle creation with org.codehaus.griffon.runtime.util.BrokenBundle" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.015"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[[Test worker] WARN org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder - An error occurred while loading resource bundle org/codehaus/griffon/runtime/util/BrokenBundle from file:/home/travis/build/griffon/griffon/subprojects/griffon-core/build/classes/test/org/codehaus/griffon/runtime/util/BrokenBundle.class
 java.lang.RuntimeException: Boom!
@@ -14,7 +14,7 @@ java.lang.RuntimeException: Boom!
 	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
 	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
 	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
-	at java.lang.reflect.Constructor.newInstance(Constructor.java:422)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
 	at java.lang.Class.newInstance(Class.java:442)
 	at org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder.newInstance(DefaultCompositeResourceBundleBuilder.java:101)
 	at org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder.loadBundleFromClass(DefaultCompositeResourceBundleBuilder.java:85)
@@ -24,7 +24,7 @@ java.lang.RuntimeException: Boom!
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:497)
+	at java.lang.reflect.Method.invoke(Method.java:498)
 	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:93)
 	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:325)
 	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1210)
@@ -37,7 +37,7 @@ java.lang.RuntimeException: Boom!
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:497)
+	at java.lang.reflect.Method.invoke(Method.java:498)
 	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:153)
 	at org.spockframework.runtime.model.MethodInfo.invoke(MethodInfo.java:84)
 	at org.spockframework.runtime.extension.MethodInvocation.proceed(MethodInvocation.java:88)
@@ -74,7 +74,7 @@ java.lang.RuntimeException: Boom!
 	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:50)
 	at sun.reflect.GeneratedMethodAccessor80.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:497)
+	at java.lang.reflect.Method.invoke(Method.java:498)
 	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)
 	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
 	at org.gradle.messaging.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:32)
@@ -83,7 +83,7 @@ java.lang.RuntimeException: Boom!
 	at org.gradle.api.internal.tasks.testing.worker.TestWorker.processTestClass(TestWorker.java:106)
 	at sun.reflect.GeneratedMethodAccessor79.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:497)
+	at java.lang.reflect.Method.invoke(Method.java:498)
 	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)
 	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
 	at org.gradle.messaging.remote.internal.hub.MessageHub$Handler.run(MessageHub.java:360)
