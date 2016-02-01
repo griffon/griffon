@@ -44,6 +44,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,7 @@ import static griffon.core.GriffonExceptionHandler.sanitize;
 import static griffon.util.AnnotationUtils.annotationsOfMethodParameter;
 import static griffon.util.AnnotationUtils.findAnnotation;
 import static griffon.util.AnnotationUtils.nameFor;
+import static griffon.util.AnnotationUtils.namesFor;
 import static griffon.util.ConfigUtils.getConfigValueAsBoolean;
 import static griffon.util.GriffonClassUtils.getAllDeclaredFields;
 import static griffon.util.GriffonClassUtils.getPropertyDescriptors;
@@ -70,7 +72,7 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
-<span class="fc" id="L73">    private static final Logger LOG = LoggerFactory.getLogger(DefaultMVCGroupManager.class);</span>
+<span class="fc" id="L75">    private static final Logger LOG = LoggerFactory.getLogger(DefaultMVCGroupManager.class);</span>
     private static final String CONFIG_KEY_COMPONENT = &quot;component&quot;;
     private static final String CONFIG_KEY_EVENTS_LIFECYCLE = &quot;events.lifecycle&quot;;
     private static final String CONFIG_KEY_EVENTS_INSTANTIATION = &quot;events.instantiation&quot;;
@@ -82,415 +84,421 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
     @Inject
     public DefaultMVCGroupManager(@Nonnull GriffonApplication application, @Nonnull ApplicationClassLoader applicationClassLoader) {
-<span class="fc" id="L85">        super(application);</span>
-<span class="fc" id="L86">        this.applicationClassLoader = requireNonNull(applicationClassLoader, &quot;Argument 'applicationClassLoader' must not be null&quot;);</span>
-<span class="fc" id="L87">    }</span>
+<span class="fc" id="L87">        super(application);</span>
+<span class="fc" id="L88">        this.applicationClassLoader = requireNonNull(applicationClassLoader, &quot;Argument 'applicationClassLoader' must not be null&quot;);</span>
+<span class="fc" id="L89">    }</span>
 
     protected void doInitialize(@Nonnull Map&lt;String, MVCGroupConfiguration&gt; configurations) {
-<span class="fc" id="L90">        requireNonNull(configurations, &quot;Argument 'configurations' must not be null&quot;);</span>
-<span class="fc bfc" id="L91" title="All 2 branches covered.">        for (MVCGroupConfiguration configuration : configurations.values()) {</span>
-<span class="fc" id="L92">            addConfiguration(configuration);</span>
-<span class="fc" id="L93">        }</span>
-<span class="fc" id="L94">    }</span>
+<span class="fc" id="L92">        requireNonNull(configurations, &quot;Argument 'configurations' must not be null&quot;);</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        for (MVCGroupConfiguration configuration : configurations.values()) {</span>
+<span class="fc" id="L94">            addConfiguration(configuration);</span>
+<span class="fc" id="L95">        }</span>
+<span class="fc" id="L96">    }</span>
 
     @Nonnull
     protected MVCGroup createMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map&lt;String, Object&gt; args) {
-<span class="fc" id="L98">        requireNonNull(configuration, ERROR_CONFIGURATION_NULL);</span>
-<span class="fc" id="L99">        requireNonNull(args, ERROR_ARGS_NULL);</span>
+<span class="fc" id="L100">        requireNonNull(configuration, ERROR_CONFIGURATION_NULL);</span>
+<span class="fc" id="L101">        requireNonNull(args, ERROR_ARGS_NULL);</span>
 
-<span class="fc" id="L101">        mvcId = resolveMvcId(configuration, mvcId);</span>
-<span class="fc" id="L102">        checkIdIsUnique(mvcId, configuration);</span>
+<span class="fc" id="L103">        mvcId = resolveMvcId(configuration, mvcId);</span>
+<span class="fc" id="L104">        checkIdIsUnique(mvcId, configuration);</span>
 
-<span class="fc" id="L104">        LOG.debug(&quot;Building MVC group '{}' with name '{}'&quot;, configuration.getMvcType(), mvcId);</span>
-<span class="fc" id="L105">        Map&lt;String, Object&gt; argsCopy = copyAndConfigureArguments(args, configuration, mvcId);</span>
+<span class="fc" id="L106">        LOG.debug(&quot;Building MVC group '{}' with name '{}'&quot;, configuration.getMvcType(), mvcId);</span>
+<span class="fc" id="L107">        Map&lt;String, Object&gt; argsCopy = copyAndConfigureArguments(args, configuration, mvcId);</span>
 
         // figure out what the classes are
-<span class="fc" id="L108">        Map&lt;String, ClassHolder&gt; classMap = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc bfc" id="L109" title="All 2 branches covered.">        for (Map.Entry&lt;String, String&gt; memberEntry : configuration.getMembers().entrySet()) {</span>
-<span class="fc" id="L110">            String memberType = memberEntry.getKey();</span>
-<span class="fc" id="L111">            String memberClassName = memberEntry.getValue();</span>
-<span class="fc" id="L112">            selectClassesPerMember(memberType, memberClassName, classMap);</span>
-<span class="fc" id="L113">        }</span>
+<span class="fc" id="L110">        Map&lt;String, ClassHolder&gt; classMap = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        for (Map.Entry&lt;String, String&gt; memberEntry : configuration.getMembers().entrySet()) {</span>
+<span class="fc" id="L112">            String memberType = memberEntry.getKey();</span>
+<span class="fc" id="L113">            String memberClassName = memberEntry.getValue();</span>
+<span class="fc" id="L114">            selectClassesPerMember(memberType, memberClassName, classMap);</span>
+<span class="fc" id="L115">        }</span>
 
-<span class="fc" id="L115">        boolean isEventPublishingEnabled = getApplication().getEventRouter().isEventPublishingEnabled();</span>
-<span class="fc" id="L116">        getApplication().getEventRouter().setEventPublishingEnabled(isConfigFlagEnabled(configuration, CONFIG_KEY_EVENTS_INSTANTIATION));</span>
-<span class="fc" id="L117">        Map&lt;String, Object&gt; instances = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L118">        List&lt;Object&gt; injectedInstances = new ArrayList&lt;&gt;();</span>
-
-        try {
-<span class="fc" id="L121">            InjectionUnitOfWork.start();</span>
-<span class="nc" id="L122">        } catch (IllegalStateException ise) {</span>
-<span class="nc" id="L123">            throw new MVCGroupInstantiationException(&quot;Can not instantiate MVC group '&quot; + configuration.getMvcType() + &quot;' with id '&quot; + mvcId + &quot;'&quot;, configuration.getMvcType(), mvcId, ise);</span>
-<span class="fc" id="L124">        }</span>
+<span class="fc" id="L117">        boolean isEventPublishingEnabled = getApplication().getEventRouter().isEventPublishingEnabled();</span>
+<span class="fc" id="L118">        getApplication().getEventRouter().setEventPublishingEnabled(isConfigFlagEnabled(configuration, CONFIG_KEY_EVENTS_INSTANTIATION));</span>
+<span class="fc" id="L119">        Map&lt;String, Object&gt; instances = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L120">        List&lt;Object&gt; injectedInstances = new ArrayList&lt;&gt;();</span>
 
         try {
-<span class="fc" id="L127">            instances.putAll(instantiateMembers(classMap, argsCopy));</span>
+<span class="fc" id="L123">            InjectionUnitOfWork.start();</span>
+<span class="nc" id="L124">        } catch (IllegalStateException ise) {</span>
+<span class="nc" id="L125">            throw new MVCGroupInstantiationException(&quot;Can not instantiate MVC group '&quot; + configuration.getMvcType() + &quot;' with id '&quot; + mvcId + &quot;'&quot;, configuration.getMvcType(), mvcId, ise);</span>
+<span class="fc" id="L126">        }</span>
+
+        try {
+<span class="fc" id="L129">            instances.putAll(instantiateMembers(classMap, argsCopy));</span>
         } finally {
-<span class="pc" id="L129">            getApplication().getEventRouter().setEventPublishingEnabled(isEventPublishingEnabled);</span>
+<span class="pc" id="L131">            getApplication().getEventRouter().setEventPublishingEnabled(isEventPublishingEnabled);</span>
             try {
-<span class="pc" id="L131">                injectedInstances.addAll(InjectionUnitOfWork.finish());</span>
-<span class="nc" id="L132">            } catch (IllegalStateException ise) {</span>
-<span class="nc" id="L133">                throw new MVCGroupInstantiationException(&quot;Can not instantiate MVC group '&quot; + configuration.getMvcType() + &quot;' with id '&quot; + mvcId + &quot;'&quot;, configuration.getMvcType(), mvcId, ise);</span>
-<span class="pc" id="L134">            }</span>
+<span class="pc" id="L133">                injectedInstances.addAll(InjectionUnitOfWork.finish());</span>
+<span class="nc" id="L134">            } catch (IllegalStateException ise) {</span>
+<span class="nc" id="L135">                throw new MVCGroupInstantiationException(&quot;Can not instantiate MVC group '&quot; + configuration.getMvcType() + &quot;' with id '&quot; + mvcId + &quot;'&quot;, configuration.getMvcType(), mvcId, ise);</span>
+<span class="pc" id="L136">            }</span>
         }
 
-<span class="fc" id="L137">        MVCGroup group = newMVCGroup(configuration, mvcId, instances, (MVCGroup) args.get(KEY_PARENT_GROUP));</span>
-<span class="fc" id="L138">        adjustMvcArguments(group, argsCopy);</span>
+<span class="fc" id="L139">        MVCGroup group = newMVCGroup(configuration, mvcId, instances, (MVCGroup) args.get(KEY_PARENT_GROUP));</span>
+<span class="fc" id="L140">        adjustMvcArguments(group, argsCopy);</span>
 
-<span class="fc" id="L140">        boolean fireEvents = isConfigFlagEnabled(configuration, CONFIG_KEY_EVENTS_LIFECYCLE);</span>
-<span class="pc bpc" id="L141" title="1 of 2 branches missed.">        if (fireEvents) {</span>
-<span class="fc" id="L142">            getApplication().getEventRouter().publishEvent(ApplicationEvent.INITIALIZE_MVC_GROUP.getName(), asList(configuration, group));</span>
+<span class="fc" id="L142">        boolean fireEvents = isConfigFlagEnabled(configuration, CONFIG_KEY_EVENTS_LIFECYCLE);</span>
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">        if (fireEvents) {</span>
+<span class="fc" id="L144">            getApplication().getEventRouter().publishEvent(ApplicationEvent.INITIALIZE_MVC_GROUP.getName(), asList(configuration, group));</span>
         }
 
         // special case -- controllers are added as application listeners
-<span class="pc bpc" id="L146" title="1 of 2 branches missed.">        if (isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_LISTENER)) {</span>
-<span class="fc" id="L147">            GriffonController controller = group.getController();</span>
-<span class="pc bpc" id="L148" title="1 of 2 branches missed.">            if (controller != null) {</span>
-<span class="fc" id="L149">                getApplication().getEventRouter().addEventListener(controller);</span>
+<span class="pc bpc" id="L148" title="1 of 2 branches missed.">        if (isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_LISTENER)) {</span>
+<span class="fc" id="L149">            GriffonController controller = group.getController();</span>
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">            if (controller != null) {</span>
+<span class="fc" id="L151">                getApplication().getEventRouter().addEventListener(controller);</span>
             }
         }
 
         // mutually set each other to the available fields and inject args
-<span class="fc" id="L154">        fillReferencedProperties(group, argsCopy);</span>
+<span class="fc" id="L156">        fillReferencedProperties(group, argsCopy);</span>
 
-<span class="fc" id="L156">        doAddGroup(group);</span>
+<span class="fc" id="L158">        doAddGroup(group);</span>
 
-<span class="fc" id="L158">        initializeMembers(group, argsCopy);</span>
-<span class="pc bpc" id="L159" title="1 of 2 branches missed.">        if (group instanceof AbstractMVCGroup) {</span>
-<span class="fc" id="L160">            ((AbstractMVCGroup) group).getInjectedInstances().addAll(injectedInstances);</span>
+<span class="fc" id="L160">        initializeMembers(group, argsCopy);</span>
+<span class="pc bpc" id="L161" title="1 of 2 branches missed.">        if (group instanceof AbstractMVCGroup) {</span>
+<span class="fc" id="L162">            ((AbstractMVCGroup) group).getInjectedInstances().addAll(injectedInstances);</span>
         }
 
-<span class="pc bpc" id="L163" title="1 of 2 branches missed.">        if (fireEvents) {</span>
-<span class="fc" id="L164">            getApplication().getEventRouter().publishEvent(ApplicationEvent.CREATE_MVC_GROUP.getName(), asList(group));</span>
+<span class="pc bpc" id="L165" title="1 of 2 branches missed.">        if (fireEvents) {</span>
+<span class="fc" id="L166">            getApplication().getEventRouter().publishEvent(ApplicationEvent.CREATE_MVC_GROUP.getName(), asList(group));</span>
         }
 
-<span class="fc" id="L167">        return group;</span>
+<span class="fc" id="L169">        return group;</span>
     }
 
     protected void adjustMvcArguments(@Nonnull MVCGroup group, @Nonnull Map&lt;String, Object&gt; args) {
         // must set it again because mvcId might have been initialized internally
-<span class="fc" id="L172">        args.put(&quot;mvcId&quot;, group.getMvcId());</span>
-<span class="fc" id="L173">        args.put(&quot;mvcGroup&quot;, group);</span>
-<span class="fc" id="L174">        args.put(&quot;application&quot;, getApplication());</span>
-<span class="fc" id="L175">    }</span>
+<span class="fc" id="L174">        args.put(&quot;mvcId&quot;, group.getMvcId());</span>
+<span class="fc" id="L175">        args.put(&quot;mvcGroup&quot;, group);</span>
+<span class="fc" id="L176">        args.put(&quot;application&quot;, getApplication());</span>
+<span class="fc" id="L177">    }</span>
 
     @Nonnull
     @SuppressWarnings(&quot;ConstantConditions&quot;)
     protected String resolveMvcId(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId) {
-<span class="fc" id="L180">        boolean component = getConfigValueAsBoolean(configuration.getConfig(), CONFIG_KEY_COMPONENT, false);</span>
+<span class="fc" id="L182">        boolean component = getConfigValueAsBoolean(configuration.getConfig(), CONFIG_KEY_COMPONENT, false);</span>
 
-<span class="pc bpc" id="L182" title="1 of 2 branches missed.">        if (isBlank(mvcId)) {</span>
-<span class="pc bpc" id="L183" title="1 of 2 branches missed.">            if (component) {</span>
-<span class="nc" id="L184">                mvcId = configuration.getMvcType() + &quot;-&quot; + System.nanoTime();</span>
+<span class="pc bpc" id="L184" title="1 of 2 branches missed.">        if (isBlank(mvcId)) {</span>
+<span class="pc bpc" id="L185" title="1 of 2 branches missed.">            if (component) {</span>
+<span class="nc" id="L186">                mvcId = configuration.getMvcType() + &quot;-&quot; + System.nanoTime();</span>
             } else {
-<span class="fc" id="L186">                mvcId = configuration.getMvcType();</span>
+<span class="fc" id="L188">                mvcId = configuration.getMvcType();</span>
             }
         }
-<span class="fc" id="L189">        return mvcId;</span>
+<span class="fc" id="L191">        return mvcId;</span>
     }
 
     @SuppressWarnings(&quot;unchecked&quot;)
     protected void selectClassesPerMember(@Nonnull String memberType, @Nonnull String memberClassName, @Nonnull Map&lt;String, ClassHolder&gt; classMap) {
-<span class="fc" id="L194">        GriffonClass griffonClass = getApplication().getArtifactManager().findGriffonClass(memberClassName);</span>
-<span class="fc" id="L195">        ClassHolder classHolder = new ClassHolder();</span>
-<span class="pc bpc" id="L196" title="1 of 2 branches missed.">        if (griffonClass != null) {</span>
-<span class="fc" id="L197">            classHolder.artifactClass = (Class&lt;? extends GriffonArtifact&gt;) griffonClass.getClazz();</span>
+<span class="fc" id="L196">        GriffonClass griffonClass = getApplication().getArtifactManager().findGriffonClass(memberClassName);</span>
+<span class="fc" id="L197">        ClassHolder classHolder = new ClassHolder();</span>
+<span class="pc bpc" id="L198" title="1 of 2 branches missed.">        if (griffonClass != null) {</span>
+<span class="fc" id="L199">            classHolder.artifactClass = (Class&lt;? extends GriffonArtifact&gt;) griffonClass.getClazz();</span>
         } else {
-<span class="nc" id="L199">            classHolder.regularClass = loadClass(memberClassName);</span>
+<span class="nc" id="L201">            classHolder.regularClass = loadClass(memberClassName);</span>
         }
-<span class="fc" id="L201">        classMap.put(memberType, classHolder);</span>
-<span class="fc" id="L202">    }</span>
+<span class="fc" id="L203">        classMap.put(memberType, classHolder);</span>
+<span class="fc" id="L204">    }</span>
 
     @Nonnull
     protected Map&lt;String, Object&gt; copyAndConfigureArguments(@Nonnull Map&lt;String, Object&gt; args, @Nonnull MVCGroupConfiguration configuration, @Nonnull String mvcId) {
-<span class="fc" id="L206">        Map&lt;String, Object&gt; argsCopy = CollectionUtils.&lt;String, Object&gt;map()</span>
-<span class="fc" id="L207">            .e(&quot;application&quot;, getApplication())</span>
-<span class="fc" id="L208">            .e(&quot;mvcType&quot;, configuration.getMvcType())</span>
-<span class="fc" id="L209">            .e(&quot;mvcId&quot;, mvcId)</span>
-<span class="fc" id="L210">            .e(&quot;configuration&quot;, configuration);</span>
+<span class="fc" id="L208">        Map&lt;String, Object&gt; argsCopy = CollectionUtils.&lt;String, Object&gt;map()</span>
+<span class="fc" id="L209">            .e(&quot;application&quot;, getApplication())</span>
+<span class="fc" id="L210">            .e(&quot;mvcType&quot;, configuration.getMvcType())</span>
+<span class="fc" id="L211">            .e(&quot;mvcId&quot;, mvcId)</span>
+<span class="fc" id="L212">            .e(&quot;configuration&quot;, configuration);</span>
 
-<span class="pc bpc" id="L212" title="1 of 2 branches missed.">        if (args.containsKey(KEY_PARENT_GROUP)) {</span>
-<span class="nc bnc" id="L213" title="All 2 branches missed.">            if (args.get(KEY_PARENT_GROUP) instanceof MVCGroup) {</span>
-<span class="nc" id="L214">                MVCGroup parentGroup = (MVCGroup) args.get(KEY_PARENT_GROUP);</span>
-<span class="nc bnc" id="L215" title="All 2 branches missed.">                for (Map.Entry&lt;String, Object&gt; e : parentGroup.getMembers().entrySet()) {</span>
-<span class="nc" id="L216">                    args.put(&quot;parent&quot; + capitalize(e.getKey()), e.getValue());</span>
-<span class="nc" id="L217">                }</span>
+<span class="pc bpc" id="L214" title="1 of 2 branches missed.">        if (args.containsKey(KEY_PARENT_GROUP)) {</span>
+<span class="nc bnc" id="L215" title="All 2 branches missed.">            if (args.get(KEY_PARENT_GROUP) instanceof MVCGroup) {</span>
+<span class="nc" id="L216">                MVCGroup parentGroup = (MVCGroup) args.get(KEY_PARENT_GROUP);</span>
+<span class="nc bnc" id="L217" title="All 2 branches missed.">                for (Map.Entry&lt;String, Object&gt; e : parentGroup.getMembers().entrySet()) {</span>
+<span class="nc" id="L218">                    args.put(&quot;parent&quot; + capitalize(e.getKey()), e.getValue());</span>
+<span class="nc" id="L219">                }</span>
             }
         }
 
-<span class="fc" id="L221">        argsCopy.putAll(args);</span>
-<span class="fc" id="L222">        return argsCopy;</span>
+<span class="fc" id="L223">        argsCopy.putAll(args);</span>
+<span class="fc" id="L224">        return argsCopy;</span>
     }
 
     protected void checkIdIsUnique(@Nonnull String mvcId, @Nonnull MVCGroupConfiguration configuration) {
-<span class="pc bpc" id="L226" title="1 of 2 branches missed.">        if (findGroup(mvcId) != null) {</span>
-<span class="nc" id="L227">            String action = getApplication().getConfiguration().getAsString(&quot;griffon.mvcid.collision&quot;, &quot;exception&quot;);</span>
-<span class="nc bnc" id="L228" title="All 2 branches missed.">            if (&quot;warning&quot;.equalsIgnoreCase(action)) {</span>
-<span class="nc" id="L229">                LOG.warn(&quot;A previous instance of MVC group '{}' with id '{}' exists. Destroying the old instance first.&quot;, configuration.getMvcType(), mvcId);</span>
-<span class="nc" id="L230">                destroyMVCGroup(mvcId);</span>
+<span class="pc bpc" id="L228" title="1 of 2 branches missed.">        if (findGroup(mvcId) != null) {</span>
+<span class="nc" id="L229">            String action = getApplication().getConfiguration().getAsString(&quot;griffon.mvcid.collision&quot;, &quot;exception&quot;);</span>
+<span class="nc bnc" id="L230" title="All 2 branches missed.">            if (&quot;warning&quot;.equalsIgnoreCase(action)) {</span>
+<span class="nc" id="L231">                LOG.warn(&quot;A previous instance of MVC group '{}' with id '{}' exists. Destroying the old instance first.&quot;, configuration.getMvcType(), mvcId);</span>
+<span class="nc" id="L232">                destroyMVCGroup(mvcId);</span>
             } else {
-<span class="nc" id="L232">                throw new MVCGroupInstantiationException(&quot;Can not instantiate MVC group '&quot; + configuration.getMvcType() + &quot;' with id '&quot; + mvcId + &quot;' because a previous instance with that name exists and was not disposed off properly.&quot;, configuration.getMvcType(), mvcId);</span>
+<span class="nc" id="L234">                throw new MVCGroupInstantiationException(&quot;Can not instantiate MVC group '&quot; + configuration.getMvcType() + &quot;' with id '&quot; + mvcId + &quot;' because a previous instance with that name exists and was not disposed off properly.&quot;, configuration.getMvcType(), mvcId);</span>
             }
         }
-<span class="fc" id="L235">    }</span>
+<span class="fc" id="L237">    }</span>
 
     @Nonnull
     protected Map&lt;String, Object&gt; instantiateMembers(@Nonnull Map&lt;String, ClassHolder&gt; classMap, @Nonnull Map&lt;String, Object&gt; args) {
         // instantiate the parts
-<span class="fc" id="L240">        Map&lt;String, Object&gt; instanceMap = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc bfc" id="L241" title="All 2 branches covered.">        for (Map.Entry&lt;String, ClassHolder&gt; classEntry : classMap.entrySet()) {</span>
-<span class="fc" id="L242">            String memberType = classEntry.getKey();</span>
-<span class="pc bpc" id="L243" title="1 of 2 branches missed.">            if (args.containsKey(memberType)) {</span>
+<span class="fc" id="L242">        Map&lt;String, Object&gt; instanceMap = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L243" title="All 2 branches covered.">        for (Map.Entry&lt;String, ClassHolder&gt; classEntry : classMap.entrySet()) {</span>
+<span class="fc" id="L244">            String memberType = classEntry.getKey();</span>
+<span class="pc bpc" id="L245" title="1 of 2 branches missed.">            if (args.containsKey(memberType)) {</span>
                 // use provided value, even if null
-<span class="nc" id="L245">                instanceMap.put(memberType, args.get(memberType));</span>
+<span class="nc" id="L247">                instanceMap.put(memberType, args.get(memberType));</span>
             } else {
                 // otherwise create a new value
-<span class="fc" id="L248">                ClassHolder classHolder = classEntry.getValue();</span>
-<span class="pc bpc" id="L249" title="1 of 2 branches missed.">                if (classHolder.artifactClass != null) {</span>
-<span class="fc" id="L250">                    Class&lt;? extends GriffonArtifact&gt; memberClass = classHolder.artifactClass;</span>
-<span class="fc" id="L251">                    ArtifactManager artifactManager = getApplication().getArtifactManager();</span>
-<span class="fc" id="L252">                    GriffonClass griffonClass = artifactManager.findGriffonClass(memberClass);</span>
-<span class="fc" id="L253">                    GriffonArtifact instance = artifactManager.newInstance(griffonClass);</span>
-<span class="fc" id="L254">                    instanceMap.put(memberType, instance);</span>
-<span class="fc" id="L255">                    args.put(memberType, instance);</span>
-<span class="fc" id="L256">                } else {</span>
-<span class="nc" id="L257">                    Class&lt;?&gt; memberClass = classHolder.regularClass;</span>
+<span class="fc" id="L250">                ClassHolder classHolder = classEntry.getValue();</span>
+<span class="pc bpc" id="L251" title="1 of 2 branches missed.">                if (classHolder.artifactClass != null) {</span>
+<span class="fc" id="L252">                    Class&lt;? extends GriffonArtifact&gt; memberClass = classHolder.artifactClass;</span>
+<span class="fc" id="L253">                    ArtifactManager artifactManager = getApplication().getArtifactManager();</span>
+<span class="fc" id="L254">                    GriffonClass griffonClass = artifactManager.findGriffonClass(memberClass);</span>
+<span class="fc" id="L255">                    GriffonArtifact instance = artifactManager.newInstance(griffonClass);</span>
+<span class="fc" id="L256">                    instanceMap.put(memberType, instance);</span>
+<span class="fc" id="L257">                    args.put(memberType, instance);</span>
+<span class="fc" id="L258">                } else {</span>
+<span class="nc" id="L259">                    Class&lt;?&gt; memberClass = classHolder.regularClass;</span>
                     try {
-<span class="nc" id="L259">                        Object instance = memberClass.newInstance();</span>
-<span class="nc" id="L260">                        getApplication().getInjector().injectMembers(instance);</span>
-<span class="nc" id="L261">                        instanceMap.put(memberType, instance);</span>
-<span class="nc" id="L262">                        args.put(memberType, instance);</span>
-<span class="nc" id="L263">                    } catch (InstantiationException | IllegalAccessException e) {</span>
-<span class="nc" id="L264">                        LOG.error(&quot;Can't create member {} with {}&quot;, memberType, memberClass);</span>
-<span class="nc" id="L265">                        throw new NewInstanceException(memberClass, e);</span>
-<span class="nc" id="L266">                    }</span>
+<span class="nc" id="L261">                        Object instance = memberClass.newInstance();</span>
+<span class="nc" id="L262">                        getApplication().getInjector().injectMembers(instance);</span>
+<span class="nc" id="L263">                        instanceMap.put(memberType, instance);</span>
+<span class="nc" id="L264">                        args.put(memberType, instance);</span>
+<span class="nc" id="L265">                    } catch (InstantiationException | IllegalAccessException e) {</span>
+<span class="nc" id="L266">                        LOG.error(&quot;Can't create member {} with {}&quot;, memberType, memberClass);</span>
+<span class="nc" id="L267">                        throw new NewInstanceException(memberClass, e);</span>
+<span class="nc" id="L268">                    }</span>
                 }
             }
-<span class="fc" id="L269">        }</span>
-<span class="fc" id="L270">        return instanceMap;</span>
+<span class="fc" id="L271">        }</span>
+<span class="fc" id="L272">        return instanceMap;</span>
     }
 
     protected void initializeMembers(@Nonnull MVCGroup group, @Nonnull Map&lt;String, Object&gt; args) {
-<span class="fc" id="L274">        LOG.debug(&quot;Initializing each MVC member of group '{}'&quot;, group.getMvcId());</span>
-<span class="fc bfc" id="L275" title="All 2 branches covered.">        for (Map.Entry&lt;String, Object&gt; memberEntry : group.getMembers().entrySet()) {</span>
-<span class="fc" id="L276">            String memberType = memberEntry.getKey();</span>
-<span class="fc" id="L277">            Object member = memberEntry.getValue();</span>
-<span class="pc bpc" id="L278" title="1 of 2 branches missed.">            if (member instanceof GriffonArtifact) {</span>
-<span class="fc" id="L279">                initializeArtifactMember(group, memberType, (GriffonArtifact) member, args);</span>
+<span class="fc" id="L276">        LOG.debug(&quot;Initializing each MVC member of group '{}'&quot;, group.getMvcId());</span>
+<span class="fc bfc" id="L277" title="All 2 branches covered.">        for (Map.Entry&lt;String, Object&gt; memberEntry : group.getMembers().entrySet()) {</span>
+<span class="fc" id="L278">            String memberType = memberEntry.getKey();</span>
+<span class="fc" id="L279">            Object member = memberEntry.getValue();</span>
+<span class="pc bpc" id="L280" title="1 of 2 branches missed.">            if (member instanceof GriffonArtifact) {</span>
+<span class="fc" id="L281">                initializeArtifactMember(group, memberType, (GriffonArtifact) member, args);</span>
             } else {
-<span class="nc" id="L281">                initializeNonArtifactMember(group, memberType, member, args);</span>
+<span class="nc" id="L283">                initializeNonArtifactMember(group, memberType, member, args);</span>
             }
-<span class="fc" id="L283">        }</span>
-<span class="fc" id="L284">    }</span>
+<span class="fc" id="L285">        }</span>
+<span class="fc" id="L286">    }</span>
 
     protected void initializeArtifactMember(@Nonnull MVCGroup group, @Nonnull String type, final @Nonnull GriffonArtifact member, final @Nonnull Map&lt;String, Object&gt; args) {
-<span class="fc bfc" id="L287" title="All 2 branches covered.">        if (member instanceof GriffonView) {</span>
-<span class="fc" id="L288">            getApplication().getUIThreadManager().runInsideUISync(new Runnable() {</span>
+<span class="fc bfc" id="L289" title="All 2 branches covered.">        if (member instanceof GriffonView) {</span>
+<span class="fc" id="L290">            getApplication().getUIThreadManager().runInsideUISync(new Runnable() {</span>
                 @Override
                 public void run() {
                     try {
-<span class="fc" id="L292">                        GriffonView view = (GriffonView) member;</span>
-<span class="fc" id="L293">                        view.initUI();</span>
-<span class="fc" id="L294">                        view.mvcGroupInit(args);</span>
-<span class="nc" id="L295">                    } catch (RuntimeException e) {</span>
-<span class="nc" id="L296">                        throw (RuntimeException) sanitize(e);</span>
-<span class="fc" id="L297">                    }</span>
-<span class="fc" id="L298">                }</span>
+<span class="fc" id="L294">                        GriffonView view = (GriffonView) member;</span>
+<span class="fc" id="L295">                        view.initUI();</span>
+<span class="fc" id="L296">                        view.mvcGroupInit(args);</span>
+<span class="nc" id="L297">                    } catch (RuntimeException e) {</span>
+<span class="nc" id="L298">                        throw (RuntimeException) sanitize(e);</span>
+<span class="fc" id="L299">                    }</span>
+<span class="fc" id="L300">                }</span>
             });
-<span class="pc bpc" id="L300" title="1 of 2 branches missed.">        } else if (member instanceof GriffonMvcArtifact) {</span>
-<span class="fc" id="L301">            ((GriffonMvcArtifact) member).mvcGroupInit(args);</span>
+<span class="pc bpc" id="L302" title="1 of 2 branches missed.">        } else if (member instanceof GriffonMvcArtifact) {</span>
+<span class="fc" id="L303">            ((GriffonMvcArtifact) member).mvcGroupInit(args);</span>
         }
-<span class="fc" id="L303">    }</span>
+<span class="fc" id="L305">    }</span>
 
     protected void initializeNonArtifactMember(@Nonnull MVCGroup group, @Nonnull String type, @Nonnull Object member, @Nonnull Map&lt;String, Object&gt; args) {
         // empty
-<span class="nc" id="L307">    }</span>
+<span class="nc" id="L309">    }</span>
 
     protected void fillReferencedProperties(@Nonnull MVCGroup group, @Nonnull Map&lt;String, Object&gt; args) {
-<span class="fc bfc" id="L310" title="All 2 branches covered.">        for (Map.Entry&lt;String, Object&gt; memberEntry : group.getMembers().entrySet()) {</span>
-<span class="fc" id="L311">            String memberType = memberEntry.getKey();</span>
-<span class="fc" id="L312">            Object member = memberEntry.getValue();</span>
-<span class="pc bpc" id="L313" title="1 of 2 branches missed.">            if (member instanceof GriffonArtifact) {</span>
-<span class="fc" id="L314">                fillArtifactMemberProperties(memberType, (GriffonArtifact) member, args);</span>
+<span class="fc bfc" id="L312" title="All 2 branches covered.">        for (Map.Entry&lt;String, Object&gt; memberEntry : group.getMembers().entrySet()) {</span>
+<span class="fc" id="L313">            String memberType = memberEntry.getKey();</span>
+<span class="fc" id="L314">            Object member = memberEntry.getValue();</span>
+<span class="pc bpc" id="L315" title="1 of 2 branches missed.">            if (member instanceof GriffonArtifact) {</span>
+<span class="fc" id="L316">                fillArtifactMemberProperties(memberType, (GriffonArtifact) member, args);</span>
             } else {
-<span class="nc" id="L316">                fillNonArtifactMemberProperties(memberType, member, args);</span>
+<span class="nc" id="L318">                fillNonArtifactMemberProperties(memberType, member, args);</span>
             }
-<span class="fc" id="L318">            fillContextualMemberProperties(group, memberType, member);</span>
-<span class="fc" id="L319">        }</span>
-<span class="fc" id="L320">    }</span>
+<span class="fc" id="L320">            fillContextualMemberProperties(group, memberType, member);</span>
+<span class="fc" id="L321">        }</span>
+<span class="fc" id="L322">    }</span>
 
     private void fillArtifactMemberProperties(@Nonnull String type, @Nonnull GriffonArtifact member, @Nonnull Map&lt;String, Object&gt; args) {
         // set the args and instances
-<span class="fc" id="L324">        setPropertiesOrFieldsNoException(member, args);</span>
-<span class="fc" id="L325">    }</span>
+<span class="fc" id="L326">        setPropertiesOrFieldsNoException(member, args);</span>
+<span class="fc" id="L327">    }</span>
 
     protected void fillNonArtifactMemberProperties(@Nonnull String type, @Nonnull Object member, @Nonnull Map&lt;String, Object&gt; args) {
         // empty
-<span class="nc" id="L329">    }</span>
+<span class="nc" id="L331">    }</span>
 
     protected void fillContextualMemberProperties(@Nonnull MVCGroup group, @Nonnull String type, @Nonnull Object member) {
-<span class="fc bfc" id="L332" title="All 2 branches covered.">        for (PropertyDescriptor descriptor : getPropertyDescriptors(member.getClass())) {</span>
-<span class="fc" id="L333">            Method method = descriptor.getWriteMethod();</span>
-<span class="pc bpc" id="L334" title="1 of 4 branches missed.">            if (method != null &amp;&amp; method.getAnnotation(Contextual.class) != null) {</span>
-<span class="nc" id="L335">                String key = nameFor(method);</span>
-<span class="nc" id="L336">                Object arg = group.getContext().get(key);</span>
+<span class="fc bfc" id="L334" title="All 2 branches covered.">        for (PropertyDescriptor descriptor : getPropertyDescriptors(member.getClass())) {</span>
+<span class="fc" id="L335">            Method method = descriptor.getWriteMethod();</span>
+<span class="pc bpc" id="L336" title="1 of 4 branches missed.">            if (method != null &amp;&amp; method.getAnnotation(Contextual.class) != null) {</span>
+<span class="nc" id="L337">                String key = nameFor(method);</span>
+<span class="nc" id="L338">                Object arg = group.getContext().get(key);</span>
 
-<span class="nc" id="L338">                Nonnull nonNull = findAnnotation(annotationsOfMethodParameter(method, 0), Nonnull.class);</span>
-<span class="nc bnc" id="L339" title="All 4 branches missed.">                if (arg == null &amp;&amp; nonNull != null) {</span>
-<span class="nc" id="L340">                    throw new IllegalStateException(&quot;Could not find an instance of type &quot; +</span>
-<span class="nc" id="L341">                        method.getParameterTypes()[0].getName() + &quot; under key '&quot; + key +</span>
-<span class="nc" id="L342">                        &quot;' in the context of MVCGroup[&quot; + group.getMvcType() + &quot;:&quot; + group.getMvcId() +</span>
-<span class="nc" id="L343">                        &quot;] to be injected on property '&quot; + descriptor.getName() +</span>
-<span class="nc" id="L344">                        &quot;' in &quot; + type + &quot; (&quot; + member.getClass().getName() + &quot;). Property does not accept null values.&quot;);</span>
+<span class="nc" id="L340">                Nonnull nonNull = findAnnotation(annotationsOfMethodParameter(method, 0), Nonnull.class);</span>
+<span class="nc bnc" id="L341" title="All 4 branches missed.">                if (arg == null &amp;&amp; nonNull != null) {</span>
+<span class="nc" id="L342">                    throw new IllegalStateException(&quot;Could not find an instance of type &quot; +</span>
+<span class="nc" id="L343">                        method.getParameterTypes()[0].getName() + &quot; under key '&quot; + key +</span>
+<span class="nc" id="L344">                        &quot;' in the context of MVCGroup[&quot; + group.getMvcType() + &quot;:&quot; + group.getMvcId() +</span>
+<span class="nc" id="L345">                        &quot;] to be injected on property '&quot; + descriptor.getName() +</span>
+<span class="nc" id="L346">                        &quot;' in &quot; + type + &quot; (&quot; + member.getClass().getName() + &quot;). Property does not accept null values.&quot;);</span>
                 }
 
                 try {
-<span class="nc" id="L348">                    method.invoke(member, arg);</span>
-<span class="nc" id="L349">                } catch (IllegalAccessException | InvocationTargetException e) {</span>
-<span class="nc" id="L350">                    throw new MVCGroupInstantiationException(group.getMvcType(), group.getMvcId(), e);</span>
-<span class="nc" id="L351">                }</span>
+<span class="nc" id="L350">                    method.invoke(member, arg);</span>
+<span class="nc" id="L351">                } catch (IllegalAccessException | InvocationTargetException e) {</span>
+<span class="nc" id="L352">                    throw new MVCGroupInstantiationException(group.getMvcType(), group.getMvcId(), e);</span>
+<span class="nc" id="L353">                }</span>
             }
         }
 
-<span class="fc bfc" id="L355" title="All 2 branches covered.">        for (Field field : getAllDeclaredFields(member.getClass())) {</span>
-<span class="pc bpc" id="L356" title="1 of 2 branches missed.">            if (field.getAnnotation(Contextual.class) != null) {</span>
-<span class="nc" id="L357">                String key = nameFor(field);</span>
-<span class="nc" id="L358">                Object arg = group.getContext().get(key);</span>
-<span class="nc bnc" id="L359" title="All 4 branches missed.">                if (arg == null &amp;&amp; field.getAnnotation(Nonnull.class) != null) {</span>
-<span class="nc" id="L360">                    throw new IllegalStateException(&quot;Could not find an instance of type &quot; +</span>
-<span class="nc" id="L361">                        field.getType().getName() + &quot; under key '&quot; + key +</span>
-<span class="nc" id="L362">                        &quot;' in the context of MVCGroup[&quot; + group.getMvcType() + &quot;:&quot; + group.getMvcId() +</span>
-<span class="nc" id="L363">                        &quot;] to be injected on field '&quot; + field.getName() +</span>
-<span class="nc" id="L364">                        &quot;' in &quot; + type + &quot; (&quot; + member.getClass().getName() + &quot;). Field does not accept null values.&quot;);</span>
+<span class="fc bfc" id="L357" title="All 2 branches covered.">        for (Field field : getAllDeclaredFields(member.getClass())) {</span>
+<span class="pc bpc" id="L358" title="1 of 2 branches missed.">            if (field.getAnnotation(Contextual.class) != null) {</span>
+<span class="nc" id="L359">                Object value = null;</span>
+<span class="nc" id="L360">                String[] keys = namesFor(field);</span>
+<span class="nc bnc" id="L361" title="All 2 branches missed.">                for (String key : keys) {</span>
+<span class="nc bnc" id="L362" title="All 2 branches missed.">                    if (group.getContext().containsKey(key)) {</span>
+<span class="nc" id="L363">                        value = group.getContext().get(key);</span>
+                    }
+                }
+
+<span class="nc bnc" id="L367" title="All 4 branches missed.">                if (value == null &amp;&amp; field.getAnnotation(Nonnull.class) != null) {</span>
+<span class="nc" id="L368">                    throw new IllegalStateException(&quot;Could not find an instance of type &quot; +</span>
+<span class="nc" id="L369">                        field.getType().getName() + &quot; under keys '&quot; + Arrays.toString(keys) +</span>
+<span class="nc" id="L370">                        &quot;' in the context of MVCGroup[&quot; + group.getMvcType() + &quot;:&quot; + group.getMvcId() +</span>
+<span class="nc" id="L371">                        &quot;] to be injected on field '&quot; + field.getName() +</span>
+<span class="nc" id="L372">                        &quot;' in &quot; + type + &quot; (&quot; + member.getClass().getName() + &quot;). Field does not accept null values.&quot;);</span>
                 }
 
                 try {
-<span class="nc" id="L368">                    setFieldValue(member, field.getName(), arg);</span>
-<span class="nc" id="L369">                } catch (FieldException e) {</span>
-<span class="nc" id="L370">                    throw new MVCGroupInstantiationException(group.getMvcType(), group.getMvcId(), e);</span>
-<span class="nc" id="L371">                }</span>
+<span class="nc" id="L376">                    setFieldValue(member, field.getName(), value);</span>
+<span class="nc" id="L377">                } catch (FieldException e) {</span>
+<span class="nc" id="L378">                    throw new MVCGroupInstantiationException(group.getMvcType(), group.getMvcId(), e);</span>
+<span class="nc" id="L379">                }</span>
             }
         }
-<span class="fc" id="L374">    }</span>
+<span class="fc" id="L382">    }</span>
 
     protected void doAddGroup(@Nonnull MVCGroup group) {
-<span class="fc" id="L377">        addGroup(group);</span>
-<span class="fc" id="L378">    }</span>
+<span class="fc" id="L385">        addGroup(group);</span>
+<span class="fc" id="L386">    }</span>
 
     public void destroyMVCGroup(@Nonnull String mvcId) {
-<span class="fc" id="L381">        MVCGroup group = findGroup(mvcId);</span>
-<span class="fc" id="L382">        LOG.debug(&quot;Group '{}' points to {}&quot;, mvcId, group);</span>
+<span class="fc" id="L389">        MVCGroup group = findGroup(mvcId);</span>
+<span class="fc" id="L390">        LOG.debug(&quot;Group '{}' points to {}&quot;, mvcId, group);</span>
 
-<span class="fc bfc" id="L384" title="All 2 branches covered.">        if (group == null) return;</span>
+<span class="fc bfc" id="L392" title="All 2 branches covered.">        if (group == null) return;</span>
 
-<span class="fc" id="L386">        LOG.debug(&quot;Destroying MVC group identified by '{}'&quot;, mvcId);</span>
+<span class="fc" id="L394">        LOG.debug(&quot;Destroying MVC group identified by '{}'&quot;, mvcId);</span>
 
-<span class="pc bpc" id="L388" title="1 of 2 branches missed.">        if (isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_LISTENER)) {</span>
-<span class="fc" id="L389">            GriffonController controller = group.getController();</span>
-<span class="pc bpc" id="L390" title="1 of 2 branches missed.">            if (controller != null) {</span>
-<span class="fc" id="L391">                getApplication().getEventRouter().removeEventListener(controller);</span>
+<span class="pc bpc" id="L396" title="1 of 2 branches missed.">        if (isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_LISTENER)) {</span>
+<span class="fc" id="L397">            GriffonController controller = group.getController();</span>
+<span class="pc bpc" id="L398" title="1 of 2 branches missed.">            if (controller != null) {</span>
+<span class="fc" id="L399">                getApplication().getEventRouter().removeEventListener(controller);</span>
             }
         }
 
-<span class="fc" id="L395">        boolean fireDestructionEvents = isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_DESTRUCTION);</span>
+<span class="fc" id="L403">        boolean fireDestructionEvents = isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_DESTRUCTION);</span>
 
-<span class="fc" id="L397">        destroyMembers(group, fireDestructionEvents);</span>
+<span class="fc" id="L405">        destroyMembers(group, fireDestructionEvents);</span>
 
-<span class="fc" id="L399">        doRemoveGroup(group);</span>
-<span class="fc" id="L400">        group.destroy();</span>
+<span class="fc" id="L407">        doRemoveGroup(group);</span>
+<span class="fc" id="L408">        group.destroy();</span>
 
-<span class="pc bpc" id="L402" title="1 of 2 branches missed.">        if (isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_LIFECYCLE)) {</span>
-<span class="fc" id="L403">            getApplication().getEventRouter().publishEvent(ApplicationEvent.DESTROY_MVC_GROUP.getName(), asList(group));</span>
+<span class="pc bpc" id="L410" title="1 of 2 branches missed.">        if (isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_LIFECYCLE)) {</span>
+<span class="fc" id="L411">            getApplication().getEventRouter().publishEvent(ApplicationEvent.DESTROY_MVC_GROUP.getName(), asList(group));</span>
         }
-<span class="fc" id="L405">    }</span>
+<span class="fc" id="L413">    }</span>
 
     protected void destroyMembers(@Nonnull MVCGroup group, boolean fireDestructionEvents) {
-<span class="fc bfc" id="L408" title="All 2 branches covered.">        for (Map.Entry&lt;String, Object&gt; memberEntry : group.getMembers().entrySet()) {</span>
-<span class="fc" id="L409">            Object member = memberEntry.getValue();</span>
-<span class="pc bpc" id="L410" title="1 of 2 branches missed.">            if (member instanceof GriffonArtifact) {</span>
-<span class="fc" id="L411">                destroyArtifactMember(memberEntry.getKey(), (GriffonArtifact) member, fireDestructionEvents);</span>
+<span class="fc bfc" id="L416" title="All 2 branches covered.">        for (Map.Entry&lt;String, Object&gt; memberEntry : group.getMembers().entrySet()) {</span>
+<span class="fc" id="L417">            Object member = memberEntry.getValue();</span>
+<span class="pc bpc" id="L418" title="1 of 2 branches missed.">            if (member instanceof GriffonArtifact) {</span>
+<span class="fc" id="L419">                destroyArtifactMember(memberEntry.getKey(), (GriffonArtifact) member, fireDestructionEvents);</span>
             } else {
-<span class="nc" id="L413">                destroyNonArtifactMember(memberEntry.getKey(), member, fireDestructionEvents);</span>
+<span class="nc" id="L421">                destroyNonArtifactMember(memberEntry.getKey(), member, fireDestructionEvents);</span>
             }
 
-<span class="fc" id="L416">        }</span>
+<span class="fc" id="L424">        }</span>
 
-<span class="pc bpc" id="L418" title="1 of 2 branches missed.">        if (group instanceof AbstractMVCGroup) {</span>
-<span class="fc" id="L419">            List&lt;Object&gt; injectedInstances = ((AbstractMVCGroup) group).getInjectedInstances();</span>
-<span class="pc bpc" id="L420" title="1 of 2 branches missed.">            for (Object instance : injectedInstances) {</span>
-<span class="nc" id="L421">                getApplication().getInjector().release(instance);</span>
-<span class="nc" id="L422">            }</span>
-<span class="fc" id="L423">            injectedInstances.clear();</span>
+<span class="pc bpc" id="L426" title="1 of 2 branches missed.">        if (group instanceof AbstractMVCGroup) {</span>
+<span class="fc" id="L427">            List&lt;Object&gt; injectedInstances = ((AbstractMVCGroup) group).getInjectedInstances();</span>
+<span class="pc bpc" id="L428" title="1 of 2 branches missed.">            for (Object instance : injectedInstances) {</span>
+<span class="nc" id="L429">                getApplication().getInjector().release(instance);</span>
+<span class="nc" id="L430">            }</span>
+<span class="fc" id="L431">            injectedInstances.clear();</span>
         }
-<span class="fc" id="L425">    }</span>
+<span class="fc" id="L433">    }</span>
 
     protected void destroyArtifactMember(@Nonnull String type, @Nonnull GriffonArtifact member, boolean fireDestructionEvents) {
-<span class="pc bpc" id="L428" title="1 of 2 branches missed.">        if (member instanceof GriffonMvcArtifact) {</span>
-<span class="fc" id="L429">            final GriffonMvcArtifact artifact = (GriffonMvcArtifact) member;</span>
-<span class="pc bpc" id="L430" title="1 of 2 branches missed.">            if (fireDestructionEvents) {</span>
-<span class="fc" id="L431">                getApplication().getEventRouter().publishEvent(ApplicationEvent.DESTROY_INSTANCE.getName(), asList(member.getClass(), artifact));</span>
+<span class="pc bpc" id="L436" title="1 of 2 branches missed.">        if (member instanceof GriffonMvcArtifact) {</span>
+<span class="fc" id="L437">            final GriffonMvcArtifact artifact = (GriffonMvcArtifact) member;</span>
+<span class="pc bpc" id="L438" title="1 of 2 branches missed.">            if (fireDestructionEvents) {</span>
+<span class="fc" id="L439">                getApplication().getEventRouter().publishEvent(ApplicationEvent.DESTROY_INSTANCE.getName(), asList(member.getClass(), artifact));</span>
             }
 
-<span class="fc bfc" id="L434" title="All 2 branches covered.">            if (artifact instanceof GriffonView) {</span>
-<span class="fc" id="L435">                getApplication().getUIThreadManager().runInsideUISync(new Runnable() {</span>
+<span class="fc bfc" id="L442" title="All 2 branches covered.">            if (artifact instanceof GriffonView) {</span>
+<span class="fc" id="L443">                getApplication().getUIThreadManager().runInsideUISync(new Runnable() {</span>
                     @Override
                     public void run() {
                         try {
-<span class="fc" id="L439">                            artifact.mvcGroupDestroy();</span>
-<span class="nc" id="L440">                        } catch (RuntimeException e) {</span>
-<span class="nc" id="L441">                            throw (RuntimeException) sanitize(e);</span>
-<span class="fc" id="L442">                        }</span>
-<span class="fc" id="L443">                    }</span>
+<span class="fc" id="L447">                            artifact.mvcGroupDestroy();</span>
+<span class="nc" id="L448">                        } catch (RuntimeException e) {</span>
+<span class="nc" id="L449">                            throw (RuntimeException) sanitize(e);</span>
+<span class="fc" id="L450">                        }</span>
+<span class="fc" id="L451">                    }</span>
                 });
             } else {
-<span class="fc" id="L446">                artifact.mvcGroupDestroy();</span>
+<span class="fc" id="L454">                artifact.mvcGroupDestroy();</span>
             }
 
             // clear all parent* references
-<span class="fc bfc" id="L450" title="All 2 branches covered.">            for (String parentMemberName : new String[]{&quot;parentModel&quot;, &quot;parentView&quot;, &quot;parentController&quot;, &quot;parentGroup&quot;}) {</span>
-<span class="fc" id="L451">                setPropertyOrFieldValueNoException(member, parentMemberName, null);</span>
+<span class="fc bfc" id="L458" title="All 2 branches covered.">            for (String parentMemberName : new String[]{&quot;parentModel&quot;, &quot;parentView&quot;, &quot;parentController&quot;, &quot;parentGroup&quot;}) {</span>
+<span class="fc" id="L459">                setPropertyOrFieldValueNoException(member, parentMemberName, null);</span>
             }
         }
 
-<span class="fc" id="L455">        destroyContextualMemberProperties(type, member);</span>
-<span class="fc" id="L456">    }</span>
+<span class="fc" id="L463">        destroyContextualMemberProperties(type, member);</span>
+<span class="fc" id="L464">    }</span>
 
     protected void destroyContextualMemberProperties(@Nonnull String type, @Nonnull GriffonArtifact member) {
-<span class="fc bfc" id="L459" title="All 2 branches covered.">        for (Field field : getAllDeclaredFields(member.getClass())) {</span>
-<span class="pc bpc" id="L460" title="1 of 2 branches missed.">            if (field.getAnnotation(Contextual.class) != null) {</span>
+<span class="fc bfc" id="L467" title="All 2 branches covered.">        for (Field field : getAllDeclaredFields(member.getClass())) {</span>
+<span class="pc bpc" id="L468" title="1 of 2 branches missed.">            if (field.getAnnotation(Contextual.class) != null) {</span>
                 try {
-<span class="nc" id="L462">                    setFieldValue(member, field.getName(), null);</span>
-<span class="nc" id="L463">                } catch (FieldException e) {</span>
-<span class="nc" id="L464">                    throw new IllegalStateException(&quot;Could not nullify field &quot; +</span>
-<span class="nc" id="L465">                        field.getName() + &quot;' in &quot; + type + &quot; (&quot; + member.getClass().getName() + &quot;)&quot;, e);</span>
-<span class="nc" id="L466">                }</span>
+<span class="nc" id="L470">                    setFieldValue(member, field.getName(), null);</span>
+<span class="nc" id="L471">                } catch (FieldException e) {</span>
+<span class="nc" id="L472">                    throw new IllegalStateException(&quot;Could not nullify field &quot; +</span>
+<span class="nc" id="L473">                        field.getName() + &quot;' in &quot; + type + &quot; (&quot; + member.getClass().getName() + &quot;)&quot;, e);</span>
+<span class="nc" id="L474">                }</span>
             }
         }
-<span class="fc" id="L469">    }</span>
+<span class="fc" id="L477">    }</span>
 
     protected void destroyNonArtifactMember(@Nonnull String type, @Nonnull Object member, boolean fireDestructionEvents) {
         // empty
-<span class="nc" id="L473">    }</span>
+<span class="nc" id="L481">    }</span>
 
     protected void doRemoveGroup(@Nonnull MVCGroup group) {
-<span class="fc" id="L476">        removeGroup(group);</span>
-<span class="fc" id="L477">    }</span>
+<span class="fc" id="L484">        removeGroup(group);</span>
+<span class="fc" id="L485">    }</span>
 
     protected boolean isConfigFlagEnabled(@Nonnull MVCGroupConfiguration configuration, @Nonnull String key) {
-<span class="fc" id="L480">        return getConfigValueAsBoolean(configuration.getConfig(), key, true);</span>
+<span class="fc" id="L488">        return getConfigValueAsBoolean(configuration.getConfig(), key, true);</span>
     }
 
     @Nullable
     protected Class&lt;?&gt; loadClass(@Nonnull String className) {
         try {
-<span class="nc" id="L486">            return applicationClassLoader.get().loadClass(className);</span>
-<span class="nc" id="L487">        } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L494">            return applicationClassLoader.get().loadClass(className);</span>
+<span class="nc" id="L495">        } catch (ClassNotFoundException e) {</span>
             // #39 do not ignore this CNFE
-<span class="nc" id="L489">            throw new GriffonException(e.toString(), e);</span>
+<span class="nc" id="L497">            throw new GriffonException(e.toString(), e);</span>
         }
     }
 
-<span class="fc" id="L493">    protected static final class ClassHolder {</span>
+<span class="fc" id="L501">    protected static final class ClassHolder {</span>
         protected Class&lt;?&gt; regularClass;
         protected Class&lt;? extends GriffonArtifact&gt; artifactClass;
     }
