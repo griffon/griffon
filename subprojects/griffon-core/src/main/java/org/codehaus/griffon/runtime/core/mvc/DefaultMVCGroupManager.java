@@ -44,6 +44,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,7 @@ import static griffon.core.GriffonExceptionHandler.sanitize;
 import static griffon.util.AnnotationUtils.annotationsOfMethodParameter;
 import static griffon.util.AnnotationUtils.findAnnotation;
 import static griffon.util.AnnotationUtils.nameFor;
+import static griffon.util.AnnotationUtils.namesFor;
 import static griffon.util.ConfigUtils.getConfigValueAsBoolean;
 import static griffon.util.GriffonClassUtils.getAllDeclaredFields;
 import static griffon.util.GriffonClassUtils.getPropertyDescriptors;
@@ -354,18 +356,24 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
         for (Field field : getAllDeclaredFields(member.getClass())) {
             if (field.getAnnotation(Contextual.class) != null) {
-                String key = nameFor(field);
-                Object arg = group.getContext().get(key);
-                if (arg == null && field.getAnnotation(Nonnull.class) != null) {
+                Object value = null;
+                String[] keys = namesFor(field);
+                for (String key : keys) {
+                    if (group.getContext().containsKey(key)) {
+                        value = group.getContext().get(key);
+                    }
+                }
+
+                if (value == null && field.getAnnotation(Nonnull.class) != null) {
                     throw new IllegalStateException("Could not find an instance of type " +
-                        field.getType().getName() + " under key '" + key +
+                        field.getType().getName() + " under keys '" + Arrays.toString(keys) +
                         "' in the context of MVCGroup[" + group.getMvcType() + ":" + group.getMvcId() +
                         "] to be injected on field '" + field.getName() +
                         "' in " + type + " (" + member.getClass().getName() + "). Field does not accept null values.");
                 }
 
                 try {
-                    setFieldValue(member, field.getName(), arg);
+                    setFieldValue(member, field.getName(), value);
                 } catch (FieldException e) {
                     throw new MVCGroupInstantiationException(group.getMvcType(), group.getMvcId(), e);
                 }

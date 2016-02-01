@@ -186,6 +186,21 @@ public class AnnotationUtils {
     }
 
     @Nonnull
+    public static String[] namesFor(@Nonnull Field field) {
+        requireNonNull(field, "Argument 'field' must not be null");
+
+        List<String> names = new ArrayList<>();
+        Named annotation = field.getAnnotation(Named.class);
+        if (annotation != null && !isBlank(annotation.value())) {
+            names.add(annotation.value());
+        } else {
+            names.add(field.getName());
+        }
+        names.add(field.getType().getName());
+        return names.toArray(new String[names.size()]);
+    }
+
+    @Nonnull
     public static String nameFor(@Nonnull Method setterMethod) {
         requireNonNull(setterMethod, "Argument 'setterMethod' must not be null");
 
