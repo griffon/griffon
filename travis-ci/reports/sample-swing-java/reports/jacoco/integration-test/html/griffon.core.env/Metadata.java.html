@@ -120,8 +120,10 @@ public class Metadata {
     @Nonnull
     public Set&lt;String&gt; keySet() {
 <span class="nc" id="L122">        Set&lt;String&gt; keys = new LinkedHashSet&lt;&gt;();</span>
-
-<span class="nc" id="L124">        return Collections.unmodifiableSet(keys);</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        for (Object key : properties.keySet()) {</span>
+<span class="nc" id="L124">            keys.add(String.valueOf(key));</span>
+<span class="nc" id="L125">        }</span>
+<span class="nc" id="L126">        return Collections.unmodifiableSet(keys);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

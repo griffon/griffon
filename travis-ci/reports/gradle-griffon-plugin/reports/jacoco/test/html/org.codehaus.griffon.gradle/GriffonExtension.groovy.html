@@ -33,6 +33,8 @@ class GriffonExtension {
 
     String applicationIconName = 'griffon.icns'
 
+    Map applicationProperties = [:]
+
     GriffonExtension(Project project) {
     }
 }
