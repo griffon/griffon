@@ -141,7 +141,7 @@ class GriffonPlugin implements Plugin<Project> {
                     'application.name'   : resolveApplicationName(project),
                     'application.version': project.version,
                     'griffon.version'    : extension.version
-                ])
+                ] + extension.applicationProperties)
             }
         }
     }
@@ -165,7 +165,7 @@ class GriffonPlugin implements Plugin<Project> {
                     'application.name'   : resolveApplicationName(project),
                     'application.version': project.version,
                     'griffon.version'    : extension.version
-                ])
+                ] + extension.applicationProperties)
             }
         }
     }

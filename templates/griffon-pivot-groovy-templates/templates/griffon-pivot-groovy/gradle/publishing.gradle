@@ -1,10 +1,3 @@
-import java.text.SimpleDateFormat
-
-Date buildTimeAndDate = new Date()
-ext {
-    buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
-    buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
-}
 
 jar {
     manifest {
@@ -13,6 +6,7 @@ jar {
             'Created-By': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})".toString(),
             'Build-Date': project.buildDate,
             'Build-Time': project.buildTime,
+            'Build-Revision': versioning.info.commit,
             'Specification-Title': project.name,
             'Specification-Version': project.version,
             'Implementation-Title': project.name,

@@ -120,7 +120,9 @@ public class Metadata {
     @Nonnull
     public Set<String> keySet() {
         Set<String> keys = new LinkedHashSet<>();
-
+        for (Object key : properties.keySet()) {
+            keys.add(String.valueOf(key));
+        }
         return Collections.unmodifiableSet(keys);
     }
 }

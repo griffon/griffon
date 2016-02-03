@@ -14,21 +14,31 @@ buildscript {
         classpath 'org.kordamp.gradle:stats-gradle-plugin:0.1.5'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
         classpath 'de.gliderpilot.gradle.jnlp:gradle-jnlp-plugin:0.2.1'
+        classpath 'net.nemerosa:versioning:1.6.0'
     }
 }
 
 apply plugin: 'groovy'
 apply plugin: 'org.codehaus.griffon.griffon'
+apply plugin: 'net.nemerosa.versioning'
+
+Date buildTimeAndDate = new Date()
+ext {
+    buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
+    buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+    macosx = System.getProperty('os.name').contains('Mac OS')
+}
 
 griffon {
     disableDependencyResolution = false
     includeGroovyDependencies = true
     version = '${griffon_version}'
     toolkit = 'javafx'
-}
-
-ext {
-    macosx = System.getProperty('os.name').contains('Mac OS')
+    applicationProperties = [
+        'build.date'    : buildDate,
+        'build.time'    : buildTime,
+        'build.revision': versioning.info.commit
+    ]
 }
 
 mainClassName = '${project_package}.Launcher'
@@ -78,6 +88,8 @@ tasks.withType(GroovyCompile) {
 }
 
 import com.github.jengelman.gradle.plugins.shadow.transformers.*
+import java.text.SimpleDateFormat
+
 shadowJar {
     transform(ServiceFileTransformer)
     transform(ServiceFileTransformer) {

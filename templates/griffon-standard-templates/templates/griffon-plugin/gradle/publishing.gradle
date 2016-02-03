@@ -2,6 +2,7 @@ if (!publishJars.toBoolean()) return
 
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
+apply plugin: 'net.nemerosa.versioning'
 
 def pomConfig = {
     name project.name
@@ -44,6 +45,7 @@ jar {
             'Created-By': "\${System.properties['java.version']} (\${System.properties['java.vendor']} \${System.properties['java.vm.version']})".toString(),
             'Build-Date': buildDate,
             'Build-Time': buildTime,
+            'Build-Revision': versioning.info.commit,
             'Specification-Title': project.name,
             'Specification-Version': project.version,
             'Specification-Vendor': 'griffon-framework.org',
