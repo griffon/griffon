@@ -29,7 +29,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class DefaultEventRouter extends AbstractEventRouter {
     private final BlockingQueue<Runnable> deferredEvents = new LinkedBlockingQueue<>();
-    protected static int count = 1;
+    private static final String ERROR_PUBLISHER_NULL = "Argument 'publisher' must not be null";
     private UIThreadManager uiThreadManager;
 
     public DefaultEventRouter() {
@@ -38,21 +38,15 @@ public class DefaultEventRouter extends AbstractEventRouter {
                 //noinspection InfiniteLoopStatement
                 while (true) {
                     try {
-                        deferredEvents.take().run();
+                        executorService.submit(deferredEvents.take());
                     } catch (InterruptedException e) {
                         // ignore ?
                     }
                 }
             }
-        }, getClass().getSimpleName() + "-" + identifier());
+        }, "event-router-queue-" + eventRouterId);
         t.setDaemon(true);
         t.start();
-    }
-
-    private static int identifier() {
-        synchronized (LOCK) {
-            return count++;
-        }
     }
 
     @Inject
@@ -61,7 +55,12 @@ public class DefaultEventRouter extends AbstractEventRouter {
     }
 
     protected void doPublishOutsideUI(@Nonnull Runnable publisher) {
-        uiThreadManager.runOutsideUI(publisher);
+        requireNonNull(publisher, ERROR_PUBLISHER_NULL);
+        if (!uiThreadManager.isUIThread()) {
+            publisher.run();
+        } else {
+            runInsideExecutorService(publisher);
+        }
     }
 
     protected void doPublishAsync(@Nonnull Runnable publisher) {

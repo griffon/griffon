@@ -16,6 +16,8 @@
 package org.codehaus.griffon.runtime.core.event;
 
 import griffon.core.CallableWithArgs;
+import griffon.core.ExceptionHandler;
+import griffon.core.ExecutorServiceManager;
 import griffon.core.RunnableWithArgs;
 import griffon.core.event.Event;
 import griffon.core.event.EventRouter;
@@ -27,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,6 +39,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static griffon.util.GriffonClassUtils.convertToTypeArray;
 import static griffon.util.GriffonNameUtils.capitalize;
@@ -66,6 +73,43 @@ public abstract class AbstractEventRouter implements EventRouter {
     protected final Map<String, List<Object>> functionalListeners = new ConcurrentHashMap<>();
     private final MethodCache methodCache = new MethodCache();
     private boolean enabled = true;
+
+    protected static final AtomicInteger EVENT_ROUTER_ID = new AtomicInteger(1);
+
+    protected ExecutorServiceManager executorServiceManager;
+    protected final ExecutorService executorService;
+    protected final int eventRouterId;
+
+    @Inject
+    private ExceptionHandler exceptionHandler;
+
+    public AbstractEventRouter() {
+        eventRouterId = EVENT_ROUTER_ID.getAndIncrement();
+        executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(), new DefaultThreadFactory(eventRouterId));
+    }
+
+    @Inject
+    public void setExecutorServiceManager(@Nonnull ExecutorServiceManager executorServiceManager) {
+        requireNonNull(executorServiceManager, "Argument 'executorServiceManager' must not be null");
+        if (this.executorServiceManager != null) {
+            this.executorServiceManager.remove(executorService);
+        }
+        this.executorServiceManager = executorServiceManager;
+        this.executorServiceManager.add(executorService);
+    }
+
+    protected void runInsideExecutorService(@Nonnull final Runnable runnable) {
+        requireNonNull(runnable, ERROR_RUNNABLE_NULL);
+        executorService.submit(new Runnable() {
+            public void run() {
+                try {
+                    runnable.run();
+                } catch (Throwable throwable) {
+                    exceptionHandler.uncaughtException(Thread.currentThread(), throwable);
+                }
+            }
+        });
+    }
 
     @Override
     public boolean isEventPublishingEnabled() {
@@ -546,6 +590,26 @@ public abstract class AbstractEventRouter implements EventRouter {
 
         public Method getMethod() {
             return method;
+        }
+    }
+
+    private static class DefaultThreadFactory implements ThreadFactory {
+        private final ThreadGroup group;
+        private final AtomicInteger threadNumber = new AtomicInteger(1);
+        private final String namePrefix;
+
+        private DefaultThreadFactory(int eventRouterId) {
+            SecurityManager s = System.getSecurityManager();
+            group = (s != null) ? s.getThreadGroup() :
+                Thread.currentThread().getThreadGroup();
+            namePrefix = "event-router-" + eventRouterId + "-thread-";
+        }
+
+        public Thread newThread(Runnable r) {
+            Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
+            if (t.isDaemon()) t.setDaemon(false);
+            if (t.getPriority() != Thread.NORM_PRIORITY) t.setPriority(Thread.NORM_PRIORITY);
+            return t;
         }
     }
 }
