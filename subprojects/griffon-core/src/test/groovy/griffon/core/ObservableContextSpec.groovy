@@ -28,6 +28,7 @@ import javax.annotation.Nonnull
 class ObservableContextSpec extends Specification {
     @Shared private ObservableContext ctx1 = new DefaultObservableContext()
     @Shared private ObservableContext ctx2 = new DefaultObservableContext(ctx1)
+    @Shared private ObservableContext ctx3 = new DefaultObservableContext(ctx1)
 
     def setup() {
         ctx1['foo'] = 'foo'
@@ -205,6 +206,25 @@ class ObservableContextSpec extends Specification {
 
         cleanup:
         PropertyEditorResolver.clear()
+    }
+
+    void "listen to lateral context events"() {
+        given:
+        TestContextEventListener listener2 = new TestContextEventListener()
+        ctx2.addContextEventListener(listener2)
+        TestContextEventListener listener3 = new TestContextEventListener()
+        ctx3.addContextEventListener(listener3)
+
+        when:
+        ctx2.put('key', 'value')
+
+        then:
+        listener2.contextEvent
+        listener2.contextEvent.type == ObservableContext.ContextEvent.Type.ADD
+        listener2.contextEvent.key == 'key'
+        listener2.contextEvent.oldValue == null
+        listener2.contextEvent.newValue == 'value'
+        listener3.contextEvent == null
     }
 
     private static class TestContextEventListener implements ObservableContext.ContextEventListener {
