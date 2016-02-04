@@ -1366,6 +1366,10 @@
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
+        <Package name="java.util.concurrent.atomic">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
         <Package name="java.util.jar">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
@@ -1906,14 +1910,14 @@
 
         <Package name="org.codehaus.griffon.runtime.core.event">
             <Stats>
-                <TotalClasses>9</TotalClasses>
-                <ConcreteClasses>7</ConcreteClasses>
+                <TotalClasses>11</TotalClasses>
+                <ConcreteClasses>9</ConcreteClasses>
                 <AbstractClasses>2</AbstractClasses>
                 <Ca>1</Ca>
-                <Ce>9</Ce>
-                <A>0.22</A>
-                <I>0.9</I>
-                <D>0.12</D>
+                <Ce>10</Ce>
+                <A>0.18</A>
+                <I>0.91</I>
+                <D>0.09</D>
                 <V>1</V>
             </Stats>
 
@@ -1929,6 +1933,12 @@
             <ConcreteClasses>
                 <Class sourceFile="AbstractEventRouter.java">
                     org.codehaus.griffon.runtime.core.event.AbstractEventRouter$1
+                </Class>
+                <Class sourceFile="AbstractEventRouter.java">
+                    org.codehaus.griffon.runtime.core.event.AbstractEventRouter$2
+                </Class>
+                <Class sourceFile="AbstractEventRouter.java">
+                    org.codehaus.griffon.runtime.core.event.AbstractEventRouter$DefaultThreadFactory
                 </Class>
                 <Class sourceFile="AbstractEventRouter.java">
                     org.codehaus.griffon.runtime.core.event.AbstractEventRouter$MethodCache
@@ -1959,6 +1969,7 @@
                 <Package>java.lang.reflect</Package>
                 <Package>java.util</Package>
                 <Package>java.util.concurrent</Package>
+                <Package>java.util.concurrent.atomic</Package>
                 <Package>org.slf4j</Package>
             </DependsUpon>
 
@@ -2316,14 +2327,14 @@
 
         <Package name="org.codehaus.griffon.runtime.core.threading">
             <Stats>
-                <TotalClasses>5</TotalClasses>
-                <ConcreteClasses>3</ConcreteClasses>
+                <TotalClasses>7</TotalClasses>
+                <ConcreteClasses>5</ConcreteClasses>
                 <AbstractClasses>2</AbstractClasses>
                 <Ca>1</Ca>
-                <Ce>7</Ce>
-                <A>0.4</A>
-                <I>0.88</I>
-                <D>0.27</D>
+                <Ce>8</Ce>
+                <A>0.29</A>
+                <I>0.89</I>
+                <D>0.17</D>
                 <V>1</V>
             </Stats>
 
@@ -2343,6 +2354,12 @@
                 <Class sourceFile="DefaultExecutorServiceProvider.java">
                     org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider
                 </Class>
+                <Class sourceFile="DefaultExecutorServiceProvider.java">
+                    org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider$1
+                </Class>
+                <Class sourceFile="DefaultExecutorServiceProvider.java">
+                    org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider$DefaultThreadFactory
+                </Class>
                 <Class sourceFile="DefaultUIThreadManager.java">
                     org.codehaus.griffon.runtime.core.threading.DefaultUIThreadManager
                 </Class>
@@ -2355,6 +2372,7 @@
                 <Package>java.lang</Package>
                 <Package>java.util</Package>
                 <Package>java.util.concurrent</Package>
+                <Package>java.util.concurrent.atomic</Package>
                 <Package>javax.inject</Package>
             </DependsUpon>
 

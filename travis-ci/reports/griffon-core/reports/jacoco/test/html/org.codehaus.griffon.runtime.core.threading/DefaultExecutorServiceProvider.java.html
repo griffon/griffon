@@ -18,15 +18,40 @@ package org.codehaus.griffon.runtime.core.threading;
 import javax.inject.Provider;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Andres Almiray
  * @since 2.2.0
  */
-<span class="fc" id="L26">public class DefaultExecutorServiceProvider implements Provider&lt;ExecutorService&gt; {</span>
+<span class="fc" id="L28">public class DefaultExecutorServiceProvider implements Provider&lt;ExecutorService&gt; {</span>
     @Override
     public ExecutorService get() {
-<span class="fc" id="L29">        return Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());</span>
+<span class="fc" id="L31">        return Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(), new DefaultThreadFactory());</span>
+    }
+
+    private static class DefaultThreadFactory implements ThreadFactory {
+<span class="fc" id="L35">        private static final AtomicInteger poolNumber = new AtomicInteger(1);</span>
+        private final ThreadGroup group;
+<span class="fc" id="L37">        private final AtomicInteger threadNumber = new AtomicInteger(1);</span>
+        private final String namePrefix;
+
+<span class="fc" id="L40">        private DefaultThreadFactory() {</span>
+<span class="fc" id="L41">            SecurityManager s = System.getSecurityManager();</span>
+<span class="pc bpc" id="L42" title="1 of 2 branches missed.">            group = (s != null) ? s.getThreadGroup() :</span>
+<span class="fc" id="L43">                Thread.currentThread().getThreadGroup();</span>
+<span class="fc" id="L44">            namePrefix = &quot;griffon-pool-&quot; +</span>
+<span class="fc" id="L45">                poolNumber.getAndIncrement() +</span>
+                &quot;-thread-&quot;;
+<span class="fc" id="L47">        }</span>
+
+        public Thread newThread(Runnable r) {
+<span class="fc" id="L50">            Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);</span>
+<span class="pc bpc" id="L51" title="1 of 2 branches missed.">            if (t.isDaemon()) t.setDaemon(false);</span>
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">            if (t.getPriority() != Thread.NORM_PRIORITY) t.setPriority(Thread.NORM_PRIORITY);</span>
+<span class="fc" id="L53">            return t;</span>
+        }
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

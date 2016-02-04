@@ -29,7 +29,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class DefaultEventRouter extends AbstractEventRouter {
 <span class="fc" id="L31">    private final BlockingQueue&lt;Runnable&gt; deferredEvents = new LinkedBlockingQueue&lt;&gt;();</span>
-<span class="fc" id="L32">    protected static int count = 1;</span>
+    private static final String ERROR_PUBLISHER_NULL = &quot;Argument 'publisher' must not be null&quot;;
     private UIThreadManager uiThreadManager;
 
 <span class="fc" id="L35">    public DefaultEventRouter() {</span>
@@ -38,34 +38,33 @@ public class DefaultEventRouter extends AbstractEventRouter {
                 //noinspection InfiniteLoopStatement
                 while (true) {
                     try {
-<span class="nc" id="L41">                        deferredEvents.take().run();</span>
+<span class="nc" id="L41">                        executorService.submit(deferredEvents.take());</span>
 <span class="nc" id="L42">                    } catch (InterruptedException e) {</span>
                         // ignore ?
 <span class="nc" id="L44">                    }</span>
                 }
             }
-<span class="fc" id="L47">        }, getClass().getSimpleName() + &quot;-&quot; + identifier());</span>
+        }, &quot;event-router-queue-&quot; + eventRouterId);
 <span class="fc" id="L48">        t.setDaemon(true);</span>
 <span class="fc" id="L49">        t.start();</span>
 <span class="fc" id="L50">    }</span>
 
-    private static int identifier() {
-<span class="fc" id="L53">        synchronized (LOCK) {</span>
-<span class="fc" id="L54">            return count++;</span>
-<span class="nc" id="L55">        }</span>
-    }
-
     @Inject
     public void setUIThreadManager(@Nonnull UIThreadManager uiThreadManager) {
-<span class="fc" id="L60">        this.uiThreadManager = requireNonNull(uiThreadManager, &quot;Argument 'uiThreadManager' must not be null&quot;);</span>
-<span class="fc" id="L61">    }</span>
+<span class="fc" id="L54">        this.uiThreadManager = requireNonNull(uiThreadManager, &quot;Argument 'uiThreadManager' must not be null&quot;);</span>
+<span class="fc" id="L55">    }</span>
 
     protected void doPublishOutsideUI(@Nonnull Runnable publisher) {
-<span class="nc" id="L64">        uiThreadManager.runOutsideUI(publisher);</span>
-<span class="nc" id="L65">    }</span>
+<span class="nc" id="L58">        requireNonNull(publisher, ERROR_PUBLISHER_NULL);</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        if (!uiThreadManager.isUIThread()) {</span>
+<span class="nc" id="L60">            publisher.run();</span>
+        } else {
+<span class="nc" id="L62">            runInsideExecutorService(publisher);</span>
+        }
+<span class="nc" id="L64">    }</span>
 
     protected void doPublishAsync(@Nonnull Runnable publisher) {
-<span class="nc" id="L68">        deferredEvents.offer(publisher);</span>
-<span class="nc" id="L69">    }</span>
+<span class="nc" id="L67">        deferredEvents.offer(publisher);</span>
+<span class="nc" id="L68">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
