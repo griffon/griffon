@@ -18,7 +18,9 @@ package griffon.javafx.test;
 import griffon.core.ApplicationEvent;
 import griffon.core.RunnableWithArgs;
 import griffon.core.env.Environment;
+import griffon.exceptions.GriffonException;
 import griffon.javafx.JavaFXGriffonApplication;
+import javafx.stage.Window;
 import org.codehaus.griffon.runtime.core.DefaultGriffonApplication;
 import org.codehaus.griffon.runtime.javafx.TestJavaFXGriffonApplication;
 import org.junit.rules.MethodRule;
@@ -27,6 +29,7 @@ import org.junit.runners.model.Statement;
 import org.testfx.api.FxToolkit;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.concurrent.TimeoutException;
 
 import static com.jayway.awaitility.Awaitility.await;
@@ -44,6 +47,7 @@ public class GriffonTestFXRule extends TestFX implements MethodRule {
     protected String windowName;
     protected String[] startupArgs;
     protected Class<? extends TestJavaFXGriffonApplication> applicationClass;
+    protected JavaFXGriffonApplication application;
 
     public GriffonTestFXRule(@Nonnull String windowName) {
         this(TestJavaFXGriffonApplication.class, windowName, DefaultGriffonApplication.EMPTY_ARGS);
@@ -73,7 +77,7 @@ public class GriffonTestFXRule extends TestFX implements MethodRule {
             public void evaluate() throws Throwable {
                 FxToolkit.registerPrimaryStage();
 
-                JavaFXGriffonApplication application = (JavaFXGriffonApplication) FxToolkit.setupApplication(applicationClass);
+                application = (JavaFXGriffonApplication) FxToolkit.setupApplication(applicationClass);
                 WindowShownHandler startingWindow = new WindowShownHandler(windowName);
                 application.getEventRouter().addEventListener(ApplicationEvent.WINDOW_SHOWN.getName(), startingWindow);
                 application.getInjector().injectMembers(target);
@@ -100,8 +104,21 @@ public class GriffonTestFXRule extends TestFX implements MethodRule {
     }
 
     protected void after(@Nonnull JavaFXGriffonApplication application, @Nonnull Object target) throws TimeoutException {
-        application.shutdown();
-        FxToolkit.cleanupApplication(application);
+        if (application != null) {
+            application.shutdown();
+            try {
+                FxToolkit.cleanupApplication(application);
+            } catch (TimeoutException e) {
+                throw new GriffonException("An error occurred while shutting down the application", e);
+            } finally {
+                this.application = null;
+            }
+        }
+    }
+
+    @Nullable
+    public <W extends Window> W window(@Nonnull String name) {
+        return (W) application.getWindowManager().findWindow(name);
     }
 
     private static class WindowShownHandler implements RunnableWithArgs {

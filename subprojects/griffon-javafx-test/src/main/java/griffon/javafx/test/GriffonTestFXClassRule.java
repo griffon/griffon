@@ -20,6 +20,7 @@ import griffon.core.RunnableWithArgs;
 import griffon.core.env.Environment;
 import griffon.exceptions.GriffonException;
 import griffon.javafx.JavaFXGriffonApplication;
+import javafx.stage.Window;
 import org.codehaus.griffon.runtime.core.DefaultGriffonApplication;
 import org.codehaus.griffon.runtime.javafx.TestJavaFXGriffonApplication;
 import org.junit.rules.TestRule;
@@ -28,6 +29,7 @@ import org.junit.runners.model.Statement;
 import org.testfx.api.FxToolkit;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.concurrent.TimeoutException;
 
 import static com.jayway.awaitility.Awaitility.await;
@@ -88,7 +90,9 @@ public class GriffonTestFXClassRule extends TestFX implements TestRule {
             try {
                 FxToolkit.cleanupApplication(application);
             } catch (TimeoutException e) {
-                throw new GriffonException("An error occurred while shutting down the application",e);
+                throw new GriffonException("An error occurred while shutting down the application", e);
+            } finally {
+                application = null;
             }
         }
     }
@@ -111,6 +115,11 @@ public class GriffonTestFXClassRule extends TestFX implements TestRule {
     public void injectMembers(@Nonnull Object target) {
         requireNonNull(target, "Argument 'target' must not be null");
         application.getInjector().injectMembers(target);
+    }
+
+    @Nullable
+    public <W extends Window> W window(@Nonnull String name) {
+        return (W) application.getWindowManager().findWindow(name);
     }
 
     protected void initialize() {
