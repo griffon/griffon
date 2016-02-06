@@ -2,6 +2,10 @@
 <JDepend>
     <Packages>
 
+        <Package name="com.google.common.base">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
         <Package name="griffon.core">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
@@ -18,20 +22,24 @@
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
+        <Package name="griffon.exceptions">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
         <Package name="griffon.javafx">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
         <Package name="griffon.javafx.test">
             <Stats>
-                <TotalClasses>6</TotalClasses>
-                <ConcreteClasses>6</ConcreteClasses>
+                <TotalClasses>11</TotalClasses>
+                <ConcreteClasses>11</ConcreteClasses>
                 <AbstractClasses>0</AbstractClasses>
                 <Ca>1</Ca>
-                <Ce>12</Ce>
+                <Ce>18</Ce>
                 <A>0</A>
-                <I>0.92</I>
-                <D>0.08</D>
+                <I>0.95</I>
+                <D>0.05</D>
                 <V>1</V>
             </Stats>
 
@@ -57,21 +65,42 @@
                 <Class sourceFile="TestFX.java">
                     griffon.javafx.test.TestFX
                 </Class>
+                <Class sourceFile="WindowMatchers.java">
+                    griffon.javafx.test.WindowMatchers
+                </Class>
+                <Class sourceFile="WindowMatchers.java">
+                    griffon.javafx.test.WindowMatchers$1
+                </Class>
+                <Class sourceFile="WindowMatchers.java">
+                    griffon.javafx.test.WindowMatchers$2
+                </Class>
+                <Class sourceFile="WindowMatchers.java">
+                    griffon.javafx.test.WindowMatchers$3
+                </Class>
+                <Class sourceFile="WindowMatchers.java">
+                    griffon.javafx.test.WindowMatchers$4
+                </Class>
             </ConcreteClasses>
 
             <DependsUpon>
+                <Package>com.google.common.base</Package>
                 <Package>griffon.core</Package>
                 <Package>griffon.core.env</Package>
+                <Package>griffon.core.view</Package>
+                <Package>griffon.exceptions</Package>
                 <Package>griffon.javafx</Package>
                 <Package>griffon.util</Package>
                 <Package>java.lang</Package>
                 <Package>java.util</Package>
                 <Package>java.util.concurrent</Package>
+                <Package>javafx.stage</Package>
                 <Package>org.codehaus.griffon.runtime.core</Package>
                 <Package>org.codehaus.griffon.runtime.javafx</Package>
+                <Package>org.hamcrest</Package>
                 <Package>org.junit.rules</Package>
                 <Package>org.junit.runners.model</Package>
                 <Package>org.testfx.api</Package>
+                <Package>org.testfx.matcher.base</Package>
             </DependsUpon>
 
             <UsedBy>
@@ -92,6 +121,10 @@
         </Package>
 
         <Package name="java.util.concurrent">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="javafx.stage">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
@@ -160,6 +193,10 @@
             </UsedBy>
         </Package>
 
+        <Package name="org.hamcrest">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
         <Package name="org.junit.rules">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
@@ -169,6 +206,10 @@
         </Package>
 
         <Package name="org.testfx.api">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.testfx.matcher.base">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
     </Packages>

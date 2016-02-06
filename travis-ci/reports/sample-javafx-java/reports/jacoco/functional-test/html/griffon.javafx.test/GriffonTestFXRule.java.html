@@ -18,7 +18,9 @@ package griffon.javafx.test;
 import griffon.core.ApplicationEvent;
 import griffon.core.RunnableWithArgs;
 import griffon.core.env.Environment;
+import griffon.exceptions.GriffonException;
 import griffon.javafx.JavaFXGriffonApplication;
+import javafx.stage.Window;
 import org.codehaus.griffon.runtime.core.DefaultGriffonApplication;
 import org.codehaus.griffon.runtime.javafx.TestJavaFXGriffonApplication;
 import org.junit.rules.MethodRule;
@@ -27,6 +29,7 @@ import org.junit.runners.model.Statement;
 import org.testfx.api.FxToolkit;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.concurrent.TimeoutException;
 
 import static com.jayway.awaitility.Awaitility.await;
@@ -44,84 +47,98 @@ public class GriffonTestFXRule extends TestFX implements MethodRule {
     protected String windowName;
     protected String[] startupArgs;
     protected Class&lt;? extends TestJavaFXGriffonApplication&gt; applicationClass;
+    protected JavaFXGriffonApplication application;
 
     public GriffonTestFXRule(@Nonnull String windowName) {
-<span class="nc" id="L49">        this(TestJavaFXGriffonApplication.class, windowName, DefaultGriffonApplication.EMPTY_ARGS);</span>
-<span class="nc" id="L50">    }</span>
-
-    public GriffonTestFXRule(@Nonnull Class&lt;? extends TestJavaFXGriffonApplication&gt; applicationClass, @Nonnull String windowName) {
-<span class="nc" id="L53">        this(applicationClass, windowName, DefaultGriffonApplication.EMPTY_ARGS);</span>
+<span class="nc" id="L53">        this(TestJavaFXGriffonApplication.class, windowName, DefaultGriffonApplication.EMPTY_ARGS);</span>
 <span class="nc" id="L54">    }</span>
 
-<span class="nc" id="L56">    public GriffonTestFXRule(@Nonnull Class&lt;? extends TestJavaFXGriffonApplication&gt; applicationClass, @Nonnull String windowName, @Nonnull String[] startupArgs) {</span>
-<span class="nc" id="L57">        this.applicationClass = requireNonNull(applicationClass, &quot;Argument 'applicationClass' must not be null&quot;);</span>
-<span class="nc" id="L58">        this.windowName = requireNonBlank(windowName, &quot;Argument 'windowName' cannot be blank&quot;);</span>
-<span class="nc" id="L59">        requireNonNull(startupArgs, &quot;Argument 'startupArgs' must not be null&quot;);</span>
-<span class="nc" id="L60">        this.startupArgs = new String[startupArgs.length];</span>
-<span class="nc" id="L61">        System.arraycopy(startupArgs, 0, this.startupArgs, 0, startupArgs.length);</span>
-<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (!Environment.isSystemSet()) {</span>
-<span class="nc" id="L63">            System.setProperty(Environment.KEY, Environment.TEST.getName());</span>
+    public GriffonTestFXRule(@Nonnull Class&lt;? extends TestJavaFXGriffonApplication&gt; applicationClass, @Nonnull String windowName) {
+<span class="nc" id="L57">        this(applicationClass, windowName, DefaultGriffonApplication.EMPTY_ARGS);</span>
+<span class="nc" id="L58">    }</span>
+
+<span class="nc" id="L60">    public GriffonTestFXRule(@Nonnull Class&lt;? extends TestJavaFXGriffonApplication&gt; applicationClass, @Nonnull String windowName, @Nonnull String[] startupArgs) {</span>
+<span class="nc" id="L61">        this.applicationClass = requireNonNull(applicationClass, &quot;Argument 'applicationClass' must not be null&quot;);</span>
+<span class="nc" id="L62">        this.windowName = requireNonBlank(windowName, &quot;Argument 'windowName' cannot be blank&quot;);</span>
+<span class="nc" id="L63">        requireNonNull(startupArgs, &quot;Argument 'startupArgs' must not be null&quot;);</span>
+<span class="nc" id="L64">        this.startupArgs = new String[startupArgs.length];</span>
+<span class="nc" id="L65">        System.arraycopy(startupArgs, 0, this.startupArgs, 0, startupArgs.length);</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        if (!Environment.isSystemSet()) {</span>
+<span class="nc" id="L67">            System.setProperty(Environment.KEY, Environment.TEST.getName());</span>
         }
-<span class="nc" id="L65">    }</span>
+<span class="nc" id="L69">    }</span>
 
     @Override
     public Statement apply(final Statement base, final FrameworkMethod method, final Object target) {
-<span class="nc" id="L69">        initialize(target);</span>
+<span class="nc" id="L73">        initialize(target);</span>
 
-<span class="nc" id="L71">        return new Statement() {</span>
+<span class="nc" id="L75">        return new Statement() {</span>
             @Override
             public void evaluate() throws Throwable {
-<span class="nc" id="L74">                FxToolkit.registerPrimaryStage();</span>
+<span class="nc" id="L78">                FxToolkit.registerPrimaryStage();</span>
 
-<span class="nc" id="L76">                JavaFXGriffonApplication application = (JavaFXGriffonApplication) FxToolkit.setupApplication(applicationClass);</span>
-<span class="nc" id="L77">                WindowShownHandler startingWindow = new WindowShownHandler(windowName);</span>
-<span class="nc" id="L78">                application.getEventRouter().addEventListener(ApplicationEvent.WINDOW_SHOWN.getName(), startingWindow);</span>
-<span class="nc" id="L79">                application.getInjector().injectMembers(target);</span>
+<span class="nc" id="L80">                application = (JavaFXGriffonApplication) FxToolkit.setupApplication(applicationClass);</span>
+<span class="nc" id="L81">                WindowShownHandler startingWindow = new WindowShownHandler(windowName);</span>
+<span class="nc" id="L82">                application.getEventRouter().addEventListener(ApplicationEvent.WINDOW_SHOWN.getName(), startingWindow);</span>
+<span class="nc" id="L83">                application.getInjector().injectMembers(target);</span>
 
-<span class="nc" id="L81">                await().until(() -&gt; startingWindow.isShowing());</span>
+<span class="nc" id="L85">                await().until(() -&gt; startingWindow.isShowing());</span>
 
-<span class="nc" id="L83">                before(application, target);</span>
+<span class="nc" id="L87">                before(application, target);</span>
                 try {
-<span class="nc" id="L85">                    base.evaluate();</span>
+<span class="nc" id="L89">                    base.evaluate();</span>
                 } finally {
-<span class="nc" id="L87">                    after(application, target);</span>
-<span class="nc" id="L88">                }</span>
-<span class="nc" id="L89">            }</span>
+<span class="nc" id="L91">                    after(application, target);</span>
+<span class="nc" id="L92">                }</span>
+<span class="nc" id="L93">            }</span>
         };
     }
 
     protected void initialize(Object target) {
-<span class="nc" id="L94">        getTestContext().setTestCase(target);</span>
-<span class="nc" id="L95">        getTestContext().setWindowName(windowName);</span>
-<span class="nc" id="L96">    }</span>
+<span class="nc" id="L98">        getTestContext().setTestCase(target);</span>
+<span class="nc" id="L99">        getTestContext().setWindowName(windowName);</span>
+<span class="nc" id="L100">    }</span>
 
     protected void before(@Nonnull JavaFXGriffonApplication application, @Nonnull Object target) throws Throwable {
 
-<span class="nc" id="L100">    }</span>
+<span class="nc" id="L104">    }</span>
 
     protected void after(@Nonnull JavaFXGriffonApplication application, @Nonnull Object target) throws TimeoutException {
-<span class="nc" id="L103">        application.shutdown();</span>
-<span class="nc" id="L104">        FxToolkit.cleanupApplication(application);</span>
-<span class="nc" id="L105">    }</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        if (application != null) {</span>
+<span class="nc" id="L108">            application.shutdown();</span>
+            try {
+<span class="nc" id="L110">                FxToolkit.cleanupApplication(application);</span>
+<span class="nc" id="L111">            } catch (TimeoutException e) {</span>
+<span class="nc" id="L112">                throw new GriffonException(&quot;An error occurred while shutting down the application&quot;, e);</span>
+            } finally {
+<span class="nc" id="L114">                this.application = null;</span>
+<span class="nc" id="L115">            }</span>
+        }
+<span class="nc" id="L117">    }</span>
+
+    @Nullable
+    public &lt;W extends Window&gt; W window(@Nonnull String name) {
+<span class="nc" id="L121">        return (W) application.getWindowManager().findWindow(name);</span>
+    }
 
     private static class WindowShownHandler implements RunnableWithArgs {
         private final String windowName;
         private boolean showing;
 
-<span class="nc" id="L111">        private WindowShownHandler(String windowName) {</span>
-<span class="nc" id="L112">            this.windowName = windowName;</span>
-<span class="nc" id="L113">        }</span>
+<span class="nc" id="L128">        private WindowShownHandler(String windowName) {</span>
+<span class="nc" id="L129">            this.windowName = windowName;</span>
+<span class="nc" id="L130">        }</span>
 
         public boolean isShowing() {
-<span class="nc" id="L116">            return showing;</span>
+<span class="nc" id="L133">            return showing;</span>
         }
 
         @Override
         public void run(Object... args) {
-<span class="nc bnc" id="L121" title="All 6 branches missed.">            if (args != null &amp;&amp; args.length &gt; 0 &amp;&amp; args[0] instanceof CharSequence) {</span>
-<span class="nc" id="L122">                showing = windowName.equals(String.valueOf(args[0]));</span>
+<span class="nc bnc" id="L138" title="All 6 branches missed.">            if (args != null &amp;&amp; args.length &gt; 0 &amp;&amp; args[0] instanceof CharSequence) {</span>
+<span class="nc" id="L139">                showing = windowName.equals(String.valueOf(args[0]));</span>
             }
-<span class="nc" id="L124">        }</span>
+<span class="nc" id="L141">        }</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
