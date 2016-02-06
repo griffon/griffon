@@ -15,16 +15,16 @@
  */
 package sample.javafx.groovy
 
+import griffon.javafx.test.FunctionalJavaFXRunner
 import griffon.javafx.test.GriffonTestFXClassRule
 import org.junit.ClassRule
-import org.junit.FixMethodOrder
 import org.junit.Test
-import org.junit.runners.MethodSorters
+import org.junit.runner.RunWith
 
 import static org.testfx.api.FxAssert.verifyThat
 import static org.testfx.matcher.control.LabeledMatchers.hasText
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@RunWith(FunctionalJavaFXRunner)
 public class SampleFunctionalTest {
     static {
         System.setProperty('org.slf4j.simpleLogger.defaultLogLevel', 'trace')
@@ -34,7 +34,7 @@ public class SampleFunctionalTest {
     public static GriffonTestFXClassRule testfx = new GriffonTestFXClassRule('mainWindow')
     
     @Test
-    void doNotTypeNameAndClickButton() {
+    void _01_doNotTypeNameAndClickButton() {
         // given:
         testfx.clickOn('#input').write('')
 
@@ -46,7 +46,7 @@ public class SampleFunctionalTest {
     }
 
     @Test
-    void typeNameAndClickButton() {
+    void _02_typeNameAndClickButton() {
         // given:
         testfx.clickOn('#input').write('Griffon')
 

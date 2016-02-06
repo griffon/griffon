@@ -48,6 +48,7 @@ public class GriffonTestFXClassRule extends TestFX implements TestRule {
     protected String[] startupArgs;
     protected Class<? extends TestJavaFXGriffonApplication> applicationClass;
     protected JavaFXGriffonApplication application;
+    private boolean failures = false;
 
     public GriffonTestFXClassRule(@Nonnull String windowName) {
         this(TestJavaFXGriffonApplication.class, windowName, DefaultGriffonApplication.EMPTY_ARGS);
@@ -115,6 +116,14 @@ public class GriffonTestFXClassRule extends TestFX implements TestRule {
     public void injectMembers(@Nonnull Object target) {
         requireNonNull(target, "Argument 'target' must not be null");
         application.getInjector().injectMembers(target);
+    }
+
+    public boolean hasFailures() {
+        return failures;
+    }
+
+    public void setFailures(boolean failures) {
+        this.failures = failures;
     }
 
     @Nullable
