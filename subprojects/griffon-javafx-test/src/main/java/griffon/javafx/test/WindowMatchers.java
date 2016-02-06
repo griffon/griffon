@@ -47,7 +47,12 @@ public class WindowMatchers {
 
     @Factory
     public static Matcher<Window> isNotShowing() {
-        return baseMatcher("Window is not showing", window -> !isShowing(window));
+        return baseMatcher("Window is not showing", new Predicate<Window>() {
+            @Override
+            public boolean apply(@Nullable Window window) {
+                return !isShowing(window);
+            }
+        });
     }
 
     @Factory
