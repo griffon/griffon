@@ -1,0 +1,20 @@
+
+[[_mvc_lifecycle]]
+= MVC Lifecycle
+
+All subclasses of `{link_griffon_mvcartifact}` (such as controllers, models, and views) have a basic lifecycle that complements
+the lifecycle offered by the Depenendency Injection container. The following rules apply (in order):
+
+.Initialization
+
+1. The artifact's constructor is invoked by the DI container.
+2. If a method is annotated with `@javax.annotation.PostConstruct` then it's invoked by the DI container.
+3. All members (fields and setters) annotated with `{link_contextual}` are resolved and injected.
+4. The `{link_mvc_group_manager}` invokes `{link_mvc_group_init}` on the artifact.
+
+.Destruction
+
+1. The `{link_mvc_group_manager}` invokes `{link_mvc_group_destroy}` on the artifact.
+3. All members (fields and setters) annotated with `{link_contextual}` are set to `null`.
+2. If a method is annotated with `@javax.annotation.PreDestroy` then it's invoked by the DI container.
+
