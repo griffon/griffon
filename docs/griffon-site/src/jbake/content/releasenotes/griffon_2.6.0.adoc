@@ -1,6 +1,6 @@
 = Griffon 2.6.0 Release Notes
 Andres Almiray
-2016-03-01
+2016-03-04
 :jbake-type: post
 :jbake-status: published
 :category: releasenotes
@@ -14,14 +14,125 @@ Andres Almiray
 
 The following dependencies have been upgraded
 
+ * org.slf4j:slf4j-simple:1.7.16
+ * org.slf4j:slf4j-log4j:1.7.16
+
 === Runtime
 
+==== Lifecycle Updates
+
+`@PostConstruct` and `@PreDestroy` are guaranteed to be invoked when an artifact is created/destroyed. Previously the runtime
+would invoke `@PostConstruct` on a service during shutdown if the service was never used at all. Destroying an MVC group
+guarantees that methods annotated with `@PreDestroy` are invoked.
+
+==== EventRouter
+
+It's now possible to query an `EventRouter` for its set of listeners. `EventRouter` instances also use a well defined pattern
+to name the threads they may use internally.
+
+==== @Contextual
+
+Fields annotated with `@Contextual` noew benefit from the following statregy to locate a matching key in the context:
+
+ 1. Use the field's name.
+ 2. If not found then use the value of `@Named` if the file is annotated with it.
+ 3. If not found then use the fully qualified field type.
+
+==== JavaFX UI Thread Ready ObservableList
+
+`JavaFXUtils` can be used to create an `ObservableList` wrapper that guarantees all updates will be pushed inside the
+JavaFX UI thread. This allows models and controllers more freedom to change values without concerning themselves too much
+with the needs of the view. You will typically define an `ObservableList` property on the model, update its values inside
+a controller action (by default running outisde the UI thread). The view only needs to wrap the model property and pass it
+to the widget that will consume it, for example
+
+[source, java]
+----
+ObservableList threadReadyList = JavaFXUtils.createJavaFXThreadProxyList(model.getItems());
+listView.setItems(threadReadyList);
+----
+
+==== JavaFX Action Properties
+
+All properties beloging to `JavaFXAction` will pushe their updates inside the UI thread. This makes it for an easier
+development experience when programmatically updating those properties inside a controller action, as there's no longer
+a need to wrap update calls with Thread specific blocks (such as `runInsideUIAsync` for example).
+
+=== Testing
+
+==== TestModule Providers
+
+Test cases may annotated any method with either `@TestModules` or `@TestModuleOverrides` to supply a list of `Module`
+instances used as the set of all available modules (the first annotation) or to override a subset of all modules (the latter).
+These annotations superceed the need to follow a naming convention, such as
+
+[source, java]
+----
+public class SomeTest {
+    @Rule
+    public final GriffonUnitRule griffon = new GriffonUnitRule();
+
+    @TestModuleOverrides
+    public List<Module> modulesToOverride() {
+        return asList(new TestModule() { ... });
+    }
+}
+----
+
+==== Functional JavaFX Tests
+
+There are a handful of updates in this area. First, all methods may be executed in alphaetical order, carrying over their
+state from method to method. If one of them fails then all other methods will be marked as skipped. This is the same behavior
+found in Spock using the `@Stepwise` annotation. You must apply the `FunctionalJavaFXRunner` runner to the test case to enable
+this feature.
+
+`GriffonTestFXClassRule` can inject members on the running testcase. You will typically invoke this feature in a method
+annotated with `@Before` (JUnit) or in the `setup()` method (Spock).
+
+==== TestFX Updates
+
+Both `GriffonTestFXClassRule` and `GriffonTestFXRule` now have the capability to locate a `Window` instance. There's also
+a brand new `WindowMatcher` that can be used to assert the showing and focused state of a `Window`.
+
 === Buildtime
+
+==== Additional Key/Values in application.properties
+
+The `griffon` configuration block has a new property that can be used to define additional key/value pairs that may be
+replaced in `application.properties`; for example
+
+[source, groovy]
+----
+griffon {
+    disableDependencyResolution = false
+    includeGroovyDependencies = false
+    version = '2.6.0'
+    toolkit = 'javafx'
+    applicationProperties = [
+        'build.date'     : buildDate,
+        'build.time'     : buildTime,
+        'build.revision' : versioning.info.commit,
+        'my.property.key': 'my-value'
+    ]
+}
+----
+
+The `application.properties` must define matching replacement tokens, such as
+
+[source, java]
+----
+application.name=@application.name@
+application.version=@application.version@
+build.date=@build.date@
+build.time=@build.time@
+build.revision=@build.revision@
+my.property.key=@my.property.key@
+----
 
 === Compatibility
 
 Full binary compatibility report between Griffon 2.6.0 and 2.5.0 can be found
-link:../reports/2.5.0/compatibility-report.html[here].
+link:../reports/2.6.0/compatibility-report.html[here].
 
 A list of fixed issues can be found at the
 link:https://github.com/griffon/griffon/issues?q=milestone%3A2.6.0+is%3Aclosed[2.6.0 milestone] page.

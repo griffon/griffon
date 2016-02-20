@@ -1,6 +1,6 @@
 = Griffon 2.6.0 Released
 Andres Almiray
-2016-03-01
+2016-03-04
 :jbake-type: post
 :jbake-status: published
 :category: news
@@ -14,6 +14,18 @@ The Griffon team is happy to announce the release of Griffon 2.6.0!
 
 The following list summarizes the changes brought by this release:
 
+* [Build] Additional key/values may be set in `application.properties`.
+* [Runtime] `@PostConstruct` and `@PreDestroy` are guaranteed to be invoked when an artifact is created/destroyed.
+* [Runtime] `EventRouter` can now be queried for its listeners.
+* [Runtime] Provide `ThreadFactory` for all internal Thread producers, such as `EventRouter` and `ExecutorServiceProvider`.
+* [Runtime] Fields annotated with `@Contextual` will use field name first for key resolution; then `@Named`, followed by field type.
+* [Testing] TestModule providers can now be identified with `@TestModules` and `@TestModuleOverrides`.
+* [Testing] Functional TestFX testcases can participate in members injection.
+* [Testing] Added a `Window` matcher for TestFX testcases.
+* [Testing] Enforce test execution order in functional TestFX testcases.
+* [Testing] Carry over state between test methods in functional TestFX testcases.
+* [JavaFX] Added an UI Thread proxy `ObservableList`; all of its updates will be triggered inside the UI thread.
+* [JavaFX] Action properties will trigger their updates inside the UI Thread.
 
 A more detailed description of the changes and compatibility issues can be found at the link:/releasenotes/griffon_2.6.0.html[release notes, window="_blank"].
 
