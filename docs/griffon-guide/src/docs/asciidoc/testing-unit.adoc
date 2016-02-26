@@ -2,38 +2,508 @@
 [[_testing_unit]]
 = Unit Testing
 
-lorem ipsum
+Classes under test that do not require dependency injection can be tested without any additional support from Griffon.
+For those classes that required dependency injection you have the following options:
+
+[discrete]
+== GuiceBerry
+
+If the project relies on `griffon-guice-{griffon-version}` for injecting dependencies at runtime then you may use {link_guiceberry}
+when writing tests. GuiceBerry can resolve Guice modules and perform injection on the test class itself.
+
+.Installing
+
+[source, groovy]
+.Gradle
+----
+testCompile 'com.google.guiceberry:guiceberry:3.3.1'
+----
+
+[source, xml]
+[subs="verbatim"]
+.Maven
+----
+<dependency>
+    <groupId>com.google.guiceberry</groupId>
+    <artifactId>guiceberry</artifactId>
+    <artifactId>3.3.1</artifactId>
+</dependency>
+----
+
+.Example
+
+[source,java,linenums,options="nowrap"]
+----
+import com.google.guiceberry.GuiceBerryModule;
+import com.google.guiceberry.junit4.GuiceBerryRule;
+import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
+import org.junit.Rule;
+import org.junit.Test;
+
+import javax.inject.Singleton;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+public class MyGuiceBerryTest {
+    @Rule
+    public final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule.class);
+
+    @Inject
+    private FooBar classUnderTest;
+
+    @Test
+    public void testIt() {
+        assertThat(classUnderTest.foobar(), equalTo("foobar"));
+    }
+
+    public static final class TestModule extends AbstractModule {
+        @Override
+        protected void configure() {
+            install(new GuiceBerryModule());
+            bind(Foo.class).to(DefaultFoo.class).in(Singleton.class);
+            bind(Bar.class).to(DefaultBar.class).in(Singleton.class);
+            bind(FooBar.class).to(DefaultFooBar.class).in(Singleton.class);
+        }
+    }
+
+    public static interface FooBar {
+        String foobar();
+    }
+
+    public static interface Foo {
+        String foo();
+    }
+
+    public static interface Bar {
+        String bar();
+    }
+
+    public static class DefaultFooBar implements FooBar {
+        private final Foo foo;
+        private final Bar bar;
+
+        @Inject
+        public DefaultFooBar(Foo foo, Bar bar) {
+            this.foo = foo;
+            this.bar = bar;
+        }
+
+        public String foobar() { return foo.foo() + bar.bar(); }
+    }
+
+    public static class DefaultFoo implements Foo {
+        public String foo() { return "foo"; }
+    }
+
+    public static class DefaultBar implements Bar {
+        public String bar() { return "bar"; }
+    }
+}
+----
+
+You may use GuiceBerry with both JUnit and Spock based tests.
+
+[discrete]
+== Jukito
+
+{link_jukito} combines the power of {link_junit}, {link_google_guice}, and {link_mockito} in one single package. The advantage of
+Jukito over plain GuiceBerry is that injection points that are not defined by a `TestModule` will be automatically mocked with
+Mockito.
+
+.Installing
+
+[source, groovy]
+.Gradle
+----
+testCompile 'org.jukito:jukito:1.4'
+----
+
+[source, xml]
+[subs="verbatim"]
+.Maven
+----
+<dependency>
+    <groupId>org.jukito</groupId>
+    <artifactId>jukito</artifactId>
+    <artifactId>1.4</artifactId>
+</dependency>
+----
+
+.Example
+
+[source,java,linenums,options="nowrap"]
+----
+import org.jukito.JukitoRunner;
+import org.jukito.JukitoModule;
+import com.google.inject.Inject;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import javax.inject.Singleton;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.when;
+
+@RunWith(JukitoRunner.class)
+public class MyJukitoTest {
+    public static class TestModule extends JukitoModule {
+        protected void configureTest() {
+            bind(FooBar.class).to(DefaultFooBar.class).in(Singleton.class);
+        }
+    }
+
+    @Inject
+    private FooBar classUnderTest;
+
+    @Before
+    public void setupMocks(Foo foo, Bar bar) {
+        when(foo.foo()).thenReturn("foo");
+        when(bar.bar()).thenReturn("bar");
+    }
+
+    @Test
+    public void testIt() {
+        assertThat(classUnderTest.foobar(), equalTo("foobar"));
+    }
+
+    public static interface FooBar {
+        String foobar();
+    }
+
+    public static interface Foo {
+        String foo();
+    }
+
+    public static interface Bar {
+        String bar();
+    }
+
+    public static class DefaultFooBar implements FooBar {
+        private final Foo foo;
+        private final Bar bar;
+
+        @Inject
+        public DefaultFooBar(Foo foo, Bar bar) {
+            this.foo = foo;
+            this.bar = bar;
+        }
+
+        public String foobar() { return foo.foo() + bar.bar(); }
+    }
+}
+----
+
+Jukito should be used with JUnit alone.
 
 == The GriffonUnitRule
 
-lorem ipsum
+While the previous options work perfectly well with non-Griffon artifacts there will be times when you need to setup more
+test bindings that provide fake or real collaborators. The `{link_griffon_unit_rule}` rule class provides this
+behavior and more. This class behaves in a similar way as GuiceBerry and Jukito in the sense that it can inject dependencies
+in the current testcase, but it'll also bootstrap a `{link_griffon_application}` using real modules. You have the choice to
+override any modules as needed.
+
+`GriffonUnitRule` must be applied using JUnit's `@Rule` annotation.
+
+.sample/javafx/java/SampleControllerTest.java
+[source,java,linenums,options="nowrap"]
+----
+include::{sample-javafx-java}/src/test/java/sample/javafx/java/SampleControllerTest.java[lines=16..-1]
+----
+
+You can define any of the following arguments to tweak it's behavior and of the application under test:
+
+[horizontal]
+startupArgs:: An array of literal arguments. Similar to the startup args sent to a real application during launch.
+applicationClass:: Defines the application class to use. Default value is set to `{link_default_griffon_application}`
+which is not tied to an specific UI toolkit.
+applicationBootstrapper:: Defines the streategies used to locate modules and bootstrap the application. Default value is
+set to `{link_test_application_bootstrapper}`. this bootstrapper enables the module overriding options
+discusses in the next sections.
+
+This rule can be used with both JUnit and Spock based tests.
+
+The following sections describe all available options for overriding modules in a testcase.
 
 === Overriding Module Bindings
 
-lorem ipsum
+The default `TestApplicationBootstrapper` applies the following strategy to locate suitable modules that should be used
+during the bootstrap sequence of the application under test:
 
-==== Defining Specific Modules
+ . If the testcase wants to override *all* modules. If so, consume those modules, no more checks are applied.
+ . If the testcase wants to override *some* modules. If so, consume those modules and continue with the next check.
+ . If the testcase defines bindings using inner classes. If so, create a `{link_module}` on the fly with those bindings and continue with the next check.
+ . If the testcase defines individual bindings using annotated fields. If so, create a `{link_module}` on the fly with those bindings.
 
-lorem ipsum
+In order to override an existing binding you must match the source type and the qualifier (if it exist). Please review the
+<<_overview_binding_equivalencies,Binding Equivalencies>> section if you have any doubts regarding the rules.
 
-==== Overriding Existing Modules
+[discrete]
+==== Override All Modules
 
-lorem ipsum
+There are two ways to define if a testcase wants to override all available modules:
 
+ . implement the `{link_test_module_aware}` interface; providing a non-empty value for the `modules()` method.
+ . annotate a method with `{link_test_modules}` making sure it returns a non-empty `List<{link_module}>` instance.
+
+[discrete]
+==== Overriding Some Modules
+
+There are two ways to define if a testcase wants to override some available modules:
+
+ . implement the `{link_test_module_aware}` interface; providing a non-empty value for the `moduleOverrides()` method.
+ . annotate a method with `{link_test_module_overrides}` making sure it returns a non-empty `List<{link_module}>` instance.
+
+NOTE: It's recommended to implement `{link_testing_module}` instead of `{link_module}` as the
+`TestApplicationBootstrapper` will make sure the former are placed after previous module definitions. This guarantees that
+test bindings override previous bindings.
+
+[discrete]
 ==== Defining Bindings on the TestCase
 
-lorem ipsum
+Bindings defined in this way must use the `{link_bindto}` annotation to define the source type. If a qualifier is attached
+to the type then it will be set on the binding too.
 
 [discrete]
 ===== Inner Classes
 
-lorem ipsum
+You may define a concrete type of a `javax.inject.Provider`. The binding will use prototype scope unless the target inner
+class is annotated with `javax.inject.Singleton`. Some examples follow
+
+[source,java,linenums,options="nowrap"]
+----
+import griffon.core.test.GriffonUnitRule;
+import org.junit.Rule;
+
+import griffon.inject.BindTo;
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
+import griffon.core.event.EventRouter;
+import griffon.core.Context;
+
+public class SomeTest {
+    @Rule
+    public final GriffonUnitRule griffon = new GriffonUnitRule();
+
+    @BindTo(EventRouter.class)
+    public static class CustomEventRouter implements EventRouter { ... }     //<1>
+
+    @BindTo(Context.class)
+    @Named("applicationContext")
+    @Singleton
+    public static class ContextProvider implements Provider<Context> { ... } //<2>
+
+    // tests
+}
+----
+<1> overrides `EventRouter` in prototype scope.
+<2> overrides an specific binding matching type and qualifier.
 
 [discrete]
 ===== Fields
 
-lorem ipsum
+Field bindings are more flexible that inner class bindings as you can define the instance to be associated with the source
+type. This instance may be a concrete class that implements the source type, or a `Provider`. For example, the bindings seen
+in the previous example can be rewritten as follows:
+
+[source,java,linenums,options="nowrap"]
+----
+import griffon.core.test.GriffonUnitRule;
+import org.junit.Rule;
+
+import griffon.inject.BindTo;
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
+import griffon.core.event.EventRouter;
+import griffon.core.Context;
+
+public class SomeTest {
+    @Rule
+    public final GriffonUnitRule griffon = new GriffonUnitRule();
+
+    @BindTo(EventRouter.class)
+    private CustomEventRouter customEventRouter;                              //<1>
+
+    @BindTo(Context.class)
+    @Named("applicationContext")
+    @Singleton
+    private Provider<Context> contextProvider = new Provider<Context> { ... } //<2>
+
+    // tests
+}
+----
+<1> overrides `EventRouter` in prototype scope.
+<2> overrides an specific binding matching type and qualifier.
 
 == The @TestFor Annotation
 
-lorem ipsum
+The `{link_testfor}` annotation comes in handy when testing Griffon artifacts, as it will automatically instantiate the
+given type and set it on a field following a naming convention. The convention is to use the value for `getArtifactType()`
+of the corresponding artifact `GriffonClass`. The folowing table summarizes these values:
+
+[cols="2*",options="header"]
+|===
+| Type                | Field Name
+| `GriffonController` | controller
+| `GriffonModel`      | model
+| `GriffonService`    | service
+| `GriffonView`       | view
+|===
+
+It's worth mentioning that this annotation will not instantiate additional MVC members that the current artifact under
+test may require. This design is on purpose in order to accommodate mocking of additional MVC members.
+
+This annotation can be used with both JUnit and Spock based tests.
+
+== Mocking
+
+There are several options for mocking types in test cases. Spock comes with its own solution. If you're writing tests
+with JUnit then we recommend you to have a look at {link_mockito}. Both of these mocking options can be paired with
+`GriffonUnitRule` in order to supply bindings. You can use any of the techniques discussed in the previous sections to
+define a binding, perhaps field bindings are the ones that are easier to grasp, as they can be used to define an
+instance value, in this case, the mock object itself.
+
+Take for example a `CalculatorService` that requires an instance of a `Calculator`. We want to test the service in
+isolation which means we must mock the `Calculator`. Given that the service is a Griffon artifact we can use both
+`GriffonUnitRule` and `@TestFor` to reduce the amount of setup.
+
+[source,java,linenums,options="nowrap"]
+----
+import griffon.core.test.GriffonUnitRule;
+import griffon.core.test.TestFor;
+import org.junit.Rule;
+import org.junit.Test;
+
+import griffon.inject.BindTo;
+
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+@TestFor(SampleService.class)
+public class CalculatorServiceTest {
+    private CalculatorServiceTest service;                         //<1>
+
+    @Rule
+    public final GriffonUnitRule griffon = new GriffonUnitRule();
+
+    @Test
+    public void addTwoNumbers() {
+        // given:
+        when(calculator.add(anyInt(), anyInt())).thenReturn(3);    //<3>
+
+        // when:
+        int result = service.add(1, 2);
+
+        // then
+        assertThat(, equalTo(3));
+    }
+
+    @BindTo(Calculator.class)
+    private Calculator calculator = mock(Calculator.class);        //<2>
+}
+----
+<1> matches the type and name of the artifact under test
+<2> instantiates the mock
+<3> prepares the mock for stubbing
+
+This technique can be applied for mocking any types except Griffon artifacts. Griffon artifacts must be mocked in a
+slightly different way due to their relationship with Griffon internals. But don't worry, is not that different, as a
+matter of fact we've already covered how it can be done when explaining all possible ways to override a binding. In this
+case we must use the _verbose_ option, which is, defining an explicit `{link_module}`. Why do we need to do this? Because
+Griffon artifacts must be initialized as lazily as possible. Using `{link_bindto}` is too eager for them. Here's a working
+example of a `controller` that mocks a `service` while also creating a live instance for its `model`.
+
+[source,java,linenums,options="nowrap"]
+----
+package org.example;
+
+import griffon.core.artifact.ArtifactManager;
+import griffon.core.injection.Module;
+import griffon.core.test.GriffonUnitRule;
+import griffon.core.test.TestFor;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+import org.codehaus.griffon.runtime.core.injection.AbstractTestingModule;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@RunWith(JUnitParamsRunner.class)                                           //<1>
+@TestFor(SampleController.class)
+public class SampleControllerTest {
+    private SampleController controller;
+
+    @Rule
+    public final GriffonUnitRule griffon = new GriffonUnitRule();
+
+    @Inject private ArtifactManager artifactManager;
+    @Inject private SampleService sampleService;                            //<2>
+
+    @Test
+    @Parameters({",Howdy stranger!",
+                 "Test, Hello Test"})
+    public void sayHelloAction(String input, String output) {               //<3>
+        // given:
+        SampleModel model = artifactManager.newInstance(SampleModel.class); //<4>
+        controller.setModel(model);
+
+        // expect:
+        assertThat(model.getOutput(), nullValue());
+
+        // expectations
+        when(sampleService.sayHello(input)).thenReturn(output);
+
+        // when:
+        model.setInput(input);
+        controller.sayHello();
+
+        // then:
+        assertThat(model.getOutput(), equalTo(output));
+        verify(sampleService, only()).sayHello(input);
+    }
+
+    @Nonnull
+    private List<Module> moduleOverrides() {
+        return asList(new AbstractTestingModule() {                         //<5>
+            @Override
+            protected void doConfigure() {
+                bind(SampleService.class)
+                    .toProvider(() -> mock(SampleService.class))
+                    .asSingleton();
+            }
+        });
+    }
+}
+----
+<1> parameterize this test using {link_junitparams}
+<2> injected by `GriffonUnitRule`
+<3> parameterized test arguments
+<4> create a live `model` instance
+<5> configure the service mock
+

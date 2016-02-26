@@ -187,6 +187,10 @@ task sampleStats() << {
     sampleApps.each { p -> project(p).tasks.findByName('stats').computeLoc() }
 }
 
+asciidoctorj {
+    version = '1.5.4'
+}
+
 asciidoctor {
     attributes = [
         toc                     : 'left',
