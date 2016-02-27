@@ -127,7 +127,7 @@ public class GriffonTestFXClassRule extends TestFX implements TestRule {
 <span class="nc" id="L127">    }</span>
 
     @Nullable
-    public &lt;W extends Window&gt; W window(@Nonnull String name) {
+    public &lt;W extends Window&gt; W managedWindow(@Nonnull String name) {
 <span class="nc" id="L131">        return (W) application.getWindowManager().findWindow(name);</span>
     }
 

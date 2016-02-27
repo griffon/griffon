@@ -117,7 +117,7 @@ public class GriffonTestFXRule extends TestFX implements MethodRule {
 <span class="nc" id="L117">    }</span>
 
     @Nullable
-    public &lt;W extends Window&gt; W window(@Nonnull String name) {
+    public &lt;W extends Window&gt; W managedWindow(@Nonnull String name) {
 <span class="nc" id="L121">        return (W) application.getWindowManager().findWindow(name);</span>
     }
 
