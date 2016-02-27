@@ -1,0 +1,98 @@
+/*
+ * Copyright 2008-2016-2018 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+buildscript {
+    repositories {
+        jcenter()
+        mavenLocal()
+    }
+
+    dependencies {
+        classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.6.0-SNAPSHOT'
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
+        classpath 'org.kordamp.gradle:stats-gradle-plugin:0.1.5'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
+    }
+}
+
+apply plugin: 'groovy'
+apply plugin: 'org.codehaus.griffon.griffon'
+
+griffon {
+    disableDependencyResolution = false
+    includeGroovyDependencies = false
+    version = '2.6.0-SNAPSHOT'
+    toolkit = 'javafx'
+}
+
+ext {
+    macosx = System.getProperty('os.name').contains('Mac OS')
+}
+
+mainClassName = 'org.example.Launcher'
+
+apply from: 'gradle/code-quality.gradle'
+apply from: 'gradle/javafx-plugin.gradle'
+apply from: 'gradle/integration-test.gradle'
+apply from: 'gradle/functional-test.gradle'
+apply plugin: 'org.kordamp.gradle.stats'
+apply plugin: 'com.github.ben-manes.versions'
+
+javafx {
+    mainClass = mainClassName
+}
+
+dependencies {
+    compile "org.codehaus.griffon:griffon-guice:${griffon.version}"
+
+    runtime('log4j:log4j:1.2.17') {
+        exclude group: 'ant',         module: 'ant-nodeps'
+        exclude group: 'ant',         module: 'ant-junit'
+        exclude group: 'ant-contrib', module: 'ant-contrib'
+    }
+    runtime 'org.slf4j:slf4j-log4j12:1.7.13'
+
+    testCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
+    testCompile 'pl.pragmatists:JUnitParams:1.0.4'
+    testCompile 'org.mockito:mockito-core:2.0.39-beta'
+
+    functionalTestCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
+}
+
+compileGroovy.enabled = false
+
+tasks.withType(JavaCompile) {
+    sourceCompatibility = project.sourceCompatibility
+    targetCompatibility = project.targetCompatibility
+}
+
+tasks.withType(GroovyCompile) {
+    sourceCompatibility = project.sourceCompatibility
+    targetCompatibility = project.targetCompatibility
+}
+
+startScripts {
+    doLast {
+        if (!macosx) unixScript.text = unixScript.text.replaceAll('"(-Xdock:(name|icon)=)([^"]*?)(")', ' ')
+        windowsScript.text = windowsScript.text.replaceAll('"(-Xdock:(name|icon)=)([^"]*?)(")', ' ')
+    }
+}
+
+if (hasProperty('debugRun') && ((project.debugRun as boolean))) {
+    run {
+        jvmArgs '-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005'
+    }
+}

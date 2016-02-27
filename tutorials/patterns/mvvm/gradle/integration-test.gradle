@@ -1,0 +1,78 @@
+/*
+ * Copyright 2008-2016-2018 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+configurations {
+    integrationTestCompile {
+        extendsFrom testCompile
+    }
+    integrationTestRuntime {
+        extendsFrom integrationTestCompile, testRuntime
+    }
+}
+
+sourceSets {
+    integrationTest {
+        if (file('src/integration-test/java').exists()) {
+            java.srcDirs file('src/integration-test/java')
+        }
+        if (file('src/integration-test/groovy').exists()) {
+            groovy.srcDirs file('src/integration-test/groovy')
+        }
+        resources.srcDir file('src/integration-test/resources')
+        compileClasspath += [sourceSets.main.output]
+        compileClasspath += configurations.compileOnly
+        compileClasspath += configurations.testCompileOnly
+        runtimeClasspath += [compileClasspath]
+    }
+}
+
+idea {
+    module {
+        scopes.PROVIDED.plus += [configurations.integrationTestCompile]
+        scopes.PROVIDED.plus += [configurations.integrationTestRuntime]
+        testSourceDirs += sourceSets.integrationTest.allSource.srcDirs
+    }
+}
+
+task integrationTest(type: Test, dependsOn: jar) {
+    testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    reports.html.enabled = false
+}
+
+task integrationTestReport(type: TestReport) {
+    destinationDir = file("${buildDir}/reports/integration-tests")
+    reportOn integrationTest.binResultsDir
+}
+
+integrationTest.mustRunAfter test
+integrationTest.finalizedBy integrationTestReport
+check.dependsOn integrationTestReport
+
+task jacocoIntegrationTestReport(dependsOn: integrationTest, type: JacocoReport) {
+    group = 'Reporting'
+    description = 'Generate Jacoco coverage reports after running integration tests.'
+    executionData file("${buildDir}/jacoco/integrationTest.exec")
+    sourceDirectories = files(sourceSets.main.allSource.srcDirs)
+    classDirectories = files(sourceSets.main.output)
+    reports {
+        csv.enabled = false
+        xml.enabled = true
+        html.enabled = true
+        html.destination = "${buildDir}/reports/jacoco/integration-test/html"
+        xml.destination = "${buildDir}/reports/jacoco/integration-test/jacocoIntegrationTestReport.xml"
+    }
+}

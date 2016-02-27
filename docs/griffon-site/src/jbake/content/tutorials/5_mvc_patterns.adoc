@@ -1,0 +1,345 @@
+= Tutorial 5: MVC Patterns
+Andres Almiray
+:jbake-type: page
+:jbake-status: published
+:icons: font
+:linkattrs:
+:patterns-dir: {jbake-project-rootdir}/tutorials/patterns
+:mvc:  {patterns-dir}/mvc
+:mvp:  {patterns-dir}/mvp
+:mvvm: {patterns-dir}/mvvm
+:pmvc: {patterns-dir}/pmvc
+
+[[_tutorial_5_toc]]
+== Agenda
+
+This tutorial describes how to leverage different MVC patterns, such as
+
+ * Model - View - Controller
+ * Model - View - Presenter
+ * Model - View - ViewModel
+ * PresentationModel - View - Controller
+
+The goal is to build the same application using different patterns.
+
+. <<_tutorial_5_1,Definitions>>
+.. <<_tutorial_5_1_1,Model-View-Controller>>
+.. <<_tutorial_5_1_2,Model-View-Presenter>>
+.. <<_tutorial_5_1_3,Model-View-ViewModel>>
+.. <<_tutorial_5_1_4,PresentationModel-View-Controller>>
+. <<_tutorial_5_2,Implementations>>
+.. <<_tutorial_5_2_1,Common Files>>
+.. <<_tutorial_5_2_2,Model-View-Controller>>
+.. <<_tutorial_5_2_3,Model-View-Presenter>>
+.. <<_tutorial_5_2_4,Model-View-ViewModel>>
+.. <<_tutorial_5_2_5,PresentationModel-View-Controller>>
+. <<_tutorial_5_3,Conclusions>>
+
+:numbered:
+
+[[_tutorial_5_1]]
+== Definitions
+
+[[_tutorial_5_1_1]]
+=== MVC: Model-View-Controller
+
+link:https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller[https://en.wikipedia.org/wiki/Model-view-controller]
+
+Perhaps the most well known pattern, also the one that many will get wrong and implement in an even worse way. The MVC
+pattern arose as a solution to keep 3 concerns separate from each other: visuals (*View*), data (*Model*), and logic
+(*Controller*). The pattern is easy to understand but hard to implement given that its generic description: a triangle
+where all parts can communicate with each other. Problem is, the links between some parts may be passive, for example
+some claim the *View* may only read the *Model* but do not update it directly, where as others claim data flows equally
+both ways.
+
+The following diagram presents one of the many ways in which this pattern may be implemented; the dotted lines represent
+passive links.
+
+.MVC
+image::/img/patterns/mvc.png[]
+
+icon:arrow-up[link="#_tutorial_5_toc"] <<_tutorial_5_toc,Top>>
+
+[[_tutorial_5_1_2]]
+=== MVP: Model-View-Presenter
+
+link:https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter[https://en.wikipedia.org/wiki/Model-view-presenter]
+
+This pattern emerged as a counterpoint for MVC, trying to solve the triangle problem. In this pattern the *View* is passive
+and only reacts to data sent by the *Presenter*, which came from the *Model*. The *View* can route user events to the
+*Presenter* but does not know the *Model*. The *Model* in turn receives updates form the *Presenter* and notifies it of
+any state changes, resulting in an isolated *Model*. Only the *Presenter* knows the other two members of the pattern.
+
+.MVP
+image::/img/patterns/mvp.png[]
+
+icon:arrow-up[link="#_tutorial_5_toc"] <<_tutorial_5_toc,Top>>
+
+[[_tutorial_5_1_3]]
+=== MVVM: Model-View-ViewModel
+
+link:https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel[https://en.wikipedia.org/wiki/Model-view-viewmodel]
+
+The MVVM pattern is a weird variation if you ask me, as it puts the logic between the *View* and the *ViewModel*. The
+*ViewModel* is responsible for abstracting all *View* input/outputs while providing behavior at the same time. This
+simplifies (in theory) testing of an application built with this pattern as the *ViewModel* has the lion's share of
+data and behavior, and it's separated from the *View*. Perhaps the most interesting feature coming form this pattern is
+the availability of a *Binder*, used to synchronize data between *View* and *ViewModel*.
+
+.MVVM
+image::/img/patterns/mvvm.png[]
+
+icon:arrow-up[link="#_tutorial_5_toc"] <<_tutorial_5_toc,Top>>
+
+[[_tutorial_5_1_4]]
+=== PMVC: PresentationModel-View-Controller
+
+The PMVC pattern is the ultimate variation of MVC, where we're back to the triangle but this time we've got clear links
+between members. The *PresentationModel* is responsible for holding information used to display the application's data
+and hints to how said data should be visualized, such as colors, fonts, etc. Similarly to MVVM, the *View* benefits from
+a *Binder* that can tie data from the *PresentationModel* to the *View*'s UI elements. The *Controller* is now content
+to manipulate the *PresentationModel* directly, completely oblivious about a specific *View*. This leads to a much more
+testable outcome, as the *PresentationModel* and *Controller* are completely separate from the *View*.
+
+.PMVC
+image::/img/patterns/pmvc.png[]
+
+icon:arrow-up[link="#_tutorial_5_toc"] <<_tutorial_5_toc,Top>>
+
+[[_tutorial_5_2]]
+== Implementations
+
+It's time to get down with business. The following sections describe the implementation of each pattern using the
+link:http://griffon-framework.org/[Griffon] framework. All applications use JavaFX as the toolkit of choice.
+
+[[_tutorial_5_2_1]]
+=== Common Files
+
+Regardless of the pattern all UIs rely on FXML to describe the *View* in a declarative approach as much as possible.
+The following FXML file is thus shared by all applications
+
+[source,xml]
+[subs="verbatim"]
+.griffon-app/resources/org/example/sample.fxml
+----
+<?xml version="1.0" encoding="UTF-8"?>
+include::{mvc}/griffon-app/resources/org/example/sample.fxml[lines=20..-1]
+----
+
+Input data is transformed by a simple service class, also shared by all applications
+
+[source,java]
+.griffon-app/services/org/example/SampleService.java
+----
+include::{mvc}/griffon-app/services/org/example/SampleService.java[lines=16..-1]
+----
+
+Finally the i18n messages required by the service
+
+[source,java]
+.griffon-app/i18n/messages.properties
+----
+include::{mvc}/griffon-app/i18n/messages.properties[lines=17..-1]
+----
+
+Alright, we can now have a look at each specific pattern.
+
+icon:arrow-up[link="#_tutorial_5_toc"] <<_tutorial_5_toc,Top>>
+
+[[_tutorial_5_2_2]]
+=== MVC
+
+Let's begin with the *View*, as this is the pattern member the user will interact. The *View* in this case is pretty
+straight forward, as it only needs to load the FXML file that contains the descriptive UI. However it also exposes two
+UI elements (_input_ and _output_) in order for the *Controller* and *Model* to read data and supply updates.
+
+[source,java]
+.griffon-app/views/org/example/SampleView.java
+----
+include::{mvc}/griffon-app/views/org/example/SampleView.java[lines=16..-1]
+----
+<1> Connects user events to *Controller*
+<2> Exposes UI elements
+
+Next comes the *Model*, responsible for holding the data required by the *View*. Notice that this particular implementation
+notifies the *View* using proper threading concerns, that is, data is pushed to the *View* only inside the UI thread.
+
+[source,java]
+.griffon-app/models/org/example/SampleModel.java
+----
+include::{mvc}/griffon-app/models/org/example/SampleModel.java[lines=16..-1]
+----
+<1> Notifies *View*
+
+Finally we get to the *Controller*, where we can see how it reacts to user events (the click on a button), reads data from
+the *View*, transforms said data, then sends it to the *Model*. As we saw earlier, the *Model* closes the circuit by updating
+the *View*. You may be wondering, how is the connection established between *Controller* and *View*? If you look back at
+the FXML file you'll notice that the button has an id equal to `sayHelloActionTarget`.  That name is really close to one
+of the *Controller*'s public methods. Also, in the *View* there's a call to `connectActions` that takes a `controller`
+argument. Here Griffon expects a naming convention (the name of the action method plus the name of the button's id), which
+if followed correctly, will make the a connection between *Controller* and *View*.
+
+[source,java]
+.griffon-app/controllers/org/example/SampleController.java
+----
+include::{mvc}/griffon-app/controllers/org/example/SampleController.java[lines=16..-1]
+----
+<1> Read input
+<2> Transform data
+<3> Set as output
+
+Given the trivial nature of this application you may be wondering if it's worthwhile having a *Model* at all. And you may
+be right, however the *Model* is shown here to compare the different implementations that follow.
+
+icon:arrow-up[link="#_tutorial_5_toc"] <<_tutorial_5_toc,Top>>
+
+[[_tutorial_5_2_3]]
+=== MVP
+
+The *View* in this pattern is a passive one. Curiously enough we can implement it in the same way as we did with the MVC
+pattern. The resulting *View* turns out to be exactly the same as before.
+
+[source,java]
+.griffon-app/views/org/example/SampleView.java
+----
+include::{mvp}/griffon-app/views/org/example/SampleView.java[lines=16..-1]
+----
+<1> Connects user events to *Presenter*
+<2> Exposes UI elements
+
+We'll see some changes in the remaining pattern members. The *Model* is again just a data holder, with just a single
+property that takes care of the output to be displayed. There's nothing more to it given that this class uses JavaFX
+properties, and as such we'll use event listeners to let the *Model* notify the *Presenter* when a state change occurs.
+
+[source,java]
+.griffon-app/models/org/example/SampleModel.java
+----
+include::{mvp}/griffon-app/models/org/example/SampleModel.java[lines=16..-1]
+----
+
+Next we get to the *Presenter*. Griffon allows MVC members to have any name you deem fit, however their
+responsibilities must be clearly stated, using the `@ArtifactProviderFor` annotation and a given MVC interface. At the
+moment of writing there's no `GriffonPresenter` interface, and it's likely there'll never be, as this example shows
+the current types are more than enough to provide the required behavior
+
+[source,java]
+.griffon-app/controllers/org/example/SamplePresenter.java
+----
+include::{mvp}/griffon-app/controllers/org/example/SamplePresenter.java[lines=16..-1]
+----
+<1> Read input
+<2> Transform data
+<3> Set as output
+<4> Notifies *View*
+
+Last but not least, we have to cover the application's configuration in terms of MVC definitions, given that we're using
+`presenter` instead of `controller`.
+
+[source,java]
+.griffon-app/conf/Config.java
+----
+include::{mvp}/griffon-app/conf/Config.java[lines=16..-1]
+----
+
+The configuration is quite flexible to allow us a simple rename.
+
+icon:arrow-up[link="#_tutorial_5_toc"] <<_tutorial_5_toc,Top>>
+
+[[_tutorial_5_2_4]]
+=== MVVM
+
+On to the third pattern, MVVM. The *View* is again a passive one. A *Binder* makes it easy to keep data in sync between
+the *View* and the *ViewModel*. I opted to make use of the *Binder* in the *View*, rendering it almost exactly the same
+as in the previous two patterns.
+
+[source,java]
+.griffon-app/views/org/example/SampleView.java
+----
+include::{mvvm}/griffon-app/views/org/example/SampleView.java[lines=16..-1]
+----
+<1> Connects user events to *ViewModel*
+<2> Binds *ViewModel* and *View*
+
+Now, the *ViewModel* contains data and behavior, essentially, a combination of *Model* and *Controller*/*Presenter* as
+seen in previous patterns
+
+[source,java]
+.griffon-app/controllers/org/example/SampleViewModel.java
+----
+include::{mvvm}/griffon-app/controllers/org/example/SampleViewModel.java[lines=16..-1]
+----
+<1> Read input
+<2> Transform data
+<3> Set as output
+
+The configuration is shown next.
+
+[source,java]
+.griffon-app/conf/Config.java
+----
+include::{mvvm}/griffon-app/conf/Config.java[lines=16..-1]
+----
+
+In truth we could have had a *Model* member too, just like in the other pattern implementations. However MVVM prefers the
+ *Model* to wrap a domain object or provide direct access to the data layer. As that's not the case for this trivial
+application the *Model* disappears and the data properties are moved to the *ViewModel*. This also servers to showcase
+that MVC configurations can have less members than the stereotypical three.
+
+icon:arrow-up[link="#_tutorial_5_toc"] <<_tutorial_5_toc,Top>>
+
+[[_tutorial_5_2_5]]
+=== PMVC
+
+Finally we meet the last pattern. We begin again with the *View*.
+
+[source,java]
+.griffon-app/views/org/example/SampleView.java
+----
+include::{pmvc}/griffon-app/views/org/example/SampleView.java[lines=16..-1]
+----
+<1> Connects user events to *Controller*
+<2> Binds *Model* and *View*
+
+Opposed to the other implementations, this *View* makes direct use of the *Binder*, thus foregoing the need to expose
+UI elements to other MVC members. In this way, the *View* is self contained and all of its links are properly established.
+
+The *Model* goes back to being a simple data holder, but this time it contains properties for both _input_ and _output_,
+as those define all the required data points.
+
+[source,java]
+.griffon-app/models/org/example/SampleModel.java
+----
+include::{pmvc}/griffon-app/models/org/example/SampleModel.java[lines=16..-1]
+----
+
+The last member we must discuss is the *Controller* itself.
+
+[source,java]
+.griffon-app/controllers/org/example/SampleController.java
+----
+include::{pmvc}/griffon-app/controllers/org/example/SampleController.java[lines=16..-1]
+----
+<1> Read input
+<2> Transform data
+<3> Set as output
+
+This *Controller* has no need for a particular *View*, it only needs a *PresentationModel* that delivers the required
+inputs and outputs. This greatly simplifies testing such components.
+
+icon:arrow-up[link="#_tutorial_5_toc"] <<_tutorial_5_toc,Top>>
+
+[[_tutorial_5_3]]
+== Conclusions
+
+As you can see, Griffon is flexible enough and can adapt itself to your preferred MVC pattern. There are other MVC variants,
+such as the link:https://en.wikipedia.org/wiki/Hierarchical_model%E2%80%93view%E2%80%93controller[Hierarchical model–view–controller],
+which is also automatically supported, given that Griffon enables hierarchical MVC groups and per-group contexts.
+
+The preferred pattern is PMVC, as that's the one suggested by the
+link:https://bintray.com/griffon/griffon-lazybones-templates[standard project templates], but as we've shown, it's easy to
+migrate from one pattern to the next.
+
+The full code for these applications can be found
+link:https://github.com/griffon/griffon/tree/master/tutorials/patterns[here, window="_blank"].
+
+icon:arrow-up[link="#_tutorial_5_toc"] <<_tutorial_5_toc,Top>>
