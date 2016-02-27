@@ -1,0 +1,251 @@
+= Tutorial 6::Minimalistic Build
+Andres Almiray
+:jbake-type: page
+:jbake-status: published
+:icons: font
+:linkattrs:
+:app-dir: {jbake-project-rootdir}/tutorials/simplified
+
+[[_tutorial_6_toc]]
+==  Agenda
+
+This tutorial describes how a Griffon application can be build without using the `griffon` Gradle plugin. It also shows
+that how all source and resources directories can be condensed into a minimum set of directories.
+
+. <<_tutorial_6_1,Directory Layout>>
+. <<_tutorial_6_2,Metadata Files>>
+. <<_tutorial_6_3,Build Files>>
+.. <<_tutorial_6_3_1,Main>>
+.. <<_tutorial_6_3_2,JavaFX>>
+.. <<_tutorial_6_3_3,Integration Tests>>
+.. <<_tutorial_6_3_4,Functional Tests>>
+
+:numbered:
+
+[[_tutorial_6_1]]
+== Directory Layout
+
+Griffon relies on Lazybones templates in order to boostrap a brand new project or create additional artifacts. However
+this does not mean that Griffon projects must be created using the templates; as a matter of fact is possible to create
+a project by conventional Gradle means, or even by hand. The project doesn't even have to comply with the standard Griffon
+structure, it can use the standard Java/Groovy project layout that Gradle understands. The following listing shows this
+layout, with all sources for a simple application already inside their respective directories
+
+[source]
+----
+.
+├── build.gradle                                                 //<1>
+├── gradle                                                       //<2>
+│   ├── functional-test.gradle
+│   ├── integration-test.gradle
+│   ├── javafx-plugin.gradle
+├── gradle.properties
+└── src
+    ├── functional-test                                          //<7>
+    │   └── java
+    │       └── org
+    │           └── example
+    │               └── SampleFunctionalTest.java
+    ├── integration-test                                         //<6>
+    │   └── java
+    │       └── org
+    │           └── example
+    │               └── SampleIntegrationTest.java
+    ├── main                                                     //<3>
+    │   ├── java
+    │   │   ├── Config.java
+    │   │   └── org
+    │   │       └── example
+    │   │           ├── Launcher.java
+    │   │           ├── SampleController.java
+    │   │           ├── SampleModel.java
+    │   │           ├── SampleService.java
+    │   │           └── SampleView.java
+    │   └── resources                                            //<4>
+    │       ├── META-INF
+    │       │   └── griffon
+    │       │       ├── griffon.core.artifact.GriffonController
+    │       │       ├── griffon.core.artifact.GriffonModel
+    │       │       ├── griffon.core.artifact.GriffonService
+    │       │       └── griffon.core.artifact.GriffonView
+    │       ├── application.properties
+    │       ├── griffon-icon-128x128.png
+    │       ├── griffon-icon-16x16.png
+    │       ├── griffon-icon-24x24.png
+    │       ├── griffon-icon-256x256.png
+    │       ├── griffon-icon-32x32.png
+    │       ├── griffon-icon-48x48.png
+    │       ├── griffon-icon-64x64.png
+    │       ├── griffon.png
+    │       ├── log4j.properties
+    │       ├── messages.properties
+    │       ├── org
+    │       │   └── example
+    │       │       └── sample.fxml
+    │       └── resources.properties
+    └── test                                                     //<5>
+        └── java
+            └── org
+                └── example
+                    ├── SampleControllerTest.java
+                    └── SampleServiceTest.java
+----
+<1> build file
+<2> additional build files
+<3> main sources
+<4> main resources
+<5> test sources
+<6> integration test sources
+<7> functional test sources
+
+We begin by looking at root directory, where we find the main build file [conum,data-value=1]_1_ paired with some additional
+build scripts [conum,data-value=2]_2_ that take care of configuring this project for JavaFX, as well as setting up
+integration and functional tests. All application sources are located in the standard location for a Java project, that
+is `src/main/java` [conum,data-value=3]_3_; main resources are found in their conventional location too [conum,data-value=4]_4_.
+Notice that special metadata files are located there too. Test sources do follow the same conventions [conum,data-value=5]_5_
+so they are located inside `src/test/java`. Finally we see the sources for integration [conum,data-value=6]_6_ and
+[conum,data-value=7]_7_ functional tests, which follow the paths configured by the additional build scripts [conum,data-value=2]_2_.
+
+icon:arrow-up[link="#_tutorial_6_toc"] <<_tutorial_6_toc,Top>>
+
+[[_tutorial_6_2]]
+== Metadata Files
+
+Usually Griffon projects will automatically generate metadata files associated with Griffon artifacts, thanks to the usage
+of the `@ArtifactProviderFor` annotation in combination with {link_jipsy}. But given that we did not define a dependency in
+_provided_ scope for {link_jipsy} we must have to write these files by hand. The catch is that these files must be updated
+every time an artifact is added, renamed, or deleted.
+
+[source,java]
+.META-INF/griffon/griffon.core.artifact.GriffonController
+----
+include::{app-dir}/src/main/resources/META-INF/griffon/griffon.core.artifact.GriffonController[]
+----
+
+[source,java]
+.META-INF/griffon/griffon.core.artifact.GriffonModel
+----
+include::{app-dir}/src/main/resources/META-INF/griffon/griffon.core.artifact.GriffonModel[]
+----
+
+[source,java]
+.META-INF/griffon/griffon.core.artifact.GriffonService
+----
+include::{app-dir}/src/main/resources/META-INF/griffon/griffon.core.artifact.GriffonService[]
+----
+
+[source,java]
+.META-INF/griffon/griffon.core.artifact.GriffonView
+----
+include::{app-dir}/src/main/resources/META-INF/griffon/griffon.core.artifact.GriffonView[]
+----
+
+icon:arrow-up[link="#_tutorial_6_toc"] <<_tutorial_6_toc,Top>>
+
+[[_tutorial_6_3]]
+== Build Files
+
+There are a handful of ways to define project properties for a Gradle project. The cleanlest one is to define these properties
+on a file named `gradle.properties`, whose contents can be found in the next listing
+
+[source,java]
+.gradle.properties
+----
+include::{app-dir}/gradle.properties[]
+----
+
+The next sections describe the manin build file segreggating its blocks by responsibilities, as well as the additional
+script files that deal with more functionality.
+
+icon:arrow-up[link="#_tutorial_6_toc"] <<_tutorial_6_toc,Top>>
+
+[[_tutorial_6_3_1]]
+=== Main
+
+There's little to be done in terms of plugin configuration. You need the `java` plugin at the very least. The other ones
+listed next allow you to keep an eye on dependency versions and tidy up license headers on files
+
+[source,groovy]
+.Plugin configuration
+----
+include::{app-dir}/build.gradle[tags=plugins]
+----
+
+Let's have a look at the project dependencies. This being a JavaFx project means we need `griffon-javafx-{jbake-griffon_version_current}.jar`
+as a dependency. We also need an implementation for dependency injection, this is why `griffon-guice-{jbake-griffon_version_current}.jar` is
+added to the list. We round up with a concrete implementation of `slf4j-api`, such as `slf4j-log4j12`. Finally, regarding
+tests, we would need `griffon-javafx-test-{jbake-griffon_version_current}.jar` plus a few others to make writing tests easier.
+
+[source,groovy]
+.Dependencies configuration
+----
+include::{app-dir}/build.gradle[tags=dependencies]
+----
+
+Every Griffon application has a set of resource files; `application.properties` contains useful values such as the name of
+the application, its version, and the current Griffon version in use. These values can be obtained from the build and passed
+into resource files. We use Gradle's standard mechanism for processing resources.
+
+[source,groovy]
+.Resources configuration
+----
+include::{app-dir}/build.gradle[tags=resources]
+----
+
+Finally, we must configure the entry point of the application so that the JavaFX plugin can find it.
+
+[source,groovy]
+.JavaFX configuration
+----
+include::{app-dir}/build.gradle[tags=javafx]
+----
+
+icon:arrow-up[link="#_tutorial_6_toc"] <<_tutorial_6_toc,Top>>
+
+[[_tutorial_6_3_2]]
+=== JavaFX
+
+This file performs a check on several paths to locate the correct `jfxrt.jar` which is required by the JavaFX plugin.
+It also applies the JavaFX plugin.
+
+[source,groovy]
+.gradle/javafx-plugin.gradle
+----
+include::{app-dir}/gradle/javafx-plugin.gradle[lines=27..-1]
+----
+
+icon:arrow-up[link="#_tutorial_6_toc"] <<_tutorial_6_toc,Top>>
+
+[[_tutorial_6_3_3]]
+=== Integration Tests
+
+Integration tests build up on existing configuration from regular tests. Some paths and classpaths need to be adjusted,
+as well as wiring up tasks dependencies, so that in the end, invoking `check` will also run `integration-test`, just like
+it happens with the standard `test` task.
+
+[source,groovy]
+.gradle/integration-test.gradle
+----
+include::{app-dir}/gradle/integration-test.gradle[lines=17..-1]
+----
+
+icon:arrow-up[link="#_tutorial_6_toc"] <<_tutorial_6_toc,Top>>
+
+[[_tutorial_6_3_4]]
+=== Functional Tests
+
+Functional tests differ from the previous ones by not extending directly from regular tests. This assures that functional
+tests don't get polluted with unit or integration concerns. This is the reason why basic test dependencies are defined
+explicitly here.
+
+[source,groovy]
+.gradle/functional-test.gradle
+----
+include::{app-dir}/gradle/functional-test.gradle[lines=17..-1]
+----
+
+The full code for this application can be found
+link:https://github.com/griffon/griffon/tree/master/tutorials/simplified[here, window="_blank"].
+
+
+icon:arrow-up[link="#_tutorial_6_toc"] <<_tutorial_6_toc,Top>>
