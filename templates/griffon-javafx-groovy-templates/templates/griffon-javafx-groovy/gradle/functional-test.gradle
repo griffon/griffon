@@ -50,6 +50,7 @@ task functionalTestReport(type: TestReport) {
 
 functionalTest.mustRunAfter integrationTest
 functionalTest.finalizedBy functionalTestReport
+functionalTestReport.dependsOn functionalTest
 check.dependsOn functionalTestReport
 
 task jacocoFunctionalTestReport(dependsOn: functionalTest, type: JacocoReport) {
