@@ -156,6 +156,27 @@ include::{console-swing-groovy}/griffon-app/models/console/ConsoleModel.groovy[l
 Griffon Models are *_not_* domain classes like the ones you find in Grails; they're more akin
 to presentation models, and as such, they're used to transfer data between Views and Controllers.
 
+Notice the usage of the `{link_artifact_provider_for}` annotation. This annotation serves as an additional hint to the
+compiler, letting it know it must generate or update a metadata file in an specific location.
+The file is named after the argument set on the annotation, in this case, `griffon.core.artifact.GriffonModel`. This file
+is automatically placed under `META-INF/griffon`. It's contents are fully qualified class names of types that implement
+the argument set on the annotation. This results in the following file being automatically created or updated with every
+compilation session
+
+.META-INF/griffon/griffon.core.artifact.GriffonModel
+[source,java,linenums,options="nowrap"]
+----
+console.ConsoleModel
+----
+
+You will see this annotation being used by other artifacts too albeit with different values, which will produce different
+files, such as `META-INF/griffon/griffon.core.artifact.GriffonController`, `META-INF/griffon/griffon.core.artifact.GriffonView`,
+and `META-INF/griffon/griffon.core.artifact.GriffonService`.
+
+It's worth mentioning that you may skip applying this annotation, in which case you'll be responsible for creating and
+updating the files mentioned earlier. These files are *very important* to the Griffon runtime, as they are used to
+locate and configure all artifacts in an application.
+
 [[_getting_started_console_example_controller]]
 === Controller
 
@@ -211,13 +232,19 @@ include::{console-swing-groovy}/src/main/groovy/console/ApplicationModule.groovy
 <1> Binding definition
 <2> Overriding an existing binding
 <3> Loaded after `swing` module
+<4> Generate metadata file automatically
 
 Modules can define several bindings, even override existing bindings. In our particular
 case, we defined a binding [conum,data-value=1]_1_ for `Evaluator` and overrode a
 binding [conum,data-value=2]_2_ for `SwingWindowDisplayHandler`. The latter is
 supplied by the `swing` module; thus, we must mark it as a dependency [conum,data-value=3]_3_
-in our module definition. The implementation of our custom `SwingWindowDisplayHandler`
-is quite trivial, as shown by the following snippet:
+in our module definition. Modules must be listed in a metadata file named `META-INF/services/griffon.core.injection.Module`;
+this is exactly what the `@ServiceProviderFor` annotation does, by instructing the compiler that it must create or update
+this particular file. This annotation is handled by the Annotation Processing tool facilities in Java via {link_jipsy} or
+by AST Transformations in Groovy via {link_gipsy}. What's important to remember is that this annotation will keep the metadata
+files up to date everytime a compilation session is executed.
+
+The implementation of our custom `SwingWindowDisplayHandler` is quite trivial, as shown by the following snippet:
 
 .src/main/groovy/console/CenteringWindowDisplayHandler.groovy
 [source,groovy,linenums,options="nowrap"]

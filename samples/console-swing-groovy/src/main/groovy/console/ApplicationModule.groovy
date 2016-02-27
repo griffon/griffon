@@ -24,7 +24,7 @@ import org.kordamp.jipsy.ServiceProviderFor
 import static griffon.util.AnnotationUtils.named
 
 @DependsOn('swing')                                                        //<3>
-@ServiceProviderFor(Module)
+@ServiceProviderFor(Module)                                                //<4>
 class ApplicationModule extends AbstractModule {
     @Override
     protected void doConfigure() {

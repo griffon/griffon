@@ -100,7 +100,7 @@ subprojects { subproj ->
             }
             if (!subproj.name.startsWith('gradle-')) {
                 testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
-                testCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
+                testCompile("org.spockframework:spock-core:$spockVersion") {
                     exclude group: 'org.codehaus.groovy', module: 'groovy-all'
                 }
             }
