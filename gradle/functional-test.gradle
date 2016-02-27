@@ -24,9 +24,12 @@ configurations {
 }
 
 dependencies {
-    functionalTestCompile 'junit:junit:4.12'
+    functionalTestCompile "junit:junit:$junitVersion"
     functionalTestCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
-    functionalTestCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+    functionalTestCompile("org.spockframework:spock-core:$spockVersion") {
+        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+    }
+    functionalTestCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
 }
 
 sourceSets {

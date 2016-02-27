@@ -26,5 +26,8 @@ dependencies {
 
     testCompile project.files(project.jfxrtLocation)
     testCompile "com.jayway.awaitility:awaitility:$awaitilityVersion"
-    testCompile "com.jayway.awaitility:awaitility-groovy:$awaitilityVersion"
+    testCompile("com.jayway.awaitility:awaitility-groovy:$awaitilityVersion") {
+        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+    }
+    testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
 }

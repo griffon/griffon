@@ -29,6 +29,11 @@ checkstyle {
     configProperties.checkstyleConfigDir = checkstyleConfigDir
 }
 
+dependencies {
+    codenarc("org.codenarc:CodeNarc:$codenarcVersion") { transitive = false }
+    codenarc "org.codehaus.groovy:groovy-all:$groovyVersion"
+}
+
 codenarc {
     ignoreFailures = true
     configFile = file("$configDir/codenarc/codenarc.groovy")
@@ -46,7 +51,7 @@ findbugs {
 */
 
 jdepend {
-    toolVersion = '2.9.1'
+    toolVersion = jdependVersion
     sourceSets = [sourceSets.main]
     ignoreFailures = true
     reportsDir = file("$project.buildDir/reports/jdepend")
