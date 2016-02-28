@@ -311,6 +311,7 @@ task clirrRootReport(type: org.kordamp.gradle.clirr.ClirrReportTask) {
         difference?.message?.text() =~ /super\$/ ||
         difference?.message?.text() =~ /this\$/ ||
         difference?.message?.text() =~ /__.swapInit/ ||
+        difference?.classname?.text() =~ /_closure/ ||
         !(difference?.classname?.text() =~ /griffon/)
     }
 }
