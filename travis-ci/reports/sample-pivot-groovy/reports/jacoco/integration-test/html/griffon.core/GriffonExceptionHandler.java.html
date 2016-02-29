@@ -76,8 +76,8 @@ public class GriffonExceptionHandler implements ExceptionHandler {
 
     @Override
     public void uncaughtException(Thread t, Throwable e) {
-<span class="fc" id="L79">        handle(e);</span>
-<span class="fc" id="L80">    }</span>
+<span class="nc" id="L79">        handle(e);</span>
+<span class="nc" id="L80">    }</span>
 
     @Override
     @SuppressWarnings(&quot;ThrowableResultOfMethodCallIgnored&quot;)
@@ -90,12 +90,12 @@ public class GriffonExceptionHandler implements ExceptionHandler {
 <span class="nc" id="L90">                application.getEventRouter().publishEvent(&quot;Uncaught&quot; + getShortName(throwable.getClass()), asList(throwable));</span>
 <span class="nc" id="L91">                application.getEventRouter().publishEvent(ApplicationEvent.UNCAUGHT_EXCEPTION_THROWN.getName(), asList(throwable));</span>
             }
-<span class="fc" id="L93">        } catch (Throwable t) {</span>
-<span class="fc" id="L94">            sanitize(t);</span>
-<span class="pc bpc" id="L95" title="1 of 2 branches missed.">            if (isOutputEnabled()) t.printStackTrace(System.err);</span>
-<span class="fc" id="L96">            LOG.error(&quot;An error occurred while handling uncaught exception &quot; + throwable, t);</span>
+<span class="nc" id="L93">        } catch (Throwable t) {</span>
+<span class="nc" id="L94">            sanitize(t);</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">            if (isOutputEnabled()) t.printStackTrace(System.err);</span>
+<span class="nc" id="L96">            LOG.error(&quot;An error occurred while handling uncaught exception &quot; + throwable, t);</span>
 <span class="nc" id="L97">        }</span>
-<span class="fc" id="L98">    }</span>
+<span class="nc" id="L98">    }</span>
 
     @SuppressWarnings(&quot;ThrowableResultOfMethodCallIgnored&quot;)
     public static Throwable sanitize(Throwable throwable) {
