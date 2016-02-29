@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.057s</div>
+<div class="counter">0.060s</div>
 <p>duration</p>
 </div>
 </td>
@@ -94,27 +94,27 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.get(key.string, null) returns string</td>
-<td>0.014s</td>
+<td>0.012s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.getAsString(key.foo, foo) returns foo</td>
-<td>0s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Calling configuration.getAsString(key.foo, null) returns null</td>
-<td>0s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Calling configuration.getAsString(key.string, foo) returns string</td>
 <td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Calling configuration.getAsString(key.string, null) returns string</td>
+<td class="success">Calling configuration.getAsString(key.foo, null) returns null</td>
+<td>0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Calling configuration.getAsString(key.string, foo) returns string</td>
 <td>0s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Calling configuration.getAsString(key.string, null) returns string</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -129,7 +129,7 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.remove(key.double.string) removes the key</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -139,12 +139,12 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.remove(key.float.string) removes the key</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.remove(key.float.type) removes the key</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -154,7 +154,7 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.remove(key.int.string) removes the key</td>
-<td>0.002s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -179,17 +179,17 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.removeAs(key.boolean.string) removes the key</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.removeAs(key.double.string) removes the key</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.removeAs(key.float.string) removes the key</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -199,7 +199,7 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.removeAs(key.int.string) removes the key</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -214,12 +214,12 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.removeConverted(key.foo) removes the key</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.removeConverted(key.int.string) removes the key</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -229,17 +229,17 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.boolean.string, foo) stores foo</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.boolean.string, foo) stores foo (recall with getAsString)</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.boolean.type, foo) stores foo</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -249,12 +249,12 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.double.string, foo) stores foo</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.double.string, foo) stores foo (recall with getAsString)</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -274,12 +274,12 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.float.string, foo) stores foo (recall with getAsString)</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.float.type, foo) stores foo</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -289,17 +289,17 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.int.string, foo) stores foo</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.int.string, foo) stores foo (recall with getAsString)</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.int.type, foo) stores foo</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -309,17 +309,17 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.long.string, foo) stores foo</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.long.string, foo) stores foo (recall with getAsString)</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.long.type, foo) stores foo</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -344,22 +344,22 @@
 </tr>
 <tr>
 <td class="success">Transforming configuration into Properties and retrieving key key.boolean.string</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into Properties and retrieving key key.boolean.type</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into Properties and retrieving key key.double.string</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into Properties and retrieving key key.double.type</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -369,22 +369,22 @@
 </tr>
 <tr>
 <td class="success">Transforming configuration into Properties and retrieving key key.float.type</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into Properties and retrieving key key.foo</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into Properties and retrieving key key.int.string</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into Properties and retrieving key key.int.type</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -404,7 +404,7 @@
 </tr>
 <tr>
 <td class="success">Transforming configuration into ResourceBundle and retrieving key key.boolean.string</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -414,7 +414,7 @@
 </tr>
 <tr>
 <td class="success">Transforming configuration into ResourceBundle and retrieving key key.double.string</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -424,12 +424,12 @@
 </tr>
 <tr>
 <td class="success">Transforming configuration into ResourceBundle and retrieving key key.float.string</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into ResourceBundle and retrieving key key.float.type</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -439,7 +439,7 @@
 </tr>
 <tr>
 <td class="success">Transforming configuration into ResourceBundle and retrieving key key.int.string</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -459,17 +459,17 @@
 </tr>
 <tr>
 <td class="success">Transforming configuration into ResourceBundle and retrieving key key.string</td>
-<td>0.001s</td>
+<td>0.002s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into flat Map and retrieving key key.boolean.string</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into flat Map and retrieving key key.boolean.type</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -484,7 +484,7 @@
 </tr>
 <tr>
 <td class="success">Transforming configuration into flat Map and retrieving key key.float.string</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -499,7 +499,7 @@
 </tr>
 <tr>
 <td class="success">Transforming configuration into flat Map and retrieving key key.int.string</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -509,12 +509,12 @@
 </tr>
 <tr>
 <td class="success">Transforming configuration into flat Map and retrieving key key.long.string</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into flat Map and retrieving key key.long.type</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -530,29 +530,29 @@
 <pre>[Test worker] TRACE griffon.core.editors.PropertyEditorResolver - Searching PropertyEditor for java.lang.Integer
 [Test worker] TRACE griffon.core.editors.PropertyEditorResolver - PropertyEditor for java.lang.Integer is griffon.core.editors.IntegerPropertyEditor
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=key.string
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5741ac57; key=key.string; value='string'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1b7f94fb; key=key.string; value='string'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=key.boolean.type
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@649cf70; key=key.boolean.type; value='true'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@25b39cbd; key=key.boolean.type; value='true'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=key.boolean.string
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@7f3300ab; key=key.boolean.string; value='true'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@13ab49b8; key=key.boolean.string; value='true'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=key.int.type
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@7d952059; key=key.int.type; value='42'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@2dea376c; key=key.int.type; value='42'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=key.int.string
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@276c18a8; key=key.int.string; value='21'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4ad5b666; key=key.int.string; value='21'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=key.long.type
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@6f16717a; key=key.long.type; value='64'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@73ba9df5; key=key.long.type; value='64'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=key.long.string
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@8c7026b; key=key.long.string; value='32'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@3a15fcb3; key=key.long.string; value='32'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=key.float.type
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@5c847cc2; key=key.float.type; value='3.1416'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@46b8fdca; key=key.float.type; value='3.1416'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=key.float.string
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1bea96a2; key=key.float.string; value='6.2832'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@213905fd; key=key.float.string; value='6.2832'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=key.double.type
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@472ba904; key=key.double.type; value='3.1416'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@6cb611a; key=key.double.type; value='3.1416'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=key.double.string
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@8522f87; key=key.double.string; value='6.2832'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@12f91c06; key=key.double.string; value='6.2832'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=key.foo
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@4742e7a9; key=key.foo; value='foo'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@7b06e549; key=key.foo; value='foo'
 </pre>
 </span>
 </div>
@@ -564,7 +564,7 @@
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 2.11</a> at Feb 29, 2016 9:58:21 AM</p>
+<a href="http://www.gradle.org">Gradle 2.11</a> at Feb 29, 2016 12:11:11 PM</p>
 </div>
 </div>
 </body>
