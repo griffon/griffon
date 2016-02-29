@@ -2,5 +2,51 @@
 [[_models_binding_javafx]]
 = JavaFX Binding
 
-TBD
+JavaFX provides its own binding mechanism, based on `{link_javafx_beans_observable}` and related types, such as
+`javafx.beans.property.Property` and `javafx.beans.binding.Binding`.
+
+[[_models_binding_javafx_groovy]]
+== Groovy Bindings
+
+{link_groovyfx} brings Groovy support for JavaFX in a similar way as standard Groovy does for Swing, which was
+ discussed in a <<_models_binding_swing_groovy,previous section>>. However there are some slight differences.
+
+The `griffon-javafx-groovy-{griffon-version}.jar` delivers a new AST Transformation: <<_models_fxobservable_transformation,@FXObservable>>,
+which by all means and purposes is functionally equivalent to GroovyFX's `@FXBindable` annotation. However `@FXObservable`
+delivers better integration with the Griffon runtime, for example hooking into `{link_threadingmanager}` instead of calling
+into `Platform.runLater`.
+
+Using the `@FXObservable` AST transformation results in shorter, more expressive code. For example, the following code
+
+[source,groovy,linenums,options="nowrap"]
+----
+class MyModel {
+    @FXObservable String value
+}
+----
+
+Is transformed into byte code as if you had written the following source code
+
+[source,groovy,linenums,options="nowrap"]
+----
+import javafx.beans.property.SimpleStringProperty
+import javafx.beans.property.StringProperty
+
+class MyModel {
+    private StringProperty value
+
+    String getValue() { valueProperty().get() }
+    void setValue(String s) { valueProperty().set(s) }
+
+    StringProperty getValueProperty() { valueProperty() }
+    StringProperty valueProperty() {
+        if (value == null) {
+            value = new SimpleStringProperty(this, 'value')
+        }
+        value
+    }
+}
+----
+
+This annotation serves then as a shortcut for writing observable properties and nothing more.
 
