@@ -28,7 +28,23 @@ mvcGroups {
 The definition order is very important, it determines the order in which each member
 will be initialized. In the previous example both `model` and `view` will be initialized
 before the `controller`. Do not mistake initialization for instantiation, as initialization
-relies on calling `{link_mvc_group_init}` on the group member.
+relies on calling `{link_mvc_group_init}` on the group member. The name of each member is
+also defined by convention, you will typically find `model`, `view`, and `controller` entries
+in an MVC group configuration. These names are used to identify each member by their responsibility.
+They are also used to inject member references into a particular MVC member. For example, if a
+`controller` needs access to its `model` member (both defined in the same MVC group) then it simply
+must define a field with matching type and name, such as
+
+[source,groovy,linenums,options="nowrap"]
+----
+import griffon.core.artifact.GriffonController
+import griffon.metadata.ArtifactProviderFor
+
+@ArtifactProviderFor(GriffonController)
+class SampleController {
+    SampleModel model
+}
+----
 
 MVC group configurations accept a special key that defines additional configuration
 for that group, as it can be seen in the following snippet:
