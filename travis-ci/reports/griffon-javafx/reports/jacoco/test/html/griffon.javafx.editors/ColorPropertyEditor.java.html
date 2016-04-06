@@ -74,7 +74,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
         try {
 <span class="fc" id="L76">            super.setValueInternal(ColorFormatter.parseColor(str));</span>
-<span class="nc" id="L77">        } catch (ParseException e) {</span>
+<span class="fc" id="L77">        } catch (ParseException e) {</span>
 <span class="nc" id="L78">            throw illegalValue(str, Color.class, e);</span>
 <span class="fc" id="L79">        }</span>
 <span class="fc" id="L80">    }</span>
@@ -133,7 +133,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
     protected double parse(String val) {
         try {
 <span class="fc" id="L135">            return (Integer.parseInt(String.valueOf(val).trim(), 16) &amp; 0xFF) / 255d;</span>
-<span class="nc" id="L136">        } catch (NumberFormatException e) {</span>
+<span class="fc" id="L136">        } catch (NumberFormatException e) {</span>
 <span class="nc" id="L137">            throw illegalValue(val, Color.class, e);</span>
         }
     }
@@ -160,4 +160,4 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="fc" id="L160">        super.setValueInternal(new Color(c, c, c, 1d));</span>
 <span class="fc" id="L161">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

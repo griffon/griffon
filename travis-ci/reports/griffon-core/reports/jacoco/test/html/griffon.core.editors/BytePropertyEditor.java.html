@@ -40,7 +40,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
     protected void handleAsString(String str) {
         try {
 <span class="fc bfc" id="L42" title="All 2 branches covered.">            super.setValueInternal(isBlank(str) ? null : Byte.parseByte(str));</span>
-<span class="nc" id="L43">        } catch (NumberFormatException e) {</span>
+<span class="fc" id="L43">        } catch (NumberFormatException e) {</span>
 <span class="nc" id="L44">            throw illegalValue(str, Byte.class, e);</span>
 <span class="fc" id="L45">        }</span>
 <span class="fc" id="L46">    }</span>
@@ -53,4 +53,4 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="fc bfc" id="L53" title="All 2 branches covered.">        return isBlank(getFormat()) ? null : new ByteFormatter(getFormat());</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

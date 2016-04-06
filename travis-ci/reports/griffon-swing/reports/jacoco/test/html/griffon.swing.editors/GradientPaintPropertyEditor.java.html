@@ -245,7 +245,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
     protected float parse(String val) {
         try {
 <span class="fc" id="L247">            return Float.parseFloat(val.trim());</span>
-<span class="nc" id="L248">        } catch (NumberFormatException e) {</span>
+<span class="fc" id="L248">        } catch (NumberFormatException e) {</span>
 <span class="nc" id="L249">            throw illegalValue(val, GradientPaint.class, e);</span>
         }
     }
@@ -275,7 +275,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="fc" id="L275">        Object val = map.get(key);</span>
 <span class="pc bpc" id="L276" title="1 of 2 branches missed.">        if (null == val) {</span>
 <span class="nc" id="L277">            return defaultValue;</span>
-<span class="pc bpc" id="L278" title="1 of 2 branches missed.">        } else if (val instanceof CharSequence) {</span>
+<span class="fc bfc" id="L278" title="All 2 branches covered.">        } else if (val instanceof CharSequence) {</span>
 <span class="nc" id="L279">            return parse(String.valueOf(val));</span>
 <span class="pc bpc" id="L280" title="1 of 2 branches missed.">        } else if (val instanceof Number) {</span>
 <span class="fc" id="L281">            return parse((Number) val);</span>
@@ -283,4 +283,4 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L283">        throw illegalValue(map, GradientPaint.class);</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

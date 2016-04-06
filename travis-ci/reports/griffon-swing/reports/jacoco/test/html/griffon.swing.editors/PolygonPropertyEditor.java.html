@@ -65,7 +65,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
 
 <span class="fc" id="L67">        String[] parts = str.split(&quot;,&quot;);</span>
-<span class="pc bpc" id="L68" title="1 of 2 branches missed.">        if (parts.length % 2 == 1) {</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (parts.length % 2 == 1) {</span>
 <span class="nc" id="L69">            throw illegalValue(str, Polygon.class);</span>
         }
 
@@ -86,7 +86,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="fc" id="L86">            return;</span>
         }
 
-<span class="pc bpc" id="L89" title="1 of 2 branches missed.">        if (list.size() % 2 == 1) {</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (list.size() % 2 == 1) {</span>
 <span class="nc" id="L90">            throw illegalValue(list, Polygon.class);</span>
         }
 
@@ -113,7 +113,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
     protected int parse(String val) {
         try {
 <span class="fc" id="L115">            return Integer.parseInt(val.trim());</span>
-<span class="nc" id="L116">        } catch (NumberFormatException e) {</span>
+<span class="fc" id="L116">        } catch (NumberFormatException e) {</span>
 <span class="nc" id="L117">            throw illegalValue(val, Polygon.class, e);</span>
         }
     }
@@ -122,4 +122,4 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="fc" id="L122">        return val.intValue();</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

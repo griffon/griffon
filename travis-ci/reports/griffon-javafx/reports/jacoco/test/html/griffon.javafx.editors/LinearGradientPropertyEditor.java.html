@@ -63,7 +63,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
         }
         try {
 <span class="nc" id="L65">            super.setValueInternal(LinearGradient.valueOf(str));</span>
-<span class="nc" id="L66">        } catch (Exception e) {</span>
+<span class="fc" id="L66">        } catch (Exception e) {</span>
 <span class="nc" id="L67">            throw illegalValue(str, LinearGradient.class, e);</span>
 <span class="nc" id="L68">        }</span>
 <span class="nc" id="L69">    }</span>
@@ -136,7 +136,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
     protected double parse(String val) {
         try {
 <span class="nc" id="L138">            return Float.parseFloat(val.trim());</span>
-<span class="nc" id="L139">        } catch (NumberFormatException e) {</span>
+<span class="fc" id="L139">        } catch (NumberFormatException e) {</span>
 <span class="nc" id="L140">            throw illegalValue(val, LinearGradient.class, e);</span>
         }
     }
@@ -158,7 +158,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="fc" id="L158">        Object val = map.get(key);</span>
 <span class="fc bfc" id="L159" title="All 2 branches covered.">        if (null == val) {</span>
 <span class="fc" id="L160">            return defaultValue;</span>
-<span class="pc bpc" id="L161" title="1 of 2 branches missed.">        } else if (val instanceof CharSequence) {</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">        } else if (val instanceof CharSequence) {</span>
 <span class="nc" id="L162">            return parse(String.valueOf(val));</span>
 <span class="pc bpc" id="L163" title="1 of 2 branches missed.">        } else if (val instanceof Number) {</span>
 <span class="fc" id="L164">            return parse((Number) val);</span>
@@ -166,4 +166,4 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L166">        throw illegalValue(map, LinearGradient.class);</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

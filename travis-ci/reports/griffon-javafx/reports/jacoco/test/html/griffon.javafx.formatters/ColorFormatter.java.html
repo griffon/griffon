@@ -196,7 +196,7 @@ public class ColorFormatter extends AbstractFormatter&lt;Color&gt; {
 <span class="fc" id="L196">                String colorFieldName = str.toUpperCase();</span>
 <span class="fc" id="L197">                Field field = Color.class.getField(colorFieldName);</span>
 <span class="fc" id="L198">                return (Color) field.get(null);</span>
-<span class="nc" id="L199">            } catch (Exception e) {</span>
+<span class="fc" id="L199">            } catch (Exception e) {</span>
 <span class="nc" id="L200">                throw parseError(str, Color.class, e);</span>
             }
         }
@@ -416,4 +416,4 @@ public class ColorFormatter extends AbstractFormatter&lt;Color&gt; {
 <span class="fc bfc" id="L416" title="All 2 branches covered.">        return 2 &lt;= self.length() ? self : padding + self;</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

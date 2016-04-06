@@ -156,8 +156,8 @@ public class GuiceInjector implements Injector&lt;com.google.inject.Injector&gt;
 <span class="fc" id="L156">        requireNonNull(type, ERROR_TYPE_NULL);</span>
 <span class="fc" id="L157">        requireNonNull(qualifier, ERROR_QUALIFIER_NULL);</span>
 
-<span class="fc bfc" id="L159" title="All 2 branches covered.">        if (isClosed()) {</span>
-<span class="fc" id="L160">            throw new InstanceNotFoundException(type, qualifier, new ClosedInjectorException(this));</span>
+<span class="pc bpc" id="L159" title="1 of 2 branches missed.">        if (isClosed()) {</span>
+<span class="nc" id="L160">            throw new InstanceNotFoundException(type, qualifier, new ClosedInjectorException(this));</span>
         }
 
         try {
@@ -286,4 +286,4 @@ public class GuiceInjector implements Injector&lt;com.google.inject.Injector&gt;
 <span class="nc" id="L286">        }</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
