@@ -282,7 +282,7 @@ any problems, as opposed to other popular JVM languages. This is also the reason
 include::{javafx-app}/griffon-app/views/org/example/Tab3View.groovy[]
 ----
 
-GroovyFX provides a a builder class that can be used to instantiate nodes using the DSL capabilities delivered by
+GroovyFX provides a builder class that can be used to instantiate nodes using the DSL capabilities delivered by
 the Groovy syntax. In this particular view, the builder is used to recreate the same layout found in the other tabs. The
 code looks like a cross between FXML (defining nodes and their layout properties) and the direct JavaFX API (defining
 bindings right on the spot). The code for setting up the tab is exactly the same, albeit it looks a bit different,
@@ -304,7 +304,7 @@ FXML file. Then you can further enhance the view by using the GroovyFX DSL. Let'
 include::{javafx-app}/griffon-app/resources/org/example/tab4.fxml[]
 ----
 
-This file does nto define a controller nor makes use of `ResourceBundle` resources, the reason being is that the `fxml()`
+This file does not define a controller nor makes use of `ResourceBundle` resources, the reason being is that the `fxml()`
 node is quite spartan at the moment: it does not aware of the Griffon conventions nor does it setup a `ResourceBundle`,
 thus i18n resources can not be resolved properly. We'll rely on the Groovy view to fix these shortcomings.
 
@@ -316,7 +316,7 @@ include::{javafx-app}/griffon-app/views/org/example/Tab4View.groovy[]
 
 Notice that all widgets with a proper `id` attribute can be accessed directly inside the block associated with the
 `fxml()` node. These happen to be the widgets we're interested in, thus bindings can be set accordingly.
-Another change sen in `Tab4View` is that this class extends directly from `AbstractJavaFXGriffonView`, allowing this
+Another change seen in `Tab4View` is that this class extends directly from `AbstractJavaFXGriffonView`, allowing this
 view to invoke the `connectActions()` method. Finally the `tab` is setup in exactly the same way as we've seen before.
 
 This is the final tab that we need to setup in order for the application to work. You can run the application once more
