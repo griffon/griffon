@@ -67,7 +67,7 @@ link:https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter[https://
 
 This pattern emerged as a counterpoint for MVC, trying to solve the triangle problem. In this pattern the *View* is passive
 and only reacts to data sent by the *Presenter*, which came from the *Model*. The *View* can route user events to the
-*Presenter* but does not know the *Model*. The *Model* in turn receives updates form the *Presenter* and notifies it of
+*Presenter* but does not know the *Model*. The *Model* in turn receives updates from the *Presenter* and notifies it of
 any state changes, resulting in an isolated *Model*. Only the *Presenter* knows the other two members of the pattern.
 
 .MVP
@@ -83,7 +83,7 @@ link:https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel[https://
 The MVVM pattern is a weird variation if you ask me, as it puts the logic between the *View* and the *ViewModel*. The
 *ViewModel* is responsible for abstracting all *View* input/outputs while providing behavior at the same time. This
 simplifies (in theory) testing of an application built with this pattern as the *ViewModel* has the lion's share of
-data and behavior, and it's separated from the *View*. Perhaps the most interesting feature coming form this pattern is
+data and behavior, and it's separated from the *View*. Perhaps the most interesting feature coming from this pattern is
 the availability of a *Binder*, used to synchronize data between *View* and *ViewModel*.
 
 .MVVM
