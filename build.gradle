@@ -77,11 +77,6 @@ allprojects {
 
 subprojects { subproj ->
     plugins.withType(JavaPlugin) {
-        configurations {
-            compileOnly
-            testCompileOnly
-        }
-
         subproj.tasks.withType(JavaCompile) {
             sourceCompatibility = subproj.sourceCompatibility
             targetCompatibility = subproj.targetCompatibility
@@ -106,26 +101,6 @@ subprojects { subproj ->
             }
             testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
             testCompile 'cglib:cglib-nodep:3.2.0'
-        }
-
-        sourceSets {
-            main {
-                compileClasspath += [configurations.compileOnly]
-            }
-            test {
-                compileClasspath += [configurations.testCompileOnly]
-            }
-        }
-
-        javadoc {
-            classpath += [configurations.compileOnly]
-        }
-
-        idea {
-            module {
-                scopes.PROVIDED.plus += [configurations.compileOnly]
-                scopes.PROVIDED.plus += [configurations.testCompileOnly]
-            }
         }
 
         processResources {
