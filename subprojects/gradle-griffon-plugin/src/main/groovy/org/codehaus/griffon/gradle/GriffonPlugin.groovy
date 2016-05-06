@@ -48,8 +48,6 @@ class GriffonPlugin implements Plugin<Project> {
 
         configureDefaultSourceSets(project, 'java')
         if (sourceSetName != 'java') configureDefaultSourceSets(project, sourceSetName)
-        adjustJavadocClasspath(project, sourceSetName)
-        adjustIdeClasspaths(project)
         createDefaultDirectoryStructure(project, 'java')
         if (sourceSetName != 'java') createDefaultDirectoryStructure(project, sourceSetName)
 
@@ -58,13 +56,7 @@ class GriffonPlugin implements Plugin<Project> {
 
     private void applyDefaultDependencies(final Project project) {
         // add compile time configurations
-        project.configurations.maybeCreate('compileOnly')
-        project.configurations.maybeCreate('testCompileOnly')
         project.configurations.maybeCreate('griffon').visible = true
-
-        // wire up classpaths with compile time dependencies
-        project.sourceSets.main.compileClasspath += [project.configurations.compileOnly]
-        project.sourceSets.test.compileClasspath += [project.configurations.testCompileOnly]
 
         GriffonPluginResolutionStrategy.applyTo(project)
     }
@@ -75,25 +67,6 @@ class GriffonPlugin implements Plugin<Project> {
         if (!project.hasProperty('griffonPlugin') || !project.griffonPlugin) {
             project.apply(plugin: 'application')
         }
-    }
-
-    private void adjustJavadocClasspath(Project project, String sourceSetName) {
-        project.javadoc.classpath += [project.configurations.compileOnly]
-        if (sourceSetName == 'groovy') {
-            project.groovydoc.classpath += [project.configurations.compileOnly]
-        }
-    }
-
-    private void adjustIdeClasspaths(Project project) {
-        // adjust Eclipse classpath, but only if EclipsePlugin is applied
-        project.plugins.withId('eclipse') {
-            project.eclipse.classpath.plusConfigurations += [project.configurations.compileOnly]
-            project.eclipse.classpath.plusConfigurations += [project.configurations.testCompileOnly]
-        }
-
-        // adjust IntelliJ classpath
-        project.idea.module.scopes.PROVIDED.plus += [project.configurations.compileOnly]
-        project.idea.module.scopes.PROVIDED.plus += [project.configurations.testCompileOnly]
     }
 
     private void configureDefaultSourceSets(Project project, String sourceSetName) {
