@@ -1,10 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.codehaus.griffon.gradle.GriffonPluginWithAppliedEclipsePluginSpecification" tests="2" skipped="0" failures="0" errors="0" timestamp="2016-05-15T10:21:30" hostname="testing-gce-849f456b-13c5-48dd-b5c2-cae76ce5c94c.c.travis-ci-prod-5.internal" time="0.018">
+<testsuite name="org.codehaus.griffon.gradle.GriffonPluginWithAppliedEclipsePluginSpecification" tests="2" skipped="0" failures="2" errors="0" timestamp="2016-05-15T10:30:34" hostname="testing-gce-2b0d0013-556e-4632-b443-7e667d5c1d73.c.travis-ci-prod-2.internal" time="0.153">
   <properties/>
-  <testcase name="eclipse classpath plusConfigurations contains configuration ':compileOnly'" classname="org.codehaus.griffon.gradle.GriffonPluginWithAppliedEclipsePluginSpecification" time="0.016"/>
-  <testcase name="eclipse classpath plusConfigurations contains configuration ':testCompileOnly'" classname="org.codehaus.griffon.gradle.GriffonPluginWithAppliedEclipsePluginSpecification" time="0.001"/>
-  <system-out><![CDATA[The plus(Iterable<FileCollection>) method and using the '+' operator in conjunction with an Iterable<FileCollection> object have been deprecated and are scheduled to be removed in 3.0.  Please use the plus(FileCollection) method or the '+' operator with a FileCollection object instead.
-]]></system-out>
+  <testcase name="eclipse classpath plusConfigurations contains configuration ':compileOnly'" classname="org.codehaus.griffon.gradle.GriffonPluginWithAppliedEclipsePluginSpecification" time="0.15">
+    <failure message="Condition not satisfied:&#10;&#10;project.eclipse.classpath.plusConfigurations.contains configuration&#10;|       |       |         |                  |        |&#10;|       |       |         |                  false    configuration ':compileOnly'&#10;|       |       |         [configuration ':testRuntime', configuration ':compileClasspath', configuration ':testCompileClasspath']&#10;|       |       org.gradle.plugins.ide.eclipse.model.EclipseClasspath_Decorated@30102d65&#10;|       org.gradle.plugins.ide.eclipse.model.EclipseModel_Decorated@3224b595&#10;root project 'test'&#10;" type="org.spockframework.runtime.ConditionNotSatisfiedError">Condition not satisfied:
+
+project.eclipse.classpath.plusConfigurations.contains configuration
+|       |       |         |                  |        |
+|       |       |         |                  false    configuration ':compileOnly'
+|       |       |         [configuration ':testRuntime', configuration ':compileClasspath', configuration ':testCompileClasspath']
+|       |       org.gradle.plugins.ide.eclipse.model.EclipseClasspath_Decorated@30102d65
+|       org.gradle.plugins.ide.eclipse.model.EclipseModel_Decorated@3224b595
+root project 'test'
+
+	at org.codehaus.griffon.gradle.GriffonPluginWithAppliedEclipsePluginSpecification.eclipse classpath plusConfigurations contains #configuration(GriffonPluginWithAppliedEclipsePluginSpecification.groovy:35)
+</failure>
+  </testcase>
+  <testcase name="eclipse classpath plusConfigurations contains configuration ':testCompileOnly'" classname="org.codehaus.griffon.gradle.GriffonPluginWithAppliedEclipsePluginSpecification" time="0.003">
+    <failure message="Condition not satisfied:&#10;&#10;project.eclipse.classpath.plusConfigurations.contains configuration&#10;|       |       |         |                  |        |&#10;|       |       |         |                  false    configuration ':testCompileOnly'&#10;|       |       |         [configuration ':testRuntime', configuration ':compileClasspath', configuration ':testCompileClasspath']&#10;|       |       org.gradle.plugins.ide.eclipse.model.EclipseClasspath_Decorated@30102d65&#10;|       org.gradle.plugins.ide.eclipse.model.EclipseModel_Decorated@3224b595&#10;root project 'test'&#10;" type="org.spockframework.runtime.ConditionNotSatisfiedError">Condition not satisfied:
+
+project.eclipse.classpath.plusConfigurations.contains configuration
+|       |       |         |                  |        |
+|       |       |         |                  false    configuration ':testCompileOnly'
+|       |       |         [configuration ':testRuntime', configuration ':compileClasspath', configuration ':testCompileClasspath']
+|       |       org.gradle.plugins.ide.eclipse.model.EclipseClasspath_Decorated@30102d65
+|       org.gradle.plugins.ide.eclipse.model.EclipseModel_Decorated@3224b595
+root project 'test'
+
+	at org.codehaus.griffon.gradle.GriffonPluginWithAppliedEclipsePluginSpecification.eclipse classpath plusConfigurations contains #configuration(GriffonPluginWithAppliedEclipsePluginSpecification.groovy:35)
+</failure>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[SLF4J: Class path contains multiple SLF4J bindings.
 SLF4J: Found binding in [jar:file:/home/travis/.gradle/wrapper/dists/gradle-2.13-bin/4xsgxlfjcxvrea7akf941nvc7/gradle-2.13/lib/gradle-core-2.13.jar!/org/slf4j/impl/StaticLoggerBinder.class]
 SLF4J: Found binding in [jar:file:/home/travis/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-simple/1.7.21/be4b3c560a37e69b6c58278116740db28832232c/slf4j-simple-1.7.21.jar!/org/slf4j/impl/StaticLoggerBinder.class]
