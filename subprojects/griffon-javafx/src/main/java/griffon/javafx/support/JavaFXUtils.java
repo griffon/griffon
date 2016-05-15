@@ -541,15 +541,13 @@ public final class JavaFXUtils {
                 Object found = findElement(child, id);
                 if (found != null) return found;
             }
-        }
-        if (root instanceof MenuBar) {
+        } else if (root instanceof MenuBar) {
             MenuBar menuBar = (MenuBar) root;
             for (Menu child : menuBar.getMenus()) {
                 Object found = findElement(child, id);
                 if (found != null) return found;
             }
-        }
-        if (root instanceof ContextMenu) {
+        } else if (root instanceof ContextMenu) {
             ContextMenu contextMenu = (ContextMenu) root;
             for (MenuItem child : contextMenu.getItems()) {
                 Object found = findElement(child, id);

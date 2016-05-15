@@ -22,6 +22,7 @@ import javafx.collections.ObservableList
 import javafx.embed.swing.JFXPanel
 import javafx.scene.control.Accordion
 import javafx.scene.control.Button
+import javafx.scene.control.ButtonBar
 import javafx.scene.control.ContextMenu
 import javafx.scene.control.Menu
 import javafx.scene.control.MenuBar
@@ -103,7 +104,8 @@ class JavaFXUtilsSpec extends Specification {
             createScrollPane(),
             createToolBar(),
             createContextMenu(),
-            createMenuBar()
+            createMenuBar(),
+            createButtonBar()
         ]
     }
 
@@ -137,6 +139,14 @@ class JavaFXUtilsSpec extends Specification {
         secondary.items << button
         menuBar.menus << primary
         menuBar
+    }
+
+    private ButtonBar createButtonBar() {
+        ButtonBar buttonBar = new ButtonBar()
+        buttonBar.buttons << new Button('Primary')
+        buttonBar.buttons << new Button('Secondary')
+        buttonBar.buttons[1].id = 'buttonId'
+        buttonBar
     }
 
     private TabPane createTabPane() {
