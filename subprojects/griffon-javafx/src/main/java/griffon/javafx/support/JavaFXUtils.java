@@ -30,6 +30,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.ButtonBase;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
@@ -534,6 +535,13 @@ public final class JavaFXUtils {
 
         if (id.equals(getPropertyValue(root, "id"))) return root;
 
+        if (root instanceof ButtonBar) {
+            ButtonBar buttonBar = (ButtonBar) root;
+            for (Node child : buttonBar.getButtons()) {
+                Object found = findElement(child, id);
+                if (found != null) return found;
+            }
+        }
         if (root instanceof MenuBar) {
             MenuBar menuBar = (MenuBar) root;
             for (Menu child : menuBar.getMenus()) {
