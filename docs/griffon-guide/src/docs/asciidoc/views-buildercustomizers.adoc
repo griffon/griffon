@@ -78,54 +78,6 @@ thus ensuring that the customizations from this customizer are applied afterward
 
 The `griffon-groovy` dependency delivers the following nodes:
 
-=== Root
-
-Identifies the top level node of a secondary View script. View scripts are expected
-to return the top level node; however, there may be times when further customizations
-prevent this from happening, for example when wiring up a custom listener. When that happens,
-the result has to be made explicit; otherwise the script will return the wrong value.
-Using the `root()` node avoids forgetting this fact while also providing an alias for
-the node.
-
-.griffon-app/views/com/acme/Secondary.groovy
-[source,groovy,linenums,options="nowrap"]
-----
-root(
-    tree(id: 'mytree')
-)
-
-mytree.addTreeSelectionModel(new DefaultTreeSelectionModel() { /* ... */ })
-----
-
-.griffon-app/views/com/acme/PrimaryView.groovy
-[source,groovy,linenums,options="nowrap"]
-----
-package com.acme
-
-import griffon.core.artifact.GriffonView
-import griffon.metadata.ArtifactProviderFor
-
-@ArtifactProviderFor(GriffonView)
-class PrimaryView {
-    def builder
-
-    void initUI() {
-        builder.with {
-            build(Secondary)
-            application(title: 'Sample') {
-                borderLayout()
-                label 'Options', constraints: NORTH
-                widget root(SampleSecondary)
-            }
-        }
-    }
-}
-----
-
-This node accepts an additional parameter `name` which can be used to override the
-default alias assigned to the node. If you specify a value for this parameter when
-the node is built, then you'll need to use it again to retrieve the node.
-
 === MetaComponent
 
 Enables the usage of a meta-component as a View node. Meta-components are MVC groups
@@ -155,3 +107,55 @@ in a View is straightforward:
 metaComponent('custom', title: 'Another Title')
 ----
 
+== Default Builder Delegates
+
+The `griffon-groovy` dependency delivers the following delegates:
+
+=== Root
+
+Identifies the root node of a View. Views may identify the root node. The root node is the first
+node call invoked on the builder member.
+
+.griffon-app/views/com/acme/Sample.groovy
+[source,groovy,linenums,options="nowrap"]
+----
+package org.example
+
+import griffon.core.artifact.GriffonView
+import griffon.metadata.ArtifactProviderFor
+
+@ArtifactProviderFor(GriffonView)
+class SampleView {
+    FactoryBuilderSupport builder
+
+    void initUI() {
+        builder.with {
+            button(id: 'clickActionTarget', clickAction)
+        }
+    }
+}
+----
+
+.griffon-app/views/com/acme/PrimaryView.groovy
+[source,groovy,linenums,options="nowrap"]
+----
+package com.acme
+
+import griffon.core.artifact.GriffonView
+import griffon.metadata.ArtifactProviderFor
+
+@ArtifactProviderFor(GriffonView)
+class PrimaryView {
+    def builder
+
+    void initUI() {
+        builder.with {
+            application(title: 'Sample') {
+                borderLayout()
+                label 'Options', constraints: NORTH
+                node createMVCGroup('sample').rootNode
+            }
+        }
+    }
+}
+----
