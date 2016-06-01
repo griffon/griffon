@@ -16,7 +16,6 @@
 package griffon.builder.core;
 
 import griffon.builder.core.factory.MetaComponentFactory;
-import griffon.builder.core.factory.RootFactory;
 import griffon.core.threading.UIThreadManager;
 import groovy.lang.Closure;
 import groovy.util.Factory;
@@ -44,7 +43,6 @@ public class CoreBuilderCustomizer extends AbstractBuilderCustomizer {
 
     public CoreBuilderCustomizer() {
         Map<String, Factory> factories = new LinkedHashMap<>();
-        factories.put("root", new RootFactory());
         factories.put("metaComponent", new MetaComponentFactory());
         setFactories(factories);
     }
