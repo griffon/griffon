@@ -79,7 +79,7 @@ public class CoreBuilderCustomizer extends AbstractBuilderCustomizer {
 
     protected void rootNodePostNodeCompletionDelegate(FactoryBuilderSupport builder, Object parent, Object node) {
         String name = String.valueOf(builder.getContext().get(FactoryBuilderSupport.CURRENT_NAME));
-        if (builder.getVariable(KEY_ROOT_NODE_NAME).equals(name)) {
+        if (builder.getVariable(KEY_ROOT_NODE_NAME).equals(name) && builder.hasVariable("mvcId")) {
             String mvcId = String.valueOf(builder.getVariable("mvcId"));
             builder.getVariables().put(mvcId + "-rootNode", node);
         }
