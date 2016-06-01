@@ -16,7 +16,11 @@
 package griffon.builder.core.factory
 
 import griffon.core.ApplicationEvent
+import griffon.core.GriffonApplication
+import griffon.core.RunnableWithArgs
 import griffon.core.mvc.MVCGroup
+
+import javax.annotation.Nullable
 
 /**
  * Enables MVC groups to be used as component nodes
@@ -36,22 +40,40 @@ class MetaComponentFactory extends AbstractFactory {
 
         String mvcId = attributes.remove('mvcId')
         mvcId = attributes.containsKey('mvcId') ? attributes.remove('mvcId') : mvcId
+        Map mvcArgs = attributes.remove('mvcArgs') ?: [:]
+        Map mvcArgsCopy = [*:mvcArgs]
 
-        MVCGroup mvcGroup = builder.application.createMVCGroup(mvcType, mvcId, attributes)
-        def root = mvcGroup.getScriptResult('view')
+        MVCGroup mvcGroup = builder.application.mvcGroupManager.createMVCGroup(mvcType, mvcId, mvcArgs)
+        def root = mvcGroup.rootNode
 
-        Closure destroyEventHandler
-        destroyEventHandler = { String parentId, MVCGroup childGroup, MVCGroup destroyedGroup ->
-            if (destroyedGroup.mvcId == parentId) {
-                childGroup.destroy()
-                builder.application.removeApplicationEventListener(ApplicationEvent.DESTROY_MVC_GROUP.name, destroyEventHandler)
-            }
-        }.curry(mvcId, mvcGroup)
-        builder.application.addApplicationEventListener(ApplicationEvent.DESTROY_MVC_GROUP.name, destroyEventHandler)
+        new DestroyEventHandler(mvcId, mvcGroup, builder.application)
 
         builder.context.root = root
         builder.context.mvcGroup = mvcGroup
+        builder.context.mvcArgs = mvcArgsCopy
         root
+    }
+
+    private static class DestroyEventHandler implements RunnableWithArgs {
+        private final String parentId
+        private final MVCGroup childGroup
+        private final GriffonApplication application
+
+        DestroyEventHandler(String parentId, MVCGroup childGroup, GriffonApplication application) {
+            this.parentId = parentId
+            this.childGroup = childGroup
+            this.application = application
+            application.eventRouter.addEventListener(ApplicationEvent.DESTROY_MVC_GROUP.name, this)
+        }
+
+        @Override
+        void run(@Nullable Object... args) {
+            Object destroyedGroup = args[0]
+            if (destroyedGroup.mvcId == parentId) {
+                childGroup.destroy()
+                application.eventRouter.removeEventListener(ApplicationEvent.DESTROY_MVC_GROUP.name, this)
+            }
+        }
     }
 
     boolean onHandleNodeAttributes(FactoryBuilderSupport builder, Object node, Map attributes) {
