@@ -1,19 +1,186 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="griffon.builder.core.CoreBuilderCustomizerSpec" tests="9" skipped="0" failures="0" errors="0" timestamp="2016-05-15T10:41:33" hostname="testing-gce-ad892f28-e390-4205-bb65-89cd9ef0369e.c.travis-ci-prod-4.internal" time="0.781">
+<testsuite name="griffon.builder.core.CoreBuilderCustomizerSpec" tests="9" skipped="0" failures="9" errors="0" timestamp="2016-06-01T19:44:09" hostname="testing-gce-9dac5269-5c14-4672-86ae-ab39fc154bfd.c.travis-ci-prod-4.internal" time="0.875">
   <properties/>
-  <testcase name="Root node is properly configured for griffon.builder.core.ChildScript1-root" classname="griffon.builder.core.CoreBuilderCustomizerSpec" time="0.674"/>
-  <testcase name="Root node is properly configured for griffon.builder.core.ChildScript2-myroot" classname="griffon.builder.core.CoreBuilderCustomizerSpec" time="0.011"/>
-  <testcase name="Root node is properly configured for griffon.builder.core.ChildScript1-root" classname="griffon.builder.core.CoreBuilderCustomizerSpec" time="0.034"/>
-  <testcase name="Root node is properly configured for griffon.builder.core.ChildScript1-root" classname="griffon.builder.core.CoreBuilderCustomizerSpec" time="0.013"/>
-  <testcase name="Threading method runOutsideUI is available in builder" classname="griffon.builder.core.CoreBuilderCustomizerSpec" time="0.024"/>
-  <testcase name="Threading method runInsideUISync is available in builder" classname="griffon.builder.core.CoreBuilderCustomizerSpec" time="0.004"/>
-  <testcase name="Threading method runInsideUIAsync is available in builder" classname="griffon.builder.core.CoreBuilderCustomizerSpec" time="0.003"/>
-  <testcase name="Threading method runFuture is available in builder" classname="griffon.builder.core.CoreBuilderCustomizerSpec" time="0.006"/>
-  <testcase name="Threading method isUIThread is available in builder" classname="griffon.builder.core.CoreBuilderCustomizerSpec" time="0.002"/>
+  <testcase name="Root node is properly configured for griffon.builder.core.ChildScript1-root" classname="griffon.builder.core.CoreBuilderCustomizerSpec" time="0.747">
+    <failure message="groovy.lang.MissingPropertyException: No such property: mvcId for class: griffon.util.CompositeBuilder" type="groovy.lang.MissingPropertyException">groovy.lang.MissingPropertyException: No such property: mvcId for class: griffon.util.CompositeBuilder
+	at griffon.util.CompositeBuilder$2.doCall(CompositeBuilder.java:116)
+	at groovy.lang.Closure.call(Closure.java:426)
+	at groovy.util.FactoryBuilderSupport.getVariable(FactoryBuilderSupport.java:231)
+	at griffon.builder.core.CoreBuilderCustomizer.rootNodePostNodeCompletionDelegate(CoreBuilderCustomizer.java:83)
+	at groovy.lang.Closure.call(Closure.java:426)
+	at groovy.util.FactoryBuilderSupport.postNodeCompletion(FactoryBuilderSupport.java:1041)
+	at groovy.util.FactoryBuilderSupport.dispatchNodeCall(FactoryBuilderSupport.java:897)
+	at groovy.util.FactoryBuilderSupport.doInvokeMethod(FactoryBuilderSupport.java:781)
+	at groovy.util.FactoryBuilderSupport.invokeMethod(FactoryBuilderSupport.java:501)
+	at griffon.builder.core.ChildScript1.run(CoreBuilderCustomizerSpec.groovy:94)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1171)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1154)
+	at griffon.builder.core.ParentScript1.run(CoreBuilderCustomizerSpec.groovy:87)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1171)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1154)
+	at griffon.builder.core.CoreBuilderCustomizerSpec.Root node is properly configured for #rootName(CoreBuilderCustomizerSpec.groovy:37)
+</failure>
+  </testcase>
+  <testcase name="Root node is properly configured for griffon.builder.core.ChildScript2-myroot" classname="griffon.builder.core.CoreBuilderCustomizerSpec" time="0.035">
+    <failure message="groovy.lang.MissingPropertyException: No such property: mvcId for class: griffon.util.CompositeBuilder" type="groovy.lang.MissingPropertyException">groovy.lang.MissingPropertyException: No such property: mvcId for class: griffon.util.CompositeBuilder
+	at griffon.util.CompositeBuilder$2.doCall(CompositeBuilder.java:116)
+	at groovy.lang.Closure.call(Closure.java:426)
+	at groovy.util.FactoryBuilderSupport.getVariable(FactoryBuilderSupport.java:231)
+	at griffon.builder.core.CoreBuilderCustomizer.rootNodePostNodeCompletionDelegate(CoreBuilderCustomizer.java:83)
+	at groovy.lang.Closure.call(Closure.java:426)
+	at groovy.util.FactoryBuilderSupport.postNodeCompletion(FactoryBuilderSupport.java:1041)
+	at groovy.util.FactoryBuilderSupport.dispatchNodeCall(FactoryBuilderSupport.java:897)
+	at groovy.util.FactoryBuilderSupport.doInvokeMethod(FactoryBuilderSupport.java:781)
+	at groovy.util.FactoryBuilderSupport.invokeMethod(FactoryBuilderSupport.java:501)
+	at griffon.builder.core.ChildScript2.run(CoreBuilderCustomizerSpec.groovy:110)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1171)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1154)
+	at griffon.builder.core.ParentScript2.run(CoreBuilderCustomizerSpec.groovy:103)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1171)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1154)
+	at griffon.builder.core.CoreBuilderCustomizerSpec.Root node is properly configured for #rootName(CoreBuilderCustomizerSpec.groovy:37)
+</failure>
+  </testcase>
+  <testcase name="Root node is properly configured for griffon.builder.core.ChildScript1-root" classname="griffon.builder.core.CoreBuilderCustomizerSpec" time="0.006">
+    <failure message="groovy.lang.MissingPropertyException: No such property: mvcId for class: griffon.util.CompositeBuilder" type="groovy.lang.MissingPropertyException">groovy.lang.MissingPropertyException: No such property: mvcId for class: griffon.util.CompositeBuilder
+	at griffon.util.CompositeBuilder$2.doCall(CompositeBuilder.java:116)
+	at groovy.lang.Closure.call(Closure.java:426)
+	at groovy.util.FactoryBuilderSupport.getVariable(FactoryBuilderSupport.java:231)
+	at griffon.builder.core.CoreBuilderCustomizer.rootNodePostNodeCompletionDelegate(CoreBuilderCustomizer.java:83)
+	at groovy.lang.Closure.call(Closure.java:426)
+	at groovy.util.FactoryBuilderSupport.postNodeCompletion(FactoryBuilderSupport.java:1041)
+	at groovy.util.FactoryBuilderSupport.dispatchNodeCall(FactoryBuilderSupport.java:897)
+	at groovy.util.FactoryBuilderSupport.doInvokeMethod(FactoryBuilderSupport.java:781)
+	at groovy.util.FactoryBuilderSupport.invokeMethod(FactoryBuilderSupport.java:501)
+	at griffon.builder.core.ChildScript1.run(CoreBuilderCustomizerSpec.groovy:94)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1171)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1154)
+	at griffon.builder.core.ParentScript3.run(CoreBuilderCustomizerSpec.groovy:119)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1171)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1154)
+	at griffon.builder.core.CoreBuilderCustomizerSpec.Root node is properly configured for #rootName(CoreBuilderCustomizerSpec.groovy:37)
+</failure>
+  </testcase>
+  <testcase name="Root node is properly configured for griffon.builder.core.ChildScript1-root" classname="griffon.builder.core.CoreBuilderCustomizerSpec" time="0.026">
+    <failure message="groovy.lang.MissingPropertyException: No such property: mvcId for class: griffon.util.CompositeBuilder" type="groovy.lang.MissingPropertyException">groovy.lang.MissingPropertyException: No such property: mvcId for class: griffon.util.CompositeBuilder
+	at griffon.util.CompositeBuilder$2.doCall(CompositeBuilder.java:116)
+	at groovy.lang.Closure.call(Closure.java:426)
+	at groovy.util.FactoryBuilderSupport.getVariable(FactoryBuilderSupport.java:231)
+	at griffon.builder.core.CoreBuilderCustomizer.rootNodePostNodeCompletionDelegate(CoreBuilderCustomizer.java:83)
+	at groovy.lang.Closure.call(Closure.java:426)
+	at groovy.util.FactoryBuilderSupport.postNodeCompletion(FactoryBuilderSupport.java:1041)
+	at groovy.util.FactoryBuilderSupport.dispatchNodeCall(FactoryBuilderSupport.java:897)
+	at groovy.util.FactoryBuilderSupport.doInvokeMethod(FactoryBuilderSupport.java:781)
+	at groovy.util.FactoryBuilderSupport.invokeMethod(FactoryBuilderSupport.java:501)
+	at griffon.builder.core.ChildScript1.run(CoreBuilderCustomizerSpec.groovy:94)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1171)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1154)
+	at griffon.builder.core.ParentScript4.run(CoreBuilderCustomizerSpec.groovy:126)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1171)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1154)
+	at griffon.builder.core.CoreBuilderCustomizerSpec.Root node is properly configured for #rootName(CoreBuilderCustomizerSpec.groovy:37)
+</failure>
+  </testcase>
+  <testcase name="Threading method runOutsideUI is available in builder" classname="griffon.builder.core.CoreBuilderCustomizerSpec" time="0.018">
+    <failure message="groovy.lang.MissingPropertyException: No such property: mvcId for class: griffon.util.CompositeBuilder" type="groovy.lang.MissingPropertyException">groovy.lang.MissingPropertyException: No such property: mvcId for class: griffon.util.CompositeBuilder
+	at griffon.util.CompositeBuilder$2.doCall(CompositeBuilder.java:116)
+	at groovy.lang.Closure.call(Closure.java:426)
+	at groovy.util.FactoryBuilderSupport.getVariable(FactoryBuilderSupport.java:231)
+	at griffon.builder.core.CoreBuilderCustomizer.rootNodePostNodeCompletionDelegate(CoreBuilderCustomizer.java:83)
+	at groovy.lang.Closure.call(Closure.java:426)
+	at groovy.util.FactoryBuilderSupport.postNodeCompletion(FactoryBuilderSupport.java:1041)
+	at groovy.util.FactoryBuilderSupport.dispatchNodeCall(FactoryBuilderSupport.java:897)
+	at groovy.util.FactoryBuilderSupport.doInvokeMethod(FactoryBuilderSupport.java:781)
+	at groovy.util.FactoryBuilderSupport.invokeMethod(FactoryBuilderSupport.java:501)
+	at griffon.builder.core.ChildScript1.run(CoreBuilderCustomizerSpec.groovy:94)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1171)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1154)
+	at griffon.builder.core.ParentScript1.run(CoreBuilderCustomizerSpec.groovy:87)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1171)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1154)
+	at griffon.builder.core.CoreBuilderCustomizerSpec.Threading method #methodName is available in builder(CoreBuilderCustomizerSpec.groovy:59)
+</failure>
+  </testcase>
+  <testcase name="Threading method runInsideUISync is available in builder" classname="griffon.builder.core.CoreBuilderCustomizerSpec" time="0.004">
+    <failure message="groovy.lang.MissingPropertyException: No such property: mvcId for class: griffon.util.CompositeBuilder" type="groovy.lang.MissingPropertyException">groovy.lang.MissingPropertyException: No such property: mvcId for class: griffon.util.CompositeBuilder
+	at griffon.util.CompositeBuilder$2.doCall(CompositeBuilder.java:116)
+	at groovy.lang.Closure.call(Closure.java:426)
+	at groovy.util.FactoryBuilderSupport.getVariable(FactoryBuilderSupport.java:231)
+	at griffon.builder.core.CoreBuilderCustomizer.rootNodePostNodeCompletionDelegate(CoreBuilderCustomizer.java:83)
+	at groovy.lang.Closure.call(Closure.java:426)
+	at groovy.util.FactoryBuilderSupport.postNodeCompletion(FactoryBuilderSupport.java:1041)
+	at groovy.util.FactoryBuilderSupport.dispatchNodeCall(FactoryBuilderSupport.java:897)
+	at groovy.util.FactoryBuilderSupport.doInvokeMethod(FactoryBuilderSupport.java:781)
+	at groovy.util.FactoryBuilderSupport.invokeMethod(FactoryBuilderSupport.java:501)
+	at griffon.builder.core.ChildScript1.run(CoreBuilderCustomizerSpec.groovy:94)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1171)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1154)
+	at griffon.builder.core.ParentScript1.run(CoreBuilderCustomizerSpec.groovy:87)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1171)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1154)
+	at griffon.builder.core.CoreBuilderCustomizerSpec.Threading method #methodName is available in builder(CoreBuilderCustomizerSpec.groovy:59)
+</failure>
+  </testcase>
+  <testcase name="Threading method runInsideUIAsync is available in builder" classname="griffon.builder.core.CoreBuilderCustomizerSpec" time="0.002">
+    <failure message="groovy.lang.MissingPropertyException: No such property: mvcId for class: griffon.util.CompositeBuilder" type="groovy.lang.MissingPropertyException">groovy.lang.MissingPropertyException: No such property: mvcId for class: griffon.util.CompositeBuilder
+	at griffon.util.CompositeBuilder$2.doCall(CompositeBuilder.java:116)
+	at groovy.lang.Closure.call(Closure.java:426)
+	at groovy.util.FactoryBuilderSupport.getVariable(FactoryBuilderSupport.java:231)
+	at griffon.builder.core.CoreBuilderCustomizer.rootNodePostNodeCompletionDelegate(CoreBuilderCustomizer.java:83)
+	at groovy.lang.Closure.call(Closure.java:426)
+	at groovy.util.FactoryBuilderSupport.postNodeCompletion(FactoryBuilderSupport.java:1041)
+	at groovy.util.FactoryBuilderSupport.dispatchNodeCall(FactoryBuilderSupport.java:897)
+	at groovy.util.FactoryBuilderSupport.doInvokeMethod(FactoryBuilderSupport.java:781)
+	at groovy.util.FactoryBuilderSupport.invokeMethod(FactoryBuilderSupport.java:501)
+	at griffon.builder.core.ChildScript1.run(CoreBuilderCustomizerSpec.groovy:94)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1171)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1154)
+	at griffon.builder.core.ParentScript1.run(CoreBuilderCustomizerSpec.groovy:87)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1171)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1154)
+	at griffon.builder.core.CoreBuilderCustomizerSpec.Threading method #methodName is available in builder(CoreBuilderCustomizerSpec.groovy:59)
+</failure>
+  </testcase>
+  <testcase name="Threading method runFuture is available in builder" classname="griffon.builder.core.CoreBuilderCustomizerSpec" time="0.032">
+    <failure message="groovy.lang.MissingPropertyException: No such property: mvcId for class: griffon.util.CompositeBuilder" type="groovy.lang.MissingPropertyException">groovy.lang.MissingPropertyException: No such property: mvcId for class: griffon.util.CompositeBuilder
+	at griffon.util.CompositeBuilder$2.doCall(CompositeBuilder.java:116)
+	at groovy.lang.Closure.call(Closure.java:426)
+	at groovy.util.FactoryBuilderSupport.getVariable(FactoryBuilderSupport.java:231)
+	at griffon.builder.core.CoreBuilderCustomizer.rootNodePostNodeCompletionDelegate(CoreBuilderCustomizer.java:83)
+	at groovy.lang.Closure.call(Closure.java:426)
+	at groovy.util.FactoryBuilderSupport.postNodeCompletion(FactoryBuilderSupport.java:1041)
+	at groovy.util.FactoryBuilderSupport.dispatchNodeCall(FactoryBuilderSupport.java:897)
+	at groovy.util.FactoryBuilderSupport.doInvokeMethod(FactoryBuilderSupport.java:781)
+	at groovy.util.FactoryBuilderSupport.invokeMethod(FactoryBuilderSupport.java:501)
+	at griffon.builder.core.ChildScript1.run(CoreBuilderCustomizerSpec.groovy:94)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1171)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1154)
+	at griffon.builder.core.ParentScript1.run(CoreBuilderCustomizerSpec.groovy:87)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1171)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1154)
+	at griffon.builder.core.CoreBuilderCustomizerSpec.Threading method #methodName is available in builder(CoreBuilderCustomizerSpec.groovy:59)
+</failure>
+  </testcase>
+  <testcase name="Threading method isUIThread is available in builder" classname="griffon.builder.core.CoreBuilderCustomizerSpec" time="0.003">
+    <failure message="groovy.lang.MissingPropertyException: No such property: mvcId for class: griffon.util.CompositeBuilder" type="groovy.lang.MissingPropertyException">groovy.lang.MissingPropertyException: No such property: mvcId for class: griffon.util.CompositeBuilder
+	at griffon.util.CompositeBuilder$2.doCall(CompositeBuilder.java:116)
+	at groovy.lang.Closure.call(Closure.java:426)
+	at groovy.util.FactoryBuilderSupport.getVariable(FactoryBuilderSupport.java:231)
+	at griffon.builder.core.CoreBuilderCustomizer.rootNodePostNodeCompletionDelegate(CoreBuilderCustomizer.java:83)
+	at groovy.lang.Closure.call(Closure.java:426)
+	at groovy.util.FactoryBuilderSupport.postNodeCompletion(FactoryBuilderSupport.java:1041)
+	at groovy.util.FactoryBuilderSupport.dispatchNodeCall(FactoryBuilderSupport.java:897)
+	at groovy.util.FactoryBuilderSupport.doInvokeMethod(FactoryBuilderSupport.java:781)
+	at groovy.util.FactoryBuilderSupport.invokeMethod(FactoryBuilderSupport.java:501)
+	at griffon.builder.core.ChildScript1.run(CoreBuilderCustomizerSpec.groovy:94)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1171)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1154)
+	at griffon.builder.core.ParentScript1.run(CoreBuilderCustomizerSpec.groovy:87)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1171)
+	at groovy.util.FactoryBuilderSupport.build(FactoryBuilderSupport.java:1154)
+	at griffon.builder.core.CoreBuilderCustomizerSpec.Threading method #methodName is available in builder(CoreBuilderCustomizerSpec.groovy:59)
+</failure>
+  </testcase>
   <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[May 15, 2016 10:41:34 AM groovy.util.FactoryBuilderSupport createNode
-WARNING: Factory for name 'root' returned null
-May 15, 2016 10:41:34 AM groovy.util.FactoryBuilderSupport createNode
-WARNING: Factory for name 'root' returned null
-]]></system-err>
+  <system-err><![CDATA[]]></system-err>
 </testsuite>
