@@ -20,13 +20,17 @@ import griffon.builder.core.factory.RootFactory;
 import griffon.core.threading.UIThreadManager;
 import groovy.lang.Closure;
 import groovy.util.Factory;
+import groovy.util.FactoryBuilderSupport;
 import org.codehaus.griffon.runtime.groovy.view.AbstractBuilderCustomizer;
 import org.codehaus.groovy.runtime.MethodClosure;
 
+import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,6 +38,7 @@ import java.util.Map;
  */
 @Named("core")
 public class CoreBuilderCustomizer extends AbstractBuilderCustomizer {
+    private static final String KEY_ROOT_NODE_NAME = "ROOT_NODE_NAME";
     @Inject
     private UIThreadManager uiThreadManager;
 
@@ -42,7 +47,6 @@ public class CoreBuilderCustomizer extends AbstractBuilderCustomizer {
         factories.put("root", new RootFactory());
         factories.put("metaComponent", new MetaComponentFactory());
         setFactories(factories);
-
     }
 
     @PostConstruct
@@ -54,5 +58,32 @@ public class CoreBuilderCustomizer extends AbstractBuilderCustomizer {
         methods.put("runFuture", new MethodClosure(uiThreadManager, "runFuture"));
         methods.put("isUIThread", new MethodClosure(uiThreadManager, "isUIThread"));
         setMethods(methods);
+    }
+
+    @Nonnull
+    @Override
+    public List<Closure> getPreInstantiateDelegates() {
+        return Arrays.<Closure>asList(new MethodClosure(this, "rootNodePreInstantiateDelegate"));
+    }
+
+    @Nonnull
+    @Override
+    public List<Closure> getPostNodeCompletionDelegates() {
+        return Arrays.<Closure>asList(new MethodClosure(this, "rootNodePostNodeCompletionDelegate"));
+    }
+
+    protected void rootNodePreInstantiateDelegate(FactoryBuilderSupport builder, Map attributes, Object value) {
+        String name = String.valueOf(builder.getContext().get(FactoryBuilderSupport.CURRENT_NAME));
+        if (!builder.hasVariable(KEY_ROOT_NODE_NAME)) {
+            builder.setVariable(KEY_ROOT_NODE_NAME, name);
+        }
+    }
+
+    protected void rootNodePostNodeCompletionDelegate(FactoryBuilderSupport builder, Object parent, Object node) {
+        String name = String.valueOf(builder.getContext().get(FactoryBuilderSupport.CURRENT_NAME));
+        if (builder.getVariable(KEY_ROOT_NODE_NAME).equals(name)) {
+            String mvcId = String.valueOf(builder.getVariable("mvcId"));
+            builder.getVariables().put(mvcId + "-rootNode", node);
+        }
     }
 }
