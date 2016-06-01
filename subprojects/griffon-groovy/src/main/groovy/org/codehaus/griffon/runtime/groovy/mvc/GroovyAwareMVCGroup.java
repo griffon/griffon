@@ -43,13 +43,17 @@ public class GroovyAwareMVCGroup extends DefaultMVCGroup {
         return (FactoryBuilderSupport) getMember(BUILDER);
     }
 
+    public Object getRootNode() {
+        return getBuilder().getVariables().get(getMvcId() + "-rootNode");
+    }
+
     public Object getScriptResult(String name) {
         return scriptResults.get(name);
     }
 
     public void buildScriptMember(final String name) {
         Object member = getMember(name);
-        if (!(member instanceof Script)) return;
+        if (!(member instanceof Script)) { return; }
         final Script script = (Script) member;
 
         // special case: view gets executed in the UI thread always
