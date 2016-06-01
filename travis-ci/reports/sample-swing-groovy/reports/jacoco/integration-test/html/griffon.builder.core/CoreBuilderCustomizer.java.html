@@ -16,17 +16,20 @@
 package griffon.builder.core;
 
 import griffon.builder.core.factory.MetaComponentFactory;
-import griffon.builder.core.factory.RootFactory;
 import griffon.core.threading.UIThreadManager;
 import groovy.lang.Closure;
 import groovy.util.Factory;
+import groovy.util.FactoryBuilderSupport;
 import org.codehaus.griffon.runtime.groovy.view.AbstractBuilderCustomizer;
 import org.codehaus.groovy.runtime.MethodClosure;
 
+import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,26 +37,52 @@ import java.util.Map;
  */
 @Named(&quot;core&quot;)
 public class CoreBuilderCustomizer extends AbstractBuilderCustomizer {
+    private static final String KEY_ROOT_NODE_NAME = &quot;ROOT_NODE_NAME&quot;;
     @Inject
     private UIThreadManager uiThreadManager;
 
-<span class="fc" id="L40">    public CoreBuilderCustomizer() {</span>
-<span class="fc" id="L41">        Map&lt;String, Factory&gt; factories = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L42">        factories.put(&quot;root&quot;, new RootFactory());</span>
-<span class="fc" id="L43">        factories.put(&quot;metaComponent&quot;, new MetaComponentFactory());</span>
-<span class="fc" id="L44">        setFactories(factories);</span>
-
-<span class="fc" id="L46">    }</span>
+<span class="fc" id="L44">    public CoreBuilderCustomizer() {</span>
+<span class="fc" id="L45">        Map&lt;String, Factory&gt; factories = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L46">        factories.put(&quot;metaComponent&quot;, new MetaComponentFactory());</span>
+<span class="fc" id="L47">        setFactories(factories);</span>
+<span class="fc" id="L48">    }</span>
 
     @PostConstruct
     private void setup() {
-<span class="fc" id="L50">        Map&lt;String, Closure&gt; methods = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L51">        methods.put(&quot;runInsideUISync&quot;, new MethodClosure(uiThreadManager, &quot;runInsideUISync&quot;));</span>
-<span class="fc" id="L52">        methods.put(&quot;runInsideUIAsync&quot;, new MethodClosure(uiThreadManager, &quot;runInsideUIAsync&quot;));</span>
-<span class="fc" id="L53">        methods.put(&quot;runOutsideUI&quot;, new MethodClosure(uiThreadManager, &quot;runOutsideUI&quot;));</span>
-<span class="fc" id="L54">        methods.put(&quot;runFuture&quot;, new MethodClosure(uiThreadManager, &quot;runFuture&quot;));</span>
-<span class="fc" id="L55">        methods.put(&quot;isUIThread&quot;, new MethodClosure(uiThreadManager, &quot;isUIThread&quot;));</span>
-<span class="fc" id="L56">        setMethods(methods);</span>
-<span class="fc" id="L57">    }</span>
+<span class="fc" id="L52">        Map&lt;String, Closure&gt; methods = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L53">        methods.put(&quot;runInsideUISync&quot;, new MethodClosure(uiThreadManager, &quot;runInsideUISync&quot;));</span>
+<span class="fc" id="L54">        methods.put(&quot;runInsideUIAsync&quot;, new MethodClosure(uiThreadManager, &quot;runInsideUIAsync&quot;));</span>
+<span class="fc" id="L55">        methods.put(&quot;runOutsideUI&quot;, new MethodClosure(uiThreadManager, &quot;runOutsideUI&quot;));</span>
+<span class="fc" id="L56">        methods.put(&quot;runFuture&quot;, new MethodClosure(uiThreadManager, &quot;runFuture&quot;));</span>
+<span class="fc" id="L57">        methods.put(&quot;isUIThread&quot;, new MethodClosure(uiThreadManager, &quot;isUIThread&quot;));</span>
+<span class="fc" id="L58">        setMethods(methods);</span>
+<span class="fc" id="L59">    }</span>
+
+    @Nonnull
+    @Override
+    public List&lt;Closure&gt; getPreInstantiateDelegates() {
+<span class="fc" id="L64">        return Arrays.&lt;Closure&gt;asList(new MethodClosure(this, &quot;rootNodePreInstantiateDelegate&quot;));</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Closure&gt; getPostNodeCompletionDelegates() {
+<span class="fc" id="L70">        return Arrays.&lt;Closure&gt;asList(new MethodClosure(this, &quot;rootNodePostNodeCompletionDelegate&quot;));</span>
+    }
+
+    protected void rootNodePreInstantiateDelegate(FactoryBuilderSupport builder, Map attributes, Object value) {
+<span class="fc" id="L74">        String name = String.valueOf(builder.getContext().get(FactoryBuilderSupport.CURRENT_NAME));</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (!builder.hasVariable(KEY_ROOT_NODE_NAME)) {</span>
+<span class="fc" id="L76">            builder.setVariable(KEY_ROOT_NODE_NAME, name);</span>
+        }
+<span class="fc" id="L78">    }</span>
+
+    protected void rootNodePostNodeCompletionDelegate(FactoryBuilderSupport builder, Object parent, Object node) {
+<span class="fc" id="L81">        String name = String.valueOf(builder.getContext().get(FactoryBuilderSupport.CURRENT_NAME));</span>
+<span class="pc bpc" id="L82" title="1 of 4 branches missed.">        if (builder.getVariable(KEY_ROOT_NODE_NAME).equals(name) &amp;&amp; builder.hasVariable(&quot;mvcId&quot;)) {</span>
+<span class="fc" id="L83">            String mvcId = String.valueOf(builder.getVariable(&quot;mvcId&quot;));</span>
+<span class="fc" id="L84">            builder.getVariables().put(mvcId + &quot;-rootNode&quot;, node);</span>
+        }
+<span class="fc" id="L86">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

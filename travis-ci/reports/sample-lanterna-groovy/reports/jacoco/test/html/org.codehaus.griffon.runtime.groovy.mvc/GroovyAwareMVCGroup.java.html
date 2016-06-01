@@ -43,26 +43,30 @@ public class GroovyAwareMVCGroup extends DefaultMVCGroup {
 <span class="nc" id="L43">        return (FactoryBuilderSupport) getMember(BUILDER);</span>
     }
 
+    public Object getRootNode() {
+<span class="nc" id="L47">        return getBuilder().getVariables().get(getMvcId() + &quot;-rootNode&quot;);</span>
+    }
+
     public Object getScriptResult(String name) {
-<span class="nc" id="L47">        return scriptResults.get(name);</span>
+<span class="nc" id="L51">        return scriptResults.get(name);</span>
     }
 
     public void buildScriptMember(final String name) {
-<span class="nc" id="L51">        Object member = getMember(name);</span>
-<span class="nc bnc" id="L52" title="All 2 branches missed.">        if (!(member instanceof Script)) return;</span>
-<span class="nc" id="L53">        final Script script = (Script) member;</span>
+<span class="nc" id="L55">        Object member = getMember(name);</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (!(member instanceof Script)) { return; }</span>
+<span class="nc" id="L57">        final Script script = (Script) member;</span>
 
         // special case: view gets executed in the UI thread always
-<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (GriffonViewClass.TYPE.equals(name)) {</span>
-<span class="nc" id="L57">            getMvcGroupManager().getApplication().getUIThreadManager().runInsideUISync(new Runnable() {</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        if (GriffonViewClass.TYPE.equals(name)) {</span>
+<span class="nc" id="L61">            getMvcGroupManager().getApplication().getUIThreadManager().runInsideUISync(new Runnable() {</span>
                 @Override
                 public void run() {
-<span class="nc" id="L60">                    scriptResults.put(name, getBuilder().build(script));</span>
-<span class="nc" id="L61">                }</span>
+<span class="nc" id="L64">                    scriptResults.put(name, getBuilder().build(script));</span>
+<span class="nc" id="L65">                }</span>
             });
         } else {
-<span class="nc" id="L64">            scriptResults.put(name, getBuilder().build(script));</span>
+<span class="nc" id="L68">            scriptResults.put(name, getBuilder().build(script));</span>
         }
-<span class="nc" id="L66">    }</span>
+<span class="nc" id="L70">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
