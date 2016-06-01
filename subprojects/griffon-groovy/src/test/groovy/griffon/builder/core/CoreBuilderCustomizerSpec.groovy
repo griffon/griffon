@@ -26,28 +26,6 @@ import spock.lang.Unroll
 
 @Unroll
 class CoreBuilderCustomizerSpec extends Specification {
-    void "Root node is properly configured for #rootName"() {
-        given:
-        CompositeBuilder builder = new CompositeBuilder([
-            new TestBuilderCustomizer(),
-            newCoreBuilderCustomizer()
-        ] as BuilderCustomizer[])
-
-        when:
-        builder.build(script)
-
-        then:
-        builder.variables[rootName]
-        builder.variables[rootName].key == ['value1', 'value2']
-
-        where:
-        rootName                                   | script
-        'griffon.builder.core.ChildScript1-root'   | ParentScript1
-        'griffon.builder.core.ChildScript2-myroot' | ParentScript2
-        'griffon.builder.core.ChildScript1-root'   | ParentScript3
-        'griffon.builder.core.ChildScript1-root'   | ParentScript4
-    }
-
     void "Threading method #methodName is available in builder"() {
         given:
         CompositeBuilder builder = new CompositeBuilder([
@@ -84,46 +62,5 @@ class TestBuilderCustomizer extends AbstractBuilderCustomizer {
 
 class ParentScript1 extends Script {
     Object run() {
-        build(ChildScript1)
-        root(ChildScript1)
-    }
-}
-
-class ChildScript1 extends Script {
-    Object run() {
-        root(list {
-            map(key: 'value1')
-            map(key: 'value2')
-        })
-    }
-}
-
-class ParentScript2 extends Script {
-    Object run() {
-        build(ChildScript2)
-        root(ChildScript2)
-    }
-}
-
-class ChildScript2 extends Script {
-    Object run() {
-        root(name: 'myroot', list {
-            map(key: 'value1')
-            map(key: 'value2')
-        })
-    }
-}
-
-class ParentScript3 extends Script {
-    Object run() {
-        build(ChildScript1)
-        root()
-    }
-}
-
-class ParentScript4 extends Script {
-    Object run() {
-        build(ChildScript1)
-        root('root')
     }
 }
