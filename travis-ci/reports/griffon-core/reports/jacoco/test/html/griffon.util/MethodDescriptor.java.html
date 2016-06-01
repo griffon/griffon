@@ -163,10 +163,10 @@ public class MethodDescriptor implements Comparable&lt;MethodDescriptor&gt; {
 
     public boolean matches(@Nonnull MethodDescriptor md) {
 <span class="fc" id="L165">        requireNonNull(md, &quot;Argument 'methodDescriptor' must not be null&quot;);</span>
-<span class="pc bpc" id="L166" title="3 of 6 branches missed.">        if (!methodName.equals(md.methodName) ||</span>
+<span class="pc bpc" id="L166" title="2 of 6 branches missed.">        if (!methodName.equals(md.methodName) ||</span>
             modifiers != md.modifiers ||
             paramTypes.length != md.paramTypes.length) {
-<span class="nc" id="L169">            return false;</span>
+<span class="fc" id="L169">            return false;</span>
         }
 
 <span class="fc bfc" id="L172" title="All 2 branches covered.">        for (int i = 0; i &lt; paramTypes.length; i++) {</span>

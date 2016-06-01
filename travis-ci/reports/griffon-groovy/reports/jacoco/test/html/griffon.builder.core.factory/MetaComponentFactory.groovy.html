@@ -16,7 +16,11 @@
 package griffon.builder.core.factory
 
 import griffon.core.ApplicationEvent
+import griffon.core.GriffonApplication
+import griffon.core.RunnableWithArgs
 import griffon.core.mvc.MVCGroup
+
+import javax.annotation.Nullable
 
 /**
  * Enables MVC groups to be used as component nodes
@@ -27,77 +31,95 @@ import griffon.core.mvc.MVCGroup
 @SuppressWarnings(&quot;rawtypes&quot;)
 class MetaComponentFactory extends AbstractFactory {
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
-<span class="nc" id="L30">        String mvcType = ''</span>
-<span class="nc bnc" id="L31" title="All 6 branches missed.">        if (value != null &amp;&amp; value instanceof CharSequence) {</span>
-<span class="nc" id="L32">            mvcType = value.toString()</span>
+<span class="nc" id="L34">        String mvcType = ''</span>
+<span class="nc bnc" id="L35" title="All 6 branches missed.">        if (value != null &amp;&amp; value instanceof CharSequence) {</span>
+<span class="nc" id="L36">            mvcType = value.toString()</span>
         } else {
-<span class="nc" id="L34">            throw new IllegalArgumentException(&quot;In $name value must be an MVC group type&quot;)</span>
+<span class="nc" id="L38">            throw new IllegalArgumentException(&quot;In $name value must be an MVC group type&quot;)</span>
         }
 
-<span class="nc" id="L37">        String mvcId = attributes.remove('mvcId')</span>
-<span class="nc bnc" id="L38" title="All 2 branches missed.">        mvcId = attributes.containsKey('mvcId') ? attributes.remove('mvcId') : mvcId</span>
+<span class="nc" id="L41">        String mvcId = attributes.remove('mvcId')</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        mvcId = attributes.containsKey('mvcId') ? attributes.remove('mvcId') : mvcId</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        Map mvcArgs = attributes.remove('mvcArgs') ?: [:]</span>
+<span class="nc" id="L44">        Map mvcArgsCopy = [*:mvcArgs]</span>
 
-<span class="nc" id="L40">        MVCGroup mvcGroup = builder.application.createMVCGroup(mvcType, mvcId, attributes)</span>
-<span class="nc" id="L41">        def root = mvcGroup.getScriptResult('view')</span>
+<span class="nc" id="L46">        MVCGroup mvcGroup = builder.application.mvcGroupManager.createMVCGroup(mvcType, mvcId, mvcArgs)</span>
+<span class="nc" id="L47">        def root = mvcGroup.rootNode</span>
 
-<span class="nc" id="L43">        Closure destroyEventHandler</span>
-<span class="nc" id="L44">        destroyEventHandler = { String parentId, MVCGroup childGroup, MVCGroup destroyedGroup -&gt;</span>
-<span class="nc bnc" id="L45" title="All 2 branches missed.">            if (destroyedGroup.mvcId == parentId) {</span>
-<span class="nc" id="L46">                childGroup.destroy()</span>
-<span class="nc" id="L47">                builder.application.removeApplicationEventListener(ApplicationEvent.DESTROY_MVC_GROUP.name, destroyEventHandler)</span>
-            }
-        }.curry(mvcId, mvcGroup)
-<span class="nc" id="L50">        builder.application.addApplicationEventListener(ApplicationEvent.DESTROY_MVC_GROUP.name, destroyEventHandler)</span>
+<span class="nc" id="L49">        new DestroyEventHandler(mvcId, mvcGroup, builder.application)</span>
 
-<span class="nc" id="L52">        builder.context.root = root</span>
-<span class="nc" id="L53">        builder.context.mvcGroup = mvcGroup</span>
+<span class="nc" id="L51">        builder.context.root = root</span>
+<span class="nc" id="L52">        builder.context.mvcGroup = mvcGroup</span>
+<span class="nc" id="L53">        builder.context.mvcArgs = mvcArgsCopy</span>
 <span class="nc" id="L54">        root</span>
+    }
+
+    private static class DestroyEventHandler implements RunnableWithArgs {
+        private final String parentId
+        private final MVCGroup childGroup
+        private final GriffonApplication application
+
+        DestroyEventHandler(String parentId, MVCGroup childGroup, GriffonApplication application) {
+<span class="nc" id="L63">            this.parentId = parentId</span>
+<span class="nc" id="L64">            this.childGroup = childGroup</span>
+<span class="nc" id="L65">            this.application = application</span>
+<span class="nc" id="L66">            application.eventRouter.addEventListener(ApplicationEvent.DESTROY_MVC_GROUP.name, this)</span>
+        }
+
+        @Override
+        void run(@Nullable Object... args) {
+<span class="nc bnc" id="L71" title="All 6 branches missed.">            Object destroyedGroup = args[0]</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">            if (destroyedGroup.mvcId == parentId) {</span>
+<span class="nc" id="L73">                childGroup.destroy()</span>
+<span class="nc" id="L74">                application.eventRouter.removeEventListener(ApplicationEvent.DESTROY_MVC_GROUP.name, this)</span>
+            }
+        }
     }
 
     boolean onHandleNodeAttributes(FactoryBuilderSupport builder, Object node, Map attributes) {
         try {
-<span class="nc" id="L59">            return builder.context.mvcGroup.controller.metaClass.invokeMethod(builder.context.mvcGroup.controller, 'onHandleNodeAttributes', builder, node, attributes)</span>
+<span class="nc" id="L81">            return builder.context.mvcGroup.controller.metaClass.invokeMethod(builder.context.mvcGroup.controller, 'onHandleNodeAttributes', builder, node, attributes)</span>
         } catch (MissingMethodException e) {
-<span class="nc" id="L61">            return false</span>
+<span class="nc" id="L83">            return false</span>
         }
     }
 
     boolean onNodeChildren(FactoryBuilderSupport builder, Object node, Closure childContent) {
-<span class="nc" id="L66">        def root = builder.context.root</span>
-<span class="nc" id="L67">        builder = builder.context.mvcGroup.builder</span>
-<span class="nc" id="L68">        Closure handleChildContent = builder.getVariables().get('handleChildContent')</span>
-<span class="nc bnc" id="L69" title="All 2 branches missed.">        if (handleChildContent != null) {</span>
-<span class="nc" id="L70">            handleChildContent(childContent)</span>
+<span class="nc" id="L88">        def root = builder.context.root</span>
+<span class="nc" id="L89">        builder = builder.context.mvcGroup.builder</span>
+<span class="nc" id="L90">        Closure handleChildContent = builder.getVariables().get('handleChildContent')</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        if (handleChildContent != null) {</span>
+<span class="nc" id="L92">            handleChildContent(childContent)</span>
         } else {
-<span class="nc" id="L72">            builder.container(root, childContent)</span>
+<span class="nc" id="L94">            builder.container(root, childContent)</span>
         }
-<span class="nc" id="L74">        false</span>
+<span class="nc" id="L96">        false</span>
     }
 
     boolean isHandlesNodeChildren() {
-<span class="nc" id="L78">        false</span>
+<span class="nc" id="L100">        false</span>
     }
 
     @Override
     void setChild(FactoryBuilderSupport builder, Object parent, Object child) {
-<span class="nc" id="L83">        safeInvoke(builder.parentContext.mvcGroup.builder, 'setChild', builder, parent, child)</span>
+<span class="nc" id="L105">        safeInvoke(builder.parentContext.mvcGroup.builder, 'setChild', builder, parent, child)</span>
     }
 
     @Override
     void setParent(FactoryBuilderSupport builder, Object parent, Object child) {
-<span class="nc" id="L88">        safeInvoke(builder.context.mvcGroup.builder, 'setParent', builder, parent, child)</span>
+<span class="nc" id="L110">        safeInvoke(builder.context.mvcGroup.builder, 'setParent', builder, parent, child)</span>
     }
 
     @Override
     void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
-<span class="nc" id="L93">        safeInvoke(builder.context.mvcGroup.builder, 'onNodeCompleted', builder, parent, node)</span>
+<span class="nc" id="L115">        safeInvoke(builder.context.mvcGroup.builder, 'onNodeCompleted', builder, parent, node)</span>
     }
 
     static protected def safeInvoke(Object obj, String method, Object... args) {
         try {
-<span class="nc" id="L98">            return obj.metaClass.invokeMethod(obj, method, args)</span>
+<span class="nc" id="L120">            return obj.metaClass.invokeMethod(obj, method, args)</span>
         } catch (MissingMethodException e) {
-<span class="nc" id="L100">            return null</span>
+<span class="nc" id="L122">            return null</span>
         }
     }
 }
