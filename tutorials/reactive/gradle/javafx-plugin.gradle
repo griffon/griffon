@@ -1,0 +1,36 @@
+/*
+ * Bootstrap script for the Gradle JavaFX Plugin.
+ * (based on http://plugins.jasoft.fi/vaadin.plugin)
+ *
+ * The script will add the latest version of the plugin to the build script
+ * dependencies and apply the plugin to the project. If you do not want
+ * this behavior you can copy and paste the below configuration into your
+ * own build script and define your own repository and version for the plugin.
+ */
+
+buildscript {
+    File javaHome = new File(System.properties['java.home'])
+    javaHome = javaHome.name == 'jre' ? javaHome.parentFile : javaHome
+    String jfxrtLocation = new File("${javaHome}/jre/lib/jfxrt.jar").absolutePath
+    // JavaFX locations for JDK7, JDK7, JDK8
+    for (location in ['lib/jfxrt.jar', 'jre/lib/jfxrt.jar', 'jre/lib/ext/jfxrt.jar']) {
+        File file = new File(javaHome, location)
+        if (file.exists()) {
+            jfxrtLocation = file.absolutePath
+            break
+        }
+    }
+
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.bitbucket.shemnon.javafxplugin:gradle-javafx-plugin:8.1.1'
+        classpath project.files("${javaHome}/lib/ant-javafx.jar")
+        classpath project.files(jfxrtLocation)
+    }
+}
+
+if (!project.plugins.findPlugin(org.bitbucket.shemnon.javafxplugin.JavaFXPlugin)) {
+    project.apply(plugin: org.bitbucket.shemnon.javafxplugin.JavaFXPlugin)
+}
