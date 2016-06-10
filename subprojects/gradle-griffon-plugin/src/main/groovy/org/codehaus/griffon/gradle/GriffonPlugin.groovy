@@ -43,7 +43,6 @@ class GriffonPlugin implements Plugin<Project> {
 
         configureDefaultSourceSets(project, 'java')
         if (sourceSetName != 'java') configureDefaultSourceSets(project, sourceSetName)
-        adjustJavadocClasspath(project, sourceSetName)
         createDefaultDirectoryStructure(project, 'java')
         if (sourceSetName != 'java') createDefaultDirectoryStructure(project, sourceSetName)
 
@@ -60,13 +59,6 @@ class GriffonPlugin implements Plugin<Project> {
         project.apply(plugin: 'java')
         if (!project.hasProperty('griffonPlugin') || !project.griffonPlugin) {
             project.apply(plugin: 'application')
-        }
-    }
-
-    private void adjustJavadocClasspath(Project project, String sourceSetName) {
-        project.javadoc.classpath += project.configurations.compileOnly
-        if (sourceSetName == 'groovy') {
-            project.groovydoc.classpath += project.configurations.compileOnly
         }
     }
 
