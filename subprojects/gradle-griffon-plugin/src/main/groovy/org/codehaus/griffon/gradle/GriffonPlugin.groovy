@@ -37,11 +37,6 @@ class GriffonPlugin implements Plugin<Project> {
 
         applyDefaultPlugins(project)
 
-        // enable jcenter by default
-        project.repositories.jcenter()
-        // enable griffon-plugins @ bintray
-        project.repositories.maven { url 'http://dl.bintray.com/griffon/griffon-plugins' }
-
         applyDefaultDependencies(project)
 
         String sourceSetName = project.plugins.hasPlugin('groovy') ? 'groovy' : 'java'
@@ -49,7 +44,6 @@ class GriffonPlugin implements Plugin<Project> {
         configureDefaultSourceSets(project, 'java')
         if (sourceSetName != 'java') configureDefaultSourceSets(project, sourceSetName)
         adjustJavadocClasspath(project, sourceSetName)
-        adjustIdeClasspaths(project)
         createDefaultDirectoryStructure(project, 'java')
         if (sourceSetName != 'java') createDefaultDirectoryStructure(project, sourceSetName)
 
@@ -57,15 +51,7 @@ class GriffonPlugin implements Plugin<Project> {
     }
 
     private void applyDefaultDependencies(final Project project) {
-        // add compile time configurations
-        project.configurations.maybeCreate('compileOnly')
-        project.configurations.maybeCreate('testCompileOnly')
         project.configurations.maybeCreate('griffon').visible = true
-
-        // wire up classpaths with compile time dependencies
-        project.sourceSets.main.compileClasspath += [project.configurations.compileOnly]
-        project.sourceSets.test.compileClasspath += [project.configurations.testCompileOnly]
-
         GriffonPluginResolutionStrategy.applyTo(project)
     }
 
@@ -78,27 +64,15 @@ class GriffonPlugin implements Plugin<Project> {
     }
 
     private void adjustJavadocClasspath(Project project, String sourceSetName) {
-        project.javadoc.classpath += [project.configurations.compileOnly]
+        project.javadoc.classpath += project.configurations.compileOnly
         if (sourceSetName == 'groovy') {
-            project.groovydoc.classpath += [project.configurations.compileOnly]
+            project.groovydoc.classpath += project.configurations.compileOnly
         }
-    }
-
-    private void adjustIdeClasspaths(Project project) {
-        // adjust Eclipse classpath, but only if EclipsePlugin is applied
-        project.plugins.withId('eclipse') {
-            project.eclipse.classpath.plusConfigurations += [project.configurations.compileOnly]
-            project.eclipse.classpath.plusConfigurations += [project.configurations.testCompileOnly]
-        }
-
-        // adjust IntelliJ classpath
-        project.idea.module.scopes.PROVIDED.plus += [project.configurations.compileOnly]
-        project.idea.module.scopes.PROVIDED.plus += [project.configurations.testCompileOnly]
     }
 
     private void configureDefaultSourceSets(Project project, String sourceSetName) {
         // configure default source directories
-        project.sourceSets.main[sourceSetName].srcDirs = [
+        project.sourceSets.main[sourceSetName].srcDirs += [
             'griffon-app/conf',
             'griffon-app/controllers',
             'griffon-app/models',
@@ -108,7 +82,7 @@ class GriffonPlugin implements Plugin<Project> {
             'src/main/' + sourceSetName
         ]
         // configure default resource directories
-        project.sourceSets.main.resources.srcDirs = [
+        project.sourceSets.main.resources.srcDirs += [
             'griffon-app/resources',
             'griffon-app/i18n',
             'src/main/resources'
@@ -237,7 +211,13 @@ class GriffonPlugin implements Plugin<Project> {
         project.gradle.addBuildListener(new BuildAdapter() {
             @Override
             void projectsEvaluated(Gradle gradle) {
-                project.repositories.mavenLocal()
+                if (extension.includeDefaultRepositories) {
+                    project.repositories.mavenLocal()
+                    // enable jcenter
+                    project.repositories.jcenter()
+                    // enable griffon-plugins @ bintray
+                    project.repositories.maven { url 'http://dl.bintray.com/griffon/griffon-plugins' }
+                }
 
                 // add default dependencies
                 appendDependency('core')
@@ -268,12 +248,12 @@ class GriffonPlugin implements Plugin<Project> {
                 project.plugins.withId('org.kordamp.gradle.stats') { plugin ->
                     Task statsTask = project.tasks.findByName('stats')
                     statsTask.paths += [
-                        model      : [name: 'Models', path: 'griffon-app/models'],
-                        view       : [name: 'Views', path: 'griffon-app/views'],
-                        controller : [name: 'Controllers', path: 'griffon-app/controllers'],
-                        service    : [name: 'Services', path: 'griffon-app/services'],
-                        config     : [name: 'Configuration', path: 'griffon-app/conf'],
-                        lifecycle  : [name: 'Lifecycle', path: 'griffon-app/lifecycle']
+                        model     : [name: 'Models', path: 'griffon-app/models'],
+                        view      : [name: 'Views', path: 'griffon-app/views'],
+                        controller: [name: 'Controllers', path: 'griffon-app/controllers'],
+                        service   : [name: 'Services', path: 'griffon-app/services'],
+                        config    : [name: 'Configuration', path: 'griffon-app/conf'],
+                        lifecycle : [name: 'Lifecycle', path: 'griffon-app/lifecycle']
                     ]
                 }
 

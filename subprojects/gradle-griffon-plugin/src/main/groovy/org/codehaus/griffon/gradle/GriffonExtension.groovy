@@ -15,11 +15,13 @@
  */
 package org.codehaus.griffon.gradle
 
+import groovy.transform.CompileStatic
 import org.gradle.api.Project
 
 /**
  * @author Andres Almiray
  */
+@CompileStatic
 class GriffonExtension {
     static final List<String> TOOLKIT_NAMES = ['swing', 'javafx', 'pivot', 'lanterna']
 
@@ -30,6 +32,8 @@ class GriffonExtension {
     Boolean includeGroovyDependencies
 
     boolean disableDependencyResolution
+
+    boolean includeDefaultRepositories = true
 
     String applicationIconName = 'griffon.icns'
 

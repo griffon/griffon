@@ -15,11 +15,12 @@
  */
 package org.codehaus.griffon.gradle
 
+import spock.lang.Ignore
 import spock.lang.Unroll
 
+@Ignore
 @Unroll
 class GriffonPluginWithAppliedEclipsePluginSpecification extends AbstractPluginSpecification {
-
     def setupSpec() {
         project {
             apply plugin: 'org.codehaus.griffon.griffon'
@@ -39,5 +40,4 @@ class GriffonPluginWithAppliedEclipsePluginSpecification extends AbstractPluginS
         project.configurations.compileOnly     | _
         project.configurations.testCompileOnly | _
     }
-
 }
