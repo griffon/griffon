@@ -175,7 +175,6 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
         Method namedMethod = null;
         try {
             namedMethod = clazz.getDeclaredMethod(methodName);
-            namedMethod.setAccessible(true);
         } catch (NoSuchMethodException e) {
             if (annotatedMethod == null) {
                 return Collections.emptyList();
@@ -188,6 +187,7 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
 
         Method method = annotatedMethod != null ? annotatedMethod : namedMethod;
         try {
+            method.setAccessible(true);
             return (List<Module>) method.invoke(testCase);
         } catch (Exception e) {
             throw new IllegalArgumentException("An error occurred while initializing modules from " + clazz.getName() + "." + method.getName(), e);
