@@ -28,7 +28,7 @@ class GriffonPluginResolutionStrategy {
     private static final String PLUGIN_PREFIX = 'griffon-'
     private static final String PLUGIN_SUFFIX = '-plugin'
     private static final String GRIFFON_CONFIGURATION = 'griffon'
-<span class="fc" id="L31">    private static final List&lt;String&gt; CONFIGURATION_NAMES = [</span>
+<span class="nc" id="L31">    private static final List&lt;String&gt; CONFIGURATION_NAMES = [</span>
         'compile',
         'compileOnly',
         'testCompileOnly',
@@ -37,11 +37,11 @@ class GriffonPluginResolutionStrategy {
     ]
 
     static void applyTo(Project project) {
-<span class="fc" id="L40">        GriffonPluginDependencyResolver resolver = new GriffonPluginDependencyResolver(project)</span>
-<span class="fc" id="L41">        project.configurations.getByName(GRIFFON_CONFIGURATION).incoming.beforeResolve(resolver)</span>
-<span class="fc" id="L42">        CONFIGURATION_NAMES.each { String configurationName -&gt;</span>
-<span class="fc" id="L43">            Configuration configuration = project.configurations.getByName(configurationName)</span>
-<span class="pc" id="L44">            configuration.incoming.beforeResolve(new GriffonDependencyResolver(configurationName, resolver))</span>
+<span class="nc" id="L40">        GriffonPluginDependencyResolver resolver = new GriffonPluginDependencyResolver(project)</span>
+<span class="nc" id="L41">        project.configurations.getByName(GRIFFON_CONFIGURATION).incoming.beforeResolve(resolver)</span>
+<span class="nc" id="L42">        CONFIGURATION_NAMES.each { String configurationName -&gt;</span>
+<span class="nc" id="L43">            Configuration configuration = project.configurations.getByName(configurationName)</span>
+<span class="nc" id="L44">            configuration.incoming.beforeResolve(new GriffonDependencyResolver(configurationName, resolver))</span>
         }
     }
 
@@ -50,8 +50,8 @@ class GriffonPluginResolutionStrategy {
         private final String configurationName
 
         GriffonDependencyResolver(String configurationName, GriffonPluginDependencyResolver resolver) {
-<span class="fc" id="L53">            this.resolver = resolver</span>
-<span class="fc" id="L54">            this.configurationName = configurationName</span>
+<span class="nc" id="L53">            this.resolver = resolver</span>
+<span class="nc" id="L54">            this.configurationName = configurationName</span>
         }
 
         @Override
@@ -74,7 +74,7 @@ class GriffonPluginResolutionStrategy {
         final Map&lt;String, List&lt;String&gt;&gt; dependencyMap = [:]
 
         GriffonPluginDependencyResolver(Project project) {
-<span class="fc" id="L77">            this.project = project</span>
+<span class="nc" id="L77">            this.project = project</span>
         }
 
         @Override
