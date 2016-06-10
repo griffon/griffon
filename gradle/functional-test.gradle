@@ -41,10 +41,10 @@ sourceSets {
             groovy.srcDirs file('src/functional-test/groovy')
         }
         resources.srcDir file('src/functional-test/resources')
-        compileClasspath += [sourceSets.main.output]
+        compileClasspath += sourceSets.main.output
         compileClasspath += configurations.compileOnly
         compileClasspath += configurations.testCompileOnly
-        runtimeClasspath += [compileClasspath]
+        runtimeClasspath += compileClasspath
     }
 }
 
