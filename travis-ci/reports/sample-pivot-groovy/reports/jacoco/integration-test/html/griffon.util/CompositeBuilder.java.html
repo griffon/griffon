@@ -66,8 +66,8 @@ public class CompositeBuilder extends FactoryBuilderSupport {
             private static final long serialVersionUID = -6901410680736336645L;
 
             protected Object doCall(Object[] args) {
-<span class="fc" id="L69">                String methodName = String.valueOf(args[0]);</span>
-<span class="pc bpc" id="L70" title="1 of 2 branches missed.">                for (Closure methodMissingDelegate : methodMissingDelegates) {</span>
+<span class="nc" id="L69">                String methodName = String.valueOf(args[0]);</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">                for (Closure methodMissingDelegate : methodMissingDelegates) {</span>
                     try {
 <span class="nc" id="L72">                        return methodMissingDelegate.call(args);</span>
 <span class="nc" id="L73">                    } catch (MissingMethodException mme) {</span>
@@ -75,7 +75,7 @@ public class CompositeBuilder extends FactoryBuilderSupport {
                     }
 <span class="nc" id="L76">                }</span>
 
-<span class="pc bpc" id="L78" title="1 of 2 branches missed.">                if (originalMethodMissingDelegate != null) {</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">                if (originalMethodMissingDelegate != null) {</span>
                     try {
 <span class="nc" id="L80">                        return originalMethodMissingDelegate.call(args);</span>
 <span class="nc" id="L81">                    } catch (MissingMethodException mme) {</span>
@@ -83,9 +83,9 @@ public class CompositeBuilder extends FactoryBuilderSupport {
                     }
                 }
 
-<span class="fc" id="L86">                Object[] argsCopy = new Object[args.length - 1];</span>
-<span class="fc" id="L87">                System.arraycopy(args, 1, argsCopy, 0, argsCopy.length);</span>
-<span class="fc" id="L88">                throw new MissingMethodException(methodName, CompositeBuilder.class, argsCopy);</span>
+<span class="nc" id="L86">                Object[] argsCopy = new Object[args.length - 1];</span>
+<span class="nc" id="L87">                System.arraycopy(args, 1, argsCopy, 0, argsCopy.length);</span>
+<span class="nc" id="L88">                throw new MissingMethodException(methodName, CompositeBuilder.class, argsCopy);</span>
             }
         });
 
@@ -94,8 +94,8 @@ public class CompositeBuilder extends FactoryBuilderSupport {
             private static final long serialVersionUID = 1055591497264374109L;
 
             protected Object doCall(Object[] args) {
-<span class="fc" id="L97">                String propertyName = String.valueOf(args[0]);</span>
-<span class="pc bpc" id="L98" title="1 of 2 branches missed.">                for (Closure propertyMissingDelegate : propertyMissingDelegates) {</span>
+<span class="nc" id="L97">                String propertyName = String.valueOf(args[0]);</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">                for (Closure propertyMissingDelegate : propertyMissingDelegates) {</span>
                     try {
 <span class="nc" id="L100">                        return propertyMissingDelegate.call(args);</span>
 <span class="nc" id="L101">                    } catch (MissingMethodException mme) {</span>
@@ -104,16 +104,16 @@ public class CompositeBuilder extends FactoryBuilderSupport {
                     }
 <span class="nc" id="L105">                }</span>
 
-<span class="pc bpc" id="L107" title="1 of 2 branches missed.">                if (originalPropertyMissingDelegate != null) {</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">                if (originalPropertyMissingDelegate != null) {</span>
                     try {
 <span class="nc" id="L109">                        return originalPropertyMissingDelegate.call(args);</span>
-<span class="fc" id="L110">                    } catch (MissingMethodException mme) {</span>
-<span class="pc bpc" id="L111" title="1 of 2 branches missed.">                        if (!propertyName.equals(mme.getMethod()))</span>
+<span class="nc" id="L110">                    } catch (MissingMethodException mme) {</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">                        if (!propertyName.equals(mme.getMethod()))</span>
 <span class="nc" id="L112">                            throw mme;</span>
                     }
                 }
 
-<span class="fc" id="L116">                throw new MissingPropertyException(propertyName, CompositeBuilder.class);</span>
+<span class="nc" id="L116">                throw new MissingPropertyException(propertyName, CompositeBuilder.class);</span>
             }
         });
 <span class="fc" id="L119">    }</span>

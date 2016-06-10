@@ -175,19 +175,19 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
 <span class="fc" id="L175">        Method namedMethod = null;</span>
         try {
 <span class="nc" id="L177">            namedMethod = clazz.getDeclaredMethod(methodName);</span>
-<span class="nc" id="L178">            namedMethod.setAccessible(true);</span>
-<span class="fc" id="L179">        } catch (NoSuchMethodException e) {</span>
-<span class="pc bpc" id="L180" title="1 of 2 branches missed.">            if (annotatedMethod == null) {</span>
-<span class="fc" id="L181">                return Collections.emptyList();</span>
+<span class="fc" id="L178">        } catch (NoSuchMethodException e) {</span>
+<span class="pc bpc" id="L179" title="1 of 2 branches missed.">            if (annotatedMethod == null) {</span>
+<span class="fc" id="L180">                return Collections.emptyList();</span>
             }
-<span class="nc" id="L183">        }</span>
+<span class="nc" id="L182">        }</span>
 
-<span class="nc bnc" id="L185" title="All 4 branches missed.">        if (namedMethod != null &amp;&amp; annotatedMethod != namedMethod) {</span>
-<span class="nc" id="L186">            System.err.println(&quot;Usage of method named '&quot; + clazz.getName() + &quot;.&quot; + methodName + &quot;()' is discouraged. Rename the method and annotate it with @&quot; + annotationClass.getSimpleName());</span>
+<span class="nc bnc" id="L184" title="All 4 branches missed.">        if (namedMethod != null &amp;&amp; annotatedMethod != namedMethod) {</span>
+<span class="nc" id="L185">            System.err.println(&quot;Usage of method named '&quot; + clazz.getName() + &quot;.&quot; + methodName + &quot;()' is discouraged. Rename the method and annotate it with @&quot; + annotationClass.getSimpleName());</span>
         }
 
-<span class="nc bnc" id="L189" title="All 2 branches missed.">        Method method = annotatedMethod != null ? annotatedMethod : namedMethod;</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">        Method method = annotatedMethod != null ? annotatedMethod : namedMethod;</span>
         try {
+<span class="nc" id="L190">            method.setAccessible(true);</span>
 <span class="nc" id="L191">            return (List&lt;Module&gt;) method.invoke(testCase);</span>
 <span class="nc" id="L192">        } catch (Exception e) {</span>
 <span class="nc" id="L193">            throw new IllegalArgumentException(&quot;An error occurred while initializing modules from &quot; + clazz.getName() + &quot;.&quot; + method.getName(), e);</span>
