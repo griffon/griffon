@@ -16,12 +16,12 @@
 package org.codehaus.griffon.runtime.injection
 
 import com.google.inject.CreationException
-import griffon.core.ApplicationBootstrapper
 import griffon.core.ExceptionHandler
 import griffon.core.ExecutorServiceManager
 import griffon.core.GriffonApplication
 import griffon.core.event.EventRouter
 import griffon.core.injection.Binding
+import griffon.core.injection.Key
 import griffon.core.injection.Module
 import griffon.core.threading.UIThreadManager
 import griffon.exceptions.ClosedInjectorException
@@ -189,14 +189,14 @@ class GuiceInjectorFactorySpec extends Specification {
     @Nonnull
     private
     static Iterable<Binding<?>> createBindings(GriffonApplication application, boolean withFailure = false) {
-        Map<ApplicationBootstrapper.Key, Binding<?>> map = new LinkedHashMap<>()
+        Map<Key, Binding<?>> map = new LinkedHashMap<>()
 
         for (Binding<?> binding : createModule(application).bindings) {
-            map.put(ApplicationBootstrapper.Key.of(binding), binding)
+            map.put(Key.of(binding), binding)
         }
         if (withFailure) {
             Binding<?> binding = new InvalidBinding<>(Animal)
-            map.put(ApplicationBootstrapper.Key.of(binding), binding)
+            map.put(Key.of(binding), binding)
         }
 
         return unmodifiableCollection(map.values())

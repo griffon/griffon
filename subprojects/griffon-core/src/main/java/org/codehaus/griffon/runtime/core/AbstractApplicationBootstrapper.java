@@ -22,6 +22,7 @@ import griffon.core.env.GriffonEnvironment;
 import griffon.core.injection.Binding;
 import griffon.core.injection.Injector;
 import griffon.core.injection.InjectorFactory;
+import griffon.core.injection.Key;
 import griffon.core.injection.Module;
 import griffon.util.GriffonClassUtils;
 import griffon.util.ServiceLoaderUtils;
