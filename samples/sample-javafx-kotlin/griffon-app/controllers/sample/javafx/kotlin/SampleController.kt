@@ -22,11 +22,11 @@ import javax.inject.Inject
 
 @ArtifactProviderFor(GriffonController::class)
 class SampleController : AbstractGriffonController() {
-    var model: SampleModel? = null
-    @Inject var sampleService: SampleService? = null
+    lateinit var model: SampleModel
+    lateinit @Inject var sampleService: SampleService
 
     fun sayHello() {
-        val result = sampleService!!.sayHello(model!!.input)
-        runInsideUIAsync { model!!.output = result }
+        val result = sampleService.sayHello(model.input)
+        runInsideUIAsync { model.output = result }
     }
 }

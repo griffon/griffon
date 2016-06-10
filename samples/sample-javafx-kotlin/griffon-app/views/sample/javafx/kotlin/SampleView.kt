@@ -30,11 +30,11 @@ import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView
 
 @ArtifactProviderFor(GriffonView::class)
 class SampleView : AbstractJavaFXGriffonView() {
-    var model: SampleModel? = null
-    var controller: SampleController? = null
+    lateinit var model: SampleModel
+    lateinit var controller: SampleController
 
-    private @FXML var input: TextField? = null
-    private @FXML var output: Label? = null
+    lateinit private @FXML var input: TextField
+    lateinit private @FXML var output: Label
 
     override fun initUI() {
         val stage: Stage = application.createApplicationContainer(mapOf()) as Stage
@@ -50,8 +50,8 @@ class SampleView : AbstractJavaFXGriffonView() {
         scene.fill = Color.WHITE
 
         val node = loadFromFXML()
-        model!!.inputProperty().bindBidirectional(input!!.textProperty())
-        model!!.outputProperty().bindBidirectional(output!!.textProperty())
+        model.inputProperty().bindBidirectional(input.textProperty())
+        model.outputProperty().bindBidirectional(output.textProperty())
         (scene.root as Group).children.addAll(node)
         connectActions(node as Any, controller as GriffonController)
         return scene
