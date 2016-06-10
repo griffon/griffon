@@ -15,11 +15,6 @@
  */
 package griffon.core;
 
-import griffon.core.injection.Binding;
-
-import javax.annotation.Nonnull;
-import java.lang.annotation.Annotation;
-
 /**
  * @author Andres Almiray
  * @since 2.0.0
@@ -28,64 +23,4 @@ public interface ApplicationBootstrapper {
     void bootstrap() throws Exception;
 
     void run();
-
-    public static class Key {
-        private final Class<?> source;
-        private final Class<? extends Annotation> annotationType;
-        private Annotation annotation;
-
-        private Key(@Nonnull Class<?> source, @Nonnull Annotation annotation) {
-            this.source = source;
-            this.annotation = annotation;
-            this.annotationType = annotation.getClass();
-        }
-
-        private Key(@Nonnull Class<?> source, @Nonnull Class<? extends Annotation> annotationType) {
-            this.source = source;
-            this.annotationType = annotationType;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            ApplicationBootstrapper.Key key = (ApplicationBootstrapper.Key) o;
-
-            if (annotation != null) {
-                return source.equals(key.source) && annotation.equals(key.annotation);
-            }
-
-            return source.equals(key.source) &&
-                !(annotationType != null ? !annotationType.equals(key.annotationType) : key.annotationType != null);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = source.hashCode();
-            if (annotation != null) {
-                result = 31 * result + annotation.hashCode();
-            } else {
-                result = 31 * result + (annotationType != null ? annotationType.hashCode() : 0);
-            }
-            return result;
-        }
-
-        @Override
-        public String toString() {
-            final StringBuilder sb = new StringBuilder("Key{");
-            sb.append("source=").append(source);
-            sb.append(", annotation=").append(annotation);
-            sb.append(", annotationType=").append(annotationType);
-            sb.append('}');
-            return sb.toString();
-        }
-
-        @Nonnull
-        @SuppressWarnings("ConstantConditions")
-        public static ApplicationBootstrapper.Key of(Binding<?> binding) {
-            return binding.getClassifier() != null ? new ApplicationBootstrapper.Key(binding.getSource(), binding.getClassifier()) :
-                new ApplicationBootstrapper.Key(binding.getSource(), binding.getClassifierType());
-        }
-    }
 }
