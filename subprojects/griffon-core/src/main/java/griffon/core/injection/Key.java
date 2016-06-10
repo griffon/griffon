@@ -46,7 +46,7 @@ public class Key<T> {
 
     private Key(@Nonnull Class<T> source, @Nonnull Class<? extends Annotation> annotationType) {
         this.source = requireNonNull(source, ERROR_SOURCE_NULL);
-        this.annotationType = requireNonNull(annotationType, ERROR_ANNOTATION_TYPE_NULL); ;
+        this.annotationType = requireNonNull(annotationType, ERROR_ANNOTATION_TYPE_NULL);
     }
 
     @Nonnull
