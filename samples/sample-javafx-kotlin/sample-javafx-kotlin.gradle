@@ -1,0 +1,71 @@
+/*
+ * Copyright 2008-2016 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+apply plugin: 'groovy'
+apply plugin: 'application'
+apply plugin: 'kotlin'
+
+mainClassName = 'sample.javafx.kotlin.LauncherKt'
+
+repositories {
+    maven {
+        url 'http://repository.jetbrains.com/all'
+    }
+}
+
+dependencies {
+    compileOnly project(':griffon-core-compile')
+    kapt project(':griffon-core-compile')
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+
+    compile project(':griffon-javafx')
+    compile project(':griffon-guice')
+
+    runtime "org.slf4j:slf4j-simple:$slf4jVersion"
+
+    testCompile project(':griffon-core-test')
+    testCompile project(':griffon-javafx-test')
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = [
+                'griffon-app/conf',
+                'griffon-app/controllers',
+                'griffon-app/models',
+                'griffon-app/views',
+                'griffon-app/services',
+                'griffon-app/lifecycle',
+                'src/main/java'
+            ]
+        }
+        resources {
+            srcDirs = [
+                'griffon-app/resources',
+                'griffon-app/i18n',
+                'src/main/resources'
+            ]
+        }
+    }
+}
+
+kapt {
+    generateStubs = true
+}
+
+compileGroovy.enabled = false
