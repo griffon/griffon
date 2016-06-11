@@ -50,8 +50,7 @@ class GriffonPlugin implements Plugin<Project> {
     }
 
     private void applyDefaultDependencies(final Project project) {
-        project.configurations.maybeCreate('griffon').visible = true
-        GriffonPluginResolutionStrategy.applyTo(project)
+        project.configurations.maybeCreate('griffon').visible = false
     }
 
     private void applyDefaultPlugins(Project project) {
@@ -211,7 +210,7 @@ class GriffonPlugin implements Plugin<Project> {
                     project.repositories.maven { url 'http://dl.bintray.com/griffon/griffon-plugins' }
                 }
 
-                // add default dependencies
+                // add default core dependencies
                 appendDependency('core')
                 appendDependency('core-compile')
                 appendDependency('core-test')
@@ -233,6 +232,8 @@ class GriffonPlugin implements Plugin<Project> {
                 }
                 maybeIncludeGroovyDependency(groovyDependenciesEnabled, 'groovy')
                 maybeIncludeGroovyDependency(groovyDependenciesEnabled, 'groovy-compile')
+
+                GriffonPluginResolutionStrategy.applyTo(project)
 
                 processMainResources(project, extension)
                 processTestResources(project, extension)
