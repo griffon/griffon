@@ -76,37 +76,37 @@ public class GriffonExceptionHandler implements ExceptionHandler {
 
     @Override
     public void uncaughtException(Thread t, Throwable e) {
-<span class="nc" id="L79">        handle(e);</span>
-<span class="nc" id="L80">    }</span>
+<span class="fc" id="L79">        handle(e);</span>
+<span class="fc" id="L80">    }</span>
 
     @Override
     @SuppressWarnings(&quot;ThrowableResultOfMethodCallIgnored&quot;)
     public void handle(Throwable throwable) {
         try {
-<span class="nc" id="L86">            sanitize(throwable);</span>
-<span class="nc bnc" id="L87" title="All 2 branches missed.">            if (isOutputEnabled()) throwable.printStackTrace(System.err);</span>
-<span class="nc" id="L88">            LOG.error(&quot;Uncaught Exception&quot;, throwable);</span>
-<span class="nc bnc" id="L89" title="All 2 branches missed.">            if (application != null) {</span>
+<span class="fc" id="L86">            sanitize(throwable);</span>
+<span class="pc bpc" id="L87" title="1 of 2 branches missed.">            if (isOutputEnabled()) throwable.printStackTrace(System.err);</span>
+<span class="fc" id="L88">            LOG.error(&quot;Uncaught Exception&quot;, throwable);</span>
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">            if (application != null) {</span>
 <span class="nc" id="L90">                application.getEventRouter().publishEvent(&quot;Uncaught&quot; + getShortName(throwable.getClass()), asList(throwable));</span>
 <span class="nc" id="L91">                application.getEventRouter().publishEvent(ApplicationEvent.UNCAUGHT_EXCEPTION_THROWN.getName(), asList(throwable));</span>
             }
-<span class="nc" id="L93">        } catch (Throwable t) {</span>
-<span class="nc" id="L94">            sanitize(t);</span>
-<span class="nc bnc" id="L95" title="All 2 branches missed.">            if (isOutputEnabled()) t.printStackTrace(System.err);</span>
-<span class="nc" id="L96">            LOG.error(&quot;An error occurred while handling uncaught exception &quot; + throwable, t);</span>
+<span class="fc" id="L93">        } catch (Throwable t) {</span>
+<span class="fc" id="L94">            sanitize(t);</span>
+<span class="pc bpc" id="L95" title="1 of 2 branches missed.">            if (isOutputEnabled()) t.printStackTrace(System.err);</span>
+<span class="fc" id="L96">            LOG.error(&quot;An error occurred while handling uncaught exception &quot; + throwable, t);</span>
 <span class="nc" id="L97">        }</span>
-<span class="nc" id="L98">    }</span>
+<span class="fc" id="L98">    }</span>
 
     @SuppressWarnings(&quot;ThrowableResultOfMethodCallIgnored&quot;)
     public static Throwable sanitize(Throwable throwable) {
         try {
-<span class="nc bnc" id="L103" title="All 2 branches missed.">            if (!Boolean.getBoolean(GRIFFON_FULL_STACKTRACE)) {</span>
-<span class="nc" id="L104">                deepSanitize(throwable);</span>
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">            if (!Boolean.getBoolean(GRIFFON_FULL_STACKTRACE)) {</span>
+<span class="fc" id="L104">                deepSanitize(throwable);</span>
             }
 <span class="nc" id="L106">        } catch (Throwable t) {</span>
             // don't let the exception get thrown out, will cause infinite looping!
-<span class="nc" id="L108">        }</span>
-<span class="nc" id="L109">        return throwable;</span>
+<span class="fc" id="L108">        }</span>
+<span class="fc" id="L109">        return throwable;</span>
     }
 
     @SuppressWarnings(&quot;ThrowableResultOfMethodCallIgnored&quot;)
@@ -125,7 +125,7 @@ public class GriffonExceptionHandler implements ExceptionHandler {
     }
 
     public static boolean isOutputEnabled() {
-<span class="nc" id="L128">        return Boolean.getBoolean(GRIFFON_EXCEPTION_OUTPUT);</span>
+<span class="fc" id="L128">        return Boolean.getBoolean(GRIFFON_EXCEPTION_OUTPUT);</span>
     }
 
     public static void configure(Map&lt;String, Object&gt; config) {
@@ -158,41 +158,41 @@ public class GriffonExceptionHandler implements ExceptionHandler {
      */
     @SuppressWarnings(&quot;ThrowableResultOfMethodCallIgnored&quot;)
     public static Throwable deepSanitize(Throwable t) {
-<span class="nc" id="L161">        Throwable current = t;</span>
-<span class="nc bnc" id="L162" title="All 2 branches missed.">        while (current.getCause() != null) {</span>
-<span class="nc" id="L163">            current = doSanitize(current.getCause());</span>
+<span class="fc" id="L161">        Throwable current = t;</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">        while (current.getCause() != null) {</span>
+<span class="fc" id="L163">            current = doSanitize(current.getCause());</span>
         }
-<span class="nc" id="L165">        return doSanitize(t);</span>
+<span class="fc" id="L165">        return doSanitize(t);</span>
     }
 
     private static Throwable doSanitize(Throwable t) {
-<span class="nc" id="L169">        StackTraceElement[] trace = t.getStackTrace();</span>
-<span class="nc" id="L170">        List&lt;StackTraceElement&gt; newTrace = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L171" title="All 2 branches missed.">        for (StackTraceElement stackTraceElement : trace) {</span>
-<span class="nc bnc" id="L172" title="All 2 branches missed.">            if (isApplicationClass(stackTraceElement.getClassName())) {</span>
-<span class="nc" id="L173">                newTrace.add(stackTraceElement);</span>
+<span class="fc" id="L169">        StackTraceElement[] trace = t.getStackTrace();</span>
+<span class="fc" id="L170">        List&lt;StackTraceElement&gt; newTrace = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">        for (StackTraceElement stackTraceElement : trace) {</span>
+<span class="fc bfc" id="L172" title="All 2 branches covered.">            if (isApplicationClass(stackTraceElement.getClassName())) {</span>
+<span class="fc" id="L173">                newTrace.add(stackTraceElement);</span>
             }
         }
 
-<span class="nc" id="L177">        StackTraceElement[] clean = new StackTraceElement[newTrace.size()];</span>
-<span class="nc" id="L178">        newTrace.toArray(clean);</span>
-<span class="nc" id="L179">        t.setStackTrace(clean);</span>
-<span class="nc" id="L180">        return t;</span>
+<span class="fc" id="L177">        StackTraceElement[] clean = new StackTraceElement[newTrace.size()];</span>
+<span class="fc" id="L178">        newTrace.toArray(clean);</span>
+<span class="fc" id="L179">        t.setStackTrace(clean);</span>
+<span class="fc" id="L180">        return t;</span>
     }
 
     private static boolean isApplicationClass(String className) {
-<span class="nc bnc" id="L184" title="All 2 branches missed.">        for (CallableWithArgs&lt;Boolean&gt; test : TESTS) {</span>
+<span class="pc bpc" id="L184" title="1 of 2 branches missed.">        for (CallableWithArgs&lt;Boolean&gt; test : TESTS) {</span>
 <span class="nc bnc" id="L185" title="All 2 branches missed.">            if (test.call(className)) {</span>
 <span class="nc" id="L186">                return false;</span>
             }
 <span class="nc" id="L188">        }</span>
 
-<span class="nc bnc" id="L190" title="All 2 branches missed.">        for (String excludedPackage : GRIFFON_PACKAGES) {</span>
-<span class="nc bnc" id="L191" title="All 2 branches missed.">            if (className.startsWith(excludedPackage)) {</span>
-<span class="nc" id="L192">                return false;</span>
+<span class="fc bfc" id="L190" title="All 2 branches covered.">        for (String excludedPackage : GRIFFON_PACKAGES) {</span>
+<span class="fc bfc" id="L191" title="All 2 branches covered.">            if (className.startsWith(excludedPackage)) {</span>
+<span class="fc" id="L192">                return false;</span>
             }
         }
-<span class="nc" id="L195">        return true;</span>
+<span class="fc" id="L195">        return true;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
