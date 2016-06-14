@@ -57,12 +57,7 @@ apply plugin: 'com.github.kt3k.coveralls'
 dependencies {
     compile "org.codehaus.griffon:griffon-guice:\${griffon.version}"
 
-    runtime('log4j:log4j:1.2.17') {
-        exclude group: 'ant',         module: 'ant-nodeps'
-        exclude group: 'ant',         module: 'ant-junit'
-        exclude group: 'ant-contrib', module: 'ant-contrib'
-    }
-    runtime 'org.slf4j:slf4j-log4j12:1.7.21'
+    runtime 'org.slf4j:slf4j-simple:1.7.21'
 
     testCompile "org.codehaus.griffon:griffon-pivot-test:\${griffon.version}"
     testCompile 'org.codehaus.groovy:groovy-all:2.4.7'
