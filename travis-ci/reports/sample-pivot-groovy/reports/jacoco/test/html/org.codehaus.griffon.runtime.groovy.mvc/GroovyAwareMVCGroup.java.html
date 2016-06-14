@@ -15,17 +15,14 @@
  */
 package org.codehaus.griffon.runtime.groovy.mvc;
 
-import griffon.core.artifact.GriffonViewClass;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.core.mvc.MVCGroupManager;
-import groovy.lang.Script;
 import groovy.util.FactoryBuilderSupport;
 import org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -33,40 +30,18 @@ import java.util.Map;
  */
 public class GroovyAwareMVCGroup extends DefaultMVCGroup {
     public static final String BUILDER = &quot;builder&quot;;
-<span class="nc" id="L36">    protected final Map&lt;String, Object&gt; scriptResults = new LinkedHashMap&lt;&gt;();</span>
+    public static final String CURRENT_MVCGROUP = &quot;_CURRENT_MVCGROUP_&quot;;
 
     public GroovyAwareMVCGroup(@Nonnull MVCGroupManager mvcGroupManager, @Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map&lt;String, Object&gt; members, @Nullable MVCGroup parentGroup) {
-<span class="nc" id="L39">        super(mvcGroupManager, configuration, mvcId, members, parentGroup);</span>
-<span class="nc" id="L40">    }</span>
+<span class="nc" id="L36">        super(mvcGroupManager, configuration, mvcId, members, parentGroup);</span>
+<span class="nc" id="L37">    }</span>
 
     public FactoryBuilderSupport getBuilder() {
-<span class="nc" id="L43">        return (FactoryBuilderSupport) getMember(BUILDER);</span>
+<span class="nc" id="L40">        return (FactoryBuilderSupport) getMember(BUILDER);</span>
     }
 
     public Object getRootNode() {
-<span class="nc" id="L47">        return getBuilder().getVariables().get(getMvcId() + &quot;-rootNode&quot;);</span>
+<span class="nc" id="L44">        return getBuilder().getVariables().get(getMvcId() + &quot;-rootNode&quot;);</span>
     }
-
-    public Object getScriptResult(String name) {
-<span class="nc" id="L51">        return scriptResults.get(name);</span>
-    }
-
-    public void buildScriptMember(final String name) {
-<span class="nc" id="L55">        Object member = getMember(name);</span>
-<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (!(member instanceof Script)) { return; }</span>
-<span class="nc" id="L57">        final Script script = (Script) member;</span>
-
-        // special case: view gets executed in the UI thread always
-<span class="nc bnc" id="L60" title="All 2 branches missed.">        if (GriffonViewClass.TYPE.equals(name)) {</span>
-<span class="nc" id="L61">            getMvcGroupManager().getApplication().getUIThreadManager().runInsideUISync(new Runnable() {</span>
-                @Override
-                public void run() {
-<span class="nc" id="L64">                    scriptResults.put(name, getBuilder().build(script));</span>
-<span class="nc" id="L65">                }</span>
-            });
-        } else {
-<span class="nc" id="L68">            scriptResults.put(name, getBuilder().build(script));</span>
-        }
-<span class="nc" id="L70">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
