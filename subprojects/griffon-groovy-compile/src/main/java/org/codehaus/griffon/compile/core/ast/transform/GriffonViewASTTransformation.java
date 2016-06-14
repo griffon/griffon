@@ -18,7 +18,6 @@ package org.codehaus.griffon.compile.core.ast.transform;
 import griffon.core.artifact.GriffonView;
 import griffon.core.artifact.GriffonViewClass;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
-import org.codehaus.griffon.runtime.groovy.view.AbstractGriffonViewScript;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
@@ -30,7 +29,7 @@ import javax.annotation.Nonnull;
 
 /**
  * Handles generation of code for Griffon controllers.
- * <p/>
+ * <p>
  *
  * @author Andres Almiray
  * @since 2.0.0
@@ -40,22 +39,13 @@ import javax.annotation.Nonnull;
 public class GriffonViewASTTransformation extends GriffonArtifactASTTransformation {
     private static final ClassNode GRIFFON_VIEW_CLASS = makeClassSafe(GriffonView.class);
     private static final ClassNode ABSTRACT_GRIFFON_VIEW_CLASS = makeClassSafe(AbstractGriffonView.class);
-    private static final ClassNode ABSTRACT_GRIFFON_VIEW_SCRIPT_CLASS = makeClassSafe(AbstractGriffonViewScript.class);
 
     public static boolean isViewArtifact(@Nonnull ClassNode classNode, @Nonnull SourceUnit source) {
         return isArtifact(classNode, source, GRIFFON_VIEW_CLASS);
     }
 
-    protected boolean allowsScriptAsArtifact() {
-        return true;
-    }
-
     protected String getArtifactType() {
         return GriffonViewClass.TYPE;
-    }
-
-    protected ClassNode getSuperScriptClassNode(ClassNode classNode) {
-        return ABSTRACT_GRIFFON_VIEW_SCRIPT_CLASS;
     }
 
     protected ClassNode getSuperClassNode(ClassNode classNode) {

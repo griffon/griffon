@@ -17,11 +17,9 @@ package org.codehaus.griffon.runtime.groovy.mvc;
 
 import griffon.core.ApplicationClassLoader;
 import griffon.core.GriffonApplication;
-import griffon.core.artifact.GriffonArtifact;
 import griffon.core.mvc.MVCGroup;
 import griffon.util.BuilderCustomizer;
 import griffon.util.CompositeBuilder;
-import groovy.lang.Script;
 import groovy.util.FactoryBuilderSupport;
 import org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager;
 import org.slf4j.Logger;
@@ -35,6 +33,7 @@ import java.util.Map;
 import static griffon.core.GriffonExceptionHandler.sanitize;
 import static griffon.util.AnnotationUtils.sortByDependencies;
 import static org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup.BUILDER;
+import static org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup.CURRENT_MVCGROUP;
 
 /**
  * @author Andres Almiray
@@ -55,15 +54,6 @@ public class GroovyAwareMVCGroupManager extends DefaultMVCGroupManager {
         Map<String, Object> map = super.instantiateMembers(classMap, args);
         FactoryBuilderSupport builder = createBuilder(getApplication());
         map.put(BUILDER, builder);
-
-        for (Object member : map.values()) {
-            // all scripts get the builder as their binding
-            if (member instanceof Script) {
-                builder.getVariables().putAll(((Script) member).getBinding().getVariables());
-                ((Script) member).setBinding(builder);
-            }
-        }
-
         return map;
     }
 
@@ -85,29 +75,10 @@ public class GroovyAwareMVCGroupManager extends DefaultMVCGroupManager {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    protected void fillNonArtifactMemberProperties(@Nonnull String type, @Nonnull Object member, @Nonnull Map<String, Object> args) {
-        if (member instanceof Script) {
-            ((Script) member).getBinding().getVariables().putAll(args);
-        }
-    }
-
-    @Override
-    protected void initializeArtifactMember(@Nonnull MVCGroup group, @Nonnull String type, @Nonnull GriffonArtifact member, @Nonnull Map<String, Object> args) {
-        if (member instanceof Script) {
-            ((GroovyAwareMVCGroup) group).buildScriptMember(type);
-        } else {
-            super.initializeArtifactMember(group, type, member, args);
-        }
-    }
-
-    @Override
-    protected void initializeNonArtifactMember(@Nonnull MVCGroup group, @Nonnull String type, @Nonnull Object member, @Nonnull Map<String, Object> args) {
-        if (member instanceof Script) {
-            ((GroovyAwareMVCGroup) group).buildScriptMember(type);
-        } else {
-            super.initializeNonArtifactMember(group, type, member, args);
-        }
+    protected void initializeMembers(@Nonnull MVCGroup group, @Nonnull Map<String, Object> args) {
+        FactoryBuilderSupport builder = (FactoryBuilderSupport) group.getMember(BUILDER);
+        builder.setVariable(CURRENT_MVCGROUP, group);
+        super.initializeMembers(group, args);
     }
 
     @Override

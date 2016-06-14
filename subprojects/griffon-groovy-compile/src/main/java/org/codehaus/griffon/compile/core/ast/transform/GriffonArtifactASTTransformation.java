@@ -70,25 +70,17 @@ public abstract class GriffonArtifactASTTransformation extends AbstractASTTransf
     public void visit(ASTNode[] nodes, SourceUnit source) {
         ModuleNode moduleNode = (ModuleNode) nodes[0];
         ClassNode classNode = moduleNode.getClasses().get(0);
-        if (classNode.isDerivedFrom(ClassHelper.SCRIPT_TYPE) && !allowsScriptAsArtifact() ||
+        if (classNode.isDerivedFrom(ClassHelper.SCRIPT_TYPE) ||
             !matches(classNode, source)) {
             return;
         }
         transform(classNode);
     }
 
-    protected boolean allowsScriptAsArtifact() {
-        return false;
-    }
-
     protected void transform(ClassNode classNode) {
         ClassNode superClass = classNode.getSuperClass();
-        ClassNode superScriptClassNode = getSuperScriptClassNode(classNode);
         ClassNode superClassNode = getSuperClassNode(classNode);
-        if (superScriptClassNode != null && allowsScriptAsArtifact() && classNode.isDerivedFrom(ClassHelper.SCRIPT_TYPE)) {
-            LOG.debug("Setting {} as the superclass of {}", superScriptClassNode.getName(), classNode.getName());
-            classNode.setSuperClass(superScriptClassNode);
-        } else if (superClassNode != null && ClassHelper.OBJECT_TYPE.equals(superClass)) {
+        if (superClassNode != null && ClassHelper.OBJECT_TYPE.equals(superClass)) {
             LOG.debug("Setting {} as the superclass of {}", superClassNode.getName(), classNode.getName());
             classNode.setSuperClass(superClassNode);
         } else if (!classNode.implementsInterface(getInterfaceNode())) {
@@ -115,10 +107,6 @@ public abstract class GriffonArtifactASTTransformation extends AbstractASTTransf
     }
 
     protected abstract String getArtifactType();
-
-    protected ClassNode getSuperScriptClassNode(ClassNode classNode) {
-        return null;
-    }
 
     protected ClassNode getSuperClassNode(ClassNode classNode) {
         return null;
