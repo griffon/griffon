@@ -15,10 +15,8 @@
  */
 
 apply plugin: 'groovy'
+apply plugin: 'com.gradle.plugin-publish'
 apply from: rootProject.file('gradle/coverage.gradle')
-
-sourceCompatibility = '1.7'
-targetCompatibility = '1.7'
 
 dependencies {
     compile gradleApi()
@@ -41,9 +39,9 @@ bintray {
         desc = project.pomDescription
         licenses = ['Apache-2.0']
         labels = ['griffon']
-        websiteUrl = 'http://griffon-framework.org'
-        issueTrackerUrl = 'https://github.com/griffon/griffon/issues'
-        vcsUrl = "https://github.com/griffon/griffon.git"
+        websiteUrl = project.project_website_url
+        issueTrackerUrl = project.project_issues_url
+        vcsUrl = project.project_vcs_url
         publicDownloadNumbers = true
         version {
             vcsTag = project.version
@@ -51,5 +49,25 @@ bintray {
                 'gradle-plugin': ['org.codehaus.griffon.griffon-build', project.group, project.name].join(':')
             ]
         }
+    }
+}
+
+pluginBundle {
+    website = project.project_website_url
+    vcsUrl = project.project_vcs_url
+    description = project.pomDescription
+    tags = ['griffon']
+
+    plugins {
+        statsPlugin {
+            id = 'org.codehaus.griffon.griffon-build'
+            displayName = project.pomDescription
+        }
+    }
+
+    mavenCoordinates {
+        groupId = project.group
+        artifactId = project.name
+        version = project.version
     }
 }
