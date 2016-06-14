@@ -42,61 +42,61 @@ public interface VetoableConstants extends ObservableConstants {
     String METHOD_GET_VETOABLE_CHANGE_LISTENERS = &quot;getVetoableChangeListeners&quot;;
     String METHOD_FIRE_VETOABLE_CHANGE = &quot;fireVetoableChange&quot;;
 
-<span class="nc" id="L45">    MethodDescriptor[] VETOABLE_METHODS = new MethodDescriptor[]{</span>
-<span class="nc" id="L46">        method(</span>
-<span class="nc" id="L47">            type(VOID),</span>
+<span class="fc" id="L45">    MethodDescriptor[] VETOABLE_METHODS = new MethodDescriptor[]{</span>
+<span class="fc" id="L46">        method(</span>
+<span class="fc" id="L47">            type(VOID),</span>
             METHOD_ADD_VETOABLE_CHANGE_LISTENER,
-<span class="nc" id="L49">            args(annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), VETOABLE_CHANGE_LISTENER_TYPE))</span>
+<span class="fc" id="L49">            args(annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), VETOABLE_CHANGE_LISTENER_TYPE))</span>
         ),
-<span class="nc" id="L51">        method(</span>
-<span class="nc" id="L52">            type(VOID),</span>
+<span class="fc" id="L51">        method(</span>
+<span class="fc" id="L52">            type(VOID),</span>
             METHOD_ADD_VETOABLE_CHANGE_LISTENER,
-<span class="nc" id="L54">            args(</span>
-<span class="nc" id="L55">                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_STRING),</span>
-<span class="nc" id="L56">                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), VETOABLE_CHANGE_LISTENER_TYPE))</span>
+<span class="fc" id="L54">            args(</span>
+<span class="fc" id="L55">                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_STRING),</span>
+<span class="fc" id="L56">                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), VETOABLE_CHANGE_LISTENER_TYPE))</span>
         ),
-<span class="nc" id="L58">        method(</span>
-<span class="nc" id="L59">            type(VOID),</span>
+<span class="fc" id="L58">        method(</span>
+<span class="fc" id="L59">            type(VOID),</span>
             METHOD_REMOVE_VETOABLE_CHANGE_LISTENER,
-<span class="nc" id="L61">            args(annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), VETOABLE_CHANGE_LISTENER_TYPE))</span>
+<span class="fc" id="L61">            args(annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), VETOABLE_CHANGE_LISTENER_TYPE))</span>
         ),
-<span class="nc" id="L63">        method(</span>
-<span class="nc" id="L64">            type(VOID),</span>
+<span class="fc" id="L63">        method(</span>
+<span class="fc" id="L64">            type(VOID),</span>
             METHOD_REMOVE_VETOABLE_CHANGE_LISTENER,
-<span class="nc" id="L66">            args(</span>
-<span class="nc" id="L67">                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_STRING),</span>
-<span class="nc" id="L68">                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), VETOABLE_CHANGE_LISTENER_TYPE))</span>
+<span class="fc" id="L66">            args(</span>
+<span class="fc" id="L67">                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_STRING),</span>
+<span class="fc" id="L68">                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), VETOABLE_CHANGE_LISTENER_TYPE))</span>
         ),
-<span class="nc" id="L70">        annotatedMethod(</span>
-<span class="nc" id="L71">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
-<span class="nc" id="L72">            type(VETOABLE_CHANGE_LISTENER_TYPE, 1),</span>
+<span class="fc" id="L70">        annotatedMethod(</span>
+<span class="fc" id="L71">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="fc" id="L72">            type(VETOABLE_CHANGE_LISTENER_TYPE, 1),</span>
             METHOD_GET_VETOABLE_CHANGE_LISTENERS
         ),
-<span class="nc" id="L75">        annotatedMethod(</span>
-<span class="nc" id="L76">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
-<span class="nc" id="L77">            type(VETOABLE_CHANGE_LISTENER_TYPE, 1),</span>
+<span class="fc" id="L75">        annotatedMethod(</span>
+<span class="fc" id="L76">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="fc" id="L77">            type(VETOABLE_CHANGE_LISTENER_TYPE, 1),</span>
             METHOD_GET_VETOABLE_CHANGE_LISTENERS,
-<span class="nc" id="L79">            args(annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_STRING))</span>
+<span class="fc" id="L79">            args(annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_STRING))</span>
         )
     };
 
-<span class="nc" id="L83">    MethodDescriptor[] VETOABLE_FIRE_METHODS = new MethodDescriptor[]{</span>
-<span class="nc" id="L84">        method(</span>
+<span class="fc" id="L83">    MethodDescriptor[] VETOABLE_FIRE_METHODS = new MethodDescriptor[]{</span>
+<span class="fc" id="L84">        method(</span>
             Modifier.PROTECTED,
-<span class="nc" id="L86">            type(VOID),</span>
+<span class="fc" id="L86">            type(VOID),</span>
             METHOD_FIRE_VETOABLE_CHANGE,
-<span class="nc" id="L88">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), PROPERTY_CHANGE_EVENT_TYPE)),</span>
-<span class="nc" id="L89">            throwing(type(PROPERTY_VETO_EXCEPTION_TYPE))</span>
+<span class="fc" id="L88">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), PROPERTY_CHANGE_EVENT_TYPE)),</span>
+<span class="fc" id="L89">            throwing(type(PROPERTY_VETO_EXCEPTION_TYPE))</span>
         ),
-<span class="nc" id="L91">        method(</span>
+<span class="fc" id="L91">        method(</span>
             Modifier.PROTECTED,
-<span class="nc" id="L93">            type(VOID),</span>
+<span class="fc" id="L93">            type(VOID),</span>
             METHOD_FIRE_VETOABLE_CHANGE,
-<span class="nc" id="L95">            args(</span>
-<span class="nc" id="L96">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="nc" id="L97">                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT),</span>
-<span class="nc" id="L98">                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT)),</span>
-<span class="nc" id="L99">            throwing(type(PROPERTY_VETO_EXCEPTION_TYPE))</span>
+<span class="fc" id="L95">            args(</span>
+<span class="fc" id="L96">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L97">                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT),</span>
+<span class="fc" id="L98">                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT)),</span>
+<span class="fc" id="L99">            throwing(type(PROPERTY_VETO_EXCEPTION_TYPE))</span>
         )
     };
 }

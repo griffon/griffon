@@ -120,7 +120,7 @@ import static java.util.Objects.requireNonNull;
     }
 
     public static &lt;E&gt; ListBuilder&lt;E&gt; list(List&lt;E&gt; delegate) {
-<span class="nc" id="L123">        return new ListBuilder&lt;&gt;(delegate);</span>
+<span class="fc" id="L123">        return new ListBuilder&lt;&gt;(delegate);</span>
     }
 
     public static &lt;E&gt; SetBuilder&lt;E&gt; set() {
@@ -128,7 +128,7 @@ import static java.util.Objects.requireNonNull;
     }
 
     public static &lt;E&gt; SetBuilder&lt;E&gt; set(Set&lt;E&gt; delegate) {
-<span class="nc" id="L131">        return new SetBuilder&lt;&gt;(delegate);</span>
+<span class="fc" id="L131">        return new SetBuilder&lt;&gt;(delegate);</span>
     }
 
     /**
@@ -160,7 +160,7 @@ import static java.util.Objects.requireNonNull;
         }
 
         public int size() {
-<span class="nc" id="L163">            return delegate.size();</span>
+<span class="fc" id="L163">            return delegate.size();</span>
         }
 
         public boolean isEmpty() {
@@ -172,7 +172,7 @@ import static java.util.Objects.requireNonNull;
         }
 
         public boolean containsValue(Object o) {
-<span class="nc" id="L175">            return delegate.containsValue(o);</span>
+<span class="fc" id="L175">            return delegate.containsValue(o);</span>
         }
 
         public V get(Object o) {
@@ -184,7 +184,7 @@ import static java.util.Objects.requireNonNull;
         }
 
         public V remove(Object o) {
-<span class="nc" id="L187">            return delegate.remove(o);</span>
+<span class="fc" id="L187">            return delegate.remove(o);</span>
         }
 
         public void putAll(Map&lt;? extends K, ? extends V&gt; map) {
@@ -192,15 +192,15 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L192">        }</span>
 
         public void clear() {
-<span class="nc" id="L195">            delegate.clear();</span>
-<span class="nc" id="L196">        }</span>
+<span class="fc" id="L195">            delegate.clear();</span>
+<span class="fc" id="L196">        }</span>
 
         public Set&lt;K&gt; keySet() {
-<span class="nc" id="L199">            return delegate.keySet();</span>
+<span class="fc" id="L199">            return delegate.keySet();</span>
         }
 
         public Collection&lt;V&gt; values() {
-<span class="nc" id="L203">            return delegate.values();</span>
+<span class="fc" id="L203">            return delegate.values();</span>
         }
 
         public Set&lt;Entry&lt;K, V&gt;&gt; entrySet() {
@@ -214,7 +214,7 @@ import static java.util.Objects.requireNonNull;
 
         @Override
         public int hashCode() {
-<span class="nc" id="L217">            return delegate.hashCode();</span>
+<span class="fc" id="L217">            return delegate.hashCode();</span>
         }
 
         @Override
@@ -226,17 +226,17 @@ import static java.util.Objects.requireNonNull;
     public static class ListBuilder&lt;E&gt; implements List&lt;E&gt; {
         private final List&lt;E&gt; delegate;
 
-<span class="nc" id="L229">        public ListBuilder(List&lt;E&gt; delegate) {</span>
-<span class="nc" id="L230">            this.delegate = delegate;</span>
-<span class="nc" id="L231">        }</span>
+<span class="fc" id="L229">        public ListBuilder(List&lt;E&gt; delegate) {</span>
+<span class="fc" id="L230">            this.delegate = delegate;</span>
+<span class="fc" id="L231">        }</span>
 
         public ListBuilder&lt;E&gt; e(E e) {
-<span class="nc" id="L234">            delegate.add(e);</span>
-<span class="nc" id="L235">            return this;</span>
+<span class="fc" id="L234">            delegate.add(e);</span>
+<span class="fc" id="L235">            return this;</span>
         }
 
         public int size() {
-<span class="nc" id="L239">            return delegate.size();</span>
+<span class="fc" id="L239">            return delegate.size();</span>
         }
 
         public boolean isEmpty() {
@@ -244,7 +244,7 @@ import static java.util.Objects.requireNonNull;
         }
 
         public boolean contains(Object o) {
-<span class="nc" id="L247">            return delegate.contains(o);</span>
+<span class="fc" id="L247">            return delegate.contains(o);</span>
         }
 
         public Iterator&lt;E&gt; iterator() {
@@ -260,15 +260,15 @@ import static java.util.Objects.requireNonNull;
         }
 
         public boolean add(E e) {
-<span class="nc" id="L263">            return delegate.add(e);</span>
+<span class="fc" id="L263">            return delegate.add(e);</span>
         }
 
         public boolean remove(Object o) {
-<span class="nc" id="L267">            return delegate.remove(o);</span>
+<span class="fc" id="L267">            return delegate.remove(o);</span>
         }
 
         public boolean containsAll(Collection&lt;?&gt; objects) {
-<span class="nc" id="L271">            return delegate.containsAll(objects);</span>
+<span class="fc" id="L271">            return delegate.containsAll(objects);</span>
         }
 
         public boolean addAll(Collection&lt;? extends E&gt; es) {
@@ -288,8 +288,8 @@ import static java.util.Objects.requireNonNull;
         }
 
         public void clear() {
-<span class="nc" id="L291">            delegate.clear();</span>
-<span class="nc" id="L292">        }</span>
+<span class="fc" id="L291">            delegate.clear();</span>
+<span class="fc" id="L292">        }</span>
 
         @Override
         public boolean equals(Object o) {
@@ -298,7 +298,7 @@ import static java.util.Objects.requireNonNull;
 
         @Override
         public int hashCode() {
-<span class="nc" id="L301">            return delegate.hashCode();</span>
+<span class="fc" id="L301">            return delegate.hashCode();</span>
         }
 
         @Override
@@ -311,12 +311,12 @@ import static java.util.Objects.requireNonNull;
         }
 
         public E set(int i, E e) {
-<span class="nc" id="L314">            return delegate.set(i, e);</span>
+<span class="fc" id="L314">            return delegate.set(i, e);</span>
         }
 
         public void add(int i, E e) {
-<span class="nc" id="L318">            delegate.add(i, e);</span>
-<span class="nc" id="L319">        }</span>
+<span class="fc" id="L318">            delegate.add(i, e);</span>
+<span class="fc" id="L319">        }</span>
 
         public E remove(int i) {
 <span class="nc" id="L322">            return delegate.remove(i);</span>
@@ -346,17 +346,17 @@ import static java.util.Objects.requireNonNull;
     public static class SetBuilder&lt;E&gt; implements Set&lt;E&gt; {
         private final Set&lt;E&gt; delegate;
 
-<span class="nc" id="L349">        public SetBuilder(Set&lt;E&gt; delegate) {</span>
-<span class="nc" id="L350">            this.delegate = delegate;</span>
-<span class="nc" id="L351">        }</span>
+<span class="fc" id="L349">        public SetBuilder(Set&lt;E&gt; delegate) {</span>
+<span class="fc" id="L350">            this.delegate = delegate;</span>
+<span class="fc" id="L351">        }</span>
 
         public SetBuilder&lt;E&gt; e(E e) {
-<span class="nc" id="L354">            delegate.add(e);</span>
-<span class="nc" id="L355">            return this;</span>
+<span class="fc" id="L354">            delegate.add(e);</span>
+<span class="fc" id="L355">            return this;</span>
         }
 
         public int size() {
-<span class="nc" id="L359">            return delegate.size();</span>
+<span class="fc" id="L359">            return delegate.size();</span>
         }
 
         public boolean isEmpty() {
@@ -364,7 +364,7 @@ import static java.util.Objects.requireNonNull;
         }
 
         public boolean contains(Object o) {
-<span class="nc" id="L367">            return delegate.contains(o);</span>
+<span class="fc" id="L367">            return delegate.contains(o);</span>
         }
 
         public Iterator&lt;E&gt; iterator() {
@@ -380,15 +380,15 @@ import static java.util.Objects.requireNonNull;
         }
 
         public boolean add(E e) {
-<span class="nc" id="L383">            return delegate.add(e);</span>
+<span class="fc" id="L383">            return delegate.add(e);</span>
         }
 
         public boolean remove(Object o) {
-<span class="nc" id="L387">            return delegate.remove(o);</span>
+<span class="fc" id="L387">            return delegate.remove(o);</span>
         }
 
         public boolean containsAll(Collection&lt;?&gt; objects) {
-<span class="nc" id="L391">            return delegate.containsAll(objects);</span>
+<span class="fc" id="L391">            return delegate.containsAll(objects);</span>
         }
 
         public boolean addAll(Collection&lt;? extends E&gt; es) {
@@ -404,8 +404,8 @@ import static java.util.Objects.requireNonNull;
         }
 
         public void clear() {
-<span class="nc" id="L407">            delegate.clear();</span>
-<span class="nc" id="L408">        }</span>
+<span class="fc" id="L407">            delegate.clear();</span>
+<span class="fc" id="L408">        }</span>
 
         @Override
         public boolean equals(Object o) {
@@ -414,7 +414,7 @@ import static java.util.Objects.requireNonNull;
 
         @Override
         public int hashCode() {
-<span class="nc" id="L417">            return delegate.hashCode();</span>
+<span class="fc" id="L417">            return delegate.hashCode();</span>
         }
 
         @Override
