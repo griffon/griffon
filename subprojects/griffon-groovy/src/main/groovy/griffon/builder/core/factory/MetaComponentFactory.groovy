@@ -19,8 +19,11 @@ import griffon.core.ApplicationEvent
 import griffon.core.GriffonApplication
 import griffon.core.RunnableWithArgs
 import griffon.core.mvc.MVCGroup
+import org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup
 
 import javax.annotation.Nullable
+
+import static org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup.CURRENT_MVCGROUP
 
 /**
  * Enables MVC groups to be used as component nodes
@@ -31,19 +34,16 @@ import javax.annotation.Nullable
 @SuppressWarnings("rawtypes")
 class MetaComponentFactory extends AbstractFactory {
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
-        String mvcType = ''
-        if (value != null && value instanceof CharSequence) {
-            mvcType = value.toString()
-        } else {
-            throw new IllegalArgumentException("In $name value must be an MVC group type")
-        }
-
-        String mvcId = attributes.remove('mvcId')
-        mvcId = attributes.containsKey('mvcId') ? attributes.remove('mvcId') : mvcId
-        Map mvcArgs = attributes.remove('mvcArgs') ?: [:]
+        Map attrs = resolveAttributes(attributes)
+        String mvcId = resolveMvcId(name, value, attrs)
+        Map mvcArgs = resolveMvcArgs(attrs)
         Map mvcArgsCopy = [*:mvcArgs]
+        attributes.clear()
+        attributes.putAll(attrs)
 
-        MVCGroup mvcGroup = builder.application.mvcGroupManager.createMVCGroup(mvcType, mvcId, mvcArgs)
+        MVCGroup parentGroup = builder.getVariables().get(CURRENT_MVCGROUP)
+        def receiver = parentGroup ?: builder.application.mvcGroupManager
+        MVCGroup mvcGroup = receiver.createMVCGroup(mvcType, mvcId, mvcArgs)
         def root = mvcGroup.rootNode
 
         new DestroyEventHandler(mvcId, mvcGroup, builder.application)
@@ -52,6 +52,25 @@ class MetaComponentFactory extends AbstractFactory {
         builder.context.mvcGroup = mvcGroup
         builder.context.mvcArgs = mvcArgsCopy
         root
+    }
+
+    protected Map resolveAttributes(Map attributes) {
+        attributes
+    }
+
+    protected String resolveMvcId(Object name, Object value,  Map attributes) {
+        String mvcType = ''
+        if (value != null && value instanceof CharSequence) {
+            mvcType = value.toString()
+        } else {
+            throw new IllegalArgumentException("In $name value must be an MVC group type")
+        }
+
+        return attributes.containsKey('mvcId') ? attributes.remove('mvcId') : mvcType
+    }
+
+    protected Map resolveMvcArgs(Map attributes) {
+        attributes.remove('mvcArgs') ?: [:]
     }
 
     private static class DestroyEventHandler implements RunnableWithArgs {
