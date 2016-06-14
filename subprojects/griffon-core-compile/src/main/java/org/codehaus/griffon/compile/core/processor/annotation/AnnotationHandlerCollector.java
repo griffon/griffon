@@ -20,6 +20,7 @@ import org.kordamp.jipsy.processor.Initializer;
 import org.kordamp.jipsy.processor.LogLocation;
 import org.kordamp.jipsy.processor.Logger;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -75,7 +76,7 @@ public final class AnnotationHandlerCollector {
         this.cached.putAll(handlers);
     }
 
-    public void removeEditor(String handler) {
+    public void removeAnnotationHandler(String handler) {
         if (handler == null) {
             throw new NullPointerException("type");
         }
@@ -106,6 +107,10 @@ public final class AnnotationHandlerCollector {
                 .append("\n");
         }
         return sb.toString();
+    }
+
+    public Map<String, String> handlers() {
+        return Collections.unmodifiableMap(handlers);
     }
 
     public void fromList(String input) {

@@ -20,6 +20,7 @@ import org.kordamp.jipsy.processor.LogLocation;
 import org.kordamp.jipsy.processor.Logger;
 
 import java.beans.PropertyEditor;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -75,7 +76,7 @@ public final class PropertyEditorCollector {
         cached.putAll(editors);
     }
 
-    public void removeEditor(String editor) {
+    public void removePropertyEditor(String editor) {
         if (editor == null) {
             throw new NullPointerException("type");
         }
@@ -108,13 +109,17 @@ public final class PropertyEditorCollector {
         return sb.toString();
     }
 
+    public Map<String, String> editors() {
+        return Collections.unmodifiableMap(editors);
+    }
+
     public void fromList(String input) {
         if (input == null) {
             throw new NullPointerException("input");
         }
         String[] lines = input.split("\\n");
         for (String line : lines) {
-            if (line.startsWith("#")) continue;
+            if (line.startsWith("#")) { continue; }
             if (line.trim().length() > 0) {
                 String[] entry = line.trim().split("=");
                 editors.put(entry[0], entry[1]);

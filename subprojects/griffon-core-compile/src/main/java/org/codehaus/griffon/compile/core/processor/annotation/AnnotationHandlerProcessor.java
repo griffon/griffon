@@ -113,7 +113,7 @@ public class AnnotationHandlerProcessor extends AbstractSpiProcessor {
         for (Element e : roundEnv.getRootElements()) {
             if (e instanceof TypeElement) {
                 TypeElement currentClass = (TypeElement) e;
-                data.removeEditor(createProperQualifiedName(currentClass));
+                data.removeAnnotationHandler(createProperQualifiedName(currentClass));
             }
         }
     }

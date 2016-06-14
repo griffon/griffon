@@ -72,7 +72,7 @@ public class PropertyEditorASTTransformation extends GipsyASTTransformation {
 
     @Override
     protected void removeStaleData(ClassNode classNode, ModuleNode moduleNode) {
-        data.removeEditor(classNode.getName());
+        data.removePropertyEditor(classNode.getName());
     }
 
     protected void handleAnnotations(ClassNode classNode, List<AnnotationNode> annotations, ModuleNode moduleNode) {
