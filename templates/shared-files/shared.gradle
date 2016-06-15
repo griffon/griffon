@@ -32,6 +32,14 @@ tasks.withType(Zip) { task ->
             into destDir
             if (destDir.name.startsWith('subtmpl-')) {
                 // continue
+            } else if (destDir.name == 'griffon-javafx-kotlin') {
+                from(rootProject.file('templates/shared-files/sources')) {
+                    exclude 'maven'
+                    exclude 'gradle/package.gradle'
+                    exclude 'gradle/code-quality.gradle'
+                    exclude 'gradle/integration-test.gradle'
+                    exclude 'gradle/functional-test.gradle'
+                }
             } else if (destDir.name == 'griffon-plugin') {
                 from(rootProject.file('templates/shared-files/sources')) {
                     exclude 'src'
