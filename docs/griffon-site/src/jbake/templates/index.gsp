@@ -80,6 +80,7 @@ Available templates in griffon/griffon-lazybones-templates
 
     griffon-javafx-groovy
     griffon-javafx-java
+    griffon-javafx-kotlin
     griffon-lanterna-groovy
     griffon-lanterna-java
     griffon-pivot-groovy
