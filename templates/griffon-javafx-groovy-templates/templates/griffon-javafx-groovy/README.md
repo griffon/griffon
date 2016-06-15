@@ -17,6 +17,8 @@ and Groovy as the main language. The project has the following file structure
     │   └── views
     ├── pom.xml
     └── src
+        ├── functional-test
+        │   └── groovy
         ├── integration-test
         │   └── groovy
         ├── main
