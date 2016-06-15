@@ -1,0 +1,212 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenLocal()
+    }
+
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
+        classpath 'org.gradle.api.plugins:gradle-izpack-plugin:0.2.3'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+        classpath 'com.github.cr0:gradle-macappbundle-plugin:3.1.0'
+        classpath 'org.kordamp.gradle:stats-gradle-plugin:0.2.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
+        classpath 'de.gliderpilot.gradle.jnlp:gradle-jnlp-plugin:0.2.1'
+        classpath 'net.nemerosa:versioning:2.1.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:\$kotlinVersion"
+    }
+}
+
+apply plugin: 'groovy'
+apply plugin: 'kotlin'
+apply plugin: 'application'
+apply plugin: 'idea'
+apply plugin: 'net.nemerosa.versioning'
+
+Date buildTimeAndDate = new Date()
+ext {
+    buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
+    buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+    macosx = System.getProperty('os.name').contains('Mac OS')
+}
+
+mainClassName = '${project_package}.LauncherKt'
+
+apply from: 'gradle/publishing.gradle'
+apply from: 'gradle/code-coverage.gradle'
+apply from: 'gradle/code-quality.gradle'
+apply from: 'gradle/javafx-plugin.gradle'
+apply from: 'gradle/integration-test.gradle'
+apply from: 'gradle/functional-test.gradle'
+apply from: 'gradle/package.gradle'
+apply from: 'gradle/docs.gradle'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'org.kordamp.gradle.stats'
+apply plugin: 'com.github.ben-manes.versions'
+apply plugin: 'com.github.kt3k.coveralls'
+
+javafx {
+    mainClass = mainClassName
+}
+
+repositories {
+    jcenter()
+    mavenLocal()
+}
+
+dependencies {
+    kapt            "org.codehaus.griffon:griffon-core-compile:\${griffonVersion}"
+    compileOnly     "org.codehaus.griffon:griffon-core-compile:\${griffonVersion}"
+    testCompileOnly "org.codehaus.griffon:griffon-core-compile:\${griffonVersion}"
+
+    compile "org.codehaus.griffon:griffon-javafx:\${griffonVersion}"
+    compile "org.codehaus.griffon:griffon-guice:\${griffonVersion}"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:\$kotlinVersion"
+
+    runtime 'org.slf4j:slf4j-simple:1.7.21'
+
+    testCompile "org.codehaus.griffon:griffon-javafx-test:\${griffonVersion}"
+    testCompile "org.codehaus.groovy:groovy-all:\${groovyVersion}"
+    testCompile "org.spockframework:spock-core:\${spockVersion}"
+
+    functionalTestCompile "org.codehaus.griffon:griffon-javafx-test:\${griffonVersion}"
+}
+
+kapt {
+    generateStubs = true
+}
+
+sourceSets {
+    main {
+        kotlin {
+            srcDirs += [
+                'griffon-app/conf',
+                'griffon-app/controllers',
+                'griffon-app/models',
+                'griffon-app/views',
+                'griffon-app/services',
+                'griffon-app/lifecycle',
+                'src/main/java',
+                'src/main/kotlin'
+            ]
+        }
+        resources {
+            srcDirs += [
+                'griffon-app/resources',
+                'griffon-app/i18n',
+                'src/main/resources'
+            ]
+        }
+    }
+}
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        exclude '**/*.properties'
+        exclude '**/*.groovy'
+        exclude '**/*.xml'
+    }
+    from(sourceSets.main.resources.srcDirs) {
+        include '**/*.properties'
+        include '**/*.groovy'
+        include '**/*.xml'
+        filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+            'application.name'   : project.name,
+            'application.version': project.version,
+            'griffon.version'    : project.version
+        ])
+    }
+}
+
+processTestResources {
+    from(sourceSets.test.resources.srcDirs) {
+        exclude '**/*.properties'
+        exclude '**/*.groovy'
+        exclude '**/*.xml'
+    }
+    from(sourceSets.test.resources.srcDirs) {
+        include '**/*.properties'
+        include '**/*.groovy'
+        include '**/*.xml'
+        filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+            'application.name'   : project.name,
+            'application.version': project.version,
+            'griffon.version'    : project.version
+        ])
+    }
+}
+
+stats {
+    paths += [
+        model     : [name: 'Models', path: 'griffon-app/models'],
+        view      : [name: 'Views', path: 'griffon-app/views'],
+        controller: [name: 'Controllers', path: 'griffon-app/controllers'],
+        service   : [name: 'Services', path: 'griffon-app/services'],
+        config    : [name: 'Configuration', path: 'griffon-app/conf'],
+        lifecycle : [name: 'Lifecycle', path: 'griffon-app/lifecycle']
+    ]
+}
+
+compileGroovy.enabled = false
+
+tasks.withType(JavaCompile) {
+    sourceCompatibility = project.sourceCompatibility
+    targetCompatibility = project.targetCompatibility
+}
+
+tasks.withType(GroovyCompile) {
+    sourceCompatibility = project.sourceCompatibility
+    targetCompatibility = project.targetCompatibility
+}
+
+import com.github.jengelman.gradle.plugins.shadow.transformers.*
+import java.text.SimpleDateFormat
+
+shadowJar {
+    transform(ServiceFileTransformer)
+    transform(ServiceFileTransformer) {
+        path = 'META-INF/griffon'
+    }
+    transform(ServiceFileTransformer) {
+        path = 'META-INF/types'
+    }
+    transform(PropertiesFileTransformer) {
+        paths = [
+            'META-INF/editors/java.beans.PropertyEditor'
+        ]
+    }
+}
+
+startScripts {
+    doLast {
+        if (!macosx) unixScript.text = unixScript.text.replaceAll('"(-Xdock:(name|icon)=)([^"]*?)(")', ' ')
+        windowsScript.text = windowsScript.text.replaceAll('"(-Xdock:(name|icon)=)([^"]*?)(")', ' ')
+    }
+}
+
+if (hasProperty('debugRun') && ((project.debugRun as boolean))) {
+    run {
+        jvmArgs '-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005'
+    }
+}
+
+task jacocoRootMerge(type: org.gradle.testing.jacoco.tasks.JacocoMerge, dependsOn: [test, jacocoTestReport, jacocoIntegrationTestReport, jacocoFunctionalTestReport]) {
+    executionData = files(jacocoTestReport.executionData, jacocoIntegrationTestReport.executionData, jacocoFunctionalTestReport.executionData)
+    destinationFile = file("\${buildDir}/jacoco/root.exec")
+}
+
+task jacocoRootReport(dependsOn: jacocoRootMerge, type: JacocoReport) {
+    group = 'Reporting'
+    description = 'Generate Jacoco coverage reports after running all tests.'
+    executionData file("\${buildDir}/jacoco/root.exec")
+    sourceDirectories = files(sourceSets.main.allSource.srcDirs)
+    classDirectories = files(sourceSets.main.output)
+    reports {
+        csv.enabled = false
+        xml.enabled = true
+        html.enabled = true
+        html.destination = "\${buildDir}/reports/jacoco/root/html"
+        xml.destination = "\${buildDir}/reports/jacoco/root/root.xml"
+    }
+}

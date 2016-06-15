@@ -1,0 +1,53 @@
+javadoc {
+    excludes = ['**/*.html', 'META-INF/**', '**/*.groovy']
+
+    options.use         = true
+    options.splitIndex  = true
+    options.encoding    = 'UTF-8'
+    options.author      = true
+    options.version     = true
+    options.windowTitle = "$project.name $project.version API"
+    options.docTitle    = "$project.name $project.version API"
+    options.links       = ['http://www.slf4j.org/apidocs/',
+                           'http://junit.org/javadoc/latest/',
+                           'http://docs.oracle.com/javase/7/docs/api/',
+                           'http://jsr-305.googlecode.com/svn/trunk/javadoc/',
+                           'http://atinject.googlecode.com/svn/trunk/javadoc/',
+                           'http://griffon-framework.org/guide/latest/api/']
+
+    doLast { task ->
+        copy {
+            into task.destinationDir
+            from rootProject.file('src/javadoc/resources/img/griffon.ico'),
+                rootProject.file('src/javadoc/resources/css/stylesheet.css')
+        }
+        copy {
+            into file("${task.destinationDir}/resources")
+            from rootProject.file('src/javadoc/resources/img/')
+        }
+    }
+}
+
+groovydoc {
+    use = true
+    source = project.sourceSets.main.allSource
+    classpath = javadoc.classpath
+    windowTitle = "$project.name $project.version API"
+    docTitle = "$project.name $project.version API"
+    header = "$project.name $project.version API"
+    includePrivate = false
+    link 'http://www.slf4j.org/apidocs/', 'org.slf4j.'
+    link 'http://junit.org/javadoc/latest/', 'org.junit.', 'junit.'
+    link 'http://docs.oracle.com/javase/7/docs/api/', 'java.', 'org.xml.', 'javax.', 'org.w3c.'
+    link 'http://jsr-305.googlecode.com/svn/trunk/javadoc/', 'javax.annotation.'
+    link 'http://atinject.googlecode.com/svn/trunk/javadoc/', 'javax.inject.'
+    link 'http://griffon-framework.org/guide/latest/api/', 'griffon.', 'org.codehaus.griffon.'
+
+    doLast { task ->
+        copy {
+            into task.destinationDir
+            from rootProject.file('src/javadoc/resources/img/griffon.ico')
+            rename 'griffon.ico', 'groovy.ico'
+        }
+    }
+}
