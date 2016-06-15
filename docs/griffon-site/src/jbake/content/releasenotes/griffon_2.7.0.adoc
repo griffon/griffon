@@ -1,0 +1,50 @@
+= Griffon 2.7.0 Release Notes
+Andres Almiray
+2016-06-20
+:jbake-type: post
+:jbake-status: published
+:category: releasenotes
+:idprefix:
+:linkattrs:
+:path-griffon-core: /guide/2.7.0/api/griffon/core
+
+== Griffon 2.7.0 Release Notes
+
+=== Dependencies
+
+The following dependencies have been upgraded
+
+ * org.codehaus.groovy:groovy-all:2.4.7
+ * org.slf4j:slf4j-simple:1.7.21
+ * org.slf4j:slf4j-log4j:1.7.21
+ * org.groovyfx:groovyfx:8.0.0
+ * org.testfx:testfx-core:4.0.4-alpha
+
+=== Runtime
+
+==== MetaComponent Factories
+
+In the last major version of Griffon (1.x) it's was possible to create and inject an `MVCGroup` instance inside a Groovy
+View as if it were just another builder node. This feature is known as `metaComponent`. Sadly this support was not working
+properly until Griffon 2.7.0 fixed the problem. Now you can use `metaComponent` as expected.
+
+=== Buildtime
+
+==== Gradle 2.12+ Support
+
+Previous versions of the `griffon-gradle` plugin did not work with Gradle 2.12 or newer due to some changes introduced in
+that particular version of Gradle on how dependencies can be managed. Griffon 2.7.0 fixes this problem, now the plugin can
+be used with the latest Gradle versions.
+
+==== Kotlin Project Template
+
+There's a new lazybones project template that targets JavaFX and link:http://kotlinlang.org/[Kotlin] as main language. The
+name of this template is `griffon-javafx-kotlin`.
+
+=== Compatibility
+
+Full binary compatibility report between Griffon 2.7.0 and 2.6.0 can be found
+link:../reports/2.7.0/compatibility-report.html[here].
+
+A list of fixed issues can be found at the
+link:https://github.com/griffon/griffon/issues?q=milestone%3A2.7.0+is%3Aclosed[2.7.0 milestone] page.
