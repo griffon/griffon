@@ -17,6 +17,8 @@ and Java as main language. The project has the following file structure
     │   └── views
     ├── pom.xml
     └── src
+        ├── functional-test
+        │   └── java
         ├── integration-test
         │   └── java
         ├── main
