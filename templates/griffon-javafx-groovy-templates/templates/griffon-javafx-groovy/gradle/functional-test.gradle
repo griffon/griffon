@@ -31,8 +31,8 @@ sourceSets {
 
 idea {
     module {
-        scopes.PROVIDED.plus += { configurations.functionalTestCompile }
-        scopes.PROVIDED.plus += { configurations.functionalTestRuntime }
+        scopes.PROVIDED.plus += [configurations.functionalTestCompile]
+        scopes.PROVIDED.plus += [configurations.functionalTestRuntime]
         testSourceDirs += sourceSets.functionalTest.allSource.srcDirs
     }
 }
