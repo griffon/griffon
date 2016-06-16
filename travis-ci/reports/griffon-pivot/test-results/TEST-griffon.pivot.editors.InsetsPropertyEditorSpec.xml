@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="griffon.pivot.editors.InsetsPropertyEditorSpec" tests="34" skipped="0" failures="0" errors="0" timestamp="2016-06-15T15:19:38" hostname="testing-gce-d48e4618-8743-49ce-ab58-b05a4715e7f0.c.travis-ci-prod-3.internal" time="0.091">
+<testsuite name="griffon.pivot.editors.InsetsPropertyEditorSpec" tests="34" skipped="0" failures="0" errors="0" timestamp="2016-06-16T07:58:30" hostname="testing-gce-7424ba10-1242-40d5-9572-e7653f8a3e42.c.eco-emissary-99515.internal" time="0.076">
   <properties/>
-  <testcase name="Insets format 'null' should be equal to null" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.044"/>
-  <testcase name="Insets format '' should be equal to null" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.004"/>
+  <testcase name="Insets format 'null' should be equal to null" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.037"/>
+  <testcase name="Insets format '' should be equal to null" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.003"/>
   <testcase name="Insets format ' ' should be equal to null" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.0"/>
   <testcase name="Insets format '[]' should be equal to null" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.001"/>
-  <testcase name="Insets format '[:]' should be equal to null" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.001"/>
-  <testcase name="Insets format '1' should be equal to org.apache.pivot.wtk.Insets [1, 0, 0, 0]" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.0"/>
+  <testcase name="Insets format '[:]' should be equal to null" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.0"/>
+  <testcase name="Insets format '1' should be equal to org.apache.pivot.wtk.Insets [1, 0, 0, 0]" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.001"/>
   <testcase name="Insets format '1,2' should be equal to org.apache.pivot.wtk.Insets [1, 2, 0, 0]" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.001"/>
-  <testcase name="Insets format '1,2,3' should be equal to org.apache.pivot.wtk.Insets [1, 2, 3, 0]" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.001"/>
+  <testcase name="Insets format '1,2,3' should be equal to org.apache.pivot.wtk.Insets [1, 2, 3, 0]" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.0"/>
   <testcase name="Insets format '1,2,3,4' should be equal to org.apache.pivot.wtk.Insets [1, 2, 3, 4]" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.0"/>
   <testcase name="Insets format '1, 2, 3, 4' should be equal to org.apache.pivot.wtk.Insets [1, 2, 3, 4]" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.0"/>
   <testcase name="Insets format ' 1, 2, 3, 4' should be equal to org.apache.pivot.wtk.Insets [1, 2, 3, 4]" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.0"/>
   <testcase name="Insets format ' 1, 2,3 , 4 ' should be equal to org.apache.pivot.wtk.Insets [1, 2, 3, 4]" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.001"/>
   <testcase name="Insets format '[1, 2, 3, 4]' should be equal to org.apache.pivot.wtk.Insets [1, 2, 3, 4]" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.0"/>
   <testcase name="Insets format '[1, 2, 3, 4]' should be equal to org.apache.pivot.wtk.Insets [1, 2, 3, 4]" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.001"/>
-  <testcase name="Insets format '1' should be equal to org.apache.pivot.wtk.Insets [1, 1, 1, 1]" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.001"/>
+  <testcase name="Insets format '1' should be equal to org.apache.pivot.wtk.Insets [1, 1, 1, 1]" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.0"/>
   <testcase name="Insets format '[1]' should be equal to org.apache.pivot.wtk.Insets [1, 0, 0, 0]" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.007"/>
   <testcase name="Insets format '[1]' should be equal to org.apache.pivot.wtk.Insets [1, 0, 0, 0]" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.0"/>
   <testcase name="Insets format '[top:1, left:2, right:3, bottom:4]' should be equal to org.apache.pivot.wtk.Insets [1, 2, 3, 4]" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.001"/>
@@ -27,12 +27,12 @@
   <testcase name="Invalid insets format 'garbage'" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.007"/>
   <testcase name="Invalid insets format '1, 2, 3,4 ,5'" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.0"/>
   <testcase name="Invalid insets format '1, a'" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.0"/>
-  <testcase name="Invalid insets format '[1, 2, 3, 4, 5]'" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.001"/>
-  <testcase name="Invalid insets format '[java.lang.Object@38c18c02]'" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.0"/>
-  <testcase name="Invalid insets format '[top:java.lang.Object@2e80c487]'" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.0"/>
-  <testcase name="Invalid insets format '[top:a]'" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.0"/>
+  <testcase name="Invalid insets format '[1, 2, 3, 4, 5]'" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.0"/>
+  <testcase name="Invalid insets format '[java.lang.Object@228f258e]'" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.0"/>
+  <testcase name="Invalid insets format '[top:java.lang.Object@5fbdf591]'" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.0"/>
+  <testcase name="Invalid insets format '[top:a]'" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.001"/>
   <testcase name="Invalid insets format '[t:b]'" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.001"/>
-  <testcase name="Invalid insets format 'java.lang.Object@517f002b'" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.0"/>
+  <testcase name="Invalid insets format 'java.lang.Object@3c9ab63f'" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.0"/>
   <testcase name="Formatted insets 'null'" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.001"/>
   <testcase name="Formatted insets '1, 2, 3, 4'" classname="griffon.pivot.editors.InsetsPropertyEditorSpec" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
