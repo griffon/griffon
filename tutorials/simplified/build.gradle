@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2016-2018 the original author or authors.
+ * Copyright 2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,11 +48,11 @@ dependencies {
         exclude group: 'ant',         module: 'ant-junit'
         exclude group: 'ant-contrib', module: 'ant-contrib'
     }
-    runtime 'org.slf4j:slf4j-log4j12:1.7.18'
+    runtime 'org.slf4j:slf4j-log4j12:1.7.21'
 
     testCompile "org.codehaus.griffon:griffon-javafx-test:${griffonVersion}"
-    testCompile 'pl.pragmatists:JUnitParams:1.0.4'
-    testCompile 'org.mockito:mockito-core:2.0.43-beta'
+    testCompile 'pl.pragmatists:JUnitParams:1.0.5'
+    testCompile 'org.mockito:mockito-core:2.0.59-beta'
 }
 // end::dependencies[]
 
@@ -82,6 +82,6 @@ license {
         java = 'SLASHSTAR_STYLE'
         fxml = 'XML_STYLE'
     }
-    ext.year = '2016-2018'
+    ext.year = '2016'
     exclude '**/*.png'
 }
