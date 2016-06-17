@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2016-2018 the original author or authors.
+ * Copyright 2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ buildscript {
     dependencies {
         classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.7.0-SNAPSHOT'
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
-        classpath 'org.kordamp.gradle:stats-gradle-plugin:0.1.5'
+        classpath 'org.kordamp.gradle:stats-gradle-plugin:0.2.0'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
     }
 }
@@ -63,11 +63,11 @@ dependencies {
         exclude group: 'ant',         module: 'ant-junit'
         exclude group: 'ant-contrib', module: 'ant-contrib'
     }
-    runtime 'org.slf4j:slf4j-log4j12:1.7.13'
+    runtime 'org.slf4j:slf4j-log4j12:1.7.21'
 
     testCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
-    testCompile 'pl.pragmatists:JUnitParams:1.0.4'
-    testCompile 'org.mockito:mockito-core:2.0.39-beta'
+    testCompile 'pl.pragmatists:JUnitParams:1.0.5'
+    testCompile 'org.mockito:mockito-core:2.0.59-beta'
 
     functionalTestCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
 }
