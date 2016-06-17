@@ -30,11 +30,13 @@ import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView
 
 @ArtifactProviderFor(GriffonView::class)
 class SampleView : AbstractJavaFXGriffonView() {
-    lateinit var model: SampleModel
     lateinit var controller: SampleController
+    lateinit var model: SampleModel
 
-    lateinit private @FXML var input: TextField
-    lateinit private @FXML var output: Label
+    @FXML
+    lateinit private var input: TextField
+    @FXML
+    lateinit private var output: Label
 
     override fun initUI() {
         val stage: Stage = application.createApplicationContainer(mapOf()) as Stage

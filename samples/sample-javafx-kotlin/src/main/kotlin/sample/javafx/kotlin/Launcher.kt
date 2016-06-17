@@ -18,6 +18,5 @@ package sample.javafx.kotlin
 import griffon.javafx.JavaFXGriffonApplication
 
 fun main(args: Array<String>) {
-    System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "error")
     JavaFXGriffonApplication.main(args)
 }
