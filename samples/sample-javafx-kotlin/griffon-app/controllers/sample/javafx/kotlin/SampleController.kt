@@ -23,7 +23,9 @@ import javax.inject.Inject
 @ArtifactProviderFor(GriffonController::class)
 class SampleController : AbstractGriffonController() {
     lateinit var model: SampleModel
-    lateinit @Inject var sampleService: SampleService
+
+    @Inject
+    lateinit var sampleService: SampleService
 
     fun sayHello() {
         val result = sampleService.sayHello(model.input)

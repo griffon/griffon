@@ -39,14 +39,6 @@ public class SampleView extends AbstractJavaFXGriffonView {
     @FXML
     private Label output;                                                 //<2>
 
-    public void setController(SampleController controller) {
-        this.controller = controller;
-    }
-
-    public void setModel(SampleModel model) {
-        this.model = model;
-    }
-
     @Override
     public void initUI() {
         Stage stage = (Stage) getApplication()
