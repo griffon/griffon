@@ -38,8 +38,8 @@ sourceSets {
 
 idea {
     module {
-        scopes.PROVIDED.plus += [configurations.integrationTestCompile]
-        scopes.PROVIDED.plus += [configurations.integrationTestRuntime]
+        scopes.TEST.plus += [configurations.integrationTestCompile]
+        scopes.TEST.plus += [configurations.integrationTestRuntime]
         testSourceDirs += sourceSets.integrationTest.allSource.srcDirs
     }
 }
