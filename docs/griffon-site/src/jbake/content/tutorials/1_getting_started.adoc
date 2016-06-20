@@ -287,7 +287,7 @@ with Griffon 2 projects!
 You can import a project either using the Gradle or Maven import. Once you do you'll be able to invoke build
 goals using the respective build tool view.
 
-NOTE: Mac OSX users must run IntelliJ IDEA using JDK7 (the default is JDK6) otherwise the Gradle plugin will not
+NOTE: Mac OSX users must run IntelliJ IDEA using JDK7 (the default is JDK6 in Intellij 15) otherwise the Gradle plugin will not
 be able to import the project and will fail with a cryptic error.
 
 You must also have Annotation Processing enabled for compile time annotations such as `@ArtifactProviderFor` to be picked
@@ -295,6 +295,8 @@ up automatically. Open up Preferences and navigate to *Build, Execution Deployme
 
 .Annotation Processing in IntelliJ
 image::/img/intellij_apt_processor.png[]
+
+Finally, check that all `*-compile` JARs are added in the PROVIDED scope, also `jipsy-0.4.0.jar` and `gipsy-0.4.0.jar`.
 
 .NetBeans
 NetBeans can import Maven projects without additional plugins. You must install the Gradle plugin first if you
