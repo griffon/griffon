@@ -8,10 +8,10 @@
                 <ConcreteClasses>1</ConcreteClasses>
                 <AbstractClasses>0</AbstractClasses>
                 <Ca>1</Ca>
-                <Ce>5</Ce>
+                <Ce>8</Ce>
                 <A>0</A>
-                <I>0.83</I>
-                <D>0.17</D>
+                <I>0.89</I>
+                <D>0.11</D>
                 <V>1</V>
             </Stats>
 
@@ -27,6 +27,9 @@
             <DependsUpon>
                 <Package>griffon.builder.core.factory</Package>
                 <Package>griffon.core.threading</Package>
+                <Package>groovy.lang</Package>
+                <Package>groovy.util</Package>
+                <Package>java.lang</Package>
                 <Package>java.util</Package>
                 <Package>org.codehaus.griffon.runtime.groovy.view</Package>
                 <Package>org.codehaus.groovy.runtime</Package>
@@ -43,7 +46,7 @@
                 <ConcreteClasses>3</ConcreteClasses>
                 <AbstractClasses>0</AbstractClasses>
                 <Ca>1</Ca>
-                <Ce>11</Ce>
+                <Ce>12</Ce>
                 <A>0</A>
                 <I>0.92</I>
                 <D>0.08</D>
@@ -54,14 +57,14 @@
             </AbstractClasses>
 
             <ConcreteClasses>
+                <Class sourceFile="AliasedMetaComponentFactory.groovy">
+                    griffon.builder.core.factory.AliasedMetaComponentFactory
+                </Class>
                 <Class sourceFile="MetaComponentFactory.groovy">
                     griffon.builder.core.factory.MetaComponentFactory
                 </Class>
                 <Class sourceFile="MetaComponentFactory.groovy">
-                    griffon.builder.core.factory.MetaComponentFactory$_newInstance_closure1
-                </Class>
-                <Class sourceFile="RootFactory.groovy">
-                    griffon.builder.core.factory.RootFactory
+                    griffon.builder.core.factory.MetaComponentFactory$DestroyEventHandler
                 </Class>
             </ConcreteClasses>
 
@@ -73,6 +76,7 @@
                 <Package>java.lang</Package>
                 <Package>java.lang.ref</Package>
                 <Package>java.util</Package>
+                <Package>org.codehaus.griffon.runtime.groovy.mvc</Package>
                 <Package>org.codehaus.groovy.reflection</Package>
                 <Package>org.codehaus.groovy.runtime</Package>
                 <Package>org.codehaus.groovy.runtime.callsite</Package>
@@ -153,11 +157,11 @@
                 <TotalClasses>1</TotalClasses>
                 <ConcreteClasses>0</ConcreteClasses>
                 <AbstractClasses>1</AbstractClasses>
-                <Ca>3</Ca>
+                <Ca>2</Ca>
                 <Ce>2</Ce>
                 <A>1</A>
-                <I>0.4</I>
-                <D>0.4</D>
+                <I>0.5</I>
+                <D>0.5</D>
                 <V>1</V>
             </Stats>
 
@@ -176,7 +180,6 @@
             </DependsUpon>
 
             <UsedBy>
-                <Package>org.codehaus.griffon.runtime.groovy.artifact</Package>
                 <Package>org.codehaus.griffon.runtime.groovy.resources</Package>
                 <Package>org.codehaus.griffon.runtime.groovy.util</Package>
             </UsedBy>
@@ -320,10 +323,6 @@
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
-        <Package name="java.util.concurrent">
-            <error>No stats available: package referenced, but not analyzed.</error>
-        </Package>
-
         <Package name="javax.inject">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
@@ -409,51 +408,6 @@
             </UsedBy>
         </Package>
 
-        <Package name="org.codehaus.griffon.runtime.groovy.artifact">
-            <Stats>
-                <TotalClasses>2</TotalClasses>
-                <ConcreteClasses>0</ConcreteClasses>
-                <AbstractClasses>2</AbstractClasses>
-                <Ca>1</Ca>
-                <Ce>12</Ce>
-                <A>1</A>
-                <I>0.92</I>
-                <D>0.92</D>
-                <V>1</V>
-            </Stats>
-
-            <AbstractClasses>
-                <Class sourceFile="AbstractGriffonArtifactScript.java">
-                    org.codehaus.griffon.runtime.groovy.artifact.AbstractGriffonArtifactScript
-                </Class>
-                <Class sourceFile="AbstractGriffonMvcArtifactScript.java">
-                    org.codehaus.griffon.runtime.groovy.artifact.AbstractGriffonMvcArtifactScript
-                </Class>
-            </AbstractClasses>
-
-            <ConcreteClasses>
-            </ConcreteClasses>
-
-            <DependsUpon>
-                <Package>griffon.core</Package>
-                <Package>griffon.core.artifact</Package>
-                <Package>griffon.core.mvc</Package>
-                <Package>griffon.core.resources</Package>
-                <Package>griffon.core.threading</Package>
-                <Package>groovy.lang</Package>
-                <Package>java.io</Package>
-                <Package>java.lang</Package>
-                <Package>java.net</Package>
-                <Package>java.util</Package>
-                <Package>java.util.concurrent</Package>
-                <Package>org.slf4j</Package>
-            </DependsUpon>
-
-            <UsedBy>
-                <Package>org.codehaus.griffon.runtime.groovy.view</Package>
-            </UsedBy>
-        </Package>
-
         <Package name="org.codehaus.griffon.runtime.groovy.event">
             <Stats>
                 <TotalClasses>1</TotalClasses>
@@ -529,14 +483,14 @@
 
         <Package name="org.codehaus.griffon.runtime.groovy.mvc">
             <Stats>
-                <TotalClasses>4</TotalClasses>
-                <ConcreteClasses>4</ConcreteClasses>
+                <TotalClasses>3</TotalClasses>
+                <ConcreteClasses>3</ConcreteClasses>
                 <AbstractClasses>0</AbstractClasses>
-                <Ca>1</Ca>
-                <Ce>12</Ce>
+                <Ca>2</Ca>
+                <Ce>9</Ce>
                 <A>0</A>
-                <I>0.92</I>
-                <D>0.08</D>
+                <I>0.82</I>
+                <D>0.18</D>
                 <V>1</V>
             </Stats>
 
@@ -546,9 +500,6 @@
             <ConcreteClasses>
                 <Class sourceFile="GroovyAwareMVCGroup.java">
                     org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup
-                </Class>
-                <Class sourceFile="GroovyAwareMVCGroup.java">
-                    org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup$1
                 </Class>
                 <Class sourceFile="GroovyAwareMVCGroupFactory.java">
                     org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroupFactory
@@ -560,12 +511,9 @@
 
             <DependsUpon>
                 <Package>griffon.core</Package>
-                <Package>griffon.core.artifact</Package>
                 <Package>griffon.core.injection</Package>
                 <Package>griffon.core.mvc</Package>
-                <Package>griffon.core.threading</Package>
                 <Package>griffon.util</Package>
-                <Package>groovy.lang</Package>
                 <Package>groovy.util</Package>
                 <Package>java.lang</Package>
                 <Package>java.util</Package>
@@ -574,6 +522,7 @@
             </DependsUpon>
 
             <UsedBy>
+                <Package>griffon.builder.core.factory</Package>
                 <Package>org.codehaus.griffon.runtime.groovy</Package>
             </UsedBy>
         </Package>
@@ -662,21 +611,18 @@
 
         <Package name="org.codehaus.griffon.runtime.groovy.view">
             <Stats>
-                <TotalClasses>2</TotalClasses>
+                <TotalClasses>1</TotalClasses>
                 <ConcreteClasses>1</ConcreteClasses>
-                <AbstractClasses>1</AbstractClasses>
+                <AbstractClasses>0</AbstractClasses>
                 <Ca>1</Ca>
-                <Ce>7</Ce>
-                <A>0.5</A>
-                <I>0.88</I>
-                <D>0.38</D>
+                <Ce>4</Ce>
+                <A>0</A>
+                <I>0.8</I>
+                <D>0.2</D>
                 <V>1</V>
             </Stats>
 
             <AbstractClasses>
-                <Class sourceFile="AbstractGriffonViewScript.java">
-                    org.codehaus.griffon.runtime.groovy.view.AbstractGriffonViewScript
-                </Class>
             </AbstractClasses>
 
             <ConcreteClasses>
@@ -686,13 +632,10 @@
             </ConcreteClasses>
 
             <DependsUpon>
-                <Package>griffon.core.artifact</Package>
                 <Package>griffon.util</Package>
                 <Package>groovy.lang</Package>
-                <Package>groovy.util</Package>
                 <Package>java.lang</Package>
                 <Package>java.util</Package>
-                <Package>org.codehaus.griffon.runtime.groovy.artifact</Package>
             </DependsUpon>
 
             <UsedBy>

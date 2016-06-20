@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TypeCollector.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-core-compile</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.compile.core.processor.type</a> &gt; <span class="el_source">TypeCollector.java</span></div><h1>TypeCollector.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TypeCollector.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-core-compile</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.compile.core.processor.type</a> &gt; <span class="el_source">TypeCollector.java</span></div><h1>TypeCollector.java</h1><pre class="source lang-java linenums">/*
  * Copyright 2008-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -31,17 +31,17 @@ import java.util.Map;
  * @since 2.1.0
  */
 public final class TypeCollector {
-<span class="nc" id="L34">    private final Map&lt;String, Type&gt; types = new LinkedHashMap&lt;&gt;();</span>
-<span class="nc" id="L35">    private final Map&lt;String, Type&gt; cached = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L34">    private final Map&lt;String, Type&gt; types = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L35">    private final Map&lt;String, Type&gt; cached = new LinkedHashMap&lt;&gt;();</span>
 
-<span class="nc" id="L37">    private final List&lt;String&gt; removed = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L37">    private final List&lt;String&gt; removed = new ArrayList&lt;&gt;();</span>
     private final Initializer initializer;
     private final Logger logger;
 
-<span class="nc" id="L41">    public TypeCollector(Initializer initializer, Logger logger) {</span>
-<span class="nc" id="L42">        this.initializer = initializer;</span>
-<span class="nc" id="L43">        this.logger = logger;</span>
-<span class="nc" id="L44">    }</span>
+<span class="fc" id="L41">    public TypeCollector(Initializer initializer, Logger logger) {</span>
+<span class="fc" id="L42">        this.initializer = initializer;</span>
+<span class="fc" id="L43">        this.logger = logger;</span>
+<span class="fc" id="L44">    }</span>
 
     public void cache() {
 <span class="nc" id="L47">        this.cached.putAll(types);</span>
@@ -65,41 +65,41 @@ public final class TypeCollector {
     }
 
     public Type getType(String type) {
-<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (type == null) {</span>
-<span class="nc" id="L69">            throw new NullPointerException(&quot;type&quot;);</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (type == null) {</span>
+<span class="fc" id="L69">            throw new NullPointerException(&quot;type&quot;);</span>
         }
-<span class="nc bnc" id="L71" title="All 2 branches missed.">        if (!types.containsKey(type)) {</span>
-<span class="nc" id="L72">            Type newType = new Type(logger, type);</span>
-<span class="nc" id="L73">            CharSequence initialData = initializer.initialData(type);</span>
-<span class="nc bnc" id="L74" title="All 2 branches missed.">            if (initialData != null) {</span>
-<span class="nc" id="L75">                newType.fromProviderNamesList(initialData.toString());</span>
-<span class="nc bnc" id="L76" title="All 2 branches missed.">                for (String provider : removed) {</span>
-<span class="nc" id="L77">                    newType.removeProvider(provider);</span>
-<span class="nc" id="L78">                }</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (!types.containsKey(type)) {</span>
+<span class="fc" id="L72">            Type newType = new Type(logger, type);</span>
+<span class="fc" id="L73">            CharSequence initialData = initializer.initialData(type);</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">            if (initialData != null) {</span>
+<span class="fc" id="L75">                newType.fromProviderNamesList(initialData.toString());</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">                for (String provider : removed) {</span>
+<span class="fc" id="L77">                    newType.removeProvider(provider);</span>
+<span class="fc" id="L78">                }</span>
             }
-<span class="nc" id="L80">            types.put(type, newType);</span>
+<span class="fc" id="L80">            types.put(type, newType);</span>
         }
-<span class="nc" id="L82">        return types.get(type);</span>
+<span class="fc" id="L82">        return types.get(type);</span>
     }
 
     public Collection&lt;Type&gt; types() {
-<span class="nc" id="L86">        return Collections.unmodifiableMap(types).values();</span>
+<span class="fc" id="L86">        return Collections.unmodifiableMap(types).values();</span>
     }
 
     public void removeProvider(String provider) {
-<span class="nc bnc" id="L90" title="All 2 branches missed.">        if (provider == null) {</span>
-<span class="nc" id="L91">            throw new NullPointerException(&quot;provider&quot;);</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        if (provider == null) {</span>
+<span class="fc" id="L91">            throw new NullPointerException(&quot;provider&quot;);</span>
         }
-<span class="nc" id="L93">        logger.note(LogLocation.LOG_FILE, &quot;Removing &quot; + provider);</span>
-<span class="nc" id="L94">        removed.add(provider);</span>
-<span class="nc bnc" id="L95" title="All 2 branches missed.">        for (Type type : types.values()) {</span>
-<span class="nc" id="L96">            type.removeProvider(provider);</span>
-<span class="nc" id="L97">        }</span>
-<span class="nc" id="L98">    }</span>
+<span class="fc" id="L93">        logger.note(LogLocation.LOG_FILE, &quot;Removing &quot; + provider);</span>
+<span class="fc" id="L94">        removed.add(provider);</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        for (Type type : types.values()) {</span>
+<span class="fc" id="L96">            type.removeProvider(provider);</span>
+<span class="fc" id="L97">        }</span>
+<span class="fc" id="L98">    }</span>
 
     @Override
     public String toString() {
-<span class="nc" id="L102">        return types.values().toString();</span>
+<span class="fc" id="L102">        return types.values().toString();</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

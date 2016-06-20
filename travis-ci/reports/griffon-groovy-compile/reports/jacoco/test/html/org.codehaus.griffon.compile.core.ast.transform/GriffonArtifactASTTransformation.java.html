@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GriffonArtifactASTTransformation.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-groovy-compile</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.compile.core.ast.transform</a> &gt; <span class="el_source">GriffonArtifactASTTransformation.java</span></div><h1>GriffonArtifactASTTransformation.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GriffonArtifactASTTransformation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-groovy-compile</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.compile.core.ast.transform</a> &gt; <span class="el_source">GriffonArtifactASTTransformation.java</span></div><h1>GriffonArtifactASTTransformation.java</h1><pre class="source lang-java linenums">/*
  * Copyright 2008-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -70,58 +70,46 @@ import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectInterf
     public void visit(ASTNode[] nodes, SourceUnit source) {
 <span class="fc" id="L71">        ModuleNode moduleNode = (ModuleNode) nodes[0];</span>
 <span class="fc" id="L72">        ClassNode classNode = moduleNode.getClasses().get(0);</span>
-<span class="fc bfc" id="L73" title="All 4 branches covered.">        if (classNode.isDerivedFrom(ClassHelper.SCRIPT_TYPE) &amp;&amp; !allowsScriptAsArtifact() ||</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        if (classNode.isDerivedFrom(ClassHelper.SCRIPT_TYPE) ||</span>
 <span class="fc bfc" id="L74" title="All 2 branches covered.">            !matches(classNode, source)) {</span>
 <span class="fc" id="L75">            return;</span>
         }
 <span class="fc" id="L77">        transform(classNode);</span>
 <span class="fc" id="L78">    }</span>
 
-    protected boolean allowsScriptAsArtifact() {
-<span class="fc" id="L81">        return false;</span>
-    }
-
     protected void transform(ClassNode classNode) {
-<span class="fc" id="L85">        ClassNode superClass = classNode.getSuperClass();</span>
-<span class="fc" id="L86">        ClassNode superScriptClassNode = getSuperScriptClassNode(classNode);</span>
-<span class="fc" id="L87">        ClassNode superClassNode = getSuperClassNode(classNode);</span>
-<span class="pc bpc" id="L88" title="2 of 6 branches missed.">        if (superScriptClassNode != null &amp;&amp; allowsScriptAsArtifact() &amp;&amp; classNode.isDerivedFrom(ClassHelper.SCRIPT_TYPE)) {</span>
-<span class="nc" id="L89">            LOG.debug(&quot;Setting {} as the superclass of {}&quot;, superScriptClassNode.getName(), classNode.getName());</span>
-<span class="nc" id="L90">            classNode.setSuperClass(superScriptClassNode);</span>
-<span class="pc bpc" id="L91" title="1 of 4 branches missed.">        } else if (superClassNode != null &amp;&amp; ClassHelper.OBJECT_TYPE.equals(superClass)) {</span>
-<span class="fc" id="L92">            LOG.debug(&quot;Setting {} as the superclass of {}&quot;, superClassNode.getName(), classNode.getName());</span>
-<span class="fc" id="L93">            classNode.setSuperClass(superClassNode);</span>
-<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        } else if (!classNode.implementsInterface(getInterfaceNode())) {</span>
-<span class="fc" id="L95">            inject(classNode, superClass);</span>
+<span class="fc" id="L81">        ClassNode superClass = classNode.getSuperClass();</span>
+<span class="fc" id="L82">        ClassNode superClassNode = getSuperClassNode(classNode);</span>
+<span class="pc bpc" id="L83" title="1 of 4 branches missed.">        if (superClassNode != null &amp;&amp; ClassHelper.OBJECT_TYPE.equals(superClass)) {</span>
+<span class="fc" id="L84">            LOG.debug(&quot;Setting {} as the superclass of {}&quot;, superClassNode.getName(), classNode.getName());</span>
+<span class="fc" id="L85">            classNode.setSuperClass(superClassNode);</span>
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">        } else if (!classNode.implementsInterface(getInterfaceNode())) {</span>
+<span class="fc" id="L87">            inject(classNode, superClass);</span>
         }
-<span class="fc" id="L97">    }</span>
+<span class="fc" id="L89">    }</span>
 
     protected void inject(ClassNode classNode, ClassNode superClass) {
-<span class="fc" id="L100">        SourceUnit superSource = SourceUnitCollector.getInstance().getSourceUnit(superClass);</span>
+<span class="fc" id="L92">        SourceUnit superSource = SourceUnitCollector.getInstance().getSourceUnit(superClass);</span>
 
-<span class="pc bpc" id="L102" title="1 of 2 branches missed.">        if (superSource == null) {</span>
-<span class="fc" id="L103">            ClassNode interfaceNode = getInterfaceNode();</span>
-<span class="fc" id="L104">            LOG.debug(&quot;Injecting {} behavior to {}&quot;, interfaceNode.getName(), classNode.getName());</span>
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        if (superSource == null) {</span>
+<span class="fc" id="L95">            ClassNode interfaceNode = getInterfaceNode();</span>
+<span class="fc" id="L96">            LOG.debug(&quot;Injecting {} behavior to {}&quot;, interfaceNode.getName(), classNode.getName());</span>
             // 1. add interface
-<span class="fc" id="L106">            injectInterface(classNode, interfaceNode);</span>
+<span class="fc" id="L98">            injectInterface(classNode, interfaceNode);</span>
             // 2. add methods
-<span class="fc bfc" id="L108" title="All 2 branches covered.">            for (ASTInjector injector : getASTInjectors()) {</span>
-<span class="fc" id="L109">                injector.inject(classNode, getArtifactType());</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">            for (ASTInjector injector : getASTInjectors()) {</span>
+<span class="fc" id="L101">                injector.inject(classNode, getArtifactType());</span>
             }
-<span class="fc" id="L111">            postInject(classNode);</span>
-<span class="pc bnc" id="L112" title="All 2 branches missed.">        } else if (!matches(superClass, superSource)) {</span>
-<span class="nc" id="L113">            transform(superClass);</span>
+<span class="fc" id="L103">            postInject(classNode);</span>
+<span class="pc bnc" id="L104" title="All 2 branches missed.">        } else if (!matches(superClass, superSource)) {</span>
+<span class="nc" id="L105">            transform(superClass);</span>
         }
-<span class="fc" id="L115">    }</span>
+<span class="fc" id="L107">    }</span>
 
     protected abstract String getArtifactType();
 
-    protected ClassNode getSuperScriptClassNode(ClassNode classNode) {
-<span class="fc" id="L120">        return null;</span>
-    }
-
     protected ClassNode getSuperClassNode(ClassNode classNode) {
-<span class="nc" id="L124">        return null;</span>
+<span class="nc" id="L112">        return null;</span>
     }
 
     protected abstract ClassNode getInterfaceNode();
@@ -132,6 +120,6 @@ import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectInterf
 
     protected void postInject(ClassNode classNode) {
 
-<span class="fc" id="L135">    }</span>
+<span class="fc" id="L123">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

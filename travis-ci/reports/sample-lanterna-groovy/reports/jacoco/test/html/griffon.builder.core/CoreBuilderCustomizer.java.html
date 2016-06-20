@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>CoreBuilderCustomizer.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-lanterna-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.builder.core</a> &gt; <span class="el_source">CoreBuilderCustomizer.java</span></div><h1>CoreBuilderCustomizer.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CoreBuilderCustomizer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-lanterna-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.builder.core</a> &gt; <span class="el_source">CoreBuilderCustomizer.java</span></div><h1>CoreBuilderCustomizer.java</h1><pre class="source lang-java linenums">/*
  * Copyright 2008-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -16,17 +16,20 @@
 package griffon.builder.core;
 
 import griffon.builder.core.factory.MetaComponentFactory;
-import griffon.builder.core.factory.RootFactory;
 import griffon.core.threading.UIThreadManager;
 import groovy.lang.Closure;
 import groovy.util.Factory;
+import groovy.util.FactoryBuilderSupport;
 import org.codehaus.griffon.runtime.groovy.view.AbstractBuilderCustomizer;
 import org.codehaus.groovy.runtime.MethodClosure;
 
+import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,26 +37,52 @@ import java.util.Map;
  */
 @Named(&quot;core&quot;)
 public class CoreBuilderCustomizer extends AbstractBuilderCustomizer {
+    private static final String KEY_ROOT_NODE_NAME = &quot;ROOT_NODE_NAME&quot;;
     @Inject
     private UIThreadManager uiThreadManager;
 
-<span class="nc" id="L40">    public CoreBuilderCustomizer() {</span>
-<span class="nc" id="L41">        Map&lt;String, Factory&gt; factories = new LinkedHashMap&lt;&gt;();</span>
-<span class="nc" id="L42">        factories.put(&quot;root&quot;, new RootFactory());</span>
-<span class="nc" id="L43">        factories.put(&quot;metaComponent&quot;, new MetaComponentFactory());</span>
-<span class="nc" id="L44">        setFactories(factories);</span>
-
-<span class="nc" id="L46">    }</span>
+<span class="nc" id="L44">    public CoreBuilderCustomizer() {</span>
+<span class="nc" id="L45">        Map&lt;String, Factory&gt; factories = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L46">        factories.put(&quot;metaComponent&quot;, new MetaComponentFactory());</span>
+<span class="nc" id="L47">        setFactories(factories);</span>
+<span class="nc" id="L48">    }</span>
 
     @PostConstruct
     private void setup() {
-<span class="nc" id="L50">        Map&lt;String, Closure&gt; methods = new LinkedHashMap&lt;&gt;();</span>
-<span class="nc" id="L51">        methods.put(&quot;runInsideUISync&quot;, new MethodClosure(uiThreadManager, &quot;runInsideUISync&quot;));</span>
-<span class="nc" id="L52">        methods.put(&quot;runInsideUIAsync&quot;, new MethodClosure(uiThreadManager, &quot;runInsideUIAsync&quot;));</span>
-<span class="nc" id="L53">        methods.put(&quot;runOutsideUI&quot;, new MethodClosure(uiThreadManager, &quot;runOutsideUI&quot;));</span>
-<span class="nc" id="L54">        methods.put(&quot;runFuture&quot;, new MethodClosure(uiThreadManager, &quot;runFuture&quot;));</span>
-<span class="nc" id="L55">        methods.put(&quot;isUIThread&quot;, new MethodClosure(uiThreadManager, &quot;isUIThread&quot;));</span>
-<span class="nc" id="L56">        setMethods(methods);</span>
-<span class="nc" id="L57">    }</span>
+<span class="nc" id="L52">        Map&lt;String, Closure&gt; methods = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L53">        methods.put(&quot;runInsideUISync&quot;, new MethodClosure(uiThreadManager, &quot;runInsideUISync&quot;));</span>
+<span class="nc" id="L54">        methods.put(&quot;runInsideUIAsync&quot;, new MethodClosure(uiThreadManager, &quot;runInsideUIAsync&quot;));</span>
+<span class="nc" id="L55">        methods.put(&quot;runOutsideUI&quot;, new MethodClosure(uiThreadManager, &quot;runOutsideUI&quot;));</span>
+<span class="nc" id="L56">        methods.put(&quot;runFuture&quot;, new MethodClosure(uiThreadManager, &quot;runFuture&quot;));</span>
+<span class="nc" id="L57">        methods.put(&quot;isUIThread&quot;, new MethodClosure(uiThreadManager, &quot;isUIThread&quot;));</span>
+<span class="nc" id="L58">        setMethods(methods);</span>
+<span class="nc" id="L59">    }</span>
+
+    @Nonnull
+    @Override
+    public List&lt;Closure&gt; getPreInstantiateDelegates() {
+<span class="nc" id="L64">        return Arrays.&lt;Closure&gt;asList(new MethodClosure(this, &quot;rootNodePreInstantiateDelegate&quot;));</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Closure&gt; getPostNodeCompletionDelegates() {
+<span class="nc" id="L70">        return Arrays.&lt;Closure&gt;asList(new MethodClosure(this, &quot;rootNodePostNodeCompletionDelegate&quot;));</span>
+    }
+
+    protected void rootNodePreInstantiateDelegate(FactoryBuilderSupport builder, Map attributes, Object value) {
+<span class="nc" id="L74">        String name = String.valueOf(builder.getContext().get(FactoryBuilderSupport.CURRENT_NAME));</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">        if (!builder.hasVariable(KEY_ROOT_NODE_NAME)) {</span>
+<span class="nc" id="L76">            builder.setVariable(KEY_ROOT_NODE_NAME, name);</span>
+        }
+<span class="nc" id="L78">    }</span>
+
+    protected void rootNodePostNodeCompletionDelegate(FactoryBuilderSupport builder, Object parent, Object node) {
+<span class="nc" id="L81">        String name = String.valueOf(builder.getContext().get(FactoryBuilderSupport.CURRENT_NAME));</span>
+<span class="nc bnc" id="L82" title="All 4 branches missed.">        if (builder.getVariable(KEY_ROOT_NODE_NAME).equals(name) &amp;&amp; builder.hasVariable(&quot;mvcId&quot;)) {</span>
+<span class="nc" id="L83">            String mvcId = String.valueOf(builder.getVariable(&quot;mvcId&quot;));</span>
+<span class="nc" id="L84">            builder.getVariables().put(mvcId + &quot;-rootNode&quot;, node);</span>
+        }
+<span class="nc" id="L86">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
