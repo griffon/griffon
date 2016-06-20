@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" tests="6" skipped="0" failures="0" errors="0" timestamp="2016-06-20T06:41:33" hostname="testing-gce-dfc024f2-265a-4356-bfc2-a5a02638c044.c.travis-ci-prod-4.internal" time="0.083">
+<testsuite name="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" tests="6" skipped="0" failures="0" errors="0" timestamp="2016-06-20T06:53:00" hostname="testing-gce-ce54ca9a-5864-49bf-b4d1-0598d6a78117.c.travis-ci-prod-2.internal" time="0.092">
   <properties/>
-  <testcase name="Create throws class java.lang.IllegalArgumentException" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.064"/>
+  <testcase name="Create throws class java.lang.IllegalArgumentException" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.073"/>
   <testcase name="Create throws class java.lang.NullPointerException" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.001"/>
   <testcase name="Create throws class java.lang.IllegalArgumentException" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.002"/>
-  <testcase name="Excercise bundle creation with org.codehaus.griffon.runtime.util.NotFoundBundle" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.001"/>
+  <testcase name="Excercise bundle creation with org.codehaus.griffon.runtime.util.NotFoundBundle" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.002"/>
   <testcase name="Excercise bundle creation with org.codehaus.griffon.runtime.util.NotABundle" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.002"/>
-  <testcase name="Excercise bundle creation with org.codehaus.griffon.runtime.util.BrokenBundle" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.013"/>
+  <testcase name="Excercise bundle creation with org.codehaus.griffon.runtime.util.BrokenBundle" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.011"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[[Test worker] WARN org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder - An error occurred while loading resource bundle org/codehaus/griffon/runtime/util/BrokenBundle from file:/home/travis/build/griffon/griffon/subprojects/griffon-core/build/classes/test/org/codehaus/griffon/runtime/util/BrokenBundle.class
 java.lang.RuntimeException: Boom!
@@ -27,8 +27,8 @@ java.lang.RuntimeException: Boom!
 	at java.lang.reflect.Method.invoke(Method.java:498)
 	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:93)
 	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:325)
-	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1215)
-	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1024)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1212)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1021)
 	at org.codehaus.groovy.runtime.InvokerHelper.invokePojoMethod(InvokerHelper.java:911)
 	at org.codehaus.groovy.runtime.InvokerHelper.invokeMethod(InvokerHelper.java:902)
 	at org.spockframework.runtime.GroovyRuntimeUtil.invokeMethod(GroovyRuntimeUtil.java:174)
@@ -68,25 +68,25 @@ java.lang.RuntimeException: Boom!
 	at org.spockframework.runtime.BaseSpecRunner.runSpec(BaseSpecRunner.java:76)
 	at org.spockframework.runtime.BaseSpecRunner.run(BaseSpecRunner.java:67)
 	at org.spockframework.runtime.Sputnik.run(Sputnik.java:63)
-	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecuter.runTestClass(JUnitTestClassExecuter.java:114)
-	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecuter.execute(JUnitTestClassExecuter.java:57)
-	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassProcessor.processTestClass(JUnitTestClassProcessor.java:66)
-	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:51)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecuter.runTestClass(JUnitTestClassExecuter.java:105)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecuter.execute(JUnitTestClassExecuter.java:56)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassProcessor.processTestClass(JUnitTestClassProcessor.java:64)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:49)
+	at sun.reflect.GeneratedMethodAccessor80.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)
+	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.messaging.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:32)
+	at org.gradle.messaging.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:93)
+	at com.sun.proxy.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.processTestClass(TestWorker.java:106)
 	at sun.reflect.GeneratedMethodAccessor79.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
 	at java.lang.reflect.Method.invoke(Method.java:498)
-	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)
-	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
-	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:32)
-	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:93)
-	at com.sun.proxy.$Proxy2.processTestClass(Unknown Source)
-	at org.gradle.api.internal.tasks.testing.worker.TestWorker.processTestClass(TestWorker.java:109)
-	at sun.reflect.GeneratedMethodAccessor78.invoke(Unknown Source)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:498)
-	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)
-	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
-	at org.gradle.internal.remote.internal.hub.MessageHub$Handler.run(MessageHub.java:377)
+	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)
+	at org.gradle.messaging.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.messaging.remote.internal.hub.MessageHub$Handler.run(MessageHub.java:360)
 	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:54)
 	at org.gradle.internal.concurrent.StoppableExecutorImpl$1.run(StoppableExecutorImpl.java:40)
 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)

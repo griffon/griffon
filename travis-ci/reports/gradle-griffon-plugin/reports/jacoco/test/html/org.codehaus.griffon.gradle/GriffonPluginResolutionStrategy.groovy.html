@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GriffonPluginResolutionStrategy.groovy</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">gradle-griffon-plugin</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.gradle</a> &gt; <span class="el_source">GriffonPluginResolutionStrategy.groovy</span></div><h1>GriffonPluginResolutionStrategy.groovy</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GriffonPluginResolutionStrategy.groovy</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">gradle-griffon-plugin</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.gradle</a> &gt; <span class="el_source">GriffonPluginResolutionStrategy.groovy</span></div><h1>GriffonPluginResolutionStrategy.groovy</h1><pre class="source lang-java linenums">/*
  * Copyright 2008-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -16,14 +16,9 @@
 package org.codehaus.griffon.gradle
 
 import org.gradle.api.Action
-import org.gradle.api.Action
-import org.gradle.api.Project
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
-import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.Dependency
-import org.gradle.api.artifacts.Dependency
-import org.gradle.api.artifacts.ResolvableDependencies
 import org.gradle.api.artifacts.ResolvableDependencies
 
 /**
@@ -33,7 +28,7 @@ class GriffonPluginResolutionStrategy {
     private static final String PLUGIN_PREFIX = 'griffon-'
     private static final String PLUGIN_SUFFIX = '-plugin'
     private static final String GRIFFON_CONFIGURATION = 'griffon'
-<span class="nc" id="L36">    private static final List&lt;String&gt; CONFIGURATION_NAMES = [</span>
+<span class="fc" id="L31">    private static final List&lt;String&gt; CONFIGURATION_NAMES = [</span>
         'compile',
         'compileOnly',
         'testCompileOnly',
@@ -41,108 +36,129 @@ class GriffonPluginResolutionStrategy {
         'runtime'
     ]
 
-    private static final Map&lt;String, List&lt;String&gt;&gt; DEPENDENCY_MAP = [:]
-
     static void applyTo(Project project) {
-<span class="nc" id="L47">        GriffonPluginDependencyResolver resolver = new GriffonPluginDependencyResolver(project)</span>
+<span class="fc" id="L40">        GriffonPluginDependencyResolver resolver = new GriffonPluginDependencyResolver(project)</span>
+<span class="fc" id="L41">        project.configurations.getByName(GRIFFON_CONFIGURATION).incoming.beforeResolve(resolver)</span>
+<span class="fc" id="L42">        CONFIGURATION_NAMES.each { String configurationName -&gt;</span>
+<span class="fc" id="L43">            Configuration configuration = project.configurations.getByName(configurationName)</span>
+<span class="pc" id="L44">            configuration.incoming.beforeResolve(new GriffonDependencyResolver(configurationName, resolver))</span>
+        }
+    }
 
-<span class="nc" id="L49">        Configuration griffonConfiguration = project.configurations.getByName(GRIFFON_CONFIGURATION)</span>
-<span class="nc" id="L50">        griffonConfiguration.incoming.beforeResolve(resolver)</span>
-<span class="nc" id="L51">        griffonConfiguration.resolve()</span>
+    private static class GriffonDependencyResolver implements Action&lt;ResolvableDependencies&gt; {
+        private final GriffonPluginDependencyResolver resolver
+        private final String configurationName
 
-<span class="nc" id="L53">        CONFIGURATION_NAMES.each { String configurationName -&gt;</span>
-<span class="nc" id="L54">            DEPENDENCY_MAP[configurationName].each { String dependency -&gt;</span>
-<span class="nc" id="L55">                project.logger.info(&quot;Adding {} to '{}' configuration&quot;, configurationName, dependency)</span>
-<span class="nc" id="L56">                resolver.project.dependencies.add(configurationName, dependency)</span>
+        GriffonDependencyResolver(String configurationName, GriffonPluginDependencyResolver resolver) {
+<span class="fc" id="L53">            this.resolver = resolver</span>
+<span class="fc" id="L54">            this.configurationName = configurationName</span>
+        }
+
+        @Override
+        void execute(ResolvableDependencies resolvableDependencies) {
+<span class="nc bnc" id="L59" title="All 2 branches missed.">            if (resolver.project.extensions.getByName(GRIFFON_CONFIGURATION).disableDependencyResolution) {</span>
+<span class="nc" id="L60">                return</span>
+            }
+
+<span class="nc bnc" id="L63" title="All 4 branches missed.">            if (!resolver.dependencyMap) {</span>
+<span class="nc" id="L64">                resolver.project.configurations.getByName(GRIFFON_CONFIGURATION).resolve()</span>
+            }
+<span class="nc" id="L66">            resolver.dependencyMap[configurationName].each { String dependency -&gt;</span>
+<span class="nc" id="L67">                resolver.project.dependencies.add(configurationName, dependency)</span>
             }
         }
     }
 
     private static class GriffonPluginDependencyResolver implements Action&lt;ResolvableDependencies&gt; {
         final Project project
+        final Map&lt;String, List&lt;String&gt;&gt; dependencyMap = [:]
 
         GriffonPluginDependencyResolver(Project project) {
-<span class="nc" id="L65">            this.project = project</span>
+<span class="fc" id="L77">            this.project = project</span>
         }
 
         @Override
         void execute(ResolvableDependencies resolvableDependencies) {
-<span class="nc" id="L70">            String toolkit = griffonExtension.toolkit</span>
-<span class="nc" id="L71">            project.logger.info(&quot;UI toolkit for project {} is {}&quot;, project.name, toolkit)</span>
-<span class="nc" id="L72">            String toolkitRegex = (GriffonExtension.TOOLKIT_NAMES - toolkit).join('|')</span>
+<span class="nc" id="L82">            String toolkit = griffonExtension.toolkit</span>
+<span class="nc" id="L83">            project.logger.info(&quot;UI toolkit for project {} is {}&quot;, project.name, toolkit)</span>
+<span class="nc" id="L84">            String toolkitRegex = (GriffonExtension.TOOLKIT_NAMES - toolkit).join('|')</span>
 
-<span class="nc bnc" id="L74" title="All 2 branches missed.">            boolean groovyDependenciesEnabled = griffonExtension.includeGroovyDependencies?.toBoolean() ||</span>
-<span class="nc bnc" id="L75" title="All 6 branches missed.">                (project.plugins.hasPlugin('groovy') &amp;&amp; griffonExtension.includeGroovyDependencies == null)</span>
-<span class="nc bnc" id="L76" title="All 2 branches missed.">            project.logger.info(&quot;Groovy dependencies are {}enabled in project {}&quot;, (groovyDependenciesEnabled ? '' : 'NOT '), project.name)</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">            boolean groovyDependenciesEnabled = griffonExtension.includeGroovyDependencies?.toBoolean() ||</span>
+<span class="nc bnc" id="L87" title="All 6 branches missed.">                (project.plugins.hasPlugin('groovy') &amp;&amp; griffonExtension.includeGroovyDependencies == null)</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">            project.logger.info(&quot;Groovy dependencies are {}enabled in project {}&quot;, (groovyDependenciesEnabled ? '' : 'NOT '), project.name)</span>
 
-<span class="nc" id="L78">            resolvableDependencies.dependencies.each { Dependency dependency -&gt;</span>
-<span class="nc" id="L79">                String pluginName = dependency.name</span>
-<span class="nc bnc" id="L80" title="All 6 branches missed.">                if (pluginName.startsWith(PLUGIN_PREFIX) &amp;&amp; pluginName.endsWith(PLUGIN_SUFFIX)) {</span>
-<span class="nc" id="L81">                    String bomDependency = &quot;${dependency.group}:${dependency.name}:${dependency.version}@pom&quot;</span>
+<span class="nc" id="L90">            resolvableDependencies.dependencies.each { Dependency dependency -&gt;</span>
+<span class="nc" id="L91">                String pluginName = dependency.name</span>
+<span class="nc bnc" id="L92" title="All 6 branches missed.">                if (pluginName.startsWith(PLUGIN_PREFIX) &amp;&amp; pluginName.endsWith(PLUGIN_SUFFIX)) {</span>
+<span class="nc" id="L93">                    String bomDependency = &quot;${dependency.group}:${dependency.name}:${dependency.version}@pom&quot;</span>
 
-<span class="nc" id="L83">                    project.logger.info(&quot;Resolving {}&quot;, bomDependency)</span>
-<span class="nc" id="L84">                    File bomFile = project.configurations.detachedConfiguration(</span>
-<span class="nc" id="L85">                        project.dependencies.create(bomDependency)</span>
+<span class="nc" id="L95">                    project.logger.info(&quot;Resolving {}&quot;, bomDependency)</span>
+<span class="nc" id="L96">                    File bomFile = project.configurations.detachedConfiguration(</span>
+<span class="nc" id="L97">                        project.dependencies.create(bomDependency)</span>
                     ).singleFile
-<span class="nc" id="L87">                    def bom = new XmlSlurper().parse(bomFile)</span>
+<span class="nc" id="L99">                    def bom = new XmlSlurper().parse(bomFile)</span>
 
-<span class="nc" id="L89">                    bom.dependencyManagement.dependencies.dependency.each { importedDependency -&gt;</span>
-<span class="nc bnc" id="L90" title="All 4 branches missed.">                        if (Boolean.parseBoolean(importedDependency.optional?.text() ?: 'false')) {</span>
-<span class="nc" id="L91">                            return</span>
+<span class="nc" id="L101">                    bom.dependencyManagement.dependencies.dependency.each { importedDependency -&gt;</span>
+<span class="nc bnc" id="L102" title="All 4 branches missed.">                        if (Boolean.parseBoolean(importedDependency.optional?.text() ?: 'false')) {</span>
+<span class="nc" id="L103">                            return</span>
                         }
 
-<span class="nc" id="L94">                        String groupId = importedDependency.groupId.text()</span>
-<span class="nc" id="L95">                        String artifactId = importedDependency.artifactId.text()</span>
-<span class="nc" id="L96">                        String version = importedDependency.version.text()</span>
-<span class="nc bnc" id="L97" title="All 2 branches missed.">                        String scope = importedDependency.scope?.text() ?: 'compile'</span>
+<span class="nc" id="L106">                        String groupId = importedDependency.groupId.text()</span>
+<span class="nc" id="L107">                        String artifactId = importedDependency.artifactId.text()</span>
+<span class="nc" id="L108">                        String version = importedDependency.version.text()</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">                        String scope = importedDependency.scope?.text() ?: 'compile'</span>
 
-<span class="nc bnc" id="L99" title="All 2 branches missed.">                        groupId = groupId == '${project.groupId}' ? dependency.group : groupId</span>
-<span class="nc bnc" id="L100" title="All 2 branches missed.">                        version = version == '${project.version}' ? dependency.version : version</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">                        groupId = groupId == '${project.groupId}' ? dependency.group : groupId</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">                        version = version == '${project.version}' ? dependency.version : version</span>
 
-<span class="nc" id="L102">                        String dependencyCoordinates = [groupId, artifactId, version].join(':')</span>
-<span class="nc" id="L103">                        project.logger.info(&quot;Processing {} in scope {}&quot;, dependencyCoordinates, scope)</span>
+<span class="nc" id="L114">                        String dependencyCoordinates = [groupId, artifactId, version].join(':')</span>
+<span class="nc" id="L115">                        project.logger.info(&quot;Processing {} in scope {}&quot;, dependencyCoordinates, scope)</span>
 
-<span class="nc bnc" id="L105" title="All 2 branches missed.">                        if (toolkit) {</span>
-<span class="nc bnc" id="L106" title="All 2 branches missed.">                            if (artifactId =~ /$toolkitRegex/) {</span>
-<span class="nc" id="L107">                                return</span>
-<span class="nc bnc" id="L108" title="All 4 branches missed.">                            } else if (!maybeIncludeGroovyDependency(groovyDependenciesEnabled, artifactId, scope, dependencyCoordinates)) {</span>
-<span class="nc" id="L109">                                appendDependency(artifactId, scope, dependencyCoordinates)</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">                        if (toolkit) {</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">                            if (artifactId =~ /$toolkitRegex/) {</span>
+<span class="nc" id="L119">                                return</span>
+<span class="nc bnc" id="L120" title="All 4 branches missed.">                            } else if (!maybeIncludeGroovyDependency(groovyDependenciesEnabled, artifactId, scope, dependencyCoordinates)) {</span>
+<span class="nc" id="L121">                                appendDependency(artifactId, scope, dependencyCoordinates)</span>
                             }
-<span class="nc bnc" id="L111" title="All 4 branches missed.">                        } else if (!maybeIncludeGroovyDependency(groovyDependenciesEnabled, artifactId, scope, dependencyCoordinates)) {</span>
-<span class="nc" id="L112">                            appendDependency(artifactId, scope, dependencyCoordinates)</span>
+<span class="nc bnc" id="L123" title="All 4 branches missed.">                        } else if (!maybeIncludeGroovyDependency(groovyDependenciesEnabled, artifactId, scope, dependencyCoordinates)) {</span>
+<span class="nc" id="L124">                            appendDependency(artifactId, scope, dependencyCoordinates)</span>
                         }
                     }
                 } else {
-<span class="nc" id="L116">                    project.logger.warn(&quot;Dependency {}:{}:{} does not appear to be a valid Griffon plugin!&quot;,</span>
+<span class="nc" id="L128">                    project.logger.warn(&quot;Dependency {}:{}:{} does not appear to be a valid Griffon plugin!&quot;,</span>
                         dependency.group, dependency.name, dependency.version)
                 }
             }
         }
 
         private GriffonExtension getGriffonExtension() {
-<span class="nc" id="L123">            project.extensions.getByName(GRIFFON_CONFIGURATION)</span>
+<span class="nc" id="L135">            project.extensions.getByName(GRIFFON_CONFIGURATION)</span>
         }
 
         private boolean maybeIncludeGroovyDependency(boolean groovyDependenciesEnabled, String artifactId, String scope, String dependencyCoordinates) {
-<span class="nc bnc" id="L127" title="All 2 branches missed.">            if (artifactId =~ /groovy/) {</span>
-<span class="nc bnc" id="L128" title="All 2 branches missed.">                if (groovyDependenciesEnabled) {</span>
-<span class="nc" id="L129">                    appendDependency(artifactId, scope, dependencyCoordinates)</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">            if (artifactId =~ /groovy/) {</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">                if (groovyDependenciesEnabled) {</span>
+<span class="nc" id="L141">                    appendDependency(artifactId, scope, dependencyCoordinates)</span>
                 }
-<span class="nc" id="L131">                return true</span>
+<span class="nc" id="L143">                return true</span>
             }
-<span class="nc" id="L133">            false</span>
+<span class="nc" id="L145">            false</span>
         }
 
         private void appendDependency(String artifactId, String scope, String dependencyCoordinates) {
-<span class="nc bnc" id="L137" title="All 2 branches missed.">            if (artifactId.endsWith('-compile')) {</span>
-<span class="nc" id="L138">                DEPENDENCY_MAP.get('compileOnly', []) &lt;&lt; dependencyCoordinates</span>
-<span class="nc" id="L139">                DEPENDENCY_MAP.get('testCompileOnly', []) &lt;&lt; dependencyCoordinates</span>
-<span class="nc bnc" id="L140" title="All 6 branches missed.">            } else if (scope == 'test' &amp;&amp; artifactId.endsWith('-test')) {</span>
-<span class="nc" id="L141">                DEPENDENCY_MAP.get('testCompile', []) &lt;&lt; dependencyCoordinates</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">            if (artifactId.endsWith('-compile')) {</span>
+<span class="nc" id="L150">                project.logger.info(&quot;Adding {} to 'compileOnly' configuration&quot;, dependencyCoordinates)</span>
+<span class="nc" id="L151">                dependencyMap.get('compileOnly', []) &lt;&lt; dependencyCoordinates</span>
+<span class="nc" id="L152">                project.logger.info(&quot;Adding {} to 'testCompileOnly' configuration&quot;, dependencyCoordinates)</span>
+<span class="nc" id="L153">                dependencyMap.get('testCompileOnly', []) &lt;&lt; dependencyCoordinates</span>
+<span class="nc bnc" id="L154" title="All 6 branches missed.">            } else if (scope == 'test' &amp;&amp; artifactId.endsWith('-test')) {</span>
+<span class="nc" id="L155">                project.logger.info(&quot;Adding {} to 'testCompile' configuration&quot;, dependencyCoordinates)</span>
+<span class="nc" id="L156">                dependencyMap.get('testCompile', []) &lt;&lt; dependencyCoordinates</span>
             } else {
-<span class="nc" id="L143">                DEPENDENCY_MAP.get(scope, []) &lt;&lt; dependencyCoordinates</span>
+<span class="nc" id="L158">                project.logger.info(&quot;Adding {} to '{}' configuration&quot;, dependencyCoordinates, scope)</span>
+<span class="nc" id="L159">                dependencyMap.get(scope, []) &lt;&lt; dependencyCoordinates</span>
             }
         }
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

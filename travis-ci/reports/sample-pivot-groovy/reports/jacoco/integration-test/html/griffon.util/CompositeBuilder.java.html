@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CompositeBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.util</a> &gt; <span class="el_source">CompositeBuilder.java</span></div><h1>CompositeBuilder.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>CompositeBuilder.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.util</a> &gt; <span class="el_source">CompositeBuilder.java</span></div><h1>CompositeBuilder.java</h1><pre class="source lang-java linenums">/*
  * Copyright 2008-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -152,9 +152,9 @@ public class CompositeBuilder extends FactoryBuilderSupport {
 <span class="fc" id="L152">    }</span>
 
     private void doRegisterPreInstantiateDelegates(@Nonnull BuilderCustomizer customizer) {
-<span class="fc bfc" id="L155" title="All 2 branches covered.">        for (Closure c : customizer.getPreInstantiateDelegates()) {</span>
-<span class="fc" id="L156">            addPreInstantiateDelegate(c);</span>
-<span class="fc" id="L157">        }</span>
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">        for (Closure c : customizer.getPreInstantiateDelegates()) {</span>
+<span class="nc" id="L156">            addPreInstantiateDelegate(c);</span>
+<span class="nc" id="L157">        }</span>
 <span class="fc" id="L158">    }</span>
 
     private void doRegisterPostInstantiateDelegates(@Nonnull BuilderCustomizer customizer) {
@@ -164,9 +164,9 @@ public class CompositeBuilder extends FactoryBuilderSupport {
 <span class="fc" id="L164">    }</span>
 
     private void doRegisterPostNodeCompletionDelegates(@Nonnull BuilderCustomizer customizer) {
-<span class="fc bfc" id="L167" title="All 2 branches covered.">        for (Closure c : customizer.getPostNodeCompletionDelegates()) {</span>
-<span class="fc" id="L168">            addPostNodeCompletionDelegate(c);</span>
-<span class="fc" id="L169">        }</span>
+<span class="pc bpc" id="L167" title="1 of 2 branches missed.">        for (Closure c : customizer.getPostNodeCompletionDelegates()) {</span>
+<span class="nc" id="L168">            addPostNodeCompletionDelegate(c);</span>
+<span class="nc" id="L169">        }</span>
 <span class="fc" id="L170">    }</span>
 
     private void doDisposalClosures(@Nonnull BuilderCustomizer customizer) {
@@ -175,4 +175,4 @@ public class CompositeBuilder extends FactoryBuilderSupport {
 <span class="nc" id="L175">        }</span>
 <span class="fc" id="L176">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

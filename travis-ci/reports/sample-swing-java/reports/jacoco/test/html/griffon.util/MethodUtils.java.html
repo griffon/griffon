@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MethodUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-java</a> &gt; <a href="index.source.html" class="el_package">griffon.util</a> &gt; <span class="el_source">MethodUtils.java</span></div><h1>MethodUtils.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>MethodUtils.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-java</a> &gt; <a href="index.source.html" class="el_package">griffon.util</a> &gt; <span class="el_source">MethodUtils.java</span></div><h1>MethodUtils.java</h1><pre class="source lang-java linenums">/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -920,8 +920,8 @@ import java.util.WeakHashMap;
         try {
             // Check the cache first
 <span class="fc" id="L922">            Method method = getCachedMethod(md);</span>
-<span class="pc bpc" id="L923" title="1 of 2 branches missed.">            if (method != null) {</span>
-<span class="nc" id="L924">                return method;</span>
+<span class="fc bfc" id="L923" title="All 2 branches covered.">            if (method != null) {</span>
+<span class="fc" id="L924">                return method;</span>
             }
 
 <span class="fc" id="L927">            method = clazz.getMethod(methodName, parameterTypes);</span>
@@ -1190,8 +1190,8 @@ import java.util.WeakHashMap;
     private static Method getCachedMethod(MethodDescriptor md) {
 <span class="pc bpc" id="L1191" title="1 of 2 branches missed.">        if (CACHE_METHODS) {</span>
 <span class="fc" id="L1192">            Reference methodRef = (Reference) cache.get(md);</span>
-<span class="pc bpc" id="L1193" title="1 of 2 branches missed.">            if (methodRef != null) {</span>
-<span class="nc" id="L1194">                return (Method) methodRef.get();</span>
+<span class="fc bfc" id="L1193" title="All 2 branches covered.">            if (methodRef != null) {</span>
+<span class="fc" id="L1194">                return (Method) methodRef.get();</span>
             }
         }
 <span class="fc" id="L1197">        return null;</span>
@@ -1266,16 +1266,16 @@ import java.util.WeakHashMap;
          * @return true, if the object describes the same Method.
          */
         public boolean equals(Object obj) {
-<span class="nc bnc" id="L1269" title="All 2 branches missed.">            if (!(obj instanceof MethodDescriptor)) {</span>
+<span class="pc bpc" id="L1269" title="1 of 2 branches missed.">            if (!(obj instanceof MethodDescriptor)) {</span>
 <span class="nc" id="L1270">                return false;</span>
             }
-<span class="nc" id="L1272">            MethodDescriptor md = (MethodDescriptor) obj;</span>
+<span class="fc" id="L1272">            MethodDescriptor md = (MethodDescriptor) obj;</span>
 
-<span class="nc bnc" id="L1274" title="All 2 branches missed.">            return (</span>
+<span class="pc bpc" id="L1274" title="1 of 2 branches missed.">            return (</span>
                 exact == md.exact &amp;&amp;
-<span class="nc bnc" id="L1276" title="All 2 branches missed.">                    methodName.equals(md.methodName) &amp;&amp;</span>
-<span class="nc bnc" id="L1277" title="All 2 branches missed.">                    cls.equals(md.cls) &amp;&amp;</span>
-<span class="nc bnc" id="L1278" title="All 2 branches missed.">                    java.util.Arrays.equals(paramTypes, md.paramTypes)</span>
+<span class="pc bpc" id="L1276" title="1 of 2 branches missed.">                    methodName.equals(md.methodName) &amp;&amp;</span>
+<span class="pc bpc" id="L1277" title="1 of 2 branches missed.">                    cls.equals(md.cls) &amp;&amp;</span>
+<span class="pc bpc" id="L1278" title="1 of 2 branches missed.">                    java.util.Arrays.equals(paramTypes, md.paramTypes)</span>
             );
         }
 
@@ -1292,4 +1292,4 @@ import java.util.WeakHashMap;
         }
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GriffonViewASTTransformation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-groovy-compile</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.compile.core.ast.transform</a> &gt; <span class="el_source">GriffonViewASTTransformation.java</span></div><h1>GriffonViewASTTransformation.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GriffonViewASTTransformation.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-groovy-compile</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.compile.core.ast.transform</a> &gt; <span class="el_source">GriffonViewASTTransformation.java</span></div><h1>GriffonViewASTTransformation.java</h1><pre class="source lang-java linenums">/*
  * Copyright 2008-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -18,6 +18,7 @@ package org.codehaus.griffon.compile.core.ast.transform;
 import griffon.core.artifact.GriffonView;
 import griffon.core.artifact.GriffonViewClass;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
+import org.codehaus.griffon.runtime.groovy.view.AbstractGriffonViewScript;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
@@ -29,47 +30,56 @@ import javax.annotation.Nonnull;
 
 /**
  * Handles generation of code for Griffon controllers.
- * &lt;p&gt;
+ * &lt;p/&gt;
  *
  * @author Andres Almiray
  * @since 2.0.0
  */
 @ServiceProviderFor(ASTTransformation.class)
 @GroovyASTTransformation(phase = CompilePhase.SEMANTIC_ANALYSIS)
-<span class="fc" id="L39">public class GriffonViewASTTransformation extends GriffonArtifactASTTransformation {</span>
-<span class="fc" id="L40">    private static final ClassNode GRIFFON_VIEW_CLASS = makeClassSafe(GriffonView.class);</span>
-<span class="fc" id="L41">    private static final ClassNode ABSTRACT_GRIFFON_VIEW_CLASS = makeClassSafe(AbstractGriffonView.class);</span>
+<span class="fc" id="L40">public class GriffonViewASTTransformation extends GriffonArtifactASTTransformation {</span>
+<span class="fc" id="L41">    private static final ClassNode GRIFFON_VIEW_CLASS = makeClassSafe(GriffonView.class);</span>
+<span class="fc" id="L42">    private static final ClassNode ABSTRACT_GRIFFON_VIEW_CLASS = makeClassSafe(AbstractGriffonView.class);</span>
+<span class="fc" id="L43">    private static final ClassNode ABSTRACT_GRIFFON_VIEW_SCRIPT_CLASS = makeClassSafe(AbstractGriffonViewScript.class);</span>
 
     public static boolean isViewArtifact(@Nonnull ClassNode classNode, @Nonnull SourceUnit source) {
-<span class="fc" id="L44">        return isArtifact(classNode, source, GRIFFON_VIEW_CLASS);</span>
+<span class="fc" id="L46">        return isArtifact(classNode, source, GRIFFON_VIEW_CLASS);</span>
+    }
+
+    protected boolean allowsScriptAsArtifact() {
+<span class="fc" id="L50">        return true;</span>
     }
 
     protected String getArtifactType() {
-<span class="fc" id="L48">        return GriffonViewClass.TYPE;</span>
+<span class="fc" id="L54">        return GriffonViewClass.TYPE;</span>
+    }
+
+    protected ClassNode getSuperScriptClassNode(ClassNode classNode) {
+<span class="fc" id="L58">        return ABSTRACT_GRIFFON_VIEW_SCRIPT_CLASS;</span>
     }
 
     protected ClassNode getSuperClassNode(ClassNode classNode) {
-<span class="fc" id="L52">        return ABSTRACT_GRIFFON_VIEW_CLASS;</span>
+<span class="fc" id="L62">        return ABSTRACT_GRIFFON_VIEW_CLASS;</span>
     }
 
     protected ClassNode getInterfaceNode() {
-<span class="fc" id="L56">        return GRIFFON_VIEW_CLASS;</span>
+<span class="fc" id="L66">        return GRIFFON_VIEW_CLASS;</span>
     }
 
     protected boolean matches(ClassNode classNode, SourceUnit source) {
-<span class="fc" id="L60">        return isViewArtifact(classNode, source);</span>
+<span class="fc" id="L70">        return isViewArtifact(classNode, source);</span>
     }
 
     protected ASTInjector[] getASTInjectors() {
-<span class="fc" id="L64">        return new ASTInjector[]{</span>
+<span class="fc" id="L74">        return new ASTInjector[]{</span>
             new GriffonMvcArtifactASTInjector(),
-<span class="fc" id="L66">            new AbstractASTInjector() {</span>
+<span class="fc" id="L76">            new AbstractASTInjector() {</span>
                 @Override
                 public void inject(@Nonnull ClassNode classNode, @Nonnull String artifactType) {
-<span class="fc" id="L69">                    AbstractASTTransformation.injectApplication(classNode);</span>
-<span class="fc" id="L70">                }</span>
+<span class="fc" id="L79">                    AbstractASTTransformation.injectApplication(classNode);</span>
+<span class="fc" id="L80">                }</span>
             }
         };
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

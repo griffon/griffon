@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LinearGradientPaintPropertyEditor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-swing</a> &gt; <a href="index.source.html" class="el_package">griffon.swing.editors</a> &gt; <span class="el_source">LinearGradientPaintPropertyEditor.java</span></div><h1>LinearGradientPaintPropertyEditor.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>LinearGradientPaintPropertyEditor.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-swing</a> &gt; <a href="index.source.html" class="el_package">griffon.swing.editors</a> &gt; <span class="el_source">LinearGradientPaintPropertyEditor.java</span></div><h1>LinearGradientPaintPropertyEditor.java</h1><pre class="source lang-java linenums">/*
  * Copyright 2008-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -123,7 +123,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="fc" id="L123">                y2 = parseValue(parts[3]);</span>
 <span class="fc" id="L124">                fractions = parseFractions(str, parts[4].trim());</span>
 <span class="fc" id="L125">                colors = parseColors(str, parts[5].trim());</span>
-<span class="fc bfc" id="L126" title="All 2 branches covered.">                if (fractions.length != colors.length) {</span>
+<span class="pc bpc" id="L126" title="1 of 2 branches missed.">                if (fractions.length != colors.length) {</span>
 <span class="nc" id="L127">                    throw illegalValue(str, LinearGradientPaint.class);</span>
                 }
 <span class="fc" id="L129">                super.setValueInternal(new LinearGradientPaint(x1, y1, x2, y2, fractions, colors, cyclicMethod));</span>
@@ -156,7 +156,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="fc" id="L156">                y2 = parseValue(list.get(3));</span>
 <span class="fc" id="L157">                fractions = parseFractions(list, list.get(4));</span>
 <span class="fc" id="L158">                colors = parseColors(list, list.get(5));</span>
-<span class="fc bfc" id="L159" title="All 2 branches covered.">                if (fractions.length != colors.length) {</span>
+<span class="pc bpc" id="L159" title="1 of 2 branches missed.">                if (fractions.length != colors.length) {</span>
 <span class="nc" id="L160">                    throw illegalValue(list, LinearGradientPaint.class);</span>
                 }
 <span class="fc" id="L162">                super.setValueInternal(new LinearGradientPaint(x1, y1, x2, y2, fractions, colors, cyclicMethod));</span>
@@ -180,7 +180,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 
 <span class="fc" id="L181">        float[] fractions = parseFractions(map, map.get(&quot;fractions&quot;));</span>
 <span class="fc" id="L182">        Color[] colors = parseColors(map, map.get(&quot;colors&quot;));</span>
-<span class="fc bfc" id="L183" title="All 2 branches covered.">        if (fractions.length != colors.length) {</span>
+<span class="pc bpc" id="L183" title="1 of 2 branches missed.">        if (fractions.length != colors.length) {</span>
 <span class="nc" id="L184">            throw illegalValue(map, LinearGradientPaint.class);</span>
         }
 <span class="fc" id="L186">        Object cyclicValue = map.get(&quot;cycle&quot;);</span>
@@ -279,7 +279,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
     protected float parse(String val) {
         try {
 <span class="fc" id="L281">            return Float.parseFloat(val.trim());</span>
-<span class="fc" id="L282">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L282">        } catch (NumberFormatException e) {</span>
 <span class="nc" id="L283">            throw illegalValue(val, LinearGradientPaint.class, e);</span>
         }
     }
@@ -301,7 +301,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="fc" id="L301">        Object val = map.get(key);</span>
 <span class="pc bpc" id="L302" title="1 of 2 branches missed.">        if (null == val) {</span>
 <span class="nc" id="L303">            return defaultValue;</span>
-<span class="fc bfc" id="L304" title="All 2 branches covered.">        } else if (val instanceof CharSequence) {</span>
+<span class="pc bpc" id="L304" title="1 of 2 branches missed.">        } else if (val instanceof CharSequence) {</span>
 <span class="nc" id="L305">            return parse(String.valueOf(val));</span>
 <span class="pc bpc" id="L306" title="1 of 2 branches missed.">        } else if (val instanceof Number) {</span>
 <span class="fc" id="L307">            return parse((Number) val);</span>
@@ -309,4 +309,4 @@ import static griffon.util.GriffonNameUtils.isBlank;
 <span class="nc" id="L309">        throw illegalValue(map, LinearGradientPaint.class);</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

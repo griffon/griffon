@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TestApplicationBootstrapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-java</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core</a> &gt; <span class="el_source">TestApplicationBootstrapper.java</span></div><h1>TestApplicationBootstrapper.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TestApplicationBootstrapper.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-java</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core</a> &gt; <span class="el_source">TestApplicationBootstrapper.java</span></div><h1>TestApplicationBootstrapper.java</h1><pre class="source lang-java linenums">/*
  * Copyright 2008-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -175,19 +175,19 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
 <span class="fc" id="L175">        Method namedMethod = null;</span>
         try {
 <span class="nc" id="L177">            namedMethod = clazz.getDeclaredMethod(methodName);</span>
-<span class="fc" id="L178">        } catch (NoSuchMethodException e) {</span>
-<span class="pc bpc" id="L179" title="1 of 2 branches missed.">            if (annotatedMethod == null) {</span>
-<span class="fc" id="L180">                return Collections.emptyList();</span>
+<span class="nc" id="L178">            namedMethod.setAccessible(true);</span>
+<span class="fc" id="L179">        } catch (NoSuchMethodException e) {</span>
+<span class="pc bpc" id="L180" title="1 of 2 branches missed.">            if (annotatedMethod == null) {</span>
+<span class="fc" id="L181">                return Collections.emptyList();</span>
             }
-<span class="nc" id="L182">        }</span>
+<span class="nc" id="L183">        }</span>
 
-<span class="nc bnc" id="L184" title="All 4 branches missed.">        if (namedMethod != null &amp;&amp; annotatedMethod != namedMethod) {</span>
-<span class="nc" id="L185">            System.err.println(&quot;Usage of method named '&quot; + clazz.getName() + &quot;.&quot; + methodName + &quot;()' is discouraged. Rename the method and annotate it with @&quot; + annotationClass.getSimpleName());</span>
+<span class="nc bnc" id="L185" title="All 4 branches missed.">        if (namedMethod != null &amp;&amp; annotatedMethod != namedMethod) {</span>
+<span class="nc" id="L186">            System.err.println(&quot;Usage of method named '&quot; + clazz.getName() + &quot;.&quot; + methodName + &quot;()' is discouraged. Rename the method and annotate it with @&quot; + annotationClass.getSimpleName());</span>
         }
 
-<span class="nc bnc" id="L188" title="All 2 branches missed.">        Method method = annotatedMethod != null ? annotatedMethod : namedMethod;</span>
+<span class="nc bnc" id="L189" title="All 2 branches missed.">        Method method = annotatedMethod != null ? annotatedMethod : namedMethod;</span>
         try {
-<span class="nc" id="L190">            method.setAccessible(true);</span>
 <span class="nc" id="L191">            return (List&lt;Module&gt;) method.invoke(testCase);</span>
 <span class="nc" id="L192">        } catch (Exception e) {</span>
 <span class="nc" id="L193">            throw new IllegalArgumentException(&quot;An error occurred while initializing modules from &quot; + clazz.getName() + &quot;.&quot; + method.getName(), e);</span>
@@ -377,4 +377,4 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
 <span class="fc" id="L377">        }</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

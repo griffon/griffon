@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ArtifactCollector.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-core-compile</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.compile.core.processor.artifact</a> &gt; <span class="el_source">ArtifactCollector.java</span></div><h1>ArtifactCollector.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ArtifactCollector.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-core-compile</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.compile.core.processor.artifact</a> &gt; <span class="el_source">ArtifactCollector.java</span></div><h1>ArtifactCollector.java</h1><pre class="source lang-java linenums">/*
  * Copyright 2008-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -30,17 +30,17 @@ import java.util.Map;
  * @author Andres Almiray
  */
 public final class ArtifactCollector {
-<span class="fc" id="L33">    private final Map&lt;String, Artifact&gt; artifacts = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L34">    private final Map&lt;String, Artifact&gt; cached = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L33">    private final Map&lt;String, Artifact&gt; artifacts = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L34">    private final Map&lt;String, Artifact&gt; cached = new LinkedHashMap&lt;&gt;();</span>
 
-<span class="fc" id="L36">    private final List&lt;String&gt; removed = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L36">    private final List&lt;String&gt; removed = new ArrayList&lt;&gt;();</span>
     private final Initializer initializer;
     private final Logger logger;
 
-<span class="fc" id="L40">    public ArtifactCollector(Initializer initializer, Logger logger) {</span>
-<span class="fc" id="L41">        this.initializer = initializer;</span>
-<span class="fc" id="L42">        this.logger = logger;</span>
-<span class="fc" id="L43">    }</span>
+<span class="nc" id="L40">    public ArtifactCollector(Initializer initializer, Logger logger) {</span>
+<span class="nc" id="L41">        this.initializer = initializer;</span>
+<span class="nc" id="L42">        this.logger = logger;</span>
+<span class="nc" id="L43">    }</span>
 
     public void cache() {
 <span class="nc" id="L46">        this.cached.putAll(artifacts);</span>
@@ -64,41 +64,41 @@ public final class ArtifactCollector {
     }
 
     public Artifact getArtifact(String artifact) {
-<span class="fc bfc" id="L67" title="All 2 branches covered.">        if (artifact == null) {</span>
-<span class="fc" id="L68">            throw new NullPointerException(&quot;artifact&quot;);</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (artifact == null) {</span>
+<span class="nc" id="L68">            throw new NullPointerException(&quot;artifact&quot;);</span>
         }
-<span class="fc bfc" id="L70" title="All 2 branches covered.">        if (!artifacts.containsKey(artifact)) {</span>
-<span class="fc" id="L71">            Artifact newArtifact = new Artifact(logger, artifact);</span>
-<span class="fc" id="L72">            CharSequence initialData = initializer.initialData(artifact);</span>
-<span class="fc bfc" id="L73" title="All 2 branches covered.">            if (initialData != null) {</span>
-<span class="fc" id="L74">                newArtifact.fromProviderNamesList(initialData.toString());</span>
-<span class="fc bfc" id="L75" title="All 2 branches covered.">                for (String provider : removed) {</span>
-<span class="fc" id="L76">                    newArtifact.removeProvider(provider);</span>
-<span class="fc" id="L77">                }</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        if (!artifacts.containsKey(artifact)) {</span>
+<span class="nc" id="L71">            Artifact newArtifact = new Artifact(logger, artifact);</span>
+<span class="nc" id="L72">            CharSequence initialData = initializer.initialData(artifact);</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">            if (initialData != null) {</span>
+<span class="nc" id="L74">                newArtifact.fromProviderNamesList(initialData.toString());</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">                for (String provider : removed) {</span>
+<span class="nc" id="L76">                    newArtifact.removeProvider(provider);</span>
+<span class="nc" id="L77">                }</span>
             }
-<span class="fc" id="L79">            artifacts.put(artifact, newArtifact);</span>
+<span class="nc" id="L79">            artifacts.put(artifact, newArtifact);</span>
         }
-<span class="fc" id="L81">        return artifacts.get(artifact);</span>
+<span class="nc" id="L81">        return artifacts.get(artifact);</span>
     }
 
     public Collection&lt;Artifact&gt; artifacts() {
-<span class="fc" id="L85">        return Collections.unmodifiableMap(artifacts).values();</span>
+<span class="nc" id="L85">        return Collections.unmodifiableMap(artifacts).values();</span>
     }
 
     public void removeProvider(String provider) {
-<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (provider == null) {</span>
-<span class="fc" id="L90">            throw new NullPointerException(&quot;provider&quot;);</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        if (provider == null) {</span>
+<span class="nc" id="L90">            throw new NullPointerException(&quot;provider&quot;);</span>
         }
-<span class="fc" id="L92">        logger.note(LogLocation.LOG_FILE, &quot;Removing &quot; + provider);</span>
-<span class="fc" id="L93">        removed.add(provider);</span>
-<span class="fc bfc" id="L94" title="All 2 branches covered.">        for (Artifact artifact : artifacts.values()) {</span>
-<span class="fc" id="L95">            artifact.removeProvider(provider);</span>
-<span class="fc" id="L96">        }</span>
-<span class="fc" id="L97">    }</span>
+<span class="nc" id="L92">        logger.note(LogLocation.LOG_FILE, &quot;Removing &quot; + provider);</span>
+<span class="nc" id="L93">        removed.add(provider);</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">        for (Artifact artifact : artifacts.values()) {</span>
+<span class="nc" id="L95">            artifact.removeProvider(provider);</span>
+<span class="nc" id="L96">        }</span>
+<span class="nc" id="L97">    }</span>
 
     @Override
     public String toString() {
-<span class="fc" id="L101">        return artifacts.values().toString();</span>
+<span class="nc" id="L101">        return artifacts.values().toString();</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
