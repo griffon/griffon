@@ -29,8 +29,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
-import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
@@ -58,6 +58,7 @@ import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -81,6 +82,8 @@ public final class JavaFXUtils {
     private static final String ERROR_ID_BLANK = "Argument 'id' must not be blank";
     private static final String ERROR_URL_BLANK = "Argument 'url' must not be blank";
     private static final String ERROR_ROOT_NULL = "Argument 'root' must not be null";
+    private static final String ERROR_TYPE_NULL = "Argument 'type' must not be null";
+    private static final String ERROR_PREDICATE_NULL = "Argument 'predicate' must not be null";
     private static final String ERROR_CONTROLLER_NULL = "Argument 'controller' must not be null";
     private static final String ACTION_TARGET_SUFFIX = "ActionTarget";
     private static final String PROPERTY_SUFFIX = "Property";
@@ -90,11 +93,71 @@ public final class JavaFXUtils {
     }
 
     /**
+     * Associates a {@code Action} with a target {@code Node}.
+     *
+     * @param node     the target node on which the action will be registered.
+     * @param actionId the id of the action to be registered.
+     *
+     * @since 2.8.0
+     */
+    public static void setGriffonActionId(@Nonnull Node node, @Nonnull String actionId) {
+        requireNonNull(node, ERROR_NODE_NULL);
+        requireNonBlank(actionId, ERROR_ID_BLANK);
+        node.getProperties().put(Action.class.getName(), actionId);
+    }
+
+    /**
+     * Finds out if an {@code Action} has been registered with the target {@code Node}, returning the aciton id if found.
+     *
+     * @param node the target node on which the action may have been registered.
+     *
+     * @return the name of the action registered with the target {@code Node} or {@code null} if not found.
+     *
+     * @since 2.8.0
+     */
+    @Nullable
+    public static String getGriffonActionId(@Nonnull Node node) {
+        requireNonNull(node, ERROR_NODE_NULL);
+        return (String) node.getProperties().get(Action.class.getName());
+    }
+
+    /**
+     * Associates a {@code Action} with a target {@code MenuItem}.
+     *
+     * @param menuItem the target menuItem on which the action will be registered.
+     * @param actionId the id of the action to be registered.
+     *
+     * @since 2.8.0
+     */
+    public static void setGriffonActionId(@Nonnull MenuItem menuItem, @Nonnull String actionId) {
+        requireNonNull(menuItem, ERROR_NODE_NULL);
+        requireNonBlank(actionId, ERROR_ID_BLANK);
+        menuItem.getProperties().put(Action.class.getName(), actionId);
+    }
+
+    /**
+     * Finds out if an {@code Action} has been registered with the target {@code MenuItem}, returning the aciton id if found.
+     *
+     * @param menuItem the target menuItem on which the action may have been registered.
+     *
+     * @return the name of the action registered with the target {@code MenuItem} or {@code null} if not found.
+     *
+     * @since 2.8.0
+     */
+    @Nullable
+    public static String getGriffonActionId(@Nonnull MenuItem menuItem) {
+        requireNonNull(menuItem, ERROR_NODE_NULL);
+        return (String) menuItem.getProperties().get(Action.class.getName());
+    }
+
+    /**
      * Wraps an <tt>ObservableList</tt>, publishing updates inside the UI thread.
      *
      * @param source the <tt>ObservableList</tt> to be wrapped
      * @param <E>    the list's paramter type.
+     *
      * @return a new  <tt>ObservableList</tt>
+     *
      * @since 2.6.0
      */
     @Nonnull
@@ -149,24 +212,45 @@ public final class JavaFXUtils {
         requireNonNull(controller, ERROR_CONTROLLER_NULL);
         ActionManager actionManager = controller.getApplication().getActionManager();
         for (Map.Entry<String, Action> e : actionManager.actionsFor(controller).entrySet()) {
-            String actionTargetName = actionManager.normalizeName(e.getKey()) + ACTION_TARGET_SUFFIX;
-            Object control = findElement(node, actionTargetName);
-            if (control == null) continue;
+            String actionName = actionManager.normalizeName(e.getKey());
+            final String actionTargetName = actionName + ACTION_TARGET_SUFFIX;
             JavaFXAction action = (JavaFXAction) e.getValue().getToolkitAction();
 
-            if (control instanceof ButtonBase) {
-                configure(((ButtonBase) control), action);
-            } else if (control instanceof MenuItem) {
-                JavaFXUtils.configure(((MenuItem) control), action);
-            } else if (control instanceof Node) {
-                ((Node) control).addEventHandler(ActionEvent.ACTION, action.getOnAction());
-            } else {
-                // does it support the onAction property?
-                try {
-                    invokeInstanceMethod(control, "setOnAction", action.getOnAction());
-                } catch (InstanceMethodInvocationException imie) {
-                    // ignore
+            Collection<Object> controls = findElements(node, new Predicate<Object>() {
+                @Override
+                public boolean test(@Nonnull Object arg) {
+                    if (arg instanceof Node) {
+                        return actionName.equals(getGriffonActionId((Node) arg));
+                    } else if (arg instanceof MenuItem) {
+                        return actionName.equals(getGriffonActionId((MenuItem) arg));
+                    }
+                    return false;
                 }
+            });
+
+            for (Object control : controls) {
+                configureControl(control, action);
+            }
+
+            Object control = findElement(node, actionTargetName);
+            if (control == null || controls.contains(control)) { continue; }
+            configureControl(control, action);
+        }
+    }
+
+    private static void configureControl(@Nonnull Object control, @Nonnull JavaFXAction action) {
+        if (control instanceof ButtonBase) {
+            configure(((ButtonBase) control), action);
+        } else if (control instanceof MenuItem) {
+            JavaFXUtils.configure(((MenuItem) control), action);
+        } else if (control instanceof Node) {
+            ((Node) control).addEventHandler(ActionEvent.ACTION, action.getOnAction());
+        } else {
+            // does it support the onAction property?
+            try {
+                invokeInstanceMethod(control, "setOnAction", action.getOnAction());
+            } catch (InstanceMethodInvocationException imie) {
+                // ignore
             }
         }
     }
@@ -302,7 +386,7 @@ public final class JavaFXUtils {
 
     public static void setStyleClass(@Nonnull Node node, @Nonnull String styleClass, boolean remove) {
         requireNonNull(node, ERROR_CONTROL_NULL);
-        if (isBlank(styleClass)) return;
+        if (isBlank(styleClass)) { return; }
 
         ObservableList<String> styleClasses = node.getStyleClass();
         applyStyleClass(styleClass, styleClasses, remove);
@@ -314,7 +398,7 @@ public final class JavaFXUtils {
 
     public static void setStyleClass(@Nonnull MenuItem node, @Nonnull String styleClass, boolean remove) {
         requireNonNull(node, ERROR_CONTROL_NULL);
-        if (isBlank(styleClass)) return;
+        if (isBlank(styleClass)) { return; }
         ObservableList<String> styleClasses = node.getStyleClass();
         applyStyleClass(styleClass, styleClasses, remove);
     }
@@ -327,7 +411,7 @@ public final class JavaFXUtils {
             } else {
                 Set<String> classes = new LinkedHashSet<>(styleClasses);
                 for (String s : strings) {
-                    if (isBlank(s)) continue;
+                    if (isBlank(s)) { continue; }
                     classes.add(s.trim());
                 }
                 styleClasses.setAll(classes);
@@ -477,51 +561,51 @@ public final class JavaFXUtils {
         requireNonNull(root, ERROR_ROOT_NULL);
         requireNonBlank(id, ERROR_ID_BLANK);
 
-        if (id.equals(root.getId())) return root;
+        if (id.equals(root.getId())) { return root; }
 
         if (root instanceof TabPane) {
             TabPane parent = (TabPane) root;
             for (Tab child : parent.getTabs()) {
                 if (child.getContent() != null) {
                     Node found = findNode(child.getContent(), id);
-                    if (found != null) return found;
+                    if (found != null) { return found; }
                 }
             }
         } else if (root instanceof TitledPane) {
             TitledPane parent = (TitledPane) root;
             if (parent.getContent() != null) {
                 Node found = findNode(parent.getContent(), id);
-                if (found != null) return found;
+                if (found != null) { return found; }
             }
         } else if (root instanceof Accordion) {
             Accordion parent = (Accordion) root;
             for (TitledPane child : parent.getPanes()) {
                 Node found = findNode(child, id);
-                if (found != null) return found;
+                if (found != null) { return found; }
             }
         } else if (root instanceof SplitPane) {
             SplitPane parent = (SplitPane) root;
             for (Node child : parent.getItems()) {
                 Node found = findNode(child, id);
-                if (found != null) return found;
+                if (found != null) { return found; }
             }
         } else if (root instanceof ScrollPane) {
             ScrollPane scrollPane = (ScrollPane) root;
             if (scrollPane.getContent() != null) {
                 Node found = findNode(scrollPane.getContent(), id);
-                if (found != null) return found;
+                if (found != null) { return found; }
             }
         } else if (root instanceof ToolBar) {
             ToolBar toolBar = (ToolBar) root;
             for (Node child : toolBar.getItems()) {
                 Node found = findNode(child, id);
-                if (found != null) return found;
+                if (found != null) { return found; }
             }
         } else if (root instanceof Parent) {
             Parent parent = (Parent) root;
             for (Node child : parent.getChildrenUnmodifiable()) {
                 Node found = findNode(child, id);
-                if (found != null) return found;
+                if (found != null) { return found; }
             }
         }
 
@@ -533,83 +617,247 @@ public final class JavaFXUtils {
         requireNonNull(root, ERROR_ROOT_NULL);
         requireNonBlank(id, ERROR_ID_BLANK);
 
-        if (id.equals(getPropertyValue(root, "id"))) return root;
+        if (id.equals(getPropertyValue(root, "id"))) { return root; }
 
         if (root instanceof ButtonBar) {
             ButtonBar buttonBar = (ButtonBar) root;
             for (Node child : buttonBar.getButtons()) {
                 Object found = findElement(child, id);
-                if (found != null) return found;
+                if (found != null) { return found; }
             }
         } else if (root instanceof MenuBar) {
             MenuBar menuBar = (MenuBar) root;
             for (Menu child : menuBar.getMenus()) {
                 Object found = findElement(child, id);
-                if (found != null) return found;
+                if (found != null) { return found; }
             }
         } else if (root instanceof ContextMenu) {
             ContextMenu contextMenu = (ContextMenu) root;
             for (MenuItem child : contextMenu.getItems()) {
                 Object found = findElement(child, id);
-                if (found != null) return found;
+                if (found != null) { return found; }
             }
         } else if (root instanceof Menu) {
             Menu menu = (Menu) root;
             for (MenuItem child : menu.getItems()) {
                 Object found = findElement(child, id);
-                if (found != null) return found;
+                if (found != null) { return found; }
             }
         } else if (root instanceof TabPane) {
             TabPane tabPane = (TabPane) root;
             for (Tab child : tabPane.getTabs()) {
                 Object found = findElement(child, id);
-                if (found != null) return found;
+                if (found != null) { return found; }
             }
         } else if (root instanceof Tab) {
             Tab tab = (Tab) root;
             if (tab.getContent() != null) {
                 Object found = findElement(tab.getContent(), id);
-                if (found != null) return found;
+                if (found != null) { return found; }
             }
         } else if (root instanceof TitledPane) {
             TitledPane parent = (TitledPane) root;
             if (parent.getContent() != null) {
                 Object found = findElement(parent.getContent(), id);
-                if (found != null) return found;
+                if (found != null) { return found; }
             }
         } else if (root instanceof Accordion) {
             Accordion parent = (Accordion) root;
             for (TitledPane child : parent.getPanes()) {
                 Object found = findElement(child, id);
-                if (found != null) return found;
+                if (found != null) { return found; }
             }
         } else if (root instanceof SplitPane) {
             SplitPane parent = (SplitPane) root;
             for (Node child : parent.getItems()) {
                 Object found = findElement(child, id);
-                if (found != null) return found;
+                if (found != null) { return found; }
             }
         } else if (root instanceof ScrollPane) {
             ScrollPane scrollPane = (ScrollPane) root;
             if (scrollPane.getContent() != null) {
                 Object found = findElement(scrollPane.getContent(), id);
-                if (found != null) return found;
+                if (found != null) { return found; }
             }
         } else if (root instanceof ToolBar) {
             ToolBar toolBar = (ToolBar) root;
             for (Node child : toolBar.getItems()) {
-                Node found = findNode(child, id);
-                if (found != null) return found;
+                Object found = findElement(child, id);
+                if (found != null) { return found; }
             }
         } else if (root instanceof Parent) {
             Parent parent = (Parent) root;
             for (Node child : parent.getChildrenUnmodifiable()) {
                 Object found = findElement(child, id);
-                if (found != null) return found;
+                if (found != null) { return found; }
             }
         }
 
         return null;
+    }
+
+    @Nullable
+    public static Object findElement(@Nonnull Object root, @Nonnull Predicate<Object> predicate) {
+        requireNonNull(root, ERROR_ROOT_NULL);
+        requireNonNull(predicate, ERROR_PREDICATE_NULL);
+
+        if (predicate.test(root)) {
+            return root;
+        }
+
+        if (root instanceof ButtonBar) {
+            ButtonBar buttonBar = (ButtonBar) root;
+            for (Node child : buttonBar.getButtons()) {
+                Object found = findElement(child, predicate);
+                if (found != null) { return found; }
+            }
+        } else if (root instanceof MenuBar) {
+            MenuBar menuBar = (MenuBar) root;
+            for (Menu child : menuBar.getMenus()) {
+                Object found = findElement(child, predicate);
+                if (found != null) { return found; }
+            }
+        } else if (root instanceof ContextMenu) {
+            ContextMenu contextMenu = (ContextMenu) root;
+            for (MenuItem child : contextMenu.getItems()) {
+                Object found = findElement(child, predicate);
+                if (found != null) { return found; }
+            }
+        } else if (root instanceof Menu) {
+            Menu menu = (Menu) root;
+            for (MenuItem child : menu.getItems()) {
+                Object found = findElement(child, predicate);
+                if (found != null) { return found; }
+            }
+        } else if (root instanceof TabPane) {
+            TabPane tabPane = (TabPane) root;
+            for (Tab child : tabPane.getTabs()) {
+                Object found = findElement(child, predicate);
+                if (found != null) { return found; }
+            }
+        } else if (root instanceof Tab) {
+            Tab tab = (Tab) root;
+            if (tab.getContent() != null) {
+                Object found = findElement(tab.getContent(), predicate);
+                if (found != null) { return found; }
+            }
+        } else if (root instanceof TitledPane) {
+            TitledPane parent = (TitledPane) root;
+            if (parent.getContent() != null) {
+                Object found = findElement(parent.getContent(), predicate);
+                if (found != null) { return found; }
+            }
+        } else if (root instanceof Accordion) {
+            Accordion parent = (Accordion) root;
+            for (TitledPane child : parent.getPanes()) {
+                Object found = findElement(child, predicate);
+                if (found != null) { return found; }
+            }
+        } else if (root instanceof SplitPane) {
+            SplitPane parent = (SplitPane) root;
+            for (Node child : parent.getItems()) {
+                Object found = findElement(child, predicate);
+                if (found != null) { return found; }
+            }
+        } else if (root instanceof ScrollPane) {
+            ScrollPane scrollPane = (ScrollPane) root;
+            if (scrollPane.getContent() != null) {
+                Object found = findElement(scrollPane.getContent(), predicate);
+                if (found != null) { return found; }
+            }
+        } else if (root instanceof ToolBar) {
+            ToolBar toolBar = (ToolBar) root;
+            for (Node child : toolBar.getItems()) {
+                Object found = findElement(child, predicate);
+                if (found != null) { return found; }
+            }
+        } else if (root instanceof Parent) {
+            Parent parent = (Parent) root;
+            for (Node child : parent.getChildrenUnmodifiable()) {
+                Object found = findElement(child, predicate);
+                if (found != null) { return found; }
+            }
+        }
+
+        return null;
+    }
+
+    @Nonnull
+    public static Collection<Object> findElements(@Nonnull Object root, @Nonnull Predicate<Object> predicate) {
+        Set<Object> accumulator = new LinkedHashSet<>();
+        findElements(root, predicate, accumulator);
+        return accumulator;
+    }
+
+    private static void findElements(@Nonnull Object root, @Nonnull Predicate<Object> predicate, @Nonnull Collection<Object> accumulator) {
+        requireNonNull(root, ERROR_ROOT_NULL);
+        requireNonNull(predicate, ERROR_PREDICATE_NULL);
+
+        if (predicate.test(root)) {
+            accumulator.add(root);
+        }
+
+        if (root instanceof ButtonBar) {
+            ButtonBar buttonBar = (ButtonBar) root;
+            for (Node child : buttonBar.getButtons()) {
+                findElements(child, predicate, accumulator);
+            }
+        } else if (root instanceof MenuBar) {
+            MenuBar menuBar = (MenuBar) root;
+            for (Menu child : menuBar.getMenus()) {
+                findElements(child, predicate, accumulator);
+            }
+        } else if (root instanceof ContextMenu) {
+            ContextMenu contextMenu = (ContextMenu) root;
+            for (MenuItem child : contextMenu.getItems()) {
+                findElements(child, predicate, accumulator);
+            }
+        } else if (root instanceof Menu) {
+            Menu menu = (Menu) root;
+            for (MenuItem child : menu.getItems()) {
+                findElements(child, predicate, accumulator);
+            }
+        } else if (root instanceof TabPane) {
+            TabPane tabPane = (TabPane) root;
+            for (Tab child : tabPane.getTabs()) {
+                findElements(child, predicate, accumulator);
+            }
+        } else if (root instanceof Tab) {
+            Tab tab = (Tab) root;
+            if (tab.getContent() != null) {
+                findElements(tab.getContent(), predicate, accumulator);
+            }
+        } else if (root instanceof TitledPane) {
+            TitledPane parent = (TitledPane) root;
+            if (parent.getContent() != null) {
+                findElements(parent.getContent(), predicate, accumulator);
+            }
+        } else if (root instanceof Accordion) {
+            Accordion parent = (Accordion) root;
+            for (TitledPane child : parent.getPanes()) {
+                findElements(child, predicate, accumulator);
+            }
+        } else if (root instanceof SplitPane) {
+            SplitPane parent = (SplitPane) root;
+            for (Node child : parent.getItems()) {
+                findElements(child, predicate, accumulator);
+            }
+        } else if (root instanceof ScrollPane) {
+            ScrollPane scrollPane = (ScrollPane) root;
+            if (scrollPane.getContent() != null) {
+                findElements(scrollPane.getContent(), predicate, accumulator);
+            }
+        } else if (root instanceof ToolBar) {
+            ToolBar toolBar = (ToolBar) root;
+            for (Node child : toolBar.getItems()) {
+                findElements(child, predicate, accumulator);
+            }
+        } else if (root instanceof Parent) {
+            Parent parent = (Parent) root;
+            for (Node child : parent.getChildrenUnmodifiable()) {
+                findElements(child, predicate, accumulator);
+            }
+        }
     }
 
     @Nullable
@@ -641,5 +889,25 @@ public final class JavaFXUtils {
 
     private static ValueConversionException illegalValue(Object value, Class<?> klass, Exception e) {
         throw new ValueConversionException(value, klass, e);
+    }
+
+    /**
+     * An unary function that evaluates its input.
+     *
+     * @param <T> the type of the input to the predicate
+     *
+     * @authot Andres Almiray
+     * @since 2.8.0
+     */
+    public interface Predicate<T> {
+        /**
+         * Evaluates this predicate on the given argument.
+         *
+         * @param arg the input argument
+         *
+         * @return {@code true} if the input argument matches the predicate,
+         * {@code false} otherwise.
+         */
+        boolean test(@Nonnull T arg);
     }
 }
