@@ -218,23 +218,29 @@
 
         <Package name="griffon.javafx.support">
             <Stats>
-                <TotalClasses>1</TotalClasses>
-                <ConcreteClasses>1</ConcreteClasses>
-                <AbstractClasses>0</AbstractClasses>
+                <TotalClasses>3</TotalClasses>
+                <ConcreteClasses>2</ConcreteClasses>
+                <AbstractClasses>1</AbstractClasses>
                 <Ca>0</Ca>
-                <Ce>6</Ce>
-                <A>0</A>
+                <Ce>7</Ce>
+                <A>0.33</A>
                 <I>1</I>
-                <D>0</D>
+                <D>0.33</D>
                 <V>1</V>
             </Stats>
 
             <AbstractClasses>
+                <Class sourceFile="JavaFXUtils.java">
+                    griffon.javafx.support.JavaFXUtils$Predicate
+                </Class>
             </AbstractClasses>
 
             <ConcreteClasses>
                 <Class sourceFile="JavaFXAction.java">
                     griffon.javafx.support.JavaFXAction
+                </Class>
+                <Class sourceFile="JavaFXUtils.java">
+                    griffon.javafx.support.JavaFXUtils$1
                 </Class>
             </ConcreteClasses>
 
@@ -243,6 +249,7 @@
                 <Package>javafx.beans.property</Package>
                 <Package>javafx.event</Package>
                 <Package>javafx.scene</Package>
+                <Package>javafx.scene.control</Package>
                 <Package>javafx.scene.image</Package>
                 <Package>javafx.scene.input</Package>
             </DependsUpon>
@@ -300,6 +307,10 @@
         </Package>
 
         <Package name="javafx.scene">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="javafx.scene.control">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
