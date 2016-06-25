@@ -15,41 +15,41 @@
  */
 package integration;
 
-import griffon.core.mvc.MVCGroup;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
-public class SimpleController extends AbstractGriffonController {
-    private SimpleModel model;
-    private String key;
-    private String mvcId;
-    private MVCGroup parentGroup;
-    private IntegrationModel parentModel;
+import javax.annotation.Nonnull;
+import java.util.Map;
 
-    public void setModel(SimpleModel model) {
+public class ArgsController extends AbstractGriffonController {
+    private ArgsModel model;
+    private ArgsView view;
+    @Nonnull
+    private String arg1;
+    private String arg2;
+
+    public void setModel(ArgsModel model) {
         this.model = model;
     }
 
-    public String getMvcId() {
-        return mvcId;
+    public void setView(ArgsView view) {
+        this.view = view;
     }
 
-    public void setMvcId(String mvcId) {
-        this.mvcId = mvcId;
+    @Nonnull
+    public String getArg1() {
+        return arg1;
     }
 
-    public String getKey() {
-        return key;
+    public String getArg2() {
+        return arg2;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setArg2(@Nonnull String arg2) {
+        this.arg2 = arg2;
     }
 
-    public MVCGroup getParentGroup() {
-        return parentGroup;
-    }
-
-    public IntegrationModel getParentModel() {
-        return parentModel;
+    @Override
+    public void mvcGroupInit(@Nonnull Map<String, Object> args) {
+        getMvcGroup().getContext().put("KEY", "VALUE");
     }
 }
