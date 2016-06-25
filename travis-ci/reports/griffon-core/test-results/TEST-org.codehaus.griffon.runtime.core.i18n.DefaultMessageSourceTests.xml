@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.codehaus.griffon.runtime.core.i18n.DefaultMessageSourceTests" tests="8" skipped="0" failures="0" errors="0" timestamp="2016-06-21T15:10:54" hostname="testing-gce-0e782aca-58c1-412b-87a9-e88a2fcd4730.c.travis-ci-prod-5.internal" time="0.102">
+<testsuite name="org.codehaus.griffon.runtime.core.i18n.DefaultMessageSourceTests" tests="8" skipped="0" failures="0" errors="0" timestamp="2016-06-25T19:00:36" hostname="testing-gce-5591e47c-7f32-483f-97e0-e3daf6a65c7e.c.travis-ci-prod-4.internal" time="0.17">
   <properties/>
-  <testcase name="exerciseAllExceptionThrowingMethods" classname="org.codehaus.griffon.runtime.core.i18n.DefaultMessageSourceTests" time="0.05"/>
-  <testcase name="resolveMessageValueWithReferencedKey" classname="org.codehaus.griffon.runtime.core.i18n.DefaultMessageSourceTests" time="0.005"/>
-  <testcase name="invalidKeysInResourceBundle" classname="org.codehaus.griffon.runtime.core.i18n.DefaultMessageSourceTests" time="0.009"/>
-  <testcase name="getMessageFromCustomMessageSource" classname="org.codehaus.griffon.runtime.core.i18n.DefaultMessageSourceTests" time="0.016"/>
-  <testcase name="exerciseAllMethodsWithDefaultMessage" classname="org.codehaus.griffon.runtime.core.i18n.DefaultMessageSourceTests" time="0.008"/>
-  <testcase name="getAllMessagesFromResourceBundle" classname="org.codehaus.griffon.runtime.core.i18n.DefaultMessageSourceTests" time="0.004"/>
+  <testcase name="exerciseAllExceptionThrowingMethods" classname="org.codehaus.griffon.runtime.core.i18n.DefaultMessageSourceTests" time="0.091"/>
+  <testcase name="resolveMessageValueWithReferencedKey" classname="org.codehaus.griffon.runtime.core.i18n.DefaultMessageSourceTests" time="0.003"/>
+  <testcase name="invalidKeysInResourceBundle" classname="org.codehaus.griffon.runtime.core.i18n.DefaultMessageSourceTests" time="0.006"/>
+  <testcase name="getMessageFromCustomMessageSource" classname="org.codehaus.griffon.runtime.core.i18n.DefaultMessageSourceTests" time="0.032"/>
+  <testcase name="exerciseAllMethodsWithDefaultMessage" classname="org.codehaus.griffon.runtime.core.i18n.DefaultMessageSourceTests" time="0.021"/>
+  <testcase name="getAllMessagesFromResourceBundle" classname="org.codehaus.griffon.runtime.core.i18n.DefaultMessageSourceTests" time="0.001"/>
   <testcase name="exerciseFormatMessage" classname="org.codehaus.griffon.runtime.core.i18n.DefaultMessageSourceTests" time="0.002"/>
-  <testcase name="testGetAllMessagesByProperties" classname="org.codehaus.griffon.runtime.core.i18n.DefaultMessageSourceTests" time="0.005"/>
+  <testcase name="testGetAllMessagesByProperties" classname="org.codehaus.griffon.runtime.core.i18n.DefaultMessageSourceTests" time="0.013"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[[Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
@@ -19,71 +19,71 @@
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=reference.key
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=reference.key; value='@[referenced.key]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=reference.key; value='@[referenced.key]'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=referenced.key
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=referenced.key; value='what's up doc?'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=referenced.key; value='what's up doc?'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=not.a.reference.key1
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=not.a.reference.key1; value='@[NOT'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=not.a.reference.key1; value='@[NOT'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=not.a.reference.key2
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=not.a.reference.key2; value='NOT]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=not.a.reference.key2; value='NOT]'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=not.a.reference.key3
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=not.a.reference.key3; value='@[]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=not.a.reference.key3; value='@[]'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=famous; value='{quote={index=This is {0}!, map=This is {:location}!}}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=famous; value='{quote={index=This is {0}!, map=This is {:location}!}}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.index
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=famous.quote.index; value='This is {0}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=famous.quote.index; value='This is {0}!'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=healthy; value='{proverb={map=An {:fruit} a day keeps the {:occupation} away, index=An {0} a day keeps the {1} away}}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=healthy; value='{proverb={map=An {:fruit} a day keeps the {:occupation} away, index=An {0} a day keeps the {1} away}}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.map
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=healthy.proverb.map; value='An {:fruit} a day keeps the {:occupation} away'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=healthy.proverb.map; value='An {:fruit} a day keeps the {:occupation} away'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=reference
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=reference; value='{key=@[referenced.key]}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=reference; value='{key=@[referenced.key]}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=reference.key
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=reference.key; value='@[referenced.key]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=reference.key; value='@[referenced.key]'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=not
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=not; value='{a={reference={key3=@[], key2=NOT], key1=@[NOT}}}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=not; value='{a={reference={key3=@[], key2=NOT], key1=@[NOT}}}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=not.a.reference.key3
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=not.a.reference.key3; value='@[]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=not.a.reference.key3; value='@[]'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.index
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=healthy.proverb.index; value='An {0} a day keeps the {1} away'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=healthy.proverb.index; value='An {0} a day keeps the {1} away'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=not.a.reference.key2
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=not.a.reference.key2; value='NOT]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=not.a.reference.key2; value='NOT]'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=not.a.reference.key1
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=not.a.reference.key1; value='@[NOT'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=not.a.reference.key1; value='@[NOT'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=referenced
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=referenced; value='{key=what's up doc?}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=referenced; value='{key=what's up doc?}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=referenced.key
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=referenced.key; value='what's up doc?'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=referenced.key; value='what's up doc?'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.map
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=famous.quote.map; value='This is {:location}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=famous.quote.map; value='This is {:location}!'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=famous; value='{quote={index=This is {0}!, map=This is {:location}!}}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=famous; value='{quote={index=This is {0}!, map=This is {:location}!}}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.index
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=famous.quote.index; value='This is {0}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=famous.quote.index; value='This is {0}!'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=reference.key
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=reference.key; value='@[referenced.key]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=reference.key; value='@[referenced.key]'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.index
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=healthy.proverb.index; value='An {0} a day keeps the {1} away'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=healthy.proverb.index; value='An {0} a day keeps the {1} away'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=referenced.key
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=referenced.key; value='what's up doc?'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=referenced.key; value='what's up doc?'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=reference
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=reference; value='{key=@[referenced.key]}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=reference; value='{key=@[referenced.key]}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=not
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=not; value='{a={reference={key3=@[], key2=NOT], key1=@[NOT}}}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=not; value='{a={reference={key3=@[], key2=NOT], key1=@[NOT}}}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=referenced
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=referenced; value='{key=what's up doc?}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=referenced; value='{key=what's up doc?}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=healthy; value='{proverb={map=An {:fruit} a day keeps the {:occupation} away, index=An {0} a day keeps the {1} away}}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=healthy; value='{proverb={map=An {:fruit} a day keeps the {:occupation} away, index=An {0} a day keeps the {1} away}}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.map
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=healthy.proverb.map; value='An {:fruit} a day keeps the {:occupation} away'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=healthy.proverb.map; value='An {:fruit} a day keeps the {:occupation} away'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=not.a.reference.key3
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=not.a.reference.key3; value='@[]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=not.a.reference.key3; value='@[]'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=not.a.reference.key2
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=not.a.reference.key2; value='NOT]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=not.a.reference.key2; value='NOT]'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=not.a.reference.key1
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=not.a.reference.key1; value='@[NOT'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=not.a.reference.key1; value='@[NOT'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.map
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=famous.quote.map; value='This is {:location}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=famous.quote.map; value='This is {:location}!'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.bogus
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
@@ -102,53 +102,53 @@
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=bogus
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=famous; value='{quote={index=This is {0}!, map=This is {:location}!}}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=famous; value='{quote={index=This is {0}!, map=This is {:location}!}}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.index
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=famous.quote.index; value='This is {0}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=famous.quote.index; value='This is {0}!'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=reference.key
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=reference.key; value='@[referenced.key]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=reference.key; value='@[referenced.key]'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.index
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=healthy.proverb.index; value='An {0} a day keeps the {1} away'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=healthy.proverb.index; value='An {0} a day keeps the {1} away'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=referenced.key
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=referenced.key; value='what's up doc?'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=referenced.key; value='what's up doc?'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=reference
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=reference; value='{key=@[referenced.key]}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=reference; value='{key=@[referenced.key]}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=not
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=not; value='{a={reference={key3=@[], key2=NOT], key1=@[NOT}}}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=not; value='{a={reference={key3=@[], key2=NOT], key1=@[NOT}}}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=referenced
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=referenced; value='{key=what's up doc?}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=referenced; value='{key=what's up doc?}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=healthy; value='{proverb={map=An {:fruit} a day keeps the {:occupation} away, index=An {0} a day keeps the {1} away}}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=healthy; value='{proverb={map=An {:fruit} a day keeps the {:occupation} away, index=An {0} a day keeps the {1} away}}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.map
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=healthy.proverb.map; value='An {:fruit} a day keeps the {:occupation} away'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=healthy.proverb.map; value='An {:fruit} a day keeps the {:occupation} away'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=not.a.reference.key3
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=not.a.reference.key3; value='@[]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=not.a.reference.key3; value='@[]'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=not.a.reference.key2
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=not.a.reference.key2; value='NOT]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=not.a.reference.key2; value='NOT]'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=not.a.reference.key1
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=not.a.reference.key1; value='@[NOT'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=not.a.reference.key1; value='@[NOT'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.map
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=famous.quote.map; value='This is {:location}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=famous.quote.map; value='This is {:location}!'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.index
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@344763aa; key=healthy.proverb.index; value='An {0} a day keeps the {1} away'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@62a0a81d; key=healthy.proverb.index; value='An {0} a day keeps the {1} away'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.index
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@344763aa; key=famous.quote.index; value='This is {0}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@62a0a81d; key=famous.quote.index; value='This is {0}!'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.map
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@344763aa; key=healthy.proverb.map; value='An {:fruit} a day keeps the {:occupation} away'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@62a0a81d; key=healthy.proverb.map; value='An {:fruit} a day keeps the {:occupation} away'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.map
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@344763aa; key=famous.quote.map; value='This is {:location}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@62a0a81d; key=famous.quote.map; value='This is {:location}!'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.index
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=healthy.proverb.index; value='An {0} a day keeps the {1} away'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=healthy.proverb.index; value='An {0} a day keeps the {1} away'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.index
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=famous.quote.index; value='This is {0}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=famous.quote.index; value='This is {0}!'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.index
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=healthy.proverb.index; value='An {0} a day keeps the {1} away'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=healthy.proverb.index; value='An {0} a day keeps the {1} away'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.index
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=famous.quote.index; value='This is {0}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=famous.quote.index; value='This is {0}!'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.map
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=healthy.proverb.map; value='An {:fruit} a day keeps the {:occupation} away'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=healthy.proverb.map; value='An {:fruit} a day keeps the {:occupation} away'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.map
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=famous.quote.map; value='This is {:location}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=famous.quote.map; value='This is {:location}!'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.bogus
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.bogus
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.bogus
@@ -156,14 +156,14 @@
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=healthy.proverb.bogus
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.bogus
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.index
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=famous.quote.index; value='This is {0}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=famous.quote.index; value='This is {0}!'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.index
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=famous.quote.index; value='This is {0}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=famous.quote.index; value='This is {0}!'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.index
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=famous.quote.index; value='This is {0}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=famous.quote.index; value='This is {0}!'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.index
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=famous.quote.index; value='This is {0}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=famous.quote.index; value='This is {0}!'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=famous.quote.map
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@465b4feb; key=famous.quote.map; value='This is {:location}!'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@1d3d66af; key=famous.quote.map; value='This is {:location}!'
 ]]></system-err>
 </testsuite>
