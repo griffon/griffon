@@ -2344,16 +2344,16 @@ import static java.util.Objects.requireNonNull;
      * @since 2.1.0
      */
     public static void setPropertiesOrFieldsNoException(@Nonnull Object bean, @Nonnull Map&lt;String, Object&gt; properties) {
-<span class="fc" id="L2347">        requireNonNull(bean, ERROR_BEAN_NULL);</span>
-<span class="fc" id="L2348">        requireNonNull(properties, ERROR_PROPERTIES_NULL);</span>
-<span class="fc bfc" id="L2349" title="All 2 branches covered.">        for (Map.Entry&lt;String, Object&gt; entry : properties.entrySet()) {</span>
+<span class="nc" id="L2347">        requireNonNull(bean, ERROR_BEAN_NULL);</span>
+<span class="nc" id="L2348">        requireNonNull(properties, ERROR_PROPERTIES_NULL);</span>
+<span class="nc bnc" id="L2349" title="All 2 branches missed.">        for (Map.Entry&lt;String, Object&gt; entry : properties.entrySet()) {</span>
             try {
-<span class="fc" id="L2351">                setPropertyOrFieldValue(bean, entry.getKey(), entry.getValue());</span>
-<span class="fc" id="L2352">            } catch (PropertyException pe) {</span>
+<span class="nc" id="L2351">                setPropertyOrFieldValue(bean, entry.getKey(), entry.getValue());</span>
+<span class="nc" id="L2352">            } catch (PropertyException pe) {</span>
                 // ignore
-<span class="fc" id="L2354">            }</span>
-<span class="fc" id="L2355">        }</span>
-<span class="fc" id="L2356">    }</span>
+<span class="nc" id="L2354">            }</span>
+<span class="nc" id="L2355">        }</span>
+<span class="nc" id="L2356">    }</span>
 
     /**
      * Sets or updates an object's property.
@@ -2851,16 +2851,16 @@ import static java.util.Objects.requireNonNull;
 
                 // type conversion needed?
 <span class="fc" id="L2853">                Class&lt;?&gt; propertyType = field.getType();</span>
-<span class="fc bfc" id="L2854" title="All 4 branches covered.">                if (value != null &amp;&amp; !propertyType.isAssignableFrom(value.getClass())) {</span>
-<span class="fc" id="L2855">                    value = TypeUtils.convertValue(propertyType, value);</span>
+<span class="pc bpc" id="L2854" title="1 of 4 branches missed.">                if (value != null &amp;&amp; !propertyType.isAssignableFrom(value.getClass())) {</span>
+<span class="nc" id="L2855">                    value = TypeUtils.convertValue(propertyType, value);</span>
                 }
 
 <span class="fc" id="L2858">                field.setAccessible(true);</span>
                 try {
 <span class="fc" id="L2860">                    field.set(bean, value);</span>
 <span class="fc" id="L2861">                    return;</span>
-<span class="fc" id="L2862">                } catch (IllegalArgumentException iae) {</span>
-<span class="fc" id="L2863">                    throw new FieldException(bean, name, value, iae);</span>
+<span class="nc" id="L2862">                } catch (IllegalArgumentException iae) {</span>
+<span class="nc" id="L2863">                    throw new FieldException(bean, name, value, iae);</span>
                 }
 <span class="fc" id="L2865">            } catch (NoSuchFieldException nsfe) {</span>
 <span class="fc" id="L2866">                declaringClass = declaringClass.getSuperclass();</span>
@@ -2905,15 +2905,15 @@ import static java.util.Objects.requireNonNull;
 
         // type conversion needed?
 <span class="fc" id="L2907">        Class&lt;?&gt; propertyType = descriptor.getPropertyType();</span>
-<span class="fc bfc" id="L2908" title="All 4 branches covered.">        if (value != null &amp;&amp; !propertyType.isAssignableFrom(value.getClass())) {</span>
-<span class="fc" id="L2909">            value = TypeUtils.convertValue(propertyType, value);</span>
+<span class="pc bpc" id="L2908" title="1 of 4 branches missed.">        if (value != null &amp;&amp; !propertyType.isAssignableFrom(value.getClass())) {</span>
+<span class="nc" id="L2909">            value = TypeUtils.convertValue(propertyType, value);</span>
         }
 
         // Call the property setter
         try {
 <span class="fc" id="L2914">            writeMethod.invoke(bean, value);</span>
-<span class="fc" id="L2915">        } catch (IllegalArgumentException iae) {</span>
-<span class="fc" id="L2916">            throw new PropertyException(bean, name, value, iae);</span>
+<span class="nc" id="L2915">        } catch (IllegalArgumentException iae) {</span>
+<span class="nc" id="L2916">            throw new PropertyException(bean, name, value, iae);</span>
 <span class="fc" id="L2917">        }</span>
 <span class="fc" id="L2918">    }</span>
 

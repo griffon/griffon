@@ -553,10 +553,10 @@ public abstract class AbstractActionManager implements ActionManager {
 <span class="fc" id="L553">            synchronized (cache) {</span>
 <span class="fc bfc" id="L554" title="All 2 branches covered.">                for (Map.Entry&lt;WeakReference&lt;GriffonController&gt;, Map&lt;String, ActionWrapper&gt;&gt; entry : cache.entrySet()) {</span>
 <span class="fc" id="L555">                    GriffonController test = entry.getKey().get();</span>
-<span class="pc bpc" id="L556" title="1 of 2 branches missed.">                    if (test == controller) {</span>
+<span class="fc bfc" id="L556" title="All 2 branches covered.">                    if (test == controller) {</span>
 <span class="fc" id="L557">                        return entry.getValue();</span>
                     }
-<span class="nc" id="L559">                }</span>
+<span class="fc" id="L559">                }</span>
 <span class="pc" id="L560">            }</span>
 <span class="fc" id="L561">            return Collections.emptyMap();</span>
         }
@@ -564,12 +564,12 @@ public abstract class AbstractActionManager implements ActionManager {
         public void set(@Nonnull GriffonController controller, @Nonnull Map&lt;String, ActionWrapper&gt; actions) {
 <span class="fc" id="L565">            WeakReference&lt;GriffonController&gt; existingController = null;</span>
 <span class="fc" id="L566">            synchronized (cache) {</span>
-<span class="pc bpc" id="L567" title="1 of 2 branches missed.">                for (WeakReference&lt;GriffonController&gt; key : cache.keySet()) {</span>
-<span class="nc bnc" id="L568" title="All 2 branches missed.">                    if (key.get() == controller) {</span>
+<span class="fc bfc" id="L567" title="All 2 branches covered.">                for (WeakReference&lt;GriffonController&gt; key : cache.keySet()) {</span>
+<span class="pc bpc" id="L568" title="1 of 2 branches missed.">                    if (key.get() == controller) {</span>
 <span class="nc" id="L569">                        existingController = key;</span>
 <span class="nc" id="L570">                        break;</span>
                     }
-<span class="nc" id="L572">                }</span>
+<span class="fc" id="L572">                }</span>
 <span class="pc" id="L573">            }</span>
 
 <span class="pc bpc" id="L575" title="1 of 2 branches missed.">            if (null != existingController) {</span>

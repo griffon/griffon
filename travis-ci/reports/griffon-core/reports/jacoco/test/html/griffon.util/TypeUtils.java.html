@@ -206,7 +206,7 @@ public final class TypeUtils {
 <span class="fc" id="L206">                return (T) value;</span>
 <span class="pc bpc" id="L207" title="1 of 4 branches missed.">            } else if (isCharacter(targetType) &amp;&amp; isCharacter(value.getClass())) {</span>
 <span class="fc" id="L208">                return (T) value;</span>
-<span class="pc bpc" id="L209" title="1 of 4 branches missed.">            } else if (isNumber(targetType) &amp;&amp; isNumber(value.getClass())) {</span>
+<span class="pc bpc" id="L209" title="2 of 4 branches missed.">            } else if (isNumber(targetType) &amp;&amp; isNumber(value.getClass())) {</span>
 <span class="fc bfc" id="L210" title="All 2 branches covered.">                if (isByte(targetType)) {</span>
 <span class="fc" id="L211">                    return (T) ((Byte) castToByte(value));</span>
 <span class="fc bfc" id="L212" title="All 2 branches covered.">                } else if (isShort(targetType)) {</span>
@@ -227,10 +227,10 @@ public final class TypeUtils {
             }
         }
 
-<span class="fc" id="L230">        PropertyEditor targetEditor = resolveTargetPropertyEditor(targetType, format);</span>
-<span class="pc bpc" id="L231" title="1 of 2 branches missed.">        if (targetEditor != null) {</span>
-<span class="fc" id="L232">            targetEditor.setValue(value);</span>
-<span class="fc" id="L233">            return (T) targetEditor.getValue();</span>
+<span class="nc" id="L230">        PropertyEditor targetEditor = resolveTargetPropertyEditor(targetType, format);</span>
+<span class="nc bnc" id="L231" title="All 2 branches missed.">        if (targetEditor != null) {</span>
+<span class="nc" id="L232">            targetEditor.setValue(value);</span>
+<span class="nc" id="L233">            return (T) targetEditor.getValue();</span>
         }
 
 <span class="nc" id="L236">        throw new TypeConversionException(value, targetType);</span>
@@ -238,16 +238,16 @@ public final class TypeUtils {
 
     @Nullable
     private static &lt;T&gt; PropertyEditor resolveTargetPropertyEditor(@Nonnull Class&lt;T&gt; targetType, @Nullable String format) {
-<span class="fc" id="L241">        PropertyEditor editor = doResolveTargetPropertyEditor(targetType);</span>
-<span class="pc bpc" id="L242" title="3 of 4 branches missed.">        if (editor instanceof ExtendedPropertyEditor &amp;&amp; !isBlank(format)) {</span>
+<span class="nc" id="L241">        PropertyEditor editor = doResolveTargetPropertyEditor(targetType);</span>
+<span class="nc bnc" id="L242" title="All 4 branches missed.">        if (editor instanceof ExtendedPropertyEditor &amp;&amp; !isBlank(format)) {</span>
 <span class="nc" id="L243">            ((ExtendedPropertyEditor) editor).setFormat(format);</span>
         }
-<span class="fc" id="L245">        return editor;</span>
+<span class="nc" id="L245">        return editor;</span>
     }
 
     @Nullable
     private static &lt;T&gt; PropertyEditor doResolveTargetPropertyEditor(@Nonnull Class&lt;T&gt; targetType) {
-<span class="fc" id="L250">        return PropertyEditorResolver.findEditor(targetType);</span>
+<span class="nc" id="L250">        return PropertyEditorResolver.findEditor(targetType);</span>
     }
 
     public static boolean isBoolean(@Nonnull Class&lt;?&gt; type) {
@@ -287,7 +287,7 @@ public final class TypeUtils {
     }
 
     public static boolean isBigDecimal(@Nonnull Class&lt;?&gt; type) {
-<span class="fc bfc" id="L290" title="All 2 branches covered.">        return BigDecimal.class == type;</span>
+<span class="pc bpc" id="L290" title="1 of 2 branches missed.">        return BigDecimal.class == type;</span>
     }
 
     public static boolean isNumber(@Nonnull Class&lt;?&gt; type) {
@@ -299,7 +299,7 @@ public final class TypeUtils {
 <span class="fc bfc" id="L299" title="All 2 branches covered.">            isFloat(type) ||</span>
 <span class="fc bfc" id="L300" title="All 2 branches covered.">            isDouble(type) ||</span>
 <span class="fc bfc" id="L301" title="All 2 branches covered.">            isBigInteger(type) ||</span>
-<span class="fc bfc" id="L302" title="All 2 branches covered.">            isBigDecimal(type);</span>
+<span class="pc bpc" id="L302" title="1 of 2 branches missed.">            isBigDecimal(type);</span>
     }
 
     // == The following methods taken from

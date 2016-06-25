@@ -285,13 +285,13 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
 <span class="fc" id="L285">            group = createMVCGroup(configuration, mvcId, args);</span>
 <span class="fc" id="L286">            handler.apply(group);</span>
         } finally {
-<span class="nc" id="L288">            try {</span>
-<span class="pc bpc" id="L289" title="3 of 4 branches missed.">                if (group != null) {</span>
+<span class="fc" id="L288">            try {</span>
+<span class="pc bpc" id="L289" title="2 of 4 branches missed.">                if (group != null) {</span>
 <span class="pc" id="L290">                    destroyMVCGroup(group.getMvcId());</span>
                 }
 <span class="nc" id="L292">            } catch (Exception x) {</span>
 <span class="nc" id="L293">                LOG.warn(&quot;Could not destroy group [{}] of type {}&quot;, mvcId, configuration.getMvcType(), sanitize(x));</span>
-<span class="pc" id="L294">            }</span>
+<span class="fc" id="L294">            }</span>
 <span class="nc" id="L295">        }</span>
 <span class="fc" id="L296">    }</span>
 

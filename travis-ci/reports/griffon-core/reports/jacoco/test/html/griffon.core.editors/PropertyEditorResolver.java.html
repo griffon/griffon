@@ -91,13 +91,13 @@ public final class PropertyEditorResolver {
 <span class="fc" id="L91">            editor = doFindEditor(type);</span>
         }
 
-<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (editor == null) {</span>
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        if (editor == null) {</span>
             // fallback
-<span class="fc" id="L96">            editor = PropertyEditorManager.findEditor(type);</span>
+<span class="nc" id="L96">            editor = PropertyEditorManager.findEditor(type);</span>
         }
 
-<span class="fc bfc" id="L99" title="All 2 branches covered.">        if (editor == null) {</span>
-<span class="fc" id="L100">            editor = new NoopPropertyEditor();</span>
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">        if (editor == null) {</span>
+<span class="nc" id="L100">            editor = new NoopPropertyEditor();</span>
         }
 
 <span class="fc" id="L103">        LOG.trace(&quot;PropertyEditor for {} is {}&quot;, type.getName(), editor.getClass().getName());</span>
@@ -187,7 +187,7 @@ public final class PropertyEditorResolver {
 <span class="fc" id="L187">                return chain.copyOf();</span>
             } else {
 <span class="fc" id="L189">                Class&lt;?&gt; propertyEditorType = propertyEditorRegistry.get(targetTypeName);</span>
-<span class="fc bfc" id="L190" title="All 2 branches covered.">                if (propertyEditorType != null) {</span>
+<span class="pc bpc" id="L190" title="1 of 2 branches missed.">                if (propertyEditorType != null) {</span>
                     try {
 <span class="fc" id="L192">                        return (PropertyEditor) propertyEditorType.newInstance();</span>
 <span class="nc" id="L193">                    } catch (InstantiationException | IllegalAccessException e) {</span>
@@ -195,11 +195,11 @@ public final class PropertyEditorResolver {
                     }
                 }
             }
-<span class="pc" id="L198">        }</span>
-<span class="fc" id="L199">        return null;</span>
+<span class="nc" id="L198">        }</span>
+<span class="nc" id="L199">        return null;</span>
     }
 
-<span class="fc" id="L202">    public static final class NoopPropertyEditor extends PropertyEditorSupport {</span>
+<span class="nc" id="L202">    public static final class NoopPropertyEditor extends PropertyEditorSupport {</span>
 
     }
 
