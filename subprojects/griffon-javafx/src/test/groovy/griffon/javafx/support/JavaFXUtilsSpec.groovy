@@ -50,7 +50,7 @@ class JavaFXUtilsSpec extends Specification {
         new JFXPanel()
     }
 
-    void "Trigger list events inside UI thread"() {
+    void "Trigger list events inside UI thread (source) "() {
         given:
         ObservableList<String> source = FXCollections.observableArrayList()
         ObservableList<String> target = JavaFXUtils.createJavaFXThreadProxyList(source)
@@ -68,6 +68,30 @@ class JavaFXUtilsSpec extends Specification {
 
         when:
         source << 'change'
+        await().until { witness.changed }
+
+        then:
+        witness.changedInsideUIThread
+    }
+
+    void "Trigger list events inside UI thread (target) "() {
+        given:
+        ObservableList<String> source = FXCollections.observableArrayList()
+        ObservableList<String> target = JavaFXUtils.createJavaFXThreadProxyList(source)
+        ListChangeListener<String> witness = new ListChangeListener<String>() {
+            boolean changed
+            boolean changedInsideUIThread
+
+            @Override
+            void onChanged(ListChangeListener.Change<? extends String> c) {
+                changed = true
+                changedInsideUIThread = Platform.isFxApplicationThread()
+            }
+        }
+        target.addListener(witness)
+
+        when:
+        target << 'change'
         await().until { witness.changed }
 
         then:

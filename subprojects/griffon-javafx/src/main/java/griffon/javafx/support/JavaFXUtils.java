@@ -82,7 +82,6 @@ public final class JavaFXUtils {
     private static final String ERROR_ID_BLANK = "Argument 'id' must not be blank";
     private static final String ERROR_URL_BLANK = "Argument 'url' must not be blank";
     private static final String ERROR_ROOT_NULL = "Argument 'root' must not be null";
-    private static final String ERROR_TYPE_NULL = "Argument 'type' must not be null";
     private static final String ERROR_PREDICATE_NULL = "Argument 'predicate' must not be null";
     private static final String ERROR_CONTROLLER_NULL = "Argument 'controller' must not be null";
     private static final String ACTION_TARGET_SUFFIX = "ActionTarget";
@@ -212,7 +211,7 @@ public final class JavaFXUtils {
         requireNonNull(controller, ERROR_CONTROLLER_NULL);
         ActionManager actionManager = controller.getApplication().getActionManager();
         for (Map.Entry<String, Action> e : actionManager.actionsFor(controller).entrySet()) {
-            String actionName = actionManager.normalizeName(e.getKey());
+            final String actionName = actionManager.normalizeName(e.getKey());
             final String actionTargetName = actionName + ACTION_TARGET_SUFFIX;
             JavaFXAction action = (JavaFXAction) e.getValue().getToolkitAction();
 
