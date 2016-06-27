@@ -149,6 +149,13 @@ subprojects { subproj ->
             from sourceSets.main.allSource
         }
 
+        task javadocJar(type: Jar) {
+            group 'Build'
+            description 'An archive of the Javadocs'
+            classifier 'javadoc'
+            from javadoc.destinationDir
+        }
+
         tasks.withType(AbstractCompile) {
             if (rootProject.hasProperty('lint') && rootProject.lint.toBoolean()) {
                 options.compilerArgs = [
@@ -197,12 +204,12 @@ subprojects { subproj ->
                 options.docTitle    = "$subproj.pomDescription $version"
                 options.footer      = rootProject.javadocFooter
                 options.links       = ['http://www.slf4j.org/apidocs/',
-                                       'http://junit.org/javadoc/latest/',
-                                       'http://jsr-305.googlecode.com/svn/trunk/javadoc/',
-                                       'http://atinject.googlecode.com/svn/trunk/javadoc/',
+                                       'http://junit.org/junit4/javadoc/latest/',
+                                       'http://static.javadoc.io/com.google.code.findbugs/jsr305/3.0.1/',
+                                       'http://static.javadoc.io/javax.inject/javax.inject/1/',
                                        'http://docs.oracle.com/javase/8/docs/api/',
                                        'http://docs.oracle.com/javase/8/javafx/api/',
-                                       'http://google.github.io/guice/api-docs/4.0/javadoc/',
+                                       'http://google.github.io/guice/api-docs/4.1/javadoc/',
                                        'http://mabe02.github.io/lanterna/apidocs/2.1/',
                                        'http://pivot.apache.org/2.0.4/docs/api/',
                                        'http://docs.groovy-lang.org/latest/html/api/',

@@ -895,7 +895,7 @@ public final class JavaFXUtils {
      *
      * @param <T> the type of the input to the predicate
      *
-     * @authot Andres Almiray
+     * @author Andres Almiray
      * @since 2.8.0
      */
     public interface Predicate<T> {

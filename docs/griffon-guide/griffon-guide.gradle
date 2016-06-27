@@ -103,12 +103,12 @@ task apiDocs(type: Javadoc, dependsOn: copyDocs) {
     options.docTitle    = "Griffon $version"
     options.footer      = project.javadocFooter
     options.links       = ['http://www.slf4j.org/apidocs/',
-                           'http://junit.org/javadoc/latest/',
-                           'http://jsr-305.googlecode.com/svn/trunk/javadoc/',
-                           'http://atinject.googlecode.com/svn/trunk/javadoc/',
+                           'http://junit.org/junit4/javadoc/latest/',
+                           'http://static.javadoc.io/com.google.code.findbugs/jsr305/3.0.1/',
+                           'http://static.javadoc.io/javax.inject/javax.inject/1/',
                            'http://docs.oracle.com/javase/8/docs/api/',
                            'http://docs.oracle.com/javase/8/javafx/api/',
-                           'http://google.github.io/guice/api-docs/4.0/javadoc/',
+                           'http://google.github.io/guice/api-docs/4.1/javadoc/',
                            'http://mabe02.github.io/lanterna/apidocs/2.1/',
                            'http://pivot.apache.org/2.0.4/docs/api/',
                            'http://docs.groovy-lang.org/latest/html/api/',
@@ -139,19 +139,25 @@ task generateJava2html {
     dependsOn java2htmlConvertCode
 }
 
-task apiJar(type: Jar, dependsOn: apiDocs) {
-    archiveName    = "griffon-core-${project.version}-javadoc.jar"
+task sourceJar(type: Jar, dependsOn: copyDocs) {
+    archiveName    = "griffon-${project.version}-sources.jar"
+    destinationDir = "$buildDir/assemble/jars" as File
+    from copyDocs.destinationDir
+}
+
+task javadocJar(type: Jar, dependsOn: apiDocs) {
+    archiveName    = "griffon-${project.version}-javadoc.jar"
     destinationDir = "$buildDir/assemble/jars" as File
     from apiDocs.destinationDir
 }
 
 task sourceHtmlJar(type: Jar, dependsOn: generateJava2html) {
-    archiveName    = "griffon-core-${project.version}-sources-html.jar"
+    archiveName    = "griffon-${project.version}-sources-html.jar"
     destinationDir = "$buildDir/assemble/jars" as File
     from java2htmlConvertCode.destDir
 }
 
-task docsJar(dependsOn: [apiJar, sourceHtmlJar]) { }
+task docsJar(dependsOn: [sourceJar, javadocJar, sourceHtmlJar]) { }
 
 java2html {
     conversion {
