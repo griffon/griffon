@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.493s</div>
+<div class="counter">0.580s</div>
 <p>duration</p>
 </div>
 </td>
@@ -79,47 +79,47 @@
 </thead>
 <tr>
 <td class="success">Bootstrap application</td>
-<td>0.170s</td>
+<td>0.186s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Creating an MVCGroup through a group does set implicit parent group</td>
-<td>0.031s</td>
+<td>0.033s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Creating an MVCGroup through an artifact does set implicit parent group</td>
-<td>0.035s</td>
+<td>0.040s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Creating an MVCGroup through the MVCGroupManager does not set implicit parent group</td>
-<td>0.025s</td>
+<td>0.028s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Validate MVCGroup relationships after creation and destruction (createMVC)</td>
-<td>0.034s</td>
+<td>0.044s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Validate MVCGroup relationships after creation and destruction (createMVCGroup)</td>
-<td>0.048s</td>
+<td>0.065s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Validate MVCGroup relationships after creation and destruction (withMVC)</td>
-<td>0.055s</td>
+<td>0.069s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Validate MVCGroup relationships after creation and destruction (withMVCGroup)</td>
-<td>0.054s</td>
+<td>0.066s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Validate argument injection (all args are available)</td>
-<td>0.017s</td>
+<td>0.018s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -134,7 +134,7 @@
 </tr>
 <tr>
 <td class="success">Validate contextual injections</td>
-<td>0.013s</td>
+<td>0.020s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -143,8 +143,8 @@
 <h2>Standard error</h2>
 <span class="code">
 <pre>[Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Griffon 2.8.0-SNAPSHOT
-[Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Build: 2016-06-27T15:56:41.858+0000
-[Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Revision: a081b115b21c3a39f26268d483dc38fd3844a3d9
+[Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Build: 2016-06-29T15:53:28.832+0000
+[Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Revision: 6451287cba6d4d86e8cab7dfea9d29d3e1b43461
 [Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - JVM: 1.8.0_91 (Oracle Corporation 25.91-b14)
 [Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - OS: Linux 3.13.0-63-generic amd64
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Creating module bindings
@@ -158,9 +158,9 @@
 [Test worker] TRACE griffon.util.AnnotationUtils -   adding module 'integration', since all dependencies have been added
 [Test worker] TRACE griffon.util.AnnotationUtils - module dependency ordering complete
 [Test worker] DEBUG griffon.util.AnnotationUtils - computed module order is [core, integration]
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from core:org.codehaus.griffon.runtime.core.DefaultApplicationModule@27099821
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from integration:integration.IntegrationModule@1a794cd0
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - InstanceBinding[source=griffon.core.GriffonApplication, instance=integration.TestGriffonApplication@866feeb, singleton=true]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from core:org.codehaus.griffon.runtime.core.DefaultApplicationModule@7c9b5ad4
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Loading module bindings from integration:integration.IntegrationModule@c5945d5
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - InstanceBinding[source=griffon.core.GriffonApplication, instance=integration.TestGriffonApplication@338da939, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=integration.IntegrationModel, target=integration.IntegrationModel, singleton=false]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=integration.SimpleModel, target=integration.SimpleModel, singleton=false]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=integration.RootModel, target=integration.RootModel, singleton=false]
@@ -186,7 +186,7 @@
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.ApplicationConfigurer, target=org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.resources.ResourceHandler, target=org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.util.CompositeResourceBundleBuilder, target=org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder, singleton=true]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=java.util.ResourceBundle, classifier=@javax.inject.Named(value=applicationResourceBundle), provider=org.codehaus.griffon.runtime.util.ResourceBundleProvider@58a93cfb, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=java.util.ResourceBundle, classifier=@javax.inject.Named(value=applicationResourceBundle), provider=org.codehaus.griffon.runtime.util.ResourceBundleProvider@753c3570, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=org.codehaus.griffon.runtime.core.ConfigurationDecoratorFactory, target=org.codehaus.griffon.runtime.core.DefaultConfigurationDecoratorFactory, singleton=false]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderTypeBinding[source=griffon.core.Configuration, providerType=org.codehaus.griffon.runtime.core.ResourceBundleConfigurationProvider, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.ExecutorServiceManager, target=org.codehaus.griffon.runtime.core.DefaultExecutorServiceManager, singleton=true]
@@ -194,19 +194,19 @@
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.event.EventRouter, target=org.codehaus.griffon.runtime.core.event.DefaultEventRouter, singleton=false]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=org.codehaus.griffon.runtime.core.resources.ResourceResolverDecoratorFactory, target=org.codehaus.griffon.runtime.core.resources.DefaultResourceResolverDecoratorFactory, singleton=false]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=org.codehaus.griffon.runtime.core.i18n.MessageSourceDecoratorFactory, target=org.codehaus.griffon.runtime.core.i18n.DefaultMessageSourceDecoratorFactory, singleton=false]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.resources.ResourceResolver, classifier=@javax.inject.Named(value=applicationResourceResolver), provider=org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider@5d665a7f, singleton=true]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.i18n.MessageSource, classifier=@javax.inject.Named(value=applicationMessageSource), provider=org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider@13bcef5b, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.resources.ResourceResolver, classifier=@javax.inject.Named(value=applicationResourceResolver), provider=org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider@3277baaf, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.i18n.MessageSource, classifier=@javax.inject.Named(value=applicationMessageSource), provider=org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider@1751eb0e, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.resources.ResourceInjector, classifier=@javax.inject.Named(value=applicationResourceInjector), target=org.codehaus.griffon.runtime.core.resources.DefaultApplicationResourceInjector, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderTypeBinding[source=java.util.concurrent.ExecutorService, classifier=@javax.inject.Named(value=defaultExecutorService), providerType=org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.threading.UIThreadManager, target=org.codehaus.griffon.runtime.core.threading.DefaultUIThreadManager, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.mvc.MVCGroupConfigurationFactory, target=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupConfigurationFactory, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.mvc.MVCGroupFactory, target=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupFactory, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.mvc.MVCGroupManager, target=org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager, singleton=true]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Initialize), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@2c92ca61, singleton=true]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Startup), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@3dcd65ec, singleton=true]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Ready), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@52177588, singleton=true]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Shutdown), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@26a58ea6, singleton=true]
-[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Stop), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@1cde89d1, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Initialize), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@49cb5cbc, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Startup), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@5d486740, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Ready), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@52e51c84, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Shutdown), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@4af4944d, singleton=true]
+[Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - ProviderBinding[source=griffon.core.LifecycleHandler, classifier=@javax.inject.Named(value=Stop), provider=org.codehaus.griffon.runtime.core.LifecycleHandlerProvider@59491f13, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.view.WindowManager, target=org.codehaus.griffon.runtime.core.view.NoopWindowManager, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.controller.ActionManager, target=org.codehaus.griffon.runtime.core.controller.DefaultActionManager, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.artifact.ArtifactManager, target=org.codehaus.griffon.runtime.core.artifact.DefaultArtifactManager, singleton=true]
@@ -222,7 +222,7 @@
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.addon.GriffonAddon, classifier=@javax.inject.Named(value=groups), target=integration.GroupsAddon, singleton=true]
 [Test worker] TRACE org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - TargetBinding[source=griffon.core.controller.ActionHandler, target=integration.InvokeActionHandler, singleton=true]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Creating application injector
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Injector will be created by integration.GuiceInjectorFactory@4a6a7da3
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Injector will be created by integration.GuiceInjectorFactory@47a5011d
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler on UncaughtMVCGroupConfigurationException
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler on UncaughtMVCGroupInstantiationException
 [Test worker] DEBUG griffon.util.AnnotationUtils - Current handler order is [default]
@@ -272,26 +272,26 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Registering griffon.core.editors.DoublePropertyEditor as editor for double
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer$2 on NewInstance
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@7318ec0e; key=application; value='{title=integration, startupGroups=[integration], autoShutdown=true}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@381970ee; key=application; value='{title=integration, startupGroups=[integration], autoShutdown=true}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.title
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@7318ec0e; key=application.title; value='integration'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@381970ee; key=application.title; value='integration'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.startupGroups
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@7318ec0e; key=application.startupGroups; value='[integration]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@381970ee; key=application.startupGroups; value='[integration]'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.autoShutdown
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@7318ec0e; key=application.autoShutdown; value='true'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@381970ee; key=application.autoShutdown; value='true'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@7318ec0e; key=mvcGroups; value='{integration={model=integration.IntegrationModel, view=integration.IntegrationView, controller=integration.IntegrationController, config={color=#0000FF}}}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@381970ee; key=mvcGroups; value='{integration={model=integration.IntegrationModel, view=integration.IntegrationView, controller=integration.IntegrationController, config={color=#0000FF}}}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups.integration.model
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@7318ec0e; key=mvcGroups.integration.model; value='integration.IntegrationModel'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@381970ee; key=mvcGroups.integration.model; value='integration.IntegrationModel'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups.integration.view
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@7318ec0e; key=mvcGroups.integration.view; value='integration.IntegrationView'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@381970ee; key=mvcGroups.integration.view; value='integration.IntegrationView'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups.integration.controller
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@7318ec0e; key=mvcGroups.integration.controller; value='integration.IntegrationController'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@381970ee; key=mvcGroups.integration.controller; value='integration.IntegrationController'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups.integration.config.color
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@7318ec0e; key=mvcGroups.integration.config.color; value='#0000FF'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@381970ee; key=mvcGroups.integration.config.color; value='#0000FF'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.lifecycle.handler.disable
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@7318ec0e; key=application; value='{title=integration, startupGroups=[integration], autoShutdown=true}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@381970ee; key=application; value='{title=integration, startupGroups=[integration], autoShutdown=true}'
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=platform.handler.linux64
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=platform
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.PlatformHandlerProvider - Using org.codehaus.griffon.runtime.core.DefaultPlatformHandler as PlatformHandler
@@ -322,7 +322,7 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.addon.AbstractAddonManager - Loading addons [END]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'LoadAddonsEnd' synchronously
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=mvcGroups
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@7318ec0e; key=mvcGroups; value='{integration={model=integration.IntegrationModel, view=integration.IntegrationView, controller=integration.IntegrationController, config={color=#0000FF}}}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@381970ee; key=mvcGroups; value='{integration={model=integration.IntegrationModel, view=integration.IntegrationView, controller=integration.IntegrationController, config={color=#0000FF}}}'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer - Adding MVC group integration
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener org.codehaus.griffon.runtime.core.DefaultApplicationConfigurer$3 on NewInstance
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=griffon.controller.action.handler.order
@@ -333,10 +333,10 @@
 [Test worker] TRACE griffon.util.AnnotationUtils -   adding handler 'invoke', since all dependencies have been added
 [Test worker] TRACE griffon.util.AnnotationUtils - handler dependency ordering complete
 [Test worker] DEBUG griffon.util.AnnotationUtils - computed handler order is [invoke]
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'model': org.codehaus.griffon.runtime.core.artifact.ModelArtifactHandler@7872e966
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'view': org.codehaus.griffon.runtime.core.artifact.ViewArtifactHandler@56a74891
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'controller': org.codehaus.griffon.runtime.core.artifact.ControllerArtifactHandler@55633d1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'service': org.codehaus.griffon.runtime.core.artifact.ServiceArtifactHandler@50f924d1
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'model': org.codehaus.griffon.runtime.core.artifact.ModelArtifactHandler@51c111da
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'view': org.codehaus.griffon.runtime.core.artifact.ViewArtifactHandler@2224c05f
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'controller': org.codehaus.griffon.runtime.core.artifact.ControllerArtifactHandler@c88af35
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Registering artifact handler for type 'service': org.codehaus.griffon.runtime.core.artifact.ServiceArtifactHandler@2f84a657
 [Test worker] DEBUG griffon.util.ServiceLoaderUtils - Reading griffon.core.artifact.GriffonView definitions from file:/home/travis/build/griffon/griffon/subprojects/griffon-core/build/resources/test/META-INF/griffon/griffon.core.artifact.GriffonView
 [Test worker] DEBUG griffon.util.ServiceLoaderUtils - Reading griffon.core.artifact.GriffonController definitions from file:/home/travis/build/griffon/griffon/subprojects/griffon-core/build/resources/test/META-INF/griffon/griffon.core.artifact.GriffonController
 [Test worker] DEBUG griffon.util.ServiceLoaderUtils - Reading griffon.core.artifact.GriffonService definitions from file:/home/travis/build/griffon/griffon/subprojects/griffon-core/build/resources/test/META-INF/griffon/griffon.core.artifact.GriffonService
@@ -348,7 +348,7 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'BootstrapEnd' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'StartupStart' synchronously
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.startupGroups
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@7318ec0e; key=application.startupGroups; value='[integration]'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@381970ee; key=application.startupGroups; value='[integration]'
 [Test worker] INFO integration.TestGriffonApplication - Initializing all startup groups: [integration]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'integration' with name 'integration'
@@ -369,35 +369,35 @@
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integration.IntegrationController.action.Abort.name
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.action.Abort.name
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - integration.IntegrationController.action.Abort.name = Abort
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.abort with integration.InvokeActionHandler@c9091a
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.abort with integration.InvokeActionHandler@6095370c
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Action for integration.IntegrationController.abort stored as abort
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integration.IntegrationController.action.ContextualFailure.name
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.action.ContextualFailure.name
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - integration.IntegrationController.action.ContextualFailure.name = Contextual Failure
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.contextualFailure with integration.InvokeActionHandler@c9091a
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.contextualFailure with integration.InvokeActionHandler@6095370c
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Action for integration.IntegrationController.contextualFailure stored as contextualFailure
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integration.IntegrationController.action.ContextualSuccess.name
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.action.ContextualSuccess.name
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - integration.IntegrationController.action.ContextualSuccess.name = Contextual Success
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.contextualSuccess with integration.InvokeActionHandler@c9091a
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.contextualSuccess with integration.InvokeActionHandler@6095370c
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Action for integration.IntegrationController.contextualSuccess stored as contextualSuccess
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integration.IntegrationController.action.HandleException.name
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.action.HandleException.name
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - integration.IntegrationController.action.HandleException.name = Handle Exception
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.handleException with integration.InvokeActionHandler@c9091a
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.handleException with integration.InvokeActionHandler@6095370c
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Action for integration.IntegrationController.handleException stored as handleException
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integration.IntegrationController.action.SayHello.name
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.action.SayHello.name
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - integration.IntegrationController.action.SayHello.name = Say Hello
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.sayHello with integration.InvokeActionHandler@c9091a
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.sayHello with integration.InvokeActionHandler@6095370c
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Action for integration.IntegrationController.sayHello stored as sayHello
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integration.IntegrationController.action.ThrowException.name
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.action.ThrowException.name
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - integration.IntegrationController.action.ThrowException.name = Throw Exception
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.throwException with integration.InvokeActionHandler@c9091a
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.throwException with integration.InvokeActionHandler@6095370c
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Action for integration.IntegrationController.throwException stored as throwException
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group integration:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@f26074d[integration:integration]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group integration:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@13460e97[integration:integration]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'integration'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] INFO integration.TestGriffonApplication - Initializing all integration startup groups: [sample]
@@ -417,17 +417,17 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group sample:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@34316894[sample:sample]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group sample:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@5e13e4fd[sample:sample]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'sample'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.lifecycle.handler.disable
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@7318ec0e; key=application; value='{title=integration, startupGroups=[integration], autoShutdown=true}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@381970ee; key=application; value='{title=integration, startupGroups=[integration], autoShutdown=true}'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'StartupEnd' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'ReadyStart' synchronously
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.lifecycle.handler.disable
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@7318ec0e; key=application; value='{title=integration, startupGroups=[integration], autoShutdown=true}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@381970ee; key=application; value='{title=integration, startupGroups=[integration], autoShutdown=true}'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'ReadyEnd' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Building MVC group 'simple' with name 'simple'
@@ -445,16 +445,16 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@23658254[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@13b70c7c[simple:simple]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'simple'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@23658254[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@13b70c7c[simple:simple]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'simple'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@23658254[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@13b70c7c[simple:simple]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
@@ -476,35 +476,35 @@
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integration.IntegrationController.action.Abort.name
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.action.Abort.name
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - integration.IntegrationController.action.Abort.name = Abort
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.abort with integration.InvokeActionHandler@c9091a
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.abort with integration.InvokeActionHandler@6095370c
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Action for integration.IntegrationController.abort stored as abort
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integration.IntegrationController.action.ContextualFailure.name
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.action.ContextualFailure.name
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - integration.IntegrationController.action.ContextualFailure.name = Contextual Failure
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.contextualFailure with integration.InvokeActionHandler@c9091a
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.contextualFailure with integration.InvokeActionHandler@6095370c
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Action for integration.IntegrationController.contextualFailure stored as contextualFailure
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integration.IntegrationController.action.ContextualSuccess.name
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.action.ContextualSuccess.name
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - integration.IntegrationController.action.ContextualSuccess.name = Contextual Success
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.contextualSuccess with integration.InvokeActionHandler@c9091a
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.contextualSuccess with integration.InvokeActionHandler@6095370c
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Action for integration.IntegrationController.contextualSuccess stored as contextualSuccess
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integration.IntegrationController.action.HandleException.name
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.action.HandleException.name
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - integration.IntegrationController.action.HandleException.name = Handle Exception
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.handleException with integration.InvokeActionHandler@c9091a
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.handleException with integration.InvokeActionHandler@6095370c
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Action for integration.IntegrationController.handleException stored as handleException
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integration.IntegrationController.action.SayHello.name
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.action.SayHello.name
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - integration.IntegrationController.action.SayHello.name = Say Hello
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.sayHello with integration.InvokeActionHandler@c9091a
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.sayHello with integration.InvokeActionHandler@6095370c
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Action for integration.IntegrationController.sayHello stored as sayHello
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integration.IntegrationController.action.ThrowException.name
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.action.ThrowException.name
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - integration.IntegrationController.action.ThrowException.name = Throw Exception
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.throwException with integration.InvokeActionHandler@c9091a
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.throwException with integration.InvokeActionHandler@6095370c
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Action for integration.IntegrationController.throwException stored as throwException
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group parent1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@59a1e1fc[integration:parent1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group parent1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@62b8683e[integration:parent1]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'parent1'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
@@ -523,16 +523,16 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6f33fdc2[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@28d67735[simple:simple]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'simple'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6f33fdc2[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@28d67735[simple:simple]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'simple'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6f33fdc2[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@28d67735[simple:simple]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
@@ -554,35 +554,35 @@
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integration.IntegrationController.action.Abort.name
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.action.Abort.name
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - integration.IntegrationController.action.Abort.name = Abort
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.abort with integration.InvokeActionHandler@c9091a
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.abort with integration.InvokeActionHandler@6095370c
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Action for integration.IntegrationController.abort stored as abort
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integration.IntegrationController.action.ContextualFailure.name
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.action.ContextualFailure.name
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - integration.IntegrationController.action.ContextualFailure.name = Contextual Failure
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.contextualFailure with integration.InvokeActionHandler@c9091a
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.contextualFailure with integration.InvokeActionHandler@6095370c
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Action for integration.IntegrationController.contextualFailure stored as contextualFailure
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integration.IntegrationController.action.ContextualSuccess.name
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.action.ContextualSuccess.name
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - integration.IntegrationController.action.ContextualSuccess.name = Contextual Success
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.contextualSuccess with integration.InvokeActionHandler@c9091a
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.contextualSuccess with integration.InvokeActionHandler@6095370c
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Action for integration.IntegrationController.contextualSuccess stored as contextualSuccess
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integration.IntegrationController.action.HandleException.name
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.action.HandleException.name
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - integration.IntegrationController.action.HandleException.name = Handle Exception
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.handleException with integration.InvokeActionHandler@c9091a
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.handleException with integration.InvokeActionHandler@6095370c
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Action for integration.IntegrationController.handleException stored as handleException
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integration.IntegrationController.action.SayHello.name
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.action.SayHello.name
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - integration.IntegrationController.action.SayHello.name = Say Hello
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.sayHello with integration.InvokeActionHandler@c9091a
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.sayHello with integration.InvokeActionHandler@6095370c
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Action for integration.IntegrationController.sayHello stored as sayHello
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=integration.IntegrationController.action.ThrowException.name
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.action.ThrowException.name
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - integration.IntegrationController.action.ThrowException.name = Throw Exception
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.throwException with integration.InvokeActionHandler@c9091a
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Configuring action integration.IntegrationController.throwException with integration.InvokeActionHandler@6095370c
 [Test worker] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Action for integration.IntegrationController.throwException stored as throwException
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group parent2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@cf9ac73[integration:parent2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group parent2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@606735a8[integration:parent2]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'parent2'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
@@ -601,16 +601,16 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.SimpleController
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@735f4cba[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@3102164d[simple:simple]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'simple'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@735f4cba[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@3102164d[simple:simple]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'simple'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@735f4cba[simple:simple]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group simple:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@3102164d[simple:simple]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group simple
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'simple' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
@@ -630,7 +630,7 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.RootController
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group root:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@1aeba81[root:root]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group root:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@59a99780[root:root]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'root'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child1
@@ -649,7 +649,7 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.ChildController
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@681ffbae[child:child1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@716be9bd[child:child1]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'child1'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child2
@@ -668,7 +668,7 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.ChildController
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@59af5264[child:child2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@308a1194[child:child2]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'child2'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child3
@@ -687,7 +687,7 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.ChildController
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child3:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@629c0e5b[child:child3]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child3:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@7e2d6040[child:child3]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'child3'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child1
@@ -695,42 +695,42 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child3
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child2
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child2
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child2' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@59af5264[child:child2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child2' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@308a1194[child:child2]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'child2'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@59af5264[child:child2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@308a1194[child:child2]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child2
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child2' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child3
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child3' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@629c0e5b[child:child3]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child3' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@7e2d6040[child:child3]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'child3'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child3:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@629c0e5b[child:child3]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child3:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@7e2d6040[child:child3]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child3
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child3' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child1' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@681ffbae[child:child1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child1' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@716be9bd[child:child1]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'child1'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@681ffbae[child:child1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@716be9bd[child:child1]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child1
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child1' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group root
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'root' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@1aeba81[root:root]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'root' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@59a99780[root:root]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'root'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group root:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@1aeba81[root:root]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group root:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@59a99780[root:root]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group root
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'root' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
@@ -753,7 +753,7 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.RootController
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group root:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@4798a468[root:root]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group root:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@58cb7fa0[root:root]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'root'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child1
@@ -772,7 +772,7 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.ChildController
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@2e2a233b[child:child1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6c633676[child:child1]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'child1'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child2
@@ -791,7 +791,7 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.ChildController
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@4e8c7e77[child:child2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@152f80c2[child:child2]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'child2'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child3
@@ -810,7 +810,7 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.ChildController
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child3:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@5f19f9b7[child:child3]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child3:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@5e63a115[child:child3]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'child3'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child1
@@ -818,42 +818,42 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child3
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child2
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child2
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child2' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@4e8c7e77[child:child2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child2' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@152f80c2[child:child2]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'child2'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@4e8c7e77[child:child2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@152f80c2[child:child2]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child2
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child2' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child3
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child3' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@5f19f9b7[child:child3]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child3' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@5e63a115[child:child3]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'child3'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child3:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@5f19f9b7[child:child3]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child3:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@5e63a115[child:child3]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child3
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child3' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child1' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@2e2a233b[child:child1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child1' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6c633676[child:child1]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'child1'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@2e2a233b[child:child1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6c633676[child:child1]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child1
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child1' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group root
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'root' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@4798a468[root:root]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'root' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@58cb7fa0[root:root]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'root'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group root:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@4798a468[root:root]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group root:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@58cb7fa0[root:root]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group root
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'root' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
@@ -876,7 +876,7 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.RootController
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group root:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@3c292bbd[root:root]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group root:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@2d1e8c8f[root:root]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'root'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child1
@@ -895,16 +895,16 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.ChildController
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@32dd2628[child:child1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@3a3903cd[child:child1]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'child1'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child1' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@32dd2628[child:child1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child1' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@3a3903cd[child:child1]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'child1'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@32dd2628[child:child1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@3a3903cd[child:child1]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child1
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child1' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
@@ -924,16 +924,16 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.ChildController
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@563071c5[child:child2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@549ff243[child:child2]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'child2'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child2
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child2' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@563071c5[child:child2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child2' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@549ff243[child:child2]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'child2'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@563071c5[child:child2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@549ff243[child:child2]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child2
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child2' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
@@ -953,16 +953,16 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.ChildController
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child3:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@3681c7f5[child:child3]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child3:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@70a7f0a5[child:child3]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'child3'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child3
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child3' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@3681c7f5[child:child3]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child3' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@70a7f0a5[child:child3]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'child3'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child3:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@3681c7f5[child:child3]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child3:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@70a7f0a5[child:child3]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child3
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child3' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
@@ -970,12 +970,12 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child2
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child3
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group root
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'root' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@3c292bbd[root:root]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'root' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@2d1e8c8f[root:root]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'root'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group root:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@3c292bbd[root:root]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group root:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@2d1e8c8f[root:root]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group root
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'root' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
@@ -995,7 +995,7 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.RootController
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group root:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@72cd00b[root:root]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group root:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@332284ec[root:root]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'root'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child1
@@ -1014,16 +1014,16 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.ChildController
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@215aa51a[child:child1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@7a1bb8f5[child:child1]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'child1'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child1' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@215aa51a[child:child1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child1' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@7a1bb8f5[child:child1]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'child1'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@215aa51a[child:child1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@7a1bb8f5[child:child1]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child1
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child1' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
@@ -1043,16 +1043,16 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.ChildController
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@a302a5b[child:child2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@28c38ed4[child:child2]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'child2'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child2
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child2' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@a302a5b[child:child2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child2' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@28c38ed4[child:child2]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'child2'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@a302a5b[child:child2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@28c38ed4[child:child2]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child2
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child2' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
@@ -1072,16 +1072,16 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.ChildController
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child3:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@42a51b6f[child:child3]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child3:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@12ecb218[child:child3]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'child3'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child3
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child3' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@42a51b6f[child:child3]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child3' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@12ecb218[child:child3]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'child3'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child3:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@42a51b6f[child:child3]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child3:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@12ecb218[child:child3]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child3
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child3' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
@@ -1089,12 +1089,12 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child2
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child3
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group root
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'root' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@72cd00b[root:root]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'root' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@332284ec[root:root]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'root'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group root:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@72cd00b[root:root]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group root:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@332284ec[root:root]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group root
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'root' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
@@ -1114,7 +1114,7 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.RootController
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group root:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@659e8a4f[root:root]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group root:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@2f38143f[root:root]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'root'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child1
@@ -1133,26 +1133,26 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.ChildController
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@29520785[child:child1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group child1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@4179002b[child:child1]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'child1'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child1' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@29520785[child:child1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child1' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@4179002b[child:child1]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'child1'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@29520785[child:child1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group child1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@4179002b[child:child1]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group child1
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'child1' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group root
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'root' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@659e8a4f[root:root]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'root' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@2f38143f[root:root]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'root'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group root:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@659e8a4f[root:root]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group root:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@2f38143f[root:root]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group root
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'root' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
@@ -1172,16 +1172,16 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'NewInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.artifact.AbstractArtifactManager - Searching for griffonClass of integration.ArgsController
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group args:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6dc682db[args:args]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group args:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@3f7d7ecb[args:args]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'args'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'CreateMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group args
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'args' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6dc682db[args:args]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'args' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@3f7d7ecb[args:args]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'args'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group args:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@6dc682db[args:args]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group args:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@3f7d7ecb[args:args]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group args
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'args' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
@@ -1225,49 +1225,49 @@
 [Test worker] DEBUG integration.TestGriffonApplication - Shutdown stage 2: notify all shutdown handlers
 [Test worker] DEBUG integration.TestGriffonApplication - Shutdown stage 3: destroy all MVC groups
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'integration' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@f26074d[integration:integration]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'integration' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@13460e97[integration:integration]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'integration'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group integration:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@f26074d[integration:integration]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group integration:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@13460e97[integration:integration]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group integration
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'integration' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group sample
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'sample' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@34316894[sample:sample]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'sample' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@5e13e4fd[sample:sample]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'sample'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group sample:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@34316894[sample:sample]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group sample:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@5e13e4fd[sample:sample]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group sample
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'sample' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group parent1
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'parent1' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@59a1e1fc[integration:parent1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'parent1' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@62b8683e[integration:parent1]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'parent1'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group parent1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@59a1e1fc[integration:parent1]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group parent1:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@62b8683e[integration:parent1]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group parent1
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'parent1' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group parent2
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'parent2' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@cf9ac73[integration:parent2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'parent2' points to org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@606735a8[integration:parent2]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'parent2'
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group parent2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@cf9ac73[integration:parent2]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group parent2:org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup@606735a8[integration:parent2]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group parent2
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'parent2' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
 [Test worker] DEBUG integration.TestGriffonApplication - Shutdown stage 4: execute Shutdown script
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.lifecycle.handler.disable
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
-[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@7318ec0e; key=application; value='{title=integration, startupGroups=[integration], autoShutdown=true}'
+[Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@381970ee; key=application; value='{title=integration, startupGroups=[integration], autoShutdown=true}'
 </pre>
 </span>
 </div>
@@ -1279,7 +1279,7 @@
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 2.14</a> at Jun 27, 2016 3:58:26 PM</p>
+<a href="http://www.gradle.org">Gradle 2.14</a> at Jun 29, 2016 3:55:26 PM</p>
 </div>
 </div>
 </body>

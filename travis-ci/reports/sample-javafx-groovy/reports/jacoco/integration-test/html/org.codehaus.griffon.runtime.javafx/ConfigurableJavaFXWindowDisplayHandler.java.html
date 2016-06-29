@@ -63,13 +63,13 @@ public class ConfigurableJavaFXWindowDisplayHandler extends ConfigurableWindowDi
     @Override
     protected boolean handleHideByInjectedHandler(@Nonnull String name, @Nonnull Window window) {
         try {
-<span class="fc" id="L66">            JavaFXWindowDisplayHandler handler = getApplication().getInjector()</span>
+<span class="nc" id="L66">            JavaFXWindowDisplayHandler handler = getApplication().getInjector()</span>
 <span class="nc" id="L67">                .getInstance(JavaFXWindowDisplayHandler.class, named(name));</span>
 <span class="nc" id="L68">            LOG.trace(&quot;Hiding {} with injected handler&quot;, name);</span>
 <span class="nc" id="L69">            handler.hide(name, window);</span>
 <span class="nc" id="L70">            return true;</span>
-<span class="fc" id="L71">        } catch (InstanceNotFoundException infe) {</span>
-<span class="fc" id="L72">            return super.handleHideByInjectedHandler(name, window);</span>
+<span class="nc" id="L71">        } catch (InstanceNotFoundException infe) {</span>
+<span class="nc" id="L72">            return super.handleHideByInjectedHandler(name, window);</span>
         }
     }
 }

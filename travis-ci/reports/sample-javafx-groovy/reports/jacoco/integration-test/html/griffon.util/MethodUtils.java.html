@@ -204,13 +204,13 @@ import java.util.WeakHashMap;
         IllegalAccessException,
         InvocationTargetException {
 
-<span class="pc bpc" id="L207" title="1 of 2 branches missed.">        if (args == null) {</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">        if (args == null) {</span>
 <span class="nc" id="L208">            args = EMPTY_OBJECT_ARRAY;</span>
         }
-<span class="fc" id="L210">        int arguments = args.length;</span>
-<span class="fc" id="L211">        Class[] parameterTypes = new Class[arguments];</span>
-<span class="pc bpc" id="L212" title="1 of 2 branches missed.">        for (int i = 0; i &lt; arguments; i++) {</span>
-<span class="pc bpc" id="L213" title="1 of 2 branches missed.">            parameterTypes[i] = args[i] != null ? args[i].getClass() : Object.class;</span>
+<span class="nc" id="L210">        int arguments = args.length;</span>
+<span class="nc" id="L211">        Class[] parameterTypes = new Class[arguments];</span>
+<span class="nc bnc" id="L212" title="All 2 branches missed.">        for (int i = 0; i &lt; arguments; i++) {</span>
+<span class="nc bnc" id="L213" title="All 2 branches missed.">            parameterTypes[i] = args[i] != null ? args[i].getClass() : Object.class;</span>
         }
 <span class="nc" id="L215">        return invokeMethod(object, methodName, args, parameterTypes);</span>
 
@@ -251,20 +251,20 @@ import java.util.WeakHashMap;
         IllegalAccessException,
         InvocationTargetException {
 
-<span class="pc bpc" id="L254" title="1 of 2 branches missed.">        if (parameterTypes == null) {</span>
+<span class="nc bnc" id="L254" title="All 2 branches missed.">        if (parameterTypes == null) {</span>
 <span class="nc" id="L255">            parameterTypes = EMPTY_CLASS_PARAMETERS;</span>
         }
-<span class="pc bpc" id="L257" title="1 of 2 branches missed.">        if (args == null) {</span>
+<span class="nc bnc" id="L257" title="All 2 branches missed.">        if (args == null) {</span>
 <span class="nc" id="L258">            args = EMPTY_OBJECT_ARRAY;</span>
         }
 
-<span class="fc" id="L261">        Method method = getMatchingAccessibleMethod(</span>
-<span class="fc" id="L262">            object.getClass(),</span>
+<span class="nc" id="L261">        Method method = getMatchingAccessibleMethod(</span>
+<span class="nc" id="L262">            object.getClass(),</span>
             methodName,
             parameterTypes);
-<span class="pc bpc" id="L265" title="1 of 2 branches missed.">        if (method == null) {</span>
-<span class="fc" id="L266">            throw new NoSuchMethodException(&quot;No such accessible method: &quot; +</span>
-<span class="fc" id="L267">                methodName + &quot;() on object: &quot; + object.getClass().getName());</span>
+<span class="nc bnc" id="L265" title="All 2 branches missed.">        if (method == null) {</span>
+<span class="nc" id="L266">            throw new NoSuchMethodException(&quot;No such accessible method: &quot; +</span>
+<span class="nc" id="L267">                methodName + &quot;() on object: &quot; + object.getClass().getName());</span>
         }
 <span class="nc" id="L269">        return method.invoke(object, args);</span>
     }
@@ -328,15 +328,15 @@ import java.util.WeakHashMap;
         NoSuchMethodException,
         IllegalAccessException,
         InvocationTargetException {
-<span class="pc bpc" id="L331" title="1 of 2 branches missed.">        if (args == null) {</span>
+<span class="nc bnc" id="L331" title="All 2 branches missed.">        if (args == null) {</span>
 <span class="nc" id="L332">            args = EMPTY_OBJECT_ARRAY;</span>
         }
-<span class="fc" id="L334">        int arguments = args.length;</span>
-<span class="fc" id="L335">        Class[] parameterTypes = new Class[arguments];</span>
-<span class="pc bpc" id="L336" title="1 of 2 branches missed.">        for (int i = 0; i &lt; arguments; i++) {</span>
+<span class="nc" id="L334">        int arguments = args.length;</span>
+<span class="nc" id="L335">        Class[] parameterTypes = new Class[arguments];</span>
+<span class="nc bnc" id="L336" title="All 2 branches missed.">        for (int i = 0; i &lt; arguments; i++) {</span>
 <span class="nc bnc" id="L337" title="All 2 branches missed.">            parameterTypes[i] = args[i] != null ? args[i].getClass() : Object.class;</span>
         }
-<span class="fc" id="L339">        return invokeExactMethod(object, methodName, args, parameterTypes);</span>
+<span class="nc" id="L339">        return invokeExactMethod(object, methodName, args, parameterTypes);</span>
 
     }
 
@@ -369,23 +369,23 @@ import java.util.WeakHashMap;
         IllegalAccessException,
         InvocationTargetException {
 
-<span class="pc bpc" id="L372" title="1 of 2 branches missed.">        if (args == null) {</span>
+<span class="nc bnc" id="L372" title="All 2 branches missed.">        if (args == null) {</span>
 <span class="nc" id="L373">            args = EMPTY_OBJECT_ARRAY;</span>
         }
 
-<span class="pc bpc" id="L376" title="1 of 2 branches missed.">        if (parameterTypes == null) {</span>
+<span class="nc bnc" id="L376" title="All 2 branches missed.">        if (parameterTypes == null) {</span>
 <span class="nc" id="L377">            parameterTypes = EMPTY_CLASS_PARAMETERS;</span>
         }
 
-<span class="fc" id="L380">        Method method = getAccessibleMethod(</span>
-<span class="fc" id="L381">            object.getClass(),</span>
+<span class="nc" id="L380">        Method method = getAccessibleMethod(</span>
+<span class="nc" id="L381">            object.getClass(),</span>
             methodName,
             parameterTypes);
-<span class="pc bpc" id="L384" title="1 of 2 branches missed.">        if (method == null) {</span>
+<span class="nc bnc" id="L384" title="All 2 branches missed.">        if (method == null) {</span>
 <span class="nc" id="L385">            throw new NoSuchMethodException(&quot;No such accessible method: &quot; +</span>
 <span class="nc" id="L386">                methodName + &quot;() on object: &quot; + object.getClass().getName());</span>
         }
-<span class="fc" id="L388">        return method.invoke(object, args);</span>
+<span class="nc" id="L388">        return method.invoke(object, args);</span>
 
     }
 
@@ -697,17 +697,17 @@ import java.util.WeakHashMap;
         Class[] parameterTypes) {
 
         try {
-<span class="fc" id="L700">            MethodDescriptor md = new MethodDescriptor(clazz, methodName, parameterTypes, true);</span>
+<span class="nc" id="L700">            MethodDescriptor md = new MethodDescriptor(clazz, methodName, parameterTypes, true);</span>
             // Check the cache first
-<span class="fc" id="L702">            Method method = getCachedMethod(md);</span>
-<span class="fc bfc" id="L703" title="All 2 branches covered.">            if (method != null) {</span>
-<span class="fc" id="L704">                return method;</span>
+<span class="nc" id="L702">            Method method = getCachedMethod(md);</span>
+<span class="nc bnc" id="L703" title="All 2 branches missed.">            if (method != null) {</span>
+<span class="nc" id="L704">                return method;</span>
             }
 
-<span class="fc" id="L707">            method = getAccessibleMethod</span>
-<span class="fc" id="L708">                (clazz, clazz.getMethod(methodName, parameterTypes));</span>
-<span class="fc" id="L709">            cacheMethod(md, method);</span>
-<span class="fc" id="L710">            return method;</span>
+<span class="nc" id="L707">            method = getAccessibleMethod</span>
+<span class="nc" id="L708">                (clazz, clazz.getMethod(methodName, parameterTypes));</span>
+<span class="nc" id="L709">            cacheMethod(md, method);</span>
+<span class="nc" id="L710">            return method;</span>
 <span class="nc" id="L711">        } catch (NoSuchMethodException e) {</span>
 <span class="nc" id="L712">            return (null);</span>
         }
@@ -913,14 +913,14 @@ import java.util.WeakHashMap;
         Class clazz,
         String methodName,
         Class[] parameterTypes) {
-<span class="fc" id="L916">        MethodDescriptor md = new MethodDescriptor(clazz, methodName, parameterTypes, false);</span>
+<span class="nc" id="L916">        MethodDescriptor md = new MethodDescriptor(clazz, methodName, parameterTypes, false);</span>
 
         // see if we can find the method directly
         // most of the time this works and it's much faster
         try {
             // Check the cache first
-<span class="fc" id="L922">            Method method = getCachedMethod(md);</span>
-<span class="pc bpc" id="L923" title="1 of 2 branches missed.">            if (method != null) {</span>
+<span class="nc" id="L922">            Method method = getCachedMethod(md);</span>
+<span class="nc bnc" id="L923" title="All 2 branches missed.">            if (method != null) {</span>
 <span class="nc" id="L924">                return method;</span>
             }
 
@@ -931,20 +931,20 @@ import java.util.WeakHashMap;
 <span class="nc" id="L931">            cacheMethod(md, method);</span>
 <span class="nc" id="L932">            return method;</span>
 
-<span class="fc" id="L934">        } catch (NoSuchMethodException e) { /* SWALLOW */ }</span>
+<span class="nc" id="L934">        } catch (NoSuchMethodException e) { /* SWALLOW */ }</span>
 
         // search through all methods 
-<span class="fc" id="L937">        int paramSize = parameterTypes.length;</span>
-<span class="fc" id="L938">        Method bestMatch = null;</span>
-<span class="fc" id="L939">        Method[] methods = clazz.getMethods();</span>
-<span class="fc" id="L940">        float bestMatchCost = Float.MAX_VALUE;</span>
-<span class="fc" id="L941">        float myCost = Float.MAX_VALUE;</span>
-<span class="fc bfc" id="L942" title="All 2 branches covered.">        for (int i = 0, size = methods.length; i &lt; size; i++) {</span>
-<span class="fc bfc" id="L943" title="All 2 branches covered.">            if (methods[i].getName().equals(methodName)) {</span>
+<span class="nc" id="L937">        int paramSize = parameterTypes.length;</span>
+<span class="nc" id="L938">        Method bestMatch = null;</span>
+<span class="nc" id="L939">        Method[] methods = clazz.getMethods();</span>
+<span class="nc" id="L940">        float bestMatchCost = Float.MAX_VALUE;</span>
+<span class="nc" id="L941">        float myCost = Float.MAX_VALUE;</span>
+<span class="nc bnc" id="L942" title="All 2 branches missed.">        for (int i = 0, size = methods.length; i &lt; size; i++) {</span>
+<span class="nc bnc" id="L943" title="All 2 branches missed.">            if (methods[i].getName().equals(methodName)) {</span>
                 // compare parameters
-<span class="fc" id="L945">                Class[] methodsParams = methods[i].getParameterTypes();</span>
-<span class="fc" id="L946">                int methodParamSize = methodsParams.length;</span>
-<span class="pc bpc" id="L947" title="1 of 2 branches missed.">                if (methodParamSize == paramSize) {</span>
+<span class="nc" id="L945">                Class[] methodsParams = methods[i].getParameterTypes();</span>
+<span class="nc" id="L946">                int methodParamSize = methodsParams.length;</span>
+<span class="nc bnc" id="L947" title="All 2 branches missed.">                if (methodParamSize == paramSize) {</span>
 <span class="nc" id="L948">                    boolean match = true;</span>
 <span class="nc bnc" id="L949" title="All 2 branches missed.">                    for (int n = 0; n &lt; methodParamSize; n++) {</span>
 <span class="nc bnc" id="L950" title="All 2 branches missed.">                        if (!isAssignmentCompatible(methodsParams[n], parameterTypes[n])) {</span>
@@ -968,10 +968,10 @@ import java.util.WeakHashMap;
                 }
             }
         }
-<span class="pc bpc" id="L971" title="1 of 2 branches missed.">        if (bestMatch != null) { //find a match</span>
+<span class="nc bnc" id="L971" title="All 2 branches missed.">        if (bestMatch != null) { //find a match</span>
 <span class="nc" id="L972">            cacheMethod(md, bestMatch);</span>
         }
-<span class="fc" id="L974">        return bestMatch;</span>
+<span class="nc" id="L974">        return bestMatch;</span>
     }
 
     /**
@@ -1188,13 +1188,13 @@ import java.util.WeakHashMap;
      * @return The cached method
      */
     private static Method getCachedMethod(MethodDescriptor md) {
-<span class="pc bpc" id="L1191" title="1 of 2 branches missed.">        if (CACHE_METHODS) {</span>
-<span class="fc" id="L1192">            Reference methodRef = (Reference) cache.get(md);</span>
-<span class="fc bfc" id="L1193" title="All 2 branches covered.">            if (methodRef != null) {</span>
-<span class="fc" id="L1194">                return (Method) methodRef.get();</span>
+<span class="nc bnc" id="L1191" title="All 2 branches missed.">        if (CACHE_METHODS) {</span>
+<span class="nc" id="L1192">            Reference methodRef = (Reference) cache.get(md);</span>
+<span class="nc bnc" id="L1193" title="All 2 branches missed.">            if (methodRef != null) {</span>
+<span class="nc" id="L1194">                return (Method) methodRef.get();</span>
             }
         }
-<span class="fc" id="L1197">        return null;</span>
+<span class="nc" id="L1197">        return null;</span>
     }
 
     /**
@@ -1204,12 +1204,12 @@ import java.util.WeakHashMap;
      * @param method The method to cache
      */
     private static void cacheMethod(MethodDescriptor md, Method method) {
-<span class="pc bpc" id="L1207" title="1 of 2 branches missed.">        if (CACHE_METHODS) {</span>
-<span class="pc bpc" id="L1208" title="1 of 2 branches missed.">            if (method != null) {</span>
-<span class="fc" id="L1209">                cache.put(md, new WeakReference(method));</span>
+<span class="nc bnc" id="L1207" title="All 2 branches missed.">        if (CACHE_METHODS) {</span>
+<span class="nc bnc" id="L1208" title="All 2 branches missed.">            if (method != null) {</span>
+<span class="nc" id="L1209">                cache.put(md, new WeakReference(method));</span>
             }
         }
-<span class="fc" id="L1212">    }</span>
+<span class="nc" id="L1212">    }</span>
 
     public static Object invokeSafe(Method method, Object instance, Object[] args) {
         try {
@@ -1240,24 +1240,24 @@ import java.util.WeakHashMap;
          * @param paramTypes the array of classes representing the paramater types
          * @param exact      whether the match has to be exact.
          */
-<span class="fc" id="L1243">        public MethodDescriptor(Class cls, String methodName, Class[] paramTypes, boolean exact) {</span>
-<span class="pc bpc" id="L1244" title="1 of 2 branches missed.">            if (cls == null) {</span>
+<span class="nc" id="L1243">        public MethodDescriptor(Class cls, String methodName, Class[] paramTypes, boolean exact) {</span>
+<span class="nc bnc" id="L1244" title="All 2 branches missed.">            if (cls == null) {</span>
 <span class="nc" id="L1245">                throw new IllegalArgumentException(&quot;Class must not be null&quot;);</span>
             }
-<span class="pc bpc" id="L1247" title="1 of 2 branches missed.">            if (methodName == null) {</span>
+<span class="nc bnc" id="L1247" title="All 2 branches missed.">            if (methodName == null) {</span>
 <span class="nc" id="L1248">                throw new IllegalArgumentException(&quot;Method Name must not be null&quot;);</span>
             }
-<span class="pc bpc" id="L1250" title="1 of 2 branches missed.">            if (paramTypes == null) {</span>
+<span class="nc bnc" id="L1250" title="All 2 branches missed.">            if (paramTypes == null) {</span>
 <span class="nc" id="L1251">                paramTypes = EMPTY_CLASS_PARAMETERS;</span>
             }
 
-<span class="fc" id="L1254">            this.cls = cls;</span>
-<span class="fc" id="L1255">            this.methodName = methodName;</span>
-<span class="fc" id="L1256">            this.paramTypes = paramTypes;</span>
-<span class="fc" id="L1257">            this.exact = exact;</span>
+<span class="nc" id="L1254">            this.cls = cls;</span>
+<span class="nc" id="L1255">            this.methodName = methodName;</span>
+<span class="nc" id="L1256">            this.paramTypes = paramTypes;</span>
+<span class="nc" id="L1257">            this.exact = exact;</span>
 
-<span class="fc" id="L1259">            this.hashCode = methodName.length();</span>
-<span class="fc" id="L1260">        }</span>
+<span class="nc" id="L1259">            this.hashCode = methodName.length();</span>
+<span class="nc" id="L1260">        }</span>
 
         /**
          * Checks for equality.
@@ -1266,16 +1266,16 @@ import java.util.WeakHashMap;
          * @return true, if the object describes the same Method.
          */
         public boolean equals(Object obj) {
-<span class="pc bpc" id="L1269" title="1 of 2 branches missed.">            if (!(obj instanceof MethodDescriptor)) {</span>
+<span class="nc bnc" id="L1269" title="All 2 branches missed.">            if (!(obj instanceof MethodDescriptor)) {</span>
 <span class="nc" id="L1270">                return false;</span>
             }
-<span class="fc" id="L1272">            MethodDescriptor md = (MethodDescriptor) obj;</span>
+<span class="nc" id="L1272">            MethodDescriptor md = (MethodDescriptor) obj;</span>
 
-<span class="fc bfc" id="L1274" title="All 2 branches covered.">            return (</span>
+<span class="nc bnc" id="L1274" title="All 2 branches missed.">            return (</span>
                 exact == md.exact &amp;&amp;
-<span class="pc bpc" id="L1276" title="1 of 2 branches missed.">                    methodName.equals(md.methodName) &amp;&amp;</span>
-<span class="pc bpc" id="L1277" title="1 of 2 branches missed.">                    cls.equals(md.cls) &amp;&amp;</span>
-<span class="pc bpc" id="L1278" title="1 of 2 branches missed.">                    java.util.Arrays.equals(paramTypes, md.paramTypes)</span>
+<span class="nc bnc" id="L1276" title="All 2 branches missed.">                    methodName.equals(md.methodName) &amp;&amp;</span>
+<span class="nc bnc" id="L1277" title="All 2 branches missed.">                    cls.equals(md.cls) &amp;&amp;</span>
+<span class="nc bnc" id="L1278" title="All 2 branches missed.">                    java.util.Arrays.equals(paramTypes, md.paramTypes)</span>
             );
         }
 
@@ -1288,7 +1288,7 @@ import java.util.WeakHashMap;
          * @return the string length of method name.
          */
         public int hashCode() {
-<span class="fc" id="L1291">            return hashCode;</span>
+<span class="nc" id="L1291">            return hashCode;</span>
         }
     }
 }

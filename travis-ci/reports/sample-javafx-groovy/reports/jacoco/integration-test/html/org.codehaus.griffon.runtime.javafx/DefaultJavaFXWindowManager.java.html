@@ -68,13 +68,13 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager&lt;Window&
 
     @Override
     protected boolean isWindowVisible(@Nonnull Window window) {
-<span class="fc" id="L71">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
-<span class="fc" id="L72">        return window.isShowing();</span>
+<span class="nc" id="L71">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="nc" id="L72">        return window.isShowing();</span>
     }
 
     public void handleClose(@Nonnull Window widget) {
-<span class="pc bpc" id="L76" title="1 of 2 branches missed.">        if (getApplication().getPhase() == ApplicationPhase.SHUTDOWN) {</span>
-<span class="fc" id="L77">            return;</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        if (getApplication().getPhase() == ApplicationPhase.SHUTDOWN) {</span>
+<span class="nc" id="L77">            return;</span>
         }
 
 <span class="nc" id="L80">        List&lt;Window&gt; visibleWindows = new ArrayList&lt;&gt;();</span>
@@ -96,9 +96,9 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager&lt;Window&
      */
 <span class="fc" id="L97">    private class OnWindowHidingHelper implements EventHandler&lt;WindowEvent&gt; {</span>
         public void handle(WindowEvent event) {
-<span class="fc" id="L99">            hide((Window) event.getSource());</span>
-<span class="fc" id="L100">            handleClose((Window) event.getSource());</span>
-<span class="fc" id="L101">        }</span>
+<span class="nc" id="L99">            hide((Window) event.getSource());</span>
+<span class="nc" id="L100">            handleClose((Window) event.getSource());</span>
+<span class="nc" id="L101">        }</span>
     }
 
     /**
@@ -126,9 +126,9 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager&lt;Window&
          * Triggers a &lt;tt&gt;WindowHidden&lt;/tt&gt; event with the window as sole argument
          */
         public void handle(WindowEvent windowEvent) {
-<span class="fc" id="L129">            Window window = (Window) windowEvent.getSource();</span>
-<span class="fc" id="L130">            event(ApplicationEvent.WINDOW_HIDDEN, asList(findWindowName(window), window));</span>
-<span class="fc" id="L131">        }</span>
+<span class="nc" id="L129">            Window window = (Window) windowEvent.getSource();</span>
+<span class="nc" id="L130">            event(ApplicationEvent.WINDOW_HIDDEN, asList(findWindowName(window), window));</span>
+<span class="nc" id="L131">        }</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

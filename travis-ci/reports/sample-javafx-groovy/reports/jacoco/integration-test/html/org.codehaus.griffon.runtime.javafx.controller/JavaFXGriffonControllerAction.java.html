@@ -61,7 +61,7 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
 <span class="fc" id="L61">        requireNonNull(uiThreadManager, &quot;Argument 'uiThreadManager' must not be null&quot;);</span>
 
 <span class="fc" id="L63">        toolkitAction = createAction(actionManager, controller, actionName);</span>
-<span class="fc" id="L64">        toolkitAction.setOnAction(actionEvent -&gt; actionManager.invokeAction(controller, actionName, actionEvent));</span>
+<span class="pc" id="L64">        toolkitAction.setOnAction(actionEvent -&gt; actionManager.invokeAction(controller, actionName, actionEvent));</span>
 
 <span class="fc" id="L66">        addPropertyChangeListener(evt -&gt; uiThreadManager.runInsideUIAsync(() -&gt; handlePropertyChange(evt)));</span>
 <span class="fc" id="L67">    }</span>

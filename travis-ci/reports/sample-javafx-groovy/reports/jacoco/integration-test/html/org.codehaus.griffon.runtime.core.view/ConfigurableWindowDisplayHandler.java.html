@@ -148,11 +148,11 @@ public class ConfigurableWindowDisplayHandler&lt;W&gt; implements WindowDisplayH
 
     @SuppressWarnings(&quot;unchecked&quot;)
     public void hide(@Nonnull String name, @Nonnull W window) {
-<span class="fc" id="L151">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
-<span class="fc" id="L152">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="nc" id="L151">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="nc" id="L152">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
 
-<span class="fc" id="L154">        Map&lt;String, Object&gt; options = windowBlock(name);</span>
-<span class="pc bpc" id="L155" title="1 of 2 branches missed.">        if (!options.isEmpty()) {</span>
+<span class="nc" id="L154">        Map&lt;String, Object&gt; options = windowBlock(name);</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">        if (!options.isEmpty()) {</span>
 <span class="nc" id="L156">            Object handler = options.get(&quot;hide&quot;);</span>
 <span class="nc bnc" id="L157" title="All 2 branches missed.">            if (canBeRun(handler)) {</span>
 <span class="nc" id="L158">                LOG.trace(&quot;Hiding {} with hide: handler&quot;, name);</span>
@@ -165,12 +165,12 @@ public class ConfigurableWindowDisplayHandler&lt;W&gt; implements WindowDisplayH
             }
         }
 
-<span class="pc bpc" id="L168" title="1 of 2 branches missed.">        if (handleHideByInjectedHandler(name, window)) {</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">        if (handleHideByInjectedHandler(name, window)) {</span>
 <span class="nc" id="L169">            return;</span>
         }
 
-<span class="fc" id="L172">        options = windowManagerBlock();</span>
-<span class="pc bpc" id="L173" title="1 of 2 branches missed.">        if (!options.isEmpty()) {</span>
+<span class="nc" id="L172">        options = windowManagerBlock();</span>
+<span class="nc bnc" id="L173" title="All 2 branches missed.">        if (!options.isEmpty()) {</span>
 <span class="nc" id="L174">            Object defaultHide = options.get(&quot;defaultHide&quot;);</span>
 <span class="nc bnc" id="L175" title="All 2 branches missed.">            if (canBeRun(defaultHide)) {</span>
 <span class="nc" id="L176">                LOG.trace(&quot;Hiding {} with defaultHide: handler&quot;, name);</span>
@@ -179,9 +179,9 @@ public class ConfigurableWindowDisplayHandler&lt;W&gt; implements WindowDisplayH
             }
         }
 
-<span class="fc" id="L182">        LOG.trace(&quot;Hiding {} with default handler&quot;, name);</span>
-<span class="fc" id="L183">        fetchDefaultWindowDisplayHandler().hide(name, window);</span>
-<span class="fc" id="L184">    }</span>
+<span class="nc" id="L182">        LOG.trace(&quot;Hiding {} with default handler&quot;, name);</span>
+<span class="nc" id="L183">        fetchDefaultWindowDisplayHandler().hide(name, window);</span>
+<span class="nc" id="L184">    }</span>
 
     @SuppressWarnings(&quot;unchecked&quot;)
     protected boolean handleShowByInjectedHandler(@Nonnull String name, @Nonnull W window) {
@@ -200,15 +200,15 @@ public class ConfigurableWindowDisplayHandler&lt;W&gt; implements WindowDisplayH
     @SuppressWarnings(&quot;unchecked&quot;)
     protected boolean handleHideByInjectedHandler(@Nonnull String name, @Nonnull W window) {
         try {
-<span class="fc" id="L203">            WindowDisplayHandler&lt;W&gt; handler = getApplication().getInjector()</span>
+<span class="nc" id="L203">            WindowDisplayHandler&lt;W&gt; handler = getApplication().getInjector()</span>
 <span class="nc" id="L204">                .getInstance(WindowDisplayHandler.class, named(name));</span>
 <span class="nc" id="L205">            LOG.trace(&quot;Hiding {} with injected handler&quot;, name);</span>
 <span class="nc" id="L206">            handler.hide(name, window);</span>
 <span class="nc" id="L207">            return true;</span>
-<span class="fc" id="L208">        } catch (InstanceNotFoundException infe) {</span>
+<span class="nc" id="L208">        } catch (InstanceNotFoundException infe) {</span>
             // ignore
         }
-<span class="fc" id="L211">        return false;</span>
+<span class="nc" id="L211">        return false;</span>
     }
 
     public WindowDisplayHandler&lt;W&gt; getDelegateWindowsDisplayHandler() {

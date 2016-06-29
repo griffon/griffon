@@ -303,23 +303,23 @@ public abstract class AbstractEventRouter implements EventRouter {
     @Override
     @SuppressWarnings(&quot;unchecked&quot;)
     public void removeEventListener(@Nonnull Object listener) {
-<span class="fc" id="L306">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
-<span class="pc bpc" id="L307" title="1 of 2 branches missed.">        if (listener instanceof RunnableWithArgs) {</span>
+<span class="nc" id="L306">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="nc bnc" id="L307" title="All 2 branches missed.">        if (listener instanceof RunnableWithArgs) {</span>
 <span class="nc" id="L308">            throw new IllegalArgumentException(&quot;Cannot remove an event listener of type &quot; + RunnableWithArgs.class.getName() +</span>
                 &quot; because the target event name is missing. &quot; + listener);
         }
-<span class="pc bpc" id="L311" title="1 of 2 branches missed.">        if (listener instanceof CallableWithArgs) {</span>
+<span class="nc bnc" id="L311" title="All 2 branches missed.">        if (listener instanceof CallableWithArgs) {</span>
 <span class="nc" id="L312">            throw new IllegalArgumentException(&quot;Cannot remove an event listener of type &quot; + CallableWithArgs.class.getName() +</span>
                 &quot; because the target event name is missing. &quot; + listener);
         }
 
-<span class="pc bpc" id="L316" title="1 of 2 branches missed.">        if (listener instanceof Map) {</span>
+<span class="nc bnc" id="L316" title="All 2 branches missed.">        if (listener instanceof Map) {</span>
 <span class="nc" id="L317">            removeEventListener((Map) listener);</span>
 <span class="nc" id="L318">            return;</span>
         }
 
-<span class="fc" id="L321">        boolean removed = false;</span>
-<span class="pc bpc" id="L322" title="1 of 2 branches missed.">        for (String eventName : methodCache.fetchMethodMetadata(listener.getClass()).keySet()) {</span>
+<span class="nc" id="L321">        boolean removed = false;</span>
+<span class="nc bnc" id="L322" title="All 2 branches missed.">        for (String eventName : methodCache.fetchMethodMetadata(listener.getClass()).keySet()) {</span>
 <span class="nc" id="L323">            eventName = eventName.substring(2); // cut off &quot;on&quot; from the name</span>
 <span class="nc" id="L324">            List&lt;Object&gt; instances = instanceListeners.get(eventName);</span>
 <span class="nc bnc" id="L325" title="All 4 branches missed.">            if (instances != null &amp;&amp; instances.contains(listener)) {</span>
@@ -331,16 +331,16 @@ public abstract class AbstractEventRouter implements EventRouter {
             }
 <span class="nc" id="L332">        }</span>
 
-<span class="fc" id="L334">        boolean nestedRemoved = removeNestedListeners(listener);</span>
+<span class="nc" id="L334">        boolean nestedRemoved = removeNestedListeners(listener);</span>
 
-<span class="pc bpc" id="L336" title="2 of 4 branches missed.">        if (removed || nestedRemoved) {</span>
+<span class="nc bnc" id="L336" title="All 4 branches missed.">        if (removed || nestedRemoved) {</span>
             try {
 <span class="nc" id="L338">                LOG.debug(&quot;Removing listener {}&quot;, listener);</span>
 <span class="nc" id="L339">            } catch (UnsupportedOperationException uoe) {</span>
 <span class="nc" id="L340">                LOG.debug(&quot;Removing listener {}&quot;, listener.getClass().getName());</span>
 <span class="nc" id="L341">            }</span>
         }
-<span class="fc" id="L343">    }</span>
+<span class="nc" id="L343">    }</span>
 
     @Override
     public void removeEventListener(@Nonnull Map&lt;String, Object&gt; listener) {
@@ -486,37 +486,37 @@ public abstract class AbstractEventRouter implements EventRouter {
     }
 
     protected boolean removeNestedListeners(@Nonnull Object owner) {
-<span class="fc" id="L489">        requireNonNull(owner, ERROR_OWNER_NULL);</span>
+<span class="nc" id="L489">        requireNonNull(owner, ERROR_OWNER_NULL);</span>
 
-<span class="fc" id="L491">        boolean removed = false;</span>
-<span class="fc" id="L492">        synchronized (functionalListeners) {</span>
-<span class="fc bfc" id="L493" title="All 2 branches covered.">            for (Map.Entry&lt;String, List&lt;Object&gt;&gt; event : functionalListeners.entrySet()) {</span>
-<span class="fc" id="L494">                String eventName = event.getKey();</span>
-<span class="fc" id="L495">                List&lt;Object&gt; listenerList = event.getValue();</span>
-<span class="fc" id="L496">                List&lt;Object&gt; toRemove = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L497" title="All 2 branches covered.">                for (Object listener : listenerList) {</span>
-<span class="pc bpc" id="L498" title="1 of 2 branches missed.">                    if (isNestedListener(listener, owner)) {</span>
+<span class="nc" id="L491">        boolean removed = false;</span>
+<span class="nc" id="L492">        synchronized (functionalListeners) {</span>
+<span class="nc bnc" id="L493" title="All 2 branches missed.">            for (Map.Entry&lt;String, List&lt;Object&gt;&gt; event : functionalListeners.entrySet()) {</span>
+<span class="nc" id="L494">                String eventName = event.getKey();</span>
+<span class="nc" id="L495">                List&lt;Object&gt; listenerList = event.getValue();</span>
+<span class="nc" id="L496">                List&lt;Object&gt; toRemove = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L497" title="All 2 branches missed.">                for (Object listener : listenerList) {</span>
+<span class="nc bnc" id="L498" title="All 2 branches missed.">                    if (isNestedListener(listener, owner)) {</span>
 <span class="nc" id="L499">                        toRemove.add(listener);</span>
                     }
-<span class="fc" id="L501">                }</span>
-<span class="pc bpc" id="L502" title="1 of 2 branches missed.">                removed = toRemove.size() &gt; 0;</span>
-<span class="pc bpc" id="L503" title="1 of 2 branches missed.">                for (Object listener : toRemove) {</span>
+<span class="nc" id="L501">                }</span>
+<span class="nc bnc" id="L502" title="All 2 branches missed.">                removed = toRemove.size() &gt; 0;</span>
+<span class="nc bnc" id="L503" title="All 2 branches missed.">                for (Object listener : toRemove) {</span>
 <span class="nc" id="L504">                    LOG.debug(&quot;Removing listener {} on {}&quot;, listener.getClass().getName(), capitalize(eventName));</span>
 <span class="nc" id="L505">                    listenerList.remove(listener);</span>
 <span class="nc" id="L506">                }</span>
-<span class="fc" id="L507">            }</span>
-<span class="pc" id="L508">        }</span>
+<span class="nc" id="L507">            }</span>
+<span class="nc" id="L508">        }</span>
 
-<span class="fc" id="L510">        return removed;</span>
+<span class="nc" id="L510">        return removed;</span>
     }
 
     protected boolean isNestedListener(@Nonnull Object listener, @Nonnull Object owner) {
-<span class="fc" id="L514">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
-<span class="fc" id="L515">        requireNonNull(owner, ERROR_OWNER_NULL);</span>
-<span class="fc" id="L516">        Class&lt;?&gt; listenerClass = listener.getClass();</span>
-<span class="pc bpc" id="L517" title="1 of 6 branches missed.">        return (listenerClass.isMemberClass() || listenerClass.isAnonymousClass() || listenerClass.isLocalClass()) &amp;&amp;</span>
-<span class="pc bpc" id="L518" title="1 of 2 branches missed.">            owner.getClass().equals(listenerClass.getEnclosingClass()) &amp;&amp;</span>
-<span class="pc bnc" id="L519" title="All 2 branches missed.">            owner.equals(GriffonClassUtils.getFieldValue(listener, &quot;this$0&quot;));</span>
+<span class="nc" id="L514">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="nc" id="L515">        requireNonNull(owner, ERROR_OWNER_NULL);</span>
+<span class="nc" id="L516">        Class&lt;?&gt; listenerClass = listener.getClass();</span>
+<span class="nc bnc" id="L517" title="All 6 branches missed.">        return (listenerClass.isMemberClass() || listenerClass.isAnonymousClass() || listenerClass.isLocalClass()) &amp;&amp;</span>
+<span class="nc bnc" id="L518" title="All 2 branches missed.">            owner.getClass().equals(listenerClass.getEnclosingClass()) &amp;&amp;</span>
+<span class="nc bnc" id="L519" title="All 2 branches missed.">            owner.equals(GriffonClassUtils.getFieldValue(listener, &quot;this$0&quot;));</span>
     }
 
     protected Object[] asArray(@Nonnull List&lt;?&gt; list) {

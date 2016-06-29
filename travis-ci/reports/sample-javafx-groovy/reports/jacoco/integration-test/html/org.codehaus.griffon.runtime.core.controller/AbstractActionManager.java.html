@@ -110,7 +110,7 @@ public abstract class AbstractActionManager implements ActionManager {
 
     @Nonnull
     protected Configuration getConfiguration() {
-<span class="fc" id="L113">        return application.getConfiguration();</span>
+<span class="nc" id="L113">        return application.getConfiguration();</span>
     }
 
     @Nonnull
@@ -140,9 +140,9 @@ public abstract class AbstractActionManager implements ActionManager {
 
     @Nullable
     public Action actionFor(@Nonnull GriffonController controller, @Nonnull String actionName) {
-<span class="fc" id="L143">        requireNonNull(controller, ERROR_CONTROLLER_NULL);</span>
-<span class="fc" id="L144">        requireNonBlank(actionName, ERROR_ACTION_NAME_BLANK);</span>
-<span class="fc" id="L145">        return actionCache.get(controller).get(normalizeName(actionName));</span>
+<span class="nc" id="L143">        requireNonNull(controller, ERROR_CONTROLLER_NULL);</span>
+<span class="nc" id="L144">        requireNonBlank(actionName, ERROR_ACTION_NAME_BLANK);</span>
+<span class="nc" id="L145">        return actionCache.get(controller).get(normalizeName(actionName));</span>
     }
 
     public void createActions(@Nonnull GriffonController controller) {
@@ -211,33 +211,33 @@ public abstract class AbstractActionManager implements ActionManager {
 
     @Override
     public void invokeAction(@Nonnull final Action action, @Nonnull final Object... args) {
-<span class="fc" id="L214">        requireNonNull(action, ERROR_ACTION_NULL);</span>
-<span class="fc" id="L215">        final GriffonController controller = action.getController();</span>
-<span class="fc" id="L216">        final String actionName = action.getActionName();</span>
-<span class="fc" id="L217">        Runnable runnable = new Runnable() {</span>
+<span class="nc" id="L214">        requireNonNull(action, ERROR_ACTION_NULL);</span>
+<span class="nc" id="L215">        final GriffonController controller = action.getController();</span>
+<span class="nc" id="L216">        final String actionName = action.getActionName();</span>
+<span class="nc" id="L217">        Runnable runnable = new Runnable() {</span>
             @SuppressWarnings(&quot;ThrowableResultOfMethodCallIgnored&quot;)
             public void run() {
-<span class="fc" id="L220">                Object[] updatedArgs = args;</span>
-<span class="fc" id="L221">                List&lt;ActionHandler&gt; copy = new ArrayList&lt;&gt;(handlers);</span>
-<span class="fc" id="L222">                List&lt;ActionHandler&gt; invokedHandlers = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L220">                Object[] updatedArgs = args;</span>
+<span class="nc" id="L221">                List&lt;ActionHandler&gt; copy = new ArrayList&lt;&gt;(handlers);</span>
+<span class="nc" id="L222">                List&lt;ActionHandler&gt; invokedHandlers = new ArrayList&lt;&gt;();</span>
 
-<span class="fc" id="L224">                final String qualifiedActionName = action.getFullyQualifiedName();</span>
-<span class="fc" id="L225">                ActionExecutionStatus status = ActionExecutionStatus.OK;</span>
+<span class="nc" id="L224">                final String qualifiedActionName = action.getFullyQualifiedName();</span>
+<span class="nc" id="L225">                ActionExecutionStatus status = ActionExecutionStatus.OK;</span>
 
                 try {
-<span class="fc" id="L228">                    LOG.trace(&quot;Resolving contextual arguments for &quot; + qualifiedActionName);</span>
-<span class="fc" id="L229">                    updatedArgs = injectFromContext(action, updatedArgs);</span>
+<span class="nc" id="L228">                    LOG.trace(&quot;Resolving contextual arguments for &quot; + qualifiedActionName);</span>
+<span class="nc" id="L229">                    updatedArgs = injectFromContext(action, updatedArgs);</span>
 <span class="nc" id="L230">                } catch (IllegalStateException ise) {</span>
 <span class="nc" id="L231">                    LOG.debug(&quot;Execution of &quot; + qualifiedActionName + &quot; was aborted&quot;, ise);</span>
 <span class="nc" id="L232">                    throw ise;</span>
-<span class="fc" id="L233">                }</span>
+<span class="nc" id="L233">                }</span>
 
-<span class="pc bpc" id="L235" title="1 of 2 branches missed.">                if (LOG.isDebugEnabled()) {</span>
-<span class="fc" id="L236">                    int size = copy.size();</span>
-<span class="pc bpc" id="L237" title="1 of 2 branches missed.">                    LOG.debug(&quot;Executing &quot; + size + &quot; handler&quot; + (size != 1 ? &quot;s&quot; : &quot;&quot;) + &quot; for &quot; + qualifiedActionName);</span>
+<span class="nc bnc" id="L235" title="All 2 branches missed.">                if (LOG.isDebugEnabled()) {</span>
+<span class="nc" id="L236">                    int size = copy.size();</span>
+<span class="nc bnc" id="L237" title="All 2 branches missed.">                    LOG.debug(&quot;Executing &quot; + size + &quot; handler&quot; + (size != 1 ? &quot;s&quot; : &quot;&quot;) + &quot; for &quot; + qualifiedActionName);</span>
                 }
 
-<span class="pc bpc" id="L240" title="1 of 2 branches missed.">                for (ActionHandler handler : copy) {</span>
+<span class="nc bnc" id="L240" title="All 2 branches missed.">                for (ActionHandler handler : copy) {</span>
 <span class="nc" id="L241">                    invokedHandlers.add(handler);</span>
                     try {
 <span class="nc" id="L243">                        LOG.trace(&quot;Calling {}.before() on {}&quot;, handler, qualifiedActionName);</span>
@@ -249,20 +249,20 @@ public abstract class AbstractActionManager implements ActionManager {
 <span class="nc" id="L249">                    }</span>
 <span class="nc" id="L250">                }</span>
 
-<span class="fc" id="L252">                LOG.trace(&quot;Status before execution of {} is {}&quot;, qualifiedActionName, status);</span>
-<span class="fc" id="L253">                RuntimeException exception = null;</span>
-<span class="fc" id="L254">                boolean exceptionWasHandled = false;</span>
-<span class="pc bpc" id="L255" title="1 of 2 branches missed.">                if (status == ActionExecutionStatus.OK) {</span>
+<span class="nc" id="L252">                LOG.trace(&quot;Status before execution of {} is {}&quot;, qualifiedActionName, status);</span>
+<span class="nc" id="L253">                RuntimeException exception = null;</span>
+<span class="nc" id="L254">                boolean exceptionWasHandled = false;</span>
+<span class="nc bnc" id="L255" title="All 2 branches missed.">                if (status == ActionExecutionStatus.OK) {</span>
                     try {
-<span class="fc" id="L257">                        doInvokeAction(controller, actionName, updatedArgs);</span>
+<span class="nc" id="L257">                        doInvokeAction(controller, actionName, updatedArgs);</span>
 <span class="nc" id="L258">                    } catch (RuntimeException e) {</span>
 <span class="nc" id="L259">                        status = ActionExecutionStatus.EXCEPTION;</span>
 <span class="nc" id="L260">                        exception = (RuntimeException) sanitize(e);</span>
 <span class="nc" id="L261">                        LOG.warn(&quot;An exception occurred when executing {}&quot;, qualifiedActionName, exception);</span>
-<span class="fc" id="L262">                    }</span>
-<span class="fc" id="L263">                    LOG.trace(&quot;Status after execution of {} is {}&quot;, qualifiedActionName, status);</span>
+<span class="nc" id="L262">                    }</span>
+<span class="nc" id="L263">                    LOG.trace(&quot;Status after execution of {} is {}&quot;, qualifiedActionName, status);</span>
 
-<span class="pc bpc" id="L265" title="1 of 2 branches missed.">                    if (exception != null) {</span>
+<span class="nc bnc" id="L265" title="All 2 branches missed.">                    if (exception != null) {</span>
 <span class="nc bnc" id="L266" title="All 2 branches missed.">                        for (ActionHandler handler : reverse(invokedHandlers)) {</span>
 <span class="nc" id="L267">                            LOG.trace(&quot;Calling {}.exception() on {}&quot;, handler, qualifiedActionName);</span>
 <span class="nc" id="L268">                            exceptionWasHandled = handler.exception(exception, action, updatedArgs);</span>
@@ -270,38 +270,38 @@ public abstract class AbstractActionManager implements ActionManager {
                     }
                 }
 
-<span class="pc bpc" id="L273" title="1 of 2 branches missed.">                for (ActionHandler handler : reverse(invokedHandlers)) {</span>
+<span class="nc bnc" id="L273" title="All 2 branches missed.">                for (ActionHandler handler : reverse(invokedHandlers)) {</span>
 <span class="nc" id="L274">                    LOG.trace(&quot;Calling {}.after() on {}&quot;, handler, qualifiedActionName);</span>
 <span class="nc" id="L275">                    handler.after(status, action, updatedArgs);</span>
 <span class="nc" id="L276">                }</span>
 
-<span class="pc bpc" id="L278" title="3 of 4 branches missed.">                if (exception != null &amp;&amp; !exceptionWasHandled) {</span>
+<span class="nc bnc" id="L278" title="All 4 branches missed.">                if (exception != null &amp;&amp; !exceptionWasHandled) {</span>
                     // throw it again
 <span class="nc" id="L280">                    throw exception;</span>
                 }
-<span class="fc" id="L282">            }</span>
+<span class="nc" id="L282">            }</span>
         };
-<span class="fc" id="L284">        invokeAction(controller, actionName, runnable);</span>
-<span class="fc" id="L285">    }</span>
+<span class="nc" id="L284">        invokeAction(controller, actionName, runnable);</span>
+<span class="nc" id="L285">    }</span>
 
     @Nonnull
     private Object[] injectFromContext(@Nonnull Action action, @Nonnull Object[] args) {
-<span class="fc" id="L289">        ActionWrapper wrappedAction = null;</span>
-<span class="pc bpc" id="L290" title="1 of 2 branches missed.">        if (action instanceof ActionWrapper) {</span>
-<span class="fc" id="L291">            wrappedAction = (ActionWrapper) action;</span>
+<span class="nc" id="L289">        ActionWrapper wrappedAction = null;</span>
+<span class="nc bnc" id="L290" title="All 2 branches missed.">        if (action instanceof ActionWrapper) {</span>
+<span class="nc" id="L291">            wrappedAction = (ActionWrapper) action;</span>
         } else {
 <span class="nc" id="L293">            wrappedAction = wrapAction(action, findActionAsMethod(action.getController(), action.getActionName()));</span>
         }
 
-<span class="fc" id="L296">        MVCGroup group = action.getController().getMvcGroup();</span>
-<span class="pc bpc" id="L297" title="1 of 2 branches missed.">        if (group == null) {</span>
+<span class="nc" id="L296">        MVCGroup group = action.getController().getMvcGroup();</span>
+<span class="nc bnc" id="L297" title="All 2 branches missed.">        if (group == null) {</span>
             // This case only occurs during testing, when an artifact is
             // instantiated without a group
 <span class="nc" id="L300">            return args;</span>
         }
 
-<span class="fc" id="L303">        Context context = group.getContext();</span>
-<span class="pc bpc" id="L304" title="1 of 2 branches missed.">        if (wrappedAction.hasContextualArgs) {</span>
+<span class="nc" id="L303">        Context context = group.getContext();</span>
+<span class="nc bnc" id="L304" title="All 2 branches missed.">        if (wrappedAction.hasContextualArgs) {</span>
 <span class="nc" id="L305">            Object[] newArgs = new Object[wrappedAction.argumentsInfo.size()];</span>
 <span class="nc bnc" id="L306" title="All 2 branches missed.">            for (int i = 0; i &lt; newArgs.length; i++) {</span>
 <span class="nc" id="L307">                ArgInfo argInfo = wrappedAction.argumentsInfo.get(i);</span>
@@ -318,24 +318,24 @@ public abstract class AbstractActionManager implements ActionManager {
 <span class="nc" id="L318">            return newArgs;</span>
         }
 
-<span class="fc" id="L321">        return args;</span>
+<span class="nc" id="L321">        return args;</span>
     }
 
     public void invokeAction(@Nonnull final GriffonController controller, @Nonnull final String actionName, @Nonnull final Object... args) {
-<span class="fc" id="L325">        requireNonNull(controller, ERROR_CONTROLLER_NULL);</span>
-<span class="fc" id="L326">        requireNonBlank(actionName, ERROR_ACTION_NAME_BLANK);</span>
-<span class="fc" id="L327">        invokeAction(actionFor(controller, actionName), args);</span>
-<span class="fc" id="L328">    }</span>
+<span class="nc" id="L325">        requireNonNull(controller, ERROR_CONTROLLER_NULL);</span>
+<span class="nc" id="L326">        requireNonBlank(actionName, ERROR_ACTION_NAME_BLANK);</span>
+<span class="nc" id="L327">        invokeAction(actionFor(controller, actionName), args);</span>
+<span class="nc" id="L328">    }</span>
 
     protected void doInvokeAction(@Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Object[] updatedArgs) {
         try {
 <span class="nc" id="L332">            invokeInstanceMethod(controller, actionName, updatedArgs);</span>
-<span class="fc" id="L333">        } catch (InstanceMethodInvocationException imie) {</span>
-<span class="pc bpc" id="L334" title="1 of 2 branches missed.">            if (imie.getCause() instanceof NoSuchMethodException) {</span>
+<span class="nc" id="L333">        } catch (InstanceMethodInvocationException imie) {</span>
+<span class="nc bnc" id="L334" title="All 2 branches missed.">            if (imie.getCause() instanceof NoSuchMethodException) {</span>
                 // try again but this time remove the 1st arg if it's
                 // descendant of java.util.EventObject
-<span class="pc bpc" id="L337" title="3 of 6 branches missed.">                if (updatedArgs.length == 1 &amp;&amp; updatedArgs[0] != null &amp;&amp; EventObject.class.isAssignableFrom(updatedArgs[0].getClass())) {</span>
-<span class="fc" id="L338">                    invokeExactInstanceMethod(controller, actionName, EMPTY_ARGS);</span>
+<span class="nc bnc" id="L337" title="All 6 branches missed.">                if (updatedArgs.length == 1 &amp;&amp; updatedArgs[0] != null &amp;&amp; EventObject.class.isAssignableFrom(updatedArgs[0].getClass())) {</span>
+<span class="nc" id="L338">                    invokeExactInstanceMethod(controller, actionName, EMPTY_ARGS);</span>
                 } else {
 <span class="nc" id="L340">                    throw imie;</span>
                 }
@@ -343,26 +343,26 @@ public abstract class AbstractActionManager implements ActionManager {
 <span class="nc" id="L343">                throw imie;</span>
             }
 <span class="nc" id="L345">        }</span>
-<span class="fc" id="L346">    }</span>
+<span class="nc" id="L346">    }</span>
 
     private void invokeAction(@Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Runnable runnable) {
-<span class="fc" id="L349">        String fullQualifiedActionName = controller.getClass().getName() + &quot;.&quot; + actionName;</span>
-<span class="fc" id="L350">        Threading.Policy policy = threadingPolicies.get(fullQualifiedActionName);</span>
-<span class="pc bpc" id="L351" title="1 of 2 branches missed.">        if (policy == null) {</span>
-<span class="pc bpc" id="L352" title="1 of 2 branches missed.">            if (isThreadingDisabled(fullQualifiedActionName)) {</span>
+<span class="nc" id="L349">        String fullQualifiedActionName = controller.getClass().getName() + &quot;.&quot; + actionName;</span>
+<span class="nc" id="L350">        Threading.Policy policy = threadingPolicies.get(fullQualifiedActionName);</span>
+<span class="nc bnc" id="L351" title="All 2 branches missed.">        if (policy == null) {</span>
+<span class="nc bnc" id="L352" title="All 2 branches missed.">            if (isThreadingDisabled(fullQualifiedActionName)) {</span>
 <span class="nc" id="L353">                policy = Threading.Policy.SKIP;</span>
             } else {
-<span class="fc" id="L355">                policy = resolveThreadingPolicy(controller, actionName);</span>
+<span class="nc" id="L355">                policy = resolveThreadingPolicy(controller, actionName);</span>
             }
-<span class="fc" id="L357">            threadingPolicies.put(fullQualifiedActionName, policy);</span>
+<span class="nc" id="L357">            threadingPolicies.put(fullQualifiedActionName, policy);</span>
         }
 
-<span class="fc" id="L360">        LOG.debug(&quot;Executing {} with policy {}&quot;, fullQualifiedActionName, policy);</span>
+<span class="nc" id="L360">        LOG.debug(&quot;Executing {} with policy {}&quot;, fullQualifiedActionName, policy);</span>
 
-<span class="pc bpc" id="L362" title="3 of 4 branches missed.">        switch (policy) {</span>
+<span class="nc bnc" id="L362" title="All 4 branches missed.">        switch (policy) {</span>
             case OUTSIDE_UITHREAD:
-<span class="fc" id="L364">                getUiThreadManager().runOutsideUI(runnable);</span>
-<span class="fc" id="L365">                break;</span>
+<span class="nc" id="L364">                getUiThreadManager().runOutsideUI(runnable);</span>
+<span class="nc" id="L365">                break;</span>
             case INSIDE_UITHREAD_SYNC:
 <span class="nc" id="L367">                getUiThreadManager().runInsideUISync(runnable);</span>
 <span class="nc" id="L368">                break;</span>
@@ -373,14 +373,14 @@ public abstract class AbstractActionManager implements ActionManager {
             default:
 <span class="nc" id="L374">                runnable.run();</span>
         }
-<span class="fc" id="L376">    }</span>
+<span class="nc" id="L376">    }</span>
 
     @Nonnull
     private Threading.Policy resolveThreadingPolicy(@Nonnull GriffonController controller, @Nonnull String actionName) {
-<span class="fc" id="L380">        Method method = findActionAsMethod(controller, actionName);</span>
-<span class="pc bpc" id="L381" title="1 of 2 branches missed.">        if (method != null) {</span>
-<span class="fc" id="L382">            Threading annotation = method.getAnnotation(Threading.class);</span>
-<span class="pc bpc" id="L383" title="1 of 2 branches missed.">            return annotation == null ? resolveThreadingPolicy(controller) : annotation.value();</span>
+<span class="nc" id="L380">        Method method = findActionAsMethod(controller, actionName);</span>
+<span class="nc bnc" id="L381" title="All 2 branches missed.">        if (method != null) {</span>
+<span class="nc" id="L382">            Threading annotation = method.getAnnotation(Threading.class);</span>
+<span class="nc bnc" id="L383" title="All 2 branches missed.">            return annotation == null ? resolveThreadingPolicy(controller) : annotation.value();</span>
         }
 
 <span class="nc" id="L386">        return Threading.Policy.OUTSIDE_UITHREAD;</span>
@@ -388,15 +388,15 @@ public abstract class AbstractActionManager implements ActionManager {
 
     @Nonnull
     private Threading.Policy resolveThreadingPolicy(@Nonnull GriffonController controller) {
-<span class="fc" id="L391">        Threading annotation = AnnotationUtils.findAnnotation(controller.getClass(), Threading.class);</span>
-<span class="pc bpc" id="L392" title="1 of 2 branches missed.">        return annotation == null ? resolveThreadingPolicy() : annotation.value();</span>
+<span class="nc" id="L391">        Threading annotation = AnnotationUtils.findAnnotation(controller.getClass(), Threading.class);</span>
+<span class="nc bnc" id="L392" title="All 2 branches missed.">        return annotation == null ? resolveThreadingPolicy() : annotation.value();</span>
     }
 
     @Nonnull
     private Threading.Policy resolveThreadingPolicy() {
-<span class="fc" id="L397">        Object value = getConfiguration().get(KEY_THREADING_DEFAULT);</span>
-<span class="pc bpc" id="L398" title="1 of 2 branches missed.">        if (value == null) {</span>
-<span class="fc" id="L399">            return Threading.Policy.OUTSIDE_UITHREAD;</span>
+<span class="nc" id="L397">        Object value = getConfiguration().get(KEY_THREADING_DEFAULT);</span>
+<span class="nc bnc" id="L398" title="All 2 branches missed.">        if (value == null) {</span>
+<span class="nc" id="L399">            return Threading.Policy.OUTSIDE_UITHREAD;</span>
         }
 
 <span class="nc bnc" id="L402" title="All 2 branches missed.">        if (value instanceof Threading.Policy) {</span>
@@ -427,20 +427,20 @@ public abstract class AbstractActionManager implements ActionManager {
     }
 
     private boolean isThreadingDisabled(@Nonnull String actionName) {
-<span class="pc bpc" id="L430" title="1 of 2 branches missed.">        if (getConfiguration().getAsBoolean(KEY_DISABLE_THREADING_INJECTION, false)) {</span>
+<span class="nc bnc" id="L430" title="All 2 branches missed.">        if (getConfiguration().getAsBoolean(KEY_DISABLE_THREADING_INJECTION, false)) {</span>
 <span class="nc" id="L431">            return true;</span>
         }
 
-<span class="fc" id="L434">        Map&lt;String, Object&gt; settings = getConfiguration().asFlatMap();</span>
+<span class="nc" id="L434">        Map&lt;String, Object&gt; settings = getConfiguration().asFlatMap();</span>
 
-<span class="fc" id="L436">        String keyName = KEY_THREADING + &quot;.&quot; + actionName;</span>
-<span class="fc bfc" id="L437" title="All 2 branches covered.">        while (!KEY_THREADING.equals(keyName)) {</span>
-<span class="fc" id="L438">            Object value = settings.get(keyName);</span>
-<span class="fc" id="L439">            keyName = keyName.substring(0, keyName.lastIndexOf(&quot;.&quot;));</span>
-<span class="pc bpc" id="L440" title="3 of 4 branches missed.">            if (value != null &amp;&amp; !castToBoolean(value)) return true;</span>
-<span class="fc" id="L441">        }</span>
+<span class="nc" id="L436">        String keyName = KEY_THREADING + &quot;.&quot; + actionName;</span>
+<span class="nc bnc" id="L437" title="All 2 branches missed.">        while (!KEY_THREADING.equals(keyName)) {</span>
+<span class="nc" id="L438">            Object value = settings.get(keyName);</span>
+<span class="nc" id="L439">            keyName = keyName.substring(0, keyName.lastIndexOf(&quot;.&quot;));</span>
+<span class="nc bnc" id="L440" title="All 4 branches missed.">            if (value != null &amp;&amp; !castToBoolean(value)) return true;</span>
+<span class="nc" id="L441">        }</span>
 
-<span class="fc" id="L443">        return false;</span>
+<span class="nc" id="L443">        return false;</span>
     }
 
     public void addActionHandler(@Nonnull ActionHandler actionHandler) {
