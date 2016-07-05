@@ -39,12 +39,12 @@ class GriffonPlugin implements Plugin<Project> {
 
         applyDefaultDependencies(project)
 
-        String sourceSetName = project.plugins.hasPlugin('groovy') ? 'groovy' : 'java'
-
         configureDefaultSourceSets(project, 'java')
-        if (sourceSetName != 'java') configureDefaultSourceSets(project, sourceSetName)
         createDefaultDirectoryStructure(project, 'java')
-        if (sourceSetName != 'java') createDefaultDirectoryStructure(project, sourceSetName)
+        project.plugins.withId('groovy') {
+            configureDefaultSourceSets(project, 'groovy')
+            createDefaultDirectoryStructure(project, 'groovy')
+        }
 
         registerBuildListener(project, extension)
     }
