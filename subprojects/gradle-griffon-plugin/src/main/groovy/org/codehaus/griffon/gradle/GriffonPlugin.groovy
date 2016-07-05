@@ -69,14 +69,12 @@ class GriffonPlugin implements Plugin<Project> {
             'griffon-app/models',
             'griffon-app/views',
             'griffon-app/services',
-            'griffon-app/lifecycle',
-            'src/main/' + sourceSetName
+            'griffon-app/lifecycle'
         ]
         // configure default resource directories
         project.sourceSets.main.resources.srcDirs += [
             'griffon-app/resources',
-            'griffon-app/i18n',
-            'src/main/resources'
+            'griffon-app/i18n'
         ]
     }
 
