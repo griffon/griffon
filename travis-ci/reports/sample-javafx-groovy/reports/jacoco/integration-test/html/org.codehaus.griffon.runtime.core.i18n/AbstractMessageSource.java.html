@@ -76,7 +76,7 @@ import static java.util.Objects.requireNonNull;
     @Nonnull
     @Override
     public String getMessage(@Nonnull String key, @Nonnull List&lt;?&gt; args) throws NoSuchMessageException {
-<span class="nc" id="L79">        return getMessage(key, toObjectArray(args), Locale.getDefault());</span>
+<span class="fc" id="L79">        return getMessage(key, toObjectArray(args), Locale.getDefault());</span>
     }
 
     @Nonnull
@@ -192,8 +192,8 @@ import static java.util.Objects.requireNonNull;
     public String formatMessage(@Nonnull String message, @Nonnull Object[] args) {
 <span class="fc" id="L193">        requireNonNull(message, ERROR_MESSAGE_NULL);</span>
 <span class="fc" id="L194">        requireNonNull(args, ERROR_ARGS_NULL);</span>
-<span class="pc bpc" id="L195" title="1 of 2 branches missed.">        if (args.length == 0) return message;</span>
-<span class="nc" id="L196">        return MessageFormat.format(message, args);</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">        if (args.length == 0) return message;</span>
+<span class="fc" id="L196">        return MessageFormat.format(message, args);</span>
     }
 
     @Nonnull
@@ -238,10 +238,10 @@ import static java.util.Objects.requireNonNull;
 
     @Nonnull
     protected Object[] toObjectArray(@Nonnull List&lt;?&gt; args) {
-<span class="nc bnc" id="L241" title="All 2 branches missed.">        if (args.isEmpty()) {</span>
+<span class="pc bpc" id="L241" title="1 of 2 branches missed.">        if (args.isEmpty()) {</span>
 <span class="nc" id="L242">            return EMPTY_OBJECT_ARGS;</span>
         }
-<span class="nc" id="L244">        return args.toArray(new Object[args.size()]);</span>
+<span class="fc" id="L244">        return args.toArray(new Object[args.size()]);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

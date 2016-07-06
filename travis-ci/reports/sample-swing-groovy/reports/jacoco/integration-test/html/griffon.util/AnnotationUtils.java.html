@@ -217,12 +217,12 @@ public class AnnotationUtils {
 
     @Nonnull
     public static Annotation[] annotationsOfMethodParameter(@Nonnull Method method, int paramIndex) {
-<span class="fc" id="L220">        requireNonNull(method, &quot;Argument 'method' must not be null&quot;);</span>
+<span class="nc" id="L220">        requireNonNull(method, &quot;Argument 'method' must not be null&quot;);</span>
 
-<span class="fc" id="L222">        Class&lt;?&gt;[] parameterTypes = method.getParameterTypes();</span>
-<span class="pc bpc" id="L223" title="2 of 4 branches missed.">        requireState(parameterTypes != null &amp;&amp; parameterTypes.length &gt; paramIndex, &quot;Index &quot; + paramIndex + &quot; is out of bounds&quot;);</span>
+<span class="nc" id="L222">        Class&lt;?&gt;[] parameterTypes = method.getParameterTypes();</span>
+<span class="nc bnc" id="L223" title="All 4 branches missed.">        requireState(parameterTypes != null &amp;&amp; parameterTypes.length &gt; paramIndex, &quot;Index &quot; + paramIndex + &quot; is out of bounds&quot;);</span>
 
-<span class="fc" id="L225">        return method.getParameterAnnotations()[paramIndex];</span>
+<span class="nc" id="L225">        return method.getParameterAnnotations()[paramIndex];</span>
     }
 
     @Nonnull

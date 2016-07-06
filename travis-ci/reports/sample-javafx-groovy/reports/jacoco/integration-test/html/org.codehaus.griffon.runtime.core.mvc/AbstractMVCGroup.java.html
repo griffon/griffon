@@ -86,7 +86,7 @@ public abstract class AbstractMVCGroup extends AbstractMVCHandler implements MVC
     @Nonnull
     @Override
     public Context getContext() {
-<span class="nc" id="L89">        return context;</span>
+<span class="fc" id="L89">        return context;</span>
     }
 
     @Nullable
@@ -148,25 +148,25 @@ public abstract class AbstractMVCGroup extends AbstractMVCHandler implements MVC
 
     @Override
     public void destroy() {
-<span class="nc bnc" id="L151" title="All 2 branches missed.">        if (isAlive()) {</span>
-<span class="nc" id="L152">            List&lt;String&gt; childrenIds = new ArrayList&lt;&gt;(children.keySet());</span>
-<span class="nc" id="L153">            Collections.reverse(childrenIds);</span>
-<span class="nc bnc" id="L154" title="All 2 branches missed.">            for (String id : childrenIds) {</span>
+<span class="pc bpc" id="L151" title="1 of 2 branches missed.">        if (isAlive()) {</span>
+<span class="fc" id="L152">            List&lt;String&gt; childrenIds = new ArrayList&lt;&gt;(children.keySet());</span>
+<span class="fc" id="L153">            Collections.reverse(childrenIds);</span>
+<span class="pc bpc" id="L154" title="1 of 2 branches missed.">            for (String id : childrenIds) {</span>
 <span class="nc" id="L155">                getMvcGroupManager().destroyMVCGroup(id);</span>
 <span class="nc" id="L156">            }</span>
-<span class="nc" id="L157">            getMvcGroupManager().destroyMVCGroup(mvcId);</span>
-<span class="nc" id="L158">            members.clear();</span>
-<span class="nc" id="L159">            children.clear();</span>
-<span class="nc bnc" id="L160" title="All 2 branches missed.">            if (parentGroup != null) {</span>
+<span class="fc" id="L157">            getMvcGroupManager().destroyMVCGroup(mvcId);</span>
+<span class="fc" id="L158">            members.clear();</span>
+<span class="fc" id="L159">            children.clear();</span>
+<span class="pc bpc" id="L160" title="1 of 2 branches missed.">            if (parentGroup != null) {</span>
 <span class="nc" id="L161">                parentGroup.notifyMVCGroupDestroyed(mvcId);</span>
             }
-<span class="nc" id="L163">            parentGroup = null;</span>
-<span class="nc" id="L164">            context.destroy();</span>
-<span class="nc" id="L165">            synchronized (lock) {</span>
-<span class="nc" id="L166">                alive = false;</span>
-<span class="nc" id="L167">            }</span>
+<span class="fc" id="L163">            parentGroup = null;</span>
+<span class="fc" id="L164">            context.destroy();</span>
+<span class="fc" id="L165">            synchronized (lock) {</span>
+<span class="fc" id="L166">                alive = false;</span>
+<span class="pc" id="L167">            }</span>
         }
-<span class="nc" id="L169">    }</span>
+<span class="fc" id="L169">    }</span>
 
     @Override
     public void notifyMVCGroupDestroyed(@Nonnull String mvcId) {

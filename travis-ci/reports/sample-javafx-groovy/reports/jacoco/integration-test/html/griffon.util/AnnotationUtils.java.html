@@ -88,15 +88,15 @@ public class AnnotationUtils {
 
     @Nullable
     public static &lt;A extends Annotation&gt; A findAnnotation(@Nonnull Class&lt;?&gt; klass, @Nonnull Class&lt;A&gt; annotationType) {
-<span class="nc" id="L91">        requireNonNull(klass, ERROR_CLASS_NULL);</span>
-<span class="nc" id="L92">        requireNonNull(annotationType, ERROR_ANNOTATION_TYPE_NULL);</span>
+<span class="fc" id="L91">        requireNonNull(klass, ERROR_CLASS_NULL);</span>
+<span class="fc" id="L92">        requireNonNull(annotationType, ERROR_ANNOTATION_TYPE_NULL);</span>
 
-<span class="nc bnc" id="L94" title="All 2 branches missed.">        while (klass != null) {</span>
-<span class="nc" id="L95">            Annotation annotation = findAnnotation(klass.getAnnotations(), annotationType);</span>
-<span class="nc bnc" id="L96" title="All 2 branches missed.">            if (annotation != null) return (A) annotation;</span>
-<span class="nc" id="L97">            klass = klass.getSuperclass();</span>
-<span class="nc" id="L98">        }</span>
-<span class="nc" id="L99">        return null;</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        while (klass != null) {</span>
+<span class="fc" id="L95">            Annotation annotation = findAnnotation(klass.getAnnotations(), annotationType);</span>
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">            if (annotation != null) return (A) annotation;</span>
+<span class="fc" id="L97">            klass = klass.getSuperclass();</span>
+<span class="fc" id="L98">        }</span>
+<span class="fc" id="L99">        return null;</span>
     }
 
     @Nullable
@@ -217,12 +217,12 @@ public class AnnotationUtils {
 
     @Nonnull
     public static Annotation[] annotationsOfMethodParameter(@Nonnull Method method, int paramIndex) {
-<span class="fc" id="L220">        requireNonNull(method, &quot;Argument 'method' must not be null&quot;);</span>
+<span class="nc" id="L220">        requireNonNull(method, &quot;Argument 'method' must not be null&quot;);</span>
 
-<span class="fc" id="L222">        Class&lt;?&gt;[] parameterTypes = method.getParameterTypes();</span>
-<span class="pc bpc" id="L223" title="2 of 4 branches missed.">        requireState(parameterTypes != null &amp;&amp; parameterTypes.length &gt; paramIndex, &quot;Index &quot; + paramIndex + &quot; is out of bounds&quot;);</span>
+<span class="nc" id="L222">        Class&lt;?&gt;[] parameterTypes = method.getParameterTypes();</span>
+<span class="nc bnc" id="L223" title="All 4 branches missed.">        requireState(parameterTypes != null &amp;&amp; parameterTypes.length &gt; paramIndex, &quot;Index &quot; + paramIndex + &quot; is out of bounds&quot;);</span>
 
-<span class="fc" id="L225">        return method.getParameterAnnotations()[paramIndex];</span>
+<span class="nc" id="L225">        return method.getParameterAnnotations()[paramIndex];</span>
     }
 
     @Nonnull

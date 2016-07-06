@@ -334,14 +334,14 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 <span class="fc" id="L334">                Object argValue = args.get(argName);</span>
 
 <span class="fc bfc" id="L336" title="All 2 branches covered.">                if (argValue == null) {</span>
-<span class="pc bpc" id="L337" title="1 of 2 branches missed.">                    if (findAnnotation(annotationsOfMethodParameter(method, 0), Nonnull.class) != null) {</span>
-<span class="nc" id="L338">                        throw new IllegalStateException(&quot;Could not inject argument &quot; + argName +</span>
-<span class="nc" id="L339">                            &quot; on property '&quot; + descriptor.getName() + &quot;' in &quot; + memberType + &quot; (&quot; + member.getClass().getName() +</span>
-                            &quot;). Property does not accept null values.&quot;);
-                    } else {
+                    // if (findAnnotation(annotationsOfMethodParameter(method, 0), Nonnull.class) != null) {
+                    //     throw new IllegalStateException(&quot;Could not inject argument &quot; + argName +
+                    //         &quot; on property '&quot; + descriptor.getName() + &quot;' in &quot; + memberType + &quot; (&quot; + member.getClass().getName() +
+                    //         &quot;). Property does not accept null values.&quot;);
+                    // } else {
 <span class="fc" id="L342">                        alreadySet.add(argName);</span>
 <span class="fc" id="L343">                        continue;</span>
-                    }
+                    // }
                 }
 
                 try {

@@ -101,8 +101,8 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
 
     @Override
     public void stop() throws Exception {
-<span class="nc" id="L104">        shutdown();</span>
-<span class="nc" id="L105">    }</span>
+<span class="fc" id="L104">        shutdown();</span>
+<span class="fc" id="L105">    }</span>
 
     public void addPropertyChangeListener(@Nullable PropertyChangeListener listener) {
 <span class="nc" id="L108">        pcs.addPropertyChangeListener(listener);</span>
@@ -327,10 +327,10 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
 <span class="fc" id="L327">    }</span>
 
     public boolean canShutdown() {
-<span class="nc" id="L330">        event(ApplicationEvent.SHUTDOWN_REQUESTED, asList(this));</span>
-<span class="nc" id="L331">        synchronized (shutdownLock) {</span>
-<span class="nc bnc" id="L332" title="All 2 branches missed.">            for (ShutdownHandler handler : shutdownHandlers) {</span>
-<span class="nc bnc" id="L333" title="All 2 branches missed.">                if (!handler.canShutdown(this)) {</span>
+<span class="fc" id="L330">        event(ApplicationEvent.SHUTDOWN_REQUESTED, asList(this));</span>
+<span class="fc" id="L331">        synchronized (shutdownLock) {</span>
+<span class="fc bfc" id="L332" title="All 2 branches covered.">            for (ShutdownHandler handler : shutdownHandlers) {</span>
+<span class="pc bpc" id="L333" title="1 of 2 branches missed.">                if (!handler.canShutdown(this)) {</span>
 <span class="nc" id="L334">                    event(ApplicationEvent.SHUTDOWN_ABORTED, asList(this));</span>
 <span class="nc bnc" id="L335" title="All 2 branches missed.">                    if (log.isDebugEnabled()) {</span>
                         try {
@@ -341,62 +341,62 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
                     }
 <span class="nc" id="L342">                    return false;</span>
                 }
-<span class="nc" id="L344">            }</span>
-<span class="nc" id="L345">        }</span>
-<span class="nc" id="L346">        return true;</span>
+<span class="fc" id="L344">            }</span>
+<span class="pc" id="L345">        }</span>
+<span class="fc" id="L346">        return true;</span>
     }
 
     public boolean shutdown() {
         // avoids reentrant calls to shutdown()
         // once permission to quit has been granted
-<span class="nc bnc" id="L352" title="All 2 branches missed.">        if (getPhase() == ApplicationPhase.SHUTDOWN) return false;</span>
+<span class="fc bfc" id="L352" title="All 2 branches covered.">        if (getPhase() == ApplicationPhase.SHUTDOWN) return false;</span>
 
-<span class="nc bnc" id="L354" title="All 2 branches missed.">        if (!canShutdown()) return false;</span>
-<span class="nc" id="L355">        log.info(&quot;Shutdown is in process&quot;);</span>
+<span class="pc bpc" id="L354" title="1 of 2 branches missed.">        if (!canShutdown()) return false;</span>
+<span class="fc" id="L355">        log.info(&quot;Shutdown is in process&quot;);</span>
 
         // signal that shutdown is in process
-<span class="nc" id="L358">        setPhase(ApplicationPhase.SHUTDOWN);</span>
+<span class="fc" id="L358">        setPhase(ApplicationPhase.SHUTDOWN);</span>
 
         // stage 1 - alert all app event handlers
         // wait for all handlers to complete before proceeding
         // with stage #2 if and only if the current thread is
         // the ui thread
-<span class="nc" id="L364">        log.debug(&quot;Shutdown stage 1: notify all event listeners&quot;);</span>
-<span class="nc bnc" id="L365" title="All 2 branches missed.">        if (getEventRouter().isEventPublishingEnabled()) {</span>
-<span class="nc bnc" id="L366" title="All 2 branches missed.">            final CountDownLatch latch = new CountDownLatch(getUIThreadManager().isUIThread() ? 1 : 0);</span>
-<span class="nc" id="L367">            getEventRouter().addEventListener(ApplicationEvent.SHUTDOWN_START.getName(), (Object... args) -&gt; latch.countDown());</span>
-<span class="nc" id="L368">            event(ApplicationEvent.SHUTDOWN_START, asList(this));</span>
+<span class="fc" id="L364">        log.debug(&quot;Shutdown stage 1: notify all event listeners&quot;);</span>
+<span class="pc bpc" id="L365" title="1 of 2 branches missed.">        if (getEventRouter().isEventPublishingEnabled()) {</span>
+<span class="pc bpc" id="L366" title="1 of 2 branches missed.">            final CountDownLatch latch = new CountDownLatch(getUIThreadManager().isUIThread() ? 1 : 0);</span>
+<span class="fc" id="L367">            getEventRouter().addEventListener(ApplicationEvent.SHUTDOWN_START.getName(), (Object... args) -&gt; latch.countDown());</span>
+<span class="fc" id="L368">            event(ApplicationEvent.SHUTDOWN_START, asList(this));</span>
             try {
-<span class="nc" id="L370">                latch.await();</span>
+<span class="fc" id="L370">                latch.await();</span>
 <span class="nc" id="L371">            } catch (InterruptedException e) {</span>
                 // ignore
-<span class="nc" id="L373">            }</span>
+<span class="fc" id="L373">            }</span>
         }
 
         // stage 2 - alert all shutdown handlers
-<span class="nc" id="L377">        log.debug(&quot;Shutdown stage 2: notify all shutdown handlers&quot;);</span>
-<span class="nc" id="L378">        synchronized (shutdownLock) {</span>
-<span class="nc bnc" id="L379" title="All 2 branches missed.">            for (ShutdownHandler handler : shutdownHandlers) {</span>
-<span class="nc" id="L380">                handler.onShutdown(this);</span>
-<span class="nc" id="L381">            }</span>
-<span class="nc" id="L382">        }</span>
+<span class="fc" id="L377">        log.debug(&quot;Shutdown stage 2: notify all shutdown handlers&quot;);</span>
+<span class="fc" id="L378">        synchronized (shutdownLock) {</span>
+<span class="fc bfc" id="L379" title="All 2 branches covered.">            for (ShutdownHandler handler : shutdownHandlers) {</span>
+<span class="fc" id="L380">                handler.onShutdown(this);</span>
+<span class="fc" id="L381">            }</span>
+<span class="pc" id="L382">        }</span>
 
         // stage 3 - destroy all mvc groups
-<span class="nc" id="L385">        log.debug(&quot;Shutdown stage 3: destroy all MVC groups&quot;);</span>
-<span class="nc" id="L386">        List&lt;String&gt; mvcIds = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L387">        mvcIds.addAll(getMvcGroupManager().getGroups().keySet());</span>
-<span class="nc bnc" id="L388" title="All 2 branches missed.">        for (String id : mvcIds) {</span>
-<span class="nc" id="L389">            getMvcGroupManager().destroyMVCGroup(id);</span>
-<span class="nc" id="L390">        }</span>
+<span class="fc" id="L385">        log.debug(&quot;Shutdown stage 3: destroy all MVC groups&quot;);</span>
+<span class="fc" id="L386">        List&lt;String&gt; mvcIds = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L387">        mvcIds.addAll(getMvcGroupManager().getGroups().keySet());</span>
+<span class="fc bfc" id="L388" title="All 2 branches covered.">        for (String id : mvcIds) {</span>
+<span class="fc" id="L389">            getMvcGroupManager().destroyMVCGroup(id);</span>
+<span class="fc" id="L390">        }</span>
 
         // stage 4 - call shutdown script
-<span class="nc" id="L393">        log.debug(&quot;Shutdown stage 4: execute Shutdown script&quot;);</span>
-<span class="nc" id="L394">        getApplicationConfigurer().runLifecycleHandler(Lifecycle.SHUTDOWN);</span>
+<span class="fc" id="L393">        log.debug(&quot;Shutdown stage 4: execute Shutdown script&quot;);</span>
+<span class="fc" id="L394">        getApplicationConfigurer().runLifecycleHandler(Lifecycle.SHUTDOWN);</span>
 
-<span class="nc" id="L396">        injector.getInstance(ExecutorServiceManager.class).shutdownAll();</span>
-<span class="nc" id="L397">        injector.close();</span>
+<span class="fc" id="L396">        injector.getInstance(ExecutorServiceManager.class).shutdownAll();</span>
+<span class="fc" id="L397">        injector.close();</span>
 
-<span class="nc" id="L399">        return true;</span>
+<span class="fc" id="L399">        return true;</span>
     }
 
     @SuppressWarnings(&quot;unchecked&quot;)

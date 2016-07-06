@@ -117,8 +117,8 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
 
     @Nonnull
     public Map&lt;String, MVCGroup&gt; getGroups() {
-<span class="nc" id="L120">        synchronized (lock) {</span>
-<span class="nc" id="L121">            return unmodifiableMap(groups);</span>
+<span class="fc" id="L120">        synchronized (lock) {</span>
+<span class="fc" id="L121">            return unmodifiableMap(groups);</span>
 <span class="nc" id="L122">        }</span>
     }
 
@@ -194,12 +194,12 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
 <span class="fc" id="L194">    }</span>
 
     protected void removeGroup(@Nonnull MVCGroup group) {
-<span class="nc" id="L197">        requireNonNull(group, ERROR_GROUP_NULL);</span>
-<span class="nc" id="L198">        synchronized (lock) {</span>
-<span class="nc" id="L199">            LOG.debug(&quot;Removing group {}:{}&quot;, group.getMvcId(), group);</span>
-<span class="nc" id="L200">            groups.remove(group.getMvcId());</span>
-<span class="nc" id="L201">        }</span>
-<span class="nc" id="L202">    }</span>
+<span class="fc" id="L197">        requireNonNull(group, ERROR_GROUP_NULL);</span>
+<span class="fc" id="L198">        synchronized (lock) {</span>
+<span class="fc" id="L199">            LOG.debug(&quot;Removing group {}:{}&quot;, group.getMvcId(), group);</span>
+<span class="fc" id="L200">            groups.remove(group.getMvcId());</span>
+<span class="pc" id="L201">        }</span>
+<span class="fc" id="L202">    }</span>
 
     @Nonnull
     public final Map&lt;String, ? extends GriffonModel&gt; getModels() {

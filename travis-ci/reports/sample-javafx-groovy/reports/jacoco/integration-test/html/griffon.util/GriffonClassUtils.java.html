@@ -2371,11 +2371,11 @@ import static java.util.Objects.requireNonNull;
     public static void setPropertyOrFieldValue(@Nonnull Object bean, @Nonnull String name, @Nullable Object value) throws PropertyException {
         try {
 <span class="fc" id="L2373">            setPropertyValue(bean, name, value);</span>
-<span class="nc" id="L2374">        } catch (PropertyException pe) {</span>
+<span class="fc" id="L2374">        } catch (PropertyException pe) {</span>
             try {
 <span class="nc" id="L2376">                setFieldValue(bean, name, value);</span>
-<span class="nc" id="L2377">            } catch (FieldException fe) {</span>
-<span class="nc" id="L2378">                throw pe;</span>
+<span class="fc" id="L2377">            } catch (FieldException fe) {</span>
+<span class="fc" id="L2378">                throw pe;</span>
 <span class="nc" id="L2379">            }</span>
 <span class="fc" id="L2380">        }</span>
 <span class="fc" id="L2381">    }</span>
@@ -2396,10 +2396,10 @@ import static java.util.Objects.requireNonNull;
     public static void setPropertyOrFieldValueNoException(@Nonnull Object bean, @Nonnull String name, @Nullable Object value) {
         try {
 <span class="nc" id="L2398">            setPropertyOrFieldValue(bean, name, value);</span>
-<span class="nc" id="L2399">        } catch (PropertyException pe) {</span>
+<span class="fc" id="L2399">        } catch (PropertyException pe) {</span>
             // ignore
 <span class="nc" id="L2401">        }</span>
-<span class="nc" id="L2402">    }</span>
+<span class="fc" id="L2402">    }</span>
 
     /**
      * Sets or updates an object's properties.
@@ -2518,8 +2518,8 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L2518">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
         try {
 <span class="fc" id="L2520">            setField(bean, name, value);</span>
-<span class="nc" id="L2521">        } catch (IllegalAccessException | NoSuchFieldException e) {</span>
-<span class="nc" id="L2522">            throw new FieldException(bean, name, value, e);</span>
+<span class="fc" id="L2521">        } catch (IllegalAccessException | NoSuchFieldException e) {</span>
+<span class="fc" id="L2522">            throw new FieldException(bean, name, value, e);</span>
 <span class="fc" id="L2523">        }</span>
 <span class="fc" id="L2524">    }</span>
 
@@ -2587,8 +2587,8 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L2587">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
         try {
 <span class="fc" id="L2589">            setProperty(bean, name, value);</span>
-<span class="nc" id="L2590">        } catch (IllegalAccessException | NoSuchMethodException e) {</span>
-<span class="nc" id="L2591">            throw new PropertyException(bean, name, value, e);</span>
+<span class="fc" id="L2590">        } catch (IllegalAccessException | NoSuchMethodException e) {</span>
+<span class="fc" id="L2591">            throw new PropertyException(bean, name, value, e);</span>
 <span class="nc" id="L2592">        } catch (InvocationTargetException e) {</span>
 <span class="nc" id="L2593">            throw new PropertyException(bean, name, value, e.getTargetException());</span>
 <span class="fc" id="L2594">        }</span>
@@ -2679,13 +2679,13 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L2679">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
 
 <span class="fc" id="L2681">        PropertyDescriptor[] descriptors = getPropertyDescriptors(clazz);</span>
-<span class="pc bpc" id="L2682" title="1 of 2 branches missed.">        for (PropertyDescriptor descriptor : descriptors) {</span>
+<span class="fc bfc" id="L2682" title="All 2 branches covered.">        for (PropertyDescriptor descriptor : descriptors) {</span>
 <span class="fc bfc" id="L2683" title="All 2 branches covered.">            if (name.equals(descriptor.getName())) {</span>
 <span class="fc" id="L2684">                return (descriptor);</span>
             }
         }
 
-<span class="nc" id="L2688">        return null;</span>
+<span class="fc" id="L2688">        return null;</span>
     }
 
     /**
@@ -2845,7 +2845,7 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L2845">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
 
 <span class="fc" id="L2847">        Class&lt;?&gt; declaringClass = bean.getClass();</span>
-<span class="pc bpc" id="L2848" title="1 of 2 branches missed.">        while (declaringClass != null) {</span>
+<span class="fc bfc" id="L2848" title="All 2 branches covered.">        while (declaringClass != null) {</span>
             try {
 <span class="fc" id="L2850">                Field field = declaringClass.getDeclaredField(name);</span>
 
@@ -2866,7 +2866,7 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L2866">                declaringClass = declaringClass.getSuperclass();</span>
 <span class="fc" id="L2867">            }</span>
         }
-<span class="nc" id="L2869">        throw new NoSuchFieldException(name);</span>
+<span class="fc" id="L2869">        throw new NoSuchFieldException(name);</span>
     }
 
     /**
@@ -2893,9 +2893,9 @@ import static java.util.Objects.requireNonNull;
 
         // Retrieve the property setter method for the specified property
 <span class="fc" id="L2895">        PropertyDescriptor descriptor = getPropertyDescriptor(bean, name);</span>
-<span class="pc bpc" id="L2896" title="1 of 2 branches missed.">        if (descriptor == null) {</span>
-<span class="nc" id="L2897">            throw new NoSuchMethodException(&quot;Unknown property '&quot; +</span>
-<span class="nc" id="L2898">                name + &quot;' on class '&quot; + bean.getClass() + &quot;'&quot;);</span>
+<span class="fc bfc" id="L2896" title="All 2 branches covered.">        if (descriptor == null) {</span>
+<span class="fc" id="L2897">            throw new NoSuchMethodException(&quot;Unknown property '&quot; +</span>
+<span class="fc" id="L2898">                name + &quot;' on class '&quot; + bean.getClass() + &quot;'&quot;);</span>
         }
 <span class="fc" id="L2900">        Method writeMethod = getWriteMethod(bean.getClass(), descriptor);</span>
 <span class="pc bpc" id="L2901" title="1 of 2 branches missed.">        if (writeMethod == null) {</span>
@@ -3023,12 +3023,12 @@ import static java.util.Objects.requireNonNull;
 
     @Nullable
     public static Object invokeInstanceMethod(@Nonnull Object object, @Nonnull String methodName, Object... args) {
-<span class="nc" id="L3026">        requireNonNull(object, ERROR_OBJECT_NULL);</span>
-<span class="nc" id="L3027">        requireNonBlank(methodName, ERROR_METHOD_NAME_BLANK);</span>
+<span class="fc" id="L3026">        requireNonNull(object, ERROR_OBJECT_NULL);</span>
+<span class="fc" id="L3027">        requireNonBlank(methodName, ERROR_METHOD_NAME_BLANK);</span>
         try {
 <span class="nc" id="L3029">            return invokeMethod(object, methodName, args);</span>
-<span class="nc" id="L3030">        } catch (NoSuchMethodException | IllegalAccessException e) {</span>
-<span class="nc" id="L3031">            throw new InstanceMethodInvocationException(object, methodName, args, e);</span>
+<span class="fc" id="L3030">        } catch (NoSuchMethodException | IllegalAccessException e) {</span>
+<span class="fc" id="L3031">            throw new InstanceMethodInvocationException(object, methodName, args, e);</span>
 <span class="nc" id="L3032">        } catch (InvocationTargetException e) {</span>
 <span class="nc" id="L3033">            throw new InstanceMethodInvocationException(object, methodName, args, e.getTargetException());</span>
         }
@@ -3046,10 +3046,10 @@ import static java.util.Objects.requireNonNull;
 
     @Nullable
     public static Object invokeExactInstanceMethod(@Nonnull Object object, @Nonnull String methodName, Object... args) {
-<span class="nc" id="L3049">        requireNonNull(object, ERROR_OBJECT_NULL);</span>
-<span class="nc" id="L3050">        requireNonBlank(methodName, ERROR_METHOD_NAME_BLANK);</span>
+<span class="fc" id="L3049">        requireNonNull(object, ERROR_OBJECT_NULL);</span>
+<span class="fc" id="L3050">        requireNonBlank(methodName, ERROR_METHOD_NAME_BLANK);</span>
         try {
-<span class="nc" id="L3052">            return invokeExactMethod(object, methodName, args);</span>
+<span class="fc" id="L3052">            return invokeExactMethod(object, methodName, args);</span>
 <span class="nc" id="L3053">        } catch (NoSuchMethodException | IllegalAccessException e) {</span>
 <span class="nc" id="L3054">            throw new InstanceMethodInvocationException(object, methodName, args, e);</span>
 <span class="nc" id="L3055">        } catch (InvocationTargetException e) {</span>

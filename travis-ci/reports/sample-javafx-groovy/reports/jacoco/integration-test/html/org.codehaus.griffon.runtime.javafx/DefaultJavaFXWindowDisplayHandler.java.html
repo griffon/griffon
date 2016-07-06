@@ -44,11 +44,11 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L44">    }</span>
 
     public void hide(@Nonnull String name, @Nonnull Window window) {
-<span class="nc" id="L47">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
-<span class="nc" id="L48">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
-<span class="nc bnc" id="L49" title="All 2 branches missed.">        if (window instanceof Stage) {</span>
-<span class="nc" id="L50">            window.hide();</span>
+<span class="fc" id="L47">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
+<span class="fc" id="L48">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="pc bpc" id="L49" title="1 of 2 branches missed.">        if (window instanceof Stage) {</span>
+<span class="fc" id="L50">            window.hide();</span>
         }
-<span class="nc" id="L52">    }</span>
+<span class="fc" id="L52">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

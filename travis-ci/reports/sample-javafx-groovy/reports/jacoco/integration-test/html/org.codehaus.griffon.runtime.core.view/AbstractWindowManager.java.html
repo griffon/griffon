@@ -242,36 +242,36 @@ public abstract class AbstractWindowManager&lt;W&gt; implements WindowManager&lt
 
     @Override
     public void hide(@Nonnull final W window) {
-<span class="nc" id="L245">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
-<span class="nc bnc" id="L246" title="All 2 branches missed.">        if (!windows.containsValue(window)) {</span>
+<span class="fc" id="L245">        requireNonNull(window, ERROR_WINDOW_NULL);</span>
+<span class="pc bpc" id="L246" title="1 of 2 branches missed.">        if (!windows.containsValue(window)) {</span>
 <span class="nc" id="L247">            return;</span>
         }
 
-<span class="nc" id="L250">        String windowName = null;</span>
-<span class="nc" id="L251">        int windowIndex = -1;</span>
-<span class="nc" id="L252">        synchronized (windows) {</span>
-<span class="nc" id="L253">            int i = 0;</span>
-<span class="nc bnc" id="L254" title="All 2 branches missed.">            for (Map.Entry&lt;String, W&gt; entry : windows.entrySet()) {</span>
-<span class="nc bnc" id="L255" title="All 2 branches missed.">                if (entry.getValue() == window) {</span>
-<span class="nc" id="L256">                    windowName = entry.getKey();</span>
-<span class="nc" id="L257">                    windowIndex = i;</span>
-<span class="nc" id="L258">                    break;</span>
+<span class="fc" id="L250">        String windowName = null;</span>
+<span class="fc" id="L251">        int windowIndex = -1;</span>
+<span class="fc" id="L252">        synchronized (windows) {</span>
+<span class="fc" id="L253">            int i = 0;</span>
+<span class="pc bpc" id="L254" title="1 of 2 branches missed.">            for (Map.Entry&lt;String, W&gt; entry : windows.entrySet()) {</span>
+<span class="pc bpc" id="L255" title="1 of 2 branches missed.">                if (entry.getValue() == window) {</span>
+<span class="fc" id="L256">                    windowName = entry.getKey();</span>
+<span class="fc" id="L257">                    windowIndex = i;</span>
+<span class="fc" id="L258">                    break;</span>
                 }
 <span class="nc" id="L260">                i++;</span>
 <span class="nc" id="L261">            }</span>
-<span class="nc" id="L262">        }</span>
+<span class="pc" id="L262">        }</span>
 
-<span class="nc" id="L264">        final String name = windowName;</span>
-<span class="nc" id="L265">        final int index = windowIndex;</span>
+<span class="fc" id="L264">        final String name = windowName;</span>
+<span class="fc" id="L265">        final int index = windowIndex;</span>
 
-<span class="nc" id="L267">        application.getUIThreadManager().runInsideUIAsync(new Runnable() {</span>
+<span class="fc" id="L267">        application.getUIThreadManager().runInsideUIAsync(new Runnable() {</span>
             public void run() {
-<span class="nc" id="L269">                LOG.debug(&quot;Hiding window with name: '{}' at index {} {}&quot;, name, index, window);</span>
+<span class="fc" id="L269">                LOG.debug(&quot;Hiding window with name: '{}' at index {} {}&quot;, name, index, window);</span>
                 //noinspection ConstantConditions
-<span class="nc" id="L271">                resolveWindowDisplayHandler().hide(name, window);</span>
-<span class="nc" id="L272">            }</span>
+<span class="fc" id="L271">                resolveWindowDisplayHandler().hide(name, window);</span>
+<span class="fc" id="L272">            }</span>
         });
-<span class="nc" id="L274">    }</span>
+<span class="fc" id="L274">    }</span>
 
     @Nonnull
     protected WindowDisplayHandler&lt;W&gt; resolveWindowDisplayHandler() {
@@ -289,15 +289,15 @@ public abstract class AbstractWindowManager&lt;W&gt; implements WindowManager&lt
 
     @Override
     public boolean canShutdown(@Nonnull GriffonApplication app) {
-<span class="nc" id="L292">        return true;</span>
+<span class="fc" id="L292">        return true;</span>
     }
 
     @Override
     public void onShutdown(@Nonnull GriffonApplication app) {
-<span class="nc bnc" id="L297" title="All 2 branches missed.">        for (W window : windows.values()) {</span>
-<span class="nc bnc" id="L298" title="All 2 branches missed.">            if (isWindowVisible(window)) hide(window);</span>
-<span class="nc" id="L299">        }</span>
-<span class="nc" id="L300">    }</span>
+<span class="fc bfc" id="L297" title="All 2 branches covered.">        for (W window : windows.values()) {</span>
+<span class="pc bpc" id="L298" title="1 of 2 branches missed.">            if (isWindowVisible(window)) hide(window);</span>
+<span class="fc" id="L299">        }</span>
+<span class="fc" id="L300">    }</span>
 
     protected abstract boolean isWindowVisible(@Nonnull W window);
 

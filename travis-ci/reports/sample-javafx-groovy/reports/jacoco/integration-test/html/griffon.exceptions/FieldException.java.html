@@ -30,8 +30,8 @@ public class FieldException extends GriffonException {
 <span class="nc" id="L30">    }</span>
 
     public FieldException(@Nonnull Object bean, @Nonnull String fieldName, @Nullable Object value, @Nonnull Throwable cause) {
-<span class="nc" id="L33">        super(formatArgs(bean, fieldName, value), checkNonNull(cause, &quot;cause&quot;));</span>
-<span class="nc" id="L34">    }</span>
+<span class="fc" id="L33">        super(formatArgs(bean, fieldName, value), checkNonNull(cause, &quot;cause&quot;));</span>
+<span class="fc" id="L34">    }</span>
 
     public FieldException(@Nonnull Object bean, @Nonnull String fieldName) {
 <span class="nc" id="L37">        super(formatArgs(bean, fieldName));</span>
@@ -51,9 +51,9 @@ public class FieldException extends GriffonException {
 
     @Nonnull
     private static String formatArgs(@Nonnull Object bean, @Nonnull String fieldName, @Nullable Object value) {
-<span class="nc" id="L54">        checkNonNull(bean, &quot;bean&quot;);</span>
-<span class="nc" id="L55">        checkNonBlank(fieldName, &quot;fieldName&quot;);</span>
-<span class="nc" id="L56">        return &quot;Cannot set field &quot; + fieldName + &quot; with value &quot; + value + &quot; on &quot; + bean;</span>
+<span class="fc" id="L54">        checkNonNull(bean, &quot;bean&quot;);</span>
+<span class="fc" id="L55">        checkNonBlank(fieldName, &quot;fieldName&quot;);</span>
+<span class="fc" id="L56">        return &quot;Cannot set field &quot; + fieldName + &quot; with value &quot; + value + &quot; on &quot; + bean;</span>
     }
 
     @Nonnull
