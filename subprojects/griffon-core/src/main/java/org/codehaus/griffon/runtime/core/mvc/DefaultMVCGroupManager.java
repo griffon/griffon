@@ -334,14 +334,14 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                 Object argValue = args.get(argName);
 
                 if (argValue == null) {
-                    if (findAnnotation(annotationsOfMethodParameter(method, 0), Nonnull.class) != null) {
-                        throw new IllegalStateException("Could not inject argument " + argName +
-                            " on property '" + descriptor.getName() + "' in " + memberType + " (" + member.getClass().getName() +
-                            "). Property does not accept null values.");
-                    } else {
+                    // if (findAnnotation(annotationsOfMethodParameter(method, 0), Nonnull.class) != null) {
+                    //     throw new IllegalStateException("Could not inject argument " + argName +
+                    //         " on property '" + descriptor.getName() + "' in " + memberType + " (" + member.getClass().getName() +
+                    //         "). Property does not accept null values.");
+                    // } else {
                         alreadySet.add(argName);
                         continue;
-                    }
+                    // }
                 }
 
                 try {
