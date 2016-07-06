@@ -25,6 +25,8 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public interface GithubAPI {
+    String GITHUB_API_URL_KEY = "GITHUB_API_URL_KEY";
+
     @Nonnull
     @GET("/orgs/{name}/repos")
     Observable<Response<List<Repository>>> repositories(@Nonnull @Path("name") String name);

@@ -58,3 +58,23 @@ task integrationTestReport(type: TestReport) {
 integrationTest.mustRunAfter test
 integrationTest.finalizedBy integrationTestReport
 check.dependsOn integrationTestReport
+
+task jacocoIntegrationTestReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
+    dependsOn integrationTest
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports after running integration tests."
+
+    additionalSourceDirs = project.files(project.sourceSets.main.allSource.srcDirs)
+    sourceDirectories = project.files(project.sourceSets.main.allSource.srcDirs)
+    classDirectories = project.files(project.sourceSets.main.output.classesDir.path)
+    executionData integrationTest
+    jacocoClasspath = configurations.jacocoAnt
+
+    reports {
+        xml.enabled = true
+        csv.enabled = false
+        html.enabled = true
+        html.destination = "${buildDir}/reports/jacoco/integration-test/html"
+        xml.destination = "${buildDir}/reports/jacoco/integration-test/jacocoTestReport.xml"
+    }
+}

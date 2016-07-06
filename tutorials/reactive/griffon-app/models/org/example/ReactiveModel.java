@@ -66,7 +66,7 @@ public class ReactiveModel extends AbstractGriffonModel {
     @Nonnull
     public StringProperty organizationProperty() {
         if (organization == null) {
-            organization = new SimpleStringProperty(this, "organization", "griffon");
+            organization = new SimpleStringProperty(this, "organization");
         }
         return organization;
     }
