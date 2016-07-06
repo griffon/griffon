@@ -67,6 +67,7 @@ public class ReactiveControllerTest {
         assertThat(model.getRepositories().size(), is(0));
 
         // when:
+        model.setOrganization("griffon");
         controller.load();
         await().until(() -> model.getState() == State.READY);
 

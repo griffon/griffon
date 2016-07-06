@@ -96,3 +96,23 @@ startScripts {
         windowsScript.text = windowsScript.text.replaceAll('"(-Xdock:(name|icon)=)([^"]*?)(")', ' ')
     }
 }
+
+task jacocoRootMerge(type: org.gradle.testing.jacoco.tasks.JacocoMerge, dependsOn: [test, jacocoTestReport, jacocoIntegrationTestReport]) {
+    executionData = files(jacocoTestReport.executionData, jacocoIntegrationTestReport.executionData)
+    destinationFile = file("${buildDir}/jacoco/root.exec")
+}
+
+task jacocoRootReport(dependsOn: jacocoRootMerge, type: JacocoReport) {
+    group = 'Reporting'
+    description = 'Generate Jacoco coverage reports after running all tests.'
+    executionData file("${buildDir}/jacoco/root.exec")
+    sourceDirectories = files(sourceSets.main.allSource.srcDirs)
+    classDirectories = files(sourceSets.main.output)
+    reports {
+        csv.enabled = false
+        xml.enabled = true
+        html.enabled = true
+        html.destination = "${buildDir}/reports/jacoco/root/html"
+        xml.destination = "${buildDir}/reports/jacoco/root/root.xml"
+    }
+}
