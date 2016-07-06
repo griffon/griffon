@@ -18,13 +18,15 @@ package org.example.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import griffon.metadata.TypeProviderFor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Setter;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Repository implements Comparable<Repository> {
+@TypeProviderFor(JsonEntity.class)
+public class Repository implements Comparable<Repository>, JsonEntity {
     private String name;
     private String description;
     @Setter(onMethod = @__({@JsonProperty("full_name")}))
@@ -49,7 +51,7 @@ public class Repository implements Comparable<Repository> {
 
     @Override
     public int compareTo(Repository other) {
-        if (other == null || !(other instanceof Repository)) { return 1; }
+        if (other == null) { return 1; }
         return name.compareTo(other.name);
     }
 }
