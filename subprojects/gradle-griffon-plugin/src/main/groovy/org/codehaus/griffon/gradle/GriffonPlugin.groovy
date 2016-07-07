@@ -23,6 +23,7 @@ import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.invocation.Gradle
 import org.gradle.api.tasks.Copy
+import org.gradle.api.tasks.SourceSet
 import org.gradle.tooling.BuildException
 
 /**
@@ -39,12 +40,12 @@ class GriffonPlugin implements Plugin<Project> {
 
         applyDefaultDependencies(project)
 
-        String sourceSetName = project.plugins.hasPlugin('groovy') ? 'groovy' : 'java'
-
         configureDefaultSourceSets(project, 'java')
-        if (sourceSetName != 'java') configureDefaultSourceSets(project, sourceSetName)
         createDefaultDirectoryStructure(project, 'java')
-        if (sourceSetName != 'java') createDefaultDirectoryStructure(project, sourceSetName)
+        project.plugins.withId('groovy') {
+            configureDefaultSourceSets(project, 'groovy')
+            createDefaultDirectoryStructure(project, 'groovy')
+        }
 
         registerBuildListener(project, extension)
     }
@@ -69,14 +70,12 @@ class GriffonPlugin implements Plugin<Project> {
             'griffon-app/models',
             'griffon-app/views',
             'griffon-app/services',
-            'griffon-app/lifecycle',
-            'src/main/' + sourceSetName
+            'griffon-app/lifecycle'
         ]
         // configure default resource directories
         project.sourceSets.main.resources.srcDirs += [
             'griffon-app/resources',
-            'griffon-app/i18n',
-            'src/main/resources'
+            'griffon-app/i18n'
         ]
     }
 
@@ -87,45 +86,20 @@ class GriffonPlugin implements Plugin<Project> {
         return project.name
     }
 
-    private void processMainResources(Project project, GriffonExtension extension) {
-        project.processResources {
-            from(project.sourceSets.main.resources.srcDirs) {
-                exclude '**/*.properties'
-                exclude '**/*.groovy'
-                exclude '**/*.html'
-                exclude '**/*.xml'
-                exclude '**/*.txt'
+    private void processResources(Project project, SourceSet sourceSet, GriffonExtension extension) {
+        def filePatterns = [
+            '**/*.properties',
+            '**/*.groovy',
+            '**/*.html',
+            '**/*.xml',
+            '**/*.txt'
+        ]
+        project.tasks."${sourceSet.processResourcesTaskName}" {
+            from(sourceSet.resources.srcDirs) {
+                exclude filePatterns
             }
-            from(project.sourceSets.main.resources.srcDirs) {
-                include '**/*.properties'
-                include '**/*.groovy'
-                include '**/*.html'
-                include '**/*.xml'
-                include '**/*.txt'
-                filter(ReplaceTokens, tokens: [
-                    'application.name'   : resolveApplicationName(project),
-                    'application.version': project.version,
-                    'griffon.version'    : extension.version
-                ] + extension.applicationProperties)
-            }
-        }
-    }
-
-    private void processTestResources(Project project, GriffonExtension extension) {
-        project.processTestResources {
-            from(project.sourceSets.test.resources.srcDirs) {
-                exclude '**/*.properties'
-                exclude '**/*.groovy'
-                exclude '**/*.html'
-                exclude '**/*.xml'
-                exclude '**/*.txt'
-            }
-            from(project.sourceSets.test.resources.srcDirs) {
-                include '**/*.properties'
-                include '**/*.groovy'
-                include '**/*.html'
-                include '**/*.xml'
-                include '**/*.txt'
+            from(sourceSet.resources.srcDirs) {
+                include filePatterns
                 filter(ReplaceTokens, tokens: [
                     'application.name'   : resolveApplicationName(project),
                     'application.version': project.version,
@@ -235,8 +209,8 @@ class GriffonPlugin implements Plugin<Project> {
 
                 GriffonPluginResolutionStrategy.applyTo(project)
 
-                processMainResources(project, extension)
-                processTestResources(project, extension)
+                processResources(project, project.sourceSets.main, extension)
+                processResources(project, project.sourceSets.test, extension)
 
                 project.plugins.withId('org.kordamp.gradle.stats') { plugin ->
                     Task statsTask = project.tasks.findByName('stats')
