@@ -73,6 +73,13 @@ dependencies {
     functionalTestCompile "org.codehaus.griffon:griffon-javafx-test:\${griffonVersion}"
 }
 
+task sourceJar(type: Jar) {
+    group 'Build'
+    description 'An archive of the source code'
+    classifier 'sources'
+    from sourceSets.main.allSource
+}
+
 kapt {
     generateStubs = true
 }

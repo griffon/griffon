@@ -64,6 +64,13 @@ dependencies {
     testCompile 'com.jayway.awaitility:awaitility-groovy:1.6.3'
 }
 
+task sourceJar(type: Jar) {
+    group 'Build'
+    description 'An archive of the source code'
+    classifier 'sources'
+    from sourceSets.main.allSource
+}
+
 tasks.withType(JavaCompile) {
     sourceCompatibility = project.sourceCompatibility
     targetCompatibility = project.targetCompatibility

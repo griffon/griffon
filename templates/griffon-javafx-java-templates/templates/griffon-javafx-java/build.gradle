@@ -72,6 +72,13 @@ dependencies {
     functionalTestCompile "org.codehaus.griffon:griffon-javafx-test:\${griffon.version}"
 }
 
+task sourceJar(type: Jar) {
+    group 'Build'
+    description 'An archive of the source code'
+    classifier 'sources'
+    from sourceSets.main.allSource
+}
+
 compileGroovy.enabled = false
 
 tasks.withType(JavaCompile) {
