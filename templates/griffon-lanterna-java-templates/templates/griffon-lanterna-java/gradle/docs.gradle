@@ -28,26 +28,28 @@ javadoc {
     }
 }
 
-groovydoc {
-    use = true
-    source = project.sourceSets.main.allSource
-    classpath = javadoc.classpath
-    windowTitle = "$project.name $project.version API"
-    docTitle = "$project.name $project.version API"
-    header = "$project.name $project.version API"
-    includePrivate = false
-    link 'http://www.slf4j.org/apidocs/', 'org.slf4j.'
-    link 'http://junit.org/junit4/javadoc/latest/', 'org.junit.', 'junit.'
-    link 'http://docs.oracle.com/javase/7/docs/api/', 'java.', 'org.xml.', 'javax.', 'org.w3c.'
-    link 'http://static.javadoc.io/com.google.code.findbugs/jsr305/3.0.1/', 'javax.annotation.'
-    link 'http://static.javadoc.io/javax.inject/javax.inject/1/', 'javax.inject.'
-    link 'http://griffon-framework.org/guide/latest/api/', 'griffon.', 'org.codehaus.griffon.'
+project.plugins.withId('groovy') {
+    groovydoc {
+        use = true
+        source = project.sourceSets.main.allSource
+        classpath = javadoc.classpath
+        windowTitle = "$project.name $project.version API"
+        docTitle = "$project.name $project.version API"
+        header = "$project.name $project.version API"
+        includePrivate = false
+        link 'http://www.slf4j.org/apidocs/', 'org.slf4j.'
+        link 'http://junit.org/junit4/javadoc/latest/', 'org.junit.', 'junit.'
+        link 'http://docs.oracle.com/javase/7/docs/api/', 'java.', 'org.xml.', 'javax.', 'org.w3c.'
+        link 'http://static.javadoc.io/com.google.code.findbugs/jsr305/3.0.1/', 'javax.annotation.'
+        link 'http://static.javadoc.io/javax.inject/javax.inject/1/', 'javax.inject.'
+        link 'http://griffon-framework.org/guide/latest/api/', 'griffon.', 'org.codehaus.griffon.'
 
-    doLast { task ->
-        copy {
-            into task.destinationDir
-            from rootProject.file('src/javadoc/resources/img/griffon.ico')
-            rename 'griffon.ico', 'groovy.ico'
+        doLast { task ->
+            copy {
+                into task.destinationDir
+                from rootProject.file('src/javadoc/resources/img/griffon.ico')
+                rename 'griffon.ico', 'groovy.ico'
+            }
         }
     }
 }
