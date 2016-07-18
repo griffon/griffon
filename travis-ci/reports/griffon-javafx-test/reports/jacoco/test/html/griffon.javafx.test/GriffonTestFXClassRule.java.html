@@ -32,10 +32,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.concurrent.TimeoutException;
 
-import static com.jayway.awaitility.Awaitility.await;
 import static griffon.javafx.test.TestContext.getTestContext;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
+import static org.awaitility.Awaitility.await;
 
 /**
  * A JUnit Rule that starts the application once per test class.

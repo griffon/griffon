@@ -15,7 +15,49 @@
  */
 package griffon.builder.pivot;
 
-import griffon.builder.pivot.factory.*;
+import griffon.builder.pivot.factory.AccordionFactory;
+import griffon.builder.pivot.factory.AdapterFactory;
+import griffon.builder.pivot.factory.ApplicationFactory;
+import griffon.builder.pivot.factory.BeanFactory;
+import griffon.builder.pivot.factory.BoundsFactory;
+import griffon.builder.pivot.factory.BoxPaneFactory;
+import griffon.builder.pivot.factory.ButtonDataFactory;
+import griffon.builder.pivot.factory.ButtonDataRendererFactory;
+import griffon.builder.pivot.factory.ButtonFactory;
+import griffon.builder.pivot.factory.ButtonGroupFactory;
+import griffon.builder.pivot.factory.BxmlFactory;
+import griffon.builder.pivot.factory.CalendarDateSpinnerDataFactory;
+import griffon.builder.pivot.factory.ComponentFactory;
+import griffon.builder.pivot.factory.ContainerFactory;
+import griffon.builder.pivot.factory.FileBrowserSheetFactory;
+import griffon.builder.pivot.factory.FormFlagFactory;
+import griffon.builder.pivot.factory.FormSectionFactory;
+import griffon.builder.pivot.factory.GridPaneFactory;
+import griffon.builder.pivot.factory.GridPaneRowFactory;
+import griffon.builder.pivot.factory.ImageViewFactory;
+import griffon.builder.pivot.factory.InsetsFactory;
+import griffon.builder.pivot.factory.JavaCollectionFactory;
+import griffon.builder.pivot.factory.MenuBarFactory;
+import griffon.builder.pivot.factory.MenuBarItemFactory;
+import griffon.builder.pivot.factory.MenuFactory;
+import griffon.builder.pivot.factory.MenuItemFactory;
+import griffon.builder.pivot.factory.NumericSpinnerDataFactory;
+import griffon.builder.pivot.factory.PairFactory;
+import griffon.builder.pivot.factory.PictureFactory;
+import griffon.builder.pivot.factory.PivotBeanFactory;
+import griffon.builder.pivot.factory.RollupFactory;
+import griffon.builder.pivot.factory.ScrollBarScopeFactory;
+import griffon.builder.pivot.factory.ScrollPaneFactory;
+import griffon.builder.pivot.factory.SingleElementContainerFactory;
+import griffon.builder.pivot.factory.SliderFactory;
+import griffon.builder.pivot.factory.SplitPaneFactory;
+import griffon.builder.pivot.factory.TabPaneFactory;
+import griffon.builder.pivot.factory.TablePaneColumnFactory;
+import griffon.builder.pivot.factory.TablePaneFactory;
+import griffon.builder.pivot.factory.TablePaneRowFactory;
+import griffon.builder.pivot.factory.TextComponentFactory;
+import griffon.builder.pivot.factory.ViewportFactory;
+import griffon.builder.pivot.factory.WidgetFactory;
 import griffon.exceptions.PropertyException;
 import griffon.inject.DependsOn;
 import griffon.pivot.support.PivotAction;
@@ -23,7 +65,51 @@ import griffon.pivot.support.adapters.*;
 import groovy.lang.Closure;
 import groovy.util.Factory;
 import groovy.util.FactoryBuilderSupport;
-import org.apache.pivot.wtk.*;
+import org.apache.pivot.wtk.ActivityIndicator;
+import org.apache.pivot.wtk.Border;
+import org.apache.pivot.wtk.BoxPane;
+import org.apache.pivot.wtk.Calendar;
+import org.apache.pivot.wtk.CalendarButton;
+import org.apache.pivot.wtk.CardPane;
+import org.apache.pivot.wtk.Checkbox;
+import org.apache.pivot.wtk.ColorChooser;
+import org.apache.pivot.wtk.ColorChooserButton;
+import org.apache.pivot.wtk.Component;
+import org.apache.pivot.wtk.Container;
+import org.apache.pivot.wtk.Dialog;
+import org.apache.pivot.wtk.Dimensions;
+import org.apache.pivot.wtk.Expander;
+import org.apache.pivot.wtk.FileBrowser;
+import org.apache.pivot.wtk.FlowPane;
+import org.apache.pivot.wtk.Form;
+import org.apache.pivot.wtk.Frame;
+import org.apache.pivot.wtk.GridPane;
+import org.apache.pivot.wtk.Label;
+import org.apache.pivot.wtk.LinkButton;
+import org.apache.pivot.wtk.ListButton;
+import org.apache.pivot.wtk.ListView;
+import org.apache.pivot.wtk.MenuButton;
+import org.apache.pivot.wtk.MenuPopup;
+import org.apache.pivot.wtk.Meter;
+import org.apache.pivot.wtk.Orientation;
+import org.apache.pivot.wtk.Palette;
+import org.apache.pivot.wtk.Panel;
+import org.apache.pivot.wtk.Panorama;
+import org.apache.pivot.wtk.Point;
+import org.apache.pivot.wtk.PushButton;
+import org.apache.pivot.wtk.RadioButton;
+import org.apache.pivot.wtk.ScrollBar;
+import org.apache.pivot.wtk.Separator;
+import org.apache.pivot.wtk.Sheet;
+import org.apache.pivot.wtk.Span;
+import org.apache.pivot.wtk.Spinner;
+import org.apache.pivot.wtk.StackPane;
+import org.apache.pivot.wtk.TablePane;
+import org.apache.pivot.wtk.TextArea;
+import org.apache.pivot.wtk.TextInput;
+import org.apache.pivot.wtk.Tooltip;
+import org.apache.pivot.wtk.Visual;
+import org.apache.pivot.wtk.Window;
 import org.apache.pivot.wtk.content.ButtonDataRenderer;
 import org.apache.pivot.wtk.content.CalendarButtonDataRenderer;
 import org.apache.pivot.wtk.content.LinkButtonDataRenderer;
@@ -75,365 +161,365 @@ import static griffon.util.GriffonClassUtils.setPropertyValue;
 @DependsOn({&quot;core&quot;})
 @SuppressWarnings(&quot;rawtypes&quot;)
 public class PivotBuilderCustomizer extends AbstractBuilderCustomizer {
-<span class="fc" id="L78">    private final Map&lt;String, Factory&gt; factories = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L164">    private final Map&lt;String, Factory&gt; factories = new LinkedHashMap&lt;&gt;();</span>
 
     @SuppressWarnings(&quot;unchecked&quot;)
-<span class="fc" id="L81">    public PivotBuilderCustomizer() {</span>
+<span class="fc" id="L167">    public PivotBuilderCustomizer() {</span>
         // PivotUtils.enhanceClasses();
 
         // -- griffon
-<span class="fc" id="L85">        registerFactory(&quot;application&quot;, new ApplicationFactory());</span>
+<span class="fc" id="L171">        registerFactory(&quot;application&quot;, new ApplicationFactory());</span>
 
         // -- support
-<span class="fc" id="L88">        registerPivotBeanFactory(&quot;action&quot;, PivotAction.class);</span>
-<span class="fc" id="L89">        registerFactory(&quot;actions&quot;, new JavaCollectionFactory());</span>
-<span class="fc" id="L90">        registerFactory(&quot;noparent&quot;, new JavaCollectionFactory());</span>
-<span class="fc" id="L91">        registerFactory(&quot;bxml&quot;, new BxmlFactory());</span>
-<span class="fc" id="L92">        registerFactory(&quot;buttonGroup&quot;, new ButtonGroupFactory());</span>
+<span class="fc" id="L174">        registerPivotBeanFactory(&quot;action&quot;, PivotAction.class);</span>
+<span class="fc" id="L175">        registerFactory(&quot;actions&quot;, new JavaCollectionFactory());</span>
+<span class="fc" id="L176">        registerFactory(&quot;noparent&quot;, new JavaCollectionFactory());</span>
+<span class="fc" id="L177">        registerFactory(&quot;bxml&quot;, new BxmlFactory());</span>
+<span class="fc" id="L178">        registerFactory(&quot;buttonGroup&quot;, new ButtonGroupFactory());</span>
 
-<span class="fc" id="L94">        registerFactory(&quot;dimensions&quot;, new PairFactory(Dimensions.class, &quot;width&quot;, &quot;height&quot;));</span>
-<span class="fc" id="L95">        registerFactory(&quot;point&quot;, new PairFactory(Point.class, &quot;x&quot;, &quot;y&quot;));</span>
-<span class="fc" id="L96">        registerFactory(&quot;span&quot;, new PairFactory(Span.class, &quot;start&quot;, &quot;end&quot;));</span>
-<span class="fc" id="L97">        registerFactory(&quot;insets&quot;, new InsetsFactory());</span>
-<span class="fc" id="L98">        registerFactory(&quot;bounds&quot;, new BoundsFactory());</span>
+<span class="fc" id="L180">        registerFactory(&quot;dimensions&quot;, new PairFactory(Dimensions.class, &quot;width&quot;, &quot;height&quot;));</span>
+<span class="fc" id="L181">        registerFactory(&quot;point&quot;, new PairFactory(Point.class, &quot;x&quot;, &quot;y&quot;));</span>
+<span class="fc" id="L182">        registerFactory(&quot;span&quot;, new PairFactory(Span.class, &quot;start&quot;, &quot;end&quot;));</span>
+<span class="fc" id="L183">        registerFactory(&quot;insets&quot;, new InsetsFactory());</span>
+<span class="fc" id="L184">        registerFactory(&quot;bounds&quot;, new BoundsFactory());</span>
 
-<span class="fc" id="L100">        registerFactory(&quot;widget&quot;, new WidgetFactory(Component.class, false));</span>
-<span class="fc" id="L101">        registerFactory(&quot;container&quot;, new WidgetFactory(Container.class, false));</span>
-<span class="fc" id="L102">        registerFactory(&quot;bean&quot;, new WidgetFactory(Object.class, true));</span>
+<span class="fc" id="L186">        registerFactory(&quot;widget&quot;, new WidgetFactory(Component.class, false));</span>
+<span class="fc" id="L187">        registerFactory(&quot;container&quot;, new WidgetFactory(Container.class, false));</span>
+<span class="fc" id="L188">        registerFactory(&quot;bean&quot;, new WidgetFactory(Object.class, true));</span>
 
         // -- widgets
-<span class="fc" id="L105">        registerPivotComponentFactory(&quot;activityIndicator&quot;, ActivityIndicator.class);</span>
-<span class="fc" id="L106">        registerPivotComponentFactory(&quot;fileBrowser&quot;, FileBrowser.class);</span>
-<span class="fc" id="L107">        registerFactory(&quot;label&quot;, new TextComponentFactory(Label.class));</span>
-<span class="fc" id="L108">        registerFactory(&quot;meter&quot;, new TextComponentFactory(Meter.class));</span>
-<span class="fc" id="L109">        registerPivotComponentFactory(&quot;separator&quot;, Separator.class);</span>
-<span class="fc" id="L110">        registerFactory(&quot;textArea&quot;, new TextComponentFactory(TextArea.class));</span>
-<span class="fc" id="L111">        registerFactory(&quot;textInput&quot;, new TextComponentFactory(TextInput.class));</span>
+<span class="fc" id="L191">        registerPivotComponentFactory(&quot;activityIndicator&quot;, ActivityIndicator.class);</span>
+<span class="fc" id="L192">        registerPivotComponentFactory(&quot;fileBrowser&quot;, FileBrowser.class);</span>
+<span class="fc" id="L193">        registerFactory(&quot;label&quot;, new TextComponentFactory(Label.class));</span>
+<span class="fc" id="L194">        registerFactory(&quot;meter&quot;, new TextComponentFactory(Meter.class));</span>
+<span class="fc" id="L195">        registerPivotComponentFactory(&quot;separator&quot;, Separator.class);</span>
+<span class="fc" id="L196">        registerFactory(&quot;textArea&quot;, new TextComponentFactory(TextArea.class));</span>
+<span class="fc" id="L197">        registerFactory(&quot;textInput&quot;, new TextComponentFactory(TextInput.class));</span>
 
-<span class="fc" id="L113">        registerFactory(&quot;slider&quot;, new SliderFactory());</span>
-<span class="fc" id="L114">        registerPivotComponentFactory(&quot;spinner&quot;, Spinner.class);</span>
-<span class="fc" id="L115">        registerFactory(&quot;numericSpinnerData&quot;, new NumericSpinnerDataFactory());</span>
-<span class="fc" id="L116">        registerFactory(&quot;calendarDateSpinnerData&quot;, new CalendarDateSpinnerDataFactory());</span>
-<span class="fc" id="L117">        registerPivotComponentFactory(&quot;scrollBar&quot;, ScrollBar.class);</span>
-<span class="fc" id="L118">        registerFactory(&quot;scrollBarScope&quot;, new ScrollBarScopeFactory());</span>
+<span class="fc" id="L199">        registerFactory(&quot;slider&quot;, new SliderFactory());</span>
+<span class="fc" id="L200">        registerPivotComponentFactory(&quot;spinner&quot;, Spinner.class);</span>
+<span class="fc" id="L201">        registerFactory(&quot;numericSpinnerData&quot;, new NumericSpinnerDataFactory());</span>
+<span class="fc" id="L202">        registerFactory(&quot;calendarDateSpinnerData&quot;, new CalendarDateSpinnerDataFactory());</span>
+<span class="fc" id="L203">        registerPivotComponentFactory(&quot;scrollBar&quot;, ScrollBar.class);</span>
+<span class="fc" id="L204">        registerFactory(&quot;scrollBarScope&quot;, new ScrollBarScopeFactory());</span>
 
         // -- views
-<span class="fc" id="L121">        registerPivotComponentFactory(&quot;listView&quot;, ListView.class);</span>
-<span class="fc" id="L122">        registerFactory(&quot;imageView&quot;, new ImageViewFactory());</span>
+<span class="fc" id="L207">        registerPivotComponentFactory(&quot;listView&quot;, ListView.class);</span>
+<span class="fc" id="L208">        registerFactory(&quot;imageView&quot;, new ImageViewFactory());</span>
         // registerPivotComponentFactory(&quot;movieView&quot;, MovieView)
         // registerPivotComponentFactory(&quot;tableView&quot;, TableView)
         // registerPivotComponentFactory(&quot;tableViewHeader&quot;, TableViewHeader)
         // registerPivotComponentFactory(&quot;treeView&quot;, TreeView)
 
         // -- buttons
-<span class="fc" id="L129">        registerFactory(&quot;buttonData&quot;, new ButtonDataFactory());</span>
-<span class="fc" id="L130">        registerFactory(&quot;calendarButton&quot;, new ButtonFactory(CalendarButton.class));</span>
-<span class="fc" id="L131">        registerFactory(&quot;checkbox&quot;, new ButtonFactory(Checkbox.class));</span>
-<span class="fc" id="L132">        registerFactory(&quot;colorChooserButton&quot;, new ButtonFactory(ColorChooserButton.class));</span>
-<span class="fc" id="L133">        registerFactory(&quot;linkButton&quot;, new ButtonFactory(LinkButton.class));</span>
-<span class="fc" id="L134">        registerFactory(&quot;listButton&quot;, new ButtonFactory(ListButton.class));</span>
-<span class="fc" id="L135">        registerFactory(&quot;menuButton&quot;, new ButtonFactory(MenuButton.class));</span>
-<span class="fc" id="L136">        Factory button = new ButtonFactory(PushButton.class);</span>
-<span class="fc" id="L137">        registerFactory(&quot;button&quot;, button);</span>
-<span class="fc" id="L138">        registerFactory(&quot;pushButton&quot;, button);</span>
-<span class="fc" id="L139">        registerFactory(&quot;radioButton&quot;, new ButtonFactory(RadioButton.class));</span>
+<span class="fc" id="L215">        registerFactory(&quot;buttonData&quot;, new ButtonDataFactory());</span>
+<span class="fc" id="L216">        registerFactory(&quot;calendarButton&quot;, new ButtonFactory(CalendarButton.class));</span>
+<span class="fc" id="L217">        registerFactory(&quot;checkbox&quot;, new ButtonFactory(Checkbox.class));</span>
+<span class="fc" id="L218">        registerFactory(&quot;colorChooserButton&quot;, new ButtonFactory(ColorChooserButton.class));</span>
+<span class="fc" id="L219">        registerFactory(&quot;linkButton&quot;, new ButtonFactory(LinkButton.class));</span>
+<span class="fc" id="L220">        registerFactory(&quot;listButton&quot;, new ButtonFactory(ListButton.class));</span>
+<span class="fc" id="L221">        registerFactory(&quot;menuButton&quot;, new ButtonFactory(MenuButton.class));</span>
+<span class="fc" id="L222">        Factory button = new ButtonFactory(PushButton.class);</span>
+<span class="fc" id="L223">        registerFactory(&quot;button&quot;, button);</span>
+<span class="fc" id="L224">        registerFactory(&quot;pushButton&quot;, button);</span>
+<span class="fc" id="L225">        registerFactory(&quot;radioButton&quot;, new ButtonFactory(RadioButton.class));</span>
 
-<span class="fc" id="L141">        registerFactory(&quot;buttonDataRenderer&quot;, new ButtonDataRendererFactory(ButtonDataRenderer.class));</span>
-<span class="fc" id="L142">        registerFactory(&quot;calendarButtonDataRenderer&quot;, new ButtonDataRendererFactory(CalendarButtonDataRenderer.class));</span>
-<span class="fc" id="L143">        registerFactory(&quot;linkButtonDataRenderer&quot;, new ButtonDataRendererFactory(LinkButtonDataRenderer.class));</span>
-<span class="fc" id="L144">        registerFactory(&quot;listButtonColorItemRenderer&quot;, new ButtonDataRendererFactory(ListButtonColorItemRenderer.class));</span>
-<span class="fc" id="L145">        registerFactory(&quot;listButtonDataRenderer&quot;, new ButtonDataRendererFactory(ListButtonDataRenderer.class));</span>
-<span class="fc" id="L146">        registerFactory(&quot;menuButtonDataRenderer&quot;, new ButtonDataRendererFactory(MenuButtonDataRenderer.class));</span>
-<span class="fc" id="L147">        registerFactory(&quot;buttonDataRenderer&quot;, new ButtonDataRendererFactory(ButtonDataRenderer.class));</span>
+<span class="fc" id="L227">        registerFactory(&quot;buttonDataRenderer&quot;, new ButtonDataRendererFactory(ButtonDataRenderer.class));</span>
+<span class="fc" id="L228">        registerFactory(&quot;calendarButtonDataRenderer&quot;, new ButtonDataRendererFactory(CalendarButtonDataRenderer.class));</span>
+<span class="fc" id="L229">        registerFactory(&quot;linkButtonDataRenderer&quot;, new ButtonDataRendererFactory(LinkButtonDataRenderer.class));</span>
+<span class="fc" id="L230">        registerFactory(&quot;listButtonColorItemRenderer&quot;, new ButtonDataRendererFactory(ListButtonColorItemRenderer.class));</span>
+<span class="fc" id="L231">        registerFactory(&quot;listButtonDataRenderer&quot;, new ButtonDataRendererFactory(ListButtonDataRenderer.class));</span>
+<span class="fc" id="L232">        registerFactory(&quot;menuButtonDataRenderer&quot;, new ButtonDataRendererFactory(MenuButtonDataRenderer.class));</span>
+<span class="fc" id="L233">        registerFactory(&quot;buttonDataRenderer&quot;, new ButtonDataRendererFactory(ButtonDataRenderer.class));</span>
 
         // -- menus
-<span class="fc" id="L150">        registerFactory(&quot;menu&quot;, new MenuFactory());</span>
-<span class="fc" id="L151">        registerFactory(&quot;menuItem&quot;, new MenuItemFactory());</span>
-<span class="fc" id="L152">        registerFactory(&quot;menuBar&quot;, new MenuBarFactory());</span>
-<span class="fc" id="L153">        registerFactory(&quot;menuBarItem&quot;, new MenuBarItemFactory());</span>
-<span class="fc" id="L154">        registerPivotComponentFactory(&quot;menuPopup&quot;, MenuPopup.class);</span>
-<span class="fc" id="L155">        registerFactory(&quot;menuBarItemDataRenderer&quot;, new ButtonDataRendererFactory(MenuBarItemDataRenderer.class));</span>
-<span class="fc" id="L156">        registerFactory(&quot;menuItemDataRenderer&quot;, new ButtonDataRendererFactory(MenuItemDataRenderer.class));</span>
+<span class="fc" id="L236">        registerFactory(&quot;menu&quot;, new MenuFactory());</span>
+<span class="fc" id="L237">        registerFactory(&quot;menuItem&quot;, new MenuItemFactory());</span>
+<span class="fc" id="L238">        registerFactory(&quot;menuBar&quot;, new MenuBarFactory());</span>
+<span class="fc" id="L239">        registerFactory(&quot;menuBarItem&quot;, new MenuBarItemFactory());</span>
+<span class="fc" id="L240">        registerPivotComponentFactory(&quot;menuPopup&quot;, MenuPopup.class);</span>
+<span class="fc" id="L241">        registerFactory(&quot;menuBarItemDataRenderer&quot;, new ButtonDataRendererFactory(MenuBarItemDataRenderer.class));</span>
+<span class="fc" id="L242">        registerFactory(&quot;menuItemDataRenderer&quot;, new ButtonDataRendererFactory(MenuItemDataRenderer.class));</span>
 
         // -- panes
-<span class="fc" id="L159">        Factory hbox = new BoxPaneFactory(Orientation.HORIZONTAL);</span>
-<span class="fc" id="L160">        registerFactory(&quot;box&quot;, hbox);</span>
-<span class="fc" id="L161">        registerFactory(&quot;hbox&quot;, hbox);</span>
-<span class="fc" id="L162">        registerFactory(&quot;vbox&quot;, new BoxPaneFactory(Orientation.VERTICAL));</span>
-<span class="fc" id="L163">        registerPivotContainerFactory(&quot;boxPane&quot;, BoxPane.class);</span>
-<span class="fc" id="L164">        registerPivotContainerFactory(&quot;cardPane&quot;, CardPane.class);</span>
-<span class="fc" id="L165">        registerPivotContainerFactory(&quot;flowPane&quot;, FlowPane.class);</span>
-<span class="fc" id="L166">        registerFactory(&quot;gridPane&quot;, new GridPaneFactory());</span>
-<span class="fc" id="L167">        registerFactory(&quot;gridRow&quot;, new GridPaneRowFactory());</span>
-<span class="fc" id="L168">        registerPivotContainerFactory(&quot;gridFiller&quot;, GridPane.Filler.class);</span>
-<span class="fc" id="L169">        registerFactory(&quot;scrollPane&quot;, new ScrollPaneFactory());</span>
-<span class="fc" id="L170">        registerFactory(&quot;splitPane&quot;, new SplitPaneFactory());</span>
-<span class="fc" id="L171">        registerPivotContainerFactory(&quot;stackPane&quot;, StackPane.class);</span>
-<span class="fc" id="L172">        registerFactory(&quot;tabPane&quot;, new TabPaneFactory());</span>
-<span class="fc" id="L173">        registerFactory(&quot;tablePane&quot;, new TablePaneFactory());</span>
-<span class="fc" id="L174">        registerFactory(&quot;tablePaneColumn&quot;, new TablePaneColumnFactory());</span>
-<span class="fc" id="L175">        registerFactory(&quot;tablePaneRow&quot;, new TablePaneRowFactory());</span>
-<span class="fc" id="L176">        registerPivotContainerFactory(&quot;tablePaneFiller&quot;, TablePane.Filler.class);</span>
+<span class="fc" id="L245">        Factory hbox = new BoxPaneFactory(Orientation.HORIZONTAL);</span>
+<span class="fc" id="L246">        registerFactory(&quot;box&quot;, hbox);</span>
+<span class="fc" id="L247">        registerFactory(&quot;hbox&quot;, hbox);</span>
+<span class="fc" id="L248">        registerFactory(&quot;vbox&quot;, new BoxPaneFactory(Orientation.VERTICAL));</span>
+<span class="fc" id="L249">        registerPivotContainerFactory(&quot;boxPane&quot;, BoxPane.class);</span>
+<span class="fc" id="L250">        registerPivotContainerFactory(&quot;cardPane&quot;, CardPane.class);</span>
+<span class="fc" id="L251">        registerPivotContainerFactory(&quot;flowPane&quot;, FlowPane.class);</span>
+<span class="fc" id="L252">        registerFactory(&quot;gridPane&quot;, new GridPaneFactory());</span>
+<span class="fc" id="L253">        registerFactory(&quot;gridRow&quot;, new GridPaneRowFactory());</span>
+<span class="fc" id="L254">        registerPivotContainerFactory(&quot;gridFiller&quot;, GridPane.Filler.class);</span>
+<span class="fc" id="L255">        registerFactory(&quot;scrollPane&quot;, new ScrollPaneFactory());</span>
+<span class="fc" id="L256">        registerFactory(&quot;splitPane&quot;, new SplitPaneFactory());</span>
+<span class="fc" id="L257">        registerPivotContainerFactory(&quot;stackPane&quot;, StackPane.class);</span>
+<span class="fc" id="L258">        registerFactory(&quot;tabPane&quot;, new TabPaneFactory());</span>
+<span class="fc" id="L259">        registerFactory(&quot;tablePane&quot;, new TablePaneFactory());</span>
+<span class="fc" id="L260">        registerFactory(&quot;tablePaneColumn&quot;, new TablePaneColumnFactory());</span>
+<span class="fc" id="L261">        registerFactory(&quot;tablePaneRow&quot;, new TablePaneRowFactory());</span>
+<span class="fc" id="L262">        registerPivotContainerFactory(&quot;tablePaneFiller&quot;, TablePane.Filler.class);</span>
 
         // -- containers
-<span class="fc" id="L179">        registerFactory(&quot;accordion&quot;, new AccordionFactory());</span>
-<span class="fc" id="L180">        registerPivotContainerFactory(&quot;border&quot;, Border.class, true);</span>
-<span class="fc" id="L181">        registerPivotContainerFactory(&quot;calendar&quot;, Calendar.class);</span>
-<span class="fc" id="L182">        registerPivotContainerFactory(&quot;colorChooser&quot;, ColorChooser.class);</span>
-<span class="fc" id="L183">        registerPivotContainerFactory(&quot;expander&quot;, Expander.class, true);</span>
-<span class="fc" id="L184">        registerPivotComponentFactory(&quot;form&quot;, Form.class);</span>
-<span class="fc" id="L185">        registerFactory(&quot;formSection&quot;, new FormSectionFactory());</span>
-<span class="fc" id="L186">        registerFactory(&quot;formFlag&quot;, new FormFlagFactory());</span>
-<span class="fc" id="L187">        registerPivotContainerFactory(&quot;panel&quot;, Panel.class);</span>
-<span class="fc" id="L188">        registerFactory(&quot;panorama&quot;, new ViewportFactory(Panorama.class));</span>
-<span class="fc" id="L189">        registerFactory(&quot;rollup&quot;, new RollupFactory());</span>
+<span class="fc" id="L265">        registerFactory(&quot;accordion&quot;, new AccordionFactory());</span>
+<span class="fc" id="L266">        registerPivotContainerFactory(&quot;border&quot;, Border.class, true);</span>
+<span class="fc" id="L267">        registerPivotContainerFactory(&quot;calendar&quot;, Calendar.class);</span>
+<span class="fc" id="L268">        registerPivotContainerFactory(&quot;colorChooser&quot;, ColorChooser.class);</span>
+<span class="fc" id="L269">        registerPivotContainerFactory(&quot;expander&quot;, Expander.class, true);</span>
+<span class="fc" id="L270">        registerPivotComponentFactory(&quot;form&quot;, Form.class);</span>
+<span class="fc" id="L271">        registerFactory(&quot;formSection&quot;, new FormSectionFactory());</span>
+<span class="fc" id="L272">        registerFactory(&quot;formFlag&quot;, new FormFlagFactory());</span>
+<span class="fc" id="L273">        registerPivotContainerFactory(&quot;panel&quot;, Panel.class);</span>
+<span class="fc" id="L274">        registerFactory(&quot;panorama&quot;, new ViewportFactory(Panorama.class));</span>
+<span class="fc" id="L275">        registerFactory(&quot;rollup&quot;, new RollupFactory());</span>
 
         // -- windows
         // registerPivotContainerFactory(&quot;alert&quot;, Alert)
         // registerPivotContainerFactory(&quot;prompt&quot;, Prompt)
-<span class="fc" id="L194">        registerPivotContainerFactory(&quot;dialog&quot;, Dialog.class, true);</span>
-<span class="fc" id="L195">        registerPivotContainerFactory(&quot;frame&quot;, Frame.class, true);</span>
-<span class="fc" id="L196">        registerFactory(&quot;fileBrowserSheet&quot;, new FileBrowserSheetFactory());</span>
-<span class="fc" id="L197">        registerPivotContainerFactory(&quot;palette&quot;, Palette.class, true);</span>
-<span class="fc" id="L198">        registerPivotContainerFactory(&quot;sheet&quot;, Sheet.class, true);</span>
-<span class="fc" id="L199">        registerFactory(&quot;tooltip&quot;, new TextComponentFactory(Tooltip.class));</span>
-<span class="fc" id="L200">        registerPivotContainerFactory(&quot;window&quot;, Window.class, true);</span>
+<span class="fc" id="L280">        registerPivotContainerFactory(&quot;dialog&quot;, Dialog.class, true);</span>
+<span class="fc" id="L281">        registerPivotContainerFactory(&quot;frame&quot;, Frame.class, true);</span>
+<span class="fc" id="L282">        registerFactory(&quot;fileBrowserSheet&quot;, new FileBrowserSheetFactory());</span>
+<span class="fc" id="L283">        registerPivotContainerFactory(&quot;palette&quot;, Palette.class, true);</span>
+<span class="fc" id="L284">        registerPivotContainerFactory(&quot;sheet&quot;, Sheet.class, true);</span>
+<span class="fc" id="L285">        registerFactory(&quot;tooltip&quot;, new TextComponentFactory(Tooltip.class));</span>
+<span class="fc" id="L286">        registerPivotContainerFactory(&quot;window&quot;, Window.class, true);</span>
 
         // -- effects
-<span class="fc" id="L203">        registerPivotBeanFactory(&quot;baselineDecorator&quot;, BaselineDecorator.class);</span>
-<span class="fc" id="L204">        registerPivotBeanFactory(&quot;blurDecorator&quot;, BlurDecorator.class);</span>
-<span class="fc" id="L205">        registerPivotBeanFactory(&quot;clipDecorator&quot;, ClipDecorator.class);</span>
-<span class="fc" id="L206">        registerPivotBeanFactory(&quot;dropShadowDecorator&quot;, DropShadowDecorator.class);</span>
-<span class="fc" id="L207">        registerPivotBeanFactory(&quot;fadeDecorator&quot;, FadeDecorator.class);</span>
-<span class="fc" id="L208">        registerPivotBeanFactory(&quot;grayscaleDecorator&quot;, GrayscaleDecorator.class);</span>
-<span class="fc" id="L209">        registerPivotBeanFactory(&quot;reflectionDecorator&quot;, ReflectionDecorator.class);</span>
-<span class="fc" id="L210">        registerPivotBeanFactory(&quot;rotationDecorator&quot;, RotationDecorator.class);</span>
-<span class="fc" id="L211">        registerPivotBeanFactory(&quot;saturationDecorator&quot;, SaturationDecorator.class);</span>
-<span class="fc" id="L212">        registerPivotBeanFactory(&quot;scaleDecorator&quot;, ScaleDecorator.class);</span>
-<span class="fc" id="L213">        registerPivotBeanFactory(&quot;shadeDecorator&quot;, ShadeDecorator.class);</span>
-<span class="fc" id="L214">        registerPivotBeanFactory(&quot;translationDecorator&quot;, TranslationDecorator.class);</span>
-<span class="fc" id="L215">        registerFactory(&quot;overlayDecorator&quot;, new SingleElementContainerFactory(OverlayDecorator.class, &quot;component&quot;, Component.class));</span>
-<span class="fc" id="L216">        registerFactory(&quot;tagDecorator&quot;, new SingleElementContainerFactory(TagDecorator.class, &quot;tag&quot;, Visual.class));</span>
-<span class="fc" id="L217">        registerFactory(&quot;watermarkDecorator&quot;, new SingleElementContainerFactory(WatermarkDecorator.class, &quot;image&quot;, Image.class));</span>
+<span class="fc" id="L289">        registerPivotBeanFactory(&quot;baselineDecorator&quot;, BaselineDecorator.class);</span>
+<span class="fc" id="L290">        registerPivotBeanFactory(&quot;blurDecorator&quot;, BlurDecorator.class);</span>
+<span class="fc" id="L291">        registerPivotBeanFactory(&quot;clipDecorator&quot;, ClipDecorator.class);</span>
+<span class="fc" id="L292">        registerPivotBeanFactory(&quot;dropShadowDecorator&quot;, DropShadowDecorator.class);</span>
+<span class="fc" id="L293">        registerPivotBeanFactory(&quot;fadeDecorator&quot;, FadeDecorator.class);</span>
+<span class="fc" id="L294">        registerPivotBeanFactory(&quot;grayscaleDecorator&quot;, GrayscaleDecorator.class);</span>
+<span class="fc" id="L295">        registerPivotBeanFactory(&quot;reflectionDecorator&quot;, ReflectionDecorator.class);</span>
+<span class="fc" id="L296">        registerPivotBeanFactory(&quot;rotationDecorator&quot;, RotationDecorator.class);</span>
+<span class="fc" id="L297">        registerPivotBeanFactory(&quot;saturationDecorator&quot;, SaturationDecorator.class);</span>
+<span class="fc" id="L298">        registerPivotBeanFactory(&quot;scaleDecorator&quot;, ScaleDecorator.class);</span>
+<span class="fc" id="L299">        registerPivotBeanFactory(&quot;shadeDecorator&quot;, ShadeDecorator.class);</span>
+<span class="fc" id="L300">        registerPivotBeanFactory(&quot;translationDecorator&quot;, TranslationDecorator.class);</span>
+<span class="fc" id="L301">        registerFactory(&quot;overlayDecorator&quot;, new SingleElementContainerFactory(OverlayDecorator.class, &quot;component&quot;, Component.class));</span>
+<span class="fc" id="L302">        registerFactory(&quot;tagDecorator&quot;, new SingleElementContainerFactory(TagDecorator.class, &quot;tag&quot;, Visual.class));</span>
+<span class="fc" id="L303">        registerFactory(&quot;watermarkDecorator&quot;, new SingleElementContainerFactory(WatermarkDecorator.class, &quot;image&quot;, Image.class));</span>
 
-<span class="fc" id="L219">        registerBeanFactory(&quot;easingCircular&quot;, Circular.class);</span>
-<span class="fc" id="L220">        registerBeanFactory(&quot;easingCubic&quot;, Cubic.class);</span>
-<span class="fc" id="L221">        registerBeanFactory(&quot;easingExponential&quot;, Exponential.class);</span>
-<span class="fc" id="L222">        registerBeanFactory(&quot;easingLinear&quot;, Linear.class);</span>
-<span class="fc" id="L223">        registerBeanFactory(&quot;easingQuadratic&quot;, Quadratic.class);</span>
-<span class="fc" id="L224">        registerBeanFactory(&quot;easingQuartic&quot;, Quartic.class);</span>
-<span class="fc" id="L225">        registerBeanFactory(&quot;easingQuintic&quot;, Quintic.class);</span>
-<span class="fc" id="L226">        registerBeanFactory(&quot;easingSine&quot;, Sine.class);</span>
+<span class="fc" id="L305">        registerBeanFactory(&quot;easingCircular&quot;, Circular.class);</span>
+<span class="fc" id="L306">        registerBeanFactory(&quot;easingCubic&quot;, Cubic.class);</span>
+<span class="fc" id="L307">        registerBeanFactory(&quot;easingExponential&quot;, Exponential.class);</span>
+<span class="fc" id="L308">        registerBeanFactory(&quot;easingLinear&quot;, Linear.class);</span>
+<span class="fc" id="L309">        registerBeanFactory(&quot;easingQuadratic&quot;, Quadratic.class);</span>
+<span class="fc" id="L310">        registerBeanFactory(&quot;easingQuartic&quot;, Quartic.class);</span>
+<span class="fc" id="L311">        registerBeanFactory(&quot;easingQuintic&quot;, Quintic.class);</span>
+<span class="fc" id="L312">        registerBeanFactory(&quot;easingSine&quot;, Sine.class);</span>
 
-<span class="fc" id="L228">        registerFactory(&quot;picture&quot;, new PictureFactory());</span>
+<span class="fc" id="L314">        registerFactory(&quot;picture&quot;, new PictureFactory());</span>
 
         // -- listeners
-<span class="fc" id="L231">        registerFactory(&quot;accordionListener&quot;, new AdapterFactory(AccordionAdapter.class));</span>
-<span class="fc" id="L232">        registerFactory(&quot;accordionAttributeListener&quot;, new AdapterFactory(AccordionAttributeAdapter.class));</span>
-<span class="fc" id="L233">        registerFactory(&quot;accordionSelectionListener&quot;, new AdapterFactory(AccordionSelectionAdapter.class));</span>
-<span class="fc" id="L234">        registerFactory(&quot;actionListener&quot;, new AdapterFactory(ActionAdapter.class));</span>
-<span class="fc" id="L235">        registerFactory(&quot;actionClassListener&quot;, new AdapterFactory(ActionClassAdapter.class));</span>
-<span class="fc" id="L236">        registerFactory(&quot;activityIndicatorListener&quot;, new AdapterFactory(ActivityIndicatorAdapter.class));</span>
-<span class="fc" id="L237">        registerFactory(&quot;alertListener&quot;, new AdapterFactory(AlertAdapter.class));</span>
-<span class="fc" id="L238">        registerFactory(&quot;blockListener&quot;, new AdapterFactory(BlockAdapter.class));</span>
-<span class="fc" id="L239">        registerFactory(&quot;borderListener&quot;, new AdapterFactory(BorderAdapter.class));</span>
-<span class="fc" id="L240">        registerFactory(&quot;boxPaneListener&quot;, new AdapterFactory(BoxPaneAdapter.class));</span>
-<span class="fc" id="L241">        registerFactory(&quot;bulletedListListener&quot;, new AdapterFactory(BulletedListAdapter.class));</span>
-<span class="fc" id="L242">        registerFactory(&quot;buttonListener&quot;, new AdapterFactory(ButtonAdapter.class));</span>
-<span class="fc" id="L243">        registerFactory(&quot;buttonBindingListener&quot;, new AdapterFactory(ButtonBindingAdapter.class));</span>
-<span class="fc" id="L244">        registerFactory(&quot;buttonGroupListener&quot;, new AdapterFactory(ButtonGroupAdapter.class));</span>
-<span class="fc" id="L245">        registerFactory(&quot;buttonPressListener&quot;, new AdapterFactory(ButtonPressAdapter.class));</span>
-<span class="fc" id="L246">        registerFactory(&quot;buttonStateListener&quot;, new AdapterFactory(ButtonStateAdapter.class));</span>
-<span class="fc" id="L247">        registerFactory(&quot;calendarListener&quot;, new AdapterFactory(CalendarAdapter.class));</span>
-<span class="fc" id="L248">        registerFactory(&quot;calendarBindingListener&quot;, new AdapterFactory(CalendarBindingAdapter.class));</span>
-<span class="fc" id="L249">        registerFactory(&quot;calendarButtonListener&quot;, new AdapterFactory(CalendarButtonAdapter.class));</span>
-<span class="fc" id="L250">        registerFactory(&quot;calendarButtonBindingListener&quot;, new AdapterFactory(CalendarButtonBindingAdapter.class));</span>
-<span class="fc" id="L251">        registerFactory(&quot;calendarButtonSelectionListener&quot;, new AdapterFactory(CalendarButtonSelectionAdapter.class));</span>
-<span class="fc" id="L252">        registerFactory(&quot;calendarSelectionListener&quot;, new AdapterFactory(CalendarSelectionAdapter.class));</span>
-<span class="fc" id="L253">        registerFactory(&quot;cardPaneListener&quot;, new AdapterFactory(CardPaneAdapter.class));</span>
-<span class="fc" id="L254">        registerFactory(&quot;clipboardContentListener&quot;, new AdapterFactory(ClipboardContentAdapter.class));</span>
-<span class="fc" id="L255">        registerFactory(&quot;colorChooserBindingListener&quot;, new AdapterFactory(ColorChooserBindingAdapter.class));</span>
-<span class="fc" id="L256">        registerFactory(&quot;colorChooserButtonBindingListener&quot;, new AdapterFactory(ColorChooserButtonBindingAdapter.class));</span>
-<span class="fc" id="L257">        registerFactory(&quot;colorChooserButtonSelectionListener&quot;, new AdapterFactory(ColorChooserButtonSelectionAdapter.class));</span>
-<span class="fc" id="L258">        registerFactory(&quot;colorChooserSelectionListener&quot;, new AdapterFactory(ColorChooserSelectionAdapter.class));</span>
-<span class="fc" id="L259">        registerFactory(&quot;componentListener&quot;, new AdapterFactory(ComponentAdapter.class));</span>
-<span class="fc" id="L260">        registerFactory(&quot;componentClassListener&quot;, new AdapterFactory(ComponentClassAdapter.class));</span>
-<span class="fc" id="L261">        registerFactory(&quot;componentDataListener&quot;, new AdapterFactory(ComponentDataAdapter.class));</span>
-<span class="fc" id="L262">        registerFactory(&quot;componentDecoratorListener&quot;, new AdapterFactory(ComponentDecoratorAdapter.class));</span>
-<span class="fc" id="L263">        registerFactory(&quot;componentKeyListener&quot;, new AdapterFactory(ComponentKeyAdapter.class));</span>
-<span class="fc" id="L264">        registerFactory(&quot;componentMouseListener&quot;, new AdapterFactory(ComponentMouseAdapter.class));</span>
-<span class="fc" id="L265">        registerFactory(&quot;componentMouseButtonListener&quot;, new AdapterFactory(ComponentMouseButtonAdapter.class));</span>
-<span class="fc" id="L266">        registerFactory(&quot;componentMouseWheelListener&quot;, new AdapterFactory(ComponentMouseWheelAdapter.class));</span>
-<span class="fc" id="L267">        registerFactory(&quot;componentNodeListener&quot;, new AdapterFactory(ComponentNodeAdapter.class));</span>
-<span class="fc" id="L268">        registerFactory(&quot;componentStateListener&quot;, new AdapterFactory(ComponentStateAdapter.class));</span>
-<span class="fc" id="L269">        registerFactory(&quot;componentStyleListener&quot;, new AdapterFactory(ComponentStyleAdapter.class));</span>
-<span class="fc" id="L270">        registerFactory(&quot;componentTooltipListener&quot;, new AdapterFactory(ComponentTooltipAdapter.class));</span>
-<span class="fc" id="L271">        registerFactory(&quot;containerListener&quot;, new AdapterFactory(ContainerAdapter.class));</span>
-<span class="fc" id="L272">        registerFactory(&quot;containerMouseListener&quot;, new AdapterFactory(ContainerMouseAdapter.class));</span>
-<span class="fc" id="L273">        registerFactory(&quot;dialogListener&quot;, new AdapterFactory(DialogAdapter.class));</span>
-<span class="fc" id="L274">        registerFactory(&quot;dialogCloseListener&quot;, new AdapterFactory(DialogCloseAdapter.class));</span>
-<span class="fc" id="L275">        registerFactory(&quot;dialogStateListener&quot;, new AdapterFactory(DialogStateAdapter.class));</span>
-<span class="fc" id="L276">        registerFactory(&quot;elementListener&quot;, new AdapterFactory(ElementAdapter.class));</span>
-<span class="fc" id="L277">        registerFactory(&quot;expanderListener&quot;, new AdapterFactory(ExpanderAdapter.class));</span>
-<span class="fc" id="L278">        registerFactory(&quot;fileBrowserListener&quot;, new AdapterFactory(FileBrowserAdapter.class));</span>
-<span class="fc" id="L279">        registerFactory(&quot;fileBrowserSheetListener&quot;, new AdapterFactory(FileBrowserSheetAdapter.class));</span>
-<span class="fc" id="L280">        registerFactory(&quot;fillPaneListener&quot;, new AdapterFactory(FillPaneAdapter.class));</span>
-<span class="fc" id="L281">        registerFactory(&quot;formListener&quot;, new AdapterFactory(FormAdapter.class));</span>
-<span class="fc" id="L282">        registerFactory(&quot;formAttributeListener&quot;, new AdapterFactory(FormAttributeAdapter.class));</span>
-<span class="fc" id="L283">        registerFactory(&quot;frameListener&quot;, new AdapterFactory(FrameAdapter.class));</span>
-<span class="fc" id="L284">        registerFactory(&quot;gridPaneListener&quot;, new AdapterFactory(GridPaneAdapter.class));</span>
-<span class="fc" id="L285">        registerFactory(&quot;griffonPivotListener&quot;, new AdapterFactory(GriffonPivotAdapter.class));</span>
-<span class="fc" id="L286">        registerFactory(&quot;imageListener&quot;, new AdapterFactory(ImageAdapter.class));</span>
-<span class="fc" id="L287">        registerFactory(&quot;imageNodeListener&quot;, new AdapterFactory(ImageNodeAdapter.class));</span>
-<span class="fc" id="L288">        registerFactory(&quot;imageViewListener&quot;, new AdapterFactory(ImageViewAdapter.class));</span>
-<span class="fc" id="L289">        registerFactory(&quot;imageViewBindingListener&quot;, new AdapterFactory(ImageViewBindingAdapter.class));</span>
-<span class="fc" id="L290">        registerFactory(&quot;labelListener&quot;, new AdapterFactory(LabelAdapter.class));</span>
-<span class="fc" id="L291">        registerFactory(&quot;labelBindingListener&quot;, new AdapterFactory(LabelBindingAdapter.class));</span>
-<span class="fc" id="L292">        registerFactory(&quot;listButtonListener&quot;, new AdapterFactory(ListButtonAdapter.class));</span>
-<span class="fc" id="L293">        registerFactory(&quot;listButtonBindingListener&quot;, new AdapterFactory(ListButtonBindingAdapter.class));</span>
-<span class="fc" id="L294">        registerFactory(&quot;listButtonItemListener&quot;, new AdapterFactory(ListButtonItemAdapter.class));</span>
-<span class="fc" id="L295">        registerFactory(&quot;listButtonSelectionListener&quot;, new AdapterFactory(ListButtonSelectionAdapter.class));</span>
-<span class="fc" id="L296">        registerFactory(&quot;listViewListener&quot;, new AdapterFactory(ListViewAdapter.class));</span>
-<span class="fc" id="L297">        registerFactory(&quot;listViewBindingListener&quot;, new AdapterFactory(ListViewBindingAdapter.class));</span>
-<span class="fc" id="L298">        registerFactory(&quot;listViewItemListener&quot;, new AdapterFactory(ListViewItemAdapter.class));</span>
-<span class="fc" id="L299">        registerFactory(&quot;listViewItemStateListener&quot;, new AdapterFactory(ListViewItemStateAdapter.class));</span>
-<span class="fc" id="L300">        registerFactory(&quot;listViewSelectionListener&quot;, new AdapterFactory(ListViewSelectionAdapter.class));</span>
-<span class="fc" id="L301">        registerFactory(&quot;menuListener&quot;, new AdapterFactory(MenuAdapter.class));</span>
-<span class="fc" id="L302">        registerFactory(&quot;menuBarListener&quot;, new AdapterFactory(MenuBarAdapter.class));</span>
-<span class="fc" id="L303">        registerFactory(&quot;menuButtonListener&quot;, new AdapterFactory(MenuButtonAdapter.class));</span>
-<span class="fc" id="L304">        registerFactory(&quot;menuItemSelectionListener&quot;, new AdapterFactory(MenuItemSelectionAdapter.class));</span>
-<span class="fc" id="L305">        registerFactory(&quot;menuPopupListener&quot;, new AdapterFactory(MenuPopupAdapter.class));</span>
-<span class="fc" id="L306">        registerFactory(&quot;menuPopupStateListener&quot;, new AdapterFactory(MenuPopupStateAdapter.class));</span>
-<span class="fc" id="L307">        registerFactory(&quot;meterListener&quot;, new AdapterFactory(MeterAdapter.class));</span>
-<span class="fc" id="L308">        registerFactory(&quot;movieListener&quot;, new AdapterFactory(MovieAdapter.class));</span>
-<span class="fc" id="L309">        registerFactory(&quot;movieViewListener&quot;, new AdapterFactory(MovieViewAdapter.class));</span>
-<span class="fc" id="L310">        registerFactory(&quot;nodeListener&quot;, new AdapterFactory(NodeAdapter.class));</span>
-<span class="fc" id="L311">        registerFactory(&quot;numberedListListener&quot;, new AdapterFactory(NumberedListAdapter.class));</span>
-<span class="fc" id="L312">        registerFactory(&quot;promptListener&quot;, new AdapterFactory(PromptAdapter.class));</span>
-<span class="fc" id="L313">        registerFactory(&quot;rollupListener&quot;, new AdapterFactory(RollupAdapter.class));</span>
-<span class="fc" id="L314">        registerFactory(&quot;rollupStateListener&quot;, new AdapterFactory(RollupStateAdapter.class));</span>
-<span class="fc" id="L315">        registerFactory(&quot;scrollBarListener&quot;, new AdapterFactory(ScrollBarAdapter.class));</span>
-<span class="fc" id="L316">        registerFactory(&quot;scrollBarValueListener&quot;, new AdapterFactory(ScrollBarValueAdapter.class));</span>
-<span class="fc" id="L317">        registerFactory(&quot;scrollPaneListener&quot;, new AdapterFactory(ScrollPaneAdapter.class));</span>
-<span class="fc" id="L318">        registerFactory(&quot;separatorListener&quot;, new AdapterFactory(SeparatorAdapter.class));</span>
-<span class="fc" id="L319">        registerFactory(&quot;sheetCloseListener&quot;, new AdapterFactory(SheetCloseAdapter.class));</span>
-<span class="fc" id="L320">        registerFactory(&quot;sheetStateListener&quot;, new AdapterFactory(SheetStateAdapter.class));</span>
-<span class="fc" id="L321">        registerFactory(&quot;sliderListener&quot;, new AdapterFactory(SliderAdapter.class));</span>
-<span class="fc" id="L322">        registerFactory(&quot;sliderValueListener&quot;, new AdapterFactory(SliderValueAdapter.class));</span>
-<span class="fc" id="L323">        registerFactory(&quot;spinnerListener&quot;, new AdapterFactory(SpinnerAdapter.class));</span>
-<span class="fc" id="L324">        registerFactory(&quot;spinnerBindingListener&quot;, new AdapterFactory(SpinnerBindingAdapter.class));</span>
-<span class="fc" id="L325">        registerFactory(&quot;spinnerItemListener&quot;, new AdapterFactory(SpinnerItemAdapter.class));</span>
-<span class="fc" id="L326">        registerFactory(&quot;spinnerSelectionListener&quot;, new AdapterFactory(SpinnerSelectionAdapter.class));</span>
-<span class="fc" id="L327">        registerFactory(&quot;splitPaneListener&quot;, new AdapterFactory(SplitPaneAdapter.class));</span>
-<span class="fc" id="L328">        registerFactory(&quot;suggestionPopupListener&quot;, new AdapterFactory(SuggestionPopupAdapter.class));</span>
-<span class="fc" id="L329">        registerFactory(&quot;suggestionPopupCloseListener&quot;, new AdapterFactory(SuggestionPopupCloseAdapter.class));</span>
-<span class="fc" id="L330">        registerFactory(&quot;suggestionPopupItemListener&quot;, new AdapterFactory(SuggestionPopupItemAdapter.class));</span>
-<span class="fc" id="L331">        registerFactory(&quot;suggestionPopupSelectionListener&quot;, new AdapterFactory(SuggestionPopupSelectionAdapter.class));</span>
-<span class="fc" id="L332">        registerFactory(&quot;suggestionPopupStateListener&quot;, new AdapterFactory(SuggestionPopupStateAdapter.class));</span>
-<span class="fc" id="L333">        registerFactory(&quot;tablePaneListener&quot;, new AdapterFactory(TablePaneAdapter.class));</span>
-<span class="fc" id="L334">        registerFactory(&quot;tablePaneAttributeListener&quot;, new AdapterFactory(TablePaneAttributeAdapter.class));</span>
-<span class="fc" id="L335">        registerFactory(&quot;tableViewListener&quot;, new AdapterFactory(TableViewAdapter.class));</span>
-<span class="fc" id="L336">        registerFactory(&quot;tableViewBindingListener&quot;, new AdapterFactory(TableViewBindingAdapter.class));</span>
-<span class="fc" id="L337">        registerFactory(&quot;tableViewColumnListener&quot;, new AdapterFactory(TableViewColumnAdapter.class));</span>
-<span class="fc" id="L338">        registerFactory(&quot;tableViewHeaderListener&quot;, new AdapterFactory(TableViewHeaderAdapter.class));</span>
-<span class="fc" id="L339">        registerFactory(&quot;tableViewHeaderPressListener&quot;, new AdapterFactory(TableViewHeaderPressAdapter.class));</span>
-<span class="fc" id="L340">        registerFactory(&quot;tableViewRowListener&quot;, new AdapterFactory(TableViewRowAdapter.class));</span>
-<span class="fc" id="L341">        registerFactory(&quot;tableViewSelectionListener&quot;, new AdapterFactory(TableViewSelectionAdapter.class));</span>
-<span class="fc" id="L342">        registerFactory(&quot;tableViewSortListener&quot;, new AdapterFactory(TableViewSortAdapter.class));</span>
-<span class="fc" id="L343">        registerFactory(&quot;tabPaneListener&quot;, new AdapterFactory(TabPaneAdapter.class));</span>
-<span class="fc" id="L344">        registerFactory(&quot;tabPaneAttributeListener&quot;, new AdapterFactory(TabPaneAttributeAdapter.class));</span>
-<span class="fc" id="L345">        registerFactory(&quot;tabPaneSelectionListener&quot;, new AdapterFactory(TabPaneSelectionAdapter.class));</span>
-<span class="fc" id="L346">        registerFactory(&quot;textAreaListener&quot;, new AdapterFactory(TextAreaAdapter.class));</span>
-<span class="fc" id="L347">        registerFactory(&quot;textAreaBindingListener&quot;, new AdapterFactory(TextAreaBindingAdapter.class));</span>
-<span class="fc" id="L348">        registerFactory(&quot;textAreaContentListener&quot;, new AdapterFactory(TextAreaContentAdapter.class));</span>
-<span class="fc" id="L349">        registerFactory(&quot;textAreaSelectionListener&quot;, new AdapterFactory(TextAreaSelectionAdapter.class));</span>
-<span class="fc" id="L350">        registerFactory(&quot;textInputListener&quot;, new AdapterFactory(TextInputAdapter.class));</span>
-<span class="fc" id="L351">        registerFactory(&quot;textInputBindingListener&quot;, new AdapterFactory(TextInputBindingAdapter.class));</span>
-<span class="fc" id="L352">        registerFactory(&quot;textInputContentListener&quot;, new AdapterFactory(TextInputContentAdapter.class));</span>
-<span class="fc" id="L353">        registerFactory(&quot;textInputSelectionListener&quot;, new AdapterFactory(TextInputSelectionAdapter.class));</span>
-<span class="fc" id="L354">        registerFactory(&quot;textNodeListener&quot;, new AdapterFactory(TextNodeAdapter.class));</span>
-<span class="fc" id="L355">        registerFactory(&quot;textPaneListener&quot;, new AdapterFactory(TextPaneAdapter.class));</span>
-<span class="fc" id="L356">        registerFactory(&quot;textPaneCharacterListener&quot;, new AdapterFactory(TextPaneCharacterAdapter.class));</span>
-<span class="fc" id="L357">        registerFactory(&quot;textPaneSelectionListener&quot;, new AdapterFactory(TextPaneSelectionAdapter.class));</span>
-<span class="fc" id="L358">        registerFactory(&quot;transitionListener&quot;, new AdapterFactory(TransitionAdapter.class));</span>
-<span class="fc" id="L359">        registerFactory(&quot;treeViewListener&quot;, new AdapterFactory(TreeViewAdapter.class));</span>
-<span class="fc" id="L360">        registerFactory(&quot;treeViewBranchListener&quot;, new AdapterFactory(TreeViewBranchAdapter.class));</span>
-<span class="fc" id="L361">        registerFactory(&quot;treeViewNodeListener&quot;, new AdapterFactory(TreeViewNodeAdapter.class));</span>
-<span class="fc" id="L362">        registerFactory(&quot;treeViewNodeStateListener&quot;, new AdapterFactory(TreeViewNodeStateAdapter.class));</span>
-<span class="fc" id="L363">        registerFactory(&quot;treeViewSelectionListener&quot;, new AdapterFactory(TreeViewSelectionAdapter.class));</span>
-<span class="fc" id="L364">        registerFactory(&quot;viewportListener&quot;, new AdapterFactory(ViewportAdapter.class));</span>
-<span class="fc" id="L365">        registerFactory(&quot;windowActionMappingListener&quot;, new AdapterFactory(WindowActionMappingAdapter.class));</span>
-<span class="fc" id="L366">        registerFactory(&quot;windowListener&quot;, new AdapterFactory(WindowAdapter.class));</span>
-<span class="fc" id="L367">        registerFactory(&quot;windowClassListener&quot;, new AdapterFactory(WindowClassAdapter.class));</span>
-<span class="fc" id="L368">        registerFactory(&quot;windowStateListener&quot;, new AdapterFactory(WindowStateAdapter.class));</span>
+<span class="fc" id="L317">        registerFactory(&quot;accordionListener&quot;, new AdapterFactory(AccordionAdapter.class));</span>
+<span class="fc" id="L318">        registerFactory(&quot;accordionAttributeListener&quot;, new AdapterFactory(AccordionAttributeAdapter.class));</span>
+<span class="fc" id="L319">        registerFactory(&quot;accordionSelectionListener&quot;, new AdapterFactory(AccordionSelectionAdapter.class));</span>
+<span class="fc" id="L320">        registerFactory(&quot;actionListener&quot;, new AdapterFactory(ActionAdapter.class));</span>
+<span class="fc" id="L321">        registerFactory(&quot;actionClassListener&quot;, new AdapterFactory(ActionClassAdapter.class));</span>
+<span class="fc" id="L322">        registerFactory(&quot;activityIndicatorListener&quot;, new AdapterFactory(ActivityIndicatorAdapter.class));</span>
+<span class="fc" id="L323">        registerFactory(&quot;alertListener&quot;, new AdapterFactory(AlertAdapter.class));</span>
+<span class="fc" id="L324">        registerFactory(&quot;blockListener&quot;, new AdapterFactory(BlockAdapter.class));</span>
+<span class="fc" id="L325">        registerFactory(&quot;borderListener&quot;, new AdapterFactory(BorderAdapter.class));</span>
+<span class="fc" id="L326">        registerFactory(&quot;boxPaneListener&quot;, new AdapterFactory(BoxPaneAdapter.class));</span>
+<span class="fc" id="L327">        registerFactory(&quot;bulletedListListener&quot;, new AdapterFactory(BulletedListAdapter.class));</span>
+<span class="fc" id="L328">        registerFactory(&quot;buttonListener&quot;, new AdapterFactory(ButtonAdapter.class));</span>
+<span class="fc" id="L329">        registerFactory(&quot;buttonBindingListener&quot;, new AdapterFactory(ButtonBindingAdapter.class));</span>
+<span class="fc" id="L330">        registerFactory(&quot;buttonGroupListener&quot;, new AdapterFactory(ButtonGroupAdapter.class));</span>
+<span class="fc" id="L331">        registerFactory(&quot;buttonPressListener&quot;, new AdapterFactory(ButtonPressAdapter.class));</span>
+<span class="fc" id="L332">        registerFactory(&quot;buttonStateListener&quot;, new AdapterFactory(ButtonStateAdapter.class));</span>
+<span class="fc" id="L333">        registerFactory(&quot;calendarListener&quot;, new AdapterFactory(CalendarAdapter.class));</span>
+<span class="fc" id="L334">        registerFactory(&quot;calendarBindingListener&quot;, new AdapterFactory(CalendarBindingAdapter.class));</span>
+<span class="fc" id="L335">        registerFactory(&quot;calendarButtonListener&quot;, new AdapterFactory(CalendarButtonAdapter.class));</span>
+<span class="fc" id="L336">        registerFactory(&quot;calendarButtonBindingListener&quot;, new AdapterFactory(CalendarButtonBindingAdapter.class));</span>
+<span class="fc" id="L337">        registerFactory(&quot;calendarButtonSelectionListener&quot;, new AdapterFactory(CalendarButtonSelectionAdapter.class));</span>
+<span class="fc" id="L338">        registerFactory(&quot;calendarSelectionListener&quot;, new AdapterFactory(CalendarSelectionAdapter.class));</span>
+<span class="fc" id="L339">        registerFactory(&quot;cardPaneListener&quot;, new AdapterFactory(CardPaneAdapter.class));</span>
+<span class="fc" id="L340">        registerFactory(&quot;clipboardContentListener&quot;, new AdapterFactory(ClipboardContentAdapter.class));</span>
+<span class="fc" id="L341">        registerFactory(&quot;colorChooserBindingListener&quot;, new AdapterFactory(ColorChooserBindingAdapter.class));</span>
+<span class="fc" id="L342">        registerFactory(&quot;colorChooserButtonBindingListener&quot;, new AdapterFactory(ColorChooserButtonBindingAdapter.class));</span>
+<span class="fc" id="L343">        registerFactory(&quot;colorChooserButtonSelectionListener&quot;, new AdapterFactory(ColorChooserButtonSelectionAdapter.class));</span>
+<span class="fc" id="L344">        registerFactory(&quot;colorChooserSelectionListener&quot;, new AdapterFactory(ColorChooserSelectionAdapter.class));</span>
+<span class="fc" id="L345">        registerFactory(&quot;componentListener&quot;, new AdapterFactory(ComponentAdapter.class));</span>
+<span class="fc" id="L346">        registerFactory(&quot;componentClassListener&quot;, new AdapterFactory(ComponentClassAdapter.class));</span>
+<span class="fc" id="L347">        registerFactory(&quot;componentDataListener&quot;, new AdapterFactory(ComponentDataAdapter.class));</span>
+<span class="fc" id="L348">        registerFactory(&quot;componentDecoratorListener&quot;, new AdapterFactory(ComponentDecoratorAdapter.class));</span>
+<span class="fc" id="L349">        registerFactory(&quot;componentKeyListener&quot;, new AdapterFactory(ComponentKeyAdapter.class));</span>
+<span class="fc" id="L350">        registerFactory(&quot;componentMouseListener&quot;, new AdapterFactory(ComponentMouseAdapter.class));</span>
+<span class="fc" id="L351">        registerFactory(&quot;componentMouseButtonListener&quot;, new AdapterFactory(ComponentMouseButtonAdapter.class));</span>
+<span class="fc" id="L352">        registerFactory(&quot;componentMouseWheelListener&quot;, new AdapterFactory(ComponentMouseWheelAdapter.class));</span>
+<span class="fc" id="L353">        registerFactory(&quot;componentNodeListener&quot;, new AdapterFactory(ComponentNodeAdapter.class));</span>
+<span class="fc" id="L354">        registerFactory(&quot;componentStateListener&quot;, new AdapterFactory(ComponentStateAdapter.class));</span>
+<span class="fc" id="L355">        registerFactory(&quot;componentStyleListener&quot;, new AdapterFactory(ComponentStyleAdapter.class));</span>
+<span class="fc" id="L356">        registerFactory(&quot;componentTooltipListener&quot;, new AdapterFactory(ComponentTooltipAdapter.class));</span>
+<span class="fc" id="L357">        registerFactory(&quot;containerListener&quot;, new AdapterFactory(ContainerAdapter.class));</span>
+<span class="fc" id="L358">        registerFactory(&quot;containerMouseListener&quot;, new AdapterFactory(ContainerMouseAdapter.class));</span>
+<span class="fc" id="L359">        registerFactory(&quot;dialogListener&quot;, new AdapterFactory(DialogAdapter.class));</span>
+<span class="fc" id="L360">        registerFactory(&quot;dialogCloseListener&quot;, new AdapterFactory(DialogCloseAdapter.class));</span>
+<span class="fc" id="L361">        registerFactory(&quot;dialogStateListener&quot;, new AdapterFactory(DialogStateAdapter.class));</span>
+<span class="fc" id="L362">        registerFactory(&quot;elementListener&quot;, new AdapterFactory(ElementAdapter.class));</span>
+<span class="fc" id="L363">        registerFactory(&quot;expanderListener&quot;, new AdapterFactory(ExpanderAdapter.class));</span>
+<span class="fc" id="L364">        registerFactory(&quot;fileBrowserListener&quot;, new AdapterFactory(FileBrowserAdapter.class));</span>
+<span class="fc" id="L365">        registerFactory(&quot;fileBrowserSheetListener&quot;, new AdapterFactory(FileBrowserSheetAdapter.class));</span>
+<span class="fc" id="L366">        registerFactory(&quot;fillPaneListener&quot;, new AdapterFactory(FillPaneAdapter.class));</span>
+<span class="fc" id="L367">        registerFactory(&quot;formListener&quot;, new AdapterFactory(FormAdapter.class));</span>
+<span class="fc" id="L368">        registerFactory(&quot;formAttributeListener&quot;, new AdapterFactory(FormAttributeAdapter.class));</span>
+<span class="fc" id="L369">        registerFactory(&quot;frameListener&quot;, new AdapterFactory(FrameAdapter.class));</span>
+<span class="fc" id="L370">        registerFactory(&quot;gridPaneListener&quot;, new AdapterFactory(GridPaneAdapter.class));</span>
+<span class="fc" id="L371">        registerFactory(&quot;griffonPivotListener&quot;, new AdapterFactory(GriffonPivotAdapter.class));</span>
+<span class="fc" id="L372">        registerFactory(&quot;imageListener&quot;, new AdapterFactory(ImageAdapter.class));</span>
+<span class="fc" id="L373">        registerFactory(&quot;imageNodeListener&quot;, new AdapterFactory(ImageNodeAdapter.class));</span>
+<span class="fc" id="L374">        registerFactory(&quot;imageViewListener&quot;, new AdapterFactory(ImageViewAdapter.class));</span>
+<span class="fc" id="L375">        registerFactory(&quot;imageViewBindingListener&quot;, new AdapterFactory(ImageViewBindingAdapter.class));</span>
+<span class="fc" id="L376">        registerFactory(&quot;labelListener&quot;, new AdapterFactory(LabelAdapter.class));</span>
+<span class="fc" id="L377">        registerFactory(&quot;labelBindingListener&quot;, new AdapterFactory(LabelBindingAdapter.class));</span>
+<span class="fc" id="L378">        registerFactory(&quot;listButtonListener&quot;, new AdapterFactory(ListButtonAdapter.class));</span>
+<span class="fc" id="L379">        registerFactory(&quot;listButtonBindingListener&quot;, new AdapterFactory(ListButtonBindingAdapter.class));</span>
+<span class="fc" id="L380">        registerFactory(&quot;listButtonItemListener&quot;, new AdapterFactory(ListButtonItemAdapter.class));</span>
+<span class="fc" id="L381">        registerFactory(&quot;listButtonSelectionListener&quot;, new AdapterFactory(ListButtonSelectionAdapter.class));</span>
+<span class="fc" id="L382">        registerFactory(&quot;listViewListener&quot;, new AdapterFactory(ListViewAdapter.class));</span>
+<span class="fc" id="L383">        registerFactory(&quot;listViewBindingListener&quot;, new AdapterFactory(ListViewBindingAdapter.class));</span>
+<span class="fc" id="L384">        registerFactory(&quot;listViewItemListener&quot;, new AdapterFactory(ListViewItemAdapter.class));</span>
+<span class="fc" id="L385">        registerFactory(&quot;listViewItemStateListener&quot;, new AdapterFactory(ListViewItemStateAdapter.class));</span>
+<span class="fc" id="L386">        registerFactory(&quot;listViewSelectionListener&quot;, new AdapterFactory(ListViewSelectionAdapter.class));</span>
+<span class="fc" id="L387">        registerFactory(&quot;menuListener&quot;, new AdapterFactory(MenuAdapter.class));</span>
+<span class="fc" id="L388">        registerFactory(&quot;menuBarListener&quot;, new AdapterFactory(MenuBarAdapter.class));</span>
+<span class="fc" id="L389">        registerFactory(&quot;menuButtonListener&quot;, new AdapterFactory(MenuButtonAdapter.class));</span>
+<span class="fc" id="L390">        registerFactory(&quot;menuItemSelectionListener&quot;, new AdapterFactory(MenuItemSelectionAdapter.class));</span>
+<span class="fc" id="L391">        registerFactory(&quot;menuPopupListener&quot;, new AdapterFactory(MenuPopupAdapter.class));</span>
+<span class="fc" id="L392">        registerFactory(&quot;menuPopupStateListener&quot;, new AdapterFactory(MenuPopupStateAdapter.class));</span>
+<span class="fc" id="L393">        registerFactory(&quot;meterListener&quot;, new AdapterFactory(MeterAdapter.class));</span>
+<span class="fc" id="L394">        registerFactory(&quot;movieListener&quot;, new AdapterFactory(MovieAdapter.class));</span>
+<span class="fc" id="L395">        registerFactory(&quot;movieViewListener&quot;, new AdapterFactory(MovieViewAdapter.class));</span>
+<span class="fc" id="L396">        registerFactory(&quot;nodeListener&quot;, new AdapterFactory(NodeAdapter.class));</span>
+<span class="fc" id="L397">        registerFactory(&quot;numberedListListener&quot;, new AdapterFactory(NumberedListAdapter.class));</span>
+<span class="fc" id="L398">        registerFactory(&quot;promptListener&quot;, new AdapterFactory(PromptAdapter.class));</span>
+<span class="fc" id="L399">        registerFactory(&quot;rollupListener&quot;, new AdapterFactory(RollupAdapter.class));</span>
+<span class="fc" id="L400">        registerFactory(&quot;rollupStateListener&quot;, new AdapterFactory(RollupStateAdapter.class));</span>
+<span class="fc" id="L401">        registerFactory(&quot;scrollBarListener&quot;, new AdapterFactory(ScrollBarAdapter.class));</span>
+<span class="fc" id="L402">        registerFactory(&quot;scrollBarValueListener&quot;, new AdapterFactory(ScrollBarValueAdapter.class));</span>
+<span class="fc" id="L403">        registerFactory(&quot;scrollPaneListener&quot;, new AdapterFactory(ScrollPaneAdapter.class));</span>
+<span class="fc" id="L404">        registerFactory(&quot;separatorListener&quot;, new AdapterFactory(SeparatorAdapter.class));</span>
+<span class="fc" id="L405">        registerFactory(&quot;sheetCloseListener&quot;, new AdapterFactory(SheetCloseAdapter.class));</span>
+<span class="fc" id="L406">        registerFactory(&quot;sheetStateListener&quot;, new AdapterFactory(SheetStateAdapter.class));</span>
+<span class="fc" id="L407">        registerFactory(&quot;sliderListener&quot;, new AdapterFactory(SliderAdapter.class));</span>
+<span class="fc" id="L408">        registerFactory(&quot;sliderValueListener&quot;, new AdapterFactory(SliderValueAdapter.class));</span>
+<span class="fc" id="L409">        registerFactory(&quot;spinnerListener&quot;, new AdapterFactory(SpinnerAdapter.class));</span>
+<span class="fc" id="L410">        registerFactory(&quot;spinnerBindingListener&quot;, new AdapterFactory(SpinnerBindingAdapter.class));</span>
+<span class="fc" id="L411">        registerFactory(&quot;spinnerItemListener&quot;, new AdapterFactory(SpinnerItemAdapter.class));</span>
+<span class="fc" id="L412">        registerFactory(&quot;spinnerSelectionListener&quot;, new AdapterFactory(SpinnerSelectionAdapter.class));</span>
+<span class="fc" id="L413">        registerFactory(&quot;splitPaneListener&quot;, new AdapterFactory(SplitPaneAdapter.class));</span>
+<span class="fc" id="L414">        registerFactory(&quot;suggestionPopupListener&quot;, new AdapterFactory(SuggestionPopupAdapter.class));</span>
+<span class="fc" id="L415">        registerFactory(&quot;suggestionPopupCloseListener&quot;, new AdapterFactory(SuggestionPopupCloseAdapter.class));</span>
+<span class="fc" id="L416">        registerFactory(&quot;suggestionPopupItemListener&quot;, new AdapterFactory(SuggestionPopupItemAdapter.class));</span>
+<span class="fc" id="L417">        registerFactory(&quot;suggestionPopupSelectionListener&quot;, new AdapterFactory(SuggestionPopupSelectionAdapter.class));</span>
+<span class="fc" id="L418">        registerFactory(&quot;suggestionPopupStateListener&quot;, new AdapterFactory(SuggestionPopupStateAdapter.class));</span>
+<span class="fc" id="L419">        registerFactory(&quot;tablePaneListener&quot;, new AdapterFactory(TablePaneAdapter.class));</span>
+<span class="fc" id="L420">        registerFactory(&quot;tablePaneAttributeListener&quot;, new AdapterFactory(TablePaneAttributeAdapter.class));</span>
+<span class="fc" id="L421">        registerFactory(&quot;tableViewListener&quot;, new AdapterFactory(TableViewAdapter.class));</span>
+<span class="fc" id="L422">        registerFactory(&quot;tableViewBindingListener&quot;, new AdapterFactory(TableViewBindingAdapter.class));</span>
+<span class="fc" id="L423">        registerFactory(&quot;tableViewColumnListener&quot;, new AdapterFactory(TableViewColumnAdapter.class));</span>
+<span class="fc" id="L424">        registerFactory(&quot;tableViewHeaderListener&quot;, new AdapterFactory(TableViewHeaderAdapter.class));</span>
+<span class="fc" id="L425">        registerFactory(&quot;tableViewHeaderPressListener&quot;, new AdapterFactory(TableViewHeaderPressAdapter.class));</span>
+<span class="fc" id="L426">        registerFactory(&quot;tableViewRowListener&quot;, new AdapterFactory(TableViewRowAdapter.class));</span>
+<span class="fc" id="L427">        registerFactory(&quot;tableViewSelectionListener&quot;, new AdapterFactory(TableViewSelectionAdapter.class));</span>
+<span class="fc" id="L428">        registerFactory(&quot;tableViewSortListener&quot;, new AdapterFactory(TableViewSortAdapter.class));</span>
+<span class="fc" id="L429">        registerFactory(&quot;tabPaneListener&quot;, new AdapterFactory(TabPaneAdapter.class));</span>
+<span class="fc" id="L430">        registerFactory(&quot;tabPaneAttributeListener&quot;, new AdapterFactory(TabPaneAttributeAdapter.class));</span>
+<span class="fc" id="L431">        registerFactory(&quot;tabPaneSelectionListener&quot;, new AdapterFactory(TabPaneSelectionAdapter.class));</span>
+<span class="fc" id="L432">        registerFactory(&quot;textAreaListener&quot;, new AdapterFactory(TextAreaAdapter.class));</span>
+<span class="fc" id="L433">        registerFactory(&quot;textAreaBindingListener&quot;, new AdapterFactory(TextAreaBindingAdapter.class));</span>
+<span class="fc" id="L434">        registerFactory(&quot;textAreaContentListener&quot;, new AdapterFactory(TextAreaContentAdapter.class));</span>
+<span class="fc" id="L435">        registerFactory(&quot;textAreaSelectionListener&quot;, new AdapterFactory(TextAreaSelectionAdapter.class));</span>
+<span class="fc" id="L436">        registerFactory(&quot;textInputListener&quot;, new AdapterFactory(TextInputAdapter.class));</span>
+<span class="fc" id="L437">        registerFactory(&quot;textInputBindingListener&quot;, new AdapterFactory(TextInputBindingAdapter.class));</span>
+<span class="fc" id="L438">        registerFactory(&quot;textInputContentListener&quot;, new AdapterFactory(TextInputContentAdapter.class));</span>
+<span class="fc" id="L439">        registerFactory(&quot;textInputSelectionListener&quot;, new AdapterFactory(TextInputSelectionAdapter.class));</span>
+<span class="fc" id="L440">        registerFactory(&quot;textNodeListener&quot;, new AdapterFactory(TextNodeAdapter.class));</span>
+<span class="fc" id="L441">        registerFactory(&quot;textPaneListener&quot;, new AdapterFactory(TextPaneAdapter.class));</span>
+<span class="fc" id="L442">        registerFactory(&quot;textPaneCharacterListener&quot;, new AdapterFactory(TextPaneCharacterAdapter.class));</span>
+<span class="fc" id="L443">        registerFactory(&quot;textPaneSelectionListener&quot;, new AdapterFactory(TextPaneSelectionAdapter.class));</span>
+<span class="fc" id="L444">        registerFactory(&quot;transitionListener&quot;, new AdapterFactory(TransitionAdapter.class));</span>
+<span class="fc" id="L445">        registerFactory(&quot;treeViewListener&quot;, new AdapterFactory(TreeViewAdapter.class));</span>
+<span class="fc" id="L446">        registerFactory(&quot;treeViewBranchListener&quot;, new AdapterFactory(TreeViewBranchAdapter.class));</span>
+<span class="fc" id="L447">        registerFactory(&quot;treeViewNodeListener&quot;, new AdapterFactory(TreeViewNodeAdapter.class));</span>
+<span class="fc" id="L448">        registerFactory(&quot;treeViewNodeStateListener&quot;, new AdapterFactory(TreeViewNodeStateAdapter.class));</span>
+<span class="fc" id="L449">        registerFactory(&quot;treeViewSelectionListener&quot;, new AdapterFactory(TreeViewSelectionAdapter.class));</span>
+<span class="fc" id="L450">        registerFactory(&quot;viewportListener&quot;, new AdapterFactory(ViewportAdapter.class));</span>
+<span class="fc" id="L451">        registerFactory(&quot;windowActionMappingListener&quot;, new AdapterFactory(WindowActionMappingAdapter.class));</span>
+<span class="fc" id="L452">        registerFactory(&quot;windowListener&quot;, new AdapterFactory(WindowAdapter.class));</span>
+<span class="fc" id="L453">        registerFactory(&quot;windowClassListener&quot;, new AdapterFactory(WindowClassAdapter.class));</span>
+<span class="fc" id="L454">        registerFactory(&quot;windowStateListener&quot;, new AdapterFactory(WindowStateAdapter.class));</span>
 
-<span class="fc" id="L370">        setFactories(factories);</span>
+<span class="fc" id="L456">        setFactories(factories);</span>
 
-<span class="fc" id="L372">        Closure c1 = new Closure(this) {</span>
+<span class="fc" id="L458">        Closure c1 = new Closure(this) {</span>
             @Override
             public Object call(Object... args) {
-<span class="fc" id="L375">                return handleIdAttribute(args);</span>
+<span class="fc" id="L461">                return handleIdAttribute(args);</span>
             }
 
             private Object handleIdAttribute(Object[] args) {
-<span class="fc" id="L379">                FactoryBuilderSupport builder = (FactoryBuilderSupport) args[0];</span>
-<span class="fc" id="L380">                Object node = args[1];</span>
-<span class="fc" id="L381">                Map attributes = (Map) args[2];</span>
-<span class="fc bfc" id="L382" title="All 2 branches covered.">                if (attributes.containsKey(&quot;id&quot;)) {</span>
-<span class="fc" id="L383">                    String id = attributes.remove(&quot;id&quot;).toString();</span>
-<span class="fc" id="L384">                    builder.setVariable(id, node);</span>
+<span class="fc" id="L465">                FactoryBuilderSupport builder = (FactoryBuilderSupport) args[0];</span>
+<span class="fc" id="L466">                Object node = args[1];</span>
+<span class="fc" id="L467">                Map attributes = (Map) args[2];</span>
+<span class="fc bfc" id="L468" title="All 2 branches covered.">                if (attributes.containsKey(&quot;id&quot;)) {</span>
+<span class="fc" id="L469">                    String id = attributes.remove(&quot;id&quot;).toString();</span>
+<span class="fc" id="L470">                    builder.setVariable(id, node);</span>
 
                     // set id: as name: if node supports the property
                     try {
-<span class="fc" id="L388">                        Object name = getPropertyValue(node, &quot;name&quot;);</span>
-<span class="fc bfc" id="L389" title="All 2 branches covered.">                        if (name == null) {</span>
-<span class="fc" id="L390">                            setPropertyValue(node, &quot;name&quot;, id);</span>
+<span class="fc" id="L474">                        Object name = getPropertyValue(node, &quot;name&quot;);</span>
+<span class="fc bfc" id="L475" title="All 2 branches covered.">                        if (name == null) {</span>
+<span class="fc" id="L476">                            setPropertyValue(node, &quot;name&quot;, id);</span>
                         }
-<span class="nc" id="L392">                    } catch (PropertyException pe) {</span>
+<span class="nc" id="L478">                    } catch (PropertyException pe) {</span>
                         // ignore
-<span class="fc" id="L394">                    }</span>
+<span class="fc" id="L480">                    }</span>
                 }
-<span class="fc" id="L396">                return null;</span>
+<span class="fc" id="L482">                return null;</span>
             }
         };
-<span class="fc" id="L399">        Closure c2 = new MethodClosure(ButtonGroupFactory.class, &quot;buttonGroupAttributeDelegate&quot;);</span>
-<span class="fc" id="L400">        setAttributeDelegates(newList(c1, c2));</span>
-<span class="fc" id="L401">    }</span>
+<span class="fc" id="L485">        Closure c2 = new MethodClosure(ButtonGroupFactory.class, &quot;buttonGroupAttributeDelegate&quot;);</span>
+<span class="fc" id="L486">        setAttributeDelegates(newList(c1, c2));</span>
+<span class="fc" id="L487">    }</span>
 
     private void registerFactory(String name, Factory factory) {
-<span class="fc" id="L404">        factories.put(name, factory);</span>
-<span class="fc" id="L405">    }</span>
+<span class="fc" id="L490">        factories.put(name, factory);</span>
+<span class="fc" id="L491">    }</span>
 
     private void registerBeanFactory(String name, Class pivotBeanClass) {
-<span class="fc" id="L408">        registerBeanFactory(name, pivotBeanClass, true);</span>
-<span class="fc" id="L409">    }</span>
+<span class="fc" id="L494">        registerBeanFactory(name, pivotBeanClass, true);</span>
+<span class="fc" id="L495">    }</span>
 
     private void registerBeanFactory(String name, Class pivotBeanClass, boolean leaf) {
-<span class="fc" id="L412">        registerFactory(name, new BeanFactory(pivotBeanClass, leaf));</span>
-<span class="fc" id="L413">    }</span>
+<span class="fc" id="L498">        registerFactory(name, new BeanFactory(pivotBeanClass, leaf));</span>
+<span class="fc" id="L499">    }</span>
 
     private void registerPivotBeanFactory(String name, Class pivotBeanClass) {
-<span class="fc" id="L416">        registerPivotBeanFactory(name, pivotBeanClass, true);</span>
-<span class="fc" id="L417">    }</span>
+<span class="fc" id="L502">        registerPivotBeanFactory(name, pivotBeanClass, true);</span>
+<span class="fc" id="L503">    }</span>
 
     private void registerPivotBeanFactory(String name, Class pivotBeanClass, boolean leaf) {
-<span class="fc" id="L420">        registerFactory(name, new PivotBeanFactory(pivotBeanClass, leaf));</span>
-<span class="fc" id="L421">    }</span>
+<span class="fc" id="L506">        registerFactory(name, new PivotBeanFactory(pivotBeanClass, leaf));</span>
+<span class="fc" id="L507">    }</span>
 
     private void registerPivotComponentFactory(String name, Class pivotBeanClass) {
-<span class="fc" id="L424">        registerPivotComponentFactory(name, pivotBeanClass, true);</span>
-<span class="fc" id="L425">    }</span>
+<span class="fc" id="L510">        registerPivotComponentFactory(name, pivotBeanClass, true);</span>
+<span class="fc" id="L511">    }</span>
 
     private void registerPivotComponentFactory(String name, Class pivotBeanClass, boolean leaf) {
-<span class="fc" id="L428">        registerFactory(name, new ComponentFactory(pivotBeanClass, leaf));</span>
-<span class="fc" id="L429">    }</span>
+<span class="fc" id="L514">        registerFactory(name, new ComponentFactory(pivotBeanClass, leaf));</span>
+<span class="fc" id="L515">    }</span>
 
     private void registerPivotContainerFactory(String name, Class pivotBeanClass) {
-<span class="fc" id="L432">        registerPivotContainerFactory(name, pivotBeanClass, true);</span>
-<span class="fc" id="L433">    }</span>
+<span class="fc" id="L518">        registerPivotContainerFactory(name, pivotBeanClass, true);</span>
+<span class="fc" id="L519">    }</span>
 
     private void registerPivotContainerFactory(String name, Class pivotBeanClass, boolean singleElement) {
-<span class="pc bpc" id="L436" title="1 of 2 branches missed.">        registerFactory(name, singleElement ? new SingleElementContainerFactory(pivotBeanClass, &quot;content&quot;, Component.class) : new ContainerFactory(pivotBeanClass));</span>
-<span class="fc" id="L437">    }</span>
+<span class="pc bpc" id="L522" title="1 of 2 branches missed.">        registerFactory(name, singleElement ? new SingleElementContainerFactory(pivotBeanClass, &quot;content&quot;, Component.class) : new ContainerFactory(pivotBeanClass));</span>
+<span class="fc" id="L523">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
