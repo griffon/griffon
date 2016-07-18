@@ -2344,16 +2344,16 @@ import static java.util.Objects.requireNonNull;
      * @since 2.1.0
      */
     public static void setPropertiesOrFieldsNoException(@Nonnull Object bean, @Nonnull Map&lt;String, Object&gt; properties) {
-<span class="nc" id="L2347">        requireNonNull(bean, ERROR_BEAN_NULL);</span>
-<span class="nc" id="L2348">        requireNonNull(properties, ERROR_PROPERTIES_NULL);</span>
-<span class="nc bnc" id="L2349" title="All 2 branches missed.">        for (Map.Entry&lt;String, Object&gt; entry : properties.entrySet()) {</span>
+<span class="fc" id="L2347">        requireNonNull(bean, ERROR_BEAN_NULL);</span>
+<span class="fc" id="L2348">        requireNonNull(properties, ERROR_PROPERTIES_NULL);</span>
+<span class="fc bfc" id="L2349" title="All 2 branches covered.">        for (Map.Entry&lt;String, Object&gt; entry : properties.entrySet()) {</span>
             try {
-<span class="nc" id="L2351">                setPropertyOrFieldValue(bean, entry.getKey(), entry.getValue());</span>
-<span class="nc" id="L2352">            } catch (PropertyException pe) {</span>
+<span class="fc" id="L2351">                setPropertyOrFieldValue(bean, entry.getKey(), entry.getValue());</span>
+<span class="fc" id="L2352">            } catch (PropertyException pe) {</span>
                 // ignore
-<span class="nc" id="L2354">            }</span>
-<span class="nc" id="L2355">        }</span>
-<span class="nc" id="L2356">    }</span>
+<span class="fc" id="L2354">            }</span>
+<span class="fc" id="L2355">        }</span>
+<span class="fc" id="L2356">    }</span>
 
     /**
      * Sets or updates an object's property.
