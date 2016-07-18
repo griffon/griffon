@@ -34,8 +34,12 @@ limitations under the License.
 package org.kordamp.jipsy.processor.testutils;
 
 import javax.annotation.processing.Processor;
-import javax.tools.*;
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticListener;
+import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
+import javax.tools.JavaFileObject;
+import javax.tools.ToolProvider;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;

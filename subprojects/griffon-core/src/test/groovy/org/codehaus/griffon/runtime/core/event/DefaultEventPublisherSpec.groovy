@@ -36,7 +36,6 @@ import spock.lang.Specification
 
 import javax.annotation.Nullable
 import javax.inject.Inject
-import javax.inject.Singleton
 import java.util.concurrent.ExecutorService
 
 class DefaultEventPublisherSpec extends Specification {

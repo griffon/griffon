@@ -41,7 +41,7 @@ import spock.lang.Unroll
 import java.util.concurrent.Callable
 import java.util.concurrent.CountDownLatch
 
-import static com.jayway.awaitility.Awaitility.await
+import static org.awaitility.Awaitility.await
 
 @Unroll
 class JavaFXUtilsSpec extends Specification {

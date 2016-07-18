@@ -23,8 +23,8 @@ import spock.lang.Specification
 import javax.inject.Inject
 import javax.swing.JFrame
 
-import static com.jayway.awaitility.Awaitility.await
 import static java.util.concurrent.TimeUnit.SECONDS
+import static org.awaitility.Awaitility.await
 
 /**
  * @author Andres Almiray

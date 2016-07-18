@@ -27,9 +27,9 @@ import org.junit.Test;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import static com.jayway.awaitility.Awaitility.await;
-import static com.jayway.awaitility.Awaitility.fieldIn;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
+import static org.awaitility.Awaitility.fieldIn;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 

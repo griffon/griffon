@@ -1,6 +1,6 @@
 package ${project_package}
 
-import com.jayway.awaitility.Awaitility
+import org.awaitility.Awaitility
 import griffon.core.artifact.ArtifactManager
 import griffon.core.test.GriffonUnitRule
 import griffon.core.test.TestFor
