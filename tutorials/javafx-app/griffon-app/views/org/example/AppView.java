@@ -16,6 +16,7 @@
 package org.example;
 
 import griffon.core.artifact.GriffonView;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.scene.Scene;
 import javafx.scene.control.TabPane;

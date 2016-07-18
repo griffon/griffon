@@ -14,6 +14,34 @@ Andres Almiray
 
 === Runtime
 
+==== Identify MVC Members and Arguments
+
+Starting with this release you may annotate MVC members and arguments with `@griffon.inject.MVCMember`. This annotation
+servers as a hint to the Griffon runtime when paired with `@javax.annotation.Nonnull`. In this way the runtime can validate
+if all MVC members and MVC arguments have been supplied. You may annotate the field or the property setter, like so
+
+[source,java]
+----
+import griffon.core.artifact.GriffonController;
+import griffon.inject.MVCMember;
+import griffon.metadata.ArtifactProviderFor;
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import javax.annotation.Nonnull;
+
+@ArtifactProviderFor(GriffonController.class)
+public class SampleController extends AbstractGriffonController {
+    private SampleModel model;
+
+    @MVCMember @Nonnull
+    private String anMvcArgument;
+
+    @MVCMember
+    public void setModel(@Nonnull SampleModel model) {
+        this.model = model;
+    }
+}
+----
+
 ==== Finding Multiple Elements in the Node Graph
 
 You can now search for multiple elements inside the Node Graph (including those that are not subtypes of `javafx.scene.Node`

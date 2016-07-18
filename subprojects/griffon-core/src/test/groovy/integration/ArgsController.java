@@ -15,6 +15,7 @@
  */
 package integration;
 
+import griffon.inject.MVCMember;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import javax.annotation.Nonnull;
@@ -23,15 +24,17 @@ import java.util.Map;
 public class ArgsController extends AbstractGriffonController {
     private ArgsModel model;
     private ArgsView view;
-    @Nonnull
+    @MVCMember @Nonnull
     private String arg1;
     private String arg2;
 
-    public void setModel(ArgsModel model) {
+    @MVCMember
+    public void setModel(@Nonnull ArgsModel model) {
         this.model = model;
     }
 
-    public void setView(ArgsView view) {
+    @MVCMember
+    public void setView(@Nonnull ArgsView view) {
         this.view = view;
     }
 
@@ -40,10 +43,12 @@ public class ArgsController extends AbstractGriffonController {
         return arg1;
     }
 
+    @Nonnull
     public String getArg2() {
         return arg2;
     }
 
+    @MVCMember
     public void setArg2(@Nonnull String arg2) {
         this.arg2 = arg2;
     }

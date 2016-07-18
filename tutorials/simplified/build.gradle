@@ -18,7 +18,7 @@
 plugins {
     id 'java'
     id 'idea'
-    id 'com.github.ben-manes.versions' version '0.12.0'
+    id 'com.github.ben-manes.versions' version '0.13.0'
     id 'com.github.hierynomus.license' version '0.11.0'
 }
 
@@ -43,16 +43,11 @@ dependencies {
     compile "org.codehaus.griffon:griffon-javafx:${griffonVersion}"
     compile "org.codehaus.griffon:griffon-guice:${griffonVersion}"
 
-    runtime('log4j:log4j:1.2.17') {
-        exclude group: 'ant',         module: 'ant-nodeps'
-        exclude group: 'ant',         module: 'ant-junit'
-        exclude group: 'ant-contrib', module: 'ant-contrib'
-    }
-    runtime 'org.slf4j:slf4j-log4j12:1.7.21'
+    runtime 'org.slf4j:slf4j-simple:1.7.21'
 
     testCompile "org.codehaus.griffon:griffon-javafx-test:${griffonVersion}"
     testCompile 'pl.pragmatists:JUnitParams:1.0.5'
-    testCompile 'org.mockito:mockito-core:2.0.59-beta'
+    testCompile 'org.mockito:mockito-core:2.0.86-beta'
 }
 // end::dependencies[]
 

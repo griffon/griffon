@@ -16,6 +16,7 @@
 package editor;
 
 import griffon.core.artifact.GriffonController;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
@@ -28,7 +29,9 @@ import static org.apache.commons.io.FileUtils.writeStringToFile;
 
 @ArtifactProviderFor(GriffonController.class)
 public class EditorController extends AbstractGriffonController {
+    @MVCMember @Nonnull
     private EditorModel model;
+    @MVCMember @Nonnull
     private EditorView view;
 
     @Override

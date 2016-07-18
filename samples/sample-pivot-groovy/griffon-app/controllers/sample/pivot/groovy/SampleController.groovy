@@ -16,12 +16,15 @@
 package sample.pivot.groovy
 
 import griffon.core.artifact.GriffonController
+import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 
+import javax.annotation.Nonnull
 import javax.inject.Inject
 
 @ArtifactProviderFor(GriffonController)
 class SampleController {
+    @MVCMember @Nonnull
     FactoryBuilderSupport builder                                          //<1>
 
     @Inject

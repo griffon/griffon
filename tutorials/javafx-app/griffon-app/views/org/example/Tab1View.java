@@ -19,6 +19,7 @@ import griffon.core.artifact.GriffonView;
 import griffon.javafx.support.JavaFXAction;
 import griffon.javafx.support.JavaFXUtils;
 import griffon.javafx.support.fontawesome.FontAwesomeIcon;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.plugins.fontawesome.FontAwesome;
 import javafx.scene.control.Button;
@@ -28,14 +29,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 
+import javax.annotation.Nonnull;
+
 import static javafx.scene.layout.AnchorPane.setLeftAnchor;
 import static javafx.scene.layout.AnchorPane.setTopAnchor;
 
 @ArtifactProviderFor(GriffonView.class)
 public class Tab1View extends AbstractJavaFXGriffonView {
-    private SampleController controller;
-    private SampleModel model;
-    private AppView parentView;
+    @MVCMember @Nonnull private SampleController controller;
+    @MVCMember @Nonnull private SampleModel model;
+    @MVCMember @Nonnull private AppView parentView;
 
     @Override
     public void initUI() {

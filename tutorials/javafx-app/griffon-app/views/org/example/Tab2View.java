@@ -17,6 +17,7 @@ package org.example;
 
 import griffon.core.artifact.GriffonView;
 import griffon.javafx.support.fontawesome.FontAwesomeIcon;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.plugins.fontawesome.FontAwesome;
 import javafx.fxml.FXML;
@@ -26,17 +27,16 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 
+import javax.annotation.Nonnull;
+
 @ArtifactProviderFor(GriffonView.class)
 public class Tab2View extends AbstractJavaFXGriffonView {
-    private SampleController controller;
-    private SampleModel model;
-    private AppView parentView;
+    @MVCMember @Nonnull private SampleController controller;
+    @MVCMember @Nonnull private SampleModel model;
+    @MVCMember @Nonnull private AppView parentView;
 
-    @FXML
-    private TextField input;
-
-    @FXML
-    private Label output;
+    @FXML private TextField input;
+    @FXML private Label output;
 
     @Override
     public void initUI() {

@@ -16,6 +16,7 @@
 package sample.javafx.java;
 
 import griffon.core.artifact.GriffonView;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -27,11 +28,14 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 
 @ArtifactProviderFor(GriffonView.class)
 public class SampleView extends AbstractJavaFXGriffonView {
+    @MVCMember @Nonnull
     private SampleController controller;                                  //<1>
+    @MVCMember @Nonnull
     private SampleModel model;                                            //<1>
 
     @FXML

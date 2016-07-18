@@ -2,6 +2,7 @@ package ${project_package};
 
 import griffon.core.artifact.GriffonController
 import griffon.core.artifact.GriffonView
+import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 import javafx.fxml.FXML
 import javafx.scene.Group
@@ -12,19 +13,22 @@ import javafx.scene.paint.Color
 import javafx.stage.Stage
 import javafx.stage.Window
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView
+import javax.annotation.Nonnull
 
 @ArtifactProviderFor(GriffonView::class)
 class ${project_class_name}View : AbstractJavaFXGriffonView() {
+    @set:[MVCMember Nonnull]
     lateinit var model: ${project_class_name}Model
-            lateinit var controller: ${project_class_name}Controller
+    @set:[MVCMember Nonnull]
+    lateinit var controller: ${project_class_name}Controller
 
-            lateinit private @FXML var clickLabel: Label
+    lateinit private @FXML var clickLabel: Label
 
     override fun initUI() {
         val stage: Stage = application.createApplicationContainer(mapOf()) as Stage
         stage.title = application.configuration.getAsString("application.title")
         stage.scene = _init()
-        application.getWindowManager<Window>().attach("mainWindow", stage)
+        application.getWindowManager<Window>().attach("${name}", stage)
     }
 
     private fun _init(): Scene {

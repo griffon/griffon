@@ -182,11 +182,13 @@ package sample
 
 import griffon.core.artifact.GriffonView
 import griffon.metadata.ArtifactProviderFor
+import griffon.inject.MVCMember
+import javax.annotation.Nonnull
 
 @ArtifactProviderFor(GriffonView)
 class SampleView {
-    def builder
-    def model
+    @MVCMember @Nonnull def builder
+    @MVCMember @Nonnull def model
 
     void initUI() {
         builder.with {

@@ -15,18 +15,23 @@
  */
 package integration;
 
+import griffon.inject.MVCMember;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
+
+import javax.annotation.Nonnull;
 
 public class ArgsView extends AbstractGriffonView implements Invokable {
     private ArgsController controller;
     private ArgsModel model;
     private boolean invoked;
 
-    public void setController(ArgsController controller) {
+    @MVCMember
+    public void setController(@Nonnull ArgsController controller) {
         this.controller = controller;
     }
 
-    public void setModel(ArgsModel model) {
+    @MVCMember
+    public void setModel(@Nonnull ArgsModel model) {
         this.model = model;
     }
 

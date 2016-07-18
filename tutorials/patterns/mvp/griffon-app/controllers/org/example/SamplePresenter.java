@@ -16,6 +16,7 @@
 package org.example;
 
 import griffon.core.artifact.GriffonController;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
@@ -32,11 +33,13 @@ public class SamplePresenter extends AbstractGriffonController {
     @Inject
     private SampleService sampleService;
 
-    public void setModel(SampleModel model) {
+    @MVCMember
+    public void setModel(@Nonnull SampleModel model) {
         this.model = model;
     }
 
-    public void setView(SampleView view) {
+    @MVCMember
+    public void setView(@Nonnull SampleView view) {
         this.view = view;
     }
 

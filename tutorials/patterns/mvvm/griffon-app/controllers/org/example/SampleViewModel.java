@@ -16,6 +16,7 @@
 package org.example;
 
 import griffon.core.artifact.GriffonController;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
 import javafx.beans.property.SimpleStringProperty;
@@ -66,7 +67,8 @@ public class SampleViewModel extends AbstractGriffonController {
     @Inject
     private SampleService sampleService;
 
-    public void setView(SampleView view) {
+    @MVCMember
+    public void setView(@Nonnull SampleView view) {
         this.view = view;
     }
 

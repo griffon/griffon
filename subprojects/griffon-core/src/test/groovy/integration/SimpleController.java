@@ -16,15 +16,19 @@
 package integration;
 
 import griffon.core.mvc.MVCGroup;
+import griffon.inject.MVCMember;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 public class SimpleController extends AbstractGriffonController {
     private SimpleModel model;
     private String key;
     private String mvcId;
+    @MVCMember
     private MVCGroup parentGroup;
+    @MVCMember
     private IntegrationModel parentModel;
 
+    @MVCMember
     public void setModel(SimpleModel model) {
         this.model = model;
     }
@@ -33,6 +37,7 @@ public class SimpleController extends AbstractGriffonController {
         return mvcId;
     }
 
+    @MVCMember
     public void setMvcId(String mvcId) {
         this.mvcId = mvcId;
     }

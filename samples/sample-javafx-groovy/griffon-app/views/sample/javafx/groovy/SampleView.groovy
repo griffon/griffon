@@ -16,11 +16,16 @@
 package sample.javafx.groovy
 
 import griffon.core.artifact.GriffonView
+import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
+
+import javax.annotation.Nonnull
 
 @ArtifactProviderFor(GriffonView)
 class SampleView {
+    @MVCMember @Nonnull
     FactoryBuilderSupport builder                                                              //<1>
+    @MVCMember @Nonnull
     SampleModel model                                                                          //<1>
 
     void initUI() {

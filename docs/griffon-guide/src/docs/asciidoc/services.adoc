@@ -32,10 +32,12 @@ define an injection point and annotate it with `@javax.inject.Inject`:
 package sample
 
 import griffon.core.artifact.GriffonController
+import griffon.inject.MVCMember
+import javax.annotation.Nonnull
 
 @griffon.metadata.ArtifactProviderFor(GriffonController)
 class SampleController {
-    SampleModel model
+    @MVCMember @Nonnull SampleModel model
 
     @javax.inject.Inject
     private MathService mathService

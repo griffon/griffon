@@ -16,6 +16,7 @@
 package integration;
 
 import griffon.core.mvc.MVCGroup;
+import griffon.inject.MVCMember;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
 
 public class ChildView extends AbstractGriffonView implements Invokable {
@@ -29,6 +30,7 @@ public class ChildView extends AbstractGriffonView implements Invokable {
         return controller;
     }
 
+    @MVCMember
     public void setController(ChildController controller) {
         this.controller = controller;
     }
@@ -37,6 +39,7 @@ public class ChildView extends AbstractGriffonView implements Invokable {
         return model;
     }
 
+    @MVCMember
     public void setModel(ChildModel model) {
         this.model = model;
     }
@@ -45,6 +48,7 @@ public class ChildView extends AbstractGriffonView implements Invokable {
         return parentGroup;
     }
 
+    @MVCMember
     public void setParentGroup(MVCGroup parentGroup) {
         this.parentGroup = parentGroup;
     }
@@ -53,6 +57,7 @@ public class ChildView extends AbstractGriffonView implements Invokable {
         return parentView;
     }
 
+    @MVCMember
     public void setParentView(RootView parentView) {
         this.parentView = parentView;
     }

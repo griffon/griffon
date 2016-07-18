@@ -17,6 +17,7 @@ package sample.javafx.kotlin
 
 import griffon.core.artifact.GriffonController
 import griffon.core.artifact.GriffonView
+import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 import javafx.fxml.FXML
 import javafx.scene.Group
@@ -27,10 +28,13 @@ import javafx.scene.paint.Color
 import javafx.stage.Stage
 import javafx.stage.Window
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView
+import javax.annotation.Nonnull
 
 @ArtifactProviderFor(GriffonView::class)
 class SampleView : AbstractJavaFXGriffonView() {
+    @set:[MVCMember Nonnull]
     lateinit var controller: SampleController
+    @set:[MVCMember Nonnull]
     lateinit var model: SampleModel
 
     @FXML

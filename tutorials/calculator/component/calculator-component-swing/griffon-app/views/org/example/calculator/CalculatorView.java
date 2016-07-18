@@ -16,6 +16,7 @@
 package org.example.calculator;
 
 import griffon.core.artifact.GriffonView;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.util.CollectionUtils;
 import net.miginfocom.swing.MigLayout;
@@ -53,11 +54,13 @@ public class CalculatorView extends AbstractSwingGriffonView {
     private CalculatorController controller;
     private CalculatorModel model;
 
-    public void setController(CalculatorController controller) {
+    @MVCMember
+    public void setController(@Nonnull CalculatorController controller) {
         this.controller = controller;
     }
 
-    public void setModel(CalculatorModel model) {
+    @MVCMember
+    public void setModel(@Nonnull CalculatorModel model) {
         this.model = model;
     }
 

@@ -14,10 +14,12 @@ package sample
 
 import java.awt.event.ActionEvent
 import griffon.core.artifact.GriffonController
+import griffon.inject.MVCMember
+import javax.annotation.Nonnull
 
 @griffon.metadata.ArtifactProviderFor(GriffonController)
 class SampleController {
-    def model
+    @MVCMember @Nonnull SampleModel model
 
     void work(evt = null) {
         // will be invoked outside of the UI thread by default

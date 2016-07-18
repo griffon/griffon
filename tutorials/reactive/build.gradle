@@ -66,23 +66,22 @@ dependencies {
     compile 'org.kordamp.ikonli:ikonli-javafx:1.5.0'
     compile 'org.kordamp.ikonli:ikonli-typicons-pack:1.5.0'
     compile 'org.reactfx:reactfx:2.0-M5'
-    compile 'io.reactivex:rxjava:1.1.6'
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
     compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta2'
     compile 'com.squareup.retrofit:converter-jackson:2.0.0-beta2'
-    compile 'com.fasterxml.jackson.core:jackson-core:2.7.5'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.5'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.5'
-    compile 'io.reactivex:rxjava:1.1.5'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.8.0'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.0'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.0'
+    compile 'io.reactivex:rxjava:1.1.7'
 
     griffon 'org.codehaus.griffon.plugins:griffon-miglayout-plugin:1.1.1'
     runtime 'org.slf4j:slf4j-simple:1.7.21'
 
     testCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
-    testCompile 'org.mockito:mockito-core:2.0.80-beta'
+    testCompile 'org.mockito:mockito-core:2.0.86-beta'
 
-    integrationTestCompile "com.jayway.awaitility:awaitility:1.7.0"
-    integrationTestCompile "com.github.tomakehurst:wiremock:2.1.4-rc3"
+    integrationTestCompile 'com.jayway.awaitility:awaitility:1.7.0'
+    integrationTestCompile 'com.github.tomakehurst:wiremock:2.1.7'
 }
 
 tasks.withType(JavaCompile) {

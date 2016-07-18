@@ -17,16 +17,19 @@ package org.example.calculator;
 
 import griffon.core.artifact.GriffonController;
 import griffon.core.mvc.MVCGroup;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import java.util.Map;
+import javax.annotation.Nonnull;
 
 @ArtifactProviderFor(GriffonController.class)
 public class AppController extends AbstractGriffonController {
     private AppView view;
 
-    public void setView(AppView view) {
+    @MVCMember
+    public void setView(@Nonnull AppView view) {
         this.view = view;
     }
 

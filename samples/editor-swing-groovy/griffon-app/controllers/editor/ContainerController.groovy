@@ -16,14 +16,18 @@
 package editor
 
 import griffon.core.artifact.GriffonController
+import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 
+import javax.annotation.Nonnull
 import javax.swing.JFileChooser
 
 @ArtifactProviderFor(GriffonController)
 class ContainerController {
-    def model
-    def builder
+    @MVCMember @Nonnull
+    ContainerModel model
+    @MVCMember @Nonnull
+    FactoryBuilderSupport builder
 
     void open() {
         def window = application.windowManager.startingWindow

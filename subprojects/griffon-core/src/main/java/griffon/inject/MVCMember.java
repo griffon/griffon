@@ -13,12 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package sample.lanterna.java;
+package griffon.inject;
 
-import griffon.lanterna.LanternaGriffonApplication;
+import javax.inject.Qualifier;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class Launcher {
-    public static void main(String[] args) throws Exception {
-        LanternaGriffonApplication.run(LanternaGriffonApplication.class, args);
-    }
+/**
+ * @author Andres Almiray
+ * @since 2.8.0
+ */
+@Qualifier
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.FIELD})
+public @interface MVCMember {
 }

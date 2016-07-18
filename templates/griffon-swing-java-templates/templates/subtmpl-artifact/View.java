@@ -1,6 +1,7 @@
 package ${project_package};
 
 import griffon.core.artifact.GriffonView;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView;
 
@@ -12,6 +13,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
 
+import javax.annotation.Nonnull;
+
 import static java.util.Arrays.asList;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
@@ -20,11 +23,13 @@ public class ${project_class_name}View extends AbstractSwingGriffonView {
     private ${project_class_name}Model model;
     private ${project_class_name}Controller controller;
 
-    public void setModel(${project_class_name}Model model) {
+    @MVCMember
+    public void setModel(@Nonnull ${project_class_name}Model model) {
         this.model = model;
     }
 
-    public void setController(${project_class_name}Controller controller) {
+    @MVCMember
+    public void setController(@Nonnull ${project_class_name}Controller controller) {
         this.controller = controller;
     }
 

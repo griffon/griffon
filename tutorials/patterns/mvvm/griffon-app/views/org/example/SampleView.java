@@ -16,6 +16,7 @@
 package org.example;
 
 import griffon.core.artifact.GriffonView;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -37,7 +38,8 @@ public class SampleView extends AbstractJavaFXGriffonView {
     @FXML private TextField input;
     @FXML private Label output;
 
-    public void setViewModel(SampleViewModel viewModel) {
+    @MVCMember
+    public void setViewModel(@Nonnull SampleViewModel viewModel) {
         this.viewModel = viewModel;
     }
 

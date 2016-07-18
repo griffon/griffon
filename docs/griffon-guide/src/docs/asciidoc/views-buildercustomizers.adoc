@@ -122,11 +122,13 @@ node call invoked on the builder member.
 package org.example
 
 import griffon.core.artifact.GriffonView
+import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
+import javax.annotation.Nonnull
 
 @ArtifactProviderFor(GriffonView)
 class SampleView {
-    FactoryBuilderSupport builder
+    @MVCMember @Nonnull FactoryBuilderSupport builder
 
     void initUI() {
         builder.with {
@@ -142,11 +144,13 @@ class SampleView {
 package com.acme
 
 import griffon.core.artifact.GriffonView
+import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
+import javax.annotation.Nonnull
 
 @ArtifactProviderFor(GriffonView)
 class PrimaryView {
-    def builder
+    @MVCMember @Nonnull FactoryBuilderSupport builder
 
     void initUI() {
         builder.with {

@@ -16,6 +16,7 @@
 package org.example;
 
 import griffon.core.artifact.GriffonModel;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -27,6 +28,7 @@ import java.util.Map;
 @ArtifactProviderFor(GriffonModel.class)
 public class SampleModel extends AbstractGriffonModel {
     private StringProperty output;
+    private SampleView view;
 
     @Nonnull
     public final StringProperty outputProperty() {
@@ -44,9 +46,8 @@ public class SampleModel extends AbstractGriffonModel {
         return output == null ? null : outputProperty().get();
     }
 
-    private SampleView view;
-
-    public void setView(SampleView view) {
+    @MVCMember
+    public void setView(@Nonnull SampleView view) {
         this.view = view;
     }
 

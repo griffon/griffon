@@ -16,13 +16,16 @@
 package console
 
 import griffon.core.artifact.GriffonController
+import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 
+import javax.annotation.Nonnull
 import javax.inject.Inject
 
 @ArtifactProviderFor(GriffonController)
 class ConsoleController {
-    def model                                                //<1>
+    @MVCMember @Nonnull
+    ConsoleModel model                                       //<1>
 
     @Inject
     Evaluator evaluator                                      //<2>

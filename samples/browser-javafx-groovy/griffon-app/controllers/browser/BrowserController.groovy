@@ -16,14 +16,19 @@
 package browser
 
 import griffon.core.artifact.GriffonController
+import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 import griffon.transform.Threading
+
+import javax.annotation.Nonnull
 
 @Threading(Threading.Policy.SKIP)
 @ArtifactProviderFor(GriffonController)
 class BrowserController {
-    def model
-    def builder
+    @MVCMember @Nonnull
+    BrowserModel model
+    @MVCMember @Nonnull
+    FactoryBuilderSupport builder
 
     void back() {
         if (builder.browser.engine.history.entries.size() > 0) {

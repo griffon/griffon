@@ -23,6 +23,7 @@ import griffon.core.artifact.GriffonView;
 import griffon.core.mvc.MVCFunction;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupFunction;
+import griffon.inject.MVCMember;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -57,6 +58,7 @@ public abstract class AbstractGriffonMvcArtifact extends AbstractGriffonArtifact
         super(application);
     }
 
+    @MVCMember
     public void setMvcGroup(@Nonnull MVCGroup group) {
         this.group = requireNonNull(group, "Argument 'group' must not be null");
     }

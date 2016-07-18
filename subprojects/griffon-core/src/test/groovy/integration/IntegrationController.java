@@ -16,6 +16,7 @@
 package integration;
 
 import griffon.inject.Contextual;
+import griffon.inject.MVCMember;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import javax.annotation.Nonnull;
@@ -29,7 +30,8 @@ public class IntegrationController extends AbstractGriffonController {
     @Inject
     private IntegrationService sampleService;
 
-    public void setModel(IntegrationModel model) {
+    @MVCMember
+    public void setModel(@Nonnull IntegrationModel model) {
         this.model = model;
     }
 

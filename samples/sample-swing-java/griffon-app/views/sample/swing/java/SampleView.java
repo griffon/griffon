@@ -16,9 +16,11 @@
 package sample.swing.java;
 
 import griffon.core.artifact.GriffonView;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView;
 
+import javax.annotation.Nonnull;
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -41,11 +43,13 @@ public class SampleView extends AbstractSwingGriffonView {
     private SampleController controller;                                         //<1>
     private SampleModel model;                                                   //<1>
 
-    public void setController(SampleController controller) {
+    @MVCMember
+    public void setController(@Nonnull SampleController controller) {
         this.controller = controller;
     }
 
-    public void setModel(SampleModel model) {
+    @MVCMember
+    public void setModel(@Nonnull SampleModel model) {
         this.model = model;
     }
 

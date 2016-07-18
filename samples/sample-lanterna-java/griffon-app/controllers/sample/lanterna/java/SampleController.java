@@ -16,9 +16,11 @@
 package sample.lanterna.java;
 
 import griffon.core.artifact.GriffonController;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 @ArtifactProviderFor(GriffonController.class)
@@ -28,7 +30,8 @@ public class SampleController extends AbstractGriffonController {
     @Inject
     private SampleService sampleService;                                //<2>
 
-    public void setModel(SampleModel model) {
+    @MVCMember
+    public void setModel(@Nonnull SampleModel model) {
         this.model = model;
     }
 

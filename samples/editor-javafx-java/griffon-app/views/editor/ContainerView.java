@@ -17,6 +17,7 @@ package editor;
 
 import griffon.core.artifact.GriffonView;
 import griffon.core.controller.Action;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
@@ -44,11 +45,13 @@ public class ContainerView extends AbstractJavaFXGriffonView {
 
     private FileChooser fileChooser;
 
-    public void setController(ContainerController controller) {
+    @MVCMember
+    public void setController(@Nonnull ContainerController controller) {
         this.controller = controller;
     }
 
-    public void setModel(ContainerModel model) {
+    @MVCMember
+    public void setModel(@Nonnull ContainerModel model) {
         this.model = model;
     }
 

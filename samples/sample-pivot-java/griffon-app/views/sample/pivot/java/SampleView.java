@@ -16,6 +16,7 @@
 package sample.pivot.java;
 
 import griffon.core.artifact.GriffonView;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.pivot.support.PivotAction;
 import griffon.pivot.support.adapters.TextInputContentAdapter;
@@ -29,6 +30,7 @@ import org.apache.pivot.wtk.TextInput;
 import org.apache.pivot.wtk.Window;
 import org.codehaus.griffon.runtime.pivot.artifact.AbstractPivotGriffonView;
 
+import javax.annotation.Nonnull;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
@@ -38,11 +40,13 @@ public class SampleView extends AbstractPivotGriffonView {
     private SampleController controller;                                         //<1>
     private SampleModel model;                                                   //<1>
 
-    public void setController(SampleController controller) {
+    @MVCMember
+    public void setController(@Nonnull SampleController controller) {
         this.controller = controller;
     }
 
-    public void setModel(SampleModel model) {
+    @MVCMember
+    public void setModel(@Nonnull SampleModel model) {
         this.model = model;
     }
 

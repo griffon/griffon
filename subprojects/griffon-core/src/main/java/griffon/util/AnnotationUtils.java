@@ -44,6 +44,7 @@ import static griffon.util.GriffonClassUtils.requireState;
 import static griffon.util.GriffonNameUtils.getLogicalPropertyName;
 import static griffon.util.GriffonNameUtils.getPropertyName;
 import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.uncapitalize;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -93,7 +94,7 @@ public class AnnotationUtils {
 
         while (klass != null) {
             Annotation annotation = findAnnotation(klass.getAnnotations(), annotationType);
-            if (annotation != null) return (A) annotation;
+            if (annotation != null) { return (A) annotation; }
             klass = klass.getSuperclass();
         }
         return null;
@@ -213,6 +214,29 @@ public class AnnotationUtils {
         } else {
             return parameterTypes[0].getName();
         }
+    }
+
+    @Nonnull
+    public static String[] namesFor(@Nonnull Method setterMethod) {
+        requireNonNull(setterMethod, "Argument 'setterMethod' must not be null");
+
+        Class<?>[] parameterTypes = setterMethod.getParameterTypes();
+        requireState(parameterTypes != null && parameterTypes.length > 0, "Argument 'setterMethod' must have at least one parameter. " + MethodDescriptor.forMethod(setterMethod));
+
+
+        List<String> names = new ArrayList<>();
+        Named annotation = findAnnotation(annotationsOfMethodParameter(setterMethod, 0), Named.class);
+        if (annotation != null && !isBlank(annotation.value())) {
+            names.add(annotation.value());
+        } else {
+            if (GriffonClassUtils.isSetterMethod(setterMethod)) {
+                names.add(uncapitalize(setterMethod.getName().substring(3)));
+            } else {
+                names.add(uncapitalize(setterMethod.getName()));
+            }
+        }
+        names.add(parameterTypes[0].getName());
+        return names.toArray(new String[names.size()]);
     }
 
     @Nonnull

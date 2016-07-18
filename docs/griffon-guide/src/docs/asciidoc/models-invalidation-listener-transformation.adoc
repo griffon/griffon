@@ -10,10 +10,12 @@ without so much effort. The following code
 import griffon.transform.InvalidationListener
 import griffon.transform.FXObservable
 import griffon.core.artifact.GriffonModel
+import griffon.inject.MVCMember
+import javax.annotation.Nonnull
 
 @griffon.metadata.ArtifactProviderFor(GriffonModel)
 class SampleModel {
-    def controller
+    @MVCMember @Nonnull SampleController controller
 
     @FXObservable
     @InvalidationListener(snoopAll)
@@ -34,10 +36,12 @@ is equivalent to this one:
 import javafx.beans.InvalidationListener
 import griffon.transform.FXObservable
 import griffon.core.artifact.GriffonModel
+import griffon.inject.MVCMember
+import javax.annotation.Nonnull
 
 @griffon.metadata.ArtifactProviderFor(GriffonModel)
 class SampleModel {
-    def controller
+    @MVCMember @Nonnull SampleController controller
 
     @FXObservable String name
     @FXObservable String lastname
