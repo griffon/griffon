@@ -144,30 +144,37 @@ Revision:     cba5fea19f1e0c6a00cc904828a6ec4e11739abc
 
 Groovy:       2.4.4
 Ant:          Apache Ant(TM) version 1.9.6 compiled on June 29 2015
-JVM:          1.8.0_92 (Oracle Corporation 25.92-b14)
+JVM:          1.8.0_102 (Oracle Corporation 25.102-b14)
 OS:           Mac OS X 10.10.5 x86_64
 ----
 
-Gradle 2 is the minimum supported version.
+Gradle 2.13 is the minimum supported version.
 
 .Maven
 
 Maven is a software project management and comprehension tool. Based on the concept of a project object model
 (POM), Maven can manage a project's build, reporting and documentation from a central piece of information.
-Maven is a well known build tool, unfortunately there's no support for it to be found in SDKMAN, you must follow
-the link:http://maven.apache.org/download.cgi#Installation[download and install, window="_blank"] instructions.
+
+You can download and install Maven manually, however we recommend using SDKMAN for this task too, as it greatly
+simplifies handling different versions and keeping binary distributions up to date. You can install Maven via
+SDKMAN by executing this command
+
+[source]
+----
+$ sdk install maven
+----
 
 You can verify this tool by executing this command
 
 [source]
 ----
 $ mvn -v
-Apache Maven 3.0.4 (r1232337; 2012-01-17 09:44:56+0100)
+Apache Maven 3.3.1 (cab6659f9874fa96462afef40fcf6bc033d58c1c; 2015-03-13T21:10:27+01:00)
 Maven home: /usr/local/maven
-Java version: 1.8.0_25, vendor: Oracle Corporation
-Java home: /Library/Java/JavaVirtualMachines/jdk1.8.0_25.jdk/Contents/Home/jre
+Java version: 1.8.0_102, vendor: Oracle Corporation
+Java home: /Library/Java/JavaVirtualMachines/jdk1.8.0_102.jdk/Contents/Home/jre
 Default locale: en_US, platform encoding: UTF-8
-OS name: "mac os x", version: "10.9.5", arch: "x86_64", family: "mac"
+OS name: "mac os x", version: "10.10.5", arch: "x86_64", family: "mac"
 ----
 
 Maven 3 is the minimum supported version.
