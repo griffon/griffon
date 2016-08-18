@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="integration.GriffonApplicationSpec" tests="35" skipped="0" failures="0" errors="0" timestamp="2016-08-18T09:57:49" hostname="testing-gce-ebffe6ab-47c6-4829-a506-dd5f4e144ef6" time="0.459">
+  <properties/>
+  <testcase name="Bootstrap application" classname="integration.GriffonApplicationSpec" time="0.107"/>
+  <testcase name="Check artifact controller" classname="integration.GriffonApplicationSpec" time="0.008"/>
+  <testcase name="Check artifact model" classname="integration.GriffonApplicationSpec" time="0.001"/>
+  <testcase name="Check artifact service" classname="integration.GriffonApplicationSpec" time="0.005"/>
+  <testcase name="Check artifact view" classname="integration.GriffonApplicationSpec" time="0.003"/>
+  <testcase name="Check groups" classname="integration.GriffonApplicationSpec" time="0.004"/>
+  <testcase name="Invoke abort Action" classname="integration.GriffonApplicationSpec" time="0.008"/>
+  <testcase name="Invoke contextualSuccess Action" classname="integration.GriffonApplicationSpec" time="0.009"/>
+  <testcase name="Invoke contextualFailure Action" classname="integration.GriffonApplicationSpec" time="0.006"/>
+  <testcase name="Invoke sayHello Action" classname="integration.GriffonApplicationSpec" time="0.002"/>
+  <testcase name="Invoke handleException Action" classname="integration.GriffonApplicationSpec" time="0.027"/>
+  <testcase name="Invoke throwException Action" classname="integration.GriffonApplicationSpec" time="0.018"/>
+  <testcase name="Update Action" classname="integration.GriffonApplicationSpec" time="0.005"/>
+  <testcase name="Verify ActionManager" classname="integration.GriffonApplicationSpec" time="0.003"/>
+  <testcase name="Verify AddonManager" classname="integration.GriffonApplicationSpec" time="0.009"/>
+  <testcase name="Verify MVCGroupManager" classname="integration.GriffonApplicationSpec" time="0.007"/>
+  <testcase name="Verify ArtifactManager" classname="integration.GriffonApplicationSpec" time="0.075"/>
+  <testcase name="Verify withMvcGroup(type , handler)" classname="integration.GriffonApplicationSpec" time="0.012"/>
+  <testcase name="Verify withMvcGroup(type, id , handler)" classname="integration.GriffonApplicationSpec" time="0.011"/>
+  <testcase name="Verify withMvcGroup(type, id, map , handler)" classname="integration.GriffonApplicationSpec" time="0.012"/>
+  <testcase name="Verify withMvcGroup(type, map , handler)" classname="integration.GriffonApplicationSpec" time="0.011"/>
+  <testcase name="Verify withMvcGroup(map, type, id , handler)" classname="integration.GriffonApplicationSpec" time="0.011"/>
+  <testcase name="Verify withMvcGroup(map, type , handler)" classname="integration.GriffonApplicationSpec" time="0.011"/>
+  <testcase name="Verify createMVCGroup(type)" classname="integration.GriffonApplicationSpec" time="0.006"/>
+  <testcase name="Verify createMVCGroup(type, id)" classname="integration.GriffonApplicationSpec" time="0.005"/>
+  <testcase name="Verify createMVCGroup(type, map)" classname="integration.GriffonApplicationSpec" time="0.006"/>
+  <testcase name="Verify createMVCGroup(map, type)" classname="integration.GriffonApplicationSpec" time="0.006"/>
+  <testcase name="Verify createMVCGroup(type, id, map)" classname="integration.GriffonApplicationSpec" time="0.006"/>
+  <testcase name="Verify createMVCGroup(map, type, id)" classname="integration.GriffonApplicationSpec" time="0.006"/>
+  <testcase name="Verify createMVC(type)" classname="integration.GriffonApplicationSpec" time="0.005"/>
+  <testcase name="Verify createMVC(type, id)" classname="integration.GriffonApplicationSpec" time="0.005"/>
+  <testcase name="Verify createMVC(type, map)" classname="integration.GriffonApplicationSpec" time="0.007"/>
+  <testcase name="Verify createMVC(map, type)" classname="integration.GriffonApplicationSpec" time="0.007"/>
+  <testcase name="Verify createMVC(type, id, map)" classname="integration.GriffonApplicationSpec" time="0.012"/>
+  <testcase name="Verify createMVC(map, type, id)" classname="integration.GriffonApplicationSpec" time="0.012"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[[Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Griffon 2.8.0-SNAPSHOT
+[Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Build: 2016-08-18T09:55:49.618+0000
+[Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Revision: 82537a0e061ee4f29f316065d9ff9f8c833c5095
+[Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - JVM: 1.8.0_101 (Oracle Corporation 25.101-b13)
+[Test worker] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - OS: Linux 3.13.0-92-generic amd64
+[Test worker] INFO integration.TestGriffonApplication - Initializing all startup groups: [integration]
+[Test worker] INFO integration.TestGriffonApplication - Initializing all integration startup groups: [sample]
+[Test worker] WARN org.codehaus.griffon.runtime.core.controller.AbstractActionManager - An exception occurred when executing integration.IntegrationController.handleException
+griffon.exceptions.InstanceMethodInvocationException: An error occurred while invoking instance method integration.IntegrationController.handleException()
+	at griffon.util.GriffonClassUtils.invokeInstanceMethod(GriffonClassUtils.java:3033)
+	at org.codehaus.griffon.runtime.core.controller.AbstractActionManager.doInvokeAction(AbstractActionManager.java:332)
+	at org.codehaus.griffon.runtime.core.controller.AbstractActionManager$1.run(AbstractActionManager.java:257)
+	at org.codehaus.griffon.runtime.core.threading.AbstractUIThreadManager.runOutsideUI(AbstractUIThreadManager.java:90)
+	at org.codehaus.griffon.runtime.core.controller.AbstractActionManager.invokeAction(AbstractActionManager.java:364)
+	at org.codehaus.griffon.runtime.core.controller.AbstractActionManager.invokeAction(AbstractActionManager.java:284)
+	at org.codehaus.griffon.runtime.core.controller.AbstractActionManager.invokeAction(AbstractActionManager.java:327)
+	at org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController.invokeAction(AbstractGriffonController.java:65)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.codehaus.groovy.runtime.callsite.PojoMetaMethodSite$PojoCachedMethodSite.invoke(PojoMetaMethodSite.java:192)
+	at org.codehaus.groovy.runtime.callsite.PojoMetaMethodSite.call(PojoMetaMethodSite.java:56)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:48)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:113)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:125)
+	at integration.GriffonApplicationSpec.$spock_feature_0_10(GriffonApplicationSpec.groovy:235)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:153)
+	at org.spockframework.runtime.model.MethodInfo.invoke(MethodInfo.java:84)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:480)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:463)
+	at org.spockframework.runtime.BaseSpecRunner.runFeatureMethod(BaseSpecRunner.java:405)
+	at org.spockframework.runtime.BaseSpecRunner.doRunIteration(BaseSpecRunner.java:324)
+	at org.spockframework.runtime.BaseSpecRunner$6.invoke(BaseSpecRunner.java:309)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:480)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:463)
+	at org.spockframework.runtime.BaseSpecRunner.runIteration(BaseSpecRunner.java:288)
+	at org.spockframework.runtime.BaseSpecRunner.initializeAndRunIteration(BaseSpecRunner.java:278)
+	at org.spockframework.runtime.BaseSpecRunner.runSimpleFeature(BaseSpecRunner.java:269)
+	at org.spockframework.runtime.BaseSpecRunner.doRunFeature(BaseSpecRunner.java:263)
+	at org.spockframework.runtime.BaseSpecRunner$5.invoke(BaseSpecRunner.java:246)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:480)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:463)
+	at org.spockframework.runtime.BaseSpecRunner.runFeature(BaseSpecRunner.java:238)
+	at org.spockframework.runtime.BaseSpecRunner.runFeatures(BaseSpecRunner.java:188)
+	at org.spockframework.runtime.BaseSpecRunner.doRunSpec(BaseSpecRunner.java:98)
+	at org.spockframework.runtime.BaseSpecRunner$1.invoke(BaseSpecRunner.java:84)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:480)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:463)
+	at org.spockframework.runtime.BaseSpecRunner.runSpec(BaseSpecRunner.java:76)
+	at org.spockframework.runtime.BaseSpecRunner.run(BaseSpecRunner.java:67)
+	at org.spockframework.runtime.Sputnik.run(Sputnik.java:63)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecuter.runTestClass(JUnitTestClassExecuter.java:114)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecuter.execute(JUnitTestClassExecuter.java:57)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassProcessor.processTestClass(JUnitTestClassProcessor.java:66)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:51)
+	at sun.reflect.GeneratedMethodAccessor28.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:32)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:93)
+	at com.sun.proxy.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.processTestClass(TestWorker.java:109)
+	at sun.reflect.GeneratedMethodAccessor27.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.remote.internal.hub.MessageHub$Handler.run(MessageHub.java:377)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:54)
+	at org.gradle.internal.concurrent.StoppableExecutorImpl$1.run(StoppableExecutorImpl.java:40)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.RuntimeException: Boom!
+	at integration.IntegrationController.handleException(IntegrationController.java:57)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at griffon.util.MethodUtils.invokeMethod(MethodUtils.java:269)
+	at griffon.util.MethodUtils.invokeMethod(MethodUtils.java:215)
+	at griffon.util.GriffonClassUtils.invokeInstanceMethod(GriffonClassUtils.java:3029)
+	... 70 more
+[Test worker] WARN org.codehaus.griffon.runtime.core.controller.AbstractActionManager - An exception occurred when executing integration.IntegrationController.throwException
+griffon.exceptions.InstanceMethodInvocationException: An error occurred while invoking instance method integration.IntegrationController.throwException()
+	at griffon.util.GriffonClassUtils.invokeInstanceMethod(GriffonClassUtils.java:3033)
+	at org.codehaus.griffon.runtime.core.controller.AbstractActionManager.doInvokeAction(AbstractActionManager.java:332)
+	at org.codehaus.griffon.runtime.core.controller.AbstractActionManager$1.run(AbstractActionManager.java:257)
+	at org.codehaus.griffon.runtime.core.threading.AbstractUIThreadManager.runOutsideUI(AbstractUIThreadManager.java:90)
+	at org.codehaus.griffon.runtime.core.controller.AbstractActionManager.invokeAction(AbstractActionManager.java:364)
+	at org.codehaus.griffon.runtime.core.controller.AbstractActionManager.invokeAction(AbstractActionManager.java:284)
+	at org.codehaus.griffon.runtime.core.controller.AbstractActionManager.invokeAction(AbstractActionManager.java:327)
+	at org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController.invokeAction(AbstractGriffonController.java:65)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.codehaus.groovy.runtime.callsite.PojoMetaMethodSite$PojoCachedMethodSite.invoke(PojoMetaMethodSite.java:192)
+	at org.codehaus.groovy.runtime.callsite.PojoMetaMethodSite.call(PojoMetaMethodSite.java:56)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:48)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:113)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:125)
+	at integration.GriffonApplicationSpec.$spock_feature_0_11(GriffonApplicationSpec.groovy:251)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:153)
+	at org.spockframework.runtime.model.MethodInfo.invoke(MethodInfo.java:84)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:480)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:463)
+	at org.spockframework.runtime.BaseSpecRunner.runFeatureMethod(BaseSpecRunner.java:405)
+	at org.spockframework.runtime.BaseSpecRunner.doRunIteration(BaseSpecRunner.java:324)
+	at org.spockframework.runtime.BaseSpecRunner$6.invoke(BaseSpecRunner.java:309)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:480)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:463)
+	at org.spockframework.runtime.BaseSpecRunner.runIteration(BaseSpecRunner.java:288)
+	at org.spockframework.runtime.BaseSpecRunner.initializeAndRunIteration(BaseSpecRunner.java:278)
+	at org.spockframework.runtime.BaseSpecRunner.runSimpleFeature(BaseSpecRunner.java:269)
+	at org.spockframework.runtime.BaseSpecRunner.doRunFeature(BaseSpecRunner.java:263)
+	at org.spockframework.runtime.BaseSpecRunner$5.invoke(BaseSpecRunner.java:246)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:480)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:463)
+	at org.spockframework.runtime.BaseSpecRunner.runFeature(BaseSpecRunner.java:238)
+	at org.spockframework.runtime.BaseSpecRunner.runFeatures(BaseSpecRunner.java:188)
+	at org.spockframework.runtime.BaseSpecRunner.doRunSpec(BaseSpecRunner.java:98)
+	at org.spockframework.runtime.BaseSpecRunner$1.invoke(BaseSpecRunner.java:84)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:480)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:463)
+	at org.spockframework.runtime.BaseSpecRunner.runSpec(BaseSpecRunner.java:76)
+	at org.spockframework.runtime.BaseSpecRunner.run(BaseSpecRunner.java:67)
+	at org.spockframework.runtime.Sputnik.run(Sputnik.java:63)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecuter.runTestClass(JUnitTestClassExecuter.java:114)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecuter.execute(JUnitTestClassExecuter.java:57)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassProcessor.processTestClass(JUnitTestClassProcessor.java:66)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:51)
+	at sun.reflect.GeneratedMethodAccessor28.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:32)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:93)
+	at com.sun.proxy.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.processTestClass(TestWorker.java:109)
+	at sun.reflect.GeneratedMethodAccessor27.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:35)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.remote.internal.hub.MessageHub$Handler.run(MessageHub.java:377)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:54)
+	at org.gradle.internal.concurrent.StoppableExecutorImpl$1.run(StoppableExecutorImpl.java:40)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.RuntimeException: Boom!
+	at integration.IntegrationController.throwException(IntegrationController.java:53)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at griffon.util.MethodUtils.invokeMethod(MethodUtils.java:269)
+	at griffon.util.MethodUtils.invokeMethod(MethodUtils.java:215)
+	at griffon.util.GriffonClassUtils.invokeInstanceMethod(GriffonClassUtils.java:3029)
+	... 70 more
+[Test worker] WARN org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Property 'key' in controller (integration.SimpleController) must be annotated with @griffon.inject.MVCMember.
+[Test worker] WARN org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Property 'key' in controller (integration.SimpleController) must be annotated with @griffon.inject.MVCMember.
+[Test worker] WARN org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Property 'key' in controller (integration.SimpleController) must be annotated with @griffon.inject.MVCMember.
+[Test worker] WARN org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Property 'key' in controller (integration.SimpleController) must be annotated with @griffon.inject.MVCMember.
+[Test worker] WARN org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Property 'key' in controller (integration.SimpleController) must be annotated with @griffon.inject.MVCMember.
+[Test worker] WARN org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Property 'key' in controller (integration.SimpleController) must be annotated with @griffon.inject.MVCMember.
+[Test worker] WARN org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Property 'key' in controller (integration.SimpleController) must be annotated with @griffon.inject.MVCMember.
+[Test worker] WARN org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Property 'key' in controller (integration.SimpleController) must be annotated with @griffon.inject.MVCMember.
+[Test worker] WARN org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Property 'key' in controller (integration.SimpleController) must be annotated with @griffon.inject.MVCMember.
+[Test worker] WARN org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Property 'key' in controller (integration.SimpleController) must be annotated with @griffon.inject.MVCMember.
+[Test worker] WARN org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Property 'key' in controller (integration.SimpleController) must be annotated with @griffon.inject.MVCMember.
+[Test worker] WARN org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Property 'key' in controller (integration.SimpleController) must be annotated with @griffon.inject.MVCMember.
+[Test worker] INFO integration.TestGriffonApplication - Shutdown is in process
+]]></system-err>
+</testsuite>
