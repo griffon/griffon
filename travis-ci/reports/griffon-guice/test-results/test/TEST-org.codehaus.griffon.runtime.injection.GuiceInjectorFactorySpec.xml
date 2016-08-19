@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" tests="9" skipped="0" failures="0" errors="0" timestamp="2016-08-18T09:58:34" hostname="testing-gce-ebffe6ab-47c6-4829-a506-dd5f4e144ef6" time="1.535">
+<testsuite name="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" tests="9" skipped="0" failures="0" errors="0" timestamp="2016-08-19T07:56:01" hostname="localhost" time="1.745">
   <properties/>
-  <testcase name="Verify bindings" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="1.299"/>
-  <testcase name="Invalid bindings" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.109"/>
-  <testcase name="Non existent binding results in exception (1)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.021"/>
-  <testcase name="Non existent binding results in exception (2)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.02"/>
-  <testcase name="Closed injector throws exception (1)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.02"/>
-  <testcase name="Closed injector throws exception (2)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.015"/>
-  <testcase name="Closed injector throws exception (3)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.016"/>
-  <testcase name="Closed injector throws exception (4)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.016"/>
-  <testcase name="Closed injector throws exception (5)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.017"/>
+  <testcase name="Verify bindings" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="1.383"/>
+  <testcase name="Invalid bindings" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.095"/>
+  <testcase name="Non existent binding results in exception (1)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.059"/>
+  <testcase name="Non existent binding results in exception (2)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.032"/>
+  <testcase name="Closed injector throws exception (1)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.047"/>
+  <testcase name="Closed injector throws exception (2)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.029"/>
+  <testcase name="Closed injector throws exception (3)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.04"/>
+  <testcase name="Closed injector throws exception (4)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.028"/>
+  <testcase name="Closed injector throws exception (5)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.031"/>
   <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[Aug 18, 2016 9:58:35 AM com.google.inject.internal.MessageProcessor visit
-INFO: An exception was caught and reported. Message: java.lang.IllegalArgumentException: Don't know how to handle org.codehaus.griffon.runtime.injection.InvalidBinding@299172f6
-java.lang.IllegalArgumentException: Don't know how to handle org.codehaus.griffon.runtime.injection.InvalidBinding@299172f6
-	at org.codehaus.griffon.runtime.injection.GuiceInjector$1.configure(GuiceInjector.java:85)
+  <system-err><![CDATA[Aug 19, 2016 7:56:03 AM com.google.inject.internal.MessageProcessor visit
+INFO: An exception was caught and reported. Message: java.lang.IllegalArgumentException: Don't know how to handle org.codehaus.griffon.runtime.injection.InvalidBinding@68e20003
+java.lang.IllegalArgumentException: Don't know how to handle org.codehaus.griffon.runtime.injection.InvalidBinding@68e20003
+	at org.codehaus.griffon.runtime.injection.GuiceInjector$1.configure(Unknown Source)
 	at com.google.inject.AbstractModule.configure(AbstractModule.java:62)
 	at com.google.inject.spi.Elements$RecordingBinder.install(Elements.java:340)
 	at com.google.inject.spi.Elements.getElements(Elements.java:110)
@@ -22,9 +22,9 @@ java.lang.IllegalArgumentException: Don't know how to handle org.codehaus.griffo
 	at com.google.inject.internal.InternalInjectorCreator.build(InternalInjectorCreator.java:104)
 	at com.google.inject.Guice.createInjector(Guice.java:99)
 	at com.google.inject.Guice.createInjector(Guice.java:73)
-	at org.codehaus.griffon.runtime.injection.GuiceInjectorFactory.createModules(GuiceInjectorFactory.java:147)
-	at org.codehaus.griffon.runtime.injection.GuiceInjectorFactory.createInjector(GuiceInjectorFactory.java:69)
-	at org.codehaus.griffon.runtime.injection.GuiceInjectorFactory.createInjector(GuiceInjectorFactory.java:59)
+	at org.codehaus.griffon.runtime.injection.GuiceInjectorFactory.createModules(Unknown Source)
+	at org.codehaus.griffon.runtime.injection.GuiceInjectorFactory.createInjector(Unknown Source)
+	at org.codehaus.griffon.runtime.injection.GuiceInjectorFactory.createInjector(Unknown Source)
 	at griffon.core.injection.InjectorFactory$createInjector.call(Unknown Source)
 	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:48)
 	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:113)
