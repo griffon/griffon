@@ -16,8 +16,6 @@
 
 import java.text.SimpleDateFormat
 
-apply from: 'gradle/idea.gradle'
-
 buildscript {
     repositories {
         jcenter()
@@ -41,6 +39,16 @@ buildscript {
     }
 }
 
+plugins {
+    id 'com.gradle.build-scan' version '1.0'
+}
+
+buildScan {
+    licenseAgreementUrl = 'https://gradle.com/terms-of-service'
+    licenseAgree = 'yes'
+}
+
+apply from: 'gradle/idea.gradle'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 
