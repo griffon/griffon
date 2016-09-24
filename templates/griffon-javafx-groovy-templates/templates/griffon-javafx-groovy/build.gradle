@@ -68,6 +68,9 @@ dependencies {
     testCompile "org.codehaus.griffon:griffon-javafx-test:\${griffon.version}"
     testCompile "org.codehaus.groovy:groovy-all:\${groovyVersion}"
     testCompile "org.spockframework:spock-core:\${spockVersion}"
+    testCompile('org.awaitility:awaitility-groovy:2.0.0') {
+        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+    }
 
     functionalTestCompile "org.codehaus.griffon:griffon-javafx-test:\${griffon.version}"
 }

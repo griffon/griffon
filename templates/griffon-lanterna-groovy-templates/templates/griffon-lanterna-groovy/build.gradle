@@ -60,7 +60,10 @@ dependencies {
     runtime 'org.slf4j:slf4j-simple:1.7.21'
 
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
-    testCompile 'org.awaitility:awaitility-groovy:1.6.3'
+    testCompile('org.awaitility:awaitility-groovy:2.0.0') {
+        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+    }
+    testCompile 'org.codehaus.groovy:groovy-all:2.4.7'
 }
 
 task sourceJar(type: Jar) {
