@@ -15,23 +15,12 @@
  */
 package org.example.api;
 
-import retrofit2.Response;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.Url;
-import rx.Observable;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import javax.annotation.Nonnull;
-import java.util.List;
-
-public interface GithubAPI {
-    String GITHUB_API_URL_KEY = "GITHUB_API_URL_KEY";
-
-    @Nonnull
-    @GET("/orgs/{name}/repos")
-    Observable<Response<List<Repository>>> repositories(@Nonnull @Path("name") String name);
-
-    @Nonnull
-    @GET
-    Observable<Response<List<Repository>>> repositoriesPaginate(@Nonnull @Url String url);
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class HttpResponseException extends RuntimeException {
+    private final int code;
+    private final String message;
 }

@@ -16,6 +16,7 @@
 package org.example;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import griffon.core.event.EventHandler;
 import griffon.core.injection.Module;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.example.api.DefaultGithub;
@@ -46,5 +47,9 @@ public class ApplicationModule extends AbstractModule {
         bind(String.class)
             .withClassifier(named(GithubAPI.GITHUB_API_URL_KEY))
             .toInstance("https://api.github.com");
+
+        bind(EventHandler.class)
+            .to(ApplicationEventHandler.class)
+            .asSingleton();
     }
 }

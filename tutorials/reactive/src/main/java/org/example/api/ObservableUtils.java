@@ -15,7 +15,7 @@
  */
 package org.example.api;
 
-import retrofit.Response;
+import retrofit2.Response;
 import rx.Observable;
 
 import javax.annotation.Nonnull;
@@ -38,12 +38,15 @@ public final class ObservableUtils {
 
     private static <T> Observable<T> processPage(@Nonnull final NextPageSupplier<T> supplier, @Nonnull Observable<Response<List<T>>> items) {
         return items.flatMap(response -> {
-            Links links = Links.of(response.headers().get("Link"));
-            Observable<T> currentPage = Observable.from(response.body());
-            if (links.hasNext()) {
-                return currentPage.concatWith(processPage(supplier, supplier.get(links)));
+            if (response.isSuccessful()) {
+                Links links = Links.of(response.headers().get("Link"));
+                Observable<T> currentPage = Observable.from(response.body());
+                if (links.hasNext()) {
+                    return currentPage.concatWith(processPage(supplier, supplier.get(links)));
+                }
+                return currentPage;
             }
-            return currentPage;
+            return Observable.error(new HttpResponseException(response.code(), response.message()));
         });
     }
 

@@ -13,25 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.example.api;
+package org.example;
 
-import retrofit2.Response;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.Url;
-import rx.Observable;
+import griffon.core.event.Event;
+import lombok.Getter;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
-public interface GithubAPI {
-    String GITHUB_API_URL_KEY = "GITHUB_API_URL_KEY";
+import static java.util.Objects.requireNonNull;
 
-    @Nonnull
-    @GET("/orgs/{name}/repos")
-    Observable<Response<List<Repository>>> repositories(@Nonnull @Path("name") String name);
+public class ThrowableEvent extends Event {
+    @Getter
+    private final Throwable throwable;
 
-    @Nonnull
-    @GET
-    Observable<Response<List<Repository>>> repositoriesPaginate(@Nonnull @Url String url);
+    public ThrowableEvent(@Nonnull Object source, @Nonnull Throwable throwable) {
+        super(source);
+        this.throwable = requireNonNull(throwable, "throwable");
+    }
 }

@@ -53,10 +53,9 @@ public class ReactiveController extends AbstractGriffonController {
             .timeout(10, TimeUnit.SECONDS)
             .doOnSubscribe(() -> model.setState(RUNNING))
             .doOnTerminate(() -> model.setState(READY))
+            .doOnError(this::handleThrowable)
             .subscribeOn(Schedulers.io())
-            .subscribe(
-                model.getRepositories()::add,
-                Throwable::printStackTrace);
+            .subscribe(model.getRepositories()::add);
         model.setSubscription(subscription);
     }
 
@@ -65,5 +64,9 @@ public class ReactiveController extends AbstractGriffonController {
             model.getSubscription().unsubscribe();
             model.setState(READY);
         }
+    }
+
+    private void handleThrowable(@Nonnull Throwable throwable) {
+        getApplication().getEventRouter().publishEvent(new ThrowableEvent(this, throwable));
     }
 }

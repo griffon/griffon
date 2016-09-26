@@ -19,11 +19,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import griffon.inject.BindTo;
 import griffon.javafx.test.GriffonTestFXRule;
+import griffon.javafx.test.WindowMatchers;
 import javafx.scene.control.Button;
 import org.example.api.GithubAPI;
 import org.example.api.Repository;
+import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.testfx.service.support.WaitUntilSupport;
 
 import javax.inject.Inject;
@@ -44,6 +48,7 @@ import static org.testfx.matcher.base.NodeMatchers.isEnabled;
 import static org.testfx.matcher.control.LabeledMatchers.hasText;
 import static org.testfx.matcher.control.ListViewMatchers.hasItems;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ReactiveIntegration2Test {
     private static final String ORGANIZATION = "foo";
 
@@ -56,11 +61,12 @@ public class ReactiveIntegration2Test {
     @Inject private ObjectMapper objectMapper;
 
     @Test
-    public void happyPath() {
+    public void _01_happy_path() {
         // given:
         List<Repository> repositories = createSampleRepositories();
         stubFor(get(urlEqualTo("/orgs/" + ORGANIZATION + "/repos"))
             .willReturn(aResponse()
+                .withFixedDelay(200)
                 .withStatus(200)
                 .withHeader("Content-Type", "text/json")
                 .withBody(repositoriesAsJSON(repositories, objectMapper))));
@@ -80,6 +86,68 @@ public class ReactiveIntegration2Test {
         // then:
         verifyThat("#total", hasText("10"));
         verifyThat("#repositories", hasItems(10));
+    }
+
+    @Test
+    public void _02_cancel_path() throws Exception {
+        // given:
+        String nextUrl = "/organizations/1/repos?page=2";
+        List<Repository> repositories = createSampleRepositories();
+        stubFor(get(urlEqualTo("/orgs/" + ORGANIZATION + "/repos"))
+            .willReturn(aResponse()
+                .withFixedDelay(200)
+                .withStatus(200)
+                .withHeader("Content-Type", "text/json")
+                .withHeader("Link", "<http://localhost:8080" + nextUrl + ">; rel=\"next\"")
+                .withBody(repositoriesAsJSON(repositories.subList(0, 5), objectMapper))));
+        stubFor(get(urlEqualTo(nextUrl))
+            .willReturn(aResponse()
+                .withFixedDelay(200)
+                .withStatus(200)
+                .withHeader("Content-Type", "text/json")
+                .withBody(repositoriesAsJSON(repositories.subList(5, 10), objectMapper))));
+
+        // when:
+        testfx.clickOn("#organization")
+            .eraseText(ORGANIZATION.length())
+            .write(ORGANIZATION);
+        testfx.clickOn("#loadActionTarget");
+        testfx.clickOn("#cancelActionTarget");
+
+        // wait
+        Button loadButton = testfx.lookup("#loadActionTarget").query();
+        new WaitUntilSupport().waitUntil(loadButton, isEnabled(), 2);
+
+        // then:
+        verifyThat("#total", hasText("5"));
+        verifyThat("#repositories", hasItems(5));
+    }
+
+    @Test
+    public void _03_failure_path() {
+        // given:
+        String nextUrl = "/organizations/1/repos?page=2";
+        stubFor(get(urlEqualTo("/orgs/" + ORGANIZATION + "/repos"))
+            .willReturn(aResponse()
+                .withFixedDelay(200)
+                .withStatus(200)
+                .withHeader("Content-Type", "text/json")
+                .withHeader("Link", "<http://localhost:8080" + nextUrl + ">; rel=\"next\"")
+                .withBody(repositoriesAsJSON(createSampleRepositories().subList(0, 5), objectMapper))));
+        stubFor(get(urlEqualTo(nextUrl))
+            .willReturn(aResponse()
+                .withFixedDelay(200)
+                .withStatus(500)
+                .withStatusMessage("Internal Error")));
+
+        // when:
+        testfx.clickOn("#organization")
+            .eraseText(ORGANIZATION.length())
+            .write(ORGANIZATION);
+        testfx.clickOn("#loadActionTarget");
+
+        // then:
+        new WaitUntilSupport().waitUntil(testfx.window("Error"), WindowMatchers.isShowing(), 5);
     }
 
     @BindTo(String.class)

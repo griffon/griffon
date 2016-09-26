@@ -16,9 +16,9 @@
 package org.example.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import retrofit.JacksonConverterFactory;
-import retrofit.Retrofit;
-import retrofit.RxJavaCallAdapterFactory;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;

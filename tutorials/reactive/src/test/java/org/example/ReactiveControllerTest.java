@@ -16,28 +16,37 @@
 package org.example;
 
 import griffon.core.artifact.ArtifactManager;
+import griffon.core.event.EventHandler;
 import griffon.core.test.GriffonUnitRule;
 import griffon.core.test.TestFor;
 import griffon.inject.BindTo;
 import javafx.embed.swing.JFXPanel;
+import lombok.Getter;
 import org.example.api.Github;
 import org.example.api.Repository;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import rx.Observable;
 
 import javax.inject.Inject;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @TestFor(ReactiveController.class)
 public class ReactiveControllerTest {
+    private static final String ORGANIZATION = "griffon";
+
     static {
         new JFXPanel();
     }
@@ -61,22 +70,53 @@ public class ReactiveControllerTest {
             .build();
 
         // expectations
-        when(github.repositories("griffon")).thenReturn(Observable.just(repository));
+        when(github.repositories(ORGANIZATION)).thenReturn(Observable.just(repository));
 
         // expect:
         assertThat(model.getRepositories().size(), is(0));
 
         // when:
-        model.setOrganization("griffon");
+        model.setOrganization(ORGANIZATION);
         controller.load();
         await().until(() -> model.getState() == State.READY);
 
         // then:
         assertThat(model.getRepositories().size(), is(1));
         assertThat(model.getRepositories(), hasItem(repository));
-        verify(github).repositories("griffon");
+        verify(github).repositories(ORGANIZATION);
+    }
+
+    @Test
+    public void failurePath() {
+        // given:
+        final ReactiveModel model = artifactManager.newInstance(ReactiveModel.class);
+        controller.setModel(model);
+        RuntimeException exception = new RuntimeException("boom");
+        when(github.repositories(ORGANIZATION)).thenReturn(Observable.error(exception));
+
+        // when:
+        model.setOrganization(ORGANIZATION);
+        controller.load();
+        await().timeout(2, SECONDS).until(model::getState, equalTo(State.READY));
+
+        // then:
+        Assert.assertThat(model.getRepositories(), hasSize(0));
+        Assert.assertThat(eventHandler.getEvent().getThrowable(), equalTo(exception));
+        verify(github, only()).repositories(ORGANIZATION);
     }
 
     @BindTo(Github.class)
     private final Github github = mock(Github.class);
+
+    public static class ApplicationEventHandlerStub implements EventHandler {
+        @Getter
+        private ThrowableEvent event;
+
+        public void onThrowableEvent(ThrowableEvent event) {
+            this.event = event;
+        }
+    }
+
+    @BindTo(EventHandler.class)
+    private final ApplicationEventHandlerStub eventHandler = new ApplicationEventHandlerStub();
 }
