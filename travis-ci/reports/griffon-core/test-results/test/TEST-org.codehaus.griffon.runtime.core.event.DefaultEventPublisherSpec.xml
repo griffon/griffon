@@ -1,44 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" tests="38" skipped="0" failures="0" errors="0" timestamp="2016-09-19T16:09:13" hostname="testing-gce-35a66135-6c2a-47ae-8ae7-79d60611b2ca" time="2.024">
+<testsuite name="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" tests="38" skipped="0" failures="1" errors="0" timestamp="2016-09-26T20:13:04" hostname="testing-gce-303f44f5-ed88-4ffd-abbc-8239ce873565" time="2.312">
   <properties/>
-  <testcase name="Invoking an event by name in synchronous mode with a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.079"/>
-  <testcase name="Invoking an event by name in asynchronous mode with a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.207"/>
-  <testcase name="Invoking an event by name in outside mode with a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.006"/>
-  <testcase name="Invoking an event by name in synchronous mode with a runnable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.004"/>
-  <testcase name="Invoking an event by name in asynchronous mode with a runnable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.205"/>
-  <testcase name="Invoking an event by name in outside mode with a runnable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.001"/>
-  <testcase name="Invoking an event by name in synchronous mode with a Map listener (callable)" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.005"/>
-  <testcase name="Invoking an event by name in asynchronous mode with a Map listener (callable)" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.202"/>
+  <testcase name="Invoking an event by name in synchronous mode with a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.091"/>
+  <testcase name="Invoking an event by name in asynchronous mode with a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.476">
+    <failure message="Condition not satisfied:&#10;&#10;eventHandler.args == [1, 'one']&#10;|            |    |&#10;|            []   false&#10;org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestCallableEventHandler@2e7aef3f&#10;" type="org.spockframework.runtime.SpockComparisonFailure">Condition not satisfied:
+
+eventHandler.args == [1, 'one']
+|            |    |
+|            []   false
+org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestCallableEventHandler@2e7aef3f
+
+	at org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec.Invoking an event by name in asynchronous mode with a callable listener(DefaultEventPublisherSpec.groovy:87)
+</failure>
+  </testcase>
+  <testcase name="Invoking an event by name in outside mode with a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.01"/>
+  <testcase name="Invoking an event by name in synchronous mode with a runnable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.006"/>
+  <testcase name="Invoking an event by name in asynchronous mode with a runnable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.208"/>
+  <testcase name="Invoking an event by name in outside mode with a runnable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.002"/>
+  <testcase name="Invoking an event by name in synchronous mode with a Map listener (callable)" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.002"/>
+  <testcase name="Invoking an event by name in asynchronous mode with a Map listener (callable)" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.205"/>
   <testcase name="Invoking an event by name in outside mode with a Map listener (callable)" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.001"/>
   <testcase name="Invoking an event by name in synchronous mode with a Map listener (runnable)" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.001"/>
-  <testcase name="Invoking an event by name in asynchronous mode with a Map listener (runnable)" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.202"/>
+  <testcase name="Invoking an event by name in asynchronous mode with a Map listener (runnable)" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.204"/>
   <testcase name="Invoking an event by name in outside mode with a Map listener (runnable)" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.002"/>
-  <testcase name="Invoking an event by name in synchronous mode with a bean listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.012"/>
-  <testcase name="Invoking an event by name in asynchronous mode with a bean listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.208"/>
-  <testcase name="Invoking an event by name in outside mode with a bean listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.002"/>
-  <testcase name="Invoking an event in synchronous mode with a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.005"/>
-  <testcase name="Invoking an event in asynchronous mode with a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.203"/>
-  <testcase name="Invoking an event in outside mode with a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.003"/>
-  <testcase name="Invoking an event in synchronous mode with a runnable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.002"/>
-  <testcase name="Invoking an event in asynchronous mode with a runnable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.207"/>
+  <testcase name="Invoking an event by name in synchronous mode with a bean listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.008"/>
+  <testcase name="Invoking an event by name in asynchronous mode with a bean listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.203"/>
+  <testcase name="Invoking an event by name in outside mode with a bean listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.003"/>
+  <testcase name="Invoking an event in synchronous mode with a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.004"/>
+  <testcase name="Invoking an event in asynchronous mode with a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.202"/>
+  <testcase name="Invoking an event in outside mode with a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.002"/>
+  <testcase name="Invoking an event in synchronous mode with a runnable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.003"/>
+  <testcase name="Invoking an event in asynchronous mode with a runnable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.208"/>
   <testcase name="Invoking an event in outside mode with a runnable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.001"/>
   <testcase name="Invoking an event in synchronous mode with a Map listener (callable)" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.001"/>
   <testcase name="Invoking an event in asynchronous mode with a Map listener (callable)" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.202"/>
   <testcase name="Invoking an event in outside mode with a Map listener (callable)" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.002"/>
   <testcase name="Invoking an event in synchronous mode with a Map listener (runnable)" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.001"/>
-  <testcase name="Invoking an event in asynchronous mode with a Map listener (runnable)" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.201"/>
-  <testcase name="Invoking an event in outside mode with a Map listener (runnable)" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.001"/>
+  <testcase name="Invoking an event in asynchronous mode with a Map listener (runnable)" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.203"/>
+  <testcase name="Invoking an event in outside mode with a Map listener (runnable)" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.002"/>
   <testcase name="Register and unregister a callable listener by name" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.002"/>
-  <testcase name="Register and unregister a runnable listener by name" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.001"/>
+  <testcase name="Register and unregister a runnable listener by name" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.003"/>
   <testcase name="Register and unregister a Map listener by name (callable)" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.002"/>
-  <testcase name="Register and unregister a Map listener by name (runnable)" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.001"/>
-  <testcase name="Register and unregister a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.001"/>
-  <testcase name="Register and unregister a runnable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.003"/>
-  <testcase name="Register and unregister a bean listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.005"/>
-  <testcase name="Register and unregister a bean listener with nested listeners" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.012"/>
-  <testcase name="Register and unregister an invalid bean listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.002"/>
-  <testcase name="Triggering an event with event published disabled does not notify listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.002"/>
-  <testcase name="Query existing listeners by event name" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.004"/>
+  <testcase name="Register and unregister a Map listener by name (runnable)" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.006"/>
+  <testcase name="Register and unregister a callable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.002"/>
+  <testcase name="Register and unregister a runnable listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.005"/>
+  <testcase name="Register and unregister a bean listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.003"/>
+  <testcase name="Register and unregister a bean listener with nested listeners" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.016"/>
+  <testcase name="Register and unregister an invalid bean listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.003"/>
+  <testcase name="Triggering an event with event published disabled does not notify listener" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.004"/>
+  <testcase name="Query existing listeners by event name" classname="org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec" time="0.006"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
