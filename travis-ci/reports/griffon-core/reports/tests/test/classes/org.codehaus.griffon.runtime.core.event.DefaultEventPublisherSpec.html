@@ -29,7 +29,7 @@
 </td>
 <td>
 <div class="infoBox" id="failures">
-<div class="counter">1</div>
+<div class="counter">0</div>
 <p>failures</p>
 </div>
 </td>
@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">2.305s</div>
+<div class="counter">1.974s</div>
 <p>duration</p>
 </div>
 </td>
@@ -50,8 +50,8 @@
 </div>
 </td>
 <td>
-<div class="infoBox failures" id="successRate">
-<div class="percent">97%</div>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
 <p>successful</p>
 </div>
 </td>
@@ -61,31 +61,10 @@
 <div id="tabs">
 <ul class="tabLinks">
 <li>
-<a href="#tab0">Failed tests</a>
-</li>
-<li>
-<a href="#tab1">Tests</a>
+<a href="#tab0">Tests</a>
 </li>
 </ul>
 <div id="tab0" class="tab">
-<h2>Failed tests</h2>
-<div class="test">
-<a name="Invoking an event by name in asynchronous mode with a callable listener"></a>
-<h3 class="failures">Invoking an event by name in asynchronous mode with a callable listener</h3>
-<span class="code">
-<pre>Condition not satisfied:
-
-eventHandler.args == [1, 'one']
-|            |    |
-|            []   false
-org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestCallableEventHandler@2e7aef3f
-
-	at org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec.Invoking an event by name in asynchronous mode with a callable listener(DefaultEventPublisherSpec.groovy:87)
-</pre>
-</span>
-</div>
-</div>
-<div id="tab1" class="tab">
 <h2>Tests</h2>
 <table>
 <thead>
@@ -97,27 +76,27 @@ org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestCallableEv
 </thead>
 <tr>
 <td class="success">Invoking an event by name in asynchronous mode with a Map listener (callable)</td>
-<td>0.205s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Invoking an event by name in asynchronous mode with a Map listener (runnable)</td>
 <td>0.204s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">Invoking an event by name in asynchronous mode with a bean listener</td>
+<td class="success">Invoking an event by name in asynchronous mode with a Map listener (runnable)</td>
 <td>0.203s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="failures">Invoking an event by name in asynchronous mode with a callable listener</td>
-<td>0.476s</td>
-<td class="failures">failed</td>
+<td class="success">Invoking an event by name in asynchronous mode with a bean listener</td>
+<td>0.204s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Invoking an event by name in asynchronous mode with a callable listener</td>
+<td>0.208s</td>
+<td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Invoking an event by name in asynchronous mode with a runnable listener</td>
-<td>0.208s</td>
+<td>0.205s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -127,22 +106,22 @@ org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestCallableEv
 </tr>
 <tr>
 <td class="success">Invoking an event by name in outside mode with a Map listener (runnable)</td>
-<td>0.002s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Invoking an event by name in outside mode with a bean listener</td>
-<td>0.003s</td>
+<td>0.002s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Invoking an event by name in outside mode with a callable listener</td>
-<td>0.010s</td>
+<td>0.004s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Invoking an event by name in outside mode with a runnable listener</td>
-<td>0.002s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -162,12 +141,12 @@ org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestCallableEv
 </tr>
 <tr>
 <td class="success">Invoking an event by name in synchronous mode with a callable listener</td>
-<td>0.091s</td>
+<td>0.072s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Invoking an event by name in synchronous mode with a runnable listener</td>
-<td>0.006s</td>
+<td>0.007s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -177,7 +156,7 @@ org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestCallableEv
 </tr>
 <tr>
 <td class="success">Invoking an event in asynchronous mode with a Map listener (runnable)</td>
-<td>0.203s</td>
+<td>0.204s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -187,7 +166,7 @@ org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestCallableEv
 </tr>
 <tr>
 <td class="success">Invoking an event in asynchronous mode with a runnable listener</td>
-<td>0.208s</td>
+<td>0.203s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -197,7 +176,7 @@ org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestCallableEv
 </tr>
 <tr>
 <td class="success">Invoking an event in outside mode with a Map listener (runnable)</td>
-<td>0.002s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -212,27 +191,27 @@ org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestCallableEv
 </tr>
 <tr>
 <td class="success">Invoking an event in synchronous mode with a Map listener (callable)</td>
-<td>0.001s</td>
+<td>0.002s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Invoking an event in synchronous mode with a Map listener (runnable)</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Invoking an event in synchronous mode with a callable listener</td>
-<td>0.004s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Invoking an event in synchronous mode with a runnable listener</td>
 <td>0.003s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
+<td class="success">Invoking an event in synchronous mode with a runnable listener</td>
+<td>0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
 <td class="success">Query existing listeners by event name</td>
-<td>0.006s</td>
+<td>0.003s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -242,17 +221,17 @@ org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestCallableEv
 </tr>
 <tr>
 <td class="success">Register and unregister a Map listener by name (runnable)</td>
-<td>0.006s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Register and unregister a bean listener</td>
-<td>0.003s</td>
+<td>0.002s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Register and unregister a bean listener with nested listeners</td>
-<td>0.016s</td>
+<td>0.011s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -267,22 +246,22 @@ org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestCallableEv
 </tr>
 <tr>
 <td class="success">Register and unregister a runnable listener</td>
-<td>0.005s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Register and unregister a runnable listener by name</td>
-<td>0.003s</td>
+<td>0.002s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Register and unregister an invalid bean listener</td>
-<td>0.003s</td>
+<td>0.002s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Triggering an event with event published disabled does not notify listener</td>
-<td>0.004s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -295,7 +274,7 @@ org.codehaus.griffon.runtime.core.event.DefaultEventPublisherSpec$TestCallableEv
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 3.1</a> at Sep 26, 2016 8:13:12 PM</p>
+<a href="http://www.gradle.org">Gradle 3.1</a> at Sep 26, 2016 8:27:27 PM</p>
 </div>
 </div>
 </body>
