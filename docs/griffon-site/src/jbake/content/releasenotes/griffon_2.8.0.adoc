@@ -1,0 +1,105 @@
+= Griffon 2.8.0 Release Notes
+Andres Almiray
+2016-09-29
+:jbake-type: post
+:jbake-status: published
+:category: releasenotes
+:idprefix:
+:linkattrs:
+:path-griffon-core: /guide/2.8.0/api/griffon/core
+
+== Griffon 2.8.0 Release Notes
+
+=== Dependencies
+
+The following dependencies have been upgraded
+
+ * org.awaitility:awaitility:2.0.0
+ * org.awaitility:awaitility-groovy:2.0.0
+ * org.jetbrains.kotlin:kotlin-stdlib:1.0.4
+
+=== Runtime
+
+==== Identify MVC Members and Arguments
+
+Starting with this release you may annotate MVC members and arguments with `@griffon.inject.MVCMember`. This annotation
+servers as a hint to the Griffon runtime when paired with `@javax.annotation.Nonnull`. In this way the runtime can validate
+if all MVC members and MVC arguments have been supplied. You may annotate the field or the property setter, like so
+
+[source,java]
+----
+import griffon.core.artifact.GriffonController;
+import griffon.inject.MVCMember;
+import griffon.metadata.ArtifactProviderFor;
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import javax.annotation.Nonnull;
+
+@ArtifactProviderFor(GriffonController.class)
+public class SampleController extends AbstractGriffonController {
+    private SampleModel model;
+
+    @MVCMember @Nonnull
+    private String anMvcArgument;
+
+    @MVCMember
+    public void setModel(@Nonnull SampleModel model) {
+        this.model = model;
+    }
+}
+----
+
+==== Finding Multiple Elements in the Node Graph
+
+You can now search for multiple elements inside the Node Graph (including those that are not subtypes of `javafx.scene.Node`
+such as `Tab` and  `MenutItem`) using a `predicate`, for example, finding all nodes that have a custom property named `tag` with
+value `tag1`
+
+[source,groovy]
+----
+JavaFXUtils.findElements(container) { e ->
+    e.properties.tag == 'tag1'
+}
+----
+
+==== Multiple Action Targets in FXML
+
+It's now possible to target multiple elements for a particular aciton using FXML. Instead of using an `fx:id` entry that follows
+the naming convetion `<action>ActionTarget` simply use a static synthetic property: `JavaFXUtils.griffonActionId`. For example
+
+[xml]
+[subs="attributes,verbatim"]
+----
+<?import griffon.javafx.support.JavaFXUtils?>
+...
+<VBox>
+    <MenuBar>
+        <Menu text="File"/>
+            <MenuItem JavaFXUtils.griffonActionId="cut"/>
+            <MenuItem JavaFXUtils.griffonActionId="copy"/>
+            <MenuItem JavaFXUtils.griffonActionId="paste"/>
+    </MenuBar>
+    <ToolBar>
+        <Button JavaFXUtils.griffonActionId="cut"/>
+        <Button JavaFXUtils.griffonActionId="copy"/>
+        <Button JavaFXUtils.griffonActionId="paste"/>
+    </ToolBar>
+</VBox>
+----
+
+The previous code assumes the correspoding controller has defined the following actions: `cut`, `copy`, and `paste`.
+
+=== Buildtime
+
+==== Gradle Version
+
+All project templates have been upgraded to use Gradle 3.1 but usage of Gradle 3.0 is still possible.
+Be advised that usage of Gradle 2.x may bring some incompatibilities, as some tasks have been renamed or removed,
+such as the `installApp` that was renamed to `installDist`.
+
+=== Compatibility
+
+Full binary compatibility report between Griffon 2.8.0 and 2.7.0 can be found
+link:../reports/2.8.0/compatibility-report.html[here].
+
+A list of fixed issues can be found at the
+link:https://github.com/griffon/griffon/issues?q=milestone%3A2.8.0+is%3Aclosed[2.8.0 milestone] page.

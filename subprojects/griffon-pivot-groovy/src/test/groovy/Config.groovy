@@ -20,6 +20,9 @@ windowManager {
         hide: { name, window ->
             window.title = 'hidden'
             window.close()
+        },
+        show: { name, window ->
+            window.title = 'shown'
         }
     ]
 }

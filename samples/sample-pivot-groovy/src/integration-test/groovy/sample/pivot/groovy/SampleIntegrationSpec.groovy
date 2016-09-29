@@ -21,8 +21,8 @@ import org.apache.pivot.wtk.TextInput
 import org.junit.Rule
 import spock.lang.Specification
 
-import static com.jayway.awaitility.Awaitility.await
 import static java.util.concurrent.TimeUnit.SECONDS
+import static org.awaitility.Awaitility.await
 
 class SampleIntegrationSpec extends Specification {
     static {

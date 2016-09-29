@@ -16,6 +16,7 @@
 package org.example.calculator;
 
 import griffon.core.artifact.GriffonView;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.util.CollectionUtils;
 import javafx.fxml.FXML;
@@ -41,7 +42,8 @@ public class CalculatorView extends AbstractJavaFXGriffonView {
 
     private CalculatorController controller;
 
-    public void setController(CalculatorController controller) {
+    @MVCMember
+    public void setController(@Nonnull CalculatorController controller) {
         this.controller = controller;
     }
 

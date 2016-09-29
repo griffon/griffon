@@ -23,8 +23,6 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.example.api.Repository;
@@ -66,7 +64,7 @@ public class ReactiveModel extends AbstractGriffonModel {
     @Nonnull
     public StringProperty organizationProperty() {
         if (organization == null) {
-            organization = new SimpleStringProperty(this, "organization", "griffon");
+            organization = new SimpleStringProperty(this, "organization");
         }
         return organization;
     }
@@ -104,7 +102,7 @@ public class ReactiveModel extends AbstractGriffonModel {
     @Nonnull
     public IntegerProperty limitProperty() {
         if (limit == null) {
-            limit = new SimpleIntegerProperty(this, "limit", 10);
+            limit = new SimpleIntegerProperty(this, "limit");
         }
         return limit;
     }

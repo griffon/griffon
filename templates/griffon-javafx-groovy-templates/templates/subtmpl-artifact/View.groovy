@@ -1,11 +1,15 @@
 package ${project_package}
 
 import griffon.core.artifact.GriffonView
+import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
+import javax.annotation.Nonnull
 
 @ArtifactProviderFor(GriffonView)
 class ${project_class_name}View {
+    @MVCMember @Nonnull
     FactoryBuilderSupport builder
+    @MVCMember @Nonnull
     ${project_class_name}Model model
 
     void initUI() {

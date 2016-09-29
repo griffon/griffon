@@ -17,15 +17,18 @@ package org.example
 
 import griffon.core.artifact.GriffonView
 import griffon.javafx.support.fontawesome.FontAwesomeIcon
+import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 import griffon.plugins.fontawesome.FontAwesome
 import javafx.scene.control.Tab
 
+import javax.annotation.Nonnull
+
 @ArtifactProviderFor(GriffonView)
 class Tab3View {
-    FactoryBuilderSupport builder
-    SampleModel model
-    AppView parentView
+    @MVCMember @Nonnull FactoryBuilderSupport builder
+    @MVCMember @Nonnull SampleModel model
+    @MVCMember @Nonnull AppView parentView
 
     void initUI() {
         builder.with {

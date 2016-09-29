@@ -16,8 +16,10 @@
 package editor
 
 import griffon.core.artifact.GriffonView
+import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 
+import javax.annotation.Nonnull
 import javax.swing.event.ChangeListener
 import java.awt.BorderLayout
 
@@ -25,8 +27,10 @@ import static griffon.util.GriffonApplicationUtils.isMacOSX
 
 @ArtifactProviderFor(GriffonView)
 class ContainerView {
-    def builder
-    def model
+    @MVCMember @Nonnull
+    FactoryBuilderSupport builder
+    @MVCMember @Nonnull
+    ContainerModel model
 
     void initUI() {
         builder.with {

@@ -16,9 +16,11 @@
 package editor;
 
 import griffon.core.artifact.GriffonView;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView;
 
+import javax.annotation.Nonnull;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
@@ -28,8 +30,11 @@ import java.util.Objects;
 
 @ArtifactProviderFor(GriffonView.class)
 public class EditorView extends AbstractSwingGriffonView {
+    @MVCMember @Nonnull
     private EditorModel model;
+    @MVCMember @Nonnull
     private ContainerView parentView;
+    @MVCMember @Nonnull
     private String tabName;
 
     private JScrollPane tab;

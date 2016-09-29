@@ -18,10 +18,12 @@ package sample
 import groovy.sql.Sql
 import java.awt.event.ActionEvent
 import griffon.core.artifact.GriffonController
+import griffon.inject.MVCMember
+import javax.annotation.Nonnull
 
 @griffon.metadata.ArtifactProviderFor(GriffonController)
 class BadController {
-    def model
+    @MVCMember @Nonnull def model
 
     void badAction(ActionEvent evt = null) {
         def sql = Sql.newInstance(
@@ -57,10 +59,12 @@ package sample
 import groovy.sql.Sql
 import java.awt.event.ActionEvent
 import griffon.core.artifact.GriffonController
+import griffon.inject.MVCMember
+import javax.annotation.Nonnull
 
 @griffon.metadata.ArtifactProviderFor(GriffonController)
 class GoodController {
-    def model
+    @MVCMember @Nonnull def model
 
     void goodAction(ActionEvent evt = null) {                           //<1>
         def sql = Sql.newInstance(

@@ -11,9 +11,9 @@ buildscript {
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
         classpath 'com.github.cr0:gradle-macappbundle-plugin:3.1.0'
         classpath 'org.kordamp.gradle:stats-gradle-plugin:0.2.0'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
         classpath 'de.gliderpilot.gradle.jnlp:gradle-jnlp-plugin:0.2.1'
-        classpath 'net.nemerosa:versioning:2.1.0'
+        classpath 'net.nemerosa:versioning:2.4.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:\$kotlinVersion"
     }
 }
@@ -71,6 +71,13 @@ dependencies {
     testCompile "org.spockframework:spock-core:\${spockVersion}"
 
     functionalTestCompile "org.codehaus.griffon:griffon-javafx-test:\${griffonVersion}"
+}
+
+task sourceJar(type: Jar) {
+    group 'Build'
+    description 'An archive of the source code'
+    classifier 'sources'
+    from sourceSets.main.allSource
 }
 
 kapt {

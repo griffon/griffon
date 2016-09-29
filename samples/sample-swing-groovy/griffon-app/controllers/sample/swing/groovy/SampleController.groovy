@@ -16,12 +16,15 @@
 package sample.swing.groovy
 
 import griffon.core.artifact.GriffonController
+import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 
+import javax.annotation.Nonnull
 import javax.inject.Inject
 
 @ArtifactProviderFor(GriffonController)
 class SampleController {
+    @MVCMember @Nonnull
     SampleModel model                                                      //<1>
 
     @Inject

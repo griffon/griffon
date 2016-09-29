@@ -15,17 +15,23 @@
  */
 package org.example.api;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import griffon.metadata.TypeProviderFor;
 import lombok.Builder;
+import lombok.Data;
+import lombok.Setter;
 
-@TypeProviderFor(JsonEntity.class)
+@Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Repository implements Comparable<Repository> {
+@TypeProviderFor(JsonEntity.class)
+public class Repository implements Comparable<Repository>, JsonEntity {
     private String name;
-    private String fullName;
     private String description;
+    @Setter(onMethod = @__({@JsonProperty("full_name")}))
+    private String fullName;
+    @Setter(onMethod = @__({@JsonProperty("html_url")}))
     private String htmlUrl;
 
     @Builder
@@ -38,40 +44,6 @@ public class Repository implements Comparable<Repository> {
         return repository;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @JsonProperty("full_name")
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    @JsonProperty("html_url")
-    public String getHtmlUrl() {
-        return htmlUrl;
-    }
-
-    public void setHtmlUrl(String htmlUrl) {
-        this.htmlUrl = htmlUrl;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     @Override
     public String toString() {
         return fullName;
@@ -79,7 +51,7 @@ public class Repository implements Comparable<Repository> {
 
     @Override
     public int compareTo(Repository other) {
-        if (other == null || !(other instanceof Repository)) return 1;
+        if (other == null) { return 1; }
         return name.compareTo(other.name);
     }
 }

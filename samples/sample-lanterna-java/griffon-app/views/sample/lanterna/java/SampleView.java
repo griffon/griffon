@@ -20,11 +20,13 @@ import com.googlecode.lanterna.gui.component.Label;
 import com.googlecode.lanterna.gui.component.Panel;
 import com.googlecode.lanterna.gui.component.TextBox;
 import griffon.core.artifact.GriffonView;
+import griffon.inject.MVCMember;
 import griffon.lanterna.support.LanternaAction;
 import griffon.lanterna.widgets.MutableButton;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.lanterna.artifact.AbstractLanternaGriffonView;
 
+import javax.annotation.Nonnull;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
@@ -34,11 +36,13 @@ public class SampleView extends AbstractLanternaGriffonView {
     private SampleController controller;                                         //<1>
     private SampleModel model;                                                   //<1>
 
-    public void setController(SampleController controller) {
+    @MVCMember
+    public void setController(@Nonnull SampleController controller) {
         this.controller = controller;
     }
 
-    public void setModel(SampleModel model) {
+    @MVCMember
+    public void setModel(@Nonnull SampleModel model) {
         this.model = model;
     }
 

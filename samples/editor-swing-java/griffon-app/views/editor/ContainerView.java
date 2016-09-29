@@ -17,9 +17,11 @@ package editor;
 
 import griffon.core.artifact.GriffonView;
 import griffon.core.controller.Action;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -44,7 +46,9 @@ import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
 @ArtifactProviderFor(GriffonView.class)
 public class ContainerView extends AbstractSwingGriffonView {
+    @MVCMember @Nonnull
     private ContainerModel model;
+    @MVCMember @Nonnull
     private ContainerController controller;
 
     private JTabbedPane tabGroup;

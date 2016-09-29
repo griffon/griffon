@@ -10,10 +10,12 @@ without so much effort. The following code
 import griffon.transform.ChangeListener
 import griffon.transform.FXObservable
 import griffon.core.artifact.GriffonModel
+import griffon.inject.MVCMember
+import javax.annotation.Nonnull
 
 @griffon.metadata.ArtifactProviderFor(GriffonModel)
 class SampleModel {
-    def controller
+    @MVCMember @Nonnull SampleController controller
 
     @FXObservable
     @ChangeListener(snoopAll)
@@ -34,10 +36,12 @@ is equivalent to this one:
 import javafx.beans.value.ChangeListener
 import griffon.transform.FXObservable
 import griffon.core.artifact.GriffonModel
+import griffon.inject.MVCMember
+import javax.annotation.Nonnull
 
 @griffon.metadata.ArtifactProviderFor(GriffonModel)
 class SampleModel {
-    def controller
+    @MVCMember @Nonnull SampleController controller
 
     @FXObservable String name
     @FXObservable String lastname

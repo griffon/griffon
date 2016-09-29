@@ -15,6 +15,7 @@
  */
 package integration;
 
+import griffon.inject.MVCMember;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import javax.annotation.Nonnull;
@@ -24,10 +25,12 @@ public class RootController extends AbstractGriffonController {
     private RootModel model;
     private RootView view;
 
+    @MVCMember
     public void setModel(RootModel model) {
         this.model = model;
     }
 
+    @MVCMember
     public void setView(RootView view) {
         this.view = view;
     }

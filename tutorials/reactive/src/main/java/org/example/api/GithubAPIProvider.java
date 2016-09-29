@@ -16,24 +16,28 @@
 package org.example.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import retrofit.JacksonConverterFactory;
-import retrofit.Retrofit;
-import retrofit.RxJavaCallAdapterFactory;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 
 public class GithubAPIProvider implements Provider<GithubAPI> {
+    @Inject
+    @Named(GithubAPI.GITHUB_API_URL_KEY)
+    private String githubApiUrl;
+
     @Inject private ObjectMapper objectMapper;
 
     @Override
     public GithubAPI get() {
-        Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://api.github.com")
+        return new Retrofit.Builder()
+            .baseUrl(githubApiUrl)
             .addConverterFactory(JacksonConverterFactory.create(objectMapper))
             .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-            .build();
-
-        return retrofit.create(GithubAPI.class);
+            .build()
+            .create(GithubAPI.class);
     }
 }

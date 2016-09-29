@@ -19,13 +19,15 @@ package sample
 
 import griffon.core.artifact.GriffonView
 import griffon.core.env.Metadata
+import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 
+import javax.annotation.Nonnull
 import javax.inject.Inject
 
 @ArtifactProviderFor(GriffonView)
 class SampleView {
-    FactoryBuilderSupport builder
+    @MVCMember @Nonnull FactoryBuilderSupport builder
 
     @Inject Metadata metadata
 
@@ -110,13 +112,15 @@ package sample
 import griffon.core.artifact.GriffonView
 import griffon.core.env.Metadata
 import griffon.core.env.Environment
+import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 
+import javax.annotation.Nonnull
 import javax.inject.Inject
 
 @ArtifactProviderFor(GriffonView)
 class SampleView {
-    FactoryBuilderSupport builder
+    @MVCMember @Nonnull FactoryBuilderSupport builder
 
     @Inject Metadata metadata
     @Inject Environment environment
@@ -166,14 +170,16 @@ package sample
 import griffon.core.artifact.GriffonView
 import griffon.core.env.Metadata
 import griffon.core.env.Environment
+import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 import static griffon.core.env.GriffonEnvironment.*
 
+import javax.annotation.Nonnull
 import javax.inject.Inject
 
 @ArtifactProviderFor(GriffonView)
 class SampleView {
-    FactoryBuilderSupport builder
+    @MVCMember @Nonnull FactoryBuilderSupport builder
 
     @Inject Metadata metadata
     @Inject Environment environment

@@ -13,10 +13,12 @@ in Groovy you'd write
 package sample
 
 import griffon.core.artifact.GriffonController
+import griffon.inject.MVCMember
+import javax.annotation.Nonnull
 
 @griffon.metadata.ArtifactProviderFor(GriffonController)
 class SampleController {
-    def model
+    @MVCMember @Nonnull SampleModel model
 
     void click() {
         model.clickCount++
@@ -31,12 +33,15 @@ The corresponding code for Java 8 would be
 package sample;
 
 import griffon.core.artifact.GriffonController;
+import griffon.inject.MVCMember;
+import javax.annotation.Nonnull;
 
 @griffon.metadata.ArtifactProviderFor(GriffonController.class)
 public class SampleController {
     private SampleModel model;
 
-    public void setModel(SampleModel model) {
+    @MVCMember
+    public void setModel(@Nonnull SampleModel model) {
         this.model = model;
     }
 
@@ -65,11 +70,13 @@ making use of the configured `clickAction` from `SampleController`:
 package sample
 
 import griffon.core.artifact.GriffonView
+import griffon.inject.MVCMember
+import javax.annotation.Nonnull
 
 @griffon.metadata.ArtifactProviderFor(GriffonView)
 class SampleView {
-    FactoryBuilderSupport builder
-    SampleModel model
+    @MVCMember @Nonnull FactoryBuilderSupport builder
+    @MVCMember @Nonnull SampleModel model
 
     void initUI() {
         builder.with {

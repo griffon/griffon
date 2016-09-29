@@ -10,10 +10,10 @@ javadoc {
     options.docTitle    = "\$project.name \$project.version API"
     options.footer      = javadocFooter
     options.links       = ['http://www.slf4j.org/apidocs/',
-                           'http://junit.org/javadoc/latest/',
+                           'http://junit.org/junit4/javadoc/latest/',
                            'http://docs.oracle.com/javase/7/docs/api/',
-                           'http://jsr-305.googlecode.com/svn/trunk/javadoc/',
-                           'http://atinject.googlecode.com/svn/trunk/javadoc/',
+                           'http://static.javadoc.io/com.google.code.findbugs/jsr305/3.0.1/',
+                           'http://static.javadoc.io/javax.inject/javax.inject/1/',
                            'http://griffon-framework.org/guide/latest/api/']
 
     doLast { task ->
@@ -41,10 +41,10 @@ if (plugins.hasPlugin('groovy')) {
         includePrivate = false
         link 'http://www.slf4j.org/apidocs/', 'org.slf4j.'
         link 'http://docs.oracle.com/javase/7/docs/api/', 'java.', 'org.xml.', 'javax.', 'org.w3c.'
-        link 'http://jsr-305.googlecode.com/svn/trunk/javadoc/', 'javax.annotation.'
+        link 'http://static.javadoc.io/com.google.code.findbugs/jsr305/3.0.1/', 'javax.annotation.'
         link 'http://griffon-framework.org/guide/latest/api/', 'griffon.', 'org.codehaus.griffon.'
-        link 'http://junit.org/javadoc/latest/', 'org.junit.', 'junit.'
-        link 'http://atinject.googlecode.com/svn/trunk/javadoc/', 'javax.inject.'
+        link 'http://junit.org/junit4/javadoc/latest/', 'org.junit.', 'junit.'
+        link 'http://static.javadoc.io/javax.inject/javax.inject/1/', 'javax.inject.'
 
         doLast { task ->
             copy {

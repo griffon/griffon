@@ -12,10 +12,12 @@ import griffon.transform.FXObservable
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import griffon.core.artifact.GriffonModel
+import griffon.inject.MVCMember
+import javax.annotation.Nonnull
 
 @griffon.metadata.ArtifactProviderFor(GriffonModel)
 class SampleModel {
-    def controller
+    @MVCMember @Nonnull SampleController controller
 
     @FXObservable
     @ListChangeListener(snoop)
@@ -33,10 +35,12 @@ import javafx.collections.ListChangeListener
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import griffon.core.artifact.GriffonModel
+import griffon.inject.MVCMember
+import javax.annotation.Nonnull
 
 @griffon.metadata.ArtifactProviderFor(GriffonModel)
 class SampleModel {
-    def controller
+    @MVCMember @Nonnull SampleController controller
 
     @FXObservable ObservableList list = FXCollections.observableArrayList()
 

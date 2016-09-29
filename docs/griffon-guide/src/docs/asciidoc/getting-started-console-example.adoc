@@ -118,6 +118,9 @@ Here is a breakdown and links to relevant sections:
  * `test` - <<_testing,Unit tests>>.
  * `integration-test` - <<_testing,Integration tests>>.
 
+These conventions can be ommitted provided you reconfigure the default build files provided by
+the chosen project template.
+
 Here's a screenshot of the finished, running application to give you an idea of what
 we're aiming at with this example. A small Groovy script has been executed; you
 can see the result on the bottom right side:
@@ -198,9 +201,11 @@ include::{console-swing-groovy}/griffon-app/controllers/console/ConsoleControlle
 
 The Griffon framework will inject references to the other portions of the MVC triad if fields
 named `model`, `view`, and `controller` are present in the Model, Controller or View. This allows
-us to access the view widgets and the model data if needed. Any other class members annotated with
-`@javax.inject.Inject` participate in dependency injection as laid out by JSR 330, in this case the
-controller will get an instance of `Evaluator` if a suitable implementation is bound.
+us to access the view widgets and the model data if needed. These properties are annotated with
+`@griffon.inject.MVCMember` and `@javax.annotation.Nonnull` as hints to the Griffon runtime, enabling
+additional checks. Any other class members annotated with `@javax.inject.Inject` participate in
+dependency injection as laid out by JSR 330, in this case the controller will get an instance of
+`Evaluator` if a suitable implementation is bound.
 
 The `executeScript` [conum,data-value=3]_3_ method will be used later in the View in combination
 with a button. You may notice that there's no explicit threading management. All Swing developers

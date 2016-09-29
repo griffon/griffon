@@ -21,10 +21,10 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.7.0'
+        classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.8.0-SNAPSHOT'
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
         classpath 'org.kordamp.gradle:stats-gradle-plugin:0.2.0'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
     }
 }
 
@@ -34,7 +34,7 @@ apply plugin: 'org.codehaus.griffon.griffon'
 griffon {
     disableDependencyResolution = false
     includeGroovyDependencies = false
-    version = '2.7.0'
+    version = '2.8.0-SNAPSHOT'
     toolkit = 'javafx'
 }
 
@@ -59,29 +59,30 @@ javafx {
 }
 
 dependencies {
-    compileOnly 'org.projectlombok:lombok:1.16.8'
+    testCompileOnly "org.projectlombok:lombok:$lombokVersion"
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
 
     compile "org.codehaus.griffon:griffon-guice:${griffon.version}"
-    compile 'org.kordamp.bootstrapfx:bootstrapfx-core:0.1.0'
+    compile 'org.kordamp.bootstrapfx:bootstrapfx-core:0.2.0'
     compile 'org.kordamp.ikonli:ikonli-javafx:1.5.0'
     compile 'org.kordamp.ikonli:ikonli-typicons-pack:1.5.0'
     compile 'org.reactfx:reactfx:2.0-M5'
-    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
-    compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta2'
-    compile 'com.squareup.retrofit:converter-jackson:2.0.0-beta2'
-    compile 'com.fasterxml.jackson.core:jackson-core:2.7.4'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.4'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.4'
-    compile 'io.reactivex:rxjava:1.1.5'
+    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    compile "com.squareup.retrofit2:converter-jackson:$retrofitVersion"
+    compile "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion"
+    compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "io.reactivex:rxjava:$rxjavaVersion"
 
     griffon 'org.codehaus.griffon.plugins:griffon-miglayout-plugin:1.1.1'
-    runtime 'org.slf4j:slf4j-simple:1.7.16'
+    runtime 'org.slf4j:slf4j-simple:1.7.21'
 
     testCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
-    testCompile 'org.mockito:mockito-core:2.0.54-beta'
+    testCompile  "org.mockito:mockito-core:$mockitoVersion"
 
-    // functionalTestCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
-    // functionalTestCompile 'org.mockito:mockito-core:2.0.54-beta'
+    integrationTestCompile "org.awaitility:awaitility:$awaitilityVersion"
+    integrationTestCompile "com.github.tomakehurst:wiremock:$wiremockVersion"
 }
 
 tasks.withType(JavaCompile) {
@@ -93,5 +94,25 @@ startScripts {
     doLast {
         if (!macosx) unixScript.text = unixScript.text.replaceAll('"(-Xdock:(name|icon)=)([^"]*?)(")', ' ')
         windowsScript.text = windowsScript.text.replaceAll('"(-Xdock:(name|icon)=)([^"]*?)(")', ' ')
+    }
+}
+
+task jacocoRootMerge(type: org.gradle.testing.jacoco.tasks.JacocoMerge, dependsOn: [test, jacocoTestReport, jacocoIntegrationTestReport]) {
+    executionData = files(jacocoTestReport.executionData, jacocoIntegrationTestReport.executionData)
+    destinationFile = file("${buildDir}/jacoco/root.exec")
+}
+
+task jacocoRootReport(dependsOn: jacocoRootMerge, type: JacocoReport) {
+    group = 'Reporting'
+    description = 'Generate Jacoco coverage reports after running all tests.'
+    executionData file("${buildDir}/jacoco/root.exec")
+    sourceDirectories = files(sourceSets.main.allSource.srcDirs)
+    classDirectories = files(sourceSets.main.output)
+    reports {
+        csv.enabled = false
+        xml.enabled = true
+        html.enabled = true
+        html.destination = "${buildDir}/reports/jacoco/root/html"
+        xml.destination = "${buildDir}/reports/jacoco/root/root.xml"
     }
 }

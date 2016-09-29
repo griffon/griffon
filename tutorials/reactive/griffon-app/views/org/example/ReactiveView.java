@@ -16,6 +16,7 @@
 package org.example;
 
 import griffon.core.artifact.GriffonView;
+import griffon.inject.MVCMember;
 import griffon.javafx.support.JavaFXAction;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.BooleanProperty;
@@ -37,6 +38,7 @@ import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.example.api.Repository;
 import org.reactfx.EventStreams;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 
 import static griffon.javafx.support.JavaFXUtils.createJavaFXThreadProxyList;
@@ -58,11 +60,13 @@ public class ReactiveView extends AbstractJavaFXGriffonView {
     private BooleanProperty enabled = new SimpleBooleanProperty(this, "enabled", true);
     private BooleanProperty running = new SimpleBooleanProperty(this, "running", false);
 
-    public void setController(ReactiveController controller) {
+    @MVCMember
+    public void setController(@Nonnull ReactiveController controller) {
         this.controller = controller;
     }
 
-    public void setModel(ReactiveModel model) {
+    @MVCMember
+    public void setModel(@Nonnull ReactiveModel model) {
         this.model = model;
     }
 

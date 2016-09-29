@@ -16,6 +16,7 @@
 package org.example;
 
 import griffon.core.artifact.GriffonController;
+import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.example.api.Github;
@@ -24,6 +25,7 @@ import rx.Observable;
 import rx.Subscription;
 import rx.schedulers.Schedulers;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.concurrent.TimeUnit;
 
@@ -34,7 +36,8 @@ import static org.example.State.RUNNING;
 public class ReactiveController extends AbstractGriffonController {
     private ReactiveModel model;
 
-    public void setModel(ReactiveModel model) {
+    @MVCMember
+    public void setModel(@Nonnull ReactiveModel model) {
         this.model = model;
     }
 
@@ -50,10 +53,9 @@ public class ReactiveController extends AbstractGriffonController {
             .timeout(10, TimeUnit.SECONDS)
             .doOnSubscribe(() -> model.setState(RUNNING))
             .doOnTerminate(() -> model.setState(READY))
+            .doOnError(this::handleThrowable)
             .subscribeOn(Schedulers.io())
-            .subscribe(
-                model.getRepositories()::add,
-                Throwable::printStackTrace);
+            .subscribe(model.getRepositories()::add);
         model.setSubscription(subscription);
     }
 
@@ -62,5 +64,9 @@ public class ReactiveController extends AbstractGriffonController {
             model.getSubscription().unsubscribe();
             model.setState(READY);
         }
+    }
+
+    private void handleThrowable(@Nonnull Throwable throwable) {
+        getApplication().getEventRouter().publishEvent(new ThrowableEvent(this, throwable));
     }
 }

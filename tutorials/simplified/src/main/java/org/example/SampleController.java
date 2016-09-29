@@ -15,9 +15,11 @@
  */
 package org.example;
 
+import griffon.inject.MVCMember;
 import griffon.transform.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 public class SampleController extends AbstractGriffonController {
@@ -26,7 +28,8 @@ public class SampleController extends AbstractGriffonController {
     @Inject
     private SampleService sampleService;
 
-    public void setModel(SampleModel model) {
+    @MVCMember
+    public void setModel(@Nonnull SampleModel model) {
         this.model = model;
     }
 

@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
 
-import static com.jayway.awaitility.Awaitility.await;
+import static org.awaitility.Awaitility.await;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
@@ -44,6 +44,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class ReactiveIntegrationTest {
+    private static final String ORGANIZATION = "griffon";
+
     static {
         // force initialization JavaFX Toolkit
         new javafx.embed.swing.JFXPanel();
@@ -81,19 +83,20 @@ public class ReactiveIntegrationTest {
             .build();
 
         // expectations
-        when(github.repositories("griffon")).thenReturn(Observable.just(repository));
+        when(github.repositories(ORGANIZATION)).thenReturn(Observable.just(repository));
 
         // expect:
         assertThat(model.getRepositories().size(), is(0));
 
         // when:
+        model.setOrganization(ORGANIZATION);
         controller.load();
         await().until(() -> model.getState() == State.READY);
 
         // then:
         assertThat(model.getRepositories().size(), is(1));
         assertThat(model.getRepositories(), hasItem(repository));
-        verify(github).repositories("griffon");
+        verify(github).repositories(ORGANIZATION);
     }
 
     @BindTo(Github.class)

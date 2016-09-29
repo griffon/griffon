@@ -16,12 +16,17 @@
 package console
 
 import griffon.core.artifact.GriffonView
+import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
+
+import javax.annotation.Nonnull
 
 @ArtifactProviderFor(GriffonView)
 class ConsoleView {
-    def builder                                                              //<1>
-    def model                                                                //<1>
+    @MVCMember @Nonnull
+    FactoryBuilderSupport builder                                            //<1>
+    @MVCMember @Nonnull
+    ConsoleModel model                                                       //<1>
 
     void initUI() {
         builder.with {

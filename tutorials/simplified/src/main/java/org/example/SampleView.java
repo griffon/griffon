@@ -15,6 +15,7 @@
  */
 package org.example;
 
+import griffon.inject.MVCMember;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -26,6 +27,7 @@ import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 
 import java.util.Collections;
+import javax.annotation.Nonnull;
 
 public class SampleView extends AbstractJavaFXGriffonView {
     private SampleController controller;
@@ -34,11 +36,13 @@ public class SampleView extends AbstractJavaFXGriffonView {
     @FXML private TextField input;
     @FXML private Label output;
 
-    public void setController(SampleController controller) {
+    @MVCMember
+    public void setController(@Nonnull SampleController controller) {
         this.controller = controller;
     }
 
-    public void setModel(SampleModel model) {
+    @MVCMember
+    public void setModel(@Nonnull SampleModel model) {
         this.model = model;
     }
 

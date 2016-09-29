@@ -48,6 +48,10 @@ public class GroupsAddon extends AbstractGriffonAddon implements Invokable {
             .e("child", CollectionUtils.<String, Object>map()
                 .e("model", "integration.ChildModel")
                 .e("view", "integration.ChildView")
-                .e("controller", "integration.ChildController"));
+                .e("controller", "integration.ChildController"))
+            .e("args", CollectionUtils.<String, Object>map()
+                .e("model", "integration.ArgsModel")
+                .e("view", "integration.ArgsView")
+                .e("controller", "integration.ArgsController"));
     }
 }

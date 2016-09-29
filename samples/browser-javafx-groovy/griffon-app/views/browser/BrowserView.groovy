@@ -16,14 +16,20 @@
 package browser
 
 import griffon.core.artifact.GriffonView
+import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 import javafx.beans.value.ChangeListener
 
+import javax.annotation.Nonnull
+
 @ArtifactProviderFor(GriffonView)
 class BrowserView {
-    def builder
-    def model
-    def controller
+    @MVCMember @Nonnull
+    FactoryBuilderSupport builder
+    @MVCMember @Nonnull
+    BrowserModel model
+    @MVCMember @Nonnull
+    BrowserController controller
 
     void initUI() {
         builder.application(title: application.configuration['application.title'],

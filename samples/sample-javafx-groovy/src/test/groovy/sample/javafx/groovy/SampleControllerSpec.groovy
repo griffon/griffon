@@ -24,8 +24,8 @@ import spock.lang.Specification
 
 import javax.inject.Inject
 
-import static com.jayway.awaitility.Awaitility.await
 import static java.util.concurrent.TimeUnit.SECONDS
+import static org.awaitility.Awaitility.await
 import static org.hamcrest.Matchers.notNullValue
 
 @TestFor(SampleController)

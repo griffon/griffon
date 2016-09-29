@@ -32,23 +32,6 @@ public class DefaultEventRouter extends AbstractEventRouter {
     private static final String ERROR_PUBLISHER_NULL = "Argument 'publisher' must not be null";
     private UIThreadManager uiThreadManager;
 
-    public DefaultEventRouter() {
-        Thread t = new Thread(new Runnable() {
-            public void run() {
-                //noinspection InfiniteLoopStatement
-                while (true) {
-                    try {
-                        executorService.submit(deferredEvents.take());
-                    } catch (InterruptedException e) {
-                        // ignore ?
-                    }
-                }
-            }
-        }, "event-router-queue-" + eventRouterId);
-        t.setDaemon(true);
-        t.start();
-    }
-
     @Inject
     public void setUIThreadManager(@Nonnull UIThreadManager uiThreadManager) {
         this.uiThreadManager = requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be null");
@@ -64,6 +47,6 @@ public class DefaultEventRouter extends AbstractEventRouter {
     }
 
     protected void doPublishAsync(@Nonnull Runnable publisher) {
-        deferredEvents.offer(publisher);
+        executorService.submit(publisher);
     }
 }

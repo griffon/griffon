@@ -16,6 +16,7 @@
 package org.example;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import griffon.core.event.EventHandler;
 import griffon.core.injection.Module;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.example.api.DefaultGithub;
@@ -24,6 +25,8 @@ import org.example.api.GithubAPI;
 import org.example.api.GithubAPIProvider;
 import org.example.api.ObjectMapperProvider;
 import org.kordamp.jipsy.ServiceProviderFor;
+
+import static griffon.util.AnnotationUtils.named;
 
 @ServiceProviderFor(Module.class)
 public class ApplicationModule extends AbstractModule {
@@ -39,6 +42,14 @@ public class ApplicationModule extends AbstractModule {
 
         bind(ObjectMapper.class)
             .toProvider(ObjectMapperProvider.class)
+            .asSingleton();
+
+        bind(String.class)
+            .withClassifier(named(GithubAPI.GITHUB_API_URL_KEY))
+            .toInstance("https://api.github.com");
+
+        bind(EventHandler.class)
+            .to(ApplicationEventHandler.class)
             .asSingleton();
     }
 }

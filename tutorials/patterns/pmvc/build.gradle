@@ -21,10 +21,10 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.7.0'
+        classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.8.0-SNAPSHOT'
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
         classpath 'org.kordamp.gradle:stats-gradle-plugin:0.2.0'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
     }
 }
 
@@ -34,7 +34,7 @@ apply plugin: 'org.codehaus.griffon.griffon'
 griffon {
     disableDependencyResolution = false
     includeGroovyDependencies = false
-    version = '2.7.0'
+    version = '2.8.0-SNAPSHOT'
     toolkit = 'javafx'
 }
 
@@ -58,16 +58,11 @@ javafx {
 dependencies {
     compile "org.codehaus.griffon:griffon-guice:${griffon.version}"
 
-    runtime('log4j:log4j:1.2.17') {
-        exclude group: 'ant',         module: 'ant-nodeps'
-        exclude group: 'ant',         module: 'ant-junit'
-        exclude group: 'ant-contrib', module: 'ant-contrib'
-    }
-    runtime 'org.slf4j:slf4j-log4j12:1.7.21'
+    runtime 'org.slf4j:slf4j-simple:1.7.21'
 
     testCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
     testCompile 'pl.pragmatists:JUnitParams:1.0.5'
-    testCompile 'org.mockito:mockito-core:2.0.59-beta'
+    testCompile 'org.mockito:mockito-core:2.1.0-RC.1'
 
     functionalTestCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
 }

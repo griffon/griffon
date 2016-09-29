@@ -15,6 +15,7 @@
  */
 package integration;
 
+import griffon.inject.MVCMember;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
 
 public class SimpleView extends AbstractGriffonView implements Invokable {
@@ -22,10 +23,12 @@ public class SimpleView extends AbstractGriffonView implements Invokable {
     private SimpleModel model;
     private boolean invoked;
 
+    @MVCMember
     public void setController(SimpleController controller) {
         this.controller = controller;
     }
 
+    @MVCMember
     public void setModel(SimpleModel model) {
         this.model = model;
     }

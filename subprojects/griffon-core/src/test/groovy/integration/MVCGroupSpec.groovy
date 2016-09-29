@@ -80,7 +80,7 @@ class MVCGroupSpec extends Specification {
     def 'Creating an MVCGroup through a group does set implicit parent group'() {
         given:
         List checks = []
-        MVCGroup parentGroup = application.mvcGroupManager.createMVCGroup('simple', 'parent1')
+        MVCGroup parentGroup = application.mvcGroupManager.createMVCGroup('integration', 'parent1')
 
         when:
         parentGroup.withMVCGroup('simple') { MVCGroup group ->
@@ -100,7 +100,7 @@ class MVCGroupSpec extends Specification {
     def 'Creating an MVCGroup through an artifact does set implicit parent group'() {
         given:
         List checks = []
-        MVCGroup parentGroup = application.mvcGroupManager.createMVCGroup('simple', 'parent2')
+        MVCGroup parentGroup = application.mvcGroupManager.createMVCGroup('integration', 'parent2')
 
         when:
         parentGroup.controller.withMVCGroup('simple') { MVCGroup group ->
@@ -320,5 +320,35 @@ class MVCGroupSpec extends Specification {
 
         then:
         !controller.value
+    }
+
+    def 'Validate argument injection (all args are available)'() {
+        given:
+        List checks = []
+
+        when:
+        application.mvcGroupManager.withMVCGroup('args', [arg1: 'value1', arg2: 'value2']) { MVCGroup group ->
+            checks << (group.controller.arg1 == 'value1')
+            checks << (group.controller.arg2 == 'value2')
+        }
+
+        then:
+        checks.every { it == true }
+    }
+
+    def 'Validate argument injection (missing field argument)'() {
+        when:
+        application.mvcGroupManager.withMVCGroup('args', [arg2: 'value2']) { MVCGroup group -> }
+
+        then:
+        thrown(IllegalStateException)
+    }
+
+    def 'Validate argument injection (missing method argument)'() {
+        when:
+        application.mvcGroupManager.withMVCGroup('args', [arg1: 'value1']) { MVCGroup group -> }
+
+        then:
+        thrown(IllegalStateException)
     }
 }

@@ -20,14 +20,12 @@ import griffon.core.test.GriffonUnitRule
 import griffon.core.test.TestFor
 import javafx.embed.swing.JFXPanel
 import org.junit.Rule
-import sample.javafx.kotlin.SampleController
-import sample.javafx.kotlin.SampleModel
 import spock.lang.Specification
 
 import javax.inject.Inject
 
-import static com.jayway.awaitility.Awaitility.await
 import static java.util.concurrent.TimeUnit.SECONDS
+import static org.awaitility.Awaitility.await
 import static org.hamcrest.Matchers.notNullValue
 
 @TestFor(SampleController)

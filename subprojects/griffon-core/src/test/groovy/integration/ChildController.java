@@ -17,8 +17,10 @@ package integration;
 
 import griffon.core.mvc.MVCGroup;
 import griffon.inject.Contextual;
+import griffon.inject.MVCMember;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
+import javax.annotation.Nonnull;
 import javax.inject.Named;
 
 public class ChildController extends AbstractGriffonController {
@@ -32,6 +34,7 @@ public class ChildController extends AbstractGriffonController {
 
     private String theField;
 
+    @Nonnull
     public String getVal() {
         return theField;
     }
@@ -45,7 +48,8 @@ public class ChildController extends AbstractGriffonController {
         return model;
     }
 
-    public void setModel(ChildModel model) {
+    @MVCMember
+    public void setModel(@Nonnull ChildModel model) {
         this.model = model;
     }
 
@@ -53,7 +57,8 @@ public class ChildController extends AbstractGriffonController {
         return view;
     }
 
-    public void setView(ChildView view) {
+    @MVCMember
+    public void setView(@Nonnull ChildView view) {
         this.view = view;
     }
 
@@ -61,7 +66,8 @@ public class ChildController extends AbstractGriffonController {
         return parentGroup;
     }
 
-    public void setParentGroup(MVCGroup parentGroup) {
+    @MVCMember
+    public void setParentGroup(@Nonnull MVCGroup parentGroup) {
         this.parentGroup = parentGroup;
     }
 
@@ -69,7 +75,8 @@ public class ChildController extends AbstractGriffonController {
         return parentController;
     }
 
-    public void setParentController(RootController parentController) {
+    @MVCMember
+    public void setParentController(@Nonnull RootController parentController) {
         this.parentController = parentController;
     }
 }

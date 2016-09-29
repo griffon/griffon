@@ -15,16 +15,18 @@
  */
 package org.example.api;
 
-import retrofit.Response;
-import retrofit.http.GET;
-import retrofit.http.Path;
-import retrofit.http.Url;
+import retrofit2.Response;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+import retrofit2.http.Url;
 import rx.Observable;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
 public interface GithubAPI {
+    String GITHUB_API_URL_KEY = "GITHUB_API_URL_KEY";
+
     @Nonnull
     @GET("/orgs/{name}/repos")
     Observable<Response<List<Repository>>> repositories(@Nonnull @Path("name") String name);

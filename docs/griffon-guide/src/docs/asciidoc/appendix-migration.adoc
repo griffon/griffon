@@ -182,11 +182,13 @@ package sample
 
 import griffon.core.artifact.GriffonView
 import griffon.metadata.ArtifactProviderFor
+import griffon.inject.MVCMember
+import javax.annotation.Nonnull
 
 @ArtifactProviderFor(GriffonView)
 class SampleView {
-    def builder
-    def model
+    @MVCMember @Nonnull def builder
+    @MVCMember @Nonnull def model
 
     void initUI() {
         builder.with {
@@ -273,7 +275,7 @@ import griffon.core.test.TestFor
 import org.junit.Rule
 import org.junit.Test
 
-import static com.jayway.awaitility.Awaitility.await
+import static org.awaitility.Awaitility.await
 import static java.util.concurrent.TimeUnit.SECONDS
 
 @TestFor(SampleController)

@@ -10,11 +10,13 @@ without so much effort. The following code
 import griffon.transform.PropertyListener
 import griffon.transform.Observable
 import griffon.core.artifact.GriffonModel
+import griffon.inject.MVCMember
+import javax.annotation.Nonnull
 
 @griffon.metadata.ArtifactProviderFor(GriffonModel)
 @PropertyListener(snoopAll)
 class SampleModel {
-    def controller
+    @MVCMember @Nonnull SampleController controller
     @Observable String name
 
     @Observable
@@ -32,11 +34,13 @@ is equivalent to this one:
 import java.beans.PropertyChangeListener
 import griffon.transform.Observable
 import griffon.core.artifact.GriffonModel
+import griffon.inject.MVCMember
+import javax.annotation.Nonnull
 
 @griffon.metadata.ArtifactProviderFor(GriffonModel)
 @PropertyListener(snoopAll)
 class SampleModel {
-    def controller
+    @MVCMember @Nonnull SampleController controller
     @Observable String name
     @Observable String lastname
 

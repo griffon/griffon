@@ -19,7 +19,6 @@ import griffon.core.ApplicationEvent
 import griffon.core.GriffonApplication
 import griffon.core.RunnableWithArgs
 import griffon.core.mvc.MVCGroup
-import org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup
 
 import javax.annotation.Nullable
 

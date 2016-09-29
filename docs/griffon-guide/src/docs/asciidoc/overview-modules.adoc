@@ -198,6 +198,29 @@ Consumers of this binding will use the following form:
 @Inject private Calculator calculator;
 ----
 
+[[_overview_constant_value_binding]]
+=== Constant Value Binding
+
+You may use a variation of <<_overview_instance_binding, Instance Binding>> to bind a constant value, for example an instance
+of `java.lang.String`. You *must* make sure to always use a qualifier. For example, the following constant value
+
+[source,java,options="nowrap"]
+----
+bind(String.class)
+    .withClassifier(named(GithubAPI.GITHUB_API_URL_KEY))
+    .toInstance("https://api.github.com");
+----
+
+Can be injected into a target instance as
+
+[source,java,options="nowrap"]
+----
+public class GithubBean {
+    @Inject @Named(GithubAPI.GITHUB_API_URL_KEY)
+    private String githubApiUrl;
+}
+----
+
 [[_overview_bindings_additional_settings]]
 == Additional Settings
 

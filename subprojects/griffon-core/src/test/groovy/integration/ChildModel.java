@@ -16,6 +16,7 @@
 package integration;
 
 import griffon.core.mvc.MVCGroup;
+import griffon.inject.MVCMember;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 
 public class ChildModel extends AbstractGriffonModel {
@@ -26,6 +27,7 @@ public class ChildModel extends AbstractGriffonModel {
         return parentGroup;
     }
 
+    @MVCMember
     public void setParentGroup(MVCGroup parentGroup) {
         this.parentGroup = parentGroup;
     }
@@ -34,6 +36,7 @@ public class ChildModel extends AbstractGriffonModel {
         return parentModel;
     }
 
+    @MVCMember
     public void setParentModel(RootModel parentModel) {
         this.parentModel = parentModel;
     }

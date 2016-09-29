@@ -16,5 +16,7 @@
 package org.example;
 
 public enum State {
-    DISABLED, READY, RUNNING
+    DISABLED,
+    READY,
+    RUNNING
 }

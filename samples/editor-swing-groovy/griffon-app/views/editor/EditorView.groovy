@@ -16,12 +16,17 @@
 package editor
 
 import griffon.core.artifact.GriffonView
+import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
+
+import javax.annotation.Nonnull
 
 @ArtifactProviderFor(GriffonView)
 class EditorView {
-    def builder
-    def model
+    @MVCMember @Nonnull
+    FactoryBuilderSupport builder
+    @MVCMember @Nonnull
+    EditorModel model
 
     void initUI() {
         builder.with {

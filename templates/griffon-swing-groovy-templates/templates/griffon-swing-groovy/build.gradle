@@ -5,16 +5,16 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.7.0'
+        classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.8.0-SNAPSHOT'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
         classpath 'org.gradle.api.plugins:gradle-izpack-plugin:0.2.3'
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
         classpath 'com.github.cr0:gradle-macappbundle-plugin:3.1.0'
         classpath 'org.kordamp.gradle:stats-gradle-plugin:0.2.0'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
         classpath 'de.gliderpilot.gradle.jnlp:gradle-jnlp-plugin:0.2.1'
-        classpath 'net.nemerosa:versioning:2.1.0'
+        classpath 'net.nemerosa:versioning:2.4.0'
     }
 }
 
@@ -61,7 +61,17 @@ dependencies {
 
     testCompile "org.codehaus.griffon:griffon-fest-test:\${griffon.version}"
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
-    testCompile 'com.jayway.awaitility:awaitility-groovy:1.6.3'
+    testCompile('org.awaitility:awaitility-groovy:2.0.0') {
+        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+    }
+    testCompile 'org.codehaus.groovy:groovy-all:2.4.7'
+}
+
+task sourceJar(type: Jar) {
+    group 'Build'
+    description 'An archive of the source code'
+    classifier 'sources'
+    from sourceSets.main.allSource
 }
 
 tasks.withType(JavaCompile) {

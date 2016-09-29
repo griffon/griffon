@@ -25,8 +25,8 @@ dependencies {
     compileOnly project(':griffon-core-compile')
 
     testCompile project.files(project.jfxrtLocation)
-    testCompile "com.jayway.awaitility:awaitility:$awaitilityVersion"
-    testCompile("com.jayway.awaitility:awaitility-groovy:$awaitilityVersion") {
+    testCompile "org.awaitility:awaitility:$awaitilityVersion"
+    testCompile("org.awaitility:awaitility-groovy:$awaitilityVersion") {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
     testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
