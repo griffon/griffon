@@ -1,6 +1,6 @@
 = Griffon 2.8.0 Release Notes
 Andres Almiray
-2016-09-01
+2016-09-29
 :jbake-type: post
 :jbake-status: published
 :category: releasenotes
@@ -16,6 +16,7 @@ The following dependencies have been upgraded
 
  * org.awaitility:awaitility:2.0.0
  * org.awaitility:awaitility-groovy:2.0.0
+ * org.jetbrains.kotlin:kotlin-stdlib:1.0.4
 
 === Runtime
 
@@ -88,6 +89,12 @@ the naming convetion `<action>ActionTarget` simply use a static synthetic proper
 The previous code assumes the correspoding controller has defined the following actions: `cut`, `copy`, and `paste`.
 
 === Buildtime
+
+==== Gradle Version
+
+All project templates have been upgraded to use Gradle 3.1 but usage of Gradle 3.0 is still possible.
+Be advised that usage of Gradle 2.x may bring some incompatibilities, as some tasks have been renamed or removed,
+such as the `installApp` that was renamed to `installDist`.
 
 === Compatibility
 
