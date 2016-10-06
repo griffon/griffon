@@ -264,49 +264,51 @@ public final class GriffonApplicationUtils {
         javaVersion = System.getProperty("java.version");
         String version = javaVersion.substring(0, 3);
         isJdk4 = true;
-        switch (version) {
-            case "1.9":
-                isJdk9 = true;
-                isJdk8 = true;
-                isJdk7 = true;
-                isJdk6 = true;
-                isJdk5 = true;
-                break;
-            case "1.8":
-                isJdk9 = false;
-                isJdk8 = true;
-                isJdk7 = true;
-                isJdk6 = true;
-                isJdk5 = true;
-                break;
-            case "1.7":
-                isJdk9 = false;
-                isJdk8 = false;
-                isJdk7 = true;
-                isJdk6 = true;
-                isJdk5 = true;
-                break;
-            case "1.6":
-                isJdk9 = false;
-                isJdk8 = false;
-                isJdk7 = false;
-                isJdk6 = true;
-                isJdk5 = true;
-                break;
-            case "1.5":
-                isJdk9 = false;
-                isJdk8 = false;
-                isJdk7 = false;
-                isJdk6 = false;
-                isJdk5 = true;
-                break;
-            default:
-                isJdk9 = false;
-                isJdk8 = false;
-                isJdk7 = false;
-                isJdk6 = false;
-                isJdk5 = false;
-                break;
+
+        if (version.startsWith("9")) {
+            isJdk9 = true;
+            isJdk8 = true;
+            isJdk7 = true;
+            isJdk6 = true;
+            isJdk5 = true;
+        } else {
+            switch (version) {
+                case "1.8":
+                    isJdk9 = false;
+                    isJdk8 = true;
+                    isJdk7 = true;
+                    isJdk6 = true;
+                    isJdk5 = true;
+                    break;
+                case "1.7":
+                    isJdk9 = false;
+                    isJdk8 = false;
+                    isJdk7 = true;
+                    isJdk6 = true;
+                    isJdk5 = true;
+                    break;
+                case "1.6":
+                    isJdk9 = false;
+                    isJdk8 = false;
+                    isJdk7 = false;
+                    isJdk6 = true;
+                    isJdk5 = true;
+                    break;
+                case "1.5":
+                    isJdk9 = false;
+                    isJdk8 = false;
+                    isJdk7 = false;
+                    isJdk6 = false;
+                    isJdk5 = true;
+                    break;
+                default:
+                    isJdk9 = false;
+                    isJdk8 = false;
+                    isJdk7 = false;
+                    isJdk6 = false;
+                    isJdk5 = false;
+                    break;
+            }
         }
 
         platform = basePlatform + (is64Bit && !isSolaris ? "64" : "");
@@ -565,7 +567,7 @@ public final class GriffonApplicationUtils {
     @Nonnull
     @SuppressWarnings("ConstantConditions")
     public static Locale parseLocale(@Nullable String locale) {
-        if (isBlank(locale)) return Locale.getDefault();
+        if (isBlank(locale)) { return Locale.getDefault(); }
         String[] parts = locale.split("_");
         switch (parts.length) {
             case 1:
