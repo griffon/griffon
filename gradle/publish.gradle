@@ -18,7 +18,6 @@ if (!publishJars.toBoolean()) return
 
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
-apply plugin: 'net.nemerosa.versioning'
 
 def pomConfig = {
     name project.name
@@ -91,8 +90,9 @@ publishing {
 }
 
 jar {
-    manifest {
-        attributes(
+    doFirst {
+        manifest {
+            attributes(
             'Built-By': System.properties['user.name'],
             'Created-By': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})".toString(),
             'Build-Date': buildDate,
@@ -104,7 +104,8 @@ jar {
             'Implementation-Title': project.name,
             'Implementation-Version': project.version,
             'Implementation-Vendor': 'griffon-framework.org'
-        )
+            )
+        }
     }
 
     metaInf {
