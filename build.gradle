@@ -51,6 +51,7 @@ buildScan {
 apply from: 'gradle/idea.gradle'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
+apply plugin: 'net.nemerosa.versioning'
 
 jacoco {
     toolVersion = jacocoVersion
@@ -60,8 +61,11 @@ boolean travis   = (System.env['TRAVIS'] ?: false) as boolean
 boolean appveyor = (System.env['APPVEYOR'] ?: false) as boolean
 Date buildTimeAndDate = new Date()
 ext {
+    buildBy = System.properties['user.name']
     buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
     buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+    buildRevision = versioning.info.commit
+    buildCreatedBy = "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})".toString()
     projectsWithCoverage = []
     projectsWithIntegrationCoverage = []
     projectsWithFunctionalCoverage = []
