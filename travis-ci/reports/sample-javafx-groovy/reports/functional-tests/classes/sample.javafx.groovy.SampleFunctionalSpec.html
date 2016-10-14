@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">1.792s</div>
+<div class="counter">1.812s</div>
 <p>duration</p>
 </div>
 </td>
@@ -79,12 +79,12 @@
 </thead>
 <tr>
 <td class="success">Get default message if no input is given</td>
-<td>0.770s</td>
+<td>0.830s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Get hello message if input is given</td>
-<td>1.022s</td>
+<td>0.982s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -93,8 +93,8 @@
 <h2>Standard error</h2>
 <span class="code">
 <pre>[Thread-9] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Griffon 2.9.0-SNAPSHOT
-[Thread-9] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Build: 2016-10-09T11:54:07.782+0000
-[Thread-9] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Revision: 7a8d8c25f3eaefe4da455fdb1dcf5679ac27ad56
+[Thread-9] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Build: 2016-10-14T12:20:34.224+0000
+[Thread-9] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Revision: d56a7d0d98c5a435e6a4d86ca726e276f49e913b
 [Thread-9] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - JVM: 1.8.0_101 (Oracle Corporation 25.101-b13)
 [Thread-9] INFO org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - OS: Linux 3.13.0-92-generic amd64
 [Thread-9] DEBUG org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper - Creating module bindings
@@ -367,7 +367,7 @@
 [griffon-pool-1-thread-1] DEBUG griffon.util.AnnotationUtils - computed customizer order is [core, javafx]
 [griffon-pool-1-thread-1] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'InitializeMVCGroup' synchronously
 [griffon-pool-1-thread-1] TRACE griffon.addon.GroovyAddon - Adding action sayHelloAction to sample:sample:builder
-[griffon-pool-1-thread-1] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group sample:org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup@576a2e7e[sample:sample]
+[griffon-pool-1-thread-1] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Adding group sample:org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup@65822fba[sample:sample]
 [griffon-pool-1-thread-1] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Initializing each MVC member of group 'sample'
 [JavaFX Application Thread] TRACE griffon.util.CompositeResourceBundle - Searching key=application.title
 [JavaFX Application Thread] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@27a9f5a9; key=application.title; value='JavaFX + Groovy'
@@ -418,23 +418,15 @@
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'ShutdownRequested' synchronously
 [Test worker] INFO org.codehaus.griffon.runtime.javafx.TestJavaFXGriffonApplication - Shutdown is in process
 [Test worker] DEBUG org.codehaus.griffon.runtime.javafx.TestJavaFXGriffonApplication - Shutdown stage 1: notify all event listeners
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener griffon.javafx.AbstractJavaFXGriffonApplication$$Lambda$184/128097278 on ShutdownStart
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Adding listener griffon.javafx.AbstractJavaFXGriffonApplication$$Lambda$184/1091449414 on ShutdownStart
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'ShutdownStart' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.javafx.TestJavaFXGriffonApplication - Shutdown stage 2: notify all shutdown handlers
 [Test worker] DEBUG org.codehaus.griffon.runtime.javafx.TestJavaFXGriffonApplication - Shutdown stage 3: destroy all MVC groups
-[JavaFX Application Thread] DEBUG org.codehaus.griffon.runtime.core.view.AbstractWindowManager - Hiding window with name: 'mainWindow' at index 0 javafx.stage.Stage@4d788df6
-[JavaFX Application Thread] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
-[JavaFX Application Thread] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group sample
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'sample' points to org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup@576a2e7e[sample:sample]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'sample' points to org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup@65822fba[sample:sample]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Destroying MVC group identified by 'sample'
-[JavaFX Application Thread] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
-[JavaFX Application Thread] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
-[JavaFX Application Thread] TRACE org.codehaus.griffon.runtime.core.view.ConfigurableWindowDisplayHandler - Hiding mainWindow with default handler
-[JavaFX Application Thread] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
-[JavaFX Application Thread] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[JavaFX Application Thread] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'WindowHidden' synchronously
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
 [JavaFX Application Thread] DEBUG org.codehaus.griffon.runtime.core.view.AbstractWindowManager - Hiding window with name: 'mainWindow' at index 0 javafx.stage.Stage@4d788df6
 [JavaFX Application Thread] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
 [JavaFX Application Thread] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
@@ -443,9 +435,9 @@
 [JavaFX Application Thread] TRACE org.codehaus.griffon.runtime.core.view.ConfigurableWindowDisplayHandler - Hiding mainWindow with default handler
 [JavaFX Application Thread] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
 [JavaFX Application Thread] TRACE griffon.util.CompositeResourceBundle - Searching key=windowManager
+[JavaFX Application Thread] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'WindowHidden' synchronously
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyInstance' synchronously
-[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group sample:org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup@576a2e7e[sample:sample]
+[Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Removing group sample:org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup@65822fba[sample:sample]
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.AbstractMVCGroupManager - Searching group sample
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager - Group 'sample' points to null
 [Test worker] DEBUG org.codehaus.griffon.runtime.core.event.AbstractEventRouter - Triggering event 'DestroyMVCGroup' synchronously
@@ -453,6 +445,7 @@
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application.lifecycle.handler.disable
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Searching key=application
 [Test worker] TRACE griffon.util.CompositeResourceBundle - Bundle griffon.util.ExpandableResourceBundle@27a9f5a9; key=application; value='{title=JavaFX + Groovy, startupGroups=[sample], autoShutdown=true}'
+[JavaFX Application Thread] DEBUG org.codehaus.griffon.runtime.core.view.AbstractWindowManager - Hiding window with name: 'mainWindow' at index 0 javafx.stage.Stage@4d788df6
 </pre>
 </span>
 </div>
@@ -464,7 +457,7 @@
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 3.1</a> at Oct 9, 2016 11:58:23 AM</p>
+<a href="http://www.gradle.org">Gradle 3.1</a> at Oct 14, 2016 12:25:02 PM</p>
 </div>
 </div>
 </body>
