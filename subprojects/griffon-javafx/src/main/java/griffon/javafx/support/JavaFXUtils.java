@@ -69,6 +69,7 @@ import static griffon.util.GriffonClassUtils.invokeExactInstanceMethod;
 import static griffon.util.GriffonClassUtils.invokeInstanceMethod;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -262,6 +263,20 @@ public final class JavaFXUtils {
         }
     }
 
+    public static String normalizeStyle(@Nonnull String style, @Nonnull String key, @Nonnull String value) {
+        requireNonBlank(style, "Argument 'style' must not be blank");
+        requireNonBlank(key, "Argument 'key' must not be blank");
+        requireNonBlank(value, "Argument 'value' must not be blank");
+
+        int start = style.indexOf(key);
+        if (start != -1) {
+            int end = style.indexOf(";", start);
+            end = end >= start ? end : style.length() - 1;
+            style = style.substring(0, start) + style.substring(end + 1);
+        }
+        return style + key + ": " + value + ";";
+    }
+
     public static void configure(final @Nonnull ToggleButton control, final @Nonnull JavaFXAction action) {
         configure((ButtonBase) control, action);
 
@@ -322,6 +337,18 @@ public final class JavaFXUtils {
             setStyleClass(control, n);
         });
         setStyleClass(control, action.getStyleClass());
+
+        action.styleProperty().addListener((v, o, n) -> setStyle(control, n));
+        setStyle(control, action.getStyle());
+
+        action.graphicStyleClassProperty().addListener((v, o, n) -> {
+            setGraphicStyleClass(control, o, true);
+            setGraphicStyleClass(control, n);
+        });
+        setGraphicStyleClass(control, action.getGraphicStyleClass());
+
+        action.graphicStyleProperty().addListener((v, o, n) -> setGraphicStyle(control, n));
+        setGraphicStyle(control, action.getGraphicStyle());
     }
 
     public static void configure(final @Nonnull CheckMenuItem control, final @Nonnull JavaFXAction action) {
@@ -377,6 +404,58 @@ public final class JavaFXUtils {
             setStyleClass(control, n);
         });
         setStyleClass(control, action.getStyleClass());
+
+        action.styleProperty().addListener((v, o, n) -> setStyle(control, n));
+        setStyle(control, action.getStyle());
+
+        action.graphicStyleClassProperty().addListener((v, o, n) -> {
+            setGraphicStyleClass(control, o, true);
+            setGraphicStyleClass(control, n);
+        });
+        setGraphicStyleClass(control, action.getGraphicStyleClass());
+
+        action.graphicStyleProperty().addListener((v, o, n) -> setGraphicStyle(control, n));
+        setGraphicStyle(control, action.getGraphicStyle());
+    }
+
+    public static void setStyle(@Nonnull Node node, @Nonnull String style) {
+        requireNonNull(node, ERROR_CONTROL_NULL);
+        if (isNull(style)) { return; }
+        if (style.startsWith("&")) {
+            // append style
+            String nodeStyle = node.getStyle();
+            node.setStyle(nodeStyle + (nodeStyle.endsWith(";") ? "" : ";") + style.substring(1));
+        } else {
+            node.setStyle(style);
+        }
+    }
+
+    public static void setStyle(@Nonnull MenuItem node, @Nonnull String style) {
+        requireNonNull(node, ERROR_CONTROL_NULL);
+        if (isNull(style)) { return; }
+        if (style.startsWith("&")) {
+            // append style
+            String nodeStyle = node.getStyle();
+            node.setStyle(nodeStyle + (nodeStyle.endsWith(";") ? "" : ";") + style.substring(1));
+        } else {
+            node.setStyle(style);
+        }
+    }
+
+    public static void setGraphicStyle(@Nonnull ButtonBase node, @Nonnull String graphicStyle) {
+        requireNonNull(node, ERROR_CONTROL_NULL);
+        if (isNull(graphicStyle)) { return; }
+        if (node.getGraphic() != null) {
+            setStyle(node.getGraphic(), graphicStyle);
+        }
+    }
+
+    public static void setGraphicStyle(@Nonnull MenuItem node, @Nonnull String graphicStyle) {
+        requireNonNull(node, ERROR_CONTROL_NULL);
+        if (isNull(graphicStyle)) { return; }
+        if (node.getGraphic() != null) {
+            setStyle(node.getGraphic(), graphicStyle);
+        }
     }
 
     public static void setStyleClass(@Nonnull Node node, @Nonnull String styleClass) {
@@ -400,6 +479,30 @@ public final class JavaFXUtils {
         if (isBlank(styleClass)) { return; }
         ObservableList<String> styleClasses = node.getStyleClass();
         applyStyleClass(styleClass, styleClasses, remove);
+    }
+
+    public static void setGraphicStyleClass(@Nonnull ButtonBase node, @Nonnull String graphicStyleClass) {
+        setGraphicStyleClass(node, graphicStyleClass, false);
+    }
+
+    public static void setGraphicStyleClass(@Nonnull ButtonBase node, @Nonnull String graphicStyleClass, boolean remove) {
+        requireNonNull(node, ERROR_CONTROL_NULL);
+        if (isBlank(graphicStyleClass) || node.getGraphic() == null) { return; }
+
+        ObservableList<String> graphicStyleClasses = node.getGraphic().getStyleClass();
+        applyStyleClass(graphicStyleClass, graphicStyleClasses, remove);
+    }
+
+    public static void setGraphicStyleClass(@Nonnull MenuItem node, @Nonnull String graphicStyleClass) {
+        setGraphicStyleClass(node, graphicStyleClass, false);
+    }
+
+    public static void setGraphicStyleClass(@Nonnull MenuItem node, @Nonnull String graphicStyleClass, boolean remove) {
+        requireNonNull(node, ERROR_CONTROL_NULL);
+        if (isBlank(graphicStyleClass) || node.getGraphic() == null) { return; }
+
+        ObservableList<String> graphicStyleClasses = node.getGraphic().getStyleClass();
+        applyStyleClass(graphicStyleClass, graphicStyleClasses, remove);
     }
 
     private static void applyStyleClass(String styleClass, ObservableList<String> styleClasses, boolean remove) {

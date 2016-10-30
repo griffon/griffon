@@ -118,5 +118,29 @@ public class JavaFXActionManager extends AbstractActionManager {
             }
             javafxAction.setStyleClass(rsStyleClass);
         }
+
+        String rsStyle = msg(keyPrefix, normalizeNamed, "style", "");
+        if (!isBlank(rsStyle)) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace(keyPrefix + normalizeNamed + ".style = " + rsStyle);
+            }
+            javafxAction.setStyle(rsStyle);
+        }
+
+        String rsGraphicStyleClass = msg(keyPrefix, normalizeNamed, "graphic_styleclass", "");
+        if (!isBlank(rsGraphicStyleClass)) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace(keyPrefix + normalizeNamed + ".graphic_styleclass = " + rsGraphicStyleClass);
+            }
+            javafxAction.setGraphicStyleClass(rsGraphicStyleClass);
+        }
+
+        String rsGraphicStyle = msg(keyPrefix, normalizeNamed, "graphic_style", "");
+        if (!isBlank(rsGraphicStyle)) {
+            if (LOG.isTraceEnabled()) {
+                LOG.trace(keyPrefix + normalizeNamed + ".graphic_style = " + rsGraphicStyle);
+            }
+            javafxAction.setGraphicStyle(rsGraphicStyle);
+        }
     }
 }
