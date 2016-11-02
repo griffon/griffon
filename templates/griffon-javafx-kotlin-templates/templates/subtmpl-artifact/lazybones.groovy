@@ -19,7 +19,7 @@ if (tmplQualifiers) {
     templateNames.each { println "  $it" }
     println '  mvcgroup'
     println ' '
-    while (!artifactBaseName) {
+    while (!(artifactBaseName in templateNames )) {
         artifactBaseName = ask("Which type of artifact do you want to generate? ", null, "type")?.toLowerCase()
     }
 }
