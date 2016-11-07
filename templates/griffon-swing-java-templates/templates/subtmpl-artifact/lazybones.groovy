@@ -16,8 +16,8 @@ if (tmplQualifiers) {
         it.endsWith('.java') || it.endsWith('.groovy')
     }.collect { it.toLowerCase() - '.java' - '.groovy' }.sort() - 'lazybones'
     println '\nThe following artifact templates are available\n'
+	templateNames << 'mvcgroup'
     templateNames.each { println "  $it" }
-    println '  mvcgroup'
     println ' '
     while (!(artifactBaseName in templateNames )) {
         artifactBaseName = ask("Which type of artifact do you want to generate? ", null, "type")?.toLowerCase()
