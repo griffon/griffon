@@ -25,12 +25,10 @@ if (tmplQualifiers) {
 }
 
 if (!props.project_package) {
-    props.project_package = parentParams.package
-    props.project_package = ask("Define value for 'package' [" + props.project_package + "]: ", props.project_package, "package")
+	while (!(props.project_package = ask("Define value for 'package' [" + parentParams.package + "]: ", parentParams.package, "package")?.trim())) {}
 }
-while (!className) {
-    className = ask("Define value for 'class' name: ", null, "class")?.capitalize()
-}
+
+while (!(className = ask("Define value for 'class' name: ", null, "class")?.capitalize()?.trim())) {}
 
 processArtifact = { artifactClass, artifactTemplate, artifactType, artifactPath ->
     props.project_class_name = artifactClass
