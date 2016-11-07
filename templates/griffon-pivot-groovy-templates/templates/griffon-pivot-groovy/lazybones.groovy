@@ -7,14 +7,15 @@ if (projectDir.name =~ /\-/) {
 } else {
     props.project_class_name = transformText(projectDir.name, from: NameType.PROPERTY, to: NameType.CAMEL_CASE)
 }
-props.project_name = transformText(props.project_class_name, from: NameType.CAMEL_CASE, to: NameType.HYPHENATED)
+project_name = props.project_name = transformText(props.project_class_name, from: NameType.CAMEL_CASE, to: NameType.HYPHENATED)
+project_class_name = props.project_class_name
 
-props.project_group = ask("Define value for 'group' [org.example]: ", "org.example", "group")
-props.project_name = ask("Define value for 'artifactId' [" + props.project_name + "]: ", props.project_name , "artifactId")
+while (!(props.project_group = ask("Define value for 'group' [org.example]: ", "org.example", "group").trim())) {}
+while (!(props.project_name = ask("Define value for 'artifactId' [" + project_name + "]: ", project_name , "artifactId").trim())) {}
 props.project_version = ask("Define value for 'version' [0.1.0-SNAPSHOT]: ", "0.1.0-SNAPSHOT", "version")
-props.griffon_version = ask("Define value for 'griffonVersion' [2.9.0-SNAPSHOT]: ", "2.9.0-SNAPSHOT", "griffonVersion")
-props.project_package = ask("Define value for 'package' [" + props.project_group + "]: ", props.project_group, "package")
-props.project_class_name = ask("Define value for 'className' [" + props.project_class_name + "]: ", props.project_class_name, "className").capitalize()
+while (!(props.griffon_version = ask("Define value for 'griffonVersion' [2.9.0-SNAPSHOT]: ", "2.9.0-SNAPSHOT", "griffonVersion").trim())) {}
+while (!(props.project_package = ask("Define value for 'package' [" + props.project_group + "]: ", props.project_group, "package").trim())) {}
+while (!(props.project_class_name = ask("Define value for 'className' [" + project_class_name + "]: ", project_class_name, "className").capitalize().trim())) {}
 props.project_property_name = transformText(props.project_class_name, from: NameType.CAMEL_CASE, to: NameType.PROPERTY)
 props.project_capitalized_name = props.project_property_name.capitalize()
 String packagePath = props.project_package.replace('.' as char, '/' as char)
