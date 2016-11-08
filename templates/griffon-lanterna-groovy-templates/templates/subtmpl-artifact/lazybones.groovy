@@ -16,20 +16,20 @@ if (tmplQualifiers) {
         it.endsWith('.groovy')
     }.collect { it.toLowerCase() - '.groovy' }.sort() - 'lazybones'
     println '\nThe following artifact templates are available\n'
-	templateNames << 'mvcgroup'
+    templateNames << 'mvcgroup'
     templateNames.each { println "  $it" }
     println ' '
-    while (!(artifactBaseName in templateNames )) {
+    while (!(artifactBaseName in templateNames)) {
         artifactBaseName = ask("Which type of artifact do you want to generate? ", null, "type")?.toLowerCase()
     }
 }
 
 if (!props.project_package) {
     props.project_package = parentParams.package
-    props.project_package = ask("Define value for 'package' [" + props.project_package + "]: ", props.project_package, "package")
+    props.project_package = ask("Define value for 'package' [" + props.project_package + "]: ", props.project_package, "package")?.trim()
 }
-while (!className) {
-    className = ask("Define value for 'class' name: ", null, "class")?.capitalize()
+while (!className || className ==~ /.*\s.*/ || !Character.isJavaIdentifierStart(className[0] as char)) {
+    className = ask("Define value for 'class' name: ", null, "class")?.capitalize()?.trim()
 }
 
 processArtifact = { artifactClass, artifactTemplate, artifactType, artifactPath ->

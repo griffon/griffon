@@ -1,5 +1,5 @@
-import uk.co.cacoethes.util.NameType
 import org.apache.commons.io.FileUtils
+import uk.co.cacoethes.util.NameType
 
 Map props = [:]
 if (projectDir.name =~ /\-/) {
@@ -10,7 +10,7 @@ if (projectDir.name =~ /\-/) {
 props.project_name = transformText(props.project_class_name, from: NameType.CAMEL_CASE, to: NameType.HYPHENATED)
 
 props.project_group = ask("Define value for 'group' [org.example]: ", "org.example", "group")
-props.project_name = ask("Define value for 'artifactId' [" + props.project_name + "]: ", props.project_name , "artifactId")
+props.project_name = ask("Define value for 'artifactId' [" + props.project_name + "]: ", props.project_name, "artifactId")
 props.project_version = ask("Define value for 'version' [0.1.0-SNAPSHOT]: ", "0.1.0-SNAPSHOT", "version")
 props.griffon_version = ask("Define value for 'griffonVersion' [2.9.0-SNAPSHOT]: ", "2.9.0-SNAPSHOT", "griffonVersion")
 props.project_package = ask("Define value for 'package' [" + props.project_group + "]: ", props.project_group, "package")
