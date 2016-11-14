@@ -41,8 +41,8 @@ dependencies {
     docs project(':griffon-guide')
 }
 
-task pluginList << {
-
+task pluginList() {}
+pluginList.doLast {
     URL url = 'https://api.github.com/users/griffon-plugins/repos?sort=full_name'.toURL()
     def json = new JsonSlurper().setType(JsonParserType.LAX).parse(url)
 

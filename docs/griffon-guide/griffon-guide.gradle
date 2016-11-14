@@ -189,8 +189,10 @@ def loadProperties(File file) {
     props
 }
 
-task sampleStats() << {
-    sampleApps.each { p -> project(p).tasks.findByName('stats').computeLoc() }
+task sampleStats() {
+    doLast {
+        sampleApps.each { p -> project(p).tasks.findByName('stats').computeLoc() }
+    }
 }
 
 asciidoctorj {
