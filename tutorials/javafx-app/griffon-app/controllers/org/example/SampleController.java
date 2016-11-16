@@ -36,7 +36,6 @@ public class SampleController extends AbstractGriffonController {
     }
 
     public void sayHello() {
-        final String result = sampleService.sayHello(model.getInput());
-        runInsideUIAsync(() -> model.setOutput(result));
+        model.setOutput(sampleService.sayHello(model.getInput()));
     }
 }

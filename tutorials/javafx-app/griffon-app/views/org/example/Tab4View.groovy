@@ -16,12 +16,14 @@
 package org.example
 
 import griffon.core.artifact.GriffonView
-import griffon.javafx.support.fontawesome.FontAwesomeIcon
 import griffon.inject.MVCMember
+import griffon.javafx.support.BindingUtils
 import griffon.metadata.ArtifactProviderFor
-import griffon.plugins.fontawesome.FontAwesome
+import javafx.beans.property.StringProperty
 import javafx.scene.control.Tab
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView
+import org.kordamp.ikonli.fontawesome.FontAwesome
+import org.kordamp.ikonli.javafx.FontIcon
 
 import javax.annotation.Nonnull
 
@@ -32,19 +34,25 @@ class Tab4View extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull SampleModel model
     @MVCMember @Nonnull AppView parentView
 
+    private StringProperty uiInput
+    private StringProperty uiOutput
+
     void initUI() {
+        uiInput = BindingUtils.uiThreadAwareStringProperty(model.inputProperty())
+        uiOutput = BindingUtils.uiThreadAwareStringProperty(model.outputProperty())
+
         builder.with {
             content = builder.fxml(resource('/org/example/tab4.fxml')) {
                 inputLabel.text = application.messageSource.getMessage('name.label')
-                bean(input, text: bind(model.inputProperty))
-                bean(output, text: bind(model.outputProperty))
+                bean(input, text: bind(uiInput))
+                bean(output, text: bind(uiOutput))
             }
         }
 
         connectActions(builder.content, controller)
 
         Tab tab = new Tab('Hybrid')
-        tab.graphic = new FontAwesomeIcon(FontAwesome.FA_ROCKET)
+        tab.graphic = new FontIcon(FontAwesome.ROCKET)
         tab.content = builder.content
         tab.closable = false
         parentView.tabPane.tabs.add(tab)
