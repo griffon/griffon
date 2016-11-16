@@ -23,6 +23,8 @@ import javafx.beans.value.ObservableValue;
 import javax.annotation.Nonnull;
 
 import static java.util.Objects.requireNonNull;
+import static javafx.application.Platform.isFxApplicationThread;
+import static javafx.application.Platform.runLater;
 
 /**
  * @author Andres Almiray
@@ -66,8 +68,12 @@ class UIThreadAwareStringProperty extends StringProperty implements UIThreadAwar
     }
 
     @Override
-    public void set(String value) {
-        delegate.set(value);
+    public void set(final String value) {
+        if (isFxApplicationThread()) {
+            delegate.set(value);
+        } else {
+            runLater(() -> delegate.set(value));
+        }
     }
 
     @Override

@@ -27,6 +27,8 @@ import javafx.collections.ObservableMap;
 import javax.annotation.Nonnull;
 
 import static java.util.Objects.requireNonNull;
+import static javafx.application.Platform.isFxApplicationThread;
+import static javafx.application.Platform.runLater;
 
 /**
  * @author Andres Almiray
@@ -80,8 +82,12 @@ class UIThreadAwareMapProperty<K, V> extends MapProperty<K, V> implements UIThre
     }
 
     @Override
-    public void set(ObservableMap<K, V> value) {
-        delegate.setValue(value);
+    public void set(final ObservableMap<K, V> value) {
+        if (isFxApplicationThread()) {
+            delegate.set(value);
+        } else {
+            runLater(() -> delegate.set(value));
+        }
     }
 
     @Override

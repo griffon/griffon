@@ -27,6 +27,8 @@ import javafx.collections.SetChangeListener;
 import javax.annotation.Nonnull;
 
 import static java.util.Objects.requireNonNull;
+import static javafx.application.Platform.isFxApplicationThread;
+import static javafx.application.Platform.runLater;
 
 /**
  * @author Andres Almiray
@@ -80,8 +82,12 @@ class UIThreadAwareSetProperty<E> extends SetProperty<E> implements UIThreadAwar
     }
 
     @Override
-    public void set(ObservableSet<E> value) {
-        delegate.set(value);
+    public void set(final ObservableSet<E> value) {
+        if (isFxApplicationThread()) {
+            delegate.set(value);
+        } else {
+            runLater(() -> delegate.set(value));
+        }
     }
 
     @Override

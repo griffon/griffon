@@ -27,6 +27,8 @@ import javafx.collections.ObservableList;
 import javax.annotation.Nonnull;
 
 import static java.util.Objects.requireNonNull;
+import static javafx.application.Platform.isFxApplicationThread;
+import static javafx.application.Platform.runLater;
 
 /**
  * @author Andres Almiray
@@ -80,8 +82,12 @@ class UIThreadAwareListProperty<E> extends ListProperty<E> implements UIThreadAw
     }
 
     @Override
-    public void set(ObservableList<E> value) {
-        delegate.set(value);
+    public void set(final ObservableList<E> value) {
+        if (isFxApplicationThread()) {
+            delegate.set(value);
+        } else {
+            runLater(() -> delegate.set(value));
+        }
     }
 
     @Override
