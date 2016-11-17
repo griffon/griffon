@@ -23,7 +23,11 @@ import griffon.exceptions.InstanceMethodInvocationException;
 import javafx.application.Platform;
 import javafx.beans.property.Property;
 import javafx.collections.ListChangeListener;
+import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
+import javafx.collections.ObservableSet;
+import javafx.collections.SetChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -155,9 +159,9 @@ public final class JavaFXUtils {
      * Wraps an <tt>ObservableList</tt>, publishing updates inside the UI thread.
      *
      * @param source the <tt>ObservableList</tt> to be wrapped
-     * @param <E>    the list's paramter type.
+     * @param <E>    the list's parameter type.
      *
-     * @return a new  <tt>ObservableList</tt>
+     * @return a new <tt>ObservableList</tt>
      *
      * @since 2.6.0
      */
@@ -174,6 +178,69 @@ public final class JavaFXUtils {
 
         @Override
         protected void sourceChanged(@Nonnull final ListChangeListener.Change<? extends E> c) {
+            if (Platform.isFxApplicationThread()) {
+                fireChange(c);
+            } else {
+                Platform.runLater(() -> fireChange(c));
+            }
+        }
+    }
+
+    /**
+     * Wraps an <tt>ObservableSet</tt>, publishing updates inside the UI thread.
+     *
+     * @param source the <tt>ObservableSet</tt> to be wrapped
+     * @param <E>    the set's parameter type.
+     *
+     * @return a new <tt>ObservableSet</tt>
+     *
+     * @since 2.9.0
+     */
+    @Nonnull
+    public static <E> ObservableSet<E> createJavaFXThreadProxySet(@Nonnull ObservableSet<E> source) {
+        requireNonNull(source, "Argument 'source' must not be null");
+        return new JavaFXThreadProxyObservableSet<>(source);
+    }
+
+    private static class JavaFXThreadProxyObservableSet<E> extends DelegatingObservableSet<E> {
+        protected JavaFXThreadProxyObservableSet(ObservableSet<E> delegate) {
+            super(delegate);
+        }
+
+        @Override
+        protected void sourceChanged(@Nonnull final SetChangeListener.Change<? extends E> c) {
+            if (Platform.isFxApplicationThread()) {
+                fireChange(c);
+            } else {
+                Platform.runLater(() -> fireChange(c));
+            }
+        }
+    }
+
+    /**
+     * Wraps an <tt>ObservableMap</tt>, publishing updates inside the UI thread.
+     *
+     * @param source the <tt>ObservableMap</tt> to be wrapped
+     * @param <K>    the type of keys maintained by the map
+     * @param <V>    the type of mapped values
+     *
+     * @return a new <tt>ObservableMap</tt>
+     *
+     * @since 2.9.0
+     */
+    @Nonnull
+    public static <K, V> ObservableMap<K, V> createJavaFXThreadProxyMap(@Nonnull ObservableMap<K, V> source) {
+        requireNonNull(source, "Argument 'source' must not be null");
+        return new JavaFXThreadProxyObservableMap<>(source);
+    }
+
+    private static class JavaFXThreadProxyObservableMap<K, V> extends DelegatingObservableMap<K, V> {
+        protected JavaFXThreadProxyObservableMap(ObservableMap<K, V> delegate) {
+            super(delegate);
+        }
+
+        @Override
+        protected void sourceChanged(@Nonnull final MapChangeListener.Change<? extends K, ? extends V> c) {
             if (Platform.isFxApplicationThread()) {
                 fireChange(c);
             } else {

@@ -18,7 +18,11 @@ package griffon.javafx.support
 import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.collections.ListChangeListener
+import javafx.collections.MapChangeListener
 import javafx.collections.ObservableList
+import javafx.collections.ObservableMap
+import javafx.collections.ObservableSet
+import javafx.collections.SetChangeListener
 import javafx.embed.swing.JFXPanel
 import javafx.scene.control.Accordion
 import javafx.scene.control.Button
@@ -92,6 +96,102 @@ class JavaFXUtilsSpec extends Specification {
 
         when:
         target << 'change'
+        await().until { witness.changed }
+
+        then:
+        witness.changedInsideUIThread
+    }
+
+    void "Trigger set events inside UI thread (source) "() {
+        given:
+        ObservableSet<String> source = FXCollections.observableSet()
+        ObservableSet<String> target = JavaFXUtils.createJavaFXThreadProxySet(source)
+        SetChangeListener<String> witness = new SetChangeListener<String>() {
+            boolean changed
+            boolean changedInsideUIThread
+
+            @Override
+            void onChanged(SetChangeListener.Change<? extends String> c) {
+                changed = true
+                changedInsideUIThread = Platform.isFxApplicationThread()
+            }
+        }
+        target.addListener(witness)
+
+        when:
+        source << 'change'
+        await().until { witness.changed }
+
+        then:
+        witness.changedInsideUIThread
+    }
+
+    void "Trigger set events inside UI thread (target) "() {
+        given:
+        ObservableSet<String> source = FXCollections.observableSet()
+        ObservableSet<String> target = JavaFXUtils.createJavaFXThreadProxySet(source)
+        SetChangeListener<String> witness = new SetChangeListener<String>() {
+            boolean changed
+            boolean changedInsideUIThread
+
+            @Override
+            void onChanged(SetChangeListener.Change<? extends String> c) {
+                changed = true
+                changedInsideUIThread = Platform.isFxApplicationThread()
+            }
+        }
+        target.addListener(witness)
+
+        when:
+        target << 'change'
+        await().until { witness.changed }
+
+        then:
+        witness.changedInsideUIThread
+    }
+
+    void "Trigger map events inside UI thread (source) "() {
+        given:
+        ObservableMap<String, String> source = FXCollections.observableHashMap()
+        ObservableMap<String, String> target = JavaFXUtils.createJavaFXThreadProxyMap(source)
+        MapChangeListener<String, String> witness = new MapChangeListener<String, String>() {
+            boolean changed
+            boolean changedInsideUIThread
+
+            @Override
+            void onChanged(MapChangeListener.Change<? extends String, ? extends String> c) {
+                changed = true
+                changedInsideUIThread = Platform.isFxApplicationThread()
+            }
+        }
+        target.addListener(witness)
+
+        when:
+        source.key = 'value'
+        await().until { witness.changed }
+
+        then:
+        witness.changedInsideUIThread
+    }
+
+    void "Trigger map events inside UI thread (target) "() {
+        given:
+        ObservableMap<String, String> source = FXCollections.observableHashMap()
+        ObservableMap<String, String> target = JavaFXUtils.createJavaFXThreadProxyMap(source)
+        MapChangeListener<String, String> witness = new MapChangeListener<String, String>() {
+            boolean changed
+            boolean changedInsideUIThread
+
+            @Override
+            void onChanged(MapChangeListener.Change<? extends String, ? extends String> c) {
+                changed = true
+                changedInsideUIThread = Platform.isFxApplicationThread()
+            }
+        }
+        target.addListener(witness)
+
+        when:
+        target.key = 'value'
         await().until { witness.changed }
 
         then:
