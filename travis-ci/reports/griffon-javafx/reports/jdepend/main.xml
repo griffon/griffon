@@ -2,6 +2,10 @@
 <JDepend>
     <Packages>
 
+        <Package name="com.sun.javafx.collections">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
         <Package name="griffon.core">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
@@ -218,14 +222,14 @@
 
         <Package name="griffon.javafx.support">
             <Stats>
-                <TotalClasses>13</TotalClasses>
+                <TotalClasses>15</TotalClasses>
                 <ConcreteClasses>10</ConcreteClasses>
-                <AbstractClasses>3</AbstractClasses>
+                <AbstractClasses>5</AbstractClasses>
                 <Ca>0</Ca>
-                <Ce>10</Ce>
-                <A>0.23</A>
+                <Ce>12</Ce>
+                <A>0.33</A>
                 <I>1</I>
-                <D>0.23</D>
+                <D>0.33</D>
                 <V>1</V>
             </Stats>
 
@@ -235,6 +239,12 @@
                 </Class>
                 <Class sourceFile="Unknown">
                     griffon.javafx.support.JavaFXUtils$Predicate
+                </Class>
+                <Class sourceFile="Unknown">
+                    griffon.javafx.support.ObservableMapBase
+                </Class>
+                <Class sourceFile="Unknown">
+                    griffon.javafx.support.ObservableSetBase
                 </Class>
                 <Class sourceFile="Unknown">
                     griffon.javafx.support.UIThreadAware
@@ -275,11 +285,13 @@
             </ConcreteClasses>
 
             <DependsUpon>
+                <Package>com.sun.javafx.collections</Package>
                 <Package>java.lang</Package>
                 <Package>java.util</Package>
                 <Package>javafx.beans</Package>
                 <Package>javafx.beans.property</Package>
                 <Package>javafx.beans.value</Package>
+                <Package>javafx.collections</Package>
                 <Package>javafx.event</Package>
                 <Package>javafx.scene</Package>
                 <Package>javafx.scene.control</Package>
@@ -336,6 +348,10 @@
         </Package>
 
         <Package name="javafx.beans.value">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="javafx.collections">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
