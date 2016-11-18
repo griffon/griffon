@@ -48,7 +48,7 @@ import static java.lang.Long.parseLong
 class BindingUtilsSpec extends Specification {
     def "Map #type to object literal"() {
         given:
-        ObjectBinding binding = BindingUtils.mapAsObject(source)
+        ObjectBinding binding = BindingUtils.mapToObject(source)
 
         expect:
         !binding.get()
@@ -71,7 +71,7 @@ class BindingUtilsSpec extends Specification {
 
     def "Map object observable to #type binding"() {
         given:
-        Binding binding = BindingUtils."mapAs${type}"(source)
+        Binding binding = BindingUtils."mapTo${type}"(source)
 
         expect:
         !binding.get()
@@ -198,10 +198,10 @@ class BindingUtilsSpec extends Specification {
         'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | new Box(3)   | new Box(1) | new Box(2) | new Box(4) | new Box(5) | { a, b -> new Box(4) }       | { a, b -> new Box(5) }
     }
 
-    def "ReduceThenMapAs#type list with functions and default value"() {
+    def "ReduceThenMapTo#type list with functions and default value"() {
         given:
         ObservableList items = FXCollections.observableArrayList()
-        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, defaultValue, reducer as BinaryOperator, mapper as Function)
+        Binding binding = BindingUtils."reduceThenMapTo${type}"(items, defaultValue, reducer as BinaryOperator, mapper as Function)
 
         expect:
         mapper(defaultValue) == binding.get()
@@ -228,10 +228,10 @@ class BindingUtilsSpec extends Specification {
         'String'  | 'A'          | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'
     }
 
-    def "ReduceThenMapAs#type list with functions and supplier"() {
+    def "ReduceThenMapTo#type list with functions and supplier"() {
         given:
         ObservableList items = FXCollections.observableArrayList()
-        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, supplier as Supplier, reducer as BinaryOperator, mapper as Function)
+        Binding binding = BindingUtils."reduceThenMapTo${type}"(items, supplier as Supplier, reducer as BinaryOperator, mapper as Function)
 
         expect:
         mapper(supplier()) == binding.get()
@@ -258,12 +258,12 @@ class BindingUtilsSpec extends Specification {
         'String'  | { 'A' }    | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'
     }
 
-    def "ReduceThenMapAs#type list with observable functions and default value"() {
+    def "ReduceThenMapTo#type list with observable functions and default value"() {
         given:
         ObjectProperty observableReducer = new SimpleObjectProperty(reducer1 as BinaryOperator)
         ObjectProperty observableMapper = new SimpleObjectProperty(mapper1 as Function)
         ObservableList items = FXCollections.observableArrayList()
-        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, defaultValue, observableReducer, observableMapper)
+        Binding binding = BindingUtils."reduceThenMapTo${type}"(items, defaultValue, observableReducer, observableMapper)
 
         expect:
         mapper1(defaultValue) == binding.get()
@@ -302,12 +302,12 @@ class BindingUtilsSpec extends Specification {
         'String'  | 'A'          | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'    | { a, b -> 'D' }    | { i -> i * 3 }                        | 'DD'    | 'DDD'
     }
 
-    def "ReduceThenMapAs#type list with observable functions and supplier"() {
+    def "ReduceThenMapTo#type list with observable functions and supplier"() {
         given:
         ObjectProperty observableReducer = new SimpleObjectProperty(reducer1 as BinaryOperator)
         ObjectProperty observableMapper = new SimpleObjectProperty(mapper1 as Function)
         ObservableList items = FXCollections.observableArrayList()
-        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, supplier as Supplier, observableReducer, observableMapper)
+        Binding binding = BindingUtils."reduceThenMapTo${type}"(items, supplier as Supplier, observableReducer, observableMapper)
 
         expect:
         mapper1(supplier()) == binding.get()
@@ -346,10 +346,10 @@ class BindingUtilsSpec extends Specification {
         'String'  | {'A' }    | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'    | { a, b -> 'D' }    | { i -> i * 3 }                        | 'DD'    | 'DDD'
     }
 
-    def "ReduceThenMapAs#type set with functions and default value"() {
+    def "ReduceThenMapTo#type set with functions and default value"() {
         given:
         ObservableSet items = FXCollections.observableSet()
-        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, defaultValue, reducer as BinaryOperator, mapper as Function)
+        Binding binding = BindingUtils."reduceThenMapTo${type}"(items, defaultValue, reducer as BinaryOperator, mapper as Function)
 
         expect:
         mapper(defaultValue) == binding.get()
@@ -376,10 +376,10 @@ class BindingUtilsSpec extends Specification {
         'String'  | 'A'          | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'
     }
 
-    def "ReduceThenMapAs#type set with functions and supplier"() {
+    def "ReduceThenMapTo#type set with functions and supplier"() {
         given:
         ObservableSet items = FXCollections.observableSet()
-        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, supplier as Supplier, reducer as BinaryOperator, mapper as Function)
+        Binding binding = BindingUtils."reduceThenMapTo${type}"(items, supplier as Supplier, reducer as BinaryOperator, mapper as Function)
 
         expect:
         mapper(supplier()) == binding.get()
@@ -406,12 +406,12 @@ class BindingUtilsSpec extends Specification {
         'String'  | { 'A' }    | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'
     }
 
-    def "ReduceThenMapAs#type set with observable functions and default value"() {
+    def "ReduceThenMapTo#type set with observable functions and default value"() {
         given:
         ObjectProperty observableReducer = new SimpleObjectProperty(reducer1 as BinaryOperator)
         ObjectProperty observableMapper = new SimpleObjectProperty(mapper1 as Function)
         ObservableSet items = FXCollections.observableSet()
-        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, defaultValue, observableReducer, observableMapper)
+        Binding binding = BindingUtils."reduceThenMapTo${type}"(items, defaultValue, observableReducer, observableMapper)
 
         expect:
         mapper1(defaultValue) == binding.get()
@@ -450,12 +450,12 @@ class BindingUtilsSpec extends Specification {
         'String'  | 'A'          | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'    | { a, b -> 'D' }    | { i -> i * 3 }                        | 'DD'    | 'DDD'
     }
 
-    def "ReduceThenMapAs#type set with observable functions and supplier"() {
+    def "ReduceThenMapTo#type set with observable functions and supplier"() {
         given:
         ObjectProperty observableReducer = new SimpleObjectProperty(reducer1 as BinaryOperator)
         ObjectProperty observableMapper = new SimpleObjectProperty(mapper1 as Function)
         ObservableSet items = FXCollections.observableSet()
-        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, supplier as Supplier, observableReducer, observableMapper)
+        Binding binding = BindingUtils."reduceThenMapTo${type}"(items, supplier as Supplier, observableReducer, observableMapper)
 
         expect:
         mapper1(supplier()) == binding.get()
@@ -494,10 +494,10 @@ class BindingUtilsSpec extends Specification {
         'String'  | {'A' }    | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'    | { a, b -> 'D' }    | { i -> i * 3 }                        | 'DD'    | 'DDD'
     }
 
-    def "ReduceThenMapAs#type map with functions and default value"() {
+    def "ReduceThenMapTo#type map with functions and default value"() {
         given:
         ObservableMap items = FXCollections.observableHashMap()
-        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, defaultValue, reducer as BinaryOperator, mapper as Function)
+        Binding binding = BindingUtils."reduceThenMapTo${type}"(items, defaultValue, reducer as BinaryOperator, mapper as Function)
 
         expect:
         mapper(defaultValue) == binding.get()
@@ -524,10 +524,10 @@ class BindingUtilsSpec extends Specification {
         'String'  | 'A'          | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'
     }
 
-    def "ReduceThenMapAs#type map with functions and supplier"() {
+    def "ReduceThenMapTo#type map with functions and supplier"() {
         given:
         ObservableMap items = FXCollections.observableHashMap()
-        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, supplier as Supplier, reducer as BinaryOperator, mapper as Function)
+        Binding binding = BindingUtils."reduceThenMapTo${type}"(items, supplier as Supplier, reducer as BinaryOperator, mapper as Function)
 
         expect:
         mapper(supplier()) == binding.get()
@@ -554,12 +554,12 @@ class BindingUtilsSpec extends Specification {
         'String'  | { 'A' }    | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'
     }
 
-    def "ReduceThenMapAs#type map with observable functions and default value"() {
+    def "ReduceThenMapTo#type map with observable functions and default value"() {
         given:
         ObjectProperty observableReducer = new SimpleObjectProperty(reducer1 as BinaryOperator)
         ObjectProperty observableMapper = new SimpleObjectProperty(mapper1 as Function)
         ObservableMap items = FXCollections.observableHashMap()
-        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, defaultValue, observableReducer, observableMapper)
+        Binding binding = BindingUtils."reduceThenMapTo${type}"(items, defaultValue, observableReducer, observableMapper)
 
         expect:
         mapper1(defaultValue) == binding.get()
@@ -598,12 +598,12 @@ class BindingUtilsSpec extends Specification {
         'String'  | 'A'          | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'    | { a, b -> 'D' }    | { i -> i * 3 }                        | 'DD'    | 'DDD'
     }
 
-    def "ReduceThenMapAs#type map with observable functions and supplier"() {
+    def "ReduceThenMapTo#type map with observable functions and supplier"() {
         given:
         ObjectProperty observableReducer = new SimpleObjectProperty(reducer1 as BinaryOperator)
         ObjectProperty observableMapper = new SimpleObjectProperty(mapper1 as Function)
         ObservableMap items = FXCollections.observableHashMap()
-        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, supplier as Supplier, observableReducer, observableMapper)
+        Binding binding = BindingUtils."reduceThenMapTo${type}"(items, supplier as Supplier, observableReducer, observableMapper)
 
         expect:
         mapper1(supplier()) == binding.get()
@@ -642,10 +642,10 @@ class BindingUtilsSpec extends Specification {
         'String'  | {'A' }    | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'    | { a, b -> 'D' }    | { i -> i * 3 }                        | 'DD'    | 'DDD'
     }
 
-    def "MapAs#type then reduce list with functions and default value"() {
+    def "MapTo#type then reduce list with functions and default value"() {
         given:
         ObservableList items = FXCollections.observableArrayList()
-        Binding binding = BindingUtils."mapAs${type}ThenReduce"(items, defaultValue, mapper as Function, reducer as BinaryOperator)
+        Binding binding = BindingUtils."mapTo${type}ThenReduce"(items, defaultValue, mapper as Function, reducer as BinaryOperator)
 
         expect:
         defaultValue == binding.get()
@@ -672,10 +672,10 @@ class BindingUtilsSpec extends Specification {
         'String'  | 'A'          | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'
     }
 
-    def "MapAs#type then reduce list with functions and supplier"() {
+    def "MapTo#type then reduce list with functions and supplier"() {
         given:
         ObservableList items = FXCollections.observableArrayList()
-        Binding binding = BindingUtils."mapAs${type}ThenReduce"(items, supplier as Supplier, mapper as Function, reducer as BinaryOperator)
+        Binding binding = BindingUtils."mapTo${type}ThenReduce"(items, supplier as Supplier, mapper as Function, reducer as BinaryOperator)
 
         expect:
         supplier() == binding.get()
@@ -702,12 +702,12 @@ class BindingUtilsSpec extends Specification {
         'String'  | { 'A' }  | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'
     }
 
-    def "MapAs#type then reduce list with observable functions and default value"() {
+    def "MapTo#type then reduce list with observable functions and default value"() {
         given:
         ObjectProperty observableReducer = new SimpleObjectProperty(reducer1 as BinaryOperator)
         ObjectProperty observableMapper = new SimpleObjectProperty(mapper1 as Function)
         ObservableList items = FXCollections.observableArrayList()
-        Binding binding = BindingUtils."mapAs${type}ThenReduce"(items, defaultValue, observableMapper, observableReducer)
+        Binding binding = BindingUtils."mapTo${type}ThenReduce"(items, defaultValue, observableMapper, observableReducer)
 
         expect:
         defaultValue == binding.get()
@@ -746,12 +746,12 @@ class BindingUtilsSpec extends Specification {
         'String'  | 'A'          | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'    | { a, b -> b * 3 }            | { i -> 'D' }   | 'CCCCCC' | 'DDD'
     }
 
-    def "MapAs#type then reduce list with observable functions and supplier"() {
+    def "MapTo#type then reduce list with observable functions and supplier"() {
         given:
         ObjectProperty observableReducer = new SimpleObjectProperty(reducer1 as BinaryOperator)
         ObjectProperty observableMapper = new SimpleObjectProperty(mapper1 as Function)
         ObservableList items = FXCollections.observableArrayList()
-        Binding binding = BindingUtils."mapAs${type}ThenReduce"(items, supplier as Supplier, observableMapper, observableReducer)
+        Binding binding = BindingUtils."mapTo${type}ThenReduce"(items, supplier as Supplier, observableMapper, observableReducer)
 
         expect:
         supplier() == binding.get()
@@ -790,10 +790,10 @@ class BindingUtilsSpec extends Specification {
         'String'  | { 'A' }  | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'    | { a, b -> b * 3 }            | { i -> 'D' }   | 'CCCCCC' | 'DDD'
     }
 
-    def "MapAs#type then reduce set with functions and default value"() {
+    def "MapTo#type then reduce set with functions and default value"() {
         given:
         ObservableSet items = FXCollections.observableSet()
-        Binding binding = BindingUtils."mapAs${type}ThenReduce"(items, defaultValue, mapper as Function, reducer as BinaryOperator)
+        Binding binding = BindingUtils."mapTo${type}ThenReduce"(items, defaultValue, mapper as Function, reducer as BinaryOperator)
 
         expect:
         defaultValue == binding.get()
@@ -820,10 +820,10 @@ class BindingUtilsSpec extends Specification {
         'String'  | 'A'          | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'
     }
 
-    def "MapAs#type then reduce set with functions and supplier"() {
+    def "MapTo#type then reduce set with functions and supplier"() {
         given:
         ObservableSet items = FXCollections.observableSet()
-        Binding binding = BindingUtils."mapAs${type}ThenReduce"(items, supplier as Supplier, mapper as Function, reducer as BinaryOperator)
+        Binding binding = BindingUtils."mapTo${type}ThenReduce"(items, supplier as Supplier, mapper as Function, reducer as BinaryOperator)
 
         expect:
         supplier() == binding.get()
@@ -850,12 +850,12 @@ class BindingUtilsSpec extends Specification {
         'String'  | { 'A' }  | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'
     }
 
-    def "MapAs#type then reduce set with observable functions and default value"() {
+    def "MapTo#type then reduce set with observable functions and default value"() {
         given:
         ObjectProperty observableReducer = new SimpleObjectProperty(reducer1 as BinaryOperator)
         ObjectProperty observableMapper = new SimpleObjectProperty(mapper1 as Function)
         ObservableSet items = FXCollections.observableSet()
-        Binding binding = BindingUtils."mapAs${type}ThenReduce"(items, defaultValue, observableMapper, observableReducer)
+        Binding binding = BindingUtils."mapTo${type}ThenReduce"(items, defaultValue, observableMapper, observableReducer)
 
         expect:
         defaultValue == binding.get()
@@ -894,12 +894,12 @@ class BindingUtilsSpec extends Specification {
         'String'  | 'A'          | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'    | { a, b -> b * 3 }            | { i -> 'D' }   | 'CCCCCC' | 'DDD'
     }
 
-    def "MapAs#type then reduce set with observable functions and supplier"() {
+    def "MapTo#type then reduce set with observable functions and supplier"() {
         given:
         ObjectProperty observableReducer = new SimpleObjectProperty(reducer1 as BinaryOperator)
         ObjectProperty observableMapper = new SimpleObjectProperty(mapper1 as Function)
         ObservableSet items = FXCollections.observableSet()
-        Binding binding = BindingUtils."mapAs${type}ThenReduce"(items, supplier as Supplier, observableMapper, observableReducer)
+        Binding binding = BindingUtils."mapTo${type}ThenReduce"(items, supplier as Supplier, observableMapper, observableReducer)
 
         expect:
         supplier() == binding.get()
@@ -938,10 +938,10 @@ class BindingUtilsSpec extends Specification {
         'String'  | { 'A' }  | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'    | { a, b -> b * 3 }            | { i -> 'D' }   | 'CCCCCC' | 'DDD'
     }
 
-    def "MapAs#type then reduce map with functions and default value"() {
+    def "MapTo#type then reduce map with functions and default value"() {
         given:
         ObservableMap items = FXCollections.observableHashMap()
-        Binding binding = BindingUtils."mapAs${type}ThenReduce"(items, defaultValue, mapper as Function, reducer as BinaryOperator)
+        Binding binding = BindingUtils."mapTo${type}ThenReduce"(items, defaultValue, mapper as Function, reducer as BinaryOperator)
 
         expect:
         defaultValue == binding.get()
@@ -968,10 +968,10 @@ class BindingUtilsSpec extends Specification {
         'String'  | 'A'        | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'
     }
 
-    def "MapAs#type then reduce map with functions and supplier"() {
+    def "MapTo#type then reduce map with functions and supplier"() {
         given:
         ObservableMap items = FXCollections.observableHashMap()
-        Binding binding = BindingUtils."mapAs${type}ThenReduce"(items, supplier as Supplier, mapper as Function, reducer as BinaryOperator)
+        Binding binding = BindingUtils."mapTo${type}ThenReduce"(items, supplier as Supplier, mapper as Function, reducer as BinaryOperator)
 
         expect:
         supplier() == binding.get()
@@ -998,12 +998,12 @@ class BindingUtilsSpec extends Specification {
         'String'  | { 'A' }  | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'
     }
 
-    def "MapAs#type then reduce map with observable functions and default value"() {
+    def "MapTo#type then reduce map with observable functions and default value"() {
         given:
         ObjectProperty observableReducer = new SimpleObjectProperty(reducer1 as BinaryOperator)
         ObjectProperty observableMapper = new SimpleObjectProperty(mapper1 as Function)
         ObservableMap items = FXCollections.observableHashMap()
-        Binding binding = BindingUtils."mapAs${type}ThenReduce"(items, defaultValue, observableMapper, observableReducer)
+        Binding binding = BindingUtils."mapTo${type}ThenReduce"(items, defaultValue, observableMapper, observableReducer)
 
         expect:
         defaultValue == binding.get()
@@ -1042,12 +1042,12 @@ class BindingUtilsSpec extends Specification {
         'String'  | 'A'          | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'    | { a, b -> b * 3 }            | { i -> 'D' }   | 'CCCCCC' | 'DDD'
     }
 
-    def "MapAs#type then reduce map with observable functions and supplier"() {
+    def "MapTo#type then reduce map with observable functions and supplier"() {
         given:
         ObjectProperty observableReducer = new SimpleObjectProperty(reducer1 as BinaryOperator)
         ObjectProperty observableMapper = new SimpleObjectProperty(mapper1 as Function)
         ObservableMap items = FXCollections.observableHashMap()
-        Binding binding = BindingUtils."mapAs${type}ThenReduce"(items, supplier as Supplier, observableMapper, observableReducer)
+        Binding binding = BindingUtils."mapTo${type}ThenReduce"(items, supplier as Supplier, observableMapper, observableReducer)
 
         expect:
         supplier() == binding.get()

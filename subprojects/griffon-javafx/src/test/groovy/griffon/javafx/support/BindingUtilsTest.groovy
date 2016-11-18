@@ -44,7 +44,7 @@ class BindingUtilsTest {
     @Test
     void "Join list with string delimiter"() {
         ObservableList<Object> items = FXCollections.observableArrayList()
-        StringBinding joined = BindingUtils.join(items, ', ')
+        StringBinding joined = BindingUtils.joinList(items, ', ')
 
         assertThat(joined.get(), equalTo(''))
 
@@ -62,7 +62,7 @@ class BindingUtilsTest {
     void "Join list with observable delimiter"() {
         ObservableList<Object> items = FXCollections.observableArrayList()
         StringProperty delimiter = new SimpleStringProperty(', ')
-        StringBinding joined = BindingUtils.join(items, delimiter)
+        StringBinding joined = BindingUtils.joinList(items, delimiter)
 
         assertThat(joined.get(), equalTo(''))
 
@@ -83,7 +83,7 @@ class BindingUtilsTest {
     void "Join list with string delimiter and mapper"() {
         ObservableList<Object> items = FXCollections.observableArrayList()
         Function<String, String> mapper = { s -> '"' + s + '"'}
-        StringBinding joined = BindingUtils.join(items, ', ', mapper)
+        StringBinding joined = BindingUtils.joinList(items, ', ', mapper)
 
         assertThat(joined.get(), equalTo(''))
 
@@ -103,7 +103,7 @@ class BindingUtilsTest {
         StringProperty delimiter = new SimpleStringProperty(', ')
         Function<String, String> function = { s -> '"' + s + '"'}
         ObjectProperty<Function<String, String>> mapper = new SimpleObjectProperty(function)
-        StringBinding joined = BindingUtils.join(items, delimiter, mapper)
+        StringBinding joined = BindingUtils.joinList(items, delimiter, mapper)
 
         assertThat(joined.get(), equalTo(''))
 
@@ -126,7 +126,7 @@ class BindingUtilsTest {
     @Test
     void "Join set with string delimiter"() {
         ObservableSet<Object> items = FXCollections.observableSet()
-        StringBinding joined = BindingUtils.join(items, ', ')
+        StringBinding joined = BindingUtils.joinSet(items, ', ')
 
         assertThat(joined.get(), equalTo(''))
 
@@ -134,17 +134,14 @@ class BindingUtilsTest {
         assertThat(joined.get(), equalTo('A'))
 
         items << 1
-        assertThat(joined.get(), equalTo('A, 1'))
-
-        items << Runnable
-        assertThat(joined.get(), equalTo('A, 1, interface java.lang.Runnable'))
+        assert joined.get() == 'A, 1' || joined.get() == '1, A'
     }
 
     @Test
     void "Join set with observable delimiter"() {
         ObservableSet<Object> items = FXCollections.observableSet()
         StringProperty delimiter = new SimpleStringProperty(', ')
-        StringBinding joined = BindingUtils.join(items, delimiter)
+        StringBinding joined = BindingUtils.joinSet(items, delimiter)
 
         assertThat(joined.get(), equalTo(''))
 
@@ -152,13 +149,10 @@ class BindingUtilsTest {
         assertThat(joined.get(), equalTo('A'))
 
         items << 1
-        assertThat(joined.get(), equalTo('A, 1'))
-
-        items << Runnable
-        assertThat(joined.get(), equalTo('A, 1, interface java.lang.Runnable'))
+        assert joined.get() == 'A, 1' || joined.get() == '1, A'
 
         delimiter.set(':')
-        assertThat(joined.get(), equalTo('A:1:interface java.lang.Runnable'))
+        assert joined.get() == 'A:1' || joined.get() == '1:A'
     }
 
 
@@ -166,7 +160,7 @@ class BindingUtilsTest {
     void "Join set with string delimiter and mapper"() {
         ObservableSet<Object> items = FXCollections.observableSet()
         Function<String, String> mapper = { s -> '"' + s + '"'}
-        StringBinding joined = BindingUtils.join(items, ', ', mapper)
+        StringBinding joined = BindingUtils.joinSet(items, ', ', mapper)
 
         assertThat(joined.get(), equalTo(''))
 
@@ -174,10 +168,7 @@ class BindingUtilsTest {
         assertThat(joined.get(), equalTo('"A"'))
 
         items << 1
-        assertThat(joined.get(), equalTo('"A", "1"'))
-
-        items << Runnable
-        assertThat(joined.get(), equalTo('"A", "1", "interface java.lang.Runnable"'))
+        assert joined.get() == '"A", "1"' || joined.get() == '"1", "A"'
     }
 
     @Test
@@ -186,7 +177,7 @@ class BindingUtilsTest {
         StringProperty delimiter = new SimpleStringProperty(', ')
         Function<String, String> function = { s -> '"' + s + '"'}
         ObjectProperty<Function<String, String>> mapper = new SimpleObjectProperty(function)
-        StringBinding joined = BindingUtils.join(items, delimiter, mapper)
+        StringBinding joined = BindingUtils.joinSet(items, delimiter, mapper)
 
         assertThat(joined.get(), equalTo(''))
 
@@ -194,22 +185,19 @@ class BindingUtilsTest {
         assertThat(joined.get(), equalTo('"A"'))
 
         items << 1
-        assertThat(joined.get(), equalTo('"A", "1"'))
-
-        items << Runnable
-        assertThat(joined.get(), equalTo('"A", "1", "interface java.lang.Runnable"'))
+        assert joined.get() == '"A", "1"' || joined.get() == '"1", "A"'
 
         delimiter.set(':')
-        assertThat(joined.get(), equalTo('"A":"1":"interface java.lang.Runnable"'))
+        assert joined.get() == '"A":"1"' || joined.get() == '"1":"A"'
 
         mapper.set({ s -> '[' + s + ']'} as Function)
-        assertThat(joined.get(), equalTo('[A]:[1]:[interface java.lang.Runnable]'))
+        assert joined.get() == '[A]:[1]' || joined.get() == '[1]:[A]"'
     }
 
     @Test
     void "Join map with string delimiter"() {
         ObservableMap<Object, Object> items = FXCollections.observableHashMap()
-        StringBinding joined = BindingUtils.join(items, '; ')
+        StringBinding joined = BindingUtils.joinMap(items, '; ')
 
         assertThat(joined.get(), equalTo(''))
 
@@ -224,7 +212,7 @@ class BindingUtilsTest {
     void "Join map with observable delimiter"() {
         ObservableMap<Object, Object> items = FXCollections.observableHashMap()
         StringProperty delimiter = new SimpleStringProperty('; ')
-        StringBinding joined = BindingUtils.join(items, delimiter)
+        StringBinding joined = BindingUtils.joinMap(items, delimiter)
 
         assertThat(joined.get(), equalTo(''))
 
@@ -242,7 +230,7 @@ class BindingUtilsTest {
     void "Join map with string delimiter and mapper"() {
         ObservableMap<Object, Object> items = FXCollections.observableHashMap()
         Function<Map.Entry<Object,Object>, String> function = { e -> e.key + ':' + e.value }
-        StringBinding joined = BindingUtils.join(items, '; ', function)
+        StringBinding joined = BindingUtils.joinMap(items, '; ', function)
 
         assertThat(joined.get(), equalTo(''))
 
@@ -259,7 +247,7 @@ class BindingUtilsTest {
         StringProperty delimiter = new SimpleStringProperty('; ')
         Function<Map.Entry<Object,Object>, String> function = { e -> e.key + '=' + e.value }
         ObjectProperty<Function<Map.Entry<Object,Object>, String>> mapper = new SimpleObjectProperty<>(function)
-        StringBinding joined = BindingUtils.join(items, delimiter, mapper)
+        StringBinding joined = BindingUtils.joinMap(items, delimiter, mapper)
 
         assertThat(joined.get(), equalTo(''))
 
