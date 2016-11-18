@@ -19,6 +19,16 @@ The following list summarizes the changes brought by this release:
  ** `graphic`: used to set the graphic node on the bound widget.
  ** `graphicStyle`: used to set style on the graphic node of the bound widget.
  ** `graphicStyleClass`: used to set style classes on the graphic node of the bound widget.
+ * Added an UI Thread proxy `ObservableSet`; all of its updates will be triggered inside the UI thread.
+ * Added an UI Thread proxy `ObservableMap`; all of its updates will be triggered inside the UI thread.
+ * New `BindingUtils` class provides lots of useful binding and property factories:
+ ** Join `ObservableList`/`ObservableSet`/`ObservableMap` to `StringBinding`.
+ ** Reduce `ObservableList`/`ObservableSet`/`ObservableMap` to `ObjectBinding`.
+ ** Reduce `ObservableList`/`ObservableSet`/`ObservableMap` then map to X; where X may be a wrapper type, String or a type `R`.
+ ** Map elements of `ObservableList`/`ObservableSet`/`ObservableMap` to X then reduce; where X may be a wrapper type, String or a type `R`.
+ ** convert `ObservableValue<X>` to is corresponding `XBinding`.
+ ** convert `ObservableXValue` to `ObjectBinding<X>`.
+ ** Create bindings that update their value and notify listeners inside the UI thread.
 
 A more detailed description of the changes and compatibility issues can be found at the link:/releasenotes/griffon_2.9.0.html[release notes, window="_blank"].
 

@@ -12,6 +12,8 @@ Andres Almiray
 
 === Dependencies
 
+No dependencies updated in this release.
+
 === Runtime
 
 ==== JavaFX Support
@@ -23,10 +25,24 @@ Andres Almiray
  * `graphicStyle`: used to set style on the graphic node of the bound widget.
  * `graphicStyleClass`: used to set style classes on the graphic node of the bound widget.
 
-You may define a `&` at rhe beginning of the value of either `style` or `graphicStyle` properties,
+You may define a `&` at the beginning of the value of either `style` or `graphicStyle` properties,
 this instructs the runtime to append the style definition instead of overwriting it.
 
+New `BindingUtils` utility class provides the following features:
+
+ * Join `ObservableList`/`ObservableSet`/`ObservableMap` to `StringBinding`.
+ * Reduce `ObservableList`/`ObservableSet`/`ObservableMap` to `ObjectBinding`.
+ * Reduce `ObservableList`/`ObservableSet`/`ObservableMap` then map to X; where X may be a wrapper type, String or a type `R`.
+ * Map elements of `ObservableList`/`ObservableSet`/`ObservableMap` to X then reduce; where X may be a wrapper type, String or a type `R`.
+ * convert `ObservableValue<X>` to is corresponding `XBinding`.
+ * convert `ObservableXValue` to `ObjectBinding<X>`.
+ * Create bindings that update their value and notify listeners inside the UI thread.
+
 === Buildtime
+
+==== Gradle Wrapper
+
+Gradle wrapper version on all Lazybones templates has been bumped to `3.2`.
 
 === Compatibility
 
