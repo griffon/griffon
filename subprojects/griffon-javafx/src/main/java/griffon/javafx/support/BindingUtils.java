@@ -4804,4 +4804,1761 @@ public class BindingUtils {
             return mapperValue.apply(items.values().stream().reduce(operator).orElse(supplier.get()));
         }, items, reducer, mapper);
     }
+
+    /**
+     * Returns an object binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable list of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an object binding
+     */
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableList<T> items, @Nullable final R defaultValue, @Nonnull final Function<? super T, R> mapper, @Nonnull final BinaryOperator<R> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createObjectBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
+    }
+
+    /**
+     * Returns an object binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable list of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an object binding
+     */
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<R> supplier, @Nonnull final Function<? super T, R> mapper, @Nonnull final BinaryOperator<R> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createObjectBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+    }
+
+    /**
+     * Returns an object binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable list of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an object binding
+     */
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableList<T> items, @Nullable final R defaultValue, @Nonnull final ObservableValue<Function<? super T, R>> mapper, @Nonnull final ObservableValue<BinaryOperator<R>> reducer) {
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createObjectBinding(() -> {
+            BinaryOperator<R> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, R> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(defaultValue);
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns an object binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable list of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an object binding
+     */
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<R> supplier, @Nonnull final ObservableValue<Function<? super T, R>> mapper, @Nonnull final ObservableValue<BinaryOperator<R>> reducer) {
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createObjectBinding(() -> {
+            BinaryOperator<R> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, R> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns an object binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable set of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an object binding
+     */
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final R defaultValue, @Nonnull final Function<? super T, R> mapper, @Nonnull final BinaryOperator<R> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        return createObjectBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
+    }
+
+    /**
+     * Returns an object binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable set of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an object binding
+     */
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<R> supplier, @Nonnull final Function<? super T, R> mapper, @Nonnull final BinaryOperator<R> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createObjectBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+    }
+
+    /**
+     * Returns an object binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable set of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an object binding
+     */
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final R defaultValue, @Nonnull final ObservableValue<Function<? super T, R>> mapper, @Nonnull final ObservableValue<BinaryOperator<R>> reducer) {
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createObjectBinding(() -> {
+            BinaryOperator<R> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, R> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(defaultValue);
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns an object binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable set of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an object binding
+     */
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<R> supplier, @Nonnull final ObservableValue<Function<? super T, R>> mapper, @Nonnull final ObservableValue<BinaryOperator<R>> reducer) {
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createObjectBinding(() -> {
+            BinaryOperator<R> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, R> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns an object binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items        the observable map.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each value.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an object binding
+     */
+    @Nonnull
+    public static <K, V, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final R defaultValue, @Nonnull final Function<? super V, R> mapper, @Nonnull final BinaryOperator<R> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createObjectBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
+    }
+
+    /**
+     * Returns an object binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items    the observable map.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each value.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an object binding
+     */
+    @Nonnull
+    public static <K, V, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<R> supplier, @Nonnull final Function<? super V, R> mapper, @Nonnull final BinaryOperator<R> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createObjectBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+    }
+
+    /**
+     * Returns an object binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items        the observable map.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each value.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an object binding
+     */
+    @Nonnull
+    public static <K, V, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final R defaultValue, @Nonnull final ObservableValue<Function<? super V, R>> mapper, @Nonnull final ObservableValue<BinaryOperator<R>> reducer) {
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createObjectBinding(() -> {
+            BinaryOperator<R> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super V, R> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.values().stream().map(mapperValue).reduce(reducerValue).orElse(defaultValue);
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns an object binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items    the observable map.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each value.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an object binding
+     */
+    @Nonnull
+    public static <K, V, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<R> supplier, @Nonnull final ObservableValue<Function<? super V, R>> mapper, @Nonnull final ObservableValue<BinaryOperator<R>> reducer) {
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createObjectBinding(() -> {
+            BinaryOperator<R> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super V, R> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.values().stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a boolean binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable list of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static <T> BooleanBinding mapAsBooleanThenReduce(@Nonnull final ObservableList<T> items, @Nullable final Boolean defaultValue, @Nonnull final Function<? super T, Boolean> mapper, @Nonnull final BinaryOperator<Boolean> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createBooleanBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
+    }
+
+    /**
+     * Returns a boolean binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable list of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static <T> BooleanBinding mapAsBooleanThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final Function<? super T, Boolean> mapper, @Nonnull final BinaryOperator<Boolean> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createBooleanBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+    }
+
+    /**
+     * Returns a boolean binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable list of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static <T> BooleanBinding mapAsBooleanThenReduce(@Nonnull final ObservableList<T> items, @Nullable final Boolean defaultValue, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper, @Nonnull final ObservableValue<BinaryOperator<Boolean>> reducer) {
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createBooleanBinding(() -> {
+            BinaryOperator<Boolean> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, Boolean> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(defaultValue);
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a boolean binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable list of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static <T> BooleanBinding mapAsBooleanThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper, @Nonnull final ObservableValue<BinaryOperator<Boolean>> reducer) {
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createBooleanBinding(() -> {
+            BinaryOperator<Boolean> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, Boolean> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a boolean binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable set of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static <T> BooleanBinding mapAsBooleanThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final Boolean defaultValue, @Nonnull final Function<? super T, Boolean> mapper, @Nonnull final BinaryOperator<Boolean> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        return createBooleanBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
+    }
+
+    /**
+     * Returns a boolean binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable set of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static <T> BooleanBinding mapAsBooleanThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final Function<? super T, Boolean> mapper, @Nonnull final BinaryOperator<Boolean> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createBooleanBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+    }
+
+    /**
+     * Returns a boolean binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable set of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static <T> BooleanBinding mapAsBooleanThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final Boolean defaultValue, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper, @Nonnull final ObservableValue<BinaryOperator<Boolean>> reducer) {
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createBooleanBinding(() -> {
+            BinaryOperator<Boolean> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, Boolean> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(defaultValue);
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a boolean binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable set of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static <T> BooleanBinding mapAsBooleanThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper, @Nonnull final ObservableValue<BinaryOperator<Boolean>> reducer) {
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createBooleanBinding(() -> {
+            BinaryOperator<Boolean> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, Boolean> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a boolean binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items        the observable map.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each value.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static <K, V> BooleanBinding mapAsBooleanThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final Boolean defaultValue, @Nonnull final Function<? super V, Boolean> mapper, @Nonnull final BinaryOperator<Boolean> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createBooleanBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
+    }
+
+    /**
+     * Returns a boolean binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items    the observable map.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each value.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static <K, V> BooleanBinding mapAsBooleanThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final Function<? super V, Boolean> mapper, @Nonnull final BinaryOperator<Boolean> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createBooleanBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+    }
+
+    /**
+     * Returns a boolean binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items        the observable map.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each value.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static <K, V> BooleanBinding mapAsBooleanThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final Boolean defaultValue, @Nonnull final ObservableValue<Function<? super V, Boolean>> mapper, @Nonnull final ObservableValue<BinaryOperator<Boolean>> reducer) {
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createBooleanBinding(() -> {
+            BinaryOperator<Boolean> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super V, Boolean> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.values().stream().map(mapperValue).reduce(reducerValue).orElse(defaultValue);
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a boolean binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items    the observable map.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each value.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static <K, V> BooleanBinding mapAsBooleanThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final ObservableValue<Function<? super V, Boolean>> mapper, @Nonnull final ObservableValue<BinaryOperator<Boolean>> reducer) {
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createBooleanBinding(() -> {
+            BinaryOperator<Boolean> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super V, Boolean> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.values().stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns an integer binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable list of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an integer binding
+     */
+    @Nonnull
+    public static <T> IntegerBinding mapAsIntegerThenReduce(@Nonnull final ObservableList<T> items, @Nullable final Integer defaultValue, @Nonnull final Function<? super T, Integer> mapper, @Nonnull final BinaryOperator<Integer> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createIntegerBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
+    }
+
+    /**
+     * Returns an integer binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable list of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an integer binding
+     */
+    @Nonnull
+    public static <T> IntegerBinding mapAsIntegerThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final Function<? super T, Integer> mapper, @Nonnull final BinaryOperator<Integer> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createIntegerBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+    }
+
+    /**
+     * Returns an integer binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable list of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an integer binding
+     */
+    @Nonnull
+    public static <T> IntegerBinding mapAsIntegerThenReduce(@Nonnull final ObservableList<T> items, @Nullable final Integer defaultValue, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper, @Nonnull final ObservableValue<BinaryOperator<Integer>> reducer) {
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createIntegerBinding(() -> {
+            BinaryOperator<Integer> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, Integer> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(defaultValue);
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns an integer binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable list of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an integer binding
+     */
+    @Nonnull
+    public static <T> IntegerBinding mapAsIntegerThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper, @Nonnull final ObservableValue<BinaryOperator<Integer>> reducer) {
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createIntegerBinding(() -> {
+            BinaryOperator<Integer> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, Integer> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns an integer binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable set of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an integer binding
+     */
+    @Nonnull
+    public static <T> IntegerBinding mapAsIntegerThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final Integer defaultValue, @Nonnull final Function<? super T, Integer> mapper, @Nonnull final BinaryOperator<Integer> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        return createIntegerBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
+    }
+
+    /**
+     * Returns an integer binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable set of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an integer binding
+     */
+    @Nonnull
+    public static <T> IntegerBinding mapAsIntegerThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final Function<? super T, Integer> mapper, @Nonnull final BinaryOperator<Integer> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createIntegerBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+    }
+
+    /**
+     * Returns an integer binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable set of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an integer binding
+     */
+    @Nonnull
+    public static <T> IntegerBinding mapAsIntegerThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final Integer defaultValue, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper, @Nonnull final ObservableValue<BinaryOperator<Integer>> reducer) {
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createIntegerBinding(() -> {
+            BinaryOperator<Integer> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, Integer> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(defaultValue);
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns an integer binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable set of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an integer binding
+     */
+    @Nonnull
+    public static <T> IntegerBinding mapAsIntegerThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper, @Nonnull final ObservableValue<BinaryOperator<Integer>> reducer) {
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createIntegerBinding(() -> {
+            BinaryOperator<Integer> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, Integer> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns an integer binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items        the observable map.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each value.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an integer binding
+     */
+    @Nonnull
+    public static <K, V> IntegerBinding mapAsIntegerThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final Integer defaultValue, @Nonnull final Function<? super V, Integer> mapper, @Nonnull final BinaryOperator<Integer> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createIntegerBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
+    }
+
+    /**
+     * Returns an integer binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items    the observable map.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each value.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an integer binding
+     */
+    @Nonnull
+    public static <K, V> IntegerBinding mapAsIntegerThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final Function<? super V, Integer> mapper, @Nonnull final BinaryOperator<Integer> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createIntegerBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+    }
+
+    /**
+     * Returns an integer binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items        the observable map.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each value.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an integer binding
+     */
+    @Nonnull
+    public static <K, V> IntegerBinding mapAsIntegerThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final Integer defaultValue, @Nonnull final ObservableValue<Function<? super V, Integer>> mapper, @Nonnull final ObservableValue<BinaryOperator<Integer>> reducer) {
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createIntegerBinding(() -> {
+            BinaryOperator<Integer> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super V, Integer> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.values().stream().map(mapperValue).reduce(reducerValue).orElse(defaultValue);
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns an integer binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items    the observable map.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each value.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return an integer binding
+     */
+    @Nonnull
+    public static <K, V> IntegerBinding mapAsIntegerThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final ObservableValue<Function<? super V, Integer>> mapper, @Nonnull final ObservableValue<BinaryOperator<Integer>> reducer) {
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createIntegerBinding(() -> {
+            BinaryOperator<Integer> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super V, Integer> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.values().stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a long binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable list of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a long binding
+     */
+    @Nonnull
+    public static <T> LongBinding mapAsLongThenReduce(@Nonnull final ObservableList<T> items, @Nullable final Long defaultValue, @Nonnull final Function<? super T, Long> mapper, @Nonnull final BinaryOperator<Long> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createLongBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
+    }
+
+    /**
+     * Returns a long binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable list of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a long binding
+     */
+    @Nonnull
+    public static <T> LongBinding mapAsLongThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Long> supplier, @Nonnull final Function<? super T, Long> mapper, @Nonnull final BinaryOperator<Long> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createLongBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+    }
+
+    /**
+     * Returns a long binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable list of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a long binding
+     */
+    @Nonnull
+    public static <T> LongBinding mapAsLongThenReduce(@Nonnull final ObservableList<T> items, @Nullable final Long defaultValue, @Nonnull final ObservableValue<Function<? super T, Long>> mapper, @Nonnull final ObservableValue<BinaryOperator<Long>> reducer) {
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createLongBinding(() -> {
+            BinaryOperator<Long> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, Long> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(defaultValue);
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a long binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable list of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a long binding
+     */
+    @Nonnull
+    public static <T> LongBinding mapAsLongThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Long> supplier, @Nonnull final ObservableValue<Function<? super T, Long>> mapper, @Nonnull final ObservableValue<BinaryOperator<Long>> reducer) {
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createLongBinding(() -> {
+            BinaryOperator<Long> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, Long> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a long binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable set of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a long binding
+     */
+    @Nonnull
+    public static <T> LongBinding mapAsLongThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final Long defaultValue, @Nonnull final Function<? super T, Long> mapper, @Nonnull final BinaryOperator<Long> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        return createLongBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
+    }
+
+    /**
+     * Returns a long binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable set of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a long binding
+     */
+    @Nonnull
+    public static <T> LongBinding mapAsLongThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Long> supplier, @Nonnull final Function<? super T, Long> mapper, @Nonnull final BinaryOperator<Long> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createLongBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+    }
+
+    /**
+     * Returns a long binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable set of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a long binding
+     */
+    @Nonnull
+    public static <T> LongBinding mapAsLongThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final Long defaultValue, @Nonnull final ObservableValue<Function<? super T, Long>> mapper, @Nonnull final ObservableValue<BinaryOperator<Long>> reducer) {
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createLongBinding(() -> {
+            BinaryOperator<Long> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, Long> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(defaultValue);
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a long binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable set of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a long binding
+     */
+    @Nonnull
+    public static <T> LongBinding mapAsLongThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Long> supplier, @Nonnull final ObservableValue<Function<? super T, Long>> mapper, @Nonnull final ObservableValue<BinaryOperator<Long>> reducer) {
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createLongBinding(() -> {
+            BinaryOperator<Long> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, Long> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a long binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items        the observable map.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each value.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a long binding
+     */
+    @Nonnull
+    public static <K, V> LongBinding mapAsLongThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final Long defaultValue, @Nonnull final Function<? super V, Long> mapper, @Nonnull final BinaryOperator<Long> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createLongBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
+    }
+
+    /**
+     * Returns a long binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items    the observable map.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each value.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a long binding
+     */
+    @Nonnull
+    public static <K, V> LongBinding mapAsLongThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Long> supplier, @Nonnull final Function<? super V, Long> mapper, @Nonnull final BinaryOperator<Long> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createLongBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+    }
+
+    /**
+     * Returns a long binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items        the observable map.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each value.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a long binding
+     */
+    @Nonnull
+    public static <K, V> LongBinding mapAsLongThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final Long defaultValue, @Nonnull final ObservableValue<Function<? super V, Long>> mapper, @Nonnull final ObservableValue<BinaryOperator<Long>> reducer) {
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createLongBinding(() -> {
+            BinaryOperator<Long> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super V, Long> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.values().stream().map(mapperValue).reduce(reducerValue).orElse(defaultValue);
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a long binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items    the observable map.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each value.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a long binding
+     */
+    @Nonnull
+    public static <K, V> LongBinding mapAsLongThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Long> supplier, @Nonnull final ObservableValue<Function<? super V, Long>> mapper, @Nonnull final ObservableValue<BinaryOperator<Long>> reducer) {
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createLongBinding(() -> {
+            BinaryOperator<Long> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super V, Long> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.values().stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a float binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable list of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a float binding
+     */
+    @Nonnull
+    public static <T> FloatBinding mapAsFloatThenReduce(@Nonnull final ObservableList<T> items, @Nullable final Float defaultValue, @Nonnull final Function<? super T, Float> mapper, @Nonnull final BinaryOperator<Float> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createFloatBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
+    }
+
+    /**
+     * Returns a float binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable list of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a float binding
+     */
+    @Nonnull
+    public static <T> FloatBinding mapAsFloatThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Float> supplier, @Nonnull final Function<? super T, Float> mapper, @Nonnull final BinaryOperator<Float> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createFloatBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+    }
+
+    /**
+     * Returns a float binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable list of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a float binding
+     */
+    @Nonnull
+    public static <T> FloatBinding mapAsFloatThenReduce(@Nonnull final ObservableList<T> items, @Nullable final Float defaultValue, @Nonnull final ObservableValue<Function<? super T, Float>> mapper, @Nonnull final ObservableValue<BinaryOperator<Float>> reducer) {
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createFloatBinding(() -> {
+            BinaryOperator<Float> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, Float> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(defaultValue);
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a float binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable list of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a float binding
+     */
+    @Nonnull
+    public static <T> FloatBinding mapAsFloatThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Float> supplier, @Nonnull final ObservableValue<Function<? super T, Float>> mapper, @Nonnull final ObservableValue<BinaryOperator<Float>> reducer) {
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createFloatBinding(() -> {
+            BinaryOperator<Float> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, Float> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a float binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable set of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a float binding
+     */
+    @Nonnull
+    public static <T> FloatBinding mapAsFloatThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final Float defaultValue, @Nonnull final Function<? super T, Float> mapper, @Nonnull final BinaryOperator<Float> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        return createFloatBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
+    }
+
+    /**
+     * Returns a float binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable set of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a float binding
+     */
+    @Nonnull
+    public static <T> FloatBinding mapAsFloatThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Float> supplier, @Nonnull final Function<? super T, Float> mapper, @Nonnull final BinaryOperator<Float> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createFloatBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+    }
+
+    /**
+     * Returns a float binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable set of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a float binding
+     */
+    @Nonnull
+    public static <T> FloatBinding mapAsFloatThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final Float defaultValue, @Nonnull final ObservableValue<Function<? super T, Float>> mapper, @Nonnull final ObservableValue<BinaryOperator<Float>> reducer) {
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createFloatBinding(() -> {
+            BinaryOperator<Float> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, Float> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(defaultValue);
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a float binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable set of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a float binding
+     */
+    @Nonnull
+    public static <T> FloatBinding mapAsFloatThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Float> supplier, @Nonnull final ObservableValue<Function<? super T, Float>> mapper, @Nonnull final ObservableValue<BinaryOperator<Float>> reducer) {
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createFloatBinding(() -> {
+            BinaryOperator<Float> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, Float> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a float binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items        the observable map.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each value.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a float binding
+     */
+    @Nonnull
+    public static <K, V> FloatBinding mapAsFloatThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final Float defaultValue, @Nonnull final Function<? super V, Float> mapper, @Nonnull final BinaryOperator<Float> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createFloatBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
+    }
+
+    /**
+     * Returns a float binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items    the observable map.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each value.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a float binding
+     */
+    @Nonnull
+    public static <K, V> FloatBinding mapAsFloatThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Float> supplier, @Nonnull final Function<? super V, Float> mapper, @Nonnull final BinaryOperator<Float> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createFloatBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+    }
+
+    /**
+     * Returns a float binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items        the observable map.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each value.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a float binding
+     */
+    @Nonnull
+    public static <K, V> FloatBinding mapAsFloatThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final Float defaultValue, @Nonnull final ObservableValue<Function<? super V, Float>> mapper, @Nonnull final ObservableValue<BinaryOperator<Float>> reducer) {
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createFloatBinding(() -> {
+            BinaryOperator<Float> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super V, Float> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.values().stream().map(mapperValue).reduce(reducerValue).orElse(defaultValue);
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a float binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items    the observable map.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each value.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a float binding
+     */
+    @Nonnull
+    public static <K, V> FloatBinding mapAsFloatThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Float> supplier, @Nonnull final ObservableValue<Function<? super V, Float>> mapper, @Nonnull final ObservableValue<BinaryOperator<Float>> reducer) {
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createFloatBinding(() -> {
+            BinaryOperator<Float> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super V, Float> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.values().stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a double binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable list of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a double binding
+     */
+    @Nonnull
+    public static <T> DoubleBinding mapAsDoubleThenReduce(@Nonnull final ObservableList<T> items, @Nullable final Double defaultValue, @Nonnull final Function<? super T, Double> mapper, @Nonnull final BinaryOperator<Double> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createDoubleBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
+    }
+
+    /**
+     * Returns a double binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable list of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a double binding
+     */
+    @Nonnull
+    public static <T> DoubleBinding mapAsDoubleThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Double> supplier, @Nonnull final Function<? super T, Double> mapper, @Nonnull final BinaryOperator<Double> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createDoubleBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+    }
+
+    /**
+     * Returns a double binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable list of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a double binding
+     */
+    @Nonnull
+    public static <T> DoubleBinding mapAsDoubleThenReduce(@Nonnull final ObservableList<T> items, @Nullable final Double defaultValue, @Nonnull final ObservableValue<Function<? super T, Double>> mapper, @Nonnull final ObservableValue<BinaryOperator<Double>> reducer) {
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createDoubleBinding(() -> {
+            BinaryOperator<Double> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, Double> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(defaultValue);
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a double binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable list of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a double binding
+     */
+    @Nonnull
+    public static <T> DoubleBinding mapAsDoubleThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Double> supplier, @Nonnull final ObservableValue<Function<? super T, Double>> mapper, @Nonnull final ObservableValue<BinaryOperator<Double>> reducer) {
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createDoubleBinding(() -> {
+            BinaryOperator<Double> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, Double> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a double binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable set of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a double binding
+     */
+    @Nonnull
+    public static <T> DoubleBinding mapAsDoubleThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final Double defaultValue, @Nonnull final Function<? super T, Double> mapper, @Nonnull final BinaryOperator<Double> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        return createDoubleBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
+    }
+
+    /**
+     * Returns a double binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable set of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a double binding
+     */
+    @Nonnull
+    public static <T> DoubleBinding mapAsDoubleThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Double> supplier, @Nonnull final Function<? super T, Double> mapper, @Nonnull final BinaryOperator<Double> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createDoubleBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+    }
+
+    /**
+     * Returns a double binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable set of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a double binding
+     */
+    @Nonnull
+    public static <T> DoubleBinding mapAsDoubleThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final Double defaultValue, @Nonnull final ObservableValue<Function<? super T, Double>> mapper, @Nonnull final ObservableValue<BinaryOperator<Double>> reducer) {
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createDoubleBinding(() -> {
+            BinaryOperator<Double> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, Double> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(defaultValue);
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a double binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable set of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a double binding
+     */
+    @Nonnull
+    public static <T> DoubleBinding mapAsDoubleThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Double> supplier, @Nonnull final ObservableValue<Function<? super T, Double>> mapper, @Nonnull final ObservableValue<BinaryOperator<Double>> reducer) {
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createDoubleBinding(() -> {
+            BinaryOperator<Double> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, Double> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a double binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items        the observable map.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each value.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a double binding
+     */
+    @Nonnull
+    public static <K, V> DoubleBinding mapAsDoubleThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final Double defaultValue, @Nonnull final Function<? super V, Double> mapper, @Nonnull final BinaryOperator<Double> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createDoubleBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
+    }
+
+    /**
+     * Returns a double binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items    the observable map.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each value.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a double binding
+     */
+    @Nonnull
+    public static <K, V> DoubleBinding mapAsDoubleThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Double> supplier, @Nonnull final Function<? super V, Double> mapper, @Nonnull final BinaryOperator<Double> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createDoubleBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+    }
+
+    /**
+     * Returns a double binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items        the observable map.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each value.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a double binding
+     */
+    @Nonnull
+    public static <K, V> DoubleBinding mapAsDoubleThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final Double defaultValue, @Nonnull final ObservableValue<Function<? super V, Double>> mapper, @Nonnull final ObservableValue<BinaryOperator<Double>> reducer) {
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createDoubleBinding(() -> {
+            BinaryOperator<Double> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super V, Double> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.values().stream().map(mapperValue).reduce(reducerValue).orElse(defaultValue);
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a double binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items    the observable map.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each value.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a double binding
+     */
+    @Nonnull
+    public static <K, V> DoubleBinding mapAsDoubleThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Double> supplier, @Nonnull final ObservableValue<Function<? super V, Double>> mapper, @Nonnull final ObservableValue<BinaryOperator<Double>> reducer) {
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createDoubleBinding(() -> {
+            BinaryOperator<Double> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super V, Double> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.values().stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a string binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable list of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a string binding
+     */
+    @Nonnull
+    public static <T> StringBinding mapAsStringThenReduce(@Nonnull final ObservableList<T> items, @Nullable final String defaultValue, @Nonnull final Function<? super T, String> mapper, @Nonnull final BinaryOperator<String> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createStringBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
+    }
+
+    /**
+     * Returns a string binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable list of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a string binding
+     */
+    @Nonnull
+    public static <T> StringBinding mapAsStringThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<String> supplier, @Nonnull final Function<? super T, String> mapper, @Nonnull final BinaryOperator<String> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createStringBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+    }
+
+    /**
+     * Returns a string binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable list of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a string binding
+     */
+    @Nonnull
+    public static <T> StringBinding mapAsStringThenReduce(@Nonnull final ObservableList<T> items, @Nullable final String defaultValue, @Nonnull final ObservableValue<Function<? super T, String>> mapper, @Nonnull final ObservableValue<BinaryOperator<String>> reducer) {
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createStringBinding(() -> {
+            BinaryOperator<String> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, String> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(defaultValue);
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a string binding whose value is the reduction of all elements in the list. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable list of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a string binding
+     */
+    @Nonnull
+    public static <T> StringBinding mapAsStringThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<String> supplier, @Nonnull final ObservableValue<Function<? super T, String>> mapper, @Nonnull final ObservableValue<BinaryOperator<String>> reducer) {
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createStringBinding(() -> {
+            BinaryOperator<String> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, String> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a string binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable set of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a string binding
+     */
+    @Nonnull
+    public static <T> StringBinding mapAsStringThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final String defaultValue, @Nonnull final Function<? super T, String> mapper, @Nonnull final BinaryOperator<String> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        return createStringBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
+    }
+
+    /**
+     * Returns a string binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable set of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a string binding
+     */
+    @Nonnull
+    public static <T> StringBinding mapAsStringThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<String> supplier, @Nonnull final Function<? super T, String> mapper, @Nonnull final BinaryOperator<String> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createStringBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+    }
+
+    /**
+     * Returns a string binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items        the observable set of elements.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each element.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a string binding
+     */
+    @Nonnull
+    public static <T> StringBinding mapAsStringThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final String defaultValue, @Nonnull final ObservableValue<Function<? super T, String>> mapper, @Nonnull final ObservableValue<BinaryOperator<String>> reducer) {
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createStringBinding(() -> {
+            BinaryOperator<String> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, String> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(defaultValue);
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a string binding whose value is the reduction of all elements in the set. The mapper function is applied to each element before reduction.
+     *
+     * @param items    the observable set of elements.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each element.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a string binding
+     */
+    @Nonnull
+    public static <T> StringBinding mapAsStringThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<String> supplier, @Nonnull final ObservableValue<Function<? super T, String>> mapper, @Nonnull final ObservableValue<BinaryOperator<String>> reducer) {
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createStringBinding(() -> {
+            BinaryOperator<String> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super T, String> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a string binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items        the observable map.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each value.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a string binding
+     */
+    @Nonnull
+    public static <K, V> StringBinding mapAsStringThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final String defaultValue, @Nonnull final Function<? super V, String> mapper, @Nonnull final BinaryOperator<String> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createStringBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
+    }
+
+    /**
+     * Returns a string binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items    the observable map.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each value.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a string binding
+     */
+    @Nonnull
+    public static <K, V> StringBinding mapAsStringThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<String> supplier, @Nonnull final Function<? super V, String> mapper, @Nonnull final BinaryOperator<String> reducer) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createStringBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+    }
+
+    /**
+     * Returns a string binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items        the observable map.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to each value.
+     * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a string binding
+     */
+    @Nonnull
+    public static <K, V> StringBinding mapAsStringThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final String defaultValue, @Nonnull final ObservableValue<Function<? super V, String>> mapper, @Nonnull final ObservableValue<BinaryOperator<String>> reducer) {
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createStringBinding(() -> {
+            BinaryOperator<String> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super V, String> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.values().stream().map(mapperValue).reduce(reducerValue).orElse(defaultValue);
+        }, items, reducer, mapper);
+    }
+
+    /**
+     * Returns a string binding whose value is the reduction of all values in the map. The mapper function is applied to each value before reduction.
+     *
+     * @param items    the observable map.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to each value.
+     * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
+     * @return a string binding
+     */
+    @Nonnull
+    public static <K, V> StringBinding mapAsStringThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<String> supplier, @Nonnull final ObservableValue<Function<? super V, String>> mapper, @Nonnull final ObservableValue<BinaryOperator<String>> reducer) {
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(reducer, ERROR_REDUCER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createStringBinding(() -> {
+            BinaryOperator<String> reducerValue = reducer.getValue();
+            requireNonNull(reducerValue, ERROR_REDUCER_NULL);
+            final Function<? super V, String> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return items.values().stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+        }, items, reducer, mapper);
+    }
 }
