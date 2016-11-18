@@ -26,11 +26,23 @@ import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleLongProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
+import javafx.collections.FXCollections
+import javafx.collections.ObservableList
+import javafx.collections.ObservableMap
+import javafx.collections.ObservableSet
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.util.function.BiFunction
+import java.util.function.BinaryOperator
 import java.util.function.Function
+import java.util.function.Supplier
+
+import static java.lang.Boolean.parseBoolean
+import static java.lang.Double.parseDouble
+import static java.lang.Float.parseFloat
+import static java.lang.Integer.parseInt
+import static java.lang.Long.parseLong
 
 @Unroll
 class BindingUtilsSpec extends Specification {
@@ -184,6 +196,450 @@ class BindingUtilsSpec extends Specification {
         'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | new Box(3)   | new Box(1) | null       | new Box(3) | new Box(3) | { a, b -> new Box(4) }       | { a, b -> new Box(5) }
         'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | new Box(3)   | null       | new Box(2) | new Box(3) | new Box(3) | { a, b -> new Box(4) }       | { a, b -> new Box(5) }
         'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | new Box(3)   | new Box(1) | new Box(2) | new Box(4) | new Box(5) | { a, b -> new Box(4) }       | { a, b -> new Box(5) }
+    }
+
+    def "ReduceThenMapAs#type list with functions and default value"() {
+        given:
+        ObservableList items = FXCollections.observableArrayList()
+        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, defaultValue, reducer as BinaryOperator, mapper as Function)
+
+        expect:
+        mapper(defaultValue) == binding.get()
+
+        when:
+        items << value1
+
+        then:
+        result1 == binding.get()
+
+        when:
+        items << value2
+
+        then:
+        result2 == binding.get()
+
+        where:
+        type      | defaultValue | reducer       | mapper                   | value1 | value2  | result1 | result2
+        'Boolean' | 'true'       | { a, b -> b } | { i -> parseBoolean(i) } | 'true' | 'false' | true    | false
+        'Integer' | '4'          | { a, b -> b } | { i -> parseInt(i) }     | '1'    | '2'     | 1       | 2
+        'Long'    | '4'          | { a, b -> b } | { i -> parseLong(i) }    | '1'    | '2'     | 1L      | 2L
+        'Float'   | '4'          | { a, b -> b } | { i -> parseFloat(i) }   | '1'    | '2'     | 1f      | 2f
+        'Double'  | '4'          | { a, b -> b } | { i -> parseDouble(i) }  | '1'    | '2'     | 1d      | 2d
+        'String'  | 'A'          | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'
+    }
+
+    def "ReduceThenMapAs#type list with functions and supplier"() {
+        given:
+        ObservableList items = FXCollections.observableArrayList()
+        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, supplier as Supplier, reducer as BinaryOperator, mapper as Function)
+
+        expect:
+        mapper(supplier()) == binding.get()
+
+        when:
+        items << value1
+
+        then:
+        result1 == binding.get()
+
+        when:
+        items << value2
+
+        then:
+        result2 == binding.get()
+
+        where:
+        type      | supplier   | reducer       | mapper                   | value1 | value2  | result1 | result2
+        'Boolean' | { 'true' } | { a, b -> b } | { i -> parseBoolean(i) } | 'true' | 'false' | true    | false
+        'Integer' | { '4' }    | { a, b -> b } | { i -> parseInt(i) }     | '1'    | '2'     | 1       | 2
+        'Long'    | { '4' }    | { a, b -> b } | { i -> parseLong(i) }    | '1'    | '2'     | 1L      | 2L
+        'Float'   | { '4' }    | { a, b -> b } | { i -> parseFloat(i) }   | '1'    | '2'     | 1f      | 2f
+        'Double'  | { '4' }    | { a, b -> b } | { i -> parseDouble(i) }  | '1'    | '2'     | 1d      | 2d
+        'String'  | { 'A' }    | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'
+    }
+
+    def "ReduceThenMapAs#type list with observable functions and default value"() {
+        given:
+        ObjectProperty observableReducer = new SimpleObjectProperty(reducer1 as BinaryOperator)
+        ObjectProperty observableMapper = new SimpleObjectProperty(mapper1 as Function)
+        ObservableList items = FXCollections.observableArrayList()
+        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, defaultValue, observableReducer, observableMapper)
+
+        expect:
+        mapper1(defaultValue) == binding.get()
+
+        when:
+        items << value1
+
+        then:
+        result1 == binding.get()
+
+        when:
+        items << value2
+
+        then:
+        result2 == binding.get()
+
+        when:
+        observableReducer.set(reducer2 as BinaryOperator)
+
+        then:
+        result3 == binding.get()
+
+        when:
+        observableMapper.set(mapper2 as Function)
+
+        then:
+        result4 == binding.get()
+
+        where:
+        type      | defaultValue | reducer1      | mapper1                  | value1 | value2  | result1 | result2 | reducer2           | mapper2                               | result3 | result4
+        'Boolean' | 'true'       | { a, b -> b } | { i -> parseBoolean(i) } | 'true' | 'false' | true    | false   | { a, b -> 'true' } | { i -> false }                        | true    | false
+        'Integer' | '4'          | { a, b -> b } | { i -> parseInt(i) }     | '1'    | '2'     | 1       | 2       | { a, b -> '5' }    | { i -> 2 * parseInt(i) }              | 5       | 10
+        'Long'    | '4'          | { a, b -> b } | { i -> parseLong(i) }    | '1'    | '2'     | 1L      | 2L      | { a, b -> '5' }    | { i -> 2 * parseLong(i) }             | 5L      | 10L
+        'Float'   | '4'          | { a, b -> b } | { i -> parseFloat(i) }   | '1'    | '2'     | 1f      | 2f      | { a, b -> '5' }    | { i -> (2 * parseFloat(i)) as float } | 5f      | 10f
+        'Double'  | '4'          | { a, b -> b } | { i -> parseDouble(i) }  | '1'    | '2'     | 1d      | 2d      | { a, b -> '5' }    | { i -> 2 * parseDouble(i) }           | 5d      | 10d
+        'String'  | 'A'          | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'    | { a, b -> 'D' }    | { i -> i * 3 }                        | 'DD'    | 'DDD'
+    }
+
+    def "ReduceThenMapAs#type list with observable functions and supplier"() {
+        given:
+        ObjectProperty observableReducer = new SimpleObjectProperty(reducer1 as BinaryOperator)
+        ObjectProperty observableMapper = new SimpleObjectProperty(mapper1 as Function)
+        ObservableList items = FXCollections.observableArrayList()
+        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, supplier as Supplier, observableReducer, observableMapper)
+
+        expect:
+        mapper1(supplier()) == binding.get()
+
+        when:
+        items << value1
+
+        then:
+        result1 == binding.get()
+
+        when:
+        items << value2
+
+        then:
+        result2 == binding.get()
+
+        when:
+        observableReducer.set(reducer2 as BinaryOperator)
+
+        then:
+        result3 == binding.get()
+
+        when:
+        observableMapper.set(mapper2 as Function)
+
+        then:
+        result4 == binding.get()
+
+        where:
+        type      | supplier  | reducer1      | mapper1                  | value1 | value2  | result1 | result2 | reducer2           | mapper2                               | result3 | result4
+        'Boolean' | {'true' } | { a, b -> b } | { i -> parseBoolean(i) } | 'true' | 'false' | true    | false   | { a, b -> 'true' } | { i -> false }                        | true    | false
+        'Integer' | {'4' }    | { a, b -> b } | { i -> parseInt(i) }     | '1'    | '2'     | 1       | 2       | { a, b -> '5' }    | { i -> 2 * parseInt(i) }              | 5       | 10
+        'Long'    | {'4' }    | { a, b -> b } | { i -> parseLong(i) }    | '1'    | '2'     | 1L      | 2L      | { a, b -> '5' }    | { i -> 2 * parseLong(i) }             | 5L      | 10L
+        'Float'   | {'4' }    | { a, b -> b } | { i -> parseFloat(i) }   | '1'    | '2'     | 1f      | 2f      | { a, b -> '5' }    | { i -> (2 * parseFloat(i)) as float } | 5f      | 10f
+        'Double'  | {'4' }    | { a, b -> b } | { i -> parseDouble(i) }  | '1'    | '2'     | 1d      | 2d      | { a, b -> '5' }    | { i -> 2 * parseDouble(i) }           | 5d      | 10d
+        'String'  | {'A' }    | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'    | { a, b -> 'D' }    | { i -> i * 3 }                        | 'DD'    | 'DDD'
+    }
+
+    def "ReduceThenMapAs#type set with functions and default value"() {
+        given:
+        ObservableSet items = FXCollections.observableSet()
+        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, defaultValue, reducer as BinaryOperator, mapper as Function)
+
+        expect:
+        mapper(defaultValue) == binding.get()
+
+        when:
+        items << value1
+
+        then:
+        result1 == binding.get()
+
+        when:
+        items << value2
+
+        then:
+        result2 == binding.get()
+
+        where:
+        type      | defaultValue | reducer       | mapper                   | value1 | value2  | result1 | result2
+        'Boolean' | 'true'       | { a, b -> b } | { i -> parseBoolean(i) } | 'true' | 'false' | true    | false
+        'Integer' | '4'          | { a, b -> b } | { i -> parseInt(i) }     | '1'    | '2'     | 1       | 2
+        'Long'    | '4'          | { a, b -> b } | { i -> parseLong(i) }    | '1'    | '2'     | 1L      | 2L
+        'Float'   | '4'          | { a, b -> b } | { i -> parseFloat(i) }   | '1'    | '2'     | 1f      | 2f
+        'Double'  | '4'          | { a, b -> b } | { i -> parseDouble(i) }  | '1'    | '2'     | 1d      | 2d
+        'String'  | 'A'          | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'
+    }
+
+    def "ReduceThenMapAs#type set with functions and supplier"() {
+        given:
+        ObservableSet items = FXCollections.observableSet()
+        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, supplier as Supplier, reducer as BinaryOperator, mapper as Function)
+
+        expect:
+        mapper(supplier()) == binding.get()
+
+        when:
+        items << value1
+
+        then:
+        result1 == binding.get()
+
+        when:
+        items << value2
+
+        then:
+        result2 == binding.get()
+
+        where:
+        type      | supplier   | reducer       | mapper                   | value1 | value2  | result1 | result2
+        'Boolean' | { 'true' } | { a, b -> b } | { i -> parseBoolean(i) } | 'true' | 'false' | true    | false
+        'Integer' | { '4' }    | { a, b -> b } | { i -> parseInt(i) }     | '1'    | '2'     | 1       | 2
+        'Long'    | { '4' }    | { a, b -> b } | { i -> parseLong(i) }    | '1'    | '2'     | 1L      | 2L
+        'Float'   | { '4' }    | { a, b -> b } | { i -> parseFloat(i) }   | '1'    | '2'     | 1f      | 2f
+        'Double'  | { '4' }    | { a, b -> b } | { i -> parseDouble(i) }  | '1'    | '2'     | 1d      | 2d
+        'String'  | { 'A' }    | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'
+    }
+
+    def "ReduceThenMapAs#type set with observable functions and default value"() {
+        given:
+        ObjectProperty observableReducer = new SimpleObjectProperty(reducer1 as BinaryOperator)
+        ObjectProperty observableMapper = new SimpleObjectProperty(mapper1 as Function)
+        ObservableSet items = FXCollections.observableSet()
+        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, defaultValue, observableReducer, observableMapper)
+
+        expect:
+        mapper1(defaultValue) == binding.get()
+
+        when:
+        items << value1
+
+        then:
+        result1 == binding.get()
+
+        when:
+        items << value2
+
+        then:
+        result2 == binding.get()
+
+        when:
+        observableReducer.set(reducer2 as BinaryOperator)
+
+        then:
+        result3 == binding.get()
+
+        when:
+        observableMapper.set(mapper2 as Function)
+
+        then:
+        result4 == binding.get()
+
+        where:
+        type      | defaultValue | reducer1      | mapper1                  | value1 | value2  | result1 | result2 | reducer2           | mapper2                               | result3 | result4
+        'Boolean' | 'true'       | { a, b -> b } | { i -> parseBoolean(i) } | 'true' | 'false' | true    | false   | { a, b -> 'true' } | { i -> false }                        | true    | false
+        'Integer' | '4'          | { a, b -> b } | { i -> parseInt(i) }     | '1'    | '2'     | 1       | 2       | { a, b -> '5' }    | { i -> 2 * parseInt(i) }              | 5       | 10
+        'Long'    | '4'          | { a, b -> b } | { i -> parseLong(i) }    | '1'    | '2'     | 1L      | 2L      | { a, b -> '5' }    | { i -> 2 * parseLong(i) }             | 5L      | 10L
+        'Float'   | '4'          | { a, b -> b } | { i -> parseFloat(i) }   | '1'    | '2'     | 1f      | 2f      | { a, b -> '5' }    | { i -> (2 * parseFloat(i)) as float } | 5f      | 10f
+        'Double'  | '4'          | { a, b -> b } | { i -> parseDouble(i) }  | '1'    | '2'     | 1d      | 2d      | { a, b -> '5' }    | { i -> 2 * parseDouble(i) }           | 5d      | 10d
+        'String'  | 'A'          | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'    | { a, b -> 'D' }    | { i -> i * 3 }                        | 'DD'    | 'DDD'
+    }
+
+    def "ReduceThenMapAs#type set with observable functions and supplier"() {
+        given:
+        ObjectProperty observableReducer = new SimpleObjectProperty(reducer1 as BinaryOperator)
+        ObjectProperty observableMapper = new SimpleObjectProperty(mapper1 as Function)
+        ObservableSet items = FXCollections.observableSet()
+        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, supplier as Supplier, observableReducer, observableMapper)
+
+        expect:
+        mapper1(supplier()) == binding.get()
+
+        when:
+        items << value1
+
+        then:
+        result1 == binding.get()
+
+        when:
+        items << value2
+
+        then:
+        result2 == binding.get()
+
+        when:
+        observableReducer.set(reducer2 as BinaryOperator)
+
+        then:
+        result3 == binding.get()
+
+        when:
+        observableMapper.set(mapper2 as Function)
+
+        then:
+        result4 == binding.get()
+
+        where:
+        type      | supplier  | reducer1      | mapper1                  | value1 | value2  | result1 | result2 | reducer2           | mapper2                               | result3 | result4
+        'Boolean' | {'true' } | { a, b -> b } | { i -> parseBoolean(i) } | 'true' | 'false' | true    | false   | { a, b -> 'true' } | { i -> false }                        | true    | false
+        'Integer' | {'4' }    | { a, b -> b } | { i -> parseInt(i) }     | '1'    | '2'     | 1       | 2       | { a, b -> '5' }    | { i -> 2 * parseInt(i) }              | 5       | 10
+        'Long'    | {'4' }    | { a, b -> b } | { i -> parseLong(i) }    | '1'    | '2'     | 1L      | 2L      | { a, b -> '5' }    | { i -> 2 * parseLong(i) }             | 5L      | 10L
+        'Float'   | {'4' }    | { a, b -> b } | { i -> parseFloat(i) }   | '1'    | '2'     | 1f      | 2f      | { a, b -> '5' }    | { i -> (2 * parseFloat(i)) as float } | 5f      | 10f
+        'Double'  | {'4' }    | { a, b -> b } | { i -> parseDouble(i) }  | '1'    | '2'     | 1d      | 2d      | { a, b -> '5' }    | { i -> 2 * parseDouble(i) }           | 5d      | 10d
+        'String'  | {'A' }    | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'    | { a, b -> 'D' }    | { i -> i * 3 }                        | 'DD'    | 'DDD'
+    }
+
+    def "ReduceThenMapAs#type map with functions and default value"() {
+        given:
+        ObservableMap items = FXCollections.observableHashMap()
+        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, defaultValue, reducer as BinaryOperator, mapper as Function)
+
+        expect:
+        mapper(defaultValue) == binding.get()
+
+        when:
+        items.key1 = value1
+
+        then:
+        result1 == binding.get()
+
+        when:
+        items.key2 = value2
+
+        then:
+        result2 == binding.get()
+
+        where:
+        type      | defaultValue | reducer       | mapper                   | value1 | value2  | result1 | result2
+        'Boolean' | 'true'       | { a, b -> b } | { i -> parseBoolean(i) } | 'true' | 'false' | true    | false
+        'Integer' | '4'          | { a, b -> b } | { i -> parseInt(i) }     | '1'    | '2'     | 1       | 2
+        'Long'    | '4'          | { a, b -> b } | { i -> parseLong(i) }    | '1'    | '2'     | 1L      | 2L
+        'Float'   | '4'          | { a, b -> b } | { i -> parseFloat(i) }   | '1'    | '2'     | 1f      | 2f
+        'Double'  | '4'          | { a, b -> b } | { i -> parseDouble(i) }  | '1'    | '2'     | 1d      | 2d
+        'String'  | 'A'          | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'
+    }
+
+    def "ReduceThenMapAs#type map with functions and supplier"() {
+        given:
+        ObservableMap items = FXCollections.observableHashMap()
+        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, supplier as Supplier, reducer as BinaryOperator, mapper as Function)
+
+        expect:
+        mapper(supplier()) == binding.get()
+
+        when:
+        items.key1 = value1
+
+        then:
+        result1 == binding.get()
+
+        when:
+        items.key2 = value2
+
+        then:
+        result2 == binding.get()
+
+        where:
+        type      | supplier   | reducer       | mapper                   | value1 | value2  | result1 | result2
+        'Boolean' | { 'true' } | { a, b -> b } | { i -> parseBoolean(i) } | 'true' | 'false' | true    | false
+        'Integer' | { '4' }    | { a, b -> b } | { i -> parseInt(i) }     | '1'    | '2'     | 1       | 2
+        'Long'    | { '4' }    | { a, b -> b } | { i -> parseLong(i) }    | '1'    | '2'     | 1L      | 2L
+        'Float'   | { '4' }    | { a, b -> b } | { i -> parseFloat(i) }   | '1'    | '2'     | 1f      | 2f
+        'Double'  | { '4' }    | { a, b -> b } | { i -> parseDouble(i) }  | '1'    | '2'     | 1d      | 2d
+        'String'  | { 'A' }    | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'
+    }
+
+    def "ReduceThenMapAs#type map with observable functions and default value"() {
+        given:
+        ObjectProperty observableReducer = new SimpleObjectProperty(reducer1 as BinaryOperator)
+        ObjectProperty observableMapper = new SimpleObjectProperty(mapper1 as Function)
+        ObservableMap items = FXCollections.observableHashMap()
+        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, defaultValue, observableReducer, observableMapper)
+
+        expect:
+        mapper1(defaultValue) == binding.get()
+
+        when:
+        items.key1 = value1
+
+        then:
+        result1 == binding.get()
+
+        when:
+        items.key2 = value2
+
+        then:
+        result2 == binding.get()
+
+        when:
+        observableReducer.set(reducer2 as BinaryOperator)
+
+        then:
+        result3 == binding.get()
+
+        when:
+        observableMapper.set(mapper2 as Function)
+
+        then:
+        result4 == binding.get()
+
+        where:
+        type      | defaultValue | reducer1      | mapper1                  | value1 | value2  | result1 | result2 | reducer2           | mapper2                               | result3 | result4
+        'Boolean' | 'true'       | { a, b -> b } | { i -> parseBoolean(i) } | 'true' | 'false' | true    | false   | { a, b -> 'true' } | { i -> false }                        | true    | false
+        'Integer' | '4'          | { a, b -> b } | { i -> parseInt(i) }     | '1'    | '2'     | 1       | 2       | { a, b -> '5' }    | { i -> 2 * parseInt(i) }              | 5       | 10
+        'Long'    | '4'          | { a, b -> b } | { i -> parseLong(i) }    | '1'    | '2'     | 1L      | 2L      | { a, b -> '5' }    | { i -> 2 * parseLong(i) }             | 5L      | 10L
+        'Float'   | '4'          | { a, b -> b } | { i -> parseFloat(i) }   | '1'    | '2'     | 1f      | 2f      | { a, b -> '5' }    | { i -> (2 * parseFloat(i)) as float } | 5f      | 10f
+        'Double'  | '4'          | { a, b -> b } | { i -> parseDouble(i) }  | '1'    | '2'     | 1d      | 2d      | { a, b -> '5' }    | { i -> 2 * parseDouble(i) }           | 5d      | 10d
+        'String'  | 'A'          | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'    | { a, b -> 'D' }    | { i -> i * 3 }                        | 'DD'    | 'DDD'
+    }
+
+    def "ReduceThenMapAs#type map with observable functions and supplier"() {
+        given:
+        ObjectProperty observableReducer = new SimpleObjectProperty(reducer1 as BinaryOperator)
+        ObjectProperty observableMapper = new SimpleObjectProperty(mapper1 as Function)
+        ObservableMap items = FXCollections.observableHashMap()
+        Binding binding = BindingUtils."reduceThenMapAs${type}"(items, supplier as Supplier, observableReducer, observableMapper)
+
+        expect:
+        mapper1(supplier()) == binding.get()
+
+        when:
+        items.key1 = value1
+
+        then:
+        result1 == binding.get()
+
+        when:
+        items.key2 = value2
+
+        then:
+        result2 == binding.get()
+
+        when:
+        observableReducer.set(reducer2 as BinaryOperator)
+
+        then:
+        result3 == binding.get()
+
+        when:
+        observableMapper.set(mapper2 as Function)
+
+        then:
+        result4 == binding.get()
+
+        where:
+        type      | supplier  | reducer1      | mapper1                  | value1 | value2  | result1 | result2 | reducer2           | mapper2                               | result3 | result4
+        'Boolean' | {'true' } | { a, b -> b } | { i -> parseBoolean(i) } | 'true' | 'false' | true    | false   | { a, b -> 'true' } | { i -> false }                        | true    | false
+        'Integer' | {'4' }    | { a, b -> b } | { i -> parseInt(i) }     | '1'    | '2'     | 1       | 2       | { a, b -> '5' }    | { i -> 2 * parseInt(i) }              | 5       | 10
+        'Long'    | {'4' }    | { a, b -> b } | { i -> parseLong(i) }    | '1'    | '2'     | 1L      | 2L      | { a, b -> '5' }    | { i -> 2 * parseLong(i) }             | 5L      | 10L
+        'Float'   | {'4' }    | { a, b -> b } | { i -> parseFloat(i) }   | '1'    | '2'     | 1f      | 2f      | { a, b -> '5' }    | { i -> (2 * parseFloat(i)) as float } | 5f      | 10f
+        'Double'  | {'4' }    | { a, b -> b } | { i -> parseDouble(i) }  | '1'    | '2'     | 1d      | 2d      | { a, b -> '5' }    | { i -> 2 * parseDouble(i) }           | 5d      | 10d
+        'String'  | {'A' }    | { a, b -> b } | { i -> i + i }           | 'B'    | 'C'     | 'BB'    | 'CC'    | { a, b -> 'D' }    | { i -> i * 3 }                        | 'DD'    | 'DDD'
     }
 
     @Canonical

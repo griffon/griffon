@@ -1766,6 +1766,77 @@ public class BindingUtils {
     /**
      * Creates a string binding that constructs a sequence of characters separated by a delimiter.
      *
+     * @param items     the observable set of items.
+     * @param delimiter the sequence of characters to be used between each element.
+     *
+     * @return a string binding.
+     */
+    @Nonnull
+    public static StringBinding join(@Nonnull final ObservableSet<?> items, @Nullable final String delimiter) {
+        return join(items, delimiter, String::valueOf);
+    }
+
+    /**
+     * Creates a string binding that constructs a sequence of characters separated by a delimiter.
+     *
+     * @param items     the observable set of items.
+     * @param delimiter the sequence of characters to be used between each element.
+     * @param mapper    a non-interfering, stateless function to apply to the reduced value.
+     *
+     * @return a string binding.
+     */
+    @Nonnull
+    public static <T> StringBinding join(@Nonnull final ObservableSet<T> items, @Nullable final String delimiter, @Nonnull final Function<? super T, String> mapper) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        final String value = delimiter == null ? "" : delimiter;
+        return createStringBinding(() -> items.stream().map(mapper).collect(joining(value)), items);
+    }
+
+    /**
+     * Creates a string binding that constructs a sequence of characters separated by a delimiter.
+     *
+     * @param items     the observable set of items.
+     * @param delimiter the sequence of characters to be used between each element.
+     *
+     * @return a string binding.
+     */
+    @Nonnull
+    public static StringBinding join(@Nonnull final ObservableSet<?> items, @Nonnull final ObservableValue<String> delimiter) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(delimiter, ERROR_DELIMITER_NULL);
+        return createStringBinding(() -> {
+            String value = delimiter.getValue();
+            value = value == null ? "" : value;
+            return items.stream().map(String::valueOf).collect(joining(value));
+        }, items, delimiter);
+    }
+
+    /**
+     * Creates a string binding that constructs a sequence of characters separated by a delimiter.
+     *
+     * @param items     the observable set of items.
+     * @param delimiter the sequence of characters to be used between each element.
+     * @param mapper    a non-interfering, stateless function to apply to the reduced value.
+     *
+     * @return a string binding.
+     */
+    @Nonnull
+    public static <T> StringBinding join(@Nonnull final ObservableSet<T> items, @Nonnull final ObservableValue<String> delimiter, @Nonnull final ObservableValue<Function<? super T, String>> mapper) {
+        requireNonNull(items, ERROR_ITEMS_NULL);
+        requireNonNull(delimiter, ERROR_DELIMITER_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createStringBinding(() -> {
+            String value = delimiter.getValue();
+            value = value == null ? "" : value;
+            final Function<? super T, String> mapperValue = mapper.getValue() != null ? mapper.getValue() : String::valueOf;
+            return items.stream().map(mapperValue).collect(joining(value));
+        }, items, delimiter, mapper);
+    }
+
+    /**
+     * Creates a string binding that constructs a sequence of characters separated by a delimiter.
+     *
      * @param items     the observable map of items.
      * @param delimiter the sequence of characters to be used between each element.
      *
@@ -1837,7 +1908,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns an object binding whose value is the reduction of all values in the map.
+     * Returns an object binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items        the observable map.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -1846,14 +1917,14 @@ public class BindingUtils {
      * @return an object binding
      */
     @Nonnull
-    public static <K, V> ObjectBinding<V> reduce(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final BinaryOperator<V> reducer) {
+    public static <K, V> ObjectBinding<V> reduceThenMap(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final BinaryOperator<V> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         return createObjectBinding(() -> items.values().stream().reduce(reducer).orElse(defaultValue), items);
     }
 
     /**
-     * Returns an object binding whose value is the reduction of all values in the map.
+     * Returns an object binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items    the observable map.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -1862,7 +1933,7 @@ public class BindingUtils {
      * @return an object binding
      */
     @Nonnull
-    public static <K, V> ObjectBinding<V> reduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final BinaryOperator<V> reducer) {
+    public static <K, V> ObjectBinding<V> reduceThenMap(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final BinaryOperator<V> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -1870,7 +1941,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns an object binding whose value is the reduction of all values in the map.
+     * Returns an object binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items        the observable map.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -1879,7 +1950,7 @@ public class BindingUtils {
      * @return an object binding
      */
     @Nonnull
-    public static <K, V> ObjectBinding<V> reduce(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final ObservableValue<BinaryOperator<V>> reducer) {
+    public static <K, V> ObjectBinding<V> reduceThenMap(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final ObservableValue<BinaryOperator<V>> reducer) {
         return createObjectBinding(() -> {
             BinaryOperator<V> operator = reducer.getValue();
             requireNonNull(operator, ERROR_REDUCER_NULL);
@@ -1888,7 +1959,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns an object binding whose value is the reduction of all values in the map.
+     * Returns an object binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items    the observable map.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -1897,7 +1968,7 @@ public class BindingUtils {
      * @return an object binding
      */
     @Nonnull
-    public static <K, V> ObjectBinding<V> reduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final ObservableValue<BinaryOperator<V>> reducer) {
+    public static <K, V> ObjectBinding<V> reduceThenMap(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final ObservableValue<BinaryOperator<V>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         return createObjectBinding(() -> {
             BinaryOperator<V> operator = reducer.getValue();
@@ -1907,7 +1978,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a boolean binding whose value is the reduction of all values in the map.
+     * Returns a boolean binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items        the observable map.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -1917,7 +1988,7 @@ public class BindingUtils {
      * @return a boolean binding
      */
     @Nonnull
-    public static <K, V> BooleanBinding reduceAsBoolean(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, Boolean> mapper) {
+    public static <K, V> BooleanBinding reduceThenMapAsBoolean(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, Boolean> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1925,7 +1996,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a boolean binding whose value is the reduction of all values in the map.
+     * Returns a boolean binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items    the observable map.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -1935,7 +2006,7 @@ public class BindingUtils {
      * @return a boolean binding
      */
     @Nonnull
-    public static <K, V> BooleanBinding reduceAsBoolean(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, Boolean> mapper) {
+    public static <K, V> BooleanBinding reduceThenMapAsBoolean(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, Boolean> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1944,7 +2015,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a boolean binding whose value is the reduction of all values in the map.
+     * Returns a boolean binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items        the observable map.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -1954,7 +2025,7 @@ public class BindingUtils {
      * @return a boolean binding
      */
     @Nonnull
-    public static <K, V> BooleanBinding reduceAsBoolean(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Boolean>> mapper) {
+    public static <K, V> BooleanBinding reduceThenMapAsBoolean(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Boolean>> mapper) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createBooleanBinding(() -> {
@@ -1967,7 +2038,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a boolean binding whose value is the reduction of all values in the map.
+     * Returns a boolean binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items    the observable map.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
@@ -1977,7 +2048,7 @@ public class BindingUtils {
      * @return a boolean binding
      */
     @Nonnull
-    public static <K, V> BooleanBinding reduceAsBoolean(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Boolean>> mapper) {
+    public static <K, V> BooleanBinding reduceThenMapAsBoolean(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Boolean>> mapper) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createBooleanBinding(() -> {
@@ -1990,7 +2061,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns an integer binding whose value is the reduction of all values in the map.
+     * Returns an integer binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items        the observable map.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2000,7 +2071,7 @@ public class BindingUtils {
      * @return an integer binding
      */
     @Nonnull
-    public static <K, V> IntegerBinding reduceAsInteger(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, Integer> mapper) {
+    public static <K, V> IntegerBinding reduceThenMapAsInteger(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, Integer> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2008,7 +2079,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns an integer binding whose value is the reduction of all values in the map.
+     * Returns an integer binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items    the observable map.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -2018,7 +2089,7 @@ public class BindingUtils {
      * @return an integer binding
      */
     @Nonnull
-    public static <K, V> IntegerBinding reduceAsInteger(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, Integer> mapper) {
+    public static <K, V> IntegerBinding reduceThenMapAsInteger(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, Integer> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2027,7 +2098,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns an integer binding whose value is the reduction of all values in the map.
+     * Returns an integer binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items        the observable map.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2037,7 +2108,7 @@ public class BindingUtils {
      * @return an integer binding
      */
     @Nonnull
-    public static <K, V> IntegerBinding reduceAsInteger(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Integer>> mapper) {
+    public static <K, V> IntegerBinding reduceThenMapAsInteger(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Integer>> mapper) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createIntegerBinding(() -> {
@@ -2050,7 +2121,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns an integer binding whose value is the reduction of all values in the map.
+     * Returns an integer binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items    the observable map.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -2060,7 +2131,7 @@ public class BindingUtils {
      * @return an integer binding
      */
     @Nonnull
-    public static <K, V> IntegerBinding reduceAsInteger(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Integer>> mapper) {
+    public static <K, V> IntegerBinding reduceThenMapAsInteger(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Integer>> mapper) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createIntegerBinding(() -> {
@@ -2073,7 +2144,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a long binding whose value is the reduction of all values in the map.
+     * Returns a long binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items        the observable map.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2083,7 +2154,7 @@ public class BindingUtils {
      * @return a long binding
      */
     @Nonnull
-    public static <K, V> LongBinding reduceAsLong(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, Long> mapper) {
+    public static <K, V> LongBinding reduceThenMapAsLong(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, Long> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2091,7 +2162,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a long binding whose value is the reduction of all values in the map.
+     * Returns a long binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items    the observable map.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -2101,7 +2172,7 @@ public class BindingUtils {
      * @return a long binding
      */
     @Nonnull
-    public static <K, V> LongBinding reduceAsLong(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, Long> mapper) {
+    public static <K, V> LongBinding reduceThenMapAsLong(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, Long> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2110,7 +2181,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a long binding whose value is the reduction of all values in the map.
+     * Returns a long binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items        the observable map.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2120,7 +2191,7 @@ public class BindingUtils {
      * @return a long binding
      */
     @Nonnull
-    public static <K, V> LongBinding reduceAsLong(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Long>> mapper) {
+    public static <K, V> LongBinding reduceThenMapAsLong(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Long>> mapper) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createLongBinding(() -> {
@@ -2133,7 +2204,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a long binding whose value is the reduction of all values in the map.
+     * Returns a long binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items    the observable map.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -2143,7 +2214,7 @@ public class BindingUtils {
      * @return a long binding
      */
     @Nonnull
-    public static <K, V> LongBinding reduceAsLong(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Long>> mapper) {
+    public static <K, V> LongBinding reduceThenMapAsLong(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Long>> mapper) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createLongBinding(() -> {
@@ -2156,7 +2227,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a float binding whose value is the reduction of all values in the map.
+     * Returns a float binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items        the observable map.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2166,7 +2237,7 @@ public class BindingUtils {
      * @return a float binding
      */
     @Nonnull
-    public static <K, V> FloatBinding reduceAsFloat(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, Float> mapper) {
+    public static <K, V> FloatBinding reduceThenMapAsFloat(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, Float> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2174,7 +2245,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a float binding whose value is the reduction of all values in the map.
+     * Returns a float binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items    the observable map.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -2184,7 +2255,7 @@ public class BindingUtils {
      * @return a float binding
      */
     @Nonnull
-    public static <K, V> FloatBinding reduceAsFloat(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, Float> mapper) {
+    public static <K, V> FloatBinding reduceThenMapAsFloat(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, Float> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2193,7 +2264,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a float binding whose value is the reduction of all values in the map.
+     * Returns a float binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items        the observable map.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2203,7 +2274,7 @@ public class BindingUtils {
      * @return a float binding
      */
     @Nonnull
-    public static <K, V> FloatBinding reduceAsFloat(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Float>> mapper) {
+    public static <K, V> FloatBinding reduceThenMapAsFloat(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Float>> mapper) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createFloatBinding(() -> {
@@ -2216,7 +2287,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a float binding whose value is the reduction of all values in the map.
+     * Returns a float binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items    the observable map.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -2226,7 +2297,7 @@ public class BindingUtils {
      * @return a float binding
      */
     @Nonnull
-    public static <K, V> FloatBinding reduceAsFloat(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Float>> mapper) {
+    public static <K, V> FloatBinding reduceThenMapAsFloat(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Float>> mapper) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createFloatBinding(() -> {
@@ -2239,7 +2310,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a double binding whose value is the reduction of all values in the map.
+     * Returns a double binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items        the observable map.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2249,7 +2320,7 @@ public class BindingUtils {
      * @return a double binding
      */
     @Nonnull
-    public static <K, V> DoubleBinding reduceAsDouble(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, Double> mapper) {
+    public static <K, V> DoubleBinding reduceThenMapAsDouble(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, Double> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2257,7 +2328,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a double binding whose value is the reduction of all values in the map.
+     * Returns a double binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items    the observable map.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -2267,7 +2338,7 @@ public class BindingUtils {
      * @return a double binding
      */
     @Nonnull
-    public static <K, V> DoubleBinding reduceAsDouble(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, Double> mapper) {
+    public static <K, V> DoubleBinding reduceThenMapAsDouble(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, Double> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2276,7 +2347,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a double binding whose value is the reduction of all values in the map.
+     * Returns a double binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items        the observable map.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2286,7 +2357,7 @@ public class BindingUtils {
      * @return a double binding
      */
     @Nonnull
-    public static <K, V> DoubleBinding reduceAsDouble(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Double>> mapper) {
+    public static <K, V> DoubleBinding reduceThenMapAsDouble(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Double>> mapper) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createDoubleBinding(() -> {
@@ -2299,7 +2370,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a double binding whose value is the reduction of all values in the map.
+     * Returns a double binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items    the observable map.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -2309,7 +2380,7 @@ public class BindingUtils {
      * @return a double binding
      */
     @Nonnull
-    public static <K, V> DoubleBinding reduceAsDouble(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Double>> mapper) {
+    public static <K, V> DoubleBinding reduceThenMapAsDouble(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Double>> mapper) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createDoubleBinding(() -> {
@@ -2322,7 +2393,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a String binding whose value is the reduction of all values in the map.
+     * Returns a String binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items        the observable map.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2332,7 +2403,7 @@ public class BindingUtils {
      * @return a String binding
      */
     @Nonnull
-    public static <K, V> StringBinding reduceAsString(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, String> mapper) {
+    public static <K, V> StringBinding reduceThenMapAsString(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, String> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2340,7 +2411,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a String binding whose value is the reduction of all values in the map.
+     * Returns a String binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items    the observable map.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -2350,7 +2421,7 @@ public class BindingUtils {
      * @return a String binding
      */
     @Nonnull
-    public static <K, V> StringBinding reduceAsString(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, String> mapper) {
+    public static <K, V> StringBinding reduceThenMapAsString(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final BinaryOperator<V> reducer, @Nullable final Function<? super V, String> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2359,7 +2430,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a String binding whose value is the reduction of all values in the map.
+     * Returns a String binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items        the observable map.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2369,7 +2440,7 @@ public class BindingUtils {
      * @return a String binding
      */
     @Nonnull
-    public static <K, V> StringBinding reduceAsString(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, String>> mapper) {
+    public static <K, V> StringBinding reduceThenMapAsString(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, String>> mapper) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createStringBinding(() -> {
@@ -2382,7 +2453,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a String binding whose value is the reduction of all values in the map.
+     * Returns a String binding whose value is the reduction of all values in the map. The mapper function is applied to the reduced value.
      *
      * @param items    the observable map.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -2392,7 +2463,7 @@ public class BindingUtils {
      * @return a String binding
      */
     @Nonnull
-    public static <K, V> StringBinding reduceAsString(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, String>> mapper) {
+    public static <K, V> StringBinding reduceThenMapAsString(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, String>> mapper) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createStringBinding(() -> {
@@ -2405,7 +2476,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns an object binding whose value is the reduction of all elements in the list.
+     * Returns an object binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items        the observable list of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2414,14 +2485,14 @@ public class BindingUtils {
      * @return an object binding
      */
     @Nonnull
-    public static <T> ObjectBinding<T> reduce(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer) {
+    public static <T> ObjectBinding<T> reduceThenMap(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         return createObjectBinding(() -> items.stream().reduce(reducer).orElse(defaultValue), items);
     }
 
     /**
-     * Returns an object binding whose value is the reduction of all elements in the list.
+     * Returns an object binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items    the observable list of elements.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
@@ -2430,7 +2501,7 @@ public class BindingUtils {
      * @return an object binding
      */
     @Nonnull
-    public static <T> ObjectBinding<T> reduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer) {
+    public static <T> ObjectBinding<T> reduceThenMap(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -2438,7 +2509,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns an object binding whose value is the reduction of all elements in the list.
+     * Returns an object binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items        the observable list of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2447,7 +2518,7 @@ public class BindingUtils {
      * @return an object binding
      */
     @Nonnull
-    public static <T> ObjectBinding<T> reduce(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer) {
+    public static <T> ObjectBinding<T> reduceThenMap(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer) {
         return createObjectBinding(() -> {
             BinaryOperator<T> operator = reducer.getValue();
             requireNonNull(operator, ERROR_REDUCER_NULL);
@@ -2456,7 +2527,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns an object binding whose value is the reduction of all elements in the list.
+     * Returns an object binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items    the observable list of elements.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
@@ -2465,7 +2536,7 @@ public class BindingUtils {
      * @return an object binding
      */
     @Nonnull
-    public static <T> ObjectBinding<T> reduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer) {
+    public static <T> ObjectBinding<T> reduceThenMap(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         return createObjectBinding(() -> {
             BinaryOperator<T> operator = reducer.getValue();
@@ -2475,7 +2546,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a string binding whose value is the reduction of all elements in the list.
+     * Returns a string binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items        the observable list of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2485,7 +2556,7 @@ public class BindingUtils {
      * @return a string binding
      */
     @Nonnull
-    public static <T> StringBinding reduceAsString(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, String> mapper) {
+    public static <T> StringBinding reduceThenMapAsString(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, String> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         final Function<? super T, String> mapperValue = mapper != null ? mapper : String::valueOf;
@@ -2493,7 +2564,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a string binding whose value is the reduction of all elements in the list.
+     * Returns a string binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items    the observable list of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -2503,7 +2574,7 @@ public class BindingUtils {
      * @return a string binding
      */
     @Nonnull
-    public static <T> StringBinding reduceAsString(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, String> mapper) {
+    public static <T> StringBinding reduceThenMapAsString(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, String> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         final Function<? super T, String> mapperValue = mapper != null ? mapper : String::valueOf;
@@ -2511,7 +2582,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a string binding whose value is the reduction of all elements in the list.
+     * Returns a string binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items        the observable list of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2521,7 +2592,7 @@ public class BindingUtils {
      * @return a string binding
      */
     @Nonnull
-    public static <T> StringBinding reduceAsString(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, String>> mapper) {
+    public static <T> StringBinding reduceThenMapAsString(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, String>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2534,7 +2605,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a string binding whose value is the reduction of all elements in the list.
+     * Returns a string binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items    the observable list of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -2544,7 +2615,7 @@ public class BindingUtils {
      * @return a string binding
      */
     @Nonnull
-    public static <T> StringBinding reduceAsString(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, String>> mapper) {
+    public static <T> StringBinding reduceThenMapAsString(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, String>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2558,7 +2629,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns an integer binding whose value is the reduction of all elements in the list.
+     * Returns an integer binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items        the observable list of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2568,7 +2639,7 @@ public class BindingUtils {
      * @return an integer binding
      */
     @Nonnull
-    public static <T> IntegerBinding reduceAsInteger(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Integer> mapper) {
+    public static <T> IntegerBinding reduceThenMapAsInteger(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Integer> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2576,7 +2647,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns an integer binding whose value is the reduction of all elements in the list.
+     * Returns an integer binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items    the observable list of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -2586,7 +2657,7 @@ public class BindingUtils {
      * @return an integer binding
      */
     @Nonnull
-    public static <T> IntegerBinding reduceAsInteger(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Integer> mapper) {
+    public static <T> IntegerBinding reduceThenMapAsInteger(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Integer> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2594,7 +2665,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns an integer binding whose value is the reduction of all elements in the list.
+     * Returns an integer binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items        the observable list of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2604,7 +2675,7 @@ public class BindingUtils {
      * @return an integer binding
      */
     @Nonnull
-    public static <T> IntegerBinding reduceAsInteger(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper) {
+    public static <T> IntegerBinding reduceThenMapAsInteger(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2618,7 +2689,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns an integer binding whose value is the reduction of all elements in the list.
+     * Returns an integer binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items    the observable list of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -2628,7 +2699,7 @@ public class BindingUtils {
      * @return an integer binding
      */
     @Nonnull
-    public static <T> IntegerBinding reduceAsInteger(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper) {
+    public static <T> IntegerBinding reduceThenMapAsInteger(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2643,7 +2714,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a long binding whose value is the reduction of all elements in the list.
+     * Returns a long binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items        the observable list of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2653,7 +2724,7 @@ public class BindingUtils {
      * @return a long binding
      */
     @Nonnull
-    public static <T> LongBinding reduceAsLong(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Long> mapper) {
+    public static <T> LongBinding reduceThenMapAsLong(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Long> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2661,7 +2732,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a long binding whose value is the reduction of all elements in the list.
+     * Returns a long binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items    the observable list of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -2671,7 +2742,7 @@ public class BindingUtils {
      * @return a long binding
      */
     @Nonnull
-    public static <T> LongBinding reduceAsLong(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Long> mapper) {
+    public static <T> LongBinding reduceThenMapAsLong(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Long> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2679,7 +2750,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a long binding whose value is the reduction of all elements in the list.
+     * Returns a long binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items        the observable list of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2689,7 +2760,7 @@ public class BindingUtils {
      * @return a long binding
      */
     @Nonnull
-    public static <T> LongBinding reduceAsLong(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Long>> mapper) {
+    public static <T> LongBinding reduceThenMapAsLong(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Long>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2703,7 +2774,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a long binding whose value is the reduction of all elements in the list.
+     * Returns a long binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items    the observable list of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -2713,7 +2784,7 @@ public class BindingUtils {
      * @return a long binding
      */
     @Nonnull
-    public static <T> LongBinding reduceAsLong(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Long>> mapper) {
+    public static <T> LongBinding reduceThenMapAsLong(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Long>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2728,7 +2799,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a float binding whose value is the reduction of all elements in the list.
+     * Returns a float binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items        the observable list of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2738,7 +2809,7 @@ public class BindingUtils {
      * @return a float binding
      */
     @Nonnull
-    public static <T> FloatBinding reduceAsFloat(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Float> mapper) {
+    public static <T> FloatBinding reduceThenMapAsFloat(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Float> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2746,7 +2817,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a float binding whose value is the reduction of all elements in the list.
+     * Returns a float binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items    the observable list of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -2756,7 +2827,7 @@ public class BindingUtils {
      * @return a float binding
      */
     @Nonnull
-    public static <T> FloatBinding reduceAsFloat(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Float> mapper) {
+    public static <T> FloatBinding reduceThenMapAsFloat(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Float> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2764,7 +2835,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a float binding whose value is the reduction of all elements in the list.
+     * Returns a float binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items        the observable list of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2774,7 +2845,7 @@ public class BindingUtils {
      * @return a float binding
      */
     @Nonnull
-    public static <T> FloatBinding reduceAsFloat(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Float>> mapper) {
+    public static <T> FloatBinding reduceThenMapAsFloat(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Float>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2788,7 +2859,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a float binding whose value is the reduction of all elements in the list.
+     * Returns a float binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items    the observable list of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -2798,7 +2869,7 @@ public class BindingUtils {
      * @return a float binding
      */
     @Nonnull
-    public static <T> FloatBinding reduceAsFloat(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Float>> mapper) {
+    public static <T> FloatBinding reduceThenMapAsFloat(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Float>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2813,7 +2884,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a double binding whose value is the reduction of all elements in the list.
+     * Returns a double binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items        the observable list of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2823,7 +2894,7 @@ public class BindingUtils {
      * @return a double binding
      */
     @Nonnull
-    public static <T> DoubleBinding reduceAsDouble(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Double> mapper) {
+    public static <T> DoubleBinding reduceThenMapAsDouble(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Double> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2831,7 +2902,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a double binding whose value is the reduction of all elements in the list.
+     * Returns a double binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items    the observable list of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -2841,7 +2912,7 @@ public class BindingUtils {
      * @return a double binding
      */
     @Nonnull
-    public static <T> DoubleBinding reduceAsDouble(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Double> mapper) {
+    public static <T> DoubleBinding reduceThenMapAsDouble(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Double> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2849,7 +2920,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a double binding whose value is the reduction of all elements in the list.
+     * Returns a double binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items        the observable list of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2859,7 +2930,7 @@ public class BindingUtils {
      * @return a double binding
      */
     @Nonnull
-    public static <T> DoubleBinding reduceAsDouble(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Double>> mapper) {
+    public static <T> DoubleBinding reduceThenMapAsDouble(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Double>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2873,7 +2944,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a double binding whose value is the reduction of all elements in the list.
+     * Returns a double binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items    the observable list of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -2883,7 +2954,7 @@ public class BindingUtils {
      * @return a double binding
      */
     @Nonnull
-    public static <T> DoubleBinding reduceAsDouble(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Double>> mapper) {
+    public static <T> DoubleBinding reduceThenMapAsDouble(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Double>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2898,7 +2969,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a boolean binding whose value is the reduction of all elements in the list.
+     * Returns a boolean binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items        the observable list of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2908,7 +2979,7 @@ public class BindingUtils {
      * @return a boolean binding
      */
     @Nonnull
-    public static <T> BooleanBinding reduceAsBoolean(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Boolean> mapper) {
+    public static <T> BooleanBinding reduceThenMapAsBoolean(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Boolean> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2916,7 +2987,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a boolean binding whose value is the reduction of all elements in the list.
+     * Returns a boolean binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items    the observable list of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -2926,7 +2997,7 @@ public class BindingUtils {
      * @return a boolean binding
      */
     @Nonnull
-    public static <T> BooleanBinding reduceAsBoolean(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Boolean> mapper) {
+    public static <T> BooleanBinding reduceThenMapAsBoolean(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Boolean> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2935,7 +3006,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a boolean binding whose value is the reduction of all elements in the list.
+     * Returns a boolean binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items        the observable list of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2945,7 +3016,7 @@ public class BindingUtils {
      * @return a boolean binding
      */
     @Nonnull
-    public static <T> BooleanBinding reduceAsBoolean(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper) {
+    public static <T> BooleanBinding reduceThenMapAsBoolean(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2959,7 +3030,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a boolean binding whose value is the reduction of all elements in the list.
+     * Returns a boolean binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items    the observable list of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -2969,7 +3040,7 @@ public class BindingUtils {
      * @return a boolean binding
      */
     @Nonnull
-    public static <T> BooleanBinding reduceAsBoolean(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper) {
+    public static <T> BooleanBinding reduceThenMapAsBoolean(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2984,7 +3055,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a number binding whose value is the reduction of all elements in the list.
+     * Returns a number binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items        the observable list of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -2994,7 +3065,7 @@ public class BindingUtils {
      * @return a number binding
      */
     @Nonnull
-    public static <T> NumberBinding reduceAsNumber(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, ? extends Number> mapper) {
+    public static <T> NumberBinding reduceThenMapAsNumber(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, ? extends Number> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3002,7 +3073,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a number binding whose value is the reduction of all elements in the list.
+     * Returns a number binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items    the observable list of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -3012,7 +3083,7 @@ public class BindingUtils {
      * @return a number binding
      */
     @Nonnull
-    public static <T> NumberBinding reduceAsNumber(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Number> mapper) {
+    public static <T> NumberBinding reduceThenMapAsNumber(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Number> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3021,7 +3092,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a number binding whose value is the reduction of all elements in the list.
+     * Returns a number binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items        the observable list of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -3031,7 +3102,7 @@ public class BindingUtils {
      * @return a number binding
      */
     @Nonnull
-    public static <T> NumberBinding reduceAsNumber(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, ? extends Number>> mapper) {
+    public static <T> NumberBinding reduceThenMapAsNumber(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, ? extends Number>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3045,7 +3116,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a number binding whose value is the reduction of all elements in the list.
+     * Returns a number binding whose value is the reduction of all elements in the list. The mapper function is applied to the reduced value.
      *
      * @param items    the observable list of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -3055,7 +3126,7 @@ public class BindingUtils {
      * @return a number binding
      */
     @Nonnull
-    public static <T> NumberBinding reduceAsNumber(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Number>> mapper) {
+    public static <T> NumberBinding reduceThenMapAsNumber(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Number>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3070,78 +3141,7 @@ public class BindingUtils {
     }
 
     /**
-     * Creates a string binding that constructs a sequence of characters separated by a delimiter.
-     *
-     * @param items     the observable set of items.
-     * @param delimiter the sequence of characters to be used between each element.
-     *
-     * @return a string binding.
-     */
-    @Nonnull
-    public static StringBinding join(@Nonnull final ObservableSet<?> items, @Nullable final String delimiter) {
-        return join(items, delimiter, String::valueOf);
-    }
-
-    /**
-     * Creates a string binding that constructs a sequence of characters separated by a delimiter.
-     *
-     * @param items     the observable set of items.
-     * @param delimiter the sequence of characters to be used between each element.
-     * @param mapper    a non-interfering, stateless function to apply to the reduced value.
-     *
-     * @return a string binding.
-     */
-    @Nonnull
-    public static <T> StringBinding join(@Nonnull final ObservableSet<T> items, @Nullable final String delimiter, @Nonnull final Function<? super T, String> mapper) {
-        requireNonNull(items, ERROR_ITEMS_NULL);
-        requireNonNull(mapper, ERROR_MAPPER_NULL);
-        final String value = delimiter == null ? "" : delimiter;
-        return createStringBinding(() -> items.stream().map(mapper).collect(joining(value)), items);
-    }
-
-    /**
-     * Creates a string binding that constructs a sequence of characters separated by a delimiter.
-     *
-     * @param items     the observable set of items.
-     * @param delimiter the sequence of characters to be used between each element.
-     *
-     * @return a string binding.
-     */
-    @Nonnull
-    public static StringBinding join(@Nonnull final ObservableSet<?> items, @Nonnull final ObservableValue<String> delimiter) {
-        requireNonNull(items, ERROR_ITEMS_NULL);
-        requireNonNull(delimiter, ERROR_DELIMITER_NULL);
-        return createStringBinding(() -> {
-            String value = delimiter.getValue();
-            value = value == null ? "" : value;
-            return items.stream().map(String::valueOf).collect(joining(value));
-        }, items, delimiter);
-    }
-
-    /**
-     * Creates a string binding that constructs a sequence of characters separated by a delimiter.
-     *
-     * @param items     the observable set of items.
-     * @param delimiter the sequence of characters to be used between each element.
-     * @param mapper    a non-interfering, stateless function to apply to the reduced value.
-     *
-     * @return a string binding.
-     */
-    @Nonnull
-    public static <T> StringBinding join(@Nonnull final ObservableSet<T> items, @Nonnull final ObservableValue<String> delimiter, @Nonnull final ObservableValue<Function<? super T, String>> mapper) {
-        requireNonNull(items, ERROR_ITEMS_NULL);
-        requireNonNull(delimiter, ERROR_DELIMITER_NULL);
-        requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createStringBinding(() -> {
-            String value = delimiter.getValue();
-            value = value == null ? "" : value;
-            final Function<? super T, String> mapperValue = mapper.getValue() != null ? mapper.getValue() : String::valueOf;
-            return items.stream().map(mapperValue).collect(joining(value));
-        }, items, delimiter, mapper);
-    }
-
-    /**
-     * Returns an object binding whose value is the reduction of all elements in the set.
+     * Returns an object binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items        the observable set of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -3150,14 +3150,14 @@ public class BindingUtils {
      * @return an object binding
      */
     @Nonnull
-    public static <T> ObjectBinding<T> reduce(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer) {
+    public static <T> ObjectBinding<T> reduceThenMap(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         return createObjectBinding(() -> items.stream().reduce(reducer).orElse(defaultValue), items);
     }
 
     /**
-     * Returns an object binding whose value is the reduction of all elements in the set.
+     * Returns an object binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items    the observable set of elements.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
@@ -3166,7 +3166,7 @@ public class BindingUtils {
      * @return an object binding
      */
     @Nonnull
-    public static <T> ObjectBinding<T> reduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer) {
+    public static <T> ObjectBinding<T> reduceThenMap(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -3174,7 +3174,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns an object binding whose value is the reduction of all elements in the set.
+     * Returns an object binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items        the observable set of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -3183,7 +3183,7 @@ public class BindingUtils {
      * @return an object binding
      */
     @Nonnull
-    public static <T> ObjectBinding<T> reduce(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer) {
+    public static <T> ObjectBinding<T> reduceThenMap(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer) {
         return createObjectBinding(() -> {
             BinaryOperator<T> operator = reducer.getValue();
             requireNonNull(operator, ERROR_REDUCER_NULL);
@@ -3192,7 +3192,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns an object binding whose value is the reduction of all elements in the set.
+     * Returns an object binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items    the observable set of elements.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
@@ -3201,7 +3201,7 @@ public class BindingUtils {
      * @return an object binding
      */
     @Nonnull
-    public static <T> ObjectBinding<T> reduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer) {
+    public static <T> ObjectBinding<T> reduceThenMap(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         return createObjectBinding(() -> {
             BinaryOperator<T> operator = reducer.getValue();
@@ -3211,7 +3211,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a string binding whose value is the reduction of all elements in the set.
+     * Returns a string binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items        the observable set of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -3221,7 +3221,7 @@ public class BindingUtils {
      * @return a string binding
      */
     @Nonnull
-    public static <T> StringBinding reduceAsString(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, String> mapper) {
+    public static <T> StringBinding reduceThenMapAsString(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, String> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         final Function<? super T, String> mapperValue = mapper != null ? mapper : String::valueOf;
@@ -3229,7 +3229,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a string binding whose value is the reduction of all elements in the set.
+     * Returns a string binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items    the observable set of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -3239,7 +3239,7 @@ public class BindingUtils {
      * @return a string binding
      */
     @Nonnull
-    public static <T> StringBinding reduceAsString(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, String> mapper) {
+    public static <T> StringBinding reduceThenMapAsString(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, String> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -3248,7 +3248,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a string binding whose value is the reduction of all elements in the set.
+     * Returns a string binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items        the observable set of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -3258,7 +3258,7 @@ public class BindingUtils {
      * @return a string binding
      */
     @Nonnull
-    public static <T> StringBinding reduceAsString(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, String>> mapper) {
+    public static <T> StringBinding reduceThenMapAsString(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, String>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3271,7 +3271,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a string binding whose value is the reduction of all elements in the set.
+     * Returns a string binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items    the observable set of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -3281,7 +3281,7 @@ public class BindingUtils {
      * @return a string binding
      */
     @Nonnull
-    public static <T> StringBinding reduceAsString(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, String>> mapper) {
+    public static <T> StringBinding reduceThenMapAsString(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, String>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3295,7 +3295,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns an integer binding whose value is the reduction of all elements in the set.
+     * Returns an integer binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items        the observable set of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -3305,7 +3305,7 @@ public class BindingUtils {
      * @return an integer binding
      */
     @Nonnull
-    public static <T> IntegerBinding reduceAsInteger(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Integer> mapper) {
+    public static <T> IntegerBinding reduceThenMapAsInteger(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Integer> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3313,7 +3313,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns an integer binding whose value is the reduction of all elements in the set.
+     * Returns an integer binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items    the observable set of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -3323,7 +3323,7 @@ public class BindingUtils {
      * @return an integer binding
      */
     @Nonnull
-    public static <T> IntegerBinding reduceAsInteger(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Integer> mapper) {
+    public static <T> IntegerBinding reduceThenMapAsInteger(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Integer> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3332,7 +3332,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns an integer binding whose value is the reduction of all elements in the set.
+     * Returns an integer binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items        the observable set of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -3342,7 +3342,7 @@ public class BindingUtils {
      * @return an integer binding
      */
     @Nonnull
-    public static <T> IntegerBinding reduceAsInteger(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper) {
+    public static <T> IntegerBinding reduceThenMapAsInteger(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3356,7 +3356,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns an integer binding whose value is the reduction of all elements in the set.
+     * Returns an integer binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items    the observable set of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -3366,7 +3366,7 @@ public class BindingUtils {
      * @return an integer binding
      */
     @Nonnull
-    public static <T> IntegerBinding reduceAsInteger(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper) {
+    public static <T> IntegerBinding reduceThenMapAsInteger(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3381,7 +3381,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a long binding whose value is the reduction of all elements in the set.
+     * Returns a long binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items        the observable set of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -3391,7 +3391,7 @@ public class BindingUtils {
      * @return a long binding
      */
     @Nonnull
-    public static <T> LongBinding reduceAsLong(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Long> mapper) {
+    public static <T> LongBinding reduceThenMapAsLong(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Long> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3399,7 +3399,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a long binding whose value is the reduction of all elements in the set.
+     * Returns a long binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items    the observable set of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -3409,7 +3409,7 @@ public class BindingUtils {
      * @return a long binding
      */
     @Nonnull
-    public static <T> LongBinding reduceAsLong(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Long> mapper) {
+    public static <T> LongBinding reduceThenMapAsLong(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Long> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3418,7 +3418,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a long binding whose value is the reduction of all elements in the set.
+     * Returns a long binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items        the observable set of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -3428,7 +3428,7 @@ public class BindingUtils {
      * @return a long binding
      */
     @Nonnull
-    public static <T> LongBinding reduceAsLong(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Long>> mapper) {
+    public static <T> LongBinding reduceThenMapAsLong(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Long>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3442,7 +3442,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a long binding whose value is the reduction of all elements in the set.
+     * Returns a long binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items    the observable set of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -3452,7 +3452,7 @@ public class BindingUtils {
      * @return a long binding
      */
     @Nonnull
-    public static <T> LongBinding reduceAsLong(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Long>> mapper) {
+    public static <T> LongBinding reduceThenMapAsLong(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Long>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3467,7 +3467,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a float binding whose value is the reduction of all elements in the set.
+     * Returns a float binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items        the observable set of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -3477,7 +3477,7 @@ public class BindingUtils {
      * @return a float binding
      */
     @Nonnull
-    public static <T> FloatBinding reduceAsFloat(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Float> mapper) {
+    public static <T> FloatBinding reduceThenMapAsFloat(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Float> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3485,7 +3485,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a float binding whose value is the reduction of all elements in the set.
+     * Returns a float binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items    the observable set of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -3495,7 +3495,7 @@ public class BindingUtils {
      * @return a float binding
      */
     @Nonnull
-    public static <T> FloatBinding reduceAsFloat(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Float> mapper) {
+    public static <T> FloatBinding reduceThenMapAsFloat(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Float> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3504,7 +3504,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a float binding whose value is the reduction of all elements in the set.
+     * Returns a float binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items        the observable set of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -3514,7 +3514,7 @@ public class BindingUtils {
      * @return a float binding
      */
     @Nonnull
-    public static <T> FloatBinding reduceAsFloat(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Float>> mapper) {
+    public static <T> FloatBinding reduceThenMapAsFloat(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Float>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3528,7 +3528,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a float binding whose value is the reduction of all elements in the set.
+     * Returns a float binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items    the observable set of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -3538,7 +3538,7 @@ public class BindingUtils {
      * @return a float binding
      */
     @Nonnull
-    public static <T> FloatBinding reduceAsFloat(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Float>> mapper) {
+    public static <T> FloatBinding reduceThenMapAsFloat(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Float>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3553,7 +3553,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a double binding whose value is the reduction of all elements in the set.
+     * Returns a double binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items        the observable set of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -3563,7 +3563,7 @@ public class BindingUtils {
      * @return a double binding
      */
     @Nonnull
-    public static <T> DoubleBinding reduceAsDouble(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Double> mapper) {
+    public static <T> DoubleBinding reduceThenMapAsDouble(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Double> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3571,7 +3571,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a double binding whose value is the reduction of all elements in the set.
+     * Returns a double binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items    the observable set of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -3581,7 +3581,7 @@ public class BindingUtils {
      * @return a double binding
      */
     @Nonnull
-    public static <T> DoubleBinding reduceAsDouble(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Double> mapper) {
+    public static <T> DoubleBinding reduceThenMapAsDouble(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Double> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3590,7 +3590,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a double binding whose value is the reduction of all elements in the set.
+     * Returns a double binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items        the observable set of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -3600,7 +3600,7 @@ public class BindingUtils {
      * @return a double binding
      */
     @Nonnull
-    public static <T> DoubleBinding reduceAsDouble(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Double>> mapper) {
+    public static <T> DoubleBinding reduceThenMapAsDouble(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Double>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3614,7 +3614,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a double binding whose value is the reduction of all elements in the set.
+     * Returns a double binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items    the observable set of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -3624,7 +3624,7 @@ public class BindingUtils {
      * @return a double binding
      */
     @Nonnull
-    public static <T> DoubleBinding reduceAsDouble(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Double>> mapper) {
+    public static <T> DoubleBinding reduceThenMapAsDouble(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Double>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3639,7 +3639,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a boolean binding whose value is the reduction of all elements in the set.
+     * Returns a boolean binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items        the observable set of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -3649,7 +3649,7 @@ public class BindingUtils {
      * @return a boolean binding
      */
     @Nonnull
-    public static <T> BooleanBinding reduceAsBoolean(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Boolean> mapper) {
+    public static <T> BooleanBinding reduceThenMapAsBoolean(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Boolean> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3657,7 +3657,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a boolean binding whose value is the reduction of all elements in the set.
+     * Returns a boolean binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items    the observable set of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -3667,7 +3667,7 @@ public class BindingUtils {
      * @return a boolean binding
      */
     @Nonnull
-    public static <T> BooleanBinding reduceAsBoolean(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Boolean> mapper) {
+    public static <T> BooleanBinding reduceThenMapAsBoolean(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Boolean> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3676,7 +3676,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a boolean binding whose value is the reduction of all elements in the set.
+     * Returns a boolean binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items        the observable set of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -3686,7 +3686,7 @@ public class BindingUtils {
      * @return a boolean binding
      */
     @Nonnull
-    public static <T> BooleanBinding reduceAsBoolean(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper) {
+    public static <T> BooleanBinding reduceThenMapAsBoolean(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3700,7 +3700,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a boolean binding whose value is the reduction of all elements in the set.
+     * Returns a boolean binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items    the observable set of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -3710,7 +3710,7 @@ public class BindingUtils {
      * @return a boolean binding
      */
     @Nonnull
-    public static <T> BooleanBinding reduceAsBoolean(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper) {
+    public static <T> BooleanBinding reduceThenMapAsBoolean(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3725,7 +3725,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a number binding whose value is the reduction of all elements in the set.
+     * Returns a number binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items        the observable set of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -3735,7 +3735,7 @@ public class BindingUtils {
      * @return a number binding
      */
     @Nonnull
-    public static <T> NumberBinding reduceAsNumber(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, ? extends Number> mapper) {
+    public static <T> NumberBinding reduceThenMapAsNumber(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, ? extends Number> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3743,7 +3743,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a number binding whose value is the reduction of all elements in the set.
+     * Returns a number binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items    the observable set of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -3753,7 +3753,7 @@ public class BindingUtils {
      * @return a number binding
      */
     @Nonnull
-    public static <T> NumberBinding reduceAsNumber(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Number> mapper) {
+    public static <T> NumberBinding reduceThenMapAsNumber(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nullable final Function<? super T, Number> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3762,7 +3762,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a number binding whose value is the reduction of all elements in the set.
+     * Returns a number binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items        the observable set of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
@@ -3772,7 +3772,7 @@ public class BindingUtils {
      * @return a number binding
      */
     @Nonnull
-    public static <T> NumberBinding reduceAsNumber(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, ? extends Number>> mapper) {
+    public static <T> NumberBinding reduceThenMapAsNumber(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, ? extends Number>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3786,7 +3786,7 @@ public class BindingUtils {
     }
 
     /**
-     * Returns a number binding whose value is the reduction of all elements in the set.
+     * Returns a number binding whose value is the reduction of all elements in the set. The mapper function is applied to the reduced value.
      *
      * @param items    the observable set of elements.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
@@ -3796,7 +3796,7 @@ public class BindingUtils {
      * @return a number binding
      */
     @Nonnull
-    public static <T> NumberBinding reduceAsNumber(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Number>> mapper) {
+    public static <T> NumberBinding reduceThenMapAsNumber(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Number>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
