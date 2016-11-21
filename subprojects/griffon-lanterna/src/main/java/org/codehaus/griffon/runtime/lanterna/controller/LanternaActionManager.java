@@ -19,15 +19,28 @@ import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
 import org.codehaus.griffon.runtime.core.controller.AbstractActionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import static griffon.util.GriffonNameUtils.getNaturalName;
+import static griffon.util.GriffonNameUtils.isBlank;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class LanternaActionManager extends AbstractActionManager {
+    private static final Logger LOG = LoggerFactory.getLogger(LanternaActionManager.class);
+
+    private static final String DOT = ".";
+    private static final String EQUALS = " = ";
+    private static final String KEY_NAME = "name";
+
     @Inject
     public LanternaActionManager(@Nonnull GriffonApplication application) {
         super(application);
@@ -40,7 +53,31 @@ public class LanternaActionManager extends AbstractActionManager {
     }
 
     @Override
-    protected void doConfigureAction(@Nonnull Action action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
-        // empty
+    protected void doConfigureAction(@Nonnull final Action action, @Nonnull final GriffonController controller, @Nonnull final String normalizeNamed, @Nonnull final String keyPrefix) {
+        controller.getApplication().addPropertyChangeListener(GriffonApplication.PROPERTY_LOCALE, new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                configureAction((LanternaGriffonControllerAction) action, controller, normalizeNamed, keyPrefix);
+            }
+        });
+        configureAction((LanternaGriffonControllerAction) action, controller, normalizeNamed, keyPrefix);
+    }
+
+    protected void configureAction(@Nonnull LanternaGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+        resolveName(action, controller, normalizeNamed, keyPrefix);
+    }
+
+    protected void resolveName(@Nonnull LanternaGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+        String rsActionName = msg(keyPrefix, normalizeNamed, KEY_NAME, getNaturalName(normalizeNamed));
+        if (!isBlank(rsActionName)) {
+            trace(keyPrefix + normalizeNamed, KEY_NAME, rsActionName);
+            action.setName(rsActionName);
+        }
+    }
+
+    protected void trace(@Nonnull String actionKey, @Nonnull String key, @Nonnull String value) {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace(actionKey + DOT + key + EQUALS + value);
+        }
     }
 }

@@ -49,6 +49,7 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
     public static final String KEY_STYLE = "style";
     public static final String KEY_GRAPHICSTYLECLASS = "graphicStyleClass";
     public static final String KEY_GRAPHICSTYLE = "graphicStyle";
+
     private final JavaFXAction toolkitAction;
     private String description;
     private String icon;

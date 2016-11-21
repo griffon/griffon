@@ -24,8 +24,11 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import static griffon.util.GriffonApplicationUtils.isMacOSX;
+import static griffon.util.GriffonNameUtils.getNaturalName;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.TypeUtils.castToBoolean;
 
@@ -35,96 +38,144 @@ import static griffon.util.TypeUtils.castToBoolean;
  */
 public class SwingActionManager extends AbstractActionManager {
     private static final Logger LOG = LoggerFactory.getLogger(SwingActionManager.class);
+    private static final String KEY_SELECTED = "selected";
+    private static final String KEY_ENABLED = "enabled";
+    private static final String KEY_LARGE_ICON = "large_icon";
+    private static final String KEY_SMALL_ICON = "small_icon";
+    private static final String KEY_LONG_DESCRIPTION = "long_description";
+    private static final String KEY_SHORT_DESCRIPTION = "short_description";
+    private static final String KEY_COMMAND = "command";
+    private static final String KEY_ACCELERATOR = "accelerator";
+    private static final String KEY_NAME = "name";
+    private static final String KEY_MNEMONIC = "mnemonic";
+    private static final String KEY_CTRL = "ctrl";
+    private static final String KEY_META = "meta";
+    private static final String EMPTY_STRING = "";
+    private static final String DOT = ".";
+    private static final String EQUALS = " = ";
 
     @Inject
     public SwingActionManager(@Nonnull GriffonApplication application) {
         super(application);
     }
 
-    @Override
-    protected void doConfigureAction(@Nonnull Action action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
-        SwingGriffonControllerAction swingAction = (SwingGriffonControllerAction) action;
-
-        String rsAccelerator = msg(keyPrefix, normalizeNamed, "accelerator", "");
-        if (!isBlank(rsAccelerator)) {
-            //noinspection ConstantConditions
-            if (!isMacOSX() && rsAccelerator.contains("meta") && !rsAccelerator.contains("ctrl")) {
-                rsAccelerator = rsAccelerator.replace("meta", "ctrl");
-            }
-            if (LOG.isTraceEnabled()) {
-                LOG.trace(keyPrefix + normalizeNamed + ".accelerator = " + rsAccelerator);
-            }
-            swingAction.setAccelerator(rsAccelerator);
-        }
-
-        String rsCommand = msg(keyPrefix, normalizeNamed, "command", "");
-        if (!isBlank(rsCommand)) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace(keyPrefix + normalizeNamed + ".command = " + rsCommand);
-            }
-            swingAction.setCommand(rsCommand);
-        }
-
-        String rsShortDescription = msg(keyPrefix, normalizeNamed, "short_description", "");
-        if (!isBlank(rsShortDescription)) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace(keyPrefix + normalizeNamed + ".short_description = " + rsShortDescription);
-            }
-            swingAction.setShortDescription(rsShortDescription);
-        }
-
-        String rsLongDescription = msg(keyPrefix, normalizeNamed, "long_description", "");
-        if (!isBlank(rsLongDescription)) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace(keyPrefix + normalizeNamed + ".long_description = " + rsLongDescription);
-            }
-            swingAction.setLongDescription(rsLongDescription);
-        }
-
-        String rsMnemonic = msg(keyPrefix, normalizeNamed, "mnemonic", "");
-        if (!isBlank(rsMnemonic)) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace(keyPrefix + normalizeNamed + ".mnemonic = " + rsMnemonic);
-            }
-            swingAction.setMnemonic(rsMnemonic);
-        }
-
-        String rsSmallIcon = msg(keyPrefix, normalizeNamed, "small_icon", "");
-        if (!isBlank(rsSmallIcon)) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace(keyPrefix + normalizeNamed + ".small_icon = " + rsSmallIcon);
-            }
-            swingAction.setSmallIcon(rsSmallIcon);
-        }
-
-        String rsLargeIcon = msg(keyPrefix, normalizeNamed, "large_icon", "");
-        if (!isBlank(rsLargeIcon)) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace(keyPrefix + normalizeNamed + ".large_icon = " + rsLargeIcon);
-            }
-            swingAction.setLargeIcon(rsLargeIcon);
-        }
-
-        String rsEnabled = msg(keyPrefix, normalizeNamed, "enabled", "true");
-        if (!isBlank(rsEnabled)) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace(keyPrefix + normalizeNamed + ".enabled = " + rsEnabled);
-            }
-            swingAction.setEnabled(castToBoolean(rsEnabled));
-        }
-
-        String rsSelected = msg(keyPrefix, normalizeNamed, "selected", "false");
-        if (!isBlank(rsSelected)) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace(keyPrefix + normalizeNamed + ".selected = " + rsSelected);
-            }
-            swingAction.setSelected(castToBoolean(rsSelected));
-        }
-    }
-
     @Nonnull
     @Override
     protected Action createControllerAction(@Nonnull GriffonController controller, @Nonnull String actionName) {
         return new SwingGriffonControllerAction(getUiThreadManager(), this, controller, actionName);
+    }
+
+    @Override
+    protected void doConfigureAction(@Nonnull final Action action, @Nonnull final GriffonController controller, @Nonnull final String normalizeNamed, @Nonnull final String keyPrefix) {
+        controller.getApplication().addPropertyChangeListener(GriffonApplication.PROPERTY_LOCALE, new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                configureAction((SwingGriffonControllerAction) action, controller, normalizeNamed, keyPrefix);
+            }
+        });
+        configureAction((SwingGriffonControllerAction) action, controller, normalizeNamed, keyPrefix);
+    }
+
+    protected void configureAction(@Nonnull SwingGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+        resolveName(action, controller, normalizeNamed, keyPrefix);
+        resolveAccelerator(action, controller, normalizeNamed, keyPrefix);
+        resolveCommand(action, controller, normalizeNamed, keyPrefix);
+        resolveShortDescription(action, controller, normalizeNamed, keyPrefix);
+        resolveLongDescription(action, controller, normalizeNamed, keyPrefix);
+        resolveMnemonic(action, controller, normalizeNamed, keyPrefix);
+        resolveSmallIcon(action, controller, normalizeNamed, keyPrefix);
+        resolveLargeIcon(action, controller, normalizeNamed, keyPrefix);
+        resolveEnabled(action, controller, normalizeNamed, keyPrefix);
+        resolveSelected(action, controller, normalizeNamed, keyPrefix);
+    }
+
+    protected void resolveName(@Nonnull SwingGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+        String rsActionName = msg(keyPrefix, normalizeNamed, KEY_NAME, getNaturalName(normalizeNamed));
+        if (!isBlank(rsActionName)) {
+            trace(keyPrefix + normalizeNamed, KEY_NAME, rsActionName);
+            action.setName(rsActionName);
+        }
+    }
+
+    protected void resolveAccelerator(@Nonnull SwingGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+        String rsAccelerator = msg(keyPrefix, normalizeNamed, KEY_ACCELERATOR, EMPTY_STRING);
+        if (!isBlank(rsAccelerator)) {
+            //noinspection ConstantConditions
+            if (!isMacOSX() && rsAccelerator.contains(KEY_META) && !rsAccelerator.contains(KEY_CTRL)) {
+                rsAccelerator = rsAccelerator.replace(KEY_META, KEY_CTRL);
+            }
+            trace(keyPrefix + normalizeNamed, KEY_ACCELERATOR, rsAccelerator);
+            action.setAccelerator(rsAccelerator);
+        }
+    }
+
+    protected void resolveCommand(@Nonnull SwingGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+        String rsCommand = msg(keyPrefix, normalizeNamed, KEY_COMMAND, EMPTY_STRING);
+        if (!isBlank(rsCommand)) {
+            trace(keyPrefix + normalizeNamed, KEY_COMMAND, rsCommand);
+            action.setCommand(rsCommand);
+        }
+    }
+
+    protected void resolveShortDescription(@Nonnull SwingGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+        String rsShortDescription = msg(keyPrefix, normalizeNamed, KEY_SHORT_DESCRIPTION, EMPTY_STRING);
+        if (!isBlank(rsShortDescription)) {
+            trace(keyPrefix + normalizeNamed, KEY_SHORT_DESCRIPTION, rsShortDescription);
+            action.setShortDescription(rsShortDescription);
+        }
+    }
+
+    protected void resolveLongDescription(@Nonnull SwingGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+        String rsLongDescription = msg(keyPrefix, normalizeNamed, KEY_LONG_DESCRIPTION, EMPTY_STRING);
+        if (!isBlank(rsLongDescription)) {
+            trace(keyPrefix + normalizeNamed, KEY_LONG_DESCRIPTION, rsLongDescription);
+            action.setLongDescription(rsLongDescription);
+        }
+    }
+
+    protected void resolveMnemonic(@Nonnull SwingGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+        String rsMnemonic = msg(keyPrefix, normalizeNamed, KEY_MNEMONIC, EMPTY_STRING);
+        if (!isBlank(rsMnemonic)) {
+            trace(keyPrefix + normalizeNamed, KEY_MNEMONIC, rsMnemonic);
+            action.setMnemonic(rsMnemonic);
+        }
+    }
+
+    protected void resolveSmallIcon(@Nonnull SwingGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+        String rsSmallIcon = msg(keyPrefix, normalizeNamed, KEY_SMALL_ICON, EMPTY_STRING);
+        if (!isBlank(rsSmallIcon)) {
+            trace(keyPrefix + normalizeNamed, KEY_SMALL_ICON, rsSmallIcon);
+            action.setSmallIcon(rsSmallIcon);
+        }
+    }
+
+    protected void resolveLargeIcon(@Nonnull SwingGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+        String rsLargeIcon = msg(keyPrefix, normalizeNamed, KEY_LARGE_ICON, EMPTY_STRING);
+        if (!isBlank(rsLargeIcon)) {
+            trace(keyPrefix + normalizeNamed, KEY_LARGE_ICON, rsLargeIcon);
+            action.setLargeIcon(rsLargeIcon);
+        }
+    }
+
+    protected void resolveEnabled(@Nonnull SwingGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+        String rsEnabled = msg(keyPrefix, normalizeNamed, KEY_ENABLED, "true");
+        if (!isBlank(rsEnabled)) {
+            trace(keyPrefix + normalizeNamed, KEY_ENABLED, rsEnabled);
+            action.setEnabled(castToBoolean(rsEnabled));
+        }
+    }
+
+    protected void resolveSelected(@Nonnull SwingGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+        String rsSelected = msg(keyPrefix, normalizeNamed, KEY_SELECTED, "false");
+        if (!isBlank(rsSelected)) {
+            trace(keyPrefix + normalizeNamed, KEY_SELECTED, rsSelected);
+            action.setSelected(castToBoolean(rsSelected));
+        }
+    }
+
+    protected void trace(@Nonnull String actionKey, @Nonnull String key, @Nonnull String value) {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace(actionKey + DOT + key + EQUALS + value);
+        }
     }
 }

@@ -61,7 +61,6 @@ import static griffon.util.GriffonClassUtils.EMPTY_ARGS;
 import static griffon.util.GriffonClassUtils.invokeExactInstanceMethod;
 import static griffon.util.GriffonClassUtils.invokeInstanceMethod;
 import static griffon.util.GriffonNameUtils.capitalize;
-import static griffon.util.GriffonNameUtils.getNaturalName;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static griffon.util.GriffonNameUtils.uncapitalize;
@@ -84,6 +83,7 @@ public abstract class AbstractActionManager implements ActionManager {
     private static final String ERROR_ACTION_NAME_BLANK = "Argument 'actionName' must not be blank";
     private static final String ERROR_ACTION_HANDLER_NULL = "Argument 'actionHandler' must not be null";
     private static final String ERROR_ACTION_NULL = "Argument 'action' must not be null";
+
     private final ActionCache actionCache = new ActionCache();
     private final Map<String, Threading.Policy> threadingPolicies = new ConcurrentHashMap<>();
     private final List<ActionHandler> handlers = new CopyOnWriteArrayList<>();
@@ -306,7 +306,7 @@ public abstract class AbstractActionManager implements ActionManager {
             for (int i = 0; i < newArgs.length; i++) {
                 ArgInfo argInfo = wrappedAction.argumentsInfo.get(i);
                 newArgs[i] = argInfo.contextual ? context.get(argInfo.name) : args[i];
-                if (argInfo.contextual && newArgs[i] != null) context.put(argInfo.name, newArgs[i]);
+                if (argInfo.contextual && newArgs[i] != null) { context.put(argInfo.name, newArgs[i]); }
                 if (argInfo.contextual && !argInfo.nullable && newArgs[i] == null) {
                     throw new IllegalStateException("Could not find an instance of type " +
                         argInfo.type.getName() + " under key '" + argInfo.name +
@@ -437,7 +437,7 @@ public abstract class AbstractActionManager implements ActionManager {
         while (!KEY_THREADING.equals(keyName)) {
             Object value = settings.get(keyName);
             keyName = keyName.substring(0, keyName.lastIndexOf("."));
-            if (value != null && !castToBoolean(value)) return true;
+            if (value != null && !castToBoolean(value)) { return true; }
         }
 
         return false;
@@ -452,7 +452,7 @@ public abstract class AbstractActionManager implements ActionManager {
     }
 
     public void addActionInterceptor(@Nonnull ActionInterceptor actionInterceptor) {
-        throw new UnsupportedOperationException(ActionInterceptor.class.getName() + " have been deprecated and are no longer supported");
+        throw new UnsupportedOperationException(ActionInterceptor.class.getName() + " has been deprecated and is no longer supported");
     }
 
     @Nonnull
@@ -463,12 +463,6 @@ public abstract class AbstractActionManager implements ActionManager {
 
         String normalizeNamed = capitalize(normalizeName(actionName));
         String keyPrefix = controller.getClass().getName() + ".action.";
-
-        String rsActionName = msg(keyPrefix, normalizeNamed, "name", getNaturalName(normalizeNamed));
-        if (!isBlank(rsActionName)) {
-            LOG.trace("{}{}.name = {}", keyPrefix, normalizeNamed, rsActionName);
-            action.setName(rsActionName);
-        }
 
         doConfigureAction(action, controller, normalizeNamed, keyPrefix);
 
@@ -494,9 +488,9 @@ public abstract class AbstractActionManager implements ActionManager {
     @Nullable
     protected String msg(@Nonnull String key, @Nonnull String actionName, @Nonnull String subkey, @Nullable String defaultValue) {
         try {
-            return getMessageSource().getMessage(key + actionName + "." + subkey);
+            return getMessageSource().getMessage(key + actionName + "." + subkey, application.getLocale());
         } catch (NoSuchMessageException nsme) {
-            return getMessageSource().getMessage("application.action." + actionName + "." + subkey, defaultValue);
+            return getMessageSource().getMessage("application.action." + actionName + "." + subkey, application.getLocale(), defaultValue);
         }
     }
 

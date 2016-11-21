@@ -37,6 +37,7 @@ public interface Action {
      * The value should be the controller's full class name and the action's name joined by a period.
      *
      * @return the fully qualified name of this action.
+     *
      * @since 2.1.0
      */
     @Nonnull
