@@ -3827,7 +3827,7 @@ public class BindingUtils {
      * @return a boolean binding
      */
     @Nonnull
-    public static BooleanBinding mapBoolean(@Nonnull final ObservableValue<Boolean> observable1, @Nonnull final ObservableValue<Boolean> observable2, @Nonnull final Boolean defaultValue, @Nonnull final BiFunction<Boolean, Boolean, Boolean> mapper) {
+    public static BooleanBinding mapBooleans(@Nonnull final ObservableValue<Boolean> observable1, @Nonnull final ObservableValue<Boolean> observable2, @Nonnull final Boolean defaultValue, @Nonnull final BiFunction<Boolean, Boolean, Boolean> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
@@ -3853,7 +3853,7 @@ public class BindingUtils {
      * @return a boolean binding
      */
     @Nonnull
-    public static BooleanBinding mapBoolean(@Nonnull final ObservableValue<Boolean> observable1, @Nonnull final ObservableValue<Boolean> observable2, @Nonnull final Supplier<Boolean> supplier, @Nonnull final BiFunction<Boolean, Boolean, Boolean> mapper) {
+    public static BooleanBinding mapBooleans(@Nonnull final ObservableValue<Boolean> observable1, @Nonnull final ObservableValue<Boolean> observable2, @Nonnull final Supplier<Boolean> supplier, @Nonnull final BiFunction<Boolean, Boolean, Boolean> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -3879,7 +3879,7 @@ public class BindingUtils {
      * @return a boolean binding
      */
     @Nonnull
-    public static BooleanBinding mapBoolean(@Nonnull final ObservableValue<Boolean> observable1, @Nonnull final ObservableValue<Boolean> observable2, @Nonnull final Boolean defaultValue, @Nonnull final ObservableValue<BiFunction<Boolean, Boolean, Boolean>> mapper) {
+    public static BooleanBinding mapBooleans(@Nonnull final ObservableValue<Boolean> observable1, @Nonnull final ObservableValue<Boolean> observable2, @Nonnull final Boolean defaultValue, @Nonnull final ObservableValue<BiFunction<Boolean, Boolean, Boolean>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
@@ -3906,7 +3906,7 @@ public class BindingUtils {
      * @return a boolean binding
      */
     @Nonnull
-    public static BooleanBinding mapBoolean(@Nonnull final ObservableValue<Boolean> observable1, @Nonnull final ObservableValue<Boolean> observable2, @Nonnull final Supplier<Boolean> supplier, @Nonnull final ObservableValue<BiFunction<Boolean, Boolean, Boolean>> mapper) {
+    public static BooleanBinding mapBooleans(@Nonnull final ObservableValue<Boolean> observable1, @Nonnull final ObservableValue<Boolean> observable2, @Nonnull final Supplier<Boolean> supplier, @Nonnull final ObservableValue<BiFunction<Boolean, Boolean, Boolean>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -3933,7 +3933,7 @@ public class BindingUtils {
      * @return an integer binding
      */
     @Nonnull
-    public static IntegerBinding mapInteger(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Integer defaultValue, @Nonnull final BiFunction<? super Number, ? super Number, Integer> mapper) {
+    public static IntegerBinding mapIntegers(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Integer defaultValue, @Nonnull final BiFunction<? super Number, ? super Number, Integer> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
@@ -3959,7 +3959,7 @@ public class BindingUtils {
      * @return an integer binding
      */
     @Nonnull
-    public static IntegerBinding mapInteger(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Integer> supplier, @Nonnull final BiFunction<? super Number, ? super Number, Integer> mapper) {
+    public static IntegerBinding mapIntegers(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Integer> supplier, @Nonnull final BiFunction<? super Number, ? super Number, Integer> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -3985,7 +3985,7 @@ public class BindingUtils {
      * @return an integer binding
      */
     @Nonnull
-    public static IntegerBinding mapInteger(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Integer defaultValue, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Integer>> mapper) {
+    public static IntegerBinding mapIntegers(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Integer defaultValue, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Integer>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
@@ -4012,7 +4012,7 @@ public class BindingUtils {
      * @return an integer binding
      */
     @Nonnull
-    public static IntegerBinding mapInteger(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Integer> supplier, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Integer>> mapper) {
+    public static IntegerBinding mapIntegers(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Integer> supplier, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Integer>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -4039,7 +4039,7 @@ public class BindingUtils {
      * @return a long binding
      */
     @Nonnull
-    public static LongBinding mapLong(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Long defaultValue, @Nonnull final BiFunction<? super Number, ? super Number, Long> mapper) {
+    public static LongBinding mapLongs(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Long defaultValue, @Nonnull final BiFunction<? super Number, ? super Number, Long> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
@@ -4065,7 +4065,7 @@ public class BindingUtils {
      * @return a long binding
      */
     @Nonnull
-    public static LongBinding mapLong(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Long> supplier, @Nonnull final BiFunction<? super Number, ? super Number, Long> mapper) {
+    public static LongBinding mapLongs(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Long> supplier, @Nonnull final BiFunction<? super Number, ? super Number, Long> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -4091,7 +4091,7 @@ public class BindingUtils {
      * @return a long binding
      */
     @Nonnull
-    public static LongBinding mapLong(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Long defaultValue, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Long>> mapper) {
+    public static LongBinding mapLongs(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Long defaultValue, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Long>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
@@ -4118,7 +4118,7 @@ public class BindingUtils {
      * @return a long binding
      */
     @Nonnull
-    public static LongBinding mapLong(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Long> supplier, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Long>> mapper) {
+    public static LongBinding mapLongs(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Long> supplier, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Long>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -4145,7 +4145,7 @@ public class BindingUtils {
      * @return a float binding
      */
     @Nonnull
-    public static FloatBinding mapFloat(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Float defaultValue, @Nonnull final BiFunction<? super Number, ? super Number, Float> mapper) {
+    public static FloatBinding mapFloats(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Float defaultValue, @Nonnull final BiFunction<? super Number, ? super Number, Float> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
@@ -4171,7 +4171,7 @@ public class BindingUtils {
      * @return a float binding
      */
     @Nonnull
-    public static FloatBinding mapFloat(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Float> supplier, @Nonnull final BiFunction<? super Number, ? super Number, Float> mapper) {
+    public static FloatBinding mapFloats(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Float> supplier, @Nonnull final BiFunction<? super Number, ? super Number, Float> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -4197,7 +4197,7 @@ public class BindingUtils {
      * @return a float binding
      */
     @Nonnull
-    public static FloatBinding mapFloat(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Float defaultValue, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Float>> mapper) {
+    public static FloatBinding mapFloats(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Float defaultValue, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Float>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
@@ -4224,7 +4224,7 @@ public class BindingUtils {
      * @return a float binding
      */
     @Nonnull
-    public static FloatBinding mapFloat(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Float> supplier, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Float>> mapper) {
+    public static FloatBinding mapFloats(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Float> supplier, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Float>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -4251,7 +4251,7 @@ public class BindingUtils {
      * @return a double binding
      */
     @Nonnull
-    public static DoubleBinding mapDouble(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Double defaultValue, @Nonnull final BiFunction<? super Number, ? super Number, Double> mapper) {
+    public static DoubleBinding mapDoubles(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Double defaultValue, @Nonnull final BiFunction<? super Number, ? super Number, Double> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
@@ -4277,7 +4277,7 @@ public class BindingUtils {
      * @return a double binding
      */
     @Nonnull
-    public static DoubleBinding mapDouble(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Double> supplier, @Nonnull final BiFunction<? super Number, ? super Number, Double> mapper) {
+    public static DoubleBinding mapDoubles(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Double> supplier, @Nonnull final BiFunction<? super Number, ? super Number, Double> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -4303,7 +4303,7 @@ public class BindingUtils {
      * @return a double binding
      */
     @Nonnull
-    public static DoubleBinding mapDouble(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Double defaultValue, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Double>> mapper) {
+    public static DoubleBinding mapDoubles(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Double defaultValue, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Double>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
@@ -4330,7 +4330,7 @@ public class BindingUtils {
      * @return a double binding
      */
     @Nonnull
-    public static DoubleBinding mapDouble(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Double> supplier, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Double>> mapper) {
+    public static DoubleBinding mapDoubles(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Double> supplier, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Double>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -4357,7 +4357,7 @@ public class BindingUtils {
      * @return an object binding
      */
     @Nonnull
-    public static <A, B, R> ObjectBinding<R> mapObject(@Nonnull final ObservableValue<A> observable1, @Nonnull final ObservableValue<B> observable2, @Nullable final R defaultValue, @Nonnull final BiFunction<? super A, ? super B, R> mapper) {
+    public static <A, B, R> ObjectBinding<R> mapObjects(@Nonnull final ObservableValue<A> observable1, @Nonnull final ObservableValue<B> observable2, @Nullable final R defaultValue, @Nonnull final BiFunction<? super A, ? super B, R> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4382,7 +4382,7 @@ public class BindingUtils {
      * @return an object binding
      */
     @Nonnull
-    public static <A, B, R> ObjectBinding<R> mapObject(@Nonnull final ObservableValue<A> observable1, @Nonnull final ObservableValue<B> observable2, @Nonnull final Supplier<R> supplier, @Nonnull final BiFunction<? super A, ? super B, R> mapper) {
+    public static <A, B, R> ObjectBinding<R> mapObjects(@Nonnull final ObservableValue<A> observable1, @Nonnull final ObservableValue<B> observable2, @Nonnull final Supplier<R> supplier, @Nonnull final BiFunction<? super A, ? super B, R> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -4408,7 +4408,7 @@ public class BindingUtils {
      * @return an object binding
      */
     @Nonnull
-    public static <A, B, R> ObjectBinding<R> mapObject(@Nonnull final ObservableValue<A> observable1, @Nonnull final ObservableValue<B> observable2, @Nullable final R defaultValue, @Nonnull final ObservableValue<BiFunction<? super A, ? super B, R>> mapper) {
+    public static <A, B, R> ObjectBinding<R> mapObjects(@Nonnull final ObservableValue<A> observable1, @Nonnull final ObservableValue<B> observable2, @Nullable final R defaultValue, @Nonnull final ObservableValue<BiFunction<? super A, ? super B, R>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4434,7 +4434,7 @@ public class BindingUtils {
      * @return an object binding
      */
     @Nonnull
-    public static <A, B, R> ObjectBinding<R> mapObject(@Nonnull final ObservableValue<A> observable1, @Nonnull final ObservableValue<B> observable2, @Nonnull final Supplier<R> supplier, @Nonnull final ObservableValue<BiFunction<? super A, ? super B, R>> mapper) {
+    public static <A, B, R> ObjectBinding<R> mapObjects(@Nonnull final ObservableValue<A> observable1, @Nonnull final ObservableValue<B> observable2, @Nonnull final Supplier<R> supplier, @Nonnull final ObservableValue<BiFunction<? super A, ? super B, R>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -4461,7 +4461,7 @@ public class BindingUtils {
      * @return a string binding
      */
     @Nonnull
-    public static StringBinding mapString(@Nonnull final ObservableValue<String> observable1, @Nonnull final ObservableValue<String> observable2, @Nullable final String defaultValue, @Nonnull final BiFunction<String, String, String> mapper) {
+    public static StringBinding mapStrings(@Nonnull final ObservableValue<String> observable1, @Nonnull final ObservableValue<String> observable2, @Nullable final String defaultValue, @Nonnull final BiFunction<String, String, String> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4486,7 +4486,7 @@ public class BindingUtils {
      * @return a string binding
      */
     @Nonnull
-    public static StringBinding mapString(@Nonnull final ObservableValue<String> observable1, @Nonnull final ObservableValue<String> observable2, @Nonnull final Supplier<String> supplier, @Nonnull final BiFunction<String, String, String> mapper) {
+    public static StringBinding mapStrings(@Nonnull final ObservableValue<String> observable1, @Nonnull final ObservableValue<String> observable2, @Nonnull final Supplier<String> supplier, @Nonnull final BiFunction<String, String, String> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -4512,7 +4512,7 @@ public class BindingUtils {
      * @return a string binding
      */
     @Nonnull
-    public static StringBinding mapString(@Nonnull final ObservableValue<String> observable1, @Nonnull final ObservableValue<String> observable2, @Nullable final String defaultValue, @Nonnull final ObservableValue<BiFunction<String, String, String>> mapper) {
+    public static StringBinding mapStrings(@Nonnull final ObservableValue<String> observable1, @Nonnull final ObservableValue<String> observable2, @Nullable final String defaultValue, @Nonnull final ObservableValue<BiFunction<String, String, String>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4538,7 +4538,7 @@ public class BindingUtils {
      * @return a string binding
      */
     @Nonnull
-    public static StringBinding mapString(@Nonnull final ObservableValue<String> observable1, @Nonnull final ObservableValue<String> observable2, @Nonnull final Supplier<String> supplier, @Nonnull final ObservableValue<BiFunction<String, String, String>> mapper) {
+    public static StringBinding mapStrings(@Nonnull final ObservableValue<String> observable1, @Nonnull final ObservableValue<String> observable2, @Nonnull final Supplier<String> supplier, @Nonnull final ObservableValue<BiFunction<String, String, String>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);

@@ -143,7 +143,7 @@ class BindingUtilsSpec extends Specification {
 
     def "Map#type with function (observables) value1=#value1 value2=#value2"() {
         given:
-        Binding binding = BindingUtils."map${type}"(ob1, ob2, defaultValue, function as BiFunction)
+        Binding binding = BindingUtils."map${type}s"(ob1, ob2, defaultValue, function as BiFunction)
 
         when:
         ob1.set(value1)
@@ -169,7 +169,7 @@ class BindingUtilsSpec extends Specification {
     def "Map#type with observable function (observables)"() {
         given:
         ObjectProperty mapper = new SimpleObjectProperty(function1 as BiFunction)
-        Binding binding = BindingUtils."map${type}"(ob1, ob2, defaultValue, mapper)
+        Binding binding = BindingUtils."map${type}s"(ob1, ob2, defaultValue, mapper)
 
         when:
         ob1.set(value1)
@@ -196,6 +196,63 @@ class BindingUtilsSpec extends Specification {
         'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | new Box(3)   | new Box(1) | null       | new Box(3) | new Box(3) | { a, b -> new Box(4) }       | { a, b -> new Box(5) }
         'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | new Box(3)   | null       | new Box(2) | new Box(3) | new Box(3) | { a, b -> new Box(4) }       | { a, b -> new Box(5) }
         'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | new Box(3)   | new Box(1) | new Box(2) | new Box(4) | new Box(5) | { a, b -> new Box(4) }       | { a, b -> new Box(5) }
+    }
+
+    def "Map#type with function and supplier (observables) value1=#value1 value2=#value2"() {
+        given:
+        Binding binding = BindingUtils."map${type}s"(ob1, ob2, supplier as Supplier, function as BiFunction)
+
+        when:
+        ob1.set(value1)
+        ob2.set(value2)
+
+        then:
+        result == binding.get()
+
+        where:
+        type      | ob1                             | ob2                             | supplier |      value1     | value2     | result     | function
+        'Integer' | new SimpleIntegerProperty()     | new SimpleIntegerProperty()     | { 0 }          | 1          | 2          | 3          | { a, b -> a + b }
+        'Long'    | new SimpleLongProperty()        | new SimpleLongProperty()        | { 0L }         | 1L         | 2L         | 3L         | { a, b -> a + b }
+        'Float'   | new SimpleFloatProperty()       | new SimpleFloatProperty()       | { 0f }         | 1f         | 2f         | 3f         | { a, b -> (a + b) as float }
+        'Double'  | new SimpleDoubleProperty()      | new SimpleDoubleProperty()      | { 0d }         | 1d         | 2d         | 3d         | { a, b -> a + b }
+        'Boolean' | new SimpleBooleanProperty()     | new SimpleBooleanProperty()     | { false }      | false      | true       | true       | { a, b -> a || b }
+        'String'  | new SimpleStringProperty()      | new SimpleStringProperty()      | { '0'}         | '1'        | '2'        | '12'       | { a, b -> a + b }
+        'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | { new Box(3) } | null       | null       | new Box(3) | { a, b -> new Box(4) }
+        'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | { new Box(3) } | new Box(1) | null       | new Box(3) | { a, b -> new Box(4) }
+        'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | { new Box(3) } | null       | new Box(2) | new Box(3) | { a, b -> new Box(4) }
+        'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | { new Box(3) } | new Box(1) | new Box(2) | new Box(4) | { a, b -> new Box(4) }
+    }
+
+    def "Map#type with observable function and supplier (observables)"() {
+        given:
+        ObjectProperty mapper = new SimpleObjectProperty(function1 as BiFunction)
+        Binding binding = BindingUtils."map${type}s"(ob1, ob2, supplier as Supplier, mapper)
+
+        when:
+        ob1.set(value1)
+        ob2.set(value2)
+
+        then:
+        result1 == binding.get()
+
+        when:
+        mapper.set(function2 as BiFunction)
+
+        then:
+        result2 == binding.get()
+
+        where:
+        type      | ob1                             | ob2                             | supplier       | value1     | value2     | result1    | result2    | function1                    | function2
+        'Integer' | new SimpleIntegerProperty()     | new SimpleIntegerProperty()     | { 0 }          | 1          | 2          | 3          | -1         | { a, b -> a + b }            | { a, b -> a - b }
+        'Long'    | new SimpleLongProperty()        | new SimpleLongProperty()        | { 0L }         | 1L         | 2L         | 3L         | -1L        | { a, b -> a + b }            | { a, b -> a - b }
+        'Float'   | new SimpleFloatProperty()       | new SimpleFloatProperty()       | { 0f }         | 1f         | 2f         | 3f         | -1f        | { a, b -> (a + b) as float } | { a, b -> (a - b) as float }
+        'Double'  | new SimpleDoubleProperty()      | new SimpleDoubleProperty()      | { 0d }         | 1d         | 2d         | 3d         | -1d        | { a, b -> a + b }            | { a, b -> a - b }
+        'Boolean' | new SimpleBooleanProperty()     | new SimpleBooleanProperty()     | { false }      | false      | true       | true       | false      | { a, b -> a || b }           | { a, b -> a && b }
+        'String'  | new SimpleStringProperty()      | new SimpleStringProperty()      | { '0' }        | '1'        | '2'        | '12'       | '3'        | { a, b -> a + b }            | { a, b -> '3' }
+        'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | { new Box(3) } | null       | null       | new Box(3) | new Box(3) | { a, b -> new Box(4) }       | { a, b -> new Box(5) }
+        'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | { new Box(3) } | new Box(1) | null       | new Box(3) | new Box(3) | { a, b -> new Box(4) }       | { a, b -> new Box(5) }
+        'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | { new Box(3) } | null       | new Box(2) | new Box(3) | new Box(3) | { a, b -> new Box(4) }       | { a, b -> new Box(5) }
+        'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | { new Box(3) } | new Box(1) | new Box(2) | new Box(4) | new Box(5) | { a, b -> new Box(4) }       | { a, b -> new Box(5) }
     }
 
     def "ReduceThenMapTo#type list with functions and default value"() {
