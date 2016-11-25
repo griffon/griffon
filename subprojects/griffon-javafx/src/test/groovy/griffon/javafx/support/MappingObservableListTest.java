@@ -33,7 +33,7 @@ public class MappingObservableListTest {
         // given:
         ObservableList<String> source = FXCollections.observableArrayList();
         Function<String, Integer> mapper = Integer::valueOf;
-        ObservableList<Integer> target = BindingUtils.mapList(source, mapper);
+        ObservableList<Integer> target = MappingBindings.mapList(source, mapper);
 
         // expect:
         assertThat(target, empty());
@@ -70,7 +70,7 @@ public class MappingObservableListTest {
         ObservableList<Integer> source = FXCollections.observableArrayList();
         Function<Integer, Integer> function = Function.identity();
         ObjectProperty<Function<Integer, Integer>> mapper = new SimpleObjectProperty<>(function);
-        ObservableList<Integer> target = BindingUtils.mapList(source, mapper);
+        ObservableList<Integer> target = MappingBindings.mapList(source, mapper);
 
         // expect:
         assertThat(target, empty());

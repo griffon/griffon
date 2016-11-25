@@ -15,7 +15,6 @@
  */
 package griffon.javafx.support
 
-import javafx.application.Platform
 import javafx.beans.binding.StringBinding
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleObjectProperty
@@ -28,14 +27,12 @@ import javafx.collections.ObservableSet
 import javafx.embed.swing.JFXPanel
 import org.junit.Test
 
-import java.util.concurrent.Callable
-import java.util.concurrent.CountDownLatch
 import java.util.function.Function
 
 import static org.hamcrest.Matchers.equalTo
 import static org.junit.Assert.assertThat
 
-class BindingUtilsTest {
+class CollectionBindingsTest {
     static {
         // initialize UI toolkit
         new JFXPanel()
@@ -44,7 +41,7 @@ class BindingUtilsTest {
     @Test
     void "Join list with string delimiter"() {
         ObservableList<Object> items = FXCollections.observableArrayList()
-        StringBinding joined = BindingUtils.joinList(items, ', ')
+        StringBinding joined = CollectionBindings.joinList(items, ', ')
 
         assertThat(joined.get(), equalTo(''))
 
@@ -62,7 +59,7 @@ class BindingUtilsTest {
     void "Join list with observable delimiter"() {
         ObservableList<Object> items = FXCollections.observableArrayList()
         StringProperty delimiter = new SimpleStringProperty(', ')
-        StringBinding joined = BindingUtils.joinList(items, delimiter)
+        StringBinding joined = CollectionBindings.joinList(items, delimiter)
 
         assertThat(joined.get(), equalTo(''))
 
@@ -82,8 +79,8 @@ class BindingUtilsTest {
     @Test
     void "Join list with string delimiter and mapper"() {
         ObservableList<Object> items = FXCollections.observableArrayList()
-        Function<String, String> mapper = { s -> '"' + s + '"'}
-        StringBinding joined = BindingUtils.joinList(items, ', ', mapper)
+        Function<String, String> mapper = { s -> '"' + s + '"' }
+        StringBinding joined = CollectionBindings.joinList(items, ', ', mapper)
 
         assertThat(joined.get(), equalTo(''))
 
@@ -101,9 +98,9 @@ class BindingUtilsTest {
     void "Join list with observable delimiter and mapper"() {
         ObservableList<Object> items = FXCollections.observableArrayList()
         StringProperty delimiter = new SimpleStringProperty(', ')
-        Function<String, String> function = { s -> '"' + s + '"'}
+        Function<String, String> function = { s -> '"' + s + '"' }
         ObjectProperty<Function<String, String>> mapper = new SimpleObjectProperty(function)
-        StringBinding joined = BindingUtils.joinList(items, delimiter, mapper)
+        StringBinding joined = CollectionBindings.joinList(items, delimiter, mapper)
 
         assertThat(joined.get(), equalTo(''))
 
@@ -119,14 +116,14 @@ class BindingUtilsTest {
         delimiter.set(':')
         assertThat(joined.get(), equalTo('"A":"1":"interface java.lang.Runnable"'))
 
-        mapper.set({ s -> '[' + s + ']'} as Function)
+        mapper.set({ s -> '[' + s + ']' } as Function)
         assertThat(joined.get(), equalTo('[A]:[1]:[interface java.lang.Runnable]'))
     }
 
     @Test
     void "Join set with string delimiter"() {
         ObservableSet<Object> items = FXCollections.observableSet()
-        StringBinding joined = BindingUtils.joinSet(items, ', ')
+        StringBinding joined = CollectionBindings.joinSet(items, ', ')
 
         assertThat(joined.get(), equalTo(''))
 
@@ -141,7 +138,7 @@ class BindingUtilsTest {
     void "Join set with observable delimiter"() {
         ObservableSet<Object> items = FXCollections.observableSet()
         StringProperty delimiter = new SimpleStringProperty(', ')
-        StringBinding joined = BindingUtils.joinSet(items, delimiter)
+        StringBinding joined = CollectionBindings.joinSet(items, delimiter)
 
         assertThat(joined.get(), equalTo(''))
 
@@ -159,8 +156,8 @@ class BindingUtilsTest {
     @Test
     void "Join set with string delimiter and mapper"() {
         ObservableSet<Object> items = FXCollections.observableSet()
-        Function<String, String> mapper = { s -> '"' + s + '"'}
-        StringBinding joined = BindingUtils.joinSet(items, ', ', mapper)
+        Function<String, String> mapper = { s -> '"' + s + '"' }
+        StringBinding joined = CollectionBindings.joinSet(items, ', ', mapper)
 
         assertThat(joined.get(), equalTo(''))
 
@@ -175,9 +172,9 @@ class BindingUtilsTest {
     void "Join set with observable delimiter and mapper"() {
         ObservableSet<Object> items = FXCollections.observableSet()
         StringProperty delimiter = new SimpleStringProperty(', ')
-        Function<String, String> function = { s -> '"' + s + '"'}
+        Function<String, String> function = { s -> '"' + s + '"' }
         ObjectProperty<Function<String, String>> mapper = new SimpleObjectProperty(function)
-        StringBinding joined = BindingUtils.joinSet(items, delimiter, mapper)
+        StringBinding joined = CollectionBindings.joinSet(items, delimiter, mapper)
 
         assertThat(joined.get(), equalTo(''))
 
@@ -190,14 +187,14 @@ class BindingUtilsTest {
         delimiter.set(':')
         assert joined.get() == '"A":"1"' || joined.get() == '"1":"A"'
 
-        mapper.set({ s -> '[' + s + ']'} as Function)
+        mapper.set({ s -> '[' + s + ']' } as Function)
         assert joined.get() == '[A]:[1]' || joined.get() == '[1]:[A]"'
     }
 
     @Test
     void "Join map with string delimiter"() {
         ObservableMap<Object, Object> items = FXCollections.observableHashMap()
-        StringBinding joined = BindingUtils.joinMap(items, '; ')
+        StringBinding joined = CollectionBindings.joinMap(items, '; ')
 
         assertThat(joined.get(), equalTo(''))
 
@@ -212,7 +209,7 @@ class BindingUtilsTest {
     void "Join map with observable delimiter"() {
         ObservableMap<Object, Object> items = FXCollections.observableHashMap()
         StringProperty delimiter = new SimpleStringProperty('; ')
-        StringBinding joined = BindingUtils.joinMap(items, delimiter)
+        StringBinding joined = CollectionBindings.joinMap(items, delimiter)
 
         assertThat(joined.get(), equalTo(''))
 
@@ -229,8 +226,8 @@ class BindingUtilsTest {
     @Test
     void "Join map with string delimiter and mapper"() {
         ObservableMap<Object, Object> items = FXCollections.observableHashMap()
-        Function<Map.Entry<Object,Object>, String> function = { e -> e.key + ':' + e.value }
-        StringBinding joined = BindingUtils.joinMap(items, '; ', function)
+        Function<Map.Entry<Object, Object>, String> function = { e -> e.key + ':' + e.value }
+        StringBinding joined = CollectionBindings.joinMap(items, '; ', function)
 
         assertThat(joined.get(), equalTo(''))
 
@@ -245,9 +242,9 @@ class BindingUtilsTest {
     void "Join map with observable delimiter and mapper"() {
         ObservableMap<Object, Object> items = FXCollections.observableHashMap()
         StringProperty delimiter = new SimpleStringProperty('; ')
-        Function<Map.Entry<Object,Object>, String> function = { e -> e.key + '=' + e.value }
-        ObjectProperty<Function<Map.Entry<Object,Object>, String>> mapper = new SimpleObjectProperty<>(function)
-        StringBinding joined = BindingUtils.joinMap(items, delimiter, mapper)
+        Function<Map.Entry<Object, Object>, String> function = { e -> e.key + '=' + e.value }
+        ObjectProperty<Function<Map.Entry<Object, Object>, String>> mapper = new SimpleObjectProperty<>(function)
+        StringBinding joined = CollectionBindings.joinMap(items, delimiter, mapper)
 
         assertThat(joined.get(), equalTo(''))
 
@@ -262,20 +259,5 @@ class BindingUtilsTest {
 
         mapper.set({ e -> e.key + ':' + e.value } as Function)
         assertThat(joined.get(), equalTo('key1:value1, key2:value2'))
-    }
-
-    private static <T> T runInsideUISync(Callable<T> callable) {
-        if (Platform.isFxApplicationThread()) {
-            return callable.call()
-        }
-
-        T result = null
-        CountDownLatch latch = new CountDownLatch(1)
-        Platform.runLater {
-            result = callable.call()
-            latch.countDown()
-        }
-        latch.await()
-        result
     }
 }
