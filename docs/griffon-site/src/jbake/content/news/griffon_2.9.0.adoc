@@ -22,13 +22,20 @@ The following list summarizes the changes brought by this release:
  ** `graphicStyleClass`: used to set style classes on the graphic node of the bound widget.
  * Added an UI Thread proxy `ObservableSet`; all of its updates will be triggered inside the UI thread.
  * Added an UI Thread proxy `ObservableMap`; all of its updates will be triggered inside the UI thread.
- * New `BindingUtils` class provides lots of useful binding and property factories:
- ** Join `ObservableList`/`ObservableSet`/`ObservableMap` to `StringBinding`.
+ * New `CollectionBindings` class provides binding factories on `ObservableList`/`ObservableSet`/`ObservableMap`
+ ** Join source observable collection to `StringBinding`.
+ ** Calculate `min`, `max`, `average`, and `sum` on source observable collection.
+ * New `FilteringBindings` class provides filtering capabilities on `ObservableList`/`ObservableSet`/`ObservableMap`
+ ** Filter `ObservableList`/`ObservableSet`/`ObservableMap` and find first match, creating a `ObjectBinding`.
+ ** Filter `ObservableList`/`ObservableSet`/`ObservableMap` then map and find first match to X; where X may be a wrapper type, String or a type `R`.
+ ** Map elements of `ObservableList`/`ObservableSet`/`ObservableMap` to X then filter and find first match; where X may be a wrapper type, String or a type `R`.
+ * New `ReducingBindings` class provides reduce capabilities on `ObservableList`/`ObservableSet`/`ObservableMap`
  ** Reduce `ObservableList`/`ObservableSet`/`ObservableMap` to `ObjectBinding`.
  ** Reduce `ObservableList`/`ObservableSet`/`ObservableMap` then map to X; where X may be a wrapper type, String or a type `R`.
  ** Map elements of `ObservableList`/`ObservableSet`/`ObservableMap` to X then reduce; where X may be a wrapper type, String or a type `R`.
- ** convert `ObservableValue<X>` to is corresponding `XBinding`.
- ** convert `ObservableXValue` to `ObjectBinding<X>`.
+ * New `MappingBindings` class provides lots of useful binding and property factories
+ ** Convert `ObservableValue<X>` to is corresponding `XBinding`.
+ ** Convert `ObservableXValue` to `ObjectBinding<X>`.
  ** Create bindings that update their value and notify listeners inside the UI thread.
 
 A more detailed description of the changes and compatibility issues can be found at the link:/releasenotes/griffon_2.9.0.html[release notes, window="_blank"].
