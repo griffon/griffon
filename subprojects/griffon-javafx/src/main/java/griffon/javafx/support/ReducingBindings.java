@@ -87,7 +87,7 @@ public final class ReducingBindings {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createObjectBinding(() -> items.values().stream().reduce(reducer).orElse(supplier.get()), items);
+        return createObjectBinding(() -> items.values().stream().reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -125,7 +125,7 @@ public final class ReducingBindings {
         return createObjectBinding(() -> {
             BinaryOperator<V> operator = reducer.getValue();
             requireNonNull(operator, ERROR_REDUCER_NULL);
-            return items.values().stream().reduce(operator).orElse(supplier.get());
+            return items.values().stream().reduce(operator).orElseGet(supplier);
         }, items, reducer);
     }
 
@@ -163,7 +163,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createBooleanBinding(() -> mapper.apply(items.values().stream().reduce(reducer).orElse(supplier.get())), items);
+        return createBooleanBinding(() -> mapper.apply(items.values().stream().reduce(reducer).orElseGet(supplier)), items);
     }
 
     /**
@@ -208,7 +208,7 @@ public final class ReducingBindings {
             requireNonNull(operator, ERROR_REDUCER_NULL);
             Function<? super V, Boolean> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return mapperValue.apply(items.values().stream().reduce(operator).orElse(supplier.get()));
+            return mapperValue.apply(items.values().stream().reduce(operator).orElseGet(supplier));
         }, items, reducer, mapper);
     }
 
@@ -246,7 +246,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createIntegerBinding(() -> mapper.apply(items.values().stream().reduce(reducer).orElse(supplier.get())), items);
+        return createIntegerBinding(() -> mapper.apply(items.values().stream().reduce(reducer).orElseGet(supplier)), items);
     }
 
     /**
@@ -291,7 +291,7 @@ public final class ReducingBindings {
             requireNonNull(operator, ERROR_REDUCER_NULL);
             Function<? super V, Integer> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return mapperValue.apply(items.values().stream().reduce(operator).orElse(supplier.get()));
+            return mapperValue.apply(items.values().stream().reduce(operator).orElseGet(supplier));
         }, items, reducer, mapper);
     }
 
@@ -329,7 +329,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createLongBinding(() -> mapper.apply(items.values().stream().reduce(reducer).orElse(supplier.get())), items);
+        return createLongBinding(() -> mapper.apply(items.values().stream().reduce(reducer).orElseGet(supplier)), items);
     }
 
     /**
@@ -374,7 +374,7 @@ public final class ReducingBindings {
             requireNonNull(operator, ERROR_REDUCER_NULL);
             Function<? super V, Long> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return mapperValue.apply(items.values().stream().reduce(operator).orElse(supplier.get()));
+            return mapperValue.apply(items.values().stream().reduce(operator).orElseGet(supplier));
         }, items, reducer, mapper);
     }
 
@@ -412,7 +412,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createFloatBinding(() -> mapper.apply(items.values().stream().reduce(reducer).orElse(supplier.get())), items);
+        return createFloatBinding(() -> mapper.apply(items.values().stream().reduce(reducer).orElseGet(supplier)), items);
     }
 
     /**
@@ -457,7 +457,7 @@ public final class ReducingBindings {
             requireNonNull(operator, ERROR_REDUCER_NULL);
             Function<? super V, Float> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return mapperValue.apply(items.values().stream().reduce(operator).orElse(supplier.get()));
+            return mapperValue.apply(items.values().stream().reduce(operator).orElseGet(supplier));
         }, items, reducer, mapper);
     }
 
@@ -495,7 +495,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createDoubleBinding(() -> mapper.apply(items.values().stream().reduce(reducer).orElse(supplier.get())), items);
+        return createDoubleBinding(() -> mapper.apply(items.values().stream().reduce(reducer).orElseGet(supplier)), items);
     }
 
     /**
@@ -540,7 +540,7 @@ public final class ReducingBindings {
             requireNonNull(operator, ERROR_REDUCER_NULL);
             Function<? super V, Double> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return mapperValue.apply(items.values().stream().reduce(operator).orElse(supplier.get()));
+            return mapperValue.apply(items.values().stream().reduce(operator).orElseGet(supplier));
         }, items, reducer, mapper);
     }
 
@@ -578,7 +578,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createStringBinding(() -> mapper.apply(items.values().stream().reduce(reducer).orElse(supplier.get())), items);
+        return createStringBinding(() -> mapper.apply(items.values().stream().reduce(reducer).orElseGet(supplier)), items);
     }
 
     /**
@@ -623,7 +623,7 @@ public final class ReducingBindings {
             requireNonNull(operator, ERROR_REDUCER_NULL);
             Function<? super V, String> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return mapperValue.apply(items.values().stream().reduce(operator).orElse(supplier.get()));
+            return mapperValue.apply(items.values().stream().reduce(operator).orElseGet(supplier));
         }, items, reducer, mapper);
     }
 
@@ -657,7 +657,7 @@ public final class ReducingBindings {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createObjectBinding(() -> items.stream().reduce(reducer).orElse(supplier.get()), items);
+        return createObjectBinding(() -> items.stream().reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -695,7 +695,7 @@ public final class ReducingBindings {
         return createObjectBinding(() -> {
             BinaryOperator<T> operator = reducer.getValue();
             requireNonNull(operator, ERROR_REDUCER_NULL);
-            return items.stream().reduce(operator).orElse(supplier.get());
+            return items.stream().reduce(operator).orElseGet(supplier);
         }, items, reducer);
     }
 
@@ -732,7 +732,7 @@ public final class ReducingBindings {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         final Function<? super T, String> mapperValue = mapper != null ? mapper : String::valueOf;
-        return createStringBinding(() -> mapperValue.apply(items.stream().reduce(reducer).orElse(supplier.get())), items);
+        return createStringBinding(() -> mapperValue.apply(items.stream().reduce(reducer).orElseGet(supplier)), items);
     }
 
     /**
@@ -778,7 +778,7 @@ public final class ReducingBindings {
             BinaryOperator<T> operator = reducer.getValue();
             requireNonNull(operator, ERROR_REDUCER_NULL);
             final Function<? super T, String> mapperValue = mapper.getValue() != null ? mapper.getValue() : String::valueOf;
-            return mapperValue.apply(items.stream().reduce(operator).orElse(supplier.get()));
+            return mapperValue.apply(items.stream().reduce(operator).orElseGet(supplier));
         }, items, reducer, mapper);
     }
 
@@ -815,7 +815,7 @@ public final class ReducingBindings {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createIntegerBinding(() -> mapper.apply(items.stream().reduce(reducer).orElse(supplier.get())), items);
+        return createIntegerBinding(() -> mapper.apply(items.stream().reduce(reducer).orElseGet(supplier)), items);
     }
 
     /**
@@ -863,7 +863,7 @@ public final class ReducingBindings {
             requireNonNull(operator, ERROR_REDUCER_NULL);
             final Function<? super T, Integer> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return mapperValue.apply(items.stream().reduce(operator).orElse(supplier.get()));
+            return mapperValue.apply(items.stream().reduce(operator).orElseGet(supplier));
         }, items, reducer, mapper);
     }
 
@@ -900,7 +900,7 @@ public final class ReducingBindings {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createLongBinding(() -> mapper.apply(items.stream().reduce(reducer).orElse(supplier.get())), items);
+        return createLongBinding(() -> mapper.apply(items.stream().reduce(reducer).orElseGet(supplier)), items);
     }
 
     /**
@@ -948,7 +948,7 @@ public final class ReducingBindings {
             requireNonNull(operator, ERROR_REDUCER_NULL);
             final Function<? super T, Long> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return mapperValue.apply(items.stream().reduce(operator).orElse(supplier.get()));
+            return mapperValue.apply(items.stream().reduce(operator).orElseGet(supplier));
         }, items, reducer, mapper);
     }
 
@@ -985,7 +985,7 @@ public final class ReducingBindings {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createFloatBinding(() -> mapper.apply(items.stream().reduce(reducer).orElse(supplier.get())), items);
+        return createFloatBinding(() -> mapper.apply(items.stream().reduce(reducer).orElseGet(supplier)), items);
     }
 
     /**
@@ -1033,7 +1033,7 @@ public final class ReducingBindings {
             requireNonNull(operator, ERROR_REDUCER_NULL);
             final Function<? super T, Float> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return mapperValue.apply(items.stream().reduce(operator).orElse(supplier.get()));
+            return mapperValue.apply(items.stream().reduce(operator).orElseGet(supplier));
         }, items, reducer, mapper);
     }
 
@@ -1070,7 +1070,7 @@ public final class ReducingBindings {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createDoubleBinding(() -> mapper.apply(items.stream().reduce(reducer).orElse(supplier.get())), items);
+        return createDoubleBinding(() -> mapper.apply(items.stream().reduce(reducer).orElseGet(supplier)), items);
     }
 
     /**
@@ -1118,7 +1118,7 @@ public final class ReducingBindings {
             requireNonNull(operator, ERROR_REDUCER_NULL);
             final Function<? super T, Double> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return mapperValue.apply(items.stream().reduce(operator).orElse(supplier.get()));
+            return mapperValue.apply(items.stream().reduce(operator).orElseGet(supplier));
         }, items, reducer, mapper);
     }
 
@@ -1156,7 +1156,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createBooleanBinding(() -> mapper.apply(items.stream().reduce(reducer).orElse(supplier.get())), items);
+        return createBooleanBinding(() -> mapper.apply(items.stream().reduce(reducer).orElseGet(supplier)), items);
     }
 
     /**
@@ -1204,7 +1204,7 @@ public final class ReducingBindings {
             requireNonNull(operator, ERROR_REDUCER_NULL);
             final Function<? super T, Boolean> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return mapperValue.apply(items.stream().reduce(operator).orElse(supplier.get()));
+            return mapperValue.apply(items.stream().reduce(operator).orElseGet(supplier));
         }, items, reducer, mapper);
     }
 
@@ -1242,7 +1242,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createDoubleBinding(() -> mapper.apply(items.stream().reduce(reducer).orElse(supplier.get())).doubleValue(), items);
+        return createDoubleBinding(() -> mapper.apply(items.stream().reduce(reducer).orElseGet(supplier)).doubleValue(), items);
     }
 
     /**
@@ -1290,7 +1290,7 @@ public final class ReducingBindings {
             requireNonNull(operator, ERROR_REDUCER_NULL);
             final Function<? super T, ? extends Number> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return mapperValue.apply(items.stream().reduce(operator).orElse(supplier.get())).doubleValue();
+            return mapperValue.apply(items.stream().reduce(operator).orElseGet(supplier)).doubleValue();
         }, items, reducer, mapper);
     }
 
@@ -1324,7 +1324,7 @@ public final class ReducingBindings {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createObjectBinding(() -> items.stream().reduce(reducer).orElse(supplier.get()), items);
+        return createObjectBinding(() -> items.stream().reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -1362,7 +1362,7 @@ public final class ReducingBindings {
         return createObjectBinding(() -> {
             BinaryOperator<T> operator = reducer.getValue();
             requireNonNull(operator, ERROR_REDUCER_NULL);
-            return items.stream().reduce(operator).orElse(supplier.get());
+            return items.stream().reduce(operator).orElseGet(supplier);
         }, items, reducer);
     }
 
@@ -1400,7 +1400,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         final Function<? super T, String> mapperValue = mapper != null ? mapper : String::valueOf;
-        return createStringBinding(() -> mapperValue.apply(items.stream().reduce(reducer).orElse(supplier.get())), items);
+        return createStringBinding(() -> mapperValue.apply(items.stream().reduce(reducer).orElseGet(supplier)), items);
     }
 
     /**
@@ -1446,7 +1446,7 @@ public final class ReducingBindings {
             BinaryOperator<T> operator = reducer.getValue();
             requireNonNull(operator, ERROR_REDUCER_NULL);
             final Function<? super T, String> mapperValue = mapper.getValue() != null ? mapper.getValue() : String::valueOf;
-            return mapperValue.apply(items.stream().reduce(operator).orElse(supplier.get()));
+            return mapperValue.apply(items.stream().reduce(operator).orElseGet(supplier));
         }, items, reducer, mapper);
     }
 
@@ -1484,7 +1484,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createIntegerBinding(() -> mapper.apply(items.stream().reduce(reducer).orElse(supplier.get())), items);
+        return createIntegerBinding(() -> mapper.apply(items.stream().reduce(reducer).orElseGet(supplier)), items);
     }
 
     /**
@@ -1532,7 +1532,7 @@ public final class ReducingBindings {
             requireNonNull(operator, ERROR_REDUCER_NULL);
             final Function<? super T, Integer> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return mapperValue.apply(items.stream().reduce(operator).orElse(supplier.get()));
+            return mapperValue.apply(items.stream().reduce(operator).orElseGet(supplier));
         }, items, reducer, mapper);
     }
 
@@ -1570,7 +1570,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createLongBinding(() -> mapper.apply(items.stream().reduce(reducer).orElse(supplier.get())), items);
+        return createLongBinding(() -> mapper.apply(items.stream().reduce(reducer).orElseGet(supplier)), items);
     }
 
     /**
@@ -1618,7 +1618,7 @@ public final class ReducingBindings {
             requireNonNull(operator, ERROR_REDUCER_NULL);
             final Function<? super T, Long> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return mapperValue.apply(items.stream().reduce(operator).orElse(supplier.get()));
+            return mapperValue.apply(items.stream().reduce(operator).orElseGet(supplier));
         }, items, reducer, mapper);
     }
 
@@ -1656,7 +1656,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createFloatBinding(() -> mapper.apply(items.stream().reduce(reducer).orElse(supplier.get())), items);
+        return createFloatBinding(() -> mapper.apply(items.stream().reduce(reducer).orElseGet(supplier)), items);
     }
 
     /**
@@ -1704,7 +1704,7 @@ public final class ReducingBindings {
             requireNonNull(operator, ERROR_REDUCER_NULL);
             final Function<? super T, Float> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return mapperValue.apply(items.stream().reduce(operator).orElse(supplier.get()));
+            return mapperValue.apply(items.stream().reduce(operator).orElseGet(supplier));
         }, items, reducer, mapper);
     }
 
@@ -1742,7 +1742,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createDoubleBinding(() -> mapper.apply(items.stream().reduce(reducer).orElse(supplier.get())), items);
+        return createDoubleBinding(() -> mapper.apply(items.stream().reduce(reducer).orElseGet(supplier)), items);
     }
 
     /**
@@ -1790,7 +1790,7 @@ public final class ReducingBindings {
             requireNonNull(operator, ERROR_REDUCER_NULL);
             final Function<? super T, Double> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return mapperValue.apply(items.stream().reduce(operator).orElse(supplier.get()));
+            return mapperValue.apply(items.stream().reduce(operator).orElseGet(supplier));
         }, items, reducer, mapper);
     }
 
@@ -1828,7 +1828,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createBooleanBinding(() -> mapper.apply(items.stream().reduce(reducer).orElse(supplier.get())), items);
+        return createBooleanBinding(() -> mapper.apply(items.stream().reduce(reducer).orElseGet(supplier)), items);
     }
 
     /**
@@ -1876,7 +1876,7 @@ public final class ReducingBindings {
             requireNonNull(operator, ERROR_REDUCER_NULL);
             final Function<? super T, Boolean> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return mapperValue.apply(items.stream().reduce(operator).orElse(supplier.get()));
+            return mapperValue.apply(items.stream().reduce(operator).orElseGet(supplier));
         }, items, reducer, mapper);
     }
 
@@ -1914,7 +1914,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createDoubleBinding(() -> mapper.apply(items.stream().reduce(reducer).orElse(supplier.get())).doubleValue(), items);
+        return createDoubleBinding(() -> mapper.apply(items.stream().reduce(reducer).orElseGet(supplier)).doubleValue(), items);
     }
 
     /**
@@ -1962,7 +1962,7 @@ public final class ReducingBindings {
             requireNonNull(operator, ERROR_REDUCER_NULL);
             final Function<? super T, ? extends Number> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return mapperValue.apply(items.stream().reduce(operator).orElse(supplier.get())).doubleValue();
+            return mapperValue.apply(items.stream().reduce(operator).orElseGet(supplier)).doubleValue();
         }, items, reducer, mapper);
     }
 
@@ -2000,7 +2000,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createObjectBinding(() -> mapper.apply(items.stream().reduce(reducer).orElse(supplier.get())), items);
+        return createObjectBinding(() -> mapper.apply(items.stream().reduce(reducer).orElseGet(supplier)), items);
     }
 
     /**
@@ -2046,7 +2046,7 @@ public final class ReducingBindings {
             requireNonNull(operator, ERROR_REDUCER_NULL);
             final Function<? super T, R> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return mapperValue.apply(items.stream().reduce(operator).orElse(supplier.get()));
+            return mapperValue.apply(items.stream().reduce(operator).orElseGet(supplier));
         }, items, reducer, mapper);
     }
 
@@ -2083,7 +2083,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createObjectBinding(() -> mapper.apply(items.stream().reduce(reducer).orElse(supplier.get())), items);
+        return createObjectBinding(() -> mapper.apply(items.stream().reduce(reducer).orElseGet(supplier)), items);
     }
 
     /**
@@ -2129,7 +2129,7 @@ public final class ReducingBindings {
             requireNonNull(operator, ERROR_REDUCER_NULL);
             final Function<? super T, R> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return mapperValue.apply(items.stream().reduce(operator).orElse(supplier.get()));
+            return mapperValue.apply(items.stream().reduce(operator).orElseGet(supplier));
         }, items, reducer, mapper);
     }
 
@@ -2167,7 +2167,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createObjectBinding(() -> mapper.apply(items.values().stream().reduce(reducer).orElse(supplier.get())), items);
+        return createObjectBinding(() -> mapper.apply(items.values().stream().reduce(reducer).orElseGet(supplier)), items);
     }
 
     /**
@@ -2213,7 +2213,7 @@ public final class ReducingBindings {
             requireNonNull(operator, ERROR_REDUCER_NULL);
             final Function<? super V, R> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return mapperValue.apply(items.values().stream().reduce(operator).orElse(supplier.get()));
+            return mapperValue.apply(items.values().stream().reduce(operator).orElseGet(supplier));
         }, items, reducer, mapper);
     }
 
@@ -2251,7 +2251,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createObjectBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+        return createObjectBinding(() -> items.stream().map(mapper).reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -2297,7 +2297,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super T, R> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+            return items.stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier);
         }, items, reducer, mapper);
     }
 
@@ -2334,7 +2334,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createObjectBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+        return createObjectBinding(() -> items.stream().map(mapper).reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -2380,7 +2380,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super T, R> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+            return items.stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier);
         }, items, reducer, mapper);
     }
 
@@ -2418,7 +2418,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createObjectBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+        return createObjectBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -2464,7 +2464,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super V, R> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.values().stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+            return items.values().stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier);
         }, items, reducer, mapper);
     }
 
@@ -2502,7 +2502,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createBooleanBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+        return createBooleanBinding(() -> items.stream().map(mapper).reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -2548,7 +2548,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super T, Boolean> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+            return items.stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier);
         }, items, reducer, mapper);
     }
 
@@ -2585,7 +2585,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createBooleanBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+        return createBooleanBinding(() -> items.stream().map(mapper).reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -2631,7 +2631,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super T, Boolean> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+            return items.stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier);
         }, items, reducer, mapper);
     }
 
@@ -2669,7 +2669,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createBooleanBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+        return createBooleanBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -2715,7 +2715,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super V, Boolean> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.values().stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+            return items.values().stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier);
         }, items, reducer, mapper);
     }
 
@@ -2753,7 +2753,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createIntegerBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+        return createIntegerBinding(() -> items.stream().map(mapper).reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -2799,7 +2799,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super T, Integer> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+            return items.stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier);
         }, items, reducer, mapper);
     }
 
@@ -2836,7 +2836,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createIntegerBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+        return createIntegerBinding(() -> items.stream().map(mapper).reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -2882,7 +2882,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super T, Integer> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+            return items.stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier);
         }, items, reducer, mapper);
     }
 
@@ -2920,7 +2920,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createIntegerBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+        return createIntegerBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -2966,7 +2966,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super V, Integer> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.values().stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+            return items.values().stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier);
         }, items, reducer, mapper);
     }
 
@@ -3004,7 +3004,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createLongBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+        return createLongBinding(() -> items.stream().map(mapper).reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -3050,7 +3050,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super T, Long> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+            return items.stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier);
         }, items, reducer, mapper);
     }
 
@@ -3087,7 +3087,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createLongBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+        return createLongBinding(() -> items.stream().map(mapper).reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -3133,7 +3133,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super T, Long> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+            return items.stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier);
         }, items, reducer, mapper);
     }
 
@@ -3171,7 +3171,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createLongBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+        return createLongBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -3217,7 +3217,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super V, Long> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.values().stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+            return items.values().stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier);
         }, items, reducer, mapper);
     }
 
@@ -3255,7 +3255,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createFloatBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+        return createFloatBinding(() -> items.stream().map(mapper).reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -3301,7 +3301,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super T, Float> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+            return items.stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier);
         }, items, reducer, mapper);
     }
 
@@ -3338,7 +3338,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createFloatBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+        return createFloatBinding(() -> items.stream().map(mapper).reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -3384,7 +3384,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super T, Float> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+            return items.stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier);
         }, items, reducer, mapper);
     }
 
@@ -3422,7 +3422,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createFloatBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+        return createFloatBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -3468,7 +3468,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super V, Float> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.values().stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+            return items.values().stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier);
         }, items, reducer, mapper);
     }
 
@@ -3506,7 +3506,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createDoubleBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+        return createDoubleBinding(() -> items.stream().map(mapper).reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -3552,7 +3552,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super T, Double> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+            return items.stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier);
         }, items, reducer, mapper);
     }
 
@@ -3589,7 +3589,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createDoubleBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+        return createDoubleBinding(() -> items.stream().map(mapper).reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -3635,7 +3635,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super T, Double> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+            return items.stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier);
         }, items, reducer, mapper);
     }
 
@@ -3673,7 +3673,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createDoubleBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+        return createDoubleBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -3719,7 +3719,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super V, Double> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.values().stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+            return items.values().stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier);
         }, items, reducer, mapper);
     }
 
@@ -3757,7 +3757,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createDoubleBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()).doubleValue(), items);
+        return createDoubleBinding(() -> items.stream().map(mapper).reduce(reducer).orElseGet(supplier).doubleValue(), items);
     }
 
     /**
@@ -3803,7 +3803,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super T, Number> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get()).doubleValue();
+            return items.stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier).doubleValue();
         }, items, reducer, mapper);
     }
 
@@ -3840,7 +3840,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createDoubleBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()).doubleValue(), items);
+        return createDoubleBinding(() -> items.stream().map(mapper).reduce(reducer).orElseGet(supplier).doubleValue(), items);
     }
 
     /**
@@ -3886,7 +3886,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super T, Number> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get()).doubleValue();
+            return items.stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier).doubleValue();
         }, items, reducer, mapper);
     }
 
@@ -3924,7 +3924,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createDoubleBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElse(supplier.get()).doubleValue(), items);
+        return createDoubleBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElseGet(supplier).doubleValue(), items);
     }
 
     /**
@@ -3970,7 +3970,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super V, Number> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.values().stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get()).doubleValue();
+            return items.values().stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier).doubleValue();
         }, items, reducer, mapper);
     }
 
@@ -4008,7 +4008,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createStringBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+        return createStringBinding(() -> items.stream().map(mapper).reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -4054,7 +4054,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super T, String> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+            return items.stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier);
         }, items, reducer, mapper);
     }
 
@@ -4091,7 +4091,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createStringBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+        return createStringBinding(() -> items.stream().map(mapper).reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -4137,7 +4137,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super T, String> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+            return items.stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier);
         }, items, reducer, mapper);
     }
 
@@ -4175,7 +4175,7 @@ public final class ReducingBindings {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createStringBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElse(supplier.get()), items);
+        return createStringBinding(() -> items.values().stream().map(mapper).reduce(reducer).orElseGet(supplier), items);
     }
 
     /**
@@ -4221,7 +4221,7 @@ public final class ReducingBindings {
             requireNonNull(reducerValue, ERROR_REDUCER_NULL);
             final Function<? super V, String> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.values().stream().map(mapperValue).reduce(reducerValue).orElse(supplier.get());
+            return items.values().stream().map(mapperValue).reduce(reducerValue).orElseGet(supplier);
         }, items, reducer, mapper);
     }
 }

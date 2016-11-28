@@ -25,6 +25,7 @@ import javafx.collections.ObservableSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
+import java.util.function.DoubleSupplier;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.ToDoubleFunction;
@@ -291,7 +292,7 @@ public final class CollectionBindings {
     public static NumberBinding minInList(@Nonnull final ObservableList<? extends Number> items, @Nonnull final Supplier<? extends Number> supplier) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).min().orElse(supplier.get().doubleValue()), items);
+        return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).min().orElseGet(resolveDoubleSupplier(supplier)), items);
     }
 
     /**
@@ -321,7 +322,7 @@ public final class CollectionBindings {
     public static NumberBinding maxInList(@Nonnull final ObservableList<? extends Number> items, @Nonnull final Supplier<? extends Number> supplier) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).max().orElse(supplier.get().doubleValue()), items);
+        return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).max().orElseGet(resolveDoubleSupplier(supplier)), items);
     }
 
     /**
@@ -351,7 +352,7 @@ public final class CollectionBindings {
     public static NumberBinding averageInList(@Nonnull final ObservableList<? extends Number> items, @Nonnull final Supplier<? extends Number> supplier) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).average().orElse(supplier.get().doubleValue()), items);
+        return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).average().orElseGet(resolveDoubleSupplier(supplier)), items);
     }
 
     /**
@@ -398,7 +399,7 @@ public final class CollectionBindings {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createDoubleBinding(() -> items.stream().mapToDouble(mapper).min().orElse(supplier.get().doubleValue()), items);
+        return createDoubleBinding(() -> items.stream().mapToDouble(mapper).min().orElseGet(resolveDoubleSupplier(supplier)), items);
     }
 
     /**
@@ -432,7 +433,7 @@ public final class CollectionBindings {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createDoubleBinding(() -> items.stream().mapToDouble(mapper).max().orElse(supplier.get().doubleValue()), items);
+        return createDoubleBinding(() -> items.stream().mapToDouble(mapper).max().orElseGet(resolveDoubleSupplier(supplier)), items);
     }
 
     /**
@@ -466,7 +467,7 @@ public final class CollectionBindings {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createDoubleBinding(() -> items.stream().mapToDouble(mapper).average().orElse(supplier.get().doubleValue()), items);
+        return createDoubleBinding(() -> items.stream().mapToDouble(mapper).average().orElseGet(resolveDoubleSupplier(supplier)), items);
     }
 
     /**
@@ -522,7 +523,7 @@ public final class CollectionBindings {
         return createDoubleBinding(() -> {
             ToDoubleFunction<? super T> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.stream().mapToDouble(mapperValue).min().orElse(supplier.get().doubleValue());
+            return items.stream().mapToDouble(mapperValue).min().orElseGet(resolveDoubleSupplier(supplier));
         }, items, mapper);
     }
 
@@ -564,7 +565,7 @@ public final class CollectionBindings {
         return createDoubleBinding(() -> {
             ToDoubleFunction<? super T> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.stream().mapToDouble(mapperValue).max().orElse(supplier.get().doubleValue());
+            return items.stream().mapToDouble(mapperValue).max().orElseGet(resolveDoubleSupplier(supplier));
         }, items, mapper);
     }
 
@@ -606,7 +607,7 @@ public final class CollectionBindings {
         return createDoubleBinding(() -> {
             ToDoubleFunction<? super T> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.stream().mapToDouble(mapperValue).average().orElse(supplier.get().doubleValue());
+            return items.stream().mapToDouble(mapperValue).average().orElseGet(resolveDoubleSupplier(supplier));
         }, items, mapper);
     }
 
@@ -656,7 +657,7 @@ public final class CollectionBindings {
     public static NumberBinding minInSet(@Nonnull final ObservableSet<? extends Number> items, @Nonnull final Supplier<? extends Number> supplier) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).min().orElse(supplier.get().doubleValue()), items);
+        return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).min().orElseGet(resolveDoubleSupplier(supplier)), items);
     }
 
     /**
@@ -686,7 +687,7 @@ public final class CollectionBindings {
     public static NumberBinding maxInSet(@Nonnull final ObservableSet<? extends Number> items, @Nonnull final Supplier<? extends Number> supplier) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).max().orElse(supplier.get().doubleValue()), items);
+        return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).max().orElseGet(resolveDoubleSupplier(supplier)), items);
     }
 
     /**
@@ -716,7 +717,7 @@ public final class CollectionBindings {
     public static NumberBinding averageInSet(@Nonnull final ObservableSet<? extends Number> items, @Nonnull final Supplier<? extends Number> supplier) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).average().orElse(supplier.get().doubleValue()), items);
+        return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).average().orElseGet(resolveDoubleSupplier(supplier)), items);
     }
 
     /**
@@ -763,7 +764,7 @@ public final class CollectionBindings {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createDoubleBinding(() -> items.stream().mapToDouble(mapper).min().orElse(supplier.get().doubleValue()), items);
+        return createDoubleBinding(() -> items.stream().mapToDouble(mapper).min().orElseGet(resolveDoubleSupplier(supplier)), items);
     }
 
     /**
@@ -797,7 +798,7 @@ public final class CollectionBindings {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createDoubleBinding(() -> items.stream().mapToDouble(mapper).max().orElse(supplier.get().doubleValue()), items);
+        return createDoubleBinding(() -> items.stream().mapToDouble(mapper).max().orElseGet(resolveDoubleSupplier(supplier)), items);
     }
 
     /**
@@ -831,7 +832,7 @@ public final class CollectionBindings {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createDoubleBinding(() -> items.stream().mapToDouble(mapper).average().orElse(supplier.get().doubleValue()), items);
+        return createDoubleBinding(() -> items.stream().mapToDouble(mapper).average().orElseGet(resolveDoubleSupplier(supplier)), items);
     }
 
     /**
@@ -887,7 +888,7 @@ public final class CollectionBindings {
         return createDoubleBinding(() -> {
             ToDoubleFunction<? super T> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.stream().mapToDouble(mapperValue).min().orElse(supplier.get().doubleValue());
+            return items.stream().mapToDouble(mapperValue).min().orElseGet(resolveDoubleSupplier(supplier));
         }, items, mapper);
     }
 
@@ -929,7 +930,7 @@ public final class CollectionBindings {
         return createDoubleBinding(() -> {
             ToDoubleFunction<? super T> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.stream().mapToDouble(mapperValue).max().orElse(supplier.get().doubleValue());
+            return items.stream().mapToDouble(mapperValue).max().orElseGet(resolveDoubleSupplier(supplier));
         }, items, mapper);
     }
 
@@ -971,7 +972,7 @@ public final class CollectionBindings {
         return createDoubleBinding(() -> {
             ToDoubleFunction<? super T> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.stream().mapToDouble(mapperValue).average().orElse(supplier.get().doubleValue());
+            return items.stream().mapToDouble(mapperValue).average().orElseGet(resolveDoubleSupplier(supplier));
         }, items, mapper);
     }
 
@@ -1021,7 +1022,7 @@ public final class CollectionBindings {
     public static <K> NumberBinding minInMap(@Nonnull final ObservableMap<K, ? extends Number> items, @Nonnull final Supplier<? extends Number> supplier) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createDoubleBinding(() -> items.values().stream().mapToDouble(Number::doubleValue).min().orElse(supplier.get().doubleValue()), items);
+        return createDoubleBinding(() -> items.values().stream().mapToDouble(Number::doubleValue).min().orElseGet(resolveDoubleSupplier(supplier)), items);
     }
 
     /**
@@ -1051,7 +1052,7 @@ public final class CollectionBindings {
     public static <K> NumberBinding maxInMap(@Nonnull final ObservableMap<K, ? extends Number> items, @Nonnull final Supplier<? extends Number> supplier) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createDoubleBinding(() -> items.values().stream().mapToDouble(Number::doubleValue).max().orElse(supplier.get().doubleValue()), items);
+        return createDoubleBinding(() -> items.values().stream().mapToDouble(Number::doubleValue).max().orElseGet(resolveDoubleSupplier(supplier)), items);
     }
 
     /**
@@ -1081,7 +1082,7 @@ public final class CollectionBindings {
     public static <K> NumberBinding averageInMap(@Nonnull final ObservableMap<K, ? extends Number> items, @Nonnull final Supplier<? extends Number> supplier) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createDoubleBinding(() -> items.values().stream().mapToDouble(Number::doubleValue).average().orElse(supplier.get().doubleValue()), items);
+        return createDoubleBinding(() -> items.values().stream().mapToDouble(Number::doubleValue).average().orElseGet(resolveDoubleSupplier(supplier)), items);
     }
 
     /**
@@ -1128,7 +1129,7 @@ public final class CollectionBindings {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createDoubleBinding(() -> items.values().stream().mapToDouble(mapper).min().orElse(supplier.get().doubleValue()), items);
+        return createDoubleBinding(() -> items.values().stream().mapToDouble(mapper).min().orElseGet(resolveDoubleSupplier(supplier)), items);
     }
 
     /**
@@ -1162,7 +1163,7 @@ public final class CollectionBindings {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createDoubleBinding(() -> items.values().stream().mapToDouble(mapper).max().orElse(supplier.get().doubleValue()), items);
+        return createDoubleBinding(() -> items.values().stream().mapToDouble(mapper).max().orElseGet(resolveDoubleSupplier(supplier)), items);
     }
 
     /**
@@ -1196,7 +1197,7 @@ public final class CollectionBindings {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        return createDoubleBinding(() -> items.values().stream().mapToDouble(mapper).average().orElse(supplier.get().doubleValue()), items);
+        return createDoubleBinding(() -> items.values().stream().mapToDouble(mapper).average().orElseGet(resolveDoubleSupplier(supplier)), items);
     }
 
     /**
@@ -1252,7 +1253,7 @@ public final class CollectionBindings {
         return createDoubleBinding(() -> {
             ToDoubleFunction<? super V> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.values().stream().mapToDouble(mapperValue).min().orElse(supplier.get().doubleValue());
+            return items.values().stream().mapToDouble(mapperValue).min().orElseGet(resolveDoubleSupplier(supplier));
         }, items, mapper);
     }
 
@@ -1294,7 +1295,7 @@ public final class CollectionBindings {
         return createDoubleBinding(() -> {
             ToDoubleFunction<? super V> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.values().stream().mapToDouble(mapperValue).max().orElse(supplier.get().doubleValue());
+            return items.values().stream().mapToDouble(mapperValue).max().orElseGet(resolveDoubleSupplier(supplier));
         }, items, mapper);
     }
 
@@ -1336,7 +1337,7 @@ public final class CollectionBindings {
         return createDoubleBinding(() -> {
             ToDoubleFunction<? super V> mapperValue = mapper.getValue();
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
-            return items.values().stream().mapToDouble(mapperValue).average().orElse(supplier.get().doubleValue());
+            return items.values().stream().mapToDouble(mapperValue).average().orElseGet(resolveDoubleSupplier(supplier));
         }, items, mapper);
     }
 
@@ -1357,5 +1358,11 @@ public final class CollectionBindings {
             requireNonNull(mapperValue, ERROR_MAPPER_NULL);
             return items.values().stream().mapToDouble(mapperValue).sum();
         }, items, mapper);
+    }
+
+    @Nonnull
+    private static DoubleSupplier resolveDoubleSupplier(@Nonnull final Supplier<? extends Number> supplier) {
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        return () -> supplier.get().doubleValue();
     }
 }
