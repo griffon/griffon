@@ -174,17 +174,17 @@ class MappingBindingsSpec extends Specification {
         result2 == binding.get()
 
         where:
-        type      | ob1                             | ob2                             | defaultValue | value1     | value2     | result1    | result2    | function1                    | function2
-        'Integer' | new SimpleIntegerProperty()     | new SimpleIntegerProperty()     | 0            | 1          | 2          | 3          | -1         | { a, b -> a + b }            | { a, b -> a - b }
+        type      | ob1                             | ob2                             | defaultValue | value1     | value2     | result1    | result2    | function1              | function2
+        'Integer' | new SimpleIntegerProperty()     | new SimpleIntegerProperty()     | 0            | 1          | 2          | 3          | -1         | { a, b -> a + b }      | { a, b -> a - b }
         'Long'    | new SimpleLongProperty()        | new SimpleLongProperty()        | 0L           | 1L         | 2L         | 3L         | -1L        | { a, b -> a + b }            | { a, b -> a - b }
         'Float'   | new SimpleFloatProperty()       | new SimpleFloatProperty()       | 0f           | 1f         | 2f         | 3f         | -1f        | { a, b -> (a + b) as float } | { a, b -> (a - b) as float }
-        'Double'  | new SimpleDoubleProperty()      | new SimpleDoubleProperty()      | 0d           | 1d         | 2d         | 3d         | -1d        | { a, b -> a + b }            | { a, b -> a - b }
-        'Boolean' | new SimpleBooleanProperty()     | new SimpleBooleanProperty()     | false        | false      | true       | true       | false      | { a, b -> a || b }           | { a, b -> a && b }
-        'String'  | new SimpleStringProperty()      | new SimpleStringProperty()      | '0'          | '1'        | '2'        | '12'       | '3'        | { a, b -> a + b }            | { a, b -> '3' }
-        'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | new Box(3)   | null       | null       | new Box(3) | new Box(3) | { a, b -> new Box(4) }       | { a, b -> new Box(5) }
-        'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | new Box(3)   | new Box(1) | null       | new Box(3) | new Box(3) | { a, b -> new Box(4) }       | { a, b -> new Box(5) }
-        'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | new Box(3)   | null       | new Box(2) | new Box(3) | new Box(3) | { a, b -> new Box(4) }       | { a, b -> new Box(5) }
-        'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | new Box(3)   | new Box(1) | new Box(2) | new Box(4) | new Box(5) | { a, b -> new Box(4) }       | { a, b -> new Box(5) }
+        'Double'  | new SimpleDoubleProperty()      | new SimpleDoubleProperty()      | 0d           | 1d         | 2d         | 3d         | -1d        | { a, b -> a + b }      | { a, b -> a - b }
+        'Boolean' | new SimpleBooleanProperty()     | new SimpleBooleanProperty()     | false        | false      | true       | true       | false      | { a, b -> a || b }     | { a, b -> a && b }
+        'String'  | new SimpleStringProperty()      | new SimpleStringProperty()      | '0'          | '1'        | '2'        | '12'       | '3'        | { a, b -> a + b }      | { a, b -> '3' }
+        'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | new Box(3)   | null       | null       | new Box(3) | new Box(3) | { a, b -> new Box(4) } | { a, b -> new Box(5) }
+        'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | new Box(3)   | new Box(1) | null       | new Box(3) | new Box(3) | { a, b -> new Box(4) } | { a, b -> new Box(5) }
+        'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | new Box(3)   | null       | new Box(2) | new Box(3) | new Box(3) | { a, b -> new Box(4) } | { a, b -> new Box(5) }
+        'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | new Box(3)   | new Box(1) | new Box(2) | new Box(4) | new Box(5) | { a, b -> new Box(4) } | { a, b -> new Box(5) }
     }
 
     def "Map#type with function and supplier (observables) value1=#value1 value2=#value2"() {
@@ -251,10 +251,10 @@ class MappingBindingsSpec extends Specification {
         result2 == binding.get()
 
         where:
-        type      | ob1                             | ob2                             | supplier | value1     | value2     | result1    | result2    | function1                    | function2
+        type      | ob1                             | ob2                             | supplier | value1                                                                                        | value2     | result1    | result2    | function1              | function2
         'Integer' | new SimpleIntegerProperty()     | new SimpleIntegerProperty()     | {
             0
-        }                                                                                        | 1          | 2          | 3          | -1         | { a, b -> a + b }            | { a, b -> a - b }
+        }                                                                                        | 1     | 2          | 3          | -1         | { a, b -> a + b }      | { a, b -> a - b }
         'Long'    | new SimpleLongProperty()        | new SimpleLongProperty()        | {
             0L
         }                                                                                        | 1L         | 2L         | 3L         | -1L        | { a, b -> a + b }            | { a, b -> a - b }
@@ -266,22 +266,22 @@ class MappingBindingsSpec extends Specification {
         }                                                                                        | 1d         | 2d         | 3d         | -1d        | { a, b -> a + b }            | { a, b -> a - b }
         'Boolean' | new SimpleBooleanProperty()     | new SimpleBooleanProperty()     | {
             false
-        }                                                                                        | false      | true       | true       | false      | { a, b -> a || b }           | { a, b -> a && b }
+        }                                                                                        | false | true       | true       | false      | { a, b -> a || b }     | { a, b -> a && b }
         'String'  | new SimpleStringProperty()      | new SimpleStringProperty()      | {
             '0'
-        }                                                                                        | '1'        | '2'        | '12'       | '3'        | { a, b -> a + b }            | { a, b -> '3' }
+        }                                                                                        | '1'                                                                                           | '2'        | '12'       | '3'        | { a, b -> a + b }      | { a, b -> '3' }
         'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | {
             new Box(3)
-        }                                                                                        | null       | null       | new Box(3) | new Box(3) | { a, b -> new Box(4) }       | { a, b -> new Box(5) }
+        }                                                                                        | null                                                                                          | null       | new Box(3) | new Box(3) | { a, b -> new Box(4) } | { a, b -> new Box(5) }
         'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | {
             new Box(3)
-        }                                                                                        | new Box(1) | null       | new Box(3) | new Box(3) | { a, b -> new Box(4) }       | { a, b -> new Box(5) }
+        }                                                                                        | new Box(1)                                                                                    | null       | new Box(3) | new Box(3) | { a, b -> new Box(4) } | { a, b -> new Box(5) }
         'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | {
             new Box(3)
-        }                                                                                        | null       | new Box(2) | new Box(3) | new Box(3) | { a, b -> new Box(4) }       | { a, b -> new Box(5) }
+        }                                                                                        | null                                                                                          | new Box(2) | new Box(3) | new Box(3) | { a, b -> new Box(4) } | { a, b -> new Box(5) }
         'Object'  | new SimpleObjectProperty<Box>() | new SimpleObjectProperty<Box>() | {
             new Box(3)
-        }                                                                                        | new Box(1) | new Box(2) | new Box(4) | new Box(5) | { a, b -> new Box(4) }       | { a, b -> new Box(5) }
+        }                                                                                        | new Box(1)                                                                                    | new Box(2) | new Box(4) | new Box(5) | { a, b -> new Box(4) } | { a, b -> new Box(5) }
     }
 
     @Canonical
