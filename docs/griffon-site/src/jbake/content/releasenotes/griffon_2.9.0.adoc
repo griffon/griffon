@@ -24,6 +24,32 @@ Any properties configured via `messages.properties` will be refreshed when the a
 
 ==== JavaFX Support
 
+`Labeled` nodes can react to changes made to the application's `Locale` provided you supply enough information to resolve
+the target message. `JavaFXUtils` exposes 3 new properties and 1 connect method to make this feature work. You may use
+these properties with FXML, for example
+
+[source, xml]
+[subs="verbatim"]
+----
+<Label JavaFXUtils.i18nKey="key.label"
+       JavaFXUtils.i18nArgs="one, two"
+       JavaFXUtils.i18nDefaultValue="No value supplied"/>
+----
+
+You must use the connect method on the `View` class too, like so
+
+[source, java]
+----
+Node node = loadFromFXML();
+if (node instanceof Parent) {
+    scene.setRoot((Parent) node);
+} else {
+    ((Group) scene.getRoot()).getChildren().addAll(node);
+}
+connectActions(node, controller);
+connectMessageSource(node);
+----
+
 `JavaFXAction` supports four new properties:
 
  * `style`: used to set style on the bound widget.

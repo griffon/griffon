@@ -57,6 +57,7 @@ public class ${project_class_name}View extends AbstractJavaFXGriffonView {
             ((Group) scene.getRoot()).getChildren().addAll(node);
         }
         connectActions(node, controller);
+        connectMessageSource(node);
 
         return scene;
     }

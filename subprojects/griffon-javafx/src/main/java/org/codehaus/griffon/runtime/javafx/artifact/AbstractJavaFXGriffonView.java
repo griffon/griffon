@@ -55,6 +55,7 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
      * Creates a new instance of this class.
      *
      * @param application the GriffonApplication that holds this artifact.
+     *
      * @deprecated Griffon prefers field injection over constructor injector for artifacts as of 2.1.0
      */
     @Inject
@@ -119,6 +120,10 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
 
     protected void connectActions(@Nonnull Object node, @Nonnull GriffonController controller) {
         JavaFXUtils.connectActions(node, controller);
+    }
+
+    protected void connectMessageSource(@Nonnull Object node) {
+        JavaFXUtils.connectMessageSource(node, getApplication());
     }
 
     @Nullable
