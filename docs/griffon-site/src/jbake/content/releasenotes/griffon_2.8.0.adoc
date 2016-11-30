@@ -66,17 +66,18 @@ JavaFXUtils.findElements(container) { e ->
 It's now possible to target multiple elements for a particular aciton using FXML. Instead of using an `fx:id` entry that follows
 the naming convetion `<action>ActionTarget` simply use a static synthetic property: `JavaFXUtils.griffonActionId`. For example
 
-[xml]
+[source, xml]
 [subs="attributes,verbatim"]
 ----
 <?import griffon.javafx.support.JavaFXUtils?>
 ...
 <VBox>
     <MenuBar>
-        <Menu text="File"/>
+        <Menu text="File">
             <MenuItem JavaFXUtils.griffonActionId="cut"/>
             <MenuItem JavaFXUtils.griffonActionId="copy"/>
             <MenuItem JavaFXUtils.griffonActionId="paste"/>
+        </Menu>
     </MenuBar>
     <ToolBar>
         <Button JavaFXUtils.griffonActionId="cut"/>

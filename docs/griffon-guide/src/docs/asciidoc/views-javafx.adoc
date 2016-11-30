@@ -5,3 +5,148 @@
 Refer to the <<_builder_nodes_javafx,list of nodes>> which become available when
 the `griffon-javafx-groovy-{griffon-version}.jar` is added as a dependency.
 
+== I18n Support
+
+Nodes of type `Labeled` can react to changes made to the application's `Locale` provided you
+supply enough information to resolve the target message. `{link_javafxutils}` exposes 3 synthetic
+properties and 1 connect method to make this feature work. You may use these properties with
+FXML, for example
+
+[source, xml]
+[subs="verbatim"]
+----
+<Label JavaFXUtils.i18nKey="key.label"
+       JavaFXUtils.i18nArgs="one, two"
+       JavaFXUtils.i18nDefaultValue="No value supplied"/>
+----
+
+These values are used in combination with `{link_message_source}` to resolve a message and set it
+as the value of the node's `text` property. The message will be resolved again anytime the application's
+`Locale` changes value. You must use the connect method on the `View` class too, by invoking the
+following method during UI construction
+
+[source, java]
+----
+connectMessageSource(node);
+----
+
+Where `node` is the root of the hierarchy.
+
+== Action Support
+
+Actions can be attached to JavaFX nodes defined in two ways:
+
+ * By defining a node id that follows the `<action_name>ActionTarget` naming convention.
+ * By invoking `JavaFXUtils.setGriffonActionId()` with the target node and action id as arguments.
+
+Both methods work whether you create the UI using the JavaFX API directly or with FXML. The advantage
+of the second option is that you can link mutliple nodes to the same action. Once action ids have been
+set on the target nodes you must still establish a connection between the configured nodes and the
+controller; this task is attained by invoking the following method during UI construction in the `view`
+
+[source, java]
+----
+connectionActions(node, controller);
+----
+
+Where `node` is the root of the hierarchy. Here's an example of 3 actions being used by two different
+controls each:
+
+[source, xml]
+[subs="attributes,verbatim"]
+----
+<?import griffon.javafx.support.JavaFXUtils?>
+...
+<VBox>
+    <MenuBar>
+        <Menu text="File">
+            <MenuItem JavaFXUtils.griffonActionId="cut"/>
+            <MenuItem JavaFXUtils.griffonActionId="copy"/>
+            <MenuItem JavaFXUtils.griffonActionId="paste"/>
+        </Menu>
+    </MenuBar>
+    <ToolBar>
+        <Button JavaFXUtils.griffonActionId="cut"/>
+        <Button JavaFXUtils.griffonActionId="copy"/>
+        <Button JavaFXUtils.griffonActionId="paste"/>
+    </ToolBar>
+</VBox>
+----
+
+In contrast this is how the FXML would look if node ids would be set instead
+
+[source, xml]
+[subs="attributes,verbatim"]
+----
+...
+<VBox>
+    <ToolBar>
+        <Button fx:id="cutActionTarget"/>
+        <Button fx:id="copyActionTarget"/>
+        <Button fx:id="pasteActionTarget"/>
+    </ToolBar>
+</VBox>
+----
+
+In this case we can't assign the same action to a different node because the node ids would clash.
+
+== Binding Support
+
+=== Collections
+
+`{link_collection_bindings}` class provides binding factories on `ObservableList`/`ObservableSet`/`ObservableMap`
+
+ * Join source observable collection to `StringBinding`.
+ * Calculate `min`, `max`, `average`, and `sum` on source observable collection.
+
+=== Filtering
+
+`{link_filtering_bindings}` class provides filtering capabilities on `ObservableList`/`ObservableSet`/`ObservableMap`
+
+ * Filter `ObservableList`/`ObservableSet`/`ObservableMap` and find first match, creating a `ObjectBinding`.
+ * Filter `ObservableList`/`ObservableSet`/`ObservableMap` then map and find first match to X; where X may be a wrapper type, String or a type `R`.
+ * Map elements of `ObservableList`/`ObservableSet`/`ObservableMap` to X then filter and find first match; where X may be a wrapper type, String or a type `R`.
+
+=== Mapping
+
+`{link_mapping_bindings}` class provides lots of useful binding and property factories
+
+ * Convert `ObservableValue<X>` to is corresponding `XBinding`.
+ * Convert `ObservableXValue` to `ObjectBinding<X>`.
+ * Create bindings that update their value and notify listeners inside the UI thread.
+
+=== Reducing
+
+`{link_reducing_bindings}` class provides reduce capabilities on `ObservableList`/`ObservableSet`/`ObservableMap`
+
+ * Reduce `ObservableList`/`ObservableSet`/`ObservableMap` to `ObjectBinding`.
+ * Reduce `ObservableList`/`ObservableSet`/`ObservableMap` then map to X; where X may be a wrapper type, String or a type `R`.
+ * Map elements of `ObservableList`/`ObservableSet`/`ObservableMap` to X then reduce; where X may be a wrapper type, String or a type `R`.
+
+=== UI Thread Specific
+
+It's very important to obey the basic rules of UI programming in the Java platform. Basically everything
+related to UI must be performed inside the UI thread. Everything that's not UI related must be executed
+outside the UI thread. Griffon provides the means to wrap `{link_observable_list}`, `{link_observable_set}`,
+and `{link_observable_map}` with versions that guarantee to notify its listeners inside the UI thread.
+This lets you write the following code in a `View` artifact:
+
+[source, java]
+----
+import griffon.javafx.support.JavaFXUtils;
+...
+
+ObservableList<String> items = model.getItems();
+ObservableList<String> uiItems = JavaFXUtils.createJavaFXThreadProxyList(items);
+listView.setItems(uiItems);
+----
+
+Now every time the `items` list that belongs to the `Model` gets updated so will be the `listView` widget
+with the guarantee that it doesn't matter which thread pushes the original changes the `listView` will
+be updated inside the UI thread.
+
+You may also create UI thread aware versions of `ChangeListener`, `InvalidationListener`, `ListChangeListener`,
+`SetChangeListener`, `MapChangeListener`, all combinations of `Property<X>` and their specializations,
+`XProperty`; where X stands for `Boolean`, `Integer`, `Long`, `Float`, `Double`, `String`, `Map`, `List`,
+`Set`. The class `{link_uithreadaware_bindings}` provides the means to create these type of bindings.
+
