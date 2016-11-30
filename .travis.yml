@@ -24,3 +24,10 @@ after_success:
   - bash <(curl -s https://codecov.io/bash)
 after_failure:
   - ./update-gh-pages.sh
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/914e6ffa96dfbf419d60
+    on_success: change 
+    on_failure: always
+    on_start: never

@@ -287,7 +287,8 @@ subprojects { subproj ->
 evaluationDependsOnChildren()
 
 coveralls {
-    sourceDirs = files(projectsWithCoverage.sourceSets.main.allSource.srcDirs).files.absolutePath
+    sourceDirs = projectsWithCoverage.sourceSets.main.allSource.srcDirs.flatten()
+    jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
 }
 
 task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
@@ -301,13 +302,10 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
         projectsWithCoverage.jacocoTestReport +
         projectsWithIntegrationCoverage.jacocoIntegrationTestReport +
         projectsWithFunctionalCoverage.jacocoFunctionalTestReport
-    ].executionData)
+    ].unique().executionData)
     reports {
         html.enabled = true
         xml.enabled = true
-        csv.enabled = false
-        html.destination = "${buildDir}/reports/jacoco/test/html"
-        xml.destination = "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
     }
 }
 
