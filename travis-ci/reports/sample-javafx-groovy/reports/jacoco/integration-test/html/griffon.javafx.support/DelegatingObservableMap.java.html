@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DelegatingObservableMap.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.support</a> &gt; <span class="el_source">DelegatingObservableMap.java</span></div><h1>DelegatingObservableMap.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2016 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.support;
+
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableMap;
+import javafx.collections.WeakMapChangeListener;
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.9.0
+ */
+public abstract class DelegatingObservableMap&lt;K, V&gt; extends ObservableMapBase&lt;K, V&gt; implements ObservableMap&lt;K, V&gt; {
+    private final ObservableMap&lt;K, V&gt; delegate;
+    private MapChangeListener&lt;K, V&gt; sourceListener;
+
+<span class="nc" id="L37">    public DelegatingObservableMap(@Nonnull ObservableMap&lt;K, V&gt; delegate) {</span>
+<span class="nc" id="L38">        this.delegate = requireNonNull(delegate, &quot;Argument 'delegate' must not be null&quot;);</span>
+<span class="nc" id="L39">        this.delegate.addListener(new WeakMapChangeListener&lt;&gt;(getListener()));</span>
+<span class="nc" id="L40">    }</span>
+
+    @Nonnull
+    protected ObservableMap&lt;K, V&gt; getDelegate() {
+<span class="nc" id="L44">        return delegate;</span>
+    }
+
+    private MapChangeListener&lt;K, V&gt; getListener() {
+<span class="nc bnc" id="L48" title="All 2 branches missed.">        if (sourceListener == null) {</span>
+<span class="nc" id="L49">            sourceListener = DelegatingObservableMap.this::sourceChanged;</span>
+        }
+<span class="nc" id="L51">        return sourceListener;</span>
+    }
+
+    protected abstract void sourceChanged(@Nonnull MapChangeListener.Change&lt;? extends K, ? extends V&gt; c);
+
+    // --== Delegate methods ==--
+
+    @Override
+    public int size() {
+<span class="nc" id="L60">        return getDelegate().size();</span>
+    }
+
+    @Override
+    public boolean isEmpty() {
+<span class="nc" id="L65">        return getDelegate().isEmpty();</span>
+    }
+
+    @Override
+    public boolean containsValue(Object value) {
+<span class="nc" id="L70">        return getDelegate().containsValue(value);</span>
+    }
+
+    @Override
+    public boolean containsKey(Object key) {
+<span class="nc" id="L75">        return getDelegate().containsKey(key);</span>
+    }
+
+    @Override
+    public V get(Object key) {
+<span class="nc" id="L80">        return getDelegate().get(key);</span>
+    }
+
+    @Override
+    public V put(K key, V value) {
+<span class="nc" id="L85">        return getDelegate().put(key, value);</span>
+    }
+
+    @Override
+    public V remove(Object key) {
+<span class="nc" id="L90">        return getDelegate().remove(key);</span>
+    }
+
+    @Override
+    public void putAll(Map&lt;? extends K, ? extends V&gt; m) {
+<span class="nc" id="L95">        getDelegate().putAll(m);</span>
+<span class="nc" id="L96">    }</span>
+
+    @Override
+    public void clear() {
+<span class="nc" id="L100">        getDelegate().clear();</span>
+<span class="nc" id="L101">    }</span>
+
+    @Override
+    public Set&lt;K&gt; keySet() {
+<span class="nc" id="L105">        return getDelegate().keySet();</span>
+    }
+
+    @Override
+    public Collection&lt;V&gt; values() {
+<span class="nc" id="L110">        return getDelegate().values();</span>
+    }
+
+    @Override
+    public Set&lt;Entry&lt;K, V&gt;&gt; entrySet() {
+<span class="nc" id="L115">        return getDelegate().entrySet();</span>
+    }
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc" id="L120">        return getDelegate().equals(o);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L125">        return getDelegate().hashCode();</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L130">        return getDelegate().toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

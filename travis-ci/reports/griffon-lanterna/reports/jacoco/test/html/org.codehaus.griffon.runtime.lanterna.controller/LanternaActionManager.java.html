@@ -19,29 +19,66 @@ import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
 import org.codehaus.griffon.runtime.core.controller.AbstractActionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import static griffon.util.GriffonNameUtils.getNaturalName;
+import static griffon.util.GriffonNameUtils.isBlank;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class LanternaActionManager extends AbstractActionManager {
+<span class="nc" id="L38">    private static final Logger LOG = LoggerFactory.getLogger(LanternaActionManager.class);</span>
+
+    private static final String DOT = &quot;.&quot;;
+    private static final String EQUALS = &quot; = &quot;;
+    private static final String KEY_NAME = &quot;name&quot;;
+
     @Inject
     public LanternaActionManager(@Nonnull GriffonApplication application) {
-<span class="nc" id="L33">        super(application);</span>
-<span class="nc" id="L34">    }</span>
+<span class="nc" id="L46">        super(application);</span>
+<span class="nc" id="L47">    }</span>
 
     @Nonnull
     @Override
     protected Action createControllerAction(@Nonnull GriffonController controller, @Nonnull String actionName) {
-<span class="nc" id="L39">        return new LanternaGriffonControllerAction(getUiThreadManager(), this, controller, actionName);</span>
+<span class="nc" id="L52">        return new LanternaGriffonControllerAction(getUiThreadManager(), this, controller, actionName);</span>
     }
 
     @Override
-    protected void doConfigureAction(@Nonnull Action action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
-        // empty
-<span class="nc" id="L45">    }</span>
+    protected void doConfigureAction(@Nonnull final Action action, @Nonnull final GriffonController controller, @Nonnull final String normalizeNamed, @Nonnull final String keyPrefix) {
+<span class="nc" id="L57">        controller.getApplication().addPropertyChangeListener(GriffonApplication.PROPERTY_LOCALE, new PropertyChangeListener() {</span>
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+<span class="nc" id="L60">                configureAction((LanternaGriffonControllerAction) action, controller, normalizeNamed, keyPrefix);</span>
+<span class="nc" id="L61">            }</span>
+        });
+<span class="nc" id="L63">        configureAction((LanternaGriffonControllerAction) action, controller, normalizeNamed, keyPrefix);</span>
+<span class="nc" id="L64">    }</span>
+
+    protected void configureAction(@Nonnull LanternaGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+<span class="nc" id="L67">        resolveName(action, controller, normalizeNamed, keyPrefix);</span>
+<span class="nc" id="L68">    }</span>
+
+    protected void resolveName(@Nonnull LanternaGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+<span class="nc" id="L71">        String rsActionName = msg(keyPrefix, normalizeNamed, KEY_NAME, getNaturalName(normalizeNamed));</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        if (!isBlank(rsActionName)) {</span>
+<span class="nc" id="L73">            trace(keyPrefix + normalizeNamed, KEY_NAME, rsActionName);</span>
+<span class="nc" id="L74">            action.setName(rsActionName);</span>
+        }
+<span class="nc" id="L76">    }</span>
+
+    protected void trace(@Nonnull String actionKey, @Nonnull String key, @Nonnull String value) {
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        if (LOG.isTraceEnabled()) {</span>
+<span class="nc" id="L80">            LOG.trace(actionKey + DOT + key + EQUALS + value);</span>
+        }
+<span class="nc" id="L82">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

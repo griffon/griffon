@@ -255,5 +255,62 @@ import javafx.scene.input.KeyCombination;
     public String getStyleClass() {
 <span class="pc bpc" id="L256" title="1 of 2 branches missed.">        return styleClass == null ? null : styleClassProperty().get();</span>
     }
+
+    // -- style
+
+    private StringProperty style;
+
+    public final StringProperty styleProperty() {
+<span class="fc bfc" id="L264" title="All 2 branches covered.">        if (style == null) {</span>
+<span class="fc" id="L265">            style = new SimpleStringProperty(this, &quot;style&quot;);</span>
+        }
+<span class="fc" id="L267">        return style;</span>
+    }
+
+    public void setStyle(String style) {
+<span class="nc" id="L271">        styleProperty().set(style);</span>
+<span class="nc" id="L272">    }</span>
+
+    public String getStyle() {
+<span class="pc bpc" id="L275" title="1 of 2 branches missed.">        return style == null ? null : styleProperty().get();</span>
+    }
+
+    // -- graphicStyleClass
+
+    private StringProperty graphicStyleClass;
+
+    public final StringProperty graphicStyleClassProperty() {
+<span class="fc bfc" id="L283" title="All 2 branches covered.">        if (graphicStyleClass == null) {</span>
+<span class="fc" id="L284">            graphicStyleClass = new SimpleStringProperty(this, &quot;graphicStyleClass&quot;);</span>
+        }
+<span class="fc" id="L286">        return graphicStyleClass;</span>
+    }
+
+    public void setGraphicStyleClass(String graphicStyleClass) {
+<span class="nc" id="L290">        graphicStyleClassProperty().set(graphicStyleClass);</span>
+<span class="nc" id="L291">    }</span>
+
+    public String getGraphicStyleClass() {
+<span class="pc bpc" id="L294" title="1 of 2 branches missed.">        return graphicStyleClass == null ? null : graphicStyleClassProperty().get();</span>
+    }
+
+    // -- graphicStyle
+
+    private StringProperty graphicStyle;
+
+    public final StringProperty graphicStyleProperty() {
+<span class="fc bfc" id="L302" title="All 2 branches covered.">        if (graphicStyle == null) {</span>
+<span class="fc" id="L303">            graphicStyle = new SimpleStringProperty(this, &quot;graphicStyle&quot;);</span>
+        }
+<span class="fc" id="L305">        return graphicStyle;</span>
+    }
+
+    public void setGraphicStyle(String graphicStyle) {
+<span class="nc" id="L309">        graphicStyleProperty().set(graphicStyle);</span>
+<span class="nc" id="L310">    }</span>
+
+    public String getGraphicStyle() {
+<span class="pc bpc" id="L313" title="1 of 2 branches missed.">        return graphicStyle == null ? null : graphicStyleProperty().get();</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

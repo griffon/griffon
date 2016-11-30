@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static griffon.util.GriffonApplicationUtils.isMacOSX;
+import static griffon.util.GriffonNameUtils.getNaturalName;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.TypeUtils.castToBoolean;
 
@@ -34,90 +35,164 @@ import static griffon.util.TypeUtils.castToBoolean;
  * @since 2.0.0
  */
 public class JavaFXActionManager extends AbstractActionManager {
-<span class="fc" id="L37">    private static final Logger LOG = LoggerFactory.getLogger(JavaFXActionManager.class);</span>
+<span class="fc" id="L38">    private static final Logger LOG = LoggerFactory.getLogger(JavaFXActionManager.class);</span>
+
+    private static final String EMPTY_STRING = &quot;&quot;;
+    private static final String DOT = &quot;.&quot;;
+    private static final String EQUALS = &quot; = &quot;;
+    private static final String KEY_NAME = &quot;name&quot;;
+    private static final String KEY_ACCELERATOR = &quot;accelerator&quot;;
+    private static final String KEY_DESCRIPTION = &quot;description&quot;;
+    private static final String KEY_ICON = &quot;icon&quot;;
+    private static final String KEY_IMAGE = &quot;image&quot;;
+    private static final String KEY_ENABLED = &quot;enabled&quot;;
+    private static final String KEY_SELECTED = &quot;selected&quot;;
+    private static final String KEY_VISIBLE = &quot;visible&quot;;
+    private static final String KEY_STYLE_CLASS = &quot;styleclass&quot;;
+    private static final String KEY_STYLE = &quot;style&quot;;
+    private static final String KEY_GRAPHIC_STYLE_CLASS = &quot;graphic_styleclass&quot;;
+    private static final String KEY_GRAPHIC_STYLE = &quot;graphic_style&quot;;
+    private static final String KEY_CTRL = &quot;ctrl&quot;;
+    private static final String KEY_META = &quot;meta&quot;;
+    private static final String TRUE = &quot;true&quot;;
+    private static final String FALSE = &quot;false&quot;;
 
     @Inject
     public JavaFXActionManager(@Nonnull GriffonApplication application) {
-<span class="fc" id="L41">        super(application);</span>
-<span class="fc" id="L42">    }</span>
+<span class="fc" id="L62">        super(application);</span>
+<span class="fc" id="L63">    }</span>
 
     @Nonnull
     @Override
     protected Action createControllerAction(@Nonnull GriffonController controller, @Nonnull String actionName) {
-<span class="fc" id="L47">        return new JavaFXGriffonControllerAction(getUiThreadManager(), this, controller, actionName);</span>
+<span class="fc" id="L68">        return new JavaFXGriffonControllerAction(getUiThreadManager(), this, controller, actionName);</span>
     }
 
     @Override
-    protected void doConfigureAction(@Nonnull Action action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
-<span class="fc" id="L52">        JavaFXGriffonControllerAction javafxAction = (JavaFXGriffonControllerAction) action;</span>
+    protected void doConfigureAction(@Nonnull final Action action, @Nonnull final GriffonController controller, @Nonnull final String normalizeNamed, @Nonnull final String keyPrefix) {
+<span class="pc" id="L73">        controller.getApplication().addPropertyChangeListener(GriffonApplication.PROPERTY_LOCALE, evt -&gt; configureAction((JavaFXGriffonControllerAction) action, controller, normalizeNamed, keyPrefix));</span>
+<span class="fc" id="L74">        configureAction((JavaFXGriffonControllerAction) action, controller, normalizeNamed, keyPrefix);</span>
+<span class="fc" id="L75">    }</span>
 
-<span class="fc" id="L54">        String rsAccelerator = msg(keyPrefix, normalizeNamed, &quot;accelerator&quot;, &quot;&quot;);</span>
-<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        if (!isBlank(rsAccelerator)) {</span>
+    protected void configureAction(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+<span class="fc" id="L78">        resolveName(action, controller, normalizeNamed, keyPrefix);</span>
+<span class="fc" id="L79">        resolveAccelerator(action, controller, normalizeNamed, keyPrefix);</span>
+<span class="fc" id="L80">        resolveDescription(action, controller, normalizeNamed, keyPrefix);</span>
+<span class="fc" id="L81">        resolveIcon(action, controller, normalizeNamed, keyPrefix);</span>
+<span class="fc" id="L82">        resolveImage(action, controller, normalizeNamed, keyPrefix);</span>
+<span class="fc" id="L83">        resolveEnabled(action, controller, normalizeNamed, keyPrefix);</span>
+<span class="fc" id="L84">        resolveSelected(action, controller, normalizeNamed, keyPrefix);</span>
+<span class="fc" id="L85">        resolveVisible(action, controller, normalizeNamed, keyPrefix);</span>
+<span class="fc" id="L86">        resolveStyleClass(action, controller, normalizeNamed, keyPrefix);</span>
+<span class="fc" id="L87">        resolveStyle(action, controller, normalizeNamed, keyPrefix);</span>
+<span class="fc" id="L88">        resolveGraphicStyleClass(action, controller, normalizeNamed, keyPrefix);</span>
+<span class="fc" id="L89">        resolveGraphicStyle(action, controller, normalizeNamed, keyPrefix);</span>
+<span class="fc" id="L90">    }</span>
+
+    protected void resolveName(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+<span class="fc" id="L93">        String rsActionName = msg(keyPrefix, normalizeNamed, KEY_NAME, getNaturalName(normalizeNamed));</span>
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        if (!isBlank(rsActionName)) {</span>
+<span class="fc" id="L95">            trace(keyPrefix + normalizeNamed, KEY_NAME, rsActionName);</span>
+<span class="fc" id="L96">            action.setName(rsActionName);</span>
+        }
+<span class="fc" id="L98">    }</span>
+
+    protected void resolveAccelerator(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+<span class="fc" id="L101">        String rsAccelerator = msg(keyPrefix, normalizeNamed, KEY_ACCELERATOR, EMPTY_STRING);</span>
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">        if (!isBlank(rsAccelerator)) {</span>
             //noinspection ConstantConditions
-<span class="nc bnc" id="L57" title="All 6 branches missed.">            if (!isMacOSX() &amp;&amp; rsAccelerator.contains(&quot;meta&quot;) &amp;&amp; !rsAccelerator.contains(&quot;ctrl&quot;)) {</span>
-<span class="nc" id="L58">                rsAccelerator = rsAccelerator.replace(&quot;meta&quot;, &quot;ctrl&quot;);</span>
+<span class="nc bnc" id="L104" title="All 6 branches missed.">            if (!isMacOSX() &amp;&amp; rsAccelerator.contains(KEY_META) &amp;&amp; !rsAccelerator.contains(KEY_CTRL)) {</span>
+<span class="nc" id="L105">                rsAccelerator = rsAccelerator.replace(KEY_META, KEY_CTRL);</span>
             }
-<span class="nc bnc" id="L60" title="All 2 branches missed.">            if (LOG.isTraceEnabled()) {</span>
-<span class="nc" id="L61">                LOG.trace(keyPrefix + normalizeNamed + &quot;.accelerator = &quot; + rsAccelerator);</span>
-            }
-<span class="nc" id="L63">            javafxAction.setAccelerator(rsAccelerator);</span>
+<span class="nc" id="L107">            trace(keyPrefix + normalizeNamed, KEY_ACCELERATOR, rsAccelerator);</span>
+<span class="nc" id="L108">            action.setAccelerator(rsAccelerator);</span>
         }
+<span class="fc" id="L110">    }</span>
 
-<span class="fc" id="L66">        String rsDescription = msg(keyPrefix, normalizeNamed, &quot;description&quot;, &quot;&quot;);</span>
-<span class="pc bpc" id="L67" title="1 of 2 branches missed.">        if (!isBlank(rsDescription)) {</span>
-<span class="nc bnc" id="L68" title="All 2 branches missed.">            if (LOG.isTraceEnabled()) {</span>
-<span class="nc" id="L69">                LOG.trace(keyPrefix + normalizeNamed + &quot;.description = &quot; + rsDescription);</span>
-            }
-<span class="nc" id="L71">            javafxAction.setDescription(rsDescription);</span>
+    protected void resolveDescription(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+<span class="fc" id="L113">        String rsDescription = msg(keyPrefix, normalizeNamed, KEY_DESCRIPTION, EMPTY_STRING);</span>
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">        if (!isBlank(rsDescription)) {</span>
+<span class="nc" id="L115">            trace(keyPrefix + normalizeNamed, KEY_DESCRIPTION, rsDescription);</span>
+<span class="nc" id="L116">            action.setDescription(rsDescription);</span>
         }
+<span class="fc" id="L118">    }</span>
 
-<span class="fc" id="L74">        String rsIcon = msg(keyPrefix, normalizeNamed, &quot;icon&quot;, &quot;&quot;);</span>
-<span class="pc bpc" id="L75" title="1 of 2 branches missed.">        if (!isBlank(rsIcon)) {</span>
-<span class="nc bnc" id="L76" title="All 2 branches missed.">            if (LOG.isTraceEnabled()) {</span>
-<span class="nc" id="L77">                LOG.trace(keyPrefix + normalizeNamed + &quot;.icon = &quot; + rsIcon);</span>
-            }
-<span class="nc" id="L79">            javafxAction.setIcon(rsIcon);</span>
+    protected void resolveIcon(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+<span class="fc" id="L121">        String rsIcon = msg(keyPrefix, normalizeNamed, KEY_ICON, EMPTY_STRING);</span>
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">        if (!isBlank(rsIcon)) {</span>
+<span class="nc" id="L123">            trace(keyPrefix + normalizeNamed, KEY_ICON, rsIcon);</span>
+<span class="nc" id="L124">            action.setIcon(rsIcon);</span>
         }
+<span class="fc" id="L126">    }</span>
 
-<span class="fc" id="L82">        String rsImage = msg(keyPrefix, normalizeNamed, &quot;image&quot;, &quot;&quot;);</span>
-<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        if (!isBlank(rsImage)) {</span>
-<span class="nc bnc" id="L84" title="All 2 branches missed.">            if (LOG.isTraceEnabled()) {</span>
-<span class="nc" id="L85">                LOG.trace(keyPrefix + normalizeNamed + &quot;.image = &quot; + rsImage);</span>
-            }
-<span class="nc" id="L87">            javafxAction.setImage(rsImage);</span>
+    protected void resolveImage(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+<span class="fc" id="L129">        String rsImage = msg(keyPrefix, normalizeNamed, KEY_IMAGE, EMPTY_STRING);</span>
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">        if (!isBlank(rsImage)) {</span>
+<span class="nc" id="L131">            trace(keyPrefix + normalizeNamed, KEY_IMAGE, rsImage);</span>
+<span class="nc" id="L132">            action.setImage(rsImage);</span>
         }
+<span class="fc" id="L134">    }</span>
 
-<span class="fc" id="L90">        String rsEnabled = msg(keyPrefix, normalizeNamed, &quot;enabled&quot;, &quot;true&quot;);</span>
-<span class="pc bpc" id="L91" title="1 of 2 branches missed.">        if (!isBlank(rsEnabled)) {</span>
-<span class="pc bpc" id="L92" title="1 of 2 branches missed.">            if (LOG.isTraceEnabled()) {</span>
-<span class="fc" id="L93">                LOG.trace(keyPrefix + normalizeNamed + &quot;.enabled = &quot; + rsEnabled);</span>
-            }
-<span class="fc" id="L95">            javafxAction.setEnabled(castToBoolean(rsEnabled));</span>
+    protected void resolveEnabled(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+<span class="fc" id="L137">        String rsEnabled = msg(keyPrefix, normalizeNamed, KEY_ENABLED, TRUE);</span>
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">        if (!isBlank(rsEnabled)) {</span>
+<span class="fc" id="L139">            trace(keyPrefix + normalizeNamed, KEY_ENABLED, rsEnabled);</span>
+<span class="fc" id="L140">            action.setEnabled(castToBoolean(rsEnabled));</span>
         }
+<span class="fc" id="L142">    }</span>
 
-<span class="fc" id="L98">        String rsSelected = msg(keyPrefix, normalizeNamed, &quot;selected&quot;, &quot;false&quot;);</span>
-<span class="pc bpc" id="L99" title="1 of 2 branches missed.">        if (!isBlank(rsSelected)) {</span>
-<span class="pc bpc" id="L100" title="1 of 2 branches missed.">            if (LOG.isTraceEnabled()) {</span>
-<span class="fc" id="L101">                LOG.trace(keyPrefix + normalizeNamed + &quot;.selected = &quot; + rsSelected);</span>
-            }
-<span class="fc" id="L103">            javafxAction.setSelected(castToBoolean(rsSelected));</span>
+    protected void resolveSelected(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+<span class="fc" id="L145">        String rsSelected = msg(keyPrefix, normalizeNamed, KEY_SELECTED, FALSE);</span>
+<span class="pc bpc" id="L146" title="1 of 2 branches missed.">        if (!isBlank(rsSelected)) {</span>
+<span class="fc" id="L147">            trace(keyPrefix + normalizeNamed, KEY_SELECTED, rsSelected);</span>
+<span class="fc" id="L148">            action.setSelected(castToBoolean(rsSelected));</span>
         }
+<span class="fc" id="L150">    }</span>
 
-<span class="fc" id="L106">        String rsVisible = msg(keyPrefix, normalizeNamed, &quot;visible&quot;, &quot;true&quot;);</span>
-<span class="pc bpc" id="L107" title="1 of 2 branches missed.">        if (!isBlank(rsVisible)) {</span>
-<span class="pc bpc" id="L108" title="1 of 2 branches missed.">            if (LOG.isTraceEnabled()) {</span>
-<span class="fc" id="L109">                LOG.trace(keyPrefix + normalizeNamed + &quot;.visible = &quot; + rsVisible);</span>
-            }
-<span class="fc" id="L111">            javafxAction.setVisible(castToBoolean(rsVisible));</span>
+    protected void resolveVisible(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+<span class="fc" id="L153">        String rsVisible = msg(keyPrefix, normalizeNamed, KEY_VISIBLE, TRUE);</span>
+<span class="pc bpc" id="L154" title="1 of 2 branches missed.">        if (!isBlank(rsVisible)) {</span>
+<span class="fc" id="L155">            trace(keyPrefix + normalizeNamed, KEY_VISIBLE, rsVisible);</span>
+<span class="fc" id="L156">            action.setVisible(castToBoolean(rsVisible));</span>
         }
+<span class="fc" id="L158">    }</span>
 
-<span class="fc" id="L114">        String rsStyleClass = msg(keyPrefix, normalizeNamed, &quot;styleclass&quot;, &quot;&quot;);</span>
-<span class="pc bpc" id="L115" title="1 of 2 branches missed.">        if (!isBlank(rsStyleClass)) {</span>
-<span class="nc bnc" id="L116" title="All 2 branches missed.">            if (LOG.isTraceEnabled()) {</span>
-<span class="nc" id="L117">                LOG.trace(keyPrefix + normalizeNamed + &quot;.styleclass = &quot; + rsStyleClass);</span>
-            }
-<span class="nc" id="L119">            javafxAction.setStyleClass(rsStyleClass);</span>
+    protected void resolveStyleClass(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+<span class="fc" id="L161">        String rsStyleClass = msg(keyPrefix, normalizeNamed, KEY_STYLE_CLASS, EMPTY_STRING);</span>
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">        if (!isBlank(rsStyleClass)) {</span>
+<span class="nc" id="L163">            trace(keyPrefix + normalizeNamed, KEY_STYLE_CLASS, rsStyleClass);</span>
+<span class="nc" id="L164">            action.setStyleClass(rsStyleClass);</span>
         }
-<span class="fc" id="L121">    }</span>
+<span class="fc" id="L166">    }</span>
+
+    protected void resolveStyle(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+<span class="fc" id="L169">        String rsStyle = msg(keyPrefix, normalizeNamed, KEY_STYLE, EMPTY_STRING);</span>
+<span class="pc bpc" id="L170" title="1 of 2 branches missed.">        if (!isBlank(rsStyle)) {</span>
+<span class="nc" id="L171">            trace(keyPrefix + normalizeNamed, KEY_STYLE, rsStyle);</span>
+<span class="nc" id="L172">            action.setStyle(rsStyle);</span>
+        }
+<span class="fc" id="L174">    }</span>
+
+    protected void resolveGraphicStyleClass(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+<span class="fc" id="L177">        String rsGraphicStyleClass = msg(keyPrefix, normalizeNamed, KEY_GRAPHIC_STYLE_CLASS, EMPTY_STRING);</span>
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">        if (!isBlank(rsGraphicStyleClass)) {</span>
+<span class="nc" id="L179">            trace(keyPrefix + normalizeNamed, KEY_GRAPHIC_STYLE_CLASS, rsGraphicStyleClass);</span>
+<span class="nc" id="L180">            action.setGraphicStyleClass(rsGraphicStyleClass);</span>
+        }
+<span class="fc" id="L182">    }</span>
+
+    protected void resolveGraphicStyle(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+<span class="fc" id="L185">        String rsGraphicStyle = msg(keyPrefix, normalizeNamed, KEY_GRAPHIC_STYLE, EMPTY_STRING);</span>
+<span class="pc bpc" id="L186" title="1 of 2 branches missed.">        if (!isBlank(rsGraphicStyle)) {</span>
+<span class="nc" id="L187">            trace(keyPrefix + normalizeNamed, KEY_GRAPHIC_STYLE, rsGraphicStyle);</span>
+<span class="nc" id="L188">            action.setGraphicStyle(rsGraphicStyle);</span>
+        }
+<span class="fc" id="L190">    }</span>
+
+    protected void trace(@Nonnull String actionKey, @Nonnull String key, @Nonnull String value) {
+<span class="pc bpc" id="L193" title="1 of 2 branches missed.">        if (LOG.isTraceEnabled()) {</span>
+<span class="fc" id="L194">            LOG.trace(actionKey + DOT + key + EQUALS + value);</span>
+        }
+<span class="fc" id="L196">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

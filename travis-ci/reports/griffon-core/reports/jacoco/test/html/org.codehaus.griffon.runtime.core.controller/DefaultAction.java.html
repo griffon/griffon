@@ -44,12 +44,12 @@ public class DefaultAction extends AbstractAction {
         });
 <span class="fc" id="L45">        addPropertyChangeListener(new PropertyChangeListener() {</span>
             public void propertyChange(final PropertyChangeEvent evt) {
-<span class="fc" id="L47">                uiThreadManager.runInsideUIAsync(new Runnable() {</span>
+<span class="nc" id="L47">                uiThreadManager.runInsideUIAsync(new Runnable() {</span>
                     public void run() {
-<span class="fc" id="L49">                        toolkitAction.setName(String.valueOf(evt.getNewValue()));</span>
-<span class="fc" id="L50">                    }</span>
+<span class="nc" id="L49">                        toolkitAction.setName(String.valueOf(evt.getNewValue()));</span>
+<span class="nc" id="L50">                    }</span>
                 });
-<span class="fc" id="L52">            }</span>
+<span class="nc" id="L52">            }</span>
         });
 <span class="fc" id="L54">    }</span>
 

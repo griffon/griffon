@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractUIThreadAwareObservableNumberValue.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-javafx</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.support</a> &gt; <span class="el_source">AbstractUIThreadAwareObservableNumberValue.java</span></div><h1>AbstractUIThreadAwareObservableNumberValue.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2016 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.support;
+
+import javafx.beans.InvalidationListener;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableNumberValue;
+
+import javax.annotation.Nonnull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.9.0
+ */
+class AbstractUIThreadAwareObservableNumberValue&lt;T&gt; implements ObservableNumberValue, UIThreadAware {
+    private final ObservableNumberValue delegate;
+
+<span class="nc" id="L31">    AbstractUIThreadAwareObservableNumberValue(ObservableNumberValue delegate) {</span>
+<span class="nc" id="L32">        this.delegate = delegate;</span>
+<span class="nc" id="L33">    }</span>
+
+    @Nonnull
+    public ObservableNumberValue getDelegate() {
+<span class="nc" id="L37">        return delegate;</span>
+    }
+
+    @Override
+    public int intValue() {
+<span class="nc" id="L42">        return delegate.intValue();</span>
+    }
+
+    @Override
+    public long longValue() {
+<span class="nc" id="L47">        return delegate.longValue();</span>
+    }
+
+    @Override
+    public float floatValue() {
+<span class="nc" id="L52">        return delegate.floatValue();</span>
+    }
+
+    @Override
+    public double doubleValue() {
+<span class="nc" id="L57">        return delegate.doubleValue();</span>
+    }
+
+    @Override
+    public Number getValue() {
+<span class="nc" id="L62">        return delegate.getValue();</span>
+    }
+
+    @Override
+    public void addListener(ChangeListener&lt;? super Number&gt; listener) {
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (listener instanceof UIThreadAware) {</span>
+<span class="nc" id="L68">            delegate.addListener(listener);</span>
+        } else {
+<span class="nc" id="L70">            delegate.addListener(new UIThreadAwareChangeListener&lt;&gt;(listener));</span>
+        }
+<span class="nc" id="L72">    }</span>
+
+    @Override
+    public void removeListener(ChangeListener&lt;? super Number&gt; listener) {
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        if (listener instanceof UIThreadAware) {</span>
+<span class="nc" id="L77">            delegate.removeListener(listener);</span>
+        } else {
+<span class="nc" id="L79">            delegate.removeListener(new UIThreadAwareChangeListener&lt;&gt;(listener));</span>
+        }
+<span class="nc" id="L81">    }</span>
+
+    @Override
+    public void addListener(InvalidationListener listener) {
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        if (listener instanceof UIThreadAware) {</span>
+<span class="nc" id="L86">            delegate.addListener(listener);</span>
+        } else {
+<span class="nc" id="L88">            delegate.addListener(new UIThreadAwareInvalidationListener(listener));</span>
+        }
+<span class="nc" id="L90">    }</span>
+
+    @Override
+    public void removeListener(InvalidationListener listener) {
+<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (listener instanceof UIThreadAware) {</span>
+<span class="nc" id="L95">            delegate.removeListener(listener);</span>
+        } else {
+<span class="nc" id="L97">            delegate.removeListener(new UIThreadAwareInvalidationListener(listener));</span>
+        }
+<span class="nc" id="L99">    }</span>
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L103" title="All 4 branches missed.">        return this == o || delegate.equals(o);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L108">        return delegate.hashCode();</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L113">        return getClass().getName() + &quot;:&quot; + delegate.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

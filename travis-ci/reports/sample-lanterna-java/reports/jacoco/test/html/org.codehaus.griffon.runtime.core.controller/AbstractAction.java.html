@@ -97,7 +97,7 @@ public abstract class AbstractAction extends AbstractObservable implements Actio
 
     public final void initialize() {
 <span class="fc" id="L99">        synchronized (lock) {</span>
-<span class="pc bpc" id="L100" title="1 of 2 branches missed.">            if (initialized) return;</span>
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">            if (initialized) { return; }</span>
 <span class="fc" id="L101">            doInitialize();</span>
 <span class="fc" id="L102">            initialized = true;</span>
 <span class="pc" id="L103">        }</span>

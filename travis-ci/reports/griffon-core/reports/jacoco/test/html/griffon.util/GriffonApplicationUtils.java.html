@@ -264,318 +264,320 @@ public final class GriffonApplicationUtils {
 <span class="fc" id="L264">        javaVersion = System.getProperty(&quot;java.version&quot;);</span>
 <span class="fc" id="L265">        String version = javaVersion.substring(0, 3);</span>
 <span class="fc" id="L266">        isJdk4 = true;</span>
-<span class="pc bpc" id="L267" title="19 of 22 branches missed.">        switch (version) {</span>
-            case &quot;1.9&quot;:
-<span class="nc" id="L269">                isJdk9 = true;</span>
-<span class="nc" id="L270">                isJdk8 = true;</span>
-<span class="nc" id="L271">                isJdk7 = true;</span>
-<span class="nc" id="L272">                isJdk6 = true;</span>
-<span class="nc" id="L273">                isJdk5 = true;</span>
-<span class="nc" id="L274">                break;</span>
-            case &quot;1.8&quot;:
-<span class="fc" id="L276">                isJdk9 = false;</span>
-<span class="fc" id="L277">                isJdk8 = true;</span>
-<span class="fc" id="L278">                isJdk7 = true;</span>
-<span class="fc" id="L279">                isJdk6 = true;</span>
-<span class="fc" id="L280">                isJdk5 = true;</span>
-<span class="fc" id="L281">                break;</span>
-            case &quot;1.7&quot;:
-<span class="nc" id="L283">                isJdk9 = false;</span>
-<span class="nc" id="L284">                isJdk8 = false;</span>
-<span class="nc" id="L285">                isJdk7 = true;</span>
-<span class="nc" id="L286">                isJdk6 = true;</span>
-<span class="nc" id="L287">                isJdk5 = true;</span>
-<span class="nc" id="L288">                break;</span>
-            case &quot;1.6&quot;:
-<span class="nc" id="L290">                isJdk9 = false;</span>
-<span class="nc" id="L291">                isJdk8 = false;</span>
-<span class="nc" id="L292">                isJdk7 = false;</span>
-<span class="nc" id="L293">                isJdk6 = true;</span>
-<span class="nc" id="L294">                isJdk5 = true;</span>
-<span class="nc" id="L295">                break;</span>
-            case &quot;1.5&quot;:
-<span class="nc" id="L297">                isJdk9 = false;</span>
-<span class="nc" id="L298">                isJdk8 = false;</span>
-<span class="nc" id="L299">                isJdk7 = false;</span>
-<span class="nc" id="L300">                isJdk6 = false;</span>
-<span class="nc" id="L301">                isJdk5 = true;</span>
-<span class="nc" id="L302">                break;</span>
-            default:
-<span class="nc" id="L304">                isJdk9 = false;</span>
-<span class="nc" id="L305">                isJdk8 = false;</span>
-<span class="nc" id="L306">                isJdk7 = false;</span>
-<span class="nc" id="L307">                isJdk6 = false;</span>
-<span class="nc" id="L308">                isJdk5 = false;</span>
-                break;
+
+<span class="pc bpc" id="L268" title="1 of 2 branches missed.">        if (version.startsWith(&quot;9&quot;)) {</span>
+<span class="nc" id="L269">            isJdk9 = true;</span>
+<span class="nc" id="L270">            isJdk8 = true;</span>
+<span class="nc" id="L271">            isJdk7 = true;</span>
+<span class="nc" id="L272">            isJdk6 = true;</span>
+<span class="nc" id="L273">            isJdk5 = true;</span>
+        } else {
+<span class="pc bpc" id="L275" title="15 of 18 branches missed.">            switch (version) {</span>
+                case &quot;1.8&quot;:
+<span class="fc" id="L277">                    isJdk9 = false;</span>
+<span class="fc" id="L278">                    isJdk8 = true;</span>
+<span class="fc" id="L279">                    isJdk7 = true;</span>
+<span class="fc" id="L280">                    isJdk6 = true;</span>
+<span class="fc" id="L281">                    isJdk5 = true;</span>
+<span class="fc" id="L282">                    break;</span>
+                case &quot;1.7&quot;:
+<span class="nc" id="L284">                    isJdk9 = false;</span>
+<span class="nc" id="L285">                    isJdk8 = false;</span>
+<span class="nc" id="L286">                    isJdk7 = true;</span>
+<span class="nc" id="L287">                    isJdk6 = true;</span>
+<span class="nc" id="L288">                    isJdk5 = true;</span>
+<span class="nc" id="L289">                    break;</span>
+                case &quot;1.6&quot;:
+<span class="nc" id="L291">                    isJdk9 = false;</span>
+<span class="nc" id="L292">                    isJdk8 = false;</span>
+<span class="nc" id="L293">                    isJdk7 = false;</span>
+<span class="nc" id="L294">                    isJdk6 = true;</span>
+<span class="nc" id="L295">                    isJdk5 = true;</span>
+<span class="nc" id="L296">                    break;</span>
+                case &quot;1.5&quot;:
+<span class="nc" id="L298">                    isJdk9 = false;</span>
+<span class="nc" id="L299">                    isJdk8 = false;</span>
+<span class="nc" id="L300">                    isJdk7 = false;</span>
+<span class="nc" id="L301">                    isJdk6 = false;</span>
+<span class="nc" id="L302">                    isJdk5 = true;</span>
+<span class="nc" id="L303">                    break;</span>
+                default:
+<span class="nc" id="L305">                    isJdk9 = false;</span>
+<span class="nc" id="L306">                    isJdk8 = false;</span>
+<span class="nc" id="L307">                    isJdk7 = false;</span>
+<span class="nc" id="L308">                    isJdk6 = false;</span>
+<span class="nc" id="L309">                    isJdk5 = false;</span>
+                    break;
+            }
         }
 
-<span class="pc bpc" id="L312" title="2 of 4 branches missed.">        platform = basePlatform + (is64Bit &amp;&amp; !isSolaris ? &quot;64&quot; : &quot;&quot;);</span>
-<span class="fc" id="L313">    }</span>
+<span class="pc bpc" id="L314" title="2 of 4 branches missed.">        platform = basePlatform + (is64Bit &amp;&amp; !isSolaris ? &quot;64&quot; : &quot;&quot;);</span>
+<span class="fc" id="L315">    }</span>
 
     public static boolean isWindows() {
-<span class="nc" id="L316">        return isWindows;</span>
+<span class="nc" id="L318">        return isWindows;</span>
     }
 
     public static boolean isWindows95() {
-<span class="nc" id="L320">        return isWindows95;</span>
+<span class="nc" id="L322">        return isWindows95;</span>
     }
 
     public static boolean isWindows98() {
-<span class="nc" id="L324">        return isWindows98;</span>
+<span class="nc" id="L326">        return isWindows98;</span>
     }
 
     public static boolean isWindowsNT() {
-<span class="nc" id="L328">        return isWindowsNT;</span>
+<span class="nc" id="L330">        return isWindowsNT;</span>
     }
 
     public static boolean isWindows2000() {
-<span class="nc" id="L332">        return isWindows2000;</span>
+<span class="nc" id="L334">        return isWindows2000;</span>
     }
 
     public static boolean isWindows2003() {
-<span class="nc" id="L336">        return isWindows2003;</span>
+<span class="nc" id="L338">        return isWindows2003;</span>
     }
 
     public static boolean isWindowsXP() {
-<span class="nc" id="L340">        return isWindowsXP;</span>
+<span class="nc" id="L342">        return isWindowsXP;</span>
     }
 
     public static boolean isWindowsVista() {
-<span class="nc" id="L344">        return isWindowsVista;</span>
+<span class="nc" id="L346">        return isWindowsVista;</span>
     }
 
     public static boolean isWindows7() {
-<span class="nc" id="L348">        return isWindows7;</span>
+<span class="nc" id="L350">        return isWindows7;</span>
     }
 
     public static boolean isWindows8() {
-<span class="nc" id="L352">        return isWindows8;</span>
+<span class="nc" id="L354">        return isWindows8;</span>
     }
 
     public static boolean isWindows10() {
-<span class="nc" id="L356">        return isWindows10;</span>
+<span class="nc" id="L358">        return isWindows10;</span>
     }
 
     public static boolean isUnix() {
-<span class="nc" id="L360">        return isUnix;</span>
+<span class="nc" id="L362">        return isUnix;</span>
     }
 
     public static boolean isLinux() {
-<span class="nc" id="L364">        return isLinux;</span>
+<span class="nc" id="L366">        return isLinux;</span>
     }
 
     public static boolean isSolaris() {
-<span class="nc" id="L368">        return isSolaris;</span>
+<span class="nc" id="L370">        return isSolaris;</span>
     }
 
     public static boolean isMacOSX() {
-<span class="nc" id="L372">        return isMacOSX;</span>
+<span class="nc" id="L374">        return isMacOSX;</span>
     }
 
     public static String getOsArch() {
-<span class="nc" id="L376">        return osArch;</span>
+<span class="nc" id="L378">        return osArch;</span>
     }
 
     public static String getOsName() {
-<span class="nc" id="L380">        return osName;</span>
+<span class="nc" id="L382">        return osName;</span>
     }
 
     public static String getOsVersion() {
-<span class="nc" id="L384">        return osVersion;</span>
+<span class="nc" id="L386">        return osVersion;</span>
     }
 
     public static String getJavaVersion() {
-<span class="nc" id="L388">        return javaVersion;</span>
+<span class="nc" id="L390">        return javaVersion;</span>
     }
 
     public static boolean is64Bit() {
-<span class="nc" id="L392">        return is64Bit;</span>
+<span class="nc" id="L394">        return is64Bit;</span>
     }
 
     @Deprecated
     public static boolean isJdk14() {
-<span class="nc" id="L397">        return isJdk4();</span>
+<span class="nc" id="L399">        return isJdk4();</span>
     }
 
     @Deprecated
     public static boolean isJdk15() {
-<span class="nc" id="L402">        return isJdk5();</span>
+<span class="nc" id="L404">        return isJdk5();</span>
     }
 
     @Deprecated
     public static boolean isJdk16() {
-<span class="nc" id="L407">        return isJdk6();</span>
+<span class="nc" id="L409">        return isJdk6();</span>
     }
 
     @Deprecated
     public static boolean isJdk17() {
-<span class="nc" id="L412">        return isJdk7();</span>
+<span class="nc" id="L414">        return isJdk7();</span>
     }
 
     @Deprecated
     public static boolean isJdk18() {
-<span class="nc" id="L417">        return isJdk8();</span>
+<span class="nc" id="L419">        return isJdk8();</span>
     }
 
     public static boolean isJdk4() {
-<span class="nc" id="L421">        return isJdk4;</span>
+<span class="nc" id="L423">        return isJdk4;</span>
     }
 
     public static boolean isJdk5() {
-<span class="nc" id="L425">        return isJdk5;</span>
+<span class="nc" id="L427">        return isJdk5;</span>
     }
 
     public static boolean isJdk6() {
-<span class="nc" id="L429">        return isJdk6;</span>
+<span class="nc" id="L431">        return isJdk6;</span>
     }
 
     public static boolean isJdk7() {
-<span class="nc" id="L433">        return isJdk7;</span>
+<span class="nc" id="L435">        return isJdk7;</span>
     }
 
     public static boolean isJdk8() {
-<span class="nc" id="L437">        return isJdk8;</span>
+<span class="nc" id="L439">        return isJdk8;</span>
     }
 
     public static boolean isJdk9() {
-<span class="nc" id="L441">        return isJdk9;</span>
+<span class="nc" id="L443">        return isJdk9;</span>
     }
 
     public static String getPlatform() {
-<span class="nc" id="L445">        return platform;</span>
+<span class="nc" id="L447">        return platform;</span>
     }
 
     public static String getBasePlatform() {
-<span class="nc" id="L449">        return basePlatform;</span>
+<span class="nc" id="L451">        return basePlatform;</span>
     }
 
     public static boolean getIsWindows() {
-<span class="nc" id="L453">        return isWindows;</span>
+<span class="nc" id="L455">        return isWindows;</span>
     }
 
     public static boolean getIsWindows95() {
-<span class="nc" id="L457">        return isWindows95;</span>
+<span class="nc" id="L459">        return isWindows95;</span>
     }
 
     public static boolean getIsWindows98() {
-<span class="nc" id="L461">        return isWindows98;</span>
+<span class="nc" id="L463">        return isWindows98;</span>
     }
 
     public static boolean getIsWindowsNT() {
-<span class="nc" id="L465">        return isWindowsNT;</span>
+<span class="nc" id="L467">        return isWindowsNT;</span>
     }
 
     public static boolean getIsWindows2000() {
-<span class="nc" id="L469">        return isWindows2000;</span>
+<span class="nc" id="L471">        return isWindows2000;</span>
     }
 
     public static boolean getIsWindows2003() {
-<span class="nc" id="L473">        return isWindows2003;</span>
+<span class="nc" id="L475">        return isWindows2003;</span>
     }
 
     public static boolean getIsWindowsXP() {
-<span class="nc" id="L477">        return isWindowsXP;</span>
+<span class="nc" id="L479">        return isWindowsXP;</span>
     }
 
     public static boolean getIsWindowsVista() {
-<span class="nc" id="L481">        return isWindowsVista;</span>
+<span class="nc" id="L483">        return isWindowsVista;</span>
     }
 
     public static boolean getIsWindows7() {
-<span class="nc" id="L485">        return isWindows7;</span>
+<span class="nc" id="L487">        return isWindows7;</span>
     }
 
     public static boolean getIsWindows8() {
-<span class="nc" id="L489">        return isWindows8;</span>
+<span class="nc" id="L491">        return isWindows8;</span>
     }
 
     public static boolean getIsWindows10() {
-<span class="nc" id="L493">        return isWindows10;</span>
+<span class="nc" id="L495">        return isWindows10;</span>
     }
 
     public static boolean getIsUnix() {
-<span class="nc" id="L497">        return isUnix;</span>
+<span class="nc" id="L499">        return isUnix;</span>
     }
 
     public static boolean getIsLinux() {
-<span class="nc" id="L501">        return isLinux;</span>
+<span class="nc" id="L503">        return isLinux;</span>
     }
 
     public static boolean getIsSolaris() {
-<span class="nc" id="L505">        return isSolaris;</span>
+<span class="nc" id="L507">        return isSolaris;</span>
     }
 
     public static boolean getIsMacOSX() {
-<span class="nc" id="L509">        return isMacOSX;</span>
+<span class="nc" id="L511">        return isMacOSX;</span>
     }
 
     public static boolean getIs64Bit() {
-<span class="nc" id="L513">        return is64Bit;</span>
+<span class="nc" id="L515">        return is64Bit;</span>
     }
 
     @Deprecated
     public static boolean getIsJdk14() {
-<span class="nc" id="L518">        return isJdk4;</span>
+<span class="nc" id="L520">        return isJdk4;</span>
     }
 
     @Deprecated
     public static boolean getIsJdk15() {
-<span class="nc" id="L523">        return isJdk5;</span>
+<span class="nc" id="L525">        return isJdk5;</span>
     }
 
     @Deprecated
     public static boolean getIsJdk16() {
-<span class="nc" id="L528">        return isJdk6;</span>
+<span class="nc" id="L530">        return isJdk6;</span>
     }
 
     @Deprecated
     public static boolean getIsJdk17() {
-<span class="nc" id="L533">        return isJdk7;</span>
+<span class="nc" id="L535">        return isJdk7;</span>
     }
 
     @Deprecated
     public static boolean getIsJdk18() {
-<span class="nc" id="L538">        return isJdk8;</span>
+<span class="nc" id="L540">        return isJdk8;</span>
     }
 
     public static boolean getIsJdk4() {
-<span class="nc" id="L542">        return isJdk4;</span>
+<span class="nc" id="L544">        return isJdk4;</span>
     }
 
     public static boolean getIsJdk5() {
-<span class="nc" id="L546">        return isJdk5;</span>
+<span class="nc" id="L548">        return isJdk5;</span>
     }
 
     public static boolean getIsJdk6() {
-<span class="nc" id="L550">        return isJdk6;</span>
+<span class="nc" id="L552">        return isJdk6;</span>
     }
 
     public static boolean getIsJdk7() {
-<span class="nc" id="L554">        return isJdk7;</span>
+<span class="nc" id="L556">        return isJdk7;</span>
     }
 
     public static boolean getIsJdk8() {
-<span class="nc" id="L558">        return isJdk8;</span>
+<span class="nc" id="L560">        return isJdk8;</span>
     }
 
     public static boolean getIsJdk9() {
-<span class="nc" id="L562">        return isJdk9;</span>
+<span class="nc" id="L564">        return isJdk9;</span>
     }
 
     @Nonnull
     @SuppressWarnings(&quot;ConstantConditions&quot;)
     public static Locale parseLocale(@Nullable String locale) {
-<span class="fc bfc" id="L568" title="All 2 branches covered.">        if (isBlank(locale)) return Locale.getDefault();</span>
-<span class="fc" id="L569">        String[] parts = locale.split(&quot;_&quot;);</span>
-<span class="fc bfc" id="L570" title="All 4 branches covered.">        switch (parts.length) {</span>
+<span class="fc bfc" id="L570" title="All 2 branches covered.">        if (isBlank(locale)) { return Locale.getDefault(); }</span>
+<span class="fc" id="L571">        String[] parts = locale.split(&quot;_&quot;);</span>
+<span class="fc bfc" id="L572" title="All 4 branches covered.">        switch (parts.length) {</span>
             case 1:
-<span class="fc" id="L572">                return new Locale(parts[0]);</span>
+<span class="fc" id="L574">                return new Locale(parts[0]);</span>
             case 2:
-<span class="fc" id="L574">                return new Locale(parts[0], parts[1]);</span>
+<span class="fc" id="L576">                return new Locale(parts[0], parts[1]);</span>
             case 3:
-<span class="fc" id="L576">                return new Locale(parts[0], parts[1], parts[2]);</span>
+<span class="fc" id="L578">                return new Locale(parts[0], parts[1], parts[2]);</span>
             default:
-<span class="fc" id="L578">                return Locale.getDefault();</span>
+<span class="fc" id="L580">                return Locale.getDefault();</span>
         }
     }
 }
