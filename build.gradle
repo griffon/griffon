@@ -72,6 +72,11 @@ ext {
     projectsWithClirr = []
     depProjects = []
     fullBuild = !travis && !appveyor
+    withDebug = (rootProject.hasProperty('withDebug') && rootProject.withDebug.toBoolean()) || travis
+}
+
+if (rootProject.withDebug) {
+    println "Enabling debug information for compiled classes"
 }
 
 allprojects {
@@ -286,15 +291,11 @@ subprojects { subproj ->
 
 evaluationDependsOnChildren()
 
-coveralls {
-    sourceDirs = projectsWithCoverage.sourceSets.main.allSource.srcDirs.flatten()
-    jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
-}
-
 task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
     dependsOn = projectsWithCoverage.test + projectsWithIntegrationCoverage.integrationTest + projectsWithFunctionalCoverage.functionalTest
-    group = "Reporting"
-    description = "Aggregate Jacoco coverage reports."
+    group = 'Reporting'
+    description = 'Aggregate Jacoco coverage reports.'
+
     additionalSourceDirs = files(projectsWithCoverage.sourceSets.main.allSource.srcDirs)
     sourceDirectories = files(projectsWithCoverage .sourceSets.main.allSource.srcDirs)
     classDirectories = files(projectsWithCoverage.sourceSets.main.output)
@@ -304,9 +305,16 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
         projectsWithFunctionalCoverage.jacocoFunctionalTestReport
     ].unique().executionData)
     reports {
-        html.enabled = true
-        xml.enabled = true
+        xml.enabled true
+        html.enabled true
+        xml.destination "${buildDir}/reports/jacoco/report.xml"
+        html.destination "${buildDir}/reports/jacoco/html"
     }
+}
+
+coveralls {
+    sourceDirs = projectsWithCoverage.sourceSets.main.allSource.srcDirs.flatten()
+    jacocoReportPath = "${buildDir}/reports/jacoco/report.xml"
 }
 
 task clirrRootReport(type: org.kordamp.gradle.clirr.ClirrReportTask) {
