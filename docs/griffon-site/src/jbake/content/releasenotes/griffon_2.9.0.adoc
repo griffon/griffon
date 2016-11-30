@@ -1,0 +1,98 @@
+= Griffon 2.9.0 Release Notes
+Andres Almiray
+2016-12-01
+:jbake-type: post
+:jbake-status: published
+:category: releasenotes
+:idprefix:
+:linkattrs:
+:path-griffon-core: /guide/2.9.0/api/griffon/core
+
+== Griffon 2.9.0 Release Notes
+
+=== Dependencies
+
+No dependencies updated in this release.
+
+=== Runtime
+
+==== Automatic I18N of Action Properties
+
+Action properties can now react to changes made to the application's `Locale`.
+Any properties configured via `messages.properties` will be refreshed when the application's
+`Locale` changes value.
+
+==== JavaFX Support
+
+`Labeled` nodes can react to changes made to the application's `Locale` provided you supply enough information to resolve
+the target message. `JavaFXUtils` exposes 3 new properties and 1 connect method to make this feature work. You may use
+these properties with FXML, for example
+
+[source, xml]
+[subs="verbatim"]
+----
+<Label JavaFXUtils.i18nKey="key.label"
+       JavaFXUtils.i18nArgs="one, two"
+       JavaFXUtils.i18nDefaultValue="No value supplied"/>
+----
+
+You must use the connect method on the `View` class too, like so
+
+[source, java]
+----
+Node node = loadFromFXML();
+if (node instanceof Parent) {
+    scene.setRoot((Parent) node);
+} else {
+    ((Group) scene.getRoot()).getChildren().addAll(node);
+}
+connectActions(node, controller);
+connectMessageSource(node);
+----
+
+`JavaFXAction` supports four new properties:
+
+ * `style`: used to set style on the bound widget.
+ * `graphic`: used to set the graphic node on the bound widget.
+ * `graphicStyle`: used to set style on the graphic node of the bound widget.
+ * `graphicStyleClass`: used to set style classes on the graphic node of the bound widget.
+
+You may define a `&` at the beginning of the value of either `style` or `graphicStyle` properties,
+this instructs the runtime to append the style definition instead of overwriting it.
+
+New `CollectionBindings` class provides binding factories on `ObservableList`/`ObservableSet`/`ObservableMap`
+
+ * Join source observable collection to `StringBinding`.
+ * Calculate `min`, `max`, `average`, and `sum` on source observable collection.
+
+New `FilteringBindings` class provides filtering capabilities on `ObservableList`/`ObservableSet`/`ObservableMap`
+
+ * Filter `ObservableList`/`ObservableSet`/`ObservableMap` and find first match, creating a `ObjectBinding`.
+ * Filter `ObservableList`/`ObservableSet`/`ObservableMap` then map and find first match to X; where X may be a wrapper type, String or a type `R`.
+ * Map elements of `ObservableList`/`ObservableSet`/`ObservableMap` to X then filter and find first match; where X may be a wrapper type, String or a type `R`.
+
+New `ReducingBindings` class provides reduce capabilities on `ObservableList`/`ObservableSet`/`ObservableMap`
+
+ * Reduce `ObservableList`/`ObservableSet`/`ObservableMap` to `ObjectBinding`.
+ * Reduce `ObservableList`/`ObservableSet`/`ObservableMap` then map to X; where X may be a wrapper type, String or a type `R`.
+ * Map elements of `ObservableList`/`ObservableSet`/`ObservableMap` to X then reduce; where X may be a wrapper type, String or a type `R`.
+
+New `MappingBindings` class provides lots of useful binding and property factories
+
+ * Convert `ObservableValue<X>` to is corresponding `XBinding`.
+ * Convert `ObservableXValue` to `ObjectBinding<X>`.
+ * Create bindings that update their value and notify listeners inside the UI thread.
+
+=== Buildtime
+
+==== Gradle Wrapper
+
+Gradle wrapper version on all Lazybones templates has been bumped to `3.2`.
+
+=== Compatibility
+
+Full binary compatibility report between Griffon 2.9.0 and 2.8.0 can be found
+link:../reports/2.9.0/compatibility-report.html[here].
+
+A list of fixed issues can be found at the
+link:https://github.com/griffon/griffon/issues?q=milestone%3A2.9.0+is%3Aclosed[2.9.0 milestone] page.

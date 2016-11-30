@@ -86,14 +86,15 @@ griffon {
 
 [arabic, start=3]
  . Remove `compileGroovy.enabled = false`.
- . Add a dependency for `griffon-fontawesome-plugin`
+ . Add a dependency definition for `ikonli-javafx` and its FontAwesome icon pack.
 
 [source,groovy]
 [subs="attributes"]
 .build.gradle
 ----
 dependencies {
-    griffon 'org.codehaus.griffon.plugins:griffon-fontawesome-plugin:1.4.0'
+    compile 'org.kordamp.ikonli:ikonli-javafx:1.8.0'
+    compile 'org.kordamp.ikonli:ikonli-fontawesome-pack:1.8.0'
 }
 ----
 
@@ -252,8 +253,9 @@ include::{javafx-app}/griffon-app/resources/org/example/tab2.fxml[]
 ----
 
 It looks like any other FXML file except that the button's id follows a naming convention. Notice that the controller
-attribute is set to `org.example.SampleController`. This is the class that defines an action named `sayHello`. Now look
-at the button's id, it's `sayHelloActionTarget`. The Griffon runtime is able to match an action to a corresponding UI
+attribute is set to `org.example.Tab2View`. An instance of this type will receive all injections based on fields
+annotated with `@FXML`. However the controller (`SampleController`)  will react to actions matching a naming convention,
+in our case it will be a single action name `sayHello`. The Griffon runtime is able to match an action to a corresponding UI
 node by using this naming convention. The `Tab2View.java` file defines the second half of this view
 
 .griffon-app/views/org/example/Tab2View.java

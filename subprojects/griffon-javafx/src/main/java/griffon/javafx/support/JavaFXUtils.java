@@ -15,16 +15,23 @@
  */
 package griffon.javafx.support;
 
+import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
 import griffon.core.controller.ActionManager;
 import griffon.core.editors.ValueConversionException;
+import griffon.core.i18n.MessageSource;
 import griffon.exceptions.InstanceMethodInvocationException;
 import javafx.application.Platform;
 import javafx.beans.property.Property;
 import javafx.collections.ListChangeListener;
+import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
+import javafx.collections.ObservableSet;
+import javafx.collections.SetChangeListener;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -63,12 +70,15 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static griffon.core.GriffonApplication.PROPERTY_LOCALE;
+import static griffon.util.GriffonClassUtils.EMPTY_OBJECT_ARRAY;
 import static griffon.util.GriffonClassUtils.getGetterName;
 import static griffon.util.GriffonClassUtils.getPropertyValue;
 import static griffon.util.GriffonClassUtils.invokeExactInstanceMethod;
 import static griffon.util.GriffonClassUtils.invokeInstanceMethod;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -81,14 +91,132 @@ public final class JavaFXUtils {
     private static final String ERROR_ICON_BLANK = "Argument 'iconUrl' must not be blank";
     private static final String ERROR_ID_BLANK = "Argument 'id' must not be blank";
     private static final String ERROR_URL_BLANK = "Argument 'url' must not be blank";
+    private static final String ERROR_KEY_BLANK = "Argument 'key' must not be blank";
+    private static final String ERROR_ARGS_BLANK = "Argument 'args' must not be blank";
     private static final String ERROR_ROOT_NULL = "Argument 'root' must not be null";
     private static final String ERROR_PREDICATE_NULL = "Argument 'predicate' must not be null";
     private static final String ERROR_CONTROLLER_NULL = "Argument 'controller' must not be null";
+    private static final String ERROR_APPLICATION_NULL = "Argument 'application' must not be null";
     private static final String ACTION_TARGET_SUFFIX = "ActionTarget";
     private static final String PROPERTY_SUFFIX = "Property";
 
     private JavaFXUtils() {
 
+    }
+
+    /**
+     * Associates an i18n key to a {@code node}. The key is used to resolve a message via the application's {@code MessageSource}.
+     *
+     * @param node the target node on which the key will be registered.
+     * @param key  the message key to be registered.
+     *
+     * @since 2.9.0
+     */
+    public static void setI18nKey(@Nonnull Labeled node, @Nonnull String key) {
+        requireNonNull(node, ERROR_NODE_NULL);
+        requireNonBlank(key, ERROR_KEY_BLANK);
+        node.getProperties().put(MessageSource.class.getName() + "-KEY", key);
+    }
+
+    /**
+     * Finds out if an i18n {@code key} has been registered with the target {@code Node}, returning the key if found.
+     *
+     * @param node the target node on which the key may have been registered.
+     *
+     * @return the key registered with the target {@code Node} or {@code null} if not found.
+     *
+     * @since 2.9.0
+     */
+    @Nullable
+    public static String getI18nKey(@Nonnull Labeled node) {
+        requireNonNull(node, ERROR_NODE_NULL);
+        return (String) node.getProperties().get(MessageSource.class.getName() + "-KEY");
+    }
+
+    /**
+     * Associates an i18n arrays of arguments to a {@code node}.
+     * These arguments will be used alongside a key to resolve a message via the application's {@code MessageSource}.
+     *
+     * @param node the target node on which the key will be registered.
+     * @param args the array of arguments to be registered.
+     *
+     * @since 2.9.0
+     */
+    public static void setI18nArgs(@Nonnull Labeled node, @Nullable String args) {
+        requireNonNull(node, ERROR_NODE_NULL);
+        requireNonBlank(args, ERROR_ARGS_BLANK);
+        node.getProperties().put(MessageSource.class.getName() + "-ARGS", args);
+    }
+
+    /**
+     * Finds out if an {@code arguments array} has been registered with the target {@code Node}, returning the array if found.
+     *
+     * @param node the target node on which the arguments may have been registered.
+     *
+     * @return the arguments registered with the target {@code Node} or {@code null} if not found.
+     *
+     * @since 2.9.0
+     */
+    @Nullable
+    public static String getI18nArgs(@Nonnull Labeled node) {
+        requireNonNull(node, ERROR_NODE_NULL);
+        return (String) node.getProperties().get(MessageSource.class.getName() + "-ARGS");
+    }
+
+    /**
+     * Associates an default value {@code node}.
+     * The value will be used alongside a key to resolve a message via the application's {@code MessageSource}.
+     *
+     * @param node         the target node on which the key will be registered.
+     * @param defaultValue the value to be registered.
+     *
+     * @since 2.9.0
+     */
+    public static void setI18nDefaultValue(@Nonnull Labeled node, @Nullable String defaultValue) {
+        requireNonNull(node, ERROR_NODE_NULL);
+        node.getProperties().put(MessageSource.class.getName() + "-DEFAULT_VALUE", defaultValue);
+    }
+
+    /**
+     * Finds out if a {@code default value} has been registered with the target {@code Node}, returning the value if found.
+     *
+     * @param node the target node on which the value may have been registered.
+     *
+     * @return the value registered with the target {@code Node} or {@code null} if not found.
+     *
+     * @since 2.9.0
+     */
+    @Nullable
+    public static String getI18nDefaultValue(@Nonnull Labeled node) {
+        requireNonNull(node, ERROR_NODE_NULL);
+        return (String) node.getProperties().get(MessageSource.class.getName() + "-DEFAULT_VALUE");
+    }
+
+    public static void connectMessageSource(@Nonnull Object node, @Nonnull GriffonApplication application) {
+        requireNonNull(node, ERROR_NODE_NULL);
+        requireNonNull(application, ERROR_APPLICATION_NULL);
+
+        findElements(node, arg -> arg instanceof Labeled && !isBlank(getI18nKey((Labeled) arg)))
+            .forEach(element -> doConnectMessageSource((Labeled) element, application));
+    }
+
+    private static void doConnectMessageSource(final @Nonnull Labeled labeled, final @Nonnull GriffonApplication application) {
+        application.addPropertyChangeListener(PROPERTY_LOCALE, evt -> updateLabeled(labeled, application));
+        updateLabeled(labeled, application);
+    }
+
+    private static void updateLabeled(@Nonnull Labeled labeled, @Nonnull GriffonApplication application) {
+        String key = getI18nKey(labeled);
+        String args = getI18nArgs(labeled);
+        String defaultValue = getI18nDefaultValue(labeled);
+
+        Object[] argArray = isBlank(args) ? EMPTY_OBJECT_ARRAY : args.split(",");
+
+        if (isBlank(defaultValue)) {
+            labeled.setText(application.getMessageSource().getMessage(key, argArray, application.getLocale()));
+        } else {
+            labeled.setText(application.getMessageSource().getMessage(key, argArray, application.getLocale(), defaultValue));
+        }
     }
 
     /**
@@ -106,7 +234,7 @@ public final class JavaFXUtils {
     }
 
     /**
-     * Finds out if an {@code Action} has been registered with the target {@code Node}, returning the aciton id if found.
+     * Finds out if an {@code Action} has been registered with the target {@code Node}, returning the action id if found.
      *
      * @param node the target node on which the action may have been registered.
      *
@@ -135,7 +263,7 @@ public final class JavaFXUtils {
     }
 
     /**
-     * Finds out if an {@code Action} has been registered with the target {@code MenuItem}, returning the aciton id if found.
+     * Finds out if an {@code Action} has been registered with the target {@code MenuItem}, returning the action id if found.
      *
      * @param menuItem the target menuItem on which the action may have been registered.
      *
@@ -153,9 +281,9 @@ public final class JavaFXUtils {
      * Wraps an <tt>ObservableList</tt>, publishing updates inside the UI thread.
      *
      * @param source the <tt>ObservableList</tt> to be wrapped
-     * @param <E>    the list's paramter type.
+     * @param <E>    the list's parameter type.
      *
-     * @return a new  <tt>ObservableList</tt>
+     * @return a new <tt>ObservableList</tt>
      *
      * @since 2.6.0
      */
@@ -172,6 +300,69 @@ public final class JavaFXUtils {
 
         @Override
         protected void sourceChanged(@Nonnull final ListChangeListener.Change<? extends E> c) {
+            if (Platform.isFxApplicationThread()) {
+                fireChange(c);
+            } else {
+                Platform.runLater(() -> fireChange(c));
+            }
+        }
+    }
+
+    /**
+     * Wraps an <tt>ObservableSet</tt>, publishing updates inside the UI thread.
+     *
+     * @param source the <tt>ObservableSet</tt> to be wrapped
+     * @param <E>    the set's parameter type.
+     *
+     * @return a new <tt>ObservableSet</tt>
+     *
+     * @since 2.9.0
+     */
+    @Nonnull
+    public static <E> ObservableSet<E> createJavaFXThreadProxySet(@Nonnull ObservableSet<E> source) {
+        requireNonNull(source, "Argument 'source' must not be null");
+        return new JavaFXThreadProxyObservableSet<>(source);
+    }
+
+    private static class JavaFXThreadProxyObservableSet<E> extends DelegatingObservableSet<E> {
+        protected JavaFXThreadProxyObservableSet(ObservableSet<E> delegate) {
+            super(delegate);
+        }
+
+        @Override
+        protected void sourceChanged(@Nonnull final SetChangeListener.Change<? extends E> c) {
+            if (Platform.isFxApplicationThread()) {
+                fireChange(c);
+            } else {
+                Platform.runLater(() -> fireChange(c));
+            }
+        }
+    }
+
+    /**
+     * Wraps an <tt>ObservableMap</tt>, publishing updates inside the UI thread.
+     *
+     * @param source the <tt>ObservableMap</tt> to be wrapped
+     * @param <K>    the type of keys maintained by the map
+     * @param <V>    the type of mapped values
+     *
+     * @return a new <tt>ObservableMap</tt>
+     *
+     * @since 2.9.0
+     */
+    @Nonnull
+    public static <K, V> ObservableMap<K, V> createJavaFXThreadProxyMap(@Nonnull ObservableMap<K, V> source) {
+        requireNonNull(source, "Argument 'source' must not be null");
+        return new JavaFXThreadProxyObservableMap<>(source);
+    }
+
+    private static class JavaFXThreadProxyObservableMap<K, V> extends DelegatingObservableMap<K, V> {
+        protected JavaFXThreadProxyObservableMap(ObservableMap<K, V> delegate) {
+            super(delegate);
+        }
+
+        @Override
+        protected void sourceChanged(@Nonnull final MapChangeListener.Change<? extends K, ? extends V> c) {
             if (Platform.isFxApplicationThread()) {
                 fireChange(c);
             } else {
@@ -243,15 +434,23 @@ public final class JavaFXUtils {
         } else if (control instanceof MenuItem) {
             JavaFXUtils.configure(((MenuItem) control), action);
         } else if (control instanceof Node) {
-            ((Node) control).addEventHandler(ActionEvent.ACTION, action.getOnAction());
+            ((Node) control).addEventHandler(ActionEvent.ACTION, wrapAction(action));
         } else {
             // does it support the onAction property?
             try {
-                invokeInstanceMethod(control, "setOnAction", action.getOnAction());
+                invokeInstanceMethod(control, "setOnAction", wrapAction(action));
             } catch (InstanceMethodInvocationException imie) {
                 // ignore
             }
         }
+    }
+
+    private static EventHandler<ActionEvent> wrapAction(final @Nonnull JavaFXAction action) {
+        return event -> {
+            if (action.isEnabled()) {
+                action.getOnAction().handle(event);
+            }
+        };
     }
 
     private static void runInsideUIThread(@Nonnull Runnable runnable) {
@@ -260,6 +459,20 @@ public final class JavaFXUtils {
         } else {
             Platform.runLater(runnable);
         }
+    }
+
+    public static String normalizeStyle(@Nonnull String style, @Nonnull String key, @Nonnull String value) {
+        requireNonBlank(style, "Argument 'style' must not be blank");
+        requireNonBlank(key, "Argument 'key' must not be blank");
+        requireNonBlank(value, "Argument 'value' must not be blank");
+
+        int start = style.indexOf(key);
+        if (start != -1) {
+            int end = style.indexOf(";", start);
+            end = end >= start ? end : style.length() - 1;
+            style = style.substring(0, start) + style.substring(end + 1);
+        }
+        return style + key + ": " + value + ";";
     }
 
     public static void configure(final @Nonnull ToggleButton control, final @Nonnull JavaFXAction action) {
@@ -322,6 +535,18 @@ public final class JavaFXUtils {
             setStyleClass(control, n);
         });
         setStyleClass(control, action.getStyleClass());
+
+        action.styleProperty().addListener((v, o, n) -> setStyle(control, n));
+        setStyle(control, action.getStyle());
+
+        action.graphicStyleClassProperty().addListener((v, o, n) -> {
+            setGraphicStyleClass(control, o, true);
+            setGraphicStyleClass(control, n);
+        });
+        setGraphicStyleClass(control, action.getGraphicStyleClass());
+
+        action.graphicStyleProperty().addListener((v, o, n) -> setGraphicStyle(control, n));
+        setGraphicStyle(control, action.getGraphicStyle());
     }
 
     public static void configure(final @Nonnull CheckMenuItem control, final @Nonnull JavaFXAction action) {
@@ -377,6 +602,58 @@ public final class JavaFXUtils {
             setStyleClass(control, n);
         });
         setStyleClass(control, action.getStyleClass());
+
+        action.styleProperty().addListener((v, o, n) -> setStyle(control, n));
+        setStyle(control, action.getStyle());
+
+        action.graphicStyleClassProperty().addListener((v, o, n) -> {
+            setGraphicStyleClass(control, o, true);
+            setGraphicStyleClass(control, n);
+        });
+        setGraphicStyleClass(control, action.getGraphicStyleClass());
+
+        action.graphicStyleProperty().addListener((v, o, n) -> setGraphicStyle(control, n));
+        setGraphicStyle(control, action.getGraphicStyle());
+    }
+
+    public static void setStyle(@Nonnull Node node, @Nonnull String style) {
+        requireNonNull(node, ERROR_CONTROL_NULL);
+        if (isNull(style)) { return; }
+        if (style.startsWith("&")) {
+            // append style
+            String nodeStyle = node.getStyle();
+            node.setStyle(nodeStyle + (nodeStyle.endsWith(";") ? "" : ";") + style.substring(1));
+        } else {
+            node.setStyle(style);
+        }
+    }
+
+    public static void setStyle(@Nonnull MenuItem node, @Nonnull String style) {
+        requireNonNull(node, ERROR_CONTROL_NULL);
+        if (isNull(style)) { return; }
+        if (style.startsWith("&")) {
+            // append style
+            String nodeStyle = node.getStyle();
+            node.setStyle(nodeStyle + (nodeStyle.endsWith(";") ? "" : ";") + style.substring(1));
+        } else {
+            node.setStyle(style);
+        }
+    }
+
+    public static void setGraphicStyle(@Nonnull ButtonBase node, @Nonnull String graphicStyle) {
+        requireNonNull(node, ERROR_CONTROL_NULL);
+        if (isNull(graphicStyle)) { return; }
+        if (node.getGraphic() != null) {
+            setStyle(node.getGraphic(), graphicStyle);
+        }
+    }
+
+    public static void setGraphicStyle(@Nonnull MenuItem node, @Nonnull String graphicStyle) {
+        requireNonNull(node, ERROR_CONTROL_NULL);
+        if (isNull(graphicStyle)) { return; }
+        if (node.getGraphic() != null) {
+            setStyle(node.getGraphic(), graphicStyle);
+        }
     }
 
     public static void setStyleClass(@Nonnull Node node, @Nonnull String styleClass) {
@@ -400,6 +677,30 @@ public final class JavaFXUtils {
         if (isBlank(styleClass)) { return; }
         ObservableList<String> styleClasses = node.getStyleClass();
         applyStyleClass(styleClass, styleClasses, remove);
+    }
+
+    public static void setGraphicStyleClass(@Nonnull ButtonBase node, @Nonnull String graphicStyleClass) {
+        setGraphicStyleClass(node, graphicStyleClass, false);
+    }
+
+    public static void setGraphicStyleClass(@Nonnull ButtonBase node, @Nonnull String graphicStyleClass, boolean remove) {
+        requireNonNull(node, ERROR_CONTROL_NULL);
+        if (isBlank(graphicStyleClass) || node.getGraphic() == null) { return; }
+
+        ObservableList<String> graphicStyleClasses = node.getGraphic().getStyleClass();
+        applyStyleClass(graphicStyleClass, graphicStyleClasses, remove);
+    }
+
+    public static void setGraphicStyleClass(@Nonnull MenuItem node, @Nonnull String graphicStyleClass) {
+        setGraphicStyleClass(node, graphicStyleClass, false);
+    }
+
+    public static void setGraphicStyleClass(@Nonnull MenuItem node, @Nonnull String graphicStyleClass, boolean remove) {
+        requireNonNull(node, ERROR_CONTROL_NULL);
+        if (isBlank(graphicStyleClass) || node.getGraphic() == null) { return; }
+
+        ObservableList<String> graphicStyleClasses = node.getGraphic().getStyleClass();
+        applyStyleClass(graphicStyleClass, graphicStyleClasses, remove);
     }
 
     private static void applyStyleClass(String styleClass, ObservableList<String> styleClasses, boolean remove) {

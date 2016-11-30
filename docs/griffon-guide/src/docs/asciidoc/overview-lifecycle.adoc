@@ -9,6 +9,9 @@ inspired by JSR-296, the Swing Application Framework.
 
 Every phase has an associated lifecycle class that will be invoked at the appropriate
 time. Class names match each phase name; you'll find them inside `griffon-app/lifecycle`.
+The `{link_griffon_application}` exposes an observable property of type `{link_application_phase}`;
+this property reflects the phase the application currently has. Any component can register a
+listener on this property in order to be notified when the application changes phase.
 
 [[_overview_lifecycle_initialize]]
 == Initialize
@@ -51,6 +54,6 @@ event handlers interested in the `<<_events_lifecycle_events,ShutdownStart>>` ev
 [[_overview_lifecycle_stop]]
 == Stop
 
-This phase is only available when running on applet mode. It will be called when the
+This phase is only available when running in applet mode. It will be called when the
 applet container invokes `destroy()` on the applet instance.
 

@@ -31,15 +31,12 @@ public class SampleModel extends AbstractGriffonModel {
     @Nonnull
     public final StringProperty inputProperty() {
         if (input == null) {
-            input = new SimpleStringProperty(this, "input");
+            input = new SimpleStringProperty(this, "input", "");
         }
         return input;
     }
 
-    public final StringProperty getInputProperty() {
-        return inputProperty();
-    }
-
+    @Nonnull
     public String getInput() {
         return input == null ? null : inputProperty().get();
     }
@@ -51,15 +48,12 @@ public class SampleModel extends AbstractGriffonModel {
     @Nonnull
     public final StringProperty outputProperty() {
         if (output == null) {
-            output = new SimpleStringProperty(this, "output");
+            output = new SimpleStringProperty(this, "output", "");
         }
         return output;
     }
 
-    public final StringProperty getOutputProperty() {
-        return outputProperty();
-    }
-
+    @Nonnull
     public String getOutput() {
         return output == null ? null : outputProperty().get();
     }

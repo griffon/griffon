@@ -1,5 +1,5 @@
-import uk.co.cacoethes.util.NameType
 import org.apache.commons.io.FileUtils
+import uk.co.cacoethes.util.NameType
 
 Map props = [:]
 String projectName = projectDir.name
@@ -25,15 +25,15 @@ props.project_year = Calendar.instance.get(Calendar.YEAR)
 props.project_author = System.getProperty('user.name')
 props.project_group = ask("Define value for 'group' [org.codehaus.griffon.plugins]: ", "org.codehaus.griffon.plugins", "group")
 props.project_version = ask("Define value for 'version' [0.1.0-SNAPSHOT]: ", "0.1.0-SNAPSHOT", "version")
-props.project_package = ask("Define value for 'package' [org.codehaus.griffon.runtime." +pluginName + "]: ",
-                        'org.codehaus.griffon.runtime.' + pluginName, "package")
-props.griffon_version = ask("Define value for 'griffonVersion' [2.8.0]: ", "2.8.0", "griffonVersion")
-props.project_website = ask("Define value for 'website' [http://artifacts.griffon-framework.org/plugin/" + pluginName +"]: ",
-                        "http://artifacts.griffon-framework.org/plugin/" + pluginName, "website")
-props.project_issue_tracker = ask("Define value for 'issueTracker' [http://artifacts.griffon-framework.org/plugin/" + pluginName +"/issues]: ",
-                              "http://artifacts.griffon-framework.org/plugin/" + pluginName +"/issues", "issueTracker")
-props.project_vcs = ask("Define value for 'vcs' [https://github.com/griffon/" + props.plugin_full_name +".git]: ",
-                    "https://github.com/griffon/" + props.plugin_full_name, "vcs")
+props.project_package = ask("Define value for 'package' [org.codehaus.griffon.runtime." + pluginName + "]: ",
+    'org.codehaus.griffon.runtime.' + pluginName, "package")
+props.griffon_version = ask("Define value for 'griffonVersion' [2.9.0-SNAPSHOT]: ", "2.9.0-SNAPSHOT", "griffonVersion")
+props.project_website = ask("Define value for 'website' [http://artifacts.griffon-framework.org/plugin/" + pluginName + "]: ",
+    "http://artifacts.griffon-framework.org/plugin/" + pluginName, "website")
+props.project_issue_tracker = ask("Define value for 'issueTracker' [http://artifacts.griffon-framework.org/plugin/" + pluginName + "/issues]: ",
+    "http://artifacts.griffon-framework.org/plugin/" + pluginName + "/issues", "issueTracker")
+props.project_vcs = ask("Define value for 'vcs' [https://github.com/griffon/" + props.plugin_full_name + ".git]: ",
+    "https://github.com/griffon/" + props.plugin_full_name, "vcs")
 
 String packagePath = props.project_package.replace('.' as char, '/' as char)
 

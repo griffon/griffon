@@ -16,11 +16,13 @@
 package org.example
 
 import griffon.core.artifact.GriffonView
-import griffon.javafx.support.fontawesome.FontAwesomeIcon
 import griffon.inject.MVCMember
+import griffon.javafx.support.BindingUtils
 import griffon.metadata.ArtifactProviderFor
-import griffon.plugins.fontawesome.FontAwesome
+import javafx.beans.property.StringProperty
 import javafx.scene.control.Tab
+import org.kordamp.ikonli.fontawesome.FontAwesome
+import org.kordamp.ikonli.javafx.FontIcon
 
 import javax.annotation.Nonnull
 
@@ -30,22 +32,28 @@ class Tab3View {
     @MVCMember @Nonnull SampleModel model
     @MVCMember @Nonnull AppView parentView
 
+    private StringProperty uiInput
+    private StringProperty uiOutput
+
     void initUI() {
+        uiInput = BindingUtils.uiThreadAwareStringProperty(model.inputProperty())
+        uiOutput = BindingUtils.uiThreadAwareStringProperty(model.outputProperty())
+
         builder.with {
             content = anchorPane {
                 label(leftAnchor: 14, topAnchor: 14,
                     text: application.messageSource.getMessage('name.label'))
                 textField(leftAnchor: 172, topAnchor: 11, prefWidth: 200,
-                    text: bind(model.inputProperty))
+                    text: bind(uiInput))
                 button(leftAnchor: 172, topAnchor: 45, prefWidth: 200,
                     sayHelloAction)
                 label(leftAnchor: 14, topAnchor: 80, prefWidth: 200,
-                    text: bind(model.outputProperty))
+                    text: bind(uiOutput))
             }
         }
 
         Tab tab = new Tab('GroovyFX')
-        tab.graphic = new FontAwesomeIcon(FontAwesome.FA_FLASH)
+        tab.graphic = new FontIcon(FontAwesome.FLASH)
         tab.content = builder.content
         tab.closable = false
         parentView.tabPane.tabs.add(tab)

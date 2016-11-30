@@ -30,25 +30,25 @@ class BrowserController {
     @MVCMember @Nonnull
     FactoryBuilderSupport builder
 
-    void back() {
+    void back(evt) {
         if (builder.browser.engine.history.entries.size() > 0) {
             builder.browser.engine.history.go(-1)
             builder.urlField.text = getUrlFromHistory()
         }
     }
 
-    void forward() {
+    void forward(evt) {
         if (builder.browser.engine.history.entries.size() > 0) {
             builder.browser.engine.history.go(1)
             builder.urlField.text = getUrlFromHistory()
         }
     }
 
-    void reload() {
+    void reload(evt) {
         builder.browser.engine.reload()
     }
 
-    void openUrl() {
+    void openUrl(evt) {
         String url = model.url
         if (url.indexOf('://') < 0) url = 'http://' + url
         if (builder.browser.engine.location == url) return

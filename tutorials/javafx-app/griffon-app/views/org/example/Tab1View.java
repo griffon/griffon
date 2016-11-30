@@ -16,18 +16,20 @@
 package org.example;
 
 import griffon.core.artifact.GriffonView;
+import griffon.inject.MVCMember;
+import griffon.javafx.support.BindingUtils;
 import griffon.javafx.support.JavaFXAction;
 import griffon.javafx.support.JavaFXUtils;
-import griffon.javafx.support.fontawesome.FontAwesomeIcon;
-import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import griffon.plugins.fontawesome.FontAwesome;
+import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import javax.annotation.Nonnull;
 
@@ -39,6 +41,9 @@ public class Tab1View extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private SampleController controller;
     @MVCMember @Nonnull private SampleModel model;
     @MVCMember @Nonnull private AppView parentView;
+
+    private StringProperty uiInput;
+    private StringProperty uiOutput;
 
     @Override
     public void initUI() {
@@ -57,8 +62,10 @@ public class Tab1View extends AbstractJavaFXGriffonView {
         Label output = new Label();
         label.setPrefWidth(360.0);
 
-        model.inputProperty().bindBidirectional(input.textProperty());
-        model.outputProperty().bindBidirectional(output.textProperty());
+        uiInput = BindingUtils.uiThreadAwareStringProperty(input.textProperty());
+        uiOutput = BindingUtils.uiThreadAwareStringProperty(output.textProperty());
+        model.inputProperty().bindBidirectional(uiInput);
+        model.outputProperty().bindBidirectional(uiOutput);
 
         anchorPane.getChildren().addAll(label, input, button, output);
 
@@ -72,7 +79,7 @@ public class Tab1View extends AbstractJavaFXGriffonView {
         setTopAnchor(output, 80.0);
 
         Tab tab = new Tab("Java");
-        tab.setGraphic(new FontAwesomeIcon(FontAwesome.FA_COFFEE));
+        tab.setGraphic(new FontIcon(FontAwesome.COFFEE));
         tab.setClosable(false);
         tab.setContent(anchorPane);
         parentView.getTabPane().getTabs().add(tab);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2008-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import griffon.core.GriffonApplication;
-import org.codehaus.griffon.runtime.core.AbstractLifecycleHandler;
+package griffon.javafx.support;
+
+import javafx.beans.value.ObservableStringValue;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
-public class Initialize extends AbstractLifecycleHandler {
-    @Inject
-    public Initialize(@Nonnull GriffonApplication application) {
-        super(application);
+/**
+ * @author Andres Almiray
+ * @since 2.9.0
+ */
+class UIThreadAwareObservableStringValue extends UIThreadAwareObservableValue<String> implements ObservableStringValue {
+    UIThreadAwareObservableStringValue(@Nonnull ObservableStringValue delegate) {
+        super(delegate);
     }
 
     @Override
-    public void execute() {
+    public String get() {
+        return getDelegate().getValue();
     }
 }

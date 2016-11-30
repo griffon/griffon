@@ -46,6 +46,10 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
     public static final String KEY_VISIBLE = "visible";
     public static final String KEY_ACCELERATOR = "accelerator";
     public static final String KEY_STYLECLASS = "styleClass";
+    public static final String KEY_STYLE = "style";
+    public static final String KEY_GRAPHICSTYLECLASS = "graphicStyleClass";
+    public static final String KEY_GRAPHICSTYLE = "graphicStyle";
+
     private final JavaFXAction toolkitAction;
     private String description;
     private String icon;
@@ -53,6 +57,9 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
     private Node graphic;
     private String accelerator;
     private String styleClass;
+    private String style;
+    private String graphicStyleClass;
+    private String graphicStyle;
     private boolean selected;
     private boolean visible = true;
 
@@ -83,19 +90,28 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
             toolkitAction.setVisible(castToBoolean(evt.getNewValue()));
         } else if (KEY_ACCELERATOR.equals(evt.getPropertyName())) {
             String accelerator = (String) evt.getNewValue();
-            if (!isBlank(accelerator)) toolkitAction.setAccelerator(accelerator);
+            if (!isBlank(accelerator)) { toolkitAction.setAccelerator(accelerator); }
         } else if (KEY_STYLECLASS.equals(evt.getPropertyName())) {
             String styleClass = (String) evt.getNewValue();
-            if (!isBlank(styleClass)) toolkitAction.setStyleClass(styleClass);
+            if (!isBlank(styleClass)) { toolkitAction.setStyleClass(styleClass); }
+        } else if (KEY_STYLE.equals(evt.getPropertyName())) {
+            String style = (String) evt.getNewValue();
+            if (!isBlank(style)) { toolkitAction.setStyle(style); }
         } else if (KEY_ICON.equals(evt.getPropertyName())) {
             String icon = (String) evt.getNewValue();
-            if (!isBlank(icon)) toolkitAction.setIcon(icon);
+            if (!isBlank(icon)) { toolkitAction.setIcon(icon); }
         } else if (KEY_IMAGE.equals(evt.getPropertyName())) {
             Image image = (Image) evt.getNewValue();
-            if (null != image) toolkitAction.setImage(image);
+            if (null != image) { toolkitAction.setImage(image); }
         } else if (KEY_GRAPHIC.equals(evt.getPropertyName())) {
             Node graphic = (Node) evt.getNewValue();
-            if (null != graphic) toolkitAction.setGraphic(graphic);
+            if (null != graphic) { toolkitAction.setGraphic(graphic); }
+        } else if (KEY_GRAPHICSTYLECLASS.equals(evt.getPropertyName())) {
+            String graphicStyleClass = (String) evt.getNewValue();
+            if (!isBlank(graphicStyleClass)) { toolkitAction.setGraphicStyleClass(graphicStyleClass); }
+        } else if (KEY_GRAPHICSTYLE.equals(evt.getPropertyName())) {
+            String graphicStyle = (String) evt.getNewValue();
+            if (!isBlank(graphicStyle)) { toolkitAction.setGraphicStyle(graphicStyle); }
         }
     }
 
@@ -106,6 +122,33 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
 
     public void setStyleClass(@Nullable String styleClass) {
         firePropertyChange(KEY_STYLECLASS, this.styleClass, this.styleClass = styleClass);
+    }
+
+    @Nullable
+    public String getStyle() {
+        return style;
+    }
+
+    public void setStyle(@Nullable String style) {
+        firePropertyChange(KEY_STYLE, this.style, this.style = style);
+    }
+
+    @Nullable
+    public String getGraphicStyleClass() {
+        return graphicStyleClass;
+    }
+
+    public void setGraphicStyleClass(@Nullable String graphicStyleClass) {
+        firePropertyChange(KEY_GRAPHICSTYLECLASS, this.graphicStyleClass, this.graphicStyleClass = graphicStyleClass);
+    }
+
+    @Nullable
+    public String getGraphicStyle() {
+        return graphicStyle;
+    }
+
+    public void setGraphicStyle(@Nullable String graphicStyle) {
+        firePropertyChange(KEY_GRAPHICSTYLE, this.graphicStyle, this.graphicStyle = graphicStyle);
     }
 
     @Nullable
@@ -192,11 +235,14 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
         toolkitAction.setSelected(isSelected());
         toolkitAction.setVisible(isVisible());
         String accelerator = getAccelerator();
-        if (!isBlank(accelerator)) toolkitAction.setAccelerator(accelerator);
-        if (!isBlank(styleClass)) toolkitAction.setStyleClass(styleClass);
+        if (!isBlank(accelerator)) { toolkitAction.setAccelerator(accelerator); }
+        if (!isBlank(style)) { toolkitAction.setStyle(style); }
+        if (!isBlank(styleClass)) { toolkitAction.setStyleClass(styleClass); }
         String icon = getIcon();
-        if (!isBlank(icon)) toolkitAction.setIcon(icon);
-        if (null != getImage()) toolkitAction.setImage(getImage());
-        if (null != getGraphic()) toolkitAction.setGraphic(getGraphic());
+        if (!isBlank(icon)) { toolkitAction.setIcon(icon); }
+        if (null != getImage()) { toolkitAction.setImage(getImage()); }
+        if (null != getGraphic()) { toolkitAction.setGraphic(getGraphic()); }
+        if (!isBlank(graphicStyle)) { toolkitAction.setGraphicStyle(graphicStyle); }
+        if (!isBlank(graphicStyleClass)) { toolkitAction.setGraphicStyleClass(graphicStyleClass); }
     }
 }

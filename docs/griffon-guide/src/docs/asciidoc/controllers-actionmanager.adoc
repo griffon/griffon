@@ -34,18 +34,21 @@ properties specifically per Controller or application wide. Available keys are
 .JavaFX
 [cols="3*", options="header"]
 |===
-| Key               | Type    | Default Value
-| name              | String  | Natural name minus the `Action` suffix
-| accelerator       | String  | undefined
-| long_description  | String  | undefined
-| short_description | String  | undefined
-| mnemonic          | String  | undefined
-| icon              | String  | undefined
-| image             | String  | undefined
-| enabled           | boolean | true
-| selected          | boolean | false
-| visible           | boolean | true
-| styleclass        | String  | undefined
+| Key                | Type    | Default Value
+| name               | String  | Natural name minus the `Action` suffix
+| accelerator        | String  | undefined
+| description        | String  | undefined
+| mnemonic           | String  | undefined
+| icon               | String  | undefined
+| image              | String  | undefined
+| enabled            | boolean | true
+| selected           | boolean | false
+| visible            | boolean | true
+| style              | String  | undefined
+| styleclass         | String  | undefined
+| graphic            | String  | undefined
+| graphic_style      | String  | undefined
+| graphic_styleclass | String  | undefined
 |===
 
 .Pivot
@@ -71,14 +74,17 @@ Icon keys should point to a URL available in the classpath, or they may use the 
 iconClassName|constructorArg
 ----
 
-Here's an example using the link:https://github.com/griffon-plugins/griffon-fontawesome-plugin[griffon-fontawesome-plugin, window="_blank"]:
+Here's an example using the link:http://aalmiray.github.io/ikonli/[Ikonli, window="_blank"] library with the
+link:http://fontawesome.io/[FontAwesome, window="_blank"] icon pack installed:
 
 [source,java]
 ----
-org.example.AppController.action.Preferences.icon=griffon.swing.support.fontawesome.FontAwesomeIcon|fa-gear
+org.kordamp.griffon.addressbook.AddresbookController.action.New.icon=org.kordamp.ikonli.javafx.FontIcon|fa-flash
 ----
 
 Values must be placed in resources files following the <<_resources,internationalization>> guidelines.
+It's worth mentioning that all of action properties will react to changes made to the application's
+`Locale`.
 
 == Configuration Examples
 

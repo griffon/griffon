@@ -255,4 +255,61 @@ public class JavaFXAction {
     public String getStyleClass() {
         return styleClass == null ? null : styleClassProperty().get();
     }
+
+    // -- style
+
+    private StringProperty style;
+
+    public final StringProperty styleProperty() {
+        if (style == null) {
+            style = new SimpleStringProperty(this, "style");
+        }
+        return style;
+    }
+
+    public void setStyle(String style) {
+        styleProperty().set(style);
+    }
+
+    public String getStyle() {
+        return style == null ? null : styleProperty().get();
+    }
+
+    // -- graphicStyleClass
+
+    private StringProperty graphicStyleClass;
+
+    public final StringProperty graphicStyleClassProperty() {
+        if (graphicStyleClass == null) {
+            graphicStyleClass = new SimpleStringProperty(this, "graphicStyleClass");
+        }
+        return graphicStyleClass;
+    }
+
+    public void setGraphicStyleClass(String graphicStyleClass) {
+        graphicStyleClassProperty().set(graphicStyleClass);
+    }
+
+    public String getGraphicStyleClass() {
+        return graphicStyleClass == null ? null : graphicStyleClassProperty().get();
+    }
+
+    // -- graphicStyle
+
+    private StringProperty graphicStyle;
+
+    public final StringProperty graphicStyleProperty() {
+        if (graphicStyle == null) {
+            graphicStyle = new SimpleStringProperty(this, "graphicStyle");
+        }
+        return graphicStyle;
+    }
+
+    public void setGraphicStyle(String graphicStyle) {
+        graphicStyleProperty().set(graphicStyle);
+    }
+
+    public String getGraphicStyle() {
+        return graphicStyle == null ? null : graphicStyleProperty().get();
+    }
 }

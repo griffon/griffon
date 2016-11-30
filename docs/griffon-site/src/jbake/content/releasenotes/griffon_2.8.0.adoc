@@ -51,7 +51,7 @@ public class SampleController extends AbstractGriffonController {
 ==== Finding Multiple Elements in the Node Graph
 
 You can now search for multiple elements inside the Node Graph (including those that are not subtypes of `javafx.scene.Node`
-such as `Tab` and  `MenutItem`) using a `predicate`, for example, finding all nodes that have a custom property named `tag` with
+such as `Tab` and `MenutItem`) using a `predicate`, for example, finding all nodes that have a custom property named `tag` with
 value `tag1`
 
 [source,groovy]
@@ -66,17 +66,18 @@ JavaFXUtils.findElements(container) { e ->
 It's now possible to target multiple elements for a particular aciton using FXML. Instead of using an `fx:id` entry that follows
 the naming convetion `<action>ActionTarget` simply use a static synthetic property: `JavaFXUtils.griffonActionId`. For example
 
-[xml]
+[source, xml]
 [subs="attributes,verbatim"]
 ----
 <?import griffon.javafx.support.JavaFXUtils?>
 ...
 <VBox>
     <MenuBar>
-        <Menu text="File"/>
+        <Menu text="File">
             <MenuItem JavaFXUtils.griffonActionId="cut"/>
             <MenuItem JavaFXUtils.griffonActionId="copy"/>
             <MenuItem JavaFXUtils.griffonActionId="paste"/>
+        </Menu>
     </MenuBar>
     <ToolBar>
         <Button JavaFXUtils.griffonActionId="cut"/>
@@ -86,7 +87,7 @@ the naming convetion `<action>ActionTarget` simply use a static synthetic proper
 </VBox>
 ----
 
-The previous code assumes the correspoding controller has defined the following actions: `cut`, `copy`, and `paste`.
+The previous code assumes the corresponding controller has defined the following actions: `cut`, `copy`, and `paste`.
 
 === Buildtime
 

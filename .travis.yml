@@ -1,6 +1,10 @@
 language: java
 install: true
 jdk: oraclejdk8
+cache:
+  directories:
+  - $HOME/.m2
+  - $HOME/.gradle
 env:
   matrix:
   - TERM=dumb
@@ -16,7 +20,16 @@ before_script:
 script: ./gradlew -S -Dscan check test integrationTest functionalTest jacocoTestReport jacocoIntegrationTestReport jacocoFunctionalTestReport jacocoRootReport -x :sample-javafx-groovy:jfxJar -x :sample-javafx-groovy:jfxDeploy -x :sample-javafx-java:jfxJar -x :sample-javafx-java:jfxDeploy -x clirr
 after_success:
   - ./update-gh-pages.sh
+  - for report in `find ./subprojects -name "jacocoTestReport.xml" -print`; do rm -f $report ; done
+  - for report in `find ./samples -name "jacocoTestReport.xml" -print`; do rm -f $report ; done
   - ./gradlew coveralls
   - bash <(curl -s https://codecov.io/bash)
 after_failure:
   - ./update-gh-pages.sh
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/914e6ffa96dfbf419d60
+    on_success: change 
+    on_failure: always
+    on_start: never

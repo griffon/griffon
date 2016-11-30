@@ -39,6 +39,7 @@ class ${project_class_name}View : AbstractJavaFXGriffonView() {
         model.clickCountProperty().bindBidirectional(clickLabel.textProperty());
         (scene.root as Group).children.addAll(node)
         connectActions(node as Any, controller as GriffonController)
+        connectMessageSource(node)
         return scene
     }
 }

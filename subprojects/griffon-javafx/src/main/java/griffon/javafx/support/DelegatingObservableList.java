@@ -19,20 +19,13 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableListBase;
 import javafx.collections.WeakListChangeListener;
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Spliterator;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.function.UnaryOperator;
-import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
@@ -69,10 +62,6 @@ public abstract class DelegatingObservableList<E> extends ObservableListBase<E> 
         return getDelegate().removeAll(elements);
     }
 
-    public boolean removeIf(Predicate<? super E> filter) {
-        return getDelegate().removeIf(filter);
-    }
-
     public void remove(int from, int to) {
         getDelegate().remove(from, to);
     }
@@ -93,14 +82,6 @@ public abstract class DelegatingObservableList<E> extends ObservableListBase<E> 
         return getDelegate().isEmpty();
     }
 
-    public SortedList<E> sorted() {
-        return getDelegate().sorted();
-    }
-
-    public Stream<E> parallelStream() {
-        return getDelegate().parallelStream();
-    }
-
     public boolean addAll(E... elements) {
         return getDelegate().addAll(elements);
     }
@@ -109,24 +90,12 @@ public abstract class DelegatingObservableList<E> extends ObservableListBase<E> 
         return getDelegate().subList(fromIndex, toIndex);
     }
 
-    public Spliterator<E> spliterator() {
-        return getDelegate().spliterator();
-    }
-
-    public void sort(Comparator<? super E> c) {
-        getDelegate().sort(c);
-    }
-
     public E set(int index, E element) {
         return getDelegate().set(index, element);
     }
 
     public void add(int index, E element) {
         getDelegate().add(index, element);
-    }
-
-    public void replaceAll(UnaryOperator<E> operator) {
-        getDelegate().replaceAll(operator);
     }
 
     public boolean containsAll(Collection<?> c) {
@@ -163,18 +132,6 @@ public abstract class DelegatingObservableList<E> extends ObservableListBase<E> 
 
     public boolean retainAll(Collection<?> c) {
         return getDelegate().retainAll(c);
-    }
-
-    public SortedList<E> sorted(Comparator<E> comparator) {
-        return getDelegate().sorted(comparator);
-    }
-
-    public FilteredList<E> filtered(Predicate<E> predicate) {
-        return getDelegate().filtered(predicate);
-    }
-
-    public Stream<E> stream() {
-        return getDelegate().stream();
     }
 
     public boolean contains(Object o) {

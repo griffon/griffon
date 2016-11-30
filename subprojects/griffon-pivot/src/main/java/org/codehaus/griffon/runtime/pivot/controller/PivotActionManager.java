@@ -26,9 +26,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import static griffon.util.GriffonClassUtils.EMPTY_ARGS;
 import static griffon.util.GriffonClassUtils.invokeExactInstanceMethod;
+import static griffon.util.GriffonNameUtils.getNaturalName;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.TypeUtils.castToBoolean;
 
@@ -38,6 +41,13 @@ import static griffon.util.TypeUtils.castToBoolean;
  */
 public class PivotActionManager extends AbstractActionManager {
     private static final Logger LOG = LoggerFactory.getLogger(PivotActionManager.class);
+
+    private static final String EMPTY_STRING = "";
+    private static final String DOT = ".";
+    private static final String EQUALS = " = ";
+    private static final String KEY_NAME = "name";
+    private static final String KEY_DESCRIPTION = "description";
+    private static final String KEY_ENABLED = "enabled";
 
     @Inject
     public PivotActionManager(@Nonnull GriffonApplication application) {
@@ -51,23 +61,43 @@ public class PivotActionManager extends AbstractActionManager {
     }
 
     @Override
-    protected void doConfigureAction(@Nonnull Action action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
-        PivotGriffonControllerAction swingAction = (PivotGriffonControllerAction) action;
-
-        String rsDescription = msg(keyPrefix, normalizeNamed, "description", "");
-        if (!isBlank(rsDescription)) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace(keyPrefix + normalizeNamed + ".description = " + rsDescription);
+    protected void doConfigureAction(@Nonnull final Action action, @Nonnull final GriffonController controller, @Nonnull final String normalizeNamed, @Nonnull final String keyPrefix) {
+        controller.getApplication().addPropertyChangeListener(GriffonApplication.PROPERTY_LOCALE, new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                configureAction((PivotGriffonControllerAction) action, controller, normalizeNamed, keyPrefix);
             }
-            swingAction.setDescription(rsDescription);
+        });
+        configureAction((PivotGriffonControllerAction) action, controller, normalizeNamed, keyPrefix);
+    }
+
+    protected void configureAction(@Nonnull PivotGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+        resolveName(action, controller, normalizeNamed, keyPrefix);
+        resolveDescription(action, controller, normalizeNamed, keyPrefix);
+        resolveEnabled(action, controller, normalizeNamed, keyPrefix);
+    }
+
+    protected void resolveName(@Nonnull PivotGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+        String rsActionName = msg(keyPrefix, normalizeNamed, KEY_NAME, getNaturalName(normalizeNamed));
+        if (!isBlank(rsActionName)) {
+            trace(keyPrefix + normalizeNamed, KEY_NAME, rsActionName);
+            action.setName(rsActionName);
         }
+    }
 
-        String rsEnabled = msg(keyPrefix, normalizeNamed, "enabled", "true");
+    protected void resolveDescription(@Nonnull PivotGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+        String rsDescription = msg(keyPrefix, normalizeNamed, KEY_DESCRIPTION, EMPTY_STRING);
+        if (!isBlank(rsDescription)) {
+            trace(keyPrefix + normalizeNamed, KEY_DESCRIPTION, rsDescription);
+            action.setDescription(rsDescription);
+        }
+    }
+
+    protected void resolveEnabled(@Nonnull PivotGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
+        String rsEnabled = msg(keyPrefix, normalizeNamed, KEY_ENABLED, "true");
         if (!isBlank(rsEnabled)) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace(keyPrefix + normalizeNamed + ".enabled = " + rsEnabled);
-            }
-            swingAction.setEnabled(castToBoolean(rsEnabled));
+            trace(keyPrefix + normalizeNamed, KEY_ENABLED, rsEnabled);
+            action.setEnabled(castToBoolean(rsEnabled));
         }
     }
 
@@ -87,6 +117,12 @@ public class PivotActionManager extends AbstractActionManager {
             } else {
                 throw imie;
             }
+        }
+    }
+
+    protected void trace(@Nonnull String actionKey, @Nonnull String key, @Nonnull String value) {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace(actionKey + DOT + key + EQUALS + value);
         }
     }
 }
