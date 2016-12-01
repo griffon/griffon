@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.164s</div>
+<div class="counter">0.104s</div>
 <p>duration</p>
 </div>
 </td>
@@ -76,22 +76,22 @@
 </thead>
 <tr>
 <td class="success">Calling configuration.get(key.foo, foo) returns foo</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.get(key.foo, null) returns null</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.get(key.string, foo) returns string</td>
-<td>0.001s</td>
+<td>0.003s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.get(key.string, null) returns string</td>
-<td>0.024s</td>
+<td>0.022s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -101,12 +101,12 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.getAsString(key.foo, null) returns null</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.getAsString(key.string, foo) returns string</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -121,12 +121,12 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.remove(key.boolean.type) removes the key</td>
-<td>0.002s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.remove(key.double.string) removes the key</td>
-<td>0.002s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -136,12 +136,12 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.remove(key.float.string) removes the key</td>
-<td>0.003s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.remove(key.float.type) removes the key</td>
-<td>0.002s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -151,22 +151,22 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.remove(key.int.string) removes the key</td>
-<td>0.002s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.remove(key.int.type) removes the key</td>
-<td>0.002s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.remove(key.long.string) removes the key</td>
-<td>0.002s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.remove(key.long.type) removes the key</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -176,7 +176,7 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.removeAs(key.boolean.string) removes the key</td>
-<td>0.002s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -196,7 +196,7 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.removeAs(key.int.string) removes the key</td>
-<td>0.002s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -206,7 +206,7 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.removeAs(key.string) removes the key</td>
-<td>0.003s</td>
+<td>0.002s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -221,7 +221,7 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.removeConverted(key.int.type) removes the key</td>
-<td>0.010s</td>
+<td>0.004s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -231,7 +231,7 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.boolean.string, foo) stores foo (recall with getAsString)</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -241,22 +241,22 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.boolean.type, foo) stores foo (recall with getAsString)</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.double.string, foo) stores foo</td>
-<td>0.005s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Calling configuration.set(key.double.string, foo) stores foo (recall with getAsString)</td>
 <td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
+<td class="success">Calling configuration.set(key.double.string, foo) stores foo (recall with getAsString)</td>
+<td>0s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
 <td class="success">Calling configuration.set(key.double.type, foo) stores foo</td>
-<td>0.002s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -266,22 +266,22 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.float.string, foo) stores foo</td>
-<td>0.002s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.float.string, foo) stores foo (recall with getAsString)</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.float.type, foo) stores foo</td>
-<td>0.002s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.float.type, foo) stores foo (recall with getAsString)</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -291,7 +291,7 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.int.string, foo) stores foo (recall with getAsString)</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -301,7 +301,7 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.int.type, foo) stores foo (recall with getAsString)</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -311,12 +311,12 @@
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.long.string, foo) stores foo (recall with getAsString)</td>
-<td>0.002s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Calling configuration.set(key.long.type, foo) stores foo</td>
-<td>0s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -336,27 +336,27 @@
 </tr>
 <tr>
 <td class="success">Check containsKey after removal</td>
-<td>0.004s</td>
+<td>0.002s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into Properties and retrieving key key.boolean.string</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into Properties and retrieving key key.boolean.type</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into Properties and retrieving key key.double.string</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into Properties and retrieving key key.double.type</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -386,22 +386,22 @@
 </tr>
 <tr>
 <td class="success">Transforming configuration into Properties and retrieving key key.long.string</td>
-<td>0.004s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into Properties and retrieving key key.long.type</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into Properties and retrieving key key.string</td>
-<td>0.005s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into ResourceBundle and retrieving key key.boolean.string</td>
-<td>0.001s</td>
+<td>0.002s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -411,37 +411,37 @@
 </tr>
 <tr>
 <td class="success">Transforming configuration into ResourceBundle and retrieving key key.double.string</td>
-<td>0.002s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into ResourceBundle and retrieving key key.double.type</td>
-<td>0.002s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into ResourceBundle and retrieving key key.float.string</td>
-<td>0.004s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into ResourceBundle and retrieving key key.float.type</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into ResourceBundle and retrieving key key.foo</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into ResourceBundle and retrieving key key.int.string</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into ResourceBundle and retrieving key key.int.type</td>
-<td>0.001s</td>
+<td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -456,7 +456,7 @@
 </tr>
 <tr>
 <td class="success">Transforming configuration into ResourceBundle and retrieving key key.string</td>
-<td>0.005s</td>
+<td>0.002s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -466,7 +466,7 @@
 </tr>
 <tr>
 <td class="success">Transforming configuration into flat Map and retrieving key key.boolean.type</td>
-<td>0.003s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -481,27 +481,27 @@
 </tr>
 <tr>
 <td class="success">Transforming configuration into flat Map and retrieving key key.float.string</td>
-<td>0.001s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Transforming configuration into flat Map and retrieving key key.float.type</td>
-<td>0.001s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">Transforming configuration into flat Map and retrieving key key.foo</td>
 <td>0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
+<td class="success">Transforming configuration into flat Map and retrieving key key.float.type</td>
+<td>0s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">Transforming configuration into flat Map and retrieving key key.foo</td>
+<td>0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
 <td class="success">Transforming configuration into flat Map and retrieving key key.int.string</td>
-<td>0.002s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">Transforming configuration into flat Map and retrieving key key.int.type</td>
-<td>0.001s</td>
+<td>0.005s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -529,7 +529,7 @@
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 3.2</a> at Dec 1, 2016 9:17:48 AM</p>
+<a href="http://www.gradle.org">Gradle 3.2</a> at Dec 1, 2016 10:04:53 AM</p>
 </div>
 </div>
 </body>
