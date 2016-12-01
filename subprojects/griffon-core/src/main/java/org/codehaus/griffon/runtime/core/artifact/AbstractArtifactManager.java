@@ -113,7 +113,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
     @Override
     @Nonnull
     @SuppressWarnings("unchecked")
-    public <A extends GriffonArtifact> A newInstance(final @Nonnull Class<A> clazz) {
+    public <A extends GriffonArtifact> A newInstance(@Nonnull final Class<A> clazz) {
         if (findGriffonClass(clazz) == null) {
             throw new ArtifactNotFoundException(clazz);
         }

@@ -54,7 +54,7 @@ public class GuiceInjectorFactory implements InjectorFactory {
         return injector;
     }
 
-    private GuiceInjector createModules(final @Nonnull GriffonApplication application, @Nonnull final InjectorProvider injectorProvider, @Nonnull Iterable<Binding<?>> bindings) {
+    private GuiceInjector createModules(@Nonnull final GriffonApplication application, @Nonnull final InjectorProvider injectorProvider, @Nonnull Iterable<Binding<?>> bindings) {
         final InjectionListener<GriffonArtifact> injectionListener = new InjectionListener<GriffonArtifact>() {
             @Override
             public void afterInjection(GriffonArtifact injectee) {

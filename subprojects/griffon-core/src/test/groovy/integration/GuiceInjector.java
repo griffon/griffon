@@ -56,7 +56,7 @@ public class GuiceInjector implements Injector<com.google.inject.Injector> {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
-    static Module moduleFromBindings(final @Nonnull Iterable<Binding<?>> bindings) {
+    static Module moduleFromBindings(@Nonnull final Iterable<Binding<?>> bindings) {
         return new AbstractModule() {
             @Override
             protected void configure() {

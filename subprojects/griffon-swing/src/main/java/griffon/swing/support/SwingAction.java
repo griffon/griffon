@@ -42,7 +42,7 @@ public class SwingAction extends AbstractAction {
     private RunnableWithArgs runnable;
 
     @Deprecated
-    public SwingAction(final @Nonnull CallableWithArgs<?> callable) {
+    public SwingAction(@Nonnull final CallableWithArgs<?> callable) {
         requireNonNull(callable, ERROR_CALLABLE_NULL);
         this.runnable = new RunnableWithArgs() {
             @Override
@@ -176,7 +176,7 @@ public class SwingAction extends AbstractAction {
 
         @Nonnull
         @Deprecated
-        public ActionBuilder withRunnable(final @Nullable CallableWithArgs<?> callable) {
+        public ActionBuilder withRunnable(@Nullable final CallableWithArgs<?> callable) {
             requireNonNull(callable, ERROR_CALLABLE_NULL);
             this.runnable = new RunnableWithArgs() {
                 @Override

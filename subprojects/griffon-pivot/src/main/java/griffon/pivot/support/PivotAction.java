@@ -65,7 +65,7 @@ public class PivotAction extends Action {
     }
 
     @Deprecated
-    public void setCallable(final @Nonnull CallableWithArgs<Void> callable) {
+    public void setCallable(@Nonnull final CallableWithArgs<Void> callable) {
         requireNonNull(callable, ERROR_CALLABLE_NULL);
         this.runnable = new RunnableWithArgs() {
             @Override

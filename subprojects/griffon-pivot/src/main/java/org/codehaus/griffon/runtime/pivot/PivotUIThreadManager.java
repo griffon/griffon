@@ -47,7 +47,7 @@ public class PivotUIThreadManager extends AbstractUIThreadManager {
     }
 
     @Override
-    public void runInsideUISync(final @Nonnull Runnable runnable) {
+    public void runInsideUISync(@Nonnull final Runnable runnable) {
         if (isUIThread()) {
             runnable.run();
         } else {

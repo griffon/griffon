@@ -28,7 +28,7 @@ public class DefaultGithub implements Github {
 
     @Nonnull
     @Override
-    public Observable<Repository> repositories(final @Nonnull String name) {
+    public Observable<Repository> repositories(@Nonnull final String name) {
         requireNonBlank(name, "Argument 'name' must not be blank");
 
         return paginatedObservable(

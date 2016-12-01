@@ -132,7 +132,7 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
     }
 
     @SuppressWarnings("unchecked")
-    private void doCollectOverridingModules(final @Nonnull Collection<Module> modules) {
+    private void doCollectOverridingModules(@Nonnull final Collection<Module> modules) {
         if (testCase == null) {
             return;
         }
@@ -194,13 +194,13 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
         }
     }
 
-    private void doCollectModulesFromInnerClasses(final @Nonnull Collection<Module> modules) {
+    private void doCollectModulesFromInnerClasses(@Nonnull final Collection<Module> modules) {
         if (testCase != null) {
             modules.add(new InnerClassesModule());
         }
     }
 
-    private void doCollectModulesFromFields(final @Nonnull Collection<Module> modules) {
+    private void doCollectModulesFromFields(@Nonnull final Collection<Module> modules) {
         if (testCase != null) {
             modules.add(new FieldsModule());
         }

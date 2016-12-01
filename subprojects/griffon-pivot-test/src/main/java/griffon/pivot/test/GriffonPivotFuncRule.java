@@ -79,7 +79,7 @@ public class GriffonPivotFuncRule extends GriffonPivotRule {
         throw new IllegalArgumentException("Could not find a component name '" + name + "' with type " + type.getName());
     }
 
-    public void runInsideUISync(final @Nonnull Runnable runnable) {
+    public void runInsideUISync(@Nonnull final Runnable runnable) {
         requireNonNull(runnable, ERROR_RUNNABLE_NULL);
         Throwable t = null;
         final CountDownLatch latch = new CountDownLatch(1);
@@ -120,7 +120,7 @@ public class GriffonPivotFuncRule extends GriffonPivotRule {
         }
     }
 
-    public void runInsideUIAsync(final @Nonnull Runnable runnable) {
+    public void runInsideUIAsync(@Nonnull final Runnable runnable) {
         requireNonNull(runnable, ERROR_RUNNABLE_NULL);
         final Throwable[] ts = new Throwable[1];
         final CountDownLatch latch = new CountDownLatch(1);

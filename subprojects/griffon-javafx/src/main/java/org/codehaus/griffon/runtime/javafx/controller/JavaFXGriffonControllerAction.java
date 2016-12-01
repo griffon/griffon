@@ -63,7 +63,7 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
     private boolean selected;
     private boolean visible = true;
 
-    public JavaFXGriffonControllerAction(final @Nonnull UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
+    public JavaFXGriffonControllerAction(@Nonnull final UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
         super(actionManager, controller, actionName);
         requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be null");
 
@@ -73,7 +73,7 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
         addPropertyChangeListener(evt -> uiThreadManager.runInsideUIAsync(() -> handlePropertyChange(evt)));
     }
 
-    protected JavaFXAction createAction(final @Nonnull ActionManager actionManager, final @Nonnull GriffonController controller, final @Nonnull String actionName) {
+    protected JavaFXAction createAction(@Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
         return new JavaFXAction();
     }
 

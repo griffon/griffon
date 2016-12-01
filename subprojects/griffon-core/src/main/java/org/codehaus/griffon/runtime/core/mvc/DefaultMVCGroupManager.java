@@ -287,7 +287,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         }
     }
 
-    protected void initializeArtifactMember(@Nonnull MVCGroup group, @Nonnull String type, final @Nonnull GriffonArtifact member, final @Nonnull Map<String, Object> args) {
+    protected void initializeArtifactMember(@Nonnull MVCGroup group, @Nonnull String type, @Nonnull final GriffonArtifact member, @Nonnull final Map<String, Object> args) {
         if (member instanceof GriffonView) {
             getApplication().getUIThreadManager().runInsideUISync(new Runnable() {
                 @Override

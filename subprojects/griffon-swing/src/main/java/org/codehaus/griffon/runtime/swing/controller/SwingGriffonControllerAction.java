@@ -59,7 +59,7 @@ public class SwingGriffonControllerAction extends AbstractAction {
     private String command;
     private boolean selected;
 
-    public SwingGriffonControllerAction(final @Nonnull UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
+    public SwingGriffonControllerAction(@Nonnull final UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
         super(actionManager, controller, actionName);
         requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be null");
 
@@ -77,7 +77,7 @@ public class SwingGriffonControllerAction extends AbstractAction {
     }
 
     @Nonnull
-    protected SwingAction createAction(final @Nonnull ActionManager actionManager, final @Nonnull GriffonController controller, final @Nonnull String actionName) {
+    protected SwingAction createAction(@Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
         return new SwingAction(new RunnableWithArgs() {
             public void run(@Nullable Object... args) {
                 actionManager.invokeAction(controller, actionName, args);

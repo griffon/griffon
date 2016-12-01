@@ -289,7 +289,7 @@ public abstract class AbstractMVCGroup extends AbstractMVCHandler implements MVC
     }
 
     @Override
-    public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, final @Nonnull MVCGroupFunction handler) {
+    public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull final MVCGroupFunction handler) {
         super.withMVCGroup(mvcType, mvcId, injectParentGroup(), new MVCGroupFunctionDecorator(handler));
     }
 

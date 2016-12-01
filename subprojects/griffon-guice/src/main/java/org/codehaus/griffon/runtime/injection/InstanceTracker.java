@@ -54,7 +54,7 @@ class InstanceTracker {
     }
 
     @Nonnull
-    public <T> T track(@Nonnull Binding<?> binding, final @Nonnull T instance) {
+    public <T> T track(@Nonnull Binding<?> binding, @Nonnull final T instance) {
         requireNonNull(binding, ERROR_BINDING_NULL);
         requireNonNull(instance, ERROR_INSTANCE_NULL);
 

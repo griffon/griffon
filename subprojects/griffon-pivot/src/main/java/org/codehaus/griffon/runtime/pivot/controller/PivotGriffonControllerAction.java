@@ -39,7 +39,7 @@ public class PivotGriffonControllerAction extends AbstractAction {
     private final PivotAction toolkitAction;
     private String description;
 
-    public PivotGriffonControllerAction(final @Nonnull UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
+    public PivotGriffonControllerAction(@Nonnull final UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
         super(actionManager, controller, actionName);
         requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be null");
 
@@ -57,7 +57,7 @@ public class PivotGriffonControllerAction extends AbstractAction {
     }
 
     @Nonnull
-    protected PivotAction createAction(final @Nonnull ActionManager actionManager, final @Nonnull GriffonController controller, final @Nonnull String actionName) {
+    protected PivotAction createAction(@Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
         return new PivotAction(new RunnableWithArgs() {
             public void run(@Nullable Object... args) {
                 actionManager.invokeAction(controller, actionName, args);

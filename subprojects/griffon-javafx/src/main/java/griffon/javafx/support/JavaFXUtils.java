@@ -376,22 +376,22 @@ public final class JavaFXUtils {
             });
     }
 
-    private static void doConnectMessageSource(final @Nonnull Labeled node, final @Nonnull GriffonApplication application) {
+    private static void doConnectMessageSource(@Nonnull final Labeled node, @Nonnull final GriffonApplication application) {
         application.addPropertyChangeListener(PROPERTY_LOCALE, evt -> updateLabeled(node, application));
         updateLabeled(node, application);
     }
 
-    private static void doConnectMessageSource(final @Nonnull Tab node, final @Nonnull GriffonApplication application) {
+    private static void doConnectMessageSource(@Nonnull final Tab node, @Nonnull final GriffonApplication application) {
         application.addPropertyChangeListener(PROPERTY_LOCALE, evt -> updateLabeled(node, application));
         updateLabeled(node, application);
     }
 
-    private static void doConnectMessageSource(final @Nonnull MenuItem node, final @Nonnull GriffonApplication application) {
+    private static void doConnectMessageSource(@Nonnull final MenuItem node, @Nonnull final GriffonApplication application) {
         application.addPropertyChangeListener(PROPERTY_LOCALE, evt -> updateLabeled(node, application));
         updateLabeled(node, application);
     }
 
-    private static void updateLabeled(final @Nonnull Labeled node, final @Nonnull GriffonApplication application) {
+    private static void updateLabeled(@Nonnull final Labeled node, @Nonnull final GriffonApplication application) {
         runInsideUIThread(() -> {
             String key = getI18nKey(node);
             String args = getI18nArgs(node);
@@ -407,7 +407,7 @@ public final class JavaFXUtils {
         });
     }
 
-    private static void updateLabeled(final @Nonnull Tab node, final @Nonnull GriffonApplication application) {
+    private static void updateLabeled(@Nonnull final Tab node, @Nonnull final GriffonApplication application) {
         runInsideUIThread(() -> {
             String key = getI18nKey(node);
             String args = getI18nArgs(node);
@@ -423,7 +423,7 @@ public final class JavaFXUtils {
         });
     }
 
-    private static void updateLabeled(final @Nonnull MenuItem node, final @Nonnull GriffonApplication application) {
+    private static void updateLabeled(@Nonnull final MenuItem node, @Nonnull final GriffonApplication application) {
         runInsideUIThread(() -> {
             String key = getI18nKey(node);
             String args = getI18nArgs(node);
@@ -665,7 +665,7 @@ public final class JavaFXUtils {
         }
     }
 
-    private static EventHandler<ActionEvent> wrapAction(final @Nonnull JavaFXAction action) {
+    private static EventHandler<ActionEvent> wrapAction(@Nonnull final JavaFXAction action) {
         return event -> {
             if (action.isEnabled()) {
                 action.getOnAction().handle(event);
@@ -695,28 +695,28 @@ public final class JavaFXUtils {
         return style + key + ": " + value + ";";
     }
 
-    public static void configure(final @Nonnull ToggleButton control, final @Nonnull JavaFXAction action) {
+    public static void configure(@Nonnull final ToggleButton control, @Nonnull final JavaFXAction action) {
         configure((ButtonBase) control, action);
 
         action.selectedProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setSelected(n)));
         runInsideUIThread(() -> control.setSelected(action.isSelected()));
     }
 
-    public static void configure(final @Nonnull CheckBox control, final @Nonnull JavaFXAction action) {
+    public static void configure(@Nonnull final CheckBox control, @Nonnull final JavaFXAction action) {
         configure((ButtonBase) control, action);
 
         action.selectedProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setSelected(n)));
         runInsideUIThread(() -> control.setSelected(action.isSelected()));
     }
 
-    public static void configure(final @Nonnull RadioButton control, final @Nonnull JavaFXAction action) {
+    public static void configure(@Nonnull final RadioButton control, @Nonnull final JavaFXAction action) {
         configure((ButtonBase) control, action);
 
         action.selectedProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setSelected(n)));
         runInsideUIThread(() -> control.setSelected(action.isSelected()));
     }
 
-    public static void configure(final @Nonnull ButtonBase control, final @Nonnull JavaFXAction action) {
+    public static void configure(@Nonnull final ButtonBase control, @Nonnull final JavaFXAction action) {
         requireNonNull(control, ERROR_CONTROL_NULL);
         requireNonNull(action, ERROR_ACTION_NULL);
 
@@ -769,21 +769,21 @@ public final class JavaFXUtils {
         setGraphicStyle(control, action.getGraphicStyle());
     }
 
-    public static void configure(final @Nonnull CheckMenuItem control, final @Nonnull JavaFXAction action) {
+    public static void configure(@Nonnull final CheckMenuItem control, @Nonnull final JavaFXAction action) {
         configure((MenuItem) control, action);
 
         action.selectedProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setSelected(n)));
         runInsideUIThread(() -> control.setSelected(action.isSelected()));
     }
 
-    public static void configure(final @Nonnull RadioMenuItem control, final @Nonnull JavaFXAction action) {
+    public static void configure(@Nonnull final RadioMenuItem control, @Nonnull final JavaFXAction action) {
         configure((MenuItem) control, action);
 
         action.selectedProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setSelected(n)));
         runInsideUIThread(() -> control.setSelected(action.isSelected()));
     }
 
-    public static void configure(final @Nonnull MenuItem control, final @Nonnull JavaFXAction action) {
+    public static void configure(@Nonnull final MenuItem control, @Nonnull final JavaFXAction action) {
         requireNonNull(control, ERROR_CONTROL_NULL);
         requireNonNull(action, ERROR_ACTION_NULL);
 

@@ -47,7 +47,7 @@ public class JavaFXUIThreadManager extends AbstractUIThreadManager {
     }
 
     @Override
-    public void runInsideUISync(final @Nonnull Runnable runnable) {
+    public void runInsideUISync(@Nonnull final Runnable runnable) {
         requireNonNull(runnable, ERROR_RUNNABLE_NULL);
         if (isUIThread()) {
             runnable.run();
