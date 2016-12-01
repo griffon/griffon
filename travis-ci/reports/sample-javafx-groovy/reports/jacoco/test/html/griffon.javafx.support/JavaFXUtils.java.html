@@ -99,24 +99,13 @@ public final class JavaFXUtils {
     private static final String ERROR_APPLICATION_NULL = &quot;Argument 'application' must not be null&quot;;
     private static final String ACTION_TARGET_SUFFIX = &quot;ActionTarget&quot;;
     private static final String PROPERTY_SUFFIX = &quot;Property&quot;;
+    private static final String SUFFIX_KEY = &quot;-KEY&quot;;
+    private static final String SUFFIX_ARGS = &quot;-ARGS&quot;;
+    private static final String SUFFIX_DEFAULT_VALUE = &quot;-DEFAULT_VALUE&quot;;
 
-<span class="nc" id="L103">    private JavaFXUtils() {</span>
+<span class="nc" id="L106">    private JavaFXUtils() {</span>
 
-<span class="nc" id="L105">    }</span>
-
-    /**
-     * Associates an i18n key to a {@code node}. The key is used to resolve a message via the application's {@code MessageSource}.
-     *
-     * @param node the target node on which the key will be registered.
-     * @param key  the message key to be registered.
-     *
-     * @since 2.9.0
-     */
-    public static void setI18nKey(@Nonnull Labeled node, @Nonnull String key) {
-<span class="nc" id="L116">        requireNonNull(node, ERROR_NODE_NULL);</span>
-<span class="nc" id="L117">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
-<span class="nc" id="L118">        node.getProperties().put(MessageSource.class.getName() + &quot;-KEY&quot;, key);</span>
-<span class="nc" id="L119">    }</span>
+<span class="nc" id="L108">    }</span>
 
     /**
      * Finds out if an i18n {@code key} has been registered with the target {@code Node}, returning the key if found.
@@ -129,8 +118,8 @@ public final class JavaFXUtils {
      */
     @Nullable
     public static String getI18nKey(@Nonnull Labeled node) {
-<span class="nc" id="L132">        requireNonNull(node, ERROR_NODE_NULL);</span>
-<span class="nc" id="L133">        return (String) node.getProperties().get(MessageSource.class.getName() + &quot;-KEY&quot;);</span>
+<span class="nc" id="L121">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L122">        return (String) node.getProperties().get(MessageSource.class.getName() + SUFFIX_KEY);</span>
     }
 
     /**
@@ -143,10 +132,10 @@ public final class JavaFXUtils {
      * @since 2.9.0
      */
     public static void setI18nArgs(@Nonnull Labeled node, @Nullable String args) {
-<span class="nc" id="L146">        requireNonNull(node, ERROR_NODE_NULL);</span>
-<span class="nc" id="L147">        requireNonBlank(args, ERROR_ARGS_BLANK);</span>
-<span class="nc" id="L148">        node.getProperties().put(MessageSource.class.getName() + &quot;-ARGS&quot;, args);</span>
-<span class="nc" id="L149">    }</span>
+<span class="nc" id="L135">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L136">        requireNonBlank(args, ERROR_ARGS_BLANK);</span>
+<span class="nc" id="L137">        node.getProperties().put(MessageSource.class.getName() + SUFFIX_ARGS, args);</span>
+<span class="nc" id="L138">    }</span>
 
     /**
      * Finds out if an {@code arguments array} has been registered with the target {@code Node}, returning the array if found.
@@ -159,8 +148,8 @@ public final class JavaFXUtils {
      */
     @Nullable
     public static String getI18nArgs(@Nonnull Labeled node) {
-<span class="nc" id="L162">        requireNonNull(node, ERROR_NODE_NULL);</span>
-<span class="nc" id="L163">        return (String) node.getProperties().get(MessageSource.class.getName() + &quot;-ARGS&quot;);</span>
+<span class="nc" id="L151">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L152">        return (String) node.getProperties().get(MessageSource.class.getName() + SUFFIX_ARGS);</span>
     }
 
     /**
@@ -173,9 +162,9 @@ public final class JavaFXUtils {
      * @since 2.9.0
      */
     public static void setI18nDefaultValue(@Nonnull Labeled node, @Nullable String defaultValue) {
-<span class="nc" id="L176">        requireNonNull(node, ERROR_NODE_NULL);</span>
-<span class="nc" id="L177">        node.getProperties().put(MessageSource.class.getName() + &quot;-DEFAULT_VALUE&quot;, defaultValue);</span>
-<span class="nc" id="L178">    }</span>
+<span class="nc" id="L165">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L166">        node.getProperties().put(MessageSource.class.getName() + SUFFIX_DEFAULT_VALUE, defaultValue);</span>
+<span class="nc" id="L167">    }</span>
 
     /**
      * Finds out if a {@code default value} has been registered with the target {@code Node}, returning the value if found.
@@ -188,36 +177,267 @@ public final class JavaFXUtils {
      */
     @Nullable
     public static String getI18nDefaultValue(@Nonnull Labeled node) {
-<span class="nc" id="L191">        requireNonNull(node, ERROR_NODE_NULL);</span>
-<span class="nc" id="L192">        return (String) node.getProperties().get(MessageSource.class.getName() + &quot;-DEFAULT_VALUE&quot;);</span>
+<span class="nc" id="L180">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L181">        return (String) node.getProperties().get(MessageSource.class.getName() + SUFFIX_DEFAULT_VALUE);</span>
     }
 
+    /**
+     * Associates an i18n key to a {@code node}. The key is used to resolve a message via the application's {@code MessageSource}.
+     *
+     * @param node the target node on which the key will be registered.
+     * @param key  the message key to be registered.
+     *
+     * @since 2.9.0
+     */
+    public static void setI18nKey(@Nonnull Tab node, @Nonnull String key) {
+<span class="nc" id="L193">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L194">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="nc" id="L195">        node.getProperties().put(MessageSource.class.getName() + SUFFIX_KEY, key);</span>
+<span class="nc" id="L196">    }</span>
+
+    /**
+     * Finds out if an i18n {@code key} has been registered with the target {@code Node}, returning the key if found.
+     *
+     * @param node the target node on which the key may have been registered.
+     *
+     * @return the key registered with the target {@code Node} or {@code null} if not found.
+     *
+     * @since 2.9.0
+     */
+    @Nullable
+    public static String getI18nKey(@Nonnull Tab node) {
+<span class="nc" id="L209">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L210">        return (String) node.getProperties().get(MessageSource.class.getName() + SUFFIX_KEY);</span>
+    }
+
+    /**
+     * Associates an i18n arrays of arguments to a {@code node}.
+     * These arguments will be used alongside a key to resolve a message via the application's {@code MessageSource}.
+     *
+     * @param node the target node on which the key will be registered.
+     * @param args the array of arguments to be registered.
+     *
+     * @since 2.9.0
+     */
+    public static void setI18nArgs(@Nonnull Tab node, @Nullable String args) {
+<span class="nc" id="L223">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L224">        requireNonBlank(args, ERROR_ARGS_BLANK);</span>
+<span class="nc" id="L225">        node.getProperties().put(MessageSource.class.getName() + SUFFIX_ARGS, args);</span>
+<span class="nc" id="L226">    }</span>
+
+    /**
+     * Finds out if an {@code arguments array} has been registered with the target {@code Node}, returning the array if found.
+     *
+     * @param node the target node on which the arguments may have been registered.
+     *
+     * @return the arguments registered with the target {@code Node} or {@code null} if not found.
+     *
+     * @since 2.9.0
+     */
+    @Nullable
+    public static String getI18nArgs(@Nonnull Tab node) {
+<span class="nc" id="L239">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L240">        return (String) node.getProperties().get(MessageSource.class.getName() + SUFFIX_ARGS);</span>
+    }
+
+    /**
+     * Associates an default value {@code node}.
+     * The value will be used alongside a key to resolve a message via the application's {@code MessageSource}.
+     *
+     * @param node         the target node on which the key will be registered.
+     * @param defaultValue the value to be registered.
+     *
+     * @since 2.9.0
+     */
+    public static void setI18nDefaultValue(@Nonnull Tab node, @Nullable String defaultValue) {
+<span class="nc" id="L253">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L254">        node.getProperties().put(MessageSource.class.getName() + SUFFIX_DEFAULT_VALUE, defaultValue);</span>
+<span class="nc" id="L255">    }</span>
+
+    /**
+     * Finds out if a {@code default value} has been registered with the target {@code Node}, returning the value if found.
+     *
+     * @param node the target node on which the value may have been registered.
+     *
+     * @return the value registered with the target {@code Node} or {@code null} if not found.
+     *
+     * @since 2.9.0
+     */
+    @Nullable
+    public static String getI18nDefaultValue(@Nonnull Tab node) {
+<span class="nc" id="L268">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L269">        return (String) node.getProperties().get(MessageSource.class.getName() + SUFFIX_DEFAULT_VALUE);</span>
+    }
+
+    /**
+     * Associates an i18n key to a {@code node}. The key is used to resolve a message via the application's {@code MessageSource}.
+     *
+     * @param node the target node on which the key will be registered.
+     * @param key  the message key to be registered.
+     *
+     * @since 2.9.0
+     */
+    public static void setI18nKey(@Nonnull MenuItem node, @Nonnull String key) {
+<span class="nc" id="L281">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L282">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="nc" id="L283">        node.getProperties().put(MessageSource.class.getName() + SUFFIX_KEY, key);</span>
+<span class="nc" id="L284">    }</span>
+
+    /**
+     * Finds out if an i18n {@code key} has been registered with the target {@code Node}, returning the key if found.
+     *
+     * @param node the target node on which the key may have been registered.
+     *
+     * @return the key registered with the target {@code Node} or {@code null} if not found.
+     *
+     * @since 2.9.0
+     */
+    @Nullable
+    public static String getI18nKey(@Nonnull MenuItem node) {
+<span class="nc" id="L297">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L298">        return (String) node.getProperties().get(MessageSource.class.getName() + SUFFIX_KEY);</span>
+    }
+
+    /**
+     * Associates an i18n arrays of arguments to a {@code node}.
+     * These arguments will be used alongside a key to resolve a message via the application's {@code MessageSource}.
+     *
+     * @param node the target node on which the key will be registered.
+     * @param args the array of arguments to be registered.
+     *
+     * @since 2.9.0
+     */
+    public static void setI18nArgs(@Nonnull MenuItem node, @Nullable String args) {
+<span class="nc" id="L311">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L312">        requireNonBlank(args, ERROR_ARGS_BLANK);</span>
+<span class="nc" id="L313">        node.getProperties().put(MessageSource.class.getName() + SUFFIX_ARGS, args);</span>
+<span class="nc" id="L314">    }</span>
+
+    /**
+     * Finds out if an {@code arguments array} has been registered with the target {@code Node}, returning the array if found.
+     *
+     * @param node the target node on which the arguments may have been registered.
+     *
+     * @return the arguments registered with the target {@code Node} or {@code null} if not found.
+     *
+     * @since 2.9.0
+     */
+    @Nullable
+    public static String getI18nArgs(@Nonnull MenuItem node) {
+<span class="nc" id="L327">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L328">        return (String) node.getProperties().get(MessageSource.class.getName() + SUFFIX_ARGS);</span>
+    }
+
+    /**
+     * Associates an default value {@code node}.
+     * The value will be used alongside a key to resolve a message via the application's {@code MessageSource}.
+     *
+     * @param node         the target node on which the key will be registered.
+     * @param defaultValue the value to be registered.
+     *
+     * @since 2.9.0
+     */
+    public static void setI18nDefaultValue(@Nonnull MenuItem node, @Nullable String defaultValue) {
+<span class="nc" id="L341">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L342">        node.getProperties().put(MessageSource.class.getName() + SUFFIX_DEFAULT_VALUE, defaultValue);</span>
+<span class="nc" id="L343">    }</span>
+
+    /**
+     * Finds out if a {@code default value} has been registered with the target {@code Node}, returning the value if found.
+     *
+     * @param node the target node on which the value may have been registered.
+     *
+     * @return the value registered with the target {@code Node} or {@code null} if not found.
+     *
+     * @since 2.9.0
+     */
+    @Nullable
+    public static String getI18nDefaultValue(@Nonnull MenuItem node) {
+<span class="nc" id="L356">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L357">        return (String) node.getProperties().get(MessageSource.class.getName() + SUFFIX_DEFAULT_VALUE);</span>
+    }
+
+
     public static void connectMessageSource(@Nonnull Object node, @Nonnull GriffonApplication application) {
-<span class="nc" id="L196">        requireNonNull(node, ERROR_NODE_NULL);</span>
-<span class="nc" id="L197">        requireNonNull(application, ERROR_APPLICATION_NULL);</span>
+<span class="nc" id="L362">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L363">        requireNonNull(application, ERROR_APPLICATION_NULL);</span>
 
-<span class="nc bnc" id="L199" title="All 4 branches missed.">        findElements(node, arg -&gt; arg instanceof Labeled &amp;&amp; !isBlank(getI18nKey((Labeled) arg)))</span>
-<span class="nc" id="L200">            .forEach(element -&gt; doConnectMessageSource((Labeled) element, application));</span>
-<span class="nc" id="L201">    }</span>
+<span class="nc bnc" id="L365" title="All 6 branches missed.">        findElements(node, arg -&gt; (arg instanceof Labeled &amp;&amp; !isBlank(getI18nKey((Labeled) arg))) ||</span>
+<span class="nc bnc" id="L366" title="All 4 branches missed.">            (arg instanceof Tab &amp;&amp; !isBlank(getI18nKey((Tab) arg))) ||</span>
+<span class="nc bnc" id="L367" title="All 2 branches missed.">            (arg instanceof MenuItem &amp;&amp; !isBlank(getI18nKey((MenuItem) arg))))</span>
+<span class="nc" id="L368">            .forEach(element -&gt; {</span>
+<span class="nc bnc" id="L369" title="All 2 branches missed.">                if (element instanceof Labeled) {</span>
+<span class="nc" id="L370">                    doConnectMessageSource((Labeled) element, application);</span>
+<span class="nc bnc" id="L371" title="All 2 branches missed.">                } else if (element instanceof Tab) {</span>
+<span class="nc" id="L372">                    doConnectMessageSource((Tab) element, application);</span>
+<span class="nc bnc" id="L373" title="All 2 branches missed.">                } else if (element instanceof MenuItem) {</span>
+<span class="nc" id="L374">                    doConnectMessageSource((MenuItem) element, application);</span>
+                }
+<span class="nc" id="L376">            });</span>
+<span class="nc" id="L377">    }</span>
 
-    private static void doConnectMessageSource(final @Nonnull Labeled labeled, final @Nonnull GriffonApplication application) {
-<span class="nc" id="L204">        application.addPropertyChangeListener(PROPERTY_LOCALE, evt -&gt; updateLabeled(labeled, application));</span>
-<span class="nc" id="L205">        updateLabeled(labeled, application);</span>
-<span class="nc" id="L206">    }</span>
+    private static void doConnectMessageSource(final @Nonnull Labeled node, final @Nonnull GriffonApplication application) {
+<span class="nc" id="L380">        application.addPropertyChangeListener(PROPERTY_LOCALE, evt -&gt; updateLabeled(node, application));</span>
+<span class="nc" id="L381">        updateLabeled(node, application);</span>
+<span class="nc" id="L382">    }</span>
 
-    private static void updateLabeled(@Nonnull Labeled labeled, @Nonnull GriffonApplication application) {
-<span class="nc" id="L209">        String key = getI18nKey(labeled);</span>
-<span class="nc" id="L210">        String args = getI18nArgs(labeled);</span>
-<span class="nc" id="L211">        String defaultValue = getI18nDefaultValue(labeled);</span>
+    private static void doConnectMessageSource(final @Nonnull Tab node, final @Nonnull GriffonApplication application) {
+<span class="nc" id="L385">        application.addPropertyChangeListener(PROPERTY_LOCALE, evt -&gt; updateLabeled(node, application));</span>
+<span class="nc" id="L386">        updateLabeled(node, application);</span>
+<span class="nc" id="L387">    }</span>
 
-<span class="nc bnc" id="L213" title="All 2 branches missed.">        Object[] argArray = isBlank(args) ? EMPTY_OBJECT_ARRAY : args.split(&quot;,&quot;);</span>
+    private static void doConnectMessageSource(final @Nonnull MenuItem node, final @Nonnull GriffonApplication application) {
+<span class="nc" id="L390">        application.addPropertyChangeListener(PROPERTY_LOCALE, evt -&gt; updateLabeled(node, application));</span>
+<span class="nc" id="L391">        updateLabeled(node, application);</span>
+<span class="nc" id="L392">    }</span>
 
-<span class="nc bnc" id="L215" title="All 2 branches missed.">        if (isBlank(defaultValue)) {</span>
-<span class="nc" id="L216">            labeled.setText(application.getMessageSource().getMessage(key, argArray, application.getLocale()));</span>
-        } else {
-<span class="nc" id="L218">            labeled.setText(application.getMessageSource().getMessage(key, argArray, application.getLocale(), defaultValue));</span>
-        }
-<span class="nc" id="L220">    }</span>
+    private static void updateLabeled(final @Nonnull Labeled node, final @Nonnull GriffonApplication application) {
+<span class="nc" id="L395">        runInsideUIThread(() -&gt; {</span>
+<span class="nc" id="L396">            String key = getI18nKey(node);</span>
+<span class="nc" id="L397">            String args = getI18nArgs(node);</span>
+<span class="nc" id="L398">            String defaultValue = getI18nDefaultValue(node);</span>
+
+<span class="nc bnc" id="L400" title="All 2 branches missed.">            Object[] argArray = isBlank(args) ? EMPTY_OBJECT_ARRAY : args.split(&quot;,&quot;);</span>
+
+<span class="nc bnc" id="L402" title="All 2 branches missed.">            if (isBlank(defaultValue)) {</span>
+<span class="nc" id="L403">                node.setText(application.getMessageSource().getMessage(key, argArray, application.getLocale()));</span>
+            } else {
+<span class="nc" id="L405">                node.setText(application.getMessageSource().getMessage(key, argArray, application.getLocale(), defaultValue));</span>
+            }
+<span class="nc" id="L407">        });</span>
+<span class="nc" id="L408">    }</span>
+
+    private static void updateLabeled(final @Nonnull Tab node, final @Nonnull GriffonApplication application) {
+<span class="nc" id="L411">        runInsideUIThread(() -&gt; {</span>
+<span class="nc" id="L412">            String key = getI18nKey(node);</span>
+<span class="nc" id="L413">            String args = getI18nArgs(node);</span>
+<span class="nc" id="L414">            String defaultValue = getI18nDefaultValue(node);</span>
+
+<span class="nc bnc" id="L416" title="All 2 branches missed.">            Object[] argArray = isBlank(args) ? EMPTY_OBJECT_ARRAY : args.split(&quot;,&quot;);</span>
+
+<span class="nc bnc" id="L418" title="All 2 branches missed.">            if (isBlank(defaultValue)) {</span>
+<span class="nc" id="L419">                node.setText(application.getMessageSource().getMessage(key, argArray, application.getLocale()));</span>
+            } else {
+<span class="nc" id="L421">                node.setText(application.getMessageSource().getMessage(key, argArray, application.getLocale(), defaultValue));</span>
+            }
+<span class="nc" id="L423">        });</span>
+<span class="nc" id="L424">    }</span>
+
+    private static void updateLabeled(final @Nonnull MenuItem node, final @Nonnull GriffonApplication application) {
+<span class="nc" id="L427">        runInsideUIThread(() -&gt; {</span>
+<span class="nc" id="L428">            String key = getI18nKey(node);</span>
+<span class="nc" id="L429">            String args = getI18nArgs(node);</span>
+<span class="nc" id="L430">            String defaultValue = getI18nDefaultValue(node);</span>
+
+<span class="nc bnc" id="L432" title="All 2 branches missed.">            Object[] argArray = isBlank(args) ? EMPTY_OBJECT_ARRAY : args.split(&quot;,&quot;);</span>
+
+<span class="nc bnc" id="L434" title="All 2 branches missed.">            if (isBlank(defaultValue)) {</span>
+<span class="nc" id="L435">                node.setText(application.getMessageSource().getMessage(key, argArray, application.getLocale()));</span>
+            } else {
+<span class="nc" id="L437">                node.setText(application.getMessageSource().getMessage(key, argArray, application.getLocale(), defaultValue));</span>
+            }
+<span class="nc" id="L439">        });</span>
+<span class="nc" id="L440">    }</span>
 
     /**
      * Associates a {@code Action} with a target {@code Node}.
@@ -228,10 +448,10 @@ public final class JavaFXUtils {
      * @since 2.8.0
      */
     public static void setGriffonActionId(@Nonnull Node node, @Nonnull String actionId) {
-<span class="nc" id="L231">        requireNonNull(node, ERROR_NODE_NULL);</span>
-<span class="nc" id="L232">        requireNonBlank(actionId, ERROR_ID_BLANK);</span>
-<span class="nc" id="L233">        node.getProperties().put(Action.class.getName(), actionId);</span>
-<span class="nc" id="L234">    }</span>
+<span class="nc" id="L451">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L452">        requireNonBlank(actionId, ERROR_ID_BLANK);</span>
+<span class="nc" id="L453">        node.getProperties().put(Action.class.getName(), actionId);</span>
+<span class="nc" id="L454">    }</span>
 
     /**
      * Finds out if an {@code Action} has been registered with the target {@code Node}, returning the action id if found.
@@ -244,8 +464,8 @@ public final class JavaFXUtils {
      */
     @Nullable
     public static String getGriffonActionId(@Nonnull Node node) {
-<span class="nc" id="L247">        requireNonNull(node, ERROR_NODE_NULL);</span>
-<span class="nc" id="L248">        return (String) node.getProperties().get(Action.class.getName());</span>
+<span class="nc" id="L467">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L468">        return (String) node.getProperties().get(Action.class.getName());</span>
     }
 
     /**
@@ -257,10 +477,10 @@ public final class JavaFXUtils {
      * @since 2.8.0
      */
     public static void setGriffonActionId(@Nonnull MenuItem menuItem, @Nonnull String actionId) {
-<span class="nc" id="L260">        requireNonNull(menuItem, ERROR_NODE_NULL);</span>
-<span class="nc" id="L261">        requireNonBlank(actionId, ERROR_ID_BLANK);</span>
-<span class="nc" id="L262">        menuItem.getProperties().put(Action.class.getName(), actionId);</span>
-<span class="nc" id="L263">    }</span>
+<span class="nc" id="L480">        requireNonNull(menuItem, ERROR_NODE_NULL);</span>
+<span class="nc" id="L481">        requireNonBlank(actionId, ERROR_ID_BLANK);</span>
+<span class="nc" id="L482">        menuItem.getProperties().put(Action.class.getName(), actionId);</span>
+<span class="nc" id="L483">    }</span>
 
     /**
      * Finds out if an {@code Action} has been registered with the target {@code MenuItem}, returning the action id if found.
@@ -273,8 +493,8 @@ public final class JavaFXUtils {
      */
     @Nullable
     public static String getGriffonActionId(@Nonnull MenuItem menuItem) {
-<span class="nc" id="L276">        requireNonNull(menuItem, ERROR_NODE_NULL);</span>
-<span class="nc" id="L277">        return (String) menuItem.getProperties().get(Action.class.getName());</span>
+<span class="nc" id="L496">        requireNonNull(menuItem, ERROR_NODE_NULL);</span>
+<span class="nc" id="L497">        return (String) menuItem.getProperties().get(Action.class.getName());</span>
     }
 
     /**
@@ -289,23 +509,23 @@ public final class JavaFXUtils {
      */
     @Nonnull
     public static &lt;E&gt; ObservableList&lt;E&gt; createJavaFXThreadProxyList(@Nonnull ObservableList&lt;E&gt; source) {
-<span class="nc" id="L292">        requireNonNull(source, &quot;Argument 'source' must not be null&quot;);</span>
-<span class="nc" id="L293">        return new JavaFXThreadProxyObservableList&lt;&gt;(source);</span>
+<span class="nc" id="L512">        requireNonNull(source, &quot;Argument 'source' must not be null&quot;);</span>
+<span class="nc" id="L513">        return new JavaFXThreadProxyObservableList&lt;&gt;(source);</span>
     }
 
     private static class JavaFXThreadProxyObservableList&lt;E&gt; extends DelegatingObservableList&lt;E&gt; {
         protected JavaFXThreadProxyObservableList(ObservableList&lt;E&gt; delegate) {
-<span class="nc" id="L298">            super(delegate);</span>
-<span class="nc" id="L299">        }</span>
+<span class="nc" id="L518">            super(delegate);</span>
+<span class="nc" id="L519">        }</span>
 
         @Override
         protected void sourceChanged(@Nonnull final ListChangeListener.Change&lt;? extends E&gt; c) {
-<span class="nc bnc" id="L303" title="All 2 branches missed.">            if (Platform.isFxApplicationThread()) {</span>
-<span class="nc" id="L304">                fireChange(c);</span>
+<span class="nc bnc" id="L523" title="All 2 branches missed.">            if (Platform.isFxApplicationThread()) {</span>
+<span class="nc" id="L524">                fireChange(c);</span>
             } else {
-<span class="nc" id="L306">                Platform.runLater(() -&gt; fireChange(c));</span>
+<span class="nc" id="L526">                Platform.runLater(() -&gt; fireChange(c));</span>
             }
-<span class="nc" id="L308">        }</span>
+<span class="nc" id="L528">        }</span>
     }
 
     /**
@@ -320,23 +540,23 @@ public final class JavaFXUtils {
      */
     @Nonnull
     public static &lt;E&gt; ObservableSet&lt;E&gt; createJavaFXThreadProxySet(@Nonnull ObservableSet&lt;E&gt; source) {
-<span class="nc" id="L323">        requireNonNull(source, &quot;Argument 'source' must not be null&quot;);</span>
-<span class="nc" id="L324">        return new JavaFXThreadProxyObservableSet&lt;&gt;(source);</span>
+<span class="nc" id="L543">        requireNonNull(source, &quot;Argument 'source' must not be null&quot;);</span>
+<span class="nc" id="L544">        return new JavaFXThreadProxyObservableSet&lt;&gt;(source);</span>
     }
 
     private static class JavaFXThreadProxyObservableSet&lt;E&gt; extends DelegatingObservableSet&lt;E&gt; {
         protected JavaFXThreadProxyObservableSet(ObservableSet&lt;E&gt; delegate) {
-<span class="nc" id="L329">            super(delegate);</span>
-<span class="nc" id="L330">        }</span>
+<span class="nc" id="L549">            super(delegate);</span>
+<span class="nc" id="L550">        }</span>
 
         @Override
         protected void sourceChanged(@Nonnull final SetChangeListener.Change&lt;? extends E&gt; c) {
-<span class="nc bnc" id="L334" title="All 2 branches missed.">            if (Platform.isFxApplicationThread()) {</span>
-<span class="nc" id="L335">                fireChange(c);</span>
+<span class="nc bnc" id="L554" title="All 2 branches missed.">            if (Platform.isFxApplicationThread()) {</span>
+<span class="nc" id="L555">                fireChange(c);</span>
             } else {
-<span class="nc" id="L337">                Platform.runLater(() -&gt; fireChange(c));</span>
+<span class="nc" id="L557">                Platform.runLater(() -&gt; fireChange(c));</span>
             }
-<span class="nc" id="L339">        }</span>
+<span class="nc" id="L559">        }</span>
     }
 
     /**
@@ -352,843 +572,843 @@ public final class JavaFXUtils {
      */
     @Nonnull
     public static &lt;K, V&gt; ObservableMap&lt;K, V&gt; createJavaFXThreadProxyMap(@Nonnull ObservableMap&lt;K, V&gt; source) {
-<span class="nc" id="L355">        requireNonNull(source, &quot;Argument 'source' must not be null&quot;);</span>
-<span class="nc" id="L356">        return new JavaFXThreadProxyObservableMap&lt;&gt;(source);</span>
+<span class="nc" id="L575">        requireNonNull(source, &quot;Argument 'source' must not be null&quot;);</span>
+<span class="nc" id="L576">        return new JavaFXThreadProxyObservableMap&lt;&gt;(source);</span>
     }
 
     private static class JavaFXThreadProxyObservableMap&lt;K, V&gt; extends DelegatingObservableMap&lt;K, V&gt; {
         protected JavaFXThreadProxyObservableMap(ObservableMap&lt;K, V&gt; delegate) {
-<span class="nc" id="L361">            super(delegate);</span>
-<span class="nc" id="L362">        }</span>
+<span class="nc" id="L581">            super(delegate);</span>
+<span class="nc" id="L582">        }</span>
 
         @Override
         protected void sourceChanged(@Nonnull final MapChangeListener.Change&lt;? extends K, ? extends V&gt; c) {
-<span class="nc bnc" id="L366" title="All 2 branches missed.">            if (Platform.isFxApplicationThread()) {</span>
-<span class="nc" id="L367">                fireChange(c);</span>
+<span class="nc bnc" id="L586" title="All 2 branches missed.">            if (Platform.isFxApplicationThread()) {</span>
+<span class="nc" id="L587">                fireChange(c);</span>
             } else {
-<span class="nc" id="L369">                Platform.runLater(() -&gt; fireChange(c));</span>
+<span class="nc" id="L589">                Platform.runLater(() -&gt; fireChange(c));</span>
             }
-<span class="nc" id="L371">        }</span>
+<span class="nc" id="L591">        }</span>
     }
 
     @Nonnull
     @SuppressWarnings(&quot;ConstantConditions&quot;)
     public static &lt;B&gt; Property&lt;?&gt; extractProperty(@Nonnull B bean, @Nonnull String propertyName) {
-<span class="nc" id="L377">        requireNonNull(bean, &quot;Argument 'bean' must not be null&quot;);</span>
-<span class="nc" id="L378">        requireNonBlank(propertyName, &quot;Argument 'propertyName' must not be null&quot;);</span>
+<span class="nc" id="L597">        requireNonNull(bean, &quot;Argument 'bean' must not be null&quot;);</span>
+<span class="nc" id="L598">        requireNonBlank(propertyName, &quot;Argument 'propertyName' must not be null&quot;);</span>
 
-<span class="nc bnc" id="L380" title="All 2 branches missed.">        if (!propertyName.endsWith(PROPERTY_SUFFIX)) {</span>
-<span class="nc" id="L381">            propertyName += PROPERTY_SUFFIX;</span>
+<span class="nc bnc" id="L600" title="All 2 branches missed.">        if (!propertyName.endsWith(PROPERTY_SUFFIX)) {</span>
+<span class="nc" id="L601">            propertyName += PROPERTY_SUFFIX;</span>
         }
 
         InstanceMethodInvocationException imie;
         try {
             // 1. try &lt;columnName&gt;Property() first
-<span class="nc" id="L387">            return (Property&lt;?&gt;) invokeExactInstanceMethod(bean, propertyName);</span>
-<span class="nc" id="L388">        } catch (InstanceMethodInvocationException e) {</span>
-<span class="nc" id="L389">            imie = e;</span>
+<span class="nc" id="L607">            return (Property&lt;?&gt;) invokeExactInstanceMethod(bean, propertyName);</span>
+<span class="nc" id="L608">        } catch (InstanceMethodInvocationException e) {</span>
+<span class="nc" id="L609">            imie = e;</span>
         }
 
         // 2. fallback to get&lt;columnName&gt;Property()
         try {
-<span class="nc" id="L394">            return (Property&lt;?&gt;) invokeExactInstanceMethod(bean, getGetterName(propertyName));</span>
-<span class="nc" id="L395">        } catch (InstanceMethodInvocationException e) {</span>
-<span class="nc" id="L396">            throw imie;</span>
+<span class="nc" id="L614">            return (Property&lt;?&gt;) invokeExactInstanceMethod(bean, getGetterName(propertyName));</span>
+<span class="nc" id="L615">        } catch (InstanceMethodInvocationException e) {</span>
+<span class="nc" id="L616">            throw imie;</span>
         }
     }
 
     public static void connectActions(@Nonnull Object node, @Nonnull GriffonController controller) {
-<span class="nc" id="L401">        requireNonNull(node, ERROR_NODE_NULL);</span>
-<span class="nc" id="L402">        requireNonNull(controller, ERROR_CONTROLLER_NULL);</span>
-<span class="nc" id="L403">        ActionManager actionManager = controller.getApplication().getActionManager();</span>
-<span class="nc bnc" id="L404" title="All 2 branches missed.">        for (Map.Entry&lt;String, Action&gt; e : actionManager.actionsFor(controller).entrySet()) {</span>
-<span class="nc" id="L405">            final String actionName = actionManager.normalizeName(e.getKey());</span>
-<span class="nc" id="L406">            final String actionTargetName = actionName + ACTION_TARGET_SUFFIX;</span>
-<span class="nc" id="L407">            JavaFXAction action = (JavaFXAction) e.getValue().getToolkitAction();</span>
+<span class="nc" id="L621">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L622">        requireNonNull(controller, ERROR_CONTROLLER_NULL);</span>
+<span class="nc" id="L623">        ActionManager actionManager = controller.getApplication().getActionManager();</span>
+<span class="nc bnc" id="L624" title="All 2 branches missed.">        for (Map.Entry&lt;String, Action&gt; e : actionManager.actionsFor(controller).entrySet()) {</span>
+<span class="nc" id="L625">            final String actionName = actionManager.normalizeName(e.getKey());</span>
+<span class="nc" id="L626">            final String actionTargetName = actionName + ACTION_TARGET_SUFFIX;</span>
+<span class="nc" id="L627">            JavaFXAction action = (JavaFXAction) e.getValue().getToolkitAction();</span>
 
-<span class="nc" id="L409">            Collection&lt;Object&gt; controls = findElements(node, new Predicate&lt;Object&gt;() {</span>
+<span class="nc" id="L629">            Collection&lt;Object&gt; controls = findElements(node, new Predicate&lt;Object&gt;() {</span>
                 @Override
                 public boolean test(@Nonnull Object arg) {
-<span class="nc bnc" id="L412" title="All 2 branches missed.">                    if (arg instanceof Node) {</span>
-<span class="nc" id="L413">                        return actionName.equals(getGriffonActionId((Node) arg));</span>
-<span class="nc bnc" id="L414" title="All 2 branches missed.">                    } else if (arg instanceof MenuItem) {</span>
-<span class="nc" id="L415">                        return actionName.equals(getGriffonActionId((MenuItem) arg));</span>
+<span class="nc bnc" id="L632" title="All 2 branches missed.">                    if (arg instanceof Node) {</span>
+<span class="nc" id="L633">                        return actionName.equals(getGriffonActionId((Node) arg));</span>
+<span class="nc bnc" id="L634" title="All 2 branches missed.">                    } else if (arg instanceof MenuItem) {</span>
+<span class="nc" id="L635">                        return actionName.equals(getGriffonActionId((MenuItem) arg));</span>
                     }
-<span class="nc" id="L417">                    return false;</span>
+<span class="nc" id="L637">                    return false;</span>
                 }
             });
 
-<span class="nc bnc" id="L421" title="All 2 branches missed.">            for (Object control : controls) {</span>
-<span class="nc" id="L422">                configureControl(control, action);</span>
-<span class="nc" id="L423">            }</span>
+<span class="nc bnc" id="L641" title="All 2 branches missed.">            for (Object control : controls) {</span>
+<span class="nc" id="L642">                configureControl(control, action);</span>
+<span class="nc" id="L643">            }</span>
 
-<span class="nc" id="L425">            Object control = findElement(node, actionTargetName);</span>
-<span class="nc bnc" id="L426" title="All 4 branches missed.">            if (control == null || controls.contains(control)) { continue; }</span>
-<span class="nc" id="L427">            configureControl(control, action);</span>
-<span class="nc" id="L428">        }</span>
-<span class="nc" id="L429">    }</span>
+<span class="nc" id="L645">            Object control = findElement(node, actionTargetName);</span>
+<span class="nc bnc" id="L646" title="All 4 branches missed.">            if (control == null || controls.contains(control)) { continue; }</span>
+<span class="nc" id="L647">            configureControl(control, action);</span>
+<span class="nc" id="L648">        }</span>
+<span class="nc" id="L649">    }</span>
 
     private static void configureControl(@Nonnull Object control, @Nonnull JavaFXAction action) {
-<span class="nc bnc" id="L432" title="All 2 branches missed.">        if (control instanceof ButtonBase) {</span>
-<span class="nc" id="L433">            configure(((ButtonBase) control), action);</span>
-<span class="nc bnc" id="L434" title="All 2 branches missed.">        } else if (control instanceof MenuItem) {</span>
-<span class="nc" id="L435">            JavaFXUtils.configure(((MenuItem) control), action);</span>
-<span class="nc bnc" id="L436" title="All 2 branches missed.">        } else if (control instanceof Node) {</span>
-<span class="nc" id="L437">            ((Node) control).addEventHandler(ActionEvent.ACTION, wrapAction(action));</span>
+<span class="nc bnc" id="L652" title="All 2 branches missed.">        if (control instanceof ButtonBase) {</span>
+<span class="nc" id="L653">            configure(((ButtonBase) control), action);</span>
+<span class="nc bnc" id="L654" title="All 2 branches missed.">        } else if (control instanceof MenuItem) {</span>
+<span class="nc" id="L655">            JavaFXUtils.configure(((MenuItem) control), action);</span>
+<span class="nc bnc" id="L656" title="All 2 branches missed.">        } else if (control instanceof Node) {</span>
+<span class="nc" id="L657">            ((Node) control).addEventHandler(ActionEvent.ACTION, wrapAction(action));</span>
         } else {
             // does it support the onAction property?
             try {
-<span class="nc" id="L441">                invokeInstanceMethod(control, &quot;setOnAction&quot;, wrapAction(action));</span>
-<span class="nc" id="L442">            } catch (InstanceMethodInvocationException imie) {</span>
+<span class="nc" id="L661">                invokeInstanceMethod(control, &quot;setOnAction&quot;, wrapAction(action));</span>
+<span class="nc" id="L662">            } catch (InstanceMethodInvocationException imie) {</span>
                 // ignore
-<span class="nc" id="L444">            }</span>
+<span class="nc" id="L664">            }</span>
         }
-<span class="nc" id="L446">    }</span>
+<span class="nc" id="L666">    }</span>
 
     private static EventHandler&lt;ActionEvent&gt; wrapAction(final @Nonnull JavaFXAction action) {
-<span class="nc" id="L449">        return event -&gt; {</span>
-<span class="nc bnc" id="L450" title="All 2 branches missed.">            if (action.isEnabled()) {</span>
-<span class="nc" id="L451">                action.getOnAction().handle(event);</span>
+<span class="nc" id="L669">        return event -&gt; {</span>
+<span class="nc bnc" id="L670" title="All 2 branches missed.">            if (action.isEnabled()) {</span>
+<span class="nc" id="L671">                action.getOnAction().handle(event);</span>
             }
-<span class="nc" id="L453">        };</span>
+<span class="nc" id="L673">        };</span>
     }
 
     private static void runInsideUIThread(@Nonnull Runnable runnable) {
-<span class="nc bnc" id="L457" title="All 2 branches missed.">        if (Platform.isFxApplicationThread()) {</span>
-<span class="nc" id="L458">            runnable.run();</span>
+<span class="nc bnc" id="L677" title="All 2 branches missed.">        if (Platform.isFxApplicationThread()) {</span>
+<span class="nc" id="L678">            runnable.run();</span>
         } else {
-<span class="nc" id="L460">            Platform.runLater(runnable);</span>
+<span class="nc" id="L680">            Platform.runLater(runnable);</span>
         }
-<span class="nc" id="L462">    }</span>
+<span class="nc" id="L682">    }</span>
 
     public static String normalizeStyle(@Nonnull String style, @Nonnull String key, @Nonnull String value) {
-<span class="nc" id="L465">        requireNonBlank(style, &quot;Argument 'style' must not be blank&quot;);</span>
-<span class="nc" id="L466">        requireNonBlank(key, &quot;Argument 'key' must not be blank&quot;);</span>
-<span class="nc" id="L467">        requireNonBlank(value, &quot;Argument 'value' must not be blank&quot;);</span>
+<span class="nc" id="L685">        requireNonBlank(style, &quot;Argument 'style' must not be blank&quot;);</span>
+<span class="nc" id="L686">        requireNonBlank(key, &quot;Argument 'key' must not be blank&quot;);</span>
+<span class="nc" id="L687">        requireNonBlank(value, &quot;Argument 'value' must not be blank&quot;);</span>
 
-<span class="nc" id="L469">        int start = style.indexOf(key);</span>
-<span class="nc bnc" id="L470" title="All 2 branches missed.">        if (start != -1) {</span>
-<span class="nc" id="L471">            int end = style.indexOf(&quot;;&quot;, start);</span>
-<span class="nc bnc" id="L472" title="All 2 branches missed.">            end = end &gt;= start ? end : style.length() - 1;</span>
-<span class="nc" id="L473">            style = style.substring(0, start) + style.substring(end + 1);</span>
+<span class="nc" id="L689">        int start = style.indexOf(key);</span>
+<span class="nc bnc" id="L690" title="All 2 branches missed.">        if (start != -1) {</span>
+<span class="nc" id="L691">            int end = style.indexOf(&quot;;&quot;, start);</span>
+<span class="nc bnc" id="L692" title="All 2 branches missed.">            end = end &gt;= start ? end : style.length() - 1;</span>
+<span class="nc" id="L693">            style = style.substring(0, start) + style.substring(end + 1);</span>
         }
-<span class="nc" id="L475">        return style + key + &quot;: &quot; + value + &quot;;&quot;;</span>
+<span class="nc" id="L695">        return style + key + &quot;: &quot; + value + &quot;;&quot;;</span>
     }
 
     public static void configure(final @Nonnull ToggleButton control, final @Nonnull JavaFXAction action) {
-<span class="nc" id="L479">        configure((ButtonBase) control, action);</span>
+<span class="nc" id="L699">        configure((ButtonBase) control, action);</span>
 
-<span class="nc" id="L481">        action.selectedProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setSelected(n)));</span>
-<span class="nc" id="L482">        runInsideUIThread(() -&gt; control.setSelected(action.isSelected()));</span>
-<span class="nc" id="L483">    }</span>
+<span class="nc" id="L701">        action.selectedProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setSelected(n)));</span>
+<span class="nc" id="L702">        runInsideUIThread(() -&gt; control.setSelected(action.isSelected()));</span>
+<span class="nc" id="L703">    }</span>
 
     public static void configure(final @Nonnull CheckBox control, final @Nonnull JavaFXAction action) {
-<span class="nc" id="L486">        configure((ButtonBase) control, action);</span>
+<span class="nc" id="L706">        configure((ButtonBase) control, action);</span>
 
-<span class="nc" id="L488">        action.selectedProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setSelected(n)));</span>
-<span class="nc" id="L489">        runInsideUIThread(() -&gt; control.setSelected(action.isSelected()));</span>
-<span class="nc" id="L490">    }</span>
+<span class="nc" id="L708">        action.selectedProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setSelected(n)));</span>
+<span class="nc" id="L709">        runInsideUIThread(() -&gt; control.setSelected(action.isSelected()));</span>
+<span class="nc" id="L710">    }</span>
 
     public static void configure(final @Nonnull RadioButton control, final @Nonnull JavaFXAction action) {
-<span class="nc" id="L493">        configure((ButtonBase) control, action);</span>
+<span class="nc" id="L713">        configure((ButtonBase) control, action);</span>
 
-<span class="nc" id="L495">        action.selectedProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setSelected(n)));</span>
-<span class="nc" id="L496">        runInsideUIThread(() -&gt; control.setSelected(action.isSelected()));</span>
-<span class="nc" id="L497">    }</span>
+<span class="nc" id="L715">        action.selectedProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setSelected(n)));</span>
+<span class="nc" id="L716">        runInsideUIThread(() -&gt; control.setSelected(action.isSelected()));</span>
+<span class="nc" id="L717">    }</span>
 
     public static void configure(final @Nonnull ButtonBase control, final @Nonnull JavaFXAction action) {
-<span class="nc" id="L500">        requireNonNull(control, ERROR_CONTROL_NULL);</span>
-<span class="nc" id="L501">        requireNonNull(action, ERROR_ACTION_NULL);</span>
+<span class="nc" id="L720">        requireNonNull(control, ERROR_CONTROL_NULL);</span>
+<span class="nc" id="L721">        requireNonNull(action, ERROR_ACTION_NULL);</span>
 
-<span class="nc" id="L503">        action.onActionProperty().addListener((v, o, n) -&gt; control.setOnAction(n));</span>
-<span class="nc" id="L504">        control.setOnAction(action.getOnAction());</span>
+<span class="nc" id="L723">        action.onActionProperty().addListener((v, o, n) -&gt; control.setOnAction(n));</span>
+<span class="nc" id="L724">        control.setOnAction(action.getOnAction());</span>
 
-<span class="nc" id="L506">        action.nameProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setText(n)));</span>
-<span class="nc" id="L507">        runInsideUIThread(() -&gt; control.setText(action.getName()));</span>
+<span class="nc" id="L726">        action.nameProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setText(n)));</span>
+<span class="nc" id="L727">        runInsideUIThread(() -&gt; control.setText(action.getName()));</span>
 
-<span class="nc" id="L509">        action.descriptionProperty().addListener((v, o, n) -&gt; setTooltip(control, n));</span>
-<span class="nc" id="L510">        setTooltip(control, action.getDescription());</span>
+<span class="nc" id="L729">        action.descriptionProperty().addListener((v, o, n) -&gt; setTooltip(control, n));</span>
+<span class="nc" id="L730">        setTooltip(control, action.getDescription());</span>
 
-<span class="nc" id="L512">        action.iconProperty().addListener((v, o, n) -&gt; setIcon(control, n));</span>
-<span class="nc bnc" id="L513" title="All 2 branches missed.">        if (!isBlank(action.getIcon())) {</span>
-<span class="nc" id="L514">            setIcon(control, action.getIcon());</span>
+<span class="nc" id="L732">        action.iconProperty().addListener((v, o, n) -&gt; setIcon(control, n));</span>
+<span class="nc bnc" id="L733" title="All 2 branches missed.">        if (!isBlank(action.getIcon())) {</span>
+<span class="nc" id="L734">            setIcon(control, action.getIcon());</span>
         }
 
-<span class="nc" id="L517">        action.imageProperty().addListener((v, o, n) -&gt; setGraphic(control, n));</span>
-<span class="nc bnc" id="L518" title="All 2 branches missed.">        if (null != action.getImage()) {</span>
-<span class="nc" id="L519">            setGraphic(control, action.getImage());</span>
+<span class="nc" id="L737">        action.imageProperty().addListener((v, o, n) -&gt; setGraphic(control, n));</span>
+<span class="nc bnc" id="L738" title="All 2 branches missed.">        if (null != action.getImage()) {</span>
+<span class="nc" id="L739">            setGraphic(control, action.getImage());</span>
         }
 
-<span class="nc" id="L522">        action.graphicProperty().addListener((v, o, n) -&gt; setGraphic(control, n));</span>
-<span class="nc bnc" id="L523" title="All 2 branches missed.">        if (null != action.getGraphic()) {</span>
-<span class="nc" id="L524">            setGraphic(control, action.getGraphic());</span>
+<span class="nc" id="L742">        action.graphicProperty().addListener((v, o, n) -&gt; setGraphic(control, n));</span>
+<span class="nc bnc" id="L743" title="All 2 branches missed.">        if (null != action.getGraphic()) {</span>
+<span class="nc" id="L744">            setGraphic(control, action.getGraphic());</span>
         }
 
-<span class="nc bnc" id="L527" title="All 2 branches missed.">        action.enabledProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setDisable(!n)));</span>
-<span class="nc bnc" id="L528" title="All 2 branches missed.">        runInsideUIThread(() -&gt; control.setDisable(!action.isEnabled()));</span>
+<span class="nc bnc" id="L747" title="All 2 branches missed.">        action.enabledProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setDisable(!n)));</span>
+<span class="nc bnc" id="L748" title="All 2 branches missed.">        runInsideUIThread(() -&gt; control.setDisable(!action.isEnabled()));</span>
 
-<span class="nc" id="L530">        action.visibleProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setVisible(n)));</span>
-<span class="nc" id="L531">        runInsideUIThread(() -&gt; control.setVisible(action.isVisible()));</span>
+<span class="nc" id="L750">        action.visibleProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setVisible(n)));</span>
+<span class="nc" id="L751">        runInsideUIThread(() -&gt; control.setVisible(action.isVisible()));</span>
 
-<span class="nc" id="L533">        action.styleClassProperty().addListener((v, o, n) -&gt; {</span>
-<span class="nc" id="L534">            setStyleClass(control, o, true);</span>
-<span class="nc" id="L535">            setStyleClass(control, n);</span>
-<span class="nc" id="L536">        });</span>
-<span class="nc" id="L537">        setStyleClass(control, action.getStyleClass());</span>
+<span class="nc" id="L753">        action.styleClassProperty().addListener((v, o, n) -&gt; {</span>
+<span class="nc" id="L754">            setStyleClass(control, o, true);</span>
+<span class="nc" id="L755">            setStyleClass(control, n);</span>
+<span class="nc" id="L756">        });</span>
+<span class="nc" id="L757">        setStyleClass(control, action.getStyleClass());</span>
 
-<span class="nc" id="L539">        action.styleProperty().addListener((v, o, n) -&gt; setStyle(control, n));</span>
-<span class="nc" id="L540">        setStyle(control, action.getStyle());</span>
+<span class="nc" id="L759">        action.styleProperty().addListener((v, o, n) -&gt; setStyle(control, n));</span>
+<span class="nc" id="L760">        setStyle(control, action.getStyle());</span>
 
-<span class="nc" id="L542">        action.graphicStyleClassProperty().addListener((v, o, n) -&gt; {</span>
-<span class="nc" id="L543">            setGraphicStyleClass(control, o, true);</span>
-<span class="nc" id="L544">            setGraphicStyleClass(control, n);</span>
-<span class="nc" id="L545">        });</span>
-<span class="nc" id="L546">        setGraphicStyleClass(control, action.getGraphicStyleClass());</span>
+<span class="nc" id="L762">        action.graphicStyleClassProperty().addListener((v, o, n) -&gt; {</span>
+<span class="nc" id="L763">            setGraphicStyleClass(control, o, true);</span>
+<span class="nc" id="L764">            setGraphicStyleClass(control, n);</span>
+<span class="nc" id="L765">        });</span>
+<span class="nc" id="L766">        setGraphicStyleClass(control, action.getGraphicStyleClass());</span>
 
-<span class="nc" id="L548">        action.graphicStyleProperty().addListener((v, o, n) -&gt; setGraphicStyle(control, n));</span>
-<span class="nc" id="L549">        setGraphicStyle(control, action.getGraphicStyle());</span>
-<span class="nc" id="L550">    }</span>
+<span class="nc" id="L768">        action.graphicStyleProperty().addListener((v, o, n) -&gt; setGraphicStyle(control, n));</span>
+<span class="nc" id="L769">        setGraphicStyle(control, action.getGraphicStyle());</span>
+<span class="nc" id="L770">    }</span>
 
     public static void configure(final @Nonnull CheckMenuItem control, final @Nonnull JavaFXAction action) {
-<span class="nc" id="L553">        configure((MenuItem) control, action);</span>
+<span class="nc" id="L773">        configure((MenuItem) control, action);</span>
 
-<span class="nc" id="L555">        action.selectedProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setSelected(n)));</span>
-<span class="nc" id="L556">        runInsideUIThread(() -&gt; control.setSelected(action.isSelected()));</span>
-<span class="nc" id="L557">    }</span>
+<span class="nc" id="L775">        action.selectedProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setSelected(n)));</span>
+<span class="nc" id="L776">        runInsideUIThread(() -&gt; control.setSelected(action.isSelected()));</span>
+<span class="nc" id="L777">    }</span>
 
     public static void configure(final @Nonnull RadioMenuItem control, final @Nonnull JavaFXAction action) {
-<span class="nc" id="L560">        configure((MenuItem) control, action);</span>
+<span class="nc" id="L780">        configure((MenuItem) control, action);</span>
 
-<span class="nc" id="L562">        action.selectedProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setSelected(n)));</span>
-<span class="nc" id="L563">        runInsideUIThread(() -&gt; control.setSelected(action.isSelected()));</span>
-<span class="nc" id="L564">    }</span>
+<span class="nc" id="L782">        action.selectedProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setSelected(n)));</span>
+<span class="nc" id="L783">        runInsideUIThread(() -&gt; control.setSelected(action.isSelected()));</span>
+<span class="nc" id="L784">    }</span>
 
     public static void configure(final @Nonnull MenuItem control, final @Nonnull JavaFXAction action) {
-<span class="nc" id="L567">        requireNonNull(control, ERROR_CONTROL_NULL);</span>
-<span class="nc" id="L568">        requireNonNull(action, ERROR_ACTION_NULL);</span>
+<span class="nc" id="L787">        requireNonNull(control, ERROR_CONTROL_NULL);</span>
+<span class="nc" id="L788">        requireNonNull(action, ERROR_ACTION_NULL);</span>
 
-<span class="nc" id="L570">        action.onActionProperty().addListener((v, o, n) -&gt; control.setOnAction(n));</span>
-<span class="nc" id="L571">        control.setOnAction(action.getOnAction());</span>
+<span class="nc" id="L790">        action.onActionProperty().addListener((v, o, n) -&gt; control.setOnAction(n));</span>
+<span class="nc" id="L791">        control.setOnAction(action.getOnAction());</span>
 
-<span class="nc" id="L573">        action.nameProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setText(n)));</span>
-<span class="nc" id="L574">        runInsideUIThread(() -&gt; control.setText(action.getName()));</span>
+<span class="nc" id="L793">        action.nameProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setText(n)));</span>
+<span class="nc" id="L794">        runInsideUIThread(() -&gt; control.setText(action.getName()));</span>
 
-<span class="nc" id="L576">        action.iconProperty().addListener((v, o, n) -&gt; setIcon(control, n));</span>
-<span class="nc bnc" id="L577" title="All 2 branches missed.">        if (!isBlank(action.getIcon())) {</span>
-<span class="nc" id="L578">            setIcon(control, action.getIcon());</span>
+<span class="nc" id="L796">        action.iconProperty().addListener((v, o, n) -&gt; setIcon(control, n));</span>
+<span class="nc bnc" id="L797" title="All 2 branches missed.">        if (!isBlank(action.getIcon())) {</span>
+<span class="nc" id="L798">            setIcon(control, action.getIcon());</span>
         }
 
-<span class="nc" id="L581">        action.imageProperty().addListener((v, o, n) -&gt; setGraphic(control, n));</span>
-<span class="nc bnc" id="L582" title="All 2 branches missed.">        if (null != action.getImage()) {</span>
-<span class="nc" id="L583">            setGraphic(control, action.getImage());</span>
+<span class="nc" id="L801">        action.imageProperty().addListener((v, o, n) -&gt; setGraphic(control, n));</span>
+<span class="nc bnc" id="L802" title="All 2 branches missed.">        if (null != action.getImage()) {</span>
+<span class="nc" id="L803">            setGraphic(control, action.getImage());</span>
         }
 
-<span class="nc" id="L586">        action.graphicProperty().addListener((v, o, n) -&gt; setGraphic(control, n));</span>
-<span class="nc bnc" id="L587" title="All 2 branches missed.">        if (null != action.getGraphic()) {</span>
-<span class="nc" id="L588">            setGraphic(control, action.getGraphic());</span>
+<span class="nc" id="L806">        action.graphicProperty().addListener((v, o, n) -&gt; setGraphic(control, n));</span>
+<span class="nc bnc" id="L807" title="All 2 branches missed.">        if (null != action.getGraphic()) {</span>
+<span class="nc" id="L808">            setGraphic(control, action.getGraphic());</span>
         }
 
-<span class="nc bnc" id="L591" title="All 2 branches missed.">        action.enabledProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setDisable(!n)));</span>
-<span class="nc bnc" id="L592" title="All 2 branches missed.">        runInsideUIThread(() -&gt; control.setDisable(!action.getEnabled()));</span>
+<span class="nc bnc" id="L811" title="All 2 branches missed.">        action.enabledProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setDisable(!n)));</span>
+<span class="nc bnc" id="L812" title="All 2 branches missed.">        runInsideUIThread(() -&gt; control.setDisable(!action.getEnabled()));</span>
 
-<span class="nc" id="L594">        action.acceleratorProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setAccelerator(n)));</span>
-<span class="nc" id="L595">        runInsideUIThread(() -&gt; control.setAccelerator(action.getAccelerator()));</span>
+<span class="nc" id="L814">        action.acceleratorProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setAccelerator(n)));</span>
+<span class="nc" id="L815">        runInsideUIThread(() -&gt; control.setAccelerator(action.getAccelerator()));</span>
 
-<span class="nc" id="L597">        action.visibleProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setVisible(n)));</span>
-<span class="nc" id="L598">        runInsideUIThread(() -&gt; control.setVisible(action.isVisible()));</span>
+<span class="nc" id="L817">        action.visibleProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setVisible(n)));</span>
+<span class="nc" id="L818">        runInsideUIThread(() -&gt; control.setVisible(action.isVisible()));</span>
 
-<span class="nc" id="L600">        action.styleClassProperty().addListener((v, o, n) -&gt; {</span>
-<span class="nc" id="L601">            setStyleClass(control, o, true);</span>
-<span class="nc" id="L602">            setStyleClass(control, n);</span>
-<span class="nc" id="L603">        });</span>
-<span class="nc" id="L604">        setStyleClass(control, action.getStyleClass());</span>
+<span class="nc" id="L820">        action.styleClassProperty().addListener((v, o, n) -&gt; {</span>
+<span class="nc" id="L821">            setStyleClass(control, o, true);</span>
+<span class="nc" id="L822">            setStyleClass(control, n);</span>
+<span class="nc" id="L823">        });</span>
+<span class="nc" id="L824">        setStyleClass(control, action.getStyleClass());</span>
 
-<span class="nc" id="L606">        action.styleProperty().addListener((v, o, n) -&gt; setStyle(control, n));</span>
-<span class="nc" id="L607">        setStyle(control, action.getStyle());</span>
+<span class="nc" id="L826">        action.styleProperty().addListener((v, o, n) -&gt; setStyle(control, n));</span>
+<span class="nc" id="L827">        setStyle(control, action.getStyle());</span>
 
-<span class="nc" id="L609">        action.graphicStyleClassProperty().addListener((v, o, n) -&gt; {</span>
-<span class="nc" id="L610">            setGraphicStyleClass(control, o, true);</span>
-<span class="nc" id="L611">            setGraphicStyleClass(control, n);</span>
-<span class="nc" id="L612">        });</span>
-<span class="nc" id="L613">        setGraphicStyleClass(control, action.getGraphicStyleClass());</span>
+<span class="nc" id="L829">        action.graphicStyleClassProperty().addListener((v, o, n) -&gt; {</span>
+<span class="nc" id="L830">            setGraphicStyleClass(control, o, true);</span>
+<span class="nc" id="L831">            setGraphicStyleClass(control, n);</span>
+<span class="nc" id="L832">        });</span>
+<span class="nc" id="L833">        setGraphicStyleClass(control, action.getGraphicStyleClass());</span>
 
-<span class="nc" id="L615">        action.graphicStyleProperty().addListener((v, o, n) -&gt; setGraphicStyle(control, n));</span>
-<span class="nc" id="L616">        setGraphicStyle(control, action.getGraphicStyle());</span>
-<span class="nc" id="L617">    }</span>
+<span class="nc" id="L835">        action.graphicStyleProperty().addListener((v, o, n) -&gt; setGraphicStyle(control, n));</span>
+<span class="nc" id="L836">        setGraphicStyle(control, action.getGraphicStyle());</span>
+<span class="nc" id="L837">    }</span>
 
     public static void setStyle(@Nonnull Node node, @Nonnull String style) {
-<span class="nc" id="L620">        requireNonNull(node, ERROR_CONTROL_NULL);</span>
-<span class="nc bnc" id="L621" title="All 2 branches missed.">        if (isNull(style)) { return; }</span>
-<span class="nc bnc" id="L622" title="All 2 branches missed.">        if (style.startsWith(&quot;&amp;&quot;)) {</span>
+<span class="nc" id="L840">        requireNonNull(node, ERROR_CONTROL_NULL);</span>
+<span class="nc bnc" id="L841" title="All 2 branches missed.">        if (isNull(style)) { return; }</span>
+<span class="nc bnc" id="L842" title="All 2 branches missed.">        if (style.startsWith(&quot;&amp;&quot;)) {</span>
             // append style
-<span class="nc" id="L624">            String nodeStyle = node.getStyle();</span>
-<span class="nc bnc" id="L625" title="All 2 branches missed.">            node.setStyle(nodeStyle + (nodeStyle.endsWith(&quot;;&quot;) ? &quot;&quot; : &quot;;&quot;) + style.substring(1));</span>
-<span class="nc" id="L626">        } else {</span>
-<span class="nc" id="L627">            node.setStyle(style);</span>
+<span class="nc" id="L844">            String nodeStyle = node.getStyle();</span>
+<span class="nc bnc" id="L845" title="All 2 branches missed.">            node.setStyle(nodeStyle + (nodeStyle.endsWith(&quot;;&quot;) ? &quot;&quot; : &quot;;&quot;) + style.substring(1));</span>
+<span class="nc" id="L846">        } else {</span>
+<span class="nc" id="L847">            node.setStyle(style);</span>
         }
-<span class="nc" id="L629">    }</span>
+<span class="nc" id="L849">    }</span>
 
     public static void setStyle(@Nonnull MenuItem node, @Nonnull String style) {
-<span class="nc" id="L632">        requireNonNull(node, ERROR_CONTROL_NULL);</span>
-<span class="nc bnc" id="L633" title="All 2 branches missed.">        if (isNull(style)) { return; }</span>
-<span class="nc bnc" id="L634" title="All 2 branches missed.">        if (style.startsWith(&quot;&amp;&quot;)) {</span>
+<span class="nc" id="L852">        requireNonNull(node, ERROR_CONTROL_NULL);</span>
+<span class="nc bnc" id="L853" title="All 2 branches missed.">        if (isNull(style)) { return; }</span>
+<span class="nc bnc" id="L854" title="All 2 branches missed.">        if (style.startsWith(&quot;&amp;&quot;)) {</span>
             // append style
-<span class="nc" id="L636">            String nodeStyle = node.getStyle();</span>
-<span class="nc bnc" id="L637" title="All 2 branches missed.">            node.setStyle(nodeStyle + (nodeStyle.endsWith(&quot;;&quot;) ? &quot;&quot; : &quot;;&quot;) + style.substring(1));</span>
-<span class="nc" id="L638">        } else {</span>
-<span class="nc" id="L639">            node.setStyle(style);</span>
+<span class="nc" id="L856">            String nodeStyle = node.getStyle();</span>
+<span class="nc bnc" id="L857" title="All 2 branches missed.">            node.setStyle(nodeStyle + (nodeStyle.endsWith(&quot;;&quot;) ? &quot;&quot; : &quot;;&quot;) + style.substring(1));</span>
+<span class="nc" id="L858">        } else {</span>
+<span class="nc" id="L859">            node.setStyle(style);</span>
         }
-<span class="nc" id="L641">    }</span>
+<span class="nc" id="L861">    }</span>
 
     public static void setGraphicStyle(@Nonnull ButtonBase node, @Nonnull String graphicStyle) {
-<span class="nc" id="L644">        requireNonNull(node, ERROR_CONTROL_NULL);</span>
-<span class="nc bnc" id="L645" title="All 2 branches missed.">        if (isNull(graphicStyle)) { return; }</span>
-<span class="nc bnc" id="L646" title="All 2 branches missed.">        if (node.getGraphic() != null) {</span>
-<span class="nc" id="L647">            setStyle(node.getGraphic(), graphicStyle);</span>
+<span class="nc" id="L864">        requireNonNull(node, ERROR_CONTROL_NULL);</span>
+<span class="nc bnc" id="L865" title="All 2 branches missed.">        if (isNull(graphicStyle)) { return; }</span>
+<span class="nc bnc" id="L866" title="All 2 branches missed.">        if (node.getGraphic() != null) {</span>
+<span class="nc" id="L867">            setStyle(node.getGraphic(), graphicStyle);</span>
         }
-<span class="nc" id="L649">    }</span>
+<span class="nc" id="L869">    }</span>
 
     public static void setGraphicStyle(@Nonnull MenuItem node, @Nonnull String graphicStyle) {
-<span class="nc" id="L652">        requireNonNull(node, ERROR_CONTROL_NULL);</span>
-<span class="nc bnc" id="L653" title="All 2 branches missed.">        if (isNull(graphicStyle)) { return; }</span>
-<span class="nc bnc" id="L654" title="All 2 branches missed.">        if (node.getGraphic() != null) {</span>
-<span class="nc" id="L655">            setStyle(node.getGraphic(), graphicStyle);</span>
+<span class="nc" id="L872">        requireNonNull(node, ERROR_CONTROL_NULL);</span>
+<span class="nc bnc" id="L873" title="All 2 branches missed.">        if (isNull(graphicStyle)) { return; }</span>
+<span class="nc bnc" id="L874" title="All 2 branches missed.">        if (node.getGraphic() != null) {</span>
+<span class="nc" id="L875">            setStyle(node.getGraphic(), graphicStyle);</span>
         }
-<span class="nc" id="L657">    }</span>
+<span class="nc" id="L877">    }</span>
 
     public static void setStyleClass(@Nonnull Node node, @Nonnull String styleClass) {
-<span class="nc" id="L660">        setStyleClass(node, styleClass, false);</span>
-<span class="nc" id="L661">    }</span>
+<span class="nc" id="L880">        setStyleClass(node, styleClass, false);</span>
+<span class="nc" id="L881">    }</span>
 
     public static void setStyleClass(@Nonnull Node node, @Nonnull String styleClass, boolean remove) {
-<span class="nc" id="L664">        requireNonNull(node, ERROR_CONTROL_NULL);</span>
-<span class="nc bnc" id="L665" title="All 2 branches missed.">        if (isBlank(styleClass)) { return; }</span>
+<span class="nc" id="L884">        requireNonNull(node, ERROR_CONTROL_NULL);</span>
+<span class="nc bnc" id="L885" title="All 2 branches missed.">        if (isBlank(styleClass)) { return; }</span>
 
-<span class="nc" id="L667">        ObservableList&lt;String&gt; styleClasses = node.getStyleClass();</span>
-<span class="nc" id="L668">        applyStyleClass(styleClass, styleClasses, remove);</span>
-<span class="nc" id="L669">    }</span>
+<span class="nc" id="L887">        ObservableList&lt;String&gt; styleClasses = node.getStyleClass();</span>
+<span class="nc" id="L888">        applyStyleClass(styleClass, styleClasses, remove);</span>
+<span class="nc" id="L889">    }</span>
 
     public static void setStyleClass(@Nonnull MenuItem node, @Nonnull String styleClass) {
-<span class="nc" id="L672">        setStyleClass(node, styleClass, false);</span>
-<span class="nc" id="L673">    }</span>
+<span class="nc" id="L892">        setStyleClass(node, styleClass, false);</span>
+<span class="nc" id="L893">    }</span>
 
     public static void setStyleClass(@Nonnull MenuItem node, @Nonnull String styleClass, boolean remove) {
-<span class="nc" id="L676">        requireNonNull(node, ERROR_CONTROL_NULL);</span>
-<span class="nc bnc" id="L677" title="All 2 branches missed.">        if (isBlank(styleClass)) { return; }</span>
-<span class="nc" id="L678">        ObservableList&lt;String&gt; styleClasses = node.getStyleClass();</span>
-<span class="nc" id="L679">        applyStyleClass(styleClass, styleClasses, remove);</span>
-<span class="nc" id="L680">    }</span>
+<span class="nc" id="L896">        requireNonNull(node, ERROR_CONTROL_NULL);</span>
+<span class="nc bnc" id="L897" title="All 2 branches missed.">        if (isBlank(styleClass)) { return; }</span>
+<span class="nc" id="L898">        ObservableList&lt;String&gt; styleClasses = node.getStyleClass();</span>
+<span class="nc" id="L899">        applyStyleClass(styleClass, styleClasses, remove);</span>
+<span class="nc" id="L900">    }</span>
 
     public static void setGraphicStyleClass(@Nonnull ButtonBase node, @Nonnull String graphicStyleClass) {
-<span class="nc" id="L683">        setGraphicStyleClass(node, graphicStyleClass, false);</span>
-<span class="nc" id="L684">    }</span>
+<span class="nc" id="L903">        setGraphicStyleClass(node, graphicStyleClass, false);</span>
+<span class="nc" id="L904">    }</span>
 
     public static void setGraphicStyleClass(@Nonnull ButtonBase node, @Nonnull String graphicStyleClass, boolean remove) {
-<span class="nc" id="L687">        requireNonNull(node, ERROR_CONTROL_NULL);</span>
-<span class="nc bnc" id="L688" title="All 4 branches missed.">        if (isBlank(graphicStyleClass) || node.getGraphic() == null) { return; }</span>
+<span class="nc" id="L907">        requireNonNull(node, ERROR_CONTROL_NULL);</span>
+<span class="nc bnc" id="L908" title="All 4 branches missed.">        if (isBlank(graphicStyleClass) || node.getGraphic() == null) { return; }</span>
 
-<span class="nc" id="L690">        ObservableList&lt;String&gt; graphicStyleClasses = node.getGraphic().getStyleClass();</span>
-<span class="nc" id="L691">        applyStyleClass(graphicStyleClass, graphicStyleClasses, remove);</span>
-<span class="nc" id="L692">    }</span>
+<span class="nc" id="L910">        ObservableList&lt;String&gt; graphicStyleClasses = node.getGraphic().getStyleClass();</span>
+<span class="nc" id="L911">        applyStyleClass(graphicStyleClass, graphicStyleClasses, remove);</span>
+<span class="nc" id="L912">    }</span>
 
     public static void setGraphicStyleClass(@Nonnull MenuItem node, @Nonnull String graphicStyleClass) {
-<span class="nc" id="L695">        setGraphicStyleClass(node, graphicStyleClass, false);</span>
-<span class="nc" id="L696">    }</span>
+<span class="nc" id="L915">        setGraphicStyleClass(node, graphicStyleClass, false);</span>
+<span class="nc" id="L916">    }</span>
 
     public static void setGraphicStyleClass(@Nonnull MenuItem node, @Nonnull String graphicStyleClass, boolean remove) {
-<span class="nc" id="L699">        requireNonNull(node, ERROR_CONTROL_NULL);</span>
-<span class="nc bnc" id="L700" title="All 4 branches missed.">        if (isBlank(graphicStyleClass) || node.getGraphic() == null) { return; }</span>
+<span class="nc" id="L919">        requireNonNull(node, ERROR_CONTROL_NULL);</span>
+<span class="nc bnc" id="L920" title="All 4 branches missed.">        if (isBlank(graphicStyleClass) || node.getGraphic() == null) { return; }</span>
 
-<span class="nc" id="L702">        ObservableList&lt;String&gt; graphicStyleClasses = node.getGraphic().getStyleClass();</span>
-<span class="nc" id="L703">        applyStyleClass(graphicStyleClass, graphicStyleClasses, remove);</span>
-<span class="nc" id="L704">    }</span>
+<span class="nc" id="L922">        ObservableList&lt;String&gt; graphicStyleClasses = node.getGraphic().getStyleClass();</span>
+<span class="nc" id="L923">        applyStyleClass(graphicStyleClass, graphicStyleClasses, remove);</span>
+<span class="nc" id="L924">    }</span>
 
     private static void applyStyleClass(String styleClass, ObservableList&lt;String&gt; styleClasses, boolean remove) {
-<span class="nc" id="L707">        runInsideUIThread(() -&gt; {</span>
-<span class="nc" id="L708">            String[] strings = styleClass.split(&quot;[,\\ ]&quot;);</span>
-<span class="nc bnc" id="L709" title="All 2 branches missed.">            if (remove) {</span>
-<span class="nc" id="L710">                styleClasses.removeAll(strings);</span>
+<span class="nc" id="L927">        runInsideUIThread(() -&gt; {</span>
+<span class="nc" id="L928">            String[] strings = styleClass.split(&quot;[,\\ ]&quot;);</span>
+<span class="nc bnc" id="L929" title="All 2 branches missed.">            if (remove) {</span>
+<span class="nc" id="L930">                styleClasses.removeAll(strings);</span>
             } else {
-<span class="nc" id="L712">                Set&lt;String&gt; classes = new LinkedHashSet&lt;&gt;(styleClasses);</span>
-<span class="nc bnc" id="L713" title="All 2 branches missed.">                for (String s : strings) {</span>
-<span class="nc bnc" id="L714" title="All 2 branches missed.">                    if (isBlank(s)) { continue; }</span>
-<span class="nc" id="L715">                    classes.add(s.trim());</span>
+<span class="nc" id="L932">                Set&lt;String&gt; classes = new LinkedHashSet&lt;&gt;(styleClasses);</span>
+<span class="nc bnc" id="L933" title="All 2 branches missed.">                for (String s : strings) {</span>
+<span class="nc bnc" id="L934" title="All 2 branches missed.">                    if (isBlank(s)) { continue; }</span>
+<span class="nc" id="L935">                    classes.add(s.trim());</span>
                 }
-<span class="nc" id="L717">                styleClasses.setAll(classes);</span>
+<span class="nc" id="L937">                styleClasses.setAll(classes);</span>
             }
-<span class="nc" id="L719">        });</span>
-<span class="nc" id="L720">    }</span>
+<span class="nc" id="L939">        });</span>
+<span class="nc" id="L940">    }</span>
 
     public static void setTooltip(@Nonnull Control control, @Nullable String text) {
-<span class="nc" id="L723">        runInsideUIThread(() -&gt; {</span>
-<span class="nc bnc" id="L724" title="All 2 branches missed.">            if (isBlank(text)) {</span>
-<span class="nc" id="L725">                return;</span>
+<span class="nc" id="L943">        runInsideUIThread(() -&gt; {</span>
+<span class="nc bnc" id="L944" title="All 2 branches missed.">            if (isBlank(text)) {</span>
+<span class="nc" id="L945">                return;</span>
             }
-<span class="nc" id="L727">            requireNonNull(control, ERROR_CONTROL_NULL);</span>
+<span class="nc" id="L947">            requireNonNull(control, ERROR_CONTROL_NULL);</span>
 
-<span class="nc" id="L729">            Tooltip tooltip = control.tooltipProperty().get();</span>
-<span class="nc bnc" id="L730" title="All 2 branches missed.">            if (tooltip == null) {</span>
-<span class="nc" id="L731">                tooltip = new Tooltip();</span>
-<span class="nc" id="L732">                control.tooltipProperty().set(tooltip);</span>
+<span class="nc" id="L949">            Tooltip tooltip = control.tooltipProperty().get();</span>
+<span class="nc bnc" id="L950" title="All 2 branches missed.">            if (tooltip == null) {</span>
+<span class="nc" id="L951">                tooltip = new Tooltip();</span>
+<span class="nc" id="L952">                control.tooltipProperty().set(tooltip);</span>
             }
-<span class="nc" id="L734">            tooltip.setText(text);</span>
-<span class="nc" id="L735">        });</span>
-<span class="nc" id="L736">    }</span>
+<span class="nc" id="L954">            tooltip.setText(text);</span>
+<span class="nc" id="L955">        });</span>
+<span class="nc" id="L956">    }</span>
 
     public static void setIcon(@Nonnull Labeled control, @Nonnull String iconUrl) {
-<span class="nc" id="L739">        requireNonNull(control, ERROR_CONTROL_NULL);</span>
-<span class="nc" id="L740">        requireNonBlank(iconUrl, ERROR_ICON_BLANK);</span>
+<span class="nc" id="L959">        requireNonNull(control, ERROR_CONTROL_NULL);</span>
+<span class="nc" id="L960">        requireNonBlank(iconUrl, ERROR_ICON_BLANK);</span>
 
-<span class="nc" id="L742">        Node graphicNode = resolveIcon(iconUrl);</span>
-<span class="nc bnc" id="L743" title="All 2 branches missed.">        if (graphicNode != null) {</span>
-<span class="nc" id="L744">            runInsideUIThread(() -&gt; control.graphicProperty().set(graphicNode));</span>
+<span class="nc" id="L962">        Node graphicNode = resolveIcon(iconUrl);</span>
+<span class="nc bnc" id="L963" title="All 2 branches missed.">        if (graphicNode != null) {</span>
+<span class="nc" id="L964">            runInsideUIThread(() -&gt; control.graphicProperty().set(graphicNode));</span>
         }
-<span class="nc" id="L746">    }</span>
+<span class="nc" id="L966">    }</span>
 
     public static void setIcon(@Nonnull MenuItem control, @Nonnull String iconUrl) {
-<span class="nc" id="L749">        requireNonNull(control, ERROR_CONTROL_NULL);</span>
-<span class="nc" id="L750">        requireNonBlank(iconUrl, ERROR_ICON_BLANK);</span>
+<span class="nc" id="L969">        requireNonNull(control, ERROR_CONTROL_NULL);</span>
+<span class="nc" id="L970">        requireNonBlank(iconUrl, ERROR_ICON_BLANK);</span>
 
-<span class="nc" id="L752">        Node graphicNode = resolveIcon(iconUrl);</span>
-<span class="nc bnc" id="L753" title="All 2 branches missed.">        if (graphicNode != null) {</span>
-<span class="nc" id="L754">            runInsideUIThread(() -&gt; control.graphicProperty().set(graphicNode));</span>
+<span class="nc" id="L972">        Node graphicNode = resolveIcon(iconUrl);</span>
+<span class="nc bnc" id="L973" title="All 2 branches missed.">        if (graphicNode != null) {</span>
+<span class="nc" id="L974">            runInsideUIThread(() -&gt; control.graphicProperty().set(graphicNode));</span>
         }
-<span class="nc" id="L756">    }</span>
+<span class="nc" id="L976">    }</span>
 
     public static void setGraphic(@Nonnull Labeled control, @Nullable Image graphic) {
-<span class="nc" id="L759">        requireNonNull(control, ERROR_CONTROL_NULL);</span>
+<span class="nc" id="L979">        requireNonNull(control, ERROR_CONTROL_NULL);</span>
 
-<span class="nc" id="L761">        runInsideUIThread(() -&gt; {</span>
-<span class="nc bnc" id="L762" title="All 2 branches missed.">            if (graphic != null) {</span>
-<span class="nc" id="L763">                Node graphicNode = new ImageView(graphic);</span>
-<span class="nc" id="L764">                control.graphicProperty().set(graphicNode);</span>
-<span class="nc" id="L765">            } else {</span>
-<span class="nc" id="L766">                control.graphicProperty().set(null);</span>
+<span class="nc" id="L981">        runInsideUIThread(() -&gt; {</span>
+<span class="nc bnc" id="L982" title="All 2 branches missed.">            if (graphic != null) {</span>
+<span class="nc" id="L983">                Node graphicNode = new ImageView(graphic);</span>
+<span class="nc" id="L984">                control.graphicProperty().set(graphicNode);</span>
+<span class="nc" id="L985">            } else {</span>
+<span class="nc" id="L986">                control.graphicProperty().set(null);</span>
             }
-<span class="nc" id="L768">        });</span>
-<span class="nc" id="L769">    }</span>
+<span class="nc" id="L988">        });</span>
+<span class="nc" id="L989">    }</span>
 
     public static void setGraphic(@Nonnull MenuItem control, @Nullable Image graphic) {
-<span class="nc" id="L772">        requireNonNull(control, ERROR_CONTROL_NULL);</span>
+<span class="nc" id="L992">        requireNonNull(control, ERROR_CONTROL_NULL);</span>
 
-<span class="nc" id="L774">        runInsideUIThread(() -&gt; {</span>
-<span class="nc bnc" id="L775" title="All 2 branches missed.">            if (graphic != null) {</span>
-<span class="nc" id="L776">                Node graphicNode = new ImageView(graphic);</span>
-<span class="nc" id="L777">                control.graphicProperty().set(graphicNode);</span>
-<span class="nc" id="L778">            } else {</span>
-<span class="nc" id="L779">                control.graphicProperty().set(null);</span>
+<span class="nc" id="L994">        runInsideUIThread(() -&gt; {</span>
+<span class="nc bnc" id="L995" title="All 2 branches missed.">            if (graphic != null) {</span>
+<span class="nc" id="L996">                Node graphicNode = new ImageView(graphic);</span>
+<span class="nc" id="L997">                control.graphicProperty().set(graphicNode);</span>
+<span class="nc" id="L998">            } else {</span>
+<span class="nc" id="L999">                control.graphicProperty().set(null);</span>
             }
-<span class="nc" id="L781">        });</span>
-<span class="nc" id="L782">    }</span>
+<span class="nc" id="L1001">        });</span>
+<span class="nc" id="L1002">    }</span>
 
     public static void setGraphic(@Nonnull Labeled control, @Nullable Node graphic) {
-<span class="nc" id="L785">        requireNonNull(control, ERROR_CONTROL_NULL);</span>
+<span class="nc" id="L1005">        requireNonNull(control, ERROR_CONTROL_NULL);</span>
 
-<span class="nc" id="L787">        runInsideUIThread(() -&gt; {</span>
-<span class="nc bnc" id="L788" title="All 2 branches missed.">            if (graphic != null) {</span>
-<span class="nc" id="L789">                control.graphicProperty().set(graphic);</span>
+<span class="nc" id="L1007">        runInsideUIThread(() -&gt; {</span>
+<span class="nc bnc" id="L1008" title="All 2 branches missed.">            if (graphic != null) {</span>
+<span class="nc" id="L1009">                control.graphicProperty().set(graphic);</span>
             } else {
-<span class="nc" id="L791">                control.graphicProperty().set(null);</span>
+<span class="nc" id="L1011">                control.graphicProperty().set(null);</span>
             }
-<span class="nc" id="L793">        });</span>
-<span class="nc" id="L794">    }</span>
+<span class="nc" id="L1013">        });</span>
+<span class="nc" id="L1014">    }</span>
 
     public static void setGraphic(@Nonnull MenuItem control, @Nullable Node graphic) {
-<span class="nc" id="L797">        requireNonNull(control, ERROR_CONTROL_NULL);</span>
+<span class="nc" id="L1017">        requireNonNull(control, ERROR_CONTROL_NULL);</span>
 
-<span class="nc" id="L799">        runInsideUIThread(() -&gt; {</span>
-<span class="nc bnc" id="L800" title="All 2 branches missed.">            if (graphic != null) {</span>
-<span class="nc" id="L801">                control.graphicProperty().set(graphic);</span>
+<span class="nc" id="L1019">        runInsideUIThread(() -&gt; {</span>
+<span class="nc bnc" id="L1020" title="All 2 branches missed.">            if (graphic != null) {</span>
+<span class="nc" id="L1021">                control.graphicProperty().set(graphic);</span>
             } else {
-<span class="nc" id="L803">                control.graphicProperty().set(null);</span>
+<span class="nc" id="L1023">                control.graphicProperty().set(null);</span>
             }
-<span class="nc" id="L805">        });</span>
-<span class="nc" id="L806">    }</span>
+<span class="nc" id="L1025">        });</span>
+<span class="nc" id="L1026">    }</span>
 
     @Nullable
     public static Node resolveIcon(@Nonnull String iconUrl) {
-<span class="nc" id="L810">        requireNonBlank(iconUrl, ERROR_URL_BLANK);</span>
+<span class="nc" id="L1030">        requireNonBlank(iconUrl, ERROR_URL_BLANK);</span>
 
-<span class="nc bnc" id="L812" title="All 2 branches missed.">        if (iconUrl.contains(&quot;|&quot;)) {</span>
+<span class="nc bnc" id="L1032" title="All 2 branches missed.">        if (iconUrl.contains(&quot;|&quot;)) {</span>
             // assume classname|arg format
-<span class="nc" id="L814">            return handleAsClassWithArg(iconUrl);</span>
+<span class="nc" id="L1034">            return handleAsClassWithArg(iconUrl);</span>
         } else {
-<span class="nc" id="L816">            URL resource = Thread.currentThread().getContextClassLoader().getResource(iconUrl);</span>
-<span class="nc bnc" id="L817" title="All 2 branches missed.">            if (resource != null) {</span>
-<span class="nc" id="L818">                return new ImageView(new Image(resource.toString()));</span>
+<span class="nc" id="L1036">            URL resource = Thread.currentThread().getContextClassLoader().getResource(iconUrl);</span>
+<span class="nc bnc" id="L1037" title="All 2 branches missed.">            if (resource != null) {</span>
+<span class="nc" id="L1038">                return new ImageView(new Image(resource.toString()));</span>
             }
         }
-<span class="nc" id="L821">        return null;</span>
+<span class="nc" id="L1041">        return null;</span>
     }
 
     @SuppressWarnings(&quot;unchecked&quot;)
     private static Node handleAsClassWithArg(String str) {
-<span class="nc" id="L826">        String[] args = str.split(&quot;\\|&quot;);</span>
-<span class="nc bnc" id="L827" title="All 2 branches missed.">        if (args.length == 2) {</span>
-<span class="nc" id="L828">            Class&lt;?&gt; iconClass = null;</span>
+<span class="nc" id="L1046">        String[] args = str.split(&quot;\\|&quot;);</span>
+<span class="nc bnc" id="L1047" title="All 2 branches missed.">        if (args.length == 2) {</span>
+<span class="nc" id="L1048">            Class&lt;?&gt; iconClass = null;</span>
             try {
-<span class="nc" id="L830">                iconClass = (Class&lt;?&gt;) JavaFXUtils.class.getClassLoader().loadClass(args[0]);</span>
-<span class="nc" id="L831">            } catch (ClassNotFoundException e) {</span>
-<span class="nc" id="L832">                throw illegalValue(str, Node.class, e);</span>
-<span class="nc" id="L833">            }</span>
+<span class="nc" id="L1050">                iconClass = (Class&lt;?&gt;) JavaFXUtils.class.getClassLoader().loadClass(args[0]);</span>
+<span class="nc" id="L1051">            } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L1052">                throw illegalValue(str, Node.class, e);</span>
+<span class="nc" id="L1053">            }</span>
 
-<span class="nc" id="L835">            Constructor&lt;?&gt; constructor = null;</span>
+<span class="nc" id="L1055">            Constructor&lt;?&gt; constructor = null;</span>
             try {
-<span class="nc" id="L837">                constructor = iconClass.getConstructor(String.class);</span>
-<span class="nc" id="L838">            } catch (NoSuchMethodException e) {</span>
-<span class="nc" id="L839">                throw illegalValue(str, Node.class, e);</span>
-<span class="nc" id="L840">            }</span>
+<span class="nc" id="L1057">                constructor = iconClass.getConstructor(String.class);</span>
+<span class="nc" id="L1058">            } catch (NoSuchMethodException e) {</span>
+<span class="nc" id="L1059">                throw illegalValue(str, Node.class, e);</span>
+<span class="nc" id="L1060">            }</span>
 
             try {
-<span class="nc" id="L843">                Object o = constructor.newInstance(args[1]);</span>
-<span class="nc bnc" id="L844" title="All 2 branches missed.">                if (o instanceof Node) {</span>
-<span class="nc" id="L845">                    return (Node) o;</span>
-<span class="nc bnc" id="L846" title="All 2 branches missed.">                } else if (o instanceof Image) {</span>
-<span class="nc" id="L847">                    return new ImageView((Image) o);</span>
+<span class="nc" id="L1063">                Object o = constructor.newInstance(args[1]);</span>
+<span class="nc bnc" id="L1064" title="All 2 branches missed.">                if (o instanceof Node) {</span>
+<span class="nc" id="L1065">                    return (Node) o;</span>
+<span class="nc bnc" id="L1066" title="All 2 branches missed.">                } else if (o instanceof Image) {</span>
+<span class="nc" id="L1067">                    return new ImageView((Image) o);</span>
                 } else {
-<span class="nc" id="L849">                    throw illegalValue(str, Node.class);</span>
+<span class="nc" id="L1069">                    throw illegalValue(str, Node.class);</span>
                 }
-<span class="nc" id="L851">            } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {</span>
-<span class="nc" id="L852">                throw illegalValue(str, Node.class, e);</span>
+<span class="nc" id="L1071">            } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {</span>
+<span class="nc" id="L1072">                throw illegalValue(str, Node.class, e);</span>
             }
         } else {
-<span class="nc" id="L855">            throw illegalValue(str, Node.class);</span>
+<span class="nc" id="L1075">            throw illegalValue(str, Node.class);</span>
         }
     }
 
     @Nullable
     public static Node findNode(@Nonnull Node root, @Nonnull String id) {
-<span class="nc" id="L861">        requireNonNull(root, ERROR_ROOT_NULL);</span>
-<span class="nc" id="L862">        requireNonBlank(id, ERROR_ID_BLANK);</span>
+<span class="nc" id="L1081">        requireNonNull(root, ERROR_ROOT_NULL);</span>
+<span class="nc" id="L1082">        requireNonBlank(id, ERROR_ID_BLANK);</span>
 
-<span class="nc bnc" id="L864" title="All 2 branches missed.">        if (id.equals(root.getId())) { return root; }</span>
+<span class="nc bnc" id="L1084" title="All 2 branches missed.">        if (id.equals(root.getId())) { return root; }</span>
 
-<span class="nc bnc" id="L866" title="All 2 branches missed.">        if (root instanceof TabPane) {</span>
-<span class="nc" id="L867">            TabPane parent = (TabPane) root;</span>
-<span class="nc bnc" id="L868" title="All 2 branches missed.">            for (Tab child : parent.getTabs()) {</span>
-<span class="nc bnc" id="L869" title="All 2 branches missed.">                if (child.getContent() != null) {</span>
-<span class="nc" id="L870">                    Node found = findNode(child.getContent(), id);</span>
-<span class="nc bnc" id="L871" title="All 2 branches missed.">                    if (found != null) { return found; }</span>
+<span class="nc bnc" id="L1086" title="All 2 branches missed.">        if (root instanceof TabPane) {</span>
+<span class="nc" id="L1087">            TabPane parent = (TabPane) root;</span>
+<span class="nc bnc" id="L1088" title="All 2 branches missed.">            for (Tab child : parent.getTabs()) {</span>
+<span class="nc bnc" id="L1089" title="All 2 branches missed.">                if (child.getContent() != null) {</span>
+<span class="nc" id="L1090">                    Node found = findNode(child.getContent(), id);</span>
+<span class="nc bnc" id="L1091" title="All 2 branches missed.">                    if (found != null) { return found; }</span>
                 }
-<span class="nc" id="L873">            }</span>
-<span class="nc bnc" id="L874" title="All 2 branches missed.">        } else if (root instanceof TitledPane) {</span>
-<span class="nc" id="L875">            TitledPane parent = (TitledPane) root;</span>
-<span class="nc bnc" id="L876" title="All 2 branches missed.">            if (parent.getContent() != null) {</span>
-<span class="nc" id="L877">                Node found = findNode(parent.getContent(), id);</span>
-<span class="nc bnc" id="L878" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc" id="L1093">            }</span>
+<span class="nc bnc" id="L1094" title="All 2 branches missed.">        } else if (root instanceof TitledPane) {</span>
+<span class="nc" id="L1095">            TitledPane parent = (TitledPane) root;</span>
+<span class="nc bnc" id="L1096" title="All 2 branches missed.">            if (parent.getContent() != null) {</span>
+<span class="nc" id="L1097">                Node found = findNode(parent.getContent(), id);</span>
+<span class="nc bnc" id="L1098" title="All 2 branches missed.">                if (found != null) { return found; }</span>
             }
-<span class="nc bnc" id="L880" title="All 2 branches missed.">        } else if (root instanceof Accordion) {</span>
-<span class="nc" id="L881">            Accordion parent = (Accordion) root;</span>
-<span class="nc bnc" id="L882" title="All 2 branches missed.">            for (TitledPane child : parent.getPanes()) {</span>
-<span class="nc" id="L883">                Node found = findNode(child, id);</span>
-<span class="nc bnc" id="L884" title="All 2 branches missed.">                if (found != null) { return found; }</span>
-<span class="nc" id="L885">            }</span>
-<span class="nc bnc" id="L886" title="All 2 branches missed.">        } else if (root instanceof SplitPane) {</span>
-<span class="nc" id="L887">            SplitPane parent = (SplitPane) root;</span>
-<span class="nc bnc" id="L888" title="All 2 branches missed.">            for (Node child : parent.getItems()) {</span>
-<span class="nc" id="L889">                Node found = findNode(child, id);</span>
-<span class="nc bnc" id="L890" title="All 2 branches missed.">                if (found != null) { return found; }</span>
-<span class="nc" id="L891">            }</span>
-<span class="nc bnc" id="L892" title="All 2 branches missed.">        } else if (root instanceof ScrollPane) {</span>
-<span class="nc" id="L893">            ScrollPane scrollPane = (ScrollPane) root;</span>
-<span class="nc bnc" id="L894" title="All 2 branches missed.">            if (scrollPane.getContent() != null) {</span>
-<span class="nc" id="L895">                Node found = findNode(scrollPane.getContent(), id);</span>
-<span class="nc bnc" id="L896" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc bnc" id="L1100" title="All 2 branches missed.">        } else if (root instanceof Accordion) {</span>
+<span class="nc" id="L1101">            Accordion parent = (Accordion) root;</span>
+<span class="nc bnc" id="L1102" title="All 2 branches missed.">            for (TitledPane child : parent.getPanes()) {</span>
+<span class="nc" id="L1103">                Node found = findNode(child, id);</span>
+<span class="nc bnc" id="L1104" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc" id="L1105">            }</span>
+<span class="nc bnc" id="L1106" title="All 2 branches missed.">        } else if (root instanceof SplitPane) {</span>
+<span class="nc" id="L1107">            SplitPane parent = (SplitPane) root;</span>
+<span class="nc bnc" id="L1108" title="All 2 branches missed.">            for (Node child : parent.getItems()) {</span>
+<span class="nc" id="L1109">                Node found = findNode(child, id);</span>
+<span class="nc bnc" id="L1110" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc" id="L1111">            }</span>
+<span class="nc bnc" id="L1112" title="All 2 branches missed.">        } else if (root instanceof ScrollPane) {</span>
+<span class="nc" id="L1113">            ScrollPane scrollPane = (ScrollPane) root;</span>
+<span class="nc bnc" id="L1114" title="All 2 branches missed.">            if (scrollPane.getContent() != null) {</span>
+<span class="nc" id="L1115">                Node found = findNode(scrollPane.getContent(), id);</span>
+<span class="nc bnc" id="L1116" title="All 2 branches missed.">                if (found != null) { return found; }</span>
             }
-<span class="nc bnc" id="L898" title="All 2 branches missed.">        } else if (root instanceof ToolBar) {</span>
-<span class="nc" id="L899">            ToolBar toolBar = (ToolBar) root;</span>
-<span class="nc bnc" id="L900" title="All 2 branches missed.">            for (Node child : toolBar.getItems()) {</span>
-<span class="nc" id="L901">                Node found = findNode(child, id);</span>
-<span class="nc bnc" id="L902" title="All 2 branches missed.">                if (found != null) { return found; }</span>
-<span class="nc" id="L903">            }</span>
-<span class="nc bnc" id="L904" title="All 2 branches missed.">        } else if (root instanceof Parent) {</span>
-<span class="nc" id="L905">            Parent parent = (Parent) root;</span>
-<span class="nc bnc" id="L906" title="All 2 branches missed.">            for (Node child : parent.getChildrenUnmodifiable()) {</span>
-<span class="nc" id="L907">                Node found = findNode(child, id);</span>
-<span class="nc bnc" id="L908" title="All 2 branches missed.">                if (found != null) { return found; }</span>
-<span class="nc" id="L909">            }</span>
+<span class="nc bnc" id="L1118" title="All 2 branches missed.">        } else if (root instanceof ToolBar) {</span>
+<span class="nc" id="L1119">            ToolBar toolBar = (ToolBar) root;</span>
+<span class="nc bnc" id="L1120" title="All 2 branches missed.">            for (Node child : toolBar.getItems()) {</span>
+<span class="nc" id="L1121">                Node found = findNode(child, id);</span>
+<span class="nc bnc" id="L1122" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc" id="L1123">            }</span>
+<span class="nc bnc" id="L1124" title="All 2 branches missed.">        } else if (root instanceof Parent) {</span>
+<span class="nc" id="L1125">            Parent parent = (Parent) root;</span>
+<span class="nc bnc" id="L1126" title="All 2 branches missed.">            for (Node child : parent.getChildrenUnmodifiable()) {</span>
+<span class="nc" id="L1127">                Node found = findNode(child, id);</span>
+<span class="nc bnc" id="L1128" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc" id="L1129">            }</span>
         }
 
-<span class="nc" id="L912">        return null;</span>
+<span class="nc" id="L1132">        return null;</span>
     }
 
     @Nullable
     public static Object findElement(@Nonnull Object root, @Nonnull String id) {
-<span class="nc" id="L917">        requireNonNull(root, ERROR_ROOT_NULL);</span>
-<span class="nc" id="L918">        requireNonBlank(id, ERROR_ID_BLANK);</span>
+<span class="nc" id="L1137">        requireNonNull(root, ERROR_ROOT_NULL);</span>
+<span class="nc" id="L1138">        requireNonBlank(id, ERROR_ID_BLANK);</span>
 
-<span class="nc bnc" id="L920" title="All 2 branches missed.">        if (id.equals(getPropertyValue(root, &quot;id&quot;))) { return root; }</span>
+<span class="nc bnc" id="L1140" title="All 2 branches missed.">        if (id.equals(getPropertyValue(root, &quot;id&quot;))) { return root; }</span>
 
-<span class="nc bnc" id="L922" title="All 2 branches missed.">        if (root instanceof ButtonBar) {</span>
-<span class="nc" id="L923">            ButtonBar buttonBar = (ButtonBar) root;</span>
-<span class="nc bnc" id="L924" title="All 2 branches missed.">            for (Node child : buttonBar.getButtons()) {</span>
-<span class="nc" id="L925">                Object found = findElement(child, id);</span>
-<span class="nc bnc" id="L926" title="All 2 branches missed.">                if (found != null) { return found; }</span>
-<span class="nc" id="L927">            }</span>
-<span class="nc bnc" id="L928" title="All 2 branches missed.">        } else if (root instanceof MenuBar) {</span>
-<span class="nc" id="L929">            MenuBar menuBar = (MenuBar) root;</span>
-<span class="nc bnc" id="L930" title="All 2 branches missed.">            for (Menu child : menuBar.getMenus()) {</span>
-<span class="nc" id="L931">                Object found = findElement(child, id);</span>
-<span class="nc bnc" id="L932" title="All 2 branches missed.">                if (found != null) { return found; }</span>
-<span class="nc" id="L933">            }</span>
-<span class="nc bnc" id="L934" title="All 2 branches missed.">        } else if (root instanceof ContextMenu) {</span>
-<span class="nc" id="L935">            ContextMenu contextMenu = (ContextMenu) root;</span>
-<span class="nc bnc" id="L936" title="All 2 branches missed.">            for (MenuItem child : contextMenu.getItems()) {</span>
-<span class="nc" id="L937">                Object found = findElement(child, id);</span>
-<span class="nc bnc" id="L938" title="All 2 branches missed.">                if (found != null) { return found; }</span>
-<span class="nc" id="L939">            }</span>
-<span class="nc bnc" id="L940" title="All 2 branches missed.">        } else if (root instanceof Menu) {</span>
-<span class="nc" id="L941">            Menu menu = (Menu) root;</span>
-<span class="nc bnc" id="L942" title="All 2 branches missed.">            for (MenuItem child : menu.getItems()) {</span>
-<span class="nc" id="L943">                Object found = findElement(child, id);</span>
-<span class="nc bnc" id="L944" title="All 2 branches missed.">                if (found != null) { return found; }</span>
-<span class="nc" id="L945">            }</span>
-<span class="nc bnc" id="L946" title="All 2 branches missed.">        } else if (root instanceof TabPane) {</span>
-<span class="nc" id="L947">            TabPane tabPane = (TabPane) root;</span>
-<span class="nc bnc" id="L948" title="All 2 branches missed.">            for (Tab child : tabPane.getTabs()) {</span>
-<span class="nc" id="L949">                Object found = findElement(child, id);</span>
-<span class="nc bnc" id="L950" title="All 2 branches missed.">                if (found != null) { return found; }</span>
-<span class="nc" id="L951">            }</span>
-<span class="nc bnc" id="L952" title="All 2 branches missed.">        } else if (root instanceof Tab) {</span>
-<span class="nc" id="L953">            Tab tab = (Tab) root;</span>
-<span class="nc bnc" id="L954" title="All 2 branches missed.">            if (tab.getContent() != null) {</span>
-<span class="nc" id="L955">                Object found = findElement(tab.getContent(), id);</span>
-<span class="nc bnc" id="L956" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc bnc" id="L1142" title="All 2 branches missed.">        if (root instanceof ButtonBar) {</span>
+<span class="nc" id="L1143">            ButtonBar buttonBar = (ButtonBar) root;</span>
+<span class="nc bnc" id="L1144" title="All 2 branches missed.">            for (Node child : buttonBar.getButtons()) {</span>
+<span class="nc" id="L1145">                Object found = findElement(child, id);</span>
+<span class="nc bnc" id="L1146" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc" id="L1147">            }</span>
+<span class="nc bnc" id="L1148" title="All 2 branches missed.">        } else if (root instanceof MenuBar) {</span>
+<span class="nc" id="L1149">            MenuBar menuBar = (MenuBar) root;</span>
+<span class="nc bnc" id="L1150" title="All 2 branches missed.">            for (Menu child : menuBar.getMenus()) {</span>
+<span class="nc" id="L1151">                Object found = findElement(child, id);</span>
+<span class="nc bnc" id="L1152" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc" id="L1153">            }</span>
+<span class="nc bnc" id="L1154" title="All 2 branches missed.">        } else if (root instanceof ContextMenu) {</span>
+<span class="nc" id="L1155">            ContextMenu contextMenu = (ContextMenu) root;</span>
+<span class="nc bnc" id="L1156" title="All 2 branches missed.">            for (MenuItem child : contextMenu.getItems()) {</span>
+<span class="nc" id="L1157">                Object found = findElement(child, id);</span>
+<span class="nc bnc" id="L1158" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc" id="L1159">            }</span>
+<span class="nc bnc" id="L1160" title="All 2 branches missed.">        } else if (root instanceof Menu) {</span>
+<span class="nc" id="L1161">            Menu menu = (Menu) root;</span>
+<span class="nc bnc" id="L1162" title="All 2 branches missed.">            for (MenuItem child : menu.getItems()) {</span>
+<span class="nc" id="L1163">                Object found = findElement(child, id);</span>
+<span class="nc bnc" id="L1164" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc" id="L1165">            }</span>
+<span class="nc bnc" id="L1166" title="All 2 branches missed.">        } else if (root instanceof TabPane) {</span>
+<span class="nc" id="L1167">            TabPane tabPane = (TabPane) root;</span>
+<span class="nc bnc" id="L1168" title="All 2 branches missed.">            for (Tab child : tabPane.getTabs()) {</span>
+<span class="nc" id="L1169">                Object found = findElement(child, id);</span>
+<span class="nc bnc" id="L1170" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc" id="L1171">            }</span>
+<span class="nc bnc" id="L1172" title="All 2 branches missed.">        } else if (root instanceof Tab) {</span>
+<span class="nc" id="L1173">            Tab tab = (Tab) root;</span>
+<span class="nc bnc" id="L1174" title="All 2 branches missed.">            if (tab.getContent() != null) {</span>
+<span class="nc" id="L1175">                Object found = findElement(tab.getContent(), id);</span>
+<span class="nc bnc" id="L1176" title="All 2 branches missed.">                if (found != null) { return found; }</span>
             }
-<span class="nc bnc" id="L958" title="All 2 branches missed.">        } else if (root instanceof TitledPane) {</span>
-<span class="nc" id="L959">            TitledPane parent = (TitledPane) root;</span>
-<span class="nc bnc" id="L960" title="All 2 branches missed.">            if (parent.getContent() != null) {</span>
-<span class="nc" id="L961">                Object found = findElement(parent.getContent(), id);</span>
-<span class="nc bnc" id="L962" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc bnc" id="L1178" title="All 2 branches missed.">        } else if (root instanceof TitledPane) {</span>
+<span class="nc" id="L1179">            TitledPane parent = (TitledPane) root;</span>
+<span class="nc bnc" id="L1180" title="All 2 branches missed.">            if (parent.getContent() != null) {</span>
+<span class="nc" id="L1181">                Object found = findElement(parent.getContent(), id);</span>
+<span class="nc bnc" id="L1182" title="All 2 branches missed.">                if (found != null) { return found; }</span>
             }
-<span class="nc bnc" id="L964" title="All 2 branches missed.">        } else if (root instanceof Accordion) {</span>
-<span class="nc" id="L965">            Accordion parent = (Accordion) root;</span>
-<span class="nc bnc" id="L966" title="All 2 branches missed.">            for (TitledPane child : parent.getPanes()) {</span>
-<span class="nc" id="L967">                Object found = findElement(child, id);</span>
-<span class="nc bnc" id="L968" title="All 2 branches missed.">                if (found != null) { return found; }</span>
-<span class="nc" id="L969">            }</span>
-<span class="nc bnc" id="L970" title="All 2 branches missed.">        } else if (root instanceof SplitPane) {</span>
-<span class="nc" id="L971">            SplitPane parent = (SplitPane) root;</span>
-<span class="nc bnc" id="L972" title="All 2 branches missed.">            for (Node child : parent.getItems()) {</span>
-<span class="nc" id="L973">                Object found = findElement(child, id);</span>
-<span class="nc bnc" id="L974" title="All 2 branches missed.">                if (found != null) { return found; }</span>
-<span class="nc" id="L975">            }</span>
-<span class="nc bnc" id="L976" title="All 2 branches missed.">        } else if (root instanceof ScrollPane) {</span>
-<span class="nc" id="L977">            ScrollPane scrollPane = (ScrollPane) root;</span>
-<span class="nc bnc" id="L978" title="All 2 branches missed.">            if (scrollPane.getContent() != null) {</span>
-<span class="nc" id="L979">                Object found = findElement(scrollPane.getContent(), id);</span>
-<span class="nc bnc" id="L980" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc bnc" id="L1184" title="All 2 branches missed.">        } else if (root instanceof Accordion) {</span>
+<span class="nc" id="L1185">            Accordion parent = (Accordion) root;</span>
+<span class="nc bnc" id="L1186" title="All 2 branches missed.">            for (TitledPane child : parent.getPanes()) {</span>
+<span class="nc" id="L1187">                Object found = findElement(child, id);</span>
+<span class="nc bnc" id="L1188" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc" id="L1189">            }</span>
+<span class="nc bnc" id="L1190" title="All 2 branches missed.">        } else if (root instanceof SplitPane) {</span>
+<span class="nc" id="L1191">            SplitPane parent = (SplitPane) root;</span>
+<span class="nc bnc" id="L1192" title="All 2 branches missed.">            for (Node child : parent.getItems()) {</span>
+<span class="nc" id="L1193">                Object found = findElement(child, id);</span>
+<span class="nc bnc" id="L1194" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc" id="L1195">            }</span>
+<span class="nc bnc" id="L1196" title="All 2 branches missed.">        } else if (root instanceof ScrollPane) {</span>
+<span class="nc" id="L1197">            ScrollPane scrollPane = (ScrollPane) root;</span>
+<span class="nc bnc" id="L1198" title="All 2 branches missed.">            if (scrollPane.getContent() != null) {</span>
+<span class="nc" id="L1199">                Object found = findElement(scrollPane.getContent(), id);</span>
+<span class="nc bnc" id="L1200" title="All 2 branches missed.">                if (found != null) { return found; }</span>
             }
-<span class="nc bnc" id="L982" title="All 2 branches missed.">        } else if (root instanceof ToolBar) {</span>
-<span class="nc" id="L983">            ToolBar toolBar = (ToolBar) root;</span>
-<span class="nc bnc" id="L984" title="All 2 branches missed.">            for (Node child : toolBar.getItems()) {</span>
-<span class="nc" id="L985">                Object found = findElement(child, id);</span>
-<span class="nc bnc" id="L986" title="All 2 branches missed.">                if (found != null) { return found; }</span>
-<span class="nc" id="L987">            }</span>
-<span class="nc bnc" id="L988" title="All 2 branches missed.">        } else if (root instanceof Parent) {</span>
-<span class="nc" id="L989">            Parent parent = (Parent) root;</span>
-<span class="nc bnc" id="L990" title="All 2 branches missed.">            for (Node child : parent.getChildrenUnmodifiable()) {</span>
-<span class="nc" id="L991">                Object found = findElement(child, id);</span>
-<span class="nc bnc" id="L992" title="All 2 branches missed.">                if (found != null) { return found; }</span>
-<span class="nc" id="L993">            }</span>
+<span class="nc bnc" id="L1202" title="All 2 branches missed.">        } else if (root instanceof ToolBar) {</span>
+<span class="nc" id="L1203">            ToolBar toolBar = (ToolBar) root;</span>
+<span class="nc bnc" id="L1204" title="All 2 branches missed.">            for (Node child : toolBar.getItems()) {</span>
+<span class="nc" id="L1205">                Object found = findElement(child, id);</span>
+<span class="nc bnc" id="L1206" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc" id="L1207">            }</span>
+<span class="nc bnc" id="L1208" title="All 2 branches missed.">        } else if (root instanceof Parent) {</span>
+<span class="nc" id="L1209">            Parent parent = (Parent) root;</span>
+<span class="nc bnc" id="L1210" title="All 2 branches missed.">            for (Node child : parent.getChildrenUnmodifiable()) {</span>
+<span class="nc" id="L1211">                Object found = findElement(child, id);</span>
+<span class="nc bnc" id="L1212" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc" id="L1213">            }</span>
         }
 
-<span class="nc" id="L996">        return null;</span>
+<span class="nc" id="L1216">        return null;</span>
     }
 
     @Nullable
     public static Object findElement(@Nonnull Object root, @Nonnull Predicate&lt;Object&gt; predicate) {
-<span class="nc" id="L1001">        requireNonNull(root, ERROR_ROOT_NULL);</span>
-<span class="nc" id="L1002">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L1221">        requireNonNull(root, ERROR_ROOT_NULL);</span>
+<span class="nc" id="L1222">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
 
-<span class="nc bnc" id="L1004" title="All 2 branches missed.">        if (predicate.test(root)) {</span>
-<span class="nc" id="L1005">            return root;</span>
+<span class="nc bnc" id="L1224" title="All 2 branches missed.">        if (predicate.test(root)) {</span>
+<span class="nc" id="L1225">            return root;</span>
         }
 
-<span class="nc bnc" id="L1008" title="All 2 branches missed.">        if (root instanceof ButtonBar) {</span>
-<span class="nc" id="L1009">            ButtonBar buttonBar = (ButtonBar) root;</span>
-<span class="nc bnc" id="L1010" title="All 2 branches missed.">            for (Node child : buttonBar.getButtons()) {</span>
-<span class="nc" id="L1011">                Object found = findElement(child, predicate);</span>
-<span class="nc bnc" id="L1012" title="All 2 branches missed.">                if (found != null) { return found; }</span>
-<span class="nc" id="L1013">            }</span>
-<span class="nc bnc" id="L1014" title="All 2 branches missed.">        } else if (root instanceof MenuBar) {</span>
-<span class="nc" id="L1015">            MenuBar menuBar = (MenuBar) root;</span>
-<span class="nc bnc" id="L1016" title="All 2 branches missed.">            for (Menu child : menuBar.getMenus()) {</span>
-<span class="nc" id="L1017">                Object found = findElement(child, predicate);</span>
-<span class="nc bnc" id="L1018" title="All 2 branches missed.">                if (found != null) { return found; }</span>
-<span class="nc" id="L1019">            }</span>
-<span class="nc bnc" id="L1020" title="All 2 branches missed.">        } else if (root instanceof ContextMenu) {</span>
-<span class="nc" id="L1021">            ContextMenu contextMenu = (ContextMenu) root;</span>
-<span class="nc bnc" id="L1022" title="All 2 branches missed.">            for (MenuItem child : contextMenu.getItems()) {</span>
-<span class="nc" id="L1023">                Object found = findElement(child, predicate);</span>
-<span class="nc bnc" id="L1024" title="All 2 branches missed.">                if (found != null) { return found; }</span>
-<span class="nc" id="L1025">            }</span>
-<span class="nc bnc" id="L1026" title="All 2 branches missed.">        } else if (root instanceof Menu) {</span>
-<span class="nc" id="L1027">            Menu menu = (Menu) root;</span>
-<span class="nc bnc" id="L1028" title="All 2 branches missed.">            for (MenuItem child : menu.getItems()) {</span>
-<span class="nc" id="L1029">                Object found = findElement(child, predicate);</span>
-<span class="nc bnc" id="L1030" title="All 2 branches missed.">                if (found != null) { return found; }</span>
-<span class="nc" id="L1031">            }</span>
-<span class="nc bnc" id="L1032" title="All 2 branches missed.">        } else if (root instanceof TabPane) {</span>
-<span class="nc" id="L1033">            TabPane tabPane = (TabPane) root;</span>
-<span class="nc bnc" id="L1034" title="All 2 branches missed.">            for (Tab child : tabPane.getTabs()) {</span>
-<span class="nc" id="L1035">                Object found = findElement(child, predicate);</span>
-<span class="nc bnc" id="L1036" title="All 2 branches missed.">                if (found != null) { return found; }</span>
-<span class="nc" id="L1037">            }</span>
-<span class="nc bnc" id="L1038" title="All 2 branches missed.">        } else if (root instanceof Tab) {</span>
-<span class="nc" id="L1039">            Tab tab = (Tab) root;</span>
-<span class="nc bnc" id="L1040" title="All 2 branches missed.">            if (tab.getContent() != null) {</span>
-<span class="nc" id="L1041">                Object found = findElement(tab.getContent(), predicate);</span>
-<span class="nc bnc" id="L1042" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc bnc" id="L1228" title="All 2 branches missed.">        if (root instanceof ButtonBar) {</span>
+<span class="nc" id="L1229">            ButtonBar buttonBar = (ButtonBar) root;</span>
+<span class="nc bnc" id="L1230" title="All 2 branches missed.">            for (Node child : buttonBar.getButtons()) {</span>
+<span class="nc" id="L1231">                Object found = findElement(child, predicate);</span>
+<span class="nc bnc" id="L1232" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc" id="L1233">            }</span>
+<span class="nc bnc" id="L1234" title="All 2 branches missed.">        } else if (root instanceof MenuBar) {</span>
+<span class="nc" id="L1235">            MenuBar menuBar = (MenuBar) root;</span>
+<span class="nc bnc" id="L1236" title="All 2 branches missed.">            for (Menu child : menuBar.getMenus()) {</span>
+<span class="nc" id="L1237">                Object found = findElement(child, predicate);</span>
+<span class="nc bnc" id="L1238" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc" id="L1239">            }</span>
+<span class="nc bnc" id="L1240" title="All 2 branches missed.">        } else if (root instanceof ContextMenu) {</span>
+<span class="nc" id="L1241">            ContextMenu contextMenu = (ContextMenu) root;</span>
+<span class="nc bnc" id="L1242" title="All 2 branches missed.">            for (MenuItem child : contextMenu.getItems()) {</span>
+<span class="nc" id="L1243">                Object found = findElement(child, predicate);</span>
+<span class="nc bnc" id="L1244" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc" id="L1245">            }</span>
+<span class="nc bnc" id="L1246" title="All 2 branches missed.">        } else if (root instanceof Menu) {</span>
+<span class="nc" id="L1247">            Menu menu = (Menu) root;</span>
+<span class="nc bnc" id="L1248" title="All 2 branches missed.">            for (MenuItem child : menu.getItems()) {</span>
+<span class="nc" id="L1249">                Object found = findElement(child, predicate);</span>
+<span class="nc bnc" id="L1250" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc" id="L1251">            }</span>
+<span class="nc bnc" id="L1252" title="All 2 branches missed.">        } else if (root instanceof TabPane) {</span>
+<span class="nc" id="L1253">            TabPane tabPane = (TabPane) root;</span>
+<span class="nc bnc" id="L1254" title="All 2 branches missed.">            for (Tab child : tabPane.getTabs()) {</span>
+<span class="nc" id="L1255">                Object found = findElement(child, predicate);</span>
+<span class="nc bnc" id="L1256" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc" id="L1257">            }</span>
+<span class="nc bnc" id="L1258" title="All 2 branches missed.">        } else if (root instanceof Tab) {</span>
+<span class="nc" id="L1259">            Tab tab = (Tab) root;</span>
+<span class="nc bnc" id="L1260" title="All 2 branches missed.">            if (tab.getContent() != null) {</span>
+<span class="nc" id="L1261">                Object found = findElement(tab.getContent(), predicate);</span>
+<span class="nc bnc" id="L1262" title="All 2 branches missed.">                if (found != null) { return found; }</span>
             }
-<span class="nc bnc" id="L1044" title="All 2 branches missed.">        } else if (root instanceof TitledPane) {</span>
-<span class="nc" id="L1045">            TitledPane parent = (TitledPane) root;</span>
-<span class="nc bnc" id="L1046" title="All 2 branches missed.">            if (parent.getContent() != null) {</span>
-<span class="nc" id="L1047">                Object found = findElement(parent.getContent(), predicate);</span>
-<span class="nc bnc" id="L1048" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc bnc" id="L1264" title="All 2 branches missed.">        } else if (root instanceof TitledPane) {</span>
+<span class="nc" id="L1265">            TitledPane parent = (TitledPane) root;</span>
+<span class="nc bnc" id="L1266" title="All 2 branches missed.">            if (parent.getContent() != null) {</span>
+<span class="nc" id="L1267">                Object found = findElement(parent.getContent(), predicate);</span>
+<span class="nc bnc" id="L1268" title="All 2 branches missed.">                if (found != null) { return found; }</span>
             }
-<span class="nc bnc" id="L1050" title="All 2 branches missed.">        } else if (root instanceof Accordion) {</span>
-<span class="nc" id="L1051">            Accordion parent = (Accordion) root;</span>
-<span class="nc bnc" id="L1052" title="All 2 branches missed.">            for (TitledPane child : parent.getPanes()) {</span>
-<span class="nc" id="L1053">                Object found = findElement(child, predicate);</span>
-<span class="nc bnc" id="L1054" title="All 2 branches missed.">                if (found != null) { return found; }</span>
-<span class="nc" id="L1055">            }</span>
-<span class="nc bnc" id="L1056" title="All 2 branches missed.">        } else if (root instanceof SplitPane) {</span>
-<span class="nc" id="L1057">            SplitPane parent = (SplitPane) root;</span>
-<span class="nc bnc" id="L1058" title="All 2 branches missed.">            for (Node child : parent.getItems()) {</span>
-<span class="nc" id="L1059">                Object found = findElement(child, predicate);</span>
-<span class="nc bnc" id="L1060" title="All 2 branches missed.">                if (found != null) { return found; }</span>
-<span class="nc" id="L1061">            }</span>
-<span class="nc bnc" id="L1062" title="All 2 branches missed.">        } else if (root instanceof ScrollPane) {</span>
-<span class="nc" id="L1063">            ScrollPane scrollPane = (ScrollPane) root;</span>
-<span class="nc bnc" id="L1064" title="All 2 branches missed.">            if (scrollPane.getContent() != null) {</span>
-<span class="nc" id="L1065">                Object found = findElement(scrollPane.getContent(), predicate);</span>
-<span class="nc bnc" id="L1066" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc bnc" id="L1270" title="All 2 branches missed.">        } else if (root instanceof Accordion) {</span>
+<span class="nc" id="L1271">            Accordion parent = (Accordion) root;</span>
+<span class="nc bnc" id="L1272" title="All 2 branches missed.">            for (TitledPane child : parent.getPanes()) {</span>
+<span class="nc" id="L1273">                Object found = findElement(child, predicate);</span>
+<span class="nc bnc" id="L1274" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc" id="L1275">            }</span>
+<span class="nc bnc" id="L1276" title="All 2 branches missed.">        } else if (root instanceof SplitPane) {</span>
+<span class="nc" id="L1277">            SplitPane parent = (SplitPane) root;</span>
+<span class="nc bnc" id="L1278" title="All 2 branches missed.">            for (Node child : parent.getItems()) {</span>
+<span class="nc" id="L1279">                Object found = findElement(child, predicate);</span>
+<span class="nc bnc" id="L1280" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc" id="L1281">            }</span>
+<span class="nc bnc" id="L1282" title="All 2 branches missed.">        } else if (root instanceof ScrollPane) {</span>
+<span class="nc" id="L1283">            ScrollPane scrollPane = (ScrollPane) root;</span>
+<span class="nc bnc" id="L1284" title="All 2 branches missed.">            if (scrollPane.getContent() != null) {</span>
+<span class="nc" id="L1285">                Object found = findElement(scrollPane.getContent(), predicate);</span>
+<span class="nc bnc" id="L1286" title="All 2 branches missed.">                if (found != null) { return found; }</span>
             }
-<span class="nc bnc" id="L1068" title="All 2 branches missed.">        } else if (root instanceof ToolBar) {</span>
-<span class="nc" id="L1069">            ToolBar toolBar = (ToolBar) root;</span>
-<span class="nc bnc" id="L1070" title="All 2 branches missed.">            for (Node child : toolBar.getItems()) {</span>
-<span class="nc" id="L1071">                Object found = findElement(child, predicate);</span>
-<span class="nc bnc" id="L1072" title="All 2 branches missed.">                if (found != null) { return found; }</span>
-<span class="nc" id="L1073">            }</span>
-<span class="nc bnc" id="L1074" title="All 2 branches missed.">        } else if (root instanceof Parent) {</span>
-<span class="nc" id="L1075">            Parent parent = (Parent) root;</span>
-<span class="nc bnc" id="L1076" title="All 2 branches missed.">            for (Node child : parent.getChildrenUnmodifiable()) {</span>
-<span class="nc" id="L1077">                Object found = findElement(child, predicate);</span>
-<span class="nc bnc" id="L1078" title="All 2 branches missed.">                if (found != null) { return found; }</span>
-<span class="nc" id="L1079">            }</span>
+<span class="nc bnc" id="L1288" title="All 2 branches missed.">        } else if (root instanceof ToolBar) {</span>
+<span class="nc" id="L1289">            ToolBar toolBar = (ToolBar) root;</span>
+<span class="nc bnc" id="L1290" title="All 2 branches missed.">            for (Node child : toolBar.getItems()) {</span>
+<span class="nc" id="L1291">                Object found = findElement(child, predicate);</span>
+<span class="nc bnc" id="L1292" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc" id="L1293">            }</span>
+<span class="nc bnc" id="L1294" title="All 2 branches missed.">        } else if (root instanceof Parent) {</span>
+<span class="nc" id="L1295">            Parent parent = (Parent) root;</span>
+<span class="nc bnc" id="L1296" title="All 2 branches missed.">            for (Node child : parent.getChildrenUnmodifiable()) {</span>
+<span class="nc" id="L1297">                Object found = findElement(child, predicate);</span>
+<span class="nc bnc" id="L1298" title="All 2 branches missed.">                if (found != null) { return found; }</span>
+<span class="nc" id="L1299">            }</span>
         }
 
-<span class="nc" id="L1082">        return null;</span>
+<span class="nc" id="L1302">        return null;</span>
     }
 
     @Nonnull
     public static Collection&lt;Object&gt; findElements(@Nonnull Object root, @Nonnull Predicate&lt;Object&gt; predicate) {
-<span class="nc" id="L1087">        Set&lt;Object&gt; accumulator = new LinkedHashSet&lt;&gt;();</span>
-<span class="nc" id="L1088">        findElements(root, predicate, accumulator);</span>
-<span class="nc" id="L1089">        return accumulator;</span>
+<span class="nc" id="L1307">        Set&lt;Object&gt; accumulator = new LinkedHashSet&lt;&gt;();</span>
+<span class="nc" id="L1308">        findElements(root, predicate, accumulator);</span>
+<span class="nc" id="L1309">        return accumulator;</span>
     }
 
     private static void findElements(@Nonnull Object root, @Nonnull Predicate&lt;Object&gt; predicate, @Nonnull Collection&lt;Object&gt; accumulator) {
-<span class="nc" id="L1093">        requireNonNull(root, ERROR_ROOT_NULL);</span>
-<span class="nc" id="L1094">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L1313">        requireNonNull(root, ERROR_ROOT_NULL);</span>
+<span class="nc" id="L1314">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
 
-<span class="nc bnc" id="L1096" title="All 2 branches missed.">        if (predicate.test(root)) {</span>
-<span class="nc" id="L1097">            accumulator.add(root);</span>
+<span class="nc bnc" id="L1316" title="All 2 branches missed.">        if (predicate.test(root)) {</span>
+<span class="nc" id="L1317">            accumulator.add(root);</span>
         }
 
-<span class="nc bnc" id="L1100" title="All 2 branches missed.">        if (root instanceof ButtonBar) {</span>
-<span class="nc" id="L1101">            ButtonBar buttonBar = (ButtonBar) root;</span>
-<span class="nc bnc" id="L1102" title="All 2 branches missed.">            for (Node child : buttonBar.getButtons()) {</span>
-<span class="nc" id="L1103">                findElements(child, predicate, accumulator);</span>
-<span class="nc" id="L1104">            }</span>
-<span class="nc bnc" id="L1105" title="All 2 branches missed.">        } else if (root instanceof MenuBar) {</span>
-<span class="nc" id="L1106">            MenuBar menuBar = (MenuBar) root;</span>
-<span class="nc bnc" id="L1107" title="All 2 branches missed.">            for (Menu child : menuBar.getMenus()) {</span>
-<span class="nc" id="L1108">                findElements(child, predicate, accumulator);</span>
-<span class="nc" id="L1109">            }</span>
-<span class="nc bnc" id="L1110" title="All 2 branches missed.">        } else if (root instanceof ContextMenu) {</span>
-<span class="nc" id="L1111">            ContextMenu contextMenu = (ContextMenu) root;</span>
-<span class="nc bnc" id="L1112" title="All 2 branches missed.">            for (MenuItem child : contextMenu.getItems()) {</span>
-<span class="nc" id="L1113">                findElements(child, predicate, accumulator);</span>
-<span class="nc" id="L1114">            }</span>
-<span class="nc bnc" id="L1115" title="All 2 branches missed.">        } else if (root instanceof Menu) {</span>
-<span class="nc" id="L1116">            Menu menu = (Menu) root;</span>
-<span class="nc bnc" id="L1117" title="All 2 branches missed.">            for (MenuItem child : menu.getItems()) {</span>
-<span class="nc" id="L1118">                findElements(child, predicate, accumulator);</span>
-<span class="nc" id="L1119">            }</span>
-<span class="nc bnc" id="L1120" title="All 2 branches missed.">        } else if (root instanceof TabPane) {</span>
-<span class="nc" id="L1121">            TabPane tabPane = (TabPane) root;</span>
-<span class="nc bnc" id="L1122" title="All 2 branches missed.">            for (Tab child : tabPane.getTabs()) {</span>
-<span class="nc" id="L1123">                findElements(child, predicate, accumulator);</span>
-<span class="nc" id="L1124">            }</span>
-<span class="nc bnc" id="L1125" title="All 2 branches missed.">        } else if (root instanceof Tab) {</span>
-<span class="nc" id="L1126">            Tab tab = (Tab) root;</span>
-<span class="nc bnc" id="L1127" title="All 2 branches missed.">            if (tab.getContent() != null) {</span>
-<span class="nc" id="L1128">                findElements(tab.getContent(), predicate, accumulator);</span>
+<span class="nc bnc" id="L1320" title="All 2 branches missed.">        if (root instanceof ButtonBar) {</span>
+<span class="nc" id="L1321">            ButtonBar buttonBar = (ButtonBar) root;</span>
+<span class="nc bnc" id="L1322" title="All 2 branches missed.">            for (Node child : buttonBar.getButtons()) {</span>
+<span class="nc" id="L1323">                findElements(child, predicate, accumulator);</span>
+<span class="nc" id="L1324">            }</span>
+<span class="nc bnc" id="L1325" title="All 2 branches missed.">        } else if (root instanceof MenuBar) {</span>
+<span class="nc" id="L1326">            MenuBar menuBar = (MenuBar) root;</span>
+<span class="nc bnc" id="L1327" title="All 2 branches missed.">            for (Menu child : menuBar.getMenus()) {</span>
+<span class="nc" id="L1328">                findElements(child, predicate, accumulator);</span>
+<span class="nc" id="L1329">            }</span>
+<span class="nc bnc" id="L1330" title="All 2 branches missed.">        } else if (root instanceof ContextMenu) {</span>
+<span class="nc" id="L1331">            ContextMenu contextMenu = (ContextMenu) root;</span>
+<span class="nc bnc" id="L1332" title="All 2 branches missed.">            for (MenuItem child : contextMenu.getItems()) {</span>
+<span class="nc" id="L1333">                findElements(child, predicate, accumulator);</span>
+<span class="nc" id="L1334">            }</span>
+<span class="nc bnc" id="L1335" title="All 2 branches missed.">        } else if (root instanceof Menu) {</span>
+<span class="nc" id="L1336">            Menu menu = (Menu) root;</span>
+<span class="nc bnc" id="L1337" title="All 2 branches missed.">            for (MenuItem child : menu.getItems()) {</span>
+<span class="nc" id="L1338">                findElements(child, predicate, accumulator);</span>
+<span class="nc" id="L1339">            }</span>
+<span class="nc bnc" id="L1340" title="All 2 branches missed.">        } else if (root instanceof TabPane) {</span>
+<span class="nc" id="L1341">            TabPane tabPane = (TabPane) root;</span>
+<span class="nc bnc" id="L1342" title="All 2 branches missed.">            for (Tab child : tabPane.getTabs()) {</span>
+<span class="nc" id="L1343">                findElements(child, predicate, accumulator);</span>
+<span class="nc" id="L1344">            }</span>
+<span class="nc bnc" id="L1345" title="All 2 branches missed.">        } else if (root instanceof Tab) {</span>
+<span class="nc" id="L1346">            Tab tab = (Tab) root;</span>
+<span class="nc bnc" id="L1347" title="All 2 branches missed.">            if (tab.getContent() != null) {</span>
+<span class="nc" id="L1348">                findElements(tab.getContent(), predicate, accumulator);</span>
             }
-<span class="nc bnc" id="L1130" title="All 2 branches missed.">        } else if (root instanceof TitledPane) {</span>
-<span class="nc" id="L1131">            TitledPane parent = (TitledPane) root;</span>
-<span class="nc bnc" id="L1132" title="All 2 branches missed.">            if (parent.getContent() != null) {</span>
-<span class="nc" id="L1133">                findElements(parent.getContent(), predicate, accumulator);</span>
+<span class="nc bnc" id="L1350" title="All 2 branches missed.">        } else if (root instanceof TitledPane) {</span>
+<span class="nc" id="L1351">            TitledPane parent = (TitledPane) root;</span>
+<span class="nc bnc" id="L1352" title="All 2 branches missed.">            if (parent.getContent() != null) {</span>
+<span class="nc" id="L1353">                findElements(parent.getContent(), predicate, accumulator);</span>
             }
-<span class="nc bnc" id="L1135" title="All 2 branches missed.">        } else if (root instanceof Accordion) {</span>
-<span class="nc" id="L1136">            Accordion parent = (Accordion) root;</span>
-<span class="nc bnc" id="L1137" title="All 2 branches missed.">            for (TitledPane child : parent.getPanes()) {</span>
-<span class="nc" id="L1138">                findElements(child, predicate, accumulator);</span>
-<span class="nc" id="L1139">            }</span>
-<span class="nc bnc" id="L1140" title="All 2 branches missed.">        } else if (root instanceof SplitPane) {</span>
-<span class="nc" id="L1141">            SplitPane parent = (SplitPane) root;</span>
-<span class="nc bnc" id="L1142" title="All 2 branches missed.">            for (Node child : parent.getItems()) {</span>
-<span class="nc" id="L1143">                findElements(child, predicate, accumulator);</span>
-<span class="nc" id="L1144">            }</span>
-<span class="nc bnc" id="L1145" title="All 2 branches missed.">        } else if (root instanceof ScrollPane) {</span>
-<span class="nc" id="L1146">            ScrollPane scrollPane = (ScrollPane) root;</span>
-<span class="nc bnc" id="L1147" title="All 2 branches missed.">            if (scrollPane.getContent() != null) {</span>
-<span class="nc" id="L1148">                findElements(scrollPane.getContent(), predicate, accumulator);</span>
+<span class="nc bnc" id="L1355" title="All 2 branches missed.">        } else if (root instanceof Accordion) {</span>
+<span class="nc" id="L1356">            Accordion parent = (Accordion) root;</span>
+<span class="nc bnc" id="L1357" title="All 2 branches missed.">            for (TitledPane child : parent.getPanes()) {</span>
+<span class="nc" id="L1358">                findElements(child, predicate, accumulator);</span>
+<span class="nc" id="L1359">            }</span>
+<span class="nc bnc" id="L1360" title="All 2 branches missed.">        } else if (root instanceof SplitPane) {</span>
+<span class="nc" id="L1361">            SplitPane parent = (SplitPane) root;</span>
+<span class="nc bnc" id="L1362" title="All 2 branches missed.">            for (Node child : parent.getItems()) {</span>
+<span class="nc" id="L1363">                findElements(child, predicate, accumulator);</span>
+<span class="nc" id="L1364">            }</span>
+<span class="nc bnc" id="L1365" title="All 2 branches missed.">        } else if (root instanceof ScrollPane) {</span>
+<span class="nc" id="L1366">            ScrollPane scrollPane = (ScrollPane) root;</span>
+<span class="nc bnc" id="L1367" title="All 2 branches missed.">            if (scrollPane.getContent() != null) {</span>
+<span class="nc" id="L1368">                findElements(scrollPane.getContent(), predicate, accumulator);</span>
             }
-<span class="nc bnc" id="L1150" title="All 2 branches missed.">        } else if (root instanceof ToolBar) {</span>
-<span class="nc" id="L1151">            ToolBar toolBar = (ToolBar) root;</span>
-<span class="nc bnc" id="L1152" title="All 2 branches missed.">            for (Node child : toolBar.getItems()) {</span>
-<span class="nc" id="L1153">                findElements(child, predicate, accumulator);</span>
-<span class="nc" id="L1154">            }</span>
-<span class="nc bnc" id="L1155" title="All 2 branches missed.">        } else if (root instanceof Parent) {</span>
-<span class="nc" id="L1156">            Parent parent = (Parent) root;</span>
-<span class="nc bnc" id="L1157" title="All 2 branches missed.">            for (Node child : parent.getChildrenUnmodifiable()) {</span>
-<span class="nc" id="L1158">                findElements(child, predicate, accumulator);</span>
-<span class="nc" id="L1159">            }</span>
+<span class="nc bnc" id="L1370" title="All 2 branches missed.">        } else if (root instanceof ToolBar) {</span>
+<span class="nc" id="L1371">            ToolBar toolBar = (ToolBar) root;</span>
+<span class="nc bnc" id="L1372" title="All 2 branches missed.">            for (Node child : toolBar.getItems()) {</span>
+<span class="nc" id="L1373">                findElements(child, predicate, accumulator);</span>
+<span class="nc" id="L1374">            }</span>
+<span class="nc bnc" id="L1375" title="All 2 branches missed.">        } else if (root instanceof Parent) {</span>
+<span class="nc" id="L1376">            Parent parent = (Parent) root;</span>
+<span class="nc bnc" id="L1377" title="All 2 branches missed.">            for (Node child : parent.getChildrenUnmodifiable()) {</span>
+<span class="nc" id="L1378">                findElements(child, predicate, accumulator);</span>
+<span class="nc" id="L1379">            }</span>
         }
-<span class="nc" id="L1161">    }</span>
+<span class="nc" id="L1381">    }</span>
 
     @Nullable
     public static Window getWindowAncestor(@Nonnull Object node) {
-<span class="nc" id="L1165">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L1385">        requireNonNull(node, ERROR_NODE_NULL);</span>
 
-<span class="nc bnc" id="L1167" title="All 2 branches missed.">        if (node instanceof Window) {</span>
-<span class="nc" id="L1168">            return (Window) node;</span>
-<span class="nc bnc" id="L1169" title="All 2 branches missed.">        } else if (node instanceof Scene) {</span>
-<span class="nc" id="L1170">            return ((Scene) node).getWindow();</span>
-<span class="nc bnc" id="L1171" title="All 2 branches missed.">        } else if (node instanceof Node) {</span>
-<span class="nc" id="L1172">            Scene scene = ((Node) node).getScene();</span>
-<span class="nc bnc" id="L1173" title="All 2 branches missed.">            if (scene != null) {</span>
-<span class="nc" id="L1174">                return scene.getWindow();</span>
+<span class="nc bnc" id="L1387" title="All 2 branches missed.">        if (node instanceof Window) {</span>
+<span class="nc" id="L1388">            return (Window) node;</span>
+<span class="nc bnc" id="L1389" title="All 2 branches missed.">        } else if (node instanceof Scene) {</span>
+<span class="nc" id="L1390">            return ((Scene) node).getWindow();</span>
+<span class="nc bnc" id="L1391" title="All 2 branches missed.">        } else if (node instanceof Node) {</span>
+<span class="nc" id="L1392">            Scene scene = ((Node) node).getScene();</span>
+<span class="nc bnc" id="L1393" title="All 2 branches missed.">            if (scene != null) {</span>
+<span class="nc" id="L1394">                return scene.getWindow();</span>
             }
-<span class="nc bnc" id="L1176" title="All 2 branches missed.">        } else if (node instanceof Tab) {</span>
-<span class="nc" id="L1177">            TabPane tabPane = ((Tab) node).getTabPane();</span>
-<span class="nc bnc" id="L1178" title="All 2 branches missed.">            if (tabPane != null) {</span>
-<span class="nc" id="L1179">                return getWindowAncestor(tabPane);</span>
+<span class="nc bnc" id="L1396" title="All 2 branches missed.">        } else if (node instanceof Tab) {</span>
+<span class="nc" id="L1397">            TabPane tabPane = ((Tab) node).getTabPane();</span>
+<span class="nc bnc" id="L1398" title="All 2 branches missed.">            if (tabPane != null) {</span>
+<span class="nc" id="L1399">                return getWindowAncestor(tabPane);</span>
             }
         }
 
-<span class="nc" id="L1183">        return null;</span>
+<span class="nc" id="L1403">        return null;</span>
     }
 
     private static ValueConversionException illegalValue(Object value, Class&lt;?&gt; klass) {
-<span class="nc" id="L1187">        throw new ValueConversionException(value, klass);</span>
+<span class="nc" id="L1407">        throw new ValueConversionException(value, klass);</span>
     }
 
     private static ValueConversionException illegalValue(Object value, Class&lt;?&gt; klass, Exception e) {
-<span class="nc" id="L1191">        throw new ValueConversionException(value, klass, e);</span>
+<span class="nc" id="L1411">        throw new ValueConversionException(value, klass, e);</span>
     }
 
     /**
