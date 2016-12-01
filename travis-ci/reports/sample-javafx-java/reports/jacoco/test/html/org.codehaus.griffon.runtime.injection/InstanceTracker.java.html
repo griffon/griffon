@@ -54,7 +54,7 @@ import static org.codehaus.griffon.runtime.injection.MethodUtils.invokeAnnotated
     }
 
     @Nonnull
-    public &lt;T&gt; T track(@Nonnull Binding&lt;?&gt; binding, final @Nonnull T instance) {
+    public &lt;T&gt; T track(@Nonnull Binding&lt;?&gt; binding, @Nonnull final T instance) {
 <span class="fc" id="L58">        requireNonNull(binding, ERROR_BINDING_NULL);</span>
 <span class="fc" id="L59">        requireNonNull(instance, ERROR_INSTANCE_NULL);</span>
 
