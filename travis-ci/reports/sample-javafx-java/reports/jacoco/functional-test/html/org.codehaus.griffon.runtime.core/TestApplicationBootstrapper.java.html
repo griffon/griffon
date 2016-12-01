@@ -132,7 +132,7 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
     }
 
     @SuppressWarnings(&quot;unchecked&quot;)
-    private void doCollectOverridingModules(@Nonnull final Collection&lt;Module&gt; modules) {
+    private void doCollectOverridingModules(final @Nonnull Collection&lt;Module&gt; modules) {
 <span class="pc bpc" id="L136" title="1 of 2 branches missed.">        if (testCase == null) {</span>
 <span class="fc" id="L137">            return;</span>
         }
@@ -194,13 +194,13 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
         }
     }
 
-    private void doCollectModulesFromInnerClasses(@Nonnull final Collection&lt;Module&gt; modules) {
+    private void doCollectModulesFromInnerClasses(final @Nonnull Collection&lt;Module&gt; modules) {
 <span class="pc bpc" id="L198" title="1 of 2 branches missed.">        if (testCase != null) {</span>
 <span class="nc" id="L199">            modules.add(new InnerClassesModule());</span>
         }
 <span class="fc" id="L201">    }</span>
 
-    private void doCollectModulesFromFields(@Nonnull final Collection&lt;Module&gt; modules) {
+    private void doCollectModulesFromFields(final @Nonnull Collection&lt;Module&gt; modules) {
 <span class="pc bpc" id="L204" title="1 of 2 branches missed.">        if (testCase != null) {</span>
 <span class="nc" id="L205">            modules.add(new FieldsModule());</span>
         }

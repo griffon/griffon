@@ -68,7 +68,7 @@ public class GuiceInjector implements Injector&lt;com.google.inject.Injector&gt;
 <span class="fc" id="L68">        this.delegate = requireNonNull(instanceTracker.getInjector(), ERROR_DELEGATE_NULL);</span>
 <span class="fc" id="L69">    }</span>
 
-    static Module moduleFromBindings(@Nonnull final Iterable&lt;Binding&lt;?&gt;&gt; bindings) {
+    static Module moduleFromBindings(final @Nonnull Iterable&lt;Binding&lt;?&gt;&gt; bindings) {
 <span class="fc" id="L72">        return new AbstractModule() {</span>
             @Override
             protected void configure() {
@@ -156,8 +156,8 @@ public class GuiceInjector implements Injector&lt;com.google.inject.Injector&gt;
 <span class="fc" id="L156">        requireNonNull(type, ERROR_TYPE_NULL);</span>
 <span class="fc" id="L157">        requireNonNull(qualifier, ERROR_QUALIFIER_NULL);</span>
 
-<span class="fc bfc" id="L159" title="All 2 branches covered.">        if (isClosed()) {</span>
-<span class="fc" id="L160">            throw new InstanceNotFoundException(type, qualifier, new ClosedInjectorException(this));</span>
+<span class="pc bpc" id="L159" title="1 of 2 branches missed.">        if (isClosed()) {</span>
+<span class="nc" id="L160">            throw new InstanceNotFoundException(type, qualifier, new ClosedInjectorException(this));</span>
         }
 
         try {
