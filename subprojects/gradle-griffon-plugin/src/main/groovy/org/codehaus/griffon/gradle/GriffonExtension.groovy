@@ -25,7 +25,7 @@ import org.gradle.api.Project
 class GriffonExtension {
     static final List<String> TOOLKIT_NAMES = ['swing', 'javafx', 'pivot', 'lanterna']
 
-    String version = '2.9.1'
+    String version = '2.10.0-SNAPSHOT'
 
     String toolkit
 
