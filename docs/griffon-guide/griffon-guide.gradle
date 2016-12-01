@@ -237,11 +237,12 @@ asciidoctor {
 }
 asciidoctor.dependsOn sampleStats
 
-task guide(type: Copy, dependsOn: [apiDocs, generateJava2html, asciidoctor]) {
+task guide(type: Copy, dependsOn: [apiDocs, generateJava2html, asciidoctor, docsJar]) {
     destinationDir = "$buildDir/guide" as File
     from(apiDocs.destinationDir)       { into 'api' }
     from(java2htmlConvertCode.destDir) { into 'api-src'}
     from("${asciidoctor.outputDir}/html5")
+    from("$buildDir/assemble/jars")
 }
 
 task guideZip(type: Zip, dependsOn: guide) {
