@@ -72,11 +72,6 @@ ext {
     projectsWithClirr = []
     depProjects = []
     fullBuild = !travis && !appveyor
-    withDebug = (rootProject.hasProperty('withDebug') && rootProject.withDebug.toBoolean()) || travis
-}
-
-if (rootProject.withDebug) {
-    println "Enabling debug information for compiled classes"
 }
 
 allprojects {
@@ -193,17 +188,6 @@ subprojects { subproj ->
                 }
 
                 projectsWithClirr << subproj
-            }
-
-            tasks.withType(AbstractCompile) {
-                options.debug = false
-            }
-
-            if (rootProject.hasProperty('withDebug') && rootProject.withDebug.toBoolean()) {
-                jar.classifier = 'debug'
-                tasks.withType(AbstractCompile) {
-                    options.debug = true
-                }
             }
 
             projectsWithCoverage << subproj
