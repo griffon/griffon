@@ -71,7 +71,7 @@ import static org.codehaus.griffon.runtime.injection.MethodUtils.invokeAnnotated
 <span class="fc" id="L71">        return injector;</span>
     }
 
-    private GuiceInjector createModules(final @Nonnull GriffonApplication application, @Nonnull final InjectorProvider injectorProvider, @Nonnull Iterable&lt;Binding&lt;?&gt;&gt; bindings) {
+    private GuiceInjector createModules(@Nonnull final GriffonApplication application, @Nonnull final InjectorProvider injectorProvider, @Nonnull Iterable&lt;Binding&lt;?&gt;&gt; bindings) {
 <span class="fc" id="L75">        final InjectionListener&lt;GriffonArtifact&gt; injectionListener = new InjectionListener&lt;GriffonArtifact&gt;() {</span>
             @Override
             public void afterInjection(GriffonArtifact injectee) {

@@ -47,7 +47,7 @@ public class PivotUIThreadManager extends AbstractUIThreadManager {
 <span class="fc" id="L47">    }</span>
 
     @Override
-    public void runInsideUISync(final @Nonnull Runnable runnable) {
+    public void runInsideUISync(@Nonnull final Runnable runnable) {
 <span class="nc bnc" id="L51" title="All 2 branches missed.">        if (isUIThread()) {</span>
 <span class="nc" id="L52">            runnable.run();</span>
         } else {

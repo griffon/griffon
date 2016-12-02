@@ -33,7 +33,7 @@ import static java.util.Objects.requireNonNull;
 public class LanternaGriffonControllerAction extends AbstractAction {
     private final LanternaAction toolkitAction;
 
-    public LanternaGriffonControllerAction(final @Nonnull UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
+    public LanternaGriffonControllerAction(@Nonnull final UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
 <span class="nc" id="L37">        super(actionManager, controller, actionName);</span>
 <span class="nc" id="L38">        requireNonNull(uiThreadManager, &quot;Argument 'uiThreadManager' must not be null&quot;);</span>
 
@@ -50,7 +50,7 @@ public class LanternaGriffonControllerAction extends AbstractAction {
 <span class="nc" id="L50">    }</span>
 
     @Nonnull
-    protected LanternaAction createAction(final @Nonnull ActionManager actionManager, final @Nonnull GriffonController controller, final @Nonnull String actionName) {
+    protected LanternaAction createAction(@Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
 <span class="nc" id="L54">        return new LanternaAction(new Runnable() {</span>
             @Override
             public void run() {
