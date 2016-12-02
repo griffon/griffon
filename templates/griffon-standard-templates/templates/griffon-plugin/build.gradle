@@ -22,6 +22,7 @@ buildscript {
 apply plugin: 'base'
 apply plugin: 'idea'
 apply plugin: 'com.github.kt3k.coveralls'
+apply plugin: 'net.nemerosa.versioning'
 apply plugin: 'build-dashboard'
 apply from: 'gradle/idea.gradle'
 apply plugin: 'org.codehaus.griffon.griffon-build'
@@ -30,8 +31,11 @@ apply plugin: 'org.ajoberstar.github-pages'
 
 Date buildTimeAndDate = new Date()
 ext {
+    buildBy = System.properties['user.name']
     buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
     buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+    buildRevision = versioning.info.commit
+    buildCreatedBy = "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})".toString()
 }
 
 allprojects {
@@ -61,11 +65,6 @@ ext.jacocoProjects = []
 
 subprojects { subproj ->
     plugins.withType(JavaPlugin) {
-        configurations {
-            compileOnly
-            testCompileOnly
-        }
-
         subproj.tasks.withType(JavaCompile) {
             sourceCompatibility = subproj.sourceCompatibility
             targetCompatibility = subproj.targetCompatibility
@@ -76,24 +75,8 @@ subprojects { subproj ->
             targetCompatibility = subproj.targetCompatibility
         }
 
-        sourceSets {
-            main {
-                compileClasspath += [configurations.compileOnly]
-            }
-            test {
-                compileClasspath += [configurations.testCompileOnly]
-            }
-        }
-
         javadoc {
             classpath += [configurations.compileOnly]
-        }
-
-        idea {
-            module {
-                scopes.PROVIDED.plus += [configurations.compileOnly]
-                scopes.PROVIDED.plus += [configurations.testCompileOnly]
-            }
         }
 
         dependencies {
