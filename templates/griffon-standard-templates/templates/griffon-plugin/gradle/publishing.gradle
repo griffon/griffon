@@ -53,6 +53,11 @@ jar {
             'Implementation-Vendor': 'griffon-framework.org'
         )
     }
+
+    metaInf {
+        from rootProject.file('.')
+        include 'LICENSE'
+    }
 }
 
 if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = ''
