@@ -376,22 +376,22 @@ public final class JavaFXUtils {
 <span class="nc" id="L376">            });</span>
 <span class="nc" id="L377">    }</span>
 
-    private static void doConnectMessageSource(@Nonnull final Labeled node, @Nonnull final GriffonApplication application) {
+    private static void doConnectMessageSource(final @Nonnull Labeled node, final @Nonnull GriffonApplication application) {
 <span class="nc" id="L380">        application.addPropertyChangeListener(PROPERTY_LOCALE, evt -&gt; updateLabeled(node, application));</span>
 <span class="nc" id="L381">        updateLabeled(node, application);</span>
 <span class="nc" id="L382">    }</span>
 
-    private static void doConnectMessageSource(@Nonnull final Tab node, @Nonnull final GriffonApplication application) {
+    private static void doConnectMessageSource(final @Nonnull Tab node, final @Nonnull GriffonApplication application) {
 <span class="nc" id="L385">        application.addPropertyChangeListener(PROPERTY_LOCALE, evt -&gt; updateLabeled(node, application));</span>
 <span class="nc" id="L386">        updateLabeled(node, application);</span>
 <span class="nc" id="L387">    }</span>
 
-    private static void doConnectMessageSource(@Nonnull final MenuItem node, @Nonnull final GriffonApplication application) {
+    private static void doConnectMessageSource(final @Nonnull MenuItem node, final @Nonnull GriffonApplication application) {
 <span class="nc" id="L390">        application.addPropertyChangeListener(PROPERTY_LOCALE, evt -&gt; updateLabeled(node, application));</span>
 <span class="nc" id="L391">        updateLabeled(node, application);</span>
 <span class="nc" id="L392">    }</span>
 
-    private static void updateLabeled(@Nonnull final Labeled node, @Nonnull final GriffonApplication application) {
+    private static void updateLabeled(final @Nonnull Labeled node, final @Nonnull GriffonApplication application) {
 <span class="nc" id="L395">        runInsideUIThread(() -&gt; {</span>
 <span class="nc" id="L396">            String key = getI18nKey(node);</span>
 <span class="nc" id="L397">            String args = getI18nArgs(node);</span>
@@ -407,7 +407,7 @@ public final class JavaFXUtils {
 <span class="nc" id="L407">        });</span>
 <span class="nc" id="L408">    }</span>
 
-    private static void updateLabeled(@Nonnull final Tab node, @Nonnull final GriffonApplication application) {
+    private static void updateLabeled(final @Nonnull Tab node, final @Nonnull GriffonApplication application) {
 <span class="nc" id="L411">        runInsideUIThread(() -&gt; {</span>
 <span class="nc" id="L412">            String key = getI18nKey(node);</span>
 <span class="nc" id="L413">            String args = getI18nArgs(node);</span>
@@ -423,7 +423,7 @@ public final class JavaFXUtils {
 <span class="nc" id="L423">        });</span>
 <span class="nc" id="L424">    }</span>
 
-    private static void updateLabeled(@Nonnull final MenuItem node, @Nonnull final GriffonApplication application) {
+    private static void updateLabeled(final @Nonnull MenuItem node, final @Nonnull GriffonApplication application) {
 <span class="nc" id="L427">        runInsideUIThread(() -&gt; {</span>
 <span class="nc" id="L428">            String key = getI18nKey(node);</span>
 <span class="nc" id="L429">            String args = getI18nArgs(node);</span>
@@ -665,7 +665,7 @@ public final class JavaFXUtils {
         }
 <span class="fc" id="L666">    }</span>
 
-    private static EventHandler&lt;ActionEvent&gt; wrapAction(@Nonnull final JavaFXAction action) {
+    private static EventHandler&lt;ActionEvent&gt; wrapAction(final @Nonnull JavaFXAction action) {
 <span class="nc" id="L669">        return event -&gt; {</span>
 <span class="nc bnc" id="L670" title="All 2 branches missed.">            if (action.isEnabled()) {</span>
 <span class="nc" id="L671">                action.getOnAction().handle(event);</span>
@@ -695,28 +695,28 @@ public final class JavaFXUtils {
 <span class="nc" id="L695">        return style + key + &quot;: &quot; + value + &quot;;&quot;;</span>
     }
 
-    public static void configure(@Nonnull final ToggleButton control, @Nonnull final JavaFXAction action) {
+    public static void configure(final @Nonnull ToggleButton control, final @Nonnull JavaFXAction action) {
 <span class="nc" id="L699">        configure((ButtonBase) control, action);</span>
 
 <span class="nc" id="L701">        action.selectedProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setSelected(n)));</span>
 <span class="nc" id="L702">        runInsideUIThread(() -&gt; control.setSelected(action.isSelected()));</span>
 <span class="nc" id="L703">    }</span>
 
-    public static void configure(@Nonnull final CheckBox control, @Nonnull final JavaFXAction action) {
+    public static void configure(final @Nonnull CheckBox control, final @Nonnull JavaFXAction action) {
 <span class="nc" id="L706">        configure((ButtonBase) control, action);</span>
 
 <span class="nc" id="L708">        action.selectedProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setSelected(n)));</span>
 <span class="nc" id="L709">        runInsideUIThread(() -&gt; control.setSelected(action.isSelected()));</span>
 <span class="nc" id="L710">    }</span>
 
-    public static void configure(@Nonnull final RadioButton control, @Nonnull final JavaFXAction action) {
+    public static void configure(final @Nonnull RadioButton control, final @Nonnull JavaFXAction action) {
 <span class="nc" id="L713">        configure((ButtonBase) control, action);</span>
 
 <span class="nc" id="L715">        action.selectedProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setSelected(n)));</span>
 <span class="nc" id="L716">        runInsideUIThread(() -&gt; control.setSelected(action.isSelected()));</span>
 <span class="nc" id="L717">    }</span>
 
-    public static void configure(@Nonnull final ButtonBase control, @Nonnull final JavaFXAction action) {
+    public static void configure(final @Nonnull ButtonBase control, final @Nonnull JavaFXAction action) {
 <span class="fc" id="L720">        requireNonNull(control, ERROR_CONTROL_NULL);</span>
 <span class="fc" id="L721">        requireNonNull(action, ERROR_ACTION_NULL);</span>
 
@@ -769,21 +769,21 @@ public final class JavaFXUtils {
 <span class="fc" id="L769">        setGraphicStyle(control, action.getGraphicStyle());</span>
 <span class="fc" id="L770">    }</span>
 
-    public static void configure(@Nonnull final CheckMenuItem control, @Nonnull final JavaFXAction action) {
+    public static void configure(final @Nonnull CheckMenuItem control, final @Nonnull JavaFXAction action) {
 <span class="nc" id="L773">        configure((MenuItem) control, action);</span>
 
 <span class="nc" id="L775">        action.selectedProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setSelected(n)));</span>
 <span class="nc" id="L776">        runInsideUIThread(() -&gt; control.setSelected(action.isSelected()));</span>
 <span class="nc" id="L777">    }</span>
 
-    public static void configure(@Nonnull final RadioMenuItem control, @Nonnull final JavaFXAction action) {
+    public static void configure(final @Nonnull RadioMenuItem control, final @Nonnull JavaFXAction action) {
 <span class="nc" id="L780">        configure((MenuItem) control, action);</span>
 
 <span class="nc" id="L782">        action.selectedProperty().addListener((v, o, n) -&gt; runInsideUIThread(() -&gt; control.setSelected(n)));</span>
 <span class="nc" id="L783">        runInsideUIThread(() -&gt; control.setSelected(action.isSelected()));</span>
 <span class="nc" id="L784">    }</span>
 
-    public static void configure(@Nonnull final MenuItem control, @Nonnull final JavaFXAction action) {
+    public static void configure(final @Nonnull MenuItem control, final @Nonnull JavaFXAction action) {
 <span class="nc" id="L787">        requireNonNull(control, ERROR_CONTROL_NULL);</span>
 <span class="nc" id="L788">        requireNonNull(action, ERROR_ACTION_NULL);</span>
 

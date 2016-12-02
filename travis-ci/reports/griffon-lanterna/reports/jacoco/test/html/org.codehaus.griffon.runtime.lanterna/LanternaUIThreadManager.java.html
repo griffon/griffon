@@ -46,7 +46,7 @@ public class LanternaUIThreadManager extends AbstractUIThreadManager {
 <span class="nc" id="L46">    }</span>
 
     @Override
-    public void runInsideUISync(@Nonnull final Runnable runnable) {
+    public void runInsideUISync(final @Nonnull Runnable runnable) {
 <span class="nc bnc" id="L50" title="All 2 branches missed.">        if (isUIThread()) {</span>
 <span class="nc" id="L51">            runnable.run();</span>
         } else {
