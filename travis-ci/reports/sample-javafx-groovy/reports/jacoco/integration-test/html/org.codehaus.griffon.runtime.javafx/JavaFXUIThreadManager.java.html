@@ -47,7 +47,7 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L47">    }</span>
 
     @Override
-    public void runInsideUISync(final @Nonnull Runnable runnable) {
+    public void runInsideUISync(@Nonnull final Runnable runnable) {
 <span class="fc" id="L51">        requireNonNull(runnable, ERROR_RUNNABLE_NULL);</span>
 <span class="pc bpc" id="L52" title="1 of 2 branches missed.">        if (isUIThread()) {</span>
 <span class="nc" id="L53">            runnable.run();</span>

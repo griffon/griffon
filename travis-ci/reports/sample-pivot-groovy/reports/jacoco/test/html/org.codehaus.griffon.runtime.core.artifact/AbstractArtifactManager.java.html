@@ -113,7 +113,7 @@ import static java.util.Objects.requireNonNull;
     @Override
     @Nonnull
     @SuppressWarnings(&quot;unchecked&quot;)
-    public &lt;A extends GriffonArtifact&gt; A newInstance(final @Nonnull Class&lt;A&gt; clazz) {
+    public &lt;A extends GriffonArtifact&gt; A newInstance(@Nonnull final Class&lt;A&gt; clazz) {
 <span class="pc bpc" id="L117" title="1 of 2 branches missed.">        if (findGriffonClass(clazz) == null) {</span>
 <span class="nc" id="L118">            throw new ArtifactNotFoundException(clazz);</span>
         }
