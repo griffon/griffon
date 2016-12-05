@@ -49,8 +49,8 @@ class GriffonPluginResolutionStrategy {
 <span class="nc bnc" id="L49" title="All 2 branches missed.">            if (project.extensions.getByName(GRIFFON_CONFIGURATION).disableDependencyResolution) {</span>
 <span class="nc" id="L50">                return</span>
             }
-<span class="nc" id="L52">            DEPENDENCY_MAP[configurationName].each { String dependency -&gt;</span>
-<span class="nc" id="L53">                project.logger.info(&quot;Adding {} to '{}' configuration&quot;, configurationName, dependency)</span>
+<span class="nc" id="L52">            DEPENDENCY_MAP.get(project.name, [:])[configurationName].each { String dependency -&gt;</span>
+<span class="nc" id="L53">                project.logger.info(&quot;Adding {} to '{}' configuration of {}&quot;, dependency, configurationName, project.name)</span>
 <span class="nc" id="L54">                resolver.project.dependencies.add(configurationName, dependency)</span>
             }
         }
@@ -136,13 +136,14 @@ class GriffonPluginResolutionStrategy {
         }
 
         private void appendDependency(String artifactId, String scope, String dependencyCoordinates) {
-<span class="nc bnc" id="L139" title="All 2 branches missed.">            if (artifactId.endsWith('-compile')) {</span>
-<span class="nc" id="L140">                DEPENDENCY_MAP.get('compileOnly', []) &lt;&lt; dependencyCoordinates</span>
-<span class="nc" id="L141">                DEPENDENCY_MAP.get('testCompileOnly', []) &lt;&lt; dependencyCoordinates</span>
-<span class="nc bnc" id="L142" title="All 6 branches missed.">            } else if (scope == 'test' &amp;&amp; artifactId.endsWith('-test')) {</span>
-<span class="nc" id="L143">                DEPENDENCY_MAP.get('testCompile', []) &lt;&lt; dependencyCoordinates</span>
+<span class="nc" id="L139">            Map projectDependencyMap = DEPENDENCY_MAP.get(project.name, [:])</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">            if (artifactId.endsWith('-compile')) {</span>
+<span class="nc" id="L141">                projectDependencyMap.get('compileOnly', []) &lt;&lt; dependencyCoordinates</span>
+<span class="nc" id="L142">                projectDependencyMap.get('testCompileOnly', []) &lt;&lt; dependencyCoordinates</span>
+<span class="nc bnc" id="L143" title="All 6 branches missed.">            } else if (scope == 'test' &amp;&amp; artifactId.endsWith('-test')) {</span>
+<span class="nc" id="L144">                projectDependencyMap.get('testCompile', []) &lt;&lt; dependencyCoordinates</span>
             } else {
-<span class="nc" id="L145">                DEPENDENCY_MAP.get(scope, []) &lt;&lt; dependencyCoordinates</span>
+<span class="nc" id="L146">                projectDependencyMap.get(scope, []) &lt;&lt; dependencyCoordinates</span>
             }
         }
     }

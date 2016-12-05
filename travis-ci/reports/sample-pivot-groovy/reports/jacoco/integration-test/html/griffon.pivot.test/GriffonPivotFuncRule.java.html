@@ -89,7 +89,7 @@ public class GriffonPivotFuncRule extends GriffonPivotRule {
                 try {
 <span class="fc" id="L90">                    runnable.run();</span>
                 } finally {
-<span class="pc" id="L92">                    latch.countDown();</span>
+<span class="fc" id="L92">                    latch.countDown();</span>
 <span class="fc" id="L93">                }</span>
 <span class="fc" id="L94">            }</span>
         };
@@ -98,9 +98,9 @@ public class GriffonPivotFuncRule extends GriffonPivotRule {
 <span class="nc" id="L98">        } catch (InterruptedException e) {</span>
 <span class="nc" id="L99">            latch.countDown();</span>
 <span class="nc" id="L100">            t = e;</span>
-<span class="nc" id="L101">        } catch (InvocationTargetException e) {</span>
-<span class="nc" id="L102">            latch.countDown();</span>
-<span class="nc" id="L103">            t = e.getTargetException();</span>
+<span class="fc" id="L101">        } catch (InvocationTargetException e) {</span>
+<span class="fc" id="L102">            latch.countDown();</span>
+<span class="fc" id="L103">            t = e.getTargetException();</span>
 <span class="pc" id="L104">        }</span>
 
         try {
@@ -109,9 +109,9 @@ public class GriffonPivotFuncRule extends GriffonPivotRule {
 <span class="nc" id="L109">            throw new GriffonException(e);</span>
 <span class="fc" id="L110">        }</span>
 
-<span class="pc bpc" id="L112" title="1 of 2 branches missed.">        if (t != null) {</span>
-<span class="nc bnc" id="L113" title="All 2 branches missed.">            if (t instanceof AssertionError) {</span>
-<span class="nc" id="L114">                throw (AssertionError) t;</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        if (t != null) {</span>
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">            if (t instanceof AssertionError) {</span>
+<span class="fc" id="L114">                throw (AssertionError) t;</span>
 <span class="nc bnc" id="L115" title="All 2 branches missed.">            } else if (t instanceof RuntimeException) {</span>
 <span class="nc" id="L116">                throw (RuntimeException) t;</span>
             } else {
