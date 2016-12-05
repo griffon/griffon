@@ -27,8 +27,9 @@ abstract class AbstractPluginSpecification extends Specification {
     Project project(Closure<Project> configuration = null) {
         deleteProjectDir()
         project = ProjectBuilder.builder().build()
-        if (configuration)
+        if (configuration) {
             project.with(configuration)
+        }
         return project
     }
 

@@ -71,6 +71,7 @@ class GriffonPlugin implements Plugin<Project> {
                 'griffon-app/i18n'
             ]
         }
+        println project.sourceSets.main[sourceSetName].srcDirs
     }
 
     private static String resolveApplicationName(Project project) {
