@@ -29,7 +29,7 @@
 </td>
 <td>
 <div class="infoBox" id="failures">
-<div class="counter">0</div>
+<div class="counter">6</div>
 <p>failures</p>
 </div>
 </td>
@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.031s</div>
+<div class="counter">0.337s</div>
 <p>duration</p>
 </div>
 </td>
@@ -50,8 +50,8 @@
 </div>
 </td>
 <td>
-<div class="infoBox success" id="successRate">
-<div class="percent">100%</div>
+<div class="infoBox failures" id="successRate">
+<div class="percent">0%</div>
 <p>successful</p>
 </div>
 </td>
@@ -61,13 +61,145 @@
 <div id="tabs">
 <ul class="tabLinks">
 <li>
-<a href="#tab0">Tests</a>
+<a href="#tab0">Failed tests</a>
 </li>
 <li>
-<a href="#tab1">Standard error</a>
+<a href="#tab1">Tests</a>
+</li>
+<li>
+<a href="#tab2">Standard error</a>
 </li>
 </ul>
 <div id="tab0" class="tab">
+<h2>Failed tests</h2>
+<div class="test">
+<a name="sourceSets.main.groovy contains griffon-app/conf"></a>
+<h3 class="failures">sourceSets.main.groovy contains griffon-app/conf</h3>
+<span class="code">
+<pre>Condition not satisfied:
+
+project.sourceSets.main.groovy.srcDirs.contains(project.file(&quot;griffon-app/${srcDir}&quot;))
+|       |          |    |      |       |        |       |                  |
+|       |          |    |      |       false    |       |                  conf
+|       |          |    |      |                |       /tmp/gradle3831917581569976130projectDir/griffon-app/conf
+|       |          |    |      |                root project 'test'
+|       |          |    |      [/tmp/gradle3831917581569976130projectDir/src/main/groovy]
+|       |          |    main Groovy source
+|       |          source set 'main'
+|       [source set 'main', source set 'test']
+root project 'test'
+
+	at org.codehaus.griffon.gradle.GriffonPluginWithAppliedGroovyPluginSpecification.sourceSets.main.groovy contains griffon-app/#srcDir(GriffonPluginWithAppliedGroovyPluginSpecification.groovy:34)
+</pre>
+</span>
+</div>
+<div class="test">
+<a name="sourceSets.main.groovy contains griffon-app/controllers"></a>
+<h3 class="failures">sourceSets.main.groovy contains griffon-app/controllers</h3>
+<span class="code">
+<pre>Condition not satisfied:
+
+project.sourceSets.main.groovy.srcDirs.contains(project.file(&quot;griffon-app/${srcDir}&quot;))
+|       |          |    |      |       |        |       |                  |
+|       |          |    |      |       false    |       |                  controllers
+|       |          |    |      |                |       /tmp/gradle3831917581569976130projectDir/griffon-app/controllers
+|       |          |    |      |                root project 'test'
+|       |          |    |      [/tmp/gradle3831917581569976130projectDir/src/main/groovy]
+|       |          |    main Groovy source
+|       |          source set 'main'
+|       [source set 'main', source set 'test']
+root project 'test'
+
+	at org.codehaus.griffon.gradle.GriffonPluginWithAppliedGroovyPluginSpecification.sourceSets.main.groovy contains griffon-app/#srcDir(GriffonPluginWithAppliedGroovyPluginSpecification.groovy:34)
+</pre>
+</span>
+</div>
+<div class="test">
+<a name="sourceSets.main.groovy contains griffon-app/lifecycle"></a>
+<h3 class="failures">sourceSets.main.groovy contains griffon-app/lifecycle</h3>
+<span class="code">
+<pre>Condition not satisfied:
+
+project.sourceSets.main.groovy.srcDirs.contains(project.file(&quot;griffon-app/${srcDir}&quot;))
+|       |          |    |      |       |        |       |                  |
+|       |          |    |      |       false    |       |                  lifecycle
+|       |          |    |      |                |       /tmp/gradle3831917581569976130projectDir/griffon-app/lifecycle
+|       |          |    |      |                root project 'test'
+|       |          |    |      [/tmp/gradle3831917581569976130projectDir/src/main/groovy]
+|       |          |    main Groovy source
+|       |          source set 'main'
+|       [source set 'main', source set 'test']
+root project 'test'
+
+	at org.codehaus.griffon.gradle.GriffonPluginWithAppliedGroovyPluginSpecification.sourceSets.main.groovy contains griffon-app/#srcDir(GriffonPluginWithAppliedGroovyPluginSpecification.groovy:34)
+</pre>
+</span>
+</div>
+<div class="test">
+<a name="sourceSets.main.groovy contains griffon-app/models"></a>
+<h3 class="failures">sourceSets.main.groovy contains griffon-app/models</h3>
+<span class="code">
+<pre>Condition not satisfied:
+
+project.sourceSets.main.groovy.srcDirs.contains(project.file(&quot;griffon-app/${srcDir}&quot;))
+|       |          |    |      |       |        |       |                  |
+|       |          |    |      |       false    |       |                  models
+|       |          |    |      |                |       /tmp/gradle3831917581569976130projectDir/griffon-app/models
+|       |          |    |      |                root project 'test'
+|       |          |    |      [/tmp/gradle3831917581569976130projectDir/src/main/groovy]
+|       |          |    main Groovy source
+|       |          source set 'main'
+|       [source set 'main', source set 'test']
+root project 'test'
+
+	at org.codehaus.griffon.gradle.GriffonPluginWithAppliedGroovyPluginSpecification.sourceSets.main.groovy contains griffon-app/#srcDir(GriffonPluginWithAppliedGroovyPluginSpecification.groovy:34)
+</pre>
+</span>
+</div>
+<div class="test">
+<a name="sourceSets.main.groovy contains griffon-app/services"></a>
+<h3 class="failures">sourceSets.main.groovy contains griffon-app/services</h3>
+<span class="code">
+<pre>Condition not satisfied:
+
+project.sourceSets.main.groovy.srcDirs.contains(project.file(&quot;griffon-app/${srcDir}&quot;))
+|       |          |    |      |       |        |       |                  |
+|       |          |    |      |       false    |       |                  services
+|       |          |    |      |                |       /tmp/gradle3831917581569976130projectDir/griffon-app/services
+|       |          |    |      |                root project 'test'
+|       |          |    |      [/tmp/gradle3831917581569976130projectDir/src/main/groovy]
+|       |          |    main Groovy source
+|       |          source set 'main'
+|       [source set 'main', source set 'test']
+root project 'test'
+
+	at org.codehaus.griffon.gradle.GriffonPluginWithAppliedGroovyPluginSpecification.sourceSets.main.groovy contains griffon-app/#srcDir(GriffonPluginWithAppliedGroovyPluginSpecification.groovy:34)
+</pre>
+</span>
+</div>
+<div class="test">
+<a name="sourceSets.main.groovy contains griffon-app/views"></a>
+<h3 class="failures">sourceSets.main.groovy contains griffon-app/views</h3>
+<span class="code">
+<pre>Condition not satisfied:
+
+project.sourceSets.main.groovy.srcDirs.contains(project.file(&quot;griffon-app/${srcDir}&quot;))
+|       |          |    |      |       |        |       |                  |
+|       |          |    |      |       false    |       |                  views
+|       |          |    |      |                |       /tmp/gradle3831917581569976130projectDir/griffon-app/views
+|       |          |    |      |                root project 'test'
+|       |          |    |      [/tmp/gradle3831917581569976130projectDir/src/main/groovy]
+|       |          |    main Groovy source
+|       |          source set 'main'
+|       [source set 'main', source set 'test']
+root project 'test'
+
+	at org.codehaus.griffon.gradle.GriffonPluginWithAppliedGroovyPluginSpecification.sourceSets.main.groovy contains griffon-app/#srcDir(GriffonPluginWithAppliedGroovyPluginSpecification.groovy:34)
+</pre>
+</span>
+</div>
+</div>
+<div id="tab1" class="tab">
 <h2>Tests</h2>
 <table>
 <thead>
@@ -78,38 +210,38 @@
 </tr>
 </thead>
 <tr>
-<td class="success">sourceSets.main.groovy contains griffon-app/conf</td>
-<td>0.001s</td>
-<td class="success">passed</td>
+<td class="failures">sourceSets.main.groovy contains griffon-app/conf</td>
+<td>0.019s</td>
+<td class="failures">failed</td>
 </tr>
 <tr>
-<td class="success">sourceSets.main.groovy contains griffon-app/controllers</td>
-<td>0.001s</td>
-<td class="success">passed</td>
+<td class="failures">sourceSets.main.groovy contains griffon-app/controllers</td>
+<td>0.010s</td>
+<td class="failures">failed</td>
 </tr>
 <tr>
-<td class="success">sourceSets.main.groovy contains griffon-app/lifecycle</td>
-<td>0.002s</td>
-<td class="success">passed</td>
+<td class="failures">sourceSets.main.groovy contains griffon-app/lifecycle</td>
+<td>0.019s</td>
+<td class="failures">failed</td>
 </tr>
 <tr>
-<td class="success">sourceSets.main.groovy contains griffon-app/models</td>
-<td>0.023s</td>
-<td class="success">passed</td>
+<td class="failures">sourceSets.main.groovy contains griffon-app/models</td>
+<td>0.267s</td>
+<td class="failures">failed</td>
 </tr>
 <tr>
-<td class="success">sourceSets.main.groovy contains griffon-app/services</td>
-<td>0.002s</td>
-<td class="success">passed</td>
+<td class="failures">sourceSets.main.groovy contains griffon-app/services</td>
+<td>0.003s</td>
+<td class="failures">failed</td>
 </tr>
 <tr>
-<td class="success">sourceSets.main.groovy contains griffon-app/views</td>
-<td>0.002s</td>
-<td class="success">passed</td>
+<td class="failures">sourceSets.main.groovy contains griffon-app/views</td>
+<td>0.019s</td>
+<td class="failures">failed</td>
 </tr>
 </table>
 </div>
-<div id="tab1" class="tab">
+<div id="tab2" class="tab">
 <h2>Standard error</h2>
 <span class="code">
 <pre>SLF4J: Class path contains multiple SLF4J bindings.
@@ -128,7 +260,7 @@ SLF4J: Actual binding is of type [org.gradle.internal.logging.slf4j.OutputEventL
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 3.2</a> at Dec 2, 2016 5:42:45 PM</p>
+<a href="http://www.gradle.org">Gradle 3.2</a> at Dec 5, 2016 9:59:01 AM</p>
 </div>
 </div>
 </body>
