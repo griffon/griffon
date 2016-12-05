@@ -35,6 +35,10 @@ class GriffonExtension {
 
     boolean includeDefaultRepositories = true
 
+    boolean generateProjectStructure = true
+
+    boolean applicationProject = true
+
     String applicationIconName = 'griffon.icns'
 
     Map applicationProperties = [:]

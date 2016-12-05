@@ -36,72 +36,67 @@ class GriffonPlugin implements Plugin&lt;Project&gt; {
     void apply(Project project) {
 <span class="fc" id="L37">        GriffonExtension extension = project.extensions.create('griffon', GriffonExtension, project)</span>
 
-<span class="fc" id="L39">        applyDefaultPlugins(project)</span>
-
-<span class="fc" id="L41">        applyDefaultDependencies(project)</span>
-
-<span class="fc" id="L43">        configureDefaultSourceSets(project, 'java')</span>
-<span class="fc" id="L44">        createDefaultDirectoryStructure(project, 'java')</span>
-<span class="fc" id="L45">        project.plugins.withId('groovy') {</span>
-<span class="fc" id="L46">            configureDefaultSourceSets(project, 'groovy')</span>
-<span class="pc" id="L47">            createDefaultDirectoryStructure(project, 'groovy')</span>
-        }
-
-<span class="fc" id="L50">        registerBuildListener(project, extension)</span>
+<span class="fc" id="L39">        applyDefaultPlugins(project, extension)</span>
+<span class="fc" id="L40">        applyDefaultDependencies(project)</span>
+<span class="fc" id="L41">        registerBuildListener(project, extension)</span>
     }
 
     private void applyDefaultDependencies(final Project project) {
-<span class="fc" id="L54">        project.configurations.maybeCreate('griffon').visible = false</span>
+<span class="fc" id="L45">        project.configurations.maybeCreate('griffon').visible = false</span>
     }
 
-    private void applyDefaultPlugins(Project project) {
-<span class="fc" id="L58">        project.apply(plugin: 'idea')</span>
-<span class="fc" id="L59">        project.apply(plugin: 'java')</span>
-<span class="pc bpc" id="L60" title="20 of 26 branches missed.">        if (!project.hasProperty('griffonPlugin') || !project.griffonPlugin) {</span>
-<span class="pc" id="L61">            project.apply(plugin: 'application')</span>
+    private void applyDefaultPlugins(Project project, GriffonExtension extension) {
+<span class="fc" id="L49">        project.apply(plugin: 'idea')</span>
+<span class="fc" id="L50">        project.apply(plugin: 'java')</span>
+<span class="pc bpc" id="L51" title="1 of 2 branches missed.">        if (extension.applicationProject) {</span>
+<span class="fc" id="L52">            project.apply(plugin: 'application')</span>
         }
     }
 
-    private void configureDefaultSourceSets(Project project, String sourceSetName) {
-        // configure default source directories
-<span class="fc" id="L67">        project.sourceSets.main[sourceSetName].srcDirs += [</span>
-            'griffon-app/conf',
-            'griffon-app/controllers',
-            'griffon-app/models',
-            'griffon-app/views',
-            'griffon-app/services',
-            'griffon-app/lifecycle'
-        ]
-        // configure default resource directories
-<span class="fc" id="L76">        project.sourceSets.main.resources.srcDirs += [</span>
-            'griffon-app/resources',
-            'griffon-app/i18n'
-        ]
+    private void configureDefaultSourceSets(Project project, GriffonExtension extension, String sourceSetName) {
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        if (extension.generateProjectStructure) {</span>
+            // configure default source directories
+<span class="nc" id="L59">            project.sourceSets.main[sourceSetName].srcDirs += [</span>
+                'griffon-app/conf',
+                'griffon-app/controllers',
+                'griffon-app/models',
+                'griffon-app/views',
+                'griffon-app/services',
+                'griffon-app/lifecycle'
+            ]
+
+            // configure default resource directories
+<span class="nc" id="L69">            project.sourceSets.main.resources.srcDirs += [</span>
+                'griffon-app/resources',
+                'griffon-app/i18n'
+            ]
+        }
+<span class="nc" id="L74">        println project.sourceSets.main[sourceSetName].srcDirs</span>
     }
 
     private static String resolveApplicationName(Project project) {
-<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (project.hasProperty('applicationName')) {</span>
-<span class="nc" id="L84">            return project.applicationName</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        if (project.hasProperty('applicationName')) {</span>
+<span class="nc" id="L79">            return project.applicationName</span>
         }
-<span class="nc" id="L86">        return project.name</span>
+<span class="nc" id="L81">        return project.name</span>
     }
 
     private void processResources(Project project, SourceSet sourceSet, GriffonExtension extension) {
-<span class="nc" id="L90">        def filePatterns = [</span>
+<span class="nc" id="L85">        def filePatterns = [</span>
             '**/*.properties',
             '**/*.groovy',
             '**/*.html',
             '**/*.xml',
             '**/*.txt'
         ]
-<span class="nc" id="L97">        project.tasks.&quot;${sourceSet.processResourcesTaskName}&quot; {</span>
-<span class="nc" id="L98">            from(sourceSet.resources.srcDirs) {</span>
-<span class="nc" id="L99">                exclude filePatterns</span>
+<span class="nc" id="L92">        project.tasks.&quot;${sourceSet.processResourcesTaskName}&quot; {</span>
+<span class="nc" id="L93">            from(sourceSet.resources.srcDirs) {</span>
+<span class="nc" id="L94">                exclude filePatterns</span>
             }
-<span class="nc" id="L101">            from(sourceSet.resources.srcDirs) {</span>
-<span class="nc" id="L102">                include filePatterns</span>
-<span class="nc" id="L103">                filter(ReplaceTokens, tokens: [</span>
-<span class="nc" id="L104">                    'application.name'   : resolveApplicationName(project),</span>
+<span class="nc" id="L96">            from(sourceSet.resources.srcDirs) {</span>
+<span class="nc" id="L97">                include filePatterns</span>
+<span class="nc" id="L98">                filter(ReplaceTokens, tokens: [</span>
+<span class="nc" id="L99">                    'application.name'   : resolveApplicationName(project),</span>
                     'application.version': project.version,
                     'griffon.version'    : extension.version
                 ] + extension.applicationProperties)
@@ -110,111 +105,121 @@ class GriffonPlugin implements Plugin&lt;Project&gt; {
     }
 
     private void configureApplicationSettings(Project project, GriffonExtension extension) {
-<span class="nc" id="L113">        Task createDistributionFiles = project.tasks.create(name: 'createDistributionFiles', type: Copy, group: 'Application') {</span>
-<span class="nc" id="L114">            destinationDir = project.file(&quot;${project.buildDir}/assemble/distribution&quot;)</span>
-<span class="nc" id="L115">            from(project.file('src/media')) {</span>
-<span class="nc" id="L116">                into 'resources'</span>
-<span class="nc" id="L117">                include '*.icns', '*.ico'</span>
+<span class="nc" id="L108">        Task createDistributionFiles = project.tasks.create(name: 'createDistributionFiles', type: Copy, group: 'Application') {</span>
+<span class="nc" id="L109">            destinationDir = project.file(&quot;${project.buildDir}/assemble/distribution&quot;)</span>
+<span class="nc" id="L110">            from(project.file('src/media')) {</span>
+<span class="nc" id="L111">                into 'resources'</span>
+<span class="nc" id="L112">                include '*.icns', '*.ico'</span>
             }
-<span class="nc" id="L119">            from(project.file('.')) {</span>
-<span class="nc" id="L120">                include 'README*', 'INSTALL*', 'LICENSE*'</span>
+<span class="nc" id="L114">            from(project.file('.')) {</span>
+<span class="nc" id="L115">                include 'README*', 'INSTALL*', 'LICENSE*'</span>
             }
         }
-<span class="nc" id="L123">        project.applicationDistribution.from(createDistributionFiles)</span>
+<span class="nc" id="L118">        project.applicationDistribution.from(createDistributionFiles)</span>
 
-<span class="nc bnc" id="L125" title="All 2 branches missed.">        if (MACOSX) {</span>
-<span class="nc" id="L126">            List jvmArgs = project.applicationDefaultJvmArgs</span>
-<span class="nc bnc" id="L127" title="All 4 branches missed.">            if (!(jvmArgs.find { it.startsWith('-Xdock:name=') })) {</span>
-<span class="nc" id="L128">                jvmArgs &lt;&lt; &quot;-Xdock:name=${resolveApplicationName(project)}&quot;</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">        if (MACOSX) {</span>
+<span class="nc" id="L121">            List jvmArgs = project.applicationDefaultJvmArgs</span>
+<span class="nc bnc" id="L122" title="All 4 branches missed.">            if (!(jvmArgs.find { it.startsWith('-Xdock:name=') })) {</span>
+<span class="nc" id="L123">                jvmArgs &lt;&lt; &quot;-Xdock:name=${resolveApplicationName(project)}&quot;</span>
             }
-<span class="nc bnc" id="L130" title="All 4 branches missed.">            if (!(jvmArgs.find { it.startsWith('-Xdock:icon=') })) {</span>
-<span class="nc" id="L131">                jvmArgs &lt;&lt; ('-Xdock:icon=$APP_HOME/resources/' + extension.applicationIconName)</span>
-            }
-
-<span class="nc" id="L134">            Task runTask = project.tasks.findByName('run')</span>
-<span class="nc" id="L135">            jvmArgs = (project.applicationDefaultJvmArgs + runTask.jvmArgs).unique()</span>
-<span class="nc bnc" id="L136" title="All 4 branches missed.">            if (!(jvmArgs.find { it.startsWith('-Xdock:name=') })) {</span>
-<span class="nc" id="L137">                jvmArgs &lt;&lt; &quot;-Xdock:name=${resolveApplicationName(project)}&quot;</span>
+<span class="nc bnc" id="L125" title="All 4 branches missed.">            if (!(jvmArgs.find { it.startsWith('-Xdock:icon=') })) {</span>
+<span class="nc" id="L126">                jvmArgs &lt;&lt; ('-Xdock:icon=$APP_HOME/resources/' + extension.applicationIconName)</span>
             }
 
-<span class="nc" id="L140">            String iconElem = jvmArgs.find { it.startsWith('-Xdock:icon=$APP_HOME/resources') }</span>
-<span class="nc" id="L141">            jvmArgs -= iconElem</span>
-<span class="nc bnc" id="L142" title="All 4 branches missed.">            if (!(jvmArgs.find { it.startsWith('-Xdock:icon=') })) {</span>
-<span class="nc" id="L143">                File iconFile = project.file(&quot;src/media/${extension.applicationIconName}&quot;)</span>
-<span class="nc bnc" id="L144" title="All 4 branches missed.">                if (!iconFile.exists()) iconFile = project.file('src/media/griffon.icns')</span>
-<span class="nc" id="L145">                jvmArgs &lt;&lt; &quot;-Xdock:icon=${iconFile.canonicalPath}&quot;</span>
+<span class="nc" id="L129">            Task runTask = project.tasks.findByName('run')</span>
+<span class="nc" id="L130">            jvmArgs = (project.applicationDefaultJvmArgs + runTask.jvmArgs).unique()</span>
+<span class="nc bnc" id="L131" title="All 4 branches missed.">            if (!(jvmArgs.find { it.startsWith('-Xdock:name=') })) {</span>
+<span class="nc" id="L132">                jvmArgs &lt;&lt; &quot;-Xdock:name=${resolveApplicationName(project)}&quot;</span>
             }
-<span class="nc" id="L147">            runTask.jvmArgs = jvmArgs</span>
+
+<span class="nc" id="L135">            String iconElem = jvmArgs.find { it.startsWith('-Xdock:icon=$APP_HOME/resources') }</span>
+<span class="nc" id="L136">            jvmArgs -= iconElem</span>
+<span class="nc bnc" id="L137" title="All 4 branches missed.">            if (!(jvmArgs.find { it.startsWith('-Xdock:icon=') })) {</span>
+<span class="nc" id="L138">                File iconFile = project.file(&quot;src/media/${extension.applicationIconName}&quot;)</span>
+<span class="nc bnc" id="L139" title="All 4 branches missed.">                if (!iconFile.exists()) iconFile = project.file('src/media/griffon.icns')</span>
+<span class="nc" id="L140">                jvmArgs &lt;&lt; &quot;-Xdock:icon=${iconFile.canonicalPath}&quot;</span>
+            }
+<span class="nc" id="L142">            runTask.jvmArgs = jvmArgs</span>
         }
     }
 
-    private void createDefaultDirectoryStructure(Project project, String sourceSetName) {
-<span class="fc" id="L152">        project.gradle.taskGraph.whenReady {</span>
-<span class="nc" id="L153">            def createIfNotExists = { File dir -&gt;</span>
-<span class="nc bnc" id="L154" title="All 4 branches missed.">                if (!dir.exists()) {</span>
-<span class="nc" id="L155">                    dir.mkdirs()</span>
+    private void createDefaultDirectoryStructure(Project project, GriffonExtension extension, String sourceSetName) {
+<span class="nc bnc" id="L147" title="All 2 branches missed.">        if (extension.generateProjectStructure) {</span>
+<span class="nc" id="L148">            def createIfNotExists = { File dir -&gt;</span>
+<span class="nc bnc" id="L149" title="All 4 branches missed.">                if (!dir.exists()) {</span>
+<span class="nc" id="L150">                    dir.mkdirs()</span>
                 }
             }
-<span class="nc" id="L158">            project.sourceSets.main[sourceSetName].srcDirs.each(createIfNotExists)</span>
-<span class="nc" id="L159">            project.sourceSets.test[sourceSetName].srcDirs.each(createIfNotExists)</span>
-<span class="nc" id="L160">            project.sourceSets.main.resources.srcDirs.each(createIfNotExists)</span>
-<span class="nc" id="L161">            project.sourceSets.test.resources.srcDirs.each(createIfNotExists)</span>
+<span class="nc" id="L153">            project.sourceSets.main[sourceSetName].srcDirs.each(createIfNotExists)</span>
+<span class="nc" id="L154">            project.sourceSets.test[sourceSetName].srcDirs.each(createIfNotExists)</span>
+<span class="nc" id="L155">            project.sourceSets.main.resources.srcDirs.each(createIfNotExists)</span>
+<span class="nc" id="L156">            project.sourceSets.test.resources.srcDirs.each(createIfNotExists)</span>
         }
     }
 
     private void validateToolkit(Project project, GriffonExtension extension) {
-<span class="nc bnc" id="L166" title="All 2 branches missed.">        if (extension.toolkit) {</span>
-<span class="nc bnc" id="L167" title="All 4 branches missed.">            if (!GriffonExtension.TOOLKIT_NAMES.contains(extension.toolkit)) {</span>
-<span class="nc" id="L168">                throw new BuildException(&quot;The value of griffon.toolkit can only be one of ${GriffonExtension.TOOLKIT_NAMES.join(',')}&quot;,</span>
-<span class="nc" id="L169">                    new IllegalStateException(extension.toolkit))</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">        if (extension.toolkit) {</span>
+<span class="nc bnc" id="L162" title="All 4 branches missed.">            if (!GriffonExtension.TOOLKIT_NAMES.contains(extension.toolkit)) {</span>
+<span class="nc" id="L163">                throw new BuildException(&quot;The value of griffon.toolkit can only be one of ${GriffonExtension.TOOLKIT_NAMES.join(',')}&quot;,</span>
+<span class="nc" id="L164">                    new IllegalStateException(extension.toolkit))</span>
             }
         }
     }
 
     private void registerBuildListener(
         final Project project, final GriffonExtension extension) {
-<span class="fc" id="L176">        project.gradle.addBuildListener(new BuildAdapter() {</span>
+<span class="fc" id="L171">        project.gradle.addBuildListener(new BuildAdapter() {</span>
             @Override
             void projectsEvaluated(Gradle gradle) {
-<span class="nc bnc" id="L179" title="All 2 branches missed.">                if (extension.includeDefaultRepositories) {</span>
-<span class="nc" id="L180">                    project.repositories.mavenLocal()</span>
+<span class="nc bnc" id="L174" title="All 2 branches missed.">                if (extension.includeDefaultRepositories) {</span>
+<span class="nc" id="L175">                    project.repositories.mavenLocal()</span>
                     // enable jcenter
-<span class="nc" id="L182">                    project.repositories.jcenter()</span>
+<span class="nc" id="L177">                    project.repositories.jcenter()</span>
                     // enable griffon-plugins @ bintray
-<span class="nc" id="L184">                    project.repositories.maven { url 'http://dl.bintray.com/griffon/griffon-plugins' }</span>
+<span class="nc" id="L179">                    project.repositories.maven { url 'http://dl.bintray.com/griffon/griffon-plugins' }</span>
+                }
+
+<span class="nc" id="L182">                configureDefaultSourceSets(project, extension, 'java')</span>
+<span class="nc" id="L183">                createDefaultDirectoryStructure(project, extension, 'java')</span>
+<span class="nc" id="L184">                project.plugins.withId('groovy') {</span>
+<span class="nc" id="L185">                    configureDefaultSourceSets(project, extension, 'groovy')</span>
+<span class="nc" id="L186">                    createDefaultDirectoryStructure(project, extension, 'groovy')</span>
                 }
 
                 // add default core dependencies
-<span class="nc bnc" id="L188" title="All 4 branches missed.">                appendDependency('core')</span>
-<span class="nc bnc" id="L189" title="All 4 branches missed.">                appendDependency('core-compile')</span>
-<span class="nc bnc" id="L190" title="All 4 branches missed.">                appendDependency('core-test')</span>
-<span class="nc bnc" id="L191" title="All 8 branches missed.">                if (JavaVersion.current().isJava8Compatible()) {</span>
-<span class="nc" id="L192">                    appendDependency('core-java8')</span>
+<span class="nc bnc" id="L190" title="All 4 branches missed.">                appendDependency('core')</span>
+<span class="nc bnc" id="L191" title="All 4 branches missed.">                appendDependency('core-compile')</span>
+<span class="nc bnc" id="L192" title="All 4 branches missed.">                appendDependency('core-test')</span>
+<span class="nc bnc" id="L193" title="All 8 branches missed.">                if (JavaVersion.current().isJava8Compatible()) {</span>
+<span class="nc" id="L194">                    appendDependency('core-java8')</span>
                 }
 
-<span class="nc" id="L195">                validateToolkit(project, extension)</span>
-<span class="nc" id="L196">                project.plugins.withId('application') { plugin -&gt;</span>
-<span class="nc" id="L197">                    configureApplicationSettings(project, extension)</span>
+<span class="nc" id="L197">                validateToolkit(project, extension)</span>
+<span class="nc bnc" id="L198" title="All 2 branches missed.">                if (extension.applicationProject) {</span>
+<span class="nc" id="L199">                    project.apply(plugin: 'application')</span>
+                }
+<span class="nc" id="L201">                project.plugins.withId('application') { plugin -&gt;</span>
+<span class="nc" id="L202">                    configureApplicationSettings(project, extension)</span>
                 }
 
-<span class="nc bnc" id="L200" title="All 10 branches missed.">                boolean groovyDependenciesEnabled = extension.includeGroovyDependencies?.toBoolean() ||</span>
-<span class="nc bnc" id="L201" title="All 12 branches missed.">                    (project.plugins.hasPlugin('groovy') &amp;&amp; extension.includeGroovyDependencies == null)</span>
+<span class="nc bnc" id="L205" title="All 10 branches missed.">                boolean groovyDependenciesEnabled = extension.includeGroovyDependencies?.toBoolean() ||</span>
+<span class="nc bnc" id="L206" title="All 12 branches missed.">                    (project.plugins.hasPlugin('groovy') &amp;&amp; extension.includeGroovyDependencies == null)</span>
 
-<span class="nc bnc" id="L203" title="All 2 branches missed.">                if (extension.toolkit) {</span>
-<span class="nc" id="L204">                    appendDependency(extension.toolkit)</span>
-<span class="nc" id="L205">                    maybeIncludeGroovyDependency(groovyDependenciesEnabled, extension.toolkit + '-groovy')</span>
+<span class="nc bnc" id="L208" title="All 2 branches missed.">                if (extension.toolkit) {</span>
+<span class="nc" id="L209">                    appendDependency(extension.toolkit)</span>
+<span class="nc" id="L210">                    maybeIncludeGroovyDependency(groovyDependenciesEnabled, extension.toolkit + '-groovy')</span>
                 }
-<span class="nc bnc" id="L207" title="All 4 branches missed.">                maybeIncludeGroovyDependency(groovyDependenciesEnabled, 'groovy')</span>
-<span class="nc bnc" id="L208" title="All 4 branches missed.">                maybeIncludeGroovyDependency(groovyDependenciesEnabled, 'groovy-compile')</span>
+<span class="nc bnc" id="L212" title="All 4 branches missed.">                maybeIncludeGroovyDependency(groovyDependenciesEnabled, 'groovy')</span>
+<span class="nc bnc" id="L213" title="All 4 branches missed.">                maybeIncludeGroovyDependency(groovyDependenciesEnabled, 'groovy-compile')</span>
 
-<span class="nc" id="L210">                GriffonPluginResolutionStrategy.applyTo(project)</span>
+<span class="nc" id="L215">                GriffonPluginResolutionStrategy.applyTo(project)</span>
 
-<span class="nc" id="L212">                processResources(project, project.sourceSets.main, extension)</span>
-<span class="nc" id="L213">                processResources(project, project.sourceSets.test, extension)</span>
+<span class="nc" id="L217">                processResources(project, project.sourceSets.main, extension)</span>
+<span class="nc" id="L218">                processResources(project, project.sourceSets.test, extension)</span>
 
-<span class="nc" id="L215">                project.plugins.withId('org.kordamp.gradle.stats') { plugin -&gt;</span>
-<span class="nc" id="L216">                    Task statsTask = project.tasks.findByName('stats')</span>
-<span class="nc" id="L217">                    statsTask.paths += [</span>
+<span class="nc" id="L220">                project.plugins.withId('org.kordamp.gradle.stats') { plugin -&gt;</span>
+<span class="nc" id="L221">                    Task statsTask = project.tasks.findByName('stats')</span>
+<span class="nc" id="L222">                    statsTask.paths += [</span>
                         model     : [name: 'Models', path: 'griffon-app/models'],
                         view      : [name: 'Views', path: 'griffon-app/views'],
                         controller: [name: 'Controllers', path: 'griffon-app/controllers'],
@@ -225,24 +230,24 @@ class GriffonPlugin implements Plugin&lt;Project&gt; {
                 }
 
                 // update Griffon environment settings
-<span class="nc" id="L228">                project.gradle.taskGraph.whenReady {</span>
-<span class="nc bnc" id="L229" title="All 2 branches missed.">                    if (project.gradle.taskGraph.hasTask(':startScripts')) {</span>
-<span class="nc bnc" id="L230" title="All 2 branches missed.">                        if (project.hasProperty('griffonEnv')) {</span>
-<span class="nc" id="L231">                            project.applicationDefaultJvmArgs &lt;&lt; &quot;-Dgriffon.env=${project.griffonEnv}&quot;</span>
+<span class="nc" id="L233">                project.gradle.taskGraph.whenReady {</span>
+<span class="nc bnc" id="L234" title="All 2 branches missed.">                    if (project.gradle.taskGraph.hasTask(':startScripts')) {</span>
+<span class="nc bnc" id="L235" title="All 2 branches missed.">                        if (project.hasProperty('griffonEnv')) {</span>
+<span class="nc" id="L236">                            project.applicationDefaultJvmArgs &lt;&lt; &quot;-Dgriffon.env=${project.griffonEnv}&quot;</span>
                         } else {
-<span class="nc" id="L233">                            project.applicationDefaultJvmArgs &lt;&lt; '-Dgriffon.env=prod'</span>
+<span class="nc" id="L238">                            project.applicationDefaultJvmArgs &lt;&lt; '-Dgriffon.env=prod'</span>
                         }
                     } else {
-<span class="nc" id="L236">                        Task runTask = project.tasks.findByName('run')</span>
-<span class="nc bnc" id="L237" title="All 2 branches missed.">                        if (runTask != null) {</span>
-<span class="nc bnc" id="L238" title="All 2 branches missed.">                            if (project.hasProperty('griffonEnv')) {</span>
-<span class="nc" id="L239">                                project.applicationDefaultJvmArgs &lt;&lt; &quot;-Dgriffon.env=${project.griffonEnv}&quot;</span>
-<span class="nc" id="L240">                                def jvmArgs = []</span>
-<span class="nc" id="L241">                                jvmArgs.addAll(runTask.jvmArgs)</span>
-<span class="nc" id="L242">                                jvmArgs &lt;&lt; &quot;-Dgriffon.env=${project.griffonEnv}&quot;</span>
-<span class="nc" id="L243">                                runTask.jvmArgs = jvmArgs</span>
+<span class="nc" id="L241">                        Task runTask = project.tasks.findByName('run')</span>
+<span class="nc bnc" id="L242" title="All 2 branches missed.">                        if (runTask != null) {</span>
+<span class="nc bnc" id="L243" title="All 2 branches missed.">                            if (project.hasProperty('griffonEnv')) {</span>
+<span class="nc" id="L244">                                project.applicationDefaultJvmArgs &lt;&lt; &quot;-Dgriffon.env=${project.griffonEnv}&quot;</span>
+<span class="nc" id="L245">                                def jvmArgs = []</span>
+<span class="nc" id="L246">                                jvmArgs.addAll(runTask.jvmArgs)</span>
+<span class="nc" id="L247">                                jvmArgs &lt;&lt; &quot;-Dgriffon.env=${project.griffonEnv}&quot;</span>
+<span class="nc" id="L248">                                runTask.jvmArgs = jvmArgs</span>
                             } else {
-<span class="nc" id="L245">                                runTask.jvmArgs &lt;&lt; '-Dgriffon.env=dev'</span>
+<span class="nc" id="L250">                                runTask.jvmArgs &lt;&lt; '-Dgriffon.env=dev'</span>
                             }
                         }
                     }
@@ -250,29 +255,29 @@ class GriffonPlugin implements Plugin&lt;Project&gt; {
             }
 
             private boolean maybeIncludeGroovyDependency(boolean groovyDependenciesEnabled, String artifactId) {
-<span class="nc bnc" id="L253" title="All 2 branches missed.">                if (artifactId =~ /groovy/) {</span>
-<span class="nc bnc" id="L254" title="All 2 branches missed.">                    if (groovyDependenciesEnabled) {</span>
-<span class="nc" id="L255">                        appendDependency(artifactId)</span>
+<span class="nc bnc" id="L258" title="All 2 branches missed.">                if (artifactId =~ /groovy/) {</span>
+<span class="nc bnc" id="L259" title="All 2 branches missed.">                    if (groovyDependenciesEnabled) {</span>
+<span class="nc" id="L260">                        appendDependency(artifactId)</span>
                     }
-<span class="nc" id="L257">                    return true</span>
+<span class="nc" id="L262">                    return true</span>
                 }
-<span class="nc" id="L259">                false</span>
+<span class="nc" id="L264">                false</span>
             }
 
             private void appendDependency(String artifactId) {
-<span class="nc" id="L263">                String dependencyCoordinates = ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':')</span>
+<span class="nc" id="L268">                String dependencyCoordinates = ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':')</span>
 
-<span class="nc bnc" id="L265" title="All 2 branches missed.">                if (artifactId.endsWith('-compile')) {</span>
-<span class="nc" id="L266">                    project.logger.info(&quot;Adding {} to 'compileOnly' configuration&quot;, dependencyCoordinates)</span>
-<span class="nc" id="L267">                    project.dependencies.add('compileOnly', dependencyCoordinates)</span>
-<span class="nc" id="L268">                    project.logger.info(&quot;Adding {} to 'testCompileOnly' configuration&quot;, dependencyCoordinates)</span>
-<span class="nc" id="L269">                    project.dependencies.add('testCompileOnly', dependencyCoordinates)</span>
-<span class="nc bnc" id="L270" title="All 2 branches missed.">                } else if (artifactId.endsWith('-test')) {</span>
-<span class="nc" id="L271">                    project.logger.info(&quot;Adding {} to 'testCompile' configuration&quot;, dependencyCoordinates)</span>
-<span class="nc" id="L272">                    project.dependencies.add('testCompile', dependencyCoordinates)</span>
+<span class="nc bnc" id="L270" title="All 2 branches missed.">                if (artifactId.endsWith('-compile')) {</span>
+<span class="nc" id="L271">                    project.logger.info(&quot;Adding {} to 'compileOnly' configuration&quot;, dependencyCoordinates)</span>
+<span class="nc" id="L272">                    project.dependencies.add('compileOnly', dependencyCoordinates)</span>
+<span class="nc" id="L273">                    project.logger.info(&quot;Adding {} to 'testCompileOnly' configuration&quot;, dependencyCoordinates)</span>
+<span class="nc" id="L274">                    project.dependencies.add('testCompileOnly', dependencyCoordinates)</span>
+<span class="nc bnc" id="L275" title="All 2 branches missed.">                } else if (artifactId.endsWith('-test')) {</span>
+<span class="nc" id="L276">                    project.logger.info(&quot;Adding {} to 'testCompile' configuration&quot;, dependencyCoordinates)</span>
+<span class="nc" id="L277">                    project.dependencies.add('testCompile', dependencyCoordinates)</span>
                 } else {
-<span class="nc" id="L274">                    project.logger.info(&quot;Adding {} to '{}' configuration&quot;, dependencyCoordinates, 'compile')</span>
-<span class="nc" id="L275">                    project.dependencies.add('compile', dependencyCoordinates)</span>
+<span class="nc" id="L279">                    project.logger.info(&quot;Adding {} to '{}' configuration&quot;, dependencyCoordinates, 'compile')</span>
+<span class="nc" id="L280">                    project.dependencies.add('compile', dependencyCoordinates)</span>
                 }
             }
         })
