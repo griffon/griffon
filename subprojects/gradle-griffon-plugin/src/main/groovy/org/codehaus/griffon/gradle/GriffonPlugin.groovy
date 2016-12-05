@@ -53,25 +53,22 @@ class GriffonPlugin implements Plugin<Project> {
         }
     }
 
-    private void configureDefaultSourceSets(Project project, GriffonExtension extension, String sourceSetName) {
-        if (extension.generateProjectStructure) {
-            // configure default source directories
-            project.sourceSets.main[sourceSetName].srcDirs += [
-                'griffon-app/conf',
-                'griffon-app/controllers',
-                'griffon-app/models',
-                'griffon-app/views',
-                'griffon-app/services',
-                'griffon-app/lifecycle'
-            ]
+    private void configureDefaultSourceSets(Project project, String sourceSetName) {
+        // configure default source directories
+        project.sourceSets.main[sourceSetName].srcDirs += [
+            'griffon-app/conf',
+            'griffon-app/controllers',
+            'griffon-app/models',
+            'griffon-app/views',
+            'griffon-app/services',
+            'griffon-app/lifecycle'
+        ]
 
-            // configure default resource directories
-            project.sourceSets.main.resources.srcDirs += [
-                'griffon-app/resources',
-                'griffon-app/i18n'
-            ]
-        }
-        println project.sourceSets.main[sourceSetName].srcDirs
+        // configure default resource directories
+        project.sourceSets.main.resources.srcDirs += [
+            'griffon-app/resources',
+            'griffon-app/i18n'
+        ]
     }
 
     private static String resolveApplicationName(Project project) {
@@ -179,10 +176,10 @@ class GriffonPlugin implements Plugin<Project> {
                     project.repositories.maven { url 'http://dl.bintray.com/griffon/griffon-plugins' }
                 }
 
-                configureDefaultSourceSets(project, extension, 'java')
+                configureDefaultSourceSets(project, 'java')
                 createDefaultDirectoryStructure(project, extension, 'java')
                 project.plugins.withId('groovy') {
-                    configureDefaultSourceSets(project, extension, 'groovy')
+                    configureDefaultSourceSets(project, 'groovy')
                     createDefaultDirectoryStructure(project, extension, 'groovy')
                 }
 
