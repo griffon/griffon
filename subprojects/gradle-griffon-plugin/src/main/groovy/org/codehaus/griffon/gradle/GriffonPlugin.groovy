@@ -36,17 +36,8 @@ class GriffonPlugin implements Plugin<Project> {
     void apply(Project project) {
         GriffonExtension extension = project.extensions.create('griffon', GriffonExtension, project)
 
-        applyDefaultPlugins(project)
-
+        applyDefaultPlugins(project, extension)
         applyDefaultDependencies(project)
-
-        configureDefaultSourceSets(project, 'java')
-        createDefaultDirectoryStructure(project, 'java')
-        project.plugins.withId('groovy') {
-            configureDefaultSourceSets(project, 'groovy')
-            createDefaultDirectoryStructure(project, 'groovy')
-        }
-
         registerBuildListener(project, extension)
     }
 
@@ -54,29 +45,32 @@ class GriffonPlugin implements Plugin<Project> {
         project.configurations.maybeCreate('griffon').visible = false
     }
 
-    private void applyDefaultPlugins(Project project) {
+    private void applyDefaultPlugins(Project project, GriffonExtension extension) {
         project.apply(plugin: 'idea')
         project.apply(plugin: 'java')
-        if (!project.hasProperty('griffonPlugin') || !project.griffonPlugin) {
+        if (extension.applicationProject) {
             project.apply(plugin: 'application')
         }
     }
 
-    private void configureDefaultSourceSets(Project project, String sourceSetName) {
-        // configure default source directories
-        project.sourceSets.main[sourceSetName].srcDirs += [
-            'griffon-app/conf',
-            'griffon-app/controllers',
-            'griffon-app/models',
-            'griffon-app/views',
-            'griffon-app/services',
-            'griffon-app/lifecycle'
-        ]
-        // configure default resource directories
-        project.sourceSets.main.resources.srcDirs += [
-            'griffon-app/resources',
-            'griffon-app/i18n'
-        ]
+    private void configureDefaultSourceSets(Project project, GriffonExtension extension, String sourceSetName) {
+        if (extension.generateProjectStructure) {
+            // configure default source directories
+            project.sourceSets.main[sourceSetName].srcDirs += [
+                'griffon-app/conf',
+                'griffon-app/controllers',
+                'griffon-app/models',
+                'griffon-app/views',
+                'griffon-app/services',
+                'griffon-app/lifecycle'
+            ]
+
+            // configure default resource directories
+            project.sourceSets.main.resources.srcDirs += [
+                'griffon-app/resources',
+                'griffon-app/i18n'
+            ]
+        }
     }
 
     private static String resolveApplicationName(Project project) {
@@ -148,8 +142,8 @@ class GriffonPlugin implements Plugin<Project> {
         }
     }
 
-    private void createDefaultDirectoryStructure(Project project, String sourceSetName) {
-        project.gradle.taskGraph.whenReady {
+    private void createDefaultDirectoryStructure(Project project, GriffonExtension extension, String sourceSetName) {
+        if (extension.generateProjectStructure) {
             def createIfNotExists = { File dir ->
                 if (!dir.exists()) {
                     dir.mkdirs()
@@ -184,6 +178,13 @@ class GriffonPlugin implements Plugin<Project> {
                     project.repositories.maven { url 'http://dl.bintray.com/griffon/griffon-plugins' }
                 }
 
+                configureDefaultSourceSets(project, extension, 'java')
+                createDefaultDirectoryStructure(project, extension, 'java')
+                project.plugins.withId('groovy') {
+                    configureDefaultSourceSets(project, extension, 'groovy')
+                    createDefaultDirectoryStructure(project, extension, 'groovy')
+                }
+
                 // add default core dependencies
                 appendDependency('core')
                 appendDependency('core-compile')
@@ -193,6 +194,9 @@ class GriffonPlugin implements Plugin<Project> {
                 }
 
                 validateToolkit(project, extension)
+                if (extension.applicationProject) {
+                    project.apply(plugin: 'application')
+                }
                 project.plugins.withId('application') { plugin ->
                     configureApplicationSettings(project, extension)
                 }

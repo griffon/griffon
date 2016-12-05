@@ -46,6 +46,9 @@ class GriffonPluginResolutionStrategy {
         griffonConfiguration.resolve()
 
         CONFIGURATION_NAMES.each { String configurationName ->
+            if (project.extensions.getByName(GRIFFON_CONFIGURATION).disableDependencyResolution) {
+                return
+            }
             DEPENDENCY_MAP[configurationName].each { String dependency ->
                 project.logger.info("Adding {} to '{}' configuration", configurationName, dependency)
                 resolver.project.dependencies.add(configurationName, dependency)
@@ -62,6 +65,10 @@ class GriffonPluginResolutionStrategy {
 
         @Override
         void execute(ResolvableDependencies resolvableDependencies) {
+            if (griffonExtension.disableDependencyResolution) {
+                return
+            }
+
             String toolkit = griffonExtension.toolkit
             project.logger.info("UI toolkit for project {} is {}", project.name, toolkit)
             String toolkitRegex = (GriffonExtension.TOOLKIT_NAMES - toolkit).join('|')
