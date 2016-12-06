@@ -222,7 +222,7 @@ public abstract class AbstractEventRouter implements EventRouter {
 <span class="nc" id="L222">        Method method = methodCache.findMatchingMethodFor(instance.getClass(), target);</span>
 
 <span class="nc bnc" id="L224" title="All 2 branches missed.">        if (method != null) {</span>
-<span class="nc" id="L225">            MethodUtils.invokeSafe(method, instance, asArray(params));</span>
+<span class="nc" id="L225">            MethodUtils.invokeUnwrapping(method, instance, asArray(params));</span>
         }
 <span class="nc" id="L227">    }</span>
 
