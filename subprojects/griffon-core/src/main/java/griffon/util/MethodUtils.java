@@ -18,6 +18,8 @@
 package griffon.util;
 
 
+import griffon.exceptions.InstanceMethodInvocationException;
+
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
@@ -107,6 +109,7 @@ public class MethodUtils {
      *
      * @param cacheMethods <code>true</code> if methods should be
      *                     cached for greater performance, otherwise <code>false</code>
+     *
      * @since 1.8.0
      */
     public static synchronized void setCacheMethods(boolean cacheMethods) {
@@ -120,6 +123,7 @@ public class MethodUtils {
      * Clear the method cache.
      *
      * @return the number of cached methods cleared
+     *
      * @since 1.8.0
      */
     public static synchronized int clearCache() {
@@ -147,7 +151,9 @@ public class MethodUtils {
      * @param object     invoke method on this object
      * @param methodName get method with this name
      * @param arg        use this argument
+     *
      * @return The value returned by the invoked method
+     *
      * @throws NoSuchMethodException     if there is no such accessible method
      * @throws InvocationTargetException wraps an exception thrown by the
      *                                   method invoked
@@ -188,7 +194,9 @@ public class MethodUtils {
      * @param object     invoke method on this object
      * @param methodName get method with this name
      * @param args       use these arguments - treat null as empty array
+     *
      * @return The value returned by the invoked method
+     *
      * @throws NoSuchMethodException     if there is no such accessible method
      * @throws InvocationTargetException wraps an exception thrown by the
      *                                   method invoked
@@ -234,7 +242,9 @@ public class MethodUtils {
      * @param methodName     get method with this name
      * @param args           use these arguments - treat null as empty array
      * @param parameterTypes match these parameters - treat null as empty array
+     *
      * @return The value returned by the invoked method
+     *
      * @throws NoSuchMethodException     if there is no such accessible method
      * @throws InvocationTargetException wraps an exception thrown by the
      *                                   method invoked
@@ -281,7 +291,9 @@ public class MethodUtils {
      * @param object     invoke method on this object
      * @param methodName get method with this name
      * @param arg        use this argument
+     *
      * @return The value returned by the invoked method
+     *
      * @throws NoSuchMethodException     if there is no such accessible method
      * @throws InvocationTargetException wraps an exception thrown by the
      *                                   method invoked
@@ -313,7 +325,9 @@ public class MethodUtils {
      * @param object     invoke method on this object
      * @param methodName get method with this name
      * @param args       use these arguments - treat null as empty array
+     *
      * @return The value returned by the invoked method
+     *
      * @throws NoSuchMethodException     if there is no such accessible method
      * @throws InvocationTargetException wraps an exception thrown by the
      *                                   method invoked
@@ -352,7 +366,9 @@ public class MethodUtils {
      * @param methodName     get method with this name
      * @param args           use these arguments - treat null as empty array
      * @param parameterTypes match these parameters - treat null as empty array
+     *
      * @return The value returned by the invoked method
+     *
      * @throws NoSuchMethodException     if there is no such accessible method
      * @throws InvocationTargetException wraps an exception thrown by the
      *                                   method invoked
@@ -400,7 +416,9 @@ public class MethodUtils {
      * @param methodName     get method with this name
      * @param args           use these arguments - treat null as empty array
      * @param parameterTypes match these parameters - treat null as empty array
+     *
      * @return The value returned by the invoked method
+     *
      * @throws NoSuchMethodException     if there is no such accessible method
      * @throws InvocationTargetException wraps an exception thrown by the
      *                                   method invoked
@@ -457,7 +475,9 @@ public class MethodUtils {
      * @param objectClass invoke static method on this class
      * @param methodName  get method with this name
      * @param arg         use this argument
+     *
      * @return The value returned by the invoked method
+     *
      * @throws NoSuchMethodException     if there is no such accessible method
      * @throws InvocationTargetException wraps an exception thrown by the
      *                                   method invoked
@@ -499,7 +519,9 @@ public class MethodUtils {
      * @param objectClass invoke static method on this class
      * @param methodName  get method with this name
      * @param args        use these arguments - treat null as empty array
+     *
      * @return The value returned by the invoked method
+     *
      * @throws NoSuchMethodException     if there is no such accessible method
      * @throws InvocationTargetException wraps an exception thrown by the
      *                                   method invoked
@@ -546,7 +568,9 @@ public class MethodUtils {
      * @param methodName     get method with this name
      * @param args           use these arguments - treat null as empty array
      * @param parameterTypes match these parameters - treat null as empty array
+     *
      * @return The value returned by the invoked method
+     *
      * @throws NoSuchMethodException     if there is no such accessible method
      * @throws InvocationTargetException wraps an exception thrown by the
      *                                   method invoked
@@ -594,7 +618,9 @@ public class MethodUtils {
      * @param objectClass invoke static method on this class
      * @param methodName  get method with this name
      * @param arg         use this argument
+     *
      * @return The value returned by the invoked method
+     *
      * @throws NoSuchMethodException     if there is no such accessible method
      * @throws InvocationTargetException wraps an exception thrown by the
      *                                   method invoked
@@ -627,7 +653,9 @@ public class MethodUtils {
      * @param objectClass invoke static method on this class
      * @param methodName  get method with this name
      * @param args        use these arguments - treat null as empty array
+     *
      * @return The value returned by the invoked method
+     *
      * @throws NoSuchMethodException     if there is no such accessible method
      * @throws InvocationTargetException wraps an exception thrown by the
      *                                   method invoked
@@ -666,6 +694,7 @@ public class MethodUtils {
      * @param clazz         get method from this class
      * @param methodName    get method with this name
      * @param parameterType taking this type of parameter
+     *
      * @return The accessible method
      */
     public static Method getAccessibleMethod(
@@ -689,6 +718,7 @@ public class MethodUtils {
      * @param clazz          get method from this class
      * @param methodName     get method with this name
      * @param parameterTypes with these parameters types
+     *
      * @return The accessible method
      */
     public static Method getAccessibleMethod(
@@ -721,6 +751,7 @@ public class MethodUtils {
      * can be found, return <code>null</code>.</p>
      *
      * @param method The method that we wish to call
+     *
      * @return The accessible method
      */
     public static Method getAccessibleMethod(Method method) {
@@ -742,7 +773,9 @@ public class MethodUtils {
      *
      * @param clazz  The class of the object
      * @param method The method that we wish to call
+     *
      * @return The accessible method
+     *
      * @since 1.8.0
      */
     public static Method getAccessibleMethod(Class clazz, Method method) {
@@ -907,6 +940,7 @@ public class MethodUtils {
      * @param clazz          find method in this class
      * @param methodName     find method with this name
      * @param parameterTypes find method with compatible parameters
+     *
      * @return The accessible method
      */
     public static Method getMatchingAccessibleMethod(
@@ -1012,6 +1046,7 @@ public class MethodUtils {
      *
      * @param srcArgs  The source arguments
      * @param destArgs The destination arguments
+     *
      * @return The total transformation cost
      */
     private static float getTotalTransformationCost(Class[] srcArgs, Class[] destArgs) {
@@ -1034,6 +1069,7 @@ public class MethodUtils {
      *
      * @param srcClass  The source class
      * @param destClass The destination class
+     *
      * @return The cost of transforming an object
      */
     private static float getObjectTransformationCost(Class srcClass, Class destClass) {
@@ -1077,6 +1113,7 @@ public class MethodUtils {
      *
      * @param parameterType    the type of parameter accepted by the method
      * @param parameterization the type of parameter being tested
+     *
      * @return true if the assignement is compatible.
      */
     public static boolean isAssignmentCompatible(Class<?> parameterType, Class<?> parameterization) {
@@ -1102,8 +1139,9 @@ public class MethodUtils {
      * For example, passing <code>boolean.class</code> returns <code>Boolean.class</code>
      *
      * @param primitiveType the primitive type class for which a match is to be found
+     *
      * @return the wrapper type associated with the given primitive
-     *         or null if no match is found
+     * or null if no match is found
      */
     public static Class getPrimitiveWrapper(Class primitiveType) {
         // does anyone know a better strategy than comparing names?
@@ -1134,8 +1172,9 @@ public class MethodUtils {
      * For example, an instance of <code>Boolean.class</code> returns a <code>boolean.class</code>.
      *
      * @param wrapperType the
+     *
      * @return the primitive type class corresponding to the given wrapper class,
-     *         null if no match is found
+     * null if no match is found
      */
     public static Class getPrimitiveType(Class wrapperType) {
         // does anyone know a better strategy than comparing names?
@@ -1164,6 +1203,7 @@ public class MethodUtils {
      * Find a non primitive representation for given primitive class.
      *
      * @param clazz the class to find a representation for, not null
+     *
      * @return the original class if it not a primitive. Otherwise the wrapper class. Not null
      */
     public static Class toNonPrimitiveClass(Class clazz) {
@@ -1185,6 +1225,7 @@ public class MethodUtils {
      * Return the method from the cache, if present.
      *
      * @param md The method descriptor
+     *
      * @return The cached method
      */
     private static Method getCachedMethod(MethodDescriptor md) {
@@ -1220,6 +1261,17 @@ public class MethodUtils {
             // ignore
         }
         return null;
+    }
+
+    public static Object invokeUnwrapping(Method method, Object instance, Object[] args) {
+        try {
+            return method.invoke(instance, args);
+        } catch (IllegalAccessException | IllegalArgumentException e) {
+            throw new InstanceMethodInvocationException(instance, method, e);
+        } catch (InvocationTargetException e) {
+            Throwable cause = e.getCause() != null ? e.getCause() : e;
+            throw new InstanceMethodInvocationException(instance, method, cause);
+        }
     }
 
     /**
@@ -1263,6 +1315,7 @@ public class MethodUtils {
          * Checks for equality.
          *
          * @param obj object to be tested for equality
+         *
          * @return true, if the object describes the same Method.
          */
         public boolean equals(Object obj) {

@@ -53,6 +53,8 @@ public class GriffonExceptionHandler implements ExceptionHandler {
 
     private static final List<CallableWithArgs<Boolean>> TESTS = new ArrayList<>();
 
+    private static final String SANITIZED_STACKTRACE_MSG = "Stacktrace was sanitized. Set System property '" + GRIFFON_FULL_STACKTRACE + "' to 'true' for full report.";
+
     public static void addClassTest(CallableWithArgs<Boolean> test) {
         TESTS.add(test);
     }
@@ -84,23 +86,23 @@ public class GriffonExceptionHandler implements ExceptionHandler {
     public void handle(Throwable throwable) {
         try {
             sanitize(throwable);
-            if (isOutputEnabled()) throwable.printStackTrace(System.err);
-            LOG.error("Uncaught Exception", throwable);
+            printStacktrace(throwable);
+            logError("Uncaught Exception.", throwable);
             if (application != null) {
                 application.getEventRouter().publishEvent("Uncaught" + getShortName(throwable.getClass()), asList(throwable));
                 application.getEventRouter().publishEvent(ApplicationEvent.UNCAUGHT_EXCEPTION_THROWN.getName(), asList(throwable));
             }
         } catch (Throwable t) {
             sanitize(t);
-            if (isOutputEnabled()) t.printStackTrace(System.err);
-            LOG.error("An error occurred while handling uncaught exception " + throwable, t);
+            printStacktrace(t);
+            logError("An error occurred while handling uncaught exception " + throwable + ".", t);
         }
     }
 
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     public static Throwable sanitize(Throwable throwable) {
         try {
-            if (!Boolean.getBoolean(GRIFFON_FULL_STACKTRACE)) {
+            if (!isFullStacktraceEnabled()) {
                 deepSanitize(throwable);
             }
         } catch (Throwable t) {
@@ -112,7 +114,7 @@ public class GriffonExceptionHandler implements ExceptionHandler {
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     public static StackTraceElement[] sanitize(StackTraceElement[] stackTrace) {
         try {
-            if (!Boolean.getBoolean(GRIFFON_FULL_STACKTRACE)) {
+            if (!isFullStacktraceEnabled()) {
                 Throwable t = new Throwable();
                 t.setStackTrace(stackTrace);
                 sanitize(t);
@@ -154,6 +156,7 @@ public class GriffonExceptionHandler implements ExceptionHandler {
      * This will MODIFY the stacktrace of the exception instance and all its causes irreversibly
      *
      * @param t a throwable
+     *
      * @return The root cause exception instances, with stack trace modified to filter out groovy runtime classes
      */
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
@@ -178,6 +181,26 @@ public class GriffonExceptionHandler implements ExceptionHandler {
         newTrace.toArray(clean);
         t.setStackTrace(clean);
         return t;
+    }
+
+    public static boolean isFullStacktraceEnabled() {
+        return Boolean.getBoolean(GRIFFON_FULL_STACKTRACE);
+    }
+
+    private static void printStacktrace(Throwable throwable) {
+        if (isOutputEnabled()) {
+            if (!isFullStacktraceEnabled()) {
+                System.err.println(SANITIZED_STACKTRACE_MSG);
+            }
+            throwable.printStackTrace(System.err);
+        }
+    }
+
+    private static void logError(String message, Throwable throwable) {
+        if (!isFullStacktraceEnabled()) {
+            message += " " + SANITIZED_STACKTRACE_MSG;
+        }
+        LOG.error(message, throwable);
     }
 
     private static boolean isApplicationClass(String className) {
