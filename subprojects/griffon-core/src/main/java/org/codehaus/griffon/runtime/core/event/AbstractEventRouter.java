@@ -222,7 +222,7 @@ public abstract class AbstractEventRouter implements EventRouter {
         Method method = methodCache.findMatchingMethodFor(instance.getClass(), target);
 
         if (method != null) {
-            MethodUtils.invokeSafe(method, instance, asArray(params));
+            MethodUtils.invokeUnwrapping(method, instance, asArray(params));
         }
     }
 
