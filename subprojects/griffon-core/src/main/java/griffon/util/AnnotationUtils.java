@@ -17,6 +17,7 @@ package griffon.util;
 
 import griffon.inject.BindTo;
 import griffon.inject.DependsOn;
+import griffon.inject.Evicts;
 import griffon.inject.Typed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +58,8 @@ public class AnnotationUtils {
     private static final String ERROR_SUFFIX_NULL = "Argument 'suffix' must not be null";
     private static final String ERROR_INSTANCE_NULL = "Argument 'instance' must not be null";
     private static final String ERROR_ANNOTATION_TYPE_NULL = "Argument 'annotationType' must not be null";
+    private static final String ERROR_FIELD_NULL = "Argument 'field' must not be null";
+    private static final String ERROR_SETTER_METHOD_NULL = "Argument 'setterMethod' must not be null";
 
     private AnnotationUtils() {
 
@@ -64,7 +67,7 @@ public class AnnotationUtils {
 
     @Nonnull
     public static List<Annotation> harvestQualifiers(@Nonnull Class<?> klass) {
-        requireNonNull(klass, "Argument 'class' must not be null");
+        requireNonNull(klass, ERROR_CLASS_NULL);
         List<Annotation> list = new ArrayList<>();
         Annotation[] annotations = klass.getAnnotations();
         for (Annotation annotation : annotations) {
@@ -163,6 +166,14 @@ public class AnnotationUtils {
     }
 
     @Nonnull
+    public static String getEvicts(@Nonnull Object instance) {
+        requireNonNull(instance, ERROR_INSTANCE_NULL);
+
+        Evicts evicts = instance.getClass().getAnnotation(Evicts.class);
+        return evicts != null ? evicts.value() : "";
+    }
+
+    @Nonnull
     public static String nameFor(@Nonnull Object instance) {
         requireNonNull(instance, ERROR_INSTANCE_NULL);
 
@@ -176,7 +187,7 @@ public class AnnotationUtils {
 
     @Nonnull
     public static String nameFor(@Nonnull Field field) {
-        requireNonNull(field, "Argument 'field' must not be null");
+        requireNonNull(field, ERROR_FIELD_NULL);
 
         Named annotation = field.getAnnotation(Named.class);
         if (annotation != null && !isBlank(annotation.value())) {
@@ -188,7 +199,7 @@ public class AnnotationUtils {
 
     @Nonnull
     public static String[] namesFor(@Nonnull Field field) {
-        requireNonNull(field, "Argument 'field' must not be null");
+        requireNonNull(field, ERROR_FIELD_NULL);
 
         List<String> names = new ArrayList<>();
         Named annotation = field.getAnnotation(Named.class);
@@ -203,7 +214,7 @@ public class AnnotationUtils {
 
     @Nonnull
     public static String nameFor(@Nonnull Method setterMethod) {
-        requireNonNull(setterMethod, "Argument 'setterMethod' must not be null");
+        requireNonNull(setterMethod, ERROR_SETTER_METHOD_NULL);
 
         Class<?>[] parameterTypes = setterMethod.getParameterTypes();
         requireState(parameterTypes != null && parameterTypes.length > 0, "Argument 'setterMethod' must have at least one parameter. " + MethodDescriptor.forMethod(setterMethod));
@@ -218,7 +229,7 @@ public class AnnotationUtils {
 
     @Nonnull
     public static String[] namesFor(@Nonnull Method setterMethod) {
-        requireNonNull(setterMethod, "Argument 'setterMethod' must not be null");
+        requireNonNull(setterMethod, ERROR_SETTER_METHOD_NULL);
 
         Class<?>[] parameterTypes = setterMethod.getParameterTypes();
         requireState(parameterTypes != null && parameterTypes.length > 0, "Argument 'setterMethod' must have at least one parameter. " + MethodDescriptor.forMethod(setterMethod));
@@ -261,6 +272,41 @@ public class AnnotationUtils {
     }
 
     @Nonnull
+    public static <T> Map<String, T> mapInstancesByName(@Nonnull Collection<T> instances, @Nonnull String suffix, @Nonnull String type) {
+        Map<String, T> map = new LinkedHashMap<>();
+
+        for (T instance : instances) {
+            String currentEvicts = getEvicts(instance);
+            String name = getLogicalPropertyName(nameFor(instance), suffix);
+            Object evictedInstance = isBlank(currentEvicts) ? null : map.get(currentEvicts);
+
+            if (evictedInstance != null) {
+                String evictedEvicts = getEvicts(evictedInstance);
+                if (!isBlank(evictedEvicts)) {
+                    throw new IllegalArgumentException(type + " " + name + " has an eviction conflict between " + instance + " and " + evictedInstance);
+                } else {
+                    name = currentEvicts;
+                    LOG.info("{} {} with instance {} evicted by {}", type, name, evictedInstance, instance);
+                }
+            } else {
+                name = isBlank(currentEvicts) ? name : currentEvicts;
+                Object previousInstance = map.get(name);
+                if (previousInstance != null) {
+                    if (isBlank(getEvicts(previousInstance))) {
+                        throw new IllegalArgumentException(type + " " + name + " neither " + instance + " nor " + previousInstance + " is marked with @Evict");
+                    } else {
+                        LOG.info("{} {} with instance {} evicted by {}", type, name, instance, previousInstance);
+                    }
+                }
+            }
+
+            map.put(name, instance);
+        }
+
+        return map;
+    }
+
+    @Nonnull
     public static <T> Map<String, T> sortByDependencies(@Nonnull Collection<T> instances, @Nonnull String suffix, @Nonnull String type) {
         return sortByDependencies(instances, suffix, type, Collections.<String>emptyList());
     }
@@ -272,7 +318,7 @@ public class AnnotationUtils {
         requireNonNull(type, "Argument 'type' must not be null");
         requireNonNull(order, "Argument 'order' must not be null");
 
-        Map<String, T> instancesByName = mapInstancesByName(instances, suffix);
+        Map<String, T> instancesByName = mapInstancesByName(instances, suffix, type);
 
         Map<String, T> map = new LinkedHashMap<>();
         map.putAll(instancesByName);
