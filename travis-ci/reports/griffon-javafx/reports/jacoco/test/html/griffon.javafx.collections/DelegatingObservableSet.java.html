@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DelegatingObservableSet.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-javafx</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.collections</a> &gt; <span class="el_source">DelegatingObservableSet.java</span></div><h1>DelegatingObservableSet.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2016 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.collections;
+
+import javafx.collections.ObservableSet;
+import javafx.collections.SetChangeListener;
+import javafx.collections.WeakSetChangeListener;
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Iterator;
+
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.9.0
+ */
+public abstract class DelegatingObservableSet&lt;E&gt; extends ObservableSetBase&lt;E&gt; implements ObservableSet&lt;E&gt; {
+    private final ObservableSet&lt;E&gt; delegate;
+    private SetChangeListener&lt;E&gt; sourceListener;
+
+<span class="fc" id="L36">    public DelegatingObservableSet(@Nonnull ObservableSet&lt;E&gt; delegate) {</span>
+<span class="fc" id="L37">        this.delegate = requireNonNull(delegate, &quot;Argument 'delegate' must not be null&quot;);</span>
+<span class="fc" id="L38">        this.delegate.addListener(new WeakSetChangeListener&lt;&gt;(getListener()));</span>
+<span class="fc" id="L39">    }</span>
+
+    @Nonnull
+    protected ObservableSet&lt;E&gt; getDelegate() {
+<span class="fc" id="L43">        return delegate;</span>
+    }
+
+    private SetChangeListener&lt;E&gt; getListener() {
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">        if (sourceListener == null) {</span>
+<span class="fc" id="L48">            sourceListener = DelegatingObservableSet.this::sourceChanged;</span>
+        }
+<span class="fc" id="L50">        return sourceListener;</span>
+    }
+
+    protected abstract void sourceChanged(@Nonnull SetChangeListener.Change&lt;? extends E&gt; c);
+
+    // --== Delegate methods ==--
+
+    @Override
+    public int size() {
+<span class="nc" id="L59">        return getDelegate().size();</span>
+    }
+
+    @Override
+    public boolean isEmpty() {
+<span class="nc" id="L64">        return getDelegate().isEmpty();</span>
+    }
+
+    @Override
+    public boolean contains(Object o) {
+<span class="nc" id="L69">        return getDelegate().contains(o);</span>
+    }
+
+    @Override
+    public Iterator&lt;E&gt; iterator() {
+<span class="nc" id="L74">        return getDelegate().iterator();</span>
+    }
+
+    @Override
+    public Object[] toArray() {
+<span class="nc" id="L79">        return getDelegate().toArray();</span>
+    }
+
+    @Override
+    public &lt;T&gt; T[] toArray(T[] a) {
+<span class="nc" id="L84">        return getDelegate().toArray(a);</span>
+    }
+
+    @Override
+    public boolean add(E e) {
+<span class="fc" id="L89">        return getDelegate().add(e);</span>
+    }
+
+    @Override
+    public boolean remove(Object o) {
+<span class="nc" id="L94">        return getDelegate().remove(o);</span>
+    }
+
+    @Override
+    public boolean containsAll(Collection&lt;?&gt; c) {
+<span class="nc" id="L99">        return getDelegate().containsAll(c);</span>
+    }
+
+    @Override
+    public boolean addAll(Collection&lt;? extends E&gt; c) {
+<span class="nc" id="L104">        return getDelegate().addAll(c);</span>
+    }
+
+    @Override
+    public boolean retainAll(Collection&lt;?&gt; c) {
+<span class="nc" id="L109">        return getDelegate().retainAll(c);</span>
+    }
+
+    @Override
+    public boolean removeAll(Collection&lt;?&gt; c) {
+<span class="nc" id="L114">        return getDelegate().removeAll(c);</span>
+    }
+
+    @Override
+    public void clear() {
+<span class="nc" id="L119">        getDelegate().clear();</span>
+<span class="nc" id="L120">    }</span>
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc" id="L124">        return getDelegate().equals(o);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L129">        return getDelegate().hashCode();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

@@ -15,167 +15,20 @@
  */
 package griffon.javafx.support;
 
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableListBase;
-import javafx.collections.WeakListChangeListener;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.function.Consumer;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
+ * @see griffon.javafx.collections.DelegatingObservableList
  * @since 2.6.0
+ * @deprecated use {@code griffon.javafx.collections.DelegatingObservableList} instead.
  */
-public abstract class DelegatingObservableList&lt;E&gt; extends ObservableListBase&lt;E&gt; implements ObservableList&lt;E&gt; {
-    private final ObservableList&lt;E&gt; delegate;
-    private ListChangeListener&lt;E&gt; sourceListener;
-
-<span class="fc" id="L40">    public DelegatingObservableList(@Nonnull ObservableList&lt;E&gt; delegate) {</span>
-<span class="fc" id="L41">        this.delegate = requireNonNull(delegate, &quot;Argument 'delegate' must not be null&quot;);</span>
-<span class="fc" id="L42">        this.delegate.addListener(new WeakListChangeListener&lt;&gt;(getListener()));</span>
-<span class="fc" id="L43">    }</span>
-
-    @Nonnull
-    protected ObservableList&lt;E&gt; getDelegate() {
-<span class="fc" id="L47">        return delegate;</span>
-    }
-
-    private ListChangeListener&lt;E&gt; getListener() {
-<span class="pc bpc" id="L51" title="1 of 2 branches missed.">        if (sourceListener == null) {</span>
-<span class="fc" id="L52">            sourceListener = DelegatingObservableList.this::sourceChanged;</span>
-        }
-<span class="fc" id="L54">        return sourceListener;</span>
-    }
-
-    protected abstract void sourceChanged(@Nonnull ListChangeListener.Change&lt;? extends E&gt; c);
-
-    // --== Delegate methods ==--
-
-    public boolean removeAll(E... elements) {
-<span class="nc" id="L62">        return getDelegate().removeAll(elements);</span>
-    }
-
-    public void remove(int from, int to) {
-<span class="nc" id="L66">        getDelegate().remove(from, to);</span>
-<span class="nc" id="L67">    }</span>
-
-    public E remove(int index) {
-<span class="nc" id="L70">        return getDelegate().remove(index);</span>
-    }
-
-    public int size() {
-<span class="nc" id="L74">        return getDelegate().size();</span>
-    }
-
-    public int lastIndexOf(Object o) {
-<span class="nc" id="L78">        return getDelegate().lastIndexOf(o);</span>
-    }
-
-    public boolean isEmpty() {
-<span class="nc" id="L82">        return getDelegate().isEmpty();</span>
-    }
-
-    public boolean addAll(E... elements) {
-<span class="nc" id="L86">        return getDelegate().addAll(elements);</span>
-    }
-
-    public List&lt;E&gt; subList(int fromIndex, int toIndex) {
-<span class="nc" id="L90">        return getDelegate().subList(fromIndex, toIndex);</span>
-    }
-
-    public E set(int index, E element) {
-<span class="nc" id="L94">        return getDelegate().set(index, element);</span>
-    }
-
-    public void add(int index, E element) {
-<span class="nc" id="L98">        getDelegate().add(index, element);</span>
-<span class="nc" id="L99">    }</span>
-
-    public boolean containsAll(Collection&lt;?&gt; c) {
-<span class="nc" id="L102">        return getDelegate().containsAll(c);</span>
-    }
-
-    public void clear() {
-<span class="nc" id="L106">        getDelegate().clear();</span>
-<span class="nc" id="L107">    }</span>
-
-    public Iterator&lt;E&gt; iterator() {
-<span class="nc" id="L110">        return getDelegate().iterator();</span>
-    }
-
-    public boolean removeAll(Collection&lt;?&gt; c) {
-<span class="nc" id="L114">        return getDelegate().removeAll(c);</span>
-    }
-
-    public &lt;T&gt; T[] toArray(T[] a) {
-<span class="nc" id="L118">        return getDelegate().toArray(a);</span>
-    }
-
-    public boolean remove(Object o) {
-<span class="nc" id="L122">        return getDelegate().remove(o);</span>
-    }
-
-    public boolean addAll(Collection&lt;? extends E&gt; c) {
-<span class="nc" id="L126">        return getDelegate().addAll(c);</span>
-    }
-
-    public boolean retainAll(E... elements) {
-<span class="nc" id="L130">        return getDelegate().retainAll(elements);</span>
-    }
-
-    public boolean retainAll(Collection&lt;?&gt; c) {
-<span class="nc" id="L134">        return getDelegate().retainAll(c);</span>
-    }
-
-    public boolean contains(Object o) {
-<span class="nc" id="L138">        return getDelegate().contains(o);</span>
-    }
-
-    public boolean setAll(Collection&lt;? extends E&gt; col) {
-<span class="nc" id="L142">        return getDelegate().setAll(col);</span>
-    }
-
-    public ListIterator&lt;E&gt; listIterator(int index) {
-<span class="nc" id="L146">        return getDelegate().listIterator(index);</span>
-    }
-
-    public boolean add(E e) {
-<span class="fc" id="L150">        return getDelegate().add(e);</span>
-    }
-
-    public boolean addAll(int index, Collection&lt;? extends E&gt; c) {
-<span class="nc" id="L154">        return getDelegate().addAll(index, c);</span>
-    }
-
-    public Object[] toArray() {
-<span class="nc" id="L158">        return getDelegate().toArray();</span>
-    }
-
-    public ListIterator&lt;E&gt; listIterator() {
-<span class="nc" id="L162">        return getDelegate().listIterator();</span>
-    }
-
-    public void forEach(Consumer&lt;? super E&gt; action) {
-<span class="nc" id="L166">        getDelegate().forEach(action);</span>
-<span class="nc" id="L167">    }</span>
-
-    public E get(int index) {
-<span class="nc" id="L170">        return getDelegate().get(index);</span>
-    }
-
-    public boolean setAll(E... elements) {
-<span class="nc" id="L174">        return getDelegate().setAll(elements);</span>
-    }
-
-    public int indexOf(Object o) {
-<span class="nc" id="L178">        return getDelegate().indexOf(o);</span>
-    }
+@Deprecated
+public abstract class DelegatingObservableList&lt;E&gt; extends griffon.javafx.collections.DelegatingObservableList&lt;E&gt; {
+    public DelegatingObservableList(@Nonnull ObservableList&lt;E&gt; delegate) {
+<span class="nc" id="L31">        super(delegate);</span>
+<span class="nc" id="L32">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

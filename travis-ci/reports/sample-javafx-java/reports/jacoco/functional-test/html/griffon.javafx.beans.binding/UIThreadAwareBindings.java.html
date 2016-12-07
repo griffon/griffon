@@ -1,0 +1,724 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UIThreadAwareBindings.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-java</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.beans.binding</a> &gt; <span class="el_source">UIThreadAwareBindings.java</span></div><h1>UIThreadAwareBindings.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2016 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.beans.binding;
+
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.MapProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
+import javafx.beans.property.SetProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.value.ObservableDoubleValue;
+import javafx.beans.value.ObservableFloatValue;
+import javafx.beans.value.ObservableIntegerValue;
+import javafx.beans.value.ObservableLongValue;
+import javafx.beans.value.ObservableStringValue;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
+import javafx.collections.ObservableSet;
+import javafx.collections.SetChangeListener;
+
+import javax.annotation.Nonnull;
+import java.util.function.Consumer;
+
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.9.0
+ */
+public final class UIThreadAwareBindings {
+    private static final String ERROR_LISTENER_NULL = &quot;Argument 'listener' must not be null&quot;;
+    private static final String ERROR_CONSUMER_NULL = &quot;Argument 'consumer' must not be null&quot;;
+    private static final String ERROR_RUNNABLE_NULL = &quot;Argument 'runnable' must not be null&quot;;
+    private static final String ERROR_OBSERVABLE_NULL = &quot;Argument 'observable' must not be null&quot;;
+
+<span class="nc" id="L61">    private UIThreadAwareBindings() {</span>
+        // prevent instantiation
+<span class="nc" id="L63">    }</span>
+
+    /**
+     * Registers a {@code ChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param observable the observable on which the listener will be registered.
+     * @param listener   the wrapped change listener.
+     */
+    public static &lt;T&gt; void uiThreadAwareChangeListener(@Nonnull final ObservableValue&lt;T&gt; observable, @Nonnull ChangeListener&lt;T&gt; listener) {
+<span class="nc" id="L72">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L73">        observable.addListener(uiThreadAwareChangeListener(listener));</span>
+<span class="nc" id="L74">    }</span>
+
+    /**
+     * Creates a {@code ChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param listener the wrapped change listener.
+     *
+     * @return a {@code ChangeListener}.
+     */
+    @Nonnull
+    public static &lt;T&gt; ChangeListener&lt;T&gt; uiThreadAwareChangeListener(@Nonnull ChangeListener&lt;T&gt; listener) {
+<span class="nc" id="L85">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        return listener instanceof UIThreadAware ? listener : new UIThreadAwareChangeListener&lt;T&gt;(listener);</span>
+    }
+
+    /**
+     * Registers a {@code ChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param observable the observable on which the listener will be registered.
+     * @param consumer   the consumer of the {@code newValue} argument.
+     */
+    public static &lt;T&gt; void uiThreadAwareChangeListener(@Nonnull final ObservableValue&lt;T&gt; observable, @Nonnull final Consumer&lt;T&gt; consumer) {
+<span class="nc" id="L96">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L97">        observable.addListener(uiThreadAwareChangeListener(consumer));</span>
+<span class="nc" id="L98">    }</span>
+
+    /**
+     * Creates a {@code ChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param consumer the consumer of the {@code newValue} argument.
+     *
+     * @return a {@code ChangeListener}.
+     */
+    @Nonnull
+    public static &lt;T&gt; ChangeListener&lt;T&gt; uiThreadAwareChangeListener(@Nonnull final Consumer&lt;T&gt; consumer) {
+<span class="nc" id="L109">        requireNonNull(consumer, ERROR_CONSUMER_NULL);</span>
+<span class="nc" id="L110">        return new UIThreadAwareChangeListener&lt;&gt;((observable, oldValue, newValue) -&gt; consumer.accept(newValue));</span>
+    }
+
+    /**
+     * Registers a {@code ChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param observable the observable on which the listener will be registered.
+     * @param runnable   the code to be executed when the listener is notified.
+     */
+    public static &lt;T&gt; void uiThreadAwareChangeListener(@Nonnull final ObservableValue&lt;T&gt; observable, @Nonnull final Runnable runnable) {
+<span class="nc" id="L120">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L121">        observable.addListener(uiThreadAwareChangeListener(runnable));</span>
+<span class="nc" id="L122">    }</span>
+
+    /**
+     * Creates a {@code ChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param runnable the code to be executed when the listener is notified.
+     *
+     * @return a {@code ChangeListener}.
+     */
+    @Nonnull
+    public static &lt;T&gt; ChangeListener&lt;T&gt; uiThreadAwareChangeListener(@Nonnull final Runnable runnable) {
+<span class="nc" id="L133">        requireNonNull(runnable, ERROR_RUNNABLE_NULL);</span>
+<span class="nc" id="L134">        return new UIThreadAwareChangeListener&lt;&gt;((observable, oldValue, newValue) -&gt; runnable.run());</span>
+    }
+
+    /**
+     * Registers a {@code InvalidationListener} that always handles notifications inside the UI thread.
+     *
+     * @param observable the observable on which the listener will be registered.
+     * @param listener   the wrapped invalidation listener.
+     */
+    public static void uiThreadAwareInvalidationListener(@Nonnull final Observable observable, @Nonnull InvalidationListener listener) {
+<span class="nc" id="L144">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L145">        observable.addListener(uiThreadAwareInvalidationListener(listener));</span>
+<span class="nc" id="L146">    }</span>
+
+    /**
+     * Creates a {@code InvalidationListener} that always handles notifications inside the UI thread.
+     *
+     * @param listener the wrapped invalidation listener.
+     *
+     * @return a {@code InvalidationListener}.
+     */
+    @Nonnull
+    public static InvalidationListener uiThreadAwareInvalidationListener(@Nonnull InvalidationListener listener) {
+<span class="nc" id="L157">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">        return listener instanceof UIThreadAware ? listener : new UIThreadAwareInvalidationListener(listener);</span>
+    }
+
+    /**
+     * Registers a {@code InvalidationListener} that always handles notifications inside the UI thread.
+     *
+     * @param observable the observable on which the listener will be registered.
+     * @param consumer   the consumer of the {@code observable} argument.
+     */
+    public static void uiThreadAwareInvalidationListener(@Nonnull final Observable observable, @Nonnull final Consumer&lt;Observable&gt; consumer) {
+<span class="nc" id="L168">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L169">        observable.addListener(uiThreadAwareInvalidationListener(consumer));</span>
+<span class="nc" id="L170">    }</span>
+
+    /**
+     * Creates a {@code InvalidationListener} that always handles notifications inside the UI thread.
+     *
+     * @param consumer the consumer of the {@code observable} argument.
+     *
+     * @return a {@code InvalidationListener}.
+     */
+    @Nonnull
+    public static InvalidationListener uiThreadAwareInvalidationListener(@Nonnull final Consumer&lt;Observable&gt; consumer) {
+<span class="nc" id="L181">        requireNonNull(consumer, ERROR_CONSUMER_NULL);</span>
+<span class="nc" id="L182">        return new UIThreadAwareInvalidationListener(consumer::accept);</span>
+    }
+
+    /**
+     * Registers a {@code InvalidationListener} that always handles notifications inside the UI thread.
+     *
+     * @param observable the observable on which the listener will be registered.
+     * @param runnable   the code to be executed when the listener is notified.
+     */
+    public static void uiThreadAwareInvalidationListener(@Nonnull final Observable observable, @Nonnull final Runnable runnable) {
+<span class="nc" id="L192">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L193">        observable.addListener(uiThreadAwareInvalidationListener(runnable));</span>
+<span class="nc" id="L194">    }</span>
+
+    /**
+     * Creates a {@code InvalidationListener} that always handles notifications inside the UI thread.
+     *
+     * @param runnable the code to be executed when the listener is notified.
+     *
+     * @return a {@code InvalidationListener}.
+     */
+    @Nonnull
+    public static InvalidationListener uiThreadAwareInvalidationListener(@Nonnull final Runnable runnable) {
+<span class="nc" id="L205">        requireNonNull(runnable, ERROR_RUNNABLE_NULL);</span>
+<span class="nc" id="L206">        return new UIThreadAwareInvalidationListener(observable -&gt; runnable.run());</span>
+    }
+
+    /**
+     * Registers a {@code ListChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param observable the observable on which the listener will be registered.
+     * @param listener   the wrapped list change listener.
+     */
+    public static &lt;E&gt; void uiThreadAwareListChangeListener(@Nonnull final ObservableList&lt;E&gt; observable, @Nonnull ListChangeListener&lt;E&gt; listener) {
+<span class="nc" id="L216">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L217">        observable.addListener(uiThreadAwareListChangeListener(listener));</span>
+<span class="nc" id="L218">    }</span>
+
+    /**
+     * Creates a {@code ListChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param listener the wrapped list change listener.
+     *
+     * @return a {@code ListChangeListener}.
+     */
+    @Nonnull
+    public static &lt;E&gt; ListChangeListener&lt;E&gt; uiThreadAwareListChangeListener(@Nonnull ListChangeListener&lt;E&gt; listener) {
+<span class="nc" id="L229">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="nc bnc" id="L230" title="All 2 branches missed.">        return listener instanceof UIThreadAware ? listener : new UIThreadAwareListChangeListener&lt;E&gt;(listener);</span>
+    }
+
+    /**
+     * Registers a {@code ListChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param observable the observable on which the listener will be registered.
+     * @param consumer   the consumer of the {@code newValue} argument.
+     */
+    public static &lt;E&gt; void uiThreadAwareListChangeListener(@Nonnull final ObservableList&lt;E&gt; observable, @Nonnull final Consumer&lt;ListChangeListener.Change&lt;? extends E&gt;&gt; consumer) {
+<span class="nc" id="L240">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L241">        observable.addListener(uiThreadAwareListChangeListener(consumer));</span>
+<span class="nc" id="L242">    }</span>
+
+    /**
+     * Creates a {@code ListChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param consumer the consumer of the {@code change} argument.
+     *
+     * @return a {@code ListChangeListener}.
+     */
+    @Nonnull
+    public static &lt;E&gt; ListChangeListener&lt;E&gt; uiThreadAwareListChangeListener(@Nonnull final Consumer&lt;ListChangeListener.Change&lt;? extends E&gt;&gt; consumer) {
+<span class="nc" id="L253">        requireNonNull(consumer, ERROR_CONSUMER_NULL);</span>
+<span class="nc" id="L254">        return new UIThreadAwareListChangeListener&lt;E&gt;(consumer::accept);</span>
+    }
+
+    /**
+     * Registers a {@code ListChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param observable the observable on which the listener will be registered.
+     * @param runnable   the code to be executed when the listener is notified.
+     */
+    public static &lt;E&gt; void uiThreadAwareListChangeListener(@Nonnull final ObservableList&lt;E&gt; observable, @Nonnull final Runnable runnable) {
+<span class="nc" id="L264">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L265">        observable.addListener(uiThreadAwareListChangeListener(runnable));</span>
+<span class="nc" id="L266">    }</span>
+
+    /**
+     * Creates a {@code ListChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param runnable the code to be executed when the listener is notified.
+     *
+     * @return a {@code ListChangeListener}.
+     */
+    @Nonnull
+    public static &lt;E&gt; ListChangeListener&lt;E&gt; uiThreadAwareListChangeListener(@Nonnull final Runnable runnable) {
+<span class="nc" id="L277">        requireNonNull(runnable, ERROR_RUNNABLE_NULL);</span>
+<span class="nc" id="L278">        return new UIThreadAwareListChangeListener&lt;&gt;(change -&gt; runnable.run());</span>
+    }
+
+    /**
+     * Registers a {@code MapChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param observable the observable on which the listener will be registered.
+     * @param listener   the wrapped map change listener.
+     */
+    public static &lt;K, V&gt; void uiThreadAwareMapChangeListener(@Nonnull final ObservableMap&lt;K, V&gt; observable, @Nonnull MapChangeListener&lt;K, V&gt; listener) {
+<span class="nc" id="L288">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L289">        observable.addListener(uiThreadAwareMapChangeListener(listener));</span>
+<span class="nc" id="L290">    }</span>
+
+    /**
+     * Creates a {@code MapChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param listener the wrapped map change listener.
+     *
+     * @return a {@code MapChangeListener}.
+     */
+    @Nonnull
+    public static &lt;K, V&gt; MapChangeListener&lt;K, V&gt; uiThreadAwareMapChangeListener(@Nonnull MapChangeListener&lt;K, V&gt; listener) {
+<span class="nc" id="L301">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="nc bnc" id="L302" title="All 2 branches missed.">        return listener instanceof UIThreadAware ? listener : new UIThreadAwareMapChangeListener&lt;K, V&gt;(listener);</span>
+    }
+
+    /**
+     * Registers a {@code MapChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param observable the observable on which the listener will be registered.
+     * @param consumer   the consumer of the {@code newValue} argument.
+     */
+    public static &lt;K, V&gt; void uiThreadAwareMapChangeListener(@Nonnull final ObservableMap&lt;K, V&gt; observable, @Nonnull final Consumer&lt;MapChangeListener.Change&lt;? extends K, ? extends V&gt;&gt; consumer) {
+<span class="nc" id="L312">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L313">        observable.addListener(uiThreadAwareMapChangeListener(consumer));</span>
+<span class="nc" id="L314">    }</span>
+
+    /**
+     * Creates a {@code MapChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param consumer the consumer of the {@code change} argument.
+     *
+     * @return a {@code MapChangeListener}.
+     */
+    @Nonnull
+    public static &lt;K, V&gt; MapChangeListener&lt;K, V&gt; uiThreadAwareMapChangeListener(@Nonnull final Consumer&lt;MapChangeListener.Change&lt;? extends K, ? extends V&gt;&gt; consumer) {
+<span class="nc" id="L325">        requireNonNull(consumer, ERROR_CONSUMER_NULL);</span>
+<span class="nc" id="L326">        return new UIThreadAwareMapChangeListener&lt;K, V&gt;(consumer::accept);</span>
+    }
+
+    /**
+     * Registers a {@code MapChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param observable the observable on which the listener will be registered.
+     * @param runnable   the code to be executed when the listener is notified.
+     */
+    public static &lt;K, V&gt; void uiThreadAwareMapChangeListener(@Nonnull final ObservableMap&lt;K, V&gt; observable, @Nonnull final Runnable runnable) {
+<span class="nc" id="L336">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L337">        observable.addListener(uiThreadAwareMapChangeListener(runnable));</span>
+<span class="nc" id="L338">    }</span>
+
+    /**
+     * Creates a {@code MapChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param runnable the code to be executed when the listener is notified.
+     *
+     * @return a {@code MapChangeListener}.
+     */
+    @Nonnull
+    public static &lt;K, V&gt; MapChangeListener&lt;K, V&gt; uiThreadAwareMapChangeListener(@Nonnull final Runnable runnable) {
+<span class="nc" id="L349">        requireNonNull(runnable, ERROR_RUNNABLE_NULL);</span>
+<span class="nc" id="L350">        return new UIThreadAwareMapChangeListener&lt;&gt;(change -&gt; runnable.run());</span>
+    }
+
+    /**
+     * Registers a {@code SetChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param observable the observable on which the listener will be registered.
+     * @param listener   the wrapped set change listener.
+     */
+    public static &lt;E&gt; void uiThreadAwareSetChangeListener(@Nonnull final ObservableSet&lt;E&gt; observable, @Nonnull SetChangeListener&lt;E&gt; listener) {
+<span class="nc" id="L360">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L361">        observable.addListener(uiThreadAwareSetChangeListener(listener));</span>
+<span class="nc" id="L362">    }</span>
+
+    /**
+     * Creates a {@code SetChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param listener the wrapped set change listener.
+     *
+     * @return a {@code SetChangeListener}.
+     */
+    @Nonnull
+    public static &lt;E&gt; SetChangeListener&lt;E&gt; uiThreadAwareSetChangeListener(@Nonnull SetChangeListener&lt;E&gt; listener) {
+<span class="nc" id="L373">        requireNonNull(listener, ERROR_LISTENER_NULL);</span>
+<span class="nc bnc" id="L374" title="All 2 branches missed.">        return listener instanceof UIThreadAware ? listener : new UIThreadAwareSetChangeListener&lt;E&gt;(listener);</span>
+    }
+
+    /**
+     * Registers a {@code SetChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param observable the observable on which the listener will be registered.
+     * @param consumer   the consumer of the {@code newValue} argument.
+     */
+    public static &lt;E&gt; void uiThreadAwareSetChangeListener(@Nonnull final ObservableSet&lt;E&gt; observable, @Nonnull final Consumer&lt;SetChangeListener.Change&lt;? extends E&gt;&gt; consumer) {
+<span class="nc" id="L384">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L385">        observable.addListener(uiThreadAwareSetChangeListener(consumer));</span>
+<span class="nc" id="L386">    }</span>
+
+    /**
+     * Creates a {@code SetChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param consumer the consumer of the {@code change} argument.
+     *
+     * @return a {@code SetChangeListener}.
+     */
+    @Nonnull
+    public static &lt;E&gt; SetChangeListener&lt;E&gt; uiThreadAwareSetChangeListener(@Nonnull final Consumer&lt;SetChangeListener.Change&lt;? extends E&gt;&gt; consumer) {
+<span class="nc" id="L397">        requireNonNull(consumer, ERROR_CONSUMER_NULL);</span>
+<span class="nc" id="L398">        return new UIThreadAwareSetChangeListener&lt;E&gt;(consumer::accept);</span>
+    }
+
+    /**
+     * Registers a {@code SetChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param observable the observable on which the listener will be registered.
+     * @param runnable   the code to be executed when the listener is notified.
+     */
+    public static &lt;E&gt; void uiThreadAwareSetChangeListener(@Nonnull final ObservableSet&lt;E&gt; observable, @Nonnull final Runnable runnable) {
+<span class="nc" id="L408">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L409">        observable.addListener(uiThreadAwareSetChangeListener(runnable));</span>
+<span class="nc" id="L410">    }</span>
+
+    /**
+     * Creates a {@code SetChangeListener} that always handles notifications inside the UI thread.
+     *
+     * @param runnable the code to be executed when the listener is notified.
+     *
+     * @return a {@code SetChangeListener}.
+     */
+    @Nonnull
+    public static &lt;E&gt; SetChangeListener&lt;E&gt; uiThreadAwareSetChangeListener(@Nonnull final Runnable runnable) {
+<span class="nc" id="L421">        requireNonNull(runnable, ERROR_RUNNABLE_NULL);</span>
+<span class="nc" id="L422">        return new UIThreadAwareSetChangeListener&lt;&gt;(change -&gt; runnable.run());</span>
+    }
+
+    /**
+     * Creates an observable boolean property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable boolean property to wrap.
+     *
+     * @return an observable boolean property.
+     */
+    @Nonnull
+    public static BooleanProperty uiThreadAwareBooleanProperty(@Nonnull BooleanProperty observable) {
+<span class="nc" id="L434">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L435" title="All 2 branches missed.">        return observable instanceof UIThreadAware ? observable : new UIThreadAwareBooleanProperty(observable);</span>
+    }
+
+    /**
+     * Creates an observable integer property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable integer property to wrap.
+     *
+     * @return an observable integer property.
+     */
+    @Nonnull
+    public static IntegerProperty uiThreadAwareIntegerProperty(@Nonnull IntegerProperty observable) {
+<span class="nc" id="L447">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L448" title="All 2 branches missed.">        return observable instanceof UIThreadAware ? observable : new UIThreadAwareIntegerProperty(observable);</span>
+    }
+
+    /**
+     * Creates an observable long property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable long property to wrap.
+     *
+     * @return an observable long property.
+     */
+    @Nonnull
+    public static LongProperty uiThreadAwareLongProperty(@Nonnull LongProperty observable) {
+<span class="nc" id="L460">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L461" title="All 2 branches missed.">        return observable instanceof UIThreadAware ? observable : new UIThreadAwareLongProperty(observable);</span>
+    }
+
+    /**
+     * Creates an observable float property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable float property to wrap.
+     *
+     * @return an observable float property.
+     */
+    @Nonnull
+    public static FloatProperty uiThreadAwareFloatProperty(@Nonnull FloatProperty observable) {
+<span class="nc" id="L473">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L474" title="All 2 branches missed.">        return observable instanceof UIThreadAware ? observable : new UIThreadAwareFloatProperty(observable);</span>
+    }
+
+    /**
+     * Creates an observable double property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable double property to wrap.
+     *
+     * @return an observable double property.
+     */
+    @Nonnull
+    public static DoubleProperty uiThreadAwareDoubleProperty(@Nonnull DoubleProperty observable) {
+<span class="nc" id="L486">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L487" title="All 2 branches missed.">        return observable instanceof UIThreadAware ? observable : new UIThreadAwareDoubleProperty(observable);</span>
+    }
+
+    /**
+     * Creates an observable string property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable string property to wrap.
+     *
+     * @return an observable string property.
+     */
+    @Nonnull
+    public static StringProperty uiThreadAwareStringProperty(@Nonnull StringProperty observable) {
+<span class="nc" id="L499">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L500" title="All 2 branches missed.">        return observable instanceof UIThreadAware ? observable : new UIThreadAwareStringProperty(observable);</span>
+    }
+
+    /**
+     * Creates an observable boolean property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable boolean property to wrap.
+     *
+     * @return an observable boolean property.
+     */
+    @Nonnull
+    public static Property&lt;Boolean&gt; uiThreadAwarePropertyBoolean(@Nonnull Property&lt;Boolean&gt; observable) {
+<span class="nc" id="L512">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L513" title="All 2 branches missed.">        return observable instanceof UIThreadAware ? observable : new UIThreadAwarePropertyBoolean(observable);</span>
+    }
+
+    /**
+     * Creates an observable integer property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable integer property to wrap.
+     *
+     * @return an observable integer property.
+     */
+    @Nonnull
+    public static Property&lt;Integer&gt; uiThreadAwarePropertyInteger(@Nonnull Property&lt;Integer&gt; observable) {
+<span class="nc" id="L525">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L526" title="All 2 branches missed.">        return observable instanceof UIThreadAware ? observable : new UIThreadAwarePropertyInteger(observable);</span>
+    }
+
+    /**
+     * Creates an observable long property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable long property to wrap.
+     *
+     * @return an observable long property.
+     */
+    @Nonnull
+    public static Property&lt;Long&gt; uiThreadAwarePropertyLong(@Nonnull Property&lt;Long&gt; observable) {
+<span class="nc" id="L538">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L539" title="All 2 branches missed.">        return observable instanceof UIThreadAware ? observable : new UIThreadAwarePropertyLong(observable);</span>
+    }
+
+    /**
+     * Creates an observable float property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable float property to wrap.
+     *
+     * @return an observable float property.
+     */
+    @Nonnull
+    public static Property&lt;Float&gt; uiThreadAwarePropertyFloat(@Nonnull Property&lt;Float&gt; observable) {
+<span class="nc" id="L551">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L552" title="All 2 branches missed.">        return observable instanceof UIThreadAware ? observable : new UIThreadAwarePropertyFloat(observable);</span>
+    }
+
+    /**
+     * Creates an observable double property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable double property to wrap.
+     *
+     * @return an observable double property.
+     */
+    @Nonnull
+    public static Property&lt;Double&gt; uiThreadAwarePropertyDouble(@Nonnull Property&lt;Double&gt; observable) {
+<span class="nc" id="L564">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L565" title="All 2 branches missed.">        return observable instanceof UIThreadAware ? observable : new UIThreadAwarePropertyDouble(observable);</span>
+    }
+
+    /**
+     * Creates an observable string property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable string property to wrap.
+     *
+     * @return an observable string property.
+     */
+    @Nonnull
+    public static Property&lt;String&gt; uiThreadAwarePropertyString(@Nonnull Property&lt;String&gt; observable) {
+<span class="nc" id="L577">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L578" title="All 2 branches missed.">        return observable instanceof UIThreadAware ? observable : new UIThreadAwarePropertyString(observable);</span>
+    }
+
+    /**
+     * Creates an observable object property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable object property to wrap.
+     *
+     * @return an observable object property.
+     */
+    @Nonnull
+    public static &lt;T&gt; ObjectProperty&lt;T&gt; uiThreadAwareObjectProperty(@Nonnull final ObjectProperty&lt;T&gt; observable) {
+<span class="nc" id="L590">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L591" title="All 2 branches missed.">        return observable instanceof UIThreadAware ? observable : new UIThreadAwareObjectProperty&lt;&gt;(observable);</span>
+    }
+
+    /**
+     * Creates an observable list property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable list property to wrap.
+     *
+     * @return an observable list property.
+     */
+    @Nonnull
+    public static &lt;E&gt; ListProperty&lt;E&gt; uiThreadAwareListProperty(@Nonnull ListProperty&lt;E&gt; observable) {
+<span class="nc" id="L603">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L604" title="All 2 branches missed.">        return observable instanceof UIThreadAware ? observable : new UIThreadAwareListProperty&lt;&gt;(observable);</span>
+    }
+
+    /**
+     * Creates an observable set property that notifies its seteners inside the UI thread.
+     *
+     * @param observable the observable set property to wrap.
+     *
+     * @return an observable set property.
+     */
+    @Nonnull
+    public static &lt;E&gt; SetProperty&lt;E&gt; uiThreadAwareSetProperty(@Nonnull SetProperty&lt;E&gt; observable) {
+<span class="nc" id="L616">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L617" title="All 2 branches missed.">        return observable instanceof UIThreadAware ? observable : new UIThreadAwareSetProperty&lt;&gt;(observable);</span>
+    }
+
+    /**
+     * Creates an observable map property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable map property to wrap.
+     *
+     * @return an observable map property.
+     */
+    @Nonnull
+    public static &lt;K, V&gt; MapProperty&lt;K, V&gt; uiThreadAwareMapProperty(@Nonnull MapProperty&lt;K, V&gt; observable) {
+<span class="nc" id="L629">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L630" title="All 2 branches missed.">        return observable instanceof UIThreadAware ? observable : new UIThreadAwareMapProperty&lt;&gt;(observable);</span>
+    }
+
+    /**
+     * Creates an observable value that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable to wrap.
+     *
+     * @return an observable value.
+     */
+    @Nonnull
+    public static &lt;T&gt; ObservableValue&lt;T&gt; uiThreadAwareObservable(@Nonnull final ObservableValue&lt;T&gt; observable) {
+<span class="nc" id="L642">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L643" title="All 2 branches missed.">        return observable instanceof UIThreadAware ? observable : new UIThreadAwareObservableValue&lt;&gt;(observable);</span>
+    }
+
+    /**
+     * Creates an observable string value that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable string to wrap.
+     *
+     * @return an observable string value.
+     */
+    @Nonnull
+    public static ObservableStringValue uiThreadAwareObservableString(@Nonnull final ObservableStringValue observable) {
+<span class="nc" id="L655">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L656" title="All 2 branches missed.">        return observable instanceof UIThreadAware ? observable : new UIThreadAwareObservableStringValue(observable);</span>
+    }
+
+    /**
+     * Creates an observable boolean value that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable boolean to wrap.
+     *
+     * @return an observable boolean value.
+     */
+    @Nonnull
+    public static ObservableBooleanValue uiThreadAwareObservableBoolean(@Nonnull final ObservableBooleanValue observable) {
+<span class="nc" id="L668">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L669" title="All 2 branches missed.">        return observable instanceof UIThreadAware ? observable : new UIThreadAwareObservableBooleanValue(observable);</span>
+    }
+
+    /**
+     * Creates an observable integer value that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable integer to wrap.
+     *
+     * @return an observable integer value.
+     */
+    @Nonnull
+    public static ObservableIntegerValue uiThreadAwareObservableInteger(@Nonnull final ObservableIntegerValue observable) {
+<span class="nc" id="L681">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L682" title="All 2 branches missed.">        return observable instanceof UIThreadAware ? observable : new UIThreadAwareObservableIntegerValue(observable);</span>
+    }
+
+    /**
+     * Creates an observable long value that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable long to wrap.
+     *
+     * @return an observable long value.
+     */
+    @Nonnull
+    public static ObservableLongValue uiThreadAwareObservableLong(@Nonnull final ObservableLongValue observable) {
+<span class="nc" id="L694">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L695" title="All 2 branches missed.">        return observable instanceof UIThreadAware ? observable : new UIThreadAwareObservableLongValue(observable);</span>
+    }
+
+    /**
+     * Creates an observable float value that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable float to wrap.
+     *
+     * @return an observable float value.
+     */
+    @Nonnull
+    public static ObservableFloatValue uiThreadAwareObservableFloat(@Nonnull final ObservableFloatValue observable) {
+<span class="nc" id="L707">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L708" title="All 2 branches missed.">        return observable instanceof UIThreadAware ? observable : new UIThreadAwareObservableFloatValue(observable);</span>
+    }
+
+    /**
+     * Creates an observable double value that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable double to wrap.
+     *
+     * @return an observable double value.
+     */
+    @Nonnull
+    public static ObservableDoubleValue uiThreadAwareObservableDouble(@Nonnull final ObservableDoubleValue observable) {
+<span class="nc" id="L720">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L721" title="All 2 branches missed.">        return observable instanceof UIThreadAware ? observable : new UIThreadAwareObservableDoubleValue(observable);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

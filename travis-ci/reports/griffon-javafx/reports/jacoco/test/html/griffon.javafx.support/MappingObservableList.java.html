@@ -16,181 +16,24 @@
 package griffon.javafx.support;
 
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.TransformationList;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Function;
-
-import static java.util.Arrays.asList;
-import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
+ * @see griffon.javafx.collections.MappingObservableList
  * @since 2.9.0
+ * @deprecated use {@code griffon.javafx.collections.MappingObservableList} instead.
  */
-public class MappingObservableList&lt;T, S&gt; extends TransformationList&lt;T, S&gt; {
-    private static final String ERROR_MAPPER_NULL = &quot;Argument 'mapper' must not be null&quot;;
-    private static final String ERROR_SOURCE_NULL = &quot;Argument 'source' must not be null&quot;;
-
-    private T[] elements;
-    private Function&lt;S, T&gt; mapper;
-    private ObservableValue&lt;Function&lt;S, T&gt;&gt; observableMapper;
-
+public class MappingObservableList&lt;T, S&gt; extends griffon.javafx.collections.MappingObservableList&lt;T, S&gt; {
     public MappingObservableList(@Nonnull ObservableList&lt;? extends S&gt; source, @Nonnull Function&lt;S, T&gt; mapper) {
-<span class="fc" id="L45">        super(requireNonNull(source, ERROR_SOURCE_NULL));</span>
-<span class="fc" id="L46">        this.mapper = requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
-<span class="fc" id="L47">        int size = source.size();</span>
-<span class="fc" id="L48">        this.elements = (T[]) new Object[size];</span>
-<span class="pc bpc" id="L49" title="1 of 2 branches missed.">        for (int i = 0; i &lt; size; ++i) {</span>
-<span class="nc" id="L50">            this.elements[i] = (T) mapper.apply(source.get(i));</span>
-        }
-<span class="fc" id="L52">    }</span>
+<span class="nc" id="L32">        super(source, mapper);</span>
+<span class="nc" id="L33">    }</span>
 
     public MappingObservableList(@Nonnull ObservableList&lt;? extends S&gt; source, @Nonnull ObservableValue&lt;Function&lt;S, T&gt;&gt; mapper) {
-<span class="fc" id="L55">        super(requireNonNull(source, ERROR_SOURCE_NULL));</span>
-<span class="fc" id="L56">        this.observableMapper = requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
-<span class="fc" id="L57">        int size = source.size();</span>
-<span class="fc" id="L58">        this.elements = (T[]) new Object[size];</span>
-<span class="fc" id="L59">        Function&lt;S, T&gt; function = resolveMapper();</span>
-
-<span class="pc bpc" id="L61" title="1 of 2 branches missed.">        for (int i = 0; i &lt; size; ++i) {</span>
-<span class="nc" id="L62">            this.elements[i] = (T) function.apply(source.get(i));</span>
-        }
-
-<span class="fc" id="L65">        mapper.addListener((v, o, n) -&gt; updateAll());</span>
-<span class="fc" id="L66">    }</span>
-
-    @Nonnull
-    protected Function&lt;S, T&gt; resolveMapper() {
-<span class="fc bfc" id="L70" title="All 2 branches covered.">        Function&lt;S, T&gt; function = observableMapper != null ? observableMapper.getValue() : mapper;</span>
-<span class="fc" id="L71">        return requireNonNull(function, ERROR_MAPPER_NULL);</span>
-    }
-
-    @Override
-    public int getSourceIndex(int index) {
-<span class="nc" id="L76">        return index;</span>
-    }
-
-    @Override
-    public T get(int index) {
-<span class="fc" id="L81">        return elements[index];</span>
-    }
-
-    @Override
-    public int size() {
-<span class="fc" id="L86">        return getSource().size();</span>
-    }
-
-    @Override
-    protected void sourceChanged(ListChangeListener.Change&lt;? extends S&gt; c) {
-<span class="fc" id="L91">        beginChange();</span>
-<span class="fc bfc" id="L92" title="All 2 branches covered.">        while (c.next()) {</span>
-<span class="pc bpc" id="L93" title="1 of 2 branches missed.">            if (c.wasPermutated()) {</span>
-<span class="nc" id="L94">                permutate(c);</span>
-<span class="fc bfc" id="L95" title="All 2 branches covered.">            } else if (c.wasReplaced()) {</span>
-<span class="fc" id="L96">                replace(c);</span>
-<span class="pc bpc" id="L97" title="1 of 2 branches missed.">            } else if (c.wasUpdated()) {</span>
-<span class="nc" id="L98">                update(c);</span>
-<span class="fc bfc" id="L99" title="All 2 branches covered.">            } else if (c.wasAdded()) {</span>
-<span class="fc" id="L100">                add(c);</span>
-<span class="pc bpc" id="L101" title="1 of 2 branches missed.">            } else if (c.wasRemoved()) {</span>
-<span class="fc" id="L102">                remove(c);</span>
-            }
-        }
-<span class="fc" id="L105">        endChange();</span>
-<span class="fc" id="L106">    }</span>
-
-    private void permutate(ListChangeListener.Change&lt;? extends S&gt; c) {
-<span class="nc" id="L109">        int from = c.getFrom();</span>
-<span class="nc" id="L110">        int to = c.getTo();</span>
-<span class="nc" id="L111">        int[] perms = new int[from - to];</span>
-<span class="nc" id="L112">        Function&lt;S, T&gt; function = resolveMapper();</span>
-
-<span class="nc bnc" id="L114" title="All 2 branches missed.">        for (int i = from, j = 0; i &lt; to; i++) {</span>
-<span class="nc" id="L115">            perms[j++] = c.getPermutation(i);</span>
-<span class="nc" id="L116">            elements[i] = (T) function.apply(c.getList().get(i));</span>
-        }
-<span class="nc" id="L118">        nextPermutation(from, to, perms);</span>
-<span class="nc" id="L119">    }</span>
-
-    private void replace(ListChangeListener.Change&lt;? extends S&gt; c) {
-<span class="fc" id="L122">        int from = c.getFrom();</span>
-<span class="fc" id="L123">        int to = c.getTo();</span>
-<span class="fc" id="L124">        List&lt;T&gt; removed = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L125">        Function&lt;S, T&gt; function = resolveMapper();</span>
-
-<span class="fc bfc" id="L127" title="All 2 branches covered.">        for (int i = from; i &lt; to; i++) {</span>
-<span class="fc" id="L128">            elements[i] = (T) function.apply(c.getList().get(i));</span>
-<span class="fc" id="L129">            removed.add(elements[i]);</span>
-        }
-<span class="fc" id="L131">        nextReplace(from, to, removed);</span>
-<span class="fc" id="L132">    }</span>
-
-    private void update(ListChangeListener.Change&lt;? extends S&gt; c) {
-<span class="nc" id="L135">        int from = c.getFrom();</span>
-<span class="nc" id="L136">        int to = c.getTo();</span>
-<span class="nc" id="L137">        Function&lt;S, T&gt; function = resolveMapper();</span>
-
-<span class="nc bnc" id="L139" title="All 2 branches missed.">        for (int i = from; i &lt; to; i++) {</span>
-<span class="nc" id="L140">            elements[i] = (T) function.apply(c.getList().get(i));</span>
-<span class="nc" id="L141">            nextUpdate(i);</span>
-        }
-<span class="nc" id="L143">    }</span>
-
-    private void add(ListChangeListener.Change&lt;? extends S&gt; c) {
-<span class="fc" id="L146">        int from = c.getFrom();</span>
-<span class="fc" id="L147">        int to = c.getTo();</span>
-<span class="fc" id="L148">        int offset = elements.length;</span>
-<span class="fc" id="L149">        T[] tmp = Arrays.copyOf(elements, offset + (to - from));</span>
-<span class="fc" id="L150">        Function&lt;S, T&gt; function = resolveMapper();</span>
-
-<span class="fc bfc" id="L152" title="All 2 branches covered.">        for (int i = from; i &lt; to; ++i) {</span>
-<span class="fc" id="L153">            tmp[offset + i] = (T) function.apply(c.getList().get(i));</span>
-        }
-
-<span class="fc" id="L156">        elements = tmp;</span>
-<span class="fc" id="L157">        nextAdd(from, to);</span>
-<span class="fc" id="L158">    }</span>
-
-    private void remove(ListChangeListener.Change&lt;? extends S&gt; c) {
-<span class="fc" id="L161">        int from = c.getFrom();</span>
-<span class="fc" id="L162">        int size = elements.length - c.getRemovedSize();</span>
-<span class="fc" id="L163">        int to = c.getTo();</span>
-<span class="pc bpc" id="L164" title="1 of 2 branches missed.">        to = to == from ? from + c.getRemovedSize() - 1 : to;</span>
-<span class="fc" id="L165">        List&lt;T&gt; removed = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L166">        T[] tmp = (T[]) new Object[size];</span>
-
-<span class="fc bfc" id="L168" title="All 2 branches covered.">        for (int i = 0, j = 0; i &lt; elements.length; i++) {</span>
-<span class="fc bfc" id="L169" title="All 4 branches covered.">            if (i &lt; from || i &gt; to) {</span>
-<span class="fc" id="L170">                tmp[j++] = elements[i];</span>
-            } else {
-<span class="fc" id="L172">                removed.add(elements[i]);</span>
-            }
-        }
-
-<span class="fc" id="L176">        elements = tmp;</span>
-<span class="fc" id="L177">        nextRemove(from, removed);</span>
-<span class="fc" id="L178">    }</span>
-
-    private void updateAll() {
-<span class="fc" id="L181">        Function&lt;S, T&gt; function = resolveMapper();</span>
-        // defensive copying
-<span class="fc" id="L183">        List&lt;S&gt; copy = new ArrayList&lt;&gt;(getSource());</span>
-<span class="fc" id="L184">        List&lt;T&gt; removed = asList(elements);</span>
-<span class="fc" id="L185">        T[] tmp = (T[]) new Object[removed.size()];</span>
-
-<span class="fc" id="L187">        beginChange();</span>
-<span class="fc bfc" id="L188" title="All 2 branches covered.">        for (int i = 0; i &lt; removed.size(); i++) {</span>
-<span class="fc" id="L189">            tmp[i] = (T) function.apply(copy.get(i));</span>
-        }
-<span class="fc" id="L191">        elements = tmp;</span>
-<span class="fc" id="L192">        nextReplace(0, elements.length, removed);</span>
-<span class="fc" id="L193">        endChange();</span>
-<span class="fc" id="L194">    }</span>
+<span class="nc" id="L36">        super(source, mapper);</span>
+<span class="nc" id="L37">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

@@ -89,6 +89,163 @@
             </UsedBy>
         </Package>
 
+        <Package name="griffon.javafx.beans.binding">
+            <Stats>
+                <TotalClasses>10</TotalClasses>
+                <ConcreteClasses>8</ConcreteClasses>
+                <AbstractClasses>2</AbstractClasses>
+                <Ca>1</Ca>
+                <Ce>5</Ce>
+                <A>0.2</A>
+                <I>0.83</I>
+                <D>0.03</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+                <Class sourceFile="AbstractUIThreadAwareProperty.java">
+                    griffon.javafx.beans.binding.AbstractUIThreadAwareProperty
+                </Class>
+                <Class sourceFile="UIThreadAware.java">
+                    griffon.javafx.beans.binding.UIThreadAware
+                </Class>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="AbstractUIThreadAwareObservableNumberValue.java">
+                    griffon.javafx.beans.binding.AbstractUIThreadAwareObservableNumberValue
+                </Class>
+                <Class sourceFile="UIThreadAwareObservableBooleanValue.java">
+                    griffon.javafx.beans.binding.UIThreadAwareObservableBooleanValue
+                </Class>
+                <Class sourceFile="UIThreadAwareObservableDoubleValue.java">
+                    griffon.javafx.beans.binding.UIThreadAwareObservableDoubleValue
+                </Class>
+                <Class sourceFile="UIThreadAwareObservableFloatValue.java">
+                    griffon.javafx.beans.binding.UIThreadAwareObservableFloatValue
+                </Class>
+                <Class sourceFile="UIThreadAwareObservableIntegerValue.java">
+                    griffon.javafx.beans.binding.UIThreadAwareObservableIntegerValue
+                </Class>
+                <Class sourceFile="UIThreadAwareObservableLongValue.java">
+                    griffon.javafx.beans.binding.UIThreadAwareObservableLongValue
+                </Class>
+                <Class sourceFile="UIThreadAwareObservableStringValue.java">
+                    griffon.javafx.beans.binding.UIThreadAwareObservableStringValue
+                </Class>
+                <Class sourceFile="UIThreadAwareObservableValue.java">
+                    griffon.javafx.beans.binding.UIThreadAwareObservableValue
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>java.lang</Package>
+                <Package>java.util</Package>
+                <Package>javafx.beans</Package>
+                <Package>javafx.beans.property</Package>
+                <Package>javafx.beans.value</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>griffon.javafx.collections</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="griffon.javafx.beans.property">
+            <Stats>
+                <TotalClasses>8</TotalClasses>
+                <ConcreteClasses>7</ConcreteClasses>
+                <AbstractClasses>1</AbstractClasses>
+                <Ca>0</Ca>
+                <Ce>3</Ce>
+                <A>0.12</A>
+                <I>1</I>
+                <D>0.12</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+                <Class sourceFile="ResetableProperty.java">
+                    griffon.javafx.beans.property.ResetableProperty
+                </Class>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="ResetableBooleanProperty.java">
+                    griffon.javafx.beans.property.ResetableBooleanProperty
+                </Class>
+                <Class sourceFile="ResetableDoubleProperty.java">
+                    griffon.javafx.beans.property.ResetableDoubleProperty
+                </Class>
+                <Class sourceFile="ResetableFloatProperty.java">
+                    griffon.javafx.beans.property.ResetableFloatProperty
+                </Class>
+                <Class sourceFile="ResetableIntegerProperty.java">
+                    griffon.javafx.beans.property.ResetableIntegerProperty
+                </Class>
+                <Class sourceFile="ResetableLongProperty.java">
+                    griffon.javafx.beans.property.ResetableLongProperty
+                </Class>
+                <Class sourceFile="ResetableObjectProperty.java">
+                    griffon.javafx.beans.property.ResetableObjectProperty
+                </Class>
+                <Class sourceFile="ResetableStringProperty.java">
+                    griffon.javafx.beans.property.ResetableStringProperty
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>java.lang</Package>
+                <Package>javafx.beans.binding</Package>
+                <Package>javafx.beans.property</Package>
+            </DependsUpon>
+
+            <UsedBy>
+            </UsedBy>
+        </Package>
+
+        <Package name="griffon.javafx.collections">
+            <Stats>
+                <TotalClasses>3</TotalClasses>
+                <ConcreteClasses>1</ConcreteClasses>
+                <AbstractClasses>2</AbstractClasses>
+                <Ca>1</Ca>
+                <Ce>6</Ce>
+                <A>0.67</A>
+                <I>0.86</I>
+                <D>0.52</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+                <Class sourceFile="ObservableMapBase.java">
+                    griffon.javafx.collections.ObservableMapBase
+                </Class>
+                <Class sourceFile="ObservableSetBase.java">
+                    griffon.javafx.collections.ObservableSetBase
+                </Class>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="GriffonFXCollections.java">
+                    griffon.javafx.collections.GriffonFXCollections
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>com.sun.javafx.collections</Package>
+                <Package>griffon.javafx.beans.binding</Package>
+                <Package>java.lang</Package>
+                <Package>java.util</Package>
+                <Package>javafx.beans</Package>
+                <Package>javafx.collections</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>griffon.javafx.support</Package>
+            </UsedBy>
+        </Package>
+
         <Package name="griffon.javafx.editors">
             <Stats>
                 <TotalClasses>10</TotalClasses>
@@ -218,20 +375,26 @@
 
         <Package name="griffon.javafx.support">
             <Stats>
-                <TotalClasses>15</TotalClasses>
-                <ConcreteClasses>10</ConcreteClasses>
-                <AbstractClasses>5</AbstractClasses>
+                <TotalClasses>9</TotalClasses>
+                <ConcreteClasses>3</ConcreteClasses>
+                <AbstractClasses>6</AbstractClasses>
                 <Ca>0</Ca>
-                <Ce>12</Ce>
-                <A>0.33</A>
+                <Ce>11</Ce>
+                <A>0.67</A>
                 <I>1</I>
-                <D>0.33</D>
+                <D>0.67</D>
                 <V>1</V>
             </Stats>
 
             <AbstractClasses>
-                <Class sourceFile="AbstractUIThreadAwareProperty.java">
-                    griffon.javafx.support.AbstractUIThreadAwareProperty
+                <Class sourceFile="DelegatingObservableList.java">
+                    griffon.javafx.support.DelegatingObservableList
+                </Class>
+                <Class sourceFile="DelegatingObservableMap.java">
+                    griffon.javafx.support.DelegatingObservableMap
+                </Class>
+                <Class sourceFile="DelegatingObservableSet.java">
+                    griffon.javafx.support.DelegatingObservableSet
                 </Class>
                 <Class sourceFile="JavaFXUtils.java">
                     griffon.javafx.support.JavaFXUtils$Predicate
@@ -242,49 +405,24 @@
                 <Class sourceFile="ObservableSetBase.java">
                     griffon.javafx.support.ObservableSetBase
                 </Class>
-                <Class sourceFile="UIThreadAware.java">
-                    griffon.javafx.support.UIThreadAware
-                </Class>
             </AbstractClasses>
 
             <ConcreteClasses>
-                <Class sourceFile="AbstractUIThreadAwareObservableNumberValue.java">
-                    griffon.javafx.support.AbstractUIThreadAwareObservableNumberValue
-                </Class>
                 <Class sourceFile="JavaFXAction.java">
                     griffon.javafx.support.JavaFXAction
                 </Class>
                 <Class sourceFile="JavaFXUtils.java">
                     griffon.javafx.support.JavaFXUtils$1
                 </Class>
-                <Class sourceFile="UIThreadAwareObservableBooleanValue.java">
-                    griffon.javafx.support.UIThreadAwareObservableBooleanValue
-                </Class>
-                <Class sourceFile="UIThreadAwareObservableDoubleValue.java">
-                    griffon.javafx.support.UIThreadAwareObservableDoubleValue
-                </Class>
-                <Class sourceFile="UIThreadAwareObservableFloatValue.java">
-                    griffon.javafx.support.UIThreadAwareObservableFloatValue
-                </Class>
-                <Class sourceFile="UIThreadAwareObservableIntegerValue.java">
-                    griffon.javafx.support.UIThreadAwareObservableIntegerValue
-                </Class>
-                <Class sourceFile="UIThreadAwareObservableLongValue.java">
-                    griffon.javafx.support.UIThreadAwareObservableLongValue
-                </Class>
-                <Class sourceFile="UIThreadAwareObservableStringValue.java">
-                    griffon.javafx.support.UIThreadAwareObservableStringValue
-                </Class>
-                <Class sourceFile="UIThreadAwareObservableValue.java">
-                    griffon.javafx.support.UIThreadAwareObservableValue
+                <Class sourceFile="MappingObservableList.java">
+                    griffon.javafx.support.MappingObservableList
                 </Class>
             </ConcreteClasses>
 
             <DependsUpon>
-                <Package>com.sun.javafx.collections</Package>
+                <Package>griffon.javafx.collections</Package>
                 <Package>java.lang</Package>
-                <Package>java.util</Package>
-                <Package>javafx.beans</Package>
+                <Package>java.util.function</Package>
                 <Package>javafx.beans.property</Package>
                 <Package>javafx.beans.value</Package>
                 <Package>javafx.collections</Package>
@@ -331,11 +469,19 @@
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
+        <Package name="java.util.function">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
         <Package name="javafx.application">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
         <Package name="javafx.beans">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="javafx.beans.binding">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 

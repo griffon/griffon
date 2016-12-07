@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UIThreadAwareMapProperty.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.beans.binding</a> &gt; <span class="el_source">UIThreadAwareMapProperty.java</span></div><h1>UIThreadAwareMapProperty.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2016 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.beans.binding;
+
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.MapProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableMap;
+
+import javax.annotation.Nonnull;
+
+import static java.util.Objects.requireNonNull;
+import static javafx.application.Platform.isFxApplicationThread;
+import static javafx.application.Platform.runLater;
+
+/**
+ * @author Andres Almiray
+ * @since 2.9.0
+ */
+class UIThreadAwareMapProperty&lt;K, V&gt; extends MapProperty&lt;K, V&gt; implements UIThreadAware {
+    private final MapProperty&lt;K, V&gt; delegate;
+
+<span class="nc" id="L40">    UIThreadAwareMapProperty(@Nonnull MapProperty&lt;K, V&gt; delegate) {</span>
+<span class="nc" id="L41">        this.delegate = requireNonNull(delegate, &quot;Argument 'delegate' must not be null&quot;);</span>
+<span class="nc" id="L42">    }</span>
+
+    @Override
+    public ReadOnlyIntegerProperty sizeProperty() {
+<span class="nc" id="L46">        return delegate.sizeProperty();</span>
+    }
+
+    @Override
+    public ReadOnlyBooleanProperty emptyProperty() {
+<span class="nc" id="L51">        return delegate.emptyProperty();</span>
+    }
+
+    @Override
+    public void bind(ObservableValue&lt;? extends ObservableMap&lt;K, V&gt;&gt; observable) {
+<span class="nc" id="L56">        delegate.bind(observable);</span>
+<span class="nc" id="L57">    }</span>
+
+    @Override
+    public void unbind() {
+<span class="nc" id="L61">        delegate.unbind();</span>
+<span class="nc" id="L62">    }</span>
+
+    @Override
+    public boolean isBound() {
+<span class="nc" id="L66">        return delegate.isBound();</span>
+    }
+
+    @Override
+    public Object getBean() {
+<span class="nc" id="L71">        return delegate.getBean();</span>
+    }
+
+    @Override
+    public String getName() {
+<span class="nc" id="L76">        return delegate.getName();</span>
+    }
+
+    @Override
+    public ObservableMap&lt;K, V&gt; get() {
+<span class="nc" id="L81">        return delegate.get();</span>
+    }
+
+    @Override
+    public void set(final ObservableMap&lt;K, V&gt; value) {
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        if (isFxApplicationThread()) {</span>
+<span class="nc" id="L87">            delegate.set(value);</span>
+        } else {
+<span class="nc" id="L89">            runLater(() -&gt; delegate.set(value));</span>
+        }
+<span class="nc" id="L91">    }</span>
+
+    @Override
+    public void addListener(MapChangeListener&lt;? super K, ? super V&gt; listener) {
+<span class="nc bnc" id="L95" title="All 2 branches missed.">        if (listener instanceof UIThreadAware) {</span>
+<span class="nc" id="L96">            delegate.addListener(listener);</span>
+        } else {
+<span class="nc" id="L98">            delegate.addListener(new UIThreadAwareMapChangeListener&lt;&gt;(listener));</span>
+        }
+<span class="nc" id="L100">    }</span>
+
+    @Override
+    public void removeListener(MapChangeListener&lt;? super K, ? super V&gt; listener) {
+<span class="nc bnc" id="L104" title="All 2 branches missed.">        if (listener instanceof UIThreadAware) {</span>
+<span class="nc" id="L105">            delegate.removeListener(listener);</span>
+        } else {
+<span class="nc" id="L107">            delegate.removeListener(new UIThreadAwareMapChangeListener&lt;&gt;(listener));</span>
+        }
+<span class="nc" id="L109">    }</span>
+
+    @Override
+    public void addListener(ChangeListener&lt;? super ObservableMap&lt;K, V&gt;&gt; listener) {
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        if (listener instanceof UIThreadAware) {</span>
+<span class="nc" id="L114">            delegate.addListener(listener);</span>
+        } else {
+<span class="nc" id="L116">            delegate.addListener(new UIThreadAwareChangeListener&lt;&gt;(listener));</span>
+        }
+<span class="nc" id="L118">    }</span>
+
+    @Override
+    public void removeListener(ChangeListener&lt;? super ObservableMap&lt;K, V&gt;&gt; listener) {
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        if (listener instanceof UIThreadAware) {</span>
+<span class="nc" id="L123">            delegate.removeListener(listener);</span>
+        } else {
+<span class="nc" id="L125">            delegate.removeListener(new UIThreadAwareChangeListener&lt;&gt;(listener));</span>
+        }
+<span class="nc" id="L127">    }</span>
+
+    @Override
+    public void addListener(InvalidationListener listener) {
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        if (listener instanceof UIThreadAware) {</span>
+<span class="nc" id="L132">            delegate.addListener(listener);</span>
+        } else {
+<span class="nc" id="L134">            delegate.addListener(new UIThreadAwareInvalidationListener(listener));</span>
+        }
+<span class="nc" id="L136">    }</span>
+
+    @Override
+    public void removeListener(InvalidationListener listener) {
+<span class="nc bnc" id="L140" title="All 2 branches missed.">        if (listener instanceof UIThreadAware) {</span>
+<span class="nc" id="L141">            delegate.removeListener(listener);</span>
+        } else {
+<span class="nc" id="L143">            delegate.removeListener(new UIThreadAwareInvalidationListener(listener));</span>
+        }
+<span class="nc" id="L145">    }</span>
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L149" title="All 4 branches missed.">        return this == o || delegate.equals(o);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L154">        return delegate.hashCode();</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L159">        return getClass().getName() + &quot;:&quot; + delegate.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

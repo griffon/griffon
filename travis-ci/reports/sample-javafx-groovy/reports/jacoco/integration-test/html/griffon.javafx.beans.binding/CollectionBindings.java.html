@@ -1,0 +1,1369 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CollectionBindings.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.beans.binding</a> &gt; <span class="el_source">CollectionBindings.java</span></div><h1>CollectionBindings.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2016 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.beans.binding;
+
+import javafx.beans.binding.NumberBinding;
+import javafx.beans.binding.StringBinding;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
+import javafx.collections.ObservableSet;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Map;
+import java.util.function.DoubleSupplier;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.function.ToDoubleFunction;
+
+import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.joining;
+import static javafx.beans.binding.Bindings.createDoubleBinding;
+import static javafx.beans.binding.Bindings.createStringBinding;
+
+/**
+ * @author Andres Almiray
+ * @since 2.10.0
+ */
+public final class CollectionBindings {
+    private static final String ERROR_ITEMS_NULL = &quot;Argument 'items' must not be null&quot;;
+    private static final String ERROR_MAPPER_NULL = &quot;Argument 'mapper' must not be null&quot;;
+    private static final String ERROR_SUPPLIER_NULL = &quot;Argument 'supplier' must not be null&quot;;
+    private static final String ERROR_DELIMITER_NULL = &quot;Argument 'delimiter' must not be null&quot;;
+    private static final String ERROR_DEFAULT_VALUE_NULL = &quot;Argument 'defaultValue' must not be null&quot;;
+
+<span class="nc" id="L49">    private CollectionBindings() {</span>
+        // prevent instantiation
+<span class="nc" id="L51">    }</span>
+
+    /**
+     * Creates a string binding that constructs a sequence of characters separated by a delimiter.
+     *
+     * @param items     the observable list of items.
+     * @param delimiter the sequence of characters to be used between each element.
+     *
+     * @return a string binding.
+     */
+    @Nonnull
+    public static StringBinding joinList(@Nonnull final ObservableList&lt;?&gt; items, @Nullable final String delimiter) {
+<span class="nc" id="L63">        return joinList(items, delimiter, String::valueOf);</span>
+    }
+
+    /**
+     * Creates a string binding that constructs a sequence of characters separated by a delimiter.
+     *
+     * @param items     the observable list of items.
+     * @param delimiter the sequence of characters to be used between each element.
+     * @param mapper    a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a string binding.
+     */
+    @Nonnull
+    public static &lt;T&gt; StringBinding joinList(@Nonnull final ObservableList&lt;T&gt; items, @Nullable final String delimiter, @Nonnull final Function&lt;? super T, String&gt; mapper) {
+<span class="nc" id="L77">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L78">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        final String value = delimiter == null ? &quot;&quot; : delimiter;</span>
+<span class="nc" id="L80">        return createStringBinding(() -&gt; items.stream().map(mapper).collect(joining(value)), items);</span>
+    }
+
+    /**
+     * Creates a string binding that constructs a sequence of characters separated by a delimiter.
+     *
+     * @param items     the observable list of items.
+     * @param delimiter the sequence of characters to be used between each element.
+     *
+     * @return a string binding.
+     */
+    @Nonnull
+    public static StringBinding joinList(@Nonnull final ObservableList&lt;?&gt; items, @Nonnull final ObservableValue&lt;String&gt; delimiter) {
+<span class="nc" id="L93">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L94">        requireNonNull(delimiter, ERROR_DELIMITER_NULL);</span>
+<span class="nc" id="L95">        return createStringBinding(() -&gt; {</span>
+<span class="nc" id="L96">            String value = delimiter.getValue();</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">            value = value == null ? &quot;&quot; : value;</span>
+<span class="nc" id="L98">            return items.stream().map(String::valueOf).collect(joining(value));</span>
+        }, items, delimiter);
+    }
+
+    /**
+     * Creates a string binding that constructs a sequence of characters separated by a delimiter.
+     *
+     * @param items     the observable list of items.
+     * @param delimiter the sequence of characters to be used between each element.
+     * @param mapper    a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a string binding.
+     */
+    @Nonnull
+    public static &lt;T&gt; StringBinding joinList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final ObservableValue&lt;String&gt; delimiter, @Nonnull final ObservableValue&lt;Function&lt;? super T, String&gt;&gt; mapper) {
+<span class="nc" id="L113">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L114">        requireNonNull(delimiter, ERROR_DELIMITER_NULL);</span>
+<span class="nc" id="L115">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L116">        return createStringBinding(() -&gt; {</span>
+<span class="nc" id="L117">            String value = delimiter.getValue();</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">            value = value == null ? &quot;&quot; : value;</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">            final Function&lt;? super T, String&gt; mapperValue = mapper.getValue() != null ? mapper.getValue() : String::valueOf;</span>
+<span class="nc" id="L120">            return items.stream().map(mapperValue).collect(joining(value));</span>
+        }, items, delimiter, mapper);
+    }
+
+    /**
+     * Creates a string binding that constructs a sequence of characters separated by a delimiter.
+     *
+     * @param items     the observable set of items.
+     * @param delimiter the sequence of characters to be used between each element.
+     *
+     * @return a string binding.
+     */
+    @Nonnull
+    public static StringBinding joinSet(@Nonnull final ObservableSet&lt;?&gt; items, @Nullable final String delimiter) {
+<span class="nc" id="L134">        return joinSet(items, delimiter, String::valueOf);</span>
+    }
+
+    /**
+     * Creates a string binding that constructs a sequence of characters separated by a delimiter.
+     *
+     * @param items     the observable set of items.
+     * @param delimiter the sequence of characters to be used between each element.
+     * @param mapper    a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a string binding.
+     */
+    @Nonnull
+    public static &lt;T&gt; StringBinding joinSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nullable final String delimiter, @Nonnull final Function&lt;? super T, String&gt; mapper) {
+<span class="nc" id="L148">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L149">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        final String value = delimiter == null ? &quot;&quot; : delimiter;</span>
+<span class="nc" id="L151">        return createStringBinding(() -&gt; items.stream().map(mapper).collect(joining(value)), items);</span>
+    }
+
+    /**
+     * Creates a string binding that constructs a sequence of characters separated by a delimiter.
+     *
+     * @param items     the observable set of items.
+     * @param delimiter the sequence of characters to be used between each element.
+     *
+     * @return a string binding.
+     */
+    @Nonnull
+    public static StringBinding joinSet(@Nonnull final ObservableSet&lt;?&gt; items, @Nonnull final ObservableValue&lt;String&gt; delimiter) {
+<span class="nc" id="L164">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L165">        requireNonNull(delimiter, ERROR_DELIMITER_NULL);</span>
+<span class="nc" id="L166">        return createStringBinding(() -&gt; {</span>
+<span class="nc" id="L167">            String value = delimiter.getValue();</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">            value = value == null ? &quot;&quot; : value;</span>
+<span class="nc" id="L169">            return items.stream().map(String::valueOf).collect(joining(value));</span>
+        }, items, delimiter);
+    }
+
+    /**
+     * Creates a string binding that constructs a sequence of characters separated by a delimiter.
+     *
+     * @param items     the observable set of items.
+     * @param delimiter the sequence of characters to be used between each element.
+     * @param mapper    a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a string binding.
+     */
+    @Nonnull
+    public static &lt;T&gt; StringBinding joinSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final ObservableValue&lt;String&gt; delimiter, @Nonnull final ObservableValue&lt;Function&lt;? super T, String&gt;&gt; mapper) {
+<span class="nc" id="L184">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L185">        requireNonNull(delimiter, ERROR_DELIMITER_NULL);</span>
+<span class="nc" id="L186">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L187">        return createStringBinding(() -&gt; {</span>
+<span class="nc" id="L188">            String value = delimiter.getValue();</span>
+<span class="nc bnc" id="L189" title="All 2 branches missed.">            value = value == null ? &quot;&quot; : value;</span>
+<span class="nc bnc" id="L190" title="All 2 branches missed.">            final Function&lt;? super T, String&gt; mapperValue = mapper.getValue() != null ? mapper.getValue() : String::valueOf;</span>
+<span class="nc" id="L191">            return items.stream().map(mapperValue).collect(joining(value));</span>
+        }, items, delimiter, mapper);
+    }
+
+    /**
+     * Creates a string binding that constructs a sequence of characters separated by a delimiter.
+     *
+     * @param items     the observable map of items.
+     * @param delimiter the sequence of characters to be used between each entry.
+     *
+     * @return a string binding.
+     */
+    @Nonnull
+    public static &lt;K, V&gt; StringBinding joinMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nullable final String delimiter) {
+<span class="nc" id="L205">        return joinMap(items, delimiter, entry -&gt; String.valueOf(entry.getKey()) + &quot;=&quot; + String.valueOf(entry.getValue()));</span>
+    }
+
+    /**
+     * Creates a string binding that constructs a sequence of characters separated by a delimiter.
+     *
+     * @param items     the observable map of items.
+     * @param delimiter the sequence of characters to be used between each element.
+     * @param mapper    a non-interfering, stateless function to apply to the each entry.
+     *
+     * @return a string binding.
+     */
+    @Nonnull
+    public static &lt;K, V&gt; StringBinding joinMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nullable final String delimiter, @Nonnull final Function&lt;Map.Entry&lt;K, V&gt;, String&gt; mapper) {
+<span class="nc" id="L219">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L220">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc bnc" id="L221" title="All 2 branches missed.">        final String value = delimiter == null ? &quot;,&quot; : delimiter;</span>
+<span class="nc" id="L222">        return createStringBinding(() -&gt; items.entrySet().stream().map(mapper).collect(joining(value)), items);</span>
+    }
+
+    /**
+     * Creates a string binding that constructs a sequence of characters separated by a delimiter.
+     *
+     * @param items     the observable map of items.
+     * @param delimiter the sequence of characters to be used between each entry.
+     *
+     * @return a string binding.
+     */
+    @Nonnull
+    public static &lt;K, V&gt; StringBinding joinMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final ObservableValue&lt;String&gt; delimiter) {
+<span class="nc" id="L235">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L236">        requireNonNull(delimiter, ERROR_DELIMITER_NULL);</span>
+<span class="nc" id="L237">        final Function&lt;Map.Entry&lt;K, V&gt;, String&gt; mapper = entry -&gt; String.valueOf(entry.getKey()) + &quot;=&quot; + String.valueOf(entry.getValue());</span>
+<span class="nc" id="L238">        return createStringBinding(() -&gt; {</span>
+<span class="nc" id="L239">            String value = delimiter.getValue();</span>
+<span class="nc bnc" id="L240" title="All 2 branches missed.">            value = value == null ? &quot;&quot; : value;</span>
+<span class="nc" id="L241">            return items.entrySet().stream().map(mapper).collect(joining(value));</span>
+        }, items, delimiter);
+    }
+
+    /**
+     * Creates a string binding that constructs a sequence of characters separated by a delimiter.
+     *
+     * @param items     the observable map of items.
+     * @param delimiter the sequence of characters to be used between each element.
+     * @param mapper    a non-interfering, stateless function to apply to the each entry.
+     *
+     * @return a string binding.
+     */
+    @Nonnull
+    public static &lt;K, V&gt; StringBinding joinMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final ObservableValue&lt;String&gt; delimiter, @Nonnull final ObservableValue&lt;Function&lt;Map.Entry&lt;K, V&gt;, String&gt;&gt; mapper) {
+<span class="nc" id="L256">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L257">        requireNonNull(delimiter, ERROR_DELIMITER_NULL);</span>
+<span class="nc" id="L258">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L259">        final Function&lt;Map.Entry&lt;K, V&gt;, String&gt; mv = entry -&gt; String.valueOf(entry.getKey()) + &quot;=&quot; + String.valueOf(entry.getValue());</span>
+<span class="nc" id="L260">        return createStringBinding(() -&gt; {</span>
+<span class="nc" id="L261">            String value = delimiter.getValue();</span>
+<span class="nc bnc" id="L262" title="All 2 branches missed.">            value = value == null ? &quot;&quot; : value;</span>
+<span class="nc bnc" id="L263" title="All 2 branches missed.">            final Function&lt;Map.Entry&lt;K, V&gt;, String&gt; mapperValue = mapper.getValue() != null ? mapper.getValue() : mv;</span>
+<span class="nc" id="L264">            return items.entrySet().stream().map(mapperValue).collect(joining(value));</span>
+        }, items, delimiter, mapper);
+    }
+
+    /**
+     * Creates a number binding that computes the minimum value amongst elements.
+     *
+     * @param items        the observable list of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public static NumberBinding minInList(@Nonnull final ObservableList&lt;? extends Number&gt; items, @Nonnull final Number defaultValue) {
+<span class="nc" id="L278">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L279">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L280">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(Number::doubleValue).min().orElse(defaultValue.doubleValue()), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the minimum value amongst elements.
+     *
+     * @param items    the observable list of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public static NumberBinding minInList(@Nonnull final ObservableList&lt;? extends Number&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier) {
+<span class="nc" id="L293">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L294">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L295">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(Number::doubleValue).min().orElseGet(resolveDoubleSupplier(supplier)), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the maximum value amongst elements.
+     *
+     * @param items        the observable list of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public static NumberBinding maxInList(@Nonnull final ObservableList&lt;? extends Number&gt; items, @Nonnull final Number defaultValue) {
+<span class="nc" id="L308">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L309">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L310">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(Number::doubleValue).max().orElse(defaultValue.doubleValue()), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the maximum value amongst elements.
+     *
+     * @param items    the observable list of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public static NumberBinding maxInList(@Nonnull final ObservableList&lt;? extends Number&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier) {
+<span class="nc" id="L323">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L324">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L325">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(Number::doubleValue).max().orElseGet(resolveDoubleSupplier(supplier)), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the average value amongst elements.
+     *
+     * @param items        the observable list of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public static NumberBinding averageInList(@Nonnull final ObservableList&lt;? extends Number&gt; items, @Nonnull final Number defaultValue) {
+<span class="nc" id="L338">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L339">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L340">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(Number::doubleValue).average().orElse(defaultValue.doubleValue()), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the average value amongst elements.
+     *
+     * @param items    the observable list of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public static NumberBinding averageInList(@Nonnull final ObservableList&lt;? extends Number&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier) {
+<span class="nc" id="L353">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L354">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L355">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(Number::doubleValue).average().orElseGet(resolveDoubleSupplier(supplier)), items);</span>
+    }
+
+    /**
+     * Creates a number binding that contains the sum of the items of the given observable list.
+     *
+     * @param items the observable list of items.
+     *
+     * @return a number binding.
+     */
+    @Nonnull
+    public static NumberBinding sumOfList(@Nonnull final ObservableList&lt;? extends Number&gt; items) {
+<span class="nc" id="L367">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L368">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(Number::doubleValue).sum(), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the minimum value amongst elements.
+     *
+     * @param items        the observable list of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     * @param mapper       a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding minInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+<span class="nc" id="L382">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L383">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L384">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L385">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(mapper).min().orElse(defaultValue.doubleValue()), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the minimum value amongst elements.
+     *
+     * @param items    the observable list of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding minInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+<span class="nc" id="L399">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L400">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L401">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L402">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(mapper).min().orElseGet(resolveDoubleSupplier(supplier)), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the maximum value amongst elements.
+     *
+     * @param items        the observable list of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     * @param mapper       a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding maxInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+<span class="nc" id="L416">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L417">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L418">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L419">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(mapper).max().orElse(defaultValue.doubleValue()), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the maximum value amongst elements.
+     *
+     * @param items    the observable list of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding maxInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+<span class="nc" id="L433">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L434">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L435">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L436">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(mapper).max().orElseGet(resolveDoubleSupplier(supplier)), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the average value amongst elements.
+     *
+     * @param items        the observable list of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     * @param mapper       a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding averageInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+<span class="nc" id="L450">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L451">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L452">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L453">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(mapper).average().orElse(defaultValue.doubleValue()), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the average value amongst elements.
+     *
+     * @param items    the observable list of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding averageInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+<span class="nc" id="L467">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L468">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L469">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L470">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(mapper).average().orElseGet(resolveDoubleSupplier(supplier)), items);</span>
+    }
+
+    /**
+     * Creates a number binding that contains the sum of the items of the given observable list.
+     *
+     * @param items  the observable list of items.
+     * @param mapper a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding.
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding sumOfList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+<span class="nc" id="L483">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L484">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L485">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(mapper).sum(), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the minimum value amongst elements.
+     *
+     * @param items        the observable list of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     * @param mapper       a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding minInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+<span class="nc" id="L499">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L500">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L501">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L502">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L503">            ToDoubleFunction&lt;? super T&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L504">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L505">            return items.stream().mapToDouble(mapperValue).min().orElse(defaultValue.doubleValue());</span>
+        }, items, mapper);
+    }
+
+    /**
+     * Creates a number binding that computes the minimum value amongst elements.
+     *
+     * @param items    the observable list of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding minInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+<span class="nc" id="L520">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L521">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L522">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L523">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L524">            ToDoubleFunction&lt;? super T&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L525">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L526">            return items.stream().mapToDouble(mapperValue).min().orElseGet(resolveDoubleSupplier(supplier));</span>
+        }, items, mapper);
+    }
+
+    /**
+     * Creates a number binding that computes the maximum value amongst elements.
+     *
+     * @param items        the observable list of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     * @param mapper       a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding maxInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+<span class="nc" id="L541">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L542">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L543">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L544">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L545">            ToDoubleFunction&lt;? super T&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L546">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L547">            return items.stream().mapToDouble(mapperValue).max().orElse(defaultValue.doubleValue());</span>
+        }, items, mapper);
+    }
+
+    /**
+     * Creates a number binding that computes the maximum value amongst elements.
+     *
+     * @param items    the observable list of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding maxInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+<span class="nc" id="L562">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L563">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L564">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L565">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L566">            ToDoubleFunction&lt;? super T&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L567">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L568">            return items.stream().mapToDouble(mapperValue).max().orElseGet(resolveDoubleSupplier(supplier));</span>
+        }, items, mapper);
+    }
+
+    /**
+     * Creates a number binding that computes the average value amongst elements.
+     *
+     * @param items        the observable list of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     * @param mapper       a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding averageInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+<span class="nc" id="L583">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L584">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L585">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L586">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L587">            ToDoubleFunction&lt;? super T&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L588">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L589">            return items.stream().mapToDouble(mapperValue).average().orElse(defaultValue.doubleValue());</span>
+        }, items, mapper);
+    }
+
+    /**
+     * Creates a number binding that computes the average value amongst elements.
+     *
+     * @param items    the observable list of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding averageInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+<span class="nc" id="L604">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L605">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L606">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L607">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L608">            ToDoubleFunction&lt;? super T&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L609">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L610">            return items.stream().mapToDouble(mapperValue).average().orElseGet(resolveDoubleSupplier(supplier));</span>
+        }, items, mapper);
+    }
+
+    /**
+     * Creates a number binding that contains the sum of the items of the given observable list.
+     *
+     * @param items  the observable list of items.
+     * @param mapper a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding.
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding sumOfList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+<span class="nc" id="L624">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L625">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L626">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L627">            ToDoubleFunction&lt;? super T&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L628">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L629">            return items.stream().mapToDouble(mapperValue).sum();</span>
+        }, items, mapper);
+    }
+
+    /**
+     * Creates a number binding that computes the minimum value amongst elements.
+     *
+     * @param items        the observable set of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public static NumberBinding minInSet(@Nonnull final ObservableSet&lt;? extends Number&gt; items, @Nonnull final Number defaultValue) {
+<span class="nc" id="L643">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L644">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L645">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(Number::doubleValue).min().orElse(defaultValue.doubleValue()), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the minimum value amongst elements.
+     *
+     * @param items    the observable set of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public static NumberBinding minInSet(@Nonnull final ObservableSet&lt;? extends Number&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier) {
+<span class="nc" id="L658">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L659">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L660">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(Number::doubleValue).min().orElseGet(resolveDoubleSupplier(supplier)), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the maximum value amongst elements.
+     *
+     * @param items        the observable set of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public static NumberBinding maxInSet(@Nonnull final ObservableSet&lt;? extends Number&gt; items, @Nonnull final Number defaultValue) {
+<span class="nc" id="L673">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L674">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L675">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(Number::doubleValue).max().orElse(defaultValue.doubleValue()), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the maximum value amongst elements.
+     *
+     * @param items    the observable set of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public static NumberBinding maxInSet(@Nonnull final ObservableSet&lt;? extends Number&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier) {
+<span class="nc" id="L688">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L689">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L690">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(Number::doubleValue).max().orElseGet(resolveDoubleSupplier(supplier)), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the average value amongst elements.
+     *
+     * @param items        the observable set of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public static NumberBinding averageInSet(@Nonnull final ObservableSet&lt;? extends Number&gt; items, @Nonnull final Number defaultValue) {
+<span class="nc" id="L703">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L704">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L705">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(Number::doubleValue).average().orElse(defaultValue.doubleValue()), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the average value amongst elements.
+     *
+     * @param items    the observable set of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public static NumberBinding averageInSet(@Nonnull final ObservableSet&lt;? extends Number&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier) {
+<span class="nc" id="L718">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L719">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L720">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(Number::doubleValue).average().orElseGet(resolveDoubleSupplier(supplier)), items);</span>
+    }
+
+    /**
+     * Creates a number binding that contains the sum of the items of the given observable set.
+     *
+     * @param items the observable set of items.
+     *
+     * @return a number binding.
+     */
+    @Nonnull
+    public static NumberBinding sumOfSet(@Nonnull final ObservableSet&lt;? extends Number&gt; items) {
+<span class="nc" id="L732">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L733">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(Number::doubleValue).sum(), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the minimum value amongst elements.
+     *
+     * @param items        the observable set of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     * @param mapper       a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding minInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+<span class="nc" id="L747">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L748">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L749">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L750">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(mapper).min().orElse(defaultValue.doubleValue()), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the minimum value amongst elements.
+     *
+     * @param items    the observable set of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding minInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+<span class="nc" id="L764">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L765">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L766">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L767">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(mapper).min().orElseGet(resolveDoubleSupplier(supplier)), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the maximum value amongst elements.
+     *
+     * @param items        the observable set of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     * @param mapper       a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding maxInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+<span class="nc" id="L781">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L782">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L783">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L784">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(mapper).max().orElse(defaultValue.doubleValue()), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the maximum value amongst elements.
+     *
+     * @param items    the observable set of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding maxInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+<span class="nc" id="L798">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L799">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L800">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L801">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(mapper).max().orElseGet(resolveDoubleSupplier(supplier)), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the average value amongst elements.
+     *
+     * @param items        the observable set of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     * @param mapper       a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding averageInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+<span class="nc" id="L815">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L816">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L817">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L818">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(mapper).average().orElse(defaultValue.doubleValue()), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the average value amongst elements.
+     *
+     * @param items    the observable set of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding averageInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+<span class="nc" id="L832">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L833">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L834">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L835">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(mapper).average().orElseGet(resolveDoubleSupplier(supplier)), items);</span>
+    }
+
+    /**
+     * Creates a number binding that contains the sum of the items of the given observable set.
+     *
+     * @param items  the observable set of items.
+     * @param mapper a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding.
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding sumOfSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+<span class="nc" id="L848">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L849">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L850">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(mapper).sum(), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the minimum value amongst elements.
+     *
+     * @param items        the observable set of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     * @param mapper       a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding minInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+<span class="nc" id="L864">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L865">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L866">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L867">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L868">            ToDoubleFunction&lt;? super T&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L869">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L870">            return items.stream().mapToDouble(mapperValue).min().orElse(defaultValue.doubleValue());</span>
+        }, items, mapper);
+    }
+
+    /**
+     * Creates a number binding that computes the minimum value amongst elements.
+     *
+     * @param items    the observable set of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding minInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+<span class="nc" id="L885">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L886">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L887">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L888">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L889">            ToDoubleFunction&lt;? super T&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L890">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L891">            return items.stream().mapToDouble(mapperValue).min().orElseGet(resolveDoubleSupplier(supplier));</span>
+        }, items, mapper);
+    }
+
+    /**
+     * Creates a number binding that computes the maximum value amongst elements.
+     *
+     * @param items        the observable set of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     * @param mapper       a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding maxInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+<span class="nc" id="L906">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L907">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L908">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L909">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L910">            ToDoubleFunction&lt;? super T&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L911">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L912">            return items.stream().mapToDouble(mapperValue).max().orElse(defaultValue.doubleValue());</span>
+        }, items, mapper);
+    }
+
+    /**
+     * Creates a number binding that computes the maximum value amongst elements.
+     *
+     * @param items    the observable set of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding maxInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+<span class="nc" id="L927">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L928">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L929">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L930">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L931">            ToDoubleFunction&lt;? super T&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L932">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L933">            return items.stream().mapToDouble(mapperValue).max().orElseGet(resolveDoubleSupplier(supplier));</span>
+        }, items, mapper);
+    }
+
+    /**
+     * Creates a number binding that computes the average value amongst elements.
+     *
+     * @param items        the observable set of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     * @param mapper       a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding averageInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+<span class="nc" id="L948">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L949">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L950">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L951">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L952">            ToDoubleFunction&lt;? super T&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L953">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L954">            return items.stream().mapToDouble(mapperValue).average().orElse(defaultValue.doubleValue());</span>
+        }, items, mapper);
+    }
+
+    /**
+     * Creates a number binding that computes the average value amongst elements.
+     *
+     * @param items    the observable set of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding averageInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+<span class="nc" id="L969">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L970">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L971">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L972">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L973">            ToDoubleFunction&lt;? super T&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L974">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L975">            return items.stream().mapToDouble(mapperValue).average().orElseGet(resolveDoubleSupplier(supplier));</span>
+        }, items, mapper);
+    }
+
+    /**
+     * Creates a number binding that contains the sum of the items of the given observable set.
+     *
+     * @param items  the observable set of items.
+     * @param mapper a non-interfering, stateless function to apply to the each element.
+     *
+     * @return a number binding.
+     */
+    @Nonnull
+    public &lt;T&gt; NumberBinding sumOfSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+<span class="nc" id="L989">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L990">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L991">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L992">            ToDoubleFunction&lt;? super T&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L993">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L994">            return items.stream().mapToDouble(mapperValue).sum();</span>
+        }, items, mapper);
+    }
+
+    /**
+     * Creates a number binding that computes the minimum value amongst values.
+     *
+     * @param items        the observable map of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public static &lt;K&gt; NumberBinding minInMap(@Nonnull final ObservableMap&lt;K, ? extends Number&gt; items, @Nonnull final Number defaultValue) {
+<span class="nc" id="L1008">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L1009">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L1010">        return createDoubleBinding(() -&gt; items.values().stream().mapToDouble(Number::doubleValue).min().orElse(defaultValue.doubleValue()), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the minimum value amongst values.
+     *
+     * @param items    the observable map of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public static &lt;K&gt; NumberBinding minInMap(@Nonnull final ObservableMap&lt;K, ? extends Number&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier) {
+<span class="nc" id="L1023">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L1024">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L1025">        return createDoubleBinding(() -&gt; items.values().stream().mapToDouble(Number::doubleValue).min().orElseGet(resolveDoubleSupplier(supplier)), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the maximum value amongst values.
+     *
+     * @param items        the observable map of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public static &lt;K&gt; NumberBinding maxInMap(@Nonnull final ObservableMap&lt;K, ? extends Number&gt; items, @Nonnull final Number defaultValue) {
+<span class="nc" id="L1038">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L1039">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L1040">        return createDoubleBinding(() -&gt; items.values().stream().mapToDouble(Number::doubleValue).max().orElse(defaultValue.doubleValue()), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the maximum value amongst values.
+     *
+     * @param items    the observable map of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public static &lt;K&gt; NumberBinding maxInMap(@Nonnull final ObservableMap&lt;K, ? extends Number&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier) {
+<span class="nc" id="L1053">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L1054">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L1055">        return createDoubleBinding(() -&gt; items.values().stream().mapToDouble(Number::doubleValue).max().orElseGet(resolveDoubleSupplier(supplier)), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the average value amongst values.
+     *
+     * @param items        the observable map of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public static &lt;K&gt; NumberBinding averageInMap(@Nonnull final ObservableMap&lt;K, ? extends Number&gt; items, @Nonnull final Number defaultValue) {
+<span class="nc" id="L1068">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L1069">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L1070">        return createDoubleBinding(() -&gt; items.values().stream().mapToDouble(Number::doubleValue).average().orElse(defaultValue.doubleValue()), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the average value amongst values.
+     *
+     * @param items    the observable map of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public static &lt;K&gt; NumberBinding averageInMap(@Nonnull final ObservableMap&lt;K, ? extends Number&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier) {
+<span class="nc" id="L1083">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L1084">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L1085">        return createDoubleBinding(() -&gt; items.values().stream().mapToDouble(Number::doubleValue).average().orElseGet(resolveDoubleSupplier(supplier)), items);</span>
+    }
+
+    /**
+     * Creates a number binding that contains the sum of the values of the given observable map.
+     *
+     * @param items the observable map of items.
+     *
+     * @return a number binding.
+     */
+    @Nonnull
+    public static &lt;K&gt; NumberBinding sumOfMap(@Nonnull final ObservableMap&lt;K, ? extends Number&gt; items) {
+<span class="nc" id="L1097">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L1098">        return createDoubleBinding(() -&gt; items.values().stream().mapToDouble(Number::doubleValue).sum(), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the minimum value amongst values.
+     *
+     * @param items        the observable map of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     * @param mapper       a non-interfering, stateless function to apply to the each value.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;K, V&gt; NumberBinding minInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super V&gt; mapper) {
+<span class="nc" id="L1112">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L1113">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L1114">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L1115">        return createDoubleBinding(() -&gt; items.values().stream().mapToDouble(mapper).min().orElse(defaultValue.doubleValue()), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the minimum value amongst values.
+     *
+     * @param items    the observable map of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to the each value.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;K, V&gt; NumberBinding minInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super V&gt; mapper) {
+<span class="nc" id="L1129">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L1130">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L1131">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L1132">        return createDoubleBinding(() -&gt; items.values().stream().mapToDouble(mapper).min().orElseGet(resolveDoubleSupplier(supplier)), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the maximum value amongst values.
+     *
+     * @param items        the observable map of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     * @param mapper       a non-interfering, stateless function to apply to the each value.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;K, V&gt; NumberBinding maxInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super V&gt; mapper) {
+<span class="nc" id="L1146">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L1147">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L1148">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L1149">        return createDoubleBinding(() -&gt; items.values().stream().mapToDouble(mapper).max().orElse(defaultValue.doubleValue()), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the maximum value amongst values.
+     *
+     * @param items    the observable map of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to the each value.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;K, V&gt; NumberBinding maxInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super V&gt; mapper) {
+<span class="nc" id="L1163">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L1164">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L1165">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L1166">        return createDoubleBinding(() -&gt; items.values().stream().mapToDouble(mapper).max().orElseGet(resolveDoubleSupplier(supplier)), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the average value amongst values.
+     *
+     * @param items        the observable map of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     * @param mapper       a non-interfering, stateless function to apply to the each value.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;K, V&gt; NumberBinding averageInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super V&gt; mapper) {
+<span class="nc" id="L1180">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L1181">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L1182">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L1183">        return createDoubleBinding(() -&gt; items.values().stream().mapToDouble(mapper).average().orElse(defaultValue.doubleValue()), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the average value amongst values.
+     *
+     * @param items    the observable map of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to the each value.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;K, V&gt; NumberBinding averageInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super V&gt; mapper) {
+<span class="nc" id="L1197">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L1198">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L1199">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L1200">        return createDoubleBinding(() -&gt; items.values().stream().mapToDouble(mapper).average().orElseGet(resolveDoubleSupplier(supplier)), items);</span>
+    }
+
+    /**
+     * Creates a number binding that contains the sum of the values of the given observable map.
+     *
+     * @param items  the observable map of items.
+     * @param mapper a non-interfering, stateless function to apply to the each value.
+     *
+     * @return a number binding.
+     */
+    @Nonnull
+    public &lt;K, V&gt; NumberBinding sumOfMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final ToDoubleFunction&lt;? super V&gt; mapper) {
+<span class="nc" id="L1213">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L1214">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L1215">        return createDoubleBinding(() -&gt; items.values().stream().mapToDouble(mapper).sum(), items);</span>
+    }
+
+    /**
+     * Creates a number binding that computes the minimum value amongst values.
+     *
+     * @param items        the observable map of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     * @param mapper       a non-interfering, stateless function to apply to the each value.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;K, V&gt; NumberBinding minInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super V&gt;&gt; mapper) {
+<span class="nc" id="L1229">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L1230">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L1231">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L1232">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L1233">            ToDoubleFunction&lt;? super V&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L1234">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L1235">            return items.values().stream().mapToDouble(mapperValue).min().orElse(defaultValue.doubleValue());</span>
+        }, items, mapper);
+    }
+
+    /**
+     * Creates a number binding that computes the minimum value amongst values.
+     *
+     * @param items    the observable map of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to the each value.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;K, V&gt; NumberBinding minInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super V&gt;&gt; mapper) {
+<span class="nc" id="L1250">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L1251">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L1252">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L1253">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L1254">            ToDoubleFunction&lt;? super V&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L1255">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L1256">            return items.values().stream().mapToDouble(mapperValue).min().orElseGet(resolveDoubleSupplier(supplier));</span>
+        }, items, mapper);
+    }
+
+    /**
+     * Creates a number binding that computes the maximum value amongst values.
+     *
+     * @param items        the observable map of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     * @param mapper       a non-interfering, stateless function to apply to the each value.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;K, V&gt; NumberBinding maxInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super V&gt;&gt; mapper) {
+<span class="nc" id="L1271">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L1272">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L1273">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L1274">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L1275">            ToDoubleFunction&lt;? super V&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L1276">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L1277">            return items.values().stream().mapToDouble(mapperValue).max().orElse(defaultValue.doubleValue());</span>
+        }, items, mapper);
+    }
+
+    /**
+     * Creates a number binding that computes the maximum value amongst values.
+     *
+     * @param items    the observable map of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to the each value.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;K, V&gt; NumberBinding maxInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super V&gt;&gt; mapper) {
+<span class="nc" id="L1292">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L1293">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L1294">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L1295">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L1296">            ToDoubleFunction&lt;? super V&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L1297">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L1298">            return items.values().stream().mapToDouble(mapperValue).max().orElseGet(resolveDoubleSupplier(supplier));</span>
+        }, items, mapper);
+    }
+
+    /**
+     * Creates a number binding that computes the average value amongst values.
+     *
+     * @param items        the observable map of items.
+     * @param defaultValue the value to be returned if there is no value present.
+     * @param mapper       a non-interfering, stateless function to apply to the each value.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;K, V&gt; NumberBinding averageInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super V&gt;&gt; mapper) {
+<span class="nc" id="L1313">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L1314">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="nc" id="L1315">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L1316">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L1317">            ToDoubleFunction&lt;? super V&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L1318">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L1319">            return items.values().stream().mapToDouble(mapperValue).average().orElse(defaultValue.doubleValue());</span>
+        }, items, mapper);
+    }
+
+    /**
+     * Creates a number binding that computes the average value amongst values.
+     *
+     * @param items    the observable map of items.
+     * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper   a non-interfering, stateless function to apply to the each value.
+     *
+     * @return a number binding
+     */
+    @Nonnull
+    public &lt;K, V&gt; NumberBinding averageInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super V&gt;&gt; mapper) {
+<span class="nc" id="L1334">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L1335">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L1336">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L1337">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L1338">            ToDoubleFunction&lt;? super V&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L1339">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L1340">            return items.values().stream().mapToDouble(mapperValue).average().orElseGet(resolveDoubleSupplier(supplier));</span>
+        }, items, mapper);
+    }
+
+    /**
+     * Creates a number binding that contains the sum of the values of the given observable map.
+     *
+     * @param items  the observable map of items.
+     * @param mapper a non-interfering, stateless function to apply to the each value.
+     *
+     * @return a number binding.
+     */
+    @Nonnull
+    public &lt;K, V&gt; NumberBinding sumOfMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super V&gt;&gt; mapper) {
+<span class="nc" id="L1354">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L1355">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L1356">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L1357">            ToDoubleFunction&lt;? super V&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L1358">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L1359">            return items.values().stream().mapToDouble(mapperValue).sum();</span>
+        }, items, mapper);
+    }
+
+    @Nonnull
+    private static DoubleSupplier resolveDoubleSupplier(@Nonnull final Supplier&lt;? extends Number&gt; supplier) {
+<span class="nc" id="L1365">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L1366">        return () -&gt; supplier.get().doubleValue();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

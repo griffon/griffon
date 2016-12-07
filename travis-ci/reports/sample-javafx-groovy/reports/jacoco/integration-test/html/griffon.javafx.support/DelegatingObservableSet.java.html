@@ -16,117 +16,18 @@
 package griffon.javafx.support;
 
 import javafx.collections.ObservableSet;
-import javafx.collections.SetChangeListener;
-import javafx.collections.WeakSetChangeListener;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.Iterator;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
+ * @see griffon.javafx.collections.DelegatingObservableSet
  * @since 2.9.0
+ * @deprecated use {@code griffon.javafx.collections.DelegatingObservableSet} instead.
  */
-public abstract class DelegatingObservableSet&lt;E&gt; extends ObservableSetBase&lt;E&gt; implements ObservableSet&lt;E&gt; {
-    private final ObservableSet&lt;E&gt; delegate;
-    private SetChangeListener&lt;E&gt; sourceListener;
-
-<span class="nc" id="L36">    public DelegatingObservableSet(@Nonnull ObservableSet&lt;E&gt; delegate) {</span>
-<span class="nc" id="L37">        this.delegate = requireNonNull(delegate, &quot;Argument 'delegate' must not be null&quot;);</span>
-<span class="nc" id="L38">        this.delegate.addListener(new WeakSetChangeListener&lt;&gt;(getListener()));</span>
-<span class="nc" id="L39">    }</span>
-
-    @Nonnull
-    protected ObservableSet&lt;E&gt; getDelegate() {
-<span class="nc" id="L43">        return delegate;</span>
-    }
-
-    private SetChangeListener&lt;E&gt; getListener() {
-<span class="nc bnc" id="L47" title="All 2 branches missed.">        if (sourceListener == null) {</span>
-<span class="nc" id="L48">            sourceListener = DelegatingObservableSet.this::sourceChanged;</span>
-        }
-<span class="nc" id="L50">        return sourceListener;</span>
-    }
-
-    protected abstract void sourceChanged(@Nonnull SetChangeListener.Change&lt;? extends E&gt; c);
-
-    // --== Delegate methods ==--
-
-    @Override
-    public int size() {
-<span class="nc" id="L59">        return getDelegate().size();</span>
-    }
-
-    @Override
-    public boolean isEmpty() {
-<span class="nc" id="L64">        return getDelegate().isEmpty();</span>
-    }
-
-    @Override
-    public boolean contains(Object o) {
-<span class="nc" id="L69">        return getDelegate().contains(o);</span>
-    }
-
-    @Override
-    public Iterator&lt;E&gt; iterator() {
-<span class="nc" id="L74">        return getDelegate().iterator();</span>
-    }
-
-    @Override
-    public Object[] toArray() {
-<span class="nc" id="L79">        return getDelegate().toArray();</span>
-    }
-
-    @Override
-    public &lt;T&gt; T[] toArray(T[] a) {
-<span class="nc" id="L84">        return getDelegate().toArray(a);</span>
-    }
-
-    @Override
-    public boolean add(E e) {
-<span class="nc" id="L89">        return getDelegate().add(e);</span>
-    }
-
-    @Override
-    public boolean remove(Object o) {
-<span class="nc" id="L94">        return getDelegate().remove(o);</span>
-    }
-
-    @Override
-    public boolean containsAll(Collection&lt;?&gt; c) {
-<span class="nc" id="L99">        return getDelegate().containsAll(c);</span>
-    }
-
-    @Override
-    public boolean addAll(Collection&lt;? extends E&gt; c) {
-<span class="nc" id="L104">        return getDelegate().addAll(c);</span>
-    }
-
-    @Override
-    public boolean retainAll(Collection&lt;?&gt; c) {
-<span class="nc" id="L109">        return getDelegate().retainAll(c);</span>
-    }
-
-    @Override
-    public boolean removeAll(Collection&lt;?&gt; c) {
-<span class="nc" id="L114">        return getDelegate().removeAll(c);</span>
-    }
-
-    @Override
-    public void clear() {
-<span class="nc" id="L119">        getDelegate().clear();</span>
-<span class="nc" id="L120">    }</span>
-
-    @Override
-    public boolean equals(Object o) {
-<span class="nc" id="L124">        return getDelegate().equals(o);</span>
-    }
-
-    @Override
-    public int hashCode() {
-<span class="nc" id="L129">        return getDelegate().hashCode();</span>
-    }
+public abstract class DelegatingObservableSet&lt;E&gt; extends griffon.javafx.collections.DelegatingObservableSet&lt;E&gt; {
+    public DelegatingObservableSet(@Nonnull ObservableSet&lt;E&gt; delegate) {
+<span class="nc" id="L30">        super(delegate);</span>
+<span class="nc" id="L31">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

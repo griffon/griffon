@@ -1,0 +1,1956 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MappingBindings.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-javafx</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.beans.binding</a> &gt; <span class="el_source">MappingBindings.java</span></div><h1>MappingBindings.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2016 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.beans.binding;
+
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.binding.FloatBinding;
+import javafx.beans.binding.IntegerBinding;
+import javafx.beans.binding.LongBinding;
+import javafx.beans.binding.ObjectBinding;
+import javafx.beans.binding.StringBinding;
+import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.value.ObservableDoubleValue;
+import javafx.beans.value.ObservableFloatValue;
+import javafx.beans.value.ObservableIntegerValue;
+import javafx.beans.value.ObservableLongValue;
+import javafx.beans.value.ObservableObjectValue;
+import javafx.beans.value.ObservableStringValue;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+import static java.util.Objects.requireNonNull;
+import static javafx.beans.binding.Bindings.createBooleanBinding;
+import static javafx.beans.binding.Bindings.createDoubleBinding;
+import static javafx.beans.binding.Bindings.createFloatBinding;
+import static javafx.beans.binding.Bindings.createIntegerBinding;
+import static javafx.beans.binding.Bindings.createLongBinding;
+import static javafx.beans.binding.Bindings.createObjectBinding;
+import static javafx.beans.binding.Bindings.createStringBinding;
+
+/**
+ * @author Andres Almiray
+ * @since 2.10.0
+ */
+public final class MappingBindings {
+    private static final String ERROR_MAPPER_NULL = &quot;Argument 'mapper' must not be null&quot;;
+    private static final String ERROR_SUPPLIER_NULL = &quot;Argument 'supplier' must not be null&quot;;
+    private static final String ERROR_OBSERVABLE_NULL = &quot;Argument 'observable' must not be null&quot;;
+    private static final String ERROR_OBSERVABLE1_NULL = &quot;Argument 'observable1' must not be null&quot;;
+    private static final String ERROR_OBSERVABLE2_NULL = &quot;Argument 'observable2' must not be null&quot;;
+    private static final String ERROR_DEFAULT_VALUE_NULL = &quot;Argument 'defaultValue' must not be null&quot;;
+
+<span class="nc" id="L62">    private MappingBindings() {</span>
+        // prevent instantiation
+<span class="nc" id="L64">    }</span>
+
+    /**
+     * Converts a string object observable value into an object binding.
+     *
+     * @param observable the observable to be converted.
+     *
+     * @return an object binding.
+     */
+    @Nonnull
+    public static ObjectBinding&lt;String&gt; mapToObject(@Nonnull final ObservableStringValue observable) {
+<span class="fc" id="L75">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L76">        return createObjectBinding(observable::get, observable);</span>
+    }
+
+    /**
+     * Converts a boolean object observable value into an object binding.
+     *
+     * @param observable the observable to be converted.
+     *
+     * @return an object binding.
+     */
+    @Nonnull
+    public static ObjectBinding&lt;Boolean&gt; mapToObject(@Nonnull final ObservableBooleanValue observable) {
+<span class="fc" id="L88">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L89">        return createObjectBinding(observable::get, observable);</span>
+    }
+
+    /**
+     * Converts a integer object observable value into an object binding.
+     *
+     * @param observable the observable to be converted.
+     *
+     * @return an object binding.
+     */
+    @Nonnull
+    public static ObjectBinding&lt;Integer&gt; mapToObject(@Nonnull final ObservableIntegerValue observable) {
+<span class="fc" id="L101">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L102">        return createObjectBinding(observable::get, observable);</span>
+    }
+
+    /**
+     * Converts a long object observable value into an object binding.
+     *
+     * @param observable the observable to be converted.
+     *
+     * @return an object binding.
+     */
+    @Nonnull
+    public static ObjectBinding&lt;Long&gt; mapToObject(@Nonnull final ObservableLongValue observable) {
+<span class="fc" id="L114">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L115">        return createObjectBinding(observable::get, observable);</span>
+    }
+
+    /**
+     * Converts a float object observable value into an object binding.
+     *
+     * @param observable the observable to be converted.
+     *
+     * @return an object binding.
+     */
+    @Nonnull
+    public static ObjectBinding&lt;Float&gt; mapToObject(@Nonnull final ObservableFloatValue observable) {
+<span class="fc" id="L127">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L128">        return createObjectBinding(observable::get, observable);</span>
+    }
+
+    /**
+     * Converts a double object observable value into an object binding.
+     *
+     * @param observable the observable to be converted.
+     *
+     * @return an object binding.
+     */
+    @Nonnull
+    public static ObjectBinding&lt;Double&gt; mapToObject(@Nonnull final ObservableDoubleValue observable) {
+<span class="fc" id="L140">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L141">        return createObjectBinding(observable::get, observable);</span>
+    }
+
+    /**
+     * Converts a boolean object observable value into a boolean binding.
+     *
+     * @param observable the observable to be converted.
+     *
+     * @return a boolean binding.
+     */
+    @Nonnull
+    public static BooleanBinding mapToBoolean(@Nonnull final ObservableObjectValue&lt;Boolean&gt; observable) {
+<span class="fc" id="L153">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L154">        return createBooleanBinding(observable::get, observable);</span>
+    }
+
+    /**
+     * Converts a integer object observable value into a integer binding.
+     *
+     * @param observable the observable to be converted.
+     *
+     * @return a integer binding.
+     */
+    @Nonnull
+    public static IntegerBinding mapToInteger(@Nonnull final ObservableObjectValue&lt;Integer&gt; observable) {
+<span class="fc" id="L166">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L167">        return createIntegerBinding(observable::get, observable);</span>
+    }
+
+    /**
+     * Converts a long object observable value into a long binding.
+     *
+     * @param observable the observable to be converted.
+     *
+     * @return a long binding.
+     */
+    @Nonnull
+    public static LongBinding mapToLong(@Nonnull final ObservableObjectValue&lt;Long&gt; observable) {
+<span class="fc" id="L179">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L180">        return createLongBinding(observable::get, observable);</span>
+    }
+
+    /**
+     * Converts a float object observable value into a float binding.
+     *
+     * @param observable the observable to be converted.
+     *
+     * @return a float binding.
+     */
+    @Nonnull
+    public static FloatBinding mapToFloat(@Nonnull final ObservableObjectValue&lt;Float&gt; observable) {
+<span class="fc" id="L192">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L193">        return createFloatBinding(observable::get, observable);</span>
+    }
+
+    /**
+     * Converts a double object observable value into a double binding.
+     *
+     * @param observable the observable to be converted.
+     *
+     * @return a double binding.
+     */
+    @Nonnull
+    public static DoubleBinding mapToDouble(@Nonnull final ObservableObjectValue&lt;Double&gt; observable) {
+<span class="fc" id="L205">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L206">        return createDoubleBinding(observable::get, observable);</span>
+    }
+
+    /**
+     * Converts a literal object observable value into a string binding.
+     *
+     * @param observable the observable to be converted.
+     *
+     * @return a string binding.
+     */
+    @Nonnull
+    public static StringBinding mapToString(@Nonnull final ObservableObjectValue&lt;String&gt; observable) {
+<span class="fc" id="L218">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L219">        return createStringBinding(observable::get, observable);</span>
+    }
+
+    /**
+     * Creates an observable list where all elements of the source list are mapped by the supplied function.
+     *
+     * @param source the source list.
+     * @param mapper a non-interfering, stateless function to apply to the reduced value.
+     *
+     * @return an observable list.
+     */
+    @Nonnull
+    public static &lt;S, T&gt; ObservableList&lt;T&gt; mapList(@Nonnull final ObservableList&lt;? super S&gt; source, @Nonnull final Function&lt;S, T&gt; mapper) {
+<span class="nc" id="L232">        return new griffon.javafx.support.MappingObservableList&lt;&gt;((ObservableList&lt;? extends S&gt;) source, mapper);</span>
+    }
+
+    /**
+     * Creates an observable list where all elements of the source list are mapped by the supplied function.
+     *
+     * @param source the source list.
+     * @param mapper a non-interfering, stateless function to apply to the reduced value.
+     *
+     * @return an observable list.
+     */
+    @Nonnull
+    public static &lt;S, T&gt; ObservableList&lt;T&gt; mapList(@Nonnull final ObservableList&lt;S&gt; source, @Nonnull final ObservableValue&lt;Function&lt;S, T&gt;&gt; mapper) {
+<span class="nc" id="L245">        return new griffon.javafx.support.MappingObservableList&lt;&gt;(source, mapper);</span>
+    }
+
+    /**
+     * Creates an object binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
+     * @return an object binding.
+     */
+    @Nonnull
+    public static &lt;T, R&gt; ObjectBinding&lt;R&gt; mapObject(@Nonnull final ObservableValue&lt;T&gt; observable, @Nonnull final Function&lt;? super T, ? extends R&gt; mapper) {
+<span class="fc" id="L258">        return mapObject(observable, mapper, (R) null);</span>
+    }
+
+    /**
+     * Creates an object binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable   the source observable.
+     * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
+     * @return an object binding.
+     */
+    @Nonnull
+    public static &lt;T, R&gt; ObjectBinding&lt;R&gt; mapObject(@Nonnull final ObservableValue&lt;T&gt; observable, @Nonnull final Function&lt;? super T, ? extends R&gt; mapper, @Nullable final R defaultValue) {
+<span class="fc" id="L272">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L273">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L274">        return createObjectBinding(() -&gt; {</span>
+<span class="fc" id="L275">            T sourceValue = observable.getValue();</span>
+<span class="pc bpc" id="L276" title="1 of 2 branches missed.">            return sourceValue == null ? defaultValue : mapper.apply(sourceValue);</span>
+        }, observable);
+    }
+
+    /**
+     * Creates an object binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return an object binding.
+     */
+    @Nonnull
+    public static &lt;T, R&gt; ObjectBinding&lt;R&gt; mapObject(@Nonnull final ObservableValue&lt;T&gt; observable, @Nonnull final Function&lt;? super T, ? extends R&gt; mapper, @Nonnull final Supplier&lt;R&gt; supplier) {
+<span class="nc" id="L291">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L292">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L293">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L294">        return createObjectBinding(() -&gt; {</span>
+<span class="nc" id="L295">            T sourceValue = observable.getValue();</span>
+<span class="nc bnc" id="L296" title="All 2 branches missed.">            return sourceValue == null ? supplier.get() : mapper.apply(sourceValue);</span>
+        }, observable);
+    }
+
+    /**
+     * Creates an object binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
+     * @return an object binding.
+     */
+    @Nonnull
+    public static &lt;T, R&gt; ObjectBinding&lt;R&gt; mapObject(@Nonnull final ObservableValue&lt;T&gt; observable, @Nonnull final ObservableValue&lt;Function&lt;? super T, ? extends R&gt;&gt; mapper) {
+<span class="fc" id="L310">        return mapObject(observable, mapper, (R) null);</span>
+    }
+
+    /**
+     * Creates an object binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable   the source observable.
+     * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
+     * @return an object binding.
+     */
+    @Nonnull
+    public static &lt;T, R&gt; ObjectBinding&lt;R&gt; mapObject(@Nonnull final ObservableValue&lt;T&gt; observable, @Nonnull final ObservableValue&lt;Function&lt;? super T, ? extends R&gt;&gt; mapper, @Nullable final R defaultValue) {
+<span class="fc" id="L324">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L325">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L326">        return createObjectBinding(() -&gt; {</span>
+<span class="fc" id="L327">            T sourceValue = observable.getValue();</span>
+<span class="fc" id="L328">            Function&lt;? super T, ? extends R&gt; mapperValue = mapper.getValue();</span>
+<span class="fc" id="L329">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="pc bpc" id="L330" title="1 of 2 branches missed.">            return sourceValue == null ? defaultValue : mapperValue.apply(sourceValue);</span>
+        }, observable, mapper);
+    }
+
+    /**
+     * Creates an object binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return an object binding.
+     */
+    @Nonnull
+    public static &lt;T, R&gt; ObjectBinding&lt;R&gt; mapObject(@Nonnull final ObservableValue&lt;T&gt; observable, @Nonnull final ObservableValue&lt;Function&lt;? super T, ? extends R&gt;&gt; mapper, @Nonnull final Supplier&lt;R&gt; supplier) {
+<span class="nc" id="L345">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L346">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L347">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L348">        return createObjectBinding(() -&gt; {</span>
+<span class="nc" id="L349">            T sourceValue = observable.getValue();</span>
+<span class="nc" id="L350">            Function&lt;? super T, ? extends R&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L351">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc bnc" id="L352" title="All 2 branches missed.">            return sourceValue == null ? supplier.get() : mapperValue.apply(sourceValue);</span>
+        }, observable, mapper);
+    }
+
+    /**
+     * Creates a boolean binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
+     * @return a boolean binding.
+     */
+    @Nonnull
+    public static BooleanBinding mapBoolean(@Nonnull final ObservableValue&lt;Boolean&gt; observable, @Nonnull final Function&lt;Boolean, Boolean&gt; mapper) {
+<span class="fc" id="L366">        return mapBoolean(observable, mapper, false);</span>
+    }
+
+    /**
+     * Creates a boolean binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable   the source observable.
+     * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
+     * @return a boolean binding.
+     */
+    @Nonnull
+    public static BooleanBinding mapBoolean(@Nonnull final ObservableValue&lt;Boolean&gt; observable, @Nonnull final Function&lt;Boolean, Boolean&gt; mapper, @Nonnull final Boolean defaultValue) {
+<span class="fc" id="L380">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L381">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L382">        return createBooleanBinding(() -&gt; {</span>
+<span class="fc" id="L383">            Boolean sourceValue = observable.getValue();</span>
+<span class="pc bpc" id="L384" title="1 of 2 branches missed.">            return sourceValue == null ? defaultValue : mapper.apply(sourceValue);</span>
+        }, observable);
+    }
+
+    /**
+     * Creates a boolean binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return a boolean binding.
+     */
+    @Nonnull
+    public static BooleanBinding mapBoolean(@Nonnull final ObservableValue&lt;Boolean&gt; observable, @Nonnull final Function&lt;Boolean, Boolean&gt; mapper, @Nonnull final Supplier&lt;Boolean&gt; supplier) {
+<span class="nc" id="L399">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L400">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L401">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L402">        return createBooleanBinding(() -&gt; {</span>
+<span class="nc" id="L403">            Boolean sourceValue = observable.getValue();</span>
+<span class="nc bnc" id="L404" title="All 2 branches missed.">            return sourceValue == null ? supplier.get() : mapper.apply(sourceValue);</span>
+        }, observable);
+    }
+
+    /**
+     * Creates a boolean binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
+     * @return a boolean binding.
+     */
+    @Nonnull
+    public static BooleanBinding mapBoolean(@Nonnull final ObservableValue&lt;Boolean&gt; observable, @Nonnull final ObservableValue&lt;Function&lt;Boolean, Boolean&gt;&gt; mapper) {
+<span class="fc" id="L418">        return mapBoolean(observable, mapper, false);</span>
+    }
+
+    /**
+     * Creates a boolean binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable   the source observable.
+     * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
+     * @return a boolean binding.
+     */
+    @Nonnull
+    public static BooleanBinding mapBoolean(@Nonnull final ObservableValue&lt;Boolean&gt; observable, @Nonnull final ObservableValue&lt;Function&lt;Boolean, Boolean&gt;&gt; mapper, @Nonnull final Boolean defaultValue) {
+<span class="fc" id="L432">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L433">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L434">        return createBooleanBinding(() -&gt; {</span>
+<span class="fc" id="L435">            Boolean sourceValue = observable.getValue();</span>
+<span class="fc" id="L436">            Function&lt;Boolean, Boolean&gt; mapperValue = mapper.getValue();</span>
+<span class="fc" id="L437">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="pc bpc" id="L438" title="1 of 2 branches missed.">            return sourceValue == null ? defaultValue : mapperValue.apply(sourceValue);</span>
+        }, observable, mapper);
+    }
+
+    /**
+     * Creates a boolean binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return a boolean binding.
+     */
+    @Nonnull
+    public static BooleanBinding mapBoolean(@Nonnull final ObservableValue&lt;Boolean&gt; observable, @Nonnull final ObservableValue&lt;Function&lt;Boolean, Boolean&gt;&gt; mapper, @Nonnull final Supplier&lt;Boolean&gt; supplier) {
+<span class="nc" id="L453">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L454">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L455">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L456">        return createBooleanBinding(() -&gt; {</span>
+<span class="nc" id="L457">            Boolean sourceValue = observable.getValue();</span>
+<span class="nc" id="L458">            Function&lt;Boolean, Boolean&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L459">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc bnc" id="L460" title="All 2 branches missed.">            return sourceValue == null ? supplier.get() : mapperValue.apply(sourceValue);</span>
+        }, observable, mapper);
+    }
+
+    /**
+     * Creates an integer binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
+     * @return an integer binding.
+     */
+    @Nonnull
+    public static IntegerBinding mapInteger(@Nonnull final ObservableValue&lt;Integer&gt; observable, @Nonnull final Function&lt;Integer, Integer&gt; mapper) {
+<span class="fc" id="L474">        return mapInteger(observable, mapper, 0);</span>
+    }
+
+    /**
+     * Creates an integer binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable   the source observable.
+     * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
+     * @return an integer binding.
+     */
+    @Nonnull
+    public static IntegerBinding mapInteger(@Nonnull final ObservableValue&lt;Integer&gt; observable, @Nonnull final Function&lt;Integer, Integer&gt; mapper, @Nonnull final Integer defaultValue) {
+<span class="fc" id="L488">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L489">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L490">        return createIntegerBinding(() -&gt; {</span>
+<span class="fc" id="L491">            Integer sourceValue = observable.getValue();</span>
+<span class="pc bpc" id="L492" title="1 of 2 branches missed.">            return sourceValue == null ? defaultValue : mapper.apply(sourceValue);</span>
+        }, observable);
+    }
+
+
+    /**
+     * Creates an integer binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return an integer binding.
+     */
+    @Nonnull
+    public static IntegerBinding mapInteger(@Nonnull final ObservableValue&lt;Integer&gt; observable, @Nonnull final Function&lt;Integer, Integer&gt; mapper, @Nonnull final Supplier&lt;Integer&gt; supplier) {
+<span class="nc" id="L508">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L509">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L510">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L511">        return createIntegerBinding(() -&gt; {</span>
+<span class="nc" id="L512">            Integer sourceValue = observable.getValue();</span>
+<span class="nc bnc" id="L513" title="All 2 branches missed.">            return sourceValue == null ? supplier.get() : mapper.apply(sourceValue);</span>
+        }, observable);
+    }
+
+    /**
+     * Creates an integer binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
+     * @return an integer binding.
+     */
+    @Nonnull
+    public static IntegerBinding mapInteger(@Nonnull final ObservableValue&lt;Integer&gt; observable, @Nonnull final ObservableValue&lt;Function&lt;Integer, Integer&gt;&gt; mapper) {
+<span class="fc" id="L527">        return mapInteger(observable, mapper, 0);</span>
+    }
+
+    /**
+     * Creates an integer binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable   the source observable.
+     * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
+     * @return an integer binding.
+     */
+    @Nonnull
+    public static IntegerBinding mapInteger(@Nonnull final ObservableValue&lt;Integer&gt; observable, @Nonnull final ObservableValue&lt;Function&lt;Integer, Integer&gt;&gt; mapper, @Nonnull final Integer defaultValue) {
+<span class="fc" id="L541">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L542">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L543">        return createIntegerBinding(() -&gt; {</span>
+<span class="fc" id="L544">            Integer sourceValue = observable.getValue();</span>
+<span class="fc" id="L545">            Function&lt;Integer, Integer&gt; mapperValue = mapper.getValue();</span>
+<span class="fc" id="L546">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="pc bpc" id="L547" title="1 of 2 branches missed.">            return sourceValue == null ? defaultValue : mapperValue.apply(sourceValue);</span>
+        }, observable, mapper);
+    }
+
+    /**
+     * Creates an integer binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return an integer binding.
+     */
+    @Nonnull
+    public static IntegerBinding mapInteger(@Nonnull final ObservableValue&lt;Integer&gt; observable, @Nonnull final ObservableValue&lt;Function&lt;Integer, Integer&gt;&gt; mapper, @Nonnull final Supplier&lt;Integer&gt; supplier) {
+<span class="nc" id="L562">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L563">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L564">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L565">        return createIntegerBinding(() -&gt; {</span>
+<span class="nc" id="L566">            Integer sourceValue = observable.getValue();</span>
+<span class="nc" id="L567">            Function&lt;Integer, Integer&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L568">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc bnc" id="L569" title="All 2 branches missed.">            return sourceValue == null ? supplier.get() : mapperValue.apply(sourceValue);</span>
+        }, observable, mapper);
+    }
+
+    /**
+     * Creates a long binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
+     * @return a long binding.
+     */
+    @Nonnull
+    public static LongBinding mapLong(@Nonnull final ObservableValue&lt;Long&gt; observable, @Nonnull final Function&lt;Long, Long&gt; mapper) {
+<span class="fc" id="L583">        return mapLong(observable, mapper, 0L);</span>
+    }
+
+    /**
+     * Creates a long binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable   the source observable.
+     * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
+     * @return a long binding.
+     */
+    @Nonnull
+    public static LongBinding mapLong(@Nonnull final ObservableValue&lt;Long&gt; observable, @Nonnull final Function&lt;Long, Long&gt; mapper, @Nonnull final Long defaultValue) {
+<span class="fc" id="L597">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L598">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L599">        return createLongBinding(() -&gt; {</span>
+<span class="fc" id="L600">            Long sourceValue = observable.getValue();</span>
+<span class="pc bpc" id="L601" title="1 of 2 branches missed.">            return sourceValue == null ? defaultValue : mapper.apply(sourceValue);</span>
+        }, observable);
+    }
+
+
+    /**
+     * Creates a long binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return a long binding.
+     */
+    @Nonnull
+    public static LongBinding mapLong(@Nonnull final ObservableValue&lt;Long&gt; observable, @Nonnull final Function&lt;Long, Long&gt; mapper, @Nonnull final Supplier&lt;Long&gt; supplier) {
+<span class="nc" id="L617">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L618">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L619">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L620">        return createLongBinding(() -&gt; {</span>
+<span class="nc" id="L621">            Long sourceValue = observable.getValue();</span>
+<span class="nc bnc" id="L622" title="All 2 branches missed.">            return sourceValue == null ? supplier.get() : mapper.apply(sourceValue);</span>
+        }, observable);
+    }
+
+    /**
+     * Creates a long binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
+     * @return a long binding.
+     */
+    @Nonnull
+    public static LongBinding mapLong(@Nonnull final ObservableValue&lt;Long&gt; observable, @Nonnull final ObservableValue&lt;Function&lt;Long, Long&gt;&gt; mapper) {
+<span class="fc" id="L636">        return mapLong(observable, mapper, 0L);</span>
+    }
+
+    /**
+     * Creates a long binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable   the source observable.
+     * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
+     * @return a long binding.
+     */
+    @Nonnull
+    public static LongBinding mapLong(@Nonnull final ObservableValue&lt;Long&gt; observable, @Nonnull final ObservableValue&lt;Function&lt;Long, Long&gt;&gt; mapper, @Nonnull final Long defaultValue) {
+<span class="fc" id="L650">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L651">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L652">        return createLongBinding(() -&gt; {</span>
+<span class="fc" id="L653">            Long sourceValue = observable.getValue();</span>
+<span class="fc" id="L654">            Function&lt;Long, Long&gt; mapperValue = mapper.getValue();</span>
+<span class="fc" id="L655">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="pc bpc" id="L656" title="1 of 2 branches missed.">            return sourceValue == null ? defaultValue : mapperValue.apply(sourceValue);</span>
+        }, observable, mapper);
+    }
+
+    /**
+     * Creates a long binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return a long binding.
+     */
+    @Nonnull
+    public static LongBinding mapLong(@Nonnull final ObservableValue&lt;Long&gt; observable, @Nonnull final ObservableValue&lt;Function&lt;Long, Long&gt;&gt; mapper, @Nonnull final Supplier&lt;Long&gt; supplier) {
+<span class="nc" id="L671">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L672">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L673">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L674">        return createLongBinding(() -&gt; {</span>
+<span class="nc" id="L675">            Long sourceValue = observable.getValue();</span>
+<span class="nc" id="L676">            Function&lt;Long, Long&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L677">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc bnc" id="L678" title="All 2 branches missed.">            return sourceValue == null ? supplier.get() : mapperValue.apply(sourceValue);</span>
+        }, observable, mapper);
+    }
+
+    /**
+     * Creates a float binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
+     * @return a float binding.
+     */
+    @Nonnull
+    public static FloatBinding mapFloat(@Nonnull final ObservableValue&lt;Float&gt; observable, @Nonnull final Function&lt;Float, Float&gt; mapper) {
+<span class="fc" id="L692">        return mapFloat(observable, mapper, 0f);</span>
+    }
+
+    /**
+     * Creates a float binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable   the source observable.
+     * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
+     * @return a float binding.
+     */
+    @Nonnull
+    public static FloatBinding mapFloat(@Nonnull final ObservableValue&lt;Float&gt; observable, @Nonnull final Function&lt;Float, Float&gt; mapper, @Nonnull final Float defaultValue) {
+<span class="fc" id="L706">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L707">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L708">        return createFloatBinding(() -&gt; {</span>
+<span class="fc" id="L709">            Float sourceValue = observable.getValue();</span>
+<span class="pc bpc" id="L710" title="1 of 2 branches missed.">            return sourceValue == null ? defaultValue : mapper.apply(sourceValue);</span>
+        }, observable);
+    }
+
+    /**
+     * Creates a float binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return a float binding.
+     */
+    @Nonnull
+    public static FloatBinding mapFloat(@Nonnull final ObservableValue&lt;Float&gt; observable, @Nonnull final Function&lt;Float, Float&gt; mapper, @Nonnull final Supplier&lt;Float&gt; supplier) {
+<span class="nc" id="L725">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L726">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L727">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L728">        return createFloatBinding(() -&gt; {</span>
+<span class="nc" id="L729">            Float sourceValue = observable.getValue();</span>
+<span class="nc bnc" id="L730" title="All 2 branches missed.">            return sourceValue == null ? supplier.get() : mapper.apply(sourceValue);</span>
+        }, observable);
+    }
+
+    /**
+     * Creates a float binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
+     * @return a float binding.
+     */
+    @Nonnull
+    public static FloatBinding mapFloat(@Nonnull final ObservableValue&lt;Float&gt; observable, @Nonnull final ObservableValue&lt;Function&lt;Float, Float&gt;&gt; mapper) {
+<span class="fc" id="L744">        return mapFloat(observable, mapper, 0f);</span>
+    }
+
+    /**
+     * Creates a float binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable   the source observable.
+     * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
+     * @return a float binding.
+     */
+    @Nonnull
+    public static FloatBinding mapFloat(@Nonnull final ObservableValue&lt;Float&gt; observable, @Nonnull final ObservableValue&lt;Function&lt;Float, Float&gt;&gt; mapper, @Nullable final Float defaultValue) {
+<span class="fc" id="L758">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L759">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L760">        return createFloatBinding(() -&gt; {</span>
+<span class="fc" id="L761">            Float sourceValue = observable.getValue();</span>
+<span class="fc" id="L762">            Function&lt;Float, Float&gt; mapperValue = mapper.getValue();</span>
+<span class="fc" id="L763">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="pc bpc" id="L764" title="1 of 2 branches missed.">            return sourceValue == null ? defaultValue : mapperValue.apply(sourceValue);</span>
+        }, observable, mapper);
+    }
+
+    /**
+     * Creates a float binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return a float binding.
+     */
+    @Nonnull
+    public static FloatBinding mapFloat(@Nonnull final ObservableValue&lt;Float&gt; observable, @Nonnull final ObservableValue&lt;Function&lt;Float, Float&gt;&gt; mapper, @Nonnull final Supplier&lt;Float&gt; supplier) {
+<span class="nc" id="L779">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L780">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L781">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L782">        return createFloatBinding(() -&gt; {</span>
+<span class="nc" id="L783">            Float sourceValue = observable.getValue();</span>
+<span class="nc" id="L784">            Function&lt;Float, Float&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L785">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc bnc" id="L786" title="All 2 branches missed.">            return sourceValue == null ? supplier.get() : mapperValue.apply(sourceValue);</span>
+        }, observable, mapper);
+    }
+
+    /**
+     * Creates a double binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
+     * @return a double binding.
+     */
+    @Nonnull
+    public static DoubleBinding mapDouble(@Nonnull final ObservableValue&lt;Double&gt; observable, @Nonnull final Function&lt;Double, Double&gt; mapper) {
+<span class="fc" id="L800">        return mapDouble(observable, mapper, 0d);</span>
+    }
+
+    /**
+     * Creates a double binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable   the source observable.
+     * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
+     * @return a double binding.
+     */
+    @Nonnull
+    public static DoubleBinding mapDouble(@Nonnull final ObservableValue&lt;Double&gt; observable, @Nonnull final Function&lt;Double, Double&gt; mapper, @Nullable final Double defaultValue) {
+<span class="fc" id="L814">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L815">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L816">        return createDoubleBinding(() -&gt; {</span>
+<span class="fc" id="L817">            Double sourceValue = observable.getValue();</span>
+<span class="pc bpc" id="L818" title="1 of 2 branches missed.">            return sourceValue == null ? defaultValue : mapper.apply(sourceValue);</span>
+        }, observable);
+    }
+
+    /**
+     * Creates a double binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return a double binding.
+     */
+    @Nonnull
+    public static DoubleBinding mapDouble(@Nonnull final ObservableValue&lt;Double&gt; observable, @Nonnull final Function&lt;Double, Double&gt; mapper, @Nonnull final Supplier&lt;Double&gt; supplier) {
+<span class="nc" id="L833">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L834">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L835">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L836">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L837">            Double sourceValue = observable.getValue();</span>
+<span class="nc bnc" id="L838" title="All 2 branches missed.">            return sourceValue == null ? supplier.get() : mapper.apply(sourceValue);</span>
+        }, observable);
+    }
+
+    /**
+     * Creates a double binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
+     * @return a double binding.
+     */
+    @Nonnull
+    public static DoubleBinding mapDouble(@Nonnull final ObservableValue&lt;Double&gt; observable, @Nonnull final ObservableValue&lt;Function&lt;Double, Double&gt;&gt; mapper) {
+<span class="fc" id="L852">        return mapDouble(observable, mapper, 0d);</span>
+    }
+
+    /**
+     * Creates a double binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable   the source observable.
+     * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
+     * @return a double binding.
+     */
+    @Nonnull
+    public static DoubleBinding mapDouble(@Nonnull final ObservableValue&lt;Double&gt; observable, @Nonnull final ObservableValue&lt;Function&lt;Double, Double&gt;&gt; mapper, @Nonnull final Double defaultValue) {
+<span class="fc" id="L866">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L867">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L868">        return createDoubleBinding(() -&gt; {</span>
+<span class="fc" id="L869">            Double sourceValue = observable.getValue();</span>
+<span class="fc" id="L870">            Function&lt;Double, Double&gt; mapperValue = mapper.getValue();</span>
+<span class="fc" id="L871">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="pc bpc" id="L872" title="1 of 2 branches missed.">            return sourceValue == null ? defaultValue : mapperValue.apply(sourceValue);</span>
+        }, observable, mapper);
+    }
+
+    /**
+     * Creates a double binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return a double binding.
+     */
+    @Nonnull
+    public static DoubleBinding mapDouble(@Nonnull final ObservableValue&lt;Double&gt; observable, @Nonnull final ObservableValue&lt;Function&lt;Double, Double&gt;&gt; mapper, @Nonnull final Supplier&lt;Double&gt; supplier) {
+<span class="nc" id="L887">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L888">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L889">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L890">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L891">            Double sourceValue = observable.getValue();</span>
+<span class="nc" id="L892">            Function&lt;Double, Double&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L893">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc bnc" id="L894" title="All 2 branches missed.">            return sourceValue == null ? supplier.get() : mapperValue.apply(sourceValue);</span>
+        }, observable, mapper);
+    }
+
+    /**
+     * Creates a string binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
+     * @return a string binding.
+     */
+    @Nonnull
+    public static StringBinding mapString(@Nonnull final ObservableValue&lt;String&gt; observable, @Nonnull final Function&lt;String, String&gt; mapper) {
+<span class="fc" id="L908">        return mapString(observable, mapper, &quot;&quot;);</span>
+    }
+
+    /**
+     * Creates a string binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable   the source observable.
+     * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
+     * @return a string binding.
+     */
+    @Nonnull
+    public static StringBinding mapString(@Nonnull final ObservableValue&lt;String&gt; observable, @Nonnull final Function&lt;String, String&gt; mapper, @Nonnull final String defaultValue) {
+<span class="fc" id="L922">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L923">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L924">        return createStringBinding(() -&gt; {</span>
+<span class="fc" id="L925">            String sourceValue = observable.getValue();</span>
+<span class="pc bpc" id="L926" title="1 of 2 branches missed.">            return sourceValue == null ? defaultValue : mapper.apply(sourceValue);</span>
+        }, observable);
+    }
+
+    /**
+     * Creates a string binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return a string binding.
+     */
+    @Nonnull
+    public static StringBinding mapString(@Nonnull final ObservableValue&lt;String&gt; observable, @Nonnull final Function&lt;String, String&gt; mapper, @Nonnull final Supplier&lt;String&gt; supplier) {
+<span class="nc" id="L941">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L942">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L943">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L944">        return createStringBinding(() -&gt; {</span>
+<span class="nc" id="L945">            String sourceValue = observable.getValue();</span>
+<span class="nc bnc" id="L946" title="All 2 branches missed.">            return sourceValue == null ? supplier.get() : mapper.apply(sourceValue);</span>
+        }, observable);
+    }
+
+    /**
+     * Creates a string binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
+     * @return a string binding.
+     */
+    @Nonnull
+    public static StringBinding mapString(@Nonnull final ObservableValue&lt;String&gt; observable, @Nonnull final ObservableValue&lt;Function&lt;String, String&gt;&gt; mapper) {
+<span class="fc" id="L960">        return mapString(observable, mapper, &quot;&quot;);</span>
+    }
+
+    /**
+     * Creates a string binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable   the source observable.
+     * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
+     * @return a string binding.
+     */
+    @Nonnull
+    public static StringBinding mapString(@Nonnull final ObservableValue&lt;String&gt; observable, @Nonnull final ObservableValue&lt;Function&lt;String, String&gt;&gt; mapper, @Nonnull final String defaultValue) {
+<span class="fc" id="L974">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="fc" id="L975">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L976">        return createStringBinding(() -&gt; {</span>
+<span class="fc" id="L977">            String sourceValue = observable.getValue();</span>
+<span class="fc" id="L978">            Function&lt;String, String&gt; mapperValue = mapper.getValue();</span>
+<span class="fc" id="L979">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="pc bpc" id="L980" title="1 of 2 branches missed.">            return sourceValue == null ? defaultValue : mapperValue.apply(sourceValue);</span>
+        }, observable, mapper);
+    }
+
+    /**
+     * Creates a string binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return a string binding.
+     */
+    @Nonnull
+    public static StringBinding mapString(@Nonnull final ObservableValue&lt;String&gt; observable, @Nonnull final ObservableValue&lt;Function&lt;String, String&gt;&gt; mapper, @Nonnull final Supplier&lt;String&gt; supplier) {
+<span class="nc" id="L995">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L996">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L997">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc" id="L998">        return createStringBinding(() -&gt; {</span>
+<span class="nc" id="L999">            String sourceValue = observable.getValue();</span>
+<span class="nc" id="L1000">            Function&lt;String, String&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L1001">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc bnc" id="L1002" title="All 2 branches missed.">            return sourceValue == null ? supplier.get() : mapperValue.apply(sourceValue);</span>
+        }, observable, mapper);
+    }
+
+    /**
+     * Returns a boolean binding whose value is the combination of two observable values.
+     *
+     * @param observable1  the first observable value.
+     * @param observable2  the second observable value.
+     * @param defaultValue the value to be returned if there are no values present.
+     * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static BooleanBinding mapBooleans(@Nonnull final ObservableValue&lt;Boolean&gt; observable1, @Nonnull final ObservableValue&lt;Boolean&gt; observable2, @Nonnull final Boolean defaultValue, @Nonnull final BiFunction&lt;Boolean, Boolean, Boolean&gt; mapper) {
+<span class="fc" id="L1018">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1019">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1020">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="fc" id="L1021">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1022">        return createBooleanBinding(() -&gt; {</span>
+<span class="fc" id="L1023">            Boolean value1 = observable1.getValue();</span>
+<span class="fc" id="L1024">            Boolean value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1025" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1026">                return mapper.apply(value1, value2);</span>
+            }
+<span class="nc" id="L1028">            return defaultValue;</span>
+        }, observable1, observable2);
+    }
+
+    /**
+     * Returns a boolean binding whose value is the combination of two observable values.
+     *
+     * @param observable1 the first observable value.
+     * @param observable2 the second observable value.
+     * @param supplier    a {@code Supplier} whose result is returned if no values are present.
+     * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static BooleanBinding mapBooleans(@Nonnull final ObservableValue&lt;Boolean&gt; observable1, @Nonnull final ObservableValue&lt;Boolean&gt; observable2, @Nonnull final Supplier&lt;Boolean&gt; supplier, @Nonnull final BiFunction&lt;Boolean, Boolean, Boolean&gt; mapper) {
+<span class="fc" id="L1044">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1045">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1046">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="fc" id="L1047">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1048">        return createBooleanBinding(() -&gt; {</span>
+<span class="fc" id="L1049">            Boolean value1 = observable1.getValue();</span>
+<span class="fc" id="L1050">            Boolean value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1051" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1052">                return mapper.apply(value1, value2);</span>
+            }
+<span class="nc" id="L1054">            return requireNonNull(supplier.get(), ERROR_DEFAULT_VALUE_NULL);</span>
+        }, observable1, observable2);
+    }
+
+    /**
+     * Returns a boolean binding whose value is the combination of two observable values.
+     *
+     * @param observable1  the first observable value.
+     * @param observable2  the second observable value.
+     * @param defaultValue the value to be returned if there is no value present.
+     * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static BooleanBinding mapBooleans(@Nonnull final ObservableValue&lt;Boolean&gt; observable1, @Nonnull final ObservableValue&lt;Boolean&gt; observable2, @Nonnull final Boolean defaultValue, @Nonnull final ObservableValue&lt;BiFunction&lt;Boolean, Boolean, Boolean&gt;&gt; mapper) {
+<span class="fc" id="L1070">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1071">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1072">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="fc" id="L1073">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1074">        return createBooleanBinding(() -&gt; {</span>
+<span class="fc" id="L1075">            Boolean value1 = observable1.getValue();</span>
+<span class="fc" id="L1076">            Boolean value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1077" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1078">                BiFunction&lt;Boolean, Boolean, Boolean&gt; function = mapper.getValue();</span>
+<span class="fc" id="L1079">                return requireNonNull(function, ERROR_MAPPER_NULL).apply(value1, value2);</span>
+            }
+<span class="nc" id="L1081">            return defaultValue;</span>
+        }, observable1, observable2, mapper);
+    }
+
+    /**
+     * Returns a boolean binding whose value is the combination of two observable values.
+     *
+     * @param observable1 the first observable value.
+     * @param observable2 the second observable value.
+     * @param supplier    a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static BooleanBinding mapBooleans(@Nonnull final ObservableValue&lt;Boolean&gt; observable1, @Nonnull final ObservableValue&lt;Boolean&gt; observable2, @Nonnull final Supplier&lt;Boolean&gt; supplier, @Nonnull final ObservableValue&lt;BiFunction&lt;Boolean, Boolean, Boolean&gt;&gt; mapper) {
+<span class="fc" id="L1097">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1098">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1099">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="fc" id="L1100">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1101">        return createBooleanBinding(() -&gt; {</span>
+<span class="fc" id="L1102">            Boolean value1 = observable1.getValue();</span>
+<span class="fc" id="L1103">            Boolean value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1104" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1105">                BiFunction&lt;Boolean, Boolean, Boolean&gt; function = mapper.getValue();</span>
+<span class="fc" id="L1106">                return requireNonNull(function, ERROR_MAPPER_NULL).apply(value1, value2);</span>
+            }
+<span class="nc" id="L1108">            return requireNonNull(supplier.get(), ERROR_DEFAULT_VALUE_NULL);</span>
+        }, observable1, observable2, mapper);
+    }
+
+    /**
+     * Returns an integer binding whose value is the combination of two observable values.
+     *
+     * @param observable1  the first observable value.
+     * @param observable2  the second observable value.
+     * @param defaultValue the value to be returned if there are no values present.
+     * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return an integer binding
+     */
+    @Nonnull
+    public static IntegerBinding mapIntegers(@Nonnull final ObservableValue&lt;? extends Number&gt; observable1, @Nonnull final ObservableValue&lt;? extends Number&gt; observable2, @Nonnull final Integer defaultValue, @Nonnull final BiFunction&lt;? super Number, ? super Number, Integer&gt; mapper) {
+<span class="fc" id="L1124">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1125">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1126">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="fc" id="L1127">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1128">        return createIntegerBinding(() -&gt; {</span>
+<span class="fc" id="L1129">            Number value1 = observable1.getValue();</span>
+<span class="fc" id="L1130">            Number value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1131" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1132">                return mapper.apply(value1, value2);</span>
+            }
+<span class="nc" id="L1134">            return defaultValue;</span>
+        }, observable1, observable2);
+    }
+
+    /**
+     * Returns an integer binding whose value is the combination of two observable values.
+     *
+     * @param observable1 the first observable value.
+     * @param observable2 the second observable value.
+     * @param supplier    a {@code Supplier} whose result is returned if no values are present.
+     * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return an integer binding
+     */
+    @Nonnull
+    public static IntegerBinding mapIntegers(@Nonnull final ObservableValue&lt;? extends Number&gt; observable1, @Nonnull final ObservableValue&lt;? extends Number&gt; observable2, @Nonnull final Supplier&lt;Integer&gt; supplier, @Nonnull final BiFunction&lt;? super Number, ? super Number, Integer&gt; mapper) {
+<span class="fc" id="L1150">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1151">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1152">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="fc" id="L1153">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1154">        return createIntegerBinding(() -&gt; {</span>
+<span class="fc" id="L1155">            Number value1 = observable1.getValue();</span>
+<span class="fc" id="L1156">            Number value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1157" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1158">                return mapper.apply(value1, value2);</span>
+            }
+<span class="nc" id="L1160">            return requireNonNull(supplier.get(), ERROR_DEFAULT_VALUE_NULL);</span>
+        }, observable1, observable2);
+    }
+
+    /**
+     * Returns an integer binding whose value is the combination of two observable values.
+     *
+     * @param observable1  the first observable value.
+     * @param observable2  the second observable value.
+     * @param defaultValue the value to be returned if there is no value present.
+     * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return an integer binding
+     */
+    @Nonnull
+    public static IntegerBinding mapIntegers(@Nonnull final ObservableValue&lt;? extends Number&gt; observable1, @Nonnull final ObservableValue&lt;? extends Number&gt; observable2, @Nonnull final Integer defaultValue, @Nonnull final ObservableValue&lt;BiFunction&lt;? super Number, ? super Number, Integer&gt;&gt; mapper) {
+<span class="fc" id="L1176">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1177">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1178">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="fc" id="L1179">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1180">        return createIntegerBinding(() -&gt; {</span>
+<span class="fc" id="L1181">            Number value1 = observable1.getValue();</span>
+<span class="fc" id="L1182">            Number value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1183" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1184">                BiFunction&lt;? super Number, ? super Number, Integer&gt; function = mapper.getValue();</span>
+<span class="fc" id="L1185">                return requireNonNull(function, ERROR_MAPPER_NULL).apply(value1, value2);</span>
+            }
+<span class="nc" id="L1187">            return defaultValue;</span>
+        }, observable1, observable2, mapper);
+    }
+
+    /**
+     * Returns an integer binding whose value is the combination of two observable values.
+     *
+     * @param observable1 the first observable value.
+     * @param observable2 the second observable value.
+     * @param supplier    a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return an integer binding
+     */
+    @Nonnull
+    public static IntegerBinding mapIntegers(@Nonnull final ObservableValue&lt;? extends Number&gt; observable1, @Nonnull final ObservableValue&lt;? extends Number&gt; observable2, @Nonnull final Supplier&lt;Integer&gt; supplier, @Nonnull final ObservableValue&lt;BiFunction&lt;? super Number, ? super Number, Integer&gt;&gt; mapper) {
+<span class="fc" id="L1203">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1204">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1205">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="fc" id="L1206">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1207">        return createIntegerBinding(() -&gt; {</span>
+<span class="fc" id="L1208">            Number value1 = observable1.getValue();</span>
+<span class="fc" id="L1209">            Number value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1210" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1211">                BiFunction&lt;? super Number, ? super Number, Integer&gt; function = mapper.getValue();</span>
+<span class="fc" id="L1212">                return requireNonNull(function, ERROR_MAPPER_NULL).apply(value1, value2);</span>
+            }
+<span class="nc" id="L1214">            return requireNonNull(supplier.get(), ERROR_DEFAULT_VALUE_NULL);</span>
+        }, observable1, observable2, mapper);
+    }
+
+    /**
+     * Returns a long binding whose value is the combination of two observable values.
+     *
+     * @param observable1  the first observable value.
+     * @param observable2  the second observable value.
+     * @param defaultValue the value to be returned if there are no values present.
+     * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return a long binding
+     */
+    @Nonnull
+    public static LongBinding mapLongs(@Nonnull final ObservableValue&lt;? extends Number&gt; observable1, @Nonnull final ObservableValue&lt;? extends Number&gt; observable2, @Nonnull final Long defaultValue, @Nonnull final BiFunction&lt;? super Number, ? super Number, Long&gt; mapper) {
+<span class="fc" id="L1230">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1231">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1232">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="fc" id="L1233">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1234">        return createLongBinding(() -&gt; {</span>
+<span class="fc" id="L1235">            Number value1 = observable1.getValue();</span>
+<span class="fc" id="L1236">            Number value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1237" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1238">                return mapper.apply(value1, value2);</span>
+            }
+<span class="nc" id="L1240">            return defaultValue;</span>
+        }, observable1, observable2);
+    }
+
+    /**
+     * Returns a long binding whose value is the combination of two observable values.
+     *
+     * @param observable1 the first observable value.
+     * @param observable2 the second observable value.
+     * @param supplier    a {@code Supplier} whose result is returned if no values are present.
+     * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return a long binding
+     */
+    @Nonnull
+    public static LongBinding mapLongs(@Nonnull final ObservableValue&lt;? extends Number&gt; observable1, @Nonnull final ObservableValue&lt;? extends Number&gt; observable2, @Nonnull final Supplier&lt;Long&gt; supplier, @Nonnull final BiFunction&lt;? super Number, ? super Number, Long&gt; mapper) {
+<span class="fc" id="L1256">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1257">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1258">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="fc" id="L1259">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1260">        return createLongBinding(() -&gt; {</span>
+<span class="fc" id="L1261">            Number value1 = observable1.getValue();</span>
+<span class="fc" id="L1262">            Number value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1263" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1264">                return mapper.apply(value1, value2);</span>
+            }
+<span class="nc" id="L1266">            return requireNonNull(supplier.get(), ERROR_DEFAULT_VALUE_NULL);</span>
+        }, observable1, observable2);
+    }
+
+    /**
+     * Returns a long binding whose value is the combination of two observable values.
+     *
+     * @param observable1  the first observable value.
+     * @param observable2  the second observable value.
+     * @param defaultValue the value to be returned if there is no value present.
+     * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return a long binding
+     */
+    @Nonnull
+    public static LongBinding mapLongs(@Nonnull final ObservableValue&lt;? extends Number&gt; observable1, @Nonnull final ObservableValue&lt;? extends Number&gt; observable2, @Nonnull final Long defaultValue, @Nonnull final ObservableValue&lt;BiFunction&lt;? super Number, ? super Number, Long&gt;&gt; mapper) {
+<span class="fc" id="L1282">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1283">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1284">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="fc" id="L1285">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1286">        return createLongBinding(() -&gt; {</span>
+<span class="fc" id="L1287">            Number value1 = observable1.getValue();</span>
+<span class="fc" id="L1288">            Number value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1289" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1290">                BiFunction&lt;? super Number, ? super Number, Long&gt; function = mapper.getValue();</span>
+<span class="fc" id="L1291">                return requireNonNull(function, ERROR_MAPPER_NULL).apply(value1, value2);</span>
+            }
+<span class="nc" id="L1293">            return defaultValue;</span>
+        }, observable1, observable2, mapper);
+    }
+
+    /**
+     * Returns a long binding whose value is the combination of two observable values.
+     *
+     * @param observable1 the first observable value.
+     * @param observable2 the second observable value.
+     * @param supplier    a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return a long binding
+     */
+    @Nonnull
+    public static LongBinding mapLongs(@Nonnull final ObservableValue&lt;? extends Number&gt; observable1, @Nonnull final ObservableValue&lt;? extends Number&gt; observable2, @Nonnull final Supplier&lt;Long&gt; supplier, @Nonnull final ObservableValue&lt;BiFunction&lt;? super Number, ? super Number, Long&gt;&gt; mapper) {
+<span class="fc" id="L1309">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1310">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1311">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="fc" id="L1312">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1313">        return createLongBinding(() -&gt; {</span>
+<span class="fc" id="L1314">            Number value1 = observable1.getValue();</span>
+<span class="fc" id="L1315">            Number value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1316" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1317">                BiFunction&lt;? super Number, ? super Number, Long&gt; function = mapper.getValue();</span>
+<span class="fc" id="L1318">                return requireNonNull(function, ERROR_MAPPER_NULL).apply(value1, value2);</span>
+            }
+<span class="nc" id="L1320">            return requireNonNull(supplier.get(), ERROR_DEFAULT_VALUE_NULL);</span>
+        }, observable1, observable2, mapper);
+    }
+
+    /**
+     * Returns a float binding whose value is the combination of two observable values.
+     *
+     * @param observable1  the first observable value.
+     * @param observable2  the second observable value.
+     * @param defaultValue the value to be returned if there are no values present.
+     * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return a float binding
+     */
+    @Nonnull
+    public static FloatBinding mapFloats(@Nonnull final ObservableValue&lt;? extends Number&gt; observable1, @Nonnull final ObservableValue&lt;? extends Number&gt; observable2, @Nonnull final Float defaultValue, @Nonnull final BiFunction&lt;? super Number, ? super Number, Float&gt; mapper) {
+<span class="fc" id="L1336">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1337">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1338">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="fc" id="L1339">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1340">        return createFloatBinding(() -&gt; {</span>
+<span class="fc" id="L1341">            Number value1 = observable1.getValue();</span>
+<span class="fc" id="L1342">            Number value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1343" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1344">                return mapper.apply(value1, value2);</span>
+            }
+<span class="nc" id="L1346">            return defaultValue;</span>
+        }, observable1, observable2);
+    }
+
+    /**
+     * Returns a float binding whose value is the combination of two observable values.
+     *
+     * @param observable1 the first observable value.
+     * @param observable2 the second observable value.
+     * @param supplier    a {@code Supplier} whose result is returned if no values are present.
+     * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return a float binding
+     */
+    @Nonnull
+    public static FloatBinding mapFloats(@Nonnull final ObservableValue&lt;? extends Number&gt; observable1, @Nonnull final ObservableValue&lt;? extends Number&gt; observable2, @Nonnull final Supplier&lt;Float&gt; supplier, @Nonnull final BiFunction&lt;? super Number, ? super Number, Float&gt; mapper) {
+<span class="fc" id="L1362">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1363">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1364">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="fc" id="L1365">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1366">        return createFloatBinding(() -&gt; {</span>
+<span class="fc" id="L1367">            Number value1 = observable1.getValue();</span>
+<span class="fc" id="L1368">            Number value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1369" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1370">                return mapper.apply(value1, value2);</span>
+            }
+<span class="nc" id="L1372">            return requireNonNull(supplier.get(), ERROR_DEFAULT_VALUE_NULL);</span>
+        }, observable1, observable2);
+    }
+
+    /**
+     * Returns a float binding whose value is the combination of two observable values.
+     *
+     * @param observable1  the first observable value.
+     * @param observable2  the second observable value.
+     * @param defaultValue the value to be returned if there is no value present.
+     * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return a float binding
+     */
+    @Nonnull
+    public static FloatBinding mapFloats(@Nonnull final ObservableValue&lt;? extends Number&gt; observable1, @Nonnull final ObservableValue&lt;? extends Number&gt; observable2, @Nonnull final Float defaultValue, @Nonnull final ObservableValue&lt;BiFunction&lt;? super Number, ? super Number, Float&gt;&gt; mapper) {
+<span class="fc" id="L1388">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1389">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1390">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="fc" id="L1391">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1392">        return createFloatBinding(() -&gt; {</span>
+<span class="fc" id="L1393">            Number value1 = observable1.getValue();</span>
+<span class="fc" id="L1394">            Number value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1395" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1396">                BiFunction&lt;? super Number, ? super Number, Float&gt; function = mapper.getValue();</span>
+<span class="fc" id="L1397">                return requireNonNull(function, ERROR_MAPPER_NULL).apply(value1, value2);</span>
+            }
+<span class="nc" id="L1399">            return defaultValue;</span>
+        }, observable1, observable2, mapper);
+    }
+
+    /**
+     * Returns a float binding whose value is the combination of two observable values.
+     *
+     * @param observable1 the first observable value.
+     * @param observable2 the second observable value.
+     * @param supplier    a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return a float binding
+     */
+    @Nonnull
+    public static FloatBinding mapFloats(@Nonnull final ObservableValue&lt;? extends Number&gt; observable1, @Nonnull final ObservableValue&lt;? extends Number&gt; observable2, @Nonnull final Supplier&lt;Float&gt; supplier, @Nonnull final ObservableValue&lt;BiFunction&lt;? super Number, ? super Number, Float&gt;&gt; mapper) {
+<span class="fc" id="L1415">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1416">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1417">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="fc" id="L1418">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1419">        return createFloatBinding(() -&gt; {</span>
+<span class="fc" id="L1420">            Number value1 = observable1.getValue();</span>
+<span class="fc" id="L1421">            Number value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1422" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1423">                BiFunction&lt;? super Number, ? super Number, Float&gt; function = mapper.getValue();</span>
+<span class="fc" id="L1424">                return requireNonNull(function, ERROR_MAPPER_NULL).apply(value1, value2);</span>
+            }
+<span class="nc" id="L1426">            return requireNonNull(supplier.get(), ERROR_DEFAULT_VALUE_NULL);</span>
+        }, observable1, observable2, mapper);
+    }
+
+    /**
+     * Returns a double binding whose value is the combination of two observable values.
+     *
+     * @param observable1  the first observable value.
+     * @param observable2  the second observable value.
+     * @param defaultValue the value to be returned if there are no values present.
+     * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return a double binding
+     */
+    @Nonnull
+    public static DoubleBinding mapDoubles(@Nonnull final ObservableValue&lt;? extends Number&gt; observable1, @Nonnull final ObservableValue&lt;? extends Number&gt; observable2, @Nonnull final Double defaultValue, @Nonnull final BiFunction&lt;? super Number, ? super Number, Double&gt; mapper) {
+<span class="fc" id="L1442">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1443">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1444">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="fc" id="L1445">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1446">        return createDoubleBinding(() -&gt; {</span>
+<span class="fc" id="L1447">            Number value1 = observable1.getValue();</span>
+<span class="fc" id="L1448">            Number value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1449" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1450">                return mapper.apply(value1, value2);</span>
+            }
+<span class="nc" id="L1452">            return defaultValue;</span>
+        }, observable1, observable2);
+    }
+
+    /**
+     * Returns a double binding whose value is the combination of two observable values.
+     *
+     * @param observable1 the first observable value.
+     * @param observable2 the second observable value.
+     * @param supplier    a {@code Supplier} whose result is returned if no values are present.
+     * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return a double binding
+     */
+    @Nonnull
+    public static DoubleBinding mapDoubles(@Nonnull final ObservableValue&lt;? extends Number&gt; observable1, @Nonnull final ObservableValue&lt;? extends Number&gt; observable2, @Nonnull final Supplier&lt;Double&gt; supplier, @Nonnull final BiFunction&lt;? super Number, ? super Number, Double&gt; mapper) {
+<span class="fc" id="L1468">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1469">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1470">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="fc" id="L1471">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1472">        return createDoubleBinding(() -&gt; {</span>
+<span class="fc" id="L1473">            Number value1 = observable1.getValue();</span>
+<span class="fc" id="L1474">            Number value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1475" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1476">                return mapper.apply(value1, value2);</span>
+            }
+<span class="nc" id="L1478">            return requireNonNull(supplier.get(), ERROR_DEFAULT_VALUE_NULL);</span>
+        }, observable1, observable2);
+    }
+
+    /**
+     * Returns a double binding whose value is the combination of two observable values.
+     *
+     * @param observable1  the first observable value.
+     * @param observable2  the second observable value.
+     * @param defaultValue the value to be returned if there is no value present.
+     * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return a double binding
+     */
+    @Nonnull
+    public static DoubleBinding mapDoubles(@Nonnull final ObservableValue&lt;? extends Number&gt; observable1, @Nonnull final ObservableValue&lt;? extends Number&gt; observable2, @Nonnull final Double defaultValue, @Nonnull final ObservableValue&lt;BiFunction&lt;? super Number, ? super Number, Double&gt;&gt; mapper) {
+<span class="fc" id="L1494">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1495">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1496">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
+<span class="fc" id="L1497">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1498">        return createDoubleBinding(() -&gt; {</span>
+<span class="fc" id="L1499">            Number value1 = observable1.getValue();</span>
+<span class="fc" id="L1500">            Number value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1501" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1502">                BiFunction&lt;? super Number, ? super Number, Double&gt; function = mapper.getValue();</span>
+<span class="fc" id="L1503">                return requireNonNull(function, ERROR_MAPPER_NULL).apply(value1, value2);</span>
+            }
+<span class="nc" id="L1505">            return defaultValue;</span>
+        }, observable1, observable2, mapper);
+    }
+
+    /**
+     * Returns a double binding whose value is the combination of two observable values.
+     *
+     * @param observable1 the first observable value.
+     * @param observable2 the second observable value.
+     * @param supplier    a {@code Supplier} whose result is returned if no value is present.
+     * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return a double binding
+     */
+    @Nonnull
+    public static DoubleBinding mapDoubles(@Nonnull final ObservableValue&lt;? extends Number&gt; observable1, @Nonnull final ObservableValue&lt;? extends Number&gt; observable2, @Nonnull final Supplier&lt;Double&gt; supplier, @Nonnull final ObservableValue&lt;BiFunction&lt;? super Number, ? super Number, Double&gt;&gt; mapper) {
+<span class="fc" id="L1521">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1522">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1523">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="fc" id="L1524">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1525">        return createDoubleBinding(() -&gt; {</span>
+<span class="fc" id="L1526">            Number value1 = observable1.getValue();</span>
+<span class="fc" id="L1527">            Number value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1528" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1529">                BiFunction&lt;? super Number, ? super Number, Double&gt; function = mapper.getValue();</span>
+<span class="fc" id="L1530">                return requireNonNull(function, ERROR_MAPPER_NULL).apply(value1, value2);</span>
+            }
+<span class="nc" id="L1532">            return requireNonNull(supplier.get(), ERROR_DEFAULT_VALUE_NULL);</span>
+        }, observable1, observable2, mapper);
+    }
+
+    /**
+     * Returns an object binding whose value is the combination of two observable values.
+     *
+     * @param observable1  the first observable value.
+     * @param observable2  the second observable value.
+     * @param defaultValue the value to be returned if there are no values present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return an object binding
+     */
+    @Nonnull
+    public static &lt;A, B, R&gt; ObjectBinding&lt;R&gt; mapObjects(@Nonnull final ObservableValue&lt;A&gt; observable1, @Nonnull final ObservableValue&lt;B&gt; observable2, @Nullable final R defaultValue, @Nonnull final BiFunction&lt;? super A, ? super B, R&gt; mapper) {
+<span class="fc" id="L1548">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1549">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1550">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1551">        return createObjectBinding(() -&gt; {</span>
+<span class="fc" id="L1552">            A value1 = observable1.getValue();</span>
+<span class="fc" id="L1553">            B value2 = observable2.getValue();</span>
+<span class="fc bfc" id="L1554" title="All 4 branches covered.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1555">                return mapper.apply(value1, value2);</span>
+            }
+<span class="fc" id="L1557">            return defaultValue;</span>
+        }, observable1, observable2);
+    }
+
+    /**
+     * Returns an object binding whose value is the combination of two observable values.
+     *
+     * @param observable1 the first observable value.
+     * @param observable2 the second observable value.
+     * @param supplier    a {@code Supplier} whose result is returnedif no values are present.
+     * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return an object binding
+     */
+    @Nonnull
+    public static &lt;A, B, R&gt; ObjectBinding&lt;R&gt; mapObjects(@Nonnull final ObservableValue&lt;A&gt; observable1, @Nonnull final ObservableValue&lt;B&gt; observable2, @Nonnull final Supplier&lt;R&gt; supplier, @Nonnull final BiFunction&lt;? super A, ? super B, R&gt; mapper) {
+<span class="fc" id="L1573">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1574">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1575">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="fc" id="L1576">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1577">        return createObjectBinding(() -&gt; {</span>
+<span class="fc" id="L1578">            A value1 = observable1.getValue();</span>
+<span class="fc" id="L1579">            B value2 = observable2.getValue();</span>
+<span class="fc bfc" id="L1580" title="All 4 branches covered.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1581">                return mapper.apply(value1, value2);</span>
+            }
+<span class="fc" id="L1583">            return supplier.get();</span>
+        }, observable1, observable2);
+    }
+
+    /**
+     * Returns an object binding whose value is the combination of two observable values.
+     *
+     * @param observable1  the first observable value.
+     * @param observable2  the second observable value.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return an object binding
+     */
+    @Nonnull
+    public static &lt;A, B, R&gt; ObjectBinding&lt;R&gt; mapObjects(@Nonnull final ObservableValue&lt;A&gt; observable1, @Nonnull final ObservableValue&lt;B&gt; observable2, @Nullable final R defaultValue, @Nonnull final ObservableValue&lt;BiFunction&lt;? super A, ? super B, R&gt;&gt; mapper) {
+<span class="fc" id="L1599">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1600">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1601">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1602">        return createObjectBinding(() -&gt; {</span>
+<span class="fc" id="L1603">            A value1 = observable1.getValue();</span>
+<span class="fc" id="L1604">            B value2 = observable2.getValue();</span>
+<span class="fc bfc" id="L1605" title="All 4 branches covered.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1606">                BiFunction&lt;? super A, ? super B, R&gt; function = mapper.getValue();</span>
+<span class="fc" id="L1607">                return requireNonNull(function, ERROR_MAPPER_NULL).apply(value1, value2);</span>
+            }
+<span class="fc" id="L1609">            return defaultValue;</span>
+        }, observable1, observable2, mapper);
+    }
+
+    /**
+     * Returns an object binding whose value is the combination of two observable values.
+     *
+     * @param observable1 the first observable value.
+     * @param observable2 the second observable value.
+     * @param supplier    a {@code Supplier} whose result is returned if no values are present.
+     * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return an object binding
+     */
+    @Nonnull
+    public static &lt;A, B, R&gt; ObjectBinding&lt;R&gt; mapObjects(@Nonnull final ObservableValue&lt;A&gt; observable1, @Nonnull final ObservableValue&lt;B&gt; observable2, @Nonnull final Supplier&lt;R&gt; supplier, @Nonnull final ObservableValue&lt;BiFunction&lt;? super A, ? super B, R&gt;&gt; mapper) {
+<span class="fc" id="L1625">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1626">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1627">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="fc" id="L1628">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1629">        return createObjectBinding(() -&gt; {</span>
+<span class="fc" id="L1630">            A value1 = observable1.getValue();</span>
+<span class="fc" id="L1631">            B value2 = observable2.getValue();</span>
+<span class="fc bfc" id="L1632" title="All 4 branches covered.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1633">                BiFunction&lt;? super A, ? super B, R&gt; function = mapper.getValue();</span>
+<span class="fc" id="L1634">                return requireNonNull(function, ERROR_MAPPER_NULL).apply(value1, value2);</span>
+            }
+<span class="fc" id="L1636">            return supplier.get();</span>
+        }, observable1, observable2, mapper);
+    }
+
+    /**
+     * Returns a string binding whose value is the combination of two observable values.
+     *
+     * @param observable1  the first observable value.
+     * @param observable2  the second observable value.
+     * @param defaultValue the value to be returned if there are no values present.
+     * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return a string binding
+     */
+    @Nonnull
+    public static StringBinding mapStrings(@Nonnull final ObservableValue&lt;String&gt; observable1, @Nonnull final ObservableValue&lt;String&gt; observable2, @Nullable final String defaultValue, @Nonnull final BiFunction&lt;String, String, String&gt; mapper) {
+<span class="fc" id="L1652">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1653">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1654">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1655">        return createStringBinding(() -&gt; {</span>
+<span class="fc" id="L1656">            String value1 = observable1.getValue();</span>
+<span class="fc" id="L1657">            String value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1658" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1659">                return mapper.apply(value1, value2);</span>
+            }
+<span class="nc" id="L1661">            return defaultValue;</span>
+        }, observable1, observable2);
+    }
+
+    /**
+     * Returns a string binding whose value is the combination of two observable values.
+     *
+     * @param observable1 the first observable value.
+     * @param observable2 the second observable value.
+     * @param supplier    a {@code Supplier} whose result is returned if no values are present.
+     * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return a string binding
+     */
+    @Nonnull
+    public static StringBinding mapStrings(@Nonnull final ObservableValue&lt;String&gt; observable1, @Nonnull final ObservableValue&lt;String&gt; observable2, @Nonnull final Supplier&lt;String&gt; supplier, @Nonnull final BiFunction&lt;String, String, String&gt; mapper) {
+<span class="fc" id="L1677">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1678">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1679">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="fc" id="L1680">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1681">        return createStringBinding(() -&gt; {</span>
+<span class="fc" id="L1682">            String value1 = observable1.getValue();</span>
+<span class="fc" id="L1683">            String value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1684" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1685">                return mapper.apply(value1, value2);</span>
+            }
+<span class="nc" id="L1687">            return supplier.get();</span>
+        }, observable1, observable2);
+    }
+
+    /**
+     * Returns a string binding whose value is the combination of two observable values.
+     *
+     * @param observable1  the first observable value.
+     * @param observable2  the second observable value.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return a string binding
+     */
+    @Nonnull
+    public static StringBinding mapStrings(@Nonnull final ObservableValue&lt;String&gt; observable1, @Nonnull final ObservableValue&lt;String&gt; observable2, @Nullable final String defaultValue, @Nonnull final ObservableValue&lt;BiFunction&lt;String, String, String&gt;&gt; mapper) {
+<span class="fc" id="L1703">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1704">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1705">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1706">        return createStringBinding(() -&gt; {</span>
+<span class="fc" id="L1707">            String value1 = observable1.getValue();</span>
+<span class="fc" id="L1708">            String value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1709" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1710">                BiFunction&lt;String, String, String&gt; function = mapper.getValue();</span>
+<span class="fc" id="L1711">                return requireNonNull(function, ERROR_MAPPER_NULL).apply(value1, value2);</span>
+            }
+<span class="nc" id="L1713">            return defaultValue;</span>
+        }, observable1, observable2, mapper);
+    }
+
+    /**
+     * Returns a string binding whose value is the combination of two observable values.
+     *
+     * @param observable1 the first observable value.
+     * @param observable2 the second observable value.
+     * @param supplier    a {@code Supplier} whose result is returned if no values are present.
+     * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
+     * @return a string binding
+     */
+    @Nonnull
+    public static StringBinding mapStrings(@Nonnull final ObservableValue&lt;String&gt; observable1, @Nonnull final ObservableValue&lt;String&gt; observable2, @Nonnull final Supplier&lt;String&gt; supplier, @Nonnull final ObservableValue&lt;BiFunction&lt;String, String, String&gt;&gt; mapper) {
+<span class="fc" id="L1729">        requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);</span>
+<span class="fc" id="L1730">        requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);</span>
+<span class="fc" id="L1731">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="fc" id="L1732">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="fc" id="L1733">        return createStringBinding(() -&gt; {</span>
+<span class="fc" id="L1734">            String value1 = observable1.getValue();</span>
+<span class="fc" id="L1735">            String value2 = observable2.getValue();</span>
+<span class="pc bpc" id="L1736" title="2 of 4 branches missed.">            if (value1 != null &amp;&amp; value2 != null) {</span>
+<span class="fc" id="L1737">                BiFunction&lt;String, String, String&gt; function = mapper.getValue();</span>
+<span class="fc" id="L1738">                return requireNonNull(function, ERROR_MAPPER_NULL).apply(value1, value2);</span>
+            }
+<span class="nc" id="L1740">            return supplier.get();</span>
+        }, observable1, observable2, mapper);
+    }
+
+    /**
+     * Creates an integer binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     *
+     * @return an integer binding.
+     */
+    @Nonnull
+    public static IntegerBinding mapInteger(@Nonnull final ObservableValue&lt;? extends Number&gt; observable) {
+<span class="nc" id="L1753">        return mapInteger(observable, 0);</span>
+    }
+
+    /**
+     * Creates an integer binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable   the source observable.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
+     * @return an integer binding.
+     */
+    @Nonnull
+    public static IntegerBinding mapInteger(@Nonnull final ObservableValue&lt;? extends Number&gt; observable, @Nullable final Integer defaultValue) {
+<span class="nc" id="L1766">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L1767" title="All 2 branches missed.">        if (observable instanceof IntegerBinding) {</span>
+<span class="nc" id="L1768">            return (IntegerBinding) observable;</span>
+        }
+<span class="nc" id="L1770">        return createIntegerBinding(() -&gt; {</span>
+<span class="nc" id="L1771">            Number value = observable.getValue();</span>
+<span class="nc bnc" id="L1772" title="All 2 branches missed.">            return value != null ? value.intValue() : defaultValue;</span>
+        }, observable);
+    }
+
+    /**
+     * Creates an integer binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return an integer binding.
+     */
+    @Nonnull
+    public static IntegerBinding mapInteger(@Nonnull final ObservableValue&lt;? extends Number&gt; observable, @Nullable final Supplier&lt;Integer&gt; supplier) {
+<span class="nc" id="L1786">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L1787">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc bnc" id="L1788" title="All 2 branches missed.">        if (observable instanceof IntegerBinding) {</span>
+<span class="nc" id="L1789">            return (IntegerBinding) observable;</span>
+        }
+<span class="nc" id="L1791">        return createIntegerBinding(() -&gt; {</span>
+<span class="nc" id="L1792">            Number value = observable.getValue();</span>
+<span class="nc bnc" id="L1793" title="All 2 branches missed.">            return value != null ? value.intValue() : supplier.get();</span>
+        }, observable);
+    }
+
+    /**
+     * Creates a long binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     *
+     * @return a long binding.
+     */
+    @Nonnull
+    public static LongBinding mapLong(@Nonnull final ObservableValue&lt;? extends Number&gt; observable) {
+<span class="nc" id="L1806">        return mapLong(observable, 0L);</span>
+    }
+
+    /**
+     * Creates a long binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable   the source observable.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
+     * @return a long binding.
+     */
+    @Nonnull
+    public static LongBinding mapLong(@Nonnull final ObservableValue&lt;? extends Number&gt; observable, @Nullable final Long defaultValue) {
+<span class="nc" id="L1819">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L1820" title="All 2 branches missed.">        if (observable instanceof LongBinding) {</span>
+<span class="nc" id="L1821">            return (LongBinding) observable;</span>
+        }
+<span class="nc" id="L1823">        return createLongBinding(() -&gt; {</span>
+<span class="nc" id="L1824">            Number value = observable.getValue();</span>
+<span class="nc bnc" id="L1825" title="All 2 branches missed.">            return value != null ? value.longValue() : defaultValue;</span>
+        }, observable);
+    }
+
+    /**
+     * Creates a long binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return a long binding.
+     */
+    @Nonnull
+    public static LongBinding mapLong(@Nonnull final ObservableValue&lt;? extends Number&gt; observable, @Nullable final Supplier&lt;Long&gt; supplier) {
+<span class="nc" id="L1839">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L1840">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc bnc" id="L1841" title="All 2 branches missed.">        if (observable instanceof LongBinding) {</span>
+<span class="nc" id="L1842">            return (LongBinding) observable;</span>
+        }
+<span class="nc" id="L1844">        return createLongBinding(() -&gt; {</span>
+<span class="nc" id="L1845">            Number value = observable.getValue();</span>
+<span class="nc bnc" id="L1846" title="All 2 branches missed.">            return value != null ? value.longValue() : supplier.get();</span>
+        }, observable);
+    }
+
+    /**
+     * Creates a float binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     *
+     * @return a float binding.
+     */
+    @Nonnull
+    public static FloatBinding mapFloat(@Nonnull final ObservableValue&lt;? extends Number&gt; observable) {
+<span class="nc" id="L1859">        return mapFloat(observable, 0f);</span>
+    }
+
+    /**
+     * Creates a float binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable   the source observable.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
+     * @return a float binding.
+     */
+    @Nonnull
+    public static FloatBinding mapFloat(@Nonnull final ObservableValue&lt;? extends Number&gt; observable, @Nullable final Float defaultValue) {
+<span class="nc" id="L1872">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L1873" title="All 2 branches missed.">        if (observable instanceof FloatBinding) {</span>
+<span class="nc" id="L1874">            return (FloatBinding) observable;</span>
+        }
+<span class="nc" id="L1876">        return createFloatBinding(() -&gt; {</span>
+<span class="nc" id="L1877">            Number value = observable.getValue();</span>
+<span class="nc bnc" id="L1878" title="All 2 branches missed.">            return value != null ? value.floatValue() : defaultValue;</span>
+        }, observable);
+    }
+
+    /**
+     * Creates a float binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return a float binding.
+     */
+    @Nonnull
+    public static FloatBinding mapFloat(@Nonnull final ObservableValue&lt;? extends Number&gt; observable, @Nullable final Supplier&lt;Float&gt; supplier) {
+<span class="nc" id="L1892">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L1893">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc bnc" id="L1894" title="All 2 branches missed.">        if (observable instanceof FloatBinding) {</span>
+<span class="nc" id="L1895">            return (FloatBinding) observable;</span>
+        }
+<span class="nc" id="L1897">        return createFloatBinding(() -&gt; {</span>
+<span class="nc" id="L1898">            Number value = observable.getValue();</span>
+<span class="nc bnc" id="L1899" title="All 2 branches missed.">            return value != null ? value.floatValue() : supplier.get();</span>
+        }, observable);
+    }
+
+    /**
+     * Creates a double binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     *
+     * @return a double binding.
+     */
+    @Nonnull
+    public static DoubleBinding mapDouble(@Nonnull final ObservableValue&lt;? extends Number&gt; observable) {
+<span class="nc" id="L1912">        return mapDouble(observable, 0d);</span>
+    }
+
+    /**
+     * Creates a double binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable   the source observable.
+     * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
+     * @return a double binding.
+     */
+    @Nonnull
+    public static DoubleBinding mapDouble(@Nonnull final ObservableValue&lt;? extends Number&gt; observable, @Nullable final Double defaultValue) {
+<span class="nc" id="L1925">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc bnc" id="L1926" title="All 2 branches missed.">        if (observable instanceof DoubleBinding) {</span>
+<span class="nc" id="L1927">            return (DoubleBinding) observable;</span>
+        }
+<span class="nc" id="L1929">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L1930">            Number value = observable.getValue();</span>
+<span class="nc bnc" id="L1931" title="All 2 branches missed.">            return value != null ? value.doubleValue() : defaultValue;</span>
+        }, observable);
+    }
+
+    /**
+     * Creates a double binding containing the value of the mapper function applied to the source observable.
+     *
+     * @param observable the source observable.
+     * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
+     * @return a double binding.
+     */
+    @Nonnull
+    public static DoubleBinding mapDouble(@Nonnull final ObservableValue&lt;? extends Number&gt; observable, @Nullable final Supplier&lt;Double&gt; supplier) {
+<span class="nc" id="L1945">        requireNonNull(observable, ERROR_OBSERVABLE_NULL);</span>
+<span class="nc" id="L1946">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
+<span class="nc bnc" id="L1947" title="All 2 branches missed.">        if (observable instanceof DoubleBinding) {</span>
+<span class="nc" id="L1948">            return (DoubleBinding) observable;</span>
+        }
+<span class="nc" id="L1950">        return createDoubleBinding(() -&gt; {</span>
+<span class="nc" id="L1951">            Number value = observable.getValue();</span>
+<span class="nc bnc" id="L1952" title="All 2 branches missed.">            return value != null ? value.doubleValue() : supplier.get();</span>
+        }, observable);
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

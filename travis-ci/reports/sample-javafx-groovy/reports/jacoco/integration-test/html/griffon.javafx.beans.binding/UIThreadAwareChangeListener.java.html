@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UIThreadAwareChangeListener.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.beans.binding</a> &gt; <span class="el_source">UIThreadAwareChangeListener.java</span></div><h1>UIThreadAwareChangeListener.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2016 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.beans.binding;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+
+import javax.annotation.Nonnull;
+
+import static java.util.Objects.requireNonNull;
+import static javafx.application.Platform.isFxApplicationThread;
+import static javafx.application.Platform.runLater;
+
+/**
+ * @author Andres Almiray
+ * @since 2.9.0
+ */
+class UIThreadAwareChangeListener&lt;T&gt; implements ChangeListener&lt;T&gt;, UIThreadAware {
+    private final ChangeListener&lt;? super T&gt; delegate;
+
+<span class="nc" id="L34">    UIThreadAwareChangeListener(@Nonnull ChangeListener&lt;? super T&gt; delegate) {</span>
+<span class="nc" id="L35">        this.delegate = requireNonNull(delegate, &quot;Argument 'delegate' must not be null&quot;);</span>
+<span class="nc" id="L36">    }</span>
+
+    @Override
+    public void changed(final ObservableValue&lt;? extends T&gt; observable, final T oldValue, final T newValue) {
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        if (isFxApplicationThread()) {</span>
+<span class="nc" id="L41">            delegate.changed(observable, oldValue, newValue);</span>
+        } else {
+<span class="nc" id="L43">            runLater(() -&gt; delegate.changed(observable, oldValue, newValue));</span>
+        }
+<span class="nc" id="L45">    }</span>
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L49" title="All 4 branches missed.">        return this == o || delegate.equals(o);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L54">        return delegate.hashCode();</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L59">        return getClass().getName() + &quot;:&quot; + delegate.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GriffonFXCollections.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.collections</a> &gt; <span class="el_source">GriffonFXCollections.java</span></div><h1>GriffonFXCollections.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2016 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.collections;
+
+import griffon.javafx.beans.binding.UIThreadAware;
+import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
+import javafx.collections.ObservableSet;
+import javafx.collections.SetChangeListener;
+
+import javax.annotation.Nonnull;
+
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.10.0
+ */
+public final class GriffonFXCollections {
+    private static final String ERROR_SOURCE_NULL = &quot;Argument 'source' must not be null&quot;;
+
+<span class="nc" id="L38">    private GriffonFXCollections() {</span>
+        // prevent instantiation
+<span class="nc" id="L40">    }</span>
+
+    /**
+     * Wraps an &lt;tt&gt;ObservableList&lt;/tt&gt;, publishing updates inside the UI thread.
+     *
+     * @param source the &lt;tt&gt;ObservableList&lt;/tt&gt; to be wrapped
+     * @param &lt;E&gt;    the list's parameter type.
+     *
+     * @return a new &lt;tt&gt;ObservableList&lt;/tt&gt;
+     */
+    @Nonnull
+    public static &lt;E&gt; ObservableList&lt;E&gt; uiThreadAwareObservableList(@Nonnull ObservableList&lt;E&gt; source) {
+<span class="nc" id="L52">        requireNonNull(source, ERROR_SOURCE_NULL);</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        return source instanceof UIThreadAware ? source : new UIThreadAwareObservableList&lt;&gt;(source);</span>
+    }
+
+    private static class UIThreadAwareObservableList&lt;E&gt; extends DelegatingObservableList&lt;E&gt; implements UIThreadAware {
+        protected UIThreadAwareObservableList(ObservableList&lt;E&gt; delegate) {
+<span class="nc" id="L58">            super(delegate);</span>
+<span class="nc" id="L59">        }</span>
+
+        @Override
+        protected void sourceChanged(@Nonnull final ListChangeListener.Change&lt;? extends E&gt; c) {
+<span class="nc bnc" id="L63" title="All 2 branches missed.">            if (Platform.isFxApplicationThread()) {</span>
+<span class="nc" id="L64">                fireChange(c);</span>
+            } else {
+<span class="nc" id="L66">                Platform.runLater(() -&gt; fireChange(c));</span>
+            }
+<span class="nc" id="L68">        }</span>
+    }
+
+    /**
+     * Wraps an &lt;tt&gt;ObservableSet&lt;/tt&gt;, publishing updates inside the UI thread.
+     *
+     * @param source the &lt;tt&gt;ObservableSet&lt;/tt&gt; to be wrapped
+     * @param &lt;E&gt;    the set's parameter type.
+     *
+     * @return a new &lt;tt&gt;ObservableSet&lt;/tt&gt;
+     */
+    @Nonnull
+    public static &lt;E&gt; ObservableSet&lt;E&gt; uiThreadAwareObservableSet(@Nonnull ObservableSet&lt;E&gt; source) {
+<span class="nc" id="L81">        requireNonNull(source, ERROR_SOURCE_NULL);</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">        return source instanceof UIThreadAware ? source : new UIThreadAwareObservableSet&lt;&gt;(source);</span>
+    }
+
+    private static class UIThreadAwareObservableSet&lt;E&gt; extends DelegatingObservableSet&lt;E&gt; implements UIThreadAware {
+        protected UIThreadAwareObservableSet(ObservableSet&lt;E&gt; delegate) {
+<span class="nc" id="L87">            super(delegate);</span>
+<span class="nc" id="L88">        }</span>
+
+        @Override
+        protected void sourceChanged(@Nonnull final SetChangeListener.Change&lt;? extends E&gt; c) {
+<span class="nc bnc" id="L92" title="All 2 branches missed.">            if (Platform.isFxApplicationThread()) {</span>
+<span class="nc" id="L93">                fireChange(c);</span>
+            } else {
+<span class="nc" id="L95">                Platform.runLater(() -&gt; fireChange(c));</span>
+            }
+<span class="nc" id="L97">        }</span>
+    }
+
+    /**
+     * Wraps an &lt;tt&gt;ObservableMap&lt;/tt&gt;, publishing updates inside the UI thread.
+     *
+     * @param source the &lt;tt&gt;ObservableMap&lt;/tt&gt; to be wrapped
+     * @param &lt;K&gt;    the type of keys maintained by the map
+     * @param &lt;V&gt;    the type of mapped values
+     *
+     * @return a new &lt;tt&gt;ObservableMap&lt;/tt&gt;
+     */
+    @Nonnull
+    public static &lt;K, V&gt; ObservableMap&lt;K, V&gt; uiThreadAwareObservableMap(@Nonnull ObservableMap&lt;K, V&gt; source) {
+<span class="nc" id="L111">        requireNonNull(source, ERROR_SOURCE_NULL);</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">        return source instanceof UIThreadAware ? source : new UIThreadAwareObservableMap&lt;&gt;(source);</span>
+    }
+
+    private static class UIThreadAwareObservableMap&lt;K, V&gt; extends DelegatingObservableMap&lt;K, V&gt; implements UIThreadAware {
+        protected UIThreadAwareObservableMap(ObservableMap&lt;K, V&gt; delegate) {
+<span class="nc" id="L117">            super(delegate);</span>
+<span class="nc" id="L118">        }</span>
+
+        @Override
+        protected void sourceChanged(@Nonnull final MapChangeListener.Change&lt;? extends K, ? extends V&gt; c) {
+<span class="nc bnc" id="L122" title="All 2 branches missed.">            if (Platform.isFxApplicationThread()) {</span>
+<span class="nc" id="L123">                fireChange(c);</span>
+            } else {
+<span class="nc" id="L125">                Platform.runLater(() -&gt; fireChange(c));</span>
+            }
+<span class="nc" id="L127">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
