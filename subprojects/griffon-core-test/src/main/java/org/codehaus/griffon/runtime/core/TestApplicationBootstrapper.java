@@ -39,6 +39,7 @@ import javax.inject.Singleton;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -197,7 +198,44 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
     private void doCollectModulesFromInnerClasses(@Nonnull final Collection<Module> modules) {
         if (testCase != null) {
             modules.add(new InnerClassesModule());
+            modules.addAll(harvestInnerModules());
         }
+    }
+
+    @Nonnull
+    private Collection<? extends Module> harvestInnerModules() {
+        Class<?> clazz = testCase.getClass();
+        List<Class<?>> classes = new ArrayList<>();
+        while (clazz != null) {
+            classes.add(clazz);
+            clazz = clazz.getSuperclass();
+        }
+
+        Collections.reverse(classes);
+
+        List<Module> modules = new ArrayList<>();
+        for (Class<?> c : classes) {
+            modules.addAll(doHarvestInnerModules(c));
+        }
+
+        return modules;
+    }
+
+    @Nonnull
+    private Collection<? extends Module> doHarvestInnerModules(@Nonnull Class<?> rootClass) {
+        List<Module> modules = new ArrayList<>();
+        for (Class<?> clazz : rootClass.getDeclaredClasses()) {
+            if (!Module.class.isAssignableFrom(clazz) || !Modifier.isPublic(clazz.getModifiers())) {
+                continue;
+            }
+
+            try {
+                modules.add((Module) clazz.newInstance());
+            } catch (InstantiationException | IllegalAccessException e) {
+                LOG.error("Can't instantiate module " + clazz.getName() + " . Make sure it's marked as public and provides a no-args constructor.");
+            }
+        }
+        return modules;
     }
 
     private void doCollectModulesFromFields(@Nonnull final Collection<Module> modules) {
