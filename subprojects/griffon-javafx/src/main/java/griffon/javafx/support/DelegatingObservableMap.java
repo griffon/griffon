@@ -15,118 +15,19 @@
  */
 package griffon.javafx.support;
 
-import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
-import javafx.collections.WeakMapChangeListener;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
+ * @see griffon.javafx.collections.DelegatingObservableMap
  * @since 2.9.0
+ * @deprecated use {@code griffon.javafx.collections.DelegatingObservableMap} instead.
  */
-public abstract class DelegatingObservableMap<K, V> extends ObservableMapBase<K, V> implements ObservableMap<K, V> {
-    private final ObservableMap<K, V> delegate;
-    private MapChangeListener<K, V> sourceListener;
-
+@Deprecated
+public abstract class DelegatingObservableMap<K, V> extends griffon.javafx.collections.DelegatingObservableMap<K, V> {
     public DelegatingObservableMap(@Nonnull ObservableMap<K, V> delegate) {
-        this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
-        this.delegate.addListener(new WeakMapChangeListener<>(getListener()));
-    }
-
-    @Nonnull
-    protected ObservableMap<K, V> getDelegate() {
-        return delegate;
-    }
-
-    private MapChangeListener<K, V> getListener() {
-        if (sourceListener == null) {
-            sourceListener = DelegatingObservableMap.this::sourceChanged;
-        }
-        return sourceListener;
-    }
-
-    protected abstract void sourceChanged(@Nonnull MapChangeListener.Change<? extends K, ? extends V> c);
-
-    // --== Delegate methods ==--
-
-    @Override
-    public int size() {
-        return getDelegate().size();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return getDelegate().isEmpty();
-    }
-
-    @Override
-    public boolean containsValue(Object value) {
-        return getDelegate().containsValue(value);
-    }
-
-    @Override
-    public boolean containsKey(Object key) {
-        return getDelegate().containsKey(key);
-    }
-
-    @Override
-    public V get(Object key) {
-        return getDelegate().get(key);
-    }
-
-    @Override
-    public V put(K key, V value) {
-        return getDelegate().put(key, value);
-    }
-
-    @Override
-    public V remove(Object key) {
-        return getDelegate().remove(key);
-    }
-
-    @Override
-    public void putAll(Map<? extends K, ? extends V> m) {
-        getDelegate().putAll(m);
-    }
-
-    @Override
-    public void clear() {
-        getDelegate().clear();
-    }
-
-    @Override
-    public Set<K> keySet() {
-        return getDelegate().keySet();
-    }
-
-    @Override
-    public Collection<V> values() {
-        return getDelegate().values();
-    }
-
-    @Override
-    public Set<Entry<K, V>> entrySet() {
-        return getDelegate().entrySet();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return getDelegate().equals(o);
-    }
-
-    @Override
-    public int hashCode() {
-        return getDelegate().hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return getDelegate().toString();
+        super(delegate);
     }
 }

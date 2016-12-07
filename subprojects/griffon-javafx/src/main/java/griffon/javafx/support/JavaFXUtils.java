@@ -22,14 +22,12 @@ import griffon.core.controller.ActionManager;
 import griffon.core.editors.ValueConversionException;
 import griffon.core.i18n.MessageSource;
 import griffon.exceptions.InstanceMethodInvocationException;
+import griffon.javafx.collections.GriffonFXCollections;
 import javafx.application.Platform;
 import javafx.beans.property.Property;
-import javafx.collections.ListChangeListener;
-import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.collections.ObservableSet;
-import javafx.collections.SetChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -505,28 +503,16 @@ public final class JavaFXUtils {
      *
      * @return a new <tt>ObservableList</tt>
      *
+     * @see GriffonFXCollections#uiThreadAwareObservableList
      * @since 2.6.0
+     * @deprecated Use {@code GriffonFXCollections.uiThreadAwareObservableList} instead.
      */
+    @Deprecated
     @Nonnull
     public static <E> ObservableList<E> createJavaFXThreadProxyList(@Nonnull ObservableList<E> source) {
-        requireNonNull(source, "Argument 'source' must not be null");
-        return new JavaFXThreadProxyObservableList<>(source);
+        return GriffonFXCollections.uiThreadAwareObservableList(source);
     }
 
-    private static class JavaFXThreadProxyObservableList<E> extends DelegatingObservableList<E> {
-        protected JavaFXThreadProxyObservableList(ObservableList<E> delegate) {
-            super(delegate);
-        }
-
-        @Override
-        protected void sourceChanged(@Nonnull final ListChangeListener.Change<? extends E> c) {
-            if (Platform.isFxApplicationThread()) {
-                fireChange(c);
-            } else {
-                Platform.runLater(() -> fireChange(c));
-            }
-        }
-    }
 
     /**
      * Wraps an <tt>ObservableSet</tt>, publishing updates inside the UI thread.
@@ -536,27 +522,14 @@ public final class JavaFXUtils {
      *
      * @return a new <tt>ObservableSet</tt>
      *
+     * @see GriffonFXCollections#uiThreadAwareObservableSet
      * @since 2.9.0
+     * @deprecated Use {@code GriffonFXCollections.uiThreadAwareObservableSet} instead.
      */
+    @Deprecated
     @Nonnull
     public static <E> ObservableSet<E> createJavaFXThreadProxySet(@Nonnull ObservableSet<E> source) {
-        requireNonNull(source, "Argument 'source' must not be null");
-        return new JavaFXThreadProxyObservableSet<>(source);
-    }
-
-    private static class JavaFXThreadProxyObservableSet<E> extends DelegatingObservableSet<E> {
-        protected JavaFXThreadProxyObservableSet(ObservableSet<E> delegate) {
-            super(delegate);
-        }
-
-        @Override
-        protected void sourceChanged(@Nonnull final SetChangeListener.Change<? extends E> c) {
-            if (Platform.isFxApplicationThread()) {
-                fireChange(c);
-            } else {
-                Platform.runLater(() -> fireChange(c));
-            }
-        }
+        return GriffonFXCollections.uiThreadAwareObservableSet(source);
     }
 
     /**
@@ -568,27 +541,14 @@ public final class JavaFXUtils {
      *
      * @return a new <tt>ObservableMap</tt>
      *
+     * @see GriffonFXCollections#uiThreadAwareObservableMap
      * @since 2.9.0
+     * @deprecated Use {@code GriffonFXCollections.uiThreadAwareObservableMap} instead.
      */
+    @Deprecated
     @Nonnull
     public static <K, V> ObservableMap<K, V> createJavaFXThreadProxyMap(@Nonnull ObservableMap<K, V> source) {
-        requireNonNull(source, "Argument 'source' must not be null");
-        return new JavaFXThreadProxyObservableMap<>(source);
-    }
-
-    private static class JavaFXThreadProxyObservableMap<K, V> extends DelegatingObservableMap<K, V> {
-        protected JavaFXThreadProxyObservableMap(ObservableMap<K, V> delegate) {
-            super(delegate);
-        }
-
-        @Override
-        protected void sourceChanged(@Nonnull final MapChangeListener.Change<? extends K, ? extends V> c) {
-            if (Platform.isFxApplicationThread()) {
-                fireChange(c);
-            } else {
-                Platform.runLater(() -> fireChange(c));
-            }
-        }
+        return GriffonFXCollections.uiThreadAwareObservableMap(source);
     }
 
     @Nonnull

@@ -15,48 +15,11 @@
  */
 package griffon.javafx.support;
 
-import com.sun.javafx.collections.MapListenerHelper;
-import javafx.beans.InvalidationListener;
-import javafx.collections.MapChangeListener;
-import javafx.collections.ObservableMap;
-
-import java.util.AbstractMap;
-
 /**
  * @author Andres Almiray
+ * @see griffon.javafx.collections.ObservableMapBase
  * @since 2.9.0
+ * @deprecated use {@code griffon.javafx.collections.ObservableMapBase} instead.
  */
-public abstract class ObservableMapBase<K, V> extends AbstractMap<K, V> implements ObservableMap<K, V> {
-    private MapListenerHelper<K, V> listenerHelper;
-
-    @Override
-    public final void addListener(MapChangeListener<? super K, ? super V> listener) {
-        listenerHelper = MapListenerHelper.addListener(listenerHelper, listener);
-    }
-
-    @Override
-    public final void removeListener(MapChangeListener<? super K, ? super V> listener) {
-        listenerHelper = MapListenerHelper.removeListener(listenerHelper, listener);
-    }
-
-    @Override
-    public final void addListener(InvalidationListener listener) {
-        listenerHelper = MapListenerHelper.addListener(listenerHelper, listener);
-    }
-
-    @Override
-    public final void removeListener(InvalidationListener listener) {
-        listenerHelper = MapListenerHelper.removeListener(listenerHelper, listener);
-    }
-
-    protected final void fireChange(MapChangeListener.Change<? extends K, ? extends V> change) {
-        MapListenerHelper.fireValueChangedEvent(listenerHelper, change);
-    }
-
-    /**
-     * Returns true if there are some listeners registered for this list.
-     */
-    protected final boolean hasListeners() {
-        return MapListenerHelper.hasListeners(listenerHelper);
-    }
+public abstract class ObservableMapBase<K, V> extends griffon.javafx.collections.ObservableMapBase<K, V> {
 }

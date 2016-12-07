@@ -13,20 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.javafx.support;
+package griffon.javafx.beans.binding;
 
-import javafx.collections.ObservableSet;
+import javafx.beans.value.ObservableStringValue;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author Andres Almiray
- * @see griffon.javafx.collections.DelegatingObservableSet
  * @since 2.9.0
- * @deprecated use {@code griffon.javafx.collections.DelegatingObservableSet} instead.
  */
-public abstract class DelegatingObservableSet<E> extends griffon.javafx.collections.DelegatingObservableSet<E> {
-    public DelegatingObservableSet(@Nonnull ObservableSet<E> delegate) {
+class UIThreadAwareObservableStringValue extends UIThreadAwareObservableValue<String> implements ObservableStringValue {
+    UIThreadAwareObservableStringValue(@Nonnull ObservableStringValue delegate) {
         super(delegate);
+    }
+
+    @Override
+    public String get() {
+        return getDelegate().getValue();
     }
 }

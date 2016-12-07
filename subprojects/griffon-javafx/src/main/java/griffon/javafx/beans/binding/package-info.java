@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 /**
- * Defines additional JavaFX property implementations.
+ * Defines additional JavaFX binding implementations.
  *
- * @since 2.0.0
+ * @since 2.10.0
  */
 
 package griffon.javafx.beans.binding;
