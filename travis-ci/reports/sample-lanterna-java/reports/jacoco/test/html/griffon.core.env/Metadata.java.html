@@ -42,14 +42,14 @@ public class Metadata {
     public static final String FILENAME = &quot;application.properties&quot;;
     public static final String APPLICATION_VERSION = &quot;application.version&quot;;
     public static final String APPLICATION_NAME = &quot;application.name&quot;;
-<span class="nc" id="L45">    private static final Logger LOG = LoggerFactory.getLogger(Metadata.class);</span>
+<span class="fc" id="L45">    private static final Logger LOG = LoggerFactory.getLogger(Metadata.class);</span>
 
-<span class="nc" id="L47">    private final Properties properties = new Properties();</span>
+<span class="pc" id="L47">    private final Properties properties = new Properties();</span>
 
-<span class="nc" id="L49">    public Metadata(@Nonnull String path) {</span>
-<span class="nc" id="L50">        requireNonBlank(path, &quot;Argument 'path' must not be blank&quot;);</span>
-<span class="nc" id="L51">        loadProperties(path);</span>
-<span class="nc" id="L52">    }</span>
+<span class="fc" id="L49">    public Metadata(@Nonnull String path) {</span>
+<span class="fc" id="L50">        requireNonBlank(path, &quot;Argument 'path' must not be blank&quot;);</span>
+<span class="fc" id="L51">        loadProperties(path);</span>
+<span class="fc" id="L52">    }</span>
 
 <span class="nc" id="L54">    public Metadata(@Nonnull File file) {</span>
 <span class="nc" id="L55">        requireNonNull(file, &quot;Argument 'file' must not be null&quot;);</span>
@@ -66,15 +66,15 @@ public class Metadata {
 <span class="nc" id="L66">    }</span>
 
     private void loadProperties(String path) {
-<span class="nc" id="L69">        URL url = Metadata.class.getClassLoader().getResource(path);</span>
-<span class="nc bnc" id="L70" title="All 2 branches missed.">        if (url != null) {</span>
+<span class="fc" id="L69">        URL url = Metadata.class.getClassLoader().getResource(path);</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">        if (url != null) {</span>
             try {
-<span class="nc" id="L72">                loadProperties(url.openStream());</span>
+<span class="fc" id="L72">                loadProperties(url.openStream());</span>
 <span class="nc" id="L73">            } catch (IOException e) {</span>
 <span class="nc" id="L74">                LOG.warn(&quot;Could not load application metadata from &quot; + path, e);</span>
-<span class="nc" id="L75">            }</span>
+<span class="fc" id="L75">            }</span>
         }
-<span class="nc" id="L77">    }</span>
+<span class="fc" id="L77">    }</span>
 
     private void loadProperties(File file) {
         try {
@@ -85,8 +85,8 @@ public class Metadata {
 <span class="nc" id="L85">    }</span>
 
     private void loadProperties(InputStream in) throws IOException {
-<span class="nc" id="L88">        properties.load(in);</span>
-<span class="nc" id="L89">    }</span>
+<span class="fc" id="L88">        properties.load(in);</span>
+<span class="fc" id="L89">    }</span>
 
     /**
      * @return The application version
@@ -110,11 +110,11 @@ public class Metadata {
      * @return The application name
      */
     public String getApplicationName() {
-<span class="nc" id="L113">        return get(APPLICATION_NAME);</span>
+<span class="fc" id="L113">        return get(APPLICATION_NAME);</span>
     }
 
     public String get(@Nonnull String key) {
-<span class="nc" id="L117">        return properties.getProperty(requireNonBlank(key, &quot;Argument 'key' must not be blank&quot;));</span>
+<span class="fc" id="L117">        return properties.getProperty(requireNonBlank(key, &quot;Argument 'key' must not be blank&quot;));</span>
     }
 
     @Nonnull
