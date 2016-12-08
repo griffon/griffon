@@ -21,6 +21,7 @@ import com.google.inject.AbstractModule
 import griffon.core.ApplicationClassLoader
 import griffon.core.resources.ResourceHandler
 import griffon.util.CompositeResourceBundleBuilder
+import griffon.util.PropertiesReader
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
 import org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler
 import org.junit.Rule
@@ -38,9 +39,12 @@ class DefaultCompositeResourceBundleBuilderSpec extends Specification {
     @Inject
     private ResourceHandler resourceHandler
 
+    @Inject
+    private PropertiesReader propertiesReader
+
     def 'Create throws #exception'() {
         given:
-        CompositeResourceBundleBuilder builder = new DefaultCompositeResourceBundleBuilder(resourceHandler)
+        CompositeResourceBundleBuilder builder = new DefaultCompositeResourceBundleBuilder(resourceHandler, propertiesReader)
 
         when:
         builder.create(filename, locale)
@@ -57,7 +61,7 @@ class DefaultCompositeResourceBundleBuilderSpec extends Specification {
 
     def 'Excercise bundle creation with #filename'() {
         given:
-        CompositeResourceBundleBuilder builder = new DefaultCompositeResourceBundleBuilder(resourceHandler)
+        CompositeResourceBundleBuilder builder = new DefaultCompositeResourceBundleBuilder(resourceHandler, propertiesReader)
 
         expect:
         builder.create(filename)
@@ -75,6 +79,7 @@ class DefaultCompositeResourceBundleBuilderSpec extends Specification {
             install(new GuiceBerryModule())
             bind(ApplicationClassLoader).to(DefaultApplicationClassLoader).in(Singleton)
             bind(ResourceHandler).to(DefaultResourceHandler).in(Singleton)
+            bind(PropertiesReader).in(Singleton)
         }
     }
 }

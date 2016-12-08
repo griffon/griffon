@@ -16,6 +16,8 @@
 package org.codehaus.griffon.runtime.util;
 
 import griffon.core.resources.ResourceHandler;
+import griffon.util.PropertiesResourceBundle;
+import griffon.util.PropertiesReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +28,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.PropertyResourceBundle;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
@@ -40,9 +42,12 @@ public class DefaultCompositeResourceBundleBuilder extends AbstractCompositeReso
     protected static final String PROPERTIES_SUFFIX = ".properties";
     protected static final String CLASS_SUFFIX = ".class";
 
+    protected final PropertiesReader propertiesReader;
+
     @Inject
-    public DefaultCompositeResourceBundleBuilder(@Nonnull ResourceHandler resourceHandler) {
+    public DefaultCompositeResourceBundleBuilder(@Nonnull ResourceHandler resourceHandler, @Nonnull PropertiesReader propertiesReader) {
         super(resourceHandler);
+        this.propertiesReader = propertiesReader;
     }
 
     @Nonnull
@@ -61,9 +66,10 @@ public class DefaultCompositeResourceBundleBuilder extends AbstractCompositeReso
         List<URL> resources = getResources(fileName, PROPERTIES_SUFFIX);
         if (resources != null) {
             for (URL resource : resources) {
-                if (null == resource) continue;
+                if (null == resource) { continue; }
                 try {
-                    bundles.add(new PropertyResourceBundle(resource.openStream()));
+                    Properties properties = propertiesReader.load(resource.openStream());
+                    bundles.add(new PropertiesResourceBundle(properties));
                 } catch (IOException e) {
                     // ignore
                 }

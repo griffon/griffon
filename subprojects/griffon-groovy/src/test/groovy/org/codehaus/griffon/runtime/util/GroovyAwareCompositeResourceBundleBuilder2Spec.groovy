@@ -24,6 +24,7 @@ import griffon.core.env.Metadata
 import griffon.core.resources.ResourceHandler
 import griffon.util.CompositeResourceBundleBuilder
 import griffon.util.ConfigReader
+import griffon.util.PropertiesReader
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
 import org.codehaus.griffon.runtime.core.env.EnvironmentProvider
 import org.codehaus.griffon.runtime.core.env.MetadataProvider
@@ -71,6 +72,7 @@ class GroovyAwareCompositeResourceBundleBuilder2Spec extends Specification {
             install(new GuiceBerryModule())
             bind(ApplicationClassLoader).to(DefaultApplicationClassLoader).in(Singleton)
             bind(ResourceHandler).to(DefaultResourceHandler).in(Singleton)
+            bind(PropertiesReader).toProvider(guicify(new PropertiesReader.Provider()))
             bind(ConfigReader).toProvider(guicify(new ConfigReader.Provider()))
             bind(Metadata).toProvider(guicify(new MetadataProvider()))
             bind(Environment).toProvider(guicify(new EnvironmentProvider()))

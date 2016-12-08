@@ -44,6 +44,7 @@ import griffon.core.resources.ResourceResolver;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import griffon.util.CompositeResourceBundleBuilder;
+import griffon.util.PropertiesReader;
 import org.codehaus.griffon.runtime.core.addon.DefaultAddonManager;
 import org.codehaus.griffon.runtime.core.artifact.ControllerArtifactHandler;
 import org.codehaus.griffon.runtime.core.artifact.DefaultArtifactManager;
@@ -107,6 +108,10 @@ public class DefaultApplicationModule extends AbstractModule {
 
         bind(ContextFactory.class)
             .to(DefaultContextFactory.class)
+            .asSingleton();
+
+        bind(PropertiesReader.class)
+            .toProvider(PropertiesReader.Provider.class)
             .asSingleton();
 
         bind(Context.class)
