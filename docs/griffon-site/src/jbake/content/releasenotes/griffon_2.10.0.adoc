@@ -1,0 +1,190 @@
+= Griffon 2.10.0 Release Notes
+Andres Almiray
+2017-03-01
+:jbake-type: post
+:jbake-status: published
+:category: releasenotes
+:idprefix:
+:linkattrs:
+:path-griffon-core: /guide/2.10.0/api/griffon/core
+
+=== Dependencies
+
+No dependencies have been upgraded in this release.
+
+=== Runtime
+
+==== Module Evictions
+
+The current module system allows multiple modules to supply type bindings. Given binding equivalences a module may override
+bindings supplied by other modules, but you can't avoid the original bindings from being added in the first case. Now
+it's possible for a module to evict another one, effectively barring the evicted module from contributing its bindings.
+Let's say there's a module named "foo" defined as follows
+
+[source, java]
+----
+import griffon.core.injection.Module;
+import griffon.inject.DependsOn;
+import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.kordamp.jipsy.ServiceProviderFor;
+
+import javax.inject.Named;
+
+@Named("foo")
+@ServiceProviderFor(Module.class)
+public class FooModule extends AbstractModule {
+    @Override
+    protected void doConfigure() {
+        // binding definitions
+    }
+}
+----
+
+You may evict this module by defining another module annotated with `@Evicts`, such as
+
+[source, java]
+----
+import griffon.core.injection.Module;
+import griffon.inject.DependsOn;
+import griffon.inject.Evicts;
+import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.kordamp.jipsy.ServiceProviderFor;
+
+import javax.inject.Named;
+
+@Named("foo")
+@Evicts("foo")
+@ServiceProviderFor(Module.class)
+public class FooEvictorModule extends AbstractModule {
+    @Override
+    protected void doConfigure() {
+        // binding definitions
+    }
+}
+----
+
+The evicting module (`FooEvictorModule`)  has to have the same name as the evicted module (`FooModule`) hence why both
+modules are annotated with `@Named("foo")`.
+
+==== Enhanced Properties Support
+
+It's now possible to define conditional blocks in properties files, similarly as it's done in Groovy scripts. For example
+the `datasource` plugin lets you define datasource configuration that may be environment sensible. In the Groovy version
+of the configuration you'd write the following
+
+[source, groovy]
+.DataSource.groovy
+----
+dataSource.driverClassName = 'org.h2.Driver'
+environments {
+    development {
+        dataSource.url = 'jdbc:h2:mem:@application.name@-dev'
+    }
+    test {
+        dataSource.url = 'jdbc:h2:mem:@application.name@-test'
+    }
+    production {
+        dataSource.url = 'jdbc:h2:file:/opt/@application.name@/data/db'
+    }
+}
+----
+
+You can rewrite this configuration file using just properties files in the this way
+
+[source, java]
+.DataSource.properties
+----
+dataSource.driverClassName = org.h2.Driver
+environments.development.dataSource.url = jdbc:h2:mem:@application.name@-dev
+environments.test.dataSource.url = jdbc:h2:mem:@application.name@-test
+environments.production.dataSource.url = jdbc:h2:file:/opt/@application.name@/data/db
+----
+
+==== JavaFX Support
+
+All of the binding and property support classes added in `2.9.0` have been relocated form package `griffon.javafx.support`
+to `griffon.javafx.beans.binding` and `griffon.javafx.beans.property` in order to mirror the same package structure found
+in the standard JavaFX APIs.
+All collection classes have been moved from package `griffon.javafx.support` to `griffon.javafx.collections` for the same
+reason.
+
+==== ElementObservableList
+
+New `ElementObservableList` can listen to updates on elements and trigger an update within itself. This enables widgets
+such as `ListView` and `TableView` to redraw data as soon as an element update is posted. Here's a concrete example, say
+you have an observable bean defined as follows:
+
+[source, java]
+----
+public class ObservablePerson implements ElementObservableList.PropertyContainer {
+    private final IntegerProperty id = new SimpleIntegerProperty(this, "id");
+    private final StringProperty name = new SimpleStringProperty(this, "name");
+    private final StringProperty lastname = new SimpleStringProperty(this, "lastname");
+
+    public ObservablePerson(int id, String name, String lastname) {
+        setId(id);
+        setName(name);
+        setLastname(lastname);
+    }
+
+    public IntegerProperty idProperty() {
+        return id;
+    }
+
+    public StringProperty nameProperty() {
+        return name;
+    }
+
+    public StringProperty lastnameProperty() {
+        return lastname;
+    }
+
+    // getters & setters
+
+    @Override
+    public Property<?>[] properties() {
+        return new Property<?>[]{
+            idProperty(),
+            nameProperty(),
+            lastnameProperty()
+        };
+    }
+}
+----
+
+Notice that the bean class must implement `ElementObservableList.PropertyContainer`, which defines a single method that
+helps `ElementObservableList` figure out what properties should be used to determine a change within the bean. Setting up
+a `ListView` backed by an `ElementObservableList` is as easy as
+
+[source, java]
+----
+listView.setItems(new ElementObservableList<>());
+----
+
+Now, whenever an element of type `ObservableBean` is added and any of its properties is modified then the `ListView will
+react too.
+
+==== Resetable Properties
+
+There's a new set of JavaFX properties that can be used to keep track of value changes, and when necessary reset the property's
+value to a base one.
+
+=== Buildtime
+
+==== Gradle Griffon Plugin
+
+There are two new properties found in this plugin:
+
+ * `generateProjectStructure`: whether to create the standard project layout (`griffon-app` directory and subdirectories)
+ or not. Default value is set to `true`.
+ * `applicationProject`: automatically includes the `application` plugin and other features for building an application
+ distribution. Default value is set to `true`. Turn it off in projects that require Griffon support but do not define
+ or require an application luancher.
+
+=== Compatibility
+
+Full binary compatibility report between Griffon 2.10.0 and 2.9.1 can be found
+link:../reports/2.9.0/compatibility-report.html[here].
+
+A list of fixed issues can be found at the
+link:https://github.com/griffon/griffon/issues?q=milestone%3A2.10.0+is%3Aclosed[2.10.0 milestone] page.
