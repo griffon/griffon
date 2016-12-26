@@ -61,6 +61,8 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public final class CollectionUtils {
+    private static final String ERROR_MAP_NULL = "Argument 'map' must not be null";
+
     public static <T> List<T> reverse(List<T> input) {
         List<T> output = new ArrayList<>(input);
         Collections.reverse(output);
@@ -137,14 +139,49 @@ public final class CollectionUtils {
      * The Map is used live, which means changes made to it will affect the
      * Properties instance directly.
      *
-     * @param map the Map instance ot adapt as a Properties instance
+     * @param map the Map instance to adapt as a Properties instance
+     *
      * @return a new Properties instance backed by the supplied Map.
+     *
      * @since 2.1.0
      */
     @Nonnull
     public static Properties toProperties(@Nonnull Map<String, Object> map) {
-        requireNonNull(map, "Argument 'map' must not be null");
+        requireNonNull(map, ERROR_MAP_NULL);
         return new MapToPropertiesAdapter(map);
+    }
+
+    /**
+     * Creates a Properties instances based on the given Map.
+     *
+     * @param map the Map instance to convert as a Properties instance
+     *
+     * @return a new Properties instance based by the supplied Map.
+     *
+     * @since 2.10.0
+     */
+    @Nonnull
+    public static Properties toPropertiesDeep(@Nonnull Map<String, Object> map) {
+        requireNonNull(map, ERROR_MAP_NULL);
+        Properties properties = new Properties();
+
+        for (Map.Entry<String, Object> e : map.entrySet()) {
+            createKey(properties, e.getKey(), e.getValue());
+        }
+
+        return properties;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void createKey(@Nonnull Properties properties, @Nonnull String key, @Nonnull Object value) {
+        if (value instanceof Map) {
+            Map<String, Object> map = (Map<String, Object>) value;
+            for (Map.Entry<String, Object> e : map.entrySet()) {
+                createKey(properties, key + "." + e.getKey(), e.getValue());
+            }
+        } else {
+            properties.put(key, value);
+        }
     }
 
     public static class MapBuilder<K, V> implements Map<K, V> {

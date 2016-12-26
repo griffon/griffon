@@ -116,4 +116,30 @@ class CollectionUtilsTest extends GroovyTestCase {
         assert set.contains(1) == delegate.contains(1)
         assert set.containsAll([1])
     }
+
+    void testToPropertiesDeep() {
+        // given:
+        Map<String, Object> map = [
+            singleKey    : 'singleValue',
+            'key.string' : 'string',
+            'key.boolean': true,
+            'key.list'   : [1, 2, 3],
+            'key.map'    : [
+                'one': 1,
+                'two': 2
+            ]
+        ]
+
+        // when:
+        Properties props = CollectionUtils.toPropertiesDeep(map)
+
+        // then:
+        assert props.keySet().size() == 6
+        assert props.singleKey == 'singleValue'
+        assert props.get('key.string') == 'string'
+        assert props.get('key.boolean') == true
+        assert props.get('key.list') == [1, 2, 3]
+        assert props.get('key.map.one') == 1
+        assert props.get('key.map.two') == 2
+    }
 }
