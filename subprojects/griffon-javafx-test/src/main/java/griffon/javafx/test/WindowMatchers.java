@@ -15,75 +15,36 @@
  */
 package griffon.javafx.test;
 
-import com.google.common.base.Predicate;
 import javafx.stage.Window;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
-
-import javax.annotation.Nullable;
-
-import static org.testfx.matcher.base.GeneralMatchers.baseMatcher;
 
 /**
  * TestFX matchers for {@code javafx.stage.Window}.
  *
  * @author Andres Almiray
+ * @Deprecated use {@code org.testfx.matcher.base.WindowMatchers} instead
  * @since 2.6.0
  */
+@Deprecated
 public class WindowMatchers {
-    //---------------------------------------------------------------------------------------------
-    // STATIC METHODS.
-    //---------------------------------------------------------------------------------------------
-
     @Factory
     public static Matcher<Window> isShowing() {
-        return baseMatcher("Window is showing", new Predicate<Window>() {
-            @Override
-            public boolean apply(@Nullable Window window) {
-                return isShowing(window);
-            }
-        });
+        return org.testfx.matcher.base.WindowMatchers.isShowing();
     }
 
     @Factory
     public static Matcher<Window> isNotShowing() {
-        return baseMatcher("Window is not showing", new Predicate<Window>() {
-            @Override
-            public boolean apply(@Nullable Window window) {
-                return !isShowing(window);
-            }
-        });
+        return org.testfx.matcher.base.WindowMatchers.isNotShowing();
     }
 
     @Factory
     public static Matcher<Window> isFocused() {
-        return baseMatcher("Window is focused", new Predicate<Window>() {
-            @Override
-            public boolean apply(@Nullable Window window) {
-                return isFocused(window);
-            }
-        });
+        return org.testfx.matcher.base.WindowMatchers.isFocused();
     }
 
     @Factory
     public static Matcher<Window> isNotFocused() {
-        return baseMatcher("Window is not focused", new Predicate<Window>() {
-            @Override
-            public boolean apply(@Nullable Window window) {
-                return !isFocused(window);
-            }
-        });
-    }
-
-    //---------------------------------------------------------------------------------------------
-    // PRIVATE STATIC METHODS.
-    //---------------------------------------------------------------------------------------------
-
-    private static boolean isShowing(Window window) {
-        return window.isShowing();
-    }
-
-    private static boolean isFocused(Window window) {
-        return window.isFocused();
+        return org.testfx.matcher.base.WindowMatchers.isNotFocused();
     }
 }
