@@ -15,76 +15,37 @@
  */
 package griffon.javafx.test;
 
-import com.google.common.base.Predicate;
 import javafx.stage.Window;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
-
-import javax.annotation.Nullable;
-
-import static org.testfx.matcher.base.GeneralMatchers.baseMatcher;
 
 /**
  * TestFX matchers for {@code javafx.stage.Window}.
  *
  * @author Andres Almiray
+ * @Deprecated use {@code org.testfx.matcher.base.WindowMatchers} instead
  * @since 2.6.0
  */
-<span class="nc" id="L33">public class WindowMatchers {</span>
-    //---------------------------------------------------------------------------------------------
-    // STATIC METHODS.
-    //---------------------------------------------------------------------------------------------
-
+@Deprecated
+<span class="nc" id="L30">public class WindowMatchers {</span>
     @Factory
     public static Matcher&lt;Window&gt; isShowing() {
-<span class="nc" id="L40">        return baseMatcher(&quot;Window is showing&quot;, new Predicate&lt;Window&gt;() {</span>
-            @Override
-            public boolean apply(@Nullable Window window) {
-<span class="nc" id="L43">                return isShowing(window);</span>
-            }
-        });
+<span class="nc" id="L33">        return org.testfx.matcher.base.WindowMatchers.isShowing();</span>
     }
 
     @Factory
     public static Matcher&lt;Window&gt; isNotShowing() {
-<span class="nc" id="L50">        return baseMatcher(&quot;Window is not showing&quot;, new Predicate&lt;Window&gt;() {</span>
-            @Override
-            public boolean apply(@Nullable Window window) {
-<span class="nc bnc" id="L53" title="All 2 branches missed.">                return !isShowing(window);</span>
-            }
-        });
+<span class="nc" id="L38">        return org.testfx.matcher.base.WindowMatchers.isNotShowing();</span>
     }
 
     @Factory
     public static Matcher&lt;Window&gt; isFocused() {
-<span class="nc" id="L60">        return baseMatcher(&quot;Window is focused&quot;, new Predicate&lt;Window&gt;() {</span>
-            @Override
-            public boolean apply(@Nullable Window window) {
-<span class="nc" id="L63">                return isFocused(window);</span>
-            }
-        });
+<span class="nc" id="L43">        return org.testfx.matcher.base.WindowMatchers.isFocused();</span>
     }
 
     @Factory
     public static Matcher&lt;Window&gt; isNotFocused() {
-<span class="nc" id="L70">        return baseMatcher(&quot;Window is not focused&quot;, new Predicate&lt;Window&gt;() {</span>
-            @Override
-            public boolean apply(@Nullable Window window) {
-<span class="nc bnc" id="L73" title="All 2 branches missed.">                return !isFocused(window);</span>
-            }
-        });
-    }
-
-    //---------------------------------------------------------------------------------------------
-    // PRIVATE STATIC METHODS.
-    //---------------------------------------------------------------------------------------------
-
-    private static boolean isShowing(Window window) {
-<span class="nc" id="L83">        return window.isShowing();</span>
-    }
-
-    private static boolean isFocused(Window window) {
-<span class="nc" id="L87">        return window.isFocused();</span>
+<span class="nc" id="L48">        return org.testfx.matcher.base.WindowMatchers.isNotFocused();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
