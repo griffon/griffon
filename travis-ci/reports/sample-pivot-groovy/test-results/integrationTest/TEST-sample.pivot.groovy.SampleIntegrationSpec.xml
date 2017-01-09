@@ -1,31 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="sample.pivot.groovy.SampleIntegrationSpec" tests="0" skipped="0" failures="0" errors="0" timestamp="1970-01-01T00:00:00" hostname="testing-gce-b8b33b65-f9aa-43f6-82c8-a8f17f90840a" time="0.0">
+<testsuite name="sample.pivot.groovy.SampleIntegrationSpec" tests="0" skipped="0" failures="0" errors="0" timestamp="1970-01-01T00:00:00" hostname="testing-gce-21936cb8-f165-4118-9ac0-d77ae1d8d6f1" time="0.0">
   <properties/>
   <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[[griffon-pool-2-thread-1] WARN org.codehaus.griffon.runtime.core.controller.AbstractActionManager - An exception occurred when executing sample.pivot.groovy.SampleController.sayHello
-griffon.exceptions.InstanceMethodInvocationException: An error occurred while invoking instance method sample.pivot.groovy.SampleController.sayHello()
-	at griffon.util.GriffonClassUtils.invokeExactInstanceMethod(GriffonClassUtils.java:3056)
-Caused by: groovy.lang.MissingPropertyException: No such property: input for class: griffon.util.CompositeBuilder
+  <system-err><![CDATA[[AWT-EventQueue-0] ERROR griffon.core.GriffonExceptionHandler - Uncaught Exception. Stacktrace was sanitized. Set System property 'griffon.full.stacktrace' to 'true' for full report.
+groovy.lang.MissingPropertyException: No such property: output for class: griffon.util.CompositeBuilder
 	at griffon.util.CompositeBuilder$2.doCall(CompositeBuilder.java:116)
-	at sample.pivot.groovy.SampleController.sayHello(SampleController.groovy:34)
-	at griffon.util.MethodUtils.invokeExactMethod(MethodUtils.java:404)
-	at griffon.util.MethodUtils.invokeExactMethod(MethodUtils.java:353)
-	at griffon.util.GriffonClassUtils.invokeExactInstanceMethod(GriffonClassUtils.java:3052)
-[griffon-pool-2-thread-1] TRACE org.codehaus.griffon.runtime.core.controller.AbstractActionManager - Status after execution of sample.pivot.groovy.SampleController.sayHello is EXCEPTION
-[griffon-pool-2-thread-1] ERROR griffon.core.GriffonExceptionHandler - Uncaught Exception. Stacktrace was sanitized. Set System property 'griffon.full.stacktrace' to 'true' for full report.
-griffon.exceptions.InstanceMethodInvocationException: An error occurred while invoking instance method sample.pivot.groovy.SampleController.sayHello()
-	at griffon.util.GriffonClassUtils.invokeExactInstanceMethod(GriffonClassUtils.java:3056)
-Caused by: groovy.lang.MissingPropertyException: No such property: input for class: griffon.util.CompositeBuilder
-	at griffon.util.CompositeBuilder$2.doCall(CompositeBuilder.java:116)
-	at sample.pivot.groovy.SampleController.sayHello(SampleController.groovy:34)
-	at griffon.util.MethodUtils.invokeExactMethod(MethodUtils.java:404)
-	at griffon.util.MethodUtils.invokeExactMethod(MethodUtils.java:353)
-	at griffon.util.GriffonClassUtils.invokeExactInstanceMethod(GriffonClassUtils.java:3052)
-[griffon-pool-2-thread-1] ERROR griffon.core.GriffonExceptionHandler - An error occurred while handling uncaught exception griffon.exceptions.InstanceMethodInvocationException: An error occurred while invoking instance method sample.pivot.groovy.SampleController.sayHello(). Stacktrace was sanitized. Set System property 'griffon.full.stacktrace' to 'true' for full report.
+	at sample.pivot.groovy.SampleController$_sayHello_closure1.doCall(SampleController.groovy:36)
+	at sample.pivot.groovy.SampleController$_sayHello_closure1.doCall(SampleController.groovy)
+[AWT-EventQueue-0] ERROR griffon.core.GriffonExceptionHandler - An error occurred while handling uncaught exception groovy.lang.MissingPropertyException: No such property: output for class: griffon.util.CompositeBuilder. Stacktrace was sanitized. Set System property 'griffon.full.stacktrace' to 'true' for full report.
 griffon.exceptions.InstanceNotFoundException: Could not find an instance of type griffon.core.event.EventRouter with qualifier @javax.inject.Named(value=applicationEventRouter)
 	at griffon.core.GriffonExceptionHandler.handle(GriffonExceptionHandler.java:92)
 	at griffon.core.GriffonExceptionHandler.uncaughtException(GriffonExceptionHandler.java:81)
-Caused by: griffon.exceptions.ClosedInjectorException: Injector is closed! org.codehaus.griffon.runtime.injection.GuiceInjector@5f5766b4
+Caused by: griffon.exceptions.ClosedInjectorException: Injector is closed! org.codehaus.griffon.runtime.injection.GuiceInjector@5a82bf6b
 	... 2 more
 ]]></system-err>
 </testsuite>
