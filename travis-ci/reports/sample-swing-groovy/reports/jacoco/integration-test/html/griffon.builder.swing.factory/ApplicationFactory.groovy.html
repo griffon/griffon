@@ -149,8 +149,8 @@ class ApplicationFactory extends AbstractFactory {
 <span class="fc" id="L149">        builder.removeAttributeDelegate(builder.context.cancelButtonDelegate)</span>
 <span class="pc bpc" id="L150" title="1 of 2 branches missed.">        if (window instanceof Window) {</span>
 <span class="fc" id="L151">            def containingWindows = builder.containingWindows</span>
-<span class="pc bpc" id="L152" title="4 of 8 branches missed.">            if (!containingWindows.empty &amp;&amp; containingWindows.last == window) {</span>
-<span class="fc" id="L153">                containingWindows.removeLast()</span>
+<span class="pc bpc" id="L152" title="15 of 22 branches missed.">            if (!containingWindows.empty &amp;&amp; containingWindows.last == window) {</span>
+<span class="pc" id="L153">                containingWindows.removeLast()</span>
             }
 
             // can't pack or show an applet...
