@@ -90,7 +90,7 @@ public class ApplicationModule extends AbstractModule {
     @Override
     protected void doConfigure() {
         bind(ConfigurationDecoratorFactory.class)
-            .toProvider(MutableConfigurationDecoratorFactory.class)
+            .to(MutableConfigurationDecoratorFactory.class)
             .asSingleton();
     }
 }
