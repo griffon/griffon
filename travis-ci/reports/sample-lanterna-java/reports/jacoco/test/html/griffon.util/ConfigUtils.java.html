@@ -20,6 +20,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.MissingResourceException;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -42,41 +43,64 @@ public final class ConfigUtils {
     private static final String ERROR_CONFIG_NULL = &quot;Argument 'config' must not be null&quot;;
     private static final String ERROR_KEY_BLANK = &quot;Argument 'key' must not be blank&quot;;
 
-<span class="nc" id="L45">    private ConfigUtils() {</span>
+<span class="nc" id="L46">    private ConfigUtils() {</span>
         // prevent instantiation
-<span class="nc" id="L47">    }</span>
+<span class="nc" id="L48">    }</span>
+
+    /**
+     * Converts a {@code ResourceBundle} instance into a {@code Properties} instance.
+     *
+     * @param resourceBundle the {@code ResourceBundle} to be converted. Must not be null.
+     *
+     * @return a newly created {@code Properties} with all key/value pairs from the given {@code ResourceBundle}.
+     *
+     * @since 2.10.0
+     */
+    @Nonnull
+    public static Properties toProperties(@Nonnull ResourceBundle resourceBundle) {
+<span class="nc" id="L61">        requireNonNull(resourceBundle, &quot;Argument 'resourceBundle' must not be null&quot;);</span>
+
+<span class="nc" id="L63">        Properties properties = new Properties();</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        for (String key : resourceBundle.keySet()) {</span>
+<span class="nc" id="L65">            properties.put(key, resourceBundle.getObject(key));</span>
+<span class="nc" id="L66">        }</span>
+
+<span class="nc" id="L68">        return properties;</span>
+    }
 
     /**
      * Returns true if there's a non-null value for the specified key.
      *
      * @param config the configuration object to be searched upon
      * @param key    the key to be searched
+     *
      * @return true if there's a value for the specified key, false otherwise
+     *
      * @since 2.2.0
      */
     @SuppressWarnings(&quot;unchecked&quot;)
     public static boolean containsKey(@Nonnull Map&lt;String, Object&gt; config, @Nonnull String key) {
-<span class="nc" id="L59">        requireNonNull(config, ERROR_CONFIG_NULL);</span>
-<span class="nc" id="L60">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="nc" id="L83">        requireNonNull(config, ERROR_CONFIG_NULL);</span>
+<span class="nc" id="L84">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
 
-<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (config.containsKey(key)) {</span>
-<span class="nc" id="L63">            return true;</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        if (config.containsKey(key)) {</span>
+<span class="nc" id="L87">            return true;</span>
         }
 
-<span class="nc" id="L66">        String[] keys = key.split(&quot;\\.&quot;);</span>
-<span class="nc bnc" id="L67" title="All 2 branches missed.">        for (int i = 0; i &lt; keys.length - 1; i++) {</span>
-<span class="nc bnc" id="L68" title="All 2 branches missed.">            if (config != null) {</span>
-<span class="nc" id="L69">                Object node = config.get(keys[i]);</span>
-<span class="nc bnc" id="L70" title="All 2 branches missed.">                if (node instanceof Map) {</span>
-<span class="nc" id="L71">                    config = (Map&lt;String, Object&gt;) node;</span>
+<span class="nc" id="L90">        String[] keys = key.split(&quot;\\.&quot;);</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        for (int i = 0; i &lt; keys.length - 1; i++) {</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">            if (config != null) {</span>
+<span class="nc" id="L93">                Object node = config.get(keys[i]);</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">                if (node instanceof Map) {</span>
+<span class="nc" id="L95">                    config = (Map&lt;String, Object&gt;) node;</span>
                 } else {
-<span class="nc" id="L73">                    return false;</span>
+<span class="nc" id="L97">                    return false;</span>
                 }
-<span class="nc" id="L75">            } else {</span>
-<span class="nc" id="L76">                return false;</span>
+<span class="nc" id="L99">            } else {</span>
+<span class="nc" id="L100">                return false;</span>
             }
         }
-<span class="nc bnc" id="L79" title="All 4 branches missed.">        return config != null &amp;&amp; config.containsKey(keys[keys.length - 1]);</span>
+<span class="nc bnc" id="L103" title="All 4 branches missed.">        return config != null &amp;&amp; config.containsKey(keys[keys.length - 1]);</span>
     }
 
     /**
@@ -84,47 +108,49 @@ public final class ConfigUtils {
      *
      * @param config the configuration object to be searched upon
      * @param key    the key to be searched
+     *
      * @return true if there's a value for the specified key, false otherwise
+     *
      * @since 2.2.0
      */
     @SuppressWarnings(&quot;unchecked&quot;)
     public static boolean containsKey(@Nonnull ResourceBundle config, @Nonnull String key) {
-<span class="nc" id="L92">        requireNonNull(config, ERROR_CONFIG_NULL);</span>
-<span class="nc" id="L93">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="nc" id="L118">        requireNonNull(config, ERROR_CONFIG_NULL);</span>
+<span class="nc" id="L119">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
 
-<span class="nc" id="L95">        String[] keys = key.split(&quot;\\.&quot;);</span>
+<span class="nc" id="L121">        String[] keys = key.split(&quot;\\.&quot;);</span>
 
         try {
-<span class="nc bnc" id="L98" title="All 2 branches missed.">            if (config.containsKey(key)) {</span>
-<span class="nc" id="L99">                return true;</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">            if (config.containsKey(key)) {</span>
+<span class="nc" id="L125">                return true;</span>
             }
-<span class="nc" id="L101">        } catch (MissingResourceException mre) {</span>
+<span class="nc" id="L127">        } catch (MissingResourceException mre) {</span>
             // OK
-<span class="nc" id="L103">        }</span>
+<span class="nc" id="L129">        }</span>
 
-<span class="nc bnc" id="L105" title="All 2 branches missed.">        if (keys.length == 1) {</span>
-<span class="nc" id="L106">            return config.containsKey(keys[0]);</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        if (keys.length == 1) {</span>
+<span class="nc" id="L132">            return config.containsKey(keys[0]);</span>
         }
 
-<span class="nc" id="L109">        Object node = config.getObject(keys[0]);</span>
-<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (!(node instanceof Map)) {</span>
-<span class="nc" id="L111">            return false;</span>
+<span class="nc" id="L135">        Object node = config.getObject(keys[0]);</span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">        if (!(node instanceof Map)) {</span>
+<span class="nc" id="L137">            return false;</span>
         }
 
-<span class="nc" id="L114">        Map&lt;String, Object&gt; map = (Map) node;</span>
-<span class="nc bnc" id="L115" title="All 2 branches missed.">        for (int i = 1; i &lt; keys.length - 1; i++) {</span>
-<span class="nc bnc" id="L116" title="All 2 branches missed.">            if (map != null) {</span>
-<span class="nc" id="L117">                node = map.get(keys[i]);</span>
-<span class="nc bnc" id="L118" title="All 2 branches missed.">                if (node instanceof Map) {</span>
-<span class="nc" id="L119">                    map = (Map) node;</span>
+<span class="nc" id="L140">        Map&lt;String, Object&gt; map = (Map) node;</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">        for (int i = 1; i &lt; keys.length - 1; i++) {</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">            if (map != null) {</span>
+<span class="nc" id="L143">                node = map.get(keys[i]);</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">                if (node instanceof Map) {</span>
+<span class="nc" id="L145">                    map = (Map) node;</span>
                 } else {
-<span class="nc" id="L121">                    return false;</span>
+<span class="nc" id="L147">                    return false;</span>
                 }
             } else {
-<span class="nc" id="L124">                return false;</span>
+<span class="nc" id="L150">                return false;</span>
             }
         }
-<span class="nc bnc" id="L127" title="All 4 branches missed.">        return map != null &amp;&amp; map.containsKey(keys[keys.length - 1]);</span>
+<span class="nc bnc" id="L153" title="All 4 branches missed.">        return map != null &amp;&amp; map.containsKey(keys[keys.length - 1]);</span>
     }
 
     /**
@@ -132,33 +158,34 @@ public final class ConfigUtils {
      *
      * @param config the configuration object to be searched upon
      * @param key    the key to be searched
+     *
      * @return true if there's a value for the specified key, false otherwise
      */
     @SuppressWarnings(&quot;unchecked&quot;)
     public static boolean isValueDefined(@Nonnull Map&lt;String, Object&gt; config, @Nonnull String key) {
-<span class="nc" id="L139">        requireNonNull(config, ERROR_CONFIG_NULL);</span>
-<span class="nc" id="L140">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="nc" id="L166">        requireNonNull(config, ERROR_CONFIG_NULL);</span>
+<span class="nc" id="L167">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
 
-<span class="nc bnc" id="L142" title="All 2 branches missed.">        if (config.containsKey(key)) {</span>
-<span class="nc" id="L143">            return true;</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">        if (config.containsKey(key)) {</span>
+<span class="nc" id="L170">            return true;</span>
         }
 
-<span class="nc" id="L146">        String[] keys = key.split(&quot;\\.&quot;);</span>
-<span class="nc bnc" id="L147" title="All 2 branches missed.">        for (int i = 0; i &lt; keys.length - 1; i++) {</span>
-<span class="nc bnc" id="L148" title="All 2 branches missed.">            if (config != null) {</span>
-<span class="nc" id="L149">                Object node = config.get(keys[i]);</span>
-<span class="nc bnc" id="L150" title="All 2 branches missed.">                if (node instanceof Map) {</span>
-<span class="nc" id="L151">                    config = (Map&lt;String, Object&gt;) node;</span>
+<span class="nc" id="L173">        String[] keys = key.split(&quot;\\.&quot;);</span>
+<span class="nc bnc" id="L174" title="All 2 branches missed.">        for (int i = 0; i &lt; keys.length - 1; i++) {</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">            if (config != null) {</span>
+<span class="nc" id="L176">                Object node = config.get(keys[i]);</span>
+<span class="nc bnc" id="L177" title="All 2 branches missed.">                if (node instanceof Map) {</span>
+<span class="nc" id="L178">                    config = (Map&lt;String, Object&gt;) node;</span>
                 } else {
-<span class="nc" id="L153">                    return false;</span>
+<span class="nc" id="L180">                    return false;</span>
                 }
-<span class="nc" id="L155">            } else {</span>
-<span class="nc" id="L156">                return false;</span>
+<span class="nc" id="L182">            } else {</span>
+<span class="nc" id="L183">                return false;</span>
             }
         }
-<span class="nc bnc" id="L159" title="All 2 branches missed.">        if (config == null) return false;</span>
-<span class="nc" id="L160">        Object value = config.get(keys[keys.length - 1]);</span>
-<span class="nc bnc" id="L161" title="All 2 branches missed.">        return value != null;</span>
+<span class="nc bnc" id="L186" title="All 2 branches missed.">        if (config == null) { return false; }</span>
+<span class="nc" id="L187">        Object value = config.get(keys[keys.length - 1]);</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">        return value != null;</span>
     }
 
     /**
@@ -166,54 +193,55 @@ public final class ConfigUtils {
      *
      * @param config the configuration object to be searched upon
      * @param key    the key to be searched
+     *
      * @return true if there's a value for the specified key, false otherwise
      */
     @SuppressWarnings(&quot;unchecked&quot;)
     public static boolean isValueDefined(@Nonnull ResourceBundle config, @Nonnull String key) {
-<span class="nc" id="L173">        requireNonNull(config, ERROR_CONFIG_NULL);</span>
-<span class="nc" id="L174">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="nc" id="L201">        requireNonNull(config, ERROR_CONFIG_NULL);</span>
+<span class="nc" id="L202">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
 
-<span class="nc" id="L176">        String[] keys = key.split(&quot;\\.&quot;);</span>
+<span class="nc" id="L204">        String[] keys = key.split(&quot;\\.&quot;);</span>
 
         try {
-<span class="nc" id="L179">            Object value = config.getObject(key);</span>
-<span class="nc bnc" id="L180" title="All 2 branches missed.">            if (value != null) {</span>
-<span class="nc" id="L181">                return true;</span>
+<span class="nc" id="L207">            Object value = config.getObject(key);</span>
+<span class="nc bnc" id="L208" title="All 2 branches missed.">            if (value != null) {</span>
+<span class="nc" id="L209">                return true;</span>
             }
-<span class="nc" id="L183">        } catch (MissingResourceException mre) {</span>
+<span class="nc" id="L211">        } catch (MissingResourceException mre) {</span>
             // OK
-<span class="nc" id="L185">        }</span>
+<span class="nc" id="L213">        }</span>
 
-<span class="nc bnc" id="L187" title="All 2 branches missed.">        if (keys.length == 1) {</span>
+<span class="nc bnc" id="L215" title="All 2 branches missed.">        if (keys.length == 1) {</span>
             try {
-<span class="nc" id="L189">                Object node = config.getObject(keys[0]);</span>
-<span class="nc bnc" id="L190" title="All 2 branches missed.">                return node != null;</span>
-<span class="nc" id="L191">            } catch (MissingResourceException mre) {</span>
-<span class="nc" id="L192">                return false;</span>
+<span class="nc" id="L217">                Object node = config.getObject(keys[0]);</span>
+<span class="nc bnc" id="L218" title="All 2 branches missed.">                return node != null;</span>
+<span class="nc" id="L219">            } catch (MissingResourceException mre) {</span>
+<span class="nc" id="L220">                return false;</span>
             }
         }
 
-<span class="nc" id="L196">        Object node = config.getObject(keys[0]);</span>
-<span class="nc bnc" id="L197" title="All 2 branches missed.">        if (!(node instanceof Map)) {</span>
-<span class="nc" id="L198">            return false;</span>
+<span class="nc" id="L224">        Object node = config.getObject(keys[0]);</span>
+<span class="nc bnc" id="L225" title="All 2 branches missed.">        if (!(node instanceof Map)) {</span>
+<span class="nc" id="L226">            return false;</span>
         }
 
-<span class="nc" id="L201">        Map&lt;String, Object&gt; map = (Map) node;</span>
-<span class="nc bnc" id="L202" title="All 2 branches missed.">        for (int i = 1; i &lt; keys.length - 1; i++) {</span>
-<span class="nc bnc" id="L203" title="All 2 branches missed.">            if (map != null) {</span>
-<span class="nc" id="L204">                node = map.get(keys[i]);</span>
-<span class="nc bnc" id="L205" title="All 2 branches missed.">                if (node instanceof Map) {</span>
-<span class="nc" id="L206">                    map = (Map) node;</span>
+<span class="nc" id="L229">        Map&lt;String, Object&gt; map = (Map) node;</span>
+<span class="nc bnc" id="L230" title="All 2 branches missed.">        for (int i = 1; i &lt; keys.length - 1; i++) {</span>
+<span class="nc bnc" id="L231" title="All 2 branches missed.">            if (map != null) {</span>
+<span class="nc" id="L232">                node = map.get(keys[i]);</span>
+<span class="nc bnc" id="L233" title="All 2 branches missed.">                if (node instanceof Map) {</span>
+<span class="nc" id="L234">                    map = (Map) node;</span>
                 } else {
-<span class="nc" id="L208">                    return false;</span>
+<span class="nc" id="L236">                    return false;</span>
                 }
             } else {
-<span class="nc" id="L211">                return false;</span>
+<span class="nc" id="L239">                return false;</span>
             }
         }
-<span class="nc bnc" id="L214" title="All 2 branches missed.">        if (map == null) return false;</span>
-<span class="nc" id="L215">        Object value = map.get(keys[keys.length - 1]);</span>
-<span class="nc bnc" id="L216" title="All 2 branches missed.">        return value != null;</span>
+<span class="nc bnc" id="L242" title="All 2 branches missed.">        if (map == null) { return false; }</span>
+<span class="nc" id="L243">        Object value = map.get(keys[keys.length - 1]);</span>
+<span class="nc bnc" id="L244" title="All 2 branches missed.">        return value != null;</span>
     }
 
     /**
@@ -222,34 +250,35 @@ public final class ConfigUtils {
      * @param config       the configuration object to be searched upon
      * @param key          the key to be searched
      * @param defaultValue the value to send back if no match is found
+     *
      * @return the value of the key or the default value if no match is found
      */
     @Nullable
     @SuppressWarnings({&quot;unchecked&quot;, &quot;ConstantConditions&quot;})
     public static &lt;T&gt; T getConfigValue(@Nonnull Map&lt;String, Object&gt; config, @Nonnull String key, @Nullable T defaultValue) {
-<span class="nc" id="L230">        requireNonNull(config, ERROR_CONFIG_NULL);</span>
-<span class="nc" id="L231">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="nc" id="L259">        requireNonNull(config, ERROR_CONFIG_NULL);</span>
+<span class="nc" id="L260">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
 
-<span class="nc bnc" id="L233" title="All 2 branches missed.">        if (config.containsKey(key)) {</span>
-<span class="nc" id="L234">            return (T) config.get(key);</span>
+<span class="nc bnc" id="L262" title="All 2 branches missed.">        if (config.containsKey(key)) {</span>
+<span class="nc" id="L263">            return (T) config.get(key);</span>
         }
 
-<span class="nc" id="L237">        String[] keys = key.split(&quot;\\.&quot;);</span>
-<span class="nc bnc" id="L238" title="All 2 branches missed.">        for (int i = 0; i &lt; keys.length - 1; i++) {</span>
-<span class="nc bnc" id="L239" title="All 2 branches missed.">            if (config != null) {</span>
-<span class="nc" id="L240">                Object node = config.get(keys[i]);</span>
-<span class="nc bnc" id="L241" title="All 2 branches missed.">                if (node instanceof Map) {</span>
-<span class="nc" id="L242">                    config = (Map) node;</span>
+<span class="nc" id="L266">        String[] keys = key.split(&quot;\\.&quot;);</span>
+<span class="nc bnc" id="L267" title="All 2 branches missed.">        for (int i = 0; i &lt; keys.length - 1; i++) {</span>
+<span class="nc bnc" id="L268" title="All 2 branches missed.">            if (config != null) {</span>
+<span class="nc" id="L269">                Object node = config.get(keys[i]);</span>
+<span class="nc bnc" id="L270" title="All 2 branches missed.">                if (node instanceof Map) {</span>
+<span class="nc" id="L271">                    config = (Map) node;</span>
                 } else {
-<span class="nc" id="L244">                    return defaultValue;</span>
+<span class="nc" id="L273">                    return defaultValue;</span>
                 }
-<span class="nc" id="L246">            } else {</span>
-<span class="nc" id="L247">                return defaultValue;</span>
+<span class="nc" id="L275">            } else {</span>
+<span class="nc" id="L276">                return defaultValue;</span>
             }
         }
-<span class="nc bnc" id="L250" title="All 2 branches missed.">        if (config == null) return defaultValue;</span>
-<span class="nc" id="L251">        Object value = config.get(keys[keys.length - 1]);</span>
-<span class="nc bnc" id="L252" title="All 2 branches missed.">        return value != null ? (T) value : defaultValue;</span>
+<span class="nc bnc" id="L279" title="All 2 branches missed.">        if (config == null) { return defaultValue; }</span>
+<span class="nc" id="L280">        Object value = config.get(keys[keys.length - 1]);</span>
+<span class="nc bnc" id="L281" title="All 2 branches missed.">        return value != null ? (T) value : defaultValue;</span>
     }
 
     /**
@@ -258,51 +287,52 @@ public final class ConfigUtils {
      * @param config       the configuration object to be searched upon
      * @param key          the key to be searched
      * @param defaultValue the value to send back if no match is found
+     *
      * @return the value of the key or the default value if no match is found
      */
     @Nullable
     @SuppressWarnings({&quot;unchecked&quot;, &quot;ConstantConditions&quot;})
     public static &lt;T&gt; T getConfigValue(@Nonnull ResourceBundle config, @Nonnull String key, @Nullable T defaultValue) {
-<span class="nc" id="L266">        requireNonNull(config, ERROR_CONFIG_NULL);</span>
-<span class="nc" id="L267">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="nc" id="L296">        requireNonNull(config, ERROR_CONFIG_NULL);</span>
+<span class="nc" id="L297">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
 
-<span class="nc" id="L269">        String[] keys = key.split(&quot;\\.&quot;);</span>
+<span class="nc" id="L299">        String[] keys = key.split(&quot;\\.&quot;);</span>
 
         try {
-<span class="nc" id="L272">            Object value = config.getObject(key);</span>
-<span class="nc bnc" id="L273" title="All 2 branches missed.">            if (value != null) {</span>
-<span class="nc" id="L274">                return (T) value;</span>
+<span class="nc" id="L302">            Object value = config.getObject(key);</span>
+<span class="nc bnc" id="L303" title="All 2 branches missed.">            if (value != null) {</span>
+<span class="nc" id="L304">                return (T) value;</span>
             }
-<span class="nc" id="L276">        } catch (MissingResourceException mre) {</span>
+<span class="nc" id="L306">        } catch (MissingResourceException mre) {</span>
             // OK
-<span class="nc" id="L278">        }</span>
+<span class="nc" id="L308">        }</span>
 
-<span class="nc bnc" id="L280" title="All 2 branches missed.">        if (keys.length == 1) {</span>
-<span class="nc" id="L281">            Object node = config.getObject(keys[0]);</span>
-<span class="nc bnc" id="L282" title="All 2 branches missed.">            return node != null ? (T) node : defaultValue;</span>
+<span class="nc bnc" id="L310" title="All 2 branches missed.">        if (keys.length == 1) {</span>
+<span class="nc" id="L311">            Object node = config.getObject(keys[0]);</span>
+<span class="nc bnc" id="L312" title="All 2 branches missed.">            return node != null ? (T) node : defaultValue;</span>
         }
 
-<span class="nc" id="L285">        Object node = config.getObject(keys[0]);</span>
-<span class="nc bnc" id="L286" title="All 2 branches missed.">        if (!(node instanceof Map)) {</span>
-<span class="nc" id="L287">            return defaultValue;</span>
+<span class="nc" id="L315">        Object node = config.getObject(keys[0]);</span>
+<span class="nc bnc" id="L316" title="All 2 branches missed.">        if (!(node instanceof Map)) {</span>
+<span class="nc" id="L317">            return defaultValue;</span>
         }
 
-<span class="nc" id="L290">        Map&lt;String, Object&gt; map = (Map) node;</span>
-<span class="nc bnc" id="L291" title="All 2 branches missed.">        for (int i = 1; i &lt; keys.length - 1; i++) {</span>
-<span class="nc bnc" id="L292" title="All 2 branches missed.">            if (map != null) {</span>
-<span class="nc" id="L293">                node = map.get(keys[i]);</span>
-<span class="nc bnc" id="L294" title="All 2 branches missed.">                if (node instanceof Map) {</span>
-<span class="nc" id="L295">                    map = (Map) node;</span>
+<span class="nc" id="L320">        Map&lt;String, Object&gt; map = (Map) node;</span>
+<span class="nc bnc" id="L321" title="All 2 branches missed.">        for (int i = 1; i &lt; keys.length - 1; i++) {</span>
+<span class="nc bnc" id="L322" title="All 2 branches missed.">            if (map != null) {</span>
+<span class="nc" id="L323">                node = map.get(keys[i]);</span>
+<span class="nc bnc" id="L324" title="All 2 branches missed.">                if (node instanceof Map) {</span>
+<span class="nc" id="L325">                    map = (Map) node;</span>
                 } else {
-<span class="nc" id="L297">                    return defaultValue;</span>
+<span class="nc" id="L327">                    return defaultValue;</span>
                 }
             } else {
-<span class="nc" id="L300">                return defaultValue;</span>
+<span class="nc" id="L330">                return defaultValue;</span>
             }
         }
-<span class="nc bnc" id="L303" title="All 2 branches missed.">        if (map == null) return defaultValue;</span>
-<span class="nc" id="L304">        Object value = map.get(keys[keys.length - 1]);</span>
-<span class="nc bnc" id="L305" title="All 2 branches missed.">        return value != null ? (T) value : defaultValue;</span>
+<span class="nc bnc" id="L333" title="All 2 branches missed.">        if (map == null) { return defaultValue; }</span>
+<span class="nc" id="L334">        Object value = map.get(keys[keys.length - 1]);</span>
+<span class="nc bnc" id="L335" title="All 2 branches missed.">        return value != null ? (T) value : defaultValue;</span>
     }
 
     /**
@@ -310,40 +340,41 @@ public final class ConfigUtils {
      *
      * @param config the configuration object to be searched upon
      * @param key    the key to be searched
+     *
      * @return the value of the key or the default value if no match is found
      */
     @Nullable
     @SuppressWarnings({&quot;unchecked&quot;, &quot;ConstantConditions&quot;})
     public static &lt;T&gt; T getConfigValue(@Nonnull Map&lt;String, Object&gt; config, @Nonnull String key) throws MissingResourceException {
-<span class="fc" id="L318">        requireNonNull(config, ERROR_CONFIG_NULL);</span>
-<span class="fc" id="L319">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
-<span class="fc" id="L320">        String type = config.getClass().getName();</span>
+<span class="fc" id="L349">        requireNonNull(config, ERROR_CONFIG_NULL);</span>
+<span class="fc" id="L350">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="fc" id="L351">        String type = config.getClass().getName();</span>
 
-<span class="pc bpc" id="L322" title="1 of 2 branches missed.">        if (config.containsKey(key)) {</span>
-<span class="nc" id="L323">            return (T) config.get(key);</span>
+<span class="pc bpc" id="L353" title="1 of 2 branches missed.">        if (config.containsKey(key)) {</span>
+<span class="nc" id="L354">            return (T) config.get(key);</span>
         }
 
-<span class="fc" id="L326">        String[] keys = key.split(&quot;\\.&quot;);</span>
-<span class="fc bfc" id="L327" title="All 2 branches covered.">        for (int i = 0; i &lt; keys.length - 1; i++) {</span>
-<span class="pc bpc" id="L328" title="1 of 2 branches missed.">            if (config != null) {</span>
-<span class="fc" id="L329">                Object node = config.get(keys[i]);</span>
-<span class="pc bpc" id="L330" title="1 of 2 branches missed.">                if (node instanceof Map) {</span>
-<span class="fc" id="L331">                    config = (Map) node;</span>
+<span class="fc" id="L357">        String[] keys = key.split(&quot;\\.&quot;);</span>
+<span class="fc bfc" id="L358" title="All 2 branches covered.">        for (int i = 0; i &lt; keys.length - 1; i++) {</span>
+<span class="pc bpc" id="L359" title="1 of 2 branches missed.">            if (config != null) {</span>
+<span class="fc" id="L360">                Object node = config.get(keys[i]);</span>
+<span class="pc bpc" id="L361" title="1 of 2 branches missed.">                if (node instanceof Map) {</span>
+<span class="fc" id="L362">                    config = (Map) node;</span>
                 } else {
-<span class="nc" id="L333">                    throw missingResource(type, key);</span>
+<span class="nc" id="L364">                    throw missingResource(type, key);</span>
                 }
-<span class="fc" id="L335">            } else {</span>
-<span class="nc" id="L336">                throw missingResource(type, key);</span>
+<span class="fc" id="L366">            } else {</span>
+<span class="nc" id="L367">                throw missingResource(type, key);</span>
             }
         }
-<span class="pc bpc" id="L339" title="1 of 2 branches missed.">        if (config == null) {</span>
-<span class="nc" id="L340">            throw missingResource(type, key);</span>
+<span class="pc bpc" id="L370" title="1 of 2 branches missed.">        if (config == null) {</span>
+<span class="nc" id="L371">            throw missingResource(type, key);</span>
         }
-<span class="fc" id="L342">        Object value = config.get(keys[keys.length - 1]);</span>
-<span class="pc bpc" id="L343" title="1 of 2 branches missed.">        if (value != null) {</span>
-<span class="fc" id="L344">            return (T) value;</span>
+<span class="fc" id="L373">        Object value = config.get(keys[keys.length - 1]);</span>
+<span class="pc bpc" id="L374" title="1 of 2 branches missed.">        if (value != null) {</span>
+<span class="fc" id="L375">            return (T) value;</span>
         }
-<span class="nc" id="L346">        throw missingResource(type, key);</span>
+<span class="nc" id="L377">        throw missingResource(type, key);</span>
     }
 
     /**
@@ -351,65 +382,66 @@ public final class ConfigUtils {
      *
      * @param config the configuration object to be searched upon
      * @param key    the key to be searched
+     *
      * @return the value of the key or the default value if no match is found
      */
     @Nullable
     @SuppressWarnings({&quot;unchecked&quot;, &quot;ConstantConditions&quot;})
     public static &lt;T&gt; T getConfigValue(@Nonnull ResourceBundle config, @Nonnull String key) throws MissingResourceException {
-<span class="fc" id="L359">        requireNonNull(config, ERROR_CONFIG_NULL);</span>
-<span class="fc" id="L360">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
-<span class="fc" id="L361">        String type = config.getClass().getName();</span>
+<span class="fc" id="L391">        requireNonNull(config, ERROR_CONFIG_NULL);</span>
+<span class="fc" id="L392">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
+<span class="fc" id="L393">        String type = config.getClass().getName();</span>
 
-<span class="fc" id="L363">        String[] keys = key.split(&quot;\\.&quot;);</span>
+<span class="fc" id="L395">        String[] keys = key.split(&quot;\\.&quot;);</span>
 
         try {
-<span class="fc" id="L366">            Object value = config.getObject(key);</span>
-<span class="pc bpc" id="L367" title="1 of 2 branches missed.">            if (value != null) {</span>
-<span class="fc" id="L368">                return (T) value;</span>
+<span class="fc" id="L398">            Object value = config.getObject(key);</span>
+<span class="pc bpc" id="L399" title="1 of 2 branches missed.">            if (value != null) {</span>
+<span class="fc" id="L400">                return (T) value;</span>
             }
-<span class="fc" id="L370">        } catch (MissingResourceException mre) {</span>
+<span class="fc" id="L402">        } catch (MissingResourceException mre) {</span>
             // OK
-<span class="nc" id="L372">        }</span>
+<span class="nc" id="L404">        }</span>
 
-<span class="pc bpc" id="L374" title="1 of 2 branches missed.">        if (keys.length == 1) {</span>
-<span class="nc" id="L375">            Object node = config.getObject(keys[0]);</span>
-<span class="nc bnc" id="L376" title="All 2 branches missed.">            if (node != null) {</span>
-<span class="nc" id="L377">                return (T) node;</span>
+<span class="pc bpc" id="L406" title="1 of 2 branches missed.">        if (keys.length == 1) {</span>
+<span class="nc" id="L407">            Object node = config.getObject(keys[0]);</span>
+<span class="nc bnc" id="L408" title="All 2 branches missed.">            if (node != null) {</span>
+<span class="nc" id="L409">                return (T) node;</span>
             }
-<span class="nc" id="L379">            throw missingResource(type, key);</span>
+<span class="nc" id="L411">            throw missingResource(type, key);</span>
         }
 
-<span class="fc" id="L382">        Object node = config.getObject(keys[0]);</span>
-<span class="pc bpc" id="L383" title="1 of 2 branches missed.">        if (!(node instanceof Map)) {</span>
-<span class="nc" id="L384">            throw missingResource(type, key);</span>
+<span class="fc" id="L414">        Object node = config.getObject(keys[0]);</span>
+<span class="pc bpc" id="L415" title="1 of 2 branches missed.">        if (!(node instanceof Map)) {</span>
+<span class="nc" id="L416">            throw missingResource(type, key);</span>
         }
 
-<span class="fc" id="L387">        Map&lt;String, Object&gt; map = (Map&lt;String, Object&gt;) node;</span>
-<span class="pc bpc" id="L388" title="1 of 2 branches missed.">        for (int i = 1; i &lt; keys.length - 1; i++) {</span>
-<span class="pc bpc" id="L389" title="1 of 2 branches missed.">            if (map != null) {</span>
-<span class="fc" id="L390">                node = map.get(keys[i]);</span>
-<span class="pc bpc" id="L391" title="1 of 2 branches missed.">                if (node instanceof Map) {</span>
-<span class="nc" id="L392">                    map = (Map&lt;String, Object&gt;) node;</span>
+<span class="fc" id="L419">        Map&lt;String, Object&gt; map = (Map&lt;String, Object&gt;) node;</span>
+<span class="pc bpc" id="L420" title="1 of 2 branches missed.">        for (int i = 1; i &lt; keys.length - 1; i++) {</span>
+<span class="pc bpc" id="L421" title="1 of 2 branches missed.">            if (map != null) {</span>
+<span class="fc" id="L422">                node = map.get(keys[i]);</span>
+<span class="pc bpc" id="L423" title="1 of 2 branches missed.">                if (node instanceof Map) {</span>
+<span class="nc" id="L424">                    map = (Map&lt;String, Object&gt;) node;</span>
                 } else {
-<span class="fc" id="L394">                    throw missingResource(type, key);</span>
+<span class="fc" id="L426">                    throw missingResource(type, key);</span>
                 }
             } else {
-<span class="nc" id="L397">                throw missingResource(type, key);</span>
+<span class="nc" id="L429">                throw missingResource(type, key);</span>
             }
         }
-<span class="nc bnc" id="L400" title="All 2 branches missed.">        if (map == null) {</span>
-<span class="nc" id="L401">            throw missingResource(type, key);</span>
+<span class="nc bnc" id="L432" title="All 2 branches missed.">        if (map == null) {</span>
+<span class="nc" id="L433">            throw missingResource(type, key);</span>
         }
 
-<span class="nc" id="L404">        Object value = map.get(keys[keys.length - 1]);</span>
-<span class="nc bnc" id="L405" title="All 2 branches missed.">        if (value != null) {</span>
-<span class="nc" id="L406">            return (T) value;</span>
+<span class="nc" id="L436">        Object value = map.get(keys[keys.length - 1]);</span>
+<span class="nc bnc" id="L437" title="All 2 branches missed.">        if (value != null) {</span>
+<span class="nc" id="L438">            return (T) value;</span>
         }
-<span class="nc" id="L408">        throw missingResource(type, key);</span>
+<span class="nc" id="L440">        throw missingResource(type, key);</span>
     }
 
     private static MissingResourceException missingResource(String classname, String key) throws MissingResourceException {
-<span class="fc" id="L412">        return new MissingResourceException(&quot;Can't find resource for bundle &quot; + classname + &quot;, key &quot; + key, classname, key);</span>
+<span class="fc" id="L444">        return new MissingResourceException(&quot;Can't find resource for bundle &quot; + classname + &quot;, key &quot; + key, classname, key);</span>
     }
 
     /**
@@ -417,10 +449,11 @@ public final class ConfigUtils {
      *
      * @param config the configuration object to be searched upon
      * @param key    the key to be searched
+     *
      * @return the value of the key. Returns {@code false} if no match.
      */
     public static boolean getConfigValueAsBoolean(@Nonnull Map&lt;String, Object&gt; config, @Nonnull String key) {
-<span class="nc" id="L423">        return getConfigValueAsBoolean(config, key, false);</span>
+<span class="nc" id="L456">        return getConfigValueAsBoolean(config, key, false);</span>
     }
 
     /**
@@ -429,11 +462,12 @@ public final class ConfigUtils {
      * @param config       the configuration object to be searched upon
      * @param key          the key to be searched
      * @param defaultValue the value to send back if no match is found
+     *
      * @return the value of the key or the default value if no match is found
      */
     public static boolean getConfigValueAsBoolean(@Nonnull Map&lt;String, Object&gt; config, @Nonnull String key, boolean defaultValue) {
-<span class="nc" id="L435">        Object value = getConfigValue(config, key, defaultValue);</span>
-<span class="nc" id="L436">        return castToBoolean(value);</span>
+<span class="nc" id="L469">        Object value = getConfigValue(config, key, defaultValue);</span>
+<span class="nc" id="L470">        return castToBoolean(value);</span>
     }
 
     /**
@@ -441,10 +475,11 @@ public final class ConfigUtils {
      *
      * @param config the configuration object to be searched upon
      * @param key    the key to be searched
+     *
      * @return the value of the key. Returns {@code 0} if no match.
      */
     public static int getConfigValueAsInt(@Nonnull Map&lt;String, Object&gt; config, @Nonnull String key) {
-<span class="nc" id="L447">        return getConfigValueAsInt(config, key, 0);</span>
+<span class="nc" id="L482">        return getConfigValueAsInt(config, key, 0);</span>
     }
 
     /**
@@ -453,11 +488,12 @@ public final class ConfigUtils {
      * @param config       the configuration object to be searched upon
      * @param key          the key to be searched
      * @param defaultValue the value to send back if no match is found
+     *
      * @return the value of the key or the default value if no match is found
      */
     public static int getConfigValueAsInt(@Nonnull Map&lt;String, Object&gt; config, @Nonnull String key, int defaultValue) {
-<span class="nc" id="L459">        Object value = getConfigValue(config, key, defaultValue);</span>
-<span class="nc" id="L460">        return castToInt(value);</span>
+<span class="nc" id="L495">        Object value = getConfigValue(config, key, defaultValue);</span>
+<span class="nc" id="L496">        return castToInt(value);</span>
     }
 
     /**
@@ -465,10 +501,11 @@ public final class ConfigUtils {
      *
      * @param config the configuration object to be searched upon
      * @param key    the key to be searched
+     *
      * @return the value of the key. Returns {@code 0L} if no match.
      */
     public static long getConfigValueAsLong(@Nonnull Map&lt;String, Object&gt; config, @Nonnull String key) {
-<span class="nc" id="L471">        return getConfigValueAsLong(config, key, 0L);</span>
+<span class="nc" id="L508">        return getConfigValueAsLong(config, key, 0L);</span>
     }
 
     /**
@@ -477,11 +514,12 @@ public final class ConfigUtils {
      * @param config       the configuration object to be searched upon
      * @param key          the key to be searched
      * @param defaultValue the value to send back if no match is found
+     *
      * @return the value of the key or the default value if no match is found
      */
     public static long getConfigValueAsLong(@Nonnull Map&lt;String, Object&gt; config, @Nonnull String key, long defaultValue) {
-<span class="nc" id="L483">        Object value = getConfigValue(config, key, defaultValue);</span>
-<span class="nc" id="L484">        return castToLong(value);</span>
+<span class="nc" id="L521">        Object value = getConfigValue(config, key, defaultValue);</span>
+<span class="nc" id="L522">        return castToLong(value);</span>
     }
 
     /**
@@ -489,10 +527,11 @@ public final class ConfigUtils {
      *
      * @param config the configuration object to be searched upon
      * @param key    the key to be searched
+     *
      * @return the value of the key. Returns {@code 0d} if no match.
      */
     public static double getConfigValueAsDouble(@Nonnull Map&lt;String, Object&gt; config, @Nonnull String key) {
-<span class="nc" id="L495">        return getConfigValueAsDouble(config, key, 0d);</span>
+<span class="nc" id="L534">        return getConfigValueAsDouble(config, key, 0d);</span>
     }
 
     /**
@@ -501,11 +540,12 @@ public final class ConfigUtils {
      * @param config       the configuration object to be searched upon
      * @param key          the key to be searched
      * @param defaultValue the value to send back if no match is found
+     *
      * @return the value of the key or the default value if no match is found
      */
     public static double getConfigValueAsDouble(@Nonnull Map&lt;String, Object&gt; config, @Nonnull String key, double defaultValue) {
-<span class="nc" id="L507">        Object value = getConfigValue(config, key, defaultValue);</span>
-<span class="nc" id="L508">        return castToDouble(value);</span>
+<span class="nc" id="L547">        Object value = getConfigValue(config, key, defaultValue);</span>
+<span class="nc" id="L548">        return castToDouble(value);</span>
     }
 
     /**
@@ -513,10 +553,11 @@ public final class ConfigUtils {
      *
      * @param config the configuration object to be searched upon
      * @param key    the key to be searched
+     *
      * @return the value of the key. Returns {@code 0f} if no match.
      */
     public static float getConfigValueAsFloat(@Nonnull Map&lt;String, Object&gt; config, @Nonnull String key) {
-<span class="nc" id="L519">        return getConfigValueAsFloat(config, key, 0f);</span>
+<span class="nc" id="L560">        return getConfigValueAsFloat(config, key, 0f);</span>
     }
 
     /**
@@ -525,11 +566,12 @@ public final class ConfigUtils {
      * @param config       the configuration object to be searched upon
      * @param key          the key to be searched
      * @param defaultValue the value to send back if no match is found
+     *
      * @return the value of the key or the default value if no match is found
      */
     public static float getConfigValueAsFloat(@Nonnull Map&lt;String, Object&gt; config, @Nonnull String key, float defaultValue) {
-<span class="nc" id="L531">        Object value = getConfigValue(config, key, defaultValue);</span>
-<span class="nc" id="L532">        return castToFloat(value);</span>
+<span class="nc" id="L573">        Object value = getConfigValue(config, key, defaultValue);</span>
+<span class="nc" id="L574">        return castToFloat(value);</span>
     }
 
     /**
@@ -537,11 +579,12 @@ public final class ConfigUtils {
      *
      * @param config the configuration object to be searched upon
      * @param key    the key to be searched
+     *
      * @return the value of the key. Returns {@code null} if no match.
      */
     @Nullable
     public static Number getConfigValueAsNumber(@Nonnull Map&lt;String, Object&gt; config, @Nonnull String key) {
-<span class="nc" id="L544">        return getConfigValueAsNumber(config, key, null);</span>
+<span class="nc" id="L587">        return getConfigValueAsNumber(config, key, null);</span>
     }
 
     /**
@@ -550,12 +593,13 @@ public final class ConfigUtils {
      * @param config       the configuration object to be searched upon
      * @param key          the key to be searched
      * @param defaultValue the value to send back if no match is found
+     *
      * @return the value of the key or the default value if no match is found
      */
     @Nullable
     public static Number getConfigValueAsNumber(@Nonnull Map&lt;String, Object&gt; config, @Nonnull String key, @Nullable Number defaultValue) {
-<span class="nc" id="L557">        Object value = getConfigValue(config, key, defaultValue);</span>
-<span class="nc" id="L558">        return castToNumber(value);</span>
+<span class="nc" id="L601">        Object value = getConfigValue(config, key, defaultValue);</span>
+<span class="nc" id="L602">        return castToNumber(value);</span>
     }
 
     /**
@@ -563,11 +607,12 @@ public final class ConfigUtils {
      *
      * @param config the configuration object to be searched upon
      * @param key    the key to be searched
+     *
      * @return the value of the key. Returns {@code &quot;&quot;} if no match.
      */
     @Nullable
     public static String getConfigValueAsString(@Nonnull Map&lt;String, Object&gt; config, @Nonnull String key) {
-<span class="nc" id="L570">        return getConfigValueAsString(config, key, &quot;&quot;);</span>
+<span class="nc" id="L615">        return getConfigValueAsString(config, key, &quot;&quot;);</span>
     }
 
     /**
@@ -576,12 +621,13 @@ public final class ConfigUtils {
      * @param config       the configuration object to be searched upon
      * @param key          the key to be searched
      * @param defaultValue the value to send back if no match is found
+     *
      * @return the value of the key or the default value if no match is found
      */
     @Nullable
     public static String getConfigValueAsString(@Nonnull Map&lt;String, Object&gt; config, @Nonnull String key, @Nullable String defaultValue) {
-<span class="nc" id="L583">        Object value = getConfigValue(config, key, defaultValue);</span>
-<span class="nc bnc" id="L584" title="All 2 branches missed.">        return value != null ? String.valueOf(value) : null;</span>
+<span class="nc" id="L629">        Object value = getConfigValue(config, key, defaultValue);</span>
+<span class="nc bnc" id="L630" title="All 2 branches missed.">        return value != null ? String.valueOf(value) : null;</span>
     }
 
     // the following taken from SpringFramework::org.springframework.util.StringUtils
@@ -591,21 +637,22 @@ public final class ConfigUtils {
      * e.g. &quot;mypath/myfile.txt&quot; -&gt; &quot;txt&quot;.
      *
      * @param path the file path (may be &lt;code&gt;null&lt;/code&gt;)
+     *
      * @return the extracted filename extension, or &lt;code&gt;null&lt;/code&gt; if none
      */
     public static String getFilenameExtension(String path) {
-<span class="nc bnc" id="L597" title="All 2 branches missed.">        if (path == null) {</span>
-<span class="nc" id="L598">            return null;</span>
+<span class="nc bnc" id="L644" title="All 2 branches missed.">        if (path == null) {</span>
+<span class="nc" id="L645">            return null;</span>
         }
-<span class="nc" id="L600">        int extIndex = path.lastIndexOf(&quot;.&quot;);</span>
-<span class="nc bnc" id="L601" title="All 2 branches missed.">        if (extIndex == -1) {</span>
-<span class="nc" id="L602">            return null;</span>
+<span class="nc" id="L647">        int extIndex = path.lastIndexOf(&quot;.&quot;);</span>
+<span class="nc bnc" id="L648" title="All 2 branches missed.">        if (extIndex == -1) {</span>
+<span class="nc" id="L649">            return null;</span>
         }
-<span class="nc" id="L604">        int folderIndex = path.lastIndexOf(&quot;/&quot;);</span>
-<span class="nc bnc" id="L605" title="All 2 branches missed.">        if (folderIndex &gt; extIndex) {</span>
-<span class="nc" id="L606">            return null;</span>
+<span class="nc" id="L651">        int folderIndex = path.lastIndexOf(&quot;/&quot;);</span>
+<span class="nc bnc" id="L652" title="All 2 branches missed.">        if (folderIndex &gt; extIndex) {</span>
+<span class="nc" id="L653">            return null;</span>
         }
-<span class="nc" id="L608">        return path.substring(extIndex + 1);</span>
+<span class="nc" id="L655">        return path.substring(extIndex + 1);</span>
     }
 
     /**
@@ -613,48 +660,49 @@ public final class ConfigUtils {
      * e.g. &quot;mypath/myfile.txt&quot; -&gt; &quot;mypath/myfile&quot;.
      *
      * @param path the file path (may be &lt;code&gt;null&lt;/code&gt;)
+     *
      * @return the path with stripped filename extension,
      * or &lt;code&gt;null&lt;/code&gt; if none
      */
     public static String stripFilenameExtension(String path) {
-<span class="nc bnc" id="L620" title="All 2 branches missed.">        if (path == null) {</span>
-<span class="nc" id="L621">            return null;</span>
+<span class="nc bnc" id="L668" title="All 2 branches missed.">        if (path == null) {</span>
+<span class="nc" id="L669">            return null;</span>
         }
-<span class="nc" id="L623">        int extIndex = path.lastIndexOf(&quot;.&quot;);</span>
-<span class="nc bnc" id="L624" title="All 2 branches missed.">        if (extIndex == -1) {</span>
-<span class="nc" id="L625">            return path;</span>
+<span class="nc" id="L671">        int extIndex = path.lastIndexOf(&quot;.&quot;);</span>
+<span class="nc bnc" id="L672" title="All 2 branches missed.">        if (extIndex == -1) {</span>
+<span class="nc" id="L673">            return path;</span>
         }
-<span class="nc" id="L627">        int folderIndex = path.lastIndexOf(&quot;/&quot;);</span>
-<span class="nc bnc" id="L628" title="All 2 branches missed.">        if (folderIndex &gt; extIndex) {</span>
-<span class="nc" id="L629">            return path;</span>
+<span class="nc" id="L675">        int folderIndex = path.lastIndexOf(&quot;/&quot;);</span>
+<span class="nc bnc" id="L676" title="All 2 branches missed.">        if (folderIndex &gt; extIndex) {</span>
+<span class="nc" id="L677">            return path;</span>
         }
-<span class="nc" id="L631">        return path.substring(0, extIndex);</span>
+<span class="nc" id="L679">        return path.substring(0, extIndex);</span>
     }
 
     @Nonnull
     public static Set&lt;String&gt; collectKeys(@Nonnull Map&lt;String, Object&gt; map) {
-<span class="fc" id="L636">        requireNonNull(map, &quot;Argument 'map' must not be null&quot;);</span>
+<span class="fc" id="L684">        requireNonNull(map, &quot;Argument 'map' must not be null&quot;);</span>
 
-<span class="fc" id="L638">        Set&lt;String&gt; keys = new LinkedHashSet&lt;&gt;();</span>
-<span class="fc bfc" id="L639" title="All 2 branches covered.">        for (Map.Entry&lt;String, Object&gt; entry : map.entrySet()) {</span>
-<span class="fc" id="L640">            String key = entry.getKey();</span>
-<span class="fc" id="L641">            Object value = entry.getValue();</span>
-<span class="fc" id="L642">            doCollectKeys(key, value, keys);</span>
-<span class="fc" id="L643">        }</span>
+<span class="fc" id="L686">        Set&lt;String&gt; keys = new LinkedHashSet&lt;&gt;();</span>
+<span class="fc bfc" id="L687" title="All 2 branches covered.">        for (Map.Entry&lt;String, Object&gt; entry : map.entrySet()) {</span>
+<span class="fc" id="L688">            String key = entry.getKey();</span>
+<span class="fc" id="L689">            Object value = entry.getValue();</span>
+<span class="fc" id="L690">            doCollectKeys(key, value, keys);</span>
+<span class="fc" id="L691">        }</span>
 
-<span class="fc" id="L645">        return unmodifiableSet(keys);</span>
+<span class="fc" id="L693">        return unmodifiableSet(keys);</span>
     }
 
     @SuppressWarnings(&quot;unchecked&quot;)
     private static void doCollectKeys(String key, Object value, Set&lt;String&gt; keys) {
-<span class="fc bfc" id="L650" title="All 2 branches covered.">        if (value instanceof Map) {</span>
-<span class="fc" id="L651">            Map&lt;String, Object&gt; map = (Map&lt;String, Object&gt;) value;</span>
-<span class="fc bfc" id="L652" title="All 2 branches covered.">            for (Map.Entry&lt;String, Object&gt; entry : map.entrySet()) {</span>
-<span class="fc" id="L653">                doCollectKeys(key + &quot;.&quot; + entry.getKey(), entry.getValue(), keys);</span>
-<span class="fc" id="L654">            }</span>
-<span class="fc" id="L655">        } else {</span>
-<span class="fc" id="L656">            keys.add(key);</span>
+<span class="fc bfc" id="L698" title="All 2 branches covered.">        if (value instanceof Map) {</span>
+<span class="fc" id="L699">            Map&lt;String, Object&gt; map = (Map&lt;String, Object&gt;) value;</span>
+<span class="fc bfc" id="L700" title="All 2 branches covered.">            for (Map.Entry&lt;String, Object&gt; entry : map.entrySet()) {</span>
+<span class="fc" id="L701">                doCollectKeys(key + &quot;.&quot; + entry.getKey(), entry.getValue(), keys);</span>
+<span class="fc" id="L702">            }</span>
+<span class="fc" id="L703">        } else {</span>
+<span class="fc" id="L704">            keys.add(key);</span>
         }
-<span class="fc" id="L658">    }</span>
+<span class="fc" id="L706">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
