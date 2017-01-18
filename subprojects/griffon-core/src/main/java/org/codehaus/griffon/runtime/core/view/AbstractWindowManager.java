@@ -129,7 +129,7 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
     @Override
     @Nullable
     public W getStartingWindow() {
-        W window;
+        W window = null;
         Object value = resolveStartingWindowFromConfiguration();
         LOG.debug("windowManager.startingWindow configured to {}", value);
 
@@ -140,10 +140,18 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
         } else if (value instanceof Number) {
             int index = ((Number) value).intValue();
             LOG.debug("Selecting window at index {} as starting window", index);
-            window = getAt(index);
+            try {
+                window = getAt(index);
+            } catch (ArrayIndexOutOfBoundsException e) {
+                LOG.warn("Window at index {} was not found", index);
+            }
         } else {
             LOG.debug("No startingWindow configured, selecting the first one from the windows list");
-            window = getAt(0);
+            try {
+                window = getAt(0);
+            } catch (ArrayIndexOutOfBoundsException e) {
+                LOG.warn("Window at index 0 was not found");
+            }
         }
 
         LOG.debug("Starting Window is {}", window);
@@ -295,7 +303,7 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
     @Override
     public void onShutdown(@Nonnull GriffonApplication app) {
         for (W window : windows.values()) {
-            if (isWindowVisible(window)) hide(window);
+            if (isWindowVisible(window)) { hide(window); }
         }
     }
 
