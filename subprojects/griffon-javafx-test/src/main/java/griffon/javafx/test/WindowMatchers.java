@@ -23,7 +23,7 @@ import org.hamcrest.Matcher;
  * TestFX matchers for {@code javafx.stage.Window}.
  *
  * @author Andres Almiray
- * @Deprecated use {@code org.testfx.matcher.base.WindowMatchers} instead
+ * @deprecated use {@code org.testfx.matcher.base.WindowMatchers} instead
  * @since 2.6.0
  */
 @Deprecated
