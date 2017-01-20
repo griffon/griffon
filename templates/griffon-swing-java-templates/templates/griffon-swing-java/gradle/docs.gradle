@@ -11,8 +11,8 @@ javadoc {
     options.links       = ['http://www.slf4j.org/apidocs/',
                            'http://junit.org/junit4/javadoc/latest/',
                            'http://docs.oracle.com/javase/7/docs/api/',
-                           'http://static.javadoc.io/com.google.code.findbugs/jsr305/3.0.1/',
-                           'http://static.javadoc.io/javax.inject/javax.inject/1/',
+                           'http://aalmiray.github.io/jsr-305/apidocs/',
+                           'http://javax-inject.github.io/javax-inject/api/',
                            'http://griffon-framework.org/guide/latest/api/']
 
     doLast { task ->
@@ -40,8 +40,8 @@ project.plugins.withId('groovy') {
         link 'http://www.slf4j.org/apidocs/', 'org.slf4j.'
         link 'http://junit.org/junit4/javadoc/latest/', 'org.junit.', 'junit.'
         link 'http://docs.oracle.com/javase/7/docs/api/', 'java.', 'org.xml.', 'javax.', 'org.w3c.'
-        link 'http://static.javadoc.io/com.google.code.findbugs/jsr305/3.0.1/', 'javax.annotation.'
-        link 'http://static.javadoc.io/javax.inject/javax.inject/1/', 'javax.inject.'
+        link 'http://aalmiray.github.io/jsr-305/apidocs/', 'javax.annotation.'
+        link 'http://javax-inject.github.io/javax-inject/api/', 'javax.inject.'
         link 'http://griffon-framework.org/guide/latest/api/', 'griffon.', 'org.codehaus.griffon.'
 
         doLast { task ->
