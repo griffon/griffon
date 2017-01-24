@@ -47,6 +47,41 @@ There are also a few helpful methods found in `{link_metadata}`:
 * `getApplicationName()` - same result as `meta['application.name']`
 * `getApplicationVersion()` - same result as `meta['application.version']`
 
+The following table shows the default properties and values found in `application.properties`. You may edit this
+file and either set a fixed value fo an existing property or add new key/value pairs
+
+[options="header"]
+.Metadata properties
+|====
+| Key                 | Value
+| application.name    | @application.name@
+| application.version | @application.version@
+| build.date          | @build.date@
+| build.time          | @build.time@
+| build.revision      | @build.revision@
+|====
+
+Values surrounded by `@` are treated as placeholder tokens; their values are determined at build time. Look
+for the `griffon` section in the Gradle build file to change these values, which looks like this by default
+
+.build.gradle
+[source, groovy,options="nowrap"]
+[subs="attributes"]
+----
+griffon {
+    disableDependencyResolution = false
+    includeGroovyDependencies = false
+    version = '{griffon-version}'
+    toolkit = 'javafx'
+    applicationProperties = [                     // <1>
+        'build.date'    : buildDate,
+        'build.time'    : buildTime,
+        'build.revision': versioning.info.commit
+    ]
+}
+----
+<1> placeholder tokens.
+
 [[_overview_metadata_feature]]
 == Feature
 
