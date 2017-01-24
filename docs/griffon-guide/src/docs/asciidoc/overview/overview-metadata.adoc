@@ -65,8 +65,8 @@ Values surrounded by `@` are treated as placeholder tokens; their values are det
 for the `griffon` section in the Gradle build file to change these values, which looks like this by default
 
 .build.gradle
-[source, groovy,options="nowrap"]
-[subs="attributes"]
+[source,groovy,options="nowrap"]
+[subs="verbatim,attributes"]
 ----
 griffon {
     disableDependencyResolution = false
@@ -184,6 +184,8 @@ You have the following options to change the environment value if using <<_build
 
  * specify the value as a project property named `griffonEnv`.
  * specify the value in the `jvmArgs` property of the `run` task.
+
+The value for this type is determined by the `griffon.env` System property.
 
 [[_overview_metadata_griffon_environment]]
 == Griffon Environment

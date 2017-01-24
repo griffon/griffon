@@ -1,0 +1,40 @@
+
+[[_overview_exception_handler]]
+= Exception Handler
+
+Griffon provides a centralized exception management facility: `{link_exception_handler}`. An instance of this type
+ is automatically registered with the application's runtime to react to exceptions that are not caught by the
+application's code. In a sense it works like an uncuaght exception handler that's attached to all threads, including
+the UI thread.
+
+An `ExceptionHandler` has three responsibilities:
+
+ . Filter out stacktraces to reduce the amount of noise.
+ . Output the exception to a log file and/or the console.
+ . Pump events to the application's `{link_event_router}`.
+
+Filtering out stacktraces can be configured by setting a System property named `griffon.full.stacktrace` whose value
+defaults to `false`. This means stacktraces will be filtered by default if no configuration changes are made. Uncaught
+exceptions are automatically logged with an `ERROR` level. You cat set the System property `griffon.exception.output` to
+`true` if you'd like to see the stacktraces forwarded to the console's output. Finally, the System property `griffon.sanitized.stacktraces`
+defines the package patterns used to filter out stractrace lines. The default package patterns used are:
+
+ * `org.codehaus.groovy.`
+ * `org.codehaus.griffon.`
+ * `groovy.`
+ * `java.`
+ * `javax.`
+ * `sun.`
+ * `com.sun.`
+
+The `ExceptionHandler` will trigger the followoing events when an exception occurs.
+[horizontal]
+Uncaught<ShortName>(Throwable t):: Triggered after the `Throwable` has had its stacktraces filtered.
+UncaughtExceptionThrown(Throwable t):: Triggered after the previous event.
+
+For the first event, `<ShortName>` refers to the Throwable's short class name. If an exception of type
+`java.lang.IllegalArgumentException` was caught by the `ExceptionHandler` then the event name would become
+`UncaughtIllegalArgumentException`.
+
+Please refer to the <<_events,Events>> chapter in order to find out how these events may be handled.
+

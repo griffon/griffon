@@ -47,6 +47,18 @@ The application's runtime configuration is available through the `configuration`
 of the application instance. This configuration instance is *read-only*; you can't modify
 its contents in any way.
 
+There are 3 configuration keys that control the application's behavior:
+
+[horizontal]
+application.title:: Defines the default title for the application.
+application.startupGroups:: Defines a list of MVC groups to be initialized during the <<_overview_lifecycle_startup,Startup>>
+phase. Refer to the <<_mvc,MVC chapter>> to know more about MVC groups.
+application.autoShutdown:: Controls if the application should shutdown when no windows are visible. Set to `true`by
+default.
+
+Additional configuration keys may be added as you deem fit. Take note that the `mvcGroups` prefix has special meaning.
+Refer to the <<_mvc,MVC chapter>> to know more about the different options available to you.
+
 == Internationalization Support
 
 Configuration files are i18n aware, which means you can append
