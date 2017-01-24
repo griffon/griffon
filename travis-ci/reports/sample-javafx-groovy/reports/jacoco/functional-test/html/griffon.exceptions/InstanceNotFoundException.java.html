@@ -30,8 +30,8 @@ public class InstanceNotFoundException extends GriffonException {
 <span class="nc" id="L30">    }</span>
 
     public InstanceNotFoundException(@Nonnull Class&lt;?&gt; type, @Nonnull Throwable cause) {
-<span class="fc" id="L33">        super(&quot;Could not find an instance of type &quot; + checkNonNull(type, &quot;type&quot;).getName(), checkNonNull(cause, &quot;cause&quot;));</span>
-<span class="fc" id="L34">    }</span>
+<span class="nc" id="L33">        super(&quot;Could not find an instance of type &quot; + checkNonNull(type, &quot;type&quot;).getName(), checkNonNull(cause, &quot;cause&quot;));</span>
+<span class="nc" id="L34">    }</span>
 
     public InstanceNotFoundException(@Nonnull Class&lt;?&gt; type, @Nonnull Annotation qualifier) {
 <span class="nc" id="L37">        super(&quot;Could not find an instance of type &quot; + checkNonNull(type, &quot;type&quot;).getName() + &quot; with qualifier &quot; + checkNonNull(qualifier, &quot;qualifier&quot;));</span>
