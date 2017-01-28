@@ -30,6 +30,7 @@ import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import javafx.scene.control.TitledPane
 import javafx.scene.control.ToolBar
+import javafx.scene.control.Tooltip
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.Pane
 import spock.lang.Specification
@@ -57,7 +58,8 @@ class JavaFXUtilsSpec extends Specification {
             createSplitPane(),
             createAccordion(),
             createScrollPane(),
-            createToolBar()
+            createToolBar(),
+            createButtonBar()
         ]
     }
 
@@ -76,7 +78,9 @@ class JavaFXUtilsSpec extends Specification {
             createToolBar(),
             createContextMenu(),
             createMenuBar(),
-            createButtonBar()
+            createButtonBar(),
+            createButtonWithContextMenu(),
+            createButtonWithTooltip()
         ]
     }
 
@@ -100,8 +104,46 @@ class JavaFXUtilsSpec extends Specification {
             createToolBarWithTags(),
             createContextMenuWithTags(),
             createMenuBarWithTags(),
-            createButtonBarWithTags()
+            createButtonBarWithTags(),
+            createButtonWithContextMenuTags(),
+            createButtonWithTooltipTags()
         ]
+    }
+
+    private Button createButtonWithContextMenu() {
+        runInsideUISync {
+            Button button = new Button()
+            button.contextMenu = createContextMenu()
+            button
+        }
+    }
+
+    private Button createButtonWithTooltip() {
+        runInsideUISync {
+            Button button = new Button()
+            Tooltip tooltip = new Tooltip()
+            tooltip.id = 'buttonId'
+            button.tooltip = tooltip
+            button
+        }
+    }
+
+    private Button createButtonWithContextMenuTags() {
+        runInsideUISync {
+            Button button = new Button()
+            button.contextMenu = createContextMenuWithTags()
+            button
+        }
+    }
+
+    private Button createButtonWithTooltipTags() {
+        runInsideUISync {
+            Button button = new Button()
+            Tooltip tooltip = new Tooltip()
+            tooltip.properties.tag = 'tag1'
+            button.tooltip = tooltip
+            button
+        }
     }
 
     private BorderPane createBorderPane() {

@@ -67,6 +67,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import static griffon.core.GriffonApplication.PROPERTY_LOCALE;
 import static griffon.util.GriffonClassUtils.EMPTY_OBJECT_ARRAY;
@@ -355,7 +356,6 @@ public final class JavaFXUtils {
         return (String) node.getProperties().get(MessageSource.class.getName() + SUFFIX_DEFAULT_VALUE);
     }
 
-
     public static void connectMessageSource(@Nonnull Object node, @Nonnull GriffonApplication application) {
         requireNonNull(node, ERROR_NODE_NULL);
         requireNonNull(application, ERROR_APPLICATION_NULL);
@@ -513,7 +513,6 @@ public final class JavaFXUtils {
         return GriffonFXCollections.uiThreadAwareObservableList(source);
     }
 
-
     /**
      * Wraps an <tt>ObservableSet</tt>, publishing updates inside the UI thread.
      *
@@ -586,16 +585,13 @@ public final class JavaFXUtils {
             final String actionTargetName = actionName + ACTION_TARGET_SUFFIX;
             JavaFXAction action = (JavaFXAction) e.getValue().getToolkitAction();
 
-            Collection<Object> controls = findElements(node, new Predicate<Object>() {
-                @Override
-                public boolean test(@Nonnull Object arg) {
-                    if (arg instanceof Node) {
-                        return actionName.equals(getGriffonActionId((Node) arg));
-                    } else if (arg instanceof MenuItem) {
-                        return actionName.equals(getGriffonActionId((MenuItem) arg));
-                    }
-                    return false;
+            Collection<Object> controls = findElements(node, arg -> {
+                if (arg instanceof Node) {
+                    return actionName.equals(getGriffonActionId((Node) arg));
+                } else if (arg instanceof MenuItem) {
+                    return actionName.equals(getGriffonActionId((MenuItem) arg));
                 }
+                return false;
             });
 
             for (Object control : controls) {
@@ -1043,6 +1039,7 @@ public final class JavaFXUtils {
 
         if (id.equals(root.getId())) { return root; }
 
+
         if (root instanceof TabPane) {
             TabPane parent = (TabPane) root;
             for (Tab child : parent.getTabs()) {
@@ -1081,6 +1078,12 @@ public final class JavaFXUtils {
                 Node found = findNode(child, id);
                 if (found != null) { return found; }
             }
+        } else if (root instanceof ButtonBar) {
+            ButtonBar buttonBar = (ButtonBar) root;
+            for (Node child : buttonBar.getButtons()) {
+                Node found = findNode(child, id);
+                if (found != null) { return found; }
+            }
         } else if (root instanceof Parent) {
             Parent parent = (Parent) root;
             for (Node child : parent.getChildrenUnmodifiable()) {
@@ -1098,6 +1101,20 @@ public final class JavaFXUtils {
         requireNonBlank(id, ERROR_ID_BLANK);
 
         if (id.equals(getPropertyValue(root, "id"))) { return root; }
+
+        if (root instanceof Control) {
+            Control control = (Control) root;
+            ContextMenu contextMenu = control.getContextMenu();
+            if (contextMenu != null) {
+                Object found = findElement(contextMenu, id);
+                if (found != null) {return found;}
+            }
+            Tooltip tooltip = control.getTooltip();
+            if (tooltip != null) {
+                Object found = findElement(tooltip, id);
+                if (found != null) {return found;}
+            }
+        }
 
         if (root instanceof ButtonBar) {
             ButtonBar buttonBar = (ButtonBar) root;
@@ -1183,6 +1200,20 @@ public final class JavaFXUtils {
 
         if (predicate.test(root)) {
             return root;
+        }
+
+        if (root instanceof Control) {
+            Control control = (Control) root;
+            ContextMenu contextMenu = control.getContextMenu();
+            if (contextMenu != null) {
+                Object found = findElement(contextMenu, predicate);
+                if (found != null) {return found;}
+            }
+            Tooltip tooltip = control.getTooltip();
+            if (tooltip != null) {
+                Object found = findElement(tooltip, predicate);
+                if (found != null) {return found;}
+            }
         }
 
         if (root instanceof ButtonBar) {
@@ -1277,6 +1308,18 @@ public final class JavaFXUtils {
             accumulator.add(root);
         }
 
+        if (root instanceof Control) {
+            Control control = (Control) root;
+            ContextMenu contextMenu = control.getContextMenu();
+            if (contextMenu != null) {
+                findElements(contextMenu, predicate, accumulator);
+            }
+            Tooltip tooltip = control.getTooltip();
+            if (tooltip != null) {
+                findElements(tooltip, predicate, accumulator);
+            }
+        }
+
         if (root instanceof ButtonBar) {
             ButtonBar buttonBar = (ButtonBar) root;
             for (Node child : buttonBar.getButtons()) {
@@ -1369,25 +1412,5 @@ public final class JavaFXUtils {
 
     private static ValueConversionException illegalValue(Object value, Class<?> klass, Exception e) {
         throw new ValueConversionException(value, klass, e);
-    }
-
-    /**
-     * An unary function that evaluates its input.
-     *
-     * @param <T> the type of the input to the predicate
-     *
-     * @author Andres Almiray
-     * @since 2.8.0
-     */
-    public interface Predicate<T> {
-        /**
-         * Evaluates this predicate on the given argument.
-         *
-         * @param arg the input argument
-         *
-         * @return {@code true} if the input argument matches the predicate,
-         * {@code false} otherwise.
-         */
-        boolean test(@Nonnull T arg);
     }
 }
