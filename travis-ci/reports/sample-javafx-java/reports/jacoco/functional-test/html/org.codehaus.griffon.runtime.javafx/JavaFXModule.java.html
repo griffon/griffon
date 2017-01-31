@@ -20,6 +20,7 @@ import griffon.core.injection.Module;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import griffon.javafx.JavaFXWindowDisplayHandler;
+import griffon.javafx.support.ActionMatcher;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.codehaus.griffon.runtime.javafx.controller.JavaFXActionManager;
 import org.kordamp.jipsy.ServiceProviderFor;
@@ -34,32 +35,35 @@ import static griffon.util.AnnotationUtils.named;
  */
 @Named(&quot;javafx&quot;)
 @ServiceProviderFor(Module.class)
-<span class="fc" id="L37">public class JavaFXModule extends AbstractModule {</span>
+<span class="fc" id="L38">public class JavaFXModule extends AbstractModule {</span>
     @Override
     protected void doConfigure() {
         // tag::bindings[]
-<span class="fc" id="L41">        bind(JavaFXWindowDisplayHandler.class)</span>
-<span class="fc" id="L42">            .withClassifier(named(&quot;defaultWindowDisplayHandler&quot;))</span>
-<span class="fc" id="L43">            .to(DefaultJavaFXWindowDisplayHandler.class)</span>
-<span class="fc" id="L44">            .asSingleton();</span>
+<span class="fc" id="L42">        bind(JavaFXWindowDisplayHandler.class)</span>
+<span class="fc" id="L43">            .withClassifier(named(&quot;defaultWindowDisplayHandler&quot;))</span>
+<span class="fc" id="L44">            .to(DefaultJavaFXWindowDisplayHandler.class)</span>
+<span class="fc" id="L45">            .asSingleton();</span>
 
-<span class="fc" id="L46">        bind(JavaFXWindowDisplayHandler.class)</span>
-<span class="fc" id="L47">            .withClassifier(named(&quot;windowDisplayHandler&quot;))</span>
-<span class="fc" id="L48">            .to(ConfigurableJavaFXWindowDisplayHandler.class)</span>
-<span class="fc" id="L49">            .asSingleton();</span>
+<span class="fc" id="L47">        bind(JavaFXWindowDisplayHandler.class)</span>
+<span class="fc" id="L48">            .withClassifier(named(&quot;windowDisplayHandler&quot;))</span>
+<span class="fc" id="L49">            .to(ConfigurableJavaFXWindowDisplayHandler.class)</span>
+<span class="fc" id="L50">            .asSingleton();</span>
 
-<span class="fc" id="L51">        bind(WindowManager.class)</span>
-<span class="fc" id="L52">            .to(DefaultJavaFXWindowManager.class)</span>
-<span class="fc" id="L53">            .asSingleton();</span>
+<span class="fc" id="L52">        bind(WindowManager.class)</span>
+<span class="fc" id="L53">            .to(DefaultJavaFXWindowManager.class)</span>
+<span class="fc" id="L54">            .asSingleton();</span>
 
-<span class="fc" id="L55">        bind(UIThreadManager.class)</span>
-<span class="fc" id="L56">            .to(JavaFXUIThreadManager.class)</span>
-<span class="fc" id="L57">            .asSingleton();</span>
+<span class="fc" id="L56">        bind(UIThreadManager.class)</span>
+<span class="fc" id="L57">            .to(JavaFXUIThreadManager.class)</span>
+<span class="fc" id="L58">            .asSingleton();</span>
 
-<span class="fc" id="L59">        bind(ActionManager.class)</span>
-<span class="fc" id="L60">            .to(JavaFXActionManager.class)</span>
-<span class="fc" id="L61">            .asSingleton();</span>
+<span class="fc" id="L60">        bind(ActionManager.class)</span>
+<span class="fc" id="L61">            .to(JavaFXActionManager.class)</span>
+<span class="fc" id="L62">            .asSingleton();</span>
+
+<span class="fc" id="L64">        bind(ActionMatcher.class)</span>
+<span class="fc" id="L65">            .toInstance(ActionMatcher.DEFAULT);</span>
         // end::bindings[]
-<span class="fc" id="L63">    }</span>
+<span class="fc" id="L67">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
