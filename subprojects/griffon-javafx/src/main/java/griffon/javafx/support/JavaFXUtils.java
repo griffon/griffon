@@ -96,11 +96,11 @@ public final class JavaFXUtils {
     private static final String ERROR_PREDICATE_NULL = "Argument 'predicate' must not be null";
     private static final String ERROR_CONTROLLER_NULL = "Argument 'controller' must not be null";
     private static final String ERROR_APPLICATION_NULL = "Argument 'application' must not be null";
-    private static final String ACTION_TARGET_SUFFIX = "ActionTarget";
     private static final String PROPERTY_SUFFIX = "Property";
     private static final String SUFFIX_KEY = "-KEY";
     private static final String SUFFIX_ARGS = "-ARGS";
     private static final String SUFFIX_DEFAULT_VALUE = "-DEFAULT_VALUE";
+    private static final ActionMatcher DEFAULT_ACTION_MATCHER = ActionMatcher.DEFAULT;
 
     private JavaFXUtils() {
 
@@ -576,35 +576,23 @@ public final class JavaFXUtils {
         }
     }
 
-    public static void connectActions(@Nonnull Object node, @Nonnull GriffonController controller) {
+    public static void connectActions(@Nonnull Object node, @Nonnull GriffonController controller, @Nonnull ActionMatcher actionMatcher) {
         requireNonNull(node, ERROR_NODE_NULL);
         requireNonNull(controller, ERROR_CONTROLLER_NULL);
+        actionMatcher = actionMatcher != null ? actionMatcher : DEFAULT_ACTION_MATCHER;
         ActionManager actionManager = controller.getApplication().getActionManager();
         for (Map.Entry<String, Action> e : actionManager.actionsFor(controller).entrySet()) {
-            final String actionName = actionManager.normalizeName(e.getKey());
-            final String actionTargetName = actionName + ACTION_TARGET_SUFFIX;
+            String actionName = actionManager.normalizeName(e.getKey());
             JavaFXAction action = (JavaFXAction) e.getValue().getToolkitAction();
-
-            Collection<Object> controls = findElements(node, arg -> {
-                if (arg instanceof Node) {
-                    return actionName.equals(getGriffonActionId((Node) arg));
-                } else if (arg instanceof MenuItem) {
-                    return actionName.equals(getGriffonActionId((MenuItem) arg));
-                }
-                return false;
-            });
-
-            for (Object control : controls) {
-                configureControl(control, action);
-            }
-
-            Object control = findElement(node, actionTargetName);
-            if (control == null || controls.contains(control)) { continue; }
-            configureControl(control, action);
+            actionMatcher.match(node, actionName, action);
         }
     }
 
-    private static void configureControl(@Nonnull Object control, @Nonnull JavaFXAction action) {
+    public static void connectActions(@Nonnull Object node, @Nonnull GriffonController controller) {
+        connectActions(node, controller, DEFAULT_ACTION_MATCHER);
+    }
+
+    public static void configureControl(@Nonnull Object control, @Nonnull JavaFXAction action) {
         if (control instanceof ButtonBase) {
             configure(((ButtonBase) control), action);
         } else if (control instanceof MenuItem) {

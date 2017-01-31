@@ -20,6 +20,7 @@ import griffon.core.injection.Module;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import griffon.javafx.JavaFXWindowDisplayHandler;
+import griffon.javafx.support.ActionMatcher;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.codehaus.griffon.runtime.javafx.controller.JavaFXActionManager;
 import org.kordamp.jipsy.ServiceProviderFor;
@@ -59,6 +60,9 @@ public class JavaFXModule extends AbstractModule {
         bind(ActionManager.class)
             .to(JavaFXActionManager.class)
             .asSingleton();
+
+        bind(ActionMatcher.class)
+            .toInstance(ActionMatcher.DEFAULT);
         // end::bindings[]
     }
 }

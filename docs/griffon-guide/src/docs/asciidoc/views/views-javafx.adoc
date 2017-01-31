@@ -88,7 +88,32 @@ In contrast this is how the FXML would look if node ids would be set instead
 </VBox>
 ----
 
-In this case we can't assign the same action to a different node because the node ids would clash.
+In this case we can't assign the same action to a different node because the node ids would clash. It's possible to override
+this naming convention by defining your own strategy. Simply implement `{link_actionmatcher}`, making sure to bind your
+custom strategy with module binding, such as
+
+.org/example/ApplicationModule.java
+[source,java,linenums,options="nowrap"]
+----
+package org.example;
+
+import griffon.core.injection.Module;
+import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.kordamp.jipsy.ServiceProviderFor;
+import griffon.javafx.support.ActionMatcher;
+import griffon.inject.DependsOn;
+
+@DependsOn("javafx")
+@ServiceProviderFor(Module.class)
+public class ApplicationModule extends AbstractModule {
+    @Override
+    protected void doConfigure() {
+        bind(ActionMatcher.class)
+            .to(MyActionMatcher.class)
+            .asSingleton();
+    }
+}
+----
 
 == Binding Support
 

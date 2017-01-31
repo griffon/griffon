@@ -175,6 +175,53 @@ react too.
 There's a new set of JavaFX properties that can be used to keep track of value changes, and when necessary reset the property's
 value to a base one.
 
+==== Action Matching Strategy
+
+Griffon 2 defines a naming convention to match widgets defined in FXML with their corresponding action. Griffon 2.8.0 introduced
+another way to match actions that enables multiple widgets to be matched to the same action. Griffon 2.10.0 adds the possibility
+to override this startegy and apply your own. Simply define an implementation of `griffon.javafx.support.ActionMatcher` and bound
+it to the application (or addon) module. Here's an example of a custom strategy that uses `"_action"` as suffix instead of
+the conventional `"ActionTarget"`.
+
+[source,java]
+----
+import griffon.javafx.support.ActionMatcher;
+import griffon.javafx.support.JavaFXAction;
+import javafx.scene.Node;
+import javafx.scene.control.MenuItem;
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
+
+import static griffon.javafx.support.JavaFXUtils.configureControl;
+import static griffon.javafx.support.JavaFXUtils.findElement;
+import static griffon.javafx.support.JavaFXUtils.findElements;
+import static griffon.javafx.support.JavaFXUtils.getGriffonActionId;
+
+public class MyActionMatcher implements ActionMatcher {
+    @Override
+    public void match(final @Nonnull Object node, final @Nonnull String actionName, @Nonnull JavaFXAction action) {
+        Collection<Object> controls = findElements(node, arg -> {
+            if (arg instanceof Node) {
+                return actionName.equals(getGriffonActionId((Node) arg));
+            } else if (arg instanceof MenuItem) {
+                return actionName.equals(getGriffonActionId((MenuItem) arg));
+            }
+            return false;
+        });
+
+        for (Object control : controls) {
+            configureControl(control, action);
+        }
+
+        Object control = findElement(node, actionName + "_action");
+        if (control != null && !controls.contains(control)) {
+            configureControl(control, action);
+        }
+    }
+}
+----
+
 === Buildtime
 
 ==== Gradle Griffon Plugin

@@ -20,6 +20,7 @@ import griffon.core.artifact.GriffonClass;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
 import griffon.exceptions.GriffonException;
+import griffon.javafx.support.ActionMatcher;
 import griffon.javafx.support.JavaFXAction;
 import griffon.javafx.support.JavaFXUtils;
 import javafx.fxml.FXMLLoader;
@@ -46,6 +47,9 @@ import static griffon.util.GriffonNameUtils.requireNonBlank;
  */
 public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
     private static final String FXML_SUFFIX = ".fxml";
+
+    @Inject
+    protected ActionMatcher actionMatcher;
 
     public AbstractJavaFXGriffonView() {
 
@@ -119,7 +123,7 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
     }
 
     protected void connectActions(@Nonnull Object node, @Nonnull GriffonController controller) {
-        JavaFXUtils.connectActions(node, controller);
+        JavaFXUtils.connectActions(node, controller, actionMatcher);
     }
 
     protected void connectMessageSource(@Nonnull Object node) {
