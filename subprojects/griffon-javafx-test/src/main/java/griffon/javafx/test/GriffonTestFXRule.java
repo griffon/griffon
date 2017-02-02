@@ -21,6 +21,7 @@ import griffon.core.env.Environment;
 import griffon.exceptions.GriffonException;
 import griffon.javafx.JavaFXGriffonApplication;
 import javafx.stage.Window;
+import org.awaitility.Duration;
 import org.codehaus.griffon.runtime.core.DefaultGriffonApplication;
 import org.codehaus.griffon.runtime.javafx.TestJavaFXGriffonApplication;
 import org.junit.rules.MethodRule;
@@ -35,6 +36,7 @@ import java.util.concurrent.TimeoutException;
 import static griffon.javafx.test.TestContext.getTestContext;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
 
 /**
@@ -45,21 +47,35 @@ import static org.awaitility.Awaitility.await;
  */
 public class GriffonTestFXRule extends TestFX implements MethodRule {
     protected String windowName;
+    protected Duration timeout;
     protected String[] startupArgs;
     protected Class<? extends TestJavaFXGriffonApplication> applicationClass;
     protected JavaFXGriffonApplication application;
 
     public GriffonTestFXRule(@Nonnull String windowName) {
-        this(TestJavaFXGriffonApplication.class, windowName, DefaultGriffonApplication.EMPTY_ARGS);
+        this(TestJavaFXGriffonApplication.class, windowName, new Duration(10, SECONDS), DefaultGriffonApplication.EMPTY_ARGS);
+    }
+
+    public GriffonTestFXRule(@Nonnull String windowName, @Nonnull Duration timeout) {
+        this(TestJavaFXGriffonApplication.class, windowName, timeout, DefaultGriffonApplication.EMPTY_ARGS);
     }
 
     public GriffonTestFXRule(@Nonnull Class<? extends TestJavaFXGriffonApplication> applicationClass, @Nonnull String windowName) {
-        this(applicationClass, windowName, DefaultGriffonApplication.EMPTY_ARGS);
+        this(applicationClass, windowName, new Duration(10, SECONDS), DefaultGriffonApplication.EMPTY_ARGS);
+    }
+
+    public GriffonTestFXRule(@Nonnull Class<? extends TestJavaFXGriffonApplication> applicationClass, @Nonnull String windowName, @Nonnull Duration timeout) {
+        this(applicationClass, windowName, timeout, DefaultGriffonApplication.EMPTY_ARGS);
     }
 
     public GriffonTestFXRule(@Nonnull Class<? extends TestJavaFXGriffonApplication> applicationClass, @Nonnull String windowName, @Nonnull String[] startupArgs) {
+        this(applicationClass, windowName, new Duration(10, SECONDS), startupArgs);
+    }
+
+    public GriffonTestFXRule(@Nonnull Class<? extends TestJavaFXGriffonApplication> applicationClass, @Nonnull String windowName, @Nonnull Duration timeout, @Nonnull String[] startupArgs) {
         this.applicationClass = requireNonNull(applicationClass, "Argument 'applicationClass' must not be null");
         this.windowName = requireNonBlank(windowName, "Argument 'windowName' cannot be blank");
+        this.timeout = requireNonNull(timeout, "Argument 'timeout' cannot be blank");
         requireNonNull(startupArgs, "Argument 'startupArgs' must not be null");
         this.startupArgs = new String[startupArgs.length];
         System.arraycopy(startupArgs, 0, this.startupArgs, 0, startupArgs.length);
@@ -82,7 +98,7 @@ public class GriffonTestFXRule extends TestFX implements MethodRule {
                 application.getEventRouter().addEventListener(ApplicationEvent.WINDOW_SHOWN.getName(), startingWindow);
                 application.getInjector().injectMembers(target);
 
-                await().until(() -> startingWindow.isShowing());
+                await().timeout(timeout).until(() -> startingWindow.isShowing());
 
                 before(application, target);
                 try {

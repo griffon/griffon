@@ -28,10 +28,10 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import static java.util.Collections.unmodifiableList;
+import static java.util.Comparator.comparing;
 import static org.junit.runner.Description.createTestDescription;
 
 /**
@@ -61,12 +61,7 @@ public class FunctionalJavaFXRunner extends BlockJUnit4ClassRunner {
     @Override
     protected List<FrameworkMethod> computeTestMethods() {
         List<FrameworkMethod> methods = new ArrayList<>(super.computeTestMethods());
-        Collections.sort(methods, new Comparator<FrameworkMethod>() {
-            @Override
-            public int compare(FrameworkMethod a, FrameworkMethod b) {
-                return a.getName().compareTo(b.getName());
-            }
-        });
+        Collections.sort(methods, comparing(FrameworkMethod::getName));
         return unmodifiableList(methods);
     }
 
