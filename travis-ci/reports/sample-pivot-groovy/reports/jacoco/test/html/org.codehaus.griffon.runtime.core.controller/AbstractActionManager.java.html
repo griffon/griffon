@@ -97,7 +97,7 @@ public abstract class AbstractActionManager implements ActionManager {
 
     @Nullable
     private static Method findActionAsMethod(@Nonnull GriffonController controller, @Nonnull String actionName) {
-<span class="pc bpc" id="L100" title="1 of 2 branches missed.">        for (Method method : controller.getClass().getMethods()) {</span>
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">        for (Method method : controller.getTypeClass().getMethods()) {</span>
 <span class="fc bfc" id="L101" title="All 2 branches covered.">            if (actionName.equals(method.getName()) &amp;&amp;</span>
 <span class="pc bpc" id="L102" title="1 of 2 branches missed.">                isPublic(method.getModifiers()) &amp;&amp;</span>
 <span class="pc bpc" id="L103" title="1 of 2 branches missed.">                !isStatic(method.getModifiers()) &amp;&amp;</span>
@@ -150,7 +150,7 @@ public abstract class AbstractActionManager implements ActionManager {
 <span class="fc bfc" id="L150" title="All 2 branches covered.">        for (String actionName : griffonClass.getActionNames()) {</span>
 <span class="fc" id="L151">            Method method = findActionAsMethod(controller, actionName);</span>
 <span class="pc bpc" id="L152" title="1 of 2 branches missed.">            if (method == null) {</span>
-<span class="nc" id="L153">                throw new GriffonException(controller.getClass().getCanonicalName() + &quot; does not define an action named &quot; + actionName);</span>
+<span class="nc" id="L153">                throw new GriffonException(controller.getTypeClass().getCanonicalName() + &quot; does not define an action named &quot; + actionName);</span>
             }
 
 <span class="fc" id="L156">            ActionWrapper action = wrapAction(createAndConfigureAction(controller, actionName), method);</span>
@@ -346,7 +346,7 @@ public abstract class AbstractActionManager implements ActionManager {
 <span class="nc" id="L346">    }</span>
 
     private void invokeAction(@Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Runnable runnable) {
-<span class="fc" id="L349">        String fullQualifiedActionName = controller.getClass().getName() + &quot;.&quot; + actionName;</span>
+<span class="fc" id="L349">        String fullQualifiedActionName = controller.getTypeClass().getName() + &quot;.&quot; + actionName;</span>
 <span class="fc" id="L350">        Threading.Policy policy = threadingPolicies.get(fullQualifiedActionName);</span>
 <span class="pc bpc" id="L351" title="1 of 2 branches missed.">        if (policy == null) {</span>
 <span class="pc bpc" id="L352" title="1 of 2 branches missed.">            if (isThreadingDisabled(fullQualifiedActionName)) {</span>
@@ -388,7 +388,7 @@ public abstract class AbstractActionManager implements ActionManager {
 
     @Nonnull
     private Threading.Policy resolveThreadingPolicy(@Nonnull GriffonController controller) {
-<span class="fc" id="L391">        Threading annotation = AnnotationUtils.findAnnotation(controller.getClass(), Threading.class);</span>
+<span class="fc" id="L391">        Threading annotation = AnnotationUtils.findAnnotation(controller.getTypeClass(), Threading.class);</span>
 <span class="pc bpc" id="L392" title="1 of 2 branches missed.">        return annotation == null ? resolveThreadingPolicy() : annotation.value();</span>
     }
 
@@ -462,7 +462,7 @@ public abstract class AbstractActionManager implements ActionManager {
 <span class="fc" id="L462">        Action action = createControllerAction(controller, actionName);</span>
 
 <span class="fc" id="L464">        String normalizeNamed = capitalize(normalizeName(actionName));</span>
-<span class="fc" id="L465">        String keyPrefix = controller.getClass().getName() + &quot;.action.&quot;;</span>
+<span class="fc" id="L465">        String keyPrefix = controller.getTypeClass().getName() + &quot;.action.&quot;;</span>
 
 <span class="fc" id="L467">        doConfigureAction(action, controller, normalizeNamed, keyPrefix);</span>
 

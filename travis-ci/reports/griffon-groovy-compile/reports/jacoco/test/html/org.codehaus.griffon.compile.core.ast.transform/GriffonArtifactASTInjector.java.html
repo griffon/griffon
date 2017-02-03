@@ -41,57 +41,68 @@ import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.field;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectField;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectMethod;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.returns;
+import static org.codehaus.groovy.ast.ClassHelper.CLASS_Type;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
-<span class="fc" id="L49">public class GriffonArtifactASTInjector extends AbstractASTInjector implements BaseConstants {</span>
-<span class="fc" id="L50">    private static final ClassNode GRIFFON_APPLICATION_TYPE = makeClassSafe(GriffonApplication.class);</span>
-<span class="fc" id="L51">    private static final ClassNode GRIFFON_CLASS_TYPE = makeClassSafe(GriffonClass.class);</span>
-<span class="fc" id="L52">    private static final ClassNode LOGGER_TYPE = makeClassSafe(Logger.class);</span>
-<span class="fc" id="L53">    private static final ClassNode LOGGER_FACTORY_TYPE = makeClassSafe(LoggerFactory.class);</span>
-<span class="fc" id="L54">    private static final ClassNode INJECT_TYPE = makeClassSafe(Inject.class);</span>
+<span class="fc" id="L50">public class GriffonArtifactASTInjector extends AbstractASTInjector implements BaseConstants {</span>
+<span class="fc" id="L51">    private static final ClassNode GRIFFON_APPLICATION_TYPE = makeClassSafe(GriffonApplication.class);</span>
+<span class="fc" id="L52">    private static final ClassNode GRIFFON_CLASS_TYPE = makeClassSafe(GriffonClass.class);</span>
+<span class="fc" id="L53">    private static final ClassNode LOGGER_TYPE = makeClassSafe(Logger.class);</span>
+<span class="fc" id="L54">    private static final ClassNode LOGGER_FACTORY_TYPE = makeClassSafe(LoggerFactory.class);</span>
+<span class="fc" id="L55">    private static final ClassNode INJECT_TYPE = makeClassSafe(Inject.class);</span>
 
     public void inject(@Nonnull ClassNode classNode, @Nonnull String artifactType) {
-<span class="fc" id="L57">        injectedField(classNode, GRIFFON_APPLICATION_TYPE, APPLICATION);</span>
+<span class="fc" id="L58">        injectedField(classNode, GRIFFON_APPLICATION_TYPE, APPLICATION);</span>
 
         // GriffonClass getGriffonClass()
-<span class="fc" id="L60">        injectMethod(classNode, new MethodNode(</span>
+<span class="fc" id="L61">        injectMethod(classNode, new MethodNode(</span>
             &quot;getGriffonClass&quot;,
             PUBLIC,
             GRIFFON_CLASS_TYPE,
             NO_PARAMS,
             NO_EXCEPTIONS,
-<span class="fc" id="L66">            returns(call(</span>
-<span class="fc" id="L67">                applicationProperty(classNode, &quot;artifactManager&quot;),</span>
+<span class="fc" id="L67">            returns(call(</span>
+<span class="fc" id="L68">                applicationProperty(classNode, &quot;artifactManager&quot;),</span>
                 &quot;findGriffonClass&quot;,
-<span class="fc" id="L69">                args(call(THIS, &quot;getClass&quot;, NO_ARGS))))</span>
+<span class="fc" id="L70">                args(call(THIS, &quot;getClass&quot;, NO_ARGS))))</span>
         ));
-<span class="fc" id="L71">        String loggerCategory = &quot;griffon.app.&quot; + artifactType + &quot;.&quot; + classNode.getName();</span>
-<span class="fc" id="L72">        FieldNode loggerField = injectField(classNode,</span>
+<span class="fc" id="L72">        String loggerCategory = &quot;griffon.app.&quot; + artifactType + &quot;.&quot; + classNode.getName();</span>
+<span class="fc" id="L73">        FieldNode loggerField = injectField(classNode,</span>
             &quot;this$logger&quot;,
             FINAL | PRIVATE,
             LOGGER_TYPE,
-<span class="fc" id="L76">            call(</span>
+<span class="fc" id="L77">            call(</span>
                 LOGGER_FACTORY_TYPE,
                 &quot;getLogger&quot;,
-<span class="fc" id="L79">                args(constx(loggerCategory)))</span>
+<span class="fc" id="L80">                args(constx(loggerCategory)))</span>
         );
 
+        // Class getTypeClass()
+<span class="fc" id="L84">        injectMethod(classNode, new MethodNode(</span>
+            &quot;getTypeClass&quot;,
+            PUBLIC,
+<span class="fc" id="L87">            makeClassSafe(CLASS_Type),</span>
+            NO_PARAMS,
+            NO_EXCEPTIONS,
+<span class="fc" id="L90">            returns(call(ClassNode.THIS, &quot;getClass&quot;, NO_ARGS))</span>
+        ));
+
         // Logger getLog()
-<span class="fc" id="L83">        injectMethod(classNode, new MethodNode(</span>
+<span class="fc" id="L94">        injectMethod(classNode, new MethodNode(</span>
             &quot;getLog&quot;,
             PUBLIC,
             LOGGER_TYPE,
             NO_PARAMS,
             NO_EXCEPTIONS,
-<span class="fc" id="L89">            returns(field(loggerField))</span>
+<span class="fc" id="L100">            returns(field(loggerField))</span>
         ));
 
-<span class="fc" id="L92">        ThreadingAwareASTTransformation.apply(classNode);</span>
-<span class="fc" id="L93">        MVCAwareASTTransformation.apply(classNode);</span>
-<span class="fc" id="L94">        ResourcesAwareASTTransformation.apply(classNode);</span>
-<span class="fc" id="L95">    }</span>
+<span class="fc" id="L103">        ThreadingAwareASTTransformation.apply(classNode);</span>
+<span class="fc" id="L104">        MVCAwareASTTransformation.apply(classNode);</span>
+<span class="fc" id="L105">        ResourcesAwareASTTransformation.apply(classNode);</span>
+<span class="fc" id="L106">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

@@ -181,7 +181,7 @@ import static java.util.Objects.requireNonNull;
     public &lt;A extends GriffonArtifact&gt; GriffonClass findGriffonClass(@Nonnull A artifact) {
 <span class="nc" id="L182">        requireNonNull(artifact, ERROR_ARTIFACT_NULL);</span>
 <span class="nc" id="L183">        synchronized (lock) {</span>
-<span class="nc" id="L184">            return findGriffonClass(artifact.getClass());</span>
+<span class="nc" id="L184">            return findGriffonClass(artifact.getTypeClass());</span>
 <span class="nc" id="L185">        }</span>
     }
 

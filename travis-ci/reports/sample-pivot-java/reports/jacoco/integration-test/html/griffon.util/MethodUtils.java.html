@@ -730,8 +730,8 @@ import java.util.WeakHashMap;
 <span class="fc" id="L730">            MethodDescriptor md = new MethodDescriptor(clazz, methodName, parameterTypes, true);</span>
             // Check the cache first
 <span class="fc" id="L732">            Method method = getCachedMethod(md);</span>
-<span class="fc bfc" id="L733" title="All 2 branches covered.">            if (method != null) {</span>
-<span class="fc" id="L734">                return method;</span>
+<span class="pc bpc" id="L733" title="1 of 2 branches missed.">            if (method != null) {</span>
+<span class="nc" id="L734">                return method;</span>
             }
 
 <span class="fc" id="L737">            method = getAccessibleMethod</span>
@@ -1231,8 +1231,8 @@ import java.util.WeakHashMap;
     private static Method getCachedMethod(MethodDescriptor md) {
 <span class="pc bpc" id="L1232" title="1 of 2 branches missed.">        if (CACHE_METHODS) {</span>
 <span class="fc" id="L1233">            Reference methodRef = (Reference) cache.get(md);</span>
-<span class="fc bfc" id="L1234" title="All 2 branches covered.">            if (methodRef != null) {</span>
-<span class="fc" id="L1235">                return (Method) methodRef.get();</span>
+<span class="pc bpc" id="L1234" title="1 of 2 branches missed.">            if (methodRef != null) {</span>
+<span class="nc" id="L1235">                return (Method) methodRef.get();</span>
             }
         }
 <span class="fc" id="L1238">        return null;</span>
@@ -1319,16 +1319,16 @@ import java.util.WeakHashMap;
          * @return true, if the object describes the same Method.
          */
         public boolean equals(Object obj) {
-<span class="pc bpc" id="L1322" title="1 of 2 branches missed.">            if (!(obj instanceof MethodDescriptor)) {</span>
+<span class="nc bnc" id="L1322" title="All 2 branches missed.">            if (!(obj instanceof MethodDescriptor)) {</span>
 <span class="nc" id="L1323">                return false;</span>
             }
-<span class="fc" id="L1325">            MethodDescriptor md = (MethodDescriptor) obj;</span>
+<span class="nc" id="L1325">            MethodDescriptor md = (MethodDescriptor) obj;</span>
 
-<span class="pc bpc" id="L1327" title="1 of 2 branches missed.">            return (</span>
+<span class="nc bnc" id="L1327" title="All 2 branches missed.">            return (</span>
                 exact == md.exact &amp;&amp;
-<span class="pc bpc" id="L1329" title="1 of 2 branches missed.">                    methodName.equals(md.methodName) &amp;&amp;</span>
-<span class="pc bpc" id="L1330" title="1 of 2 branches missed.">                    cls.equals(md.cls) &amp;&amp;</span>
-<span class="fc bfc" id="L1331" title="All 2 branches covered.">                    java.util.Arrays.equals(paramTypes, md.paramTypes)</span>
+<span class="nc bnc" id="L1329" title="All 2 branches missed.">                    methodName.equals(md.methodName) &amp;&amp;</span>
+<span class="nc bnc" id="L1330" title="All 2 branches missed.">                    cls.equals(md.cls) &amp;&amp;</span>
+<span class="nc bnc" id="L1331" title="All 2 branches missed.">                    java.util.Arrays.equals(paramTypes, md.paramTypes)</span>
             );
         }
 
