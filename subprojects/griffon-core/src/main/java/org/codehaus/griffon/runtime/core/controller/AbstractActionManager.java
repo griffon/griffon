@@ -97,7 +97,7 @@ public abstract class AbstractActionManager implements ActionManager {
 
     @Nullable
     private static Method findActionAsMethod(@Nonnull GriffonController controller, @Nonnull String actionName) {
-        for (Method method : controller.getClass().getMethods()) {
+        for (Method method : controller.getTypeClass().getMethods()) {
             if (actionName.equals(method.getName()) &&
                 isPublic(method.getModifiers()) &&
                 !isStatic(method.getModifiers()) &&
@@ -150,7 +150,7 @@ public abstract class AbstractActionManager implements ActionManager {
         for (String actionName : griffonClass.getActionNames()) {
             Method method = findActionAsMethod(controller, actionName);
             if (method == null) {
-                throw new GriffonException(controller.getClass().getCanonicalName() + " does not define an action named " + actionName);
+                throw new GriffonException(controller.getTypeClass().getCanonicalName() + " does not define an action named " + actionName);
             }
 
             ActionWrapper action = wrapAction(createAndConfigureAction(controller, actionName), method);
@@ -346,7 +346,7 @@ public abstract class AbstractActionManager implements ActionManager {
     }
 
     private void invokeAction(@Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Runnable runnable) {
-        String fullQualifiedActionName = controller.getClass().getName() + "." + actionName;
+        String fullQualifiedActionName = controller.getTypeClass().getName() + "." + actionName;
         Threading.Policy policy = threadingPolicies.get(fullQualifiedActionName);
         if (policy == null) {
             if (isThreadingDisabled(fullQualifiedActionName)) {
@@ -388,7 +388,7 @@ public abstract class AbstractActionManager implements ActionManager {
 
     @Nonnull
     private Threading.Policy resolveThreadingPolicy(@Nonnull GriffonController controller) {
-        Threading annotation = AnnotationUtils.findAnnotation(controller.getClass(), Threading.class);
+        Threading annotation = AnnotationUtils.findAnnotation(controller.getTypeClass(), Threading.class);
         return annotation == null ? resolveThreadingPolicy() : annotation.value();
     }
 
@@ -462,7 +462,7 @@ public abstract class AbstractActionManager implements ActionManager {
         Action action = createControllerAction(controller, actionName);
 
         String normalizeNamed = capitalize(normalizeName(actionName));
-        String keyPrefix = controller.getClass().getName() + ".action.";
+        String keyPrefix = controller.getTypeClass().getName() + ".action.";
 
         doConfigureAction(action, controller, normalizeNamed, keyPrefix);
 

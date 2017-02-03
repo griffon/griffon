@@ -359,10 +359,10 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                             field.getType().getName() + " under keys '" + Arrays.toString(keys) +
                             "' in the context of MVCGroup[" + group.getMvcType() + ":" + group.getMvcId() +
                             "] to be injected on field '" + field.getName() +
-                            "' in " + type + " (" + instance.getClass().getName() + "). Field does not accept null values.");
+                            "' in " + type + " (" + resolveMemberClass(instance).getName() + "). Field does not accept null values.");
                     } else if (type == Type.MEMBER) {
                         throw new IllegalStateException("Could not inject argument on field '"
-                            + name + "' in " + memberType + " (" + instance.getClass().getName() +
+                            + name + "' in " + memberType + " (" + resolveMemberClass(instance).getName() +
                             "). Field does not accept null values.");
                     }
                 }
@@ -372,7 +372,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             try {
                 setFieldValue(instance, name, argValue);
                 if (type == Type.OTHER) {
-                    LOG.warn("Field '" + name + "' in " + memberType + " (" + instance.getClass().getName() +
+                    LOG.warn("Field '" + name + "' in " + memberType + " (" + resolveMemberClass(instance).getName() +
                         ") must be annotated with @" + MVCMember.class.getName() + ".");
                 }
             } catch (FieldException e) {
@@ -407,7 +407,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                         method.getParameterTypes()[0].getName() + " under keys '" + Arrays.toString(keys) +
                         "' in the context of MVCGroup[" + group.getMvcType() + ":" + group.getMvcId() +
                         "] to be injected on property '" + name +
-                        "' in " + type + " (" + instance.getClass().getName() + "). Property does not accept null values.");
+                        "' in " + type + " (" + resolveMemberClass(instance).getName() + "). Property does not accept null values.");
                 }
 
                 try {
@@ -421,7 +421,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                     if (!nullable) {
                         if (type == Type.MEMBER) {
                             throw new IllegalStateException("Could not inject argument on property '" +
-                                name + "' in " + memberType + " (" + instance.getClass().getName() +
+                                name + "' in " + memberType + " (" + resolveMemberClass(instance).getName() +
                                 "). Property does not accept null values.");
                         }
                     }
@@ -431,7 +431,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                 try {
                     method.invoke(instance, argValue);
                     if (type == Type.OTHER) {
-                        LOG.warn("Property '" + name + "' in " + memberType + " (" + instance.getClass().getName() +
+                        LOG.warn("Property '" + name + "' in " + memberType + " (" + resolveMemberClass(instance).getName() +
                             ") must be annotated with @" + MVCMember.class.getName() + ".");
                     }
                 } catch (IllegalAccessException | InvocationTargetException e) {
@@ -449,11 +449,11 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             Map<String, Object> argsCopy = new LinkedHashMap<>(args);
 
             Map<String, Field> fields = new LinkedHashMap<>();
-            for (Field field : getAllDeclaredFields(member.getClass())) {
+            for (Field field : getAllDeclaredFields(resolveMemberClass(member))) {
                 fields.put(field.getName(), field);
             }
             Map<String, InjectionPoint> injectionPoints = new LinkedHashMap<>();
-            for (PropertyDescriptor descriptor : getPropertyDescriptors(member.getClass())) {
+            for (PropertyDescriptor descriptor : getPropertyDescriptors(resolveMemberClass(member))) {
                 Method method = descriptor.getWriteMethod();
                 if (method == null || isInjectable(method)) { continue; }
                 boolean nullable = findAnnotation(annotationsOfMethodParameter(method, 0), Nonnull.class) == null;
@@ -466,7 +466,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                 injectionPoints.put(descriptor.getName(), new MethodInjectionPoint(descriptor.getName(), nullable, type, method));
             }
 
-            for (Field field : getAllDeclaredFields(member.getClass())) {
+            for (Field field : getAllDeclaredFields(resolveMemberClass(member))) {
                 if (Modifier.isStatic(field.getModifiers()) || isInjectable(field)) { continue; }
                 if (!injectionPoints.containsKey(field.getName())) {
                     boolean nullable = field.getAnnotation(Nonnull.class) == null;
@@ -484,7 +484,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             for (Map.Entry<String, Object> e : argsCopy.entrySet()) {
                 try {
                     setPropertyOrFieldValue(member, e.getKey(), e.getValue());
-                    LOG.warn("Property '" + e.getKey() + "' in " + memberType + " (" + member.getClass().getName() +
+                    LOG.warn("Property '" + e.getKey() + "' in " + memberType + " (" + resolveMemberClass(member).getName() +
                         ") must be annotated with @" + MVCMember.class.getName() + ".");
                 } catch (PropertyException ignored) {
                     // OK
@@ -572,7 +572,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         if (member instanceof GriffonMvcArtifact) {
             final GriffonMvcArtifact artifact = (GriffonMvcArtifact) member;
             if (fireDestructionEvents) {
-                getApplication().getEventRouter().publishEvent(ApplicationEvent.DESTROY_INSTANCE.getName(), asList(member.getClass(), artifact));
+                getApplication().getEventRouter().publishEvent(ApplicationEvent.DESTROY_INSTANCE.getName(), asList(artifact.getTypeClass(), artifact));
             }
 
             if (artifact instanceof GriffonView) {
@@ -600,13 +600,13 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     }
 
     protected void destroyContextualMemberProperties(@Nonnull String type, @Nonnull GriffonArtifact member) {
-        for (Field field : getAllDeclaredFields(member.getClass())) {
+        for (Field field : getAllDeclaredFields(member.getTypeClass())) {
             if (isContextual(field)) {
                 try {
                     setFieldValue(member, field.getName(), null);
                 } catch (FieldException e) {
                     throw new IllegalStateException("Could not nullify field " +
-                        field.getName() + "' in " + type + " (" + member.getClass().getName() + ")", e);
+                        field.getName() + "' in " + type + " (" + member.getTypeClass().getName() + ")", e);
                 }
             }
         }
@@ -622,6 +622,14 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
     protected boolean isConfigFlagEnabled(@Nonnull MVCGroupConfiguration configuration, @Nonnull String key) {
         return getConfigValueAsBoolean(configuration.getConfig(), key, true);
+    }
+
+    @Nonnull
+    private static Class<?> resolveMemberClass(@Nonnull Object member) {
+        if (member instanceof GriffonArtifact) {
+            return ((GriffonArtifact) member).getTypeClass();
+        }
+        return member.getClass();
     }
 
     @Nullable

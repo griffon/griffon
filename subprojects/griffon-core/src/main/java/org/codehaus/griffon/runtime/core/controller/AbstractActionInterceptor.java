@@ -64,6 +64,6 @@ public class AbstractActionInterceptor implements ActionInterceptor {
     protected String qualifyActionName(@Nonnull GriffonController controller, @Nonnull String actionName) {
         requireNonNull(controller, ERROR_CONTROLLER_NULL);
         requireNonBlank(actionName, ERROR_ACTION_NAME_BLANK);
-        return controller.getClass().getName() + "." + actionName;
+        return controller.getTypeClass().getName() + "." + actionName;
     }
 }

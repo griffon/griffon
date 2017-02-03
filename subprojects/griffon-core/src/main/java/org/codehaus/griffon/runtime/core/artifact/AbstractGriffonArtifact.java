@@ -56,7 +56,13 @@ public abstract class AbstractGriffonArtifact implements GriffonArtifact {
     private GriffonClass griffonClass;
 
     public AbstractGriffonArtifact() {
-        log = LoggerFactory.getLogger("griffon.app." + getArtifactType() + "." + getClass().getName());
+        log = LoggerFactory.getLogger("griffon.app." + getArtifactType() + "." + getTypeClass().getName());
+    }
+
+    @Override
+    @Nonnull
+    public Class getTypeClass() {
+        return getClass();
     }
 
     /**
@@ -83,7 +89,7 @@ public abstract class AbstractGriffonArtifact implements GriffonArtifact {
     public GriffonClass getGriffonClass() {
         synchronized (lock) {
             if (griffonClass == null) {
-                griffonClass = application.getArtifactManager().findGriffonClass(getClass());
+                griffonClass = application.getArtifactManager().findGriffonClass(getTypeClass());
             }
             return griffonClass;
         }

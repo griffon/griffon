@@ -181,7 +181,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
     public <A extends GriffonArtifact> GriffonClass findGriffonClass(@Nonnull A artifact) {
         requireNonNull(artifact, ERROR_ARTIFACT_NULL);
         synchronized (lock) {
-            return findGriffonClass(artifact.getClass());
+            return findGriffonClass(artifact.getTypeClass());
         }
     }
 

@@ -52,6 +52,15 @@ public interface GriffonArtifact extends ThreadingHandler, MVCHandler, ResourceH
     GriffonClass getGriffonClass();
 
     /**
+     * Returns the {@code Class} of this artifact.
+     *
+     * @return the {@code Class} of this artifact.
+     * @since 2.10.0
+     */
+    @Nonnull
+    Class getTypeClass();
+
+    /**
      * Returns a Logger instance suitable for this Artifact.<p>
      * The Logger is configured with the following prefix 'griffon.app.&lt;type&gt;'
      * where &lt;type&gt; stands for the artifact's type.<p>

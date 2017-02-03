@@ -41,6 +41,7 @@ import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.field;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectField;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectMethod;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.returns;
+import static org.codehaus.groovy.ast.ClassHelper.CLASS_Type;
 
 /**
  * @author Andres Almiray
@@ -78,6 +79,16 @@ public class GriffonArtifactASTInjector extends AbstractASTInjector implements B
                 "getLogger",
                 args(constx(loggerCategory)))
         );
+
+        // Class getTypeClass()
+        injectMethod(classNode, new MethodNode(
+            "getTypeClass",
+            PUBLIC,
+            makeClassSafe(CLASS_Type),
+            NO_PARAMS,
+            NO_EXCEPTIONS,
+            returns(call(ClassNode.THIS, "getClass", NO_ARGS))
+        ));
 
         // Logger getLog()
         injectMethod(classNode, new MethodNode(
