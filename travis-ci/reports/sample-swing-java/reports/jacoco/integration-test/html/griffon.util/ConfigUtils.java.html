@@ -350,8 +350,8 @@ public final class ConfigUtils {
 <span class="fc" id="L350">        requireNonBlank(key, ERROR_KEY_BLANK);</span>
 <span class="fc" id="L351">        String type = config.getClass().getName();</span>
 
-<span class="pc bpc" id="L353" title="1 of 2 branches missed.">        if (config.containsKey(key)) {</span>
-<span class="nc" id="L354">            return (T) config.get(key);</span>
+<span class="fc bfc" id="L353" title="All 2 branches covered.">        if (config.containsKey(key)) {</span>
+<span class="fc" id="L354">            return (T) config.get(key);</span>
         }
 
 <span class="fc" id="L357">        String[] keys = key.split(&quot;\\.&quot;);</span>

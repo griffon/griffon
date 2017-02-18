@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResourceBundleReader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-java</a> &gt; <a href="index.source.html" class="el_package">griffon.util</a> &gt; <span class="el_source">ResourceBundleReader.java</span></div><h1>ResourceBundleReader.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.util;
+
+import griffon.core.env.Environment;
+import griffon.core.env.Metadata;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+import static griffon.util.GriffonNameUtils.isBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.10.0
+ */
+<span class="fc" id="L36">public class ResourceBundleReader {</span>
+    private static final String ENVIRONMENTS_METHOD = &quot;environments&quot;;
+
+<span class="fc" id="L39">    private final Map&lt;String, String&gt; conditionValues = new LinkedHashMap&lt;&gt;();</span>
+
+<span class="fc" id="L41">    public static class Provider implements javax.inject.Provider&lt;ResourceBundleReader&gt; {</span>
+        @Inject private Metadata metadata;
+        @Inject private Environment environment;
+
+        @Override
+        public ResourceBundleReader get() {
+<span class="fc" id="L47">            ResourceBundleReader propertiesReader = new ResourceBundleReader();</span>
+<span class="fc" id="L48">            propertiesReader.registerConditionalBlock(&quot;environments&quot;, environment.getName());</span>
+<span class="fc" id="L49">            propertiesReader.registerConditionalBlock(&quot;projects&quot;, metadata.getApplicationName());</span>
+<span class="fc" id="L50">            propertiesReader.registerConditionalBlock(&quot;platforms&quot;, GriffonApplicationUtils.getPlatform());</span>
+<span class="fc" id="L51">            return propertiesReader;</span>
+        }
+    }
+
+    public void registerConditionalBlock(@Nullable String blockName, @Nullable String blockValue) {
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">        if (!isBlank(blockName)) {</span>
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">            if (isBlank(blockValue)) {</span>
+<span class="nc" id="L58">                conditionValues.remove(blockName);</span>
+            } else {
+<span class="fc" id="L60">                conditionValues.put(blockName, blockValue);</span>
+            }
+        }
+<span class="fc" id="L63">    }</span>
+
+    @Nonnull
+    public Map&lt;String, String&gt; getConditionalBlockValues() {
+<span class="nc" id="L67">        return Collections.unmodifiableMap(conditionValues);</span>
+    }
+
+    @Nonnull
+    public String getEnvironment() {
+<span class="nc" id="L72">        return conditionValues.get(ENVIRONMENTS_METHOD);</span>
+    }
+
+    public void setEnvironment(String environment) {
+<span class="nc" id="L76">        conditionValues.put(ENVIRONMENTS_METHOD, environment);</span>
+<span class="nc" id="L77">    }</span>
+
+    @Nonnull
+    public ResourceBundle read(final @Nonnull ResourceBundle bundle) {
+<span class="fc" id="L81">        requireNonNull(bundle, &quot;Argument 'bundle' must not be null&quot;);</span>
+<span class="fc" id="L82">        return new AbstractMapResourceBundle() {</span>
+            @Override
+            protected void initialize(@Nonnull Map&lt;String, Object&gt; entries) {
+<span class="fc" id="L85">                entries.putAll(processBundle(bundle));</span>
+<span class="fc" id="L86">            }</span>
+        };
+    }
+
+    @Nonnull
+    protected Map&lt;String, Object&gt; processBundle(@Nonnull ResourceBundle input) {
+<span class="fc" id="L92">        Map&lt;String, Object&gt; output = new LinkedHashMap&lt;&gt;();</span>
+
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        for (String key : input.keySet()) {</span>
+<span class="fc" id="L95">            ConditionalBlockMatch match = resolveConditionalBlockMatch(key);</span>
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">            if (match != null) {</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">                if (match.key != null) {</span>
+<span class="nc" id="L98">                    output.put(match.key, input.getObject(key));</span>
+                }
+            } else {
+<span class="fc" id="L101">                output.put(key, input.getObject(key));</span>
+            }
+<span class="fc" id="L103">        }</span>
+
+<span class="fc" id="L105">        return output;</span>
+    }
+
+    @Nullable
+    private ConditionalBlockMatch resolveConditionalBlockMatch(@Nonnull String key) {
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        for (Map.Entry&lt;String, String&gt; e : conditionValues.entrySet()) {</span>
+<span class="fc" id="L111">            String blockName = e.getKey();</span>
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">            if (!key.startsWith(blockName + &quot;.&quot;)) {</span>
+<span class="fc" id="L113">                continue;</span>
+            }
+
+<span class="nc" id="L116">            String prefix = blockName + &quot;.&quot; + e.getValue() + &quot;.&quot;;</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">            if (key.startsWith(prefix)) {</span>
+<span class="nc" id="L118">                String subkey = key.substring(prefix.length());</span>
+<span class="nc" id="L119">                ConditionalBlockMatch match = resolveConditionalBlockMatch(subkey);</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">                if (match == null) {</span>
+<span class="nc" id="L121">                    match = new ConditionalBlockMatch(subkey);</span>
+                }
+<span class="nc" id="L123">                return match;</span>
+            } else {
+<span class="nc" id="L125">                return new ConditionalBlockMatch(null);</span>
+            }
+        }
+
+<span class="fc" id="L129">        return null;</span>
+    }
+
+    private static class ConditionalBlockMatch {
+        public final String key;
+
+<span class="nc" id="L135">        private ConditionalBlockMatch(String key) {</span>
+<span class="nc" id="L136">            this.key = key;</span>
+<span class="nc" id="L137">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
