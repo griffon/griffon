@@ -72,11 +72,11 @@ public class FooEvictorModule extends AbstractModule {
 The evicting module (`FooEvictorModule`)  has to have the same name as the evicted module (`FooModule`) hence why both
 modules are annotated with `@Named("foo")`.
 
-==== Enhanced Properties Support
+==== Enhanced Properties and ResourceBundle Support
 
-It's now possible to define conditional blocks in properties files, similarly as it's done in Groovy scripts. For example
-the `datasource` plugin lets you define datasource configuration that may be environment sensible. In the Groovy version
-of the configuration you'd write the following
+It's now possible to define conditional blocks in properties files and class based resource bundles, similarly as it's
+done in Groovy scripts. For example the `datasource` plugin lets you define datasource configuration that may be environment
+sensible. In the Groovy version of the configuration you'd write the following
 
 [source, groovy]
 .DataSource.groovy
@@ -104,6 +104,45 @@ dataSource.driverClassName = org.h2.Driver
 environments.development.dataSource.url = jdbc:h2:mem:@application.name@-dev
 environments.test.dataSource.url = jdbc:h2:mem:@application.name@-test
 environments.production.dataSource.url = jdbc:h2:file:/opt/@application.name@/data/db
+----
+
+Here's the class based ResourceBundle approach
+
+[source, java]
+.DataSource.java
+----
+import java.util.Map;
+
+import griffon.util.AbstractMapResourceBundle;
+
+import static griffon.util.CollectionUtils.map;
+
+public class DataSource extends AbstractMapResourceBundle {
+    @Override
+    protected void initialize(Map<String, Object> entries) {
+        map(entries)
+            .e("dataSource", map()
+                .e("driverClassName", "org.h2.Driver")
+            )
+            .e("environments", map()
+                .e("development", map()
+                    .e("dataSource", map()
+                        .e("url", "jdbc:h2:mem:sample-dev")
+                    )
+                )
+                .e("test", map()
+                    .e("dataSource", map()
+                        .e("url", "jdbc:h2:mem:sample-test")
+                    )
+                )
+                .e("production", map()
+                    .e("dataSource", map()
+                        .e("url", "jdbc:h2:file:/opt/:sample/data/db")
+                    )
+                )
+            );
+    }
+}
 ----
 
 ==== JavaFX Support

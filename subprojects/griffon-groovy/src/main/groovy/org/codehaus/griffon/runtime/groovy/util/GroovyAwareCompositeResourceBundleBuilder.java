@@ -18,6 +18,7 @@ package org.codehaus.griffon.runtime.groovy.util;
 import griffon.core.resources.ResourceHandler;
 import griffon.util.ConfigReader;
 import griffon.util.PropertiesReader;
+import griffon.util.ResourceBundleReader;
 import groovy.lang.Script;
 import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder;
 
@@ -40,8 +41,8 @@ public class GroovyAwareCompositeResourceBundleBuilder extends DefaultCompositeR
     private final ConfigReader configReader;
 
     @Inject
-    public GroovyAwareCompositeResourceBundleBuilder(@Nonnull ResourceHandler resourceHandler, @Nonnull PropertiesReader propertiesReader, @Nonnull ConfigReader configReader) {
-        super(resourceHandler, propertiesReader);
+    public GroovyAwareCompositeResourceBundleBuilder(@Nonnull ResourceHandler resourceHandler, @Nonnull PropertiesReader propertiesReader, @Nonnull ResourceBundleReader resourceBundleReader, @Nonnull ConfigReader configReader) {
+        super(resourceHandler, propertiesReader, resourceBundleReader);
         this.configReader = requireNonNull(configReader, "Argument 'reader' must not be null");
     }
 

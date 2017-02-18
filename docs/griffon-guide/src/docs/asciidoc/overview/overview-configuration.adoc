@@ -108,3 +108,94 @@ public class ApplicationModule extends AbstractModule {
 }
 ----
 
+== Conditional Blocks
+
+There are times where a configuration value may dependent on an enviromental setting such as the current
+<<_overview_metadata_environment,Application Environment>>. All types of configuration files (properties, Groovy scripts,
+class based resource bundles) support the notion of conditional blocks. Take for example the following datasource configuration
+in Groovy script format:
+
+[source, groovy]
+.griffon-app/resources/DataSource.groovy
+----
+dataSource.driverClassName = 'org.h2.Driver'
+environments {
+    development {
+        dataSource.url = 'jdbc:h2:mem:@application.name@-dev'
+    }
+    test {
+        dataSource.url = 'jdbc:h2:mem:@application.name@-test'
+    }
+    production {
+        dataSource.url = 'jdbc:h2:file:/opt/@application.name@/data/db'
+    }
+}
+----
+
+The same configuration in properties format:
+
+[source, java]
+.griffon-app/resources/DataSource.properties
+----
+dataSource.driverClassName = org.h2.Driver
+environments.development.dataSource.url = jdbc:h2:mem:@application.name@-dev
+environments.test.dataSource.url = jdbc:h2:mem:@application.name@-test
+environments.production.dataSource.url = jdbc:h2:file:/opt/@application.name@/data/db
+----
+
+Or as a class based `ResourceBundle` subclass:
+
+[source, java]
+.griffon-app/conf/DataSource.java
+----
+import java.util.Map;
+
+import griffon.util.AbstractMapResourceBundle;
+
+import static griffon.util.CollectionUtils.map;
+
+public class DataSource extends AbstractMapResourceBundle {
+    @Override
+    protected void initialize(Map<String, Object> entries) {
+        map(entries)
+            .e("dataSource", map()
+                .e("driverClassName", "org.h2.Driver")
+            )
+            .e("environments", map()
+                .e("development", map()
+                    .e("dataSource", map()
+                        .e("url", "jdbc:h2:mem:sample-dev")
+                    )
+                )
+                .e("test", map()
+                    .e("dataSource", map()
+                        .e("url", "jdbc:h2:mem:sample-test")
+                    )
+                )
+                .e("production", map()
+                    .e("dataSource", map()
+                        .e("url", "jdbc:h2:file:/opt/:sample/data/db")
+                    )
+                )
+            );
+    }
+}
+----
+
+The conditional block in this case is `environments`; the value of `{link_environment}` will dictate the actual value
+associated with the `dataSource.url` key. There are 3 conditional blocks defined by default:
+
+|====
+| Name         | Default value
+| environments | Environment.getName()
+| projects     | Metadata.getApplicationName()
+| platforms    | GriffonApplicationUtils.getPlatform()
+|====
+
+You may define additional conditional blocks as needed, but you must do it by defining appropriate binding overrides
+for the following types in a custom <<_overview_modules,Module>> of your choice:
+
+ * `griffon.util.PropertiesReader` for properties files.
+ * `griffon.util.ResourceBundleReader` for class based `ResourceBundle`
+ * `griffon.util.ConfigReader` for Groovy scripts.
+

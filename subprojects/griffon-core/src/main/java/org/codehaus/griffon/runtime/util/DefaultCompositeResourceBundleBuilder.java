@@ -16,8 +16,9 @@
 package org.codehaus.griffon.runtime.util;
 
 import griffon.core.resources.ResourceHandler;
-import griffon.util.PropertiesResourceBundle;
 import griffon.util.PropertiesReader;
+import griffon.util.PropertiesResourceBundle;
+import griffon.util.ResourceBundleReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,11 +44,13 @@ public class DefaultCompositeResourceBundleBuilder extends AbstractCompositeReso
     protected static final String CLASS_SUFFIX = ".class";
 
     protected final PropertiesReader propertiesReader;
+    protected final ResourceBundleReader resourceBundleReader;
 
     @Inject
-    public DefaultCompositeResourceBundleBuilder(@Nonnull ResourceHandler resourceHandler, @Nonnull PropertiesReader propertiesReader) {
+    public DefaultCompositeResourceBundleBuilder(@Nonnull ResourceHandler resourceHandler, @Nonnull PropertiesReader propertiesReader, @Nonnull ResourceBundleReader resourceBundleReader) {
         super(resourceHandler);
         this.propertiesReader = propertiesReader;
+        this.resourceBundleReader = resourceBundleReader;
     }
 
     @Nonnull
@@ -88,7 +91,7 @@ public class DefaultCompositeResourceBundleBuilder extends AbstractCompositeReso
             try {
                 Class<?> klass = loadClass(className);
                 if (ResourceBundle.class.isAssignableFrom(klass)) {
-                    bundles.add(newInstance(klass));
+                    bundles.add(resourceBundleReader.read(newInstance(klass)));
                 }
             } catch (ClassNotFoundException e) {
                 // ignore

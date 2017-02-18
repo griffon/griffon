@@ -22,6 +22,7 @@ import griffon.core.ApplicationClassLoader
 import griffon.core.resources.ResourceHandler
 import griffon.util.CompositeResourceBundleBuilder
 import griffon.util.PropertiesReader
+import griffon.util.ResourceBundleReader
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
 import org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler
 import org.junit.Rule
@@ -36,15 +37,13 @@ class DefaultCompositeResourceBundleBuilderSpec extends Specification {
     @Rule
     final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
 
-    @Inject
-    private ResourceHandler resourceHandler
-
-    @Inject
-    private PropertiesReader propertiesReader
+    @Inject private ResourceHandler resourceHandler
+    @Inject private PropertiesReader propertiesReader
+    @Inject private ResourceBundleReader resourceBundleReader
 
     def 'Create throws #exception'() {
         given:
-        CompositeResourceBundleBuilder builder = new DefaultCompositeResourceBundleBuilder(resourceHandler, propertiesReader)
+        CompositeResourceBundleBuilder builder = new DefaultCompositeResourceBundleBuilder(resourceHandler, propertiesReader, resourceBundleReader)
 
         when:
         builder.create(filename, locale)
@@ -61,7 +60,7 @@ class DefaultCompositeResourceBundleBuilderSpec extends Specification {
 
     def 'Excercise bundle creation with #filename'() {
         given:
-        CompositeResourceBundleBuilder builder = new DefaultCompositeResourceBundleBuilder(resourceHandler, propertiesReader)
+        CompositeResourceBundleBuilder builder = new DefaultCompositeResourceBundleBuilder(resourceHandler, propertiesReader, resourceBundleReader)
 
         expect:
         builder.create(filename)
@@ -80,6 +79,7 @@ class DefaultCompositeResourceBundleBuilderSpec extends Specification {
             bind(ApplicationClassLoader).to(DefaultApplicationClassLoader).in(Singleton)
             bind(ResourceHandler).to(DefaultResourceHandler).in(Singleton)
             bind(PropertiesReader).in(Singleton)
+            bind(ResourceBundleReader).in(Singleton)
         }
     }
 }
