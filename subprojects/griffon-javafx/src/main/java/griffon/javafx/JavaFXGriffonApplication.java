@@ -17,6 +17,7 @@ package griffon.javafx;
 
 import griffon.core.ApplicationBootstrapper;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper;
 
@@ -108,6 +109,7 @@ public class JavaFXGriffonApplication extends AbstractJavaFXGriffonApplication {
     }
 
     public void exit() {
+        Platform.exit();
         System.exit(0);
     }
 }

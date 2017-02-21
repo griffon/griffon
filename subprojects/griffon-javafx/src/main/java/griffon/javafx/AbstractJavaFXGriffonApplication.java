@@ -39,6 +39,7 @@ import griffon.core.resources.ResourceResolver;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler;
 import org.slf4j.Logger;
@@ -347,6 +348,16 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
     }
 
     public boolean shutdown() {
+        boolean implicitExit = Platform.isImplicitExit();
+        Platform.setImplicitExit(false);
+        if (!doShutdown()) {
+            Platform.setImplicitExit(implicitExit);
+            return false;
+        }
+        return true;
+    }
+
+    protected boolean doShutdown() {
         // avoids reentrant calls to shutdown()
         // once permission to quit has been granted
         if (getPhase() == ApplicationPhase.SHUTDOWN) return false;
