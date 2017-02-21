@@ -22,20 +22,25 @@ import griffon.core.ApplicationClassLoader
 import griffon.core.CallableWithArgs
 import griffon.core.i18n.MessageSource
 import griffon.core.i18n.NoSuchMessageException
+import griffon.core.injection.Injector
 import griffon.core.resources.ResourceHandler
 import griffon.util.CompositeResourceBundleBuilder
+import griffon.util.Instantiator
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
 import org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler
 import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder
+import org.codehaus.griffon.runtime.util.DefaultInstantiator
 import org.junit.Rule
 import org.junit.Test
 
 import javax.annotation.Nonnull
 import javax.annotation.Nullable
 import javax.inject.Inject
+import javax.inject.Provider
 import javax.inject.Singleton
 
 import static com.google.inject.util.Providers.guicify
+import static org.mockito.Mockito.mock
 
 class DefaultMessageSourceTests {
     @Rule
@@ -206,6 +211,8 @@ class DefaultMessageSourceTests {
             bind(MessageSource)
                 .toProvider(guicify(new MessageSourceProvider('org.codehaus.griffon.runtime.core.i18n.props')))
                 .in(Singleton)
+            bind(Instantiator).to(DefaultInstantiator).in(Singleton)
+            bind(Injector).toProvider(guicify({ mock(Injector) } as Provider<Injector>))
         }
     }
 

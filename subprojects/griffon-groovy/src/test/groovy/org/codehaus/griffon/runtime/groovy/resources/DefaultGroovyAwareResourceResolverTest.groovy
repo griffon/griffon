@@ -19,21 +19,26 @@ import com.google.guiceberry.GuiceBerryModule
 import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
 import griffon.core.ApplicationClassLoader
+import griffon.core.injection.Injector
 import griffon.core.resources.ResourceHandler
 import griffon.core.resources.ResourceResolver
 import griffon.util.CompositeResourceBundleBuilder
+import griffon.util.Instantiator
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
 import org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler
 import org.codehaus.griffon.runtime.core.resources.ResourceResolverDecoratorFactory
 import org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider
 import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder
+import org.codehaus.griffon.runtime.util.DefaultInstantiator
 import org.junit.Rule
 import org.junit.Test
 
 import javax.inject.Inject
+import javax.inject.Provider
 import javax.inject.Singleton
 
 import static com.google.inject.util.Providers.guicify
+import static org.mockito.Mockito.mock
 
 class DefaultGroovyAwareResourceResolverTest {
     @Rule
@@ -68,6 +73,8 @@ class DefaultGroovyAwareResourceResolverTest {
             bind(ResourceResolver)
                 .toProvider(guicify(new ResourceResolverProvider('org.codehaus.griffon.runtime.groovy.resources.props')))
                 .in(Singleton)
+            bind(Instantiator).to(DefaultInstantiator).in(Singleton)
+            bind(Injector).toProvider(guicify({ mock(Injector) } as Provider<Injector>))
         }
     }
 }

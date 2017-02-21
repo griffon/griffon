@@ -22,21 +22,26 @@ import griffon.core.ApplicationClassLoader
 import griffon.core.CallableWithArgs
 import griffon.core.editors.IntegerPropertyEditor
 import griffon.core.editors.PropertyEditorResolver
+import griffon.core.injection.Injector
 import griffon.core.resources.NoSuchResourceException
 import griffon.core.resources.ResourceHandler
 import griffon.core.resources.ResourceResolver
 import griffon.util.CompositeResourceBundleBuilder
+import griffon.util.Instantiator
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
 import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder
+import org.codehaus.griffon.runtime.util.DefaultInstantiator
 import org.junit.Rule
 import org.junit.Test
 
 import javax.annotation.Nonnull
 import javax.annotation.Nullable
 import javax.inject.Inject
+import javax.inject.Provider
 import javax.inject.Singleton
 
 import static com.google.inject.util.Providers.guicify
+import static org.mockito.Mockito.mock
 
 class DefaultResourceResolverTests {
     @Rule
@@ -245,6 +250,8 @@ class DefaultResourceResolverTests {
             bind(ResourceResolver)
                 .toProvider(guicify(new ResourceResolverProvider('org.codehaus.griffon.runtime.core.resources.props')))
                 .in(Singleton)
+            bind(Instantiator).to(DefaultInstantiator).in(Singleton)
+            bind(Injector).toProvider(guicify({ mock(Injector) } as Provider<Injector>))
         }
     }
 

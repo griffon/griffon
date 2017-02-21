@@ -21,9 +21,11 @@ import com.google.inject.AbstractModule
 import griffon.core.ApplicationClassLoader
 import griffon.core.env.Environment
 import griffon.core.env.Metadata
+import griffon.core.injection.Injector
 import griffon.core.resources.ResourceHandler
 import griffon.util.CompositeResourceBundleBuilder
 import griffon.util.ConfigReader
+import griffon.util.Instantiator
 import griffon.util.PropertiesReader
 import griffon.util.ResourceBundleReader
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
@@ -35,9 +37,11 @@ import org.junit.Rule
 import spock.lang.Specification
 
 import javax.inject.Inject
+import javax.inject.Provider
 import javax.inject.Singleton
 
 import static com.google.inject.util.Providers.guicify
+import static org.mockito.Mockito.mock
 
 class GroovyAwareCompositeResourceBundleBuilder2Spec extends Specification {
     @Rule
@@ -79,6 +83,8 @@ class GroovyAwareCompositeResourceBundleBuilder2Spec extends Specification {
             bind(Metadata).toProvider(guicify(new MetadataProvider()))
             bind(Environment).toProvider(guicify(new EnvironmentProvider()))
             bind(CompositeResourceBundleBuilder).to(GroovyAwareCompositeResourceBundleBuilder).in(Singleton)
+            bind(Instantiator).to(DefaultInstantiator).in(Singleton)
+            bind(Injector).toProvider(guicify({ mock(Injector) } as Provider<Injector>))
         }
     }
 }

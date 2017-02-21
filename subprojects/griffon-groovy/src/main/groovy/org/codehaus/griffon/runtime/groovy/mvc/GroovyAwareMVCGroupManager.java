@@ -20,6 +20,7 @@ import griffon.core.GriffonApplication;
 import griffon.core.mvc.MVCGroup;
 import griffon.util.BuilderCustomizer;
 import griffon.util.CompositeBuilder;
+import griffon.util.Instantiator;
 import groovy.util.FactoryBuilderSupport;
 import org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager;
 import org.slf4j.Logger;
@@ -43,8 +44,8 @@ public class GroovyAwareMVCGroupManager extends DefaultMVCGroupManager {
     private static final String BUILDER_CUSTOMIZER = "BuilderCustomizer";
 
     @Inject
-    public GroovyAwareMVCGroupManager(@Nonnull GriffonApplication application, @Nonnull ApplicationClassLoader applicationClassLoader) {
-        super(application, applicationClassLoader);
+    public GroovyAwareMVCGroupManager(@Nonnull GriffonApplication application, @Nonnull ApplicationClassLoader applicationClassLoader, @Nonnull Instantiator instantiator) {
+        super(application, applicationClassLoader, instantiator);
     }
 
     @Nonnull

@@ -28,9 +28,10 @@ import java.util.List;
 import java.util.Map;
 
 import static com.google.inject.Scopes.isSingleton;
+import static griffon.util.GriffonClassUtils.hasMethodAnnotatedwith;
+import static griffon.util.GriffonClassUtils.invokeAnnotatedMethod;
 import static java.util.Collections.synchronizedMap;
 import static java.util.Objects.requireNonNull;
-import static org.codehaus.griffon.runtime.injection.MethodUtils.invokeAnnotatedMethod;
 
 /**
  * @author Andres Almiray
@@ -58,7 +59,7 @@ class InstanceTracker {
         requireNonNull(binding, ERROR_BINDING_NULL);
         requireNonNull(instance, ERROR_INSTANCE_NULL);
 
-        if (MethodUtils.hasMethodAnnotatedwith(instance, PreDestroy.class)) {
+        if (hasMethodAnnotatedwith(instance, PreDestroy.class)) {
             if (isSingleton(binding)) {
                 instanceToKeyMap.put(instance, binding);
             } else {

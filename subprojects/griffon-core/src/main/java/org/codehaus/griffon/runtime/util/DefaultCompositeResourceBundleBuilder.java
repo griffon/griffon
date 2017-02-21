@@ -16,6 +16,7 @@
 package org.codehaus.griffon.runtime.util;
 
 import griffon.core.resources.ResourceHandler;
+import griffon.util.Instantiator;
 import griffon.util.PropertiesReader;
 import griffon.util.PropertiesResourceBundle;
 import griffon.util.ResourceBundleReader;
@@ -43,12 +44,17 @@ public class DefaultCompositeResourceBundleBuilder extends AbstractCompositeReso
     protected static final String PROPERTIES_SUFFIX = ".properties";
     protected static final String CLASS_SUFFIX = ".class";
 
+    protected final Instantiator instantiator;
     protected final PropertiesReader propertiesReader;
     protected final ResourceBundleReader resourceBundleReader;
 
     @Inject
-    public DefaultCompositeResourceBundleBuilder(@Nonnull ResourceHandler resourceHandler, @Nonnull PropertiesReader propertiesReader, @Nonnull ResourceBundleReader resourceBundleReader) {
+    public DefaultCompositeResourceBundleBuilder(@Nonnull Instantiator instantiator,
+                                                 @Nonnull ResourceHandler resourceHandler,
+                                                 @Nonnull PropertiesReader propertiesReader,
+                                                 @Nonnull ResourceBundleReader resourceBundleReader) {
         super(resourceHandler);
+        this.instantiator = instantiator;
         this.propertiesReader = propertiesReader;
         this.resourceBundleReader = resourceBundleReader;
     }
@@ -89,7 +95,7 @@ public class DefaultCompositeResourceBundleBuilder extends AbstractCompositeReso
             String url = resource.toString();
             String className = fileName.replace('/', '.');
             try {
-                Class<?> klass = loadClass(className);
+                Class klass = loadClass(className);
                 if (ResourceBundle.class.isAssignableFrom(klass)) {
                     bundles.add(resourceBundleReader.read(newInstance(klass)));
                 }
@@ -107,6 +113,6 @@ public class DefaultCompositeResourceBundleBuilder extends AbstractCompositeReso
     }
 
     protected ResourceBundle newInstance(Class<?> klass) throws IllegalAccessException, InstantiationException {
-        return (ResourceBundle) klass.newInstance();
+        return instantiator.instantiate((Class<? extends ResourceBundle>) klass);
     }
 }

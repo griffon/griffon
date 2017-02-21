@@ -24,6 +24,7 @@ import griffon.core.env.Metadata
 import griffon.core.resources.ResourceHandler
 import griffon.util.CompositeResourceBundleBuilder
 import griffon.util.ConfigReader
+import griffon.util.Instantiator
 import griffon.util.PropertiesReader
 import griffon.util.ResourceBundleReader
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
@@ -92,6 +93,7 @@ class GroovyAwareCompositeResourceBundleBuilderSpec extends Specification {
             bind(Metadata).toProvider(guicify(new MetadataProvider()))
             bind(Environment).toProvider(guicify(new EnvironmentProvider()))
             bind(CompositeResourceBundleBuilder).to(GroovyAwareCompositeResourceBundleBuilder).in(Singleton)
+            bind(Instantiator).toInstance({ c -> c.newInstance() } as Instantiator)
         }
     }
 }

@@ -44,6 +44,7 @@ import griffon.core.resources.ResourceResolver;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import griffon.util.CompositeResourceBundleBuilder;
+import griffon.util.Instantiator;
 import griffon.util.PropertiesReader;
 import griffon.util.ResourceBundleReader;
 import org.codehaus.griffon.runtime.core.addon.DefaultAddonManager;
@@ -74,6 +75,7 @@ import org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvide
 import org.codehaus.griffon.runtime.core.threading.DefaultUIThreadManager;
 import org.codehaus.griffon.runtime.core.view.NoopWindowManager;
 import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder;
+import org.codehaus.griffon.runtime.util.DefaultInstantiator;
 import org.codehaus.griffon.runtime.util.ResourceBundleProvider;
 
 import javax.inject.Named;
@@ -109,6 +111,10 @@ public class DefaultApplicationModule extends AbstractModule {
 
         bind(ContextFactory.class)
             .to(DefaultContextFactory.class)
+            .asSingleton();
+
+        bind(Instantiator.class)
+            .to(DefaultInstantiator.class)
             .asSingleton();
 
         bind(PropertiesReader.class)

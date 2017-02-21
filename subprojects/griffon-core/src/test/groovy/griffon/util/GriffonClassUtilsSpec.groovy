@@ -25,9 +25,12 @@ import griffon.core.mvc.MVCHandler
 import griffon.core.resources.ResourceHandler
 import griffon.core.resources.ResourceResolver
 import griffon.core.threading.ThreadingHandler
+import griffon.exceptions.InstanceMethodInvocationException
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import javax.annotation.PostConstruct
+import javax.annotation.PreDestroy
 import java.lang.reflect.Method
 
 @Unroll
@@ -442,6 +445,62 @@ class GriffonClassUtilsSpec extends Specification {
         ]
     }
 
+    void 'Find @PostConstruct annotated method on valid instance'() {
+        given:
+        ValidBean bean = new ValidBean()
+
+        expect:
+        GriffonClassUtils.hasMethodAnnotatedwith(bean, PostConstruct)
+    }
+
+    void 'Find @PreDestroy annotated method on valid instance'() {
+        given:
+        ValidBean bean = new ValidBean()
+
+        expect:
+        GriffonClassUtils.hasMethodAnnotatedwith(bean, PreDestroy)
+    }
+
+    void 'Invoke @PostConstruct annotated method on valid instance'() {
+        given:
+        ValidBean bean = new ValidBean()
+
+        expect:
+        !bean.postConstruct
+
+        when:
+        GriffonClassUtils.invokeAnnotatedMethod(bean, PostConstruct)
+
+        then:
+        bean.postConstruct
+    }
+
+    void 'Invoke @PreDestroy annotated method on valid instance'() {
+        given:
+        ValidBean bean = new ValidBean()
+
+        expect:
+        !bean.preDestroy
+
+        when:
+        GriffonClassUtils.invokeAnnotatedMethod(bean, PreDestroy)
+
+        then:
+        bean.preDestroy
+    }
+
+    void 'Invoke @PostConstruct annotated method on invalid instance'() {
+        given:
+
+        InvalidBean bean = new InvalidBean()
+
+        when:
+        GriffonClassUtils.invokeAnnotatedMethod(bean, PostConstruct)
+
+        then:
+        thrown(InstanceMethodInvocationException)
+    }
+
     private static List methodDescriptorsOf(Class<?> type, boolean result) {
         List data = []
         for (Method m : type.methods) {
@@ -491,4 +550,27 @@ class GriffonClassUtilsSpec extends Specification {
     static interface MySetter {
         void setSomething(String s)
     }
+}
+
+class ValidBean {
+    boolean postConstruct
+    boolean preDestroy
+
+    @PostConstruct
+    void init() {
+        postConstruct = true
+    }
+
+    @PreDestroy
+    void destroy(){
+        preDestroy = true
+    }
+}
+
+class InvalidBean {
+    @PostConstruct
+    void init() {}
+
+    @PostConstruct
+    void start() {}
 }

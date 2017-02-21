@@ -33,6 +33,7 @@ import griffon.exceptions.NewInstanceException;
 import griffon.inject.Contextual;
 import griffon.inject.MVCMember;
 import griffon.util.CollectionUtils;
+import griffon.util.Instantiator;
 import org.codehaus.griffon.runtime.core.injection.InjectionUnitOfWork;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,12 +83,14 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     private static final String CONFIG_KEY_EVENTS_LISTENER = "events.listener";
     private static final String KEY_PARENT_GROUP = "parentGroup";
 
-    private final ApplicationClassLoader applicationClassLoader;
+    protected final ApplicationClassLoader applicationClassLoader;
+    protected final Instantiator instantiator;
 
     @Inject
-    public DefaultMVCGroupManager(@Nonnull GriffonApplication application, @Nonnull ApplicationClassLoader applicationClassLoader) {
+    public DefaultMVCGroupManager(@Nonnull GriffonApplication application, @Nonnull ApplicationClassLoader applicationClassLoader, @Nonnull Instantiator instantiator) {
         super(application);
         this.applicationClassLoader = requireNonNull(applicationClassLoader, "Argument 'applicationClassLoader' must not be null");
+        this.instantiator = requireNonNull(instantiator, "Argument 'instantiator' must not be null");
     }
 
     protected void doInitialize(@Nonnull Map<String, MVCGroupConfiguration> configurations) {
@@ -260,11 +263,10 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                 } else {
                     Class<?> memberClass = classHolder.regularClass;
                     try {
-                        Object instance = memberClass.newInstance();
-                        getApplication().getInjector().injectMembers(instance);
+                        Object instance = instantiator.instantiate(memberClass);
                         instanceMap.put(memberType, instance);
                         args.put(memberType, instance);
-                    } catch (InstantiationException | IllegalAccessException e) {
+                    } catch (RuntimeException e) {
                         LOG.error("Can't create member {} with {}", memberType, memberClass);
                         throw new NewInstanceException(memberClass, e);
                     }
