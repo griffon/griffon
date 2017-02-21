@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" tests="6" skipped="0" failures="0" errors="0" timestamp="2017-02-18T21:15:17" hostname="testing-gce-704079ce-e776-4318-b76f-d885ae48fb5e" time="0.056">
+<testsuite name="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" tests="6" skipped="0" failures="0" errors="0" timestamp="2017-02-21T18:11:59" hostname="testing-gce-635704e8-b0eb-4898-b5e6-8d1f90074792" time="0.985">
   <properties/>
-  <testcase name="Create throws class java.lang.IllegalArgumentException" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.031"/>
+  <testcase name="Create throws class java.lang.IllegalArgumentException" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.047"/>
   <testcase name="Create throws class java.lang.NullPointerException" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.001"/>
-  <testcase name="Create throws class java.lang.IllegalArgumentException" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.001"/>
+  <testcase name="Create throws class java.lang.IllegalArgumentException" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.003"/>
   <testcase name="Excercise bundle creation with org.codehaus.griffon.runtime.util.NotFoundBundle" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.002"/>
-  <testcase name="Excercise bundle creation with org.codehaus.griffon.runtime.util.NotABundle" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.003"/>
-  <testcase name="Excercise bundle creation with org.codehaus.griffon.runtime.util.BrokenBundle" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.017"/>
+  <testcase name="Excercise bundle creation with org.codehaus.griffon.runtime.util.NotABundle" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.002"/>
+  <testcase name="Excercise bundle creation with org.codehaus.griffon.runtime.util.BrokenBundle" classname="org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec" time="0.929"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[[Test worker] WARN org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder - An error occurred while loading resource bundle org/codehaus/griffon/runtime/util/BrokenBundle from file:/home/travis/build/griffon/griffon/subprojects/griffon-core/build/classes/test/org/codehaus/griffon/runtime/util/BrokenBundle.class
-java.lang.RuntimeException: Boom!
-	at org.codehaus.griffon.runtime.util.BrokenBundle.<init>(BrokenBundle.java:23)
-	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
-	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
-	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
-	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
-	at java.lang.Class.newInstance(Class.java:442)
-	at org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder.newInstance(DefaultCompositeResourceBundleBuilder.java:110)
-	at org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder.loadBundleFromClass(DefaultCompositeResourceBundleBuilder.java:94)
-	at org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder.loadBundlesFor(DefaultCompositeResourceBundleBuilder.java:60)
+java.lang.NullPointerException: Argument 'bundle' must not be null
+	at java.util.Objects.requireNonNull(Objects.java:228)
+	at griffon.util.ResourceBundleReader.read(ResourceBundleReader.java:81)
+	at org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder.loadBundleFromClass(DefaultCompositeResourceBundleBuilder.java:100)
+	at org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder.loadBundlesFor(DefaultCompositeResourceBundleBuilder.java:66)
 	at org.codehaus.griffon.runtime.util.AbstractCompositeResourceBundleBuilder.create(AbstractCompositeResourceBundleBuilder.java:77)
 	at org.codehaus.griffon.runtime.util.AbstractCompositeResourceBundleBuilder.create(AbstractCompositeResourceBundleBuilder.java:56)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
@@ -33,7 +28,7 @@ java.lang.RuntimeException: Boom!
 	at org.codehaus.groovy.runtime.InvokerHelper.invokeMethod(InvokerHelper.java:904)
 	at org.spockframework.runtime.GroovyRuntimeUtil.invokeMethod(GroovyRuntimeUtil.java:174)
 	at org.spockframework.runtime.SpockRuntime.verifyMethodCondition(SpockRuntime.java:52)
-	at org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec.$spock_feature_0_1(DefaultCompositeResourceBundleBuilderSpec.groovy:66)
+	at org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilderSpec.$spock_feature_0_1(DefaultCompositeResourceBundleBuilderSpec.groovy:73)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

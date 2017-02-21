@@ -677,11 +677,11 @@
                 <TotalClasses>10</TotalClasses>
                 <ConcreteClasses>2</ConcreteClasses>
                 <AbstractClasses>8</AbstractClasses>
-                <Ca>8</Ca>
+                <Ca>9</Ca>
                 <Ce>6</Ce>
                 <A>0.8</A>
-                <I>0.43</I>
-                <D>0.23</D>
+                <I>0.4</I>
+                <D>0.2</D>
                 <V>1</V>
             </Stats>
 
@@ -739,6 +739,7 @@
                 <Package>org.codehaus.griffon.runtime.core.injection</Package>
                 <Package>org.codehaus.griffon.runtime.core.mvc</Package>
                 <Package>org.codehaus.griffon.runtime.core.view</Package>
+                <Package>org.codehaus.griffon.runtime.util</Package>
             </UsedBy>
         </Package>
 
@@ -982,11 +983,11 @@
                 <TotalClasses>18</TotalClasses>
                 <ConcreteClasses>17</ConcreteClasses>
                 <AbstractClasses>1</AbstractClasses>
-                <Ca>10</Ca>
+                <Ca>11</Ca>
                 <Ce>7</Ce>
                 <A>0.06</A>
-                <I>0.41</I>
-                <D>0.53</D>
+                <I>0.39</I>
+                <D>0.56</D>
                 <V>1</V>
             </Stats>
 
@@ -1071,6 +1072,7 @@
                 <Package>org.codehaus.griffon.runtime.core.resources</Package>
                 <Package>org.codehaus.griffon.runtime.core.threading</Package>
                 <Package>org.codehaus.griffon.runtime.core.view</Package>
+                <Package>org.codehaus.griffon.runtime.util</Package>
             </UsedBy>
         </Package>
 
@@ -1165,23 +1167,29 @@
 
         <Package name="griffon.util">
             <Stats>
-                <TotalClasses>41</TotalClasses>
-                <ConcreteClasses>36</ConcreteClasses>
-                <AbstractClasses>5</AbstractClasses>
+                <TotalClasses>45</TotalClasses>
+                <ConcreteClasses>38</ConcreteClasses>
+                <AbstractClasses>7</AbstractClasses>
                 <Ca>19</Ca>
-                <Ce>24</Ce>
-                <A>0.12</A>
-                <I>0.56</I>
-                <D>0.32</D>
+                <Ce>25</Ce>
+                <A>0.16</A>
+                <I>0.57</I>
+                <D>0.28</D>
                 <V>1</V>
             </Stats>
 
             <AbstractClasses>
+                <Class sourceFile="AbstractInjectionAwareMapResourceBundle.java">
+                    griffon.util.AbstractInjectionAwareMapResourceBundle
+                </Class>
                 <Class sourceFile="AbstractMapResourceBundle.java">
                     griffon.util.AbstractMapResourceBundle
                 </Class>
                 <Class sourceFile="CompositeResourceBundleBuilder.java">
                     griffon.util.CompositeResourceBundleBuilder
+                </Class>
+                <Class sourceFile="Instantiator.java">
+                    griffon.util.Instantiator
                 </Class>
                 <Class sourceFile="ServiceLoaderUtils.java">
                     griffon.util.ServiceLoaderUtils$LineProcessor
@@ -1195,6 +1203,9 @@
             </AbstractClasses>
 
             <ConcreteClasses>
+                <Class sourceFile="AbstractInjectionAwareMapResourceBundle.java">
+                    griffon.util.AbstractInjectionAwareMapResourceBundle$IteratorAsEnumeration
+                </Class>
                 <Class sourceFile="AbstractMapResourceBundle.java">
                     griffon.util.AbstractMapResourceBundle$IteratorAsEnumeration
                 </Class>
@@ -1254,6 +1265,9 @@
                 </Class>
                 <Class sourceFile="GriffonClassUtils.java">
                     griffon.util.GriffonClassUtils
+                </Class>
+                <Class sourceFile="GriffonClassUtils.java">
+                    griffon.util.GriffonClassUtils$1
                 </Class>
                 <Class sourceFile="GriffonNameUtils.java">
                     griffon.util.GriffonNameUtils
@@ -1325,6 +1339,7 @@
                 <Package>java.lang.reflect</Package>
                 <Package>java.math</Package>
                 <Package>java.net</Package>
+                <Package>java.security</Package>
                 <Package>java.util</Package>
                 <Package>java.util.jar</Package>
                 <Package>java.util.regex</Package>
@@ -1384,6 +1399,10 @@
         </Package>
 
         <Package name="java.net">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.security">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
@@ -2479,14 +2498,14 @@
 
         <Package name="org.codehaus.griffon.runtime.util">
             <Stats>
-                <TotalClasses>3</TotalClasses>
-                <ConcreteClasses>2</ConcreteClasses>
+                <TotalClasses>4</TotalClasses>
+                <ConcreteClasses>3</ConcreteClasses>
                 <AbstractClasses>1</AbstractClasses>
                 <Ca>1</Ca>
-                <Ce>8</Ce>
-                <A>0.33</A>
-                <I>0.89</I>
-                <D>0.22</D>
+                <Ce>11</Ce>
+                <A>0.25</A>
+                <I>0.92</I>
+                <D>0.17</D>
                 <V>1</V>
             </Stats>
 
@@ -2500,18 +2519,24 @@
                 <Class sourceFile="DefaultCompositeResourceBundleBuilder.java">
                     org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder
                 </Class>
+                <Class sourceFile="DefaultInstantiator.java">
+                    org.codehaus.griffon.runtime.util.DefaultInstantiator
+                </Class>
                 <Class sourceFile="ResourceBundleProvider.java">
                     org.codehaus.griffon.runtime.util.ResourceBundleProvider
                 </Class>
             </ConcreteClasses>
 
             <DependsUpon>
+                <Package>griffon.core.injection</Package>
                 <Package>griffon.core.resources</Package>
+                <Package>griffon.exceptions</Package>
                 <Package>griffon.util</Package>
                 <Package>java.io</Package>
                 <Package>java.lang</Package>
                 <Package>java.net</Package>
                 <Package>java.util</Package>
+                <Package>javax.annotation</Package>
                 <Package>javax.inject</Package>
                 <Package>org.slf4j</Package>
             </DependsUpon>

@@ -47,10 +47,10 @@ import java.util.ServiceLoader;
 
 import static com.google.inject.util.Providers.guicify;
 import static griffon.util.AnnotationUtils.sortByDependencies;
+import static griffon.util.GriffonClassUtils.invokeAnnotatedMethod;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 import static org.codehaus.griffon.runtime.injection.GuiceInjector.moduleFromBindings;
-import static org.codehaus.griffon.runtime.injection.MethodUtils.invokeAnnotatedMethod;
 
 /**
  * @author Andres Almiray

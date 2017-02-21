@@ -16,6 +16,7 @@
 package org.codehaus.griffon.runtime.util;
 
 import griffon.core.resources.ResourceHandler;
+import griffon.util.Instantiator;
 import griffon.util.PropertiesReader;
 import griffon.util.PropertiesResourceBundle;
 import griffon.util.ResourceBundleReader;
@@ -39,75 +40,80 @@ import static griffon.util.GriffonNameUtils.requireNonBlank;
  * @since 2.0.0
  */
 public class DefaultCompositeResourceBundleBuilder extends AbstractCompositeResourceBundleBuilder {
-<span class="fc" id="L42">    private static final Logger LOG = LoggerFactory.getLogger(DefaultCompositeResourceBundleBuilder.class);</span>
+<span class="fc" id="L43">    private static final Logger LOG = LoggerFactory.getLogger(DefaultCompositeResourceBundleBuilder.class);</span>
     protected static final String PROPERTIES_SUFFIX = &quot;.properties&quot;;
     protected static final String CLASS_SUFFIX = &quot;.class&quot;;
 
+    protected final Instantiator instantiator;
     protected final PropertiesReader propertiesReader;
     protected final ResourceBundleReader resourceBundleReader;
 
     @Inject
-    public DefaultCompositeResourceBundleBuilder(@Nonnull ResourceHandler resourceHandler, @Nonnull PropertiesReader propertiesReader, @Nonnull ResourceBundleReader resourceBundleReader) {
-<span class="fc" id="L51">        super(resourceHandler);</span>
-<span class="fc" id="L52">        this.propertiesReader = propertiesReader;</span>
-<span class="fc" id="L53">        this.resourceBundleReader = resourceBundleReader;</span>
-<span class="fc" id="L54">    }</span>
+    public DefaultCompositeResourceBundleBuilder(@Nonnull Instantiator instantiator,
+                                                 @Nonnull ResourceHandler resourceHandler,
+                                                 @Nonnull PropertiesReader propertiesReader,
+                                                 @Nonnull ResourceBundleReader resourceBundleReader) {
+<span class="fc" id="L56">        super(resourceHandler);</span>
+<span class="fc" id="L57">        this.instantiator = instantiator;</span>
+<span class="fc" id="L58">        this.propertiesReader = propertiesReader;</span>
+<span class="fc" id="L59">        this.resourceBundleReader = resourceBundleReader;</span>
+<span class="fc" id="L60">    }</span>
 
     @Nonnull
     protected Collection&lt;ResourceBundle&gt; loadBundlesFor(@Nonnull String fileName) {
-<span class="fc" id="L58">        requireNonBlank(fileName, ERROR_FILENAME_BLANK);</span>
-<span class="fc" id="L59">        List&lt;ResourceBundle&gt; bundles = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L60">        bundles.addAll(loadBundleFromClass(fileName));</span>
-<span class="fc" id="L61">        bundles.addAll(loadBundleFromProperties(fileName));</span>
-<span class="fc" id="L62">        return bundles;</span>
+<span class="fc" id="L64">        requireNonBlank(fileName, ERROR_FILENAME_BLANK);</span>
+<span class="fc" id="L65">        List&lt;ResourceBundle&gt; bundles = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L66">        bundles.addAll(loadBundleFromClass(fileName));</span>
+<span class="fc" id="L67">        bundles.addAll(loadBundleFromProperties(fileName));</span>
+<span class="fc" id="L68">        return bundles;</span>
     }
 
     @Nonnull
     protected Collection&lt;ResourceBundle&gt; loadBundleFromProperties(@Nonnull String fileName) {
-<span class="fc" id="L67">        requireNonBlank(fileName, ERROR_FILENAME_BLANK);</span>
-<span class="fc" id="L68">        List&lt;ResourceBundle&gt; bundles = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L69">        List&lt;URL&gt; resources = getResources(fileName, PROPERTIES_SUFFIX);</span>
-<span class="pc bpc" id="L70" title="1 of 2 branches missed.">        if (resources != null) {</span>
-<span class="fc bfc" id="L71" title="All 2 branches covered.">            for (URL resource : resources) {</span>
-<span class="pc bpc" id="L72" title="1 of 2 branches missed.">                if (null == resource) { continue; }</span>
+<span class="fc" id="L73">        requireNonBlank(fileName, ERROR_FILENAME_BLANK);</span>
+<span class="fc" id="L74">        List&lt;ResourceBundle&gt; bundles = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L75">        List&lt;URL&gt; resources = getResources(fileName, PROPERTIES_SUFFIX);</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">        if (resources != null) {</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">            for (URL resource : resources) {</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">                if (null == resource) { continue; }</span>
                 try {
-<span class="fc" id="L74">                    Properties properties = propertiesReader.load(resource.openStream());</span>
-<span class="fc" id="L75">                    bundles.add(new PropertiesResourceBundle(properties));</span>
-<span class="nc" id="L76">                } catch (IOException e) {</span>
+<span class="fc" id="L80">                    Properties properties = propertiesReader.load(resource.openStream());</span>
+<span class="fc" id="L81">                    bundles.add(new PropertiesResourceBundle(properties));</span>
+<span class="nc" id="L82">                } catch (IOException e) {</span>
                     // ignore
-<span class="fc" id="L78">                }</span>
-<span class="fc" id="L79">            }</span>
+<span class="fc" id="L84">                }</span>
+<span class="fc" id="L85">            }</span>
         }
-<span class="fc" id="L81">        return bundles;</span>
+<span class="fc" id="L87">        return bundles;</span>
     }
 
     @Nonnull
     protected Collection&lt;ResourceBundle&gt; loadBundleFromClass(@Nonnull String fileName) {
-<span class="fc" id="L86">        List&lt;ResourceBundle&gt; bundles = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L87">        URL resource = getResourceAsURL(fileName, CLASS_SUFFIX);</span>
-<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (null != resource) {</span>
-<span class="fc" id="L89">            String url = resource.toString();</span>
-<span class="fc" id="L90">            String className = fileName.replace('/', '.');</span>
+<span class="fc" id="L92">        List&lt;ResourceBundle&gt; bundles = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L93">        URL resource = getResourceAsURL(fileName, CLASS_SUFFIX);</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (null != resource) {</span>
+<span class="fc" id="L95">            String url = resource.toString();</span>
+<span class="fc" id="L96">            String className = fileName.replace('/', '.');</span>
             try {
-<span class="fc" id="L92">                Class&lt;?&gt; klass = loadClass(className);</span>
-<span class="fc bfc" id="L93" title="All 2 branches covered.">                if (ResourceBundle.class.isAssignableFrom(klass)) {</span>
-<span class="fc" id="L94">                    bundles.add(resourceBundleReader.read(newInstance(klass)));</span>
+<span class="fc" id="L98">                Class klass = loadClass(className);</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">                if (ResourceBundle.class.isAssignableFrom(klass)) {</span>
+<span class="fc" id="L100">                    bundles.add(resourceBundleReader.read(newInstance(klass)));</span>
                 }
-<span class="nc" id="L96">            } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L102">            } catch (ClassNotFoundException e) {</span>
                 // ignore
-<span class="fc" id="L98">            } catch (Exception e) {</span>
-<span class="fc" id="L99">                LOG.warn(&quot;An error occurred while loading resource bundle &quot; + fileName + &quot; from &quot; + url, e);</span>
-<span class="pc" id="L100">            }</span>
+<span class="fc" id="L104">            } catch (Exception e) {</span>
+<span class="fc" id="L105">                LOG.warn(&quot;An error occurred while loading resource bundle &quot; + fileName + &quot; from &quot; + url, e);</span>
+<span class="pc" id="L106">            }</span>
         }
-<span class="fc" id="L102">        return bundles;</span>
+<span class="fc" id="L108">        return bundles;</span>
     }
 
     protected Class&lt;?&gt; loadClass(String className) throws ClassNotFoundException {
-<span class="fc" id="L106">        return getResourceHandler().classloader().loadClass(className);</span>
+<span class="fc" id="L112">        return getResourceHandler().classloader().loadClass(className);</span>
     }
 
     protected ResourceBundle newInstance(Class&lt;?&gt; klass) throws IllegalAccessException, InstantiationException {
-<span class="fc" id="L110">        return (ResourceBundle) klass.newInstance();</span>
+<span class="fc" id="L116">        return instantiator.instantiate((Class&lt;? extends ResourceBundle&gt;) klass);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

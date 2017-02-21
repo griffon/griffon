@@ -17,6 +17,7 @@ package org.codehaus.griffon.runtime.groovy.util;
 
 import griffon.core.resources.ResourceHandler;
 import griffon.util.ConfigReader;
+import griffon.util.Instantiator;
 import griffon.util.PropertiesReader;
 import griffon.util.ResourceBundleReader;
 import groovy.lang.Script;
@@ -41,37 +42,41 @@ public class GroovyAwareCompositeResourceBundleBuilder extends DefaultCompositeR
     private final ConfigReader configReader;
 
     @Inject
-    public GroovyAwareCompositeResourceBundleBuilder(@Nonnull ResourceHandler resourceHandler, @Nonnull PropertiesReader propertiesReader, @Nonnull ResourceBundleReader resourceBundleReader, @Nonnull ConfigReader configReader) {
-<span class="fc" id="L45">        super(resourceHandler, propertiesReader, resourceBundleReader);</span>
-<span class="fc" id="L46">        this.configReader = requireNonNull(configReader, &quot;Argument 'reader' must not be null&quot;);</span>
-<span class="fc" id="L47">    }</span>
+    public GroovyAwareCompositeResourceBundleBuilder(@Nonnull Instantiator instantiator,
+                                                     @Nonnull ResourceHandler resourceHandler,
+                                                     @Nonnull PropertiesReader propertiesReader,
+                                                     @Nonnull ResourceBundleReader resourceBundleReader,
+                                                     @Nonnull ConfigReader configReader) {
+<span class="fc" id="L50">        super(instantiator, resourceHandler, propertiesReader, resourceBundleReader);</span>
+<span class="fc" id="L51">        this.configReader = requireNonNull(configReader, &quot;Argument 'reader' must not be null&quot;);</span>
+<span class="fc" id="L52">    }</span>
 
     @Nonnull
     @Override
     @SuppressWarnings(&quot;unchecked&quot;)
     protected Collection&lt;ResourceBundle&gt; loadBundleFromClass(@Nonnull String fileName) {
-<span class="fc" id="L53">        List&lt;ResourceBundle&gt; bundles = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L54">        URL resource = getResourceAsURL(fileName, GROOVY_SUFFIX);</span>
-<span class="fc bfc" id="L55" title="All 2 branches covered.">        if (null != resource) {</span>
-<span class="fc" id="L56">            bundles.add(new GroovyScriptResourceBundle(configReader, resource));</span>
-<span class="fc" id="L57">            return bundles;</span>
+<span class="fc" id="L58">        List&lt;ResourceBundle&gt; bundles = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L59">        URL resource = getResourceAsURL(fileName, GROOVY_SUFFIX);</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">        if (null != resource) {</span>
+<span class="fc" id="L61">            bundles.add(new GroovyScriptResourceBundle(configReader, resource));</span>
+<span class="fc" id="L62">            return bundles;</span>
         }
 
-<span class="fc" id="L60">        resource = getResourceAsURL(fileName, CLASS_SUFFIX);</span>
-<span class="fc bfc" id="L61" title="All 2 branches covered.">        if (null != resource) {</span>
-<span class="fc" id="L62">            String className = fileName.replace('/', '.');</span>
+<span class="fc" id="L65">        resource = getResourceAsURL(fileName, CLASS_SUFFIX);</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">        if (null != resource) {</span>
+<span class="fc" id="L67">            String className = fileName.replace('/', '.');</span>
             try {
-<span class="fc" id="L64">                Class&lt;?&gt; klass = loadClass(className);</span>
-<span class="pc bpc" id="L65" title="1 of 2 branches missed.">                if (Script.class.isAssignableFrom(klass)) {</span>
-<span class="nc" id="L66">                    bundles.add(new GroovyScriptResourceBundle(configReader, (Class&lt;? extends Script&gt;) klass));</span>
-<span class="nc" id="L67">                    return bundles;</span>
+<span class="fc" id="L69">                Class&lt;?&gt; klass = loadClass(className);</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">                if (Script.class.isAssignableFrom(klass)) {</span>
+<span class="nc" id="L71">                    bundles.add(new GroovyScriptResourceBundle(configReader, (Class&lt;? extends Script&gt;) klass));</span>
+<span class="nc" id="L72">                    return bundles;</span>
                 }
-<span class="nc" id="L69">            } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L74">            } catch (ClassNotFoundException e) {</span>
                 // ignore
-<span class="fc" id="L71">            }</span>
+<span class="fc" id="L76">            }</span>
         }
 
-<span class="fc" id="L74">        return super.loadBundleFromClass(fileName);</span>
+<span class="fc" id="L79">        return super.loadBundleFromClass(fileName);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
