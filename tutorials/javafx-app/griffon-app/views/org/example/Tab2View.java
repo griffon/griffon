@@ -17,7 +17,7 @@ package org.example;
 
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
-import griffon.javafx.support.BindingUtils;
+import griffon.javafx.beans.binding.UIThreadAwareBindings;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -46,8 +46,8 @@ public class Tab2View extends AbstractJavaFXGriffonView {
     @Override
     public void initUI() {
         Node node = loadFromFXML();
-        uiInput = BindingUtils.uiThreadAwareStringProperty(input.textProperty());
-        uiOutput = BindingUtils.uiThreadAwareStringProperty(output.textProperty());
+        uiInput = UIThreadAwareBindings.uiThreadAwareStringProperty(input.textProperty());
+        uiOutput = UIThreadAwareBindings.uiThreadAwareStringProperty(output.textProperty());
         model.inputProperty().bindBidirectional(uiInput);
         model.outputProperty().bindBidirectional(uiOutput);
         connectActions(node, controller);

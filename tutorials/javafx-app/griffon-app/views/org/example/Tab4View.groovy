@@ -17,7 +17,7 @@ package org.example
 
 import griffon.core.artifact.GriffonView
 import griffon.inject.MVCMember
-import griffon.javafx.support.BindingUtils
+import griffon.javafx.beans.binding.UIThreadAwareBindings
 import griffon.metadata.ArtifactProviderFor
 import javafx.beans.property.StringProperty
 import javafx.scene.control.Tab
@@ -38,8 +38,8 @@ class Tab4View extends AbstractJavaFXGriffonView {
     private StringProperty uiOutput
 
     void initUI() {
-        uiInput = BindingUtils.uiThreadAwareStringProperty(model.inputProperty())
-        uiOutput = BindingUtils.uiThreadAwareStringProperty(model.outputProperty())
+        uiInput = UIThreadAwareBindings.uiThreadAwareStringProperty(model.inputProperty())
+        uiOutput = UIThreadAwareBindings.uiThreadAwareStringProperty(model.outputProperty())
 
         builder.with {
             content = builder.fxml(resource('/org/example/tab4.fxml')) {
