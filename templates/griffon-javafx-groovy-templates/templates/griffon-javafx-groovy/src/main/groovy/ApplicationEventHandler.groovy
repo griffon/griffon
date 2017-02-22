@@ -1,11 +1,11 @@
 package ${project_package}
 
 import griffon.core.event.EventHandler
+import griffon.exceptions.GriffonViewInitializationException
+import javafx.application.Platform
 
 class ApplicationEventHandler implements EventHandler {
-    /*
-    void onBootstrapStart(GriffonApplication application) {
-
+    void onUncaughtGriffonViewInitializationException(GriffonViewInitializationException x) {
+        Platform.exit()
     }
-    */
 }

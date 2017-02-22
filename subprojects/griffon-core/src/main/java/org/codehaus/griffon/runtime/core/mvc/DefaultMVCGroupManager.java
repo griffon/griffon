@@ -28,6 +28,7 @@ import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.exceptions.FieldException;
 import griffon.exceptions.GriffonException;
+import griffon.exceptions.GriffonViewInitializationException;
 import griffon.exceptions.MVCGroupInstantiationException;
 import griffon.exceptions.NewInstanceException;
 import griffon.inject.Contextual;
@@ -289,7 +290,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         }
     }
 
-    protected void initializeArtifactMember(@Nonnull MVCGroup group, @Nonnull String type, @Nonnull final GriffonArtifact member, @Nonnull final Map<String, Object> args) {
+    protected void initializeArtifactMember(@Nonnull final MVCGroup group, @Nonnull String type, @Nonnull final GriffonArtifact member, @Nonnull final Map<String, Object> args) {
         if (member instanceof GriffonView) {
             getApplication().getUIThreadManager().runInsideUISync(new Runnable() {
                 @Override
@@ -297,10 +298,10 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                     try {
                         GriffonView view = (GriffonView) member;
                         view.initUI();
-                        view.mvcGroupInit(args);
                     } catch (RuntimeException e) {
-                        throw (RuntimeException) sanitize(e);
+                        throw (RuntimeException) sanitize(new GriffonViewInitializationException(group.getMvcType(), group.getMvcId(), member.getClass().getName(), e));
                     }
+                    ((GriffonMvcArtifact) member).mvcGroupInit(args);
                 }
             });
         } else if (member instanceof GriffonMvcArtifact) {
