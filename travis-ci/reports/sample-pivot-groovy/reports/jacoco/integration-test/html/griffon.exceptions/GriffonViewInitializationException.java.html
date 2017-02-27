@@ -22,35 +22,37 @@ import javax.annotation.Nonnull;
  * @since 2.10.0
  */
 public class GriffonViewInitializationException extends MVCGroupException {
+    private static final long serialVersionUID = -8983889679743472562L;
+
     private final String mvcType;
     private final String mvcId;
     private final String viewClassname;
 
     public GriffonViewInitializationException(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull String viewClassname, @Nonnull Throwable cause) {
-<span class="nc" id="L30">        super(format(mvcType, mvcId, viewClassname), checkNonNull(cause, &quot;cause&quot;));</span>
-<span class="nc" id="L31">        this.mvcType = checkNonBlank(mvcType, &quot;mvcType&quot;);</span>
-<span class="nc" id="L32">        this.mvcId = checkNonBlank(mvcId, &quot;mvcId&quot;);</span>
-<span class="nc" id="L33">        this.viewClassname = checkNonBlank(viewClassname, &quot;viewClassname&quot;);</span>
-<span class="nc" id="L34">    }</span>
+<span class="nc" id="L32">        super(format(mvcType, mvcId, viewClassname), checkNonNull(cause, &quot;cause&quot;));</span>
+<span class="nc" id="L33">        this.mvcType = checkNonBlank(mvcType, &quot;mvcType&quot;);</span>
+<span class="nc" id="L34">        this.mvcId = checkNonBlank(mvcId, &quot;mvcId&quot;);</span>
+<span class="nc" id="L35">        this.viewClassname = checkNonBlank(viewClassname, &quot;viewClassname&quot;);</span>
+<span class="nc" id="L36">    }</span>
 
     private static String format(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull String viewClassname) {
-<span class="nc" id="L37">        return &quot;Unexpected error when initializing view of type &quot; + checkNonNull(viewClassname, &quot;viewClassname&quot;)</span>
+<span class="nc" id="L39">        return &quot;Unexpected error when initializing view of type &quot; + checkNonNull(viewClassname, &quot;viewClassname&quot;)</span>
             + &quot; belonging to mvcgroup [&quot; + mvcType + &quot;:&quot; + mvcId + &quot;]&quot;;
     }
 
     @Nonnull
     public String getMvcType() {
-<span class="nc" id="L43">        return mvcType;</span>
+<span class="nc" id="L45">        return mvcType;</span>
     }
 
     @Nonnull
     public String getMvcId() {
-<span class="nc" id="L48">        return mvcId;</span>
+<span class="nc" id="L50">        return mvcId;</span>
     }
 
     @Nonnull
     public String getViewClassname() {
-<span class="nc" id="L53">        return viewClassname;</span>
+<span class="nc" id="L55">        return viewClassname;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
