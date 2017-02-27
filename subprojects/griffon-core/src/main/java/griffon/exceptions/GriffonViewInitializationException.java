@@ -22,6 +22,8 @@ import javax.annotation.Nonnull;
  * @since 2.10.0
  */
 public class GriffonViewInitializationException extends MVCGroupException {
+    private static final long serialVersionUID = -8983889679743472562L;
+
     private final String mvcType;
     private final String mvcId;
     private final String viewClassname;
