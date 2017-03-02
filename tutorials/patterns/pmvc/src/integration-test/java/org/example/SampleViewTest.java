@@ -43,6 +43,11 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 public class SampleViewTest {
+static {
+System.setProperty("griffon.full.stacktrace", "true");
+System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
+}
+
     @Rule
     public GriffonTestFXRule testfx = new GriffonTestFXRule("mainWindow");
 

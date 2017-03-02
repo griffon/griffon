@@ -17,12 +17,16 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.core.ApplicationClassLoader;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class DefaultApplicationClassLoader implements ApplicationClassLoader {
+    @Nonnull
     public ClassLoader get() {
-        return Thread.currentThread().getContextClassLoader();
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        return classLoader != null ? classLoader : DefaultApplicationClassLoader.class.getClassLoader();
     }
 }

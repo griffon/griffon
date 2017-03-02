@@ -25,7 +25,7 @@ class GriffonPluginWithAppliedGroovyPluginSpecification extends AbstractPluginSp
             apply plugin: 'groovy'
             apply plugin: 'org.codehaus.griffon.griffon'
             project.griffon {
-                version = '2.10.0-SNAPSHOT'
+                version = '2.10.0'
             }
         }
     }

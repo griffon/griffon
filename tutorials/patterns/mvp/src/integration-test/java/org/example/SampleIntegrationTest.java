@@ -108,7 +108,11 @@ public class SampleIntegrationTest {
             @Override
             protected void doConfigure() {
                 bind(SampleView.class)
-                    .toProvider(() -> mock(SampleView.class));
+                    .toProvider(() -> {
+                        SampleView view = mock(SampleView.class);
+                        when(view.getTypeClass()).thenReturn(SampleView.class);
+                        return view;
+                     });
             }
         });
     }

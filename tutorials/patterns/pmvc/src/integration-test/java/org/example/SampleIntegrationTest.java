@@ -39,6 +39,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(JUnitParamsRunner.class)
 public class SampleIntegrationTest {
@@ -76,6 +77,7 @@ public class SampleIntegrationTest {
 
         // expect:
         assertThat(model.getOutput(), nullValue());
+
         // when:
         model.setInput(input);
         controller.invokeAction("sayHello");
@@ -91,7 +93,11 @@ public class SampleIntegrationTest {
             @Override
             protected void doConfigure() {
                 bind(SampleView.class)
-                    .toProvider(() -> mock(SampleView.class));
+                    .toProvider(() -> {
+                        SampleView view = mock(SampleView.class);
+                        when(view.getTypeClass()).thenReturn(SampleView.class);
+                        return view;
+                     });
             }
         });
     }

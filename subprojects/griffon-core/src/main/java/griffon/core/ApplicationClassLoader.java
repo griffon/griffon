@@ -15,10 +15,13 @@
  */
 package griffon.core;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public interface ApplicationClassLoader {
+    @Nonnull
     ClassLoader get();
 }
