@@ -17,13 +17,17 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.core.ApplicationClassLoader;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
-<span class="fc" id="L24">public class DefaultApplicationClassLoader implements ApplicationClassLoader {</span>
+<span class="fc" id="L26">public class DefaultApplicationClassLoader implements ApplicationClassLoader {</span>
+    @Nonnull
     public ClassLoader get() {
-<span class="fc" id="L26">        return Thread.currentThread().getContextClassLoader();</span>
+<span class="fc" id="L29">        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();</span>
+<span class="pc bpc" id="L30" title="1 of 2 branches missed.">        return classLoader != null ? classLoader : DefaultApplicationClassLoader.class.getClassLoader();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
