@@ -309,6 +309,9 @@ task clirrRootReport(type: org.kordamp.gradle.clirr.ClirrReportTask) {
         difference?.message?.text() =~ /super\$/ ||
         difference?.message?.text() =~ /this\$/ ||
         difference?.message?.text() =~ /__.swapInit/ ||
+        difference?.message?.text() =~ /_methodMissing/ ||
+        difference?.message?.text() =~ /_propertyMissing/ ||
+        difference?.message?.text() =~ /getDE/ ||
         difference?.classname?.text() =~ /_closure/ ||
         !(difference?.classname?.text() =~ /griffon/)
     }
