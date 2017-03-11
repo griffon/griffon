@@ -265,15 +265,15 @@ class GriffonPlugin implements Plugin<Project> {
                 String dependencyCoordinates = ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':')
 
                 if (artifactId.endsWith('-compile')) {
-                    project.logger.info("Adding {} to 'compileOnly' configuration", dependencyCoordinates)
-                    project.dependencies.add('compileOnly', dependencyCoordinates)
-                    project.logger.info("Adding {} to 'testCompileOnly' configuration", dependencyCoordinates)
-                    project.dependencies.add('testCompileOnly', dependencyCoordinates)
+                    ['compileOnly', 'apt', 'testCompileOnly', 'testApt'].each { conf ->
+                        project.logger.info("Adding {} to '{}' configuration", dependencyCoordinates, conf)
+                        project.dependencies.add(conf, dependencyCoordinates)
+                    }
                 } else if (artifactId.endsWith('-test')) {
                     project.logger.info("Adding {} to 'testCompile' configuration", dependencyCoordinates)
                     project.dependencies.add('testCompile', dependencyCoordinates)
                 } else {
-                    project.logger.info("Adding {} to '{}' configuration", dependencyCoordinates, 'compile')
+                    project.logger.info("Adding {} to 'compile' configuration", dependencyCoordinates)
                     project.dependencies.add('compile', dependencyCoordinates)
                 }
             }
