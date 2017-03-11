@@ -265,15 +265,15 @@ class GriffonPlugin implements Plugin&lt;Project&gt; {
 <span class="nc" id="L265">                String dependencyCoordinates = ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':')</span>
 
 <span class="nc bnc" id="L267" title="All 2 branches missed.">                if (artifactId.endsWith('-compile')) {</span>
-<span class="nc" id="L268">                    project.logger.info(&quot;Adding {} to 'compileOnly' configuration&quot;, dependencyCoordinates)</span>
-<span class="nc" id="L269">                    project.dependencies.add('compileOnly', dependencyCoordinates)</span>
-<span class="nc" id="L270">                    project.logger.info(&quot;Adding {} to 'testCompileOnly' configuration&quot;, dependencyCoordinates)</span>
-<span class="nc" id="L271">                    project.dependencies.add('testCompileOnly', dependencyCoordinates)</span>
+<span class="nc" id="L268">                    ['compileOnly', 'apt', 'testCompileOnly', 'testApt'].each { conf -&gt;</span>
+<span class="nc" id="L269">                        project.logger.info(&quot;Adding {} to '{}' configuration&quot;, dependencyCoordinates, conf)</span>
+<span class="nc" id="L270">                        project.dependencies.add(conf, dependencyCoordinates)</span>
+                    }
 <span class="nc bnc" id="L272" title="All 2 branches missed.">                } else if (artifactId.endsWith('-test')) {</span>
 <span class="nc" id="L273">                    project.logger.info(&quot;Adding {} to 'testCompile' configuration&quot;, dependencyCoordinates)</span>
 <span class="nc" id="L274">                    project.dependencies.add('testCompile', dependencyCoordinates)</span>
                 } else {
-<span class="nc" id="L276">                    project.logger.info(&quot;Adding {} to '{}' configuration&quot;, dependencyCoordinates, 'compile')</span>
+<span class="nc" id="L276">                    project.logger.info(&quot;Adding {} to 'compile' configuration&quot;, dependencyCoordinates)</span>
 <span class="nc" id="L277">                    project.dependencies.add('compile', dependencyCoordinates)</span>
                 }
             }
