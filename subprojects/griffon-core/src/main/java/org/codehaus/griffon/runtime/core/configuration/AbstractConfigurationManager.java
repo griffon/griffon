@@ -72,7 +72,6 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
 
     protected void injectConfiguration(@Nonnull Object instance) {
         requireNonNull(instance, ERROR_INSTANCE_NULL);
-        System.out.println(instance);
 
         Map<String, ConfigurationDescriptor> descriptors = new LinkedHashMap<>();
         Class klass = instance.getClass();
@@ -129,13 +128,6 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
             String format = annotation.format();
 
             if (LOG.isDebugEnabled()) {
-                System.out.println("Field " + fqFieldName +
-                    " of instance " + instance +
-                    " [configuration='" + configuration +
-                    "', key='" + key +
-                    "', defaultValue='" + defaultValue +
-                    "', format='" + format +
-                    "'] is marked for configuration injection.");
                 LOG.debug("Field " + fqFieldName +
                     " of instance " + instance +
                     " [configuration='" + configuration +
