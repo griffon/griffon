@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClassResourceBundleLoader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-groovy</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.util</a> &gt; <span class="el_source">ClassResourceBundleLoader.java</span></div><h1>ClassResourceBundleLoader.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.util;
+
+import griffon.core.resources.ResourceHandler;
+import griffon.util.Instantiator;
+import griffon.util.ResourceBundleReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.11.0
+ */
+@Named(&quot;class&quot;)
+public class ClassResourceBundleLoader extends AbstractResourceBundleLoader {
+<span class="fc" id="L42">    private static final Logger LOG = LoggerFactory.getLogger(ClassResourceBundleLoader.class);</span>
+    protected static final String CLASS_SUFFIX = &quot;.class&quot;;
+
+    protected final Instantiator instantiator;
+    protected final ResourceBundleReader resourceBundleReader;
+
+    @Inject
+    public ClassResourceBundleLoader(@Nonnull Instantiator instantiator,
+                                     @Nonnull ResourceHandler resourceHandler,
+                                     @Nonnull ResourceBundleReader resourceBundleReader) {
+<span class="fc" id="L52">        super(resourceHandler);</span>
+<span class="fc" id="L53">        this.instantiator = requireNonNull(instantiator, &quot;Argument 'instantiator' must not be null&quot;);</span>
+<span class="fc" id="L54">        this.resourceBundleReader = requireNonNull(resourceBundleReader, &quot;Argument 'resourceBundleReader' must not be null&quot;);</span>
+<span class="fc" id="L55">    }</span>
+
+    @Nonnull
+    @Override
+    public Collection&lt;ResourceBundle&gt; load(@Nonnull String name) {
+<span class="fc" id="L60">        requireNonBlank(name, ERROR_FILENAME_BLANK);</span>
+<span class="fc" id="L61">        List&lt;ResourceBundle&gt; bundles = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L62">        URL resource = getResourceAsURL(name, CLASS_SUFFIX);</span>
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">        if (null != resource) {</span>
+<span class="nc" id="L64">            String url = resource.toString();</span>
+<span class="nc" id="L65">            String className = name.replace('/', '.');</span>
+            try {
+<span class="nc" id="L67">                Class klass = loadClass(className);</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">                if (ResourceBundle.class.isAssignableFrom(klass)) {</span>
+<span class="nc" id="L69">                    bundles.add(resourceBundleReader.read(newInstance(klass)));</span>
+                }
+<span class="nc" id="L71">            } catch (ClassNotFoundException e) {</span>
+                // ignore
+<span class="nc" id="L73">            } catch (Exception e) {</span>
+<span class="nc" id="L74">                LOG.warn(&quot;An error occurred while loading resource bundle &quot; + name + &quot; from &quot; + url, e);</span>
+<span class="nc" id="L75">            }</span>
+        }
+<span class="fc" id="L77">        return bundles;</span>
+    }
+
+    @Nonnull
+    protected Class&lt;?&gt; loadClass(String className) throws ClassNotFoundException {
+<span class="fc" id="L82">        return getResourceHandler().classloader().loadClass(className);</span>
+    }
+
+    @Nonnull
+    protected ResourceBundle newInstance(Class&lt;?&gt; klass) throws IllegalAccessException, InstantiationException {
+<span class="nc" id="L87">        return instantiator.instantiate((Class&lt;? extends ResourceBundle&gt;) klass);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractConfigurationManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-groovy</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core.configuration</a> &gt; <span class="el_source">AbstractConfigurationManager.java</span></div><h1>AbstractConfigurationManager.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core.configuration;
+
+import griffon.core.ApplicationEvent;
+import griffon.core.Configuration;
+import griffon.core.GriffonApplication;
+import griffon.core.RunnableWithArgs;
+import griffon.core.configuration.ConfigurationManager;
+import griffon.core.configuration.Configured;
+import griffon.core.editors.ExtendedPropertyEditor;
+import griffon.core.editors.PropertyEditorResolver;
+import griffon.util.GriffonClassUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import java.beans.PropertyDescriptor;
+import java.beans.PropertyEditor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import static griffon.core.editors.PropertyEditorResolver.findEditor;
+import static griffon.util.GriffonNameUtils.isBlank;
+import static java.lang.reflect.Modifier.isStatic;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.11.0
+ */
+<span class="fc" id="L50">public abstract class AbstractConfigurationManager implements ConfigurationManager {</span>
+<span class="fc" id="L51">    private static final Logger LOG = LoggerFactory.getLogger(AbstractConfigurationManager.class);</span>
+
+    private static final String ERROR_INSTANCE_NULL = &quot;Argument 'instance' must not be null&quot;;
+    private static final String ERROR_TYPE_NULL = &quot;Argument 'type' must not be null&quot;;
+    private static final String ERROR_VALUE_NULL = &quot;Argument 'value' must not be null&quot;;
+
+    @Inject
+    protected GriffonApplication application;
+
+    @PostConstruct
+    private void initialize() {
+<span class="fc" id="L62">        this.application = requireNonNull(application, &quot;Argument 'application' cannot ne null&quot;);</span>
+
+<span class="fc" id="L64">        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), new RunnableWithArgs() {</span>
+            @Override
+            public void run(@Nullable Object... args) {
+<span class="fc" id="L67">                Object instance = args[1];</span>
+<span class="fc" id="L68">                injectConfiguration(instance);</span>
+<span class="fc" id="L69">            }</span>
+        });
+<span class="fc" id="L71">    }</span>
+
+    protected void injectConfiguration(@Nonnull Object instance) {
+<span class="fc" id="L74">        requireNonNull(instance, ERROR_INSTANCE_NULL);</span>
+<span class="fc" id="L75">        System.out.println(instance);</span>
+
+<span class="fc" id="L77">        Map&lt;String, ConfigurationDescriptor&gt; descriptors = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L78">        Class klass = instance.getClass();</span>
+        do {
+<span class="fc" id="L80">            harvestDescriptors(instance.getClass(), klass, instance, descriptors);</span>
+<span class="fc" id="L81">            klass = klass.getSuperclass();</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        } while (null != klass);</span>
+
+<span class="fc" id="L84">        doConfigurationInjection(instance, descriptors);</span>
+<span class="fc" id="L85">    }</span>
+
+    protected void harvestDescriptors(@Nonnull Class instanceClass, @Nonnull Class currentClass, @Nonnull Object instance, @Nonnull Map&lt;String, ConfigurationDescriptor&gt; descriptors) {
+<span class="fc" id="L88">        PropertyDescriptor[] propertyDescriptors = GriffonClassUtils.getPropertyDescriptors(currentClass);</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        for (PropertyDescriptor pd : propertyDescriptors) {</span>
+<span class="fc" id="L90">            Method writeMethod = pd.getWriteMethod();</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">            if (null == writeMethod) { continue; }</span>
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">            if (isStatic(writeMethod.getModifiers())) {</span>
+<span class="nc" id="L93">                continue;</span>
+            }
+
+<span class="fc" id="L96">            Configured annotation = writeMethod.getAnnotation(Configured.class);</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">            if (null == annotation) { continue; }</span>
+
+<span class="nc" id="L99">            String propertyName = pd.getName();</span>
+<span class="nc" id="L100">            String configuration = annotation.configuration().trim();</span>
+<span class="nc" id="L101">            String key = annotation.value();</span>
+<span class="nc" id="L102">            String defaultValue = annotation.defaultValue();</span>
+<span class="nc" id="L103">            String format = annotation.format();</span>
+
+<span class="nc bnc" id="L105" title="All 2 branches missed.">            if (LOG.isDebugEnabled()) {</span>
+<span class="nc" id="L106">                LOG.debug(&quot;Property &quot; + propertyName +</span>
+                    &quot; of instance &quot; + instance +
+                    &quot; [configuration='&quot; + configuration +
+                    &quot;', key='&quot; + key +
+                    &quot;', defaultValue='&quot; + defaultValue +
+                    &quot;', format='&quot; + format +
+                    &quot;'] is marked for configuration injection.&quot;);
+            }
+<span class="nc" id="L114">            descriptors.put(propertyName, new MethodConfigurationDescriptor(writeMethod, configuration, key, defaultValue, format));</span>
+        }
+
+<span class="fc bfc" id="L117" title="All 2 branches covered.">        for (Field field : currentClass.getDeclaredFields()) {</span>
+<span class="pc bpc" id="L118" title="1 of 6 branches missed.">            if (field.isSynthetic() || isStatic(field.getModifiers()) || descriptors.containsKey(field.getName())) {</span>
+<span class="nc" id="L119">                continue;</span>
+            }
+<span class="fc" id="L121">            final Configured annotation = field.getAnnotation(Configured.class);</span>
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">            if (null == annotation) { continue; }</span>
+
+<span class="nc" id="L124">            Class resolvedClass = field.getDeclaringClass();</span>
+<span class="nc" id="L125">            String fqFieldName = resolvedClass.getName().replace('$', '.') + &quot;.&quot; + field.getName();</span>
+<span class="nc" id="L126">            String configuration = annotation.configuration().trim();</span>
+<span class="nc" id="L127">            String key = annotation.value();</span>
+<span class="nc" id="L128">            String defaultValue = annotation.defaultValue();</span>
+<span class="nc" id="L129">            String format = annotation.format();</span>
+
+<span class="nc bnc" id="L131" title="All 2 branches missed.">            if (LOG.isDebugEnabled()) {</span>
+<span class="nc" id="L132">                System.out.println(&quot;Field &quot; + fqFieldName +</span>
+                    &quot; of instance &quot; + instance +
+                    &quot; [configuration='&quot; + configuration +
+                    &quot;', key='&quot; + key +
+                    &quot;', defaultValue='&quot; + defaultValue +
+                    &quot;', format='&quot; + format +
+                    &quot;'] is marked for configuration injection.&quot;);
+<span class="nc" id="L139">                LOG.debug(&quot;Field &quot; + fqFieldName +</span>
+                    &quot; of instance &quot; + instance +
+                    &quot; [configuration='&quot; + configuration +
+                    &quot;', key='&quot; + key +
+                    &quot;', defaultValue='&quot; + defaultValue +
+                    &quot;', format='&quot; + format +
+                    &quot;'] is marked for configuration injection.&quot;);
+            }
+
+<span class="nc" id="L148">            descriptors.put(field.getName(), new FieldConfigurationDescriptor(field, configuration, key, defaultValue, format));</span>
+        }
+<span class="fc" id="L150">    }</span>
+
+    protected void doConfigurationInjection(@Nonnull Object instance, @Nonnull Map&lt;String, ConfigurationDescriptor&gt; descriptors) {
+<span class="pc bpc" id="L153" title="1 of 2 branches missed.">        for (ConfigurationDescriptor descriptor : descriptors.values()) {</span>
+<span class="nc" id="L154">            Object value = resolveConfiguration(descriptor.getConfiguration(), descriptor.getKey(), descriptor.getDefaultValue());</span>
+<span class="nc" id="L155">            InjectionPoint injectionPoint = descriptor.asInjectionPoint();</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">            if (!injectionPoint.getType().isAssignableFrom(value.getClass())) {</span>
+<span class="nc" id="L157">                value = convertValue(injectionPoint.getType(), value, descriptor.getFormat());</span>
+            }
+<span class="nc" id="L159">            injectionPoint.setValue(instance, value);</span>
+<span class="nc" id="L160">        }</span>
+<span class="fc" id="L161">    }</span>
+
+    @Nonnull
+    protected Object resolveConfiguration(@Nonnull String name, @Nonnull String key, @Nonnull String defaultValue) {
+<span class="nc" id="L165">        Configuration configuration = getConfiguration();</span>
+<span class="nc bnc" id="L166" title="All 2 branches missed.">        if (!isBlank(name)) {</span>
+<span class="nc" id="L167">            configuration = getConfiguration(name);</span>
+        }
+
+<span class="nc bnc" id="L170" title="All 2 branches missed.">        if (configuration.containsKey(key)) {</span>
+<span class="nc" id="L171">            return configuration.get(key);</span>
+        } else {
+<span class="nc" id="L173">            return defaultValue;</span>
+        }
+    }
+
+    @Nonnull
+    protected Object convertValue(@Nonnull Class&lt;?&gt; type, @Nonnull Object value, @Nullable String format) {
+<span class="nc" id="L179">        requireNonNull(type, ERROR_TYPE_NULL);</span>
+<span class="nc" id="L180">        requireNonNull(value, ERROR_VALUE_NULL);</span>
+<span class="nc" id="L181">        PropertyEditor propertyEditor = resolvePropertyEditor(type, format);</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">        if (propertyEditor instanceof PropertyEditorResolver.NoopPropertyEditor) { return value; }</span>
+<span class="nc bnc" id="L183" title="All 2 branches missed.">        if (value instanceof CharSequence) {</span>
+<span class="nc" id="L184">            propertyEditor.setAsText(String.valueOf(value));</span>
+        } else {
+<span class="nc" id="L186">            propertyEditor.setValue(value);</span>
+        }
+<span class="nc" id="L188">        return propertyEditor.getValue();</span>
+    }
+
+    @Nonnull
+    protected PropertyEditor resolvePropertyEditor(@Nonnull Class&lt;?&gt; type, @Nullable String format) {
+<span class="nc" id="L193">        requireNonNull(type, ERROR_TYPE_NULL);</span>
+<span class="nc" id="L194">        PropertyEditor propertyEditor = findEditor(type);</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">        if (propertyEditor instanceof ExtendedPropertyEditor) {</span>
+<span class="nc" id="L196">            ((ExtendedPropertyEditor) propertyEditor).setFormat(format);</span>
+        }
+<span class="nc" id="L198">        return propertyEditor;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

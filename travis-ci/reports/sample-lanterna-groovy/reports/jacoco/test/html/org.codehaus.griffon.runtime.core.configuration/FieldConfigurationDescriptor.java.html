@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FieldConfigurationDescriptor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-lanterna-groovy</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core.configuration</a> &gt; <span class="el_source">FieldConfigurationDescriptor.java</span></div><h1>FieldConfigurationDescriptor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core.configuration;
+
+import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
+
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.11.0
+ */
+public class FieldConfigurationDescriptor extends ConfigurationDescriptor {
+    private final Field field;
+
+    public FieldConfigurationDescriptor(@Nonnull Field field, @Nonnull String configuration, @Nonnull String key, @Nonnull String defaultValue, @Nonnull String format) {
+<span class="nc" id="L31">        super(configuration, key, defaultValue, format);</span>
+<span class="nc" id="L32">        this.field = requireNonNull(field, &quot;Argument 'field' must not be null&quot;);</span>
+<span class="nc" id="L33">    }</span>
+
+    @Nonnull
+    public Field getField() {
+<span class="nc" id="L37">        return field;</span>
+    }
+
+    @Nonnull
+    public InjectionPoint asInjectionPoint() {
+<span class="nc" id="L42">        return new FieldInjectionPoint(field, getConfiguration(), getKey(), getFormat());</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L47">        final StringBuilder sb = new StringBuilder(&quot;FieldPreferenceDescriptor{&quot;);</span>
+<span class="nc" id="L48">        sb.append(&quot;field=&quot;).append(field);</span>
+<span class="nc" id="L49">        sb.append(&quot;, configuration='&quot;).append(getConfiguration()).append('\'');</span>
+<span class="nc" id="L50">        sb.append(&quot;, key='&quot;).append(getKey()).append('\'');</span>
+<span class="nc" id="L51">        sb.append(&quot;, defaultValue='&quot;).append(getDefaultValue()).append('\'');</span>
+<span class="nc" id="L52">        sb.append(&quot;, format='&quot;).append(getFormat()).append('\'');</span>
+<span class="nc" id="L53">        sb.append('}');</span>
+<span class="nc" id="L54">        return sb.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

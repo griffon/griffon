@@ -170,7 +170,7 @@ public class AnnotationUtils {
 <span class="fc" id="L170">        requireNonNull(instance, ERROR_INSTANCE_NULL);</span>
 
 <span class="fc" id="L172">        Evicts evicts = instance.getClass().getAnnotation(Evicts.class);</span>
-<span class="pc bpc" id="L173" title="1 of 2 branches missed.">        return evicts != null ? evicts.value() : &quot;&quot;;</span>
+<span class="fc bfc" id="L173" title="All 2 branches covered.">        return evicts != null ? evicts.value() : &quot;&quot;;</span>
     }
 
     @Nonnull
@@ -278,17 +278,17 @@ public class AnnotationUtils {
 <span class="fc bfc" id="L278" title="All 2 branches covered.">        for (T instance : instances) {</span>
 <span class="fc" id="L279">            String currentEvicts = getEvicts(instance);</span>
 <span class="fc" id="L280">            String name = getLogicalPropertyName(nameFor(instance), suffix);</span>
-<span class="pc bpc" id="L281" title="1 of 2 branches missed.">            Object evictedInstance = isBlank(currentEvicts) ? null : map.get(currentEvicts);</span>
+<span class="fc bfc" id="L281" title="All 2 branches covered.">            Object evictedInstance = isBlank(currentEvicts) ? null : map.get(currentEvicts);</span>
 
-<span class="pc bpc" id="L283" title="1 of 2 branches missed.">            if (evictedInstance != null) {</span>
-<span class="nc" id="L284">                String evictedEvicts = getEvicts(evictedInstance);</span>
-<span class="nc bnc" id="L285" title="All 2 branches missed.">                if (!isBlank(evictedEvicts)) {</span>
+<span class="fc bfc" id="L283" title="All 2 branches covered.">            if (evictedInstance != null) {</span>
+<span class="fc" id="L284">                String evictedEvicts = getEvicts(evictedInstance);</span>
+<span class="pc bpc" id="L285" title="1 of 2 branches missed.">                if (!isBlank(evictedEvicts)) {</span>
 <span class="nc" id="L286">                    throw new IllegalArgumentException(type + &quot; &quot; + name + &quot; has an eviction conflict between &quot; + instance + &quot; and &quot; + evictedInstance);</span>
                 } else {
-<span class="nc" id="L288">                    name = currentEvicts;</span>
-<span class="nc" id="L289">                    LOG.info(&quot;{} {} with instance {} evicted by {}&quot;, type, name, evictedInstance, instance);</span>
+<span class="fc" id="L288">                    name = currentEvicts;</span>
+<span class="fc" id="L289">                    LOG.info(&quot;{} {} with instance {} evicted by {}&quot;, type, name, evictedInstance, instance);</span>
                 }
-<span class="nc" id="L291">            } else {</span>
+<span class="fc" id="L291">            } else {</span>
 <span class="pc bpc" id="L292" title="1 of 2 branches missed.">                name = isBlank(currentEvicts) ? name : currentEvicts;</span>
 <span class="fc" id="L293">                Object previousInstance = map.get(name);</span>
 <span class="pc bpc" id="L294" title="1 of 2 branches missed.">                if (previousInstance != null) {</span>

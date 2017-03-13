@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResourceBundleConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-groovy</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core.configuration</a> &gt; <span class="el_source">ResourceBundleConfiguration.java</span></div><h1>ResourceBundleConfiguration.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core.configuration;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import java.util.Enumeration;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
+import static griffon.util.ConfigUtils.getConfigValue;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Collections.unmodifiableMap;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+public class ResourceBundleConfiguration extends AbstractConfiguration {
+    protected static final String ERROR_KEY_BLANK = &quot;Argument 'key' must not be blank&quot;;
+    private final ResourceBundle resourceBundle;
+<span class="fc" id="L39">    private final Map&lt;String, Object&gt; flatMap = new LinkedHashMap&lt;&gt;();</span>
+
+    @Inject
+<span class="fc" id="L42">    public ResourceBundleConfiguration(@Nonnull ResourceBundle resourceBundle) {</span>
+<span class="fc" id="L43">        this.resourceBundle = requireNonNull(resourceBundle, &quot;Argument 'resourceBundle' must not be null&quot;);</span>
+<span class="fc" id="L44">        Enumeration&lt;String&gt; keys = resourceBundle.getKeys();</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        while (keys.hasMoreElements()) {</span>
+<span class="fc" id="L46">            String key = keys.nextElement();</span>
+<span class="fc" id="L47">            flatMap.put(key, getConfigValue(resourceBundle, key));</span>
+<span class="fc" id="L48">        }</span>
+<span class="fc" id="L49">    }</span>
+
+    public boolean containsKey(@Nonnull String key) {
+<span class="nc" id="L52">        return resourceBundle.containsKey(requireNonBlank(key, ERROR_KEY_BLANK));</span>
+    }
+
+    @Nonnull
+    @Override
+    public Map&lt;String, Object&gt; asFlatMap() {
+<span class="fc" id="L58">        return unmodifiableMap(flatMap);</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceBundle asResourceBundle() {
+<span class="nc" id="L64">        return resourceBundle;</span>
+    }
+
+    @Nullable
+    @Override
+    public Object get(@Nonnull String key) {
+        try {
+<span class="fc" id="L71">            return getConfigValue(resourceBundle, key);</span>
+<span class="fc" id="L72">        } catch (MissingResourceException mre) {</span>
+<span class="fc" id="L73">            return null;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

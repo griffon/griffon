@@ -77,9 +77,9 @@ public class AnnotationUtils {
 <span class="nc" id="L77">                    continue;</span>
                 }
                 // special case for @Named
-<span class="pc bpc" id="L80" title="1 of 2 branches missed.">                if (Named.class.isAssignableFrom(annotation.getClass())) {</span>
-<span class="nc" id="L81">                    Named named = (Named) annotation;</span>
-<span class="nc bnc" id="L82" title="All 2 branches missed.">                    if (isBlank(named.value())) {</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">                if (Named.class.isAssignableFrom(annotation.getClass())) {</span>
+<span class="fc" id="L81">                    Named named = (Named) annotation;</span>
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">                    if (isBlank(named.value())) {</span>
 <span class="nc" id="L83">                        list.add(named(getPropertyName(klass)));</span>
 <span class="nc" id="L84">                        continue;</span>
                     }

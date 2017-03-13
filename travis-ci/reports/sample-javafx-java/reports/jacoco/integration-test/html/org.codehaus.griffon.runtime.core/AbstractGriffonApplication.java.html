@@ -29,6 +29,7 @@ import griffon.core.ShutdownHandler;
 import griffon.core.addon.AddonManager;
 import griffon.core.addon.GriffonAddon;
 import griffon.core.artifact.ArtifactManager;
+import griffon.core.configuration.ConfigurationManager;
 import griffon.core.controller.ActionManager;
 import griffon.core.env.ApplicationPhase;
 import griffon.core.env.Lifecycle;
@@ -65,344 +66,350 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  */
 public abstract class AbstractGriffonApplication extends AbstractObservable implements GriffonApplication {
-<span class="fc" id="L68">    public static final String[] EMPTY_ARGS = new String[0];</span>
+<span class="fc" id="L69">    public static final String[] EMPTY_ARGS = new String[0];</span>
     private static final String ERROR_SHUTDOWN_HANDLER_NULL = &quot;Argument 'shutdownHandler' must not be null&quot;;
-<span class="fc" id="L70">    private static final Class&lt;?&gt;[] CTOR_ARGS = new Class&lt;?&gt;[]{String[].class};</span>
-<span class="nc" id="L71">    protected final Object[] lock = new Object[0];</span>
-<span class="nc" id="L72">    private final List&lt;ShutdownHandler&gt; shutdownHandlers = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L71">    private static final Class&lt;?&gt;[] CTOR_ARGS = new Class&lt;?&gt;[]{String[].class};</span>
+<span class="nc" id="L72">    protected final Object[] lock = new Object[0];</span>
+<span class="nc" id="L73">    private final List&lt;ShutdownHandler&gt; shutdownHandlers = new ArrayList&lt;&gt;();</span>
     private final String[] startupArgs;
-<span class="nc" id="L74">    private final Object shutdownLock = new Object();</span>
+<span class="nc" id="L75">    private final Object shutdownLock = new Object();</span>
     private final Logger log;
-<span class="nc" id="L76">    private Locale locale = Locale.getDefault();</span>
-<span class="nc" id="L77">    private ApplicationPhase phase = ApplicationPhase.INITIALIZE;</span>
+<span class="nc" id="L77">    private Locale locale = Locale.getDefault();</span>
+<span class="nc" id="L78">    private ApplicationPhase phase = ApplicationPhase.INITIALIZE;</span>
     private Injector&lt;?&gt; injector;
 
     public AbstractGriffonApplication() {
-<span class="nc" id="L81">        this(EMPTY_ARGS);</span>
-<span class="nc" id="L82">    }</span>
+<span class="nc" id="L82">        this(EMPTY_ARGS);</span>
+<span class="nc" id="L83">    }</span>
 
-<span class="nc" id="L84">    public AbstractGriffonApplication(@Nonnull String[] args) {</span>
-<span class="nc" id="L85">        requireNonNull(args, &quot;Argument 'args' must not be null&quot;);</span>
-<span class="nc" id="L86">        startupArgs = Arrays.copyOf(args, args.length);</span>
-<span class="nc" id="L87">        log = LoggerFactory.getLogger(getClass());</span>
-<span class="nc" id="L88">    }</span>
+<span class="nc" id="L85">    public AbstractGriffonApplication(@Nonnull String[] args) {</span>
+<span class="nc" id="L86">        requireNonNull(args, &quot;Argument 'args' must not be null&quot;);</span>
+<span class="nc" id="L87">        startupArgs = Arrays.copyOf(args, args.length);</span>
+<span class="nc" id="L88">        log = LoggerFactory.getLogger(getClass());</span>
+<span class="nc" id="L89">    }</span>
 
     @Nonnull
     public static GriffonApplication run(@Nonnull Class&lt;? extends GriffonApplication&gt; applicationClass, @Nonnull String[] args) throws Exception {
-<span class="nc" id="L92">        GriffonExceptionHandler.registerExceptionHandler();</span>
+<span class="nc" id="L93">        GriffonExceptionHandler.registerExceptionHandler();</span>
 
-<span class="nc" id="L94">        GriffonApplication application = applicationClass.getDeclaredConstructor(CTOR_ARGS).newInstance(new Object[]{args});</span>
-<span class="nc" id="L95">        ApplicationBootstrapper bootstrapper = new DefaultApplicationBootstrapper(application);</span>
-<span class="nc" id="L96">        bootstrapper.bootstrap();</span>
-<span class="nc" id="L97">        bootstrapper.run();</span>
+<span class="nc" id="L95">        GriffonApplication application = applicationClass.getDeclaredConstructor(CTOR_ARGS).newInstance(new Object[]{args});</span>
+<span class="nc" id="L96">        ApplicationBootstrapper bootstrapper = new DefaultApplicationBootstrapper(application);</span>
+<span class="nc" id="L97">        bootstrapper.bootstrap();</span>
+<span class="nc" id="L98">        bootstrapper.run();</span>
 
-<span class="nc" id="L99">        return application;</span>
+<span class="nc" id="L100">        return application;</span>
     }
 
     @Nonnull
     public Locale getLocale() {
-<span class="nc" id="L104">        return locale;</span>
+<span class="nc" id="L105">        return locale;</span>
     }
 
     public void setLocale(@Nonnull Locale locale) {
-<span class="nc" id="L108">        Locale oldValue = this.locale;</span>
-<span class="nc" id="L109">        this.locale = locale;</span>
-<span class="nc" id="L110">        Locale.setDefault(locale);</span>
-<span class="nc" id="L111">        firePropertyChange(PROPERTY_LOCALE, oldValue, locale);</span>
-<span class="nc" id="L112">    }</span>
+<span class="nc" id="L109">        Locale oldValue = this.locale;</span>
+<span class="nc" id="L110">        this.locale = locale;</span>
+<span class="nc" id="L111">        Locale.setDefault(locale);</span>
+<span class="nc" id="L112">        firePropertyChange(PROPERTY_LOCALE, oldValue, locale);</span>
+<span class="nc" id="L113">    }</span>
 
     @Nonnull
     public String[] getStartupArgs() {
-<span class="nc" id="L116">        return startupArgs;</span>
+<span class="nc" id="L117">        return startupArgs;</span>
     }
 
     @Nonnull
     public Logger getLog() {
-<span class="nc" id="L121">        return log;</span>
+<span class="nc" id="L122">        return log;</span>
     }
 
     public void setLocaleAsString(@Nullable String locale) {
-<span class="nc" id="L125">        setLocale(parseLocale(locale));</span>
-<span class="nc" id="L126">    }</span>
+<span class="nc" id="L126">        setLocale(parseLocale(locale));</span>
+<span class="nc" id="L127">    }</span>
 
     public void addShutdownHandler(@Nonnull ShutdownHandler handler) {
-<span class="nc" id="L129">        requireNonNull(handler, ERROR_SHUTDOWN_HANDLER_NULL);</span>
-<span class="nc bnc" id="L130" title="All 2 branches missed.">        if (!shutdownHandlers.contains(handler)) shutdownHandlers.add(handler);</span>
-<span class="nc" id="L131">    }</span>
+<span class="nc" id="L130">        requireNonNull(handler, ERROR_SHUTDOWN_HANDLER_NULL);</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        if (!shutdownHandlers.contains(handler)) shutdownHandlers.add(handler);</span>
+<span class="nc" id="L132">    }</span>
 
     public void removeShutdownHandler(@Nonnull ShutdownHandler handler) {
-<span class="nc" id="L134">        requireNonNull(handler, ERROR_SHUTDOWN_HANDLER_NULL);</span>
-<span class="nc" id="L135">        shutdownHandlers.remove(handler);</span>
-<span class="nc" id="L136">    }</span>
+<span class="nc" id="L135">        requireNonNull(handler, ERROR_SHUTDOWN_HANDLER_NULL);</span>
+<span class="nc" id="L136">        shutdownHandlers.remove(handler);</span>
+<span class="nc" id="L137">    }</span>
 
     @Nonnull
     public ApplicationPhase getPhase() {
-<span class="nc" id="L140">        synchronized (lock) {</span>
-<span class="nc" id="L141">            return this.phase;</span>
-<span class="nc" id="L142">        }</span>
+<span class="nc" id="L141">        synchronized (lock) {</span>
+<span class="nc" id="L142">            return this.phase;</span>
+<span class="nc" id="L143">        }</span>
     }
 
     protected void setPhase(@Nonnull ApplicationPhase phase) {
-<span class="nc" id="L146">        requireNonNull(phase, &quot;Argument 'phase' must not be null&quot;);</span>
-<span class="nc" id="L147">        synchronized (lock) {</span>
-<span class="nc" id="L148">            firePropertyChange(PROPERTY_PHASE, this.phase, this.phase = phase);</span>
-<span class="nc" id="L149">        }</span>
-<span class="nc" id="L150">    }</span>
+<span class="nc" id="L147">        requireNonNull(phase, &quot;Argument 'phase' must not be null&quot;);</span>
+<span class="nc" id="L148">        synchronized (lock) {</span>
+<span class="nc" id="L149">            firePropertyChange(PROPERTY_PHASE, this.phase, this.phase = phase);</span>
+<span class="nc" id="L150">        }</span>
+<span class="nc" id="L151">    }</span>
 
     @Nonnull
     @Override
     public ApplicationClassLoader getApplicationClassLoader() {
-<span class="nc" id="L155">        return injector.getInstance(ApplicationClassLoader.class);</span>
+<span class="nc" id="L156">        return injector.getInstance(ApplicationClassLoader.class);</span>
     }
 
     @Nonnull
     @Override
     public Context getContext() {
-<span class="nc" id="L161">        return injector.getInstance(Context.class, named(&quot;applicationContext&quot;));</span>
+<span class="nc" id="L162">        return injector.getInstance(Context.class, named(&quot;applicationContext&quot;));</span>
     }
 
     @Nonnull
     @Override
     public Configuration getConfiguration() {
-<span class="nc" id="L167">        return injector.getInstance(Configuration.class);</span>
+<span class="nc" id="L168">        return getConfigurationManager().getConfiguration();</span>
+    }
+
+    @Nonnull
+    @Override
+    public ConfigurationManager getConfigurationManager() {
+<span class="nc" id="L174">        return injector.getInstance(ConfigurationManager.class);</span>
     }
 
     @Nonnull
     @Override
     public UIThreadManager getUIThreadManager() {
-<span class="nc" id="L173">        return injector.getInstance(UIThreadManager.class);</span>
+<span class="nc" id="L180">        return injector.getInstance(UIThreadManager.class);</span>
     }
 
     @Nonnull
     @Override
     public EventRouter getEventRouter() {
-<span class="nc" id="L179">        return injector.getInstance(EventRouter.class, named(&quot;applicationEventRouter&quot;));</span>
+<span class="nc" id="L186">        return injector.getInstance(EventRouter.class, named(&quot;applicationEventRouter&quot;));</span>
     }
 
     @Nonnull
     @Override
     public ArtifactManager getArtifactManager() {
-<span class="nc" id="L185">        return injector.getInstance(ArtifactManager.class);</span>
+<span class="nc" id="L192">        return injector.getInstance(ArtifactManager.class);</span>
     }
 
     @Nonnull
     @Override
     public ActionManager getActionManager() {
-<span class="nc" id="L191">        return injector.getInstance(ActionManager.class);</span>
+<span class="nc" id="L198">        return injector.getInstance(ActionManager.class);</span>
     }
 
     @Nonnull
     @Override
     public AddonManager getAddonManager() {
-<span class="nc" id="L197">        return injector.getInstance(AddonManager.class);</span>
+<span class="nc" id="L204">        return injector.getInstance(AddonManager.class);</span>
     }
 
     @Nonnull
     @Override
     public MVCGroupManager getMvcGroupManager() {
-<span class="nc" id="L203">        return injector.getInstance(MVCGroupManager.class);</span>
+<span class="nc" id="L210">        return injector.getInstance(MVCGroupManager.class);</span>
     }
 
     @Nonnull
     @Override
     public MessageSource getMessageSource() {
-<span class="nc" id="L209">        return injector.getInstance(MessageSource.class, named(&quot;applicationMessageSource&quot;));</span>
+<span class="nc" id="L216">        return injector.getInstance(MessageSource.class, named(&quot;applicationMessageSource&quot;));</span>
     }
 
     @Nonnull
     @Override
     public ResourceResolver getResourceResolver() {
-<span class="nc" id="L215">        return injector.getInstance(ResourceResolver.class, named(&quot;applicationResourceResolver&quot;));</span>
+<span class="nc" id="L222">        return injector.getInstance(ResourceResolver.class, named(&quot;applicationResourceResolver&quot;));</span>
     }
 
     @Nonnull
     @Override
     public ResourceHandler getResourceHandler() {
-<span class="nc" id="L221">        return injector.getInstance(ResourceHandler.class);</span>
+<span class="nc" id="L228">        return injector.getInstance(ResourceHandler.class);</span>
     }
 
     @Nonnull
     @Override
     public ResourceInjector getResourceInjector() {
-<span class="nc" id="L227">        return injector.getInstance(ResourceInjector.class, named(&quot;applicationResourceInjector&quot;));</span>
+<span class="nc" id="L234">        return injector.getInstance(ResourceInjector.class, named(&quot;applicationResourceInjector&quot;));</span>
     }
 
     @Nonnull
     @Override
     public Injector&lt;?&gt; getInjector() {
-<span class="nc" id="L233">        return injector;</span>
+<span class="nc" id="L240">        return injector;</span>
     }
 
     public void setInjector(@Nonnull Injector&lt;?&gt; injector) {
-<span class="nc" id="L237">        this.injector = requireNonNull(injector, &quot;Argument 'injector' must not be null&quot;);</span>
-<span class="nc" id="L238">        this.injector.injectMembers(this);</span>
-<span class="nc" id="L239">        addShutdownHandler(getWindowManager());</span>
-<span class="nc" id="L240">        MVCGroupExceptionHandler.registerWith(this);</span>
-<span class="nc" id="L241">    }</span>
+<span class="nc" id="L244">        this.injector = requireNonNull(injector, &quot;Argument 'injector' must not be null&quot;);</span>
+<span class="nc" id="L245">        this.injector.injectMembers(this);</span>
+<span class="nc" id="L246">        addShutdownHandler(getWindowManager());</span>
+<span class="nc" id="L247">        MVCGroupExceptionHandler.registerWith(this);</span>
+<span class="nc" id="L248">    }</span>
 
     @Nonnull
     @Override
     @SuppressWarnings(&quot;unchecked&quot;)
     public &lt;W&gt; WindowManager&lt;W&gt; getWindowManager() {
-<span class="nc" id="L247">        return injector.getInstance(WindowManager.class);</span>
+<span class="nc" id="L254">        return injector.getInstance(WindowManager.class);</span>
     }
 
     protected ApplicationConfigurer getApplicationConfigurer() {
-<span class="nc" id="L251">        return injector.getInstance(ApplicationConfigurer.class);</span>
+<span class="nc" id="L258">        return injector.getInstance(ApplicationConfigurer.class);</span>
     }
 
     public void initialize() {
-<span class="nc bnc" id="L255" title="All 2 branches missed.">        if (getPhase() == ApplicationPhase.INITIALIZE) {</span>
-<span class="nc" id="L256">            getApplicationConfigurer().init();</span>
+<span class="nc bnc" id="L262" title="All 2 branches missed.">        if (getPhase() == ApplicationPhase.INITIALIZE) {</span>
+<span class="nc" id="L263">            getApplicationConfigurer().init();</span>
         }
-<span class="nc" id="L258">    }</span>
+<span class="nc" id="L265">    }</span>
 
     public void ready() {
-<span class="nc bnc" id="L261" title="All 2 branches missed.">        if (getPhase() != ApplicationPhase.STARTUP) return;</span>
+<span class="nc bnc" id="L268" title="All 2 branches missed.">        if (getPhase() != ApplicationPhase.STARTUP) return;</span>
 
-<span class="nc" id="L263">        showStartingWindow();</span>
+<span class="nc" id="L270">        showStartingWindow();</span>
 
-<span class="nc" id="L265">        setPhase(ApplicationPhase.READY);</span>
-<span class="nc" id="L266">        event(ApplicationEvent.READY_START, asList(this));</span>
-<span class="nc" id="L267">        getApplicationConfigurer().runLifecycleHandler(Lifecycle.READY);</span>
-<span class="nc" id="L268">        event(ApplicationEvent.READY_END, asList(this));</span>
-<span class="nc" id="L269">        setPhase(ApplicationPhase.MAIN);</span>
-<span class="nc" id="L270">    }</span>
-
-    protected void showStartingWindow() {
-<span class="nc" id="L273">        Object startingWindow = getWindowManager().getStartingWindow();</span>
-<span class="nc bnc" id="L274" title="All 2 branches missed.">        if (startingWindow != null) {</span>
-<span class="nc" id="L275">            getWindowManager().show(startingWindow);</span>
-        }
+<span class="nc" id="L272">        setPhase(ApplicationPhase.READY);</span>
+<span class="nc" id="L273">        event(ApplicationEvent.READY_START, asList(this));</span>
+<span class="nc" id="L274">        getApplicationConfigurer().runLifecycleHandler(Lifecycle.READY);</span>
+<span class="nc" id="L275">        event(ApplicationEvent.READY_END, asList(this));</span>
+<span class="nc" id="L276">        setPhase(ApplicationPhase.MAIN);</span>
 <span class="nc" id="L277">    }</span>
 
+    protected void showStartingWindow() {
+<span class="nc" id="L280">        Object startingWindow = getWindowManager().getStartingWindow();</span>
+<span class="nc bnc" id="L281" title="All 2 branches missed.">        if (startingWindow != null) {</span>
+<span class="nc" id="L282">            getWindowManager().show(startingWindow);</span>
+        }
+<span class="nc" id="L284">    }</span>
+
     public boolean canShutdown() {
-<span class="nc" id="L280">        event(ApplicationEvent.SHUTDOWN_REQUESTED, asList(this));</span>
-<span class="nc" id="L281">        synchronized (shutdownLock) {</span>
-<span class="nc bnc" id="L282" title="All 2 branches missed.">            for (ShutdownHandler handler : shutdownHandlers) {</span>
-<span class="nc bnc" id="L283" title="All 2 branches missed.">                if (!handler.canShutdown(this)) {</span>
-<span class="nc" id="L284">                    event(ApplicationEvent.SHUTDOWN_ABORTED, asList(this));</span>
+<span class="nc" id="L287">        event(ApplicationEvent.SHUTDOWN_REQUESTED, asList(this));</span>
+<span class="nc" id="L288">        synchronized (shutdownLock) {</span>
+<span class="nc bnc" id="L289" title="All 2 branches missed.">            for (ShutdownHandler handler : shutdownHandlers) {</span>
+<span class="nc bnc" id="L290" title="All 2 branches missed.">                if (!handler.canShutdown(this)) {</span>
+<span class="nc" id="L291">                    event(ApplicationEvent.SHUTDOWN_ABORTED, asList(this));</span>
                     try {
-<span class="nc" id="L286">                        log.debug(&quot;Shutdown aborted by {}&quot;, handler);</span>
-<span class="nc" id="L287">                    } catch (UnsupportedOperationException uoe) {</span>
-<span class="nc" id="L288">                        log.debug(&quot;Shutdown aborted by a handler&quot;);</span>
-<span class="nc" id="L289">                    }</span>
-<span class="nc" id="L290">                    return false;</span>
+<span class="nc" id="L293">                        log.debug(&quot;Shutdown aborted by {}&quot;, handler);</span>
+<span class="nc" id="L294">                    } catch (UnsupportedOperationException uoe) {</span>
+<span class="nc" id="L295">                        log.debug(&quot;Shutdown aborted by a handler&quot;);</span>
+<span class="nc" id="L296">                    }</span>
+<span class="nc" id="L297">                    return false;</span>
                 }
-<span class="nc" id="L292">            }</span>
-<span class="nc" id="L293">        }</span>
-<span class="nc" id="L294">        return true;</span>
+<span class="nc" id="L299">            }</span>
+<span class="nc" id="L300">        }</span>
+<span class="nc" id="L301">        return true;</span>
     }
 
     public boolean shutdown() {
         // avoids reentrant calls to shutdown()
         // once permission to quit has been granted
-<span class="nc bnc" id="L300" title="All 2 branches missed.">        if (getPhase() == ApplicationPhase.SHUTDOWN) return false;</span>
+<span class="nc bnc" id="L307" title="All 2 branches missed.">        if (getPhase() == ApplicationPhase.SHUTDOWN) return false;</span>
 
-<span class="nc bnc" id="L302" title="All 2 branches missed.">        if (!canShutdown()) return false;</span>
-<span class="nc" id="L303">        log.info(&quot;Shutdown is in process&quot;);</span>
+<span class="nc bnc" id="L309" title="All 2 branches missed.">        if (!canShutdown()) return false;</span>
+<span class="nc" id="L310">        log.info(&quot;Shutdown is in process&quot;);</span>
 
         // signal that shutdown is in process
-<span class="nc" id="L306">        setPhase(ApplicationPhase.SHUTDOWN);</span>
+<span class="nc" id="L313">        setPhase(ApplicationPhase.SHUTDOWN);</span>
 
         // stage 1 - alert all app event handlers
         // wait for all handlers to complete before proceeding
         // with stage #2 if and only if the current thread is
         // the ui thread
-<span class="nc" id="L312">        log.debug(&quot;Shutdown stage 1: notify all event listeners&quot;);</span>
-<span class="nc bnc" id="L313" title="All 2 branches missed.">        if (getEventRouter().isEventPublishingEnabled()) {</span>
-<span class="nc bnc" id="L314" title="All 2 branches missed.">            final CountDownLatch latch = new CountDownLatch(getUIThreadManager().isUIThread() ? 1 : 0);</span>
-<span class="nc" id="L315">            getEventRouter().addEventListener(ApplicationEvent.SHUTDOWN_START.getName(), new RunnableWithArgs() {</span>
+<span class="nc" id="L319">        log.debug(&quot;Shutdown stage 1: notify all event listeners&quot;);</span>
+<span class="nc bnc" id="L320" title="All 2 branches missed.">        if (getEventRouter().isEventPublishingEnabled()) {</span>
+<span class="nc bnc" id="L321" title="All 2 branches missed.">            final CountDownLatch latch = new CountDownLatch(getUIThreadManager().isUIThread() ? 1 : 0);</span>
+<span class="nc" id="L322">            getEventRouter().addEventListener(ApplicationEvent.SHUTDOWN_START.getName(), new RunnableWithArgs() {</span>
                 @Override
                 public void run(@Nullable Object... args) {
-<span class="nc" id="L318">                    latch.countDown();</span>
-<span class="nc" id="L319">                }</span>
+<span class="nc" id="L325">                    latch.countDown();</span>
+<span class="nc" id="L326">                }</span>
             });
-<span class="nc" id="L321">            event(ApplicationEvent.SHUTDOWN_START, asList(this));</span>
+<span class="nc" id="L328">            event(ApplicationEvent.SHUTDOWN_START, asList(this));</span>
             try {
-<span class="nc" id="L323">                latch.await();</span>
-<span class="nc" id="L324">            } catch (InterruptedException e) {</span>
+<span class="nc" id="L330">                latch.await();</span>
+<span class="nc" id="L331">            } catch (InterruptedException e) {</span>
                 // ignore
-<span class="nc" id="L326">            }</span>
+<span class="nc" id="L333">            }</span>
         }
 
         // stage 2 - alert all shutdown handlers
-<span class="nc" id="L330">        log.debug(&quot;Shutdown stage 2: notify all shutdown handlers&quot;);</span>
-<span class="nc" id="L331">        synchronized (shutdownLock) {</span>
-<span class="nc bnc" id="L332" title="All 2 branches missed.">            for (ShutdownHandler handler : shutdownHandlers) {</span>
-<span class="nc" id="L333">                handler.onShutdown(this);</span>
-<span class="nc" id="L334">            }</span>
-<span class="nc" id="L335">        }</span>
+<span class="nc" id="L337">        log.debug(&quot;Shutdown stage 2: notify all shutdown handlers&quot;);</span>
+<span class="nc" id="L338">        synchronized (shutdownLock) {</span>
+<span class="nc bnc" id="L339" title="All 2 branches missed.">            for (ShutdownHandler handler : shutdownHandlers) {</span>
+<span class="nc" id="L340">                handler.onShutdown(this);</span>
+<span class="nc" id="L341">            }</span>
+<span class="nc" id="L342">        }</span>
 
         // stage 3 - destroy all mvc groups
-<span class="nc" id="L338">        log.debug(&quot;Shutdown stage 3: destroy all MVC groups&quot;);</span>
-<span class="nc" id="L339">        List&lt;String&gt; mvcIds = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L340">        mvcIds.addAll(getMvcGroupManager().getGroups().keySet());</span>
-<span class="nc bnc" id="L341" title="All 2 branches missed.">        for (String id : mvcIds) {</span>
-<span class="nc" id="L342">            getMvcGroupManager().destroyMVCGroup(id);</span>
-<span class="nc" id="L343">        }</span>
+<span class="nc" id="L345">        log.debug(&quot;Shutdown stage 3: destroy all MVC groups&quot;);</span>
+<span class="nc" id="L346">        List&lt;String&gt; mvcIds = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L347">        mvcIds.addAll(getMvcGroupManager().getGroups().keySet());</span>
+<span class="nc bnc" id="L348" title="All 2 branches missed.">        for (String id : mvcIds) {</span>
+<span class="nc" id="L349">            getMvcGroupManager().destroyMVCGroup(id);</span>
+<span class="nc" id="L350">        }</span>
 
         // stage 4 - call shutdown script
-<span class="nc" id="L346">        log.debug(&quot;Shutdown stage 4: execute Shutdown script&quot;);</span>
-<span class="nc" id="L347">        getApplicationConfigurer().runLifecycleHandler(Lifecycle.SHUTDOWN);</span>
+<span class="nc" id="L353">        log.debug(&quot;Shutdown stage 4: execute Shutdown script&quot;);</span>
+<span class="nc" id="L354">        getApplicationConfigurer().runLifecycleHandler(Lifecycle.SHUTDOWN);</span>
 
-<span class="nc" id="L349">        injector.getInstance(ExecutorServiceManager.class).shutdownAll();</span>
-<span class="nc" id="L350">        injector.close();</span>
+<span class="nc" id="L356">        injector.getInstance(ExecutorServiceManager.class).shutdownAll();</span>
+<span class="nc" id="L357">        injector.close();</span>
 
-<span class="nc" id="L352">        return true;</span>
+<span class="nc" id="L359">        return true;</span>
     }
 
     @SuppressWarnings(&quot;unchecked&quot;)
     public void startup() {
-<span class="nc bnc" id="L357" title="All 2 branches missed.">        if (getPhase() != ApplicationPhase.INITIALIZE) return;</span>
+<span class="nc bnc" id="L364" title="All 2 branches missed.">        if (getPhase() != ApplicationPhase.INITIALIZE) return;</span>
 
-<span class="nc" id="L359">        setPhase(ApplicationPhase.STARTUP);</span>
-<span class="nc" id="L360">        event(ApplicationEvent.STARTUP_START, asList(this));</span>
+<span class="nc" id="L366">        setPhase(ApplicationPhase.STARTUP);</span>
+<span class="nc" id="L367">        event(ApplicationEvent.STARTUP_START, asList(this));</span>
 
-<span class="nc" id="L362">        Object startupGroups = getConfiguration().get(&quot;application.startupGroups&quot;, null);</span>
-<span class="nc bnc" id="L363" title="All 2 branches missed.">        if (startupGroups instanceof List) {</span>
-<span class="nc" id="L364">            log.info(&quot;Initializing all startup groups: {}&quot;, startupGroups);</span>
+<span class="nc" id="L369">        Object startupGroups = getConfiguration().get(&quot;application.startupGroups&quot;, null);</span>
+<span class="nc bnc" id="L370" title="All 2 branches missed.">        if (startupGroups instanceof List) {</span>
+<span class="nc" id="L371">            log.info(&quot;Initializing all startup groups: {}&quot;, startupGroups);</span>
 
-<span class="nc bnc" id="L366" title="All 2 branches missed.">            for (String groupName : (List&lt;String&gt;) startupGroups) {</span>
-<span class="nc" id="L367">                getMvcGroupManager().createMVC(groupName.trim());</span>
-<span class="nc" id="L368">            }</span>
-<span class="nc bnc" id="L369" title="All 4 branches missed.">        } else if (startupGroups != null &amp;&amp; startupGroups.getClass().isArray()) {</span>
-<span class="nc" id="L370">            Object[] groups = (Object[]) startupGroups;</span>
-<span class="nc" id="L371">            log.info(&quot;Initializing all startup groups: {}&quot;, Arrays.toString(groups));</span>
-
-<span class="nc bnc" id="L373" title="All 2 branches missed.">            for (Object groupName : groups) {</span>
-<span class="nc" id="L374">                getMvcGroupManager().createMVC(String.valueOf(groupName).trim());</span>
-            }
-<span class="nc bnc" id="L376" title="All 4 branches missed.">        } else if (startupGroups != null &amp;&amp; startupGroups instanceof String) {</span>
-<span class="nc" id="L377">            String[] groups = ((String) startupGroups).split(&quot;,&quot;);</span>
+<span class="nc bnc" id="L373" title="All 2 branches missed.">            for (String groupName : (List&lt;String&gt;) startupGroups) {</span>
+<span class="nc" id="L374">                getMvcGroupManager().createMVC(groupName.trim());</span>
+<span class="nc" id="L375">            }</span>
+<span class="nc bnc" id="L376" title="All 4 branches missed.">        } else if (startupGroups != null &amp;&amp; startupGroups.getClass().isArray()) {</span>
+<span class="nc" id="L377">            Object[] groups = (Object[]) startupGroups;</span>
 <span class="nc" id="L378">            log.info(&quot;Initializing all startup groups: {}&quot;, Arrays.toString(groups));</span>
 
-<span class="nc bnc" id="L380" title="All 2 branches missed.">            for (String groupName : groups) {</span>
-<span class="nc" id="L381">                getMvcGroupManager().createMVC(groupName.trim());</span>
+<span class="nc bnc" id="L380" title="All 2 branches missed.">            for (Object groupName : groups) {</span>
+<span class="nc" id="L381">                getMvcGroupManager().createMVC(String.valueOf(groupName).trim());</span>
+            }
+<span class="nc bnc" id="L383" title="All 4 branches missed.">        } else if (startupGroups != null &amp;&amp; startupGroups instanceof CharSequence) {</span>
+<span class="nc" id="L384">            String[] groups = (String.valueOf(startupGroups)).split(&quot;,&quot;);</span>
+<span class="nc" id="L385">            log.info(&quot;Initializing all startup groups: {}&quot;, Arrays.toString(groups));</span>
+
+<span class="nc bnc" id="L387" title="All 2 branches missed.">            for (String groupName : groups) {</span>
+<span class="nc" id="L388">                getMvcGroupManager().createMVC(groupName.trim());</span>
             }
         }
 
-<span class="nc bnc" id="L385" title="All 2 branches missed.">        for (Map.Entry&lt;String, GriffonAddon&gt; e : getAddonManager().getAddons().entrySet()) {</span>
-<span class="nc" id="L386">            List&lt;String&gt; groups = e.getValue().getStartupGroups();</span>
-<span class="nc bnc" id="L387" title="All 2 branches missed.">            if (groups.isEmpty()) {</span>
-<span class="nc" id="L388">                continue;</span>
+<span class="nc bnc" id="L392" title="All 2 branches missed.">        for (Map.Entry&lt;String, GriffonAddon&gt; e : getAddonManager().getAddons().entrySet()) {</span>
+<span class="nc" id="L393">            List&lt;String&gt; groups = e.getValue().getStartupGroups();</span>
+<span class="nc bnc" id="L394" title="All 2 branches missed.">            if (groups.isEmpty()) {</span>
+<span class="nc" id="L395">                continue;</span>
             }
-<span class="nc" id="L390">            log.info(&quot;Initializing all {} startup groups: {}&quot;, e.getKey(), groups);</span>
-<span class="nc" id="L391">            Map&lt;String, Map&lt;String, Object&gt;&gt; mvcGroups = e.getValue().getMvcGroups();</span>
-<span class="nc bnc" id="L392" title="All 2 branches missed.">            for (String groupName : groups) {</span>
-<span class="nc bnc" id="L393" title="All 2 branches missed.">                if (mvcGroups.containsKey(groupName)) {</span>
-<span class="nc" id="L394">                    getMvcGroupManager().createMVC(groupName.trim());</span>
+<span class="nc" id="L397">            log.info(&quot;Initializing all {} startup groups: {}&quot;, e.getKey(), groups);</span>
+<span class="nc" id="L398">            Map&lt;String, Map&lt;String, Object&gt;&gt; mvcGroups = e.getValue().getMvcGroups();</span>
+<span class="nc bnc" id="L399" title="All 2 branches missed.">            for (String groupName : groups) {</span>
+<span class="nc bnc" id="L400" title="All 2 branches missed.">                if (mvcGroups.containsKey(groupName)) {</span>
+<span class="nc" id="L401">                    getMvcGroupManager().createMVC(groupName.trim());</span>
                 }
-<span class="nc" id="L396">            }</span>
-<span class="nc" id="L397">        }</span>
+<span class="nc" id="L403">            }</span>
+<span class="nc" id="L404">        }</span>
 
-<span class="nc" id="L399">        getApplicationConfigurer().runLifecycleHandler(Lifecycle.STARTUP);</span>
+<span class="nc" id="L406">        getApplicationConfigurer().runLifecycleHandler(Lifecycle.STARTUP);</span>
 
-<span class="nc" id="L401">        event(ApplicationEvent.STARTUP_END, asList(this));</span>
-<span class="nc" id="L402">    }</span>
+<span class="nc" id="L408">        event(ApplicationEvent.STARTUP_END, asList(this));</span>
+<span class="nc" id="L409">    }</span>
 
     protected void event(@Nonnull ApplicationEvent event, @Nullable List&lt;?&gt; args) {
-<span class="nc" id="L405">        getEventRouter().publishEvent(event.getName(), args);</span>
-<span class="nc" id="L406">    }</span>
+<span class="nc" id="L412">        getEventRouter().publishEvent(event.getName(), args);</span>
+<span class="nc" id="L413">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

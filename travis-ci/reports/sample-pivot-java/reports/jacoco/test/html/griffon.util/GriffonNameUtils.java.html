@@ -219,7 +219,7 @@ import java.util.Locale;
      * @return The logical name
      */
     public static String getLogicalName(String name, String trailingName) {
-<span class="pc bpc" id="L222" title="1 of 2 branches missed.">        if (!isBlank(trailingName)) {</span>
+<span class="fc bfc" id="L222" title="All 2 branches covered.">        if (!isBlank(trailingName)) {</span>
 <span class="fc" id="L223">            String shortName = getShortName(name);</span>
 <span class="fc bfc" id="L224" title="All 2 branches covered.">            if (shortName.endsWith(trailingName)) {</span>
 <span class="fc" id="L225">                return shortName.substring(0, shortName.length() - trailingName.length());</span>
@@ -229,7 +229,7 @@ import java.util.Locale;
     }
 
     public static String getLogicalPropertyName(String className, String trailingName) {
-<span class="pc bpc" id="L232" title="2 of 4 branches missed.">        if (!isBlank(className) &amp;&amp; !isBlank(trailingName)) {</span>
+<span class="pc bpc" id="L232" title="1 of 4 branches missed.">        if (!isBlank(className) &amp;&amp; !isBlank(trailingName)) {</span>
 <span class="pc bpc" id="L233" title="3 of 4 branches missed.">            if (className.length() == trailingName.length() + 1 &amp;&amp; className.endsWith(trailingName)) {</span>
 <span class="nc" id="L234">                return className.substring(0, 1).toLowerCase();</span>
             }

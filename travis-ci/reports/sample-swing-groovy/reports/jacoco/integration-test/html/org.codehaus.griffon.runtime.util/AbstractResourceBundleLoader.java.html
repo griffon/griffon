@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractResourceBundleLoader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-swing-groovy</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.util</a> &gt; <span class="el_source">AbstractResourceBundleLoader.java</span></div><h1>AbstractResourceBundleLoader.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.util;
+
+import griffon.core.resources.ResourceHandler;
+import griffon.util.ResourceBundleLoader;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import java.net.URL;
+import java.util.List;
+
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.11.0
+ */
+public abstract class AbstractResourceBundleLoader implements ResourceBundleLoader {
+    protected static final String ERROR_FILENAME_BLANK = &quot;Argument 'fileName' must not be blank&quot;;
+    protected static final String ERROR_SUFFIX_BLANK = &quot;Argument 'suffix' must not be blank&quot;;
+    protected static final String ERROR_RESOURCE_HANDLER_NULL = &quot;Argument 'resourceHandler' must not be null&quot;;
+
+    protected final ResourceHandler resourceHandler;
+
+    @Inject
+<span class="fc" id="L42">    public AbstractResourceBundleLoader(@Nonnull ResourceHandler resourceHandler) {</span>
+<span class="fc" id="L43">        this.resourceHandler = requireNonNull(resourceHandler, ERROR_RESOURCE_HANDLER_NULL);</span>
+<span class="fc" id="L44">    }</span>
+
+    @Nonnull
+    protected ResourceHandler getResourceHandler() {
+<span class="fc" id="L48">        return resourceHandler;</span>
+    }
+
+    @Nullable
+    protected URL getResourceAsURL(@Nonnull String fileName, @Nonnull String suffix) {
+<span class="fc" id="L53">        requireNonBlank(fileName, ERROR_FILENAME_BLANK);</span>
+<span class="fc" id="L54">        requireNonBlank(suffix, ERROR_SUFFIX_BLANK);</span>
+<span class="fc" id="L55">        return resourceHandler.getResourceAsURL(fileName + suffix);</span>
+    }
+
+    @Nullable
+    protected List&lt;URL&gt; getResources(@Nonnull String fileName, @Nonnull String suffix) {
+<span class="fc" id="L60">        requireNonBlank(fileName, ERROR_FILENAME_BLANK);</span>
+<span class="fc" id="L61">        requireNonBlank(suffix, ERROR_SUFFIX_BLANK);</span>
+<span class="fc" id="L62">        return resourceHandler.getResources(fileName + suffix);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

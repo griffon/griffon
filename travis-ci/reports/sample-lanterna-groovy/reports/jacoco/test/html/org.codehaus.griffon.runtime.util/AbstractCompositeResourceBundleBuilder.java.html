@@ -15,14 +15,10 @@
  */
 package org.codehaus.griffon.runtime.util;
 
-import griffon.core.resources.ResourceHandler;
 import griffon.util.CompositeResourceBundle;
 import griffon.util.CompositeResourceBundleBuilder;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.inject.Inject;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,70 +32,45 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  * @since 2.0.0
  */
-public abstract class AbstractCompositeResourceBundleBuilder implements CompositeResourceBundleBuilder {
-    protected static final String ERROR_FILENAME_BLANK = &quot;Argument 'fileName' must not be blank&quot;;
-    protected static final String ERROR_SUFFIX_BLANK = &quot;Argument 'suffix' must not be blank&quot;;
-    protected static final String ERROR_RESOURCE_HANDLER_NULL = &quot;Argument 'resourceHandler' must not be null&quot;;
+<span class="fc" id="L35">public abstract class AbstractCompositeResourceBundleBuilder implements CompositeResourceBundleBuilder {</span>
     protected static final String ERROR_BASENAME_BLANK = &quot;Argument 'basename' must not be blank&quot;;
     protected static final String ERROR_LOCALE_NULL = &quot;Argument 'locale' must not be null&quot;;
-
-    protected final ResourceHandler resourceHandler;
-
-    @Inject
-<span class="fc" id="L49">    public AbstractCompositeResourceBundleBuilder(@Nonnull ResourceHandler resourceHandler) {</span>
-<span class="fc" id="L50">        this.resourceHandler = requireNonNull(resourceHandler, ERROR_RESOURCE_HANDLER_NULL);</span>
-<span class="fc" id="L51">    }</span>
 
     @Override
     @Nonnull
     public ResourceBundle create(@Nonnull String basename) {
-<span class="fc" id="L56">        return create(basename, Locale.getDefault());</span>
+<span class="fc" id="L42">        return create(basename, Locale.getDefault());</span>
     }
 
     @Override
     @Nonnull
     public ResourceBundle create(@Nonnull String basename, @Nonnull Locale locale) {
-<span class="fc" id="L62">        requireNonBlank(basename, ERROR_BASENAME_BLANK);</span>
-<span class="fc" id="L63">        requireNonNull(locale, ERROR_LOCALE_NULL);</span>
+<span class="fc" id="L48">        requireNonBlank(basename, ERROR_BASENAME_BLANK);</span>
+<span class="fc" id="L49">        requireNonNull(locale, ERROR_LOCALE_NULL);</span>
 
-<span class="fc" id="L65">        String[] combinations = {</span>
-<span class="fc" id="L66">            locale.getLanguage() + &quot;_&quot; + locale.getCountry() + &quot;_&quot; + locale.getVariant(),</span>
-<span class="fc" id="L67">            locale.getLanguage() + &quot;_&quot; + locale.getCountry(),</span>
-<span class="fc" id="L68">            locale.getLanguage()</span>
+<span class="fc" id="L51">        initialize();</span>
+
+<span class="fc" id="L53">        String[] combinations = {</span>
+<span class="fc" id="L54">            locale.getLanguage() + &quot;_&quot; + locale.getCountry() + &quot;_&quot; + locale.getVariant(),</span>
+<span class="fc" id="L55">            locale.getLanguage() + &quot;_&quot; + locale.getCountry(),</span>
+<span class="fc" id="L56">            locale.getLanguage()</span>
         };
 
-<span class="fc" id="L71">        basename = basename.replace('.', '/');</span>
-<span class="fc" id="L72">        List&lt;ResourceBundle&gt; bundles = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L73" title="All 2 branches covered.">        for (String suffix : combinations) {</span>
-<span class="fc bfc" id="L74" title="All 2 branches covered.">            if (suffix.endsWith(&quot;_&quot;)) continue;</span>
-<span class="fc" id="L75">            bundles.addAll(loadBundlesFor(basename + &quot;_&quot; + suffix));</span>
+<span class="fc" id="L59">        basename = basename.replace('.', '/');</span>
+<span class="fc" id="L60">        List&lt;ResourceBundle&gt; bundles = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        for (String suffix : combinations) {</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">            if (suffix.endsWith(&quot;_&quot;)) { continue; }</span>
+<span class="fc" id="L63">            bundles.addAll(loadBundlesFor(basename + &quot;_&quot; + suffix));</span>
         }
-<span class="fc" id="L77">        bundles.addAll(loadBundlesFor(basename));</span>
-<span class="pc bpc" id="L78" title="1 of 2 branches missed.">        if (bundles.size() == 0) {</span>
-<span class="nc" id="L79">            throw new IllegalArgumentException(&quot;There are no ResourceBundle resources matching &quot; + basename);</span>
+<span class="fc" id="L65">        bundles.addAll(loadBundlesFor(basename));</span>
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">        if (bundles.size() == 0) {</span>
+<span class="nc" id="L67">            throw new IllegalArgumentException(&quot;There are no ResourceBundle resources matching &quot; + basename);</span>
         }
 
-<span class="fc" id="L82">        return new CompositeResourceBundle(bundles);</span>
+<span class="fc" id="L70">        return new CompositeResourceBundle(bundles);</span>
     }
 
-    @Nonnull
-    protected ResourceHandler getResourceHandler() {
-<span class="fc" id="L87">        return resourceHandler;</span>
-    }
-
-    @Nullable
-    protected URL getResourceAsURL(@Nonnull String fileName, @Nonnull String suffix) {
-<span class="fc" id="L92">        requireNonBlank(fileName, ERROR_FILENAME_BLANK);</span>
-<span class="fc" id="L93">        requireNonBlank(suffix, ERROR_SUFFIX_BLANK);</span>
-<span class="fc" id="L94">        return resourceHandler.getResourceAsURL(fileName + suffix);</span>
-    }
-
-    @Nullable
-    protected List&lt;URL&gt; getResources(@Nonnull String fileName, @Nonnull String suffix) {
-<span class="fc" id="L99">        requireNonBlank(fileName, ERROR_FILENAME_BLANK);</span>
-<span class="fc" id="L100">        requireNonBlank(suffix, ERROR_SUFFIX_BLANK);</span>
-<span class="fc" id="L101">        return resourceHandler.getResources(fileName + suffix);</span>
-    }
+    protected abstract void initialize();
 
     @Nonnull
     protected abstract Collection&lt;ResourceBundle&gt; loadBundlesFor(@Nonnull String basename);
