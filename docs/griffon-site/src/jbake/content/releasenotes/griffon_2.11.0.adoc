@@ -1,0 +1,124 @@
+= Griffon 2.11.0 Release Notes
+Andres Almiray
+2017-06-01
+:jbake-type: post
+:jbake-status: published
+:category: releasenotes
+:idprefix:
+:linkattrs:
+:path-griffon-core: /guide/2.11.0/api/griffon/core
+
+=== Dependencies
+
+The following dependencies have been upgraded
+
+
+=== Runtime
+
+==== XML Configuration
+
+XML has been added as part of the supported formats. You may write any configuration file using XML, for example
+
+[source, xml]
+.griffon-app/resources/DataSource.xml
+----
+<?xml version="1.0"?>
+<configuration>
+    <dataSource>
+        <driverClassName>org.h2.Driver</driverClassName>
+    </dataSource>
+    <environments>
+        <development>
+            <dataSource>
+                <url>jdbc:h2:mem:@application.name@-dev</url>
+            </dataSource>
+        </development>
+        <test>
+            <dataSource>
+                <url>jdbc:h2:mem:@application.name@-test</url>
+            </dataSource>
+        </test>
+        <production>
+            <dataSource>
+                <url>jdbc:h2:mem:@application.name@-prod</url>
+            </dataSource>
+        </production>
+    </environments>
+</configuration>
+----
+
+==== Configuration Value Injection
+
+Configuration values may be injected into managed beans. Simply annotate a field or a setter with `@Configured`.
+Take for example the following configuration
+
+[source,groovy,linenums,options="nowrap"]
+.griffon-app/conf/sample/swing/groovy/Config.groovy
+----
+application {
+    title = 'JavaFX + Groovy'
+    startupGroups = ['sample']
+    autoShutdown = true
+}
+props {
+    string = 'string'
+    number = 42
+    date   = '1970-12-24'
+}
+mvcGroups {
+    'sample' {
+        model      = 'sample.javafx.groovy.SampleModel'
+        view       = 'sample.javafx.groovy.SampleView'
+        controller = 'sample.javafx.groovy.SampleController'
+    }
+}
+----
+
+Any of those configuration values may be set on a managed bean, such as the `SampleModel` class
+
+[source,groovy,linenums,options="nowrap"]
+.griffon-app/models/sample/javafx/groovy/SampleModel.groovy
+----
+package sample.javafx.groovy
+
+import griffon.core.artifact.GriffonModel
+import griffon.metadata.ArtifactProviderFor
+import griffon.transform.FXObservable
+import griffon.core.configuration.Configured
+
+@ArtifactProviderFor(GriffonModel)
+class SampleModel {
+    @FXObservable String input
+    @FXObservable String output
+
+    @Configured('application.title')
+    String title
+
+    @Configured('props.string')
+    String string
+
+    @Configured('props.number')
+    int number
+
+    @Configured(value = 'props.date', format = 'YYYY-MM-dd')
+    Date date
+
+    @Configured(value = 'props.undefined', defaultValue = 'undefined')
+    String undefined
+}
+----
+
+Values will be injected before `@PostConstruct` is triggered on the managed bean. Type conversion will be carried out
+using property editors.
+
+
+=== Buildtime
+
+
+=== Compatibility
+
+Full binary compatibility report between Griffon 2.11.0 and 2.10.0 can be found
+link:../reports/2.11.0/compatibility-report.html[here].
+
+A list of fixed issues can be found at the
+link:https://github.com/griffon/griffon/issues?q=milestone%3A2.11.0+is%3Aclosed[2.11.0 milestone] page.
