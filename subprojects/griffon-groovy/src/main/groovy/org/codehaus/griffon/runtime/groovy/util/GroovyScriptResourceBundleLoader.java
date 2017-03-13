@@ -16,55 +16,58 @@
 package org.codehaus.griffon.runtime.groovy.util;
 
 import griffon.core.resources.ResourceHandler;
+import griffon.inject.Evicts;
 import griffon.util.ConfigReader;
 import griffon.util.Instantiator;
-import griffon.util.PropertiesReader;
 import griffon.util.ResourceBundleReader;
 import groovy.lang.Script;
-import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder;
+import org.codehaus.griffon.runtime.util.ClassResourceBundleLoader;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 2.0.0
+ * @since 2.11.0
  */
-public class GroovyAwareCompositeResourceBundleBuilder extends DefaultCompositeResourceBundleBuilder {
+@Evicts("class")
+@Named("groovy")
+public class GroovyScriptResourceBundleLoader extends ClassResourceBundleLoader {
     protected static final String GROOVY_SUFFIX = ".groovy";
     private final ConfigReader configReader;
 
     @Inject
-    public GroovyAwareCompositeResourceBundleBuilder(@Nonnull Instantiator instantiator,
-                                                     @Nonnull ResourceHandler resourceHandler,
-                                                     @Nonnull PropertiesReader propertiesReader,
-                                                     @Nonnull ResourceBundleReader resourceBundleReader,
-                                                     @Nonnull ConfigReader configReader) {
-        super(instantiator, resourceHandler, propertiesReader, resourceBundleReader);
-        this.configReader = requireNonNull(configReader, "Argument 'reader' must not be null");
+    public GroovyScriptResourceBundleLoader(@Nonnull Instantiator instantiator,
+                                            @Nonnull ResourceHandler resourceHandler,
+                                            @Nonnull ResourceBundleReader resourceBundleReader,
+                                            @Nonnull ConfigReader configReader) {
+        super(instantiator, resourceHandler, resourceBundleReader);
+        this.configReader = requireNonNull(configReader, "Argument 'configReader' must not be null");
     }
 
     @Nonnull
     @Override
-    @SuppressWarnings("unchecked")
-    protected Collection<ResourceBundle> loadBundleFromClass(@Nonnull String fileName) {
+    public Collection<ResourceBundle> load(@Nonnull String name) {
+        requireNonBlank(name, ERROR_FILENAME_BLANK);
         List<ResourceBundle> bundles = new ArrayList<>();
-        URL resource = getResourceAsURL(fileName, GROOVY_SUFFIX);
+        URL resource = getResourceAsURL(name, GROOVY_SUFFIX);
         if (null != resource) {
             bundles.add(new GroovyScriptResourceBundle(configReader, resource));
             return bundles;
         }
 
-        resource = getResourceAsURL(fileName, CLASS_SUFFIX);
+        resource = getResourceAsURL(name, CLASS_SUFFIX);
         if (null != resource) {
-            String className = fileName.replace('/', '.');
+            String className = name.replace('/', '.');
             try {
                 Class<?> klass = loadClass(className);
                 if (Script.class.isAssignableFrom(klass)) {
@@ -76,6 +79,6 @@ public class GroovyAwareCompositeResourceBundleBuilder extends DefaultCompositeR
             }
         }
 
-        return super.loadBundleFromClass(fileName);
+        return super.load(name);
     }
 }

@@ -13,23 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.core;
+package org.codehaus.griffon.runtime.util;
 
-import griffon.core.Configuration;
+import griffon.util.AbstractMapResourceBundle;
 
 import javax.annotation.Nonnull;
+import java.util.Map;
 
-import static java.util.Objects.requireNonNull;
-
-/**
- * @author Andres Almiray
- * @since 2.4.0
- */
-public class MutableConfigurationDecoratorFactory implements ConfigurationDecoratorFactory {
-    @Nonnull
+public class ClassBundle extends AbstractMapResourceBundle {
     @Override
-    public ConfigurationDecorator create(@Nonnull Configuration configuration) {
-        requireNonNull(configuration, "Argument 'configuration' must not be null");
-        return new DelegatingMutableConfiguration(configuration);
+    protected void initialize(@Nonnull Map<String, Object> entries) {
+        entries.put("string", "string");
+        entries.put("integer", "42");
+        entries.put("keys.bar", "bar");
+        entries.put("environments.development.foo", "dev");
+        entries.put("environments.test.foo", "test");
     }
 }

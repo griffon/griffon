@@ -22,7 +22,7 @@ import griffon.core.storage.ObjectFactory
 import griffon.util.AbstractMapResourceBundle
 import griffon.util.ExpandableResourceBundle
 import integration.TestGriffonApplication
-import org.codehaus.griffon.runtime.core.AbstractConfiguration
+import org.codehaus.griffon.runtime.core.configuration.AbstractConfiguration
 import org.codehaus.griffon.runtime.core.event.DefaultEventRouter
 import spock.lang.Specification
 import spock.lang.Unroll

@@ -23,6 +23,9 @@ import griffon.core.Configuration
 import griffon.core.MutableConfiguration
 import griffon.core.editors.IntegerPropertyEditor
 import griffon.core.editors.PropertyEditorResolver
+import org.codehaus.griffon.runtime.core.configuration.ConfigurationDecoratorFactory
+import org.codehaus.griffon.runtime.core.configuration.MutableConfigurationDecoratorFactory
+import org.codehaus.griffon.runtime.core.configuration.ResourceBundleConfigurationProvider
 import org.junit.Rule
 import spock.lang.Specification
 import spock.lang.Unroll

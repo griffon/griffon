@@ -21,12 +21,9 @@ import com.google.inject.AbstractModule
 import griffon.core.ApplicationClassLoader
 import griffon.core.env.Environment
 import griffon.core.env.Metadata
-import griffon.core.injection.Injector
 import griffon.core.resources.ResourceHandler
 import griffon.util.AnnotationUtils
-import griffon.util.CompositeResourceBundleBuilder
 import griffon.util.Instantiator
-import griffon.util.PropertiesReader
 import griffon.util.ResourceBundleLoader
 import griffon.util.ResourceBundleReader
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
@@ -39,54 +36,29 @@ import spock.lang.Unroll
 
 import javax.inject.Inject
 import javax.inject.Named
-import javax.inject.Provider
 import javax.inject.Singleton
 
 import static com.google.inject.util.Providers.guicify
-import static org.mockito.Mockito.mock
 
 @Unroll
-class DefaultCompositeResourceBundleBuilderSpec extends Specification {
+class ClassResourceBundleLoaderSpec extends Specification {
     @Rule
     final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
 
-    @Inject private CompositeResourceBundleBuilder bundleBuilder
-    @Inject private Provider<Injector> injector
-    @Inject @Named('class') private ResourceBundleLoader resourceBundleLoader1
-    @Inject @Named('properties') private ResourceBundleLoader resourceBundleLoader2
+    @Inject @Named('class') private ResourceBundleLoader resourceBundleLoader
 
-    def 'Create throws #exception'() {
-        given:
-        injector.get().getInstances(ResourceBundleLoader) >> [resourceBundleLoader1, resourceBundleLoader2]
-
+    def 'Load bundle and check #key = #value'() {
         when:
-        bundleBuilder.create(filename, locale)
+        Collection<ResourceBundle> bundles = resourceBundleLoader.load('org/codehaus/griffon/runtime/util/ClassBundle')
 
         then:
-        thrown(exception)
+        println bundles[0].keySet()
+        bundles.size() == 1
+        bundles[0].getString(key) == value
 
         where:
-        filename | locale         | exception
-        null     | Locale.default | IllegalArgumentException
-        'empty'  | null           | NullPointerException
-        'empty'  | Locale.default | IllegalArgumentException
-    }
-
-    def 'Excercise bundle creation with #filename'() {
-        given:
-        injector.get().getInstances(ResourceBundleLoader) >> [resourceBundleLoader1, resourceBundleLoader2]
-
-        when:
-        bundleBuilder.create(filename)
-
-        then:
-        thrown(IllegalArgumentException)
-
-        where:
-        filename << [
-            'org.codehaus.griffon.runtime.util.NotFoundBundle',
-            'org.codehaus.griffon.runtime.util.NotABundle',
-            'org.codehaus.griffon.runtime.util.BrokenBundle']
+        key << ['string', 'integer', 'keys.bar', 'foo']
+        value << ['string', '42', 'bar', 'dev']
     }
 
     static final class TestModule extends AbstractModule {
@@ -95,15 +67,11 @@ class DefaultCompositeResourceBundleBuilderSpec extends Specification {
             install(new GuiceBerryModule())
             bind(ApplicationClassLoader).to(DefaultApplicationClassLoader).in(Singleton)
             bind(ResourceHandler).to(DefaultResourceHandler).in(Singleton)
-            bind(PropertiesReader).toProvider(guicify(new PropertiesReader.Provider())).in(Singleton)
             bind(ResourceBundleReader).toProvider(guicify(new ResourceBundleReader.Provider())).in(Singleton)
             bind(Metadata).toProvider(guicify(new MetadataProvider())).in(Singleton)
             bind(Environment).toProvider(guicify(new EnvironmentProvider())).in(Singleton)
-            bind(Instantiator).to(DefaultInstantiator).in(Singleton)
             bind(ResourceBundleLoader).annotatedWith(AnnotationUtils.named('class')).to(ClassResourceBundleLoader).in(Singleton)
-            bind(ResourceBundleLoader).annotatedWith(AnnotationUtils.named('properties')).to(PropertiesResourceBundleLoader).in(Singleton)
-            bind(Injector).toProvider(guicify({ mock(Injector) } as Provider<Injector>)).in(Singleton)
-            bind(CompositeResourceBundleBuilder).to(DefaultCompositeResourceBundleBuilder).in(Singleton)
+            bind(Instantiator).toInstance({ c -> c.newInstance() } as Instantiator)
         }
     }
 }

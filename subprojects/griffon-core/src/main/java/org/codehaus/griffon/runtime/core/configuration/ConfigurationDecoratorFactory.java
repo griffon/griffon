@@ -13,23 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.core;
+package org.codehaus.griffon.runtime.core.configuration;
 
 import griffon.core.Configuration;
 
 import javax.annotation.Nonnull;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * @author Andres Almiray
  * @since 2.4.0
  */
-public class DefaultConfigurationDecoratorFactory implements ConfigurationDecoratorFactory {
+public interface ConfigurationDecoratorFactory {
     @Nonnull
-    @Override
-    public ConfigurationDecorator create(@Nonnull Configuration configuration) {
-        requireNonNull(configuration, "Argument 'configuration' must not be null");
-        return new ConfigurationDecorator(configuration);
-    }
+    ConfigurationDecorator create(@Nonnull Configuration configuration);
 }

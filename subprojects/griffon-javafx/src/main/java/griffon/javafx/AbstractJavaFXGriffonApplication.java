@@ -26,6 +26,7 @@ import griffon.core.ShutdownHandler;
 import griffon.core.addon.AddonManager;
 import griffon.core.addon.GriffonAddon;
 import griffon.core.artifact.ArtifactManager;
+import griffon.core.configuration.ConfigurationManager;
 import griffon.core.controller.ActionManager;
 import griffon.core.env.ApplicationPhase;
 import griffon.core.env.Lifecycle;
@@ -206,7 +207,13 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
     @Nonnull
     @Override
     public Configuration getConfiguration() {
-        return injector.getInstance(Configuration.class);
+        return getConfigurationManager().getConfiguration();
+    }
+
+    @Nonnull
+    @Override
+    public ConfigurationManager getConfigurationManager() {
+        return injector.getInstance(ConfigurationManager.class);
     }
 
     @Nonnull
@@ -276,7 +283,7 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
     }
 
     public void setInjector(@Nonnull Injector<?> injector) {
-        this.injector = requireNonNull(injector, "Argument 'injector' cannot be null");
+        this.injector = requireNonNull(injector, "Argument 'injector' must not be null");
         this.injector.injectMembers(this);
         addShutdownHandler(getWindowManager());
         MVCGroupExceptionHandler.registerWith(this);
@@ -431,8 +438,8 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
             for (Object groupName : groups) {
                 getMvcGroupManager().createMVC(String.valueOf(groupName).trim());
             }
-        } else if (startupGroups != null && startupGroups instanceof String) {
-            String[] groups = ((String) startupGroups).split(",");
+        } else if (startupGroups != null && startupGroups instanceof CharSequence) {
+            String[] groups = (String.valueOf(startupGroups)).split(",");
             log.info("Initializing all startup groups: {}", Arrays.toString(groups));
 
             for (String groupName : groups) {

@@ -13,26 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.core
+package org.codehaus.griffon.runtime.util;
 
-import griffon.util.AbstractMapResourceBundle
+import griffon.util.AbstractMapResourceBundle;
 
-import javax.annotation.Nonnull
+import javax.annotation.Nonnull;
+import java.util.Map;
 
-class MapResourceBundle extends AbstractMapResourceBundle {
+public class JavaClassBundle extends AbstractMapResourceBundle {
     @Override
     protected void initialize(@Nonnull Map<String, Object> entries) {
-        entries['key.string'] = 'string'
-        entries['key.boolean.type'] = true
-        entries['key.boolean.string'] = 'true'
-        entries['key.int.type'] = 42
-        entries['key.int.string'] = '21'
-        entries['key.long.type'] = 64L
-        entries['key.long.string'] = '32'
-        entries['key.float.type'] = 3.1416f
-        entries['key.float.string'] = '6.2832'
-        entries['key.double.type'] = 3.1416d
-        entries['key.double.string'] = '6.2832'
-        entries['key.date.string'] = '1970-12-24'
+        entries.put("string", "string");
+        entries.put("integer", 42);
+        entries.put("keys.bar", "bar");
+        entries.put("environments.development.foo", "dev");
+        entries.put("environments.test.foo", "test");
     }
 }

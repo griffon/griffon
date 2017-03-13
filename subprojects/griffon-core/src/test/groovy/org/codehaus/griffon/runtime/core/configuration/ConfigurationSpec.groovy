@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.core
+package org.codehaus.griffon.runtime.core.configuration
 
 import com.google.guiceberry.GuiceBerryModule
 import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
 import com.google.inject.Inject
 import griffon.core.Configuration
+import griffon.core.editors.DatePropertyEditor
 import griffon.core.editors.IntegerPropertyEditor
 import griffon.core.editors.PropertyEditorResolver
+import org.codehaus.griffon.runtime.core.MapResourceBundle
 import org.junit.Rule
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -64,7 +66,7 @@ class ConfigurationSpec extends Specification {
         'key.int.type' || 42
     }
 
-    def 'Calling configuration.getAsConverted(#key) returns converted #expectedValue'() {
+    def 'Calling configuration.getConverted(#key) returns converted #expectedValue'() {
         given:
         PropertyEditorResolver.clear()
         PropertyEditorResolver.registerEditor(Integer, IntegerPropertyEditor)
@@ -83,6 +85,25 @@ class ConfigurationSpec extends Specification {
         'key.int.null'   || null
         'key.int.type'   || 42
         'key.int.string' || 21
+    }
+
+    def 'Calling configuration.getConverted(#key) with format returns converted #expectedValue'() {
+        given:
+        PropertyEditorResolver.clear()
+        PropertyEditorResolver.registerEditor(Date, DatePropertyEditor)
+
+        when:
+        Date value = configuration.getConverted(key, Date, 'YYYY-MM-dd')
+
+        then:
+        value == expectedValue
+
+        cleanup:
+        PropertyEditorResolver.clear()
+
+        where:
+        key               || expectedValue
+        'key.date.string' || Date.parse('YYYY-MM-dd', '1970-12-24')
     }
 
     def 'Calling configuration.getAsString(#key, #defaultValue) returns #expectedValue'() {

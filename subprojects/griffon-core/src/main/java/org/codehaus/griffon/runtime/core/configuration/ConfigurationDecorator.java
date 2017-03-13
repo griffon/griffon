@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.core;
+package org.codehaus.griffon.runtime.core.configuration;
 
 import griffon.core.Configuration;
 
@@ -153,6 +153,18 @@ public class ConfigurationDecorator implements Configuration {
     @Override
     public <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type, @Nullable T defaultValue) {
         return delegate.getConverted(key, type, defaultValue);
+    }
+
+    @Override
+    @Nullable
+    public <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type, @Nonnull String format) {
+        return delegate.getConverted(key, type, format);
+    }
+
+    @Override
+    @Nullable
+    public <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type, @Nonnull String format, @Nullable T defaultValue) {
+        return delegate.getConverted(key, type, format, defaultValue);
     }
 
     @Nonnull

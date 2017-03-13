@@ -231,6 +231,18 @@ public interface Configuration {
     /**
      * Finds a value associated with the given key. The value is
      * converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     *
+     * @param key  the key to search
+     * @param type the type to be returned
+     * @param format format used to convert the value
+     * @since 2.11.0
+     */
+    @Nullable
+    <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type, @Nonnull String format);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
      * If not found then the supplied <tt>defaultValue</tt> will be returned.
      *
      * @param key          the key to search
@@ -240,4 +252,18 @@ public interface Configuration {
      */
     @Nullable
     <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type, @Nullable T defaultValue);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     * If not found then the supplied <tt>defaultValue</tt> will be returned.
+     *
+     * @param key          the key to search
+     * @param type         the type to be returned
+     * @param format format used to convert the value
+     * @param defaultValue the value to be returned if the key is not found
+     * @since 2.11.0
+     */
+    @Nullable
+    <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type, @Nonnull String format, @Nullable T defaultValue);
 }

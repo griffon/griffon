@@ -15,14 +15,10 @@
  */
 package org.codehaus.griffon.runtime.util;
 
-import griffon.core.resources.ResourceHandler;
 import griffon.util.CompositeResourceBundle;
 import griffon.util.CompositeResourceBundleBuilder;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.inject.Inject;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -37,18 +33,8 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public abstract class AbstractCompositeResourceBundleBuilder implements CompositeResourceBundleBuilder {
-    protected static final String ERROR_FILENAME_BLANK = "Argument 'fileName' must not be blank";
-    protected static final String ERROR_SUFFIX_BLANK = "Argument 'suffix' must not be blank";
-    protected static final String ERROR_RESOURCE_HANDLER_NULL = "Argument 'resourceHandler' must not be null";
     protected static final String ERROR_BASENAME_BLANK = "Argument 'basename' must not be blank";
     protected static final String ERROR_LOCALE_NULL = "Argument 'locale' must not be null";
-
-    protected final ResourceHandler resourceHandler;
-
-    @Inject
-    public AbstractCompositeResourceBundleBuilder(@Nonnull ResourceHandler resourceHandler) {
-        this.resourceHandler = requireNonNull(resourceHandler, ERROR_RESOURCE_HANDLER_NULL);
-    }
 
     @Override
     @Nonnull
@@ -62,6 +48,8 @@ public abstract class AbstractCompositeResourceBundleBuilder implements Composit
         requireNonBlank(basename, ERROR_BASENAME_BLANK);
         requireNonNull(locale, ERROR_LOCALE_NULL);
 
+        initialize();
+
         String[] combinations = {
             locale.getLanguage() + "_" + locale.getCountry() + "_" + locale.getVariant(),
             locale.getLanguage() + "_" + locale.getCountry(),
@@ -71,7 +59,7 @@ public abstract class AbstractCompositeResourceBundleBuilder implements Composit
         basename = basename.replace('.', '/');
         List<ResourceBundle> bundles = new ArrayList<>();
         for (String suffix : combinations) {
-            if (suffix.endsWith("_")) continue;
+            if (suffix.endsWith("_")) { continue; }
             bundles.addAll(loadBundlesFor(basename + "_" + suffix));
         }
         bundles.addAll(loadBundlesFor(basename));
@@ -82,24 +70,7 @@ public abstract class AbstractCompositeResourceBundleBuilder implements Composit
         return new CompositeResourceBundle(bundles);
     }
 
-    @Nonnull
-    protected ResourceHandler getResourceHandler() {
-        return resourceHandler;
-    }
-
-    @Nullable
-    protected URL getResourceAsURL(@Nonnull String fileName, @Nonnull String suffix) {
-        requireNonBlank(fileName, ERROR_FILENAME_BLANK);
-        requireNonBlank(suffix, ERROR_SUFFIX_BLANK);
-        return resourceHandler.getResourceAsURL(fileName + suffix);
-    }
-
-    @Nullable
-    protected List<URL> getResources(@Nonnull String fileName, @Nonnull String suffix) {
-        requireNonBlank(fileName, ERROR_FILENAME_BLANK);
-        requireNonBlank(suffix, ERROR_SUFFIX_BLANK);
-        return resourceHandler.getResources(fileName + suffix);
-    }
+    protected abstract void initialize();
 
     @Nonnull
     protected abstract Collection<ResourceBundle> loadBundlesFor(@Nonnull String basename);

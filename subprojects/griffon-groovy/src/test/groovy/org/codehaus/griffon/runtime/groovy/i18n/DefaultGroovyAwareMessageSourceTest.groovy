@@ -22,30 +22,43 @@ import griffon.core.ApplicationClassLoader
 import griffon.core.i18n.MessageSource
 import griffon.core.injection.Injector
 import griffon.core.resources.ResourceHandler
+import griffon.util.AnnotationUtils
 import griffon.util.CompositeResourceBundleBuilder
 import griffon.util.Instantiator
+import griffon.util.ResourceBundleLoader
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
 import org.codehaus.griffon.runtime.core.i18n.MessageSourceDecoratorFactory
 import org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider
 import org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler
 import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder
 import org.codehaus.griffon.runtime.util.DefaultInstantiator
+import org.codehaus.griffon.runtime.util.PropertiesResourceBundleLoader
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Provider
 import javax.inject.Singleton
 
 import static com.google.inject.util.Providers.guicify
 import static org.mockito.Mockito.mock
+import static org.mockito.Mockito.when
 
 class DefaultGroovyAwareMessageSourceTest {
     @Rule
     public final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
 
-    @Inject
-    private MessageSource messageSource
+    @Inject private CompositeResourceBundleBuilder bundleBuilder
+    @Inject private MessageSource messageSource
+    @Inject private Provider<Injector> injector
+    @Inject @Named('properties') private ResourceBundleLoader propertiesResourceBundleLoader
+
+    @Before
+    void setup() {
+        when(injector.get().getInstances(ResourceBundleLoader)).thenReturn([propertiesResourceBundleLoader])
+    }
 
     @Test
     void testGetAllMessagesByProperties() {
@@ -71,7 +84,8 @@ class DefaultGroovyAwareMessageSourceTest {
                 .toProvider(guicify(new MessageSourceProvider('org.codehaus.griffon.runtime.groovy.i18n.props')))
                 .in(Singleton)
             bind(Instantiator).to(DefaultInstantiator).in(Singleton)
-            bind(Injector).toProvider(guicify({ mock(Injector) } as Provider<Injector>))
+            bind(ResourceBundleLoader).annotatedWith(AnnotationUtils.named('properties')).to(PropertiesResourceBundleLoader).in(Singleton)
+            bind(Injector).toProvider(guicify({ mock(Injector) } as Provider<Injector>)).in(Singleton)
         }
     }
 }

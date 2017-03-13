@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.core;
+package griffon.core.configuration;
+
+import griffon.core.Configuration;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.ResourceBundle;
 
 /**
  * @author Andres Almiray
- * @since 2.0.0
- * @deprecated
+ * @since 2.11.0
  */
-@Deprecated
-public class DefaultConfiguration extends ResourceBundleConfiguration {
-    @Inject
-    public DefaultConfiguration(@Nonnull @Named("applicationResourceBundle") ResourceBundle resourceBundle) {
-        super(resourceBundle);
-    }
+public interface ConfigurationManager {
+    @Nonnull
+    Configuration getConfiguration();
+
+    @Nonnull
+    Configuration getConfiguration(@Nonnull String name);
 }

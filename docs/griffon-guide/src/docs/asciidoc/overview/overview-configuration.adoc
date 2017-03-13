@@ -41,7 +41,29 @@ mvcGroups.sample.view = sample.swing.groovy.SampleView
 mvcGroups.sample.controller = sample.swing.groovy.SampleController
 ----
 
-Take special note that this file must be placed under `griffon-app/resources` instead.
+Finally, you can also use XML
+
+[source,xml,linenums,options="nowrap"]
+.griffon-app/resources/Config.xml
+----
+<?xml version="1.0"?>
+<configuration>
+    <application>
+        <title>Swing + Groovy</title>
+        <startupGroups>sample</startupGroups>
+        <autoShutdown>true</autoShutdown>
+    </application>
+    <mvcGroups>
+        <sample>
+            <model>sample.swing.groovy.SampleModel</model>
+            <view>sample.swing.groovy.SampleView</view>
+            <controller>sample.swing.groovy.SampleController</controller>
+        </sample>
+    </mvcGroups>
+</configuration>
+----
+
+Take special note that these last two files must be placed under `griffon-app/resources` instead.
 
 The application's runtime configuration is available through the `configuration` property
 of the application instance. This configuration instance is *read-only*; you can't modify
@@ -92,8 +114,8 @@ package com.acme
 import griffon.core.injection.Module;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.kordamp.jipsy.ServiceProviderFor;
-import org.codehaus.griffon.runtime.core.ConfigurationDecoratorFactory;
-import org.codehaus.griffon.runtime.core.MutableConfigurationDecoratorFactory;
+import org.codehaus.griffon.runtime.core.configuration.ConfigurationDecoratorFactory;
+import org.codehaus.griffon.runtime.core.configuration.MutableConfigurationDecoratorFactory;
 
 import static griffon.util.AnnotationUtils.named;
 
@@ -143,6 +165,36 @@ environments.test.dataSource.url = jdbc:h2:mem:@application.name@-test
 environments.production.dataSource.url = jdbc:h2:file:/opt/@application.name@/data/db
 ----
 
+Or in XML format:
+
+[source, xml]
+.griffon-app/resources/DataSource.xml
+----
+<?xml version="1.0"?>
+<configuration>
+    <dataSource>
+        <driverClassName>org.h2.Driver</driverClassName>
+    </dataSource>
+    <environments>
+        <development>
+            <dataSource>
+                <url>jdbc:h2:mem:@application.name@-dev</url>
+            </dataSource>
+        </development>
+        <test>
+            <dataSource>
+                <url>jdbc:h2:mem:@application.name@-test</url>
+            </dataSource>
+        </test>
+        <production>
+            <dataSource>
+                <url>jdbc:h2:mem:@application.name@-prod</url>
+            </dataSource>
+        </production>
+    </environments>
+</configuration>
+----
+
 Or as a class based `ResourceBundle` subclass:
 
 [source, java]
@@ -174,7 +226,7 @@ public class DataSource extends AbstractMapResourceBundle {
                 )
                 .e("production", map()
                     .e("dataSource", map()
-                        .e("url", "jdbc:h2:file:/opt/:sample/data/db")
+                        .e("url", "jdbc:h2:file:/opt/sample/data/db")
                     )
                 )
             );
@@ -196,6 +248,70 @@ You may define additional conditional blocks as needed, but you must do it by de
 for the following types in a custom <<_overview_modules,Module>> of your choice:
 
  * `griffon.util.PropertiesReader` for properties files.
- * `griffon.util.ResourceBundleReader` for class based `ResourceBundle`
+ * `griffon.util.ResourceBundleReader` for class based `ResourceBundle` and XML.
  * `griffon.util.ConfigReader` for Groovy scripts.
+
+== Configuration Injection
+
+Configuration values may be injected into beans if the {link_configured} annotation is applied to a field or setter method
+of a type that's bound to the application's dependency container. Take for example the following configuration
+
+[source,groovy,linenums,options="nowrap"]
+.griffon-app/conf/sample/swing/groovy/Config.groovy
+----
+application {
+    title = 'JavaFX + Groovy'
+    startupGroups = ['sample']
+    autoShutdown = true
+}
+props {
+    string = 'string'
+    number = 42
+    date   = '1970-12-24'
+}
+mvcGroups {
+    'sample' {
+        model      = 'sample.javafx.groovy.SampleModel'
+        view       = 'sample.javafx.groovy.SampleView'
+        controller = 'sample.javafx.groovy.SampleController'
+    }
+}
+----
+
+Any of those configuration values may be set on a managed bean, such as the `SampleModel` class
+
+[source,groovy,linenums,options="nowrap"]
+.griffon-app/models/sample/javafx/groovy/SampleModel.groovy
+----
+package sample.javafx.groovy
+
+import griffon.core.artifact.GriffonModel
+import griffon.metadata.ArtifactProviderFor
+import griffon.transform.FXObservable
+import griffon.core.configuration.Configured
+
+@ArtifactProviderFor(GriffonModel)
+class SampleModel {
+    @FXObservable String input
+    @FXObservable String output
+
+    @Configured('application.title')
+    String title
+
+    @Configured('props.string')
+    String string
+
+    @Configured('props.number)
+    int number
+
+    @Configured(value = 'props.date', format = 'YYYY-MM-dd')
+    Date date
+
+    @Configured(value = 'props.undefined', defaultValue = 'undefined')
+    String undefined
+}
+----
+
+Values will be injected before `@PostConstruct` is triggered on the managed bean. Type conversion will be carried out
+using <<_resources_property_editors,property editors>>.
 

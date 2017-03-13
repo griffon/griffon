@@ -117,6 +117,7 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
 
         initializePropertyEditors();
         initializeResourcesInjector();
+        initializeConfigurationManager();
         runLifecycleHandler(Lifecycle.INITIALIZE);
         applyPlatformTweaks();
         initializeAddonManager();
@@ -128,7 +129,7 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
     }
 
     protected void initializeEventHandler() {
-        Collection<EventHandler> handlerInstances =  application.getInjector().getInstances(EventHandler.class);
+        Collection<EventHandler> handlerInstances = application.getInjector().getInstances(EventHandler.class);
         Map<String, EventHandler> sortedHandlers = sortByDependencies(handlerInstances, "EventHandler", "handler");
         for (EventHandler handler : sortedHandlers.values()) {
             application.getEventRouter().addEventListener(handler);
@@ -200,6 +201,10 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
     protected void applyPlatformTweaks() {
         PlatformHandler platformHandler = application.getInjector().getInstance(PlatformHandler.class);
         platformHandler.handle(application);
+    }
+
+    protected void initializeConfigurationManager() {
+        application.getConfigurationManager();
     }
 
     protected void initializeAddonManager() {

@@ -15,104 +15,54 @@
  */
 package org.codehaus.griffon.runtime.util;
 
-import griffon.core.resources.ResourceHandler;
-import griffon.util.Instantiator;
-import griffon.util.PropertiesReader;
-import griffon.util.PropertiesResourceBundle;
-import griffon.util.ResourceBundleReader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import griffon.core.injection.Injector;
+import griffon.util.ResourceBundleLoader;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.IOException;
-import java.net.URL;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.ConcurrentHashMap;
 
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.AnnotationUtils.sortByDependencies;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class DefaultCompositeResourceBundleBuilder extends AbstractCompositeResourceBundleBuilder {
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultCompositeResourceBundleBuilder.class);
-    protected static final String PROPERTIES_SUFFIX = ".properties";
-    protected static final String CLASS_SUFFIX = ".class";
+    protected static final String ERROR_INJECTOR_NULL = "Argument 'injector' must not be null";
 
-    protected final Instantiator instantiator;
-    protected final PropertiesReader propertiesReader;
-    protected final ResourceBundleReader resourceBundleReader;
+    private final Provider<Injector> injector;
+    private final Map<String, ResourceBundleLoader> loaders = new ConcurrentHashMap<>();
 
     @Inject
-    public DefaultCompositeResourceBundleBuilder(@Nonnull Instantiator instantiator,
-                                                 @Nonnull ResourceHandler resourceHandler,
-                                                 @Nonnull PropertiesReader propertiesReader,
-                                                 @Nonnull ResourceBundleReader resourceBundleReader) {
-        super(resourceHandler);
-        this.instantiator = instantiator;
-        this.propertiesReader = propertiesReader;
-        this.resourceBundleReader = resourceBundleReader;
+    public DefaultCompositeResourceBundleBuilder(@Nonnull Provider<Injector> injector) {
+        this.injector = requireNonNull(injector, ERROR_INJECTOR_NULL);
+    }
+
+    protected void initialize() {
+        if (loaders.isEmpty()) {
+            Collection<ResourceBundleLoader> instances = injector.get().getInstances(ResourceBundleLoader.class);
+            loaders.putAll(sortByDependencies(instances, "", "resource bundle loader"));
+        }
     }
 
     @Nonnull
-    protected Collection<ResourceBundle> loadBundlesFor(@Nonnull String fileName) {
-        requireNonBlank(fileName, ERROR_FILENAME_BLANK);
+    protected Collection<ResourceBundle> loadBundlesFor(@Nonnull String basename) {
         List<ResourceBundle> bundles = new ArrayList<>();
-        bundles.addAll(loadBundleFromClass(fileName));
-        bundles.addAll(loadBundleFromProperties(fileName));
-        return bundles;
-    }
-
-    @Nonnull
-    protected Collection<ResourceBundle> loadBundleFromProperties(@Nonnull String fileName) {
-        requireNonBlank(fileName, ERROR_FILENAME_BLANK);
-        List<ResourceBundle> bundles = new ArrayList<>();
-        List<URL> resources = getResources(fileName, PROPERTIES_SUFFIX);
-        if (resources != null) {
-            for (URL resource : resources) {
-                if (null == resource) { continue; }
-                try {
-                    Properties properties = propertiesReader.load(resource.openStream());
-                    bundles.add(new PropertiesResourceBundle(properties));
-                } catch (IOException e) {
-                    // ignore
-                }
+        for (Map.Entry<String, ResourceBundleLoader> e : loaders.entrySet()) {
+            Collection<ResourceBundle> loaded = e.getValue().load(basename);
+            if (!loaded.isEmpty()) {
+                bundles.addAll(loaded);
             }
         }
+
         return bundles;
-    }
-
-    @Nonnull
-    protected Collection<ResourceBundle> loadBundleFromClass(@Nonnull String fileName) {
-        List<ResourceBundle> bundles = new ArrayList<>();
-        URL resource = getResourceAsURL(fileName, CLASS_SUFFIX);
-        if (null != resource) {
-            String url = resource.toString();
-            String className = fileName.replace('/', '.');
-            try {
-                Class klass = loadClass(className);
-                if (ResourceBundle.class.isAssignableFrom(klass)) {
-                    bundles.add(resourceBundleReader.read(newInstance(klass)));
-                }
-            } catch (ClassNotFoundException e) {
-                // ignore
-            } catch (Exception e) {
-                LOG.warn("An error occurred while loading resource bundle " + fileName + " from " + url, e);
-            }
-        }
-        return bundles;
-    }
-
-    protected Class<?> loadClass(String className) throws ClassNotFoundException {
-        return getResourceHandler().classloader().loadClass(className);
-    }
-
-    protected ResourceBundle newInstance(Class<?> klass) throws IllegalAccessException, InstantiationException {
-        return instantiator.instantiate((Class<? extends ResourceBundle>) klass);
     }
 }

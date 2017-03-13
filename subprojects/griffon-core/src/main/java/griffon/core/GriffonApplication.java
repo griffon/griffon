@@ -17,6 +17,7 @@ package griffon.core;
 
 import griffon.core.addon.AddonManager;
 import griffon.core.artifact.ArtifactManager;
+import griffon.core.configuration.ConfigurationManager;
 import griffon.core.controller.ActionManager;
 import griffon.core.env.ApplicationPhase;
 import griffon.core.event.EventRouter;
@@ -60,6 +61,9 @@ public interface GriffonApplication extends Observable {
 
     @Nonnull
     EventRouter getEventRouter();
+
+    @Nonnull
+    ConfigurationManager getConfigurationManager();
 
     @Nonnull
     ArtifactManager getArtifactManager();

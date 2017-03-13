@@ -27,6 +27,7 @@ import griffon.core.PlatformHandler;
 import griffon.core.addon.AddonManager;
 import griffon.core.artifact.ArtifactHandler;
 import griffon.core.artifact.ArtifactManager;
+import griffon.core.configuration.ConfigurationManager;
 import griffon.core.controller.ActionManager;
 import griffon.core.env.Environment;
 import griffon.core.env.Lifecycle;
@@ -46,6 +47,7 @@ import griffon.core.view.WindowManager;
 import griffon.util.CompositeResourceBundleBuilder;
 import griffon.util.Instantiator;
 import griffon.util.PropertiesReader;
+import griffon.util.ResourceBundleLoader;
 import griffon.util.ResourceBundleReader;
 import org.codehaus.griffon.runtime.core.addon.DefaultAddonManager;
 import org.codehaus.griffon.runtime.core.artifact.ControllerArtifactHandler;
@@ -53,6 +55,10 @@ import org.codehaus.griffon.runtime.core.artifact.DefaultArtifactManager;
 import org.codehaus.griffon.runtime.core.artifact.ModelArtifactHandler;
 import org.codehaus.griffon.runtime.core.artifact.ServiceArtifactHandler;
 import org.codehaus.griffon.runtime.core.artifact.ViewArtifactHandler;
+import org.codehaus.griffon.runtime.core.configuration.ConfigurationDecoratorFactory;
+import org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationDecoratorFactory;
+import org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationManager;
+import org.codehaus.griffon.runtime.core.configuration.ResourceBundleConfigurationProvider;
 import org.codehaus.griffon.runtime.core.controller.DefaultActionManager;
 import org.codehaus.griffon.runtime.core.env.EnvironmentProvider;
 import org.codehaus.griffon.runtime.core.env.MetadataProvider;
@@ -74,9 +80,12 @@ import org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider;
 import org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider;
 import org.codehaus.griffon.runtime.core.threading.DefaultUIThreadManager;
 import org.codehaus.griffon.runtime.core.view.NoopWindowManager;
+import org.codehaus.griffon.runtime.util.ClassResourceBundleLoader;
 import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder;
 import org.codehaus.griffon.runtime.util.DefaultInstantiator;
+import org.codehaus.griffon.runtime.util.PropertiesResourceBundleLoader;
 import org.codehaus.griffon.runtime.util.ResourceBundleProvider;
+import org.codehaus.griffon.runtime.util.XmlResourceBundleLoader;
 
 import javax.inject.Named;
 import java.util.ResourceBundle;
@@ -138,6 +147,18 @@ public class DefaultApplicationModule extends AbstractModule {
             .to(DefaultResourceHandler.class)
             .asSingleton();
 
+        bind(ResourceBundleLoader.class)
+            .to(ClassResourceBundleLoader.class)
+            .asSingleton();
+
+        bind(ResourceBundleLoader.class)
+            .to(PropertiesResourceBundleLoader.class)
+            .asSingleton();
+
+        bind(ResourceBundleLoader.class)
+            .to(XmlResourceBundleLoader.class)
+            .asSingleton();
+
         bind(CompositeResourceBundleBuilder.class)
             .to(DefaultCompositeResourceBundleBuilder.class)
             .asSingleton();
@@ -145,6 +166,10 @@ public class DefaultApplicationModule extends AbstractModule {
         bind(ResourceBundle.class)
             .withClassifier(named("applicationResourceBundle"))
             .toProvider(new ResourceBundleProvider("Config"))
+            .asSingleton();
+
+        bind(ConfigurationManager.class)
+            .to(DefaultConfigurationManager.class)
             .asSingleton();
 
         bind(ConfigurationDecoratorFactory.class)

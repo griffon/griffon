@@ -24,27 +24,26 @@ import javax.inject.Inject;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 2.10.0
+ * @since 2.11.0
  */
-public class ResourceBundleReader {
+public class MapReader {
     private static final String ENVIRONMENTS_METHOD = "environments";
 
     private final Map<String, String> conditionValues = new LinkedHashMap<>();
 
-    public static class Provider implements javax.inject.Provider<ResourceBundleReader> {
+    public static class Provider implements javax.inject.Provider<MapReader> {
         @Inject private Metadata metadata;
         @Inject private Environment environment;
 
         @Override
-        public ResourceBundleReader get() {
-            ResourceBundleReader propertiesReader = new ResourceBundleReader();
+        public MapReader get() {
+            MapReader propertiesReader = new MapReader();
             propertiesReader.registerConditionalBlock("environments", environment.getName());
             propertiesReader.registerConditionalBlock("projects", metadata.getApplicationName());
             propertiesReader.registerConditionalBlock("platforms", GriffonApplicationUtils.getPlatform());
@@ -77,28 +76,23 @@ public class ResourceBundleReader {
     }
 
     @Nonnull
-    public ResourceBundle read(final @Nonnull ResourceBundle bundle) {
-        requireNonNull(bundle, "Argument 'bundle' must not be null");
-        return new AbstractMapResourceBundle() {
-            @Override
-            protected void initialize(@Nonnull Map<String, Object> entries) {
-                entries.putAll(processBundle(bundle));
-            }
-        };
+    public Map<String, Object> read(final @Nonnull Map<String, Object> map) {
+        requireNonNull(map, "Argument 'map' must not be null");
+        return processMap(map);
     }
 
     @Nonnull
-    protected Map<String, Object> processBundle(@Nonnull ResourceBundle input) {
+    protected Map<String, Object> processMap(@Nonnull Map<String, Object> input) {
         Map<String, Object> output = new LinkedHashMap<>();
 
         for (String key : input.keySet()) {
             ConditionalBlockMatch match = resolveConditionalBlockMatch(key);
             if (match != null) {
                 if (match.key != null) {
-                    output.put(match.key, input.getObject(key));
+                    output.put(match.key, input.get(key));
                 }
             } else {
-                output.put(key, input.getObject(key));
+                output.put(key, input.get(key));
             }
         }
 

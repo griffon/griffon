@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.core
+package org.codehaus.griffon.runtime.core.configuration
 
 import griffon.core.Configuration
 import griffon.util.AbstractMapResourceBundle
+import org.codehaus.griffon.runtime.core.MapResourceBundle
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import javax.annotation.Nonnull
 
 @Unroll
-class ConfigurationDecoratorSpec extends Specification {
+class DefaultConfigurationSpec extends Specification {
     def 'Calling configuration.#method(#key, #defaultValue) gives #value as result'() {
         given:
         ResourceBundle bundle = new MapResourceBundle()
         Configuration configuration = new ResourceBundleConfiguration(bundle)
-        configuration = new ConfigurationDecorator(configuration)
 
         expect:
         value == (defaultValue != null ? configuration."$method"(key, defaultValue) : configuration."$method"(key))
@@ -62,35 +62,20 @@ class ConfigurationDecoratorSpec extends Specification {
         'getAsDouble'  | 'key.double.unknown'  | Double.MAX_VALUE  | Double.MAX_VALUE
     }
 
-    def 'Can resolve nested keys from sample application configuration (Properties)'() {
+    def 'Can resolve nested keys from sample application configuration'() {
         given:
         ResourceBundle bundle = new AppResourceBundle()
         Configuration configuration = new ResourceBundleConfiguration(bundle)
-        configuration = new ConfigurationDecorator(configuration)
         Properties props = configuration.asProperties()
 
         expect:
-        configuration.containsKey('application.title')
+
         'Griffon' == configuration['application.title']
         'sample.SampleView' == configuration['mvcGroups.sample.view']
         props['application.title'] == configuration['application.title']
     }
 
-    def 'Can resolve nested keys from sample application configuration (ResourceBundle)'() {
-        given:
-        ResourceBundle bundle = new AppResourceBundle()
-        Configuration configuration = new ResourceBundleConfiguration(bundle)
-        configuration = new ConfigurationDecorator(configuration)
-        ResourceBundle asBundle = configuration.asResourceBundle()
-
-        expect:
-        configuration.containsKey('application.title')
-        'Griffon' == configuration['application.title']
-        'sample.SampleView' == configuration['mvcGroups.sample.view']
-        asBundle.getString('application.title') == configuration['application.title']
-    }
-
-    static class AppResourceBundle extends AbstractMapResourceBundle {
+    class AppResourceBundle extends AbstractMapResourceBundle {
         @Override
         protected void initialize(@Nonnull Map<String, Object> entries) {
             entries['application'] = [

@@ -21,13 +21,10 @@ import com.google.inject.AbstractModule
 import griffon.core.ApplicationClassLoader
 import griffon.core.env.Environment
 import griffon.core.env.Metadata
-import griffon.core.injection.Injector
 import griffon.core.resources.ResourceHandler
 import griffon.util.AnnotationUtils
-import griffon.util.CompositeResourceBundleBuilder
 import griffon.util.ConfigReader
 import griffon.util.Instantiator
-import griffon.util.PropertiesReader
 import griffon.util.ResourceBundleLoader
 import griffon.util.ResourceBundleReader
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
@@ -37,45 +34,37 @@ import org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler
 import org.codehaus.griffon.runtime.groovy.util.GroovyScriptResourceBundleLoader
 import org.junit.Rule
 import spock.lang.Specification
+import spock.lang.Unroll
 
 import javax.inject.Inject
 import javax.inject.Named
-import javax.inject.Provider
 import javax.inject.Singleton
 
 import static com.google.inject.util.Providers.guicify
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
 
-class GroovyAwareCompositeResourceBundleBuilder2Spec extends Specification {
+@Unroll
+class GroovyScriptResourceBundleLoaderSpec extends Specification {
     @Rule
-    public final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
+    final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
 
-    @Inject private CompositeResourceBundleBuilder bundleBuilder
-    @Inject private Provider<Injector> injector
-    @Inject @Named('groovy') private ResourceBundleLoader resourceBundleLoader1
-    @Inject @Named('properties') private ResourceBundleLoader resourceBundleLoader2
+    @Inject @Named('groovy') private ResourceBundleLoader resourceBundleLoader
 
-    void setupSpec() {
-        System.setProperty(Environment.KEY, 'test')
-    }
+    def 'Load bundle #name and check #key = #value'() {
+        when:
+        Collection<ResourceBundle> bundles = resourceBundleLoader.load(name)
+        println bundles
 
-    void cleanupSpec() {
-        System.setProperty(Environment.KEY, 'dev')
-    }
-
-    def "Load Groovy and properties bundles"() {
-        given:
-        when(injector.get().getInstances(ResourceBundleLoader)).thenReturn([resourceBundleLoader1, resourceBundleLoader2])
-        ResourceBundle bundle = bundleBuilder.create('org.codehaus.griffon.runtime.util.GroovyBundle')
-
-        expect:
-        bundle.getString(key) == value
+        then:
+        println bundles[0].keySet()
+        bundles.size() == 1
+        bundles[0].getObject(key) == value
 
         where:
-        key              || value
-        'properties.key' || 'properties'
-        'groovy.key'     || 'test'
+        name << (['org/codehaus/griffon/runtime/util/GroovyClassBundle'] * 4) +
+            (['org/codehaus/griffon/runtime/util/JavaClassBundle'] * 4) +
+            (['org/codehaus/griffon/runtime/util/GroovyScriptBundle'] * 4)
+        key << (['string', 'integer', 'keys.bar', 'foo'] * 3)
+        value << (['string', 42, 'bar', 'dev'] * 3)
     }
 
     static final class TestModule extends AbstractModule {
@@ -84,15 +73,11 @@ class GroovyAwareCompositeResourceBundleBuilder2Spec extends Specification {
             install(new GuiceBerryModule())
             bind(ApplicationClassLoader).to(DefaultApplicationClassLoader).in(Singleton)
             bind(ResourceHandler).to(DefaultResourceHandler).in(Singleton)
-            bind(ResourceBundleReader).toProvider(guicify(new ResourceBundleReader.Provider()))
-            bind(PropertiesReader).toProvider(guicify(new PropertiesReader.Provider()))
-            bind(ConfigReader).toProvider(guicify(new ConfigReader.Provider()))
-            bind(Metadata).toProvider(guicify(new MetadataProvider()))
-            bind(Environment).toProvider(guicify(new EnvironmentProvider()))
+            bind(ResourceBundleReader).toProvider(guicify(new ResourceBundleReader.Provider())).in(Singleton)
+            bind(ConfigReader).toProvider(guicify(new ConfigReader.Provider())).in(Singleton)
+            bind(Metadata).toProvider(guicify(new MetadataProvider())).in(Singleton)
+            bind(Environment).toProvider(guicify(new EnvironmentProvider())).in(Singleton)
             bind(ResourceBundleLoader).annotatedWith(AnnotationUtils.named('groovy')).to(GroovyScriptResourceBundleLoader).in(Singleton)
-            bind(ResourceBundleLoader).annotatedWith(AnnotationUtils.named('properties')).to(PropertiesResourceBundleLoader).in(Singleton)
-            bind(Injector).toProvider(guicify({ mock(Injector) } as Provider<Injector>)).in(Singleton)
-            bind(CompositeResourceBundleBuilder).to(DefaultCompositeResourceBundleBuilder).in(Singleton)
             bind(Instantiator).toInstance({ c -> c.newInstance() } as Instantiator)
         }
     }
