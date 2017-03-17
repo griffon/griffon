@@ -23,8 +23,11 @@ import griffon.builder.javafx.factory.LabeledFactory;
 import griffon.builder.javafx.factory.MenuFactory;
 import griffon.builder.javafx.factory.MenuItemFactory;
 import griffon.inject.DependsOn;
+import griffon.javafx.scene.layout.IndexedCardPane;
+import griffon.javafx.scene.layout.NamedCardPane;
 import groovy.util.Factory;
 import groovyx.javafx.SceneGraphBuilder;
+import groovyx.javafx.factory.ContainerFactory;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.CheckMenuItem;
@@ -65,6 +68,8 @@ public class JavafxBuilderCustomizer extends AbstractBuilderCustomizer {
         factories.put("application", new ApplicationFactory());
         factories.remove("fxaction");
         factories.put("action", new ActionFactory());
+        factories.put("indexedCardPane", new ContainerFactory(IndexedCardPane.class));
+        factories.put("namedCardPane", new ContainerFactory(NamedCardPane.class));
 
         factories.put("menuBar", new MenuFactory(MenuBar.class));
         factories.put("contextMenu", new MenuFactory(ContextMenu.class));

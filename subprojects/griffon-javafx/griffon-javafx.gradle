@@ -30,4 +30,10 @@ dependencies {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
     testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
+    testCompile "org.testfx:testfx-core:$testfxVersion"
+    testCompile "org.testfx:testfx-junit:$testfxVersion"
+}
+
+test {
+    forkEvery = Runtime.runtime.availableProcessors()
 }

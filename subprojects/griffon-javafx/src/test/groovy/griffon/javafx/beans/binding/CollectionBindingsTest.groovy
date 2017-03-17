@@ -24,7 +24,6 @@ import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.collections.ObservableMap
 import javafx.collections.ObservableSet
-import javafx.embed.swing.JFXPanel
 import org.junit.Test
 
 import java.util.function.Function
@@ -33,11 +32,6 @@ import static org.hamcrest.Matchers.equalTo
 import static org.junit.Assert.assertThat
 
 class CollectionBindingsTest {
-    static {
-        // initialize UI toolkit
-        new JFXPanel()
-    }
-
     @Test
     void "Join list with string delimiter"() {
         ObservableList<Object> items = FXCollections.observableArrayList()
