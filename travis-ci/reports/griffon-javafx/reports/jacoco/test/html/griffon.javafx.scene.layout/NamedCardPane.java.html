@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NamedCardPane.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-javafx</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.scene.layout</a> &gt; <span class="el_source">NamedCardPane.java</span></div><h1>NamedCardPane.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.scene.layout;
+
+import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.ListChangeListener;
+import javafx.scene.Node;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static griffon.util.GriffonClassUtils.requireState;
+import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.11.0
+ */
+public class NamedCardPane extends StackPane {
+    private static final String ERROR_NODE_NULL = &quot;Argument 'node' must not be null&quot;;
+    private static final String ERROR_ID_NULL = &quot;Argument 'id' must not be null&quot;;
+
+<span class="nc" id="L49">    private final Map&lt;String, Node&gt; nodes = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="nc" id="L50">    private final StringProperty selectedNodeId = new SimpleStringProperty(this, &quot;selectedNodeId&quot;);</span>
+<span class="nc" id="L51">    private final ObjectProperty&lt;Node&gt; selectedNode = new SimpleObjectProperty&lt;&gt;(this, &quot;selectedNode&quot;);</span>
+<span class="nc" id="L52">    private final AtomicBoolean adjusting = new AtomicBoolean(false);</span>
+
+<span class="nc" id="L54">    public NamedCardPane() {</span>
+<span class="nc" id="L55">        getStyleClass().add(&quot;named-cardpane&quot;);</span>
+
+<span class="nc" id="L57">        getChildren().addListener((ListChangeListener&lt;Node&gt;) c -&gt; {</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">            if (adjusting.get()) {</span>
+<span class="nc" id="L59">                return;</span>
+            }
+
+<span class="nc bnc" id="L62" title="All 2 branches missed.">            while (c.next()) {</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">                if (c.wasAdded()) {</span>
+<span class="nc" id="L64">                    Node lastAddedNode = null;</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">                    for (Node node : c.getAddedSubList()) {</span>
+<span class="nc" id="L66">                        String id = node.getId();</span>
+<span class="nc" id="L67">                        requireNonBlank(id, ERROR_ID_NULL);</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">                        if (!nodes.containsKey(id)) {</span>
+<span class="nc" id="L69">                            nodes.put(id, node);</span>
+<span class="nc" id="L70">                            lastAddedNode = node;</span>
+                        }
+<span class="nc" id="L72">                    }</span>
+
+<span class="nc bnc" id="L74" title="All 2 branches missed.">                    if (lastAddedNode != null) {</span>
+<span class="nc" id="L75">                        String nextId = lastAddedNode.getId();</span>
+<span class="nc" id="L76">                        doShow(nextId);</span>
+                    }
+
+<span class="nc bnc" id="L79" title="All 2 branches missed.">                } else if (c.wasRemoved()) {</span>
+<span class="nc" id="L80">                    String selectedId = getSelectedNodeId();</span>
+<span class="nc" id="L81">                    boolean selectionChanged = false;</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">                    for (Node node : c.getRemoved()) {</span>
+<span class="nc" id="L83">                        String id = node.getId();</span>
+<span class="nc" id="L84">                        requireNonBlank(id, ERROR_ID_NULL);</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">                        if (!nodes.containsKey(id)) {</span>
+<span class="nc" id="L86">                            continue;</span>
+                        }
+
+<span class="nc" id="L89">                        nodes.remove(id);</span>
+
+<span class="nc bnc" id="L91" title="All 2 branches missed.">                        if (id.equals(selectedId)) {</span>
+<span class="nc" id="L92">                            selectionChanged = true;</span>
+                        }
+<span class="nc" id="L94">                    }</span>
+
+<span class="nc bnc" id="L96" title="All 2 branches missed.">                    if (selectionChanged) {</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">                        final String nextId = nodes.size() &gt; 0 ? nodes.keySet().iterator().next() : null;</span>
+<span class="nc" id="L98">                        doShow(nextId);</span>
+                    }
+<span class="nc" id="L100">                }</span>
+            }
+<span class="nc" id="L102">        });</span>
+
+<span class="nc" id="L104">        widthProperty().addListener((observable, oldValue, newValue) -&gt; updateBoundsInChildren());</span>
+<span class="nc" id="L105">        heightProperty().addListener((observable, oldValue, newValue) -&gt; updateBoundsInChildren());</span>
+<span class="nc" id="L106">    }</span>
+
+    protected void updateBoundsInChildren() {
+<span class="nc" id="L109">        nodes.values().forEach(this::updateChildBounds);</span>
+<span class="nc" id="L110">        layout();</span>
+<span class="nc" id="L111">    }</span>
+
+    protected void updateChildBounds(Node node) {
+<span class="nc bnc" id="L114" title="All 2 branches missed.">        if (node instanceof Region) {</span>
+<span class="nc" id="L115">            Region child = (Region) node;</span>
+<span class="nc" id="L116">            child.setPrefWidth(getWidth());</span>
+<span class="nc" id="L117">            child.setPrefHeight(getHeight());</span>
+        }
+<span class="nc" id="L119">    }</span>
+
+    @Nonnull
+    public ReadOnlyStringProperty selectedNodeIdProperty() {
+<span class="nc" id="L123">        return selectedNodeId;</span>
+    }
+
+    @Nonnull
+    public ReadOnlyObjectProperty&lt;Node&gt; selectedNodeProperty() {
+<span class="nc" id="L128">        return selectedNode;</span>
+    }
+
+    @Nullable
+    public String getSelectedNodeId() {
+<span class="nc" id="L133">        return selectedNodeId.get();</span>
+    }
+
+    @Nullable
+    public Node getSelectedNode() {
+<span class="nc" id="L138">        return selectedNode.get();</span>
+    }
+
+    public boolean isEmpty() {
+<span class="nc" id="L142">        return nodes.isEmpty();</span>
+    }
+
+    public int size() {
+<span class="nc" id="L146">        return nodes.size();</span>
+    }
+
+    public void clear() {
+<span class="nc" id="L150">        nodes.clear();</span>
+<span class="nc" id="L151">        getChildren().clear();</span>
+<span class="nc" id="L152">        selectedNodeId.set(null);</span>
+<span class="nc" id="L153">        selectedNode.set(null);</span>
+<span class="nc" id="L154">    }</span>
+
+    public void add(@Nonnull final String id, @Nonnull final Node node) {
+<span class="nc" id="L157">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L158">        requireNonBlank(id, ERROR_ID_NULL);</span>
+
+<span class="nc" id="L160">        adjusting.set(true);</span>
+<span class="nc" id="L161">        nodes.put(id, node);</span>
+<span class="nc" id="L162">        adjusting.set(false);</span>
+
+<span class="nc" id="L164">        show(id);</span>
+<span class="nc" id="L165">    }</span>
+
+    public void remove(@Nonnull String id) {
+<span class="nc" id="L168">        requireNonBlank(id, ERROR_ID_NULL);</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">        if (!nodes.containsKey(id)) {</span>
+<span class="nc" id="L170">            return;</span>
+        }
+
+<span class="nc" id="L173">        String selectedId = getSelectedNodeId();</span>
+<span class="nc" id="L174">        adjusting.set(true);</span>
+<span class="nc" id="L175">        nodes.remove(id);</span>
+<span class="nc" id="L176">        adjusting.set(false);</span>
+
+<span class="nc bnc" id="L178" title="All 2 branches missed.">        if (id.equals(selectedId)) {</span>
+<span class="nc" id="L179">            String nextId = null;</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">            if (nodes.size() &gt; 0) {</span>
+<span class="nc" id="L181">                nextId = nodes.keySet().iterator().next();</span>
+            }
+<span class="nc" id="L183">            doShow(nextId);</span>
+        }
+<span class="nc" id="L185">    }</span>
+
+    public void show(@Nonnull String id) {
+<span class="nc" id="L188">        requireNonBlank(id, ERROR_ID_NULL);</span>
+<span class="nc" id="L189">        requireState(nodes.containsKey(id), &quot;No content associated with id '&quot; + id + &quot;'&quot;);</span>
+<span class="nc" id="L190">        doShow(id);</span>
+<span class="nc" id="L191">    }</span>
+
+    protected void doShow(@Nullable String id) {
+<span class="nc" id="L194">        Platform.runLater(() -&gt; {</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">            if (isBlank(id)) {</span>
+<span class="nc" id="L196">                adjusting.set(true);</span>
+<span class="nc" id="L197">                getChildren().clear();</span>
+<span class="nc" id="L198">                adjusting.set(false);</span>
+<span class="nc" id="L199">                selectedNodeId.set(null);</span>
+<span class="nc" id="L200">                selectedNode.set(null);</span>
+            } else {
+<span class="nc" id="L202">                Node node = nodes.get(id);</span>
+<span class="nc" id="L203">                adjusting.set(true);</span>
+<span class="nc" id="L204">                getChildren().setAll(node);</span>
+<span class="nc" id="L205">                adjusting.set(false);</span>
+<span class="nc" id="L206">                selectedNodeId.set(id);</span>
+<span class="nc" id="L207">                selectedNode.set(node);</span>
+            }
+<span class="nc" id="L209">        });</span>
+<span class="nc" id="L210">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IndexedCardPane.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">griffon-javafx</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.scene.layout</a> &gt; <span class="el_source">IndexedCardPane.java</span></div><h1>IndexedCardPane.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.scene.layout;
+
+import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ListChangeListener;
+import javafx.scene.Node;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static griffon.util.GriffonClassUtils.requireState;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.11.0
+ */
+public class IndexedCardPane extends StackPane {
+    private static final String ERROR_NODE_NULL = &quot;Argument 'node' must not be null&quot;;
+
+<span class="nc" id="L46">    private final List&lt;Node&gt; nodes = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L47">    private final IntegerProperty selectedIndex = new SimpleIntegerProperty(this, &quot;selectedIndex&quot;, -1);</span>
+<span class="nc" id="L48">    private final ObjectProperty&lt;Node&gt; selectedNode = new SimpleObjectProperty&lt;&gt;(this, &quot;selectedNode&quot;);</span>
+<span class="nc" id="L49">    private final AtomicBoolean adjusting = new AtomicBoolean(false);</span>
+
+<span class="nc" id="L51">    public IndexedCardPane() {</span>
+<span class="nc" id="L52">        getStyleClass().add(&quot;indexed-cardpane&quot;);</span>
+
+<span class="nc" id="L54">        getChildren().addListener((ListChangeListener&lt;Node&gt;) c -&gt; {</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">            if (adjusting.get()) {</span>
+<span class="nc" id="L56">                return;</span>
+            }
+
+<span class="nc bnc" id="L59" title="All 2 branches missed.">            while (c.next()) {</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">                if (c.wasAdded()) {</span>
+<span class="nc" id="L61">                    Node lastAddedNode = null;</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">                    for (Node node : c.getAddedSubList()) {</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">                        if (!nodes.contains(node)) {</span>
+<span class="nc" id="L64">                            nodes.add(node);</span>
+<span class="nc" id="L65">                            lastAddedNode = node;</span>
+                        }
+<span class="nc" id="L67">                    }</span>
+
+<span class="nc bnc" id="L69" title="All 2 branches missed.">                    if (lastAddedNode != null) {</span>
+<span class="nc" id="L70">                        doShow(indexOf(lastAddedNode));</span>
+                    }
+<span class="nc bnc" id="L72" title="All 2 branches missed.">                } else if (c.wasRemoved()) {</span>
+<span class="nc" id="L73">                    int selectedIndex = getSelectedIndex();</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">                    for (Node node : c.getRemoved()) {</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">                        if (!nodes.contains(node)) {</span>
+<span class="nc" id="L76">                            continue;</span>
+                        }
+
+<span class="nc" id="L79">                        int removedIndex = indexOf(node);</span>
+<span class="nc" id="L80">                        nodes.remove(node);</span>
+
+<span class="nc bnc" id="L82" title="All 2 branches missed.">                        if (removedIndex &lt;= selectedIndex) {</span>
+<span class="nc" id="L83">                            selectedIndex = -1;</span>
+                        }
+<span class="nc" id="L85">                    }</span>
+
+<span class="nc" id="L87">                    doShow(selectedIndex);</span>
+<span class="nc" id="L88">                }</span>
+            }
+<span class="nc" id="L90">        });</span>
+
+<span class="nc" id="L92">        widthProperty().addListener((observable, oldValue, newValue) -&gt; updateBoundsInChildren());</span>
+<span class="nc" id="L93">        heightProperty().addListener((observable, oldValue, newValue) -&gt; updateBoundsInChildren());</span>
+<span class="nc" id="L94">    }</span>
+
+    protected void updateBoundsInChildren() {
+<span class="nc bnc" id="L97" title="All 2 branches missed.">        for (Node node : nodes) {</span>
+<span class="nc" id="L98">            updateChildBounds(node);</span>
+<span class="nc" id="L99">        }</span>
+<span class="nc" id="L100">        layout();</span>
+<span class="nc" id="L101">    }</span>
+
+    protected void updateChildBounds(Node node) {
+<span class="nc bnc" id="L104" title="All 2 branches missed.">        if (node instanceof Region) {</span>
+<span class="nc" id="L105">            Region child = (Region) node;</span>
+<span class="nc" id="L106">            child.setPrefWidth(getWidth());</span>
+<span class="nc" id="L107">            child.setPrefHeight(getHeight());</span>
+        }
+<span class="nc" id="L109">    }</span>
+
+    @Nonnull
+    public ReadOnlyIntegerProperty selectedIndexProperty() {
+<span class="nc" id="L113">        return selectedIndex;</span>
+    }
+
+    @Nonnull
+    public ReadOnlyObjectProperty&lt;Node&gt; selectedNodeProperty() {
+<span class="nc" id="L118">        return selectedNode;</span>
+    }
+
+    public int getSelectedIndex() {
+<span class="nc" id="L122">        return selectedIndex.get();</span>
+    }
+
+    @Nullable
+    public Node getSelectedNode() {
+<span class="nc" id="L127">        return selectedNode.get();</span>
+    }
+
+    public boolean isEmpty() {
+<span class="nc" id="L131">        return nodes.isEmpty();</span>
+    }
+
+    public int size() {
+<span class="nc" id="L135">        return nodes.size();</span>
+    }
+
+    public void clear() {
+<span class="nc" id="L139">        nodes.clear();</span>
+<span class="nc" id="L140">        getChildren().clear();</span>
+<span class="nc" id="L141">        selectedIndex.set(-1);</span>
+<span class="nc" id="L142">        selectedNode.set(null);</span>
+<span class="nc" id="L143">    }</span>
+
+    public int indexOf(@Nonnull Node node) {
+<span class="nc" id="L146">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc" id="L147">        return nodes.indexOf(node);</span>
+    }
+
+    public void add(@Nonnull Node node) {
+<span class="nc" id="L151">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">        if (!nodes.contains(node)) {</span>
+<span class="nc" id="L153">            adjusting.set(true);</span>
+<span class="nc" id="L154">            nodes.add(node);</span>
+<span class="nc" id="L155">            adjusting.set(false);</span>
+        }
+<span class="nc" id="L157">        show(indexOf(node));</span>
+<span class="nc" id="L158">    }</span>
+
+    public void remove(@Nonnull Node node) {
+<span class="nc" id="L161">        requireNonNull(node, ERROR_NODE_NULL);</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">        if (!nodes.contains(node)) {</span>
+<span class="nc" id="L163">            return;</span>
+        }
+
+<span class="nc" id="L166">        int selectedIndex = getSelectedIndex();</span>
+<span class="nc" id="L167">        int removedIndex = indexOf(node);</span>
+<span class="nc" id="L168">        adjusting.set(true);</span>
+<span class="nc" id="L169">        nodes.remove(node);</span>
+<span class="nc" id="L170">        adjusting.set(false);</span>
+
+<span class="nc bnc" id="L172" title="All 2 branches missed.">        if (removedIndex &lt;= selectedIndex) {</span>
+<span class="nc" id="L173">            doShow(selectedIndex - 1);</span>
+        }
+<span class="nc" id="L175">    }</span>
+
+    public void first() {
+<span class="nc bnc" id="L178" title="All 2 branches missed.">        if (nodes.size() &gt; 0) {</span>
+<span class="nc" id="L179">            show(0);</span>
+        }
+<span class="nc" id="L181">    }</span>
+
+    public void last() {
+<span class="nc" id="L184">        int size = nodes.size();</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">        if (size &gt; 0) {</span>
+<span class="nc" id="L186">            show(size - 1);</span>
+        }
+<span class="nc" id="L188">    }</span>
+
+    public void next() {
+<span class="nc" id="L191">        int size = nodes.size();</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">        if (size &gt; 0) {</span>
+<span class="nc" id="L193">            int index = getSelectedIndex() + 1;</span>
+<span class="nc bnc" id="L194" title="All 2 branches missed.">            show(index &gt;= size ? 0 : index);</span>
+        }
+<span class="nc" id="L196">    }</span>
+
+    public void previous() {
+<span class="nc" id="L199">        int size = nodes.size();</span>
+<span class="nc bnc" id="L200" title="All 2 branches missed.">        if (size &gt; 0) {</span>
+<span class="nc" id="L201">            int index = getSelectedIndex() - 1;</span>
+<span class="nc bnc" id="L202" title="All 2 branches missed.">            show(index &lt; 0 ? size - 1 : index);</span>
+        }
+<span class="nc" id="L204">    }</span>
+
+    public void show(int index) {
+<span class="nc bnc" id="L207" title="All 2 branches missed.">        requireState(index &gt; -1, &quot;Argument 'index' must be greater than -1&quot;);</span>
+<span class="nc bnc" id="L208" title="All 2 branches missed.">        requireState(index &lt; nodes.size(), &quot;Argument 'index' must be less than &quot; + nodes.size());</span>
+<span class="nc" id="L209">        doShow(index);</span>
+<span class="nc" id="L210">    }</span>
+
+    protected void doShow(final int index) {
+<span class="nc" id="L213">        Platform.runLater(() -&gt; {</span>
+<span class="nc bnc" id="L214" title="All 2 branches missed.">            if (index &lt; 0) {</span>
+<span class="nc" id="L215">                adjusting.set(true);</span>
+<span class="nc" id="L216">                getChildren().clear();</span>
+<span class="nc" id="L217">                adjusting.set(false);</span>
+<span class="nc" id="L218">                selectedIndex.set(-1);</span>
+<span class="nc" id="L219">                selectedNode.set(null);</span>
+            } else {
+<span class="nc" id="L221">                Node node = nodes.get(index);</span>
+<span class="nc" id="L222">                adjusting.set(true);</span>
+<span class="nc" id="L223">                getChildren().setAll(node);</span>
+<span class="nc" id="L224">                adjusting.set(false);</span>
+<span class="nc" id="L225">                selectedIndex.set(index);</span>
+<span class="nc" id="L226">                selectedNode.set(node);</span>
+            }
+<span class="nc" id="L228">        });</span>
+<span class="nc" id="L229">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
