@@ -36,4 +36,8 @@ dependencies {
 
 test {
     forkEvery = Runtime.runtime.availableProcessors()
+
+    if (!fullBuild) {
+        exclude 'griffon/javafx/scene/layout/**'
+    }
 }
