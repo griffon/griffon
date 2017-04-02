@@ -18,16 +18,16 @@ package griffon.core.mvc;
 import javax.annotation.Nullable;
 
 /**
- * An specialized function for working with MVC groups.
+ * An specialized function for working with typed MVC groups.
  *
  * @author Andres Almiray
- * @since 2.1.0
+ * @since 2.11.0
  */
-public interface MVCGroupFunction {
+public interface TypedMVCGroupFunction<MVC extends TypedMVCGroup> {
     /**
      * Applies this function<p>
      *
      * @param group the MVC group
      */
-    void apply(@Nullable MVCGroup group);
+    void apply(@Nullable MVC group);
 }

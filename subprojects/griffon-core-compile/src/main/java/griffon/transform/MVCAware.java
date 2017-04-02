@@ -38,25 +38,49 @@ import java.lang.annotation.Target;
  * <li><code>public MVCGroup createMVCGroup(String mvcType, Map&lt;String, Object&gt; args)</code></li>
  * <li><code>public MVCGroup createMVCGroup(Map&lt;String, Object&gt; args, String mvcType, String mvcId)</code></li>
  * <li><code>public MVCGroup createMVCGroup(String mvcType, String mvcId, Map&lt;String, Object&gt; args)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup&gt; createMVCGroup(Class&lt;? extends MVC&gt; mvcType)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup&gt; createMVCGroup(Class&lt;? extends MVC&gt; mvcType, String mvcId)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup&gt; createMVCGroup(Map&lt;String, Object&gt; args, Class&lt;? extends MVC&gt; mvcType)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup&gt; createMVCGroup(Class&lt;? extends MVC&gt; mvcType, Map&lt;String, Object&gt; args)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup&gt; createMVCGroup(Map&lt;String, Object&gt; args, Class&lt;? extends MVC&gt; mvcType, String mvcId)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup&gt; createMVCGroup(Class&lt;? extends MVC&gt; mvcType, String mvcId, Map&lt;String, Object&gt; args)</code></li>
  * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVC(String mvcType)</code></li>
  * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVC(Map&lt;String, Object&gt; args, String mvcType)</code></li>
  * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVC(String mvcType, Map&lt;String, Object&gt; args)</code></li>
  * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVC(String mvcType, String mvcId)</code></li>
  * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVC(Map&lt;String, Object&gt; args, String mvcType, String mvcId)</code></li>
  * <li><code>public List&lt;? extends GriffonMvcArtifact&gt; createMVC(String mvcType, String mvcId, Map&lt;String, Object&gt; args)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup&gt; List&lt;? extends GriffonMvcArtifact&gt; createMVC(Class&lt;? extends MVC&gt; mvcType)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup&gt; List&lt;? extends GriffonMvcArtifact&gt; createMVC(Map&lt;String, Object&gt; args, Class&lt;? extends MVC&gt; mvcType)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup&gt; List&lt;? extends GriffonMvcArtifact&gt; createMVC(Class&lt;? extends MVC&gt; mvcType, Map&lt;String, Object&gt; args)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup&gt; List&lt;? extends GriffonMvcArtifact&gt; createMVC(Class&lt;? extends MVC&gt; mvcType, String mvcId)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup&gt; List&lt;? extends GriffonMvcArtifact&gt; createMVC(Map&lt;String, Object&gt; args, Class&lt;? extends MVC&gt; mvcType, String mvcId)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup&gt; List&lt;? extends GriffonMvcArtifact&gt; createMVC(Class&lt;? extends MVC&gt; mvcType, String mvcId, Map&lt;String, Object&gt; args)</code></li>
  * <li><code>public void destroyMVCGroup(String mvcId)</code></li>
- * <li><code>public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(String mvcType, MVCCallable&lt;M, V, C&gt; handler)</code></li>
- * <li><code>public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(String mvcType, String mvcId, MVCCallable&lt;M, V, C&gt; handler)</code></li>
- * <li><code>public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(String mvcType, String mvcId, Map&lt;String, Object&gt; args, MVCCallable&lt;M, V, C&gt; handler)</code></li>
- * <li><code>public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(Map&lt;String, Object&gt; args, String mvcType, String mvcId, MVCCallable&lt;M, V, C&gt; handler)</code></li>
- * <li><code>public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(String mvcType, Map&lt;String, Object&gt; args, MVCCallable&lt;M, V, C&gt; handler)</code></li>
- * <li><code>public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(Map&lt;String, Object&gt; args, String mvcType, MVCCallable&lt;M, V, C&gt; handler)</code></li>
- * <li><code>public void withMVCGroup(String mvcType, MVCGroupCallable handler)</code></li>
- * <li><code>public void withMVCGroup(String mvcType, String mvcId, MVCGroupCallable handler)</code></li>
- * <li><code>public void withMVCGroup(String mvcType, String mvcId, Map&lt;String, Object&gt; args, MVCGroupCallable handler)</code></li>
- * <li><code>public void withMVCGroup(Map&lt;String, Object&gt; args, String mvcType, String mvcId, MVCGroupCallable handler)</code></li>
- * <li><code>public void withMVCGroup(String mvcType, Map&lt;String, Object&gt; args, MVCGroupCallable handler)</code></li>
- * <li><code>public void withMVCGroup(Map&lt;String, Object&gt; args, String mvcType, MVCGroupCallable handler)</code></li>
+ * <li><code>public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(String mvcType, MVCFunction&lt;M, V, C&gt; handler)</code></li>
+ * <li><code>public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(String mvcType, String mvcId, MVCFunction&lt;M, V, C&gt; handler)</code></li>
+ * <li><code>public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(String mvcType, String mvcId, Map&lt;String, Object&gt; args, MVCFunction&lt;M, V, C&gt; handler)</code></li>
+ * <li><code>public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(Map&lt;String, Object&gt; args, String mvcType, String mvcId, MVCFunction&lt;M, V, C&gt; handler)</code></li>
+ * <li><code>public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(String mvcType, Map&lt;String, Object&gt; args, MVCFunction&lt;M, V, C&gt; handler)</code></li>
+ * <li><code>public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(Map&lt;String, Object&gt; args, String mvcType, MVCFunction&lt;M, V, C&gt; handler)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(Class&lt;? extends MVC&gt; mvcType, MVCFunction&lt;M, V, C&gt; handler)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(Class&lt;? extends MVC&gt; mvcType, String mvcId, MVCFunction&lt;M, V, C&gt; handler)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(Class&lt;? extends MVC&gt; mvcType, String mvcId, Map&lt;String, Object&gt; args, MVCFunction&lt;M, V, C&gt; handler)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(Map&lt;String, Object&gt; args, Class&lt;? extends MVC&gt; mvcType, String mvcId, MVCFunction&lt;M, V, C&gt; handler)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(Class&lt;? extends MVC&gt; mvcType, Map&lt;String, Object&gt; args, MVCFunction&lt;M, V, C&gt; handler)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(Map&lt;String, Object&gt; args, Class&lt;? extends MVC&gt; mvcType, MVCFunction&lt;M, V, C&gt; handler)</code></li>
+ * <li><code>public void withMVCGroup(String mvcType, MVCGroupFunction handler)</code></li>
+ * <li><code>public void withMVCGroup(String mvcType, String mvcId, MVCGroupFunction handler)</code></li>
+ * <li><code>public void withMVCGroup(String mvcType, String mvcId, Map&lt;String, Object&gt; args, MVCGroupFunction handler)</code></li>
+ * <li><code>public void withMVCGroup(Map&lt;String, Object&gt; args, String mvcType, String mvcId, MVCGroupFunction handler)</code></li>
+ * <li><code>public void withMVCGroup(String mvcType, Map&lt;String, Object&gt; args, MVCGroupFunction handler)</code></li>
+ * <li><code>public void withMVCGroup(Map&lt;String, Object&gt; args, String mvcType, MVCGroupFunction handler)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup&gt; void withMVCGroup(Class&lt;? extends MVC&gt; mvcType, TypedMVCGroupFunction<MVC> handler)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup&gt; void withMVCGroup(Class&lt;? extends MVC&gt; mvcType, String mvcId, TypedMVCGroupFunction<MVC> handler)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup&gt; void withMVCGroup(Class&lt;? extends MVC&gt; mvcType, String mvcId, Map&lt;String, Object&gt; args, TypedMVCGroupFunction<MVC> handler)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup&gt; void withMVCGroup(Map&lt;String, Object&gt; args, Class&lt;? extends MVC&gt; mvcType, String mvcId, TypedMVCGroupFunction<MVC> handler)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup&gt; void withMVCGroup(Class&lt;? extends MVC&gt; mvcType, Map&lt;String, Object&gt; args, TypedMVCGroupFunction<MVC> handler)</code></li>
+ * <li><code>public &lt;MVC extends TypedMVCGroup&gt; void withMVCGroup(Map&lt;String, Object&gt; args, Class&lt;? extends MVC&gt; mvcType, TypedMVCGroupFunction<MVC> handler)</code></li>
  * </ul>
  *
  * @author Andres Almiray

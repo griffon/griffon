@@ -174,26 +174,53 @@ public class AnnotationUtils {
     }
 
     @Nonnull
+    public static String nameFor(@Nonnull Class<?> klass) {
+        return nameFor(klass, false);
+    }
+
+    @Nonnull
+    public static String nameFor(@Nonnull Class<?> klass, boolean simple) {
+        requireNonNull(klass, ERROR_CLASS_NULL);
+
+        Named annotation = klass.getAnnotation(Named.class);
+        if (annotation != null && !isBlank(annotation.value())) {
+            return annotation.value();
+        } else {
+            return simple ? klass.getSimpleName() : klass.getName();
+        }
+    }
+
+    @Nonnull
     public static String nameFor(@Nonnull Object instance) {
+        return nameFor(instance, false);
+    }
+
+    @Nonnull
+    public static String nameFor(@Nonnull Object instance, boolean simple) {
         requireNonNull(instance, ERROR_INSTANCE_NULL);
 
         Named annotation = instance.getClass().getAnnotation(Named.class);
         if (annotation != null && !isBlank(annotation.value())) {
             return annotation.value();
         } else {
-            return instance.getClass().getName();
+            return simple ? instance.getClass().getSimpleName() : instance.getClass().getName();
         }
     }
 
     @Nonnull
     public static String nameFor(@Nonnull Field field) {
+        return nameFor(field, false);
+    }
+
+    @Nonnull
+    public static String nameFor(@Nonnull Field field, boolean simple) {
         requireNonNull(field, ERROR_FIELD_NULL);
 
         Named annotation = field.getAnnotation(Named.class);
         if (annotation != null && !isBlank(annotation.value())) {
             return annotation.value();
         } else {
-            return field.getType().getName();
+            return simple ? field.getType().getSimpleName() : field.getType().getName();
         }
     }
 

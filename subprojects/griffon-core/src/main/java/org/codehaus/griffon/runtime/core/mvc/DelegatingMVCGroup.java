@@ -13,338 +13,390 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.core.artifact;
+package org.codehaus.griffon.runtime.core.mvc;
 
-import griffon.core.GriffonApplication;
+import griffon.core.Context;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonModel;
 import griffon.core.artifact.GriffonMvcArtifact;
 import griffon.core.artifact.GriffonView;
 import griffon.core.mvc.MVCFunction;
 import griffon.core.mvc.MVCGroup;
+import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.core.mvc.MVCGroupFunction;
 import griffon.core.mvc.TypedMVCGroup;
 import griffon.core.mvc.TypedMVCGroupFunction;
-import griffon.inject.MVCMember;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
 /**
- * Base implementation of the GriffonMvcArtifact interface.
- *
  * @author Andres Almiray
- * @since 2.0.0
+ * @since 2.11.0
  */
-public abstract class AbstractGriffonMvcArtifact extends AbstractGriffonArtifact implements GriffonMvcArtifact {
-    private MVCGroup group;
+public abstract class DelegatingMVCGroup implements MVCGroup {
+    private final MVCGroup delegate;
 
-    public AbstractGriffonMvcArtifact() {
-
-    }
-
-    /**
-     * Creates a new instance of this class.
-     *
-     * @param application the GriffonApplication that holds this artifact.
-     *
-     * @deprecated Griffon prefers field injection over constructor injector for artifacts as of 2.1.0
-     */
-    @Inject
-    @Deprecated
-    public AbstractGriffonMvcArtifact(@Nonnull GriffonApplication application) {
-        super(application);
-    }
-
-    @MVCMember
-    public void setMvcGroup(@Nonnull MVCGroup group) {
-        this.group = requireNonNull(group, "Argument 'group' must not be null");
+    public DelegatingMVCGroup(@Nonnull griffon.core.mvc.MVCGroup delegate) {
+        this.delegate = requireNonNull(delegate, "delegate");
     }
 
     @Nonnull
+    public MVCGroup delegate() {
+        return delegate;
+    }
+
     @Override
-    public MVCGroup getMvcGroup() {
-        return group;
+    @Nonnull
+    public MVCGroupConfiguration getConfiguration() {
+        return delegate.getConfiguration();
     }
 
-    public void mvcGroupInit(@Nonnull Map<String, Object> args) {
-        // empty
+    @Override
+    @Nonnull
+    public String getMvcType() {
+        return delegate.getMvcType();
     }
 
-    public void mvcGroupDestroy() {
-        // empty
+    @Override
+    @Nonnull
+    public String getMvcId() {
+        return delegate.getMvcId();
+    }
+
+    @Override
+    @Nullable
+    public GriffonModel getModel() {
+        return delegate.getModel();
+    }
+
+    @Override
+    @Nullable
+    public GriffonView getView() {
+        return delegate.getView();
+    }
+
+    @Override
+    @Nullable
+    public GriffonController getController() {
+        return delegate.getController();
+    }
+
+    @Override
+    @Nullable
+    public Object getMember(@Nonnull String name) {
+        return delegate.getMember(name);
+    }
+
+    @Override
+    @Nonnull
+    public Map<String, Object> getMembers() {
+        return delegate.getMembers();
+    }
+
+    @Override
+    public void destroy() {
+        delegate.destroy();
+    }
+
+    @Override
+    public boolean isAlive() {
+        return delegate.isAlive();
+    }
+
+    @Override
+    @Nonnull
+    public Context getContext() {
+        return delegate.getContext();
+    }
+
+    @Override
+    @Nullable
+    public griffon.core.mvc.MVCGroup getParentGroup() {
+        return delegate.getParentGroup();
+    }
+
+    @Override
+    @Nonnull
+    public Map<String, MVCGroup> getChildrenGroups() {
+        return delegate.getChildrenGroups();
+    }
+
+    @Override
+    public void notifyMVCGroupDestroyed(@Nonnull String mvcId) {
+        delegate.notifyMVCGroupDestroyed(mvcId);
     }
 
     @Override
     @Nonnull
     public MVCGroup createMVCGroup(@Nonnull String mvcType) {
-        return group.createMVCGroup(mvcType);
+        return delegate.createMVCGroup(mvcType);
     }
 
     @Override
     @Nonnull
     public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId) {
-        return group.createMVCGroup(mvcType, mvcId);
+        return delegate.createMVCGroup(mvcType, mvcId);
     }
 
     @Override
     @Nonnull
     public MVCGroup createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType) {
-        return group.createMVCGroup(args, mvcType);
+        return delegate.createMVCGroup(args, mvcType);
     }
 
     @Override
     @Nonnull
     public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args) {
-        return group.createMVCGroup(mvcType, args);
+        return delegate.createMVCGroup(mvcType, args);
     }
 
     @Override
     @Nonnull
     public MVCGroup createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
-        return group.createMVCGroup(args, mvcType, mvcId);
+        return delegate.createMVCGroup(args, mvcType, mvcId);
     }
 
     @Override
     @Nonnull
     public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
-        return group.createMVCGroup(mvcType, mvcId, args);
+        return delegate.createMVCGroup(mvcType, mvcId, args);
     }
 
     @Override
     @Nonnull
     public <MVC extends TypedMVCGroup> MVC createMVCGroup(@Nonnull Class<? extends MVC> mvcType) {
-        return group.createMVCGroup(mvcType);
+        return delegate.createMVCGroup(mvcType);
     }
 
     @Override
     @Nonnull
     public <MVC extends TypedMVCGroup> MVC createMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId) {
-        return group.createMVCGroup(mvcType, mvcId);
+        return delegate.createMVCGroup(mvcType, mvcId);
     }
 
     @Override
     @Nonnull
     public <MVC extends TypedMVCGroup> MVC createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType) {
-        return group.createMVCGroup(args, mvcType);
+        return delegate.createMVCGroup(args, mvcType);
     }
 
     @Override
     @Nonnull
     public <MVC extends TypedMVCGroup> MVC createMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull Map<String, Object> args) {
-        return group.createMVCGroup(mvcType, args);
+        return delegate.createMVCGroup(mvcType, args);
     }
 
     @Override
     @Nonnull
     public <MVC extends TypedMVCGroup> MVC createMVCGroup(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId) {
-        return group.createMVCGroup(args, mvcType, mvcId);
+        return delegate.createMVCGroup(args, mvcType, mvcId);
     }
 
     @Override
     @Nonnull
     public <MVC extends TypedMVCGroup> MVC createMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
-        return group.createMVCGroup(mvcType, mvcId, args);
+        return delegate.createMVCGroup(mvcType, mvcId, args);
     }
 
     @Override
     @Nonnull
     public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType) {
-        return group.createMVC(mvcType);
+        return delegate.createMVC(mvcType);
     }
 
     @Override
     @Nonnull
     public List<? extends GriffonMvcArtifact> createMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType) {
-        return group.createMVC(args, mvcType);
+        return delegate.createMVC(args, mvcType);
     }
 
     @Override
     @Nonnull
     public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull Map<String, Object> args) {
-        return group.createMVC(mvcType, args);
+        return delegate.createMVC(mvcType, args);
     }
 
     @Override
     @Nonnull
     public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull String mvcId) {
-        return group.createMVC(mvcType, mvcId);
+        return delegate.createMVC(mvcType, mvcId);
     }
 
     @Override
     @Nonnull
     public List<? extends GriffonMvcArtifact> createMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId) {
-        return group.createMVC(args, mvcType, mvcId);
+        return delegate.createMVC(args, mvcType, mvcId);
     }
 
     @Override
     @Nonnull
     public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
-        return group.createMVC(mvcType, mvcId, args);
+        return delegate.createMVC(mvcType, mvcId, args);
     }
 
     @Override
     @Nonnull
     public <MVC extends TypedMVCGroup> List<? extends GriffonMvcArtifact> createMVC(@Nonnull Class<? extends MVC> mvcType) {
-        return group.createMVC(mvcType);
+        return delegate.createMVC(mvcType);
     }
 
     @Override
     @Nonnull
     public <MVC extends TypedMVCGroup> List<? extends GriffonMvcArtifact> createMVC(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType) {
-        return group.createMVC(args, mvcType);
+        return delegate.createMVC(args, mvcType);
     }
 
     @Override
     @Nonnull
     public <MVC extends TypedMVCGroup> List<? extends GriffonMvcArtifact> createMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull Map<String, Object> args) {
-        return group.createMVC(mvcType, args);
+        return delegate.createMVC(mvcType, args);
     }
 
     @Override
     @Nonnull
     public <MVC extends TypedMVCGroup> List<? extends GriffonMvcArtifact> createMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId) {
-        return group.createMVC(mvcType, mvcId);
+        return delegate.createMVC(mvcType, mvcId);
     }
 
     @Override
     @Nonnull
     public <MVC extends TypedMVCGroup> List<? extends GriffonMvcArtifact> createMVC(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId) {
-        return group.createMVC(args, mvcType, mvcId);
+        return delegate.createMVC(args, mvcType, mvcId);
     }
 
     @Override
     @Nonnull
     public <MVC extends TypedMVCGroup> List<? extends GriffonMvcArtifact> createMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args) {
-        return group.createMVC(mvcType, mvcId, args);
+        return delegate.createMVC(mvcType, mvcId, args);
     }
 
     @Override
     public void destroyMVCGroup(@Nonnull String mvcId) {
-        group.destroyMVCGroup(mvcId);
+        delegate.destroyMVCGroup(mvcId);
     }
 
     @Override
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull MVCFunction<M, V, C> handler) {
-        group.withMVC(mvcType, handler);
+        delegate.withMVC(mvcType, handler);
     }
 
     @Override
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCFunction<M, V, C> handler) {
-        group.withMVC(mvcType, mvcId, handler);
+        delegate.withMVC(mvcType, mvcId, handler);
     }
 
     @Override
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCFunction<M, V, C> handler) {
-        group.withMVC(mvcType, mvcId, args, handler);
+        delegate.withMVC(mvcType, mvcId, args, handler);
     }
 
     @Override
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCFunction<M, V, C> handler) {
-        group.withMVC(args, mvcType, mvcId, handler);
+        delegate.withMVC(args, mvcType, mvcId, handler);
     }
 
     @Override
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCFunction<M, V, C> handler) {
-        group.withMVC(mvcType, args, handler);
+        delegate.withMVC(mvcType, args, handler);
     }
 
     @Override
     public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCFunction<M, V, C> handler) {
-        group.withMVC(args, mvcType, handler);
+        delegate.withMVC(args, mvcType, handler);
     }
 
     @Override
     public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull MVCFunction<M, V, C> handler) {
-        group.withMVC(mvcType, handler);
+        delegate.withMVC(mvcType, handler);
     }
 
     @Override
     public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull MVCFunction<M, V, C> handler) {
-        group.withMVC(mvcType, mvcId, handler);
+        delegate.withMVC(mvcType, mvcId, handler);
     }
 
     @Override
     public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCFunction<M, V, C> handler) {
-        group.withMVC(mvcType, mvcId, args, handler);
+        delegate.withMVC(mvcType, mvcId, args, handler);
     }
 
     @Override
     public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull MVCFunction<M, V, C> handler) {
-        group.withMVC(args, mvcType, mvcId, handler);
+        delegate.withMVC(args, mvcType, mvcId, handler);
     }
 
     @Override
     public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCFunction<M, V, C> handler) {
-        group.withMVC(mvcType, args, handler);
+        delegate.withMVC(mvcType, args, handler);
     }
 
     @Override
     public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType, @Nonnull MVCFunction<M, V, C> handler) {
-        group.withMVC(args, mvcType, handler);
+        delegate.withMVC(args, mvcType, handler);
     }
 
     @Override
     public void withMVCGroup(@Nonnull String mvcType, @Nonnull MVCGroupFunction handler) {
-        group.withMVCGroup(mvcType, handler);
+        delegate.withMVCGroup(mvcType, handler);
     }
 
     @Override
     public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupFunction handler) {
-        group.withMVCGroup(mvcType, mvcId, handler);
+        delegate.withMVCGroup(mvcType, mvcId, handler);
     }
 
     @Override
     public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCGroupFunction handler) {
-        group.withMVCGroup(mvcType, mvcId, args, handler);
+        delegate.withMVCGroup(mvcType, mvcId, args, handler);
     }
 
     @Override
     public void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupFunction handler) {
-        group.withMVCGroup(args, mvcType, mvcId, handler);
+        delegate.withMVCGroup(args, mvcType, mvcId, handler);
     }
 
     @Override
     public void withMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCGroupFunction handler) {
-        group.withMVCGroup(mvcType, args, handler);
+        delegate.withMVCGroup(mvcType, args, handler);
     }
 
     @Override
     public void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCGroupFunction handler) {
-        group.withMVCGroup(args, mvcType, handler);
+        delegate.withMVCGroup(args, mvcType, handler);
     }
 
     @Override
     public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull TypedMVCGroupFunction<MVC> handler) {
-        group.withMVCGroup(mvcType, handler);
+        delegate.withMVCGroup(mvcType, handler);
     }
 
     @Override
     public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull TypedMVCGroupFunction<MVC> handler) {
-        group.withMVCGroup(mvcType, mvcId, handler);
+        delegate.withMVCGroup(mvcType, mvcId, handler);
     }
 
     @Override
     public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull TypedMVCGroupFunction<MVC> handler) {
-        group.withMVCGroup(mvcType, mvcId, args, handler);
+        delegate.withMVCGroup(mvcType, mvcId, args, handler);
     }
 
     @Override
     public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull TypedMVCGroupFunction<MVC> handler) {
-        group.withMVCGroup(args, mvcType, mvcId, handler);
+        delegate.withMVCGroup(args, mvcType, mvcId, handler);
     }
 
     @Override
     public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull Map<String, Object> args, @Nonnull TypedMVCGroupFunction<MVC> handler) {
-        group.withMVCGroup(mvcType, args, handler);
+        delegate.withMVCGroup(mvcType, args, handler);
     }
 
     @Override
     public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType, @Nonnull TypedMVCGroupFunction<MVC> handler) {
-        group.withMVCGroup(args, mvcType, handler);
+        delegate.withMVCGroup(args, mvcType, handler);
     }
 }

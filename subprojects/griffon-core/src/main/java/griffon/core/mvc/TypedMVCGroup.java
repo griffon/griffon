@@ -15,19 +15,26 @@
  */
 package griffon.core.mvc;
 
-import javax.annotation.Nullable;
+import griffon.core.artifact.GriffonController;
+import griffon.core.artifact.GriffonModel;
+import griffon.core.artifact.GriffonView;
+
+import javax.annotation.Nonnull;
 
 /**
- * An specialized function for working with MVC groups.
- *
  * @author Andres Almiray
- * @since 2.1.0
+ * @since 2.11.0
  */
-public interface MVCGroupFunction {
-    /**
-     * Applies this function<p>
-     *
-     * @param group the MVC group
-     */
-    void apply(@Nullable MVCGroup group);
+public interface TypedMVCGroup<M extends GriffonModel, V extends GriffonView, C extends GriffonController> extends MVCGroup {
+    @Nonnull
+    M model();
+
+    @Nonnull
+    V view();
+
+    @Nonnull
+    C controller();
+
+    @Nonnull
+    MVCGroup delegate();
 }

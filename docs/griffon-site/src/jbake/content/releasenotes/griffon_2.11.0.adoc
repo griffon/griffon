@@ -117,6 +117,53 @@ class SampleModel {
 Values will be injected before `@PostConstruct` is triggered on the managed bean. Type conversion will be carried out
 using property editors.
 
+==== Typed MVCGroup support
+
+It's now possible to define typed MVC groups. This feature assumes the MVC group has the required `Model`, `View`, and
+`Controller` members; it won't work for groups that define less than these 3 members. For example
+
+[source,java,linenums,options="nowrap"]
+.src/main/java/org/example/FooMVCGroup.java
+----
+package org.example;
+
+import javax.inject.Named;
+import griffon.core.mvc.MVCGroup;
+import org.codehaus.griffon.runtime.core.mvc.AbstractTypedMVCGroup;
+
+@Named("foo")
+public class FooMVCGroup extends AbstractTypedMVCGroup<FooModel, FooView, FooController> {
+    public FooMVCGroup(MVCGroup delegate) {
+        super(delegate);
+    }
+}
+----
+
+Instances of this group can be created as follows
+
+[source,java,linenums,options="nowrap"]
+----
+FooMVCGroup fooGroup1 = createMVCGroup(FooMVCGroup.class);
+FooMVCGroup fooGroup2 = createMVCGroup(FooMVCGroup.class, "foo2");
+----
+
+You may refer to the exact types of each MVC member using a typed MVC group, for exammple
+
+[source,java,linenums,options="nowrap"]
+----
+FooMVCGroup fooGroup = createMVCGroup(FooMVCGroup.class);
+fooGroup.model().setSomeProperty("value"); // returned model type is FooModel
+
+// the following won't even compile
+MVCGroup mvcGroup = createMVCGroup("foo");
+mvcGroup.getModel().setSomeProperty("value"); // returned model type is GriffonModel !!
+----
+
+==== JavaFX Support
+
+Two new widgets are now available: `IndexedCardPane` and `NamedCardPane`. They provide similar capabilities as the ones
+found in `java.awt.CardLayout`. The first widget stores its children using an indexed `List` while the second widget
+uses "keys" instead of indexes.
 
 === Buildtime
 

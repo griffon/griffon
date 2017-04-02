@@ -33,10 +33,12 @@ public interface MVCAwareConstants extends BaseConstants {
     String MVC_GROUP_MANAGER_PROPERTY = "mvcGroupManager";
     String MVC_FUNCTION_TYPE = "griffon.core.mvc.MVCFunction";
     String MVC_GROUP_FUNCTION_TYPE = "griffon.core.mvc.MVCGroupFunction";
+    String TYPED_MVC_GROUP_FUNCTION_TYPE = "griffon.core.mvc.TypedMVCGroupFunction";
     String GRIFFON_MODEL_TYPE = "griffon.core.artifact.GriffonModel";
     String GRIFFON_VIEW_TYPE = "griffon.core.artifact.GriffonView";
     String GRIFFON_CONTROLLER_TYPE = "griffon.core.artifact.GriffonController";
     String MVC_GROUP = "griffon.core.mvc.MVCGroup";
+    String TYPED_MVC_GROUP = "griffon.core.mvc.TypedMVCGroup";
     String MVC_HANDLER_TYPE = "griffon.core.mvc.MVCHandler";
     String MVC_GROUP_MANAGER_TYPE = "griffon.core.mvc.MVCGroupManager";
     String GRIFFON_MVC_ARTIFACT_TYPE = "griffon.core.artifact.GriffonMvcArtifact";
@@ -50,6 +52,7 @@ public interface MVCAwareConstants extends BaseConstants {
     String M = "M";
     String V = "V";
     String C = "C";
+    String MVC = "MVC";
 
     MethodDescriptor[] METHODS = new MethodDescriptor[]{
         method(
@@ -106,6 +109,59 @@ public interface MVCAwareConstants extends BaseConstants {
 
         annotatedMethod(
             annotations(JAVAX_ANNOTATION_NONNULL),
+            type(MVC),
+            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
+            METHOD_CREATE_MVC_GROUP,
+            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC))
+        ),
+        annotatedMethod(
+            annotations(JAVAX_ANNOTATION_NONNULL),
+            type(MVC),
+            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
+            METHOD_CREATE_MVC_GROUP,
+            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC), type(JAVA_LANG_STRING))
+        ),
+        annotatedMethod(
+            annotations(JAVAX_ANNOTATION_NONNULL),
+            type(MVC),
+            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
+            METHOD_CREATE_MVC_GROUP,
+            args(
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC))
+        ),
+        annotatedMethod(
+            annotations(JAVAX_ANNOTATION_NONNULL),
+            type(MVC),
+            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
+            METHOD_CREATE_MVC_GROUP,
+            args(
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
+        ),
+        annotatedMethod(
+            annotations(JAVAX_ANNOTATION_NONNULL),
+            type(MVC),
+            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
+            METHOD_CREATE_MVC_GROUP,
+            args(
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
+        ),
+        annotatedMethod(
+            annotations(JAVAX_ANNOTATION_NONNULL),
+            type(MVC),
+            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
+            METHOD_CREATE_MVC_GROUP,
+            args(
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
+        ),
+
+        annotatedMethod(
+            annotations(JAVAX_ANNOTATION_NONNULL),
             typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),
             METHOD_CREATE_MVC,
             args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
@@ -235,6 +291,92 @@ public interface MVCAwareConstants extends BaseConstants {
 
         method(
             type(VOID),
+            typeParams(
+                typeParam(MVC, TYPED_MVC_GROUP),
+                typeParam(M, GRIFFON_MODEL_TYPE),
+                typeParam(V, GRIFFON_VIEW_TYPE),
+                typeParam(C, GRIFFON_CONTROLLER_TYPE)
+            ),
+            METHOD_WITH_MVC,
+            args(
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
+        ),
+        method(
+            type(VOID),
+            typeParams(
+                typeParam(MVC, TYPED_MVC_GROUP),
+                typeParam(M, GRIFFON_MODEL_TYPE),
+                typeParam(V, GRIFFON_VIEW_TYPE),
+                typeParam(C, GRIFFON_CONTROLLER_TYPE)
+            ),
+            METHOD_WITH_MVC,
+            args(
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
+        ),
+        method(
+            type(VOID),
+            typeParams(
+                typeParam(MVC, TYPED_MVC_GROUP),
+                typeParam(M, GRIFFON_MODEL_TYPE),
+                typeParam(V, GRIFFON_VIEW_TYPE),
+                typeParam(C, GRIFFON_CONTROLLER_TYPE)
+            ),
+            METHOD_WITH_MVC,
+            args(
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
+        ),
+        method(
+            type(VOID),
+            typeParams(
+                typeParam(MVC, TYPED_MVC_GROUP),
+                typeParam(M, GRIFFON_MODEL_TYPE),
+                typeParam(V, GRIFFON_VIEW_TYPE),
+                typeParam(C, GRIFFON_CONTROLLER_TYPE)
+            ),
+            METHOD_WITH_MVC,
+            args(
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
+        ),
+        method(
+            type(VOID),
+            typeParams(
+                typeParam(MVC, TYPED_MVC_GROUP),
+                typeParam(M, GRIFFON_MODEL_TYPE),
+                typeParam(V, GRIFFON_VIEW_TYPE),
+                typeParam(C, GRIFFON_CONTROLLER_TYPE)
+            ),
+            METHOD_WITH_MVC,
+            args(
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
+        ),
+        method(
+            type(VOID),
+            typeParams(
+                typeParam(MVC, TYPED_MVC_GROUP),
+                typeParam(M, GRIFFON_MODEL_TYPE),
+                typeParam(V, GRIFFON_VIEW_TYPE),
+                typeParam(C, GRIFFON_CONTROLLER_TYPE)
+            ),
+            METHOD_WITH_MVC,
+            args(
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
+        ),
+
+        method(
+            type(VOID),
             METHOD_WITH_MVC_GROUP,
             args(
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
@@ -281,6 +423,62 @@ public interface MVCAwareConstants extends BaseConstants {
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))
+        ),
+
+        method(
+            type(VOID),
+            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
+            METHOD_WITH_MVC_GROUP,
+            args(
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), TYPED_MVC_GROUP_FUNCTION_TYPE, MVC))
+        ),
+        method(
+            type(VOID),
+            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
+            METHOD_WITH_MVC_GROUP,
+            args(
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), TYPED_MVC_GROUP_FUNCTION_TYPE, MVC))
+        ),
+        method(
+            type(VOID),
+            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
+            METHOD_WITH_MVC_GROUP,
+            args(
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), TYPED_MVC_GROUP_FUNCTION_TYPE, MVC))
+        ),
+        method(
+            type(VOID),
+            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
+            METHOD_WITH_MVC_GROUP,
+            args(
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), TYPED_MVC_GROUP_FUNCTION_TYPE, MVC))
+        ),
+        method(
+            type(VOID),
+            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
+            METHOD_WITH_MVC_GROUP,
+            args(
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), TYPED_MVC_GROUP_FUNCTION_TYPE, MVC))
+        ),
+        method(
+            type(VOID),
+            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
+            METHOD_WITH_MVC_GROUP,
+            args(
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), TYPED_MVC_GROUP_FUNCTION_TYPE, MVC))
         )
     };
 }
