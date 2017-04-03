@@ -33,10 +33,12 @@ public interface MVCAwareConstants extends BaseConstants {
     String MVC_GROUP_MANAGER_PROPERTY = &quot;mvcGroupManager&quot;;
     String MVC_FUNCTION_TYPE = &quot;griffon.core.mvc.MVCFunction&quot;;
     String MVC_GROUP_FUNCTION_TYPE = &quot;griffon.core.mvc.MVCGroupFunction&quot;;
+    String TYPED_MVC_GROUP_FUNCTION_TYPE = &quot;griffon.core.mvc.TypedMVCGroupFunction&quot;;
     String GRIFFON_MODEL_TYPE = &quot;griffon.core.artifact.GriffonModel&quot;;
     String GRIFFON_VIEW_TYPE = &quot;griffon.core.artifact.GriffonView&quot;;
     String GRIFFON_CONTROLLER_TYPE = &quot;griffon.core.artifact.GriffonController&quot;;
     String MVC_GROUP = &quot;griffon.core.mvc.MVCGroup&quot;;
+    String TYPED_MVC_GROUP = &quot;griffon.core.mvc.TypedMVCGroup&quot;;
     String MVC_HANDLER_TYPE = &quot;griffon.core.mvc.MVCHandler&quot;;
     String MVC_GROUP_MANAGER_TYPE = &quot;griffon.core.mvc.MVCGroupManager&quot;;
     String GRIFFON_MVC_ARTIFACT_TYPE = &quot;griffon.core.artifact.GriffonMvcArtifact&quot;;
@@ -50,237 +52,433 @@ public interface MVCAwareConstants extends BaseConstants {
     String M = &quot;M&quot;;
     String V = &quot;V&quot;;
     String C = &quot;C&quot;;
+    String MVC = &quot;MVC&quot;;
 
-<span class="fc" id="L54">    MethodDescriptor[] METHODS = new MethodDescriptor[]{</span>
-<span class="fc" id="L55">        method(</span>
-<span class="fc" id="L56">            type(VOID),</span>
+<span class="fc" id="L57">    MethodDescriptor[] METHODS = new MethodDescriptor[]{</span>
+<span class="fc" id="L58">        method(</span>
+<span class="fc" id="L59">            type(VOID),</span>
             METHOD_DESTROY_MVC_GROUP,
-<span class="fc" id="L58">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
+<span class="fc" id="L61">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
         ),
-<span class="fc" id="L60">        annotatedMethod(</span>
-<span class="fc" id="L61">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
-<span class="fc" id="L62">            type(MVC_GROUP),</span>
+<span class="fc" id="L63">        annotatedMethod(</span>
+<span class="fc" id="L64">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="fc" id="L65">            type(MVC_GROUP),</span>
             METHOD_CREATE_MVC_GROUP,
-<span class="fc" id="L64">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
+<span class="fc" id="L67">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
         ),
-<span class="fc" id="L66">        annotatedMethod(</span>
-<span class="fc" id="L67">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
-<span class="fc" id="L68">            type(MVC_GROUP),</span>
+<span class="fc" id="L69">        annotatedMethod(</span>
+<span class="fc" id="L70">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="fc" id="L71">            type(MVC_GROUP),</span>
             METHOD_CREATE_MVC_GROUP,
-<span class="fc" id="L70">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING), type(JAVA_LANG_STRING))</span>
+<span class="fc" id="L73">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING), type(JAVA_LANG_STRING))</span>
         ),
-<span class="fc" id="L72">        annotatedMethod(</span>
-<span class="fc" id="L73">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
-<span class="fc" id="L74">            type(MVC_GROUP),</span>
+<span class="fc" id="L75">        annotatedMethod(</span>
+<span class="fc" id="L76">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="fc" id="L77">            type(MVC_GROUP),</span>
             METHOD_CREATE_MVC_GROUP,
-<span class="fc" id="L76">            args(</span>
-<span class="fc" id="L77">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
-<span class="fc" id="L78">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
+<span class="fc" id="L79">            args(</span>
+<span class="fc" id="L80">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
+<span class="fc" id="L81">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
         ),
-<span class="fc" id="L80">        annotatedMethod(</span>
-<span class="fc" id="L81">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
-<span class="fc" id="L82">            type(MVC_GROUP),</span>
+<span class="fc" id="L83">        annotatedMethod(</span>
+<span class="fc" id="L84">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="fc" id="L85">            type(MVC_GROUP),</span>
             METHOD_CREATE_MVC_GROUP,
-<span class="fc" id="L84">            args(</span>
-<span class="fc" id="L85">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L86">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))</span>
+<span class="fc" id="L87">            args(</span>
+<span class="fc" id="L88">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L89">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))</span>
         ),
-<span class="fc" id="L88">        annotatedMethod(</span>
-<span class="fc" id="L89">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
-<span class="fc" id="L90">            type(MVC_GROUP),</span>
+<span class="fc" id="L91">        annotatedMethod(</span>
+<span class="fc" id="L92">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="fc" id="L93">            type(MVC_GROUP),</span>
             METHOD_CREATE_MVC_GROUP,
-<span class="fc" id="L92">            args(</span>
-<span class="fc" id="L93">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
-<span class="fc" id="L94">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L95">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
+<span class="fc" id="L95">            args(</span>
+<span class="fc" id="L96">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
+<span class="fc" id="L97">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L98">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
         ),
-<span class="fc" id="L97">        annotatedMethod(</span>
-<span class="fc" id="L98">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
-<span class="fc" id="L99">            type(MVC_GROUP),</span>
+<span class="fc" id="L100">        annotatedMethod(</span>
+<span class="fc" id="L101">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="fc" id="L102">            type(MVC_GROUP),</span>
             METHOD_CREATE_MVC_GROUP,
-<span class="fc" id="L101">            args(</span>
-<span class="fc" id="L102">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L103">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L104">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))</span>
+<span class="fc" id="L104">            args(</span>
+<span class="fc" id="L105">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L106">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L107">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))</span>
         ),
 
-<span class="fc" id="L107">        annotatedMethod(</span>
-<span class="fc" id="L108">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
-<span class="fc" id="L109">            typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),</span>
-            METHOD_CREATE_MVC,
-<span class="fc" id="L111">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
+<span class="fc" id="L110">        annotatedMethod(</span>
+<span class="fc" id="L111">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="fc" id="L112">            type(MVC),</span>
+<span class="fc" id="L113">            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),</span>
+            METHOD_CREATE_MVC_GROUP,
+<span class="fc" id="L115">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC))</span>
         ),
-<span class="fc" id="L113">        annotatedMethod(</span>
-<span class="fc" id="L114">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
-<span class="fc" id="L115">            typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),</span>
-            METHOD_CREATE_MVC,
-<span class="fc" id="L117">            args(</span>
-<span class="fc" id="L118">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
-<span class="fc" id="L119">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
+<span class="fc" id="L117">        annotatedMethod(</span>
+<span class="fc" id="L118">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="fc" id="L119">            type(MVC),</span>
+<span class="fc" id="L120">            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),</span>
+            METHOD_CREATE_MVC_GROUP,
+<span class="fc" id="L122">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC), type(JAVA_LANG_STRING))</span>
         ),
-<span class="fc" id="L121">        annotatedMethod(</span>
-<span class="fc" id="L122">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
-<span class="fc" id="L123">            typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),</span>
-            METHOD_CREATE_MVC,
-<span class="fc" id="L125">            args(</span>
-<span class="fc" id="L126">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L127">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))</span>
+<span class="fc" id="L124">        annotatedMethod(</span>
+<span class="fc" id="L125">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="fc" id="L126">            type(MVC),</span>
+<span class="fc" id="L127">            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),</span>
+            METHOD_CREATE_MVC_GROUP,
+<span class="fc" id="L129">            args(</span>
+<span class="fc" id="L130">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
+<span class="fc" id="L131">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC))</span>
         ),
-<span class="fc" id="L129">        annotatedMethod(</span>
-<span class="fc" id="L130">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
-<span class="fc" id="L131">            typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),</span>
-            METHOD_CREATE_MVC,
-<span class="fc" id="L133">            args(</span>
-<span class="fc" id="L134">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L135">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
+<span class="fc" id="L133">        annotatedMethod(</span>
+<span class="fc" id="L134">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="fc" id="L135">            type(MVC),</span>
+<span class="fc" id="L136">            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),</span>
+            METHOD_CREATE_MVC_GROUP,
+<span class="fc" id="L138">            args(</span>
+<span class="fc" id="L139">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),</span>
+<span class="fc" id="L140">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))</span>
         ),
-<span class="fc" id="L137">        annotatedMethod(</span>
-<span class="fc" id="L138">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
-<span class="fc" id="L139">            typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),</span>
-            METHOD_CREATE_MVC,
-<span class="fc" id="L141">            args(</span>
-<span class="fc" id="L142">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
-<span class="fc" id="L143">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L144">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
+<span class="fc" id="L142">        annotatedMethod(</span>
+<span class="fc" id="L143">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="fc" id="L144">            type(MVC),</span>
+<span class="fc" id="L145">            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),</span>
+            METHOD_CREATE_MVC_GROUP,
+<span class="fc" id="L147">            args(</span>
+<span class="fc" id="L148">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
+<span class="fc" id="L149">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),</span>
+<span class="fc" id="L150">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
         ),
-<span class="fc" id="L146">        annotatedMethod(</span>
-<span class="fc" id="L147">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
-<span class="fc" id="L148">            typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),</span>
-            METHOD_CREATE_MVC,
-<span class="fc" id="L150">            args(</span>
-<span class="fc" id="L151">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L152">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L153">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))</span>
+<span class="fc" id="L152">        annotatedMethod(</span>
+<span class="fc" id="L153">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="fc" id="L154">            type(MVC),</span>
+<span class="fc" id="L155">            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),</span>
+            METHOD_CREATE_MVC_GROUP,
+<span class="fc" id="L157">            args(</span>
+<span class="fc" id="L158">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),</span>
+<span class="fc" id="L159">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L160">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))</span>
         ),
 
-<span class="fc" id="L156">        method(</span>
-<span class="fc" id="L157">            type(VOID),</span>
-<span class="fc" id="L158">            typeParams(</span>
-<span class="fc" id="L159">                typeParam(M, GRIFFON_MODEL_TYPE),</span>
-<span class="fc" id="L160">                typeParam(V, GRIFFON_VIEW_TYPE),</span>
-<span class="fc" id="L161">                typeParam(C, GRIFFON_CONTROLLER_TYPE)</span>
-            ),
-            METHOD_WITH_MVC,
-<span class="fc" id="L164">            args(</span>
-<span class="fc" id="L165">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L166">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))</span>
+<span class="fc" id="L163">        annotatedMethod(</span>
+<span class="fc" id="L164">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="fc" id="L165">            typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),</span>
+            METHOD_CREATE_MVC,
+<span class="fc" id="L167">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
         ),
-<span class="fc" id="L168">        method(</span>
-<span class="fc" id="L169">            type(VOID),</span>
-<span class="fc" id="L170">            typeParams(</span>
-<span class="fc" id="L171">                typeParam(M, GRIFFON_MODEL_TYPE),</span>
-<span class="fc" id="L172">                typeParam(V, GRIFFON_VIEW_TYPE),</span>
-<span class="fc" id="L173">                typeParam(C, GRIFFON_CONTROLLER_TYPE)</span>
-            ),
-            METHOD_WITH_MVC,
-<span class="fc" id="L176">            args(</span>
-<span class="fc" id="L177">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L178">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L179">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))</span>
+<span class="fc" id="L169">        annotatedMethod(</span>
+<span class="fc" id="L170">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="fc" id="L171">            typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),</span>
+            METHOD_CREATE_MVC,
+<span class="fc" id="L173">            args(</span>
+<span class="fc" id="L174">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
+<span class="fc" id="L175">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
         ),
-<span class="fc" id="L181">        method(</span>
-<span class="fc" id="L182">            type(VOID),</span>
-<span class="fc" id="L183">            typeParams(</span>
-<span class="fc" id="L184">                typeParam(M, GRIFFON_MODEL_TYPE),</span>
-<span class="fc" id="L185">                typeParam(V, GRIFFON_VIEW_TYPE),</span>
-<span class="fc" id="L186">                typeParam(C, GRIFFON_CONTROLLER_TYPE)</span>
-            ),
-            METHOD_WITH_MVC,
+<span class="fc" id="L177">        annotatedMethod(</span>
+<span class="fc" id="L178">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="fc" id="L179">            typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),</span>
+            METHOD_CREATE_MVC,
+<span class="fc" id="L181">            args(</span>
+<span class="fc" id="L182">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L183">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))</span>
+        ),
+<span class="fc" id="L185">        annotatedMethod(</span>
+<span class="fc" id="L186">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="fc" id="L187">            typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),</span>
+            METHOD_CREATE_MVC,
 <span class="fc" id="L189">            args(</span>
 <span class="fc" id="L190">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L191">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L192">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
-<span class="fc" id="L193">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))</span>
+<span class="fc" id="L191">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
         ),
-<span class="fc" id="L195">        method(</span>
-<span class="fc" id="L196">            type(VOID),</span>
-<span class="fc" id="L197">            typeParams(</span>
-<span class="fc" id="L198">                typeParam(M, GRIFFON_MODEL_TYPE),</span>
-<span class="fc" id="L199">                typeParam(V, GRIFFON_VIEW_TYPE),</span>
-<span class="fc" id="L200">                typeParam(C, GRIFFON_CONTROLLER_TYPE)</span>
-            ),
-            METHOD_WITH_MVC,
-<span class="fc" id="L203">            args(</span>
-<span class="fc" id="L204">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
-<span class="fc" id="L205">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L206">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L207">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))</span>
+<span class="fc" id="L193">        annotatedMethod(</span>
+<span class="fc" id="L194">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="fc" id="L195">            typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),</span>
+            METHOD_CREATE_MVC,
+<span class="fc" id="L197">            args(</span>
+<span class="fc" id="L198">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
+<span class="fc" id="L199">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L200">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))</span>
         ),
-<span class="fc" id="L209">        method(</span>
-<span class="fc" id="L210">            type(VOID),</span>
-<span class="fc" id="L211">            typeParams(</span>
-<span class="fc" id="L212">                typeParam(M, GRIFFON_MODEL_TYPE),</span>
-<span class="fc" id="L213">                typeParam(V, GRIFFON_VIEW_TYPE),</span>
-<span class="fc" id="L214">                typeParam(C, GRIFFON_CONTROLLER_TYPE)</span>
-            ),
-            METHOD_WITH_MVC,
-<span class="fc" id="L217">            args(</span>
-<span class="fc" id="L218">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L219">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
-<span class="fc" id="L220">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))</span>
-        ),
-<span class="fc" id="L222">        method(</span>
-<span class="fc" id="L223">            type(VOID),</span>
-<span class="fc" id="L224">            typeParams(</span>
-<span class="fc" id="L225">                typeParam(M, GRIFFON_MODEL_TYPE),</span>
-<span class="fc" id="L226">                typeParam(V, GRIFFON_VIEW_TYPE),</span>
-<span class="fc" id="L227">                typeParam(C, GRIFFON_CONTROLLER_TYPE)</span>
-            ),
-            METHOD_WITH_MVC,
-<span class="fc" id="L230">            args(</span>
-<span class="fc" id="L231">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
-<span class="fc" id="L232">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L233">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))</span>
+<span class="fc" id="L202">        annotatedMethod(</span>
+<span class="fc" id="L203">            annotations(JAVAX_ANNOTATION_NONNULL),</span>
+<span class="fc" id="L204">            typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),</span>
+            METHOD_CREATE_MVC,
+<span class="fc" id="L206">            args(</span>
+<span class="fc" id="L207">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L208">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L209">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))</span>
         ),
 
-<span class="fc" id="L236">        method(</span>
-<span class="fc" id="L237">            type(VOID),</span>
-            METHOD_WITH_MVC_GROUP,
-<span class="fc" id="L239">            args(</span>
-<span class="fc" id="L240">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L241">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))</span>
+<span class="fc" id="L212">        method(</span>
+<span class="fc" id="L213">            type(VOID),</span>
+<span class="fc" id="L214">            typeParams(</span>
+<span class="fc" id="L215">                typeParam(M, GRIFFON_MODEL_TYPE),</span>
+<span class="fc" id="L216">                typeParam(V, GRIFFON_VIEW_TYPE),</span>
+<span class="fc" id="L217">                typeParam(C, GRIFFON_CONTROLLER_TYPE)</span>
+            ),
+            METHOD_WITH_MVC,
+<span class="fc" id="L220">            args(</span>
+<span class="fc" id="L221">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L222">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))</span>
         ),
-<span class="fc" id="L243">        method(</span>
-<span class="fc" id="L244">            type(VOID),</span>
-            METHOD_WITH_MVC_GROUP,
-<span class="fc" id="L246">            args(</span>
+<span class="fc" id="L224">        method(</span>
+<span class="fc" id="L225">            type(VOID),</span>
+<span class="fc" id="L226">            typeParams(</span>
+<span class="fc" id="L227">                typeParam(M, GRIFFON_MODEL_TYPE),</span>
+<span class="fc" id="L228">                typeParam(V, GRIFFON_VIEW_TYPE),</span>
+<span class="fc" id="L229">                typeParam(C, GRIFFON_CONTROLLER_TYPE)</span>
+            ),
+            METHOD_WITH_MVC,
+<span class="fc" id="L232">            args(</span>
+<span class="fc" id="L233">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L234">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L235">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))</span>
+        ),
+<span class="fc" id="L237">        method(</span>
+<span class="fc" id="L238">            type(VOID),</span>
+<span class="fc" id="L239">            typeParams(</span>
+<span class="fc" id="L240">                typeParam(M, GRIFFON_MODEL_TYPE),</span>
+<span class="fc" id="L241">                typeParam(V, GRIFFON_VIEW_TYPE),</span>
+<span class="fc" id="L242">                typeParam(C, GRIFFON_CONTROLLER_TYPE)</span>
+            ),
+            METHOD_WITH_MVC,
+<span class="fc" id="L245">            args(</span>
+<span class="fc" id="L246">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
 <span class="fc" id="L247">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L248">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L249">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))</span>
+<span class="fc" id="L248">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
+<span class="fc" id="L249">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))</span>
         ),
 <span class="fc" id="L251">        method(</span>
 <span class="fc" id="L252">            type(VOID),</span>
-            METHOD_WITH_MVC_GROUP,
-<span class="fc" id="L254">            args(</span>
-<span class="fc" id="L255">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L256">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L257">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
-<span class="fc" id="L258">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))</span>
+<span class="fc" id="L253">            typeParams(</span>
+<span class="fc" id="L254">                typeParam(M, GRIFFON_MODEL_TYPE),</span>
+<span class="fc" id="L255">                typeParam(V, GRIFFON_VIEW_TYPE),</span>
+<span class="fc" id="L256">                typeParam(C, GRIFFON_CONTROLLER_TYPE)</span>
+            ),
+            METHOD_WITH_MVC,
+<span class="fc" id="L259">            args(</span>
+<span class="fc" id="L260">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
+<span class="fc" id="L261">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L262">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L263">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))</span>
         ),
-<span class="fc" id="L260">        method(</span>
-<span class="fc" id="L261">            type(VOID),</span>
-            METHOD_WITH_MVC_GROUP,
-<span class="fc" id="L263">            args(</span>
-<span class="fc" id="L264">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
-<span class="fc" id="L265">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L266">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L267">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))</span>
+<span class="fc" id="L265">        method(</span>
+<span class="fc" id="L266">            type(VOID),</span>
+<span class="fc" id="L267">            typeParams(</span>
+<span class="fc" id="L268">                typeParam(M, GRIFFON_MODEL_TYPE),</span>
+<span class="fc" id="L269">                typeParam(V, GRIFFON_VIEW_TYPE),</span>
+<span class="fc" id="L270">                typeParam(C, GRIFFON_CONTROLLER_TYPE)</span>
+            ),
+            METHOD_WITH_MVC,
+<span class="fc" id="L273">            args(</span>
+<span class="fc" id="L274">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L275">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
+<span class="fc" id="L276">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))</span>
         ),
-<span class="fc" id="L269">        method(</span>
-<span class="fc" id="L270">            type(VOID),</span>
-            METHOD_WITH_MVC_GROUP,
-<span class="fc" id="L272">            args(</span>
-<span class="fc" id="L273">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L274">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
-<span class="fc" id="L275">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))</span>
+<span class="fc" id="L278">        method(</span>
+<span class="fc" id="L279">            type(VOID),</span>
+<span class="fc" id="L280">            typeParams(</span>
+<span class="fc" id="L281">                typeParam(M, GRIFFON_MODEL_TYPE),</span>
+<span class="fc" id="L282">                typeParam(V, GRIFFON_VIEW_TYPE),</span>
+<span class="fc" id="L283">                typeParam(C, GRIFFON_CONTROLLER_TYPE)</span>
+            ),
+            METHOD_WITH_MVC,
+<span class="fc" id="L286">            args(</span>
+<span class="fc" id="L287">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
+<span class="fc" id="L288">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L289">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))</span>
         ),
-<span class="fc" id="L277">        method(</span>
-<span class="fc" id="L278">            type(VOID),</span>
+
+<span class="fc" id="L292">        method(</span>
+<span class="fc" id="L293">            type(VOID),</span>
+<span class="fc" id="L294">            typeParams(</span>
+<span class="fc" id="L295">                typeParam(MVC, TYPED_MVC_GROUP),</span>
+<span class="fc" id="L296">                typeParam(M, GRIFFON_MODEL_TYPE),</span>
+<span class="fc" id="L297">                typeParam(V, GRIFFON_VIEW_TYPE),</span>
+<span class="fc" id="L298">                typeParam(C, GRIFFON_CONTROLLER_TYPE)</span>
+            ),
+            METHOD_WITH_MVC,
+<span class="fc" id="L301">            args(</span>
+<span class="fc" id="L302">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),</span>
+<span class="fc" id="L303">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))</span>
+        ),
+<span class="fc" id="L305">        method(</span>
+<span class="fc" id="L306">            type(VOID),</span>
+<span class="fc" id="L307">            typeParams(</span>
+<span class="fc" id="L308">                typeParam(MVC, TYPED_MVC_GROUP),</span>
+<span class="fc" id="L309">                typeParam(M, GRIFFON_MODEL_TYPE),</span>
+<span class="fc" id="L310">                typeParam(V, GRIFFON_VIEW_TYPE),</span>
+<span class="fc" id="L311">                typeParam(C, GRIFFON_CONTROLLER_TYPE)</span>
+            ),
+            METHOD_WITH_MVC,
+<span class="fc" id="L314">            args(</span>
+<span class="fc" id="L315">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),</span>
+<span class="fc" id="L316">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L317">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))</span>
+        ),
+<span class="fc" id="L319">        method(</span>
+<span class="fc" id="L320">            type(VOID),</span>
+<span class="fc" id="L321">            typeParams(</span>
+<span class="fc" id="L322">                typeParam(MVC, TYPED_MVC_GROUP),</span>
+<span class="fc" id="L323">                typeParam(M, GRIFFON_MODEL_TYPE),</span>
+<span class="fc" id="L324">                typeParam(V, GRIFFON_VIEW_TYPE),</span>
+<span class="fc" id="L325">                typeParam(C, GRIFFON_CONTROLLER_TYPE)</span>
+            ),
+            METHOD_WITH_MVC,
+<span class="fc" id="L328">            args(</span>
+<span class="fc" id="L329">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),</span>
+<span class="fc" id="L330">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L331">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
+<span class="fc" id="L332">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))</span>
+        ),
+<span class="fc" id="L334">        method(</span>
+<span class="fc" id="L335">            type(VOID),</span>
+<span class="fc" id="L336">            typeParams(</span>
+<span class="fc" id="L337">                typeParam(MVC, TYPED_MVC_GROUP),</span>
+<span class="fc" id="L338">                typeParam(M, GRIFFON_MODEL_TYPE),</span>
+<span class="fc" id="L339">                typeParam(V, GRIFFON_VIEW_TYPE),</span>
+<span class="fc" id="L340">                typeParam(C, GRIFFON_CONTROLLER_TYPE)</span>
+            ),
+            METHOD_WITH_MVC,
+<span class="fc" id="L343">            args(</span>
+<span class="fc" id="L344">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
+<span class="fc" id="L345">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),</span>
+<span class="fc" id="L346">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L347">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))</span>
+        ),
+<span class="fc" id="L349">        method(</span>
+<span class="fc" id="L350">            type(VOID),</span>
+<span class="fc" id="L351">            typeParams(</span>
+<span class="fc" id="L352">                typeParam(MVC, TYPED_MVC_GROUP),</span>
+<span class="fc" id="L353">                typeParam(M, GRIFFON_MODEL_TYPE),</span>
+<span class="fc" id="L354">                typeParam(V, GRIFFON_VIEW_TYPE),</span>
+<span class="fc" id="L355">                typeParam(C, GRIFFON_CONTROLLER_TYPE)</span>
+            ),
+            METHOD_WITH_MVC,
+<span class="fc" id="L358">            args(</span>
+<span class="fc" id="L359">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),</span>
+<span class="fc" id="L360">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
+<span class="fc" id="L361">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))</span>
+        ),
+<span class="fc" id="L363">        method(</span>
+<span class="fc" id="L364">            type(VOID),</span>
+<span class="fc" id="L365">            typeParams(</span>
+<span class="fc" id="L366">                typeParam(MVC, TYPED_MVC_GROUP),</span>
+<span class="fc" id="L367">                typeParam(M, GRIFFON_MODEL_TYPE),</span>
+<span class="fc" id="L368">                typeParam(V, GRIFFON_VIEW_TYPE),</span>
+<span class="fc" id="L369">                typeParam(C, GRIFFON_CONTROLLER_TYPE)</span>
+            ),
+            METHOD_WITH_MVC,
+<span class="fc" id="L372">            args(</span>
+<span class="fc" id="L373">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
+<span class="fc" id="L374">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),</span>
+<span class="fc" id="L375">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))</span>
+        ),
+
+<span class="fc" id="L378">        method(</span>
+<span class="fc" id="L379">            type(VOID),</span>
             METHOD_WITH_MVC_GROUP,
-<span class="fc" id="L280">            args(</span>
-<span class="fc" id="L281">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
-<span class="fc" id="L282">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
-<span class="fc" id="L283">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))</span>
+<span class="fc" id="L381">            args(</span>
+<span class="fc" id="L382">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L383">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))</span>
+        ),
+<span class="fc" id="L385">        method(</span>
+<span class="fc" id="L386">            type(VOID),</span>
+            METHOD_WITH_MVC_GROUP,
+<span class="fc" id="L388">            args(</span>
+<span class="fc" id="L389">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L390">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L391">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))</span>
+        ),
+<span class="fc" id="L393">        method(</span>
+<span class="fc" id="L394">            type(VOID),</span>
+            METHOD_WITH_MVC_GROUP,
+<span class="fc" id="L396">            args(</span>
+<span class="fc" id="L397">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L398">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L399">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
+<span class="fc" id="L400">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))</span>
+        ),
+<span class="fc" id="L402">        method(</span>
+<span class="fc" id="L403">            type(VOID),</span>
+            METHOD_WITH_MVC_GROUP,
+<span class="fc" id="L405">            args(</span>
+<span class="fc" id="L406">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
+<span class="fc" id="L407">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L408">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L409">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))</span>
+        ),
+<span class="fc" id="L411">        method(</span>
+<span class="fc" id="L412">            type(VOID),</span>
+            METHOD_WITH_MVC_GROUP,
+<span class="fc" id="L414">            args(</span>
+<span class="fc" id="L415">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L416">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
+<span class="fc" id="L417">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))</span>
+        ),
+<span class="fc" id="L419">        method(</span>
+<span class="fc" id="L420">            type(VOID),</span>
+            METHOD_WITH_MVC_GROUP,
+<span class="fc" id="L422">            args(</span>
+<span class="fc" id="L423">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
+<span class="fc" id="L424">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L425">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))</span>
+        ),
+
+<span class="fc" id="L428">        method(</span>
+<span class="fc" id="L429">            type(VOID),</span>
+<span class="fc" id="L430">            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),</span>
+            METHOD_WITH_MVC_GROUP,
+<span class="fc" id="L432">            args(</span>
+<span class="fc" id="L433">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),</span>
+<span class="fc" id="L434">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), TYPED_MVC_GROUP_FUNCTION_TYPE, MVC))</span>
+        ),
+<span class="fc" id="L436">        method(</span>
+<span class="fc" id="L437">            type(VOID),</span>
+<span class="fc" id="L438">            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),</span>
+            METHOD_WITH_MVC_GROUP,
+<span class="fc" id="L440">            args(</span>
+<span class="fc" id="L441">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),</span>
+<span class="fc" id="L442">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L443">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), TYPED_MVC_GROUP_FUNCTION_TYPE, MVC))</span>
+        ),
+<span class="fc" id="L445">        method(</span>
+<span class="fc" id="L446">            type(VOID),</span>
+<span class="fc" id="L447">            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),</span>
+            METHOD_WITH_MVC_GROUP,
+<span class="fc" id="L449">            args(</span>
+<span class="fc" id="L450">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),</span>
+<span class="fc" id="L451">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L452">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
+<span class="fc" id="L453">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), TYPED_MVC_GROUP_FUNCTION_TYPE, MVC))</span>
+        ),
+<span class="fc" id="L455">        method(</span>
+<span class="fc" id="L456">            type(VOID),</span>
+<span class="fc" id="L457">            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),</span>
+            METHOD_WITH_MVC_GROUP,
+<span class="fc" id="L459">            args(</span>
+<span class="fc" id="L460">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
+<span class="fc" id="L461">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),</span>
+<span class="fc" id="L462">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),</span>
+<span class="fc" id="L463">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), TYPED_MVC_GROUP_FUNCTION_TYPE, MVC))</span>
+        ),
+<span class="fc" id="L465">        method(</span>
+<span class="fc" id="L466">            type(VOID),</span>
+<span class="fc" id="L467">            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),</span>
+            METHOD_WITH_MVC_GROUP,
+<span class="fc" id="L469">            args(</span>
+<span class="fc" id="L470">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),</span>
+<span class="fc" id="L471">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
+<span class="fc" id="L472">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), TYPED_MVC_GROUP_FUNCTION_TYPE, MVC))</span>
+        ),
+<span class="fc" id="L474">        method(</span>
+<span class="fc" id="L475">            type(VOID),</span>
+<span class="fc" id="L476">            typeParams(typeParam(MVC, TYPED_MVC_GROUP)),</span>
+            METHOD_WITH_MVC_GROUP,
+<span class="fc" id="L478">            args(</span>
+<span class="fc" id="L479">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),</span>
+<span class="fc" id="L480">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),</span>
+<span class="fc" id="L481">                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), TYPED_MVC_GROUP_FUNCTION_TYPE, MVC))</span>
         )
     };
 }

@@ -26,6 +26,8 @@ import griffon.core.i18n.NoSuchMessageException;
 import griffon.core.mvc.MVCFunction;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupFunction;
+import griffon.core.mvc.TypedMVCGroup;
+import griffon.core.mvc.TypedMVCGroupFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,56 +51,57 @@ import java.util.concurrent.Future;
  */
 public abstract class AbstractGriffonArtifact implements GriffonArtifact {
     private final Logger log;
-<span class="fc" id="L52">    private final Object lock = new Object[0];</span>
+<span class="fc" id="L54">    private final Object lock = new Object[0];</span>
     @Inject
     protected GriffonApplication application;
     @GuardedBy(&quot;lock&quot;)
     private GriffonClass griffonClass;
 
-<span class="fc" id="L58">    public AbstractGriffonArtifact() {</span>
-<span class="fc" id="L59">        log = LoggerFactory.getLogger(&quot;griffon.app.&quot; + getArtifactType() + &quot;.&quot; + getTypeClass().getName());</span>
-<span class="fc" id="L60">    }</span>
+<span class="fc" id="L60">    public AbstractGriffonArtifact() {</span>
+<span class="fc" id="L61">        log = LoggerFactory.getLogger(&quot;griffon.app.&quot; + getArtifactType() + &quot;.&quot; + getTypeClass().getName());</span>
+<span class="fc" id="L62">    }</span>
 
     @Override
     @Nonnull
     public Class getTypeClass() {
-<span class="fc" id="L65">        return getClass();</span>
+<span class="fc" id="L67">        return getClass();</span>
     }
 
     /**
      * Creates a new instance of this class.
      *
      * @param application the GriffonApplication that holds this artifact.
+     *
      * @deprecated Griffon prefers field injection over constructor injector for artifacts as of 2.1.0
      */
     @Inject
     @Deprecated
     public AbstractGriffonArtifact(@Nonnull GriffonApplication application) {
-<span class="nc" id="L77">        this();</span>
-<span class="nc" id="L78">        this.application = application;</span>
-<span class="nc" id="L79">    }</span>
+<span class="nc" id="L80">        this();</span>
+<span class="nc" id="L81">        this.application = application;</span>
+<span class="nc" id="L82">    }</span>
 
     @Nonnull
     public GriffonApplication getApplication() {
-<span class="fc" id="L83">        return application;</span>
+<span class="fc" id="L86">        return application;</span>
     }
 
     @Nonnull
     @Override
     @SuppressWarnings(&quot;ConstantConditions&quot;)
     public GriffonClass getGriffonClass() {
-<span class="fc" id="L90">        synchronized (lock) {</span>
-<span class="fc bfc" id="L91" title="All 2 branches covered.">            if (griffonClass == null) {</span>
-<span class="fc" id="L92">                griffonClass = application.getArtifactManager().findGriffonClass(getTypeClass());</span>
+<span class="fc" id="L93">        synchronized (lock) {</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">            if (griffonClass == null) {</span>
+<span class="fc" id="L95">                griffonClass = application.getArtifactManager().findGriffonClass(getTypeClass());</span>
             }
-<span class="fc" id="L94">            return griffonClass;</span>
-<span class="nc" id="L95">        }</span>
+<span class="fc" id="L97">            return griffonClass;</span>
+<span class="nc" id="L98">        }</span>
     }
 
     @Nonnull
     @Override
     public Logger getLog() {
-<span class="nc" id="L101">        return log;</span>
+<span class="nc" id="L104">        return log;</span>
     }
 
     @Nonnull
@@ -106,214 +109,348 @@ public abstract class AbstractGriffonArtifact implements GriffonArtifact {
 
     @Override
     public boolean isUIThread() {
-<span class="nc" id="L109">        return application.getUIThreadManager().isUIThread();</span>
+<span class="nc" id="L112">        return application.getUIThreadManager().isUIThread();</span>
     }
 
     @Nonnull
     @Override
     public &lt;R&gt; Future&lt;R&gt; runFuture(@Nonnull ExecutorService executorService, @Nonnull Callable&lt;R&gt; callable) {
-<span class="nc" id="L115">        return application.getUIThreadManager().runFuture(executorService, callable);</span>
+<span class="nc" id="L118">        return application.getUIThreadManager().runFuture(executorService, callable);</span>
     }
 
     @Nonnull
     @Override
     public &lt;R&gt; Future&lt;R&gt; runFuture(@Nonnull Callable&lt;R&gt; callable) {
-<span class="nc" id="L121">        return application.getUIThreadManager().runFuture(callable);</span>
+<span class="nc" id="L124">        return application.getUIThreadManager().runFuture(callable);</span>
     }
 
     @Override
     public void runInsideUISync(@Nonnull Runnable runnable) {
-<span class="nc" id="L126">        application.getUIThreadManager().runInsideUISync(runnable);</span>
-<span class="nc" id="L127">    }</span>
+<span class="nc" id="L129">        application.getUIThreadManager().runInsideUISync(runnable);</span>
+<span class="nc" id="L130">    }</span>
 
     @Override
     public void runOutsideUI(@Nonnull Runnable runnable) {
-<span class="nc" id="L131">        application.getUIThreadManager().runOutsideUI(runnable);</span>
-<span class="nc" id="L132">    }</span>
+<span class="nc" id="L134">        application.getUIThreadManager().runOutsideUI(runnable);</span>
+<span class="nc" id="L135">    }</span>
 
     @Override
     public void runInsideUIAsync(@Nonnull Runnable runnable) {
-<span class="nc" id="L136">        application.getUIThreadManager().runInsideUIAsync(runnable);</span>
-<span class="nc" id="L137">    }</span>
+<span class="nc" id="L139">        application.getUIThreadManager().runInsideUIAsync(runnable);</span>
+<span class="nc" id="L140">    }</span>
 
     @Nullable
     @Override
     public &lt;R&gt; R runInsideUISync(@Nonnull Callable&lt;R&gt; callable) {
-<span class="nc" id="L142">        return application.getUIThreadManager().runInsideUISync(callable);</span>
+<span class="nc" id="L145">        return application.getUIThreadManager().runInsideUISync(callable);</span>
     }
 
     @Nonnull
     @Override
     public ClassLoader classloader() {
-<span class="nc" id="L148">        return application.getResourceHandler().classloader();</span>
+<span class="nc" id="L151">        return application.getResourceHandler().classloader();</span>
     }
 
     @Nullable
     @Override
     public URL getResourceAsURL(@Nonnull String name) {
-<span class="nc" id="L154">        return application.getResourceHandler().getResourceAsURL(name);</span>
+<span class="nc" id="L157">        return application.getResourceHandler().getResourceAsURL(name);</span>
     }
 
     @Nullable
     @Override
     public List&lt;URL&gt; getResources(@Nonnull String name) {
-<span class="nc" id="L160">        return application.getResourceHandler().getResources(name);</span>
+<span class="nc" id="L163">        return application.getResourceHandler().getResources(name);</span>
     }
 
     @Nullable
     @Override
     public InputStream getResourceAsStream(@Nonnull String name) {
-<span class="nc" id="L166">        return application.getResourceHandler().getResourceAsStream(name);</span>
-    }
-
-    @Nonnull
-    @Override
-    public MVCGroup createMVCGroup(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType) {
-<span class="nc" id="L172">        return application.getMvcGroupManager().createMVCGroup(args, mvcType);</span>
-    }
-
-    @Nonnull
-    @Override
-    public List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull String mvcType) {
-<span class="nc" id="L178">        return application.getMvcGroupManager().createMVC(mvcType);</span>
+<span class="nc" id="L169">        return application.getResourceHandler().getResourceAsStream(name);</span>
     }
 
     @Override
-    public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
-<span class="nc" id="L183">        application.getMvcGroupManager().withMVC(mvcType, mvcId, handler);</span>
-<span class="nc" id="L184">    }</span>
-
     @Nonnull
-    @Override
-    public List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull String mvcType, @Nonnull String mvcId) {
-<span class="nc" id="L189">        return application.getMvcGroupManager().createMVC(mvcType, mvcId);</span>
-    }
-
-    @Nonnull
-    @Override
-    public List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType, @Nonnull String mvcId) {
-<span class="nc" id="L195">        return application.getMvcGroupManager().createMVC(args, mvcType, mvcId);</span>
-    }
-
-    @Override
-    public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
-<span class="nc" id="L200">        application.getMvcGroupManager().withMVC(args, mvcType, mvcId, handler);</span>
-<span class="nc" id="L201">    }</span>
-
-    @Nonnull
-    @Override
-    public MVCGroup createMVCGroup(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType, @Nonnull String mvcId) {
-<span class="nc" id="L206">        return application.getMvcGroupManager().createMVCGroup(args, mvcType, mvcId);</span>
-    }
-
-    @Nonnull
-    @Override
-    public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map&lt;String, Object&gt; args) {
-<span class="nc" id="L212">        return application.getMvcGroupManager().createMVCGroup(mvcType, mvcId, args);</span>
-    }
-
-    @Nonnull
-    @Override
-    public List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType) {
-<span class="nc" id="L218">        return application.getMvcGroupManager().createMVC(args, mvcType);</span>
-    }
-
-    @Override
-    public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull String mvcType, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
-<span class="nc" id="L223">        application.getMvcGroupManager().withMVC(mvcType, handler);</span>
-<span class="nc" id="L224">    }</span>
-
-    @Nonnull
-    @Override
     public MVCGroup createMVCGroup(@Nonnull String mvcType) {
-<span class="nc" id="L229">        return application.getMvcGroupManager().createMVCGroup(mvcType);</span>
+<span class="nc" id="L175">        return application.getMvcGroupManager().createMVCGroup(mvcType);</span>
     }
 
-    @Nonnull
     @Override
+    @Nonnull
     public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId) {
-<span class="nc" id="L235">        return application.getMvcGroupManager().createMVCGroup(mvcType, mvcId);</span>
-    }
-
-    @Nonnull
-    @Override
-    public List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull String mvcType, @Nonnull Map&lt;String, Object&gt; args) {
-<span class="nc" id="L241">        return application.getMvcGroupManager().createMVC(mvcType, args);</span>
+<span class="nc" id="L181">        return application.getMvcGroupManager().createMVCGroup(mvcType, mvcId);</span>
     }
 
     @Override
-    public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
-<span class="nc" id="L246">        application.getMvcGroupManager().withMVC(args, mvcType, handler);</span>
-<span class="nc" id="L247">    }</span>
-
-    @Override
-    public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull String mvcType, @Nonnull Map&lt;String, Object&gt; args, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
-<span class="nc" id="L251">        application.getMvcGroupManager().withMVC(mvcType, args, handler);</span>
-<span class="nc" id="L252">    }</span>
-
     @Nonnull
+    public MVCGroup createMVCGroup(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType) {
+<span class="nc" id="L187">        return application.getMvcGroupManager().createMVCGroup(args, mvcType);</span>
+    }
+
     @Override
+    @Nonnull
     public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull Map&lt;String, Object&gt; args) {
-<span class="nc" id="L257">        return application.getMvcGroupManager().createMVCGroup(mvcType, args);</span>
+<span class="nc" id="L193">        return application.getMvcGroupManager().createMVCGroup(mvcType, args);</span>
     }
 
+    @Override
     @Nonnull
-    @Override
-    public List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map&lt;String, Object&gt; args) {
-<span class="nc" id="L263">        return application.getMvcGroupManager().createMVC(mvcType, mvcId, args);</span>
+    public MVCGroup createMVCGroup(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType, @Nonnull String mvcId) {
+<span class="nc" id="L199">        return application.getMvcGroupManager().createMVCGroup(args, mvcType, mvcId);</span>
     }
 
     @Override
-    public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map&lt;String, Object&gt; args, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
-<span class="nc" id="L268">        application.getMvcGroupManager().withMVC(mvcType, mvcId, args, handler);</span>
-<span class="nc" id="L269">    }</span>
+    @Nonnull
+    public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map&lt;String, Object&gt; args) {
+<span class="nc" id="L205">        return application.getMvcGroupManager().createMVCGroup(mvcType, mvcId, args);</span>
+    }
 
     @Override
-    public void withMVCGroup(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType, @Nonnull MVCGroupFunction handler) {
-<span class="nc" id="L273">        application.getMvcGroupManager().withMVCGroup(args, mvcType, handler);</span>
-<span class="nc" id="L274">    }</span>
+    @Nonnull
+    public &lt;MVC extends TypedMVCGroup&gt; MVC createMVCGroup(@Nonnull Class&lt;? extends MVC&gt; mvcType) {
+<span class="nc" id="L211">        return application.getMvcGroupManager().createMVCGroup(mvcType);</span>
+    }
 
     @Override
-    public void withMVCGroup(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupFunction handler) {
-<span class="nc" id="L278">        application.getMvcGroupManager().withMVCGroup(args, mvcType, mvcId, handler);</span>
-<span class="nc" id="L279">    }</span>
+    @Nonnull
+    public &lt;MVC extends TypedMVCGroup&gt; MVC createMVCGroup(@Nonnull Class&lt;? extends MVC&gt; mvcType, @Nonnull String mvcId) {
+<span class="nc" id="L217">        return application.getMvcGroupManager().createMVCGroup(mvcType, mvcId);</span>
+    }
 
     @Override
-    public void withMVCGroup(@Nonnull String mvcType, @Nonnull Map&lt;String, Object&gt; args, @Nonnull MVCGroupFunction handler) {
-<span class="nc" id="L283">        application.getMvcGroupManager().withMVCGroup(mvcType, args, handler);</span>
-<span class="nc" id="L284">    }</span>
+    @Nonnull
+    public &lt;MVC extends TypedMVCGroup&gt; MVC createMVCGroup(@Nonnull Map&lt;String, Object&gt; args, @Nonnull Class&lt;? extends MVC&gt; mvcType) {
+<span class="nc" id="L223">        return application.getMvcGroupManager().createMVCGroup(args, mvcType);</span>
+    }
 
     @Override
-    public void withMVCGroup(@Nonnull String mvcType, @Nonnull MVCGroupFunction handler) {
-<span class="nc" id="L288">        application.getMvcGroupManager().withMVCGroup(mvcType, handler);</span>
-<span class="nc" id="L289">    }</span>
+    @Nonnull
+    public &lt;MVC extends TypedMVCGroup&gt; MVC createMVCGroup(@Nonnull Class&lt;? extends MVC&gt; mvcType, @Nonnull Map&lt;String, Object&gt; args) {
+<span class="nc" id="L229">        return application.getMvcGroupManager().createMVCGroup(mvcType, args);</span>
+    }
 
     @Override
-    public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map&lt;String, Object&gt; args, @Nonnull MVCGroupFunction handler) {
-<span class="nc" id="L293">        application.getMvcGroupManager().withMVCGroup(mvcType, mvcId, args, handler);</span>
-<span class="nc" id="L294">    }</span>
+    @Nonnull
+    public &lt;MVC extends TypedMVCGroup&gt; MVC createMVCGroup(@Nonnull Map&lt;String, Object&gt; args, @Nonnull Class&lt;? extends MVC&gt; mvcType, @Nonnull String mvcId) {
+<span class="nc" id="L235">        return application.getMvcGroupManager().createMVCGroup(args, mvcType, mvcId);</span>
+    }
 
     @Override
-    public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupFunction handler) {
-<span class="nc" id="L298">        application.getMvcGroupManager().withMVCGroup(mvcType, mvcId, handler);</span>
-<span class="nc" id="L299">    }</span>
+    @Nonnull
+    public &lt;MVC extends TypedMVCGroup&gt; MVC createMVCGroup(@Nonnull Class&lt;? extends MVC&gt; mvcType, @Nonnull String mvcId, @Nonnull Map&lt;String, Object&gt; args) {
+<span class="nc" id="L241">        return application.getMvcGroupManager().createMVCGroup(mvcType, mvcId, args);</span>
+    }
+
+    @Override
+    @Nonnull
+    public List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull String mvcType) {
+<span class="nc" id="L247">        return application.getMvcGroupManager().createMVC(mvcType);</span>
+    }
+
+    @Override
+    @Nonnull
+    public List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType) {
+<span class="nc" id="L253">        return application.getMvcGroupManager().createMVC(args, mvcType);</span>
+    }
+
+    @Override
+    @Nonnull
+    public List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull String mvcType, @Nonnull Map&lt;String, Object&gt; args) {
+<span class="nc" id="L259">        return application.getMvcGroupManager().createMVC(mvcType, args);</span>
+    }
+
+    @Override
+    @Nonnull
+    public List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull String mvcType, @Nonnull String mvcId) {
+<span class="nc" id="L265">        return application.getMvcGroupManager().createMVC(mvcType, mvcId);</span>
+    }
+
+    @Override
+    @Nonnull
+    public List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType, @Nonnull String mvcId) {
+<span class="nc" id="L271">        return application.getMvcGroupManager().createMVC(args, mvcType, mvcId);</span>
+    }
+
+    @Override
+    @Nonnull
+    public List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map&lt;String, Object&gt; args) {
+<span class="nc" id="L277">        return application.getMvcGroupManager().createMVC(mvcType, mvcId, args);</span>
+    }
+
+    @Override
+    @Nonnull
+    public &lt;MVC extends TypedMVCGroup&gt; List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull Class&lt;? extends MVC&gt; mvcType) {
+<span class="nc" id="L283">        return application.getMvcGroupManager().createMVC(mvcType);</span>
+    }
+
+    @Override
+    @Nonnull
+    public &lt;MVC extends TypedMVCGroup&gt; List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull Map&lt;String, Object&gt; args, @Nonnull Class&lt;? extends MVC&gt; mvcType) {
+<span class="nc" id="L289">        return application.getMvcGroupManager().createMVC(args, mvcType);</span>
+    }
+
+    @Override
+    @Nonnull
+    public &lt;MVC extends TypedMVCGroup&gt; List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull Class&lt;? extends MVC&gt; mvcType, @Nonnull Map&lt;String, Object&gt; args) {
+<span class="nc" id="L295">        return application.getMvcGroupManager().createMVC(mvcType, args);</span>
+    }
+
+    @Override
+    @Nonnull
+    public &lt;MVC extends TypedMVCGroup&gt; List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull Class&lt;? extends MVC&gt; mvcType, @Nonnull String mvcId) {
+<span class="nc" id="L301">        return application.getMvcGroupManager().createMVC(mvcType, mvcId);</span>
+    }
+
+    @Override
+    @Nonnull
+    public &lt;MVC extends TypedMVCGroup&gt; List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull Map&lt;String, Object&gt; args, @Nonnull Class&lt;? extends MVC&gt; mvcType, @Nonnull String mvcId) {
+<span class="nc" id="L307">        return application.getMvcGroupManager().createMVC(args, mvcType, mvcId);</span>
+    }
+
+    @Override
+    @Nonnull
+    public &lt;MVC extends TypedMVCGroup&gt; List&lt;? extends GriffonMvcArtifact&gt; createMVC(@Nonnull Class&lt;? extends MVC&gt; mvcType, @Nonnull String mvcId, @Nonnull Map&lt;String, Object&gt; args) {
+<span class="nc" id="L313">        return application.getMvcGroupManager().createMVC(mvcType, mvcId, args);</span>
+    }
 
     @Override
     public void destroyMVCGroup(@Nonnull String mvcId) {
-<span class="nc" id="L303">        application.getMvcGroupManager().destroyMVCGroup(mvcId);</span>
-<span class="nc" id="L304">    }</span>
+<span class="nc" id="L318">        application.getMvcGroupManager().destroyMVCGroup(mvcId);</span>
+<span class="nc" id="L319">    }</span>
+
+    @Override
+    public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull String mvcType, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
+<span class="nc" id="L323">        application.getMvcGroupManager().withMVC(mvcType, handler);</span>
+<span class="nc" id="L324">    }</span>
+
+    @Override
+    public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
+<span class="nc" id="L328">        application.getMvcGroupManager().withMVC(mvcType, mvcId, handler);</span>
+<span class="nc" id="L329">    }</span>
+
+    @Override
+    public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map&lt;String, Object&gt; args, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
+<span class="nc" id="L333">        application.getMvcGroupManager().withMVC(mvcType, mvcId, args, handler);</span>
+<span class="nc" id="L334">    }</span>
+
+    @Override
+    public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
+<span class="nc" id="L338">        application.getMvcGroupManager().withMVC(args, mvcType, mvcId, handler);</span>
+<span class="nc" id="L339">    }</span>
+
+    @Override
+    public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull String mvcType, @Nonnull Map&lt;String, Object&gt; args, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
+<span class="nc" id="L343">        application.getMvcGroupManager().withMVC(mvcType, args, handler);</span>
+<span class="nc" id="L344">    }</span>
+
+    @Override
+    public &lt;M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
+<span class="nc" id="L348">        application.getMvcGroupManager().withMVC(args, mvcType, handler);</span>
+<span class="nc" id="L349">    }</span>
+
+    @Override
+    public &lt;MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull Class&lt;? extends MVC&gt; mvcType, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
+<span class="nc" id="L353">        application.getMvcGroupManager().withMVC(mvcType, handler);</span>
+<span class="nc" id="L354">    }</span>
+
+    @Override
+    public &lt;MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull Class&lt;? extends MVC&gt; mvcType, @Nonnull String mvcId, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
+<span class="nc" id="L358">        application.getMvcGroupManager().withMVC(mvcType, mvcId, handler);</span>
+<span class="nc" id="L359">    }</span>
+
+    @Override
+    public &lt;MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull Class&lt;? extends MVC&gt; mvcType, @Nonnull String mvcId, @Nonnull Map&lt;String, Object&gt; args, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
+<span class="nc" id="L363">        application.getMvcGroupManager().withMVC(mvcType, mvcId, args, handler);</span>
+<span class="nc" id="L364">    }</span>
+
+    @Override
+    public &lt;MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull Map&lt;String, Object&gt; args, @Nonnull Class&lt;? extends MVC&gt; mvcType, @Nonnull String mvcId, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
+<span class="nc" id="L368">        application.getMvcGroupManager().withMVC(args, mvcType, mvcId, handler);</span>
+<span class="nc" id="L369">    }</span>
+
+    @Override
+    public &lt;MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull Class&lt;? extends MVC&gt; mvcType, @Nonnull Map&lt;String, Object&gt; args, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
+<span class="nc" id="L373">        application.getMvcGroupManager().withMVC(mvcType, args, handler);</span>
+<span class="nc" id="L374">    }</span>
+
+    @Override
+    public &lt;MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController&gt; void withMVC(@Nonnull Map&lt;String, Object&gt; args, @Nonnull Class&lt;? extends MVC&gt; mvcType, @Nonnull MVCFunction&lt;M, V, C&gt; handler) {
+<span class="nc" id="L378">        application.getMvcGroupManager().withMVC(args, mvcType, handler);</span>
+<span class="nc" id="L379">    }</span>
+
+    @Override
+    public void withMVCGroup(@Nonnull String mvcType, @Nonnull MVCGroupFunction handler) {
+<span class="nc" id="L383">        application.getMvcGroupManager().withMVCGroup(mvcType, handler);</span>
+<span class="nc" id="L384">    }</span>
+
+    @Override
+    public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupFunction handler) {
+<span class="nc" id="L388">        application.getMvcGroupManager().withMVCGroup(mvcType, mvcId, handler);</span>
+<span class="nc" id="L389">    }</span>
+
+    @Override
+    public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map&lt;String, Object&gt; args, @Nonnull MVCGroupFunction handler) {
+<span class="nc" id="L393">        application.getMvcGroupManager().withMVCGroup(mvcType, mvcId, args, handler);</span>
+<span class="nc" id="L394">    }</span>
+
+    @Override
+    public void withMVCGroup(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupFunction handler) {
+<span class="nc" id="L398">        application.getMvcGroupManager().withMVCGroup(args, mvcType, mvcId, handler);</span>
+<span class="nc" id="L399">    }</span>
+
+    @Override
+    public void withMVCGroup(@Nonnull String mvcType, @Nonnull Map&lt;String, Object&gt; args, @Nonnull MVCGroupFunction handler) {
+<span class="nc" id="L403">        application.getMvcGroupManager().withMVCGroup(mvcType, args, handler);</span>
+<span class="nc" id="L404">    }</span>
+
+    @Override
+    public void withMVCGroup(@Nonnull Map&lt;String, Object&gt; args, @Nonnull String mvcType, @Nonnull MVCGroupFunction handler) {
+<span class="nc" id="L408">        application.getMvcGroupManager().withMVCGroup(args, mvcType, handler);</span>
+<span class="nc" id="L409">    }</span>
+
+    @Override
+    public &lt;MVC extends TypedMVCGroup&gt; void withMVCGroup(@Nonnull Class&lt;? extends MVC&gt; mvcType, @Nonnull TypedMVCGroupFunction&lt;MVC&gt; handler) {
+<span class="nc" id="L413">        application.getMvcGroupManager().withMVCGroup(mvcType, handler);</span>
+<span class="nc" id="L414">    }</span>
+
+    @Override
+    public &lt;MVC extends TypedMVCGroup&gt; void withMVCGroup(@Nonnull Class&lt;? extends MVC&gt; mvcType, @Nonnull String mvcId, @Nonnull TypedMVCGroupFunction&lt;MVC&gt; handler) {
+<span class="nc" id="L418">        application.getMvcGroupManager().withMVCGroup(mvcType, mvcId, handler);</span>
+<span class="nc" id="L419">    }</span>
+
+    @Override
+    public &lt;MVC extends TypedMVCGroup&gt; void withMVCGroup(@Nonnull Class&lt;? extends MVC&gt; mvcType, @Nonnull String mvcId, @Nonnull Map&lt;String, Object&gt; args, @Nonnull TypedMVCGroupFunction&lt;MVC&gt; handler) {
+<span class="nc" id="L423">        application.getMvcGroupManager().withMVCGroup(mvcType, mvcId, args, handler);</span>
+<span class="nc" id="L424">    }</span>
+
+    @Override
+    public &lt;MVC extends TypedMVCGroup&gt; void withMVCGroup(@Nonnull Map&lt;String, Object&gt; args, @Nonnull Class&lt;? extends MVC&gt; mvcType, @Nonnull String mvcId, @Nonnull TypedMVCGroupFunction&lt;MVC&gt; handler) {
+<span class="nc" id="L428">        application.getMvcGroupManager().withMVCGroup(args, mvcType, mvcId, handler);</span>
+<span class="nc" id="L429">    }</span>
+
+    @Override
+    public &lt;MVC extends TypedMVCGroup&gt; void withMVCGroup(@Nonnull Class&lt;? extends MVC&gt; mvcType, @Nonnull Map&lt;String, Object&gt; args, @Nonnull TypedMVCGroupFunction&lt;MVC&gt; handler) {
+<span class="nc" id="L433">        application.getMvcGroupManager().withMVCGroup(mvcType, args, handler);</span>
+<span class="nc" id="L434">    }</span>
+
+    @Override
+    public &lt;MVC extends TypedMVCGroup&gt; void withMVCGroup(@Nonnull Map&lt;String, Object&gt; args, @Nonnull Class&lt;? extends MVC&gt; mvcType, @Nonnull TypedMVCGroupFunction&lt;MVC&gt; handler) {
+<span class="nc" id="L438">        application.getMvcGroupManager().withMVCGroup(args, mvcType, handler);</span>
+<span class="nc" id="L439">    }</span>
 
     /**
      * Try to resolve the message.
      *
      * @param key Key to lookup, such as 'log4j.appenders.console'
+     *
      * @return The resolved message at the given key for the default locale
+     *
      * @throws NoSuchMessageException if no message is found
      * @since 2.4.0
      */
     @Nonnull
     protected String msg(@Nonnull String key) throws NoSuchMessageException {
-<span class="nc" id="L316">        return getApplication().getMessageSource().getMessage(key);</span>
+<span class="nc" id="L453">        return getApplication().getMessageSource().getMessage(key);</span>
     }
 
     /**
@@ -322,13 +459,15 @@ public abstract class AbstractGriffonArtifact implements GriffonArtifact {
      * @param key  Key to lookup, such as 'log4j.appenders.console'
      * @param args Arguments that will be filled in for params within the message (params look like &quot;{0}&quot; within a
      *             message, but this might differ between implementations), or null if none.
+     *
      * @return The resolved message at the given key for the default locale
+     *
      * @throws NoSuchMessageException if no message is found
      * @since 2.4.0
      */
     @Nonnull
     protected String msg(@Nonnull String key, @Nonnull List&lt;?&gt; args) throws NoSuchMessageException {
-<span class="nc" id="L331">        return getApplication().getMessageSource().getMessage(key, args);</span>
+<span class="nc" id="L470">        return getApplication().getMessageSource().getMessage(key, args);</span>
     }
 
     /**
@@ -337,13 +476,15 @@ public abstract class AbstractGriffonArtifact implements GriffonArtifact {
      * @param key  Key to lookup, such as 'log4j.appenders.console'
      * @param args Arguments that will be filled in for params within the message (params look like &quot;{0}&quot; within a
      *             message, but this might differ between implementations), or null if none.
+     *
      * @return The resolved message at the given key for the default locale
+     *
      * @throws NoSuchMessageException if no message is found
      * @since 2.4.0
      */
     @Nonnull
     protected String msg(@Nonnull String key, @Nonnull Object[] args) throws NoSuchMessageException {
-<span class="nc" id="L346">        return getApplication().getMessageSource().getMessage(key, args);</span>
+<span class="nc" id="L487">        return getApplication().getMessageSource().getMessage(key, args);</span>
     }
 
     /**
@@ -352,13 +493,15 @@ public abstract class AbstractGriffonArtifact implements GriffonArtifact {
      * @param key  Key to lookup, such as 'log4j.appenders.console'
      * @param args Arguments that will be filled in for params within the message (params look like &quot;{:key}&quot;
      *             within a message, but this might differ between implementations), or null if none.
+     *
      * @return The resolved message at the given key for the default locale
+     *
      * @throws NoSuchMessageException if no message is found
      * @since 2.4.0
      */
     @Nonnull
     protected String msg(@Nonnull String key, @Nonnull Map&lt;String, Object&gt; args) throws NoSuchMessageException {
-<span class="nc" id="L361">        return getApplication().getMessageSource().getMessage(key, args);</span>
+<span class="nc" id="L504">        return getApplication().getMessageSource().getMessage(key, args);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
